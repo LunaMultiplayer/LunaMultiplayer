@@ -1,0 +1,236 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{423C5A4B-EA79-450D-BD86-5B46141D58D1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>LunaCommon</RootNamespace>
+    <AssemblyName>LunaCommon</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;ENABLE_PROFILER</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugCompileOnly|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\DebugCompileOnly\</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="FastMember, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalLibraries\FastMember.dll</HintPath>
+    </Reference>
+    <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ExternalLibraries\Lidgren.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandDefinition.cs" />
+    <Compile Include="Common.cs" />
+    <Compile Include="Message\Data\Kerbal\KerbalBaseMsgData.cs" />
+    <Compile Include="Message\Data\Motd\MotdBaseMsgData.cs" />
+    <Compile Include="Message\Data\PlayerConnection\PlayerConnectionBaseMsgData.cs" />
+    <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
+    <Compile Include="Message\Data\SyncTime\SyncTimeBaseMsgData.cs" />
+    <Compile Include="Message\Types\AdminMessageType.cs" />
+    <Compile Include="Message\Types\ChatMessageType.cs" />
+    <Compile Include="Enums\ClientState.cs" />
+    <Compile Include="Enums\ClientMessageType.cs" />
+    <Compile Include="Enums\ConnectionStatus.cs" />
+    <Compile Include="Message\Types\MotdMessageType.cs" />
+    <Compile Include="Message\Types\PlayerConnectionMessageType.cs" />
+    <Compile Include="Message\Types\SyncTimeMessageType.cs" />
+    <Compile Include="Message\Types\VesselMessageType.cs" />
+    <Compile Include="Message\Types\CraftMessageType.cs" />
+    <Compile Include="Enums\CraftType.cs" />
+    <Compile Include="Message\Types\FlagMessageType.cs" />
+    <Compile Include="Enums\GameDificulty.cs" />
+    <Compile Include="Enums\GameMode.cs" />
+    <Compile Include="Message\Types\HandshakeMessageType.cs" />
+    <Compile Include="Enums\HandshakeReply.cs" />
+    <Compile Include="Message\Types\SettingsMessageType.cs" />
+    <Compile Include="Message\Types\KerbalMessageType.cs" />
+    <Compile Include="Message\Types\LockMessageType.cs" />
+    <Compile Include="Enums\ModControlMode.cs" />
+    <Compile Include="Message\Types\ScenarioMessageType.cs" />
+    <Compile Include="Message\Types\PlayerStatusMessageType.cs" />
+    <Compile Include="Message\Types\PlayerColorMessageType.cs" />
+    <Compile Include="Enums\ServerMessageType.cs" />
+    <Compile Include="Message\Types\WarpMessageType.cs" />
+    <Compile Include="Enums\WarpMode.cs" />
+    <Compile Include="Message\Base\CompressionHelper.cs" />
+    <Compile Include="Message\Client\AdminCliMsg.cs" />
+    <Compile Include="Message\Client\ChatCliMsg.cs" />
+    <Compile Include="Message\Client\CraftLibraryCliMsg.cs" />
+    <Compile Include="Message\Client\FlagCliMsg.cs" />
+    <Compile Include="Message\Client\HandshakeCliMsg.cs" />
+    <Compile Include="Message\Client\LockCliMsg.cs" />
+    <Compile Include="Message\Client\ModCliMsg.cs" />
+    <Compile Include="Message\Client\SettingsCliMsg.cs" />
+    <Compile Include="Message\Client\WarpCliMsg.cs" />
+    <Compile Include="Message\Data\Admin\AdminListRequestMsgData.cs" />
+    <Compile Include="Message\Data\Chat\ChatListRequestMsgData.cs" />
+    <Compile Include="Message\Data\Handshake\HandshakeBaseMsgData.cs" />
+    <Compile Include="Message\Data\Handshake\HandshakeRequestMsgData.cs" />
+    <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
+    <Compile Include="Message\Data\ModMsgData.cs" />
+    <Compile Include="Message\Data\Motd\MotdRequestMsgData.cs" />
+    <Compile Include="Message\Client\MotdCliMsg.cs" />
+    <Compile Include="Message\Client\SyncTimeCliMsg.cs" />
+    <Compile Include="Message\Client\VesselCliMsg.cs" />
+    <Compile Include="Message\Client\PlayerColorCliMsg.cs" />
+    <Compile Include="Message\Client\PlayerStatusCliMsg.cs" />
+    <Compile Include="Message\Client\KerbalCliMsg.cs" />
+    <Compile Include="Message\Client\ScenarioCliMsg.cs" />
+    <Compile Include="Message\Data\Admin\AdminAddMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminRemoveMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminListReplyMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminBaseMsgData.cs" />
+    <Compile Include="Message\Data\Kerbal\KerbalProtoMsgData.cs" />
+    <Compile Include="Message\Data\Kerbal\KerbalsRequestMsgData.cs" />
+    <Compile Include="Message\Data\Handshake\HandshakeResponseMsgData.cs" />
+    <Compile Include="Message\Data\SyncTime\SyncTimeRequestMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselListRequestMsgData.cs" />
+    <Compile Include="Message\Data\Color\PlayerColorRequestMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryListRequestMsgData.cs" />
+    <Compile Include="Message\Data\Lock\LockListRequestMsgData.cs" />
+    <Compile Include="Message\Data\PlayerStatus\PlayerStatusBaseMsgData.cs" />
+    <Compile Include="Message\Data\PlayerStatus\PlayerStatusReplyMsgData.cs" />
+    <Compile Include="Message\Data\PlayerStatus\PlayerStatusRequestMsgData.cs" />
+    <Compile Include="Message\Data\PlayerStatus\PlayerStatusSetMsgData.cs" />
+    <Compile Include="Message\Data\Scenario\ScenarioBaseMsgData.cs" />
+    <Compile Include="Message\Data\Scenario\ScenarioDataMsgData.cs" />
+    <Compile Include="Message\Data\Scenario\ScenarioRequestMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselsReplyMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselRemoveMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselsRequestMsgData.cs" />
+    <Compile Include="Message\Data\Color\PlayerColorReplyMsgData.cs" />
+    <Compile Include="Message\Data\Color\PlayerColorSetMsgData.cs" />
+    <Compile Include="Message\Data\Color\PlayerColorBaseMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryAddMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryDeleteMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryRequestMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryRespondMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryUploadMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryListReplyMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftListInfo.cs" />
+    <Compile Include="Message\Data\Flag\FlagDeleteMsgData.cs" />
+    <Compile Include="Message\Data\Flag\FlagUploadMsgData.cs" />
+    <Compile Include="Message\Data\Flag\FlagDataMsgData.cs" />
+    <Compile Include="Message\Data\Flag\FlagListMsgData.cs" />
+    <Compile Include="Message\Data\Flag\FlagBaseMsgData.cs" />
+    <Compile Include="Message\Data\Lock\LockAcquireMsgData.cs" />
+    <Compile Include="Message\Data\Lock\LockBaseMsgData.cs" />
+    <Compile Include="Message\Data\Lock\LockListReplyMsgData.cs" />
+    <Compile Include="Message\Data\Lock\LockReleaseMsgData.cs" />
+    <Compile Include="Message\Data\Motd\MotdReplyMsgData.cs" />
+    <Compile Include="Message\Data\SyncTime\SyncTimeReplyMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryBaseMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselUpdateMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselProtoMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselListReplyMsgData.cs" />
+    <Compile Include="Message\Data\PlayerConnection\PlayerConnectionLeaveMsgData.cs" />
+    <Compile Include="Message\Data\Kerbal\KerbalReplyMsgData.cs" />
+    <Compile Include="Message\Data\PlayerConnection\PlayerConnectionJoinMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselBaseMsgData.cs" />
+    <Compile Include="Message\Data\Warp\WarpBaseMsgData.cs" />
+    <Compile Include="Message\Data\Warp\WarpSubspacesReplyMsgData.cs" />
+    <Compile Include="Message\Data\Warp\WarpSubspacesRequestMsgData.cs" />
+    <Compile Include="Message\Data\Warp\WarpNewSubspaceMsgData.cs" />
+    <Compile Include="Message\Data\Warp\WarpChangeSubspaceMsgData.cs" />
+    <Compile Include="Message\Interface\IClientMessageBase.cs" />
+    <Compile Include="Message\Interface\IServerMessageBase.cs" />
+    <Compile Include="Message\Interface\IMessageData.cs" />
+    <Compile Include="Message\Interface\IMessageBase.cs" />
+    <Compile Include="Message\Base\MessageConstants.cs" />
+    <Compile Include="Message\Serialization\BaseSerializer.cs" />
+    <Compile Include="Message\Serialization\CustomTypes\CustomTypeDeserializers.cs" />
+    <Compile Include="Message\Serialization\DataDeserializer.cs" />
+    <Compile Include="Message\Serialization\DataSerializer.cs" />
+    <Compile Include="Message\Base\MessageBase.cs" />
+    <Compile Include="Message\Base\MessageData.cs" />
+    <Compile Include="Message\Client\Base\CliMsgBase.cs" />
+    <Compile Include="Message\ClientMessageFactory.cs" />
+    <Compile Include="Message\Base\FactoryBase.cs" />
+    <Compile Include="Message\Serialization\EnumerableTypes\EnumerableTypeDeserializers.cs" />
+    <Compile Include="Message\Serialization\EnumerableTypes\EnumerableTypeSerializers.cs" />
+    <Compile Include="Message\Serialization\SimpleTypes\SimpleTypeDeserializers.cs" />
+    <Compile Include="Message\Serialization\CustomTypes\CustomTypeSerializers.cs" />
+    <Compile Include="Message\Serialization\SimpleTypes\SimpleTypeSerializers.cs" />
+    <Compile Include="Message\Server\LockSrvMsg.cs" />
+    <Compile Include="Message\Server\AdminSrvMsg.cs" />
+    <Compile Include="Message\Server\ModSrvMsg.cs" />
+    <Compile Include="Message\Server\WarpSrvMsg.cs" />
+    <Compile Include="Message\Server\MotdSrvMsg.cs" />
+    <Compile Include="Message\Server\SyncTimeSrvMsg.cs" />
+    <Compile Include="Message\Server\FlagSrvMsg.cs" />
+    <Compile Include="Message\Server\CraftLibrarySrvMsg.cs" />
+    <Compile Include="Message\Server\VesselSrvMsg.cs" />
+    <Compile Include="Message\Server\PlayerConnectionSrvMsg.cs" />
+    <Compile Include="Message\Server\ScenarioSrvMsg.cs" />
+    <Compile Include="Message\Server\PlayerColorSrvMsg.cs" />
+    <Compile Include="Message\Server\PlayerStatusSrvMsg.cs" />
+    <Compile Include="Message\Server\ChatSrvMsg.cs" />
+    <Compile Include="Message\Data\Chat\ChatLeaveMsgData.cs" />
+    <Compile Include="Message\Data\Chat\ChatJoinMsgData.cs" />
+    <Compile Include="Message\Data\Chat\ChatConsoleMsgData.cs" />
+    <Compile Include="Message\Data\Chat\ChatChannelMsgData.cs" />
+    <Compile Include="Message\Data\Chat\ChatPrivateMsgData.cs" />
+    <Compile Include="Message\Data\Chat\ChatListMsgData.cs" />
+    <Compile Include="Message\Data\Chat\ChatBaseMsgData.cs" />
+    <Compile Include="Message\Data\Settings\SetingsReplyMsgData.cs" />
+    <Compile Include="Message\Data\Handshake\HandshakeReplyMsgData.cs" />
+    <Compile Include="Message\Data\Handshake\HandshakeChallengeMsgData.cs" />
+    <Compile Include="Message\Server\KerbalSrvMsg.cs" />
+    <Compile Include="Message\Server\SetingsSrvMsg.cs" />
+    <Compile Include="Message\Server\Base\SrvMsgBase.cs" />
+    <Compile Include="Message\ServerMessageFactory.cs" />
+    <Compile Include="Message\Server\HandshakeSrvMsg.cs" />
+    <Compile Include="PlayerStatus.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="VersionInfo.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\"
+mkdir "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
+if /I "$(ConfigurationName)" == "Debug" "$(SolutionDir)\ExternalLibraries\pdb2mdb\pdb2mdb.exe" "$(TargetFileName)"
+if /I "$(ConfigurationName)" == "Debug" xcopy /Y "$(TargetPath)" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
+if /I "$(ConfigurationName)" == "Release" xcopy /Y "$(TargetPath)" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
+if /I "$(ConfigurationName)" == "Debug" xcopy /Y "$(TargetDir)$(TargetName).pdb" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
+if /I "$(ConfigurationName)" == "Debug" xcopy /Y "$(TargetDir)$(TargetName).dll.mdb" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

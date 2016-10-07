@@ -1,0 +1,30 @@
+DarkMultiPlayer uses a basic NTP clock algorithm as per http://en.wikipedia.org/wiki/Network_Time_Protocol#Clock_synchronization_algorithm.
+
+===The client knows the exact server time by doing this===
+1) During connection, sends a SYNC_TIME message which contains their current UTC time.
+2) The server appends the server receive time and server send time to the message and sends it back
+3) The client receives a message and has all 4 variables it needs to use the clock sync algorithm.
+
+The client also sends periodic SYNC_TIME messages to make sure everything stays synced.
+
+===The subspaces are locked by this===
+The server sends a WARP_CONTROL NEW_SUBSPACE/RELOCK_SUBSPACE message, which contains:
+1) The system clock of the subspace epoch (long)
+2) The reference planetarium time (double)
+3) The subspace rate (float).
+
+The client keeps its planetarium time in sync by doing this:
+1) Calculates what the time is supposed to be: subspace_planetarium_epoch + (((current_system_clock) + server_clock_offset) - subspace_server_clock_epoch) * subspace_rate)
+Simply put, this is: subspace_planetarium_epoch + (time_since_subspace_epoch * subspace rate)
+2) Calculates the planetarium error: planetarium_time - subspace_planetarium_time
+3) Dynamically sets the warp rate to 2^(-currenterror), with a min limit at 0.3x and a max limit at 1.5x.
+eg:
+3s ahead will give you a clock speed of 0.3x (due to the min limit).
+100ms ahead will give you a clock speed of 0.933x
+500ms ahead will give you a clock speed of 0.707x
+500ms behind will give you a clock speed of 1.414x
+3s behind will give you a clock speed of 1.5x (due to the max limit).
+
+==The server changes the subspace rate like this==
+The clients periodically send how fast they think they can run (subspace rate / skew rate) in order to keep it in sync.
+The server then sets the subspace rate to the slowest requested rate.

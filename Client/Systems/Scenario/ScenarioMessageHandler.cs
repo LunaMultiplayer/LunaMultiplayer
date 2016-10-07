@@ -1,0 +1,45 @@
+﻿using System;
+using System.Collections.Concurrent;
+using LunaClient.Base;
+using LunaClient.Base.Interface;
+using LunaClient.Utilities;
+using LunaCommon.Enums;
+using LunaCommon.Message.Data.Scenario;
+using LunaCommon.Message.Interface;
+using LunaCommon.Message.Types;
+
+namespace LunaClient.Systems.Scenario
+{
+    public class ScenarioMessageHandler : SubSystem<ScenarioSystem>, IMessageHandler
+    {
+        public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
+
+        public void HandleMessage(IMessageData messageData)
+        {
+            var msgData = messageData as ScenarioBaseMsgData;
+            if (msgData?.ScenarioMessageType == ScenarioMessageType.DATA)
+            {
+                var data = ((ScenarioDataMsgData)messageData).ScenarioNameData;
+                foreach (var scenario in data)
+                {
+                    var scenarioNode = ConfigNodeSerializer.Singleton.Deserialize(scenario.Value);
+                    if (scenarioNode != null)
+                    {
+                        var entry = new ScenarioEntry
+                        {
+                            ScenarioName = scenario.Key,
+                            ScenarioNode = scenarioNode
+                        };
+                        System.ScenarioQueue.Enqueue(entry);
+                    }
+                    else
+                    {
+                        LunaLog.Debug($"Scenario data has been lost for {scenario.Key}");
+                        ScreenMessages.PostScreenMessage($"Scenario data has been lost for {scenario.Key}", 5f, ScreenMessageStyle.UPPER_CENTER);
+                    }
+                }
+                MainSystem.Singleton.NetworkState = ClientState.SCNEARIOS_SYNCED;
+            }
+        }
+    }
+}

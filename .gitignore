@@ -1,0 +1,13 @@
+*.orig
+*.dll
+*.userprefs
+ServerTester/bin/*
+ServerTester/obj/*
+Common/bin/*
+Common/obj/*
+Client/bin/*
+Client/obj/*
+Server/bin/*
+Server/obj/*
+*.suo
+*.csproj.user

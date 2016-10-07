@@ -1,0 +1,163 @@
+This heavily depends on my MessageWriter/Reader serialiser: https://github.com/godarklight/BinarySerialiser
+
+All TCP messages include an int (4 byte) header for type, and an int (4 byte) for length, written by MessageWriter.
+All DMP messages are built without a MessageWriter header, it gets added during the send.
+
+===Shared format===
+HEARTBEAT: null - Just sends some data over the wire to keep the connection alive.
+
+CHAT_MESSAGE:
+int - chat message type (CHANNEL/PRIVATE)
+string - senders name
+string - CHANNEL: Channel, PRIVATE: PM player
+string - message.
+
+PLAYER_STATUS:
+string - player name
+string - vessel name
+string - status text
+
+CONNECTION_END:
+string - disconnect reason
+
+VESSEL_UPDATE: This message can have 2 formats, but start off the same. The server only relays this message.
+int - subspace id
+double - planetarium clock.
+string - Vessel GUID.
+string - Vessel reference body name.
+//float[4] - Rotation Quat. - Replaced with KMP's method
+float[3] - vesselForward vector
+float[3] - vesselUp vector
+float[3] - Angular velocity.
+byte[] - Serialised vessel flightState.
+bool[5] - Actiongroup controls (gear,lights,brakes,sas,rcs)
+bool - is Surface update.
+(surface type)
+double[3] - Surface position (lat,long,alt)
+double[3] - Surface velocity vector.
+(orbital type)
+double[7] - Orbital parameters, matches the order of the Orbit constructor.
+double[3] - Position delta between orbital parameters and actual position
+
+VESSEL_REMOVE:
+int subspace
+double planetarium clock
+string vesselID
+
+WARP_CONTROL: The warping system works by relaying messages through the server. The message has an int,string header, but contains different data depending on the warp message type.
+int - Warp message type
+string - Player name
+--REQUEST_VOTE type (using in MCW_VOTE)--
+null - Asks the other clients for a vote.
+--REPLY_VOTE (used in MCW_VOTE)--
+bool - reply to a vote.
+--SET_CONTROLLER--
+string - Sets the warp master
+--CHANGE_WARP (used in MCW_LOWEST and MCW_VOTE)--
+bool - physical warp (false if normal warp set).
+int - rate index.
+--REPORT_RATE (used in all types)--
+float - how fast we have to skew our clock to stay in sync. subspace master can slow down the subspace if people are lagging.
+--NEW_SUBSPACE (used in SUBSPACE)--
+long - subspace epoch (server clock)
+double - subspace epoch (planetarium time)
+
+WARP_CONTROL: This message has different formats, they all start with the same warp header:
+int - Warp message type
+string - Player name
+--REQUEST_VOTE (used in MCW_VOTE)--
+string - Player name. Asks the client if they can warp.
+--REPLY_VOTE (used in MCW_VOTE)--
+string - Player name. Asks the client if they can warp.
+bool - Give the player warp control.
+--SET_CONTROLLER--
+string - New warp master.
+--CHANGE_WARP (used in MCW_FORCE, MCW_VOTE, MCW_LOWEST)--
+bool - physical warp.
+int - rate index.
+--NEW_SUBSPACE (used in SUBSPACE)--
+int - subspace ID.
+long - subspace epoch (server clock).
+double - subspace epoch (planetarium time).
+float - subspace rate.
+(NOT IMPLEMENTED) --CHANGE_SUBSPACE (used in SUBSPACE)--
+int - subspace ID.
+
+
+SPLIT_MESSAGE: This message comes in 2 formats, it's state tracked on the server and clients. When we fill the buffer, we de-encapsulate it and handle it as another message type.
+--New split message--
+int - full message length, byte[] - First chunk.
+--Continuing split message--
+byte[] - Next chunk.
+
+===Client only===
+HANDSHAKE_REQUEST:
+int - Protocol version
+string - Player name
+string - Guid (player token).
+
+KERBALS_REQUEST: null. Makes the server send all the kerbals to the client.
+
+KERBAL_PROTO:
+int - subspace id
+double - planetarium clock
+int - kerbal id
+string - kerbal ConfigNode data.
+
+VESSELS_REQUEST: null. Makes the server send all the vessels to the client.
+
+VESSEL_PROTO:
+int subspace
+double - planetarium clock
+string - Vessel GUID
+string - Vessel ConfigNode data.
+
+SEND_ACTIVE_VESSEL:
+string - player name
+string - active vessel GUID.
+
+SYNC_TIME_REQUEST: long - Client send time (1/4 parts of a valid NTP message)
+
+PING_REQUEST: long - Client send time
+
+===Server only===
+HANDSHAKE_REPLY: int - Handshake status
+0 - Success
+1 - Protocol mismatch
+2 - Player already connected
+3 - Token mismatch
+99 - Malformed message
+
+KERBAL_REPLY:
+int - subspace id
+double - planetarium clock
+string - kerbal ConfigNode data.
+
+KERBAL_COMPLETE: null - Signal to the client that there are no more kerbals to send so it can continue connecting
+
+VESSEL_PROTO:
+int - subspace id
+double - planetarium clock
+string - vessel ConfigNode data.
+
+VESSEL_COMPLETE: null - Signal to the client that there are no more vessels to send so it can continue connecting
+
+SET_ACTIVE_VESSEL:
+string - playername
+string - active vessel GUID. Client's SEND_ACTIVE_VESSEL messages are relayed under this type.
+
+TIME_LOCK_REPLY:
+long - subspace epoch (server clock)
+double - subspace epoch (planetarium time)
+float - subspace rate.
+
+SYNC_TIME_REPLY: 
+long - server client time
+long - server receive time
+long - server send time (3/4 parts of a valid NTP message).
+
+PING_REPLY:
+long - client send time
+long server send time.
+
+TODO: Actually write documentation on how my message writer works. The code is here anyway, this is how I built the MessageWriter.dll file: https://github.com/godarklight/BinarySerialiser
