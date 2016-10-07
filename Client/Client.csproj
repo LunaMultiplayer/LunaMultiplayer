@@ -190,7 +190,7 @@
     <Compile Include="Systems\KerbalReassigner\KerbalReassignerSystem.cs" />
     <Compile Include="Systems\Lock\LockSystem.cs" />
     <Compile Include="Utilities\Log.cs" />
-    <Compile Include="Main.cs" />
+    <Compile Include="Client.cs" />
     <Compile Include="Systems\Mod\ModWorker.cs" />
     <Compile Include="Utilities\BlockingQueue.cs" />
     <Compile Include="Systems\Network\NetworkReceiver.cs" />
@@ -205,7 +205,7 @@
     <Compile Include="Systems\SettingsSys\SettingsSystem.cs" />
     <Compile Include="Systems\TimeSyncer\TimeSyncerSystem.cs" />
     <Compile Include="Systems\Toolbar\ToolbarSystem.cs" />
-    <Compile Include="ToolbarWrapper.cs" />
+    <Compile Include="Systems\Toolbar\ToolbarWrapper.cs" />
     <Compile Include="Utilities\UniverseConverter.cs" />
     <Compile Include="Windows\UniverseConverter\UniverseConverterDrawer.cs" />
     <Compile Include="Windows\UniverseConverter\UniverseConverterWindow.cs" />

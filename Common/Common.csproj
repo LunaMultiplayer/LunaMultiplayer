@@ -57,7 +57,6 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommandDefinition.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalBaseMsgData.cs" />
     <Compile Include="Message\Data\Motd\MotdBaseMsgData.cs" />

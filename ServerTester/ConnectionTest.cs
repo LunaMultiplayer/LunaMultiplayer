@@ -110,7 +110,7 @@ namespace ServerTester
                     }
                     else
                     {
-                        MainSystem.Delay(Common.SENDRECEIVE_INTERVAL);
+                        MainSystem.Delay(20);
                     }
                 }
             }

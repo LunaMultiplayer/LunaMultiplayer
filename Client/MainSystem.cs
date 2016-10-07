@@ -42,8 +42,7 @@ namespace LunaClient
         public string Status { get; set; }
         public const int WindowOffset = 1664147604;
 
-        private string AssemblyPath { get; } =
-            new DirectoryInfo(Assembly.GetExecutingAssembly().Location ?? "").FullName;
+        private string AssemblyPath { get; } = new DirectoryInfo(Assembly.GetExecutingAssembly().Location ?? "").FullName;
 
         private string KspPath { get; } = new DirectoryInfo(KSPUtil.ApplicationRootPath).FullName;
         public bool ShowGui { get; set; } = true;
@@ -57,11 +56,8 @@ namespace LunaClient
         private float LastDisconnectMessageCheck { get; set; }
         public bool DisplayDisconnectMessage { get; set; }
         private ScreenMessage DisconnectMessage { get; set; }
-
         public override bool Enabled { get; set; } = true;
-
-
-
+        
         //Hack gravity fix.
         private Dictionary<CelestialBody, double> BodiesGees { get; } = new Dictionary<CelestialBody, double>();
 

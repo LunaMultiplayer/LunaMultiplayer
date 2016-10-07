@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using LunaServer.Command.Command;
 using LunaServer.Context;
 using LunaServer.Log;
@@ -20,8 +19,6 @@ namespace LunaServer.Client
                 WarpSystem.Reset();
                 ChatSystem.Reset();
 
-                ServerContext.LidgrenServer.SetupLidgrenServer();
-
                 while (ServerContext.ServerRunning)
                 {
                     //Check timers
@@ -38,13 +35,14 @@ namespace LunaServer.Client
                 LunaLog.Error("Fatal error thrown, exception: " + e);
                 new ShutDownCommand().Execute("Crashed!");
             }
+
             try
             {
                 var disconnectTime = DateTime.UtcNow.Ticks;
                 var sendingMessages = true;
                 while (sendingMessages)
                 {
-                    if (DateTime.UtcNow.Ticks - disconnectTime > 50000000)
+                    if (DateTime.UtcNow.Ticks - disconnectTime > TimeSpan.FromSeconds(5).Ticks)
                     {
                         LunaLog.Debug($"Shutting down with {ServerContext.PlayerCount} Players, " +
                                       $"{ServerContext.Clients.Count} connected Clients");

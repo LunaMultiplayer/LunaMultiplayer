@@ -18,7 +18,6 @@ namespace LunaServer.Lidgren
     {
         private static NetServer Server { get; set; }
         public static MessageReceiver ClientMessageReceiver { get; set; } = new MessageReceiver();
-        private static readonly object ServerLock = new object();
 
         public void SetupLidgrenServer()
         {
@@ -28,7 +27,6 @@ namespace LunaServer.Lidgren
 
                 Server = new NetServer(ServerContext.Config);
                 Server.Start();
-                Task.Run(() => StartReceiveingMessages());
             }
             catch (Exception e)
             {
@@ -38,7 +36,7 @@ namespace LunaServer.Lidgren
             ServerContext.ServerStarting = false;
         }
 
-        public static void StartReceiveingMessages()
+        public void StartReceiveingMessages()
         {
             try
             {

@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerTester", "ServerTeste
 		{F8BC0417-2D6C-4B57-BC87-787B10EF7950} = {F8BC0417-2D6C-4B57-BC87-787B10EF7950}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterServer", "MasterServer\MasterServer.csproj", "{A10FAAF2-B632-41DF-8907-9C00AEE31615}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,12 @@ Global
 		{9D4EA3B2-28B4-4506-B482-CE95618FC897}.DebugCompileOnly|Any CPU.Build.0 = DebugCompileOnly|Any CPU
 		{9D4EA3B2-28B4-4506-B482-CE95618FC897}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9D4EA3B2-28B4-4506-B482-CE95618FC897}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A10FAAF2-B632-41DF-8907-9C00AEE31615}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A10FAAF2-B632-41DF-8907-9C00AEE31615}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A10FAAF2-B632-41DF-8907-9C00AEE31615}.DebugCompileOnly|Any CPU.ActiveCfg = Debug|Any CPU
+		{A10FAAF2-B632-41DF-8907-9C00AEE31615}.DebugCompileOnly|Any CPU.Build.0 = Debug|Any CPU
+		{A10FAAF2-B632-41DF-8907-9C00AEE31615}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A10FAAF2-B632-41DF-8907-9C00AEE31615}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

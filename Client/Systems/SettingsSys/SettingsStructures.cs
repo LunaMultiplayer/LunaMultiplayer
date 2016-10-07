@@ -13,6 +13,7 @@ namespace LunaClient.Systems.SettingsSys
         public int CacheSize { get; set; } = 100;
         public int ConnectionTries { get; set; } = 3;
         public int InitialConnectionMsTimeout { get; set; } = 5000;
+        public int SendReceiveMsInterval { get; set; } = 20;
 
 #if DEBUG
         public int ConnectionMsTimeout { get; set; } = 120000;

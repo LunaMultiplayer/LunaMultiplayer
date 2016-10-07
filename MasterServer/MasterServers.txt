@@ -1,0 +1,2 @@
+﻿#Here you specify the ips or hostnames of all the master servers. Then each client will query them for the servers and each server will register against them
+#192.168.1.88:44332

@@ -6,13 +6,7 @@ using System.Text;
 namespace LunaCommon
 {
     public class Common
-    {        
-        //Timeouts in milliseconds
-
-        public const long HEART_BEAT_INTERVAL = 700;
-        public const long CONNECTION_TIMEOUT = 60000;
-        public const int SENDRECEIVE_INTERVAL = 50;
-
+    {
         public static string CalculateSha256Hash(string fileName)
         {
             return CalculateSha256Hash(File.ReadAllBytes(fileName));

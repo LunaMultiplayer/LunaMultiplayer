@@ -30,7 +30,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
-namespace LunaClient
+namespace LunaClient.Systems.Toolbar
 {
 /**********************************************************\
             *          --- DO NOT EDIT BELOW THIS COMMENT ---          *

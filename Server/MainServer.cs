@@ -9,6 +9,7 @@ using LunaServer.Client;
 using LunaServer.Command;
 using LunaServer.Command.Command;
 using LunaServer.Context;
+using LunaServer.Lidgren;
 using LunaServer.Log;
 using LunaServer.Plugin;
 using LunaServer.Server;
@@ -90,6 +91,10 @@ namespace LunaServer
                     
                     var commandThread = Task.Run(() => new CommandHandler().ThreadMain());
                     var clientThread = Task.Run(() => new ClientMainThread().ThreadMain());
+
+                    ServerContext.LidgrenServer.SetupLidgrenServer();
+                    Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
+
                     var vesselRelayFarThread = Task.Run(() => VesselUpdateRelay.RelayToFarPlayers());
                     var vesselRelayMediumThread = Task.Run(() => VesselUpdateRelay.RelayToMediumDistancePlayers());
                     var vesselRelayCloseThread = Task.Run(() => VesselUpdateRelay.RelayToClosePlayers());

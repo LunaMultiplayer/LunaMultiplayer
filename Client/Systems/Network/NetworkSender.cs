@@ -29,7 +29,7 @@ namespace LunaClient.Systems.Network
                     }
                     else
                     {
-                        MainSystem.Delay(Common.SENDRECEIVE_INTERVAL);
+                        MainSystem.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
                     }
                 }
             }
