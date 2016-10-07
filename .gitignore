@@ -1,6 +1,7 @@
 *.orig
 *.dll
 *.userprefs
+.vs/
 ServerTester/bin/*
 ServerTester/obj/*
 Common/bin/*
