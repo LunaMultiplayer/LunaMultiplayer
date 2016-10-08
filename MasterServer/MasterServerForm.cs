@@ -25,8 +25,9 @@ namespace MasterServer
         
         private void MasterServerForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            notifyIcon.Dispose();
             MasterServer.RunServer = false;
-            Thread.Sleep(5000);
+            Thread.Sleep(500);
         }
 
         private void MasterServerForm_Resize(object sender, EventArgs e)
@@ -39,13 +40,14 @@ namespace MasterServer
             }
             else if (WindowState == FormWindowState.Normal)
             {
-                notifyIcon.Visible = true;
+                notifyIcon.Visible = false;
             }
         }
 
         private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             Show();
+            WindowState = FormWindowState.Normal;
         }
 
         private void tbPort_KeyPress(object sender, KeyPressEventArgs e)

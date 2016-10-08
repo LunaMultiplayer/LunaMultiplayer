@@ -18,7 +18,7 @@ namespace LunaCommon
 
         public static string[] RetrieveWorkingMasterServersIps()
         {
-            List<IPEndPoint> parsedServers = new List<IPEndPoint>();
+            var parsedServers = new List<IPEndPoint>();
             using (var client = new WebClient())
             using (var stream = client.OpenRead(MasterServersListUrl))
             {
@@ -28,9 +28,10 @@ namespace LunaCommon
                 }
                 using (var reader = new StreamReader(stream))
                 {
-                    var servers = reader.ReadToEnd()
+                    var content = reader.ReadToEnd();
+                    var servers = content
                         .Trim()
-                        .Split(new[] {Environment.NewLine}, StringSplitOptions.RemoveEmptyEntries)
+                        .Split('\n')
                         .Where(s => !s.StartsWith("#") && s.Contains(":"))
                         .ToArray();
 

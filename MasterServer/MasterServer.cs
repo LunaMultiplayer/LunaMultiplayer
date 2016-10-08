@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Lidgren.Network;
 using LunaCommon;
@@ -52,7 +53,7 @@ namespace MasterServer
                         case NetIncomingMessageType.VerboseDebugMessage:
                         case NetIncomingMessageType.WarningMessage:
                         case NetIncomingMessageType.ErrorMessage:
-                            Form.WriteLine(msg.ReadString());
+                            Form.WriteLine("ERROR! :" + msg.ReadString());
                             break;
                         case NetIncomingMessageType.UnconnectedData:
 
@@ -72,21 +73,21 @@ namespace MasterServer
             var ownEndpoint = GetOwnIpAddress() + ":" + Port;
 
             Form.WriteLine(!servers.Contains(ownEndpoint)
-                ? $"CAUTION! This server is not listed in the master-servers URL ({MasterServerRetriever.MasterServersListShortUrl}) " +
-                  $"Clients/Servers will not see your master server"
+                ? "CAUTION! This server is not listed in the master-servers URL " +
+                  $"({MasterServerRetriever.MasterServersListShortUrl}) Clients/Servers will not see you"
                 : $"Own ip correctly listed in master-servers URL ({MasterServerRetriever.MasterServersListShortUrl})");
         }
 
         private static string GetOwnIpAddress()
         {
-            string currentIpAddress = "";
+            var currentIpAddress = "";
 
             if (string.IsNullOrEmpty(currentIpAddress))
                 currentIpAddress = TryGetIpAddress("http://ip.42.pl/raw");
             if (string.IsNullOrEmpty(currentIpAddress))
-                currentIpAddress = TryGetIpAddress("http://httpbin.org/ip");
-            if (string.IsNullOrEmpty(currentIpAddress))
                 currentIpAddress = TryGetIpAddress("https://api.ipify.org/");
+            if (string.IsNullOrEmpty(currentIpAddress))
+                currentIpAddress = TryGetIpAddress("http://httpbin.org/ip");
             if (string.IsNullOrEmpty(currentIpAddress))
                 currentIpAddress = TryGetIpAddress("http://checkip.dyndns.org");
 
@@ -101,9 +102,11 @@ namespace MasterServer
                 if (stream == null) return null;
                 using (var reader = new StreamReader(stream))
                 {
+                    var ipRegEx = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
+                    var result = ipRegEx.Matches(reader.ReadToEnd());
+
                     IPAddress ip;
-                    var content = reader.ReadToEnd();
-                    if (IPAddress.TryParse(content, out ip))
+                    if (IPAddress.TryParse(result[0].Value, out ip))
                         return ip.ToString();
                 }
             }

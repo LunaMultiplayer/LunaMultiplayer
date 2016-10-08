@@ -66,6 +66,7 @@
             this.serverList.ItemHeight = 16;
             this.serverList.Location = new System.Drawing.Point(12, 542);
             this.serverList.Name = "serverList";
+            this.serverList.ScrollAlwaysVisible = true;
             this.serverList.Size = new System.Drawing.Size(999, 132);
             this.serverList.TabIndex = 1;
             // 
@@ -81,7 +82,7 @@
             // lblPort
             // 
             this.lblPort.AutoSize = true;
-            this.lblPort.Location = new System.Drawing.Point(13, 30);
+            this.lblPort.Location = new System.Drawing.Point(13, 33);
             this.lblPort.Name = "lblPort";
             this.lblPort.Size = new System.Drawing.Size(71, 17);
             this.lblPort.TabIndex = 3;
