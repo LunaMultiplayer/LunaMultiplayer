@@ -18,8 +18,8 @@ namespace MasterServer
 {
     public class MasterServer
     {
-        public static int ServerMsTimeout { get; set; } = 30000;
-        public static int ServerRemoveMsCheckInterval { get; set; } = 15000;
+        public static int ServerMsTimeout { get; set; } = 15000;
+        public static int ServerRemoveMsCheckInterval { get; set; } = 5000;
         private static long LastServerExpireCheck { get; set; }
         public static ushort Port { get; set; }
         public static bool RunServer { get; set; }

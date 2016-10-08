@@ -79,7 +79,7 @@ namespace MasterServer
             serverList.Items.Clear();
             foreach (var server in servers)
             {
-                var srv = $"{server.ExternalEndpoint}|___|{server.Info.ServerName}|___|{server.Info.Description}";
+                var srv = $"{server.ExternalEndpoint}___{server.Info.ServerName}___{server.Info.Description}";
                 serverList.Items.Add(srv);
             }
         }
