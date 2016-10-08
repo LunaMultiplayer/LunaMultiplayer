@@ -1,8 +1,3 @@
-#Here you specify the ips or hostnames of all the master servers. Then each client will query them for the servers and each server will register against them
-#192.168.1.88:44332
-google.com
-google.com:8744
-google.com:87449999
-12225.699.44.55
-81.22.44.88:9999
-81.22.44.88:9999999
+#Here you specify the ips or hostnames of all the master servers. 
+#Then each client will query them for the servers and each server will register against them
+83.59.222.128:6005
