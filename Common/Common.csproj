@@ -58,16 +58,28 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
+    <Compile Include="MasterServerRetriever.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalBaseMsgData.cs" />
+    <Compile Include="Message\Data\MasterServer\MsBaseMsgData.cs" />
+    <Compile Include="Message\Data\MasterServer\MsIntroductionMsgData.cs" />
+    <Compile Include="Message\Data\MasterServer\MsRegisterServerMsgData.cs" />
+    <Compile Include="Message\Data\MasterServer\MsRequestServersMsgData.cs" />
+    <Compile Include="Message\Data\MasterServer\MsReplyServersMsgData.cs" />
     <Compile Include="Message\Data\Motd\MotdBaseMsgData.cs" />
     <Compile Include="Message\Data\PlayerConnection\PlayerConnectionBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\SyncTime\SyncTimeBaseMsgData.cs" />
+    <Compile Include="Message\Interface\IMasterServerMessageBase.cs" />
+    <Compile Include="Message\MasterServerMessageFactory.cs" />
+    <Compile Include="Message\MasterServer\Base\MstSrvMsgBase.cs" />
+    <Compile Include="Message\MasterServer\MainMstSrvMsg.cs" />
     <Compile Include="Message\Types\AdminMessageType.cs" />
     <Compile Include="Message\Types\ChatMessageType.cs" />
     <Compile Include="Enums\ClientState.cs" />
     <Compile Include="Enums\ClientMessageType.cs" />
     <Compile Include="Enums\ConnectionStatus.cs" />
+    <Compile Include="Enums\MasterServerMessageType.cs" />
+    <Compile Include="Message\Types\MasterServerMessageSubType.cs" />
     <Compile Include="Message\Types\MotdMessageType.cs" />
     <Compile Include="Message\Types\PlayerConnectionMessageType.cs" />
     <Compile Include="Message\Types\SyncTimeMessageType.cs" />
@@ -219,6 +231,7 @@
     <Compile Include="Message\Server\HandshakeSrvMsg.cs" />
     <Compile Include="PlayerStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerInfo.cs" />
     <Compile Include="VersionInfo.cs" />
   </ItemGroup>
   <ItemGroup />

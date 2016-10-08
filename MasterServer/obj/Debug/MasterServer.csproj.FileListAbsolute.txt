@@ -1,10 +1,13 @@
 C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\bin\Debug\MasterServer.exe.config
 C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\bin\Debug\MasterServer.exe
 C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\bin\Debug\MasterServer.pdb
+C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\obj\Debug\MasterServer.csprojResolveAssemblyReference.cache
+C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\obj\Debug\MasterServer.MasterServerForm.resources
+C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\obj\Debug\MasterServer.Properties.Resources.resources
+C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\obj\Debug\MasterServer.csproj.GenerateResource.Cache
+C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\obj\Debug\MasterServer.exe
+C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\obj\Debug\MasterServer.pdb
 C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\bin\Debug\Lidgren.Network.dll
 C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\bin\Debug\LunaCommon.dll
 C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\bin\Debug\FastMember.dll
 C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\bin\Debug\LunaCommon.pdb
-C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\obj\Debug\MasterServer.csprojResolveAssemblyReference.cache
-C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\obj\Debug\MasterServer.exe
-C:\Users\gavaz\Source\Repos\LunaMultiPlayer\MasterServer\obj\Debug\MasterServer.pdb
