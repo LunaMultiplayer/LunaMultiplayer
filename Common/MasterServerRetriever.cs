@@ -51,28 +51,13 @@ namespace LunaCommon
 
                         if (ip != null && ushort.TryParse(ipPort[1], out port))
                         {
-                            var endpoint = new IPEndPoint(ip, port);
-                            if (CheckServerHost(endpoint))
-                                parsedServers.Add(endpoint);
+                            parsedServers.Add(new IPEndPoint(ip, port));
                         }
                     }
                 }
             }
 
             return parsedServers.Select(s => s.Address.ToString() + ":" + s.Port).ToArray();
-        }
-
-        public static bool CheckServerHost(IPEndPoint endpoint)
-        {
-            try
-            {
-                var client = new UdpClient(endpoint);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
         }
     }
 }

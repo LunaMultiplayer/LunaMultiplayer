@@ -38,9 +38,10 @@ namespace MasterServer
             var peer = new NetPeer(config);
             peer.Start();
 
-            CheckMasterServerListed();
             Form.WriteLine("Master server started!");
             Task.Run(() => RemoveExpiredServers());
+
+            CheckMasterServerListed();
 
             while (RunServer)
             {
