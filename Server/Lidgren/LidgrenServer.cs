@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using LunaCommon.Enums;
@@ -11,6 +13,9 @@ using LunaServer.Server;
 using LunaServer.Settings;
 using LunaServer.System;
 using Lidgren.Network;
+using LunaCommon;
+using LunaCommon.Message.Data.MasterServer;
+using LunaCommon.Message.MasterServer;
 
 namespace LunaServer.Lidgren
 {
@@ -19,11 +24,17 @@ namespace LunaServer.Lidgren
         private static NetServer Server { get; set; }
         public static MessageReceiver ClientMessageReceiver { get; set; } = new MessageReceiver();
 
+        private int MasterServerRegistrationMsInterval
+            => GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval;
+
+        private long LastRegistrationTime { get; set; }
+
         public void SetupLidgrenServer()
         {
             try
             {
                 ServerContext.Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+                ServerContext.Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
 
                 Server = new NetServer(ServerContext.Config);
                 Server.Start();
@@ -62,7 +73,7 @@ namespace LunaServer.Lidgren
                                 LunaLog.Debug("Lidgren DEBUG: " + msg.MessageType + "-- " + msg.PeekString());
                                 break;
                             case NetIncomingMessageType.StatusChanged:
-                                switch ((NetConnectionStatus)msg.ReadByte())
+                                switch ((NetConnectionStatus) msg.ReadByte())
                                 {
                                     case NetConnectionStatus.Connected:
                                         var endpoint = msg.SenderConnection.RemoteEndPoint;
@@ -130,6 +141,65 @@ namespace LunaServer.Lidgren
         public void ShutdownLidgrenServer()
         {
             Server.Shutdown("Goodbye and thanks for all the fish");
+        }
+
+        public void RegisterWithMasterServer()
+        {
+            if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
+
+            IPAddress mask;
+            var adr = NetUtility.GetMyAddress(out mask);
+            var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
+
+            var masterServers = MasterServerRetriever.RetrieveWorkingMasterServersIps()
+                .Select(s => new IPEndPoint(IPAddress.Parse(s.Split(':')[0]), int.Parse(s.Split(':')[1])))
+                .ToArray();
+
+            LunaLog.Normal("Registering with master servers...");
+            while (ServerContext.ServerRunning)
+            {
+                if (DateTime.UtcNow.Ticks - LastRegistrationTime >
+                    TimeSpan.FromMilliseconds(MasterServerRegistrationMsInterval).Ticks)
+                {
+                    LastRegistrationTime = DateTime.UtcNow.Ticks;
+
+                    var msgData = new MsRegisterServerMsgData
+                    {
+                        Id = Server.UniqueIdentifier,
+                        Cheats = GeneralSettings.SettingsStore.Cheats,
+                        Description = GeneralSettings.SettingsStore.Description,
+                        DropControlOnExit = GeneralSettings.SettingsStore.Cheats,
+                        DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats,
+                        DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats,
+                        GameMode = (int) GeneralSettings.SettingsStore.GameMode,
+                        InternalEndpoint = endpoint.Address + ":" + endpoint.Port,
+                        MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers,
+                        ModControl = (int) GeneralSettings.SettingsStore.ModControl,
+                        PlayerCount = ServerContext.Clients.Count,
+                        ServerName = GeneralSettings.SettingsStore.ServerName,
+                        VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval,
+                        WarpMode = (int) GeneralSettings.SettingsStore.WarpMode
+                    };
+
+                    var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
+                    var msgBytes = ServerContext.MasterServerMessageFactory.Serialize(msg);
+                    
+                    foreach (var masterServer in masterServers)
+                    {
+                        try
+                        {
+                            var outMsg = Server.CreateMessage(msgBytes.Length);
+                            outMsg.Write(msgBytes);
+                            Server.SendUnconnectedMessage(outMsg, masterServer);
+                            Server.FlushSendQueue();
+                        }
+                        catch (Exception)
+                        {
+                            // ignored
+                        }
+                    }
+                }
+            }
         }
     }
 }

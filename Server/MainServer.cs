@@ -94,6 +94,7 @@ namespace LunaServer
 
                     ServerContext.LidgrenServer.SetupLidgrenServer();
                     Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
+                    Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
 
                     var vesselRelayFarThread = Task.Run(() => VesselUpdateRelay.RelayToFarPlayers());
                     var vesselRelayMediumThread = Task.Run(() => VesselUpdateRelay.RelayToMediumDistancePlayers());

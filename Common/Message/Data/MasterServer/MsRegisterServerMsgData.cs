@@ -10,14 +10,13 @@ namespace LunaCommon.Message.Data.MasterServer
         public long Id { get; set; }
         public string InternalEndpoint { get; set; }
         public bool Cheats { get; set; }
-        public string GameMode { get; set; }
+        public int GameMode { get; set; }
         public int MaxPlayers { get; set; }
         public int ModControl { get; set; }
         public int PlayerCount { get; set; }
-        public int Port { get; set; }
         public string ServerName { get; set; }
         public string Description { get; set; }
-        public string WarpMode { get; set; }
+        public int WarpMode { get; set; }
         public int VesselUpdatesSendMsInterval { get; set; }
         public bool DropControlOnVesselSwitching { get; set; }
         public bool DropControlOnExitFlight { get; set; }

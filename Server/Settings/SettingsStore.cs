@@ -6,6 +6,12 @@ namespace LunaServer.Settings
 {
     public class SettingsStore
     {
+        [Description("Set to false if you don't want to appear on the server list. LAN networks for example")]
+        public bool RegisterWithMasterServer = true;
+
+        [Description("Specify in miliseconds how often we will register with masterserver.")]
+        public int MasterServerRegistrationMsInterval = 10000;
+
         [Description("Specify in minutes how often /dekessler automatically runs. 0 = Disabled")]
         public int AutoDekessler = 30;
 
@@ -58,6 +64,9 @@ namespace LunaServer.Settings
 
         [Description("Name of the server.")]
         public string ServerName = "Luna Server";
+
+        [Description("Description of the server.")]
+        public string Description = "Luna Server Description";
 
         [Description("Use UTC instead of system time in the log.")]
         public bool UseUtcTimeInLog = false;

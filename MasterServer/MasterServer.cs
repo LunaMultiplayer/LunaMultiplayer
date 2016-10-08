@@ -29,6 +29,7 @@ namespace MasterServer
 
         public static void Start(MasterServerForm form)
         {
+            RunServer = true;
             Form = form;
 
             var config = new NetPeerConfiguration("masterserver");
@@ -181,7 +182,7 @@ namespace MasterServer
             if (!ServerDictionary.ContainsKey(msgData.Id))
             {
                 ServerDictionary.TryAdd(msgData.Id, new Server(msgData, netMsg.SenderEndPoint));
-                Form.UpdateServerList(ServerDictionary.Values.Select(s => s.Info.ServerName));
+                Form.UpdateServerList(ServerDictionary.Values.Select(s => s.ExternalEndpoint.Address.ToString() + "-" + s.Info.ServerName));
             }
             else
             {
