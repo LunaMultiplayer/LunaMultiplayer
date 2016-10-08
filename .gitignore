@@ -8,6 +8,8 @@ Common/bin/*
 Common/obj/*
 Client/bin/*
 Client/obj/*
+MasterServer/bin/*
+MasterServer/obj/*
 Server/bin/*
 Server/obj/*
 *.suo
