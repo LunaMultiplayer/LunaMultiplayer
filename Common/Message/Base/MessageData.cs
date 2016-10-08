@@ -12,7 +12,7 @@ namespace LunaCommon.Message.Base
         /// <summary>
         ///     Returns the current version number
         /// </summary>
-        public string Version => VersionInfo.VersionNumber;
+        public virtual string Version => VersionInfo.VersionNumber;
 
         /// <summary>
         /// Receive time timestamp, useful for interpolation.

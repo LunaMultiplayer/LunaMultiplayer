@@ -69,17 +69,18 @@ namespace MasterServer
             Task.Run(()=> MasterServer.Start(this));
         }
         
-        public void UpdateServerList(IEnumerable<string> servers)
+        public void UpdateServerList(IEnumerable<Server> servers)
         {
             if (InvokeRequired)
             {
-                Invoke(new Action<IEnumerable<string>>(UpdateServerList), servers);
+                Invoke(new Action<IEnumerable<Server>>(UpdateServerList), servers);
                 return;
             }
             serverList.Items.Clear();
             foreach (var server in servers)
             {
-                serverList.Items.Add(server);
+                var srv = $"{server.ExternalEndpoint}|___|{server.Info.ServerName}|___|{server.Info.Description}";
+                serverList.Items.Add(srv);
             }
         }
     }
