@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base.Interface;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.Options;
+using LunaClient.Windows.ServerList;
 using LunaCommon.Enums;
 using UnityEngine;
 
@@ -57,6 +58,8 @@ namespace LunaClient.Windows.Connection
                     RemoveEventHandled = false;
             GUI.enabled = true;
             OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, "Options", ButtonStyle);
+            if (GUILayout.Button("Servers", ButtonStyle))
+                ServerListWindow.Singleton.Display = true;
             GUILayout.EndHorizontal();
             if (AddingServerSafe)
             {

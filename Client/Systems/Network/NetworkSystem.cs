@@ -26,11 +26,12 @@ namespace LunaClient.Systems.Network
 {
     public partial class NetworkSystem : System<NetworkSystem>
     {
-        private NetClient ClientConnection { get; set; }
+        private NetClient ClientConnection { get; } = new NetClient(Config);
         public double PingMs { get; set; }
         private long LastReceiveTime { get; set; }
         public long LastSendTime { get; set; }
         private static ServerMessageFactory ServerMessageFactory { get; } = new ServerMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
+        private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
 
         #region Statics
 

@@ -14,9 +14,9 @@ namespace LunaCommon
     public static class MasterServerRetriever
     {
         public static string MasterServersListShortUrl => "https://goo.gl/NJqZbc";
-        public static string MasterServersListUrl => "http://raw.githubusercontent.com/DaggerES/LunaMultiPlayer/master/MasterServersList";
+        public static string MasterServersListUrl => "https://raw.githubusercontent.com/DaggerES/LunaMultiPlayer/master/MasterServersList";
 
-        public static string[] RetrieveWorkingMasterServersIps()
+        public static string[] RetrieveWorkingMasterServersEndpoints()
         {
             var parsedServers = new List<IPEndPoint>();
             using (var client = new WebClient())

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -7,6 +8,16 @@ namespace LunaCommon
 {
     public class Common
     {
+        public static IPEndPoint CreateEndpointFromString(string endpoint)
+        {
+            return new IPEndPoint(IPAddress.Parse(endpoint.Split(':')[0]), int.Parse(endpoint.Split(':')[1]) );
+        }
+        
+        public static string StringFromEndpoint(IPEndPoint endpoint)
+        {
+            return $"{endpoint.Address}:{endpoint.Port}";
+        }
+
         public static string CalculateSha256Hash(string fileName)
         {
             return CalculateSha256Hash(File.ReadAllBytes(fileName));

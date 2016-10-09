@@ -33,7 +33,7 @@ namespace MasterServer
             Form = form;
 
             var config = new NetPeerConfiguration("masterserver");
-            config.SetMessageTypeEnabled(NetIncomingMessageType.UnconnectedData, true);
+            config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
             config.Port = Port;
 
             var peer = new NetPeer(config);
@@ -71,7 +71,7 @@ namespace MasterServer
 
         private static void CheckMasterServerListed()
         {
-            var servers = MasterServerRetriever.RetrieveWorkingMasterServersIps();
+            var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
             var ownEndpoint = GetOwnIpAddress() + ":" + Port;
 
             Form.WriteLine(!servers.Contains(ownEndpoint)
@@ -133,7 +133,7 @@ namespace MasterServer
                         peer.Introduce(
                             server.InternalEndpoint,
                             server.ExternalEndpoint,
-                            netMsg.ReadIPEndPoint(),// client internal
+                            Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
                             netMsg.SenderEndPoint,// client external
                             msgData.Token); // request token
                     }

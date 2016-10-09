@@ -7,6 +7,7 @@ using LunaClient.Windows.Debug;
 using LunaClient.Windows.Disclaimer;
 using LunaClient.Windows.Mod;
 using LunaClient.Windows.Options;
+using LunaClient.Windows.ServerList;
 using LunaClient.Windows.Status;
 using LunaClient.Windows.UniverseConverter;
 
@@ -25,6 +26,7 @@ namespace LunaClient.Windows
             TryUpdate(ModWindow.Singleton);
             TryUpdate(OptionsWindow.Singleton);
             TryUpdate(UniverseConverterWindow.Singleton);
+            TryUpdate(ServerListWindow.Singleton);
         }
 
         public static void Reset()
@@ -38,6 +40,7 @@ namespace LunaClient.Windows
             OnReset(ModWindow.Singleton);
             OnReset(OptionsWindow.Singleton);
             OnReset(UniverseConverterWindow.Singleton);
+            OnReset(ServerListWindow.Singleton);
         }
 
         public static void OnGui()
@@ -51,6 +54,7 @@ namespace LunaClient.Windows
             TryOnGui(ModWindow.Singleton);
             TryOnGui(OptionsWindow.Singleton);
             TryOnGui(UniverseConverterWindow.Singleton);
+            TryOnGui(ServerListWindow.Singleton);
         }
 
         private static void TryUpdate(IWindow window)

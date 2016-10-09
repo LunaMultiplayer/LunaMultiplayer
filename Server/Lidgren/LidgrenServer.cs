@@ -151,8 +151,8 @@ namespace LunaServer.Lidgren
             var adr = NetUtility.GetMyAddress(out mask);
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
 
-            var masterServers = MasterServerRetriever.RetrieveWorkingMasterServersIps()
-                .Select(s => new IPEndPoint(IPAddress.Parse(s.Split(':')[0]), int.Parse(s.Split(':')[1])))
+            var masterServers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
+                .Select(Common.CreateEndpointFromString)
                 .ToArray();
 
             LunaLog.Normal("Registering with master servers...");

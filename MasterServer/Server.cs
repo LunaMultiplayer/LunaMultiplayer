@@ -14,8 +14,7 @@ namespace MasterServer
 
         public Server(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
-            var endpoint = msg.InternalEndpoint.Split(':');
-            InternalEndpoint = new IPEndPoint(IPAddress.Parse(endpoint[0]), int.Parse(endpoint[1]));
+            InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);
             ExternalEndpoint = externalEndpoint;
             LastRegisterTime = DateTime.UtcNow.Ticks;
             Info = new ServerInfo

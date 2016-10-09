@@ -27,7 +27,6 @@ namespace LunaClient.Systems.Network
         public void KillThreads()
         {
             ClientConnection?.Shutdown("Disconnected!");
-            ClientConnection = null;
 
             if (ConnectThread?.IsAlive ?? false)
                 ConnectThread.Abort();
@@ -42,7 +41,7 @@ namespace LunaClient.Systems.Network
                 TimeSyncerSystem.Singleton.SyncSenderThread?.Abort();
         }
 
-        private NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
+        private static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
         {
             AutoFlushSendQueue = false,
             SuppressUnreliableUnorderedAcks = true, //We don't need ack for unreliable unordered!
@@ -146,12 +145,12 @@ namespace LunaClient.Systems.Network
         {
             var destination = (IPEndPoint)destinationObject;
 
-            if (ClientConnection != null && ClientConnection.ConnectionStatus != NetConnectionStatus.Disconnected)
+            if (ClientConnection.ConnectionStatus != NetConnectionStatus.Disconnected)
                 ClientConnection.Disconnect("Quit");
 
-            ClientConnection = new NetClient(Config);
             ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
-            ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+            ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+            ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.UnconnectedData);
             ClientConnection.Start();
 
             try

@@ -213,6 +213,7 @@ namespace LunaClient
             //Options window: 6711
             //Converter window: 6712
             //Disclaimer window: 6713
+            //Servers window: 6714
 
             var startClock = Profiler.LmpReferenceTime.ElapsedTicks;
 

@@ -19,13 +19,11 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
-using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Lidgren.Network;
-using UnityEngine;
 
 namespace LunaClient.Systems.Network
 {
@@ -43,8 +41,14 @@ namespace LunaClient.Systems.Network
                         LastReceiveTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                         switch (msg.MessageType)
                         {
+                            case NetIncomingMessageType.NatIntroductionSuccess:
+                                HandleNatIntroduction(msg);
+                                break;
                             case NetIncomingMessageType.ConnectionLatencyUpdated:
                                 PingMs = TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
+                                break;
+                            case NetIncomingMessageType.UnconnectedData:
+                                HandleServersList(msg);
                                 break;
                             case NetIncomingMessageType.Data:
                                 try
@@ -84,45 +88,9 @@ namespace LunaClient.Systems.Network
                 HandleDisconnectException(e);
             }
         }
-
+        
         private void EnqueueMessageToSystem(IServerMessageBase msg)
         {
-#if DEBUG
-            switch (msg.MessageType)
-            {
-                case ServerMessageType.VESSEL:
-                    switch (((VesselBaseMsgData)msg.Data).VesselMessageType)
-                    {
-                        //case VesselMessageType.UPDATE:
-                        case VesselMessageType.LIST_REPLY:
-                        case VesselMessageType.VESSELS_REPLY:
-                        case VesselMessageType.PROTO:
-                        case VesselMessageType.REMOVE:
-                            Debug.Log($"Received {msg.MessageType}-{msg.Data.GetType().Name} from the srv.");
-                            break;
-                    }
-                    break;
-                case ServerMessageType.HANDSHAKE:
-                case ServerMessageType.CHAT:
-                case ServerMessageType.SETTINGS:
-                case ServerMessageType.PLAYER_STATUS:
-                case ServerMessageType.PLAYER_COLOR:
-                case ServerMessageType.PLAYER_CONNECTION:
-                case ServerMessageType.SCENARIO:
-                case ServerMessageType.KERBAL:
-                case ServerMessageType.CRAFT_LIBRARY:
-                case ServerMessageType.FLAG:
-                //case ServerMessageType.SYNC_TIME:
-                case ServerMessageType.MOTD:
-                //case ServerMessageType.WARP:
-                case ServerMessageType.ADMIN:
-                case ServerMessageType.LOCK:
-                case ServerMessageType.MOD:
-                    Debug.Log($"Received {msg.MessageType}-{msg.Data.GetType().Name} from the srv.");
-                    break;
-            }
-#endif
-
             switch (msg.MessageType)
             {
                 case ServerMessageType.HANDSHAKE:

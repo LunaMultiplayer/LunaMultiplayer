@@ -109,6 +109,7 @@
     <Compile Include="Systems\Motd\MotdMessageHandler.cs" />
     <Compile Include="Systems\Motd\MotdMessageSender.cs" />
     <Compile Include="Systems\Motd\MotdSystem.cs" />
+    <Compile Include="Systems\Network\NetworkServerList.cs" />
     <Compile Include="Systems\Network\NetworkSimpleMessageSender.cs" />
     <Compile Include="Systems\Network\NetworkStructures.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageHandler.cs" />
@@ -207,6 +208,8 @@
     <Compile Include="Systems\Toolbar\ToolbarSystem.cs" />
     <Compile Include="Systems\Toolbar\ToolbarWrapper.cs" />
     <Compile Include="Utilities\UniverseConverter.cs" />
+    <Compile Include="Windows\ServerList\ServerListDrawer.cs" />
+    <Compile Include="Windows\ServerList\ServerListWindow.cs" />
     <Compile Include="Windows\UniverseConverter\UniverseConverterDrawer.cs" />
     <Compile Include="Windows\UniverseConverter\UniverseConverterWindow.cs" />
     <Compile Include="Utilities\UniverseSyncCache.cs" />

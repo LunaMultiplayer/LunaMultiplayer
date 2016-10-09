@@ -7,6 +7,7 @@ namespace LunaCommon.Message.Data.MasterServer
         public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.INTRODUCTION;
 
         public long Id { get; set; }
+        public string InternalEndpoint { get; set; }
         public string Token { get; set; }
     }
 }
