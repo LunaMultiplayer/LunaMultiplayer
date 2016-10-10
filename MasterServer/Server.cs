@@ -34,6 +34,9 @@ namespace MasterServer
                 VesselUpdatesSendMsInterval = msg.VesselUpdatesSendMsInterval,
                 WarpMode = msg.WarpMode
             };
+
+            Info.ServerName = Info.ServerName.Length > 30 ? Info.ServerName.Substring(0, 30) : Info.ServerName;
+            Info.Description = Info.Description.Length > 200 ? Info.Description.Substring(0, 200) : Info.Description;
         }
     }
 }

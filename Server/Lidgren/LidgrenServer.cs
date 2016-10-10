@@ -74,7 +74,7 @@ namespace LunaServer.Lidgren
                                 LunaLog.Debug("Lidgren DEBUG: " + msg.MessageType + "-- " + msg.PeekString());
                                 break;
                             case NetIncomingMessageType.StatusChanged:
-                                switch ((NetConnectionStatus) msg.ReadByte())
+                                switch ((NetConnectionStatus)msg.ReadByte())
                                 {
                                     case NetConnectionStatus.Connected:
                                         var endpoint = msg.SenderConnection.RemoteEndPoint;
@@ -173,19 +173,27 @@ namespace LunaServer.Lidgren
                         DropControlOnExit = GeneralSettings.SettingsStore.Cheats,
                         DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats,
                         DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats,
-                        GameMode = (int) GeneralSettings.SettingsStore.GameMode,
+                        GameMode = (int)GeneralSettings.SettingsStore.GameMode,
                         InternalEndpoint = endpoint.Address + ":" + endpoint.Port,
                         MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers,
-                        ModControl = (int) GeneralSettings.SettingsStore.ModControl,
+                        ModControl = (int)GeneralSettings.SettingsStore.ModControl,
                         PlayerCount = ServerContext.Clients.Count,
                         ServerName = GeneralSettings.SettingsStore.ServerName,
                         VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval,
-                        WarpMode = (int) GeneralSettings.SettingsStore.WarpMode
+                        WarpMode = (int)GeneralSettings.SettingsStore.WarpMode
                     };
+
+                    msgData.Description = msgData.Description.Length > 200
+                        ? msgData.Description.Substring(0, 200)
+                        : msgData.Description;
+
+                    msgData.ServerName = msgData.ServerName.Length > 30
+                        ? msgData.ServerName.Substring(0, 30)
+                        : msgData.ServerName;
 
                     var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
                     var msgBytes = ServerContext.MasterServerMessageFactory.Serialize(msg);
-                    
+
                     foreach (var masterServer in MasterServerEndpoints)
                     {
                         try

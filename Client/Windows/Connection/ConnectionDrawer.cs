@@ -17,8 +17,7 @@ namespace LunaClient.Windows.Connection
             GUILayout.BeginHorizontal();
             GUILayout.Label("Player Name:", LabelOptions);
             var oldPlayerName = SettingsSystem.CurrentSettings.PlayerName;
-            SettingsSystem.CurrentSettings.PlayerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.PlayerName, 32,
-                TextAreaStyle); // Max 32 characters
+            SettingsSystem.CurrentSettings.PlayerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.PlayerName, 32, TextAreaStyle); // Max 32 characters
             if (oldPlayerName != SettingsSystem.CurrentSettings.PlayerName)
             {
                 SettingsSystem.CurrentSettings.PlayerName = SettingsSystem.CurrentSettings.PlayerName.Replace("\n", "");

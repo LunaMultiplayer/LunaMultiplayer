@@ -18,19 +18,20 @@ using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Lidgren.Network;
-using LunaCommon.Message;
 using UnityEngine;
 
 namespace LunaClient.Network
 {
     public class NetworkReceiver
     {
+        /// <summary>
+        /// Main receiveing thread
+        /// </summary>
         public static void ReceiveMain()
         {
             try
@@ -89,6 +90,10 @@ namespace LunaClient.Network
             }
         }
         
+        /// <summary>
+        /// Enqueues the received message to the correct system
+        /// </summary>
+        /// <param name="msg"></param>
         private static void EnqueueMessageToSystem(IServerMessageBase msg)
         {
             switch (msg.MessageType)

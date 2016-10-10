@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 
@@ -17,6 +18,10 @@ namespace LunaCommon
         public static string MasterServersListShortUrl => "https://goo.gl/NJqZbc";
         public static string MasterServersListUrl => "https://raw.githubusercontent.com/DaggerES/LunaMultiPlayer/master/MasterServersList";
 
+        /// <summary>
+        /// Download the master server list from the MasterServersListUrl and return the ones that respond to a ping and are correctly written
+        /// </summary>
+        /// <returns></returns>
         public static string[] RetrieveWorkingMasterServersEndpoints()
         {
             ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
@@ -73,7 +78,7 @@ namespace LunaCommon
             // If there are errors in the certificate chain, look at each error to determine the cause.
             if (sslPolicyErrors != SslPolicyErrors.None)
             {
-                for (int i = 0; i < chain.ChainStatus.Length; i++)
+                for (var i = 0; i < chain.ChainStatus.Length; i++)
                 {
                     if (chain.ChainStatus[i].Status != X509ChainStatusFlags.RevocationStatusUnknown)
                     {

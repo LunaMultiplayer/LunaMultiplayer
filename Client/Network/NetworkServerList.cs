@@ -17,6 +17,9 @@ namespace LunaClient.Network
         public static List<ServerInfo> Servers { get; private set; } = new List<ServerInfo>();
         private static readonly Random Random = new Random();
 
+        /// <summary>
+        /// Refreshes the list of master servers
+        /// </summary>
         public static void RefreshMasterServers()
         {
             if (!MasterServers.Any())
@@ -48,6 +51,8 @@ namespace LunaClient.Network
                 var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
                 var data = msgDeserialized.Data as MsReplyServersMsgData;
 
+                //Sometimes we receive other tipe of unconnected messages. 
+                //Therefore we assert that the received message data is of MsReplyServersMsgData
                 if (data != null)
                 {
                     for (var i = 0; i < data.Id.Length; i++)
@@ -84,6 +89,9 @@ namespace LunaClient.Network
             }
         }
 
+        /// <summary>
+        /// Send a request to the master server to introduce us and do the nat punchtrough to the selected server
+        /// </summary>
         public static void IntroduceToServer(long currentEntryId)
         {
             var token = RandomString(10);
@@ -101,6 +109,9 @@ namespace LunaClient.Network
             NetworkSender.QueueOutgoingMessage(introduceMsg);
         }
 
+        /// <summary>
+        /// We received a nat punchtrough response so connect to the server
+        /// </summary>
         public static void HandleNatIntroduction(NetIncomingMessage msg)
         {
             try
@@ -115,6 +126,9 @@ namespace LunaClient.Network
             }
         }
 
+        /// <summary>
+        /// Generates a random string, usefull for token
+        /// </summary>
         private static string RandomString(int length)
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

@@ -9,8 +9,8 @@ namespace LunaServer.Settings
         [Description("Set to false if you don't want to appear on the server list. LAN networks for example")]
         public bool RegisterWithMasterServer = true;
 
-        [Description("Specify in miliseconds how often we will register with masterserver.")]
-        public int MasterServerRegistrationMsInterval = 10000;
+        [Description("Specify in miliseconds how often we will update the info with masterserver.")]
+        public int MasterServerRegistrationMsInterval = 5000;
 
         [Description("Specify in minutes how often /dekessler automatically runs. 0 = Disabled")]
         public int AutoDekessler = 30;
@@ -49,7 +49,7 @@ namespace LunaServer.Settings
         [Description("How many untracked asteroids to spawn into the universe. 0 = Disabled")]
         public int NumberOfAsteroids = 30;
 
-        [Description("The Port the server listens on.")]
+        [Description("The UDP port the server listens on. You don't need to open it in your router if RegisterWithMasterServer = true")]
         public int Port = 6702;
 
         [Description("Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
@@ -62,10 +62,10 @@ namespace LunaServer.Settings
         [Description("Specify the server's MOTD (message of the day). 255 chars max")]
         public string ServerMotd = "Welcome, %Name%!";
 
-        [Description("Name of the server.")]
+        [Description("Name of the server. Max 30 char")]
         public string ServerName = "Luna Server";
 
-        [Description("Description of the server.")]
+        [Description("Description of the server. Max 200 char")]
         public string Description = "Luna Server Description";
 
         [Description("Use UTC instead of system time in the log.")]

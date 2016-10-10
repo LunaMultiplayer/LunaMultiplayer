@@ -8,6 +8,8 @@ namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow : Window<ServerListWindow>
     {
+        protected Vector2 ScrollPosition { get; set; }
+
         protected const float WindowHeight = 700;
         protected const float WindowWidth = 700;
 
@@ -32,6 +34,8 @@ namespace LunaClient.Windows.ServerList
 
             LabelOptions = new GUILayoutOption[1];
             LabelOptions[0] = GUILayout.Width(100);
+
+            ScrollStyle = new GUIStyle(GUI.skin.scrollView);
         }
 
         public override void OnGui()

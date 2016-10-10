@@ -15,6 +15,9 @@ namespace LunaClient.Network
         public static ConcurrentQueue<IMessageBase> OutgoingMessages { get; set; } = new ConcurrentQueue<IMessageBase>();
         public static NetworkSimpleMessageSender SimpleMessageSender { get; } = new NetworkSimpleMessageSender();
 
+        /// <summary>
+        /// Main sending thread
+        /// </summary>
         public static void SendMain()
         {
             try
@@ -38,11 +41,19 @@ namespace LunaClient.Network
             }
         }
 
+        /// <summary>
+        /// Adds a new message to the queue
+        /// </summary>
+        /// <param name="message"></param>
         public static void QueueOutgoingMessage(IMessageBase message)
         {
             OutgoingMessages.Enqueue(message);
         }
 
+        /// <summary>
+        /// Sends the network message. It will skip client messages to send when we are not connected
+        /// </summary>
+        /// <param name="message"></param>
         private static void SendNetworkMessage(IMessageBase message)
         {
             var clientMessage = message as IClientMessageBase;
