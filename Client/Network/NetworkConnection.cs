@@ -47,15 +47,17 @@ namespace LunaClient.Network
                     WindowsHandler.Reset();
                 }
             }
+            NetworkMain.ClientConnection.Start();
         }
 
         public static void ConnectToServer(string address, int port)
         {
             try
             {
-                ConnectThread?.Dispose();
-                Disconnect();
-                NetworkMain.ClientConnection.Start();
+                ConnectThread?.Wait(1000);
+
+                Disconnect("Started a new connection");
+
                 ConnectThread = new Task(() => ConnectToServer(address + ":" + port));
                 ConnectThread.Start(TaskScheduler.Default);
             }
@@ -98,6 +100,7 @@ namespace LunaClient.Network
                 var outmsg = NetworkMain.ClientConnection.CreateMessage(1);
                 outmsg.Write((byte)NetIncomingMessageType.ConnectionApproval);
 
+                NetworkMain.ClientConnection.Start();
                 NetworkMain.ClientConnection.Connect(destination);
                 NetworkMain.ClientConnection.FlushSendQueue();
 

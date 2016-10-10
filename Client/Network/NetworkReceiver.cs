@@ -35,11 +35,6 @@ namespace LunaClient.Network
         {
             try
             {
-                NetworkMain.ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
-                NetworkMain.ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
-                NetworkMain.ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.UnconnectedData);
-                NetworkMain.ClientConnection.Start();
-
                 while (!MainSystem.Singleton.Quit)
                 {
                     NetIncomingMessage msg;

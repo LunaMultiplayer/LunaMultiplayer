@@ -21,30 +21,14 @@ namespace LunaClient.Network
             {
                 while (!MainSystem.Singleton.Quit)
                 {
-                    //Send master server msgs always
                     IMessageBase sendMessage;
-                    if (OutgoingMessages.TryPeek(out sendMessage) && sendMessage is IMasterServerMessageBase)
+                    if (OutgoingMessages.TryDequeue(out sendMessage))
                     {
-                        OutgoingMessages.TryDequeue(out sendMessage);
                         SendNetworkMessage(sendMessage);
                     }
                     else
                     {
                         MainSystem.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
-                    }
-
-                    //ONly send client messages when status is connected
-                    while (MainSystem.Singleton.NetworkState >= ClientState.CONNECTED)
-                    {
-                        if (OutgoingMessages.TryDequeue(out sendMessage))
-                        {
-                            if (sendMessage is IClientMessageBase)
-                                SendNetworkMessage(sendMessage);
-                        }
-                        else
-                        {
-                            MainSystem.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
-                        }
                     }
                 }
             }
@@ -88,9 +72,12 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
-                        lidgrenMsg.Write(message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled));
-                        NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
+                        if (MainSystem.Singleton.NetworkState >= ClientState.CONNECTED)
+                        {
+                            var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
+                            lidgrenMsg.Write(message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled));
+                            NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
+                        }
                     }
 
                     NetworkMain.ClientConnection.FlushSendQueue();

@@ -30,7 +30,7 @@ namespace LunaClient.Network
             ConnectionTimeout = (float)SettingsSystem.CurrentSettings.ConnectionMsTimeout / 1000
         };
 
-        public static NetClient ClientConnection { get; } = new NetClient(Config);
+        public static NetClient ClientConnection { get; private set; }
 
         public static void DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway()
         {
@@ -49,6 +49,13 @@ namespace LunaClient.Network
 
         public static void StartNetworkSystem()
         {
+            Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
+            Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+            Config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
+
+            ClientConnection = new NetClient(Config);
+            ClientConnection.Start();
+
             NetworkServerList.RefreshMasterServers();
             SendThread.Start(TaskScheduler.Default);
             ReceiveThread.Start(TaskScheduler.Default);

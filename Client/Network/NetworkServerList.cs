@@ -45,40 +45,42 @@ namespace LunaClient.Network
         {
             try
             {
-                var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes),
-                    DateTime.UtcNow.Ticks);
-                var data = (MsReplyServersMsgData) msgDeserialized.Data;
+                var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
+                var data = msgDeserialized.Data as MsReplyServersMsgData;
 
-                for (var i = 0; i < data.Id.Length; i++)
+                if (data != null)
                 {
-                    var id = data.Id[i];
-                    if (!Servers.Any(s => s.Id == id))
+                    for (var i = 0; i < data.Id.Length; i++)
                     {
-                        Servers.Add(new ServerInfo
+                        var id = data.Id[i];
+                        if (!Servers.Any(s => s.Id == id))
                         {
-                            Id = id,
-                            Description = data.Description[i],
-                            Cheats = data.Cheats[i],
-                            ServerName = data.ServerName[i],
-                            DropControlOnExit = data.DropControlOnExit[i],
-                            MaxPlayers = data.MaxPlayers[i],
-                            WarpMode = data.WarpMode[i],
-                            PlayerCount = data.PlayerCount[i],
-                            GameMode = data.GameMode[i],
-                            ModControl = data.ModControl[i],
-                            DropControlOnExitFlight = data.DropControlOnExitFlight[i],
-                            VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
-                            DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
-                            Version = data.Version
-                        });
+                            Servers.Add(new ServerInfo
+                            {
+                                Id = id,
+                                Description = data.Description[i],
+                                Cheats = data.Cheats[i],
+                                ServerName = data.ServerName[i],
+                                DropControlOnExit = data.DropControlOnExit[i],
+                                MaxPlayers = data.MaxPlayers[i],
+                                WarpMode = data.WarpMode[i],
+                                PlayerCount = data.PlayerCount[i],
+                                GameMode = data.GameMode[i],
+                                ModControl = data.ModControl[i],
+                                DropControlOnExitFlight = data.DropControlOnExitFlight[i],
+                                VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
+                                DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
+                                Version = data.Version
+                            });
+                        }
                     }
-                }
 
-                Servers = Servers.OrderBy(s => s.ServerName).ToList();
+                    Servers = Servers.OrderBy(s => s.ServerName).ToList();
+                }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                Debug.LogError("Invalid server list reply msg");
+                Debug.LogError($"Invalid server list reply msg: {e}");
             }
         }
 
