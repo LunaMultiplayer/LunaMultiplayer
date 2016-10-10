@@ -58,7 +58,6 @@ namespace MasterServer
                             Form.WriteLine("ERROR! :" + msg.ReadString());
                             break;
                         case NetIncomingMessageType.UnconnectedData:
-
                             var messageBytes = msg.ReadBytes(msg.LengthBytes);
                             var message = MasterServerMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IMasterServerMessageBase;
                             HandleMessage(message, msg, peer);
@@ -123,9 +122,11 @@ namespace MasterServer
                     RegisterServer(message, netMsg);
                     break;
                 case MasterServerMessageSubType.REQUEST_SERVERS:
+                    Form.WriteLine("Received LIST REQUEST from:" + netMsg.SenderEndPoint);
                     SendServerLists(netMsg, peer);
                     break;
                 case MasterServerMessageSubType.INTRODUCTION:
+                    Form.WriteLine("Received INTRODUCTION request from:" + netMsg.SenderEndPoint);
                     var msgData = (MsIntroductionMsgData)message.Data;
                     Server server;
                     if (ServerDictionary.TryGetValue(msgData.Id, out server))
@@ -173,6 +174,7 @@ namespace MasterServer
             var outMsg = peer.CreateMessage(data.Length);
             outMsg.Write(data);
             peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
+            peer.FlushSendQueue();
         }
 
         private static void RegisterServer(IMessageBase message, NetIncomingMessage netMsg)
@@ -186,7 +188,8 @@ namespace MasterServer
             }
             else
             {
-                ServerDictionary[msgData.Id].LastRegisterTime = DateTime.UtcNow.Ticks;
+                //Just update
+                ServerDictionary[msgData.Id] = new Server(msgData, netMsg.SenderEndPoint);
             }
         }
 

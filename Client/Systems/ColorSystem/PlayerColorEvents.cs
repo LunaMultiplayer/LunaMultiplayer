@@ -2,6 +2,7 @@
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Utilities;
+using UnityEngine;
 
 namespace LunaClient.Systems.ColorSystem
 {
@@ -22,7 +23,7 @@ namespace LunaClient.Systems.ColorSystem
                 if (LockSystem.Singleton.LockExists("control-" + colorVessel.id) && !LockSystem.Singleton.LockIsOurs("control-" + colorVessel.id))
                 {
                     var vesselOwner = LockSystem.Singleton.LockOwner("control-" + colorVessel.id);
-                    LunaLog.Debug($"Vessel {colorVessel.id} owner is {vesselOwner}");
+                    Debug.Log($"Vessel {colorVessel.id} owner is {vesselOwner}");
                     colorVessel.orbitDriver.orbitColor = System.GetPlayerColor(vesselOwner);
                 }
                 else

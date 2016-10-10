@@ -4,6 +4,7 @@ using LunaClient.Base.Interface;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Message.Data.Chat;
+using UnityEngine;
 
 namespace LunaClient.Systems.Chat
 {
@@ -40,7 +41,7 @@ namespace LunaClient.Systems.Chat
                         From = SettingsSystem.CurrentSettings.PlayerName,
                         Message = input
                     });
-                    LunaLog.Debug("Server Command: " + input);
+                    Debug.Log("Server Command: " + input);
                 }
                 if (System.SelectedPmChannel != null)
                     System.MessageSender.SendMessage(new ChatPrivateMsgData
@@ -64,12 +65,12 @@ namespace LunaClient.Systems.Chat
                     if (System.RegisteredChatCommands.ContainsKey(commandPart))
                         try
                         {
-                            LunaLog.Debug("Chat Command: " + input.Substring(1));
+                            Debug.Log("Chat Command: " + input.Substring(1));
                             System.RegisteredChatCommands[commandPart].Func(argumentPart);
                         }
                         catch (Exception e)
                         {
-                            LunaLog.Debug("Error handling chat command " + commandPart + ", Exception " + e);
+                            Debug.LogError("Error handling chat command " + commandPart + ", Exception " + e);
                             System.PrintToSelectedChannel("Error handling chat command: " + commandPart);
                         }
                     else

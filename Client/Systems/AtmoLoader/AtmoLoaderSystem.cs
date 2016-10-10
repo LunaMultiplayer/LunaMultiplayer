@@ -23,21 +23,21 @@ namespace LunaClient.Systems.AtmoLoader
                 if ((flyingVesselLoad.FlyingVessel == null) ||
                     (flyingVesselLoad.FlyingVessel.state == Vessel.State.DEAD))
                 {
-                    LunaLog.Debug("AtmoLoad failed: Vessel destroyed");
+                    Debug.Log("AtmoLoad failed: Vessel destroyed");
                     LoadingFlyingVessels.Remove(vesselId);
                     continue;
                 }
 
                 if (!FlightGlobals.Vessels.Contains(flyingVesselLoad.FlyingVessel))
                 {
-                    LunaLog.Debug("AtmoLoad failed: Vessel destroyed");
+                    Debug.Log("AtmoLoad failed: Vessel destroyed");
                     LoadingFlyingVessels.Remove(vesselId);
                     continue;
                 }
 
                 if (!LockSystem.Singleton.LockExists("update-" + vesselId) || LockSystem.Singleton.LockIsOurs("update-" + vesselId))
                 {
-                    LunaLog.Debug("AtmoLoad removed: Vessel stopped being controlled by another player");
+                    Debug.Log("AtmoLoad removed: Vessel stopped being controlled by another player");
                     LoadingFlyingVessels.Remove(vesselId);
                     VesselRemoveSystem.Singleton.KillVessel(flyingVesselLoad.FlyingVessel);
                     continue;
@@ -45,7 +45,7 @@ namespace LunaClient.Systems.AtmoLoader
 
                 if (flyingVesselLoad.FlyingVessel.loaded && Time.realtimeSinceStartup - flyingVesselLoad.LastUnpackTime > UnpackInterval)
                 {
-                    LunaLog.Debug("AtmoLoad attempting to take loaded vessel off rails");
+                    Debug.Log("AtmoLoad attempting to take loaded vessel off rails");
                     flyingVesselLoad.LastUnpackTime = Time.realtimeSinceStartup;
                     try
                     {
@@ -54,14 +54,14 @@ namespace LunaClient.Systems.AtmoLoader
                     catch (Exception e)
                     {
                         //Just in case, I don't think this can throw but you never really know with KSP.
-                        LunaLog.Debug("AtmoLoad failed to take vessel of rails: " + e.Message);
+                        Debug.Log("AtmoLoad failed to take vessel of rails: " + e.Message);
                     }
                     continue;
                 }
 
                 if (!flyingVesselLoad.FlyingVessel.packed)
                 {
-                    LunaLog.Debug("AtmoLoad successful: Vessel is off rails");
+                    Debug.Log("AtmoLoad successful: Vessel is off rails");
                     LoadingFlyingVessels.Remove(vesselId);
                     flyingVesselLoad.FlyingVessel.Landed = false;
                     flyingVesselLoad.FlyingVessel.Splashed = false;
@@ -75,7 +75,7 @@ namespace LunaClient.Systems.AtmoLoader
                 var atmoPressure = flyingVesselLoad.FlyingVessel.mainBody.GetPressure(flyingVesselLoad.FlyingVessel.altitude);
                 if (atmoPressure < 0.01d)
                 {
-                    LunaLog.Debug("AtmoLoad successful: Vessel is now safe from atmo");
+                    Debug.Log("AtmoLoad successful: Vessel is now safe from atmo");
                     LoadingFlyingVessels.Remove(vesselId);
                     flyingVesselLoad.FlyingVessel.Landed = false;
                     flyingVesselLoad.FlyingVessel.Splashed = false;
@@ -166,7 +166,7 @@ namespace LunaClient.Systems.AtmoLoader
             {
                 var hfvl = new FlyingVesselLoad { FlyingVessel = hackyVessel };
                 hfvl.FlyingVessel.vesselRanges.landed.load = hfvl.FlyingVessel.vesselRanges.flying.unload - 100f;
-                LunaLog.Debug("Default landed unload: " + hfvl.FlyingVessel.vesselRanges.landed.unload);
+                Debug.Log("Default landed unload: " + hfvl.FlyingVessel.vesselRanges.landed.unload);
                 hfvl.FlyingVessel.vesselRanges.landed.unload = hfvl.FlyingVessel.vesselRanges.flying.unload;
                 hfvl.LastUnpackTime = Time.realtimeSinceStartup;
                 LoadingFlyingVessels.Add(hackyVessel.id, hfvl);

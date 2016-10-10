@@ -1,5 +1,6 @@
 ﻿using System;
 using LunaClient.Base;
+using LunaClient.Network;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.TimeSyncer;
@@ -61,12 +62,12 @@ namespace LunaClient.Windows.Debug
                 NtpText += $"Server lag: {Math.Round(TimeSyncerSystem.Singleton.ServerLag/10000f, 3)}ms\n";
 
                 //Connection queue text
-                ConnectionText = $"Ping: {NetworkSystem.Singleton.GetStatistics("Ping")}ms.\n";
-                ConnectionText += $"Last send time: {NetworkSystem.Singleton.GetStatistics("LastSendTime")}ms ago.\n";
-                ConnectionText += $"Last receive time: {NetworkSystem.Singleton.GetStatistics("LastReceiveTime")}ms ago.\n";
-                ConnectionText += $"Sent bytes: {NetworkSystem.Singleton.GetStatistics("SentBytes")}.\n";
-                ConnectionText += $"Received bytes: {NetworkSystem.Singleton.GetStatistics("ReceivedBytes")}.\n";
-                ConnectionText += $"Queued out msgs: {NetworkSystem.Singleton.GetStatistics("QueuedOutgoingMessages")}.\n";
+                ConnectionText = $"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.\n";
+                ConnectionText += $"Last send time: {NetworkStatistics.GetStatistics("LastSendTime")}ms ago.\n";
+                ConnectionText += $"Last receive time: {NetworkStatistics.GetStatistics("LastReceiveTime")}ms ago.\n";
+                ConnectionText += $"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.\n";
+                ConnectionText += $"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n";
+                ConnectionText += $"Queued out msgs: {NetworkStatistics.GetStatistics("QueuedOutgoingMessages")}.\n";
 
                 //Vessel update system
                 VesselUpdateText = $"Queued messages: {VesselUpdateSystem.Singleton.MessageHandler.IncomingMessages.Count}.\n";

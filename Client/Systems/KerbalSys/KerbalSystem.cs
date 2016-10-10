@@ -3,6 +3,7 @@ using LunaClient.Base;
 using LunaClient.Utilities;
 using LunaCommon;
 using UniLinq;
+using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -36,7 +37,7 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void LoadKerbalsIntoGame()
         {
-            LunaLog.Debug("Loading kerbals into game");
+            Debug.Log("Loading kerbals into game");
             foreach (var kerbalQueue in KerbalProtoQueue)
             {
                 while (kerbalQueue.Value.Count > 0)
@@ -62,7 +63,7 @@ namespace LunaClient.Systems.KerbalSys
                 var generateKerbals = ServerKerbals.Count < 20 ? 20 - ServerKerbals.Count : 0;
                 if (generateKerbals > 0)
                 {
-                    LunaLog.Debug("Generating {generateKerbals} new kerbals");
+                    Debug.Log("Generating {generateKerbals} new kerbals");
                     for (var i = 0; i < generateKerbals; i++)
                     {
                         var protoKerbal = HighLogic.CurrentGame.CrewRoster.GetNewKerbal();
@@ -71,7 +72,7 @@ namespace LunaClient.Systems.KerbalSys
                 }
             }
 
-            LunaLog.Debug("Kerbals loaded");
+            Debug.Log("Kerbals loaded");
         }
 
         #endregion
@@ -83,7 +84,7 @@ namespace LunaClient.Systems.KerbalSys
             var protoCrew = new ProtoCrewMember(HighLogic.CurrentGame.Mode, crewNode);
             if (string.IsNullOrEmpty(protoCrew.name))
             {
-                LunaLog.Debug("protoName is blank!");
+                Debug.LogError("protoName is blank!");
                 return;
             }
 
@@ -108,7 +109,7 @@ namespace LunaClient.Systems.KerbalSys
                 }
                 else
                 {
-                    LunaLog.Debug("Career log node for " + protoCrew.name + " is empty!");
+                    Debug.Log("Career log node for " + protoCrew.name + " is empty!");
                 }
 
                 var flightLogNode = crewNode.GetNode("FLIGHT_LOG");

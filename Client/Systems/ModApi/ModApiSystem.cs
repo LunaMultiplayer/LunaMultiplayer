@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Utilities;
 using LunaCommon.Message.Data;
+using UnityEngine;
 
 namespace LunaClient.Systems.ModApi
 {
@@ -107,10 +108,10 @@ namespace LunaClient.Systems.ModApi
             {
                 if (RegisteredRawMods.ContainsKey(modName))
                 {
-                    LunaLog.Debug("Failed to register raw mod handler for " + modName + ", mod already registered");
+                    Debug.Log("Failed to register raw mod handler for " + modName + ", mod already registered");
                     return false;
                 }
-                LunaLog.Debug("Registered raw mod handler for " + modName);
+                Debug.Log("Registered raw mod handler for " + modName);
                 RegisteredRawMods.Add(modName, handlerFunction);
             }
             return true;
@@ -127,10 +128,10 @@ namespace LunaClient.Systems.ModApi
             {
                 if (RegisteredUpdateMods.ContainsKey(modName))
                 {
-                    LunaLog.Debug("Failed to register Update mod handler for " + modName + ", mod already registered");
+                    Debug.Log("Failed to register Update mod handler for " + modName + ", mod already registered");
                     return false;
                 }
-                LunaLog.Debug("Registered Update mod handler for " + modName);
+                Debug.Log("Registered Update mod handler for " + modName);
                 RegisteredUpdateMods.Add(modName, handlerFunction);
                 UpdateQueue.Add(modName, new ConcurrentQueue<byte[]>());
             }
@@ -148,11 +149,11 @@ namespace LunaClient.Systems.ModApi
             {
                 if (RegisteredFixedUpdateMods.ContainsKey(modName))
                 {
-                    LunaLog.Debug("Failed to register FixedUpdate mod handler for " + modName +
+                    Debug.Log("Failed to register FixedUpdate mod handler for " + modName +
                                   ", mod already registered");
                     return false;
                 }
-                LunaLog.Debug("Registered FixedUpdate mod handler for " + modName);
+                Debug.Log("Registered FixedUpdate mod handler for " + modName);
                 RegisteredFixedUpdateMods.Add(modName, handlerFunction);
                 FixedUpdateQueue.Add(modName, new ConcurrentQueue<byte[]>());
             }
@@ -171,7 +172,7 @@ namespace LunaClient.Systems.ModApi
                 return;
             if (messageData == null)
             {
-                LunaLog.Debug(modName + " attemped to send a null Message");
+                Debug.Log(modName + " attemped to send a null Message");
                 return;
             }
             MessageSender.SendMessage(new ModMsgData {Data = messageData, Relay = relay, ModName = modName});

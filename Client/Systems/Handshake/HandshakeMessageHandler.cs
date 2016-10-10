@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.SettingsSys;
@@ -12,6 +13,7 @@ using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
+using UnityEngine;
 
 namespace LunaClient.Systems.Handshake
 {
@@ -45,7 +47,7 @@ namespace LunaClient.Systems.Handshake
             }
             catch (Exception e)
             {
-                LunaLog.Debug("Error handling HANDSHAKE_CHALLANGE Message, exception: " + e);
+                Debug.Log("Error handling HANDSHAKE_CHALLANGE Message, exception: " + e);
             }
         }
 
@@ -68,7 +70,7 @@ namespace LunaClient.Systems.Handshake
             }
             catch (Exception e)
             {
-                LunaLog.Debug("Error handling HANDSHAKE_REPLY Message, exception: " + e);
+                Debug.Log("Error handling HANDSHAKE_REPLY Message, exception: " + e);
                 reply = HandshakeReply.MALFORMED_HANDSHAKE;
                 reason = "Incompatible HANDSHAKE_REPLY Message";
             }
@@ -79,13 +81,13 @@ namespace LunaClient.Systems.Handshake
                 {
                     if (ModFileParser.ParseModFile(modFileData))
                     {
-                        LunaLog.Debug("Handshake successful");
+                        Debug.Log("Handshake successful");
                         MainSystem.Singleton.NetworkState = ClientState.AUTHENTICATED;
                     }
                     else
                     {
-                        LunaLog.Debug("Failed to pass mod validation");
-                        NetworkSystem.Singleton.Disconnect("Failed mod validation", true);
+                        Debug.LogError("Failed to pass mod validation");
+                        NetworkConnection.Disconnect("Failed mod validation");
                     }
                 }
                     break;
@@ -96,8 +98,8 @@ namespace LunaClient.Systems.Handshake
                     {
                         disconnectReason += "\nClient: " + VersionInfo.VersionNumber + ", Server: " + data.Version;
                     }
-                    LunaLog.Debug(disconnectReason);
-                    NetworkSystem.Singleton.Disconnect(disconnectReason, true);
+                    Debug.Log(disconnectReason);
+                    NetworkConnection.Disconnect(disconnectReason);
                     break;
             }
         }

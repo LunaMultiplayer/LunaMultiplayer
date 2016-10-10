@@ -95,7 +95,7 @@ namespace LunaClient.Systems.Flag
                 //Don't send the flag when the SHA sum already matches
                 if (ServerFlags.ContainsKey(flagName) && (ServerFlags[flagName].ShaSum == shaSum)) return;
 
-                LunaLog.Debug("Uploading " + Path.GetFileName(flagFile));
+                Debug.Log("Uploading " + Path.GetFileName(flagFile));
                 MessageSender.SendMessage(new FlagUploadMsgData
                 {
                     PlayerName = SettingsSystem.CurrentSettings.PlayerName,
@@ -136,11 +136,11 @@ namespace LunaClient.Systems.Flag
                 else
                     GameDatabase.Instance.ReplaceTexture(textureInfo.name, textureInfo);
 
-                LunaLog.Debug("Loaded " + flagTexture.name);
+                Debug.Log("Loaded " + flagTexture.name);
             }
             else
             {
-                LunaLog.Debug("Failed to load flag " + flagRespondMessage.FlagName);
+                Debug.Log("Failed to load flag " + flagRespondMessage.FlagName);
             }
         }
 

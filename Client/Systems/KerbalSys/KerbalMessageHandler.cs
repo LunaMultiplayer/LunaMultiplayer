@@ -6,6 +6,7 @@ using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Interface;
+using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -31,10 +32,10 @@ namespace LunaClient.Systems.KerbalSys
                 if (kerbalNode != null)
                     QueueKerbal(planetTime, kerbal.Key, kerbalNode);
                 else
-                    LunaLog.Debug("Failed to load kerbal!");
+                    Debug.LogError("Failed to load kerbal!");
             }
 
-            LunaLog.Debug("Kerbals Synced!");
+            Debug.Log("Kerbals Synced!");
             MainSystem.Singleton.NetworkState = ClientState.KERBALS_SYNCED;
         }
 

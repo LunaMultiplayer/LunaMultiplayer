@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using LunaClient.Base;
+using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.KerbalSys;
@@ -57,6 +58,7 @@ namespace LunaClient
         public bool DisplayDisconnectMessage { get; set; }
         private ScreenMessage DisconnectMessage { get; set; }
         public override bool Enabled { get; set; } = true;
+        public bool Quit { get; set; }
         
         //Hack gravity fix.
         private Dictionary<CelestialBody, double> BodiesGees { get; } = new Dictionary<CelestialBody, double>();
@@ -86,6 +88,7 @@ namespace LunaClient
 
             SetupDirectoriesIfNeeded();
             UniverseSyncCache.Singleton.ExpireCache();
+            NetworkMain.StartNetworkSystem();
 
             //Register events needed to bootstrap the workers.
             GameEvents.onHideUI.Add(() => { ShowGui = false; });
@@ -95,14 +98,13 @@ namespace LunaClient
             WindowsHandler.Reset();
 
             HandleCommandLineArgs();
-            LunaLog.Debug("LunaMultiPlayer " + VersionInfo.VersionNumber + " Initialized!");
+            Debug.Log("LunaMultiPlayer " + VersionInfo.VersionNumber + " Initialized!");
         }
 
         public override void Update()
         {
             base.Update();
             var startClock = Profiler.LmpReferenceTime.ElapsedTicks;
-            LunaLog.Update();
 
             if (!Enabled) return;
 
@@ -147,12 +149,12 @@ namespace LunaClient
                         GameRunning = false;
                         FireReset = true;
                         ToolbarSystem.Singleton.Enabled = false; //Always disable toolbar in main menu
-                        NetworkSystem.Singleton.Disconnect("Quit to main menu", true);
+                        NetworkConnection.Disconnect("Quit to main menu");
                     }
 
                     if (HighLogic.CurrentGame.flagURL != SettingsSystem.CurrentSettings.SelectedFlag)
                     {
-                        LunaLog.Debug("Saving Selected flag");
+                        Debug.Log("Saving Selected flag");
                         SettingsSystem.CurrentSettings.SelectedFlag = HighLogic.CurrentGame.flagURL;
                         SettingsSystem.Singleton.SaveSettings();
                         FlagSystem.Singleton.FlagChangeEvent = true;
@@ -249,7 +251,8 @@ namespace LunaClient
 
         public void OnExit()
         {
-            NetworkSystem.Singleton.Disconnect("Quit game", true);
+            Quit = true;
+            NetworkConnection.Disconnect("Quit game");
             SystemsHandler.Reset();
         }
 
@@ -269,8 +272,8 @@ namespace LunaClient
 
         public void HandleException(Exception e, string eventName)
         {
-            LunaLog.Debug($"Threw in {eventName} event, exception: " + e);
-            NetworkSystem.Singleton.Disconnect($"Unhandled error in main system! Detail: {eventName}", true);
+            Debug.Log($"Threw in {eventName} event, exception: " + e);
+            NetworkConnection.Disconnect($"Unhandled error in main system! Detail: {eventName}");
             Reset();
         }
 
@@ -312,7 +315,7 @@ namespace LunaClient
             {
                 StatusWindow.Singleton.DisconnectEventHandled = true;
                 ForceQuit = true;
-                NetworkSystem.Singleton.Disconnect("Quit", true);
+                NetworkConnection.Disconnect("Quit");
                 ScenarioSystem.Singleton.SendScenarioModules(); // Send scenario modules before disconnecting
             }
             if (!ConnectionWindow.RenameEventHandled)
@@ -349,14 +352,14 @@ namespace LunaClient
             if (!ConnectionWindow.ConnectEventHandled)
             {
                 ConnectionWindow.ConnectEventHandled = true;
-                NetworkSystem.Singleton.ConnectToServer(
+                NetworkConnection.ConnectToServer(
                     SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Address,
                     SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Port);
             }
             if ((CommandLineServer != null) && (HighLogic.LoadedScene == GameScenes.MAINMENU) &&
                 (Time.timeSinceLevelLoad > 1f))
             {
-                NetworkSystem.Singleton.ConnectToServer(CommandLineServer.Address, CommandLineServer.Port);
+                NetworkConnection.ConnectToServer(CommandLineServer.Address, CommandLineServer.Port);
                 CommandLineServer = null;
             }
 
@@ -365,9 +368,9 @@ namespace LunaClient
                 ConnectionWindow.DisconnectEventHandled = true;
                 GameRunning = false;
                 FireReset = true;
-                NetworkSystem.Singleton.Disconnect(Singleton.NetworkState <= ClientState.STARTING
+                NetworkConnection.Disconnect(Singleton.NetworkState <= ClientState.STARTING
                     ? "Cancelled connection to server"
-                    : "Quit", true);
+                    : "Quit");
             }
         }
 
@@ -398,13 +401,13 @@ namespace LunaClient
 
             //This only makes KSP complain
             HighLogic.CurrentGame.CrewRoster.ValidateAssignments(HighLogic.CurrentGame);
-            LunaLog.Debug("Starting " + SettingsSystem.ServerSettings.GameMode + " game...");
+            Debug.Log("Starting " + SettingsSystem.ServerSettings.GameMode + " game...");
 
             //.Start() seems to stupidly .Load() somewhere - Let's overwrite it so it loads correctly.
             GamePersistence.SaveGame(HighLogic.CurrentGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
             HighLogic.CurrentGame.Start();
             ChatWindow.Singleton.Display = true;
-            LunaLog.Debug("Started!");
+            Debug.Log("Started!");
         }
 
 
@@ -482,11 +485,11 @@ namespace LunaClient
                 if (valid)
                 {
                     CommandLineServer = new ServerEntry { Address = address, Port = port };
-                    LunaLog.Debug("Connecting via command line to: " + address + ", port: " + port);
+                    Debug.Log("Connecting via command line to: " + address + ", port: " + port);
                 }
                 else
                 {
-                    LunaLog.Debug("Command line address is invalid: " + address + ", port: " + port);
+                    Debug.LogError("Command line address is invalid: " + address + ", port: " + port);
                 }
             }
         }
@@ -520,7 +523,7 @@ namespace LunaClient
             var persistentFile = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "saves", "LunaMultiPlayer", "persistent.sfs");
             if (!File.Exists(persistentFile))
             {
-                LunaLog.Debug("Creating new blank persistent.sfs file");
+                Debug.Log("Creating new blank persistent.sfs file");
                 var blankGame = CreateBlankGame();
                 HighLogic.SaveFolder = "LunaMultiPlayer";
                 GamePersistence.SaveGame(blankGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);

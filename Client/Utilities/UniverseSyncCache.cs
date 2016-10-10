@@ -5,6 +5,7 @@ using System.IO;
 using System.Threading;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
+using UnityEngine;
 
 namespace LunaClient.Utilities
 {
@@ -43,18 +44,18 @@ namespace LunaClient.Utilities
 
         public void ExpireCache()
         {
-            LunaLog.Debug("Expiring cache!");
+            Debug.Log("Expiring cache!");
             //No folder, no delete.
             if (!Directory.Exists(CommonUtil.CombinePaths(CacheDirectory, "Incoming")))
             {
-                LunaLog.Debug("No sync cache folder, skipping expire.");
+                Debug.Log("No sync cache folder, skipping expire.");
                 return;
             }
             //Delete partial incoming files
             var incomingFiles = Directory.GetFiles(CommonUtil.CombinePaths(CacheDirectory, "Incoming"));
             foreach (var incomingFile in incomingFiles)
             {
-                LunaLog.Debug("Deleting partially cached object " + incomingFile);
+                Debug.Log("Deleting partially cached object " + incomingFile);
                 File.Delete(incomingFile);
             }
             //Delete old files
@@ -66,7 +67,7 @@ namespace LunaClient.Utilities
                 //If the file is older than a week, delete it.
                 if (File.GetCreationTime(cacheFile).AddDays(7d) < DateTime.Now)
                 {
-                    LunaLog.Debug("Deleting cached object " + cacheObject + ", reason: Expired!");
+                    Debug.Log("Deleting cached object " + cacheObject + ", reason: Expired!");
                     File.Delete(cacheFile);
                 }
                 else
@@ -89,7 +90,7 @@ namespace LunaClient.Utilities
                     if (testFile.Value < FileCreationTimes[deleteObject])
                         deleteObject = testFile.Key;
                 }
-                LunaLog.Debug("Deleting cached object " + deleteObject + ", reason: Cache full!");
+                Debug.Log("Deleting cached object " + deleteObject + ", reason: Cache full!");
                 var deleteFile = CommonUtil.CombinePaths(CacheDirectory, deleteObject + ".txt");
                 File.Delete(deleteFile);
                 CurrentCacheSize -= FileLengths[deleteObject];
@@ -120,7 +121,7 @@ namespace LunaClient.Utilities
 
         public void DeleteCache()
         {
-            LunaLog.Debug("Deleting cache!");
+            Debug.Log("Deleting cache!");
             foreach (var cacheFile in GetCachedFiles())
                 File.Delete(cacheFile);
             FileLengths.Clear();

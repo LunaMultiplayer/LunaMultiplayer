@@ -10,6 +10,7 @@ using LunaCommon.Message.Data.Color;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using UniLinq;
+using UnityEngine;
 
 namespace LunaClient.Systems.ColorSystem
 {
@@ -45,7 +46,7 @@ namespace LunaClient.Systems.ColorSystem
                         var data = (PlayerColorSetMsgData)messageData;
                         var playerName = data.PlayerName;
                         var playerColor = System.ConvertStringToColor(data.Color);
-                        LunaLog.Debug("Color Message, Name: " + playerName + " , color: " + playerColor);
+                        Debug.Log("Color Message, Name: " + playerName + " , color: " + playerColor);
                         System.PlayerColors[playerName] = playerColor;
                         UpdateVesselColors(playerName);
 

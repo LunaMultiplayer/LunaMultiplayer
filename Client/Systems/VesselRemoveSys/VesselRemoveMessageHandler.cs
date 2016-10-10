@@ -8,6 +8,7 @@ using LunaClient.Utilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using UniLinq;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselRemoveSys
 {
@@ -46,7 +47,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                         ScreenMessages.PostScreenMessage("Kicked to tracking station, a player docked with you but they were not loaded into the game.");
                     }
                 }
-                LunaLog.Debug("Removing docked vessel: " + vesselId);
+                Debug.Log("Removing docked vessel: " + vesselId);
                 System.KillVessel(vessel);
             }
             else
@@ -54,13 +55,13 @@ namespace LunaClient.Systems.VesselRemoveSys
                 if (FlightGlobals.ActiveVessel?.id == vessel.id && !VesselLockSystem.Singleton.IsSpectating)
                 {
                     //Got a remove Message for our vessel, reset the send time on our vessel so we send it back.
-                    LunaLog.Debug("Resending vessel, our vessel was removed by another player. This shouldn't happen");
+                    Debug.Log("Resending vessel, our vessel was removed by another player. This shouldn't happen");
                     //TODO!
                     //System.ServerVesselsProtoUpdate[vesselId] = 0f;
                 }
                 else
                 {
-                    LunaLog.Debug("Removing vessel: " + vesselId);
+                    Debug.Log("Removing vessel: " + vesselId);
                     System.KillVessel(vessel);
                 }
             }

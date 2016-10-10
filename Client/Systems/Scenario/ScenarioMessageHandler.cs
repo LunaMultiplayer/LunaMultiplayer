@@ -7,6 +7,7 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using UnityEngine;
 
 namespace LunaClient.Systems.Scenario
 {
@@ -34,7 +35,7 @@ namespace LunaClient.Systems.Scenario
                     }
                     else
                     {
-                        LunaLog.Debug($"Scenario data has been lost for {scenario.Key}");
+                        Debug.LogError($"Scenario data has been lost for {scenario.Key}");
                         ScreenMessages.PostScreenMessage($"Scenario data has been lost for {scenario.Key}", 5f, ScreenMessageStyle.UPPER_CENTER);
                     }
                 }

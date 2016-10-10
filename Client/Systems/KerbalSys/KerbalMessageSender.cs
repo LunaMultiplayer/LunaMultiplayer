@@ -1,13 +1,13 @@
-﻿using System;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.Systems.Network;
+using LunaClient.Network;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Interface;
 using UniLinq;
+using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -15,7 +15,7 @@ namespace LunaClient.Systems.KerbalSys
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSystem.Singleton.QueueOutgoingMessage(MessageFactory.CreateNew<KerbalCliMsg>(msg));
+            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<KerbalCliMsg>(msg));
         }
         
         public void SendKerbalIfDifferent(ProtoCrewMember pcm)
@@ -23,7 +23,7 @@ namespace LunaClient.Systems.KerbalSys
             if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
             {
                 //Don't send tourists
-                LunaLog.Debug("Skipping sending of tourist: " + pcm.name);
+                Debug.Log("Skipping sending of tourist: " + pcm.name);
                 return;
             }
 
@@ -32,7 +32,7 @@ namespace LunaClient.Systems.KerbalSys
             var kerbalBytes = ConfigNodeSerializer.Singleton.Serialize(kerbalNode);
             if ((kerbalBytes == null) || (kerbalBytes.Length == 0))
             {
-                LunaLog.Debug("VesselWorker: Error sending kerbal - bytes are null or 0");
+                Debug.Log("VesselWorker: Error sending kerbal - bytes are null or 0");
                 return;
             }
             var kerbalHash = Common.CalculateSha256Hash(kerbalBytes);
@@ -40,12 +40,12 @@ namespace LunaClient.Systems.KerbalSys
             if (!System.ServerKerbals.ContainsKey(pcm.name))
             {
                 //New kerbal
-                LunaLog.Debug("Found new kerbal, sending...");
+                Debug.Log("Found new kerbal, sending...");
                 kerbalDifferent = true;
             }
             else if (System.ServerKerbals[pcm.name] != kerbalHash)
             {
-                LunaLog.Debug("Found changed kerbal (" + pcm.name + "), sending...");
+                Debug.Log("Found changed kerbal (" + pcm.name + "), sending...");
                 kerbalDifferent = true;
             }
             if (kerbalDifferent)
@@ -83,7 +83,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             if ((kerbalBytes != null) && (kerbalBytes.Length > 0))
             {
-                LunaLog.Debug("Sending kerbal " + kerbalName);
+                Debug.Log("Sending kerbal " + kerbalName);
                 var msgData = new KerbalProtoMsgData
                 {
                     KerbalName = kerbalName,
@@ -94,7 +94,7 @@ namespace LunaClient.Systems.KerbalSys
             }
             else
             {
-                LunaLog.Debug("Failed to create byte[] data for kerbal " + kerbalName);
+                Debug.Log("Failed to create byte[] data for kerbal " + kerbalName);
             }
         }
     }

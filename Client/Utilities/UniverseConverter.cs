@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
+using UnityEngine;
 
 namespace LunaClient.Utilities
 {
@@ -18,7 +19,7 @@ namespace LunaClient.Utilities
             var saveFolder = CommonUtil.CombinePaths(SavesFolder, saveName);
             if (!Directory.Exists(saveFolder))
             {
-                LunaLog.Debug("Failed to generate a LMP universe for '" + saveName + "', Save directory doesn't exist");
+                Debug.Log("Failed to generate a LMP universe for '" + saveName + "', Save directory doesn't exist");
                 ScreenMessages.PostScreenMessage("Failed to generate a LMP universe for '" + saveName + "', Save directory doesn't exist", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
@@ -27,7 +28,7 @@ namespace LunaClient.Utilities
             var persistentFile = CommonUtil.CombinePaths(saveFolder, "persistent.sfs");
             if (!File.Exists(persistentFile))
             {
-                LunaLog.Debug("Failed to generate a LMP universe for '" + saveName + "', persistent.sfs doesn't exist");
+                Debug.Log("Failed to generate a LMP universe for '" + saveName + "', persistent.sfs doesn't exist");
                 ScreenMessages.PostScreenMessage("Failed to generate a LMP universe for '" + saveName + "', persistent.sfs doesn't exist", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
@@ -47,7 +48,7 @@ namespace LunaClient.Utilities
             var persistentData = ConfigNode.Load(persistentFile);
             if (persistentData == null)
             {
-                LunaLog.Debug("Failed to generate a LMP universe for '" + saveName + "', failed to load persistent data");
+                Debug.Log("Failed to generate a LMP universe for '" + saveName + "', failed to load persistent data");
                 ScreenMessages.PostScreenMessage("Failed to generate a LMP universe for '" + saveName + "', failed to load persistent data", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
@@ -56,7 +57,7 @@ namespace LunaClient.Utilities
             var gameData = persistentData.GetNode("GAME");
             if (gameData == null)
             {
-                LunaLog.Debug("Failed to generate a LMP universe for '" + saveName + "', failed to load game data");
+                Debug.Log("Failed to generate a LMP universe for '" + saveName + "', failed to load game data");
                 ScreenMessages.PostScreenMessage("Failed to generate a LMP universe for '" + saveName + "', failed to load game data", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
@@ -66,7 +67,7 @@ namespace LunaClient.Utilities
             var flightState = gameData.GetNode("FLIGHTSTATE");
             if (flightState == null)
             {
-                LunaLog.Debug("Failed to generate a LMP universe for '" + saveName + "', failed to load flight state data");
+                Debug.Log("Failed to generate a LMP universe for '" + saveName + "', failed to load flight state data");
                 ScreenMessages.PostScreenMessage("Failed to generate a LMP universe for '" + saveName + "', failed to load flight state data", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
@@ -77,7 +78,7 @@ namespace LunaClient.Utilities
                 foreach (var cn in vesselNodes)
                 {
                     var vesselID = Common.ConvertConfigStringToGuidString(cn.GetValue("pid"));
-                    LunaLog.Debug("Saving vessel " + vesselID + ", Name: " + cn.GetValue("Name"));
+                    Debug.Log("Saving vessel " + vesselID + ", Name: " + cn.GetValue("Name"));
                     cn.Save(CommonUtil.CombinePaths(vesselFolder, vesselID + ".txt"));
                 }
             //Save scenario data
@@ -86,7 +87,7 @@ namespace LunaClient.Utilities
                 foreach (var cn in scenarioNodes)
                 {
                     var scenarioName = cn.GetValue("Name");
-                    LunaLog.Debug("Saving scenario: " + scenarioName);
+                    Debug.Log("Saving scenario: " + scenarioName);
                     cn.Save(CommonUtil.CombinePaths(playerScenarioFolder, scenarioName + ".txt"));
                 }
             //Save kerbal data
@@ -96,12 +97,12 @@ namespace LunaClient.Utilities
                 var kerbalIndex = 0;
                 foreach (var cn in kerbalNodes)
                 {
-                    LunaLog.Debug("Saving kerbal " + kerbalIndex + ", Name: " + cn.GetValue("Name"));
+                    Debug.Log("Saving kerbal " + kerbalIndex + ", Name: " + cn.GetValue("Name"));
                     cn.Save(CommonUtil.CombinePaths(kerbalFolder, kerbalIndex + ".txt"));
                     kerbalIndex++;
                 }
             }
-            LunaLog.Debug("Generated KSP_folder/Universe from " + saveName);
+            Debug.Log("Generated KSP_folder/Universe from " + saveName);
             ScreenMessages.PostScreenMessage("Generated KSP_folder/Universe from " + saveName, 5f,
                 ScreenMessageStyle.UPPER_CENTER);
         }

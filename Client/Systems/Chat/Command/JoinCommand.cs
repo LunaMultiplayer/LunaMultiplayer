@@ -1,6 +1,7 @@
 ﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Message.Data.Chat;
+using UnityEngine;
 
 namespace LunaClient.Systems.Chat.Command
 {
@@ -18,7 +19,7 @@ namespace LunaClient.Systems.Chat.Command
                     commandArgs = commandArgs.Substring(1);
                 if (!ChatSystem.Singleton.JoinedChannels.Contains(commandArgs))
                 {
-                    LunaLog.Debug("Joining Channel " + commandArgs);
+                    Debug.Log("Joining Channel " + commandArgs);
                     ChatSystem.Singleton.JoinedChannels.Add(commandArgs);
                     ChatSystem.Singleton.SelectedChannel = commandArgs;
                     ChatSystem.Singleton.SelectedPmChannel = null;

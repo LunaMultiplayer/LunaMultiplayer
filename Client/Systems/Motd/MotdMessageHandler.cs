@@ -19,8 +19,8 @@ namespace LunaClient.Systems.Motd
 
             if (!string.IsNullOrEmpty(msgData?.MessageOfTheDay))
             {
-                NetworkSystem.Singleton.DisplayMotd = true;
-                NetworkSystem.Singleton.ServerMotd = msgData.MessageOfTheDay;
+                NetworkSystem.DisplayMotd = true;
+                NetworkSystem.ServerMotd = msgData.MessageOfTheDay;
                 ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", msgData.MessageOfTheDay);
             }
         }

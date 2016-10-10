@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
@@ -13,7 +14,7 @@ namespace LunaClient.Systems.Status
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSystem.Singleton.QueueOutgoingMessage(MessageFactory.CreateNew<PlayerStatusCliMsg>(msg));
+            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<PlayerStatusCliMsg>(msg));
         }
 
         public void SendPlayerStatus(PlayerStatus playerStatus)

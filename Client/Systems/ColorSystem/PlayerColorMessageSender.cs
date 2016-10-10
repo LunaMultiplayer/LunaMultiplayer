@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Client;
@@ -12,7 +13,7 @@ namespace LunaClient.Systems.ColorSystem
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSystem.Singleton.QueueOutgoingMessage(MessageFactory.CreateNew<PlayerColorCliMsg>(msg));
+            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<PlayerColorCliMsg>(msg));
         }
 
         public void SendPlayerColorToServer()

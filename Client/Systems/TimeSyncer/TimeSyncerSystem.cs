@@ -135,7 +135,7 @@ namespace LunaClient.Systems.TimeSyncer
             if ((ClockOffset.Count > SettingsSystem.CurrentSettings.InitialConnectionSyncTimeRequests) && !Synced)
             {
                 Synced = true;
-                LunaLog.Debug($"Initial clock syncronized, offset {ClockOffsetAverage / 10000}ms, latency {NetworkLatencyAverage / 10000}ms");
+                Debug.Log($"Initial clock syncronized, offset {ClockOffsetAverage / 10000}ms, latency {NetworkLatencyAverage / 10000}ms");
             }
         }
         

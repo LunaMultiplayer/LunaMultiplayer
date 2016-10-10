@@ -8,6 +8,7 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Data.Warp;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using UnityEngine;
 
 namespace LunaClient.Systems.Warp
 {
@@ -71,7 +72,7 @@ namespace LunaClient.Systems.Warp
                     break;
                 default:
                     {
-                        LunaLog.Debug("Unhandled WARP_MESSAGE type: " + ((WarpBaseMsgData)messageData).WarpMessageType);
+                        Debug.LogError("Unhandled WARP_MESSAGE type: " + ((WarpBaseMsgData)messageData).WarpMessageType);
                         break;
                     }
             }

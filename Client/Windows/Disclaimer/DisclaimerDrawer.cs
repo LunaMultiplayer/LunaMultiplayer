@@ -28,7 +28,6 @@ namespace LunaClient.Windows.Disclaimer
                     "http://forum.kerbalspaceprogram.com/threads/87841-Add-on-Posting-Rules-July-24th-2014-going-into-effect-August-21st-2014!");
             if (GUILayout.Button("I accept - Enable LunaMultiPlayer"))
             {
-                LunaLog.Debug("User accepted disclaimer - Enabling LunaMultiPlayer");
                 Display = false;
                 SettingsSystem.CurrentSettings.DisclaimerAccepted = true;
                 MainSystem.Singleton.Enabled = true;
@@ -36,7 +35,6 @@ namespace LunaClient.Windows.Disclaimer
             }
             if (GUILayout.Button("I decline - Disable LunaMultiPlayer"))
             {
-                LunaLog.Debug("User declined disclaimer - Disabling LunaMultiPlayer");
                 MainSystem.Singleton.ShowGui = false;
                 Display = false;
             }

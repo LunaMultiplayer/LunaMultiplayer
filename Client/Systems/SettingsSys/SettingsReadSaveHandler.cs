@@ -5,6 +5,7 @@ using System.Security.Cryptography;
 using System.Xml;
 using System.Xml.Serialization;
 using LunaClient.Utilities;
+using UnityEngine;
 
 namespace LunaClient.Systems.SettingsSys
 {
@@ -36,7 +37,7 @@ namespace LunaClient.Systems.SettingsSys
 
             if (!File.Exists(BackupSettingsFilePath))
             {
-                LunaLog.Debug("Backing up player token and settings file!");
+                Debug.Log("Backing up player token and settings file!");
                 File.Copy(SettingsFilePath, BackupSettingsFilePath);
             }
 
@@ -110,7 +111,7 @@ namespace LunaClient.Systems.SettingsSys
         {
             if (File.Exists(BackupSettingsFilePath) && !File.Exists(SettingsFilePath))
             {
-                LunaLog.Debug("Restoring player settings file!");
+                Debug.Log("Restoring player settings file!");
                 File.Copy(BackupSettingsFilePath, SettingsFilePath);
             }
         }

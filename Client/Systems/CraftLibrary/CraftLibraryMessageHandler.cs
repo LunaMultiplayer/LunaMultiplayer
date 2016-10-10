@@ -8,6 +8,7 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using UnityEngine;
 
 namespace LunaClient.Systems.CraftLibrary
 {
@@ -31,7 +32,7 @@ namespace LunaClient.Systems.CraftLibrary
                             var vabExists = playerCraft.Value.VabExists;
                             var sphExists = playerCraft.Value.SphExists;
                             var subassemblyExists = playerCraft.Value.SubassemblyExists;
-                            LunaLog.Debug("Player: " + playerCraft.Key + ", VAB: " + vabExists + ", SPH: " + sphExists +
+                            Debug.Log("Player: " + playerCraft.Key + ", VAB: " + vabExists + ", SPH: " + sphExists +
                                           ", SUBASSEMBLY" + subassemblyExists);
                             if (vabExists)
                             {

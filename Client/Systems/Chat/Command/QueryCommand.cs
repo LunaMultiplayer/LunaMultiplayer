@@ -1,6 +1,7 @@
 ﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Utilities;
+using UnityEngine;
 
 namespace LunaClient.Systems.Chat.Command
 {
@@ -13,7 +14,7 @@ namespace LunaClient.Systems.Chat.Command
 
             if (playerFound && !ChatSystem.Singleton.JoinedPmChannels.Contains(commandArgs))
             {
-                LunaLog.Debug("Starting query with " + commandArgs);
+                Debug.Log("Starting query with " + commandArgs);
                 ChatSystem.Singleton.JoinedPmChannels.Add(commandArgs);
                 ChatSystem.Singleton.SelectedChannel = null;
                 ChatSystem.Singleton.SelectedPmChannel = commandArgs;

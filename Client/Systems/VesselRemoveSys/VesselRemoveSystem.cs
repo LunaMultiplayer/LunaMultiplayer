@@ -88,7 +88,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             {
                 if (killVessel != null)
                 {
-                    LunaLog.Debug("Killing vessel: " + killVessel.id);
+                    Debug.Log("Killing vessel: " + killVessel.id);
 
                     //Forget the dying vessel
                     PartKillerSystem.Singleton.ForgetVessel(killVessel);
@@ -103,7 +103,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                         }
                         catch (Exception unloadException)
                         {
-                            LunaLog.Debug("Error unloading vessel: " + unloadException);
+                            Debug.Log("Error unloading vessel: " + unloadException);
                         }
                     }
 
@@ -118,7 +118,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                     }
                     catch (Exception killException)
                     {
-                        LunaLog.Debug("Error destroying vessel: " + killException);
+                        Debug.Log("Error destroying vessel: " + killException);
                     }
 
                     try
@@ -127,7 +127,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                     }
                     catch (Exception destroyException)
                     {
-                        LunaLog.Debug("Error destroying vessel from the scenario: " + destroyException);
+                        Debug.Log("Error destroying vessel from the scenario: " + destroyException);
                     }
 
                     if (FlightGlobals.Vessels.Contains(killVessel) && (killVessel.state != Vessel.State.DEAD))

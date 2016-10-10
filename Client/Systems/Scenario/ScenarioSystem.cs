@@ -46,7 +46,7 @@ namespace LunaClient.Systems.Scenario
 
             foreach (var validScenario in validScenarios)
             {
-                LunaLog.Debug("Creating new scenario module " + validScenario.ModuleType.Name);
+                Debug.Log("Creating new scenario module " + validScenario.ModuleType.Name);
                 HighLogic.CurrentGame.AddProtoScenarioModule(validScenario.ModuleType,
                     validScenario.ScenarioAttributes.TargetScenes);
             }
@@ -75,7 +75,7 @@ namespace LunaClient.Systems.Scenario
 
                 if (scenarioBytes.Length == 0)
                 {
-                    LunaLog.Debug("Error writing scenario data for " + scenarioType);
+                    Debug.Log("Error writing scenario data for " + scenarioType);
                     continue;
                 }
 
@@ -110,12 +110,12 @@ namespace LunaClient.Systems.Scenario
                 var psm = new ProtoScenarioModule(scenarioEntry.ScenarioNode);
                 if (IsScenarioModuleAllowed(psm.moduleName))
                 {
-                    LunaLog.Debug($"Loading {psm.moduleName} scenario data");
+                    Debug.Log($"Loading {psm.moduleName} scenario data");
                     HighLogic.CurrentGame.scenarios.Add(psm);
                 }
                 else
                 {
-                    LunaLog.Debug($"Skipping {psm.moduleName} scenario data in {SettingsSystem.ServerSettings.GameMode} mode");
+                    Debug.Log($"Skipping {psm.moduleName} scenario data in {SettingsSystem.ServerSettings.GameMode} mode");
                 }
             }
         }
@@ -127,7 +127,7 @@ namespace LunaClient.Systems.Scenario
             {
                 foreach (var uf in ScenarioUpgradeableFacilities.protoUpgradeables["SpaceCenter/AstronautComplex"].facilityRefs)
                 {
-                    LunaLog.Debug("Setting astronaut complex to max level");
+                    Debug.Log("Setting astronaut complex to max level");
                     uf.SetLevel(uf.MaxLevel);
                 }
             }
@@ -148,7 +148,7 @@ namespace LunaClient.Systems.Scenario
 
             foreach (var kerbalName in kerbalNames)
             {
-                LunaLog.Debug($"Spawning missing tourist ({kerbalName}) for active tourism contract");
+                Debug.Log($"Spawning missing tourist ({kerbalName}) for active tourism contract");
                 var pcm = HighLogic.CurrentGame.CrewRoster.GetNewKerbal(ProtoCrewMember.KerbalType.Tourist);
                 pcm.ChangeName(kerbalName);
             }
@@ -165,7 +165,7 @@ namespace LunaClient.Systems.Scenario
                     var kerbalName = contractNode.GetValue("kerbalName");
                     if (!HighLogic.CurrentGame.CrewRoster.Exists(kerbalName))
                     {
-                        LunaLog.Debug("Spawning missing kerbal (" + kerbalName + ") for offered KerbalRescue contract");
+                        Debug.Log("Spawning missing kerbal (" + kerbalName + ") for offered KerbalRescue contract");
                         var pcm = HighLogic.CurrentGame.CrewRoster.GetNewKerbal(ProtoCrewMember.KerbalType.Unowned);
                         pcm.ChangeName(kerbalName);
                     }
@@ -173,7 +173,7 @@ namespace LunaClient.Systems.Scenario
                 if (contractNode.GetValue("state") == "Active")
                 {
                     var kerbalName = contractNode.GetValue("kerbalName");
-                    LunaLog.Debug("Spawning stranded kerbal (" + kerbalName + ") for active KerbalRescue contract");
+                    Debug.Log("Spawning stranded kerbal (" + kerbalName + ") for active KerbalRescue contract");
                     var bodyId = int.Parse(contractNode.GetValue("body"));
                     if (!HighLogic.CurrentGame.CrewRoster.Exists(kerbalName))
                         GenerateStrandedKerbal(bodyId, kerbalName);
@@ -184,7 +184,7 @@ namespace LunaClient.Systems.Scenario
         private static void GenerateStrandedKerbal(int bodyId, string kerbalName)
         {
             //Add kerbal to crew roster.
-            LunaLog.Debug("Spawning missing kerbal, Name: " + kerbalName);
+            Debug.Log("Spawning missing kerbal, Name: " + kerbalName);
 
             var pcm = HighLogic.CurrentGame.CrewRoster.GetNewKerbal(ProtoCrewMember.KerbalType.Unowned);
             pcm.ChangeName(kerbalName);
@@ -233,7 +233,7 @@ namespace LunaClient.Systems.Scenario
                     var kerbalNamesSplit = kerbalNames.Split(new[] {", "}, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var kerbalName in kerbalNamesSplit.Where(k => !HighLogic.CurrentGame.CrewRoster.Exists(k)))
                     {
-                        LunaLog.Debug("Generating missing kerbal from ProgressTracking: " + kerbalName);
+                        Debug.Log("Generating missing kerbal from ProgressTracking: " + kerbalName);
                         var pcm = CrewGenerator.RandomCrewMemberPrototype();
                         pcm.ChangeName(kerbalName);
                         HighLogic.CurrentGame.CrewRoster.AddCrewMember(pcm);
@@ -252,7 +252,7 @@ namespace LunaClient.Systems.Scenario
             {
                 var nodeName = scenarioEntry.ScenarioName;
                 ScreenMessages.PostScreenMessage(nodeName + " is badly behaved!");
-                LunaLog.Debug(nodeName + " is badly behaved!");
+                Debug.Log(nodeName + " is badly behaved!");
                 scenarioEntry.ScenarioNode.SetValue("scene", "7, 8, 5, 6, 9");
             }
         }

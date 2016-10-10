@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.Network;
 using LunaClient.Utilities;
 using LunaCommon.Message.Interface;
+using UnityEngine;
 
 namespace LunaClient.Base
 {
@@ -43,8 +45,8 @@ namespace LunaClient.Base
                 }
                 catch (Exception e)
                 {
-                    LunaLog.Debug("Error handling Message type " + msgData.GetType() + ", exception: " + e);
-                    NetworkSystem.Singleton.Disconnect("Error handling " + msgData.GetType() + " Message");
+                    Debug.LogError("Error handling Message type " + msgData.GetType() + ", exception: " + e);
+                    NetworkConnection.Disconnect("Error handling " + msgData.GetType() + " Message");
                 }
             }
         }

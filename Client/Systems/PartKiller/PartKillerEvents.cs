@@ -4,6 +4,7 @@ using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Utilities;
+using UnityEngine;
 
 namespace LunaClient.Systems.PartKiller
 {
@@ -55,7 +56,7 @@ namespace LunaClient.Systems.PartKiller
 
             if (killShip && !vesselHasLocks)
             {
-                LunaLog.Debug("PartKiller: Destroying vessel fragment");
+                Debug.Log("PartKiller: Destroying vessel fragment");
                 vessel.Die();
             }
             else

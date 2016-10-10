@@ -40,14 +40,8 @@ namespace LunaClient.Windows.ServerList
 
             if (Display)
             {
-                if (!NetworkSystem.Singleton.Servers.Any())
-                {
-                    NetworkSystem.Singleton.RequestServers();
-                    MainSystem.Delay(500);
-                }
-
                 WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "Server list", WindowStyle, LayoutOptions));
+                    DrawContent, "Server list", WindowStyle, LayoutOptions));
             }
         }
     }

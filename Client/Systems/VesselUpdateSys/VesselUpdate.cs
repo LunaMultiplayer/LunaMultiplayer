@@ -153,7 +153,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
             catch (Exception e)
             {
-                LunaLog.Debug("Failed to get vessel update, exception: " + e);
+                Debug.Log("Failed to get vessel update, exception: " + e);
                 return null;
             }
         }

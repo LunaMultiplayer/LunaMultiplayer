@@ -24,42 +24,49 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Lidgren.Network;
+using LunaCommon.Message;
+using UnityEngine;
 
-namespace LunaClient.Systems.Network
+namespace LunaClient.Network
 {
-    public partial class NetworkSystem
+    public class NetworkReceiver
     {
-        private void ReceiveThreadMain()
+        public static void ReceiveMain()
         {
             try
             {
-                while (ClientConnection != null && MainSystem.Singleton.NetworkState >= ClientState.CONNECTED)
+                NetworkMain.ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
+                NetworkMain.ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+                NetworkMain.ClientConnection.Configuration.EnableMessageType(NetIncomingMessageType.UnconnectedData);
+                NetworkMain.ClientConnection.Start();
+
+                while (!MainSystem.Singleton.Quit)
                 {
                     NetIncomingMessage msg;
-                    if (ClientConnection.ReadMessage(out msg))
+                    while (NetworkMain.ClientConnection.ReadMessage(out msg))
                     {
-                        LastReceiveTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                        NetworkStatistics.LastReceiveTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                         switch (msg.MessageType)
                         {
                             case NetIncomingMessageType.NatIntroductionSuccess:
-                                HandleNatIntroduction(msg);
+                                NetworkServerList.HandleNatIntroduction(msg);
                                 break;
                             case NetIncomingMessageType.ConnectionLatencyUpdated:
-                                PingMs = TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
+                                NetworkStatistics.PingMs = TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
                                 break;
                             case NetIncomingMessageType.UnconnectedData:
-                                HandleServersList(msg);
+                                NetworkServerList.HandleServersList(msg);
                                 break;
                             case NetIncomingMessageType.Data:
                                 try
                                 {
-                                    var deserializedMsg = ServerMessageFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
+                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
                                     EnqueueMessageToSystem(deserializedMsg as IServerMessageBase);
                                 }
                                 catch (Exception e)
                                 {
-                                    LunaLog.Debug("Error deserializing message!");
-                                    HandleDisconnectException(e);
+                                    Debug.Log("Error deserializing message!");
+                                    NetworkMain.HandleDisconnectException(e);
                                 }
                                 break;
                             case NetIncomingMessageType.StatusChanged:
@@ -67,29 +74,27 @@ namespace LunaClient.Systems.Network
                                 {
                                     case NetConnectionStatus.Disconnected:
                                         var reason = msg.ReadString();
-                                        Disconnect(reason);
+                                        NetworkConnection.Disconnect(reason);
                                         break;
                                 }
                                 break;
                             default:
-                                LunaLog.Debug("LIDGREN: " + msg.MessageType + "-- " + msg.PeekString());
+                                Debug.Log("LIDGREN: " + msg.MessageType + "-- " + msg.PeekString());
                                 break;
                         }
                     }
-                    else
-                    {
-                        MainSystem.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
-                    }
+
+                    MainSystem.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
                 }
             }
             catch (Exception e)
             {
-                LunaLog.Debug("Receive message thread error: " + e);
-                HandleDisconnectException(e);
+                Debug.Log("Receive message thread error: " + e);
+                NetworkMain.HandleDisconnectException(e);
             }
         }
         
-        private void EnqueueMessageToSystem(IServerMessageBase msg)
+        private static void EnqueueMessageToSystem(IServerMessageBase msg)
         {
             switch (msg.MessageType)
             {
@@ -158,7 +163,7 @@ namespace LunaClient.Systems.Network
                     ModApiSystem.Singleton.EnqueueMessage(msg.Data);
                     break;
                 default:
-                    LunaLog.Debug("Unhandled Message type " + msg.MessageType);
+                    Debug.LogError("Unhandled Message type " + msg.MessageType);
                     break;
             }
         }

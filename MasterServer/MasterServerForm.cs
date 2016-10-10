@@ -20,7 +20,7 @@ namespace MasterServer
                 Invoke(new Action<string>(WriteLine), line);
                 return;
             }
-            tbStatus.Text += line + Environment.NewLine;
+            tbStatus.Text += DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + " - " + line + Environment.NewLine;
         }
         
         private void MasterServerForm_FormClosed(object sender, FormClosedEventArgs e)

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using LunaClient.Base;
 using LunaClient.Utilities;
+using UnityEngine;
 
 namespace LunaClient.Systems.KerbalReassigner
 {
@@ -108,7 +109,7 @@ namespace LunaClient.Systems.KerbalReassigner
                 pcm.ChangeName(kerbalName);
                 pcm.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
                 HighLogic.CurrentGame.CrewRoster.AddCrewMember(pcm);
-                LunaLog.Debug("Created kerbal " + pcm.name + " for vessel " + vesselId + ", Kerbal was missing");
+                Debug.Log("Created kerbal " + pcm.name + " for vessel " + vesselId + ", Kerbal was missing");
             }
         }
 
@@ -139,7 +140,7 @@ namespace LunaClient.Systems.KerbalReassigner
             if (kerbalName.Contains(" Kerman"))
             {
                 trimmedName = kerbalName.Substring(0, kerbalName.IndexOf(" Kerman", StringComparison.Ordinal));
-                LunaLog.Debug("Trimming to '" + trimmedName + "'");
+                Debug.Log("Trimming to '" + trimmedName + "'");
             }
             try
             {
@@ -168,7 +169,7 @@ namespace LunaClient.Systems.KerbalReassigner
             }
             catch (Exception e)
             {
-                LunaLog.Debug("LunaMultiPlayer Name identifier exception: " + e);
+                Debug.LogError("LunaMultiPlayer Name identifier exception: " + e);
             }
             return ProtoCrewMember.Gender.Male;
         }

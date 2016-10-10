@@ -5,6 +5,7 @@ using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Message.Data.Lock;
+using UnityEngine;
 
 namespace LunaClient.Systems.Lock
 {
@@ -75,7 +76,7 @@ namespace LunaClient.Systems.Lock
                 }
                 catch (Exception e)
                 {
-                    LunaLog.Debug("Error thrown in acquire lock event, exception " + e);
+                    Debug.LogError("Error thrown in acquire lock event, exception " + e);
                 }
             }
         }
@@ -94,7 +95,7 @@ namespace LunaClient.Systems.Lock
                 }
                 catch (Exception e)
                 {
-                    LunaLog.Debug("Error thrown in release lock event, exception " + e);
+                    Debug.LogError("Error thrown in release lock event, exception " + e);
                 }
             }
         }

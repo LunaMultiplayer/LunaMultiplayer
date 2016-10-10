@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using LunaClient.Base;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
@@ -21,24 +22,15 @@ using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message;
 using Lidgren.Network;
+using LunaClient.Network;
+using UnityEngine;
 
 namespace LunaClient.Systems.Network
 {
-    public partial class NetworkSystem : System<NetworkSystem>
+    public class NetworkSystem : System<NetworkSystem>
     {
-        private NetClient ClientConnection { get; } = new NetClient(Config);
-        public double PingMs { get; set; }
-        private long LastReceiveTime { get; set; }
-        public long LastSendTime { get; set; }
-        private static ServerMessageFactory ServerMessageFactory { get; } = new ServerMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
-        private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
-
-        #region Statics
-
-        #endregion
-
-        public string ServerMotd { get; set; }
-        public bool DisplayMotd { get; set; }
+        public static string ServerMotd { get; set; }
+        public static bool DisplayMotd { get; set; }
 
         public override void Update()
         {
@@ -58,7 +50,7 @@ namespace LunaClient.Systems.Network
                     MainSystem.Singleton.NetworkState = ClientState.TIME_SYNCING;
                     break;
                 case ClientState.TIME_SYNCING:
-                    LunaLog.Debug("Sending time sync!");
+                    Debug.Log("Sending time sync!");
                     MainSystem.Singleton.Status = "Handshaking successful, syncing server clock";
                     if (TimeSyncerSystem.Singleton.Synced)
                         MainSystem.Singleton.NetworkState = ClientState.TIME_SYNCED;
@@ -66,8 +58,8 @@ namespace LunaClient.Systems.Network
                         TimeSyncerSystem.Singleton.MessageSender.SendTimeSyncRequest();
                     break;
                 case ClientState.TIME_SYNCED:
-                    LunaLog.Debug("Time Synced!");
-                    SimpleMessageSender.SendKerbalsRequest();
+                    Debug.Log("Time Synced!");
+                    NetworkSimpleMessageSender.SendKerbalsRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_KERBALS;
                     break;
                 case ClientState.SYNCING_KERBALS:
@@ -75,7 +67,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.KERBALS_SYNCED:
                     MainSystem.Singleton.Status = "Kerbals synced";
-                    SimpleMessageSender.SendSettingsRequest();
+                    NetworkSimpleMessageSender.SendSettingsRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_SETTINGS;
                     break;
                 case ClientState.SYNCING_SETTINGS:
@@ -83,7 +75,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.SETTINGS_SYNCED:
                     MainSystem.Singleton.Status = "Settings synced";
-                    SimpleMessageSender.SendWarpSubspacesRequest();
+                    NetworkSimpleMessageSender.SendWarpSubspacesRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_WARPSUBSPACES;
                     break;
                 case ClientState.SYNCING_WARPSUBSPACES:
@@ -91,7 +83,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.WARPSUBSPACES_SYNCED:
                     MainSystem.Singleton.Status = "Warp subspaces synced";
-                    SimpleMessageSender.SendColorsRequest();
+                    NetworkSimpleMessageSender.SendColorsRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_COLORS;
                     break;
                 case ClientState.SYNCING_COLORS:
@@ -100,7 +92,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.COLORS_SYNCED:
                     MainSystem.Singleton.Status = "Player colors synced";
-                    SimpleMessageSender.SendPlayersRequest();
+                    NetworkSimpleMessageSender.SendPlayersRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_PLAYERS;
                     break;
                 case ClientState.SYNCING_PLAYERS:
@@ -108,7 +100,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.PLAYERS_SYNCED:
                     MainSystem.Singleton.Status = "Players synced";
-                    SimpleMessageSender.SendScenariosRequest();
+                    NetworkSimpleMessageSender.SendScenariosRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_SCENARIOS;
                     break;
                 case ClientState.SYNCING_SCENARIOS:
@@ -116,7 +108,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.SCNEARIOS_SYNCED:
                     MainSystem.Singleton.Status = "Scenarios synced";
-                    SimpleMessageSender.SendCraftLibraryRequest();
+                    NetworkSimpleMessageSender.SendCraftLibraryRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_CRAFTLIBRARY;
                     break;
                 case ClientState.SYNCING_CRAFTLIBRARY:
@@ -124,7 +116,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.CRAFTLIBRARY_SYNCED:
                     MainSystem.Singleton.Status = "Craft library synced";
-                    SimpleMessageSender.SendChatRequest();
+                    NetworkSimpleMessageSender.SendChatRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_CHAT;
                     break;
                 case ClientState.SYNCING_CHAT:
@@ -132,7 +124,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.CHAT_SYNCED:
                     MainSystem.Singleton.Status = "Chat synced";
-                    SimpleMessageSender.SendLocksRequest();
+                    NetworkSimpleMessageSender.SendLocksRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_LOCKS;
                     break;
                 case ClientState.SYNCING_LOCKS:
@@ -140,7 +132,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.LOCKS_SYNCED:
                     MainSystem.Singleton.Status = "Locks synced";
-                    SimpleMessageSender.SendAdminsRequest();
+                    NetworkSimpleMessageSender.SendAdminsRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_ADMINS;
                     break;
                 case ClientState.SYNCING_ADMINS:
@@ -148,14 +140,14 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.ADMINS_SYNCED:
                     MainSystem.Singleton.Status = "Admins synced";
-                    SimpleMessageSender.SendVesselListRequest();
+                    NetworkSimpleMessageSender.SendVesselListRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_VESSELS;
                     break;
                 case ClientState.SYNCING_VESSELS:
                     MainSystem.Singleton.Status = "Syncing vessels";
                     break;
                 case ClientState.VESSELS_SYNCED:
-                    LunaLog.Debug("Vessels Synced!");
+                    Debug.Log("Vessels Synced!");
                     MainSystem.Singleton.Status = "Syncing universe time";
                     MainSystem.Singleton.NetworkState = ClientState.TIME_LOCKING;
                     TimeSyncerSystem.Singleton.Enabled = true;
@@ -170,8 +162,8 @@ namespace LunaClient.Systems.Network
                 case ClientState.TIME_LOCKING:
                     if (TimeSyncerSystem.Singleton.Synced)
                     {
-                        LunaLog.Debug("Time Locked!");
-                        LunaLog.Debug("Starting Game!");
+                        Debug.Log("Time Locked!");
+                        Debug.Log("Starting Game!");
                         MainSystem.Singleton.Status = "Starting game";
                         MainSystem.Singleton.NetworkState = ClientState.TIME_LOCKED;
                         MainSystem.Singleton.StartGame = true;
@@ -196,7 +188,7 @@ namespace LunaClient.Systems.Network
                         WarpSystem.Singleton.Enabled = true;
                         CraftLibrarySystem.Singleton.Enabled = true;
                         ToolbarSystem.Singleton.Enabled = true;
-                        SimpleMessageSender.SendMotdRequest();
+                        NetworkSimpleMessageSender.SendMotdRequest();
                     }
                     break;
                 case ClientState.RUNNING:
@@ -210,47 +202,7 @@ namespace LunaClient.Systems.Network
                 ScenarioSystem.Singleton.UpgradeTheAstronautComplexSoTheGameDoesntBugOut();
                 ScreenMessages.PostScreenMessage(ServerMotd, 10f, ScreenMessageStyle.UPPER_CENTER);
                 //Control locks will bug out the space centre sceen, so remove them before starting.
-                DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
-            }
-        }
-
-        private static void DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway()
-        {
-            LunaLog.Debug("Clearing " + InputLockManager.lockStack.Count + " control locks");
-            InputLockManager.ClearControlLocks();
-        }
-
-        public long GetStatistics(string statType)
-        {
-            switch (statType)
-            {
-                case "Ping":
-                    return (long)PingMs;
-                case "SentBytes":
-                    return ClientConnection.Statistics.SentBytes;
-                case "ReceivedBytes":
-                    return ClientConnection.Statistics.ReceivedBytes;
-                case "LastSendTime":
-                    return (int)((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - LastSendTime));
-                case "LastReceiveTime":
-                    return (int)((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - LastReceiveTime));
-                case "QueuedOutgoingMessages":
-                    return OutgoingMessages.Count;
-            }
-            return 0;
-        }
-
-        private void HandleDisconnectException(Exception e)
-        {
-            if (e.InnerException != null)
-            {
-                LunaLog.Debug("Connection error: " + e.Message + ", " + e.InnerException);
-                Disconnect("Connection error: " + e.Message + ", " + e.InnerException.Message);
-            }
-            else
-            {
-                LunaLog.Debug("Connection error: " + e);
-                Disconnect("Connection error: " + e.Message);
+                NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
             }
         }
     }

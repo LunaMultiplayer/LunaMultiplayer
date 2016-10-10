@@ -43,8 +43,6 @@ namespace ServerTester
 
             try
             {
-                LunaLog.Debug("Connecting to " + destination.Address + " port " + destination.Port + "...");
-
                 var outmsg = ClientConnection.CreateMessage(1);
                 outmsg.Write((byte)NetIncomingMessageType.ConnectionApproval);
 
@@ -64,16 +62,12 @@ namespace ServerTester
                     ReceiveThread = new Thread(ReceiveThreadMain) { IsBackground = true };
                     ReceiveThread.Start();
                 }
-                else
-                {
-                    LunaLog.Debug("Failed to connect within the timeout!");
-                }
             }
             catch (Exception e)
             {
             }
         }
-        
+
         private void ReceiveThreadMain()
         {
             try
@@ -89,15 +83,9 @@ namespace ServerTester
                                 Ping = msg.ReadFloat() * 1000;
                                 break;
                             case NetIncomingMessageType.Data:
-                                try
-                                {
-                                    var deserializedMsg = ServerMessageFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
-                                    Console.Write("RECEIVED: " + deserializedMsg.GetType() + "-- " + deserializedMsg.Data.GetType());
-                                }
-                                catch (Exception e)
-                                {
-                                    LunaLog.Debug("Error deserializing message!");
-                                }
+                                var deserializedMsg = ServerMessageFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
+                                Console.Write("RECEIVED: " + deserializedMsg.GetType() + "-- " + deserializedMsg.Data.GetType());
+
                                 break;
                             case NetIncomingMessageType.StatusChanged:
                                 if (msg.SenderConnection.Status == NetConnectionStatus.Disconnected)

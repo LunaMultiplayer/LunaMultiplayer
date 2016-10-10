@@ -21,6 +21,7 @@ namespace LunaServer.Lidgren
 {
     public class LidgrenServer
     {
+        private static IPEndPoint[] MasterServerEndpoints { get; set; }
         private static NetServer Server { get; set; }
         public static MessageReceiver ClientMessageReceiver { get; set; } = new MessageReceiver();
 
@@ -151,9 +152,10 @@ namespace LunaServer.Lidgren
             var adr = NetUtility.GetMyAddress(out mask);
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
 
-            var masterServers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
-                .Select(Common.CreateEndpointFromString)
-                .ToArray();
+            if (MasterServerEndpoints == null || !MasterServerEndpoints.Any())
+                MasterServerEndpoints = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
+                    .Select(Common.CreateEndpointFromString)
+                    .ToArray();
 
             LunaLog.Normal("Registering with master servers...");
             while (ServerContext.ServerRunning)
@@ -184,7 +186,7 @@ namespace LunaServer.Lidgren
                     var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
                     var msgBytes = ServerContext.MasterServerMessageFactory.Serialize(msg);
                     
-                    foreach (var masterServer in masterServers)
+                    foreach (var masterServer in MasterServerEndpoints)
                     {
                         try
                         {

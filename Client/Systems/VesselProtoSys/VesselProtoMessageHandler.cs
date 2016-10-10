@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.VesselWarpSys;
 using LunaClient.Utilities;
@@ -88,14 +89,14 @@ namespace LunaClient.Systems.VesselProtoSys
                         }
                         else
                         {
-                            LunaLog.Debug("Cached object " + serverVessel + " is damaged");
+                            Debug.Log("Cached object " + serverVessel + " is damaged");
                             requestedObjects.Add(serverVessel);
                         }
                     }
                 }
             }
 
-            NetworkSystem.Singleton.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>
+            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>
                 (new VesselsRequestMsgData { RequestList = requestedObjects.ToArray() }));
         }
 
@@ -130,12 +131,12 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
                 else
                 {
-                    LunaLog.Debug("Failed to load vessel " + vesselId + "!");
+                    Debug.Log("Failed to load vessel " + vesselId + "!");
                 }
             }
             else
             {
-                LunaLog.Debug("Failed to load vessel" + vesselId + "!");
+                Debug.Log("Failed to load vessel" + vesselId + "!");
             }
         }
     }

@@ -8,6 +8,7 @@ using LunaCommon;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using UnityEngine;
 
 namespace LunaClient.Systems.Flag
 {
@@ -72,13 +73,13 @@ namespace LunaClient.Systems.Flag
             {
                 if (File.Exists(flagFile))
                 {
-                    LunaLog.Debug("Deleting flag " + flagFile);
+                    Debug.Log("Deleting flag " + flagFile);
                     File.Delete(flagFile);
                 }
             }
             catch (Exception e)
             {
-                LunaLog.Debug("Error deleting flag " + flagFile + ", exception: " + e);
+                Debug.LogError("Error deleting flag " + flagFile + ", exception: " + e);
             }
         }
     }

@@ -14,7 +14,7 @@ namespace LunaClient.Systems.AtmoLoader
         {
             if (System.LoadingFlyingVessels.ContainsKey(vessel.id))
             {
-                LunaLog.Debug("Atmo load successful: Vessel is off rails");
+                Debug.Log("Atmo load successful: Vessel is off rails");
 
                 var flyingVesselLoad = System.LoadingFlyingVessels[vessel.id];
                 flyingVesselLoad.FlyingVessel.Landed = false;
@@ -52,7 +52,7 @@ namespace LunaClient.Systems.AtmoLoader
                 if ((vessel.situation == Vessel.Situations.FLYING) &&
                     (pilotedByAnotherPlayer || updatedByAnotherPlayer))
                 {
-                    LunaLog.Debug("AtmoLoad: Saving player vessel getting packed in atmosphere");
+                    Debug.Log("AtmoLoad: Saving player vessel getting packed in atmosphere");
                     var pv = vessel.BackupVessel();
 
                     var savedNode = new ConfigNode();

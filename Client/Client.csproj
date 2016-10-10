@@ -73,6 +73,8 @@
     <Compile Include="Base\Window.cs" />
     <Compile Include="Base\SystemWindow.cs" />
     <Compile Include="MainSystem.cs" />
+    <Compile Include="Network\NetworkMain.cs" />
+    <Compile Include="Network\NetworkStatistics.cs" />
     <Compile Include="Systems\Admin\AdminMessageHandler.cs" />
     <Compile Include="Systems\Admin\AdminMessageSender.cs" />
     <Compile Include="Systems\Chat\ChatMessageHandler.cs" />
@@ -109,9 +111,8 @@
     <Compile Include="Systems\Motd\MotdMessageHandler.cs" />
     <Compile Include="Systems\Motd\MotdMessageSender.cs" />
     <Compile Include="Systems\Motd\MotdSystem.cs" />
-    <Compile Include="Systems\Network\NetworkServerList.cs" />
-    <Compile Include="Systems\Network\NetworkSimpleMessageSender.cs" />
-    <Compile Include="Systems\Network\NetworkStructures.cs" />
+    <Compile Include="Network\NetworkServerList.cs" />
+    <Compile Include="Network\NetworkSimpleMessageSender.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageHandler.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageSender.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionSystem.cs" />
@@ -190,13 +191,12 @@
     <Compile Include="Systems\AtmoLoader\AtmoLoaderSystem.cs" />
     <Compile Include="Systems\KerbalReassigner\KerbalReassignerSystem.cs" />
     <Compile Include="Systems\Lock\LockSystem.cs" />
-    <Compile Include="Utilities\Log.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Systems\Mod\ModWorker.cs" />
     <Compile Include="Utilities\BlockingQueue.cs" />
-    <Compile Include="Systems\Network\NetworkReceiver.cs" />
-    <Compile Include="Systems\Network\NetworkConnection.cs" />
-    <Compile Include="Systems\Network\NetworkSender.cs" />
+    <Compile Include="Network\NetworkReceiver.cs" />
+    <Compile Include="Network\NetworkConnection.cs" />
+    <Compile Include="Network\NetworkSender.cs" />
     <Compile Include="Systems\Network\NetworkSystem.cs" />
     <Compile Include="Systems\PartKiller\PartKillerSystem.cs" />
     <Compile Include="Systems\ColorSystem\PlayerColorSystem.cs" />

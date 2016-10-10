@@ -2,6 +2,7 @@
 using System.IO;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.KerbalReassigner;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.SettingsSys;
@@ -11,6 +12,7 @@ using LunaCommon.Message.Data;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using UniLinq;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -18,7 +20,7 @@ namespace LunaClient.Systems.VesselProtoSys
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSystem.Singleton.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
+            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
         public void SendVesselProtoMessageApplyPosition(ProtoVessel vessel)
@@ -35,7 +37,7 @@ namespace LunaClient.Systems.VesselProtoSys
             //Defend against NaN orbits
             if (VesselHasNaNPosition(vessel))
             {
-                LunaLog.Debug("Vessel " + vessel.vesselID + " has NaN position");
+                Debug.Log("Vessel " + vessel.vesselID + " has NaN position");
                 return;
             }
 
@@ -60,7 +62,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (vesselBytes.Length > 0)
             {
                 UniverseSyncCache.Singleton.QueueToCache(vesselBytes);
-                LunaLog.Debug($"Sending vessel {vessel.vesselID}, Name {vessel.vesselName}, type: {vessel.vesselType}, size: {vesselBytes.Length}");
+                Debug.Log($"Sending vessel {vessel.vesselID}, Name {vessel.vesselName}, type: {vessel.vesselType}, size: {vesselBytes.Length}");
 
                 SendMessage(new VesselProtoMsgData
                 {
@@ -70,7 +72,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             else
             {
-                LunaLog.Debug("Failed to create byte[] data for " + vessel.vesselID);
+                Debug.LogError("Failed to create byte[] data for " + vessel.vesselID);
             }
         }
 
@@ -139,7 +141,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     var valueDodge = DodgeValueIfNeeded(valueCurrent);
                     if (valueCurrent != valueDodge)
                     {
-                        LunaLog.Debug("Dodged actiongroup " + keyName);
+                        Debug.Log("Dodged actiongroup " + keyName);
                         actiongroupNode.SetValue(keyName, valueDodge);
                     }
                 }

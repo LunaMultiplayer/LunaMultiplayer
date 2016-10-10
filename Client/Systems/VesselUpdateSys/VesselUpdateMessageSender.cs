@@ -1,6 +1,7 @@
 ﻿using System;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.Network;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
@@ -12,7 +13,7 @@ namespace LunaClient.Systems.VesselUpdateSys
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSystem.Singleton.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
+            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
         public void SendVesselUpdate(VesselUpdate update)

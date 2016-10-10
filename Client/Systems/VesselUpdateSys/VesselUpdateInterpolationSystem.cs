@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
+using LunaClient.Network;
 using LunaClient.Systems.Network;
 
 namespace LunaClient.Systems.VesselUpdateSys
@@ -18,7 +19,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// For bad conections we will work several MS in the past as we need time to receive them.
         /// Good connections can have this value closer to 0 although it will never be 0.
         /// </summary>
-        public double MsInPast { get; set; } = NetworkSystem.Singleton.PingMs * 2 <= 500 ? 500: NetworkSystem.Singleton.PingMs * 2;
+        public double MsInPast { get; set; } = NetworkStatistics.PingMs * 2 <= 500 ? 500: NetworkStatistics.PingMs * 2;
         
         /// <summary>
         /// After the value in ms specified here the vessel will be removed from the interpolation system

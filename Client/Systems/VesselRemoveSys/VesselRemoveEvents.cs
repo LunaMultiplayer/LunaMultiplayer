@@ -2,6 +2,7 @@
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Utilities;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselRemoveSys
 {
@@ -20,7 +21,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             //Only remove the vessel if we own the update lock
             if (LockSystem.Singleton.LockIsOurs("update-" + dyingVessel.id))
             {
-                LunaLog.Debug($"Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
+                Debug.Log($"Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
                 KerbalSystem.Singleton.MessageSender.SendKerbalsInVessel(dyingVessel);
 
                 System.MessageSender.SendVesselRemove(dyingVessel.id);
@@ -42,7 +43,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
             }
 
-            LunaLog.Debug($"Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
+            Debug.Log($"Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
             KerbalSystem.Singleton.MessageSender.SendKerbalsInVessel(recoveredVessel);
 
             System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
@@ -63,7 +64,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
             }
 
-            LunaLog.Debug($"Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
+            Debug.Log($"Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
             KerbalSystem.Singleton.MessageSender.SendKerbalsInVessel(terminatedVessel);
 
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
