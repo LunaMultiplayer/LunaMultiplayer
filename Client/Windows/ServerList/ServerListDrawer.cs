@@ -42,8 +42,10 @@ namespace LunaClient.Windows.ServerList
             
             if (NetworkServerList.Servers == null || !NetworkServerList.Servers.Any())
             {
-                GUILayout.Space(100);
-                GUILayout.Label("No servers!");
+                GUILayout.Space(200);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("No servers!", BigLabelStyle);
+                GUILayout.EndHorizontal();
             }
             else
             {

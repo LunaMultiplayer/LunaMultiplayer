@@ -70,7 +70,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
             foreach (var vesselProto in vesselsToLoad)
             {
-                VesselLoader.LoadVessel(vesselProto.VesselNode, vesselProto.VesselId);
+                Client.Singleton.StartCoroutine(VesselLoader.LoadVessel(vesselProto.VesselNode, vesselProto.VesselId));
+                vesselProto.Loaded = true;
             }
         }
         

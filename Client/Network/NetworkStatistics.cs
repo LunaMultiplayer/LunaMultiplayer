@@ -4,7 +4,7 @@ namespace LunaClient.Network
 {
     public class NetworkStatistics
     {
-        public static double PingMs { get; set; }
+        public static float PingMs { get; set; }
         public static long LastReceiveTime { get; set; }
         public static long LastSendTime { get; set; }
 

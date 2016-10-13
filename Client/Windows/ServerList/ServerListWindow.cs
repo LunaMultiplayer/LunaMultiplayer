@@ -3,11 +3,13 @@ using LunaClient.Systems.Network;
 using LunaClient.Utilities;
 using UniLinq;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow : Window<ServerListWindow>
     {
+        protected GUIStyle BigLabelStyle { get; set; }
         protected Vector2 ScrollPosition { get; set; }
 
         protected const float WindowHeight = 700;
@@ -15,6 +17,12 @@ namespace LunaClient.Windows.ServerList
 
         public override void SetStyles()
         {
+            BigLabelStyle = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 80,
+                normal = {textColor = Color.red}
+            };
+
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth,
                 WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);

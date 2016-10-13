@@ -48,7 +48,7 @@ namespace LunaClient.Network
                                 NetworkServerList.HandleNatIntroduction(msg);
                                 break;
                             case NetIncomingMessageType.ConnectionLatencyUpdated:
-                                NetworkStatistics.PingMs = TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
+                                NetworkStatistics.PingMs = (float)TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
                                 break;
                             case NetIncomingMessageType.UnconnectedData:
                                 NetworkServerList.HandleServersList(msg);

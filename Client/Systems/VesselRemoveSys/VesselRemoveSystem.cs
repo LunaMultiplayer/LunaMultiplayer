@@ -121,14 +121,15 @@ namespace LunaClient.Systems.VesselRemoveSys
                         Debug.Log("Error destroying vessel: " + killException);
                     }
 
-                    try
-                    {
-                        HighLogic.CurrentGame.DestroyVessel(killVessel);
-                    }
-                    catch (Exception destroyException)
-                    {
-                        Debug.Log("Error destroying vessel from the scenario: " + destroyException);
-                    }
+                    //try
+                    //{
+                    //    HighLogic.CurrentGame.DestroyVessel(killVessel);
+                    //    HighLogic.CurrentGame.Updated();
+                    //}
+                    //catch (Exception destroyException)
+                    //{
+                    //    Debug.Log("Error destroying vessel from the scenario: " + destroyException);
+                    //}
 
                     if (FlightGlobals.Vessels.Contains(killVessel) && (killVessel.state != Vessel.State.DEAD))
                     {

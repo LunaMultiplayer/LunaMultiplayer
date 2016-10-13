@@ -100,7 +100,7 @@ namespace LunaClient.Windows.Connection
                         }
             }
 
-            GUILayout.Label("Servers:");
+            GUILayout.Label("Custom servers:");
             if (SettingsSystem.CurrentSettings.Servers.Count == 0)
                 GUILayout.Label("(None - Add a server first)");
 

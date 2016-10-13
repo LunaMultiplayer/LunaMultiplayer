@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -66,11 +67,11 @@ namespace LunaClient
         #endregion
 
         #region Base overrides
-
+        
         public override void Reset()
         {
             Profiler.LmpReferenceTime.Start();
-
+            
             Debug.Log("KSP installed at " + KspPath);
             Debug.Log("LMP installed at " + AssemblyPath);
 

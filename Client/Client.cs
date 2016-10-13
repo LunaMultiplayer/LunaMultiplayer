@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 namespace LunaClient
@@ -6,6 +7,13 @@ namespace LunaClient
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class Client : MonoBehaviour
     {
+        public static Client Singleton { get; set; }
+
+        public Client()
+        {
+            Singleton = this;
+        }
+        
         public void Awake()
         {
             DontDestroyOnLoad(this);

@@ -72,7 +72,7 @@ namespace LunaServer.System
                     WarpContext.Subspaces.TryAdd(line.Key, line.Value);
                 }
 
-                WarpContext.NextSubspaceId = WarpContext.Subspaces.Max(s=> s.Key) + 1;
+                WarpContext.NextSubspaceId = WarpContext.Subspaces.Any() ? WarpContext.Subspaces.Max(s=> s.Key) + 1: 1;
             }
             else
             {

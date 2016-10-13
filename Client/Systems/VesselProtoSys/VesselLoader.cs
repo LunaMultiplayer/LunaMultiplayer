@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.IO;
 using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
@@ -46,12 +47,12 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Load a vessel into the game
         /// </summary>
-        public void LoadVessel(ConfigNode vesselNode, Guid protovesselId)
+        public IEnumerator LoadVessel(ConfigNode vesselNode, Guid protovesselId)
         {
             var currentProto = CreateSafeProtoVesselFromConfigNode(vesselNode, protovesselId);
 
             if (!ProtoVesselValidationsPassed(currentProto))
-                return;
+                yield return 0;
 
             RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
             FixProtoVesselFlags(currentProto);
@@ -63,7 +64,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (currentProto.vesselRef == null)
             {
                 Debug.Log("Protovessel " + currentProto.vesselID + " failed to create a vessel!");
-                return;
+                yield return 0;
             }
             
             if (ProtoVesselIsTarget(currentProto))
@@ -78,6 +79,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 FlightGlobals.SetActiveVessel(currentProto.vesselRef);
 
             Debug.Log("Protovessel Loaded");
+            yield return 0;
         }
 
         #region Private methods
