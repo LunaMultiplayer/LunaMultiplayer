@@ -25,6 +25,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             var update = new VesselUpdate
             {
+                ReceiveTime = DateTime.UtcNow.Ticks,
                 SentTime = msgData.SentTime,
                 PlanetTime = msgData.PlanetTime,
                 VesselId = msgData.VesselId,
@@ -73,7 +74,6 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
 
             System.ReceivedUpdates[update.VesselId].Add(update);
-            System.ReceivedUpdates[update.VesselId] = System.ReceivedUpdates[update.VesselId].OrderBy(u => u.SentTime).ToList();
         }
 
         private bool UpdateIsForOwnVessel(Guid vesselId)

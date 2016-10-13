@@ -71,17 +71,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         }
         
         /// <summary>
-        /// This function runs all the current vessel updates that are being interpolated and updates the vessel positions using interpolation
-        /// </summary>
-        public void HandleVesselInterpolations()
-        {
-            foreach (var update in CurrentVesselUpdate.Where(u => !InterpolationFinished(u.Key)))
-            {
-                update.Value?.ApplyVesselUpdate(NextVesselUpdate[update.Key]);
-            }
-        }
-
-        /// <summary>
         /// Main system that picks updates received and sets them for further processing
         /// </summary>
         public void HandleVesselUpdates()
@@ -94,11 +83,13 @@ namespace LunaClient.Systems.VesselUpdateSys
 
                 //Here we get the oldest update from the list.
                 //Usually it will be a packet with a sent time close to the value of MilisecondsInPast
-                var update = vesselUpdates.OrderBy(u => u.SentTime).FirstOrDefault();
+                var update = vesselUpdates.OrderBy(u => u.ReceiveTime).FirstOrDefault();
 
                 if (update != null)
                 {
                     HandleVesselUpdate(update);
+                    if (CurrentVesselUpdate.ContainsKey(update.VesselId) && NextVesselUpdate.ContainsKey(update.VesselId))
+                        Client.Singleton.StartCoroutine(CurrentVesselUpdate[update.VesselId].ApplyVesselUpdate(NextVesselUpdate[update.VesselId]));
                 }
             }
         }
@@ -123,7 +114,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                                 CurrentVesselUpdate[vesselId].InterpolationStartTime -
                                 CurrentVesselUpdate[vesselId].InterpolationDuration;
 
-                var interpolationDurationWithExtraTime = update.SentTime - NextVesselUpdate[vesselId].SentTime - extraTime;
+                var interpolationDurationWithExtraTime = update.ReceiveTime - NextVesselUpdate[vesselId].ReceiveTime - extraTime;
                 if (interpolationDurationWithExtraTime <= 0)
                 {
                     //This means that the interpolation we are trying to do has a smaller duration timespan than the extra time we took before.
@@ -131,12 +122,11 @@ namespace LunaClient.Systems.VesselUpdateSys
                     //When you do this, you must compensate and increase the duration of this interpolation 
                     //as you're using a packet that you're not supposed to use as its send time is less than MsInPast.
                     var validUpdate = System.ReceivedUpdates[vesselId]
-                        .OrderBy(u => u.SentTime)
-                        .FirstOrDefault(u => u.SentTime - NextVesselUpdate[vesselId].SentTime - extraTime > 0);
+                        .FirstOrDefault(u => u.ReceiveTime - NextVesselUpdate[vesselId].ReceiveTime - extraTime > 0);
 
                     if (validUpdate != null)
                     {
-                        var timeDifference = validUpdate.SentTime - update.SentTime;
+                        var timeDifference = validUpdate.ReceiveTime - update.ReceiveTime;
                         HandleVesselUpdate(validUpdate);
                         CurrentVesselUpdate[vesselId].InterpolationDuration += timeDifference;
                     }
@@ -152,6 +142,16 @@ namespace LunaClient.Systems.VesselUpdateSys
                     CurrentVesselUpdate[vesselId].InterpolationStartTime = InterpolationTick;
                 }
             }
+            else
+            {
+                var validUpdate = System.ReceivedUpdates[vesselId].FirstOrDefault(u => update.SentTime - NextVesselUpdate[vesselId].SentTime > 0);
+
+                if (validUpdate != null)
+                {
+                    HandleVesselUpdate(validUpdate);
+                    return;
+                }
+            }
         }
 
         /// <summary>
@@ -160,8 +160,8 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <param name="vesselUpdates"></param>
         private void RemoveOldUpdates(ICollection<VesselUpdate> vesselUpdates)
         {
-            var msInPastPlus10Percent = MsInPast + (MsInPast * 10 / 100);
-            var updatesToRemove = vesselUpdates.Where(u => u.SentTime < InterpolationTick - TimeSpan.FromMilliseconds(msInPastPlus10Percent).Ticks).ToList();
+            var ticksInPastPlus10Percent = TimeSpan.FromMilliseconds(MsInPast + (MsInPast * 10 / 100)).Ticks;
+            var updatesToRemove = vesselUpdates.Where(u => u.ReceiveTime < InterpolationTick - ticksInPastPlus10Percent).ToList();
             foreach (var updatetoRemove in updatesToRemove)
                 vesselUpdates.Remove(updatetoRemove);
         }
@@ -189,7 +189,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             var currentPosition = VesselUpdate.CreateFromVesselId(update.VesselId);
             if (currentPosition != null)
             {
-                currentPosition.SentTime = update.SentTime - TimeSpan.FromMilliseconds(MsInPast).Ticks;
+                currentPosition.ReceiveTime = update.ReceiveTime - TimeSpan.FromMilliseconds(MsInPast).Ticks;
                 CurrentVesselUpdate.Add(update.VesselId, currentPosition);
 
                 NextVesselUpdate.Add(update.VesselId, update);

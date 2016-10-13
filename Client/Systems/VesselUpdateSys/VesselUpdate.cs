@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Utilities;
 using UnityEngine;
@@ -57,6 +58,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         private Vessel Vessel { get; set; }
         private CelestialBody Body { get; set; }
         private VesselUpdate NextUpdate { get; set; }
+        public long ReceiveTime { get; set; }
 
         #endregion
 
@@ -162,46 +164,51 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         #region Main interpolation method
 
-        public void ApplyVesselUpdate(VesselUpdate nextUpdate)
+        public IEnumerator ApplyVesselUpdate(VesselUpdate nextUpdate)
         {
             Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
             Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
             NextUpdate = nextUpdate;
 
-            if ((Body == null) || (Vessel == null))
-                return;
-
-            if (!InterpolationStarted)
+            if ((Body != null) && (Vessel != null))
             {
-                InterpolationStarted = true;
-                InterpolationDuration += nextUpdate.SentTime - SentTime;
+                if (!InterpolationStarted)
+                {
+                    InterpolationStarted = true;
+                    InterpolationDuration += nextUpdate.ReceiveTime - ReceiveTime;
+                }
+
+                while (!InterpolationFinished)
+                {
+                    //This value varies a lot depending on the current tick so fix it.
+                    var interpolationValue = InterpolationPercentage;
+
+                    if (interpolationValue >= 0.5)
+                    {
+                        //Set the action groups when we are past the middle of the interpolation
+                        Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, nextUpdate.ActionGrpControls[0]);
+                        Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, nextUpdate.ActionGrpControls[1]);
+                        Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, nextUpdate.ActionGrpControls[2]);
+                        Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, nextUpdate.ActionGrpControls[3]);
+                        Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, nextUpdate.ActionGrpControls[4]);
+
+                        //Set also the current flight state (position of ailerons, gear, etc)
+                        if (!VesselLockSystem.Singleton.IsSpectating)
+                            Vessel.ctrlState.CopyFrom(FlightState);
+                        else
+                            FlightInputHandler.state.CopyFrom(FlightState);
+                    }
+
+                    ApplyCommonInterpolation(interpolationValue);
+
+                    if (IsSurfaceUpdate)
+                        ApplySurfaceInterpolation(interpolationValue);
+                    else
+                        ApplyOrbitInterpolation(interpolationValue);
+
+                    yield return null;
+                }
             }
-
-            //This value varies a lot depending on the current tick so fix it.
-            var interpolationValue = InterpolationPercentage;
-
-            if (interpolationValue >= 0.5)
-            {
-                //Set the action groups when we are past the middle of the interpolation
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, nextUpdate.ActionGrpControls[0]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, nextUpdate.ActionGrpControls[1]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, nextUpdate.ActionGrpControls[2]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, nextUpdate.ActionGrpControls[3]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, nextUpdate.ActionGrpControls[4]);
-
-                //Set also the current flight state (position of ailerons, gear, etc)
-                if (!VesselLockSystem.Singleton.IsSpectating)
-                    Vessel.ctrlState.CopyFrom(FlightState);
-                else
-                    FlightInputHandler.state.CopyFrom(FlightState);
-            }
-
-            ApplyCommonInterpolation(interpolationValue);
-
-            if (IsSurfaceUpdate)
-                ApplySurfaceInterpolation(interpolationValue);
-            else
-                ApplyOrbitInterpolation(interpolationValue);
         }
 
         #endregion

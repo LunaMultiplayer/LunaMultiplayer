@@ -63,7 +63,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                 return;
 
             SendVesselUpdates();
-            InterpolationSystem.HandleVesselInterpolations();
             InterpolationSystem.HandleVesselUpdates();
             InterpolationSystem.RemoveVessels();
         }
