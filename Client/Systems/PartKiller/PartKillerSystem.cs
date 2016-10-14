@@ -30,7 +30,7 @@ namespace LunaClient.Systems.PartKiller
             }
         }
 
-        private void RegisterGameHooks()
+        public override void OnEnabled()
         {
             GameEvents.onVesselCreate.Add(PartKillerEvents.OnVesselCreate);
             GameEvents.onVesselWasModified.Add(PartKillerEvents.OnVesselWasModified);
@@ -38,7 +38,7 @@ namespace LunaClient.Systems.PartKiller
             GameEvents.onFlightReady.Add(PartKillerEvents.OnFlightReady);
         }
 
-        private void UnregisterGameHooks()
+        public override void OnDisabled()
         {
             GameEvents.onVesselCreate.Remove(PartKillerEvents.OnVesselCreate);
             GameEvents.onVesselWasModified.Remove(PartKillerEvents.OnVesselWasModified);
@@ -47,28 +47,13 @@ namespace LunaClient.Systems.PartKiller
         }
 
         #region Fields
-
-        private bool _enabled;
+        
         //Bidictionary
         public Dictionary<Vessel, List<uint>> VesselToPart { get; } = new Dictionary<Vessel, List<uint>>();
         public Dictionary<uint, List<Vessel>> PartToVessel { get; } = new Dictionary<uint, List<Vessel>>();
         public Guid LoadGuid { get; set; } = Guid.Empty;
         private PartKillerEvents PartKillerEvents { get; } = new PartKillerEvents();
-
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                    RegisterGameHooks();
-                else if (_enabled && !value)
-                    UnregisterGameHooks();
-
-                _enabled = value;
-            }
-        }
-
+        
         #endregion
     }
 }

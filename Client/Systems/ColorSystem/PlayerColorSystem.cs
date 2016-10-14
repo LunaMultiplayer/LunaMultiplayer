@@ -16,31 +16,28 @@ namespace LunaClient.Systems.ColorSystem
         #region Fields
 
         public Color DefaultColor { get; } = Color.grey;
-        
-        private bool _enabled;
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                {
-                    GameEvents.onVesselCreate.Add(PlayerColorEvents.SetVesselOrbitColor);
-                    LockSystem.Singleton.RegisterAcquireHook(PlayerColorEvents.OnLockAcquire);
-                    LockSystem.Singleton.RegisterReleaseHook(PlayerColorEvents.OnLockRelease);
-                }
-                if (_enabled && !value)
-                {
-                    GameEvents.onVesselCreate.Remove(PlayerColorEvents.SetVesselOrbitColor);
-                    LockSystem.Singleton.UnregisterAcquireHook(PlayerColorEvents.OnLockAcquire);
-                    LockSystem.Singleton.UnregisterReleaseHook(PlayerColorEvents.OnLockRelease);
-                }
-                _enabled = value;
-            }
-        }
-
         public Dictionary<string, Color> PlayerColors { get; } = new Dictionary<string, Color>();
         public PlayerColorEvents PlayerColorEvents { get; } = new PlayerColorEvents();
+
+        #endregion
+
+        #region Base overrides
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            GameEvents.onVesselCreate.Add(PlayerColorEvents.SetVesselOrbitColor);
+            LockSystem.Singleton.RegisterAcquireHook(PlayerColorEvents.OnLockAcquire);
+            LockSystem.Singleton.RegisterReleaseHook(PlayerColorEvents.OnLockRelease);
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            GameEvents.onVesselCreate.Remove(PlayerColorEvents.SetVesselOrbitColor);
+            LockSystem.Singleton.UnregisterAcquireHook(PlayerColorEvents.OnLockAcquire);
+            LockSystem.Singleton.UnregisterReleaseHook(PlayerColorEvents.OnLockRelease);
+        }
 
         #endregion
 

@@ -49,31 +49,28 @@ namespace LunaClient.Systems.TimeSyncer
 
         private static bool CurrentlyWarping => WarpSystem.Singleton.CurrentSubspace == -1;
 
-        private bool _enabled;
-        public override bool Enabled
+        #endregion
+
+        #endregion
+
+        #region Base overrides
+
+        public override void OnEnabled()
         {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                {
-                    _enabled = true;
-                    SyncSenderThread = new Thread(SyncTimeWithServer) {IsBackground = true};
-                    SyncSenderThread.Start();
-                    Client.Singleton.StartCoroutine(SyncTime());
-                }
-                else if (_enabled && !value)
-                {
-                    _enabled = false;
-                    SyncSenderThread?.Abort();
-                }
-            }
+            base.OnEnabled();
+            SyncSenderThread = new Thread(SyncTimeWithServer) { IsBackground = true };
+            SyncSenderThread.Start();
+            Client.Singleton.StartCoroutine(SyncTime());
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            SyncSenderThread?.Abort();
         }
 
         #endregion
 
-        #endregion
-        
         #region Public Methods
 
         /// <summary>

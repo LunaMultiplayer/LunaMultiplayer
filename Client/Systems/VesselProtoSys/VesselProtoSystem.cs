@@ -19,21 +19,6 @@ namespace LunaClient.Systems.VesselProtoSys
     /// </summary>
     public class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
-        private bool _enabled;
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                    RegisterGameHooks();
-                else if (_enabled && !value)
-                    UnregisterGameHooks();
-
-                _enabled = value;
-            }
-        }
-
         public List<VesselProtoUpdate> AllPlayerVessels { get; } = new List<VesselProtoUpdate>();
 
         public float UpdateScreenMessageInterval = 1f;
@@ -46,6 +31,21 @@ namespace LunaClient.Systems.VesselProtoSys
         public bool VesselReady { get; set; } = false;
 
         private static bool VesselProtoSystemReady => HighLogic.LoadedScene == GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready;
+
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            GameEvents.onFlightReady.Add(VesselProtoEvents.OnFlightReady);
+            GameEvents.onVesselWasModified.Add(VesselProtoEvents.OnVesselWasModified);
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            GameEvents.onFlightReady.Remove(VesselProtoEvents.OnFlightReady);
+            GameEvents.onVesselWasModified.Add(VesselProtoEvents.OnVesselWasModified);
+        }
 
         /// <summary>
         /// Here we send our vessel and load other people vessels if they are in our subspace and have updates for them.
@@ -122,18 +122,6 @@ namespace LunaClient.Systems.VesselProtoSys
             Debug.Log($"Checked vessel {checkVessel.id } for banned parts, is ok: {bannedParts.Length == 0}");
 
             return bannedPartsStr;
-        }
-        
-        private void RegisterGameHooks()
-        {
-            GameEvents.onFlightReady.Add(VesselProtoEvents.OnFlightReady);
-            GameEvents.onVesselWasModified.Add(VesselProtoEvents.OnVesselWasModified);
-        }
-
-        private void UnregisterGameHooks()
-        {
-            GameEvents.onFlightReady.Remove(VesselProtoEvents.OnFlightReady);
-            GameEvents.onVesselWasModified.Add(VesselProtoEvents.OnVesselWasModified);
         }
 
         private void RegisterServerAsteriodIfVesselIsAsteroid(ProtoVessel possibleAsteroid)

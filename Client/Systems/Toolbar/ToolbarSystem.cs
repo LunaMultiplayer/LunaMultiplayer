@@ -12,8 +12,8 @@ namespace LunaClient.Systems.Toolbar
         {
             if (Enabled)
             {
-                DisableToolbar();
-                EnableToolbar();
+                OnDisabled();
+                OnEnabled();
             }
         }
 
@@ -26,26 +26,11 @@ namespace LunaClient.Systems.Toolbar
         private ApplicationLauncherButton StockLmpButton { get; set; }
         private IButton BlizzyButton { get; set; }
 
-        private bool _enabled;
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                    EnableToolbar();
-                else if (_enabled && !value)
-                    DisableToolbar();
-
-                _enabled = value;
-            }
-        }
-
         #endregion
-        
-        #region Private methods
 
-        private void EnableToolbar()
+        #region Base overrides
+
+        public override void OnEnabled()
         {
             ButtonTexture = GameDatabase.Instance.GetTexture("LunaMultiPlayer/Button/LMPButton", false);
             if (SettingsSystem.CurrentSettings.ToolbarType == LmpToolbarType.Disabled)
@@ -67,7 +52,7 @@ namespace LunaClient.Systems.Toolbar
             }
         }
 
-        private void DisableToolbar()
+        public override void OnDisabled()
         {
             if (BlizzyRegistered)
                 DisableBlizzyToolbar();
@@ -75,6 +60,10 @@ namespace LunaClient.Systems.Toolbar
                 DisableStockToolbar();
         }
 
+        #endregion
+
+        #region Private methods
+        
         private void EnableBlizzyToolbar()
         {
             BlizzyRegistered = true;

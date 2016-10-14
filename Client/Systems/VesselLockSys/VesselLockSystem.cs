@@ -31,22 +31,7 @@ namespace LunaClient.Systems.VesselLockSys
         private string GetVesselOwner => IsSpectating ? LockSystem.Singleton.LockOwner("control-" + FlightGlobals.ActiveVessel.id) : "";
 
         private VesselLockEvents VesselMainEvents { get; } = new VesselLockEvents();
-
-        private bool _enabled;
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                    RegisterGameHooks();
-                else if (_enabled && !value)
-                    UnregisterGameHooks();
-
-                _enabled = value;
-            }
-        }
-
+        
         private bool VesselLockSystemReady => Enabled && HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f && FlightGlobals.ActiveVessel != null;
 
         private string SpectatingMessage { get; set; }
@@ -57,6 +42,20 @@ namespace LunaClient.Systems.VesselLockSys
         #endregion
 
         #region base overrides
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            GameEvents.onLevelWasLoadedGUIReady.Add(VesselMainEvents.OnSceneChanged);
+            GameEvents.onVesselChange.Add(VesselMainEvents.OnVesselChange);
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            GameEvents.onLevelWasLoadedGUIReady.Remove(VesselMainEvents.OnSceneChanged);
+            GameEvents.onVesselChange.Remove(VesselMainEvents.OnVesselChange);
+        }
 
         public override void Update()
         {
@@ -140,19 +139,7 @@ namespace LunaClient.Systems.VesselLockSys
                 StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
             }
         }
-
-        private void RegisterGameHooks()
-        {
-            GameEvents.onLevelWasLoadedGUIReady.Add(VesselMainEvents.OnSceneChanged);
-            GameEvents.onVesselChange.Add(VesselMainEvents.OnVesselChange);
-        }
-
-        private void UnregisterGameHooks()
-        {
-            GameEvents.onLevelWasLoadedGUIReady.Remove(VesselMainEvents.OnSceneChanged);
-            GameEvents.onVesselChange.Remove(VesselMainEvents.OnVesselChange);
-        }
-
+        
         /// <summary>
         /// After some ms get the update lock for vessels that are close to us (not packed and not ours) not dead and that nobody has the update lock
         /// </summary>

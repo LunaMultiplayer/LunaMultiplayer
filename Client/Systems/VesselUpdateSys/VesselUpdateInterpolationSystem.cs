@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
@@ -47,16 +48,26 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <summary>
         /// Remove the vessels that didn't receive and update after the value specified in MsWithoutUpdatesToRemove
         /// </summary>
-        public void RemoveVessels()
+        public IEnumerator RemoveVessels()
         {
-            var vesselsToRemove = CurrentVesselUpdate
-                .Where(u => u.Value.InterpolationFinished && TimeSpan.FromSeconds(Time.time - u.Value.FinishTime).TotalMilliseconds > MsWithoutUpdatesToRemove)
-                .Select(u => u.Key).ToArray();
-
-            foreach (var vesselId in vesselsToRemove)
+            var seconds = new WaitForSeconds(5);
+            while (true)
             {
-                CurrentVesselUpdate.Remove(vesselId);
-                System.ReceivedUpdates.Remove(vesselId);
+                if (!VesselUpdateSystem.Singleton.Enabled) break;
+
+                var vesselsToRemove = CurrentVesselUpdate
+                    .Where(u => u.Value.InterpolationFinished &&
+                            TimeSpan.FromSeconds(Time.time - u.Value.FinishTime).TotalMilliseconds >
+                            MsWithoutUpdatesToRemove)
+                    .Select(u => u.Key).ToArray();
+
+                foreach (var vesselId in vesselsToRemove)
+                {
+                    CurrentVesselUpdate.Remove(vesselId);
+                    System.ReceivedUpdates.Remove(vesselId);
+                }
+
+                yield return seconds;
             }
         }
 

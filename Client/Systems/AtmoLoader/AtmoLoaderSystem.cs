@@ -105,36 +105,28 @@ namespace LunaClient.Systems.AtmoLoader
         private bool Registered { get; set; }
 
         private const float UnpackInterval = 3f;
-
-        private bool _enabled;
-
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                {
-                    GameEvents.onGameSceneLoadRequested.Add(AtmoLoaderEventHandler.OnGameSceneLoadRequested);
-                    GameEvents.onVesselGoOffRails.Add(AtmoLoaderEventHandler.OnVesselUnpack);
-                    GameEvents.onVesselGoOnRails.Add(AtmoLoaderEventHandler.OnVesselPack);
-                    GameEvents.onVesselWillDestroy.Add(AtmoLoaderEventHandler.OnVesselWillDestroy);
-                }
-                else if (_enabled && !value)
-                {
-                    GameEvents.onGameSceneLoadRequested.Remove(AtmoLoaderEventHandler.OnGameSceneLoadRequested);
-                    GameEvents.onVesselGoOffRails.Remove(AtmoLoaderEventHandler.OnVesselUnpack);
-                    GameEvents.onVesselGoOnRails.Remove(AtmoLoaderEventHandler.OnVesselPack);
-                    GameEvents.onVesselWillDestroy.Remove(AtmoLoaderEventHandler.OnVesselWillDestroy);
-                }
-
-                _enabled = value;
-            }
-        }
-
+        
         #endregion
 
         #region Base system overrides
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            GameEvents.onGameSceneLoadRequested.Add(AtmoLoaderEventHandler.OnGameSceneLoadRequested);
+            GameEvents.onVesselGoOffRails.Add(AtmoLoaderEventHandler.OnVesselUnpack);
+            GameEvents.onVesselGoOnRails.Add(AtmoLoaderEventHandler.OnVesselPack);
+            GameEvents.onVesselWillDestroy.Add(AtmoLoaderEventHandler.OnVesselWillDestroy);
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            GameEvents.onGameSceneLoadRequested.Remove(AtmoLoaderEventHandler.OnGameSceneLoadRequested);
+            GameEvents.onVesselGoOffRails.Remove(AtmoLoaderEventHandler.OnVesselUnpack);
+            GameEvents.onVesselGoOnRails.Remove(AtmoLoaderEventHandler.OnVesselPack);
+            GameEvents.onVesselWillDestroy.Remove(AtmoLoaderEventHandler.OnVesselWillDestroy);
+        }
 
         public override void FixedUpdate()
         {

@@ -10,24 +10,31 @@ namespace LunaClient.Systems.KerbalReassigner
 {
     public class KerbalReassignerSystem : System<KerbalReassignerSystem>
     {
-        private bool _enabled;
         private KerbalReassignerEvents KerbalReassignerEvents { get; } = new KerbalReassignerEvents();
         public Dictionary<Guid, List<string>> VesselToKerbal { get; } = new Dictionary<Guid, List<string>>();
         public Dictionary<string, Guid> KerbalToVessel { get; } = new Dictionary<string, Guid>();
+        
+        #region Base overrides
 
-        public override bool Enabled
+        public override void OnEnabled()
         {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                    RegisterGameHooks();
-                else if (_enabled && !value)
-                    UnregisterGameHooks();
-
-                _enabled = value;
-            }
+            base.OnEnabled();
+            GameEvents.onVesselCreate.Add(KerbalReassignerEvents.OnVesselCreate);
+            GameEvents.onVesselWasModified.Add(KerbalReassignerEvents.OnVesselWasModified);
+            GameEvents.onVesselDestroy.Add(KerbalReassignerEvents.OnVesselDestroyed);
+            GameEvents.onFlightReady.Add(KerbalReassignerEvents.OnFlightReady);
         }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            GameEvents.onVesselCreate.Remove(KerbalReassignerEvents.OnVesselCreate);
+            GameEvents.onVesselWasModified.Remove(KerbalReassignerEvents.OnVesselWasModified);
+            GameEvents.onVesselDestroy.Remove(KerbalReassignerEvents.OnVesselDestroyed);
+            GameEvents.onFlightReady.Remove(KerbalReassignerEvents.OnFlightReady);
+        }
+
+        #endregion
 
         #region Public methods
 
@@ -116,23 +123,7 @@ namespace LunaClient.Systems.KerbalReassigner
         #endregion
 
         #region Private methods
-
-        private void RegisterGameHooks()
-        {
-            GameEvents.onVesselCreate.Add(KerbalReassignerEvents.OnVesselCreate);
-            GameEvents.onVesselWasModified.Add(KerbalReassignerEvents.OnVesselWasModified);
-            GameEvents.onVesselDestroy.Add(KerbalReassignerEvents.OnVesselDestroyed);
-            GameEvents.onFlightReady.Add(KerbalReassignerEvents.OnFlightReady);
-        }
-
-        private void UnregisterGameHooks()
-        {
-            GameEvents.onVesselCreate.Remove(KerbalReassignerEvents.OnVesselCreate);
-            GameEvents.onVesselWasModified.Remove(KerbalReassignerEvents.OnVesselWasModified);
-            GameEvents.onVesselDestroy.Remove(KerbalReassignerEvents.OnVesselDestroyed);
-            GameEvents.onFlightReady.Remove(KerbalReassignerEvents.OnFlightReady);
-        }
-
+        
         //Better not use a bool for this and enforce the gender binary on xir!
         private static ProtoCrewMember.Gender GetKerbalGender(string kerbalName)
         {

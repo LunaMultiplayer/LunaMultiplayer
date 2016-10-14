@@ -18,19 +18,10 @@ namespace LunaClient.Systems.VesselWarpSys
     {
         public Dictionary<Guid, int> VesselSubspaceList { get; } = new Dictionary<Guid, int>();
         private long LastVesselStrandedCheck { get; set; }
-        private bool _enabled;
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (_enabled && !value)
-                {
-                    VesselSubspaceList.Clear();
-                }
 
-                _enabled = value;
-            }
+        public override void OnDisabled()
+        {
+            VesselSubspaceList.Clear();
         }
 
         public override void Update()

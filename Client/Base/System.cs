@@ -20,7 +20,40 @@ namespace LunaClient.Base
         
         public static T Singleton { get; set; }
 
-        public virtual bool Enabled { get; set; }
+        private bool _enabled;
+        public virtual bool Enabled
+        {
+            get { return _enabled; }
+            set
+            {
+                if (!_enabled && value)
+                {
+                    _enabled = true;
+                    OnEnabled();
+                }
+                else if (_enabled && !value)
+                {
+                    _enabled = false;
+                    OnDisabled();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Override to write code to execute when system is enabled
+        /// </summary>
+        public virtual void OnEnabled()
+        {
+            //Implement your own code
+        }
+
+        /// <summary>
+        /// Override to write code to execute when system is disabled
+        /// </summary>
+        public virtual void OnDisabled()
+        {
+            //Implement your own code
+        }
 
         /// <summary>
         /// Override to call your custom reset functionallity

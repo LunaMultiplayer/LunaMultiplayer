@@ -17,27 +17,6 @@ namespace LunaClient.Systems.Warp
     {
         #region Fields
 
-        private bool _enabled;
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                {
-                    RegisterGameHooks();
-                }
-                else if (_enabled && !value)
-                {
-                    UnregisterGameHooks();
-                    ClientSubspaceList.Clear();
-                    Subspaces.Clear();
-                }
-
-                _enabled = value;
-            }
-        }
-
         public bool CurrentlyWarping => CurrentSubspace == -1;
         public bool AloneInCurrentSubspace => ClientSubspaceList
             .Count(p => p.Value == CurrentSubspace && p.Key != SettingsSystem.CurrentSettings.PlayerName) > 0;
@@ -76,7 +55,17 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Base overriden methods
-        
+
+        public override void OnDisabled()
+        {
+            GameEvents.onTimeWarpRateChanged.Remove(WarpEvents.OnTimeWarpChanged);
+        }
+
+        public override void OnEnabled()
+        {
+            GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);
+        }
+
         public override void Update()
         {
             base.Update();
@@ -146,16 +135,6 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Private methods
-        
-        private void UnregisterGameHooks()
-        {
-            GameEvents.onTimeWarpRateChanged.Remove(WarpEvents.OnTimeWarpChanged);
-        }
-
-        private void RegisterGameHooks()
-        {
-            GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);
-        }
 
         /// <summary>
         /// Follows the warp master if the warp mode is set to MASTER and warp master is in another subspace

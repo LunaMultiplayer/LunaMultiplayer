@@ -15,27 +15,7 @@ namespace LunaClient.Systems.VesselUpdateSys
     public class VesselUpdateSystem : MessageSystem<VesselUpdateSystem, VesselUpdateMessageSender, VesselUpdateMessageHandler>
     {
         #region Field & Properties
-
-        private bool _enabled;
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (_enabled && !value)
-                {
-                    _enabled = false;
-                    InterpolationSystem.ResetSystem();
-                    ReceivedUpdates.Clear();
-                }
-                else if (!_enabled && value)
-                {
-                    _enabled = true;
-                    Client.Singleton.StartCoroutine(SendVesselUpdates());
-                }
-            }
-        }
-
+        
         private float VesselUpdatesSendSInterval => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
 
         public bool UpdateSystemReady
@@ -61,6 +41,20 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         #region Base overrides
 
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            Client.Singleton.StartCoroutine(SendVesselUpdates());
+            Client.Singleton.StartCoroutine(InterpolationSystem.RemoveVessels());
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            InterpolationSystem.ResetSystem();
+            ReceivedUpdates.Clear();
+        }
+
         public override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -68,15 +62,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                 return;
 
             InterpolationSystem.HandleVesselUpdates();
-        }
-
-        public override void Update()
-        {
-            base.Update();
-            if (!UpdateSystemReady)
-                return;
-            
-            InterpolationSystem.RemoveVessels();
         }
 
         #endregion

@@ -21,23 +21,7 @@ namespace LunaClient.Systems.VesselRemoveSys
     public class VesselRemoveSystem : MessageSystem<VesselRemoveSystem, VesselRemoveMessageSender, VesselRemoveMessageHandler>
     {
         #region Fields
-
-        private bool _enabled;
-
-        public override bool Enabled
-        {
-            get { return _enabled; }
-            set
-            {
-                if (!_enabled && value)
-                    RegisterGameHooks();
-                else if (_enabled && !value)
-                    UnregisterGameHooks();
-
-                _enabled = value;
-            }
-        }
-
+        
         private long LastVesselKillCheck { get; set; }
 
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
@@ -45,6 +29,22 @@ namespace LunaClient.Systems.VesselRemoveSys
         #endregion
 
         #region Base overrides
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
+            GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
+            GameEvents.onVesselDestroy.Add(VesselRemoveEvents.OnVesselDestroyed);
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
+            GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
+            GameEvents.onVesselDestroy.Remove(VesselRemoveEvents.OnVesselDestroyed);
+        }
 
         /// <summary>
         /// Check the vessels that are not in our subspace and kill them
@@ -138,24 +138,6 @@ namespace LunaClient.Systems.VesselRemoveSys
                 }
                 break;
             }
-        }
-
-        #endregion
-
-        #region Private methods
-
-        private void RegisterGameHooks()
-        {
-            GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
-            GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
-            GameEvents.onVesselDestroy.Add(VesselRemoveEvents.OnVesselDestroyed);
-        }
-
-        private void UnregisterGameHooks()
-        {
-            GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
-            GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
-            GameEvents.onVesselDestroy.Remove(VesselRemoveEvents.OnVesselDestroyed);
         }
 
         #endregion
