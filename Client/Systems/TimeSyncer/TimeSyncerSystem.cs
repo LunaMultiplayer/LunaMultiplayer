@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -30,9 +31,7 @@ namespace LunaClient.Systems.TimeSyncer
         public long ClockOffsetAverage { get; private set; }
         public long NetworkLatencyAverage { get; private set; }
         public long ServerLag { get; private set; }
-
-        private long LastTimeSync { get; set; }
-
+        
         #endregion
 
         #region Constants
@@ -58,33 +57,23 @@ namespace LunaClient.Systems.TimeSyncer
             {
                 if (!_enabled && value)
                 {
+                    _enabled = true;
                     SyncSenderThread = new Thread(SyncTimeWithServer) {IsBackground = true};
                     SyncSenderThread.Start();
+                    Client.Singleton.StartCoroutine(SyncTime());
                 }
                 else if (_enabled && !value)
+                {
+                    _enabled = false;
                     SyncSenderThread?.Abort();
-
-                _enabled = value;
+                }
             }
         }
 
         #endregion
 
         #endregion
-
-        #region Base overrides
-
-        public override void FixedUpdate()
-        {
-            base.FixedUpdate();
-            if (Enabled && Synced && !CurrentlyWarping && CanSyncTime())
-            {
-                SyncTime();
-            }
-        }
         
-        #endregion
-
         #region Public Methods
 
         /// <summary>
@@ -147,15 +136,21 @@ namespace LunaClient.Systems.TimeSyncer
 
         #region Private methods
 
-        private void SyncTime()
+        private IEnumerator SyncTime()
         {
-            if (DateTime.UtcNow.Ticks - LastTimeSync > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.ClockSetMsInterval).Ticks)
+            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.ClockSetMsInterval).TotalSeconds);
+            while (true)
             {
-                LastTimeSync = DateTime.UtcNow.Ticks;
-                var targetTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
-                var currentError = GetCurrentError();
-                if (Math.Abs(currentError) > MaxClockMsError)
-                    Planetarium.SetUniversalTime(targetTime);
+                if (!Enabled) break;
+
+                if (Synced && !CurrentlyWarping && CanSyncTime())
+                {
+                    var targetTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
+                    var currentError = GetCurrentError();
+                    if (Math.Abs(currentError) > MaxClockMsError)
+                        Planetarium.SetUniversalTime(targetTime);
+                }
+                yield return seconds;
             }
         }
         

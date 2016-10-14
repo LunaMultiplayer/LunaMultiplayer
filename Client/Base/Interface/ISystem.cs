@@ -8,6 +8,7 @@
         bool Enabled { get; set; }
         void Reset();
         void Update();
+        void LateUpdate();
         void FixedUpdate();
     }
 }

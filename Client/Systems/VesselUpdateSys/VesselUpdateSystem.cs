@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
@@ -23,13 +24,19 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 if (_enabled && !value)
                 {
+                    _enabled = false;
                     InterpolationSystem.ResetSystem();
                     ReceivedUpdates.Clear();
                 }
-
-                _enabled = value;
+                else if (!_enabled && value)
+                {
+                    _enabled = true;
+                    Client.Singleton.StartCoroutine(SendVesselUpdates());
+                }
             }
         }
+
+        private float VesselUpdatesSendSInterval => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
 
         public bool UpdateSystemReady
         {
@@ -47,23 +54,28 @@ namespace LunaClient.Systems.VesselUpdateSys
         }
         
         public Dictionary<Guid, Queue<VesselUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, Queue<VesselUpdate>>();
-
-        private double LastSendTime { get; set; }
-
+        
         private VesselUpdateInterpolationSystem InterpolationSystem { get; } = new VesselUpdateInterpolationSystem();
 
         #endregion
 
         #region Base overrides
 
+        public override void FixedUpdate()
+        {
+            base.FixedUpdate();
+            if (!UpdateSystemReady)
+                return;
+
+            InterpolationSystem.HandleVesselUpdates();
+        }
+
         public override void Update()
         {
             base.Update();
             if (!UpdateSystemReady)
                 return;
-
-            SendVesselUpdates();
-            InterpolationSystem.HandleVesselUpdates();
+            
             InterpolationSystem.RemoveVessels();
         }
 
@@ -93,13 +105,20 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <summary>
         /// Send the updates of our own vessel and the secondary vessels. We only send them after an interval specified
         /// </summary>
-        private void SendVesselUpdates()
+        private IEnumerator SendVesselUpdates()
         {
-            if (DateTime.Now.Ticks - LastSendTime >= TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).Ticks)
+            var seconds = new WaitForSeconds(VesselUpdatesSendSInterval);
+            while (true)
             {
-                LastSendTime = DateTime.Now.Ticks;
-                SendVesselUpdate(FlightGlobals.ActiveVessel);
-                SendSecondaryVesselUpdates();
+                if (!Enabled)
+                    break;
+
+                if (UpdateSystemReady)
+                {
+                    SendVesselUpdate(FlightGlobals.ActiveVessel);
+                    SendSecondaryVesselUpdates();
+                }
+                yield return seconds;
             }
         }
 

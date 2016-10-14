@@ -238,6 +238,16 @@ namespace LunaClient
             Profiler.FixedUpdateData.ReportTime(startClock);
         }
 
+        public override void LateUpdate()
+        {
+            base.LateUpdate();
+
+            if (!Enabled)
+                return;
+
+            SystemsHandler.LateUpdate();
+        }
+
         #endregion
 
         #region Public methods

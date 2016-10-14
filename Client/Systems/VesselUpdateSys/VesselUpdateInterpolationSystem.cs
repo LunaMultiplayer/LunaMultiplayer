@@ -80,7 +80,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         private VesselUpdate GetValidUpdate(long targetSentTime, Queue<VesselUpdate> vesselUpdates)
         {
             var update = vesselUpdates.ToList()
-                .Where(u => u.SentTime > targetSentTime)
+                .Where(u => u.SentTime > targetSentTime && (Time.fixedTime - u.ReceiveTime) >= SInPast)
                 .OrderBy(u => Math.Abs((Time.fixedTime - u.ReceiveTime) - SInPast))
                 .FirstOrDefault();
 

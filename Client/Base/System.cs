@@ -46,6 +46,11 @@ namespace LunaClient.Base
         {
             //Implement your own code
         }
+        
+        public virtual void LateUpdate()
+        {
+            //Implement your own code
+        }
 
         /// <summary>
         /// Override to call your custom destroy functionallity

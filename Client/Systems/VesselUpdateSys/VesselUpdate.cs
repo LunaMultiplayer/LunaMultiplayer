@@ -14,6 +14,11 @@ namespace LunaClient.Systems.VesselUpdateSys
     {
         #region Fields
 
+        public Vessel Vessel { get; set; }
+        public CelestialBody Body { get; set; }
+        public VesselUpdate Target { get; set; }
+        public Guid Id { get; set; }
+
         #region Vessel information fields
 
         public Guid VesselId { get; set; }
@@ -46,19 +51,14 @@ namespace LunaClient.Systems.VesselUpdateSys
         public long SentTime { get; set; }
         public bool InterpolationStarted { get; set; }
         public bool InterpolationFinished { get; set; }
-        public float InterpolationPercentage { get; set; }
-        public float InterpolationDuration { get; set; }
+        public float ReceiveTime { get; set; }
+        public float FinishTime { get; set; }
 
         #endregion
 
         #region Private fields
 
-        public Vessel Vessel { get; set; }
-        public CelestialBody Body { get; set; }
-        public VesselUpdate Target { get; set; }
-        public float ReceiveTime { get; set; }
-        public float FinishTime { get; set; }
-        public Guid Id { get; set; }
+        private float _interpolationDuration;
 
         #endregion
 
@@ -92,7 +92,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                     AngularVel = new[]
                     {
                         vessel.angularVelocity.x,
-                        vessel.angularVelocity.y,vessel.angularVelocity.z
+                        vessel.angularVelocity.y, vessel.angularVelocity.z
                     },
                     ActionGrpControls = new[]
                     {
@@ -119,7 +119,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                         vessel.radarAltitude
                     };
 
-                    Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
+                    Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation)*vessel.srf_velocity;
                     returnUpdate.Velocity = new[]
                     {
                         srfVel.x,
@@ -127,7 +127,8 @@ namespace LunaClient.Systems.VesselUpdateSys
                         srfVel.z
                     };
 
-                    Vector3d srfAcceleration = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.acceleration;
+                    Vector3d srfAcceleration = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation)*
+                                               vessel.acceleration;
                     returnUpdate.Acceleration = new[]
                     {
                         srfAcceleration.x,
@@ -166,6 +167,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public IEnumerator ApplyVesselUpdate()
         {
+            var fixedUpdate = new WaitForFixedUpdate();
             if (!InterpolationStarted)
             {
                 if (Body == null)
@@ -173,60 +175,52 @@ namespace LunaClient.Systems.VesselUpdateSys
                 if (Vessel == null)
                     Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
 
-                InterpolationStarted = true;
-                InterpolationDuration = Math.Min(Target.ReceiveTime - ReceiveTime, VesselUpdateInterpolationSystem.SInPast);
-            }
-
-            if ((Body != null) && (Vessel != null))
-            {
-                while (!InterpolationFinished)
-                {
-                    ApplyInterpolations();
-
-                    InterpolationPercentage += Time.deltaTime / InterpolationDuration;
-
-                    if (InterpolationPercentage >= 1)
-                    {
-                        InterpolationFinished = true;
-                        FinishTime = Time.time;
-                    }
-                    else
-                    {
-                        yield return null;
-                    }
-                }
-            }
-            else
-            {
-                InterpolationFinished = true;
-                FinishTime = Time.time;
-            }
-        }
-
-        private void ApplyInterpolations()
-        {
-            if (InterpolationPercentage == 0)
-            {
-                //Set the action ONLY ONCE
                 Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, Target.ActionGrpControls[0]);
                 Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, Target.ActionGrpControls[1]);
                 Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, Target.ActionGrpControls[2]);
                 Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, Target.ActionGrpControls[3]);
                 Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, Target.ActionGrpControls[4]);
+
+                InterpolationStarted = true;
+
+                //Interpolation cannot last more than the SInPast
+                _interpolationDuration = Math.Min(Target.ReceiveTime - ReceiveTime, VesselUpdateInterpolationSystem.SInPast);
             }
 
-            //Set also the current flight state (position of ailerons, gear, etc)
-            if (!VesselLockSystem.Singleton.IsSpectating)
-                Vessel.ctrlState.CopyFrom(FlightState);
-            else
-                FlightInputHandler.state.CopyFrom(FlightState);
+            if (Body != null && Vessel != null && _interpolationDuration > 0)
+            {
+                for (float lerp = 0; lerp < 1; lerp += Time.fixedDeltaTime/_interpolationDuration)
+                {
+                    ApplyInterpolations(lerp);
+                    yield return fixedUpdate;
+                }
+                ApplyInterpolations(1);
+            }
 
-            ApplyCommonInterpolation(InterpolationPercentage);
+            InterpolationFinished = true;
+            FinishTime = Time.time;
+        }
 
-            if (IsSurfaceUpdate)
-                ApplySurfaceInterpolation(InterpolationPercentage);
-            else
-                ApplyOrbitInterpolation(InterpolationPercentage);
+        private void ApplyInterpolations(float percentage)
+        {
+            try
+            {
+                if (!VesselLockSystem.Singleton.IsSpectating)
+                    Vessel.ctrlState.CopyFrom(FlightState);
+                else
+                    FlightInputHandler.state.CopyFrom(FlightState);
+
+                ApplyCommonInterpolation(percentage);
+
+                if (IsSurfaceUpdate)
+                    ApplySurfaceInterpolation(percentage);
+                else
+                    ApplyOrbitInterpolation(percentage);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
         }
 
         #endregion
@@ -252,10 +246,10 @@ namespace LunaClient.Systems.VesselUpdateSys
             var targetAngVel = new Vector3(Target.AngularVel[0], Target.AngularVel[1], Target.AngularVel[2]);
 
             var currentRot = Body.bodyTransform.rotation * Quaternion.identity *
-                              Quaternion.Slerp(startRot, targetRot, InterpolationPercentage);
+                              Quaternion.Slerp(startRot, targetRot, interpolationValue);
 
             var currentAngVel = Vessel.mainBody.bodyTransform.rotation * currentRot *
-                                Vector3.Lerp(startAngVel, targetAngVel, InterpolationPercentage);
+                                Vector3.Lerp(startAngVel, targetAngVel, interpolationValue);
 
             Vessel.SetRotation(currentRot);
             Vessel.angularVelocity = currentAngVel;
@@ -280,14 +274,14 @@ namespace LunaClient.Systems.VesselUpdateSys
             var startAcc = new Vector3d(Acceleration[0], Acceleration[1], Acceleration[2]);
             var targetAcc = new Vector3d(Target.Acceleration[0], Target.Acceleration[1], Target.Acceleration[2]);
 
-            var lat = Lerp(Position[0], Target.Position[0], InterpolationPercentage);
-            var lon = Lerp(Position[1], Target.Position[1], InterpolationPercentage);
-            var alt = Lerp(Position[2], Target.Position[2], InterpolationPercentage);
-            var radarAlt = Lerp(Position[3], Target.Position[3], InterpolationPercentage);
+            var lat = Lerp(Position[0], Target.Position[0], interpolationValue);
+            var lon = Lerp(Position[1], Target.Position[1], interpolationValue);
+            var alt = Lerp(Position[2], Target.Position[2], interpolationValue);
+            var radarAlt = Lerp(Position[3], Target.Position[3], interpolationValue);
 
             Vector3d currentPosition = Body.GetWorldSurfacePosition(lat, lon, alt);
-            Vector3d currentVelocity = Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, InterpolationPercentage);
-            Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, InterpolationPercentage);
+            Vector3d currentVelocity = Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, interpolationValue);
+            Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
 
             Vessel.SetPosition(currentPosition, true);
             Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
@@ -300,7 +294,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <summary>
         /// Applies interpolation when above 10000m
         /// </summary>
-        /// <param name="interpolationValue"></param>
         private void ApplyOrbitInterpolation(float interpolationValue)
         {
             if (interpolationValue > 1) return;

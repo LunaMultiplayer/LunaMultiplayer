@@ -103,6 +103,42 @@ namespace LunaClient.Systems
         }
 
         /// <summary>
+        /// Call all the updates of the systems
+        /// </summary>
+        public static void LateUpdate()
+        {
+            TryLateUpdate(NetworkSystem.Singleton);
+            TryLateUpdate(ModSystem.Singleton);
+            TryLateUpdate(ModApiSystem.Singleton);
+            TryLateUpdate(HandshakeSystem.Singleton);
+            TryLateUpdate(TimeSyncerSystem.Singleton);
+            TryLateUpdate(KerbalSystem.Singleton);
+            TryLateUpdate(VesselLockSystem.Singleton);
+            TryLateUpdate(VesselUpdateSystem.Singleton);
+            TryLateUpdate(VesselProtoSystem.Singleton);
+            TryLateUpdate(VesselRemoveSystem.Singleton);
+            TryLateUpdate(VesselWarpSystem.Singleton);
+            TryLateUpdate(VesselDockSystem.Singleton);
+            TryLateUpdate(WarpSystem.Singleton);
+            TryLateUpdate(LockSystem.Singleton);
+            TryLateUpdate(SettingsSystem.Singleton);
+            TryLateUpdate(AtmoLoaderSystem.Singleton);
+            TryLateUpdate(PartKillerSystem.Singleton);
+            TryLateUpdate(AsteroidSystem.Singleton);
+            TryLateUpdate(StatusSystem.Singleton);
+            TryLateUpdate(ChatSystem.Singleton);
+            TryLateUpdate(AdminSystem.Singleton);
+            TryLateUpdate(PlayerColorSystem.Singleton);
+            TryLateUpdate(PlayerConnectionSystem.Singleton);
+            TryLateUpdate(MotdSystem.Singleton);
+            TryLateUpdate(CraftLibrarySystem.Singleton);
+            TryLateUpdate(FlagSystem.Singleton);
+            TryLateUpdate(KerbalReassignerSystem.Singleton);
+            TryLateUpdate(ScenarioSystem.Singleton);
+            TryLateUpdate(ToolbarSystem.Singleton);
+        }
+
+        /// <summary>
         /// Call all the fixed updates of the systems
         /// </summary>
         public static void FixedUpdate()
@@ -210,6 +246,18 @@ namespace LunaClient.Systems
             catch (Exception e)
             {
                 MainSystem.Singleton.HandleException(e, "SystemHandler-Update");
+            }
+        }
+
+        private static void TryLateUpdate(ISystem system)
+        {
+            try
+            {
+                system.LateUpdate();
+            }
+            catch (Exception e)
+            {
+                MainSystem.Singleton.HandleException(e, "SystemHandler-LateUpdate");
             }
         }
 
