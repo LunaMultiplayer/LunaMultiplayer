@@ -44,21 +44,21 @@ namespace LunaClient.Systems.VesselUpdateSys
         #region Interpolation fields
 
         public long SentTime { get; set; }
-        public long InterpolationStartTime { get; set; }
-        public long InterpolationFinishTime { get; set; }
         public bool InterpolationStarted { get; set; }
-        public bool InterpolationFinished => InterpolationPercentage >= 1;
-        public float InterpolationPercentage => (float)(DateTime.UtcNow.Ticks - InterpolationStartTime) / InterpolationDuration;
-        public long InterpolationDuration { get; set; }
+        public bool InterpolationFinished { get; set; }
+        public float InterpolationPercentage { get; set; }
+        public float InterpolationDuration { get; set; }
 
         #endregion
 
         #region Private fields
 
-        private Vessel Vessel { get; set; }
-        private CelestialBody Body { get; set; }
-        private VesselUpdate NextUpdate { get; set; }
-        public long ReceiveTime { get; set; }
+        public Vessel Vessel { get; set; }
+        public CelestialBody Body { get; set; }
+        public VesselUpdate Target { get; set; }
+        public float ReceiveTime { get; set; }
+        public float FinishTime { get; set; }
+        public Guid Id { get; set; }
 
         #endregion
 
@@ -103,9 +103,9 @@ namespace LunaClient.Systems.VesselUpdateSys
                         vessel.ActionGroups[KSPActionGroup.RCS]
                     }
                 };
-                
+
                 returnUpdate.FlightState.CopyFrom(vessel.ctrlState);
-                
+
                 if (vessel.altitude < 10000)
                 {
                     //Use surface position under 10k
@@ -164,51 +164,69 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         #region Main interpolation method
 
-        public IEnumerator ApplyVesselUpdate(VesselUpdate nextUpdate)
+        public IEnumerator ApplyVesselUpdate()
         {
-            Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
-            Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
-            NextUpdate = nextUpdate;
+            if (!InterpolationStarted)
+            {
+                if (Body == null)
+                    Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
+                if (Vessel == null)
+                    Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
+
+                InterpolationStarted = true;
+                InterpolationDuration = Math.Min(Target.ReceiveTime - ReceiveTime, VesselUpdateInterpolationSystem.SInPast);
+            }
 
             if ((Body != null) && (Vessel != null))
             {
-                if (!InterpolationStarted)
-                {
-                    InterpolationStarted = true;
-                    InterpolationDuration += nextUpdate.ReceiveTime - ReceiveTime;
-                }
-
                 while (!InterpolationFinished)
                 {
-                    //This value varies a lot depending on the current tick so fix it.
-                    var interpolationValue = InterpolationPercentage;
+                    ApplyInterpolations();
 
-                    if (interpolationValue >= 0.5)
+                    InterpolationPercentage += Time.deltaTime / InterpolationDuration;
+
+                    if (InterpolationPercentage >= 1)
                     {
-                        //Set the action groups when we are past the middle of the interpolation
-                        Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, nextUpdate.ActionGrpControls[0]);
-                        Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, nextUpdate.ActionGrpControls[1]);
-                        Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, nextUpdate.ActionGrpControls[2]);
-                        Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, nextUpdate.ActionGrpControls[3]);
-                        Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, nextUpdate.ActionGrpControls[4]);
-
-                        //Set also the current flight state (position of ailerons, gear, etc)
-                        if (!VesselLockSystem.Singleton.IsSpectating)
-                            Vessel.ctrlState.CopyFrom(FlightState);
-                        else
-                            FlightInputHandler.state.CopyFrom(FlightState);
+                        InterpolationFinished = true;
+                        FinishTime = Time.time;
                     }
-
-                    ApplyCommonInterpolation(interpolationValue);
-
-                    if (IsSurfaceUpdate)
-                        ApplySurfaceInterpolation(interpolationValue);
                     else
-                        ApplyOrbitInterpolation(interpolationValue);
-
-                    yield return null;
+                    {
+                        yield return null;
+                    }
                 }
             }
+            else
+            {
+                InterpolationFinished = true;
+                FinishTime = Time.time;
+            }
+        }
+
+        private void ApplyInterpolations()
+        {
+            if (InterpolationPercentage == 0)
+            {
+                //Set the action ONLY ONCE
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, Target.ActionGrpControls[0]);
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, Target.ActionGrpControls[1]);
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, Target.ActionGrpControls[2]);
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, Target.ActionGrpControls[3]);
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, Target.ActionGrpControls[4]);
+            }
+
+            //Set also the current flight state (position of ailerons, gear, etc)
+            if (!VesselLockSystem.Singleton.IsSpectating)
+                Vessel.ctrlState.CopyFrom(FlightState);
+            else
+                FlightInputHandler.state.CopyFrom(FlightState);
+
+            ApplyCommonInterpolation(InterpolationPercentage);
+
+            if (IsSurfaceUpdate)
+                ApplySurfaceInterpolation(InterpolationPercentage);
+            else
+                ApplyOrbitInterpolation(InterpolationPercentage);
         }
 
         #endregion
@@ -228,10 +246,10 @@ namespace LunaClient.Systems.VesselUpdateSys
             //Bear in mind that for rotations you must use Slerp!
 
             var startRot = new Quaternion(Rotation[0], Rotation[1], Rotation[2], Rotation[3]);
-            var targetRot = new Quaternion(NextUpdate.Rotation[0], NextUpdate.Rotation[1], NextUpdate.Rotation[2], NextUpdate.Rotation[3]);
+            var targetRot = new Quaternion(Target.Rotation[0], Target.Rotation[1], Target.Rotation[2], Target.Rotation[3]);
 
             var startAngVel = new Vector3(AngularVel[0], AngularVel[1], AngularVel[2]);
-            var targetAngVel = new Vector3(NextUpdate.AngularVel[0], NextUpdate.AngularVel[1], NextUpdate.AngularVel[2]);
+            var targetAngVel = new Vector3(Target.AngularVel[0], Target.AngularVel[1], Target.AngularVel[2]);
 
             var currentRot = Body.bodyTransform.rotation * Quaternion.identity *
                               Quaternion.Slerp(startRot, targetRot, InterpolationPercentage);
@@ -257,15 +275,15 @@ namespace LunaClient.Systems.VesselUpdateSys
             if (interpolationValue > 1) return;
 
             var startVel = new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
-            var targetVel = new Vector3d(NextUpdate.Velocity[0], NextUpdate.Velocity[1], NextUpdate.Velocity[2]);
+            var targetVel = new Vector3d(Target.Velocity[0], Target.Velocity[1], Target.Velocity[2]);
 
             var startAcc = new Vector3d(Acceleration[0], Acceleration[1], Acceleration[2]);
-            var targetAcc = new Vector3d(NextUpdate.Acceleration[0], NextUpdate.Acceleration[1], NextUpdate.Acceleration[2]);
+            var targetAcc = new Vector3d(Target.Acceleration[0], Target.Acceleration[1], Target.Acceleration[2]);
 
-            var lat = Lerp(Position[0], NextUpdate.Position[0], InterpolationPercentage);
-            var lon = Lerp(Position[1], NextUpdate.Position[1], InterpolationPercentage);
-            var alt = Lerp(Position[2], NextUpdate.Position[2], InterpolationPercentage);
-            var radarAlt = Lerp(Position[3], NextUpdate.Position[3], InterpolationPercentage);
+            var lat = Lerp(Position[0], Target.Position[0], InterpolationPercentage);
+            var lon = Lerp(Position[1], Target.Position[1], InterpolationPercentage);
+            var alt = Lerp(Position[2], Target.Position[2], InterpolationPercentage);
+            var radarAlt = Lerp(Position[3], Target.Position[3], InterpolationPercentage);
 
             Vector3d currentPosition = Body.GetWorldSurfacePosition(lat, lon, alt);
             Vector3d currentVelocity = Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, InterpolationPercentage);
@@ -288,8 +306,8 @@ namespace LunaClient.Systems.VesselUpdateSys
             if (interpolationValue > 1) return;
 
             var startOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
-            var targetOrbit = new Orbit(NextUpdate.Orbit[0], NextUpdate.Orbit[1], NextUpdate.Orbit[2], NextUpdate.Orbit[3], NextUpdate.Orbit[4],
-                NextUpdate.Orbit[5], NextUpdate.Orbit[6], Body);
+            var targetOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4],
+                Target.Orbit[5], Target.Orbit[6], Body);
 
             var currentOrbit = OrbitLerp(startOrbit, targetOrbit, Body, interpolationValue);
 

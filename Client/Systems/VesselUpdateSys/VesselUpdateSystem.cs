@@ -46,7 +46,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
         }
         
-        public Dictionary<Guid, List<VesselUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, List<VesselUpdate>>();
+        public Dictionary<Guid, Queue<VesselUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, Queue<VesselUpdate>>();
 
         private double LastSendTime { get; set; }
 
@@ -83,7 +83,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public double GetMsInPast()
         {
-            return InterpolationSystem.MsInPast;
+            return VesselUpdateInterpolationSystem.MsInPast;
         }
 
         #endregion

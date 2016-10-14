@@ -7,6 +7,7 @@ using LunaClient.Base.Interface;
 using LunaClient.Systems.VesselLockSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -25,7 +26,8 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             var update = new VesselUpdate
             {
-                ReceiveTime = DateTime.UtcNow.Ticks,
+                Id = Guid.NewGuid(),
+                ReceiveTime = Time.fixedTime,
                 SentTime = msgData.SentTime,
                 PlanetTime = msgData.PlanetTime,
                 VesselId = msgData.VesselId,
@@ -70,10 +72,10 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             if (!System.ReceivedUpdates.ContainsKey(update.VesselId))
             {
-                System.ReceivedUpdates.Add(update.VesselId, new List<VesselUpdate>());
+                System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselUpdate>());
             }
 
-            System.ReceivedUpdates[update.VesselId].Add(update);
+            System.ReceivedUpdates[update.VesselId].Enqueue(update);
         }
 
         private bool UpdateIsForOwnVessel(Guid vesselId)
