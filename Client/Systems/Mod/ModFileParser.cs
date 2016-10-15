@@ -46,7 +46,7 @@ namespace LunaClient.Systems.Mod
 
         private static void SaveCurrentModConfigurationFile()
         {
-            var tempModFilePath = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData", "LunaMultiPlayer",
+            var tempModFilePath = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer",
                             "Plugins", "Data", "LMPModControl.txt");
 
             using (var sw = new StreamWriter(tempModFilePath))
@@ -146,7 +146,7 @@ namespace LunaClient.Systems.Mod
 
         private static void CheckFiles()
         {
-            var gameFilePaths = Directory.GetFiles(CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData"), "*",
+            var gameFilePaths = Directory.GetFiles(CommonUtil.CombinePaths(Client.KspPath, "GameData"), "*",
                 SearchOption.AllDirectories);
             var gameFileRelativePaths =
                 gameFilePaths.Select(
@@ -257,7 +257,7 @@ namespace LunaClient.Systems.Mod
 
         private static void EvaluateShaSum(string filePath, KeyValuePair<string, string> fileEntry)
         {
-            var fullFilePath = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData", filePath);
+            var fullFilePath = CommonUtil.CombinePaths(Client.KspPath, "GameData", filePath);
             if (!CheckFile(fullFilePath, fileEntry.Value))
             {
                 ModCheckOk = false;
@@ -268,7 +268,7 @@ namespace LunaClient.Systems.Mod
 
         private static bool CheckFile(string relativeFileName, string referencefileHash)
         {
-            var fullFileName = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData", relativeFileName);
+            var fullFileName = CommonUtil.CombinePaths(Client.KspPath, "GameData", relativeFileName);
             var fileHash = Common.CalculateSha256Hash(fullFileName);
             return fileHash == referencefileHash;
         }

@@ -8,11 +8,11 @@ namespace LunaClient.Utilities
 {
     public class UniverseConverter
     {
-        private static string SavesFolder { get; } = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "saves");
+        private static string SavesFolder { get; } = CommonUtil.CombinePaths(Client.KspPath, "saves");
 
         public static void GenerateUniverse(string saveName)
         {
-            var universeFolder = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "Universe");
+            var universeFolder = CommonUtil.CombinePaths(Client.KspPath, "Universe");
             if (Directory.Exists(universeFolder))
                 Directory.Delete(universeFolder, true);
 

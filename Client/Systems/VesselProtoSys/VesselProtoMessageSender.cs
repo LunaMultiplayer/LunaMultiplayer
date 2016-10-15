@@ -56,7 +56,7 @@ namespace LunaClient.Systems.VesselProtoSys
             CleanUpVesselNode(vesselNode, vessel.vesselID);
 
             var vesselBytes = ConfigNodeSerializer.Singleton.Serialize(vesselNode);
-            var path = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData", "LunaMultiPlayer","Plugins", "Data", "lastVessel.txt");
+            var path = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer","Plugins", "Data", "lastVessel.txt");
             File.WriteAllBytes(path, vesselBytes);
 
             if (vesselBytes.Length > 0)

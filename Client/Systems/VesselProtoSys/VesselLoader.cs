@@ -103,10 +103,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static bool ProtoVesselIsTarget(ProtoVessel currentProto)
         {
-            if ((FlightGlobals.fetch.VesselTarget != null) && (FlightGlobals.fetch.VesselTarget.GetVessel() != null) &&
-                FlightGlobals.fetch.VesselTarget.GetVessel().id == currentProto.vesselID)
-                return true;
-            return false;
+            return (FlightGlobals.fetch.VesselTarget != null) && (FlightGlobals.fetch.VesselTarget.GetVessel() != null) &&
+                   FlightGlobals.fetch.VesselTarget.GetVessel().id == currentProto.vesselID;
         }
 
         /// <summary>
@@ -147,7 +145,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 //Fix up flag URLS.
                 if (!string.IsNullOrEmpty(part.flagURL))
                 {
-                    string flagFile = Path.Combine(Path.Combine(KSPUtil.ApplicationRootPath, "GameData"), part.flagURL + ".png");
+                    string flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), part.flagURL + ".png");
                     if (!File.Exists(flagFile))
                     {
                         Debug.Log("Flag '" + part.flagURL + "' doesn't exist, setting to default!");

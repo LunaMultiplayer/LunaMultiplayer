@@ -22,7 +22,7 @@ namespace LunaClient.Utilities
         public static UniverseSyncCache Singleton { get; } = new UniverseSyncCache();
         public long CurrentCacheSize { get; private set; }
 
-        private static string CacheDirectory => CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData", "LunaMultiPlayer", "Cache");
+        private static string CacheDirectory => CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Cache");
 
         private AutoResetEvent IncomingEvent { get; } = new AutoResetEvent(false);
         private ConcurrentQueue<byte[]> IncomingQueue { get; } = new ConcurrentQueue<byte[]>();

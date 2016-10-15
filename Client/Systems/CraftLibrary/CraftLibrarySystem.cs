@@ -31,7 +31,7 @@ namespace LunaClient.Systems.CraftLibrary
 
         #region Paths
 
-        private static string SavePath { get; } = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "saves", "LunaMultiPlayer");
+        private static string SavePath { get; } = CommonUtil.CombinePaths(Client.KspPath, "saves", "LunaMultiPlayer");
         public string VabPath { get; } = CommonUtil.CombinePaths(SavePath, "Ships", "VAB");
         public string SphPath { get; } = CommonUtil.CombinePaths(SavePath, "Ships", "SPH");
         public string SubassemblyPath { get; } = CommonUtil.CombinePaths(SavePath, "Subassemblies");

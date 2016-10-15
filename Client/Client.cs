@@ -7,15 +7,19 @@ namespace LunaClient
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class Client : MonoBehaviour
     {
+        public static string KspPath { get; private set; }
         public static Client Singleton { get; set; }
 
         public Client()
         {
             Singleton = this;
         }
-        
+
         public void Awake()
         {
+            //We set this variable here so KspPath can be used on constructors
+            KspPath = KSPUtil.ApplicationRootPath;
+
             DontDestroyOnLoad(this);
             try
             {

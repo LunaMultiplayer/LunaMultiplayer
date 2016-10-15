@@ -62,7 +62,7 @@ namespace LunaClient.Systems.Flag
 
         public bool FlagChangeEvent { get; set; }
         public bool SyncComplete { get; set; }
-        public string FlagPath { get; } = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData", "LunaMultiPlayer", "Flags");
+        public string FlagPath { get; } = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Flags");
         public Dictionary<string, FlagInfo> ServerFlags { get; } = new Dictionary<string, FlagInfo>();
         public ConcurrentQueue<FlagRespondMessage> NewFlags { get; } = new ConcurrentQueue<FlagRespondMessage>();
 

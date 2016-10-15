@@ -46,7 +46,7 @@ namespace LunaClient
 
         private string AssemblyPath { get; } = new DirectoryInfo(Assembly.GetExecutingAssembly().Location ?? "").FullName;
 
-        private string KspPath { get; } = new DirectoryInfo(KSPUtil.ApplicationRootPath).FullName;
+        private string KspPath { get; } = new DirectoryInfo(Client.KspPath).FullName;
         public bool ShowGui { get; set; } = true;
         public bool ToolbarShowGui { get; set; } = true;
         public static ServerEntry CommandLineServer { get; set; }
@@ -507,19 +507,19 @@ namespace LunaClient
 
         private static void SetupDirectoriesIfNeeded()
         {
-            var lunaMultiPlayerSavesDirectory = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "saves", "LunaMultiPlayer");
+            var lunaMultiPlayerSavesDirectory = CommonUtil.CombinePaths(Client.KspPath, "saves", "LunaMultiPlayer");
             CreateIfNeeded(lunaMultiPlayerSavesDirectory);
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, "Ships"));
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, CommonUtil.CombinePaths("Ships", "VAB")));
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, CommonUtil.CombinePaths("Ships", "SPH")));
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, "Subassemblies"));
-            var lunaMultiPlayerCacheDirectory = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData", "LunaMultiPlayer", "Cache");
+            var lunaMultiPlayerCacheDirectory = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Cache");
             CreateIfNeeded(lunaMultiPlayerCacheDirectory);
-            var lunaMultiPlayerIncomingCacheDirectory = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData",
+            var lunaMultiPlayerIncomingCacheDirectory = CommonUtil.CombinePaths(Client.KspPath, "GameData",
                 "LunaMultiPlayer", "Cache","Incoming");
 
             CreateIfNeeded(lunaMultiPlayerIncomingCacheDirectory);
-            var lunaMultiPlayerFlagsDirectory = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "GameData", "LunaMultiPlayer", "Flags");
+            var lunaMultiPlayerFlagsDirectory = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Flags");
             CreateIfNeeded(lunaMultiPlayerFlagsDirectory);
         }
 
@@ -531,7 +531,7 @@ namespace LunaClient
 
         private static void SetupBlankGameIfNeeded()
         {
-            var persistentFile = CommonUtil.CombinePaths(KSPUtil.ApplicationRootPath, "saves", "LunaMultiPlayer", "persistent.sfs");
+            var persistentFile = CommonUtil.CombinePaths(Client.KspPath, "saves", "LunaMultiPlayer", "persistent.sfs");
             if (!File.Exists(persistentFile))
             {
                 Debug.Log("Creating new blank persistent.sfs file");

@@ -77,7 +77,7 @@ namespace LunaClient.Windows.Status
                 else
                 {
                     GUILayout.BeginHorizontal(SubspaceStyle);
-                    GUILayout.Label("T: +" + KSPUtil.PrintTimeCompact(WarpSystem.Singleton.GetCurrentSubspaceTime() + currentEntry.SubspaceTime, false));
+                    GUILayout.Label("T: +" + KSPUtil.PrintTimeCompact(WarpSystem.Singleton.GetSubspaceTime(currentEntry.SubspaceId), false));
                     GUILayout.FlexibleSpace();
                     if (NotWarpingAndNotInGivenSubspace(currentEntry.SubspaceId) && GUILayout.Button("Sync", ButtonStyle))
                         WarpSystem.Singleton.CurrentSubspace = currentEntry.SubspaceId;
