@@ -46,6 +46,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             base.OnEnabled();
             Client.Singleton.StartCoroutine(SendVesselUpdates());
             Client.Singleton.StartCoroutine(InterpolationSystem.RemoveVessels());
+            Client.Singleton.StartCoroutine(InterpolationSystem.HandleVesselUpdates());
         }
 
         public override void OnDisabled()
@@ -54,16 +55,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             InterpolationSystem.ResetSystem();
             ReceivedUpdates.Clear();
         }
-
-        public override void FixedUpdate()
-        {
-            base.FixedUpdate();
-            if (!UpdateSystemReady)
-                return;
-
-            InterpolationSystem.HandleVesselUpdates();
-        }
-
+        
         #endregion
 
         #region Public methods

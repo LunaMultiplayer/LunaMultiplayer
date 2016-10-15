@@ -184,7 +184,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                 InterpolationStarted = true;
 
                 //Interpolation cannot last more than the SInPast
-                _interpolationDuration = Math.Min(Target.ReceiveTime - ReceiveTime, VesselUpdateInterpolationSystem.SInPast);
+                _interpolationDuration = Math.Min(Target.ReceiveTime - ReceiveTime - Time.fixedDeltaTime, VesselUpdateInterpolationSystem.SInPast);
             }
 
             if (Body != null && Vessel != null && _interpolationDuration > 0)
@@ -195,6 +195,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                     yield return fixedUpdate;
                 }
                 ApplyInterpolations(1);
+                yield return fixedUpdate;
             }
 
             InterpolationFinished = true;
