@@ -165,6 +165,11 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         #region Main interpolation method
 
+        /// <summary>
+        /// This coroutine is run at every fixed update as we are updating rigid bodies (phisics are involved)
+        /// therefore we cannot use it in Update()
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator ApplyVesselUpdate()
         {
             var fixedUpdate = new WaitForFixedUpdate();
@@ -194,7 +199,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                     ApplyInterpolations(lerp);
                     yield return fixedUpdate;
                 }
-                ApplyInterpolations(1);
+                ApplyInterpolations(1); //we force to apply the last interpolation
                 yield return fixedUpdate;
             }
 
@@ -252,13 +257,15 @@ namespace LunaClient.Systems.VesselUpdateSys
             var currentAngVel = Vessel.mainBody.bodyTransform.rotation * currentRot *
                                 Vector3.Lerp(startAngVel, targetAngVel, interpolationValue);
 
-            Vessel.SetRotation(currentRot);
-            Vessel.angularVelocity = currentAngVel;
-
             if (Vessel.packed)
             {
                 Vessel.srfRelRotation = currentRot;
                 Vessel.protoVessel.rotation = Vessel.srfRelRotation;
+            }
+            else
+            {
+                Vessel.SetRotation(currentRot);
+                Vessel.angularVelocity = currentAngVel;
             }
         }
 

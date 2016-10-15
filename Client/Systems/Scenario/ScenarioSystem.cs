@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using LunaClient.Base;
@@ -14,27 +15,24 @@ namespace LunaClient.Systems.Scenario
 {
     public class ScenarioSystem : MessageSystem<ScenarioSystem, ScenarioMessageSender, ScenarioMessageHandler>
     {
-        public override void Update()
-        {
-            base.Update();
-            if (!Enabled) return;
-
-            if (DateTime.UtcNow.Ticks - LastSendTime > TimeSpan.FromSeconds(SettingsSystem.ServerSettings.SendScenarioDataSecInterval).Ticks)
-            {
-                LastSendTime = DateTime.UtcNow.Ticks;
-                SendScenarioModules();
-            }
-        }
-
         #region Fields
 
         private Dictionary<string, string> CheckData { get; } = new Dictionary<string, string>();
         public Queue<ScenarioEntry> ScenarioQueue { get; } = new Queue<ScenarioEntry>();
-        private long LastSendTime { get; set; }
         private Dictionary<string, Type> AllScenarioTypesInAssemblies { get; } = new Dictionary<string, Type>();
-        
+
         #endregion
 
+        #region Base overrides
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            Client.Singleton.StartCoroutine(SendScenarioModulesRoutine());
+        }
+
+        #endregion
+        
         #region Public methods
         
         public void LoadMissingScenarioDataIntoGame()
@@ -136,6 +134,19 @@ namespace LunaClient.Systems.Scenario
         #endregion
 
         #region Private methods
+
+        private IEnumerator SendScenarioModulesRoutine()
+        {
+            var seconds = new WaitForSeconds(SettingsSystem.ServerSettings.SendScenarioDataSecInterval);
+            while (true)
+            {
+                if (!Enabled) break;
+
+                SendScenarioModules();
+
+                yield return seconds;
+            }
+        }
 
         private static void CreateMissingTourists(ConfigNode contractSystemNode)
         {

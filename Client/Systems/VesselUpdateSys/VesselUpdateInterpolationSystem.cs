@@ -19,7 +19,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <summary>
         /// This variable specifies how many miliseconds in the past we work. It's based on the ping with a minimum of 500ms.
         /// For bad conections we will work several MS in the past as we need time to receive them.
-        /// Good connections can have this value closer to 0 although it will never be 0.
         /// </summary>
         public static double MsInPast => NetworkStatistics.PingMs * 2 <= 500 ? 500 : NetworkStatistics.PingMs * 2;
 
@@ -53,7 +52,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             var seconds = new WaitForSeconds(5);
             while (true)
             {
-                if (!VesselUpdateSystem.Singleton.Enabled) break;
+                if (!System.Enabled) break;
 
                 var vesselsToRemove = CurrentVesselUpdate
                     .Where(u => u.Value.InterpolationFinished &&
@@ -72,14 +71,15 @@ namespace LunaClient.Systems.VesselUpdateSys
         }
 
         /// <summary>
-        /// Main system that picks updates received and sets them for further processing
+        /// Main system that picks updates received and sets them for further processing. We call it in the 
+        /// fixed update as in deals with phisics
         /// </summary>
         public IEnumerator HandleVesselUpdates()
         {
             var fixedUpdate = new WaitForFixedUpdate();
             while (true)
             {
-                if (!VesselUpdateSystem.Singleton.Enabled) break;
+                if (!System.Enabled) break;
 
                 //Iterate over the updates that do not have interpolations going on
                 foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
@@ -95,7 +95,11 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
         }
 
-        private VesselUpdate GetValidUpdate(long targetSentTime, Queue<VesselUpdate> vesselUpdates)
+        /// <summary>
+        /// Retrieves an update from the queue that was sent later than the one we have as target 
+        /// and that was received close to "MSInthepast". Rmember to call it from fixed update only
+        /// </summary>
+        private static VesselUpdate GetValidUpdate(long targetSentTime, Queue<VesselUpdate> vesselUpdates)
         {
             var update = vesselUpdates.ToList()
                 .Where(u => u.SentTime > targetSentTime && (Time.fixedTime - u.ReceiveTime) >= SInPast)

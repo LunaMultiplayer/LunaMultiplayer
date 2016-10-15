@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
@@ -36,33 +37,36 @@ namespace LunaClient.Systems.Asteroid
         public Dictionary<string, string> ServerAsteroidTrackStatus { get; } = new Dictionary<string, string>();
         public object ServerAsteroidListLock { get; } = new object();
         private AsteroidEventHandler AsteroidEventHandler { get; } = new AsteroidEventHandler();
-
-        private float LastAsteroidCheck { get; set; }
+        
         private const float AsteroidCheckInterval = 5f;
 
         #endregion
 
         #region Base overrides
 
-        protected override void Recreate()
+        public override void OnEnabled()
         {
-            base.Recreate();
+            base.OnEnabled();
             GameEvents.onGameSceneLoadRequested.Add(AsteroidEventHandler.OnGameSceneLoadRequested);
             GameEvents.onVesselCreate.Add(AsteroidEventHandler.OnVesselCreate);
+            Client.Singleton.StartCoroutine(CheckAsteroids());
         }
 
-        protected override void DoReset()
+        public override void OnDisabled()
         {
-            base.DoReset();
+            base.OnDisabled();
             GameEvents.onGameSceneLoadRequested.Remove(AsteroidEventHandler.OnGameSceneLoadRequested);
             GameEvents.onVesselCreate.Remove(AsteroidEventHandler.OnVesselCreate);
         }
+        
 
-        public override void Update()
+        private IEnumerator CheckAsteroids()
         {
-            if (Enabled && Time.realtimeSinceStartup - LastAsteroidCheck > AsteroidCheckInterval)
+            var seconds = new WaitForSeconds(AsteroidCheckInterval);
+            while (true)
             {
-                LastAsteroidCheck = Time.realtimeSinceStartup;
+                if (!Enabled) break;
+
                 //Try to acquire the asteroid-spawning lock if nobody else has it.
                 if (!LockSystem.Singleton.LockExists("asteroid"))
                     LockSystem.Singleton.AcquireLock("asteroid");
@@ -80,6 +84,7 @@ namespace LunaClient.Systems.Asteroid
                     {
                         Debug.Log($"Spawning asteroid, have {beforeSpawn + asteroidsSpawned}, need {SettingsSystem.ServerSettings.MaxNumberOfAsteroids}");
                         ScenarioController.SpawnAsteroid();
+                        yield return null; //Resume on next frame
                     }
                 }
 
@@ -88,13 +93,11 @@ namespace LunaClient.Systems.Asteroid
                 {
                     if (!ServerAsteroidTrackStatus.ContainsKey(asteroid.id.ToString()))
                     {
-                        ServerAsteroidTrackStatus.Add(asteroid.id.ToString(),
-                            asteroid.DiscoveryInfo.trackingStatus.Value);
+                        ServerAsteroidTrackStatus.Add(asteroid.id.ToString(), asteroid.DiscoveryInfo.trackingStatus.Value);
                     }
                     else
                     {
-                        if (asteroid.DiscoveryInfo.trackingStatus.Value !=
-                            ServerAsteroidTrackStatus[asteroid.id.ToString()])
+                        if (asteroid.DiscoveryInfo.trackingStatus.Value != ServerAsteroidTrackStatus[asteroid.id.ToString()])
                         {
                             var pv = asteroid.BackupVessel();
                             Debug.Log($"Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
@@ -102,7 +105,10 @@ namespace LunaClient.Systems.Asteroid
                             VesselProtoSystem.Singleton.MessageSender.SendVesselProtoMessage(pv);
                         }
                     }
+                    yield return null; //Resume on next frame
                 }
+
+                yield return seconds;
             }
         }
 

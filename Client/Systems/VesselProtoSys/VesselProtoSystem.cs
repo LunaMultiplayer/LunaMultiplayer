@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
@@ -21,6 +22,8 @@ namespace LunaClient.Systems.VesselProtoSys
     {
         public List<VesselProtoUpdate> AllPlayerVessels { get; } = new List<VesselProtoUpdate>();
 
+        public float CheckVesselsToLoadSInterval = 2.5f;
+
         public float UpdateScreenMessageInterval = 1f;
         public ScreenMessage BannedPartsMessage { get; set; }
         public float LastBannedPartsMessageUpdate { get; set; }
@@ -36,6 +39,7 @@ namespace LunaClient.Systems.VesselProtoSys
         public override void OnEnabled()
         {
             base.OnEnabled();
+            Client.Singleton.StartCoroutine(CheckVesselsToLoad());
             GameEvents.onFlightReady.Add(VesselProtoEvents.OnFlightReady);
             GameEvents.onVesselWasModified.Add(VesselProtoEvents.OnVesselWasModified);
         }
@@ -62,16 +66,32 @@ namespace LunaClient.Systems.VesselProtoSys
                 CurrentVesselSent = true;
                 MessageSender.SendVesselProtoMessageApplyPosition(FlightGlobals.ActiveVessel.protoVessel);
             }
+        }
 
-            //Load vessels when we have at least 5 updates for them and are in our subspace
-            var vesselsToLoad = AllPlayerVessels
-                .Where(v => v.HasUpdates && !v.Loaded && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == WarpSystem.Singleton.CurrentSubspace)
-                .ToArray();
-
-            foreach (var vesselProto in vesselsToLoad)
+        /// <summary>
+        /// Check vessels that must be loaded
+        /// </summary>
+        private IEnumerator CheckVesselsToLoad()
+        {
+            var seconds = new WaitForSeconds(CheckVesselsToLoadSInterval);
+            while (true)
             {
-                Client.Singleton.StartCoroutine(VesselLoader.LoadVessel(vesselProto.VesselNode, vesselProto.VesselId));
-                vesselProto.Loaded = true;
+                if (!Enabled) break;
+
+                if (VesselProtoSystemReady)
+                {
+                    //Load vessels when we have at least 5 updates for them and are in our subspace
+                    var vesselsToLoad = AllPlayerVessels.Where(v =>v.HasUpdates && !v.Loaded && 
+                            VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == WarpSystem.Singleton.CurrentSubspace)
+                        .ToArray();
+
+                    foreach (var vesselProto in vesselsToLoad)
+                    {
+                        Client.Singleton.StartCoroutine(VesselLoader.LoadVessel(vesselProto.VesselNode, vesselProto.VesselId));
+                        vesselProto.Loaded = true;
+                    }
+                }
+                yield return seconds;
             }
         }
         

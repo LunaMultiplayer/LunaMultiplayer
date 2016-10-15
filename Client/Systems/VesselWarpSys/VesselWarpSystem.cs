@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
@@ -6,6 +7,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
 using UniLinq;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselWarpSys
 {
@@ -17,21 +19,19 @@ namespace LunaClient.Systems.VesselWarpSys
     public class VesselWarpSystem : System<VesselWarpSystem>
     {
         public Dictionary<Guid, int> VesselSubspaceList { get; } = new Dictionary<Guid, int>();
-        private long LastVesselStrandedCheck { get; set; }
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            Client.Singleton.StartCoroutine(CheckAbandonedVessels());
+        }
 
         public override void OnDisabled()
         {
+            base.OnDisabled();
             VesselSubspaceList.Clear();
         }
-
-        public override void Update()
-        {
-            base.Update();
-            if (!Enabled) return;
-            
-            CheckAbandonedVessels();
-        }
-
+        
         public int GetVesselSubspace(Guid vesselId)
         {
             return VesselSubspaceList.ContainsKey(vesselId) ? VesselSubspaceList[vesselId] : 0;
@@ -48,12 +48,13 @@ namespace LunaClient.Systems.VesselWarpSys
         /// <summary>
         /// Check for vessels that are stranded in a subspace with no players and moves them to subspace 0
         /// </summary>
-        private void CheckAbandonedVessels()
+        private IEnumerator CheckAbandonedVessels()
         {
-            if (DateTime.UtcNow.Ticks - LastVesselStrandedCheck > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.StrandedVesselsCheckMsInterval).Ticks)
+            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.StrandedVesselsCheckMsInterval).TotalSeconds);
+            while (true)
             {
-                LastVesselStrandedCheck = DateTime.UtcNow.Ticks;
-                
+                if (!Enabled) break;
+
                 var strandedVesselIds = new List<Guid>();
                 foreach (var vessel in VesselSubspaceList)
                 {
@@ -66,6 +67,8 @@ namespace LunaClient.Systems.VesselWarpSys
                 {
                     VesselSubspaceList[strandedVessel] = 0;
                 }
+
+                yield return seconds;
             }
         }
 

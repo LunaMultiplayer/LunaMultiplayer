@@ -1,5 +1,4 @@
 using System;
-using System.Threading;
 using LunaClient.Base;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
@@ -13,15 +12,11 @@ using LunaClient.Systems.Motd;
 using LunaClient.Systems.PartKiller;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.Warp;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
-using LunaCommon.Message;
-using Lidgren.Network;
 using LunaClient.Network;
 using UnityEngine;
 

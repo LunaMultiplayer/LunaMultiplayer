@@ -6,6 +6,14 @@ namespace LunaClient.Systems.Admin
 {
     public class AdminSystem : MessageSystem<AdminSystem, AdminMessageSender, AdminMessageHandler>
     {
+        #region Fields
+
+        private List<string> ServerAdmins { get; } = new List<string>();
+
+        #endregion
+
+        #region Public methods
+
         public bool IsCurrentPlayerAdmin()
         {
             return IsAdmin(SettingsSystem.CurrentSettings.PlayerName);
@@ -27,10 +35,6 @@ namespace LunaClient.Systems.Admin
             if (ServerAdmins.Contains(adminName))
                 ServerAdmins.Remove(adminName);
         }
-
-        #region Fields
-
-        private List<string> ServerAdmins { get; } = new List<string>();
 
         #endregion
     }

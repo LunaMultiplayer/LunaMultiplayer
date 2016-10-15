@@ -60,6 +60,9 @@
     <Reference Include="UnityEngine">
       <HintPath>..\ExternalLibraries\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\ExternalLibraries\UnityEngine.UI.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\Interface\IInputHandler.cs" />

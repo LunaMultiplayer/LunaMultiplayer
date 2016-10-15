@@ -6,6 +6,16 @@ namespace LunaClient.Systems.PartKiller
 {
     public class PartKillerSystem : System<PartKillerSystem>
     {
+        #region Fields
+
+        //Bidictionary
+        public Dictionary<Vessel, List<uint>> VesselToPart { get; } = new Dictionary<Vessel, List<uint>>();
+        public Dictionary<uint, List<Vessel>> PartToVessel { get; } = new Dictionary<uint, List<Vessel>>();
+        public Guid LoadGuid { get; set; } = Guid.Empty;
+        private PartKillerEvents PartKillerEvents { get; } = new PartKillerEvents();
+
+        #endregion
+
         public void ForgetVessel(Vessel vessel)
         {
             if (!VesselToPart.ContainsKey(vessel)) return; //Killed as a fragment.
@@ -32,6 +42,7 @@ namespace LunaClient.Systems.PartKiller
 
         public override void OnEnabled()
         {
+            base.OnEnabled();
             GameEvents.onVesselCreate.Add(PartKillerEvents.OnVesselCreate);
             GameEvents.onVesselWasModified.Add(PartKillerEvents.OnVesselWasModified);
             GameEvents.onVesselDestroy.Add(PartKillerEvents.OnVesselDestroyed);
@@ -40,20 +51,11 @@ namespace LunaClient.Systems.PartKiller
 
         public override void OnDisabled()
         {
+            base.OnDisabled();
             GameEvents.onVesselCreate.Remove(PartKillerEvents.OnVesselCreate);
             GameEvents.onVesselWasModified.Remove(PartKillerEvents.OnVesselWasModified);
             GameEvents.onVesselDestroy.Remove(PartKillerEvents.OnVesselDestroyed);
             GameEvents.onFlightReady.Remove(PartKillerEvents.OnFlightReady);
         }
-
-        #region Fields
-        
-        //Bidictionary
-        public Dictionary<Vessel, List<uint>> VesselToPart { get; } = new Dictionary<Vessel, List<uint>>();
-        public Dictionary<uint, List<Vessel>> PartToVessel { get; } = new Dictionary<uint, List<Vessel>>();
-        public Guid LoadGuid { get; set; } = Guid.Empty;
-        private PartKillerEvents PartKillerEvents { get; } = new PartKillerEvents();
-        
-        #endregion
     }
 }

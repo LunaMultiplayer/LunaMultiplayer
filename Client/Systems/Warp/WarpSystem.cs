@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
@@ -44,13 +45,13 @@ namespace LunaClient.Systems.Warp
         public bool NewSubspaceSent { get; set; }
         public Dictionary<string, int> ClientSubspaceList { get; } = new Dictionary<string, int>();
         public Dictionary<int, double> Subspaces { get; } = new Dictionary<int, double>();
-
-        private double LastScreenMessageCheck { get; set; }
+        
         private ScreenMessage WarpMessage { get; set; }
         private WarpEvents WarpEvents { get; } = new WarpEvents();
         public bool SkipSubspaceProcess { get; set; }
 
-        private const float UpdateScreenMessageInterval = 0.2f;
+        private const float UpdateScreenMessageSInterval = 0.2f;
+        private const float CheckFollowMasterSInterval = 1f;
 
         #endregion
 
@@ -64,16 +65,14 @@ namespace LunaClient.Systems.Warp
         public override void OnEnabled()
         {
             GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);
-        }
 
-        public override void Update()
-        {
-            base.Update();
-            if (!Enabled)
-                return;
-            
-            UpdateScreenMessage();
-            FollowWarpMaster();
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.MASTER &&
+                !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) &&
+                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
+            {
+                Client.Singleton.StartCoroutine(UpdateScreenMessage());
+                Client.Singleton.StartCoroutine(FollowWarpMaster());
+            }
         }
         
         #endregion
@@ -139,15 +138,21 @@ namespace LunaClient.Systems.Warp
         /// <summary>
         /// Follows the warp master if the warp mode is set to MASTER and warp master is in another subspace
         /// </summary>
-        private void FollowWarpMaster()
+        private IEnumerator FollowWarpMaster()
         {
-            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.MASTER &&
-                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName &&
-                ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
-                ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
+            var seconds = new WaitForSeconds(CheckFollowMasterSInterval);
+            while (true)
             {
-                //Follow the warp master into warp if needed
-                CurrentSubspace = ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster];
+                if (!Enabled) break;
+
+                if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
+                    ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
+                {
+                    //Follow the warp master into warp if needed
+                    CurrentSubspace = ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster];
+                }
+
+                yield return seconds;
             }
         }
 
@@ -163,17 +168,19 @@ namespace LunaClient.Systems.Warp
         /// <summary>
         /// Updates the screen message if warp mode is set to Master
         /// </summary>
-        private void UpdateScreenMessage()
+        private IEnumerator UpdateScreenMessage()
         {
-            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.MASTER && !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) && 
-                Time.realtimeSinceStartup - LastScreenMessageCheck > UpdateScreenMessageInterval)
+            var seconds = new WaitForSeconds(UpdateScreenMessageSInterval);
+            while (true)
             {
-                LastScreenMessageCheck = Time.realtimeSinceStartup;
+                if (!Enabled) break;
 
                 if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
                     DisplayMessage(SettingsSystem.ServerSettings.WarpMaster + " has warp control", 1f);
                 else
                     DisplayMessage("You have warp control", 1f);
+
+                yield return seconds;
             }
         }
         

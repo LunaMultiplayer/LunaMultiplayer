@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using LunaClient.Base;
 using LunaClient.Systems.AtmoLoader;
 using LunaClient.Systems.PartKiller;
@@ -22,8 +23,6 @@ namespace LunaClient.Systems.VesselRemoveSys
     {
         #region Fields
         
-        private long LastVesselKillCheck { get; set; }
-
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
 
         #endregion
@@ -36,6 +35,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselDestroy.Add(VesselRemoveEvents.OnVesselDestroyed);
+            Client.Singleton.StartCoroutine(CheckVesselsToKill());
         }
 
         public override void OnDisabled()
@@ -45,15 +45,18 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselDestroy.Remove(VesselRemoveEvents.OnVesselDestroyed);
         }
+        
+        #endregion
 
         /// <summary>
         /// Check the vessels that are not in our subspace and kill them
         /// </summary>
-        public override void FixedUpdate()
+        private IEnumerator CheckVesselsToKill()
         {
-            if (DateTime.UtcNow.Ticks - LastVesselKillCheck > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselKillCheckMsInterval).Ticks)
+            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselKillCheckMsInterval).TotalSeconds);
+            while (true)
             {
-                LastVesselKillCheck = DateTime.UtcNow.Ticks;
+                if (!Enabled) break;
 
                 var vesselsToKill = VesselProtoSystem.Singleton.AllPlayerVessels
                     .Where(v => v.Loaded && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) != WarpSystem.Singleton.CurrentSubspace)
@@ -65,10 +68,10 @@ namespace LunaClient.Systems.VesselRemoveSys
                 {
                     killedVessel.Loaded = false;
                 }
+
+                yield return seconds;
             }
         }
-
-        #endregion
 
         #region Public
 
