@@ -85,10 +85,15 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         public void KillVessel(Vessel killVessel)
         {
-            if (!FlightGlobals.Vessels.Contains(killVessel)) return;
+            Client.Singleton.StartCoroutine(KillVesselRoutine(killVessel));
+        }
 
+        private static IEnumerator KillVesselRoutine(Vessel killVessel)
+        {
             while (true)
             {
+                if (!FlightGlobals.Vessels.Contains(killVessel)) break;
+
                 if (killVessel != null)
                 {
                     Debug.Log("Killing vessel: " + killVessel.id);
@@ -110,10 +115,14 @@ namespace LunaClient.Systems.VesselRemoveSys
                         }
                     }
 
+                    yield return null; //Resume on next frame
+
                     //Remove the kerbal from the craft
                     foreach (var pps in killVessel.protoVessel.protoPartSnapshots)
                         foreach (var pcm in pps.protoModuleCrew.ToArray())
                             pps.RemoveCrew(pcm);
+
+                    yield return null; //Resume on next frame
 
                     try
                     {
@@ -123,6 +132,8 @@ namespace LunaClient.Systems.VesselRemoveSys
                     {
                         Debug.Log("Error destroying vessel: " + killException);
                     }
+
+                    yield return null; //Resume on next frame
 
                     //try
                     //{
@@ -134,9 +145,11 @@ namespace LunaClient.Systems.VesselRemoveSys
                     //    Debug.Log("Error destroying vessel from the scenario: " + destroyException);
                     //}
 
+                    //yield return null; //Resume on next frame
+
                     if (FlightGlobals.Vessels.Contains(killVessel) && (killVessel.state != Vessel.State.DEAD))
                     {
-                        continue;//Recursive Killing
+                        continue; //Recursive Killing
                     }
                 }
                 break;

@@ -51,35 +51,37 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             var currentProto = CreateSafeProtoVesselFromConfigNode(vesselNode, protovesselId);
 
-            if (!ProtoVesselValidationsPassed(currentProto))
-                yield return 0;
-
-            RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
-            FixProtoVesselFlags(currentProto);
-            DestroyOldVesselIfExists(currentProto);
-
-            Debug.Log("Loading " + currentProto.vesselID + ", Name: " + currentProto.vesselName + ", type: " + currentProto.vesselType);
-
-            currentProto.Load(HighLogic.CurrentGame.flightState);
-            if (currentProto.vesselRef == null)
+            if (ProtoVesselValidationsPassed(currentProto))
             {
-                Debug.Log("Protovessel " + currentProto.vesselID + " failed to create a vessel!");
-                yield return 0;
-            }
-            
-            if (ProtoVesselIsTarget(currentProto))
-            {
-                Debug.Log("ProtoVessel update for target vessel!");
-                Debug.Log("Set docking target");
-                FlightGlobals.fetch.SetVesselTarget(currentProto.vesselRef);
-            }
+                RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
+                FixProtoVesselFlags(currentProto);
+                DestroyOldVesselIfExists(currentProto);
+                yield return null; //Resume on next frame
 
-            //If we are spectating that vessel and it changed focus to the new vessel
-            if (FlightGlobals.ActiveVessel.id == currentProto.vesselID)
-                FlightGlobals.SetActiveVessel(currentProto.vesselRef);
+                Debug.Log($"Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
 
-            Debug.Log("Protovessel Loaded");
-            yield return 0;
+                currentProto.Load(HighLogic.CurrentGame.flightState);
+                yield return null; //Resume on next frame
+
+                if (currentProto.vesselRef == null)
+                {
+                    Debug.Log($"Protovessel {currentProto.vesselID} failed to create a vessel!");
+                }
+                else
+                {
+                    if (ProtoVesselIsTarget(currentProto))
+                    {
+                        Debug.Log("ProtoVessel update for target vessel!. Set docking target");
+                        FlightGlobals.fetch.SetVesselTarget(currentProto.vesselRef);
+                    }
+
+                    //If we are spectating that vessel and it changed focus to the new vessel
+                    if (FlightGlobals.ActiveVessel.id == currentProto.vesselID)
+                        FlightGlobals.SetActiveVessel(currentProto.vesselRef);
+
+                    Debug.Log("Protovessel Loaded");
+                }
+            }
         }
 
         #region Private methods
