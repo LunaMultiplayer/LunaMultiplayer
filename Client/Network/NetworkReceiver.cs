@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.ColorSystem;
@@ -80,7 +81,7 @@ namespace LunaClient.Network
                         }
                     }
 
-                    MainSystem.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
+                    Thread.Sleep(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
                 }
             }
             catch (Exception e)

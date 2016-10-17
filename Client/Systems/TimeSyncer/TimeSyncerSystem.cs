@@ -89,7 +89,7 @@ namespace LunaClient.Systems.TimeSyncer
             while (MainSystem.Singleton.NetworkState >= ClientState.CONNECTED)
             {
                 MessageSender.SendTimeSyncRequest();
-                MainSystem.Delay(SettingsSystem.CurrentSettings.SyncTimeRequestMsInterval);
+                Thread.Sleep(SettingsSystem.CurrentSettings.SyncTimeRequestMsInterval);
             }
         }
 

@@ -37,7 +37,7 @@ namespace LunaServer.Settings
         public LogLevels LogLevel = LogLevels.Debug;
 
         [Description("Main thread polling in ms")]
-        public int MainTimeTick = 30;
+        public int MainTimeTick = 5;
 
         [Description("Maximum amount of Players that can join the server.")]
         public int MaxPlayers = 20;
@@ -123,6 +123,6 @@ namespace LunaServer.Settings
         public int MediumDistanceUpdateIntervalMs { get; set; } = 250; //4 FPS
         public int CloseDistanceUpdateIntervalMs { get; set; } = 33; //30 FPS
         public int CloseDistanceInMeters { get; set; } = 25000;
-        public int SendReceiveThreadTickMs { get; set; } = 10;
+        public int SendReceiveThreadTickMs { get; set; } = 5;
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
@@ -108,7 +109,7 @@ namespace LunaClient.Network
                 while ((NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected) && (connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries))
                 {
                     connectionTrials++;
-                    MainSystem.Delay(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
+                    Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
                 }
 
                 if (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Disconnected)

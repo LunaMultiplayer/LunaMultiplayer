@@ -251,15 +251,7 @@ namespace LunaClient
         #endregion
 
         #region Public methods
-
-        public static void Delay(int delayMs)
-        {
-            var t = Environment.TickCount;
-            while (Environment.TickCount - t < delayMs)
-            {
-            }
-        }
-
+        
         public void OnExit()
         {
             Quit = true;

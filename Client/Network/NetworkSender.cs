@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
@@ -31,7 +32,7 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        MainSystem.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
+                        Thread.Sleep(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
                     }
                 }
             }
