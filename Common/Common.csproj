@@ -69,6 +69,7 @@
     <Compile Include="Message\Data\PlayerConnection\PlayerConnectionBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\SyncTime\SyncTimeBaseMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselChangeMsgData.cs" />
     <Compile Include="Message\Interface\IMasterServerMessageBase.cs" />
     <Compile Include="Message\MasterServerMessageFactory.cs" />
     <Compile Include="Message\MasterServer\Base\MstSrvMsgBase.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Message\Types\MotdMessageType.cs" />
     <Compile Include="Message\Types\PlayerConnectionMessageType.cs" />
     <Compile Include="Message\Types\SyncTimeMessageType.cs" />
+    <Compile Include="Message\Types\VesselChangeType.cs" />
     <Compile Include="Message\Types\VesselMessageType.cs" />
     <Compile Include="Message\Types\CraftMessageType.cs" />
     <Compile Include="Enums\CraftType.cs" />

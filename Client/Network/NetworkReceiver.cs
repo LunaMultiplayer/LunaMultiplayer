@@ -24,6 +24,7 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Lidgren.Network;
+using LunaClient.Systems.VesselChangeSys;
 using UnityEngine;
 
 namespace LunaClient.Network
@@ -128,6 +129,9 @@ namespace LunaClient.Network
                     {
                         case VesselMessageType.UPDATE:
                             VesselUpdateSystem.Singleton.EnqueueMessage(msg.Data);
+                            break;
+                        case VesselMessageType.CHANGE:
+                            VesselChangeSystem.Singleton.EnqueueMessage(msg.Data);
                             break;
                         case VesselMessageType.LIST_REPLY:
                         case VesselMessageType.VESSELS_REPLY:

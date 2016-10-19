@@ -23,6 +23,7 @@ namespace LunaCommon.Message.Serialization
             [typeof(ushort)] = (messageData, inputData) => WriteBytesFromUShort(messageData, (ushort)inputData),
             [typeof(short)] = (messageData, inputData) => WriteBytesFromShort(messageData, (short)inputData),
             [typeof(int)] = (messageData, inputData) => WriteBytesFromInt(messageData, (int)inputData),
+            [typeof(uint)] = (messageData, inputData) => WriteBytesFromUint(messageData, (uint)inputData),
             [typeof(long)] = (messageData, inputData) => WriteBytesFromLong(messageData, (long)inputData),
             [typeof(float)] = (messageData, inputData) => WriteBytesFromFloat(messageData, (float)inputData),
             [typeof(double)] = (messageData, inputData) => WriteBytesFromDouble(messageData, (double)inputData),
@@ -46,6 +47,7 @@ namespace LunaCommon.Message.Serialization
             [typeof(short[])] =
                 (messageData, inputData) => WriteBytesFromShortArray(messageData, (short[])inputData),
             [typeof(int[])] = (messageData, inputData) => WriteBytesFromIntArray(messageData, (int[])inputData),
+            [typeof(uint[])] = (messageData, inputData) => WriteBytesFromUintArray(messageData, (uint[])inputData),
             [typeof(long[])] = (messageData, inputData) => WriteBytesFromLongArray(messageData, (long[])inputData),
             [typeof(float[])] =
                 (messageData, inputData) => WriteBytesFromFloatArray(messageData, (float[])inputData),

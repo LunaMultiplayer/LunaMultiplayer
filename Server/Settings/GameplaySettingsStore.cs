@@ -21,7 +21,7 @@ namespace LunaServer.Settings
         public bool CommNetwork = true;
 
         [Description("Crew Respawn Time")]
-        public float RespwanTime = 2f;
+        public float RespawnTime = 2f;
 
         // Career Settings
         [Description("Funds Rewards")]

@@ -52,18 +52,8 @@ namespace LunaClient.Systems.VesselRemoveSys
             }
             else
             {
-                if (FlightGlobals.ActiveVessel?.id == vessel.id && !VesselLockSystem.Singleton.IsSpectating)
-                {
-                    //Got a remove Message for our vessel, reset the send time on our vessel so we send it back.
-                    Debug.Log("Resending vessel, our vessel was removed by another player. This shouldn't happen");
-                    //TODO!
-                    //System.ServerVesselsProtoUpdate[vesselId] = 0f;
-                }
-                else
-                {
-                    Debug.Log("Removing vessel: " + vesselId);
-                    System.KillVessel(vessel);
-                }
+                Debug.Log("Removing vessel: " + vesselId);
+                System.KillVessel(vessel);
             }
         }
     }

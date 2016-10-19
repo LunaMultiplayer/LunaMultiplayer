@@ -2,7 +2,6 @@
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
-using LunaClient.Systems.AtmoLoader;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.ColorSystem;
 using LunaClient.Systems.CraftLibrary;
@@ -15,13 +14,13 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.ModApi;
 using LunaClient.Systems.Motd;
 using LunaClient.Systems.Network;
-using LunaClient.Systems.PartKiller;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
+using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselProtoSys;
@@ -49,6 +48,7 @@ namespace LunaClient.Systems
             TimeSyncerSystem.Singleton.ClearIncomingMsgQueue();
             KerbalSystem.Singleton.ClearIncomingMsgQueue();
             VesselUpdateSystem.Singleton.ClearIncomingMsgQueue();
+            VesselChangeSystem.Singleton.ClearIncomingMsgQueue();
             VesselProtoSystem.Singleton.ClearIncomingMsgQueue();
             VesselRemoveSystem.Singleton.ClearIncomingMsgQueue();
             WarpSystem.Singleton.ClearIncomingMsgQueue();
@@ -79,6 +79,7 @@ namespace LunaClient.Systems
             TryUpdate(KerbalSystem.Singleton);
             TryUpdate(VesselLockSystem.Singleton);
             TryUpdate(VesselUpdateSystem.Singleton);
+            TryUpdate(VesselChangeSystem.Singleton);
             TryUpdate(VesselProtoSystem.Singleton);
             TryUpdate(VesselRemoveSystem.Singleton);
             TryUpdate(VesselWarpSystem.Singleton);
@@ -86,8 +87,6 @@ namespace LunaClient.Systems
             TryUpdate(WarpSystem.Singleton);
             TryUpdate(LockSystem.Singleton);
             TryUpdate(SettingsSystem.Singleton);
-            TryUpdate(AtmoLoaderSystem.Singleton);
-            TryUpdate(PartKillerSystem.Singleton);
             TryUpdate(AsteroidSystem.Singleton);
             TryUpdate(StatusSystem.Singleton);
             TryUpdate(ChatSystem.Singleton);
@@ -115,6 +114,7 @@ namespace LunaClient.Systems
             TryLateUpdate(KerbalSystem.Singleton);
             TryLateUpdate(VesselLockSystem.Singleton);
             TryLateUpdate(VesselUpdateSystem.Singleton);
+            TryLateUpdate(VesselChangeSystem.Singleton);
             TryLateUpdate(VesselProtoSystem.Singleton);
             TryLateUpdate(VesselRemoveSystem.Singleton);
             TryLateUpdate(VesselWarpSystem.Singleton);
@@ -122,8 +122,6 @@ namespace LunaClient.Systems
             TryLateUpdate(WarpSystem.Singleton);
             TryLateUpdate(LockSystem.Singleton);
             TryLateUpdate(SettingsSystem.Singleton);
-            TryLateUpdate(AtmoLoaderSystem.Singleton);
-            TryLateUpdate(PartKillerSystem.Singleton);
             TryLateUpdate(AsteroidSystem.Singleton);
             TryLateUpdate(StatusSystem.Singleton);
             TryLateUpdate(ChatSystem.Singleton);
@@ -151,6 +149,7 @@ namespace LunaClient.Systems
             TryFixedUpdate(KerbalSystem.Singleton);
             TryFixedUpdate(VesselLockSystem.Singleton);
             TryFixedUpdate(VesselUpdateSystem.Singleton);
+            TryFixedUpdate(VesselChangeSystem.Singleton);
             TryFixedUpdate(VesselProtoSystem.Singleton);
             TryFixedUpdate(VesselRemoveSystem.Singleton);
             TryFixedUpdate(VesselWarpSystem.Singleton);
@@ -158,8 +157,6 @@ namespace LunaClient.Systems
             TryFixedUpdate(WarpSystem.Singleton);
             TryFixedUpdate(LockSystem.Singleton);
             TryFixedUpdate(SettingsSystem.Singleton);
-            TryFixedUpdate(AtmoLoaderSystem.Singleton);
-            TryFixedUpdate(PartKillerSystem.Singleton);
             TryFixedUpdate(AsteroidSystem.Singleton);
             TryFixedUpdate(StatusSystem.Singleton);
             TryFixedUpdate(ChatSystem.Singleton);
@@ -192,14 +189,13 @@ namespace LunaClient.Systems
             TryReset(KerbalSystem.Singleton);
             TryReset(VesselUpdateSystem.Singleton);
             TryReset(VesselLockSystem.Singleton);
+            TryReset(VesselChangeSystem.Singleton);
             TryReset(VesselProtoSystem.Singleton);
             TryReset(VesselRemoveSystem.Singleton);
             TryReset(VesselWarpSystem.Singleton);
             TryReset(VesselDockSystem.Singleton);
             TryReset(WarpSystem.Singleton);
             TryReset(LockSystem.Singleton);
-            TryReset(AtmoLoaderSystem.Singleton);
-            TryReset(PartKillerSystem.Singleton);
             TryReset(AsteroidSystem.Singleton);
             TryReset(StatusSystem.Singleton);
             TryReset(ChatSystem.Singleton);
@@ -220,7 +216,6 @@ namespace LunaClient.Systems
         {
             AsteroidSystem.Singleton.Enabled = false;
             VesselCommon.EnableAllSystems = false;
-            AtmoLoaderSystem.Singleton.Enabled = false;
             StatusSystem.Singleton.Enabled = false;
             ScenarioSystem.Singleton.Enabled = false;
             WarpSystem.Singleton.Enabled = false;
@@ -232,7 +227,6 @@ namespace LunaClient.Systems
             PlayerConnectionSystem.Singleton.Enabled = false;
             MotdSystem.Singleton.Enabled = false;
             FlagSystem.Singleton.Enabled = false;
-            PartKillerSystem.Singleton.Enabled = false;
             KerbalReassignerSystem.Singleton.Enabled = false;
             VesselWarpSystem.Singleton.Enabled = false;
         }

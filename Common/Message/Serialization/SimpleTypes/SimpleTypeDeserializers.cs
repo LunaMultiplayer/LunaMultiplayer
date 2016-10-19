@@ -36,6 +36,16 @@ namespace LunaCommon.Message.Serialization
             return BitConverter.ToInt32(outputData, 0);
         }
 
+        private static uint GetUintFromBytes(Stream messageData)
+        {
+            CheckDataLeft(messageData.Length, sizeof(uint));
+
+            var outputData = new byte[sizeof(uint)];
+            messageData.Read(outputData, 0, sizeof(uint));
+
+            return BitConverter.ToUInt32(outputData, 0);
+        }
+
         private static long GetLongFromBytes(Stream messageData)
         {
             CheckDataLeft(messageData.Length, sizeof(long));

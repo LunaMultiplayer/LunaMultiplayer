@@ -9,5 +9,6 @@
         PROTO = 4,
         REMOVE = 5,
         UPDATE = 6,
+        CHANGE = 7,
     }
 }

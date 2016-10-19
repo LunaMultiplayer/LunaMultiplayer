@@ -9,7 +9,14 @@ namespace LunaCommon.Message.Data.Vessel
 
         public double PlanetTime { get; set; }
         public Guid VesselId { get; set; }
+        public int Stage { get; set; }
         public string BodyName { get; set; }
+        public uint[] ActiveEngines { get; set; }
+        public uint[] StoppedEngines { get; set; }
+        public uint[] Decouplers { get; set; }
+        public uint[] AnchoredDecouplers { get; set; }
+        public uint[] Clamps { get; set; }
+        public uint[] Docks { get; set; }
         public float[] Rotation { get; set; }
         public float[] AngularVelocity { get; set; }
         public float MainThrottle { get; set; }

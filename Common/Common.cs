@@ -10,9 +10,9 @@ namespace LunaCommon
     {
         public static IPEndPoint CreateEndpointFromString(string endpoint)
         {
-            return new IPEndPoint(IPAddress.Parse(endpoint.Split(':')[0]), int.Parse(endpoint.Split(':')[1]) );
+            return new IPEndPoint(IPAddress.Parse(endpoint.Split(':')[0]), int.Parse(endpoint.Split(':')[1]));
         }
-        
+
         public static string StringFromEndpoint(IPEndPoint endpoint)
         {
             return $"{endpoint.Address}:{endpoint.Port}";
@@ -374,10 +374,18 @@ namespace LunaCommon
                 "HECS2.ProbeCore",
                 "HighGainAntenna",
                 "LgRadialSolarPanel",
-                "GearSmall"
+                "GearSmall",
+                //1.2 parts
+                "ScienceBox",
+                "SurfAntenna",
+                "HighGainAntenna5",
+                "RelayAntenna100",
+                "RelayAntenna5",
+                "RelayAntenna50",
+                "HeatShield0"
             };
             return stockPartList;
-            //MAKE SURE TO CHANGE Common.MODCONTROL_VERSION
+            //MAKE SURE TO CHANGE VERSION NUMBER!
         }
 
         public static string GenerateModFileStringData(string[] requiredFiles, string[] optionalFiles, bool isWhiteList,

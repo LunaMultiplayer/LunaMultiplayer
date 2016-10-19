@@ -21,6 +21,11 @@ namespace LunaCommon.Message.Serialization
             messageData.Write(BitConverter.GetBytes(inputData), 0, sizeof(int));
         }
 
+        private static void WriteBytesFromUint(Stream messageData, uint inputData)
+        {
+            messageData.Write(BitConverter.GetBytes(inputData), 0, sizeof(uint));
+        }
+
         private static void WriteBytesFromLong(Stream messageData, long inputData)
         {
             messageData.Write(BitConverter.GetBytes(inputData), 0, sizeof(long));

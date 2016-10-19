@@ -72,7 +72,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public double GetMsInPast()
         {
-            return VesselUpdateInterpolationSystem.MsInPast;
+            return VesselCommon.MsInPast;
         }
 
         #endregion

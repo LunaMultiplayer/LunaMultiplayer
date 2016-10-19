@@ -20,6 +20,13 @@ namespace LunaCommon.Message.Serialization
                 WriteBytesFromInt(messageData, element);
         }
 
+        private static void WriteBytesFromUintArray(Stream messageData, uint[] inputData)
+        {
+            WriteFirstLengthByte(messageData, inputData.Length);
+            foreach (var element in inputData)
+                WriteBytesFromUint(messageData, element);
+        }
+
         private static void WriteBytesFromLongArray(Stream messageData, long[] inputData)
         {
             WriteFirstLengthByte(messageData, inputData.Length);

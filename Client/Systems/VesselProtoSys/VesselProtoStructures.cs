@@ -8,6 +8,6 @@ namespace LunaClient.Systems.VesselProtoSys
         public Guid VesselId { get; set; }
         public ConfigNode VesselNode { get; set; }
         public bool Loaded { get; set; }
-        public bool HasUpdates => VesselUpdateSystem.Singleton.VesselHasUpdates(VesselId, 5);
+        public bool HasUpdates => VesselUpdateSystem.Singleton.VesselHasUpdates(VesselId, 1);
     }
 }

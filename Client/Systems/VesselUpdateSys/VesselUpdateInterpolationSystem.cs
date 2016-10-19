@@ -17,14 +17,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         #region Fields
 
         /// <summary>
-        /// This variable specifies how many miliseconds in the past we work. It's based on the ping with a minimum of 500ms.
-        /// For bad conections we will work several MS in the past as we need time to receive them.
-        /// </summary>
-        public static double MsInPast => NetworkStatistics.PingMs * 2 <= 500 ? 500 : NetworkStatistics.PingMs * 2;
-
-        public static float SInPast => (float)TimeSpan.FromMilliseconds(MsInPast).TotalSeconds;
-
-        /// <summary>
         /// After the value in ms specified here the vessel will be removed from the interpolation system
         /// </summary>
         private int MsWithoutUpdatesToRemove { get; } = 10000;
@@ -102,8 +94,8 @@ namespace LunaClient.Systems.VesselUpdateSys
         private static VesselUpdate GetValidUpdate(long targetSentTime, Queue<VesselUpdate> vesselUpdates)
         {
             var update = vesselUpdates.ToList()
-                .Where(u => u.SentTime > targetSentTime && (Time.fixedTime - u.ReceiveTime) >= SInPast)
-                .OrderBy(u => Math.Abs((Time.fixedTime - u.ReceiveTime) - SInPast))
+                .Where(u => u.SentTime > targetSentTime && (Time.fixedTime - u.ReceiveTime) >= VesselCommon.SInPast)
+                .OrderBy(u => Math.Abs((Time.fixedTime - u.ReceiveTime) - VesselCommon.SInPast))
                 .FirstOrDefault();
 
             if (update != null)
@@ -156,7 +148,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             var currentPosition = VesselUpdate.CreateFromVesselId(update.VesselId);
             if (currentPosition != null)
             {
-                currentPosition.ReceiveTime = update.ReceiveTime - SInPast;
+                currentPosition.ReceiveTime = update.ReceiveTime - VesselCommon.SInPast;
                 CurrentVesselUpdate.Add(update.VesselId, currentPosition);
                 CurrentVesselUpdate[update.VesselId].Target = update;
                 return true;

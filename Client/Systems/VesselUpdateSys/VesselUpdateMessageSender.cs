@@ -22,6 +22,13 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 SentTime = DateTime.UtcNow.Ticks,
                 PlanetTime = Planetarium.GetUniversalTime(),
+                Stage = update.Stage,
+                ActiveEngines = update.ActiveEngines,
+                StoppedEngines = update.StoppedEngines,
+                Decouplers = update.Decouplers,
+                AnchoredDecouplers = update.AnchoredDecouplers,
+                Clamps = update.Clamps,
+                Docks = update.Docks,
                 VesselId = update.VesselId,
                 Acceleration = update.Acceleration,
                 ActiongroupControls = update.ActionGrpControls,

@@ -1,5 +1,7 @@
 ﻿using System;
+using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselProtoSys;
@@ -11,6 +13,14 @@ namespace LunaClient.Systems
 {
     public class VesselCommon
     {
+        /// <summary>
+        /// This variable specifies how many miliseconds in the past we work. It's based on the ping with a minimum of 500ms.
+        /// For bad conections we will work several MS in the past as we need time to receive them.
+        /// </summary>
+        public static double MsInPast => NetworkStatistics.PingMs * 2 <= 500 ? 500 : NetworkStatistics.PingMs * 2;
+
+        public static float SInPast => (float)TimeSpan.FromMilliseconds(MsInPast).TotalSeconds;
+
         public static Guid CurrentVesselId => FlightGlobals.ActiveVessel == null ? Guid.Empty : FlightGlobals.ActiveVessel.id;
 
         public static bool ActiveVesselIsInSafetyBubble()
@@ -39,6 +49,7 @@ namespace LunaClient.Systems
                 {
                     VesselLockSystem.Singleton.Enabled = true;
                     VesselUpdateSystem.Singleton.Enabled = true;
+                    VesselChangeSystem.Singleton.Enabled = true;
                     VesselProtoSystem.Singleton.Enabled = true;
                     VesselRemoveSystem.Singleton.Enabled = true;
                     VesselDockSystem.Singleton.Enabled = true;
@@ -48,6 +59,7 @@ namespace LunaClient.Systems
                 {
                     VesselLockSystem.Singleton.Enabled = false;
                     VesselUpdateSystem.Singleton.Enabled = false;
+                    VesselChangeSystem.Singleton.Enabled = false;
                     VesselProtoSystem.Singleton.Enabled = false;
                     VesselRemoveSystem.Singleton.Enabled = false;
                     VesselDockSystem.Singleton.Enabled = false;

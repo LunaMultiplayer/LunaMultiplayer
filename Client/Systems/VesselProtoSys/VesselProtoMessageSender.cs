@@ -11,6 +11,7 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using LunaCommon.Message.Types;
 using UniLinq;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             SendVesselProtoMessage(vessel);
         }
-
+        
         public void SendVesselProtoMessage(ProtoVessel vessel)
         {
             //Defend against NaN orbits

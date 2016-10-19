@@ -54,8 +54,17 @@ namespace LunaClient.Systems.VesselProtoSys
             if (ProtoVesselValidationsPassed(currentProto))
             {
                 RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
+                
+                var vessel = FlightGlobals.Vessels.FirstOrDefault(v => !ProtoVesselIsAsteroid(v.protoVessel) && v.id == currentProto.vesselID);
+                if (vessel != null)
+                {
+                    if (vessel.packed)
+                        VesselRemoveSystem.Singleton.KillVessel(vessel);
+                    else
+                        yield break; //Vessel is not packed and within range so we handle the vessel changes by it's proper messages
+                }
+
                 FixProtoVesselFlags(currentProto);
-                DestroyOldVesselIfExists(currentProto);
                 yield return null; //Resume on next frame
 
                 Debug.Log($"Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
@@ -85,19 +94,7 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         #region Private methods
-
-        /// <summary>
-        /// As this protovessel is an update over an existing one, this method kills the old vessel
-        /// </summary>
-        private static void DestroyOldVesselIfExists(ProtoVessel currentProto)
-        {
-            var vessel = FlightGlobals.Vessels.FirstOrDefault(v => !ProtoVesselIsAsteroid(v.protoVessel) && v.id == currentProto.vesselID);
-            if (vessel != null)
-            {
-                VesselRemoveSystem.Singleton.KillVessel(vessel);
-            }
-        }
-
+        
         /// <summary>
         /// Checks if the protovessel is a target we have locked
         /// </summary>

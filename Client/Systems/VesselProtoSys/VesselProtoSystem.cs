@@ -34,8 +34,7 @@ namespace LunaClient.Systems.VesselProtoSys
         public bool VesselReady { get; set; } = false;
 
         private static bool VesselProtoSystemReady => HighLogic.LoadedScene == GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready;
-
-
+        
         public override void OnEnabled()
         {
             base.OnEnabled();
@@ -48,7 +47,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             base.OnDisabled();
             GameEvents.onFlightReady.Remove(VesselProtoEvents.OnFlightReady);
-            GameEvents.onVesselWasModified.Add(VesselProtoEvents.OnVesselWasModified);
+            GameEvents.onVesselWasModified.Remove(VesselProtoEvents.OnVesselWasModified);
         }
 
         /// <summary>
@@ -80,7 +79,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                 if (VesselProtoSystemReady)
                 {
-                    //Load vessels when we have at least 5 updates for them and are in our subspace
+                    //Load vessels when we have at least 1 update for them and are in our subspace
                     var vesselsToLoad = AllPlayerVessels.Where(v =>v.HasUpdates && !v.Loaded && 
                             VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == WarpSystem.Singleton.CurrentSubspace)
                         .ToArray();

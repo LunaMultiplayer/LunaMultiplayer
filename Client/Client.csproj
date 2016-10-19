@@ -119,6 +119,10 @@
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageHandler.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageSender.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionSystem.cs" />
+    <Compile Include="Systems\VesselChangeSys\VesselChangeSystem.cs" />
+    <Compile Include="Systems\VesselChangeSys\VesselChangeEvents.cs" />
+    <Compile Include="Systems\VesselChangeSys\VesselChangeMessageHandler.cs" />
+    <Compile Include="Systems\VesselChangeSys\VesselChangeMessageSender.cs" />
     <Compile Include="Systems\VesselCommon.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockEvents.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockSystem.cs" />
@@ -162,8 +166,6 @@
     <Compile Include="Systems\Admin\AdminSystem.cs" />
     <Compile Include="Systems\Asteroid\AsteroidEvents.cs" />
     <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
-    <Compile Include="Systems\AtmoLoader\AtmoLoaderEvents.cs" />
-    <Compile Include="Systems\AtmoLoader\AtmoLoaderStructures.cs" />
     <Compile Include="Base\Interface\ISystem.cs" />
     <Compile Include="Base\System.cs" />
     <Compile Include="Systems\ColorSystem\PlayerColorEvents.cs" />
@@ -184,14 +186,12 @@
     <Compile Include="Systems\ModApi\ModApiMessageHandler.cs" />
     <Compile Include="Systems\ModApi\ModApiStructures.cs" />
     <Compile Include="Systems\Mod\ModFileParser.cs" />
-    <Compile Include="Systems\PartKiller\PartKillerEvents.cs" />
     <Compile Include="Systems\Scenario\ScenarioStructures.cs" />
     <Compile Include="Systems\SettingsSys\SettingsReadSaveHandler.cs" />
     <Compile Include="Systems\SettingsSys\SettingsStructures.cs" />
     <Compile Include="Utilities\LmpGuiUtil.cs" />
     <Compile Include="Systems\ModApi\ModApiSystem.cs" />
     <Compile Include="Systems\Flag\FlagSystem.cs" />
-    <Compile Include="Systems\AtmoLoader\AtmoLoaderSystem.cs" />
     <Compile Include="Systems\KerbalReassigner\KerbalReassignerSystem.cs" />
     <Compile Include="Systems\Lock\LockSystem.cs" />
     <Compile Include="Client.cs" />
@@ -201,7 +201,6 @@
     <Compile Include="Network\NetworkConnection.cs" />
     <Compile Include="Network\NetworkSender.cs" />
     <Compile Include="Systems\Network\NetworkSystem.cs" />
-    <Compile Include="Systems\PartKiller\PartKillerSystem.cs" />
     <Compile Include="Systems\ColorSystem\PlayerColorSystem.cs" />
     <Compile Include="Systems\Status\StatusSystem.cs" />
     <Compile Include="Utilities\Profiler.cs" />

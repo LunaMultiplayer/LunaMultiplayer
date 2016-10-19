@@ -43,7 +43,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     break;
             }
         }
-
+        
         private static void HandleVesselProto(VesselProtoMsgData messageData)
         {
             HandleVesselProtoData(messageData.VesselData, messageData.VesselId.ToString(), messageData.Subspace);

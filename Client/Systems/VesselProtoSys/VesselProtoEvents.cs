@@ -1,4 +1,7 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.VesselLockSys;
+using LunaCommon.Message.Types;
+using UniLinq;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -21,8 +24,11 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public void OnVesselWasModified(Vessel data)
         {
-            //Vessel has been modified so send the new vessel
-            System.CurrentVesselSent = false;
+            if (data.id == FlightGlobals.ActiveVessel.id && !VesselLockSystem.Singleton.IsSpectating)
+            {
+                //Vessel has been modified so send the new vessel
+                System.CurrentVesselSent = false;
+            }
         }
     }
 }

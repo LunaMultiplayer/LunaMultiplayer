@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Linq;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Utilities;
 using UnityEngine;
@@ -18,8 +19,20 @@ namespace LunaClient.Systems.VesselUpdateSys
         public CelestialBody Body { get; set; }
         public VesselUpdate Target { get; set; }
         public Guid Id { get; set; }
+        public int Stage { get; set; }
 
-        #region Vessel information fields
+        #region Vessel parts information fields
+
+        public uint[] ActiveEngines { get; set; }
+        public uint[] StoppedEngines { get; set; }
+        public uint[] Decouplers { get; set; }
+        public uint[] AnchoredDecouplers { get; set; }
+        public uint[] Clamps { get; set; }
+        public uint[] Docks { get; set; }
+
+        #endregion
+
+        #region Vessel position information fields
 
         public Guid VesselId { get; set; }
         public double PlanetTime { get; set; }
@@ -76,9 +89,26 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             try
             {
+                var engines = vessel.FindPartModulesImplementing<ModuleEngines>();
                 var returnUpdate = new VesselUpdate
                 {
                     VesselId = vessel.id,
+                    ActiveEngines = engines.Where(e => e.EngineIgnited)
+                                    .Select(e => e.part.craftID).ToArray(),
+                    StoppedEngines = engines.Where(e => !e.EngineIgnited)
+                                    .Select(e => e.part.craftID).ToArray(),
+                    Decouplers = vessel.FindPartModulesImplementing<ModuleDecouple>()
+                                    .Where(e => !e.isDecoupled)
+                                    .Select(e => e.part.craftID).ToArray(),
+                    AnchoredDecouplers = vessel.FindPartModulesImplementing<ModuleAnchoredDecoupler>()
+                                    .Where(e => !e.isDecoupled)
+                                    .Select(e => e.part.craftID).ToArray(),
+                    Clamps = vessel.FindPartModulesImplementing<LaunchClamp>()
+                                    .Select(e => e.part.craftID).ToArray(),
+                    Docks = vessel.FindPartModulesImplementing<ModuleDockingNode>()
+                                    .Where(e => !e.IsDisabled)
+                                    .Select(e => e.part.craftID).ToArray(),
+                    Stage = vessel.currentStage,
                     PlanetTime = Planetarium.GetUniversalTime(),
                     FlightState = new FlightCtrlState(),
                     BodyName = vessel.mainBody.bodyName,
@@ -119,7 +149,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                         vessel.radarAltitude
                     };
 
-                    Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation)*vessel.srf_velocity;
+                    Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
                     returnUpdate.Velocity = new[]
                     {
                         srfVel.x,
@@ -127,7 +157,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                         srfVel.z
                     };
 
-                    Vector3d srfAcceleration = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation)*
+                    Vector3d srfAcceleration = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) *
                                                vessel.acceleration;
                     returnUpdate.Acceleration = new[]
                     {
@@ -175,26 +205,12 @@ namespace LunaClient.Systems.VesselUpdateSys
             var fixedUpdate = new WaitForFixedUpdate();
             if (!InterpolationStarted)
             {
-                if (Body == null)
-                    Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
-                if (Vessel == null)
-                    Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
-
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, Target.ActionGrpControls[0]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, Target.ActionGrpControls[1]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, Target.ActionGrpControls[2]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, Target.ActionGrpControls[3]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, Target.ActionGrpControls[4]);
-
-                InterpolationStarted = true;
-
-                //Interpolation cannot last more than the SInPast
-                _interpolationDuration = Math.Min(Target.ReceiveTime - ReceiveTime - Time.fixedDeltaTime, VesselUpdateInterpolationSystem.SInPast);
+                StartupInterpolation();
             }
 
             if (Body != null && Vessel != null && _interpolationDuration > 0)
             {
-                for (float lerp = 0; lerp < 1; lerp += Time.fixedDeltaTime/_interpolationDuration)
+                for (float lerp = 0; lerp < 1; lerp += Time.fixedDeltaTime / _interpolationDuration)
                 {
                     ApplyInterpolations(lerp);
                     yield return fixedUpdate;
@@ -207,6 +223,83 @@ namespace LunaClient.Systems.VesselUpdateSys
             FinishTime = Time.time;
         }
 
+        private void StartupInterpolation()
+        {
+            if (Body == null)
+                Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
+            if (Vessel == null)
+                Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
+
+            InterpolationStarted = true;
+
+            if (Body != null && Vessel != null)
+            {
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, Target.ActionGrpControls[0]);
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, Target.ActionGrpControls[1]);
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, Target.ActionGrpControls[2]);
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, Target.ActionGrpControls[3]);
+                Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, Target.ActionGrpControls[4]);
+
+                var stage = Vessel.currentStage;
+
+                if (stage != Stage)
+                {
+                    Vessel.ActionGroups.ToggleGroup(KSPActionGroup.Stage);
+                    Vessel.currentStage = Stage;
+                }
+                else
+                {
+                    var engines = Vessel.FindPartModulesImplementing<ModuleEngines>();
+                    var enginesToActivate = engines.Where(e=> !e.EngineIgnited && ActiveEngines.Contains(e.part.craftID));
+                    var enginesToStop = engines.Where(e => e.EngineIgnited && StoppedEngines.Contains(e.part.craftID));
+
+                    var decouplersToLaunch = Vessel.FindPartModulesImplementing<ModuleDecouple>()
+                        .Where(d=> !d.isDecoupled && !Decouplers.Contains(d.part.craftID));
+
+                    var anchoredDecouplersToLaunch = Vessel.FindPartModulesImplementing<ModuleAnchoredDecoupler>()
+                        .Where(d => !d.isDecoupled && !Decouplers.Contains(d.part.craftID));
+                    
+                    var clamps = Vessel.FindPartModulesImplementing<LaunchClamp>().Where(c => !Clamps.Contains(c.part.craftID));
+
+                    var docks = Vessel.FindPartModulesImplementing<ModuleDockingNode>().Where(d => !d.IsDisabled && !Docks.Contains(d.part.craftID));
+
+                    foreach (var engine in enginesToActivate)
+                    {
+                        engine.Activate();
+                    }
+
+                    foreach (var engine in enginesToStop)
+                    {
+                        engine.Shutdown();
+                    }
+
+                    foreach (var decoupler in decouplersToLaunch)
+                    {
+                        decoupler.Decouple();
+                    }
+
+                    foreach (var anchoredDecoupler in anchoredDecouplersToLaunch)
+                    {
+                        anchoredDecoupler.Decouple();
+                    }
+
+                    foreach (var clamp in clamps)
+                    {
+                        clamp.Release();
+                    }
+
+                    foreach (var dock in docks)
+                    {
+                        dock.Decouple();
+                    }
+                }
+
+                //Interpolation cannot last more than the SInPast
+                _interpolationDuration = Math.Min(Target.ReceiveTime - ReceiveTime - Time.fixedDeltaTime,
+                    VesselCommon.SInPast);
+            }
+        }
+
         private void ApplyInterpolations(float percentage)
         {
             try
@@ -214,7 +307,11 @@ namespace LunaClient.Systems.VesselUpdateSys
                 if (!VesselLockSystem.Singleton.IsSpectating)
                     Vessel.ctrlState.CopyFrom(FlightState);
                 else
+                {
+                    //We are spectating so move the throttle slider smoothly with a lerp...
                     FlightInputHandler.state.CopyFrom(FlightState);
+                    FlightInputHandler.state.mainThrottle = Mathf.Lerp(FlightState.mainThrottle, Target.FlightState.mainThrottle, percentage);
+                }
 
                 ApplyCommonInterpolation(percentage);
 

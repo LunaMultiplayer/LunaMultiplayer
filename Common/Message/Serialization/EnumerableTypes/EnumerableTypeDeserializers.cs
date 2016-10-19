@@ -24,6 +24,15 @@ namespace LunaCommon.Message.Serialization
             return outputData;
         }
 
+        private static uint[] GetUintArrayFromBytes(Stream messageData)
+        {
+            var numberOfElements = GetIntFromBytes(messageData);
+            var outputData = new uint[numberOfElements];
+            for (var element = 0; element < numberOfElements; element++)
+                outputData[element] = GetUintFromBytes(messageData);
+            return outputData;
+        }
+
         private static long[] GetLongArrayFromBytes(Stream messageData)
         {
             var numberOfElements = GetIntFromBytes(messageData);

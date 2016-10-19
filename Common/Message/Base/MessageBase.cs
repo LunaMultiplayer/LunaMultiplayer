@@ -162,9 +162,9 @@ namespace LunaCommon.Message.Base
 
                 return fullData;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw new Exception("Error serializing message!");
+                throw new Exception($"Error serializing message! {e}");
             }
         }
 

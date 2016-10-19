@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselLockSys
         
         private bool VesselLockSystemReady => Enabled && HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f && FlightGlobals.ActiveVessel != null;
 
-        private string SpectatingMessage { get; set; }
+        private string SpectatingMessage => IsSpectating ? $"This vessel is being controlled by {GetVesselOwner}." : "";
 
         private const int CheckSecondaryVesselsMsInterval = 500;
         private long _lastCheckTime;
@@ -66,22 +66,12 @@ namespace LunaClient.Systems.VesselLockSys
 
             if (IsSpectating)
             {
-                CheckWarp();
                 TryGetControlLock();
             }
             else
                 UpdateSecondaryVesselsLocks();
         }
-
-        /// <summary>
-        /// If the player we are expectating warps, then stop spectating
-        /// </summary>
-        private void CheckWarp()
-        {
-            if (WarpSystem.Singleton.CurrentSubspace != WarpSystem.Singleton.GetPlayerSubspace(GetVesselOwner))
-                SpectatingMessage = $"The player you were spectating ({GetVesselOwner}) warped";
-        }
-
+        
         #endregion
 
         #region Public methods
@@ -101,7 +91,6 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         public void StartSpectating()
         {
-            SpectatingMessage = $"This vessel is being controlled by {GetVesselOwner}.";
             InputLockManager.SetControlLock(LmpGuiUtil.BlockAllControls, SpectateLock);
             IsSpectating = true;
         }

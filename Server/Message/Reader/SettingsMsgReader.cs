@@ -36,7 +36,7 @@ namespace LunaServer.Message.Reader
             if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.CUSTOM)
             {
                 settingsData.EnableCommNet = GameplaySettings.SettingsStore.CommNetwork;
-                settingsData.RespawnTimer = GameplaySettings.SettingsStore.RespwanTime;
+                settingsData.RespawnTimer = GameplaySettings.SettingsStore.RespawnTime;
                 settingsData.AllowStockVessels = GameplaySettings.SettingsStore.AllowStockVessels;
                 settingsData.AutoHireCrews = GameplaySettings.SettingsStore.AutoHireCrews;
                 settingsData.BypassEntryPurchaseAfterResearch = GameplaySettings.SettingsStore.BypassEntryPurchaseAfterResearch;

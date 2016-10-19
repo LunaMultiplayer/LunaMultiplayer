@@ -168,7 +168,7 @@ namespace LunaClient.Systems.Scenario
         //Defends against bug #172
         private static void SpawnStrandedKerbalsForRescueMissions(ConfigNode contractSystemNode)
         {
-            var rescueContracts = contractSystemNode.GetNode("CONTRACTS").GetNodes("CONTRACT").Where(c => c.GetValue("type") == "RescueKerbal");
+            var rescueContracts = contractSystemNode.GetNode("CONTRACTS").GetNodes("CONTRACT").Where(c => c.GetValue("type") == "RecoverAsset");
             foreach (var contractNode in rescueContracts)
             {
                 if (contractNode.GetValue("state") == "Offered")

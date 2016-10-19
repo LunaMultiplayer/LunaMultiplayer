@@ -189,7 +189,7 @@ namespace LunaClient.Systems.Lock
 
         public string LockOwner(string lockName)
         {
-            return ServerLocks.ContainsKey(lockName) ? ServerLocks[lockName] : "";
+            return ServerLocks.ContainsKey(lockName) ? ServerLocks[lockName] : "unknown player";
         }
 
         public string[] GetLocks(string playerName)

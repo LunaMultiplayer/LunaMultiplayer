@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections;
 using LunaClient.Base;
-using LunaClient.Systems.AtmoLoader;
-using LunaClient.Systems.PartKiller;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselProtoSys;
-using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.VesselWarpSys;
 using LunaClient.Systems.Warp;
-using LunaClient.Utilities;
 using UniLinq;
 using UnityEngine;
 
@@ -93,15 +89,23 @@ namespace LunaClient.Systems.VesselRemoveSys
             while (true)
             {
                 if (!FlightGlobals.Vessels.Contains(killVessel)) break;
+                
+                if (VesselLockSystem.Singleton.IsSpectating && FlightGlobals.ActiveVessel.id == killVessel.id)
+                {
+                    var otherVessels = FlightGlobals.Vessels.Where(v => v.id != killVessel.id).ToArray();
+
+                    if (otherVessels.Any())
+                        FlightGlobals.ForceSetActiveVessel(otherVessels.First());
+                    else
+                        HighLogic.LoadScene(GameScenes.SPACECENTER);
+
+                    ScreenMessages.PostScreenMessage("The player you were spectating removed his vessel");
+                }
 
                 if (killVessel != null)
                 {
                     Debug.Log("Killing vessel: " + killVessel.id);
-
-                    //Forget the dying vessel
-                    PartKillerSystem.Singleton.ForgetVessel(killVessel);
-                    AtmoLoaderSystem.Singleton.ForgetVessel(killVessel);
-
+                    
                     //Try to unload the vessel first.
                     if (killVessel.loaded)
                     {
@@ -135,15 +139,15 @@ namespace LunaClient.Systems.VesselRemoveSys
 
                     yield return null; //Resume on next frame
 
-                    //try
-                    //{
-                    //    HighLogic.CurrentGame.DestroyVessel(killVessel);
-                    //    HighLogic.CurrentGame.Updated();
-                    //}
-                    //catch (Exception destroyException)
-                    //{
-                    //    Debug.Log("Error destroying vessel from the scenario: " + destroyException);
-                    //}
+                    try
+                    {
+                        HighLogic.CurrentGame.DestroyVessel(killVessel);
+                        HighLogic.CurrentGame.Updated();
+                    }
+                    catch (Exception destroyException)
+                    {
+                        Debug.Log("Error destroying vessel from the scenario: " + destroyException);
+                    }
 
                     //yield return null; //Resume on next frame
 
