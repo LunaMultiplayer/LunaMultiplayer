@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
-using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselRemoveSys
@@ -15,6 +14,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void OnVesselDestroyed(Vessel dyingVessel)
         {
+            return;
             if (dyingVessel.state != Vessel.State.DEAD)
                 return;
 

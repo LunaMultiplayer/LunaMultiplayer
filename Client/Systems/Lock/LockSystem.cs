@@ -182,6 +182,11 @@ namespace LunaClient.Systems.Lock
             return ServerLocks.ContainsKey(lockName) && (ServerLocks[lockName] == SettingsSystem.CurrentSettings.PlayerName);
         }
 
+        public bool LockWithPrefixExists(string lockPrefix)
+        {
+            return ServerLocks.Any(l=> l.Key.StartsWith(lockPrefix));
+        }
+
         public bool LockExists(string lockName)
         {
             return ServerLocks.ContainsKey(lockName);

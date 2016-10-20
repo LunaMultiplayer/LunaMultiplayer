@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
@@ -18,8 +19,6 @@ namespace LunaClient.Systems.VesselLockSys
 
         public const string SpectateLock = "LMP_Spectating";
         private ScreenMessage _spectateMessage;
-        private float _lastSpectateMessageUpdate;
-        private const float UpdateScreenMessageInterval = 1f;
 
         private bool _isSpectating;
         public bool IsSpectating
@@ -36,8 +35,8 @@ namespace LunaClient.Systems.VesselLockSys
 
         private string SpectatingMessage => IsSpectating ? $"This vessel is being controlled by {GetVesselOwner}." : "";
 
-        private const int CheckSecondaryVesselsMsInterval = 500;
-        private long _lastCheckTime;
+        private const float CheckSecondaryVesselsSInterval = 0.5f;
+        private const float UpdateScreenMessageInterval = 1f;
 
         #endregion
 
@@ -48,6 +47,9 @@ namespace LunaClient.Systems.VesselLockSys
             base.OnEnabled();
             GameEvents.onLevelWasLoadedGUIReady.Add(VesselMainEvents.OnSceneChanged);
             GameEvents.onVesselChange.Add(VesselMainEvents.OnVesselChange);
+            Client.Singleton.StartCoroutine(TryGetControlLock());
+            Client.Singleton.StartCoroutine(UpdateSecondaryVesselsLocks());
+            Client.Singleton.StartCoroutine(UpdateOnScreenSpectateMessage());
         }
 
         public override void OnDisabled()
@@ -55,21 +57,6 @@ namespace LunaClient.Systems.VesselLockSys
             base.OnDisabled();
             GameEvents.onLevelWasLoadedGUIReady.Remove(VesselMainEvents.OnSceneChanged);
             GameEvents.onVesselChange.Remove(VesselMainEvents.OnVesselChange);
-        }
-
-        public override void Update()
-        {
-            if (!VesselLockSystemReady)
-                return;
-
-            UpdateOnScreenSpectateMessage();
-
-            if (IsSpectating)
-            {
-                TryGetControlLock();
-            }
-            else
-                UpdateSecondaryVesselsLocks();
         }
         
         #endregion
@@ -117,40 +104,89 @@ namespace LunaClient.Systems.VesselLockSys
 
         #region Private methods
 
+        #region Coroutines
+
         /// <summary>
         /// In case the player who control the ship drops the control, here we try to get it.
         /// </summary>
-        private void TryGetControlLock()
+        private IEnumerator TryGetControlLock()
         {
-            if (!LockSystem.Singleton.LockExists("control-" + FlightGlobals.ActiveVessel.id))
+            var seconds = new WaitForSeconds(3);
+            while (true)
             {
-                //Don't force as maybe other players are spectating too so the fastests is the winner :)
-                StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
+                if (!Enabled) break;
+                if (VesselLockSystemReady && IsSpectating)
+                {
+                    if (!LockSystem.Singleton.LockExists("control-" + FlightGlobals.ActiveVessel.id))
+                    {
+                        //Don't force as maybe other players are spectating too so the fastests is the winner :)
+                        StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
+                    }
+                }
+
+                yield return seconds;
             }
         }
         
         /// <summary>
         /// After some ms get the update lock for vessels that are close to us (not packed and not ours) not dead and that nobody has the update lock
         /// </summary>
-        private void UpdateSecondaryVesselsLocks()
+        private IEnumerator UpdateSecondaryVesselsLocks()
         {
-            if (DateTime.Now.Ticks - _lastCheckTime >= TimeSpan.FromMilliseconds(CheckSecondaryVesselsMsInterval).Ticks)
+            var seconds = new WaitForSeconds(CheckSecondaryVesselsSInterval);
+            while (true)
             {
-                _lastCheckTime = DateTime.Now.Ticks;
-                var validSecondaryVessels = GetValidSecondaryVesselIds().ToArray();
-                foreach (var checkVessel in validSecondaryVessels)
+                if (!Enabled) break;
+                if (VesselLockSystemReady)
                 {
-                    //Don't force it as maybe another player sent this request aswell
-                    LockSystem.Singleton.AcquireLock("update-" + checkVessel);
-                }
+                    var validSecondaryVessels = GetValidSecondaryVesselIds().ToArray();
+                    foreach (var checkVessel in validSecondaryVessels)
+                    {
+                        //Don't force it as maybe another player sent this request aswell
+                        LockSystem.Singleton.AcquireLock("update-" + checkVessel);
+                    }
 
-                var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased().ToArray();
-                foreach (var releaseVessel in vesselsToRelease)
-                {
-                    LockSystem.Singleton.ReleaseLock("update-" + releaseVessel);
+                    var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased().ToArray();
+                    foreach (var releaseVessel in vesselsToRelease)
+                    {
+                        LockSystem.Singleton.ReleaseLock("update-" + releaseVessel);
+                    }
                 }
+                yield return seconds;
             }
         }
+
+        /// <summary>
+        /// Show a message on the screen if we are spectating
+        /// </summary>
+        private IEnumerator UpdateOnScreenSpectateMessage()
+        {
+            var seconds = new WaitForSeconds(UpdateScreenMessageInterval);
+            while (true)
+            {
+                if (!Enabled) break;
+                if (VesselLockSystemReady)
+                {
+                    if (IsSpectating)
+                    {
+                        if (_spectateMessage != null)
+                            _spectateMessage.duration = 0f;
+                        _spectateMessage = ScreenMessages.PostScreenMessage(SpectatingMessage, UpdateScreenMessageInterval * 2, ScreenMessageStyle.UPPER_CENTER);
+                    }
+                    else
+                    {
+                        if (_spectateMessage != null)
+                        {
+                            _spectateMessage.duration = 0f;
+                            _spectateMessage = null;
+                        }
+                    }
+                }
+                yield return seconds;
+            }
+        }
+
+        #endregion
 
         /// <summary>
         /// Return the OTHER vessel ids of the vessels that are loaded and not packed (close to us) not dead, not in safety bubble,
@@ -164,7 +200,8 @@ namespace LunaClient.Systems.VesselLockSys
                 .Where(v => v.loaded && !v.packed && v.state != Vessel.State.DEAD &&
                             (v.id != FlightGlobals.ActiveVessel.id) &&
                             !VesselCommon.IsInSafetyBubble(v.GetWorldPos3D(), v.mainBody) &&
-                            !LockSystem.Singleton.LockExists("update-" + v.id))
+                            !LockSystem.Singleton.LockExists("update-" + v.id) &&
+                            (!v.parts.Any() || !LockSystem.Singleton.LockExists("debris-" + v.parts.First().missionID + "_" + v.id)))
                 .Select(v => v.id);
         }
 
@@ -181,31 +218,6 @@ namespace LunaClient.Systems.VesselLockSys
                             (!v.loaded || v.packed || v.state == Vessel.State.DEAD ||
                             VesselCommon.IsInSafetyBubble(v.GetWorldPos3D(), v.mainBody)))
                 .Select(v => v.id);
-        }
-
-        /// <summary>
-        /// Show a message on the screen if we are spectating
-        /// </summary>
-        private void UpdateOnScreenSpectateMessage()
-        {
-            if (Time.realtimeSinceStartup - _lastSpectateMessageUpdate > UpdateScreenMessageInterval)
-            {
-                _lastSpectateMessageUpdate = Time.realtimeSinceStartup;
-                if (IsSpectating)
-                {
-                    if (_spectateMessage != null)
-                        _spectateMessage.duration = 0f;
-                    _spectateMessage = ScreenMessages.PostScreenMessage(SpectatingMessage, UpdateScreenMessageInterval * 2, ScreenMessageStyle.UPPER_CENTER);
-                }
-                else
-                {
-                    if (_spectateMessage != null)
-                    {
-                        _spectateMessage.duration = 0f;
-                        _spectateMessage = null;
-                    }
-                }
-            }
         }
 
         #endregion

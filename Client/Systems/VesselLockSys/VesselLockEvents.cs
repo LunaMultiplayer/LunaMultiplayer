@@ -1,9 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselWarpSys;
-using LunaClient.Utilities;
 
 namespace LunaClient.Systems.VesselLockSys
 {

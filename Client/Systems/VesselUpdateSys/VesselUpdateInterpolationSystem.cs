@@ -46,16 +46,19 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 if (!System.Enabled) break;
 
-                var vesselsToRemove = CurrentVesselUpdate
-                    .Where(u => u.Value.InterpolationFinished &&
-                            TimeSpan.FromSeconds(Time.time - u.Value.FinishTime).TotalMilliseconds >
-                            MsWithoutUpdatesToRemove)
-                    .Select(u => u.Key).ToArray();
-
-                foreach (var vesselId in vesselsToRemove)
+                if (System.UpdateSystemReady)
                 {
-                    CurrentVesselUpdate.Remove(vesselId);
-                    System.ReceivedUpdates.Remove(vesselId);
+                    var vesselsToRemove = CurrentVesselUpdate
+                        .Where(u => u.Value.InterpolationFinished &&
+                                    TimeSpan.FromSeconds(Time.time - u.Value.FinishTime).TotalMilliseconds >
+                                    MsWithoutUpdatesToRemove)
+                        .Select(u => u.Key).ToArray();
+
+                    foreach (var vesselId in vesselsToRemove)
+                    {
+                        CurrentVesselUpdate.Remove(vesselId);
+                        System.ReceivedUpdates.Remove(vesselId);
+                    }
                 }
 
                 yield return seconds;
@@ -73,16 +76,20 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 if (!System.Enabled) break;
 
-                //Iterate over the updates that do not have interpolations going on
-                foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
+                if (System.UpdateSystemReady)
                 {
-                    var success = !CurrentVesselUpdate.ContainsKey(vesselUpdates.Key)
-                        ? SetFirstVesselUpdates(GetValidUpdate(0, vesselUpdates.Value))
-                        : HandleVesselUpdate(vesselUpdates);
+                    //Iterate over the updates that do not have interpolations going on
+                    foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
+                    {
+                        var success = !CurrentVesselUpdate.ContainsKey(vesselUpdates.Key)
+                            ? SetFirstVesselUpdates(GetValidUpdate(0, vesselUpdates.Value))
+                            : HandleVesselUpdate(vesselUpdates);
 
-                    if (success)
-                        Client.Singleton.StartCoroutine(CurrentVesselUpdate[vesselUpdates.Key].ApplyVesselUpdate());
+                        if (success)
+                            Client.Singleton.StartCoroutine(CurrentVesselUpdate[vesselUpdates.Key].ApplyVesselUpdate());
+                    }
                 }
+
                 yield return fixedUpdate;
             }
         }

@@ -41,33 +41,8 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselDestroy.Remove(VesselRemoveEvents.OnVesselDestroyed);
         }
-        
+
         #endregion
-
-        /// <summary>
-        /// Check the vessels that are not in our subspace and kill them
-        /// </summary>
-        private IEnumerator CheckVesselsToKill()
-        {
-            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselKillCheckMsInterval).TotalSeconds);
-            while (true)
-            {
-                if (!Enabled) break;
-
-                var vesselsToKill = VesselProtoSystem.Singleton.AllPlayerVessels
-                    .Where(v => v.Loaded && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) != WarpSystem.Singleton.CurrentSubspace)
-                    .ToList();
-
-                KillVessels(vesselsToKill.Select(v => FlightGlobals.FindVessel(v.VesselId)).ToArray());
-
-                foreach (var killedVessel in vesselsToKill)
-                {
-                    killedVessel.Loaded = false;
-                }
-
-                yield return seconds;
-            }
-        }
 
         #region Public
 
@@ -157,6 +132,35 @@ namespace LunaClient.Systems.VesselRemoveSys
                     }
                 }
                 break;
+            }
+        }
+
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Check the vessels that are not in our subspace and kill them
+        /// </summary>
+        private IEnumerator CheckVesselsToKill()
+        {
+            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselKillCheckMsInterval).TotalSeconds);
+            while (true)
+            {
+                if (!Enabled) break;
+
+                var vesselsToKill = VesselProtoSystem.Singleton.AllPlayerVessels
+                    .Where(v => v.Loaded && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) != WarpSystem.Singleton.CurrentSubspace)
+                    .ToList();
+
+                KillVessels(vesselsToKill.Select(v => FlightGlobals.FindVessel(v.VesselId)).ToArray());
+
+                foreach (var killedVessel in vesselsToKill)
+                {
+                    killedVessel.Loaded = false;
+                }
+
+                yield return seconds;
             }
         }
 

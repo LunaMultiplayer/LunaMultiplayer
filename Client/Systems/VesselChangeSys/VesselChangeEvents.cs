@@ -1,7 +1,11 @@
-﻿using LunaClient.Base;
+﻿using System;
+using LunaClient.Base;
+using LunaClient.Systems.Lock;
 using LunaClient.Systems.VesselLockSys;
+using LunaClient.Systems.VesselUpdateSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Types;
+using UniLinq;
 
 namespace LunaClient.Systems.VesselChangeSys
 {
@@ -35,9 +39,33 @@ namespace LunaClient.Systems.VesselChangeSys
         {
             if (!VesselLockSystem.Singleton.IsSpectating && !VesselCommon.ActiveVesselIsInSafetyBubble())
             {
-                //data.origin.vessel.id = new Guid();
-                //This is not going to work as the vessel id's are generated here and not transfered between clients...
-                //LockSystem.Singleton.AcquireLock("update-" + data.origin.vessel.id);
+                var debrisVessel = FlightGlobals.FindVessel(data.origin.vessel.id);
+                var missionId = data.origin.missionID;
+
+                if (!LockSystem.Singleton.LockWithPrefixExists("debris-" + missionId))
+                {
+                    LockSystem.Singleton.AcquireLock("debris-" + missionId + "_" + debrisVessel.id);
+                    VesselUpdateSystem.Singleton.MessageSender.SendVesselUpdate(VesselUpdate.CreateFromVessel(debrisVessel));
+                }
+                else
+                {
+                    var debrisLocks = LockSystem.Singleton.ServerLocks.Where(l => l.Key.StartsWith("debris-" + missionId))
+                            .Select(l => l.Key.Substring(l.Key.IndexOf('_') + 1)).ToArray();
+                    
+                    var otherVesselsWIthSameMissionId = FlightGlobals.Vessels
+                            .Where(v => v.Parts.Any() && v.Parts.First().missionID == missionId && v.id != debrisVessel.id)
+                            .Select(v => v.id.ToString()).ToArray();
+
+                    if (debrisLocks.Length == otherVesselsWIthSameMissionId.Length)
+                    {
+                        debrisVessel.id = new Guid(debrisLocks.Except(otherVesselsWIthSameMissionId).First());
+                    }
+                    else
+                    {
+                        LockSystem.Singleton.AcquireLock("debris-" + missionId + "_" + debrisVessel.id);
+                        VesselUpdateSystem.Singleton.MessageSender.SendVesselUpdate(VesselUpdate.CreateFromVessel(debrisVessel));
+                    }
+                }
             }
         }
     }
