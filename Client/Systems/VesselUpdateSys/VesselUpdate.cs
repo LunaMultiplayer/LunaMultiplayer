@@ -218,7 +218,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                 ApplyInterpolations(1); //we force to apply the last interpolation
                 yield return fixedUpdate;
             }
-
             InterpolationFinished = true;
             FinishTime = Time.time;
         }
@@ -250,15 +249,15 @@ namespace LunaClient.Systems.VesselUpdateSys
                 else
                 {
                     var engines = Vessel.FindPartModulesImplementing<ModuleEngines>();
-                    var enginesToActivate = engines.Where(e=> !e.EngineIgnited && ActiveEngines.Contains(e.part.craftID));
+                    var enginesToActivate = engines.Where(e => !e.EngineIgnited && ActiveEngines.Contains(e.part.craftID));
                     var enginesToStop = engines.Where(e => e.EngineIgnited && StoppedEngines.Contains(e.part.craftID));
 
                     var decouplersToLaunch = Vessel.FindPartModulesImplementing<ModuleDecouple>()
-                        .Where(d=> !d.isDecoupled && !Decouplers.Contains(d.part.craftID));
+                        .Where(d => !d.isDecoupled && !Decouplers.Contains(d.part.craftID));
 
                     var anchoredDecouplersToLaunch = Vessel.FindPartModulesImplementing<ModuleAnchoredDecoupler>()
                         .Where(d => !d.isDecoupled && !Decouplers.Contains(d.part.craftID));
-                    
+
                     var clamps = Vessel.FindPartModulesImplementing<LaunchClamp>().Where(c => !Clamps.Contains(c.part.craftID));
 
                     var docks = Vessel.FindPartModulesImplementing<ModuleDockingNode>().Where(d => !d.IsDisabled && !Docks.Contains(d.part.craftID));
@@ -300,25 +299,24 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
         }
 
+        #endregion
+
+        #region Private interpolation methods
+
+        /// <summary>
+        /// Apply the interpolation based on a percentage
+        /// </summary>
         private void ApplyInterpolations(float percentage)
         {
             try
             {
-                if (!VesselLockSystem.Singleton.IsSpectating)
-                    Vessel.ctrlState.CopyFrom(FlightState);
-                else
-                {
-                    //We are spectating so move the throttle slider smoothly with a lerp...
-                    FlightInputHandler.state.CopyFrom(FlightState);
-                    FlightInputHandler.state.mainThrottle = Mathf.Lerp(FlightState.mainThrottle, Target.FlightState.mainThrottle, percentage);
-                }
-
-                ApplyCommonInterpolation(percentage);
-
                 if (IsSurfaceUpdate)
                     ApplySurfaceInterpolation(percentage);
                 else
                     ApplyOrbitInterpolation(percentage);
+
+                ApplyCommonInterpolation(percentage);
+                ApplyControlState(percentage);
             }
             catch (Exception)
             {
@@ -326,11 +324,21 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
         }
 
-        #endregion
-
-        #region Private interpolation methods
-
-
+        /// <summary>
+        /// Applies the control state
+        /// </summary>
+        private void ApplyControlState(float percentage)
+        {
+            if (!VesselLockSystem.Singleton.IsSpectating)
+                Vessel.ctrlState.CopyFrom(FlightState);
+            else
+            {
+                //We are spectating so move the throttle slider smoothly with a lerp...
+                FlightInputHandler.state.CopyFrom(FlightState);
+                FlightInputHandler.state.mainThrottle = Mathf.Lerp(FlightState.mainThrottle, Target.FlightState.mainThrottle, percentage);
+            }
+        }
+        
         /// <summary>
         /// Applies common interpolation values
         /// </summary>

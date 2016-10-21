@@ -37,6 +37,23 @@ namespace LunaClient.Systems.VesselUpdateSys
         }
 
         /// <summary>
+        /// Main system that picks updates received and sets them for further processing. We call it in the 
+        /// fixed update as in deals with phisics
+        /// </summary>
+        public void FixedUpdate()
+        {
+            foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
+            {
+                var success = !CurrentVesselUpdate.ContainsKey(vesselUpdates.Key)
+                    ? SetFirstVesselUpdates(GetValidUpdate(0, vesselUpdates.Value))
+                    : HandleVesselUpdate(vesselUpdates);
+
+                if (success)
+                    Client.Singleton.StartCoroutine(CurrentVesselUpdate[vesselUpdates.Key].ApplyVesselUpdate());
+            }
+        }
+
+        /// <summary>
         /// Remove the vessels that didn't receive and update after the value specified in MsWithoutUpdatesToRemove every 5 seconds
         /// </summary>
         public IEnumerator RemoveVessels()
@@ -62,35 +79,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                 }
 
                 yield return seconds;
-            }
-        }
-
-        /// <summary>
-        /// Main system that picks updates received and sets them for further processing. We call it in the 
-        /// fixed update as in deals with phisics
-        /// </summary>
-        public IEnumerator HandleVesselUpdates()
-        {
-            var fixedUpdate = new WaitForFixedUpdate();
-            while (true)
-            {
-                if (!System.Enabled) break;
-
-                if (System.UpdateSystemReady)
-                {
-                    //Iterate over the updates that do not have interpolations going on
-                    foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
-                    {
-                        var success = !CurrentVesselUpdate.ContainsKey(vesselUpdates.Key)
-                            ? SetFirstVesselUpdates(GetValidUpdate(0, vesselUpdates.Value))
-                            : HandleVesselUpdate(vesselUpdates);
-
-                        if (success)
-                            Client.Singleton.StartCoroutine(CurrentVesselUpdate[vesselUpdates.Key].ApplyVesselUpdate());
-                    }
-                }
-
-                yield return fixedUpdate;
             }
         }
 
