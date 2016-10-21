@@ -23,10 +23,11 @@ namespace LunaClient.Systems.VesselProtoSys
         public List<VesselProtoUpdate> AllPlayerVessels { get; } = new List<VesselProtoUpdate>();
 
         public float CheckVesselsToLoadSInterval = 2.5f;
-
         public float UpdateScreenMessageInterval = 1f;
+
         public ScreenMessage BannedPartsMessage { get; set; }
-        public float LastBannedPartsMessageUpdate { get; set; }
+        public string BannedPartsStr { get; set; }
+
         public VesselLoader VesselLoader { get; } = new VesselLoader();
         private VesselProtoEvents VesselProtoEvents { get; } = new VesselProtoEvents();
 
@@ -34,11 +35,12 @@ namespace LunaClient.Systems.VesselProtoSys
         public bool VesselReady { get; set; } = false;
 
         private static bool VesselProtoSystemReady => HighLogic.LoadedScene == GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready;
-        
+
         public override void OnEnabled()
         {
             base.OnEnabled();
             Client.Singleton.StartCoroutine(CheckVesselsToLoad());
+            Client.Singleton.StartCoroutine(UpdateBannedPartsMessage());
             GameEvents.onFlightReady.Add(VesselProtoEvents.OnFlightReady);
             GameEvents.onVesselWasModified.Add(VesselProtoEvents.OnVesselWasModified);
         }
@@ -48,6 +50,9 @@ namespace LunaClient.Systems.VesselProtoSys
             base.OnDisabled();
             GameEvents.onFlightReady.Remove(VesselProtoEvents.OnFlightReady);
             GameEvents.onVesselWasModified.Remove(VesselProtoEvents.OnVesselWasModified);
+            BannedPartsStr = string.Empty;
+            CurrentVesselSent = false;
+            VesselReady = false;
         }
 
         /// <summary>
@@ -80,7 +85,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (VesselProtoSystemReady)
                 {
                     //Load vessels when we have at least 1 update for them and are in our subspace
-                    var vesselsToLoad = AllPlayerVessels.Where(v =>v.HasUpdates && !v.Loaded && 
+                    var vesselsToLoad = AllPlayerVessels.Where(v => v.HasUpdates && !v.Loaded &&
                             VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == WarpSystem.Singleton.CurrentSubspace)
                         .ToArray();
 
@@ -93,42 +98,50 @@ namespace LunaClient.Systems.VesselProtoSys
                 yield return seconds;
             }
         }
-        
+
         /// <summary>
         /// Checks the vessel for invalid parts
         /// </summary>
         public bool CheckVessel()
         {
-            if (HighLogic.LoadedScene != GameScenes.FLIGHT || 
-                FlightGlobals.ActiveVessel == null || 
-                !FlightGlobals.ActiveVessel.loaded || 
+            if (HighLogic.LoadedScene != GameScenes.FLIGHT ||
+                FlightGlobals.ActiveVessel == null ||
+                !FlightGlobals.ActiveVessel.loaded ||
                 VesselLockSystem.Singleton.IsSpectating)
                 return false;
 
             if (ModSystem.Singleton.ModControl != ModControlMode.DISABLED)
             {
-                var bannedPartsStr = GetInvalidVesselParts(FlightGlobals.ActiveVessel);
-
-                if (!string.IsNullOrEmpty(bannedPartsStr))
-                {
-                    if (Time.realtimeSinceStartup - LastBannedPartsMessageUpdate > UpdateScreenMessageInterval)
-                    {
-                        LastBannedPartsMessageUpdate = Time.realtimeSinceStartup;
-                        if (BannedPartsMessage != null)
-                            BannedPartsMessage.duration = 0;
-                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_SYNC)
-                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                    "Active vessel contains the following banned parts, it will not be saved to the server:\n" +
-                                    bannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
-                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_LAUNCH)
-                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                    "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
-                                    bannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
-                    }
-                    return false;
-                }
+                BannedPartsStr = GetInvalidVesselParts(FlightGlobals.ActiveVessel);
+                return string.IsNullOrEmpty(BannedPartsStr);
             }
+
             return true;
+        }
+
+        private IEnumerator UpdateBannedPartsMessage()
+        {
+            var seconds = new WaitForSeconds(UpdateScreenMessageInterval);
+            while (true)
+            {
+                if (!Enabled) break;
+
+                if (!string.IsNullOrEmpty(BannedPartsStr))
+                {
+                    if (BannedPartsMessage != null)
+                        BannedPartsMessage.duration = 0;
+                    if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_SYNC)
+                        BannedPartsMessage = ScreenMessages.PostScreenMessage(
+                                "Active vessel contains the following banned parts, it will not be saved to the server:\n" +                                BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+                    if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_LAUNCH)
+                        BannedPartsMessage = ScreenMessages.PostScreenMessage(
+                                "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
+                                BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+
+                }
+
+                yield return seconds;
+            }
         }
 
         private static string GetInvalidVesselParts(Vessel checkVessel)

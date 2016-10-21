@@ -143,7 +143,7 @@ namespace LunaClient.Systems.TimeSyncer
                 if (Synced && !CurrentlyWarping && CanSyncTime())
                 {
                     var targetTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
-                    var currentError = GetCurrentError();
+                    var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;
                     if (Math.Abs(currentError) > MaxClockMsError)
                         Planetarium.SetUniversalTime(targetTime);
                 }
