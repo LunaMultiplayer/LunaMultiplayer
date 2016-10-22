@@ -17,7 +17,7 @@ namespace LunaClient.Systems
         /// This variable specifies how many miliseconds in the past we work. It's based on the ping with a minimum of 500ms.
         /// For bad conections we will work several MS in the past as we need time to receive them.
         /// </summary>
-        public static double MsInPast => NetworkStatistics.PingMs * 2 <= 250 ? 250 : NetworkStatistics.PingMs * 2;
+        public static double MsInPast => NetworkStatistics.PingMs * 2 <= 350 ? 350 : NetworkStatistics.PingMs * 2;
 
         public static float SInPast => (float)TimeSpan.FromMilliseconds(MsInPast).TotalSeconds;
 

@@ -38,7 +38,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         public double PlanetTime { get; set; }
         public string BodyName { get; set; }
         public float[] Rotation { get; set; }
-        public float[] AngularVel { get; set; }
         public FlightCtrlState FlightState { get; set; }
         public bool[] ActionGrpControls { get; set; }
         public bool IsSurfaceUpdate { get; set; }
@@ -114,15 +113,10 @@ namespace LunaClient.Systems.VesselUpdateSys
                     BodyName = vessel.mainBody.bodyName,
                     Rotation = new[]
                     {
-                        vessel.srfRelRotation.x,
-                        vessel.srfRelRotation.y,
-                        vessel.srfRelRotation.z,
-                        vessel.srfRelRotation.w
-                    },
-                    AngularVel = new[]
-                    {
-                        vessel.angularVelocity.x,
-                        vessel.angularVelocity.y, vessel.angularVelocity.z
+                        vessel.transform.rotation.x,
+                        vessel.transform.rotation.y,
+                        vessel.transform.rotation.z,
+                        vessel.transform.rotation.w
                     },
                     ActionGrpControls = new[]
                     {
@@ -315,8 +309,10 @@ namespace LunaClient.Systems.VesselUpdateSys
                 else
                     ApplyOrbitInterpolation(percentage);
 
-                ApplyCommonInterpolation(percentage);
+                ApplyRotationInterpolation(percentage);
                 ApplyControlState(percentage);
+
+                //Vessel.UpdatePosVel();
             }
             catch (Exception)
             {
@@ -342,36 +338,16 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <summary>
         /// Applies common interpolation values
         /// </summary>
-        private void ApplyCommonInterpolation(float interpolationValue)
+        private void ApplyRotationInterpolation(float interpolationValue)
         {
             if (interpolationValue > 1) return;
-
-            //Here we pick the starting point, the finishing points and we pick the current values by calling the Lerp functions
-            //Lerp will give you a point in the middle based on the interpolationValue (0 to 1). 
-            //Bear in mind that for rotations you must use Slerp!
-
+            
             var startRot = new Quaternion(Rotation[0], Rotation[1], Rotation[2], Rotation[3]);
             var targetRot = new Quaternion(Target.Rotation[0], Target.Rotation[1], Target.Rotation[2], Target.Rotation[3]);
 
-            var startAngVel = new Vector3(AngularVel[0], AngularVel[1], AngularVel[2]);
-            var targetAngVel = new Vector3(Target.AngularVel[0], Target.AngularVel[1], Target.AngularVel[2]);
-
-            var currentRot = Body.bodyTransform.rotation * Quaternion.identity *
-                              Quaternion.Slerp(startRot, targetRot, interpolationValue);
-
-            var currentAngVel = Vessel.mainBody.bodyTransform.rotation * currentRot *
-                                Vector3.Lerp(startAngVel, targetAngVel, interpolationValue);
-
-            if (Vessel.packed)
-            {
-                Vessel.srfRelRotation = currentRot;
-                Vessel.protoVessel.rotation = Vessel.srfRelRotation;
-            }
-            else
-            {
-                Vessel.SetRotation(currentRot);
-                Vessel.angularVelocity = currentAngVel;
-            }
+            var currentRot = Quaternion.Slerp(startRot, targetRot, interpolationValue);
+            
+            Vessel.vesselTransform.rotation = currentRot;
         }
 
         /// <summary>
@@ -396,7 +372,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             Vector3d currentVelocity = Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, interpolationValue);
             Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
 
-            Vessel.SetPosition(currentPosition, true);
+            Vessel.SetPosition(currentPosition);
             Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
             Vessel.acceleration = currentAcc;
 
