@@ -32,7 +32,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                 VesselId = update.VesselId,
                 Acceleration = update.Acceleration,
                 ActiongroupControls = update.ActionGrpControls,
-                AngularVelocity = update.AngularVel,
                 BodyName = update.BodyName,
                 GearDown = update.FlightState.gearDown,
                 GearUp = update.FlightState.gearUp,

@@ -18,7 +18,6 @@ namespace LunaCommon.Message.Data.Vessel
         public uint[] Clamps { get; set; }
         public uint[] Docks { get; set; }
         public float[] Rotation { get; set; }
-        public float[] AngularVelocity { get; set; }
         public float MainThrottle { get; set; }
         public float WheelThrottleTrim { get; set; }
         public float X { get; set; }

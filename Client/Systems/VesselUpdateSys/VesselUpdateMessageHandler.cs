@@ -40,7 +40,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                 VesselId = msgData.VesselId,
                 BodyName = msgData.BodyName,
                 Rotation = msgData.Rotation,
-                AngularVel = msgData.AngularVelocity,
                 FlightState = new FlightCtrlState
                 {
                     mainThrottle = msgData.MainThrottle,
