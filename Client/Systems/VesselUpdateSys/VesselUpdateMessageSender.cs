@@ -6,6 +6,7 @@ using LunaClient.Systems.Network;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -20,7 +21,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             var msg = new VesselUpdateMsgData
             {
-                SentTime = DateTime.UtcNow.Ticks,
+                SentTime = Time.fixedTime,
                 PlanetTime = Planetarium.GetUniversalTime(),
                 Stage = update.Stage,
                 ActiveEngines = update.ActiveEngines,

@@ -15,7 +15,7 @@ namespace LunaClient.Systems.VesselUpdateSys
     public class VesselUpdateSystem : MessageSystem<VesselUpdateSystem, VesselUpdateMessageSender, VesselUpdateMessageHandler>
     {
         #region Field & Properties
-        
+
         private float VesselUpdatesSendSInterval => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
 
         public bool UpdateSystemReady
@@ -32,9 +32,9 @@ namespace LunaClient.Systems.VesselUpdateSys
                 return true;
             }
         }
-        
+
         public Dictionary<Guid, Queue<VesselUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, Queue<VesselUpdate>>();
-        
+
         private VesselUpdateInterpolationSystem InterpolationSystem { get; } = new VesselUpdateInterpolationSystem();
 
         #endregion
@@ -46,6 +46,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             base.OnEnabled();
             Client.Singleton.StartCoroutine(SendVesselUpdates());
             Client.Singleton.StartCoroutine(InterpolationSystem.RemoveVessels());
+            Client.Singleton.StartCoroutine(InterpolationSystem.AdjustLengthFactor());
         }
 
         public override void OnDisabled()
@@ -77,9 +78,9 @@ namespace LunaClient.Systems.VesselUpdateSys
             return ReceivedUpdates.Sum(u => u.Value.Count);
         }
 
-        public double GetMsInPast()
+        public int GetNumberOfUpdatesInQueue(Guid vesselId)
         {
-            return VesselCommon.MsInPast;
+            return ReceivedUpdates[vesselId].Count;
         }
 
         #endregion
@@ -139,7 +140,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
             else
             {
-                Debug.LogError("Cannot send vessel update!");
+                Debug.LogError("[LMP]: Cannot send vessel update!");
             }
         }
 

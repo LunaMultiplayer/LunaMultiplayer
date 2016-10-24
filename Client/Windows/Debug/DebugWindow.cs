@@ -1,6 +1,7 @@
 ﻿using System;
 using LunaClient.Base;
 using LunaClient.Network;
+using LunaClient.Systems;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.TimeSyncer;
@@ -8,6 +9,7 @@ using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
+using UniLinq;
 using UnityEngine;
 using Profiler = LunaClient.Utilities.Profiler;
 
@@ -71,8 +73,17 @@ namespace LunaClient.Windows.Debug
 
                 //Vessel update system
                 VesselUpdateText = $"Queued messages: {VesselUpdateSystem.Singleton.MessageHandler.IncomingMessages.Count}.\n";
-                VesselUpdateText += $"Queued updates: {VesselUpdateSystem.Singleton.GetNumberOfUpdatesInQueue()}.\n";
-                VesselUpdateText += $"Ms in past: {VesselUpdateSystem.Singleton.GetMsInPast()}ms.\n";
+                VesselUpdateText += $"Total queued updates: {VesselUpdateSystem.Singleton.GetNumberOfUpdatesInQueue()}.\n";
+                VesselUpdateText += $"Total queued updates: {VesselUpdateSystem.Singleton.GetNumberOfUpdatesInQueue()}.\n";
+                if (VesselUpdateSystem.Singleton.ReceivedUpdates.Any())
+                {
+                    VesselUpdateText += "Queued updates by vessel:\n";
+                    foreach (var vessel in VesselUpdateSystem.Singleton.ReceivedUpdates.Keys)
+                    {
+                        VesselUpdateText += $"{vessel}: {VesselUpdateSystem.Singleton.GetNumberOfUpdatesInQueue(vessel)} - " +
+                                            $"Interpolation factor:{VesselUpdateInterpolationSystem.GetInterpolationFactor(vessel)}\n";
+                    }
+                }
                 VesselUpdateText += $"Spectating: {VesselLockSystem.Singleton.IsSpectating}.\n";
                 VesselUpdateText += "Active vessel control lock: " +
                     $"{FlightGlobals.ActiveVessel != null && LockSystem.Singleton.LockIsOurs("control-" + FlightGlobals.ActiveVessel.id)}.\n";

@@ -60,7 +60,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         #region Interpolation fields
 
-        public long SentTime { get; set; }
+        public float SentTime { get; set; }
         public bool InterpolationStarted { get; set; }
         public bool InterpolationFinished { get; set; }
         public float ReceiveTime { get; set; }
@@ -135,12 +135,11 @@ namespace LunaClient.Systems.VesselUpdateSys
                     //Use surface position under 10k
                     returnUpdate.IsSurfaceUpdate = true;
 
-                    returnUpdate.Position = new[]
+                    returnUpdate.Position = new double[]
                     {
-                        vessel.latitude,
-                        vessel.longitude,
-                        vessel.altitude,
-                        vessel.radarAltitude
+                        vessel.transform.position.x,
+                        vessel.transform.position.y,
+                        vessel.transform.position.z
                     };
 
                     Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
@@ -286,10 +285,8 @@ namespace LunaClient.Systems.VesselUpdateSys
                         dock.Decouple();
                     }
                 }
-
-                //Interpolation cannot last more than the SInPast
-                _interpolationDuration = Math.Min(Target.ReceiveTime - ReceiveTime - Time.fixedDeltaTime,
-                    VesselCommon.SInPast);
+                
+                _interpolationDuration = Target.SentTime - SentTime - VesselUpdateInterpolationSystem.GetInterpolationFactor(VesselId);
             }
         }
 
@@ -311,8 +308,6 @@ namespace LunaClient.Systems.VesselUpdateSys
 
                 ApplyRotationInterpolation(percentage);
                 ApplyControlState(percentage);
-
-                //Vessel.UpdatePosVel();
             }
             catch (Exception)
             {
@@ -363,21 +358,21 @@ namespace LunaClient.Systems.VesselUpdateSys
             var startAcc = new Vector3d(Acceleration[0], Acceleration[1], Acceleration[2]);
             var targetAcc = new Vector3d(Target.Acceleration[0], Target.Acceleration[1], Target.Acceleration[2]);
 
-            var lat = Lerp(Position[0], Target.Position[0], interpolationValue);
-            var lon = Lerp(Position[1], Target.Position[1], interpolationValue);
-            var alt = Lerp(Position[2], Target.Position[2], interpolationValue);
-            var radarAlt = Lerp(Position[3], Target.Position[3], interpolationValue);
-
-            Vector3d currentPosition = Body.GetWorldSurfacePosition(lat, lon, alt);
+            var startPos = new Vector3d(Position[0], Position[1], Position[2]);
+            var targetPos = new Vector3d(Target.Position[0], Target.Position[1], Target.Position[2]);
+            
             Vector3d currentVelocity = Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, interpolationValue);
             Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
+            Vector3d currentPosition = Vector3d.Lerp(startPos, targetPos, interpolationValue);
 
-            Vessel.SetPosition(currentPosition);
+            var positionOffset = currentPosition - Vessel.vesselTransform.position;
+            foreach (var part in Vessel.Parts.Where(p => p.physicalSignificance == Part.PhysicalSignificance.FULL))
+            {
+                part.partTransform.position = part.partTransform.position + positionOffset;
+            }
+            
             Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
             Vessel.acceleration = currentAcc;
-
-            if (radarAlt < 10) //Only apply radar altitud for vessels on the ground
-                Vessel.radarAltitude = radarAlt;
         }
 
         /// <summary>
