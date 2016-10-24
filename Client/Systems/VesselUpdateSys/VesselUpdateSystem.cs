@@ -46,7 +46,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             base.OnEnabled();
             Client.Singleton.StartCoroutine(SendVesselUpdates());
             Client.Singleton.StartCoroutine(InterpolationSystem.RemoveVessels());
-            Client.Singleton.StartCoroutine(InterpolationSystem.AdjustLengthFactor());
+            Client.Singleton.StartCoroutine(InterpolationSystem.AdjustInterpolationLengthFactor());
         }
 
         public override void OnDisabled()

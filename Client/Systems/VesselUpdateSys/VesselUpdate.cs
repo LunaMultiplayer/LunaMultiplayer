@@ -285,7 +285,9 @@ namespace LunaClient.Systems.VesselUpdateSys
                         dock.Decouple();
                     }
                 }
-                
+
+                //Here we use the interpolation facor to make the interpolation duration 
+                //shorter or longer depending on the amount of updates we have in queue
                 _interpolationDuration = Target.SentTime - SentTime - VesselUpdateInterpolationSystem.GetInterpolationFactor(VesselId);
             }
         }
@@ -341,8 +343,8 @@ namespace LunaClient.Systems.VesselUpdateSys
             var targetRot = new Quaternion(Target.Rotation[0], Target.Rotation[1], Target.Rotation[2], Target.Rotation[3]);
 
             var currentRot = Quaternion.Slerp(startRot, targetRot, interpolationValue);
-            
-            Vessel.vesselTransform.rotation = currentRot;
+
+            Vessel.SetRotation(currentRot, false);
         }
 
         /// <summary>
@@ -365,12 +367,8 @@ namespace LunaClient.Systems.VesselUpdateSys
             Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
             Vector3d currentPosition = Vector3d.Lerp(startPos, targetPos, interpolationValue);
 
-            var positionOffset = currentPosition - Vessel.vesselTransform.position;
-            foreach (var part in Vessel.Parts.Where(p => p.physicalSignificance == Part.PhysicalSignificance.FULL))
-            {
-                part.partTransform.position = part.partTransform.position + positionOffset;
-            }
-            
+            Vessel.SetPosition(currentPosition, false);
+
             Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
             Vessel.acceleration = currentAcc;
         }

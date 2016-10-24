@@ -22,6 +22,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         private const int MinUpdatesInQueue = 2;
 
         private const float MaxSecWithuotUpdates = 10;
+        private const float RemoveVesselsSecInterval = 5;
 
         /// <summary>
         /// The current vessel update that is being handled
@@ -76,10 +77,10 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         /// <summary>
         /// This coroutine adjust the interpolation factor so the interpolation lengths are dynamically adjusted in order 
-        /// to have maximum 3 packets in the queue and 1 minimum
+        /// to have maximum MaxUpdatesInQueue packets in the queue and MinUpdatesInQueue minimum
         /// </summary>
         /// <returns></returns>
-        public IEnumerator AdjustLengthFactor()
+        public IEnumerator AdjustInterpolationLengthFactor()
         {
             var seconds = new WaitForSeconds(FactorAdjustSecInterval);
             while (true)
@@ -107,7 +108,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         public IEnumerator RemoveVessels()
         {
-            var seconds = new WaitForSeconds(5);
+            var seconds = new WaitForSeconds(RemoveVesselsSecInterval);
             while (true)
             {
                 if (!System.Enabled) break;
