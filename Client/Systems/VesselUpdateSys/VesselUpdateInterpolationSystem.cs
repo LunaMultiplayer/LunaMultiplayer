@@ -40,14 +40,15 @@ namespace LunaClient.Systems.VesselUpdateSys
         #endregion
 
         #region Public
-        
+
         /// <summary>
         /// Retrieves the interpolation factor for given vessel
         /// </summary>
         /// <param name="vesselId"></param>
         /// <returns></returns>
-        public static float GetInterpolationFactor(Guid vesselId) => InterpolationLengthFactor.ContainsKey(vesselId) ? 
-            Time.fixedDeltaTime * InterpolationLengthFactor[vesselId] : 0;
+        public static float GetInterpolationFactor(Guid vesselId) => InterpolationLengthFactor.ContainsKey(vesselId)
+            ? Time.fixedDeltaTime*InterpolationLengthFactor[vesselId]
+            : 0;
 
         /// <summary>
         /// Clear all the properties
@@ -64,7 +65,9 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         public void FixedUpdate()
         {
-            foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
+            foreach (
+                var vesselUpdates in
+                System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
             {
                 var success = !CurrentVesselUpdate.ContainsKey(vesselUpdates.Key)
                     ? SetFirstVesselUpdates(GetValidUpdate(vesselUpdates.Key, 0, vesselUpdates.Value))
@@ -85,18 +88,25 @@ namespace LunaClient.Systems.VesselUpdateSys
             var seconds = new WaitForSeconds(FactorAdjustSecInterval);
             while (true)
             {
-                if (!System.Enabled)
-                break;
-
-                if (System.UpdateSystemReady)
+                try
                 {
-                    foreach (var update in System.ReceivedUpdates)
+                    if (!System.Enabled)
+                        break;
+
+                    if (System.UpdateSystemReady)
                     {
-                        if (System.GetNumberOfUpdatesInQueue(update.Key) > MaxUpdatesInQueue)
-                            IncreaseInterpolationFactor(update.Key);
-                        else if (System.GetNumberOfUpdatesInQueue(update.Key) < MinUpdatesInQueue)
-                            DecreaseInterpolationFactor(update.Key);
+                        foreach (var update in System.ReceivedUpdates)
+                        {
+                            if (System.GetNumberOfUpdatesInQueue(update.Key) > MaxUpdatesInQueue)
+                                IncreaseInterpolationFactor(update.Key);
+                            else if (System.GetNumberOfUpdatesInQueue(update.Key) < MinUpdatesInQueue)
+                                DecreaseInterpolationFactor(update.Key);
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in AdjustInterpolationLengthFactor {e}");
                 }
 
                 yield return seconds;
@@ -111,20 +121,27 @@ namespace LunaClient.Systems.VesselUpdateSys
             var seconds = new WaitForSeconds(RemoveVesselsSecInterval);
             while (true)
             {
-                if (!System.Enabled) break;
-
-                if (System.UpdateSystemReady)
+                try
                 {
-                    var vesselsToRemove = CurrentVesselUpdate
-                        .Where(u => u.Value.InterpolationFinished && Time.time - u.Value.FinishTime > MaxSecWithuotUpdates)
-                        .Select(u => u.Key).ToArray();
+                    if (!System.Enabled) break;
 
-                    foreach (var vesselId in vesselsToRemove)
+                    if (System.UpdateSystemReady)
                     {
-                        InterpolationLengthFactor.Remove(vesselId);
-                        CurrentVesselUpdate.Remove(vesselId);
-                        System.ReceivedUpdates.Remove(vesselId);
+                        var vesselsToRemove = CurrentVesselUpdate
+                            .Where(u => u.Value.InterpolationFinished && Time.time - u.Value.FinishTime > MaxSecWithuotUpdates)
+                            .Select(u => u.Key).ToArray();
+
+                        foreach (var vesselId in vesselsToRemove)
+                        {
+                            InterpolationLengthFactor.Remove(vesselId);
+                            CurrentVesselUpdate.Remove(vesselId);
+                            System.ReceivedUpdates.Remove(vesselId);
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in RemoveVessels {e}");
                 }
 
                 yield return seconds;

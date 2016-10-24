@@ -62,6 +62,7 @@ namespace LunaClient.Systems.Asteroid
 
         private IEnumerator CheckAsteroids()
         {
+            //TODO: Surround with try catch as other coroutines
             var seconds = new WaitForSeconds(AsteroidCheckInterval);
             while (true)
             {

@@ -15,10 +15,11 @@ namespace LunaClient.Systems.VesselRemoveSys
     /// This system handles the killing of vessels. We kill the vessels that are not in our subspace and 
     /// the vessels that are destroyed, old copies of changed vessels or when they dock
     /// </summary>
-    public class VesselRemoveSystem : MessageSystem<VesselRemoveSystem, VesselRemoveMessageSender, VesselRemoveMessageHandler>
+    public class VesselRemoveSystem :
+        MessageSystem<VesselRemoveSystem, VesselRemoveMessageSender, VesselRemoveMessageHandler>
     {
         #region Fields
-        
+
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
 
         #endregion
@@ -61,10 +62,11 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         private static IEnumerator KillVesselRoutine(Vessel killVessel)
         {
+            //TODO refactor this...
             while (true)
             {
                 if (!FlightGlobals.Vessels.Contains(killVessel)) break;
-                
+
                 if (VesselLockSystem.Singleton.IsSpectating && FlightGlobals.ActiveVessel.id == killVessel.id)
                 {
                     var otherVessels = FlightGlobals.Vessels.Where(v => v.id != killVessel.id).ToArray();
@@ -80,7 +82,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 if (killVessel != null)
                 {
                     Debug.Log("Killing vessel: " + killVessel.id);
-                    
+
                     //Try to unload the vessel first.
                     if (killVessel.loaded)
                     {
@@ -96,10 +98,17 @@ namespace LunaClient.Systems.VesselRemoveSys
 
                     yield return null; //Resume on next frame
 
-                    //Remove the kerbal from the craft
-                    foreach (var pps in killVessel.protoVessel.protoPartSnapshots)
-                        foreach (var pcm in pps.protoModuleCrew.ToArray())
-                            pps.RemoveCrew(pcm);
+                    try
+                    {
+                        //Remove the kerbal from the craft
+                        foreach (var pps in killVessel.protoVessel.protoPartSnapshots)
+                            foreach (var pcm in pps.protoModuleCrew.ToArray())
+                                pps.RemoveCrew(pcm);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Log($"Error removing kerbals from vessel: {e}");
+                    }
 
                     yield return null; //Resume on next frame
 
@@ -124,8 +133,6 @@ namespace LunaClient.Systems.VesselRemoveSys
                         Debug.Log("Error destroying vessel from the scenario: " + destroyException);
                     }
 
-                    //yield return null; //Resume on next frame
-
                     if (FlightGlobals.Vessels.Contains(killVessel) && (killVessel.state != Vessel.State.DEAD))
                     {
                         continue; //Recursive Killing
@@ -144,20 +151,27 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         private IEnumerator CheckVesselsToKill()
         {
-            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselKillCheckMsInterval).TotalSeconds);
+            var seconds =new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselKillCheckMsInterval).TotalSeconds);
             while (true)
             {
-                if (!Enabled) break;
-
-                var vesselsToKill = VesselProtoSystem.Singleton.AllPlayerVessels
-                    .Where(v => v.Loaded && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) != WarpSystem.Singleton.CurrentSubspace)
-                    .ToList();
-
-                KillVessels(vesselsToKill.Select(v => FlightGlobals.FindVessel(v.VesselId)).ToArray());
-
-                foreach (var killedVessel in vesselsToKill)
+                try
                 {
-                    killedVessel.Loaded = false;
+                    if (!Enabled) break;
+
+                    var vesselsToKill = VesselProtoSystem.Singleton.AllPlayerVessels
+                        .Where(v => v.Loaded && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) != WarpSystem.Singleton.CurrentSubspace)
+                        .ToList();
+
+                    KillVessels(vesselsToKill.Select(v => FlightGlobals.FindVessel(v.VesselId)).ToArray());
+
+                    foreach (var killedVessel in vesselsToKill)
+                    {
+                        killedVessel.Loaded = false;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in CheckVesselsToKill {e}");
                 }
 
                 yield return seconds;

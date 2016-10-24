@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
@@ -18,7 +19,8 @@ namespace LunaClient.Systems.VesselProtoSys
     /// This system handles the vessel loading into the game and sending our vessel structure to other players.
     /// We only load vesels that are in our subspace
     /// </summary>
-    public class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
+    public class VesselProtoSystem :
+        MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
         public List<VesselProtoUpdate> AllPlayerVessels { get; } = new List<VesselProtoUpdate>();
 
@@ -34,7 +36,8 @@ namespace LunaClient.Systems.VesselProtoSys
         public bool CurrentVesselSent { get; set; }
         public bool VesselReady { get; set; } = false;
 
-        private static bool VesselProtoSystemReady => HighLogic.LoadedScene == GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready;
+        private static bool VesselProtoSystemReady
+            => HighLogic.LoadedScene == GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready;
 
         public override void OnEnabled()
         {
@@ -80,21 +83,30 @@ namespace LunaClient.Systems.VesselProtoSys
             var seconds = new WaitForSeconds(CheckVesselsToLoadSInterval);
             while (true)
             {
-                if (!Enabled) break;
-
-                if (VesselProtoSystemReady)
+                try
                 {
-                    //Load vessels when we have at least 1 update for them and are in our subspace
-                    var vesselsToLoad = AllPlayerVessels.Where(v => v.HasUpdates && !v.Loaded &&
-                            VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == WarpSystem.Singleton.CurrentSubspace)
-                        .ToArray();
+                    if (!Enabled) break;
 
-                    foreach (var vesselProto in vesselsToLoad)
+                    if (VesselProtoSystemReady)
                     {
-                        Client.Singleton.StartCoroutine(VesselLoader.LoadVessel(vesselProto.VesselNode, vesselProto.VesselId));
-                        vesselProto.Loaded = true;
+                        //Load vessels when we have at least 1 update for them and are in our subspace
+                        var vesselsToLoad = AllPlayerVessels
+                            .Where(v => v.HasUpdates && !v.Loaded 
+                            && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == WarpSystem.Singleton.CurrentSubspace)
+                            .ToArray();
+
+                        foreach (var vesselProto in vesselsToLoad)
+                        {
+                            Client.Singleton.StartCoroutine(VesselLoader.LoadVessel(vesselProto.VesselNode, vesselProto.VesselId));
+                            vesselProto.Loaded = true;
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in CheckVesselsToLoad {e}");
+                }
+
                 yield return seconds;
             }
         }
@@ -124,20 +136,27 @@ namespace LunaClient.Systems.VesselProtoSys
             var seconds = new WaitForSeconds(UpdateScreenMessageInterval);
             while (true)
             {
-                if (!Enabled) break;
-
-                if (!string.IsNullOrEmpty(BannedPartsStr))
+                try
                 {
-                    if (BannedPartsMessage != null)
-                        BannedPartsMessage.duration = 0;
-                    if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_SYNC)
-                        BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                "Active vessel contains the following banned parts, it will not be saved to the server:\n" +                                BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
-                    if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_LAUNCH)
-                        BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
-                                BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+                    if (!Enabled) break;
 
+                    if (!string.IsNullOrEmpty(BannedPartsStr))
+                    {
+                        if (BannedPartsMessage != null)
+                            BannedPartsMessage.duration = 0;
+                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_SYNC)
+                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
+                                    "Active vessel contains the following banned parts, it will not be saved to the server:\n" + BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_LAUNCH)
+                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
+                                    "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
+                                    BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in UpdateBannedPartsMessage {e}");
                 }
 
                 yield return seconds;

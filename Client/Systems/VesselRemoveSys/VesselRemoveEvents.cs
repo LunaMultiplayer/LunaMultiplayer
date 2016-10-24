@@ -14,7 +14,6 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void OnVesselDestroyed(Vessel dyingVessel)
         {
-            return;
             if (dyingVessel.state != Vessel.State.DEAD)
                 return;
 

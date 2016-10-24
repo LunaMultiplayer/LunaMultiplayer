@@ -12,17 +12,21 @@ namespace LunaClient.Systems.VesselUpdateSys
     /// <summary>
     /// System that handle the received vessel update messages and also sends them
     /// </summary>
-    public class VesselUpdateSystem : MessageSystem<VesselUpdateSystem, VesselUpdateMessageSender, VesselUpdateMessageHandler>
+    public class VesselUpdateSystem :
+        MessageSystem<VesselUpdateSystem, VesselUpdateMessageSender, VesselUpdateMessageHandler>
     {
         #region Field & Properties
 
-        private float VesselUpdatesSendSInterval => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
+        private float VesselUpdatesSendSInterval
+            => (float) TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds
+            ;
 
         public bool UpdateSystemReady
         {
             get
             {
-                if (!Enabled || FlightGlobals.ActiveVessel == null || !HighLogic.LoadedSceneIsFlight || !FlightGlobals.ready ||
+                if (!Enabled || FlightGlobals.ActiveVessel == null || !HighLogic.LoadedSceneIsFlight ||
+                    !FlightGlobals.ready ||
                     Time.timeSinceLevelLoad < 1f || !FlightGlobals.ActiveVessel.loaded ||
                     FlightGlobals.ActiveVessel.state == Vessel.State.DEAD ||
                     FlightGlobals.ActiveVessel.packed ||
@@ -33,7 +37,8 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
         }
 
-        public Dictionary<Guid, Queue<VesselUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, Queue<VesselUpdate>>();
+        public Dictionary<Guid, Queue<VesselUpdate>> ReceivedUpdates { get; } =
+            new Dictionary<Guid, Queue<VesselUpdate>>();
 
         private VesselUpdateInterpolationSystem InterpolationSystem { get; } = new VesselUpdateInterpolationSystem();
 
@@ -95,14 +100,22 @@ namespace LunaClient.Systems.VesselUpdateSys
             var seconds = new WaitForSeconds(VesselUpdatesSendSInterval);
             while (true)
             {
-                if (!Enabled)
-                    break;
-
-                if (UpdateSystemReady)
+                try
                 {
-                    SendVesselUpdate(FlightGlobals.ActiveVessel);
-                    SendSecondaryVesselUpdates();
+                    if (!Enabled)
+                        break;
+
+                    if (UpdateSystemReady)
+                    {
+                        SendVesselUpdate(FlightGlobals.ActiveVessel);
+                        SendSecondaryVesselUpdates();
+                    }
                 }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in SendVesselUpdates {e}");
+                }
+
                 yield return seconds;
             }
         }

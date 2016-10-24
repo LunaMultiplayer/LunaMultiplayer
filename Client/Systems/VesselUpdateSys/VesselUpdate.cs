@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Linq;
 using LunaClient.Systems.VesselLockSys;
-using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselUpdateSys
@@ -93,20 +92,20 @@ namespace LunaClient.Systems.VesselUpdateSys
                 {
                     VesselId = vessel.id,
                     ActiveEngines = engines.Where(e => e.EngineIgnited)
-                                    .Select(e => e.part.craftID).ToArray(),
+                        .Select(e => e.part.craftID).ToArray(),
                     StoppedEngines = engines.Where(e => !e.EngineIgnited)
-                                    .Select(e => e.part.craftID).ToArray(),
+                        .Select(e => e.part.craftID).ToArray(),
                     Decouplers = vessel.FindPartModulesImplementing<ModuleDecouple>()
-                                    .Where(e => !e.isDecoupled)
-                                    .Select(e => e.part.craftID).ToArray(),
+                        .Where(e => !e.isDecoupled)
+                        .Select(e => e.part.craftID).ToArray(),
                     AnchoredDecouplers = vessel.FindPartModulesImplementing<ModuleAnchoredDecoupler>()
-                                    .Where(e => !e.isDecoupled)
-                                    .Select(e => e.part.craftID).ToArray(),
+                        .Where(e => !e.isDecoupled)
+                        .Select(e => e.part.craftID).ToArray(),
                     Clamps = vessel.FindPartModulesImplementing<LaunchClamp>()
-                                    .Select(e => e.part.craftID).ToArray(),
+                        .Select(e => e.part.craftID).ToArray(),
                     Docks = vessel.FindPartModulesImplementing<ModuleDockingNode>()
-                                    .Where(e => !e.IsDisabled)
-                                    .Select(e => e.part.craftID).ToArray(),
+                        .Where(e => !e.IsDisabled)
+                        .Select(e => e.part.craftID).ToArray(),
                     Stage = vessel.currentStage,
                     PlanetTime = Planetarium.GetUniversalTime(),
                     FlightState = new FlightCtrlState(),
@@ -142,7 +141,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                         vessel.transform.position.z
                     };
 
-                    Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
+                    Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation)*vessel.srf_velocity;
                     returnUpdate.Velocity = new[]
                     {
                         srfVel.x,
@@ -150,7 +149,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                         srfVel.z
                     };
 
-                    Vector3d srfAcceleration = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) *
+                    Vector3d srfAcceleration = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation)*
                                                vessel.acceleration;
                     returnUpdate.Acceleration = new[]
                     {
@@ -203,7 +202,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             if (Body != null && Vessel != null && _interpolationDuration > 0)
             {
-                for (float lerp = 0; lerp < 1; lerp += Time.fixedDeltaTime / _interpolationDuration)
+                for (float lerp = 0; lerp < 1; lerp += Time.fixedDeltaTime/_interpolationDuration)
                 {
                     ApplyInterpolations(lerp);
                     yield return fixedUpdate;
@@ -211,90 +210,123 @@ namespace LunaClient.Systems.VesselUpdateSys
                 ApplyInterpolations(1); //we force to apply the last interpolation
                 yield return fixedUpdate;
             }
-            InterpolationFinished = true;
-            FinishTime = Time.time;
-        }
 
-        private void StartupInterpolation()
-        {
-            if (Body == null)
-                Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
-            if (Vessel == null)
-                Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
-
-            InterpolationStarted = true;
-
-            if (Body != null && Vessel != null)
-            {
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, Target.ActionGrpControls[0]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, Target.ActionGrpControls[1]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, Target.ActionGrpControls[2]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, Target.ActionGrpControls[3]);
-                Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, Target.ActionGrpControls[4]);
-
-                var stage = Vessel.currentStage;
-
-                if (stage != Stage)
-                {
-                    Vessel.ActionGroups.ToggleGroup(KSPActionGroup.Stage);
-                    Vessel.currentStage = Stage;
-                }
-                else
-                {
-                    var engines = Vessel.FindPartModulesImplementing<ModuleEngines>();
-                    var enginesToActivate = engines.Where(e => !e.EngineIgnited && ActiveEngines.Contains(e.part.craftID));
-                    var enginesToStop = engines.Where(e => e.EngineIgnited && StoppedEngines.Contains(e.part.craftID));
-
-                    var decouplersToLaunch = Vessel.FindPartModulesImplementing<ModuleDecouple>()
-                        .Where(d => !d.isDecoupled && !Decouplers.Contains(d.part.craftID));
-
-                    var anchoredDecouplersToLaunch = Vessel.FindPartModulesImplementing<ModuleAnchoredDecoupler>()
-                        .Where(d => !d.isDecoupled && !Decouplers.Contains(d.part.craftID));
-
-                    var clamps = Vessel.FindPartModulesImplementing<LaunchClamp>().Where(c => !Clamps.Contains(c.part.craftID));
-
-                    var docks = Vessel.FindPartModulesImplementing<ModuleDockingNode>().Where(d => !d.IsDisabled && !Docks.Contains(d.part.craftID));
-
-                    foreach (var engine in enginesToActivate)
-                    {
-                        engine.Activate();
-                    }
-
-                    foreach (var engine in enginesToStop)
-                    {
-                        engine.Shutdown();
-                    }
-
-                    foreach (var decoupler in decouplersToLaunch)
-                    {
-                        decoupler.Decouple();
-                    }
-
-                    foreach (var anchoredDecoupler in anchoredDecouplersToLaunch)
-                    {
-                        anchoredDecoupler.Decouple();
-                    }
-
-                    foreach (var clamp in clamps)
-                    {
-                        clamp.Release();
-                    }
-
-                    foreach (var dock in docks)
-                    {
-                        dock.Decouple();
-                    }
-                }
-
-                //Here we use the interpolation facor to make the interpolation duration 
-                //shorter or longer depending on the amount of updates we have in queue
-                _interpolationDuration = Target.SentTime - SentTime - VesselUpdateInterpolationSystem.GetInterpolationFactor(VesselId);
-            }
+            FinishInterpolation();
         }
 
         #endregion
 
         #region Private interpolation methods
+
+        /// <summary>
+        /// Finish the interpolation
+        /// </summary>
+        private void FinishInterpolation()
+        {
+            try
+            {
+                InterpolationFinished = true;
+                FinishTime = Time.time;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Coroutine error in FinishInterpolation {e}");
+            }
+        }
+
+        /// <summary>
+        /// Start the interpolation and set it's needed values
+        /// </summary>
+        private void StartupInterpolation()
+        {
+            try
+            {
+                if (Body == null)
+                    Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
+                if (Vessel == null)
+                    Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
+
+                InterpolationStarted = true;
+
+                if (Body != null && Vessel != null)
+                {
+                    Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, Target.ActionGrpControls[0]);
+                    Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, Target.ActionGrpControls[1]);
+                    Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, Target.ActionGrpControls[2]);
+                    Vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, Target.ActionGrpControls[3]);
+                    Vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, Target.ActionGrpControls[4]);
+
+                    var stage = Vessel.currentStage;
+
+                    if (stage != Stage)
+                    {
+                        Vessel.ActionGroups.ToggleGroup(KSPActionGroup.Stage);
+                        Vessel.currentStage = Stage;
+                    }
+                    else
+                    {
+                        var engines = Vessel.FindPartModulesImplementing<ModuleEngines>();
+                        var enginesToActivate =
+                            engines.Where(e => !e.EngineIgnited && ActiveEngines.Contains(e.part.craftID));
+                        var enginesToStop =
+                            engines.Where(e => e.EngineIgnited && StoppedEngines.Contains(e.part.craftID));
+
+                        var decouplersToLaunch = Vessel.FindPartModulesImplementing<ModuleDecouple>()
+                            .Where(d => !d.isDecoupled && !Decouplers.Contains(d.part.craftID));
+
+                        var anchoredDecouplersToLaunch = Vessel.FindPartModulesImplementing<ModuleAnchoredDecoupler>()
+                            .Where(d => !d.isDecoupled && !Decouplers.Contains(d.part.craftID));
+
+                        var clamps =
+                            Vessel.FindPartModulesImplementing<LaunchClamp>()
+                                .Where(c => !Clamps.Contains(c.part.craftID));
+
+                        var docks =
+                            Vessel.FindPartModulesImplementing<ModuleDockingNode>()
+                                .Where(d => !d.IsDisabled && !Docks.Contains(d.part.craftID));
+
+                        foreach (var engine in enginesToActivate)
+                        {
+                            engine.Activate();
+                        }
+
+                        foreach (var engine in enginesToStop)
+                        {
+                            engine.Shutdown();
+                        }
+
+                        foreach (var decoupler in decouplersToLaunch)
+                        {
+                            decoupler.Decouple();
+                        }
+
+                        foreach (var anchoredDecoupler in anchoredDecouplersToLaunch)
+                        {
+                            anchoredDecoupler.Decouple();
+                        }
+
+                        foreach (var clamp in clamps)
+                        {
+                            clamp.Release();
+                        }
+
+                        foreach (var dock in docks)
+                        {
+                            dock.Decouple();
+                        }
+                    }
+
+                    //Here we use the interpolation facor to make the interpolation duration 
+                    //shorter or longer depending on the amount of updates we have in queue
+                    _interpolationDuration = Target.SentTime - SentTime -
+                                             VesselUpdateInterpolationSystem.GetInterpolationFactor(VesselId);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Coroutine error in StartupInterpolation {e}");
+            }
+        }
 
         /// <summary>
         /// Apply the interpolation based on a percentage
@@ -303,17 +335,18 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             try
             {
+                ApplyRotationInterpolation(percentage);
+
                 if (IsSurfaceUpdate)
                     ApplySurfaceInterpolation(percentage);
                 else
                     ApplyOrbitInterpolation(percentage);
 
-                ApplyRotationInterpolation(percentage);
                 ApplyControlState(percentage);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // ignored
+                Debug.LogError($"[LMP]: Coroutine error in ApplyInterpolations {e}");
             }
         }
 
@@ -331,20 +364,20 @@ namespace LunaClient.Systems.VesselUpdateSys
                 FlightInputHandler.state.mainThrottle = Mathf.Lerp(FlightState.mainThrottle, Target.FlightState.mainThrottle, percentage);
             }
         }
-        
+
         /// <summary>
         /// Applies common interpolation values
         /// </summary>
         private void ApplyRotationInterpolation(float interpolationValue)
         {
             if (interpolationValue > 1) return;
-            
+
             var startRot = new Quaternion(Rotation[0], Rotation[1], Rotation[2], Rotation[3]);
             var targetRot = new Quaternion(Target.Rotation[0], Target.Rotation[1], Target.Rotation[2], Target.Rotation[3]);
 
-            var currentRot = Quaternion.Slerp(startRot, targetRot, interpolationValue);
+            var currentRot = Quaternion.Lerp(startRot, targetRot, interpolationValue);
 
-            Vessel.SetRotation(currentRot, false);
+            Vessel.SetRotation(currentRot);
         }
 
         /// <summary>
@@ -362,7 +395,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             var startPos = new Vector3d(Position[0], Position[1], Position[2]);
             var targetPos = new Vector3d(Target.Position[0], Target.Position[1], Target.Position[2]);
-            
+
             Vector3d currentVelocity = Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, interpolationValue);
             Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
             Vector3d currentPosition = Vector3d.Lerp(startPos, targetPos, interpolationValue);

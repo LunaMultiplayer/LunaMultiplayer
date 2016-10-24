@@ -13,7 +13,8 @@ namespace LunaClient.Systems.VesselChangeSys
     /// <summary>
     /// This system handle the changes of a vessel, part decouples and so on.
     /// </summary>
-    public class VesselChangeSystem : MessageSystem<VesselChangeSystem, VesselChangeMessageSender, VesselChangeMessageHandler>
+    public class VesselChangeSystem :
+        MessageSystem<VesselChangeSystem, VesselChangeMessageSender, VesselChangeMessageHandler>
     {
         public Queue<VesselChangeMsgData> IncomingChanges { get; set; } = new Queue<VesselChangeMsgData>();
         public VesselChangeEvents VesselChangeEvents { get; } = new VesselChangeEvents();
@@ -42,11 +43,18 @@ namespace LunaClient.Systems.VesselChangeSys
             var fixedUpdate = new WaitForFixedUpdate();
             while (true)
             {
-                if (!Enabled) break;
-
-                while (IncomingChanges.Count > 0 && Time.fixedTime - IncomingChanges.Peek().ReceiveTime >= 0.5)
+                try
                 {
-                    HandleVesselChange(IncomingChanges.Dequeue());
+                    if (!Enabled) break;
+
+                    while (IncomingChanges.Count > 0 && Time.fixedTime - IncomingChanges.Peek().ReceiveTime >= 0.5)
+                    {
+                        HandleVesselChange(IncomingChanges.Dequeue());
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error in coroutine HandleVesselChanges {e}");
                 }
                 
                 yield return fixedUpdate;

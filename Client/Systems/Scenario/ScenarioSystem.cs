@@ -32,14 +32,14 @@ namespace LunaClient.Systems.Scenario
         }
 
         #endregion
-        
+
         #region Public methods
-        
+
         public void LoadMissingScenarioDataIntoGame()
         {
             var validScenarios = KSPScenarioType.GetAllScenarioTypesInAssemblies()
-                .Where(s => 
-                    !HighLogic.CurrentGame.scenarios.Exists(psm => psm.moduleName == s.ModuleType.Name) && 
+                .Where(s =>
+                    !HighLogic.CurrentGame.scenarios.Exists(psm => psm.moduleName == s.ModuleType.Name) &&
                     LoadModuleByGameMode(s));
 
             foreach (var validScenario in validScenarios)
@@ -113,7 +113,8 @@ namespace LunaClient.Systems.Scenario
                 }
                 else
                 {
-                    Debug.Log($"Skipping {psm.moduleName} scenario data in {SettingsSystem.ServerSettings.GameMode} mode");
+                    Debug.Log(
+                        $"Skipping {psm.moduleName} scenario data in {SettingsSystem.ServerSettings.GameMode} mode");
                 }
             }
         }
@@ -121,9 +122,12 @@ namespace LunaClient.Systems.Scenario
         public void UpgradeTheAstronautComplexSoTheGameDoesntBugOut()
         {
             var sm = HighLogic.CurrentGame.scenarios.Find(psm => psm.moduleName == "ScenarioUpgradeableFacilities");
-            if ((sm != null) && ScenarioUpgradeableFacilities.protoUpgradeables.ContainsKey("SpaceCenter/AstronautComplex"))
+            if ((sm != null) &&
+                ScenarioUpgradeableFacilities.protoUpgradeables.ContainsKey("SpaceCenter/AstronautComplex"))
             {
-                foreach (var uf in ScenarioUpgradeableFacilities.protoUpgradeables["SpaceCenter/AstronautComplex"].facilityRefs)
+                foreach (
+                    var uf in
+                    ScenarioUpgradeableFacilities.protoUpgradeables["SpaceCenter/AstronautComplex"].facilityRefs)
                 {
                     Debug.Log("Setting astronaut complex to max level");
                     uf.SetLevel(uf.MaxLevel);
@@ -140,9 +144,15 @@ namespace LunaClient.Systems.Scenario
             var seconds = new WaitForSeconds(SettingsSystem.ServerSettings.SendScenarioDataSecInterval);
             while (true)
             {
-                if (!Enabled) break;
-
-                SendScenarioModules();
+                try
+                {
+                    if (!Enabled) break;
+                    SendScenarioModules();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error in coroutine SendScenarioModulesRoutine {e}");
+                }
 
                 yield return seconds;
             }

@@ -23,8 +23,10 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             Debug.Log("Loading vessels in subspace 0 into game");
             var numberOfLoads = 0;
-            
-            foreach (var vessel in System.AllPlayerVessels.Where(v=> VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == 0))
+
+            foreach (
+                var vessel in
+                System.AllPlayerVessels.Where(v => VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == 0))
             {
                 var pv = CreateSafeProtoVesselFromConfigNode(vessel.VesselNode, vessel.VesselId);
                 if ((pv != null) && (pv.vesselID == vessel.VesselId))
@@ -36,11 +38,12 @@ namespace LunaClient.Systems.VesselProtoSys
                 else
                 {
                     Debug.Log($"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
-                    ChatSystem.Singleton.PmMessageServer($"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
+                    ChatSystem.Singleton.PmMessageServer(
+                        $"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
                 }
                 vessel.Loaded = true;
             }
-            
+
             Debug.Log($"{numberOfLoads} Vessels loaded into game");
         }
 
@@ -49,27 +52,39 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public IEnumerator LoadVessel(ConfigNode vesselNode, Guid protovesselId)
         {
+            //TODO: Surround this with better try cach
             var currentProto = CreateSafeProtoVesselFromConfigNode(vesselNode, protovesselId);
 
             if (ProtoVesselValidationsPassed(currentProto))
             {
                 RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
-                
-                var vessel = FlightGlobals.Vessels.FirstOrDefault(v => !ProtoVesselIsAsteroid(v.protoVessel) && v.id == currentProto.vesselID);
+
+                var vessel =
+                    FlightGlobals.Vessels.FirstOrDefault(
+                        v => !ProtoVesselIsAsteroid(v.protoVessel) && v.id == currentProto.vesselID);
                 if (vessel != null)
                 {
                     if (vessel.packed)
                         VesselRemoveSystem.Singleton.KillVessel(vessel);
                     else
-                        yield break; //Vessel is not packed and within range so we handle the vessel changes by it's proper messages
+                        yield break;
+                    //Vessel is not packed and within range so we handle the vessel changes by it's proper messages
                 }
 
                 FixProtoVesselFlags(currentProto);
                 yield return null; //Resume on next frame
 
-                Debug.Log($"Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
 
-                currentProto.Load(HighLogic.CurrentGame.flightState);
+                try
+                {
+                    Debug.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
+                    currentProto.Load(HighLogic.CurrentGame.flightState);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error in coroutine LoadVessel {e}");
+                }
+
                 yield return null; //Resume on next frame
 
                 if (currentProto.vesselRef == null)
@@ -94,7 +109,7 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         #region Private methods
-        
+
         /// <summary>
         /// Checks if the protovessel is a target we have locked
         /// </summary>
@@ -125,7 +140,8 @@ namespace LunaClient.Systems.VesselProtoSys
                 var updateBody = FlightGlobals.Bodies[vesselProto.orbitSnapShot.ReferenceBodyIndex];
                 if (updateBody == null)
                 {
-                    Debug.Log("Skipping flying vessel load - Could not find celestial body index {currentProto.orbitSnapShot.ReferenceBodyIndex}");
+                    Debug.Log(
+                        "Skipping flying vessel load - Could not find celestial body index {currentProto.orbitSnapShot.ReferenceBodyIndex}");
                     return false;
                 }
             }
@@ -137,18 +153,25 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static void FixProtoVesselFlags(ProtoVessel vesselProto)
         {
-            foreach (var part in vesselProto.protoPartSnapshots)
+            try
             {
-                //Fix up flag URLS.
-                if (!string.IsNullOrEmpty(part.flagURL))
+                foreach (var part in vesselProto.protoPartSnapshots)
                 {
-                    string flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), part.flagURL + ".png");
-                    if (!File.Exists(flagFile))
+                    //Fix up flag URLS.
+                    if (!string.IsNullOrEmpty(part.flagURL))
                     {
-                        Debug.Log("Flag '" + part.flagURL + "' doesn't exist, setting to default!");
-                        part.flagURL = "Squad/Flags/default";
+                        string flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), part.flagURL + ".png");
+                        if (!File.Exists(flagFile))
+                        {
+                            Debug.Log("Flag '" + part.flagURL + "' doesn't exist, setting to default!");
+                            part.flagURL = "Squad/Flags/default";
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in coroutine FixProtoVesselFlags {e}");
             }
         }
 

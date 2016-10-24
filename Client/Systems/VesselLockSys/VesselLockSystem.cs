@@ -21,17 +21,25 @@ namespace LunaClient.Systems.VesselLockSys
         private ScreenMessage _spectateMessage;
 
         private bool _isSpectating;
+
         public bool IsSpectating
         {
-            get { return HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && _isSpectating; }
+            get
+            {
+                return HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && _isSpectating;
+            }
             set { _isSpectating = value; }
         }
 
-        private string GetVesselOwner => IsSpectating ? LockSystem.Singleton.LockOwner("control-" + FlightGlobals.ActiveVessel.id) : "";
+        private string GetVesselOwner
+            => IsSpectating ? LockSystem.Singleton.LockOwner("control-" + FlightGlobals.ActiveVessel.id) : "";
 
         private VesselLockEvents VesselMainEvents { get; } = new VesselLockEvents();
-        
-        private bool VesselLockSystemReady => Enabled && HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f && FlightGlobals.ActiveVessel != null;
+
+        private bool VesselLockSystemReady
+            =>
+            Enabled && HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f &&
+            FlightGlobals.ActiveVessel != null;
 
         private string SpectatingMessage => IsSpectating ? $"This vessel is being controlled by {GetVesselOwner}." : "";
 
@@ -58,7 +66,7 @@ namespace LunaClient.Systems.VesselLockSys
             GameEvents.onLevelWasLoadedGUIReady.Remove(VesselMainEvents.OnSceneChanged);
             GameEvents.onVesselChange.Remove(VesselMainEvents.OnVesselChange);
         }
-        
+
         #endregion
 
         #region Public methods
@@ -92,7 +100,7 @@ namespace LunaClient.Systems.VesselLockSys
             {
                 LockSystem.Singleton.AcquireLock("control-" + vessel.id, force);
             }
-            
+
             if (IsSpectating)
             {
                 InputLockManager.RemoveControlLock(SpectateLock);
@@ -114,20 +122,27 @@ namespace LunaClient.Systems.VesselLockSys
             var seconds = new WaitForSeconds(3);
             while (true)
             {
-                if (!Enabled) break;
-                if (VesselLockSystemReady && IsSpectating)
+                try
                 {
-                    if (!LockSystem.Singleton.LockExists("control-" + FlightGlobals.ActiveVessel.id))
+                    if (!Enabled) break;
+                    if (VesselLockSystemReady && IsSpectating)
                     {
-                        //Don't force as maybe other players are spectating too so the fastests is the winner :)
-                        StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
+                        if (!LockSystem.Singleton.LockExists("control-" + FlightGlobals.ActiveVessel.id))
+                        {
+                            //Don't force as maybe other players are spectating too so the fastests is the winner :)
+                            StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
+                        }
                     }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error in coroutine TryGetControlLock {e}");
                 }
 
                 yield return seconds;
             }
         }
-        
+
         /// <summary>
         /// After some ms get the update lock for vessels that are close to us (not packed and not ours) not dead and that nobody has the update lock
         /// </summary>
@@ -136,22 +151,30 @@ namespace LunaClient.Systems.VesselLockSys
             var seconds = new WaitForSeconds(CheckSecondaryVesselsSInterval);
             while (true)
             {
-                if (!Enabled) break;
-                if (VesselLockSystemReady)
+                try
                 {
-                    var validSecondaryVessels = GetValidSecondaryVesselIds().ToArray();
-                    foreach (var checkVessel in validSecondaryVessels)
+                    if (!Enabled) break;
+                    if (VesselLockSystemReady)
                     {
-                        //Don't force it as maybe another player sent this request aswell
-                        LockSystem.Singleton.AcquireLock("update-" + checkVessel);
-                    }
+                        var validSecondaryVessels = GetValidSecondaryVesselIds().ToArray();
+                        foreach (var checkVessel in validSecondaryVessels)
+                        {
+                            //Don't force it as maybe another player sent this request aswell
+                            LockSystem.Singleton.AcquireLock("update-" + checkVessel);
+                        }
 
-                    var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased().ToArray();
-                    foreach (var releaseVessel in vesselsToRelease)
-                    {
-                        LockSystem.Singleton.ReleaseLock("update-" + releaseVessel);
+                        var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased().ToArray();
+                        foreach (var releaseVessel in vesselsToRelease)
+                        {
+                            LockSystem.Singleton.ReleaseLock("update-" + releaseVessel);
+                        }
                     }
                 }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error in coroutine UpdateSecondaryVesselsLocks {e}");
+                }
+
                 yield return seconds;
             }
         }
@@ -164,24 +187,32 @@ namespace LunaClient.Systems.VesselLockSys
             var seconds = new WaitForSeconds(UpdateScreenMessageInterval);
             while (true)
             {
-                if (!Enabled) break;
-                if (VesselLockSystemReady)
+                try
                 {
-                    if (IsSpectating)
+                    if (!Enabled) break;
+                    if (VesselLockSystemReady)
                     {
-                        if (_spectateMessage != null)
-                            _spectateMessage.duration = 0f;
-                        _spectateMessage = ScreenMessages.PostScreenMessage(SpectatingMessage, UpdateScreenMessageInterval * 2, ScreenMessageStyle.UPPER_CENTER);
-                    }
-                    else
-                    {
-                        if (_spectateMessage != null)
+                        if (IsSpectating)
                         {
-                            _spectateMessage.duration = 0f;
-                            _spectateMessage = null;
+                            if (_spectateMessage != null)
+                                _spectateMessage.duration = 0f;
+                            _spectateMessage = ScreenMessages.PostScreenMessage(SpectatingMessage, UpdateScreenMessageInterval * 2, ScreenMessageStyle.UPPER_CENTER);
+                        }
+                        else
+                        {
+                            if (_spectateMessage != null)
+                            {
+                                _spectateMessage.duration = 0f;
+                                _spectateMessage = null;
+                            }
                         }
                     }
                 }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error in coroutine UpdateOnScreenSpectateMessage {e}");
+                }
+
                 yield return seconds;
             }
         }

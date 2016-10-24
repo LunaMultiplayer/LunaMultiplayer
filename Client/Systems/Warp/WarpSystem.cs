@@ -17,12 +17,17 @@ namespace LunaClient.Systems.Warp
         #region Fields
 
         public bool CurrentlyWarping => CurrentSubspace == -1;
+
         public bool AloneInCurrentSubspace => ClientSubspaceList
-            .Count(p => p.Value == CurrentSubspace && p.Key != SettingsSystem.CurrentSettings.PlayerName) > 0;
+                                                  .Count(
+                                                      p =>
+                                                          p.Value == CurrentSubspace &&
+                                                          p.Key != SettingsSystem.CurrentSettings.PlayerName) > 0;
 
         public WarpEntryDisplay WarpEntryDisplay { get; } = new WarpEntryDisplay();
 
         private int _currentSubspace;
+
         public int CurrentSubspace
         {
             get { return _currentSubspace; }
@@ -34,7 +39,8 @@ namespace LunaClient.Systems.Warp
                 if (value != -1 && value != _currentSubspace && !SkipSubspaceProcess)
                     ProcessNewSubspace();
 
-                VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(SettingsSystem.CurrentSettings.PlayerName, value);
+                VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(SettingsSystem.CurrentSettings.PlayerName,
+                    value);
                 _currentSubspace = value;
                 Debug.Log("Locked to subspace " + value + ", time: " + GetCurrentSubspaceTime());
             }
@@ -43,7 +49,7 @@ namespace LunaClient.Systems.Warp
         public bool NewSubspaceSent { get; set; }
         public Dictionary<string, int> ClientSubspaceList { get; } = new Dictionary<string, int>();
         public Dictionary<int, double> Subspaces { get; } = new Dictionary<int, double>();
-        
+
         private ScreenMessage WarpMessage { get; set; }
         private WarpEvents WarpEvents { get; } = new WarpEvents();
         public bool SkipSubspaceProcess { get; set; }
@@ -72,22 +78,27 @@ namespace LunaClient.Systems.Warp
                 Client.Singleton.StartCoroutine(FollowWarpMaster());
             }
         }
-        
+
         #endregion
 
         #region Public methods
-        
+
         public double GetCurrentSubspaceTime() => GetSubspaceTime(CurrentSubspace);
 
         public double GetSubspaceTime(int subspace)
         {
-            return TimeSyncerSystem.Singleton.Synced && Subspaces.ContainsKey(subspace) ? 
-                TimeSyncerSystem.Singleton.GetServerClock() + Subspaces[subspace] : 0;
+            return TimeSyncerSystem.Singleton.Synced && Subspaces.ContainsKey(subspace)
+                ? TimeSyncerSystem.Singleton.GetServerClock() + Subspaces[subspace]
+                : 0;
         }
 
         public void SendChangeSubspaceMsg(int subspaceId)
         {
-            MessageSender.SendMessage(new WarpChangeSubspaceMsgData { PlayerName = SettingsSystem.CurrentSettings.PlayerName, Subspace = subspaceId });
+            MessageSender.SendMessage(new WarpChangeSubspaceMsgData
+            {
+                PlayerName = SettingsSystem.CurrentSettings.PlayerName,
+                Subspace = subspaceId
+            });
         }
 
         public int GetPlayerSubspace(string playerName)
@@ -120,13 +131,14 @@ namespace LunaClient.Systems.Warp
                 WarpMessage.duration = 0f;
             WarpMessage = ScreenMessages.PostScreenMessage(messageText, messageDuration, ScreenMessageStyle.UPPER_CENTER);
         }
-        
+
         public void RemovePlayer(string playerName)
         {
             if (ClientSubspaceList.ContainsKey(playerName))
                 ClientSubspaceList.Remove(playerName);
 
-            VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(playerName, 0); //Move his vessels back to subspace 0
+            VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(playerName, 0);
+            //Move his vessels back to subspace 0
         }
 
         #endregion
@@ -141,13 +153,21 @@ namespace LunaClient.Systems.Warp
             var seconds = new WaitForSeconds(CheckFollowMasterSInterval);
             while (true)
             {
-                if (!Enabled) break;
-
-                if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
-                    ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
+                try
                 {
-                    //Follow the warp master into warp if needed
-                    CurrentSubspace = ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster];
+                    if (!Enabled) break;
+
+                    if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
+                        ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
+                    {
+                        //Follow the warp master into warp if needed
+                        CurrentSubspace = ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster];
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error in coroutine FollowWarpMaster {e}");
+                    throw;
                 }
 
                 yield return seconds;
@@ -171,17 +191,24 @@ namespace LunaClient.Systems.Warp
             var seconds = new WaitForSeconds(UpdateScreenMessageSInterval);
             while (true)
             {
-                if (!Enabled) break;
+                try
+                {
+                    if (!Enabled) break;
 
-                if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
-                    DisplayMessage(SettingsSystem.ServerSettings.WarpMaster + " has warp control", 1f);
-                else
-                    DisplayMessage("You have warp control", 1f);
+                    if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
+                        DisplayMessage(SettingsSystem.ServerSettings.WarpMaster + " has warp control", 1f);
+                    else
+                        DisplayMessage("You have warp control", 1f);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error in coroutine CheckAbandonedVessels {e}");
+                }
 
                 yield return seconds;
             }
         }
-        
+
         #endregion
     }
 }

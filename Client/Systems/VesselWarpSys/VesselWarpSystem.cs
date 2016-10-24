@@ -31,7 +31,7 @@ namespace LunaClient.Systems.VesselWarpSys
             base.OnDisabled();
             VesselSubspaceList.Clear();
         }
-        
+
         public int GetVesselSubspace(Guid vesselId)
         {
             return VesselSubspaceList.ContainsKey(vesselId) ? VesselSubspaceList[vesselId] : 0;
@@ -53,19 +53,26 @@ namespace LunaClient.Systems.VesselWarpSys
             var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.StrandedVesselsCheckMsInterval).TotalSeconds);
             while (true)
             {
-                if (!Enabled) break;
-
-                var strandedVesselIds = new List<Guid>();
-                foreach (var vessel in VesselSubspaceList)
+                try
                 {
-                    var clientsInSubspace = WarpSystem.Singleton.ClientSubspaceList.Count(v => v.Value == vessel.Value);
-                    if (clientsInSubspace < 1)
-                        strandedVesselIds.Add(vessel.Key);
+                    if (!Enabled) break;
+
+                    var strandedVesselIds = new List<Guid>();
+                    foreach (var vessel in VesselSubspaceList)
+                    {
+                        var clientsInSubspace = WarpSystem.Singleton.ClientSubspaceList.Count(v => v.Value == vessel.Value);
+                        if (clientsInSubspace < 1)
+                            strandedVesselIds.Add(vessel.Key);
+                    }
+
+                    foreach (var strandedVessel in strandedVesselIds)
+                    {
+                        VesselSubspaceList[strandedVessel] = 0;
+                    }
                 }
-
-                foreach (var strandedVessel in strandedVesselIds)
+                catch (Exception e)
                 {
-                    VesselSubspaceList[strandedVessel] = 0;
+                    Debug.LogError($"[LMP]: Error in coroutine CheckAbandonedVessels {e}");
                 }
 
                 yield return seconds;
