@@ -20,7 +20,8 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         private const int MaxUpdatesInQueue = 4;
         private const int MinUpdatesInQueue = 2;
-        private const int MsWithoutUpdatesToRemove = 10000;
+
+        private const float MaxSecWithuotUpdates = 10;
 
         /// <summary>
         /// The current vessel update that is being handled
@@ -38,8 +39,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         #endregion
 
         #region Public
-
-
+        
         /// <summary>
         /// Retrieves the interpolation factor for given vessel
         /// </summary>
@@ -115,9 +115,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                 if (System.UpdateSystemReady)
                 {
                     var vesselsToRemove = CurrentVesselUpdate
-                        .Where(u => u.Value.InterpolationFinished &&
-                                    TimeSpan.FromSeconds(Time.time - u.Value.FinishTime).TotalMilliseconds >
-                                    MsWithoutUpdatesToRemove)
+                        .Where(u => u.Value.InterpolationFinished && Time.time - u.Value.FinishTime > MaxSecWithuotUpdates)
                         .Select(u => u.Key).ToArray();
 
                     foreach (var vesselId in vesselsToRemove)
