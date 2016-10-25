@@ -34,7 +34,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         #region Vessel position information fields
 
         public Guid VesselId { get; set; }
-        public double PlanetTime { get; set; }
         public string BodyName { get; set; }
         public float[] Rotation { get; set; }
         public FlightCtrlState FlightState { get; set; }
@@ -107,7 +106,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                         .Where(e => !e.IsDisabled)
                         .Select(e => e.part.craftID).ToArray(),
                     Stage = vessel.currentStage,
-                    PlanetTime = Planetarium.GetUniversalTime(),
                     FlightState = new FlightCtrlState(),
                     BodyName = vessel.mainBody.bodyName,
                     Rotation = new[]
@@ -375,7 +373,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             var startRot = new Quaternion(Rotation[0], Rotation[1], Rotation[2], Rotation[3]);
             var targetRot = new Quaternion(Target.Rotation[0], Target.Rotation[1], Target.Rotation[2], Target.Rotation[3]);
 
-            var currentRot = Quaternion.Lerp(startRot, targetRot, interpolationValue);
+            var currentRot = Quaternion.Slerp(startRot, targetRot, interpolationValue);
 
             Vessel.SetRotation(currentRot);
         }
@@ -398,7 +396,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
             Vector3d currentPosition = Vector3d.Lerp(startPos, targetPos, interpolationValue);
 
-            Vessel.SetPosition(currentPosition, false);
+            Vessel.SetPosition(currentPosition, true);
 
             Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
             Vessel.acceleration = currentAcc;

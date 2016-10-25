@@ -30,7 +30,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                 ReceiveTime = Time.fixedTime,
                 Stage = msgData.Stage,
                 SentTime = msgData.SentTime,
-                PlanetTime = msgData.PlanetTime,
                 ActiveEngines = msgData.ActiveEngines,
                 StoppedEngines = msgData.StoppedEngines,
                 Decouplers = msgData.Decouplers,

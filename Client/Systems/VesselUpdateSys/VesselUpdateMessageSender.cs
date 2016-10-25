@@ -22,7 +22,6 @@ namespace LunaClient.Systems.VesselUpdateSys
             var msg = new VesselUpdateMsgData
             {
                 SentTime = Time.fixedTime,
-                PlanetTime = Planetarium.GetUniversalTime(),
                 Stage = update.Stage,
                 ActiveEngines = update.ActiveEngines,
                 StoppedEngines = update.StoppedEngines,

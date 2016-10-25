@@ -18,6 +18,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         private const float FactorAdjustValue = 0.05f;
         private const float DefaultFactor = 1.7f;
 
+        private const int MaxTotalUpdatesInQueue = 8;
         private const int MaxUpdatesInQueue = 4;
         private const int MinUpdatesInQueue = 2;
 
@@ -97,6 +98,11 @@ namespace LunaClient.Systems.VesselUpdateSys
                     {
                         foreach (var update in System.ReceivedUpdates)
                         {
+                            while (System.GetNumberOfUpdatesInQueue(update.Key) > MaxTotalUpdatesInQueue)
+                            {
+                                System.ReceivedUpdates[update.Key].Dequeue();
+                            }
+
                             if (System.GetNumberOfUpdatesInQueue(update.Key) > MaxUpdatesInQueue)
                                 IncreaseInterpolationFactor(update.Key);
                             else if (System.GetNumberOfUpdatesInQueue(update.Key) < MinUpdatesInQueue)

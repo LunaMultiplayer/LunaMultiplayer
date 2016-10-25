@@ -65,11 +65,11 @@ namespace LunaClient.Systems.VesselRemoveSys
             //TODO refactor this...
             while (true)
             {
-                if (!FlightGlobals.Vessels.Contains(killVessel)) break;
+                if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD) break;
 
                 if (VesselLockSystem.Singleton.IsSpectating && FlightGlobals.ActiveVessel.id == killVessel.id)
                 {
-                    var otherVessels = FlightGlobals.Vessels.Where(v => v.id != killVessel.id).ToArray();
+                    var otherVessels = FlightGlobals.Vessels.Where(v => v.id != killVessel?.id).ToArray();
 
                     if (otherVessels.Any())
                         FlightGlobals.ForceSetActiveVessel(otherVessels.First());
@@ -79,68 +79,59 @@ namespace LunaClient.Systems.VesselRemoveSys
                     ScreenMessages.PostScreenMessage("The player you were spectating removed his vessel");
                 }
 
-                if (killVessel != null)
+                Debug.Log($"[LMP]: Killing vessel {killVessel.id}");
+                //Try to unload the vessel first.
+                if (killVessel.loaded)
                 {
-                    Debug.Log($"[LMP]: Killing vessel {killVessel.id}");
-
-                    //Try to unload the vessel first.
-                    if (killVessel.loaded)
-                    {
-                        try
-                        {
-                            killVessel.Unload();
-                        }
-                        catch (Exception unloadException)
-                        {
-                            Debug.LogError("[LMP]: Error unloading vessel: " + unloadException);
-                        }
-                    }
-
-                    yield return null; //Resume on next frame
-
                     try
                     {
-                        //Remove the kerbal from the craft
-                        foreach (var pps in killVessel.protoVessel.protoPartSnapshots)
-                            foreach (var pcm in pps.protoModuleCrew.ToArray())
-                                pps.RemoveCrew(pcm);
+                        killVessel.Unload();
                     }
-                    catch (Exception e)
+                    catch (Exception unloadException)
                     {
-                        Debug.LogError($"[LMP]: Error removing kerbals from vessel: {e}");
-                    }
-
-                    yield return null; //Resume on next frame
-
-                    try
-                    {
-                        killVessel.Die();
-                    }
-                    catch (Exception killException)
-                    {
-                        Debug.LogError("[LMP]: Error destroying vessel: " + killException);
-                    }
-
-                    yield return null; //Resume on next frame
-
-                    try
-                    {
-                        HighLogic.CurrentGame.DestroyVessel(killVessel);
-                        HighLogic.CurrentGame.Updated();
-                    }
-                    catch (Exception destroyException)
-                    {
-                        Debug.LogError("[LMP]: Error destroying vessel from the scenario: " + destroyException);
-                    }
-
-                    if (FlightGlobals.Vessels.Contains(killVessel) && (killVessel.state != Vessel.State.DEAD))
-                    {
-                        continue; //Recursive Killing
+                        Debug.LogError($"[LMP]: Error unloading vessel: {unloadException}");
                     }
                 }
-                break;
+
+                yield return null; //Resume on next frame
+
+                try
+                {
+                    //Remove the kerbal from the craft
+                    foreach (var pps in killVessel?.protoVessel.protoPartSnapshots)
+                        foreach (var pcm in pps.protoModuleCrew.ToArray())
+                            pps.RemoveCrew(pcm);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error removing kerbals from vessel: {e}");
+                }
+
+                yield return null; //Resume on next frame
+
+                try
+                {
+                    killVessel?.Die();
+                }
+                catch (Exception killException)
+                {
+                    Debug.LogError("[LMP]: Error destroying vessel: " + killException);
+                }
+
+                yield return null; //Resume on next frame
+
+                try
+                {
+                    HighLogic.CurrentGame.DestroyVessel(killVessel);
+                    HighLogic.CurrentGame.Updated();
+                }
+                catch (Exception destroyException)
+                {
+                    Debug.LogError("[LMP]: Error destroying vessel from the scenario: " + destroyException);
+                }
             }
         }
+
 
         #endregion
 
