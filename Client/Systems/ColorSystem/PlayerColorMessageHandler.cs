@@ -46,7 +46,7 @@ namespace LunaClient.Systems.ColorSystem
                         var data = (PlayerColorSetMsgData)messageData;
                         var playerName = data.PlayerName;
                         var playerColor = System.ConvertStringToColor(data.Color);
-                        Debug.Log("Color Message, Name: " + playerName + " , color: " + playerColor);
+                        Debug.Log("[LMP]: Color Message, Name: " + playerName + " , color: " + playerColor);
                         System.PlayerColors[playerName] = playerColor;
                         UpdateVesselColors(playerName);
 

@@ -38,7 +38,7 @@ namespace LunaClient.Network
             }
             catch (Exception e)
             {
-                Debug.LogError("Send thread error: " + e);
+                Debug.LogError("[LMP]: Send thread error: " + e);
             }
         }
 

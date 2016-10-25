@@ -42,7 +42,7 @@ namespace LunaClient.Systems.Warp
                 VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(SettingsSystem.CurrentSettings.PlayerName,
                     value);
                 _currentSubspace = value;
-                Debug.Log("Locked to subspace " + value + ", time: " + GetCurrentSubspaceTime());
+                Debug.Log($"[LMP]: Locked to subspace {value}, time: {GetCurrentSubspaceTime()}");
             }
         }
 

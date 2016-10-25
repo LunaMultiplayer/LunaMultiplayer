@@ -29,7 +29,7 @@ namespace LunaClient.Network
             {
                 if (MainSystem.Singleton.NetworkState != ClientState.DISCONNECTED)
                 {
-                    Debug.Log("Disconnected, reason: " + reason);
+                    Debug.Log("[LMP]: Disconnected, reason: " + reason);
                     if (!HighLogic.LoadedSceneIsEditor && !HighLogic.LoadedSceneIsFlight)
                     {
                         MainSystem.Singleton.ForceQuit = true;
@@ -64,7 +64,7 @@ namespace LunaClient.Network
             }
             catch (Exception e)
             {
-                Debug.LogError($"Error calling the connect thread {e}");
+                Debug.LogError($"[LMP]: Error calling the connect thread {e}");
             }
         }
 
@@ -78,14 +78,14 @@ namespace LunaClient.Network
                 {
                     var endpoint = Common.CreateEndpointFromString(endpointString);
                     MainSystem.Singleton.Status = $"Connecting to {endpoint.Address} port {endpoint.Port}";
-                    Debug.Log($"Connecting to {endpoint.Address} port {endpoint.Port}");
+                    Debug.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
 
                     MainSystem.Singleton.NetworkState = ClientState.CONNECTING;
                     ConnectToServerAddress(endpoint);
                 }
                 else
                 {
-                    Debug.LogError("Cannot connect when we are already connected!");
+                    Debug.LogError("[LMP]: Cannot connect when we are already connected!");
                 }
             }
             catch (Exception)
@@ -114,14 +114,14 @@ namespace LunaClient.Network
 
                 if (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Disconnected)
                 {
-                    Debug.Log("Connected to " + destination.Address + " port " + destination.Port);
+                    Debug.Log("[LMP]: Connected to " + destination.Address + " port " + destination.Port);
                     MainSystem.Singleton.Status = "Connected";
                     MainSystem.Singleton.NetworkState = ClientState.CONNECTED;
                     NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg>(new HandshakeRequestMsgData()));
                 }
                 else
                 {
-                    Debug.Log("Failed to connect within the timeout!");
+                    Debug.LogError("[LMP]: Failed to connect within the timeout!");
                     Disconnect("Initial connection timeout");
                 }
             }

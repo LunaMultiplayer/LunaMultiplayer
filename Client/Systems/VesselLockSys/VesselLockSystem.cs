@@ -93,7 +93,7 @@ namespace LunaClient.Systems.VesselLockSys
         /// <summary>
         /// Stop spectating and get control of the given vessel
         /// </summary>
-        public void StopSpectatingAndGetControl(Vessel vessel, bool force = true)
+        public void StopSpectatingAndGetControl(Vessel vessel, bool force)
         {
             LockSystem.Singleton.AcquireLock("update-" + vessel.id, force);
             if (!LockSystem.Singleton.LockIsOurs("control-" + vessel.id))

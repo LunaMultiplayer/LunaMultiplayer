@@ -19,7 +19,7 @@ namespace LunaClient.Systems.Chat.Command
                     commandArgs = commandArgs.Substring(1);
                 if (!ChatSystem.Singleton.JoinedChannels.Contains(commandArgs))
                 {
-                    Debug.Log("Joining Channel " + commandArgs);
+                    Debug.Log("[LMP]: Joining Channel " + commandArgs);
                     ChatSystem.Singleton.JoinedChannels.Add(commandArgs);
                     ChatSystem.Singleton.SelectedChannel = commandArgs;
                     ChatSystem.Singleton.SelectedPmChannel = null;

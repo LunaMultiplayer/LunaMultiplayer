@@ -47,12 +47,12 @@ namespace LunaClient.Systems.VesselRemoveSys
                         ScreenMessages.PostScreenMessage("Kicked to tracking station, a player docked with you but they were not loaded into the game.");
                     }
                 }
-                Debug.Log("Removing docked vessel: " + vesselId);
+                Debug.Log($"[LMP]: Removing docked vessel: {vesselId}");
                 System.KillVessel(vessel);
             }
             else
             {
-                Debug.Log("Removing vessel: " + vesselId);
+                Debug.Log($"[LMP]: Removing vessel: {vesselId}");
                 System.KillVessel(vessel);
             }
         }

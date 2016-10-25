@@ -81,7 +81,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
                 if (killVessel != null)
                 {
-                    Debug.Log("Killing vessel: " + killVessel.id);
+                    Debug.Log($"[LMP]: Killing vessel {killVessel.id}");
 
                     //Try to unload the vessel first.
                     if (killVessel.loaded)
@@ -92,7 +92,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                         }
                         catch (Exception unloadException)
                         {
-                            Debug.Log("Error unloading vessel: " + unloadException);
+                            Debug.LogError("[LMP]: Error unloading vessel: " + unloadException);
                         }
                     }
 
@@ -107,7 +107,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                     }
                     catch (Exception e)
                     {
-                        Debug.Log($"Error removing kerbals from vessel: {e}");
+                        Debug.LogError($"[LMP]: Error removing kerbals from vessel: {e}");
                     }
 
                     yield return null; //Resume on next frame
@@ -118,7 +118,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                     }
                     catch (Exception killException)
                     {
-                        Debug.Log("Error destroying vessel: " + killException);
+                        Debug.LogError("[LMP]: Error destroying vessel: " + killException);
                     }
 
                     yield return null; //Resume on next frame
@@ -130,7 +130,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                     }
                     catch (Exception destroyException)
                     {
-                        Debug.Log("Error destroying vessel from the scenario: " + destroyException);
+                        Debug.LogError("[LMP]: Error destroying vessel from the scenario: " + destroyException);
                     }
 
                     if (FlightGlobals.Vessels.Contains(killVessel) && (killVessel.state != Vessel.State.DEAD))
@@ -151,7 +151,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         private IEnumerator CheckVesselsToKill()
         {
-            var seconds =new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselKillCheckMsInterval).TotalSeconds);
+            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselKillCheckMsInterval).TotalSeconds);
             while (true)
             {
                 try

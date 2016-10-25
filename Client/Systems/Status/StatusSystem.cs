@@ -75,11 +75,11 @@ namespace LunaClient.Systems.Status
             if (PlayerStatusList.ContainsKey(playerToRemove))
             {
                 PlayerStatusList.Remove(playerToRemove);
-                Debug.Log("Removed " + playerToRemove + " from Status list");
+                Debug.Log($"[LMP]: Removed {playerToRemove} from Status list");
             }
             else
             {
-                Debug.Log("Cannot remove non-existant player " + playerToRemove);
+                Debug.LogError("[LMP]: Cannot remove non-existant player " + playerToRemove);
             }
         }
 

@@ -45,7 +45,7 @@ namespace LunaClient.Base
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("Error handling Message type " + msgData.GetType() + ", exception: " + e);
+                    Debug.LogError("[LMP]: Error handling Message type " + msgData.GetType() + ", exception: " + e);
                     NetworkConnection.Disconnect("Error handling " + msgData.GetType() + " Message");
                 }
             }

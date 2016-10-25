@@ -23,7 +23,7 @@ namespace LunaClient.Systems.KerbalSys
             if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
             {
                 //Don't send tourists
-                Debug.Log("Skipping sending of tourist: " + pcm.name);
+                Debug.Log($"[LMP]: Skipping sending of tourist: {pcm.name}");
                 return;
             }
 
@@ -32,7 +32,7 @@ namespace LunaClient.Systems.KerbalSys
             var kerbalBytes = ConfigNodeSerializer.Singleton.Serialize(kerbalNode);
             if ((kerbalBytes == null) || (kerbalBytes.Length == 0))
             {
-                Debug.Log("VesselWorker: Error sending kerbal - bytes are null or 0");
+                Debug.Log("[LMP]: VesselWorker: Error sending kerbal - bytes are null or 0");
                 return;
             }
             var kerbalHash = Common.CalculateSha256Hash(kerbalBytes);
@@ -40,12 +40,12 @@ namespace LunaClient.Systems.KerbalSys
             if (!System.ServerKerbals.ContainsKey(pcm.name))
             {
                 //New kerbal
-                Debug.Log("Found new kerbal, sending...");
+                Debug.Log("[LMP]: Found new kerbal, sending...");
                 kerbalDifferent = true;
             }
             else if (System.ServerKerbals[pcm.name] != kerbalHash)
             {
-                Debug.Log("Found changed kerbal (" + pcm.name + "), sending...");
+                Debug.Log($"[LMP]: Found changed kerbal ({pcm.name}), sending...");
                 kerbalDifferent = true;
             }
             if (kerbalDifferent)
@@ -83,7 +83,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             if ((kerbalBytes != null) && (kerbalBytes.Length > 0))
             {
-                Debug.Log("Sending kerbal " + kerbalName);
+                Debug.Log("[LMP]: Sending kerbal {kerbalName}");
                 var msgData = new KerbalProtoMsgData
                 {
                     KerbalName = kerbalName,
@@ -94,7 +94,7 @@ namespace LunaClient.Systems.KerbalSys
             }
             else
             {
-                Debug.Log("Failed to create byte[] data for kerbal " + kerbalName);
+                Debug.LogError($"[LMP]: Failed to create byte[] data for kerbal {kerbalName}");
             }
         }
     }

@@ -44,18 +44,18 @@ namespace LunaClient.Utilities
 
         public void ExpireCache()
         {
-            Debug.Log("Expiring cache!");
+            Debug.Log("[LMP]: Expiring cache!");
             //No folder, no delete.
             if (!Directory.Exists(CommonUtil.CombinePaths(CacheDirectory, "Incoming")))
             {
-                Debug.Log("No sync cache folder, skipping expire.");
+                Debug.Log("[LMP]: No sync cache folder, skipping expire.");
                 return;
             }
             //Delete partial incoming files
             var incomingFiles = Directory.GetFiles(CommonUtil.CombinePaths(CacheDirectory, "Incoming"));
             foreach (var incomingFile in incomingFiles)
             {
-                Debug.Log("Deleting partially cached object " + incomingFile);
+                Debug.Log($"[LMP]: Deleting partially cached object {incomingFile}");
                 File.Delete(incomingFile);
             }
             //Delete old files
@@ -67,7 +67,7 @@ namespace LunaClient.Utilities
                 //If the file is older than a week, delete it.
                 if (File.GetCreationTime(cacheFile).AddDays(7d) < DateTime.Now)
                 {
-                    Debug.Log("Deleting cached object " + cacheObject + ", reason: Expired!");
+                    Debug.Log($"[LMP]: Deleting cached object {cacheObject}, reason: Expired!");
                     File.Delete(cacheFile);
                 }
                 else
@@ -90,7 +90,7 @@ namespace LunaClient.Utilities
                     if (testFile.Value < FileCreationTimes[deleteObject])
                         deleteObject = testFile.Key;
                 }
-                Debug.Log("Deleting cached object " + deleteObject + ", reason: Cache full!");
+                Debug.Log($"[LMP]: Deleting cached object {deleteObject}, reason: Cache full!");
                 var deleteFile = CommonUtil.CombinePaths(CacheDirectory, deleteObject + ".txt");
                 File.Delete(deleteFile);
                 CurrentCacheSize -= FileLengths[deleteObject];
@@ -121,7 +121,7 @@ namespace LunaClient.Utilities
 
         public void DeleteCache()
         {
-            Debug.Log("Deleting cache!");
+            Debug.Log("[LMP]: Deleting cache!");
             foreach (var cacheFile in GetCachedFiles())
                 File.Delete(cacheFile);
             FileLengths.Clear();

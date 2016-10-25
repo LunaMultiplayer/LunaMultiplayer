@@ -47,7 +47,7 @@ namespace LunaClient.Systems.VesselDockSys
 
             if ((dockedVessel != null) && !dockedVessel.packed)
             {
-                Debug.Log("Sending docked protovessel {dockedVessel.id}");
+                Debug.Log("[LMP]: Sending docked protovessel {dockedVessel.id}");
                 
                 //Send the new vessel
                 VesselProtoSystem.Singleton.CurrentVesselSent = false;
@@ -63,7 +63,7 @@ namespace LunaClient.Systems.VesselDockSys
                     DockingMessage.duration = 0f;
 
                 DockingMessage = ScreenMessages.PostScreenMessage("Docked!", 3f, ScreenMessageStyle.UPPER_CENTER);
-                Debug.Log("Docking event over!");
+                Debug.Log("[LMP]: Docking event over!");
             }
         }
     }

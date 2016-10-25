@@ -11,7 +11,7 @@ namespace LunaClient.Systems.VesselDockSys
     {
         public void OnVesselDock(GameEvents.FromToAction<Part, Part> partAction)
         {
-            Debug.Log("Vessel docking detected!");
+            Debug.Log("[LMP]: Vessel docking detected!");
             if (!VesselLockSystem.Singleton.IsSpectating)
             {
                 if ((partAction.from.vessel != null) && (partAction.to.vessel != null))
@@ -24,17 +24,17 @@ namespace LunaClient.Systems.VesselDockSys
                     if (fromVesselUpdateLockIsOurs || toVesselUpdateLockIsOurs || !fromVesselUpdateLockExists || !toVesselUpdateLockExists)
                     {
                         if (FlightGlobals.ActiveVessel != null)
-                            Debug.Log($"Vessel docking, our vessel: {VesselCommon.CurrentVesselId}");
+                            Debug.Log($"[LMP]: Vessel docking, our vessel: {VesselCommon.CurrentVesselId}");
 
-                        Debug.Log($"Vessel docking, from: {partAction.from.vessel.id}, Name: {partAction.from.vessel.vesselName}");
-                        Debug.Log($"Vessel docking, to: {partAction.to.vessel.id}, Name: {partAction.to.vessel.vesselName}");
+                        Debug.Log($"[LMP]: Vessel docking, from: {partAction.from.vessel.id}, Name: {partAction.from.vessel.vesselName}");
+                        Debug.Log($"[LMP]: Vessel docking, to: {partAction.to.vessel.id}, Name: {partAction.to.vessel.vesselName}");
                         
                         System.PrintDockingInProgress();
                         System.HandleDocking(partAction.from.vessel.id, partAction.to.vessel.id);
                     }
                     else
                     {
-                        Debug.Log("Inconsistent docking state detected, killing both vessels if possible.");
+                        Debug.Log("[LMP]: Inconsistent docking state detected, killing both vessels if possible.");
                         if (partAction.from.vessel != FlightGlobals.ActiveVessel)
                             VesselRemoveSystem.Singleton.KillVessel(partAction.from.vessel);
                         if (partAction.to.vessel != FlightGlobals.ActiveVessel)
@@ -44,17 +44,17 @@ namespace LunaClient.Systems.VesselDockSys
             }
             else
             {
-                Debug.Log("Spectator docking happened. This needs to be fixed later.");
+                Debug.Log("[LMP]: Spectator docking happened. This needs to be fixed later.");
             }
         }
 
         public void OnCrewBoard(GameEvents.FromToAction<Part, Part> partAction)
         {
-            Debug.Log("Crew boarding detected!");
+            Debug.Log("[LMP]: Crew boarding detected!");
             if (!VesselLockSystem.Singleton.IsSpectating)
             {
-                Debug.Log($"EVA Boarding, from: {partAction.from.vessel.id }, Name: {partAction.from.vessel.vesselName}");
-                Debug.Log($"EVA Boarding, to: {partAction.to.vessel.id}, Name: {partAction.to.vessel.vesselName}");
+                Debug.Log($"[LMP]: EVA Boarding, from: {partAction.from.vessel.id }, Name: {partAction.from.vessel.vesselName}");
+                Debug.Log($"[LMP]: EVA Boarding, to: {partAction.to.vessel.id}, Name: {partAction.to.vessel.vesselName}");
 
                 System.HandleDocking(partAction.from.vessel.id, partAction.to.vessel.id);
             }

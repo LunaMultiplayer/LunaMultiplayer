@@ -85,7 +85,7 @@ namespace LunaClient.Network
             }
             catch (Exception e)
             {
-                Debug.LogError($"Invalid server list reply msg: {e}");
+                Debug.LogError($"[LMP]: Invalid server list reply msg: {e}");
             }
         }
 
@@ -105,7 +105,7 @@ namespace LunaClient.Network
                 InternalEndpoint = Common.StringFromEndpoint(ownEndpoint)
             });
 
-            Debug.Log($"Sending NAT introduction to server. Token: {token}");
+            Debug.Log($"[LMP]: Sending NAT introduction to server. Token: {token}");
             NetworkSender.QueueOutgoingMessage(introduceMsg);
         }
 
@@ -117,12 +117,12 @@ namespace LunaClient.Network
             try
             {
                 var token = msg.ReadString();
-                Debug.Log($"Nat introduction success to {msg.SenderEndPoint} token is: {token}");
+                Debug.Log($"[LMP]: Nat introduction success to {msg.SenderEndPoint} token is: {token}");
                 NetworkConnection.ConnectToServer(msg.SenderEndPoint.Address.ToString(), msg.SenderEndPoint.Port);
             }
             catch (Exception e)
             {
-                Debug.Log($"Error handling NAT introduction: {e}");
+                Debug.LogError($"[LMP]: Error handling NAT introduction: {e}");
             }
         }
 

@@ -47,7 +47,7 @@ namespace LunaClient.Systems.Handshake
             }
             catch (Exception e)
             {
-                Debug.Log("Error handling HANDSHAKE_CHALLANGE Message, exception: " + e);
+                Debug.LogError($"[LMP]: Error handling HANDSHAKE_CHALLANGE Message, exception: {e}");
             }
         }
 
@@ -70,7 +70,7 @@ namespace LunaClient.Systems.Handshake
             }
             catch (Exception e)
             {
-                Debug.Log("Error handling HANDSHAKE_REPLY Message, exception: " + e);
+                Debug.LogError($"[LMP]: Error handling HANDSHAKE_REPLY Message, exception: {e}");
                 reply = HandshakeReply.MALFORMED_HANDSHAKE;
                 reason = "Incompatible HANDSHAKE_REPLY Message";
             }
@@ -81,13 +81,13 @@ namespace LunaClient.Systems.Handshake
                 {
                     if (ModFileParser.ParseModFile(modFileData))
                     {
-                        Debug.Log("Handshake successful");
+                        Debug.Log("[LMP]: Handshake successful");
                         MainSystem.Singleton.NetworkState = ClientState.AUTHENTICATED;
                     }
                     else
                     {
-                        Debug.LogError("Failed to pass mod validation");
-                        NetworkConnection.Disconnect("Failed mod validation");
+                        Debug.LogError("[LMP]: Failed to pass mod validation");
+                        NetworkConnection.Disconnect("[LMP]: Failed mod validation");
                     }
                 }
                     break;

@@ -12,6 +12,8 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         public void OnSceneChanged(GameScenes data)
         {
+            if (data == GameScenes.FLIGHT) return;
+
             //Always release the update lock and the spectate lock
             LockSystem.Singleton.ReleaseLocksWithPrefix("update-");
             InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
@@ -71,7 +73,7 @@ namespace LunaClient.Systems.VesselLockSys
             if (!LockSystem.Singleton.LockExists("control-" + vessel.id) || LockSystem.Singleton.LockIsOurs("control-" + vessel.id))
             {
                 //We managed to get the ship so set the update lock and in case we don't have the control lock aquire it.
-                System.StopSpectatingAndGetControl(vessel);
+                System.StopSpectatingAndGetControl(vessel, true);
             }
             else
             {

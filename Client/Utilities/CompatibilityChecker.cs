@@ -110,14 +110,11 @@ namespace LunaClient.Utilities
                         catch (Exception e)
                         {
                             // If a mod throws an exception from IsCompatible, it's not compatible.
-                            Debug.LogWarning(
-                                string.Format(
-                                    "[CompatibilityChecker] Exception while invoking IsCompatible() from '{0}':\n\n{1}",
-                                    m.DeclaringType.Assembly.GetName().Name, e));
+                            Debug.LogWarning($"[CompatibilityChecker] Exception while invoking IsCompatible() from '{m.DeclaringType?.Assembly.GetName().Name}':\n\n{e}");
                             return true;
                         }
                     })
-                    .Select(m => m.DeclaringType.Assembly.GetName().Name)
+                    .Select(m => m.DeclaringType?.Assembly.GetName().Name)
                     .ToArray();
 
             // A mod is incompatible with Unity if its compatibility checker has an IsUnityCompatible method which returns false.
@@ -136,14 +133,11 @@ namespace LunaClient.Utilities
                         catch (Exception e)
                         {
                             // If a mod throws an exception from IsUnityCompatible, it's not compatible.
-                            Debug.LogWarning(
-                                string.Format(
-                                    "[CompatibilityChecker] Exception while invoking IsUnityCompatible() from '{0}':\n\n{1}",
-                                    m.DeclaringType.Assembly.GetName().Name, e));
+                            Debug.LogWarning($"[CompatibilityChecker] Exception while invoking IsUnityCompatible() from '{m.DeclaringType?.Assembly.GetName().Name}':\n\n{e}");
                             return true;
                         }
                     })
-                    .Select(m => m.DeclaringType.Assembly.GetName().Name)
+                    .Select(m => m.DeclaringType?.Assembly.GetName().Name)
                     .ToArray();
 
             Array.Sort(incompatible);

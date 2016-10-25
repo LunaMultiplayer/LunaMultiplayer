@@ -170,7 +170,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             var bannedPartsStr = bannedParts.Aggregate("", (current, bannedPart) => current + (bannedPart + "\n"));
 
-            Debug.Log($"Checked vessel {checkVessel.id } for banned parts, is ok: {bannedParts.Length == 0}");
+            Debug.Log($"[LMP]: Checked vessel {checkVessel.id } for banned parts, is ok: {bannedParts.Length == 0}");
 
             return bannedPartsStr;
         }

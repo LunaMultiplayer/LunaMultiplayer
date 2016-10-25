@@ -27,7 +27,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (data.id == FlightGlobals.ActiveVessel.id && !VesselLockSystem.Singleton.IsSpectating)
             {
                 //Vessel has been modified so send the new vessel
-                System.CurrentVesselSent = false;
+                //System.CurrentVesselSent = false;
             }
         }
     }

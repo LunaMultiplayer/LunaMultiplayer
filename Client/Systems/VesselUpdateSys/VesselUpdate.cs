@@ -178,7 +178,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
             catch (Exception e)
             {
-                Debug.Log("Failed to get vessel update, exception: " + e);
+                Debug.Log($"[LMP]: Failed to get vessel update, exception: {e}");
                 return null;
             }
         }
@@ -335,6 +335,8 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             try
             {
+                if (Vessel == null || percentage > 1) return;
+
                 ApplyRotationInterpolation(percentage);
 
                 if (IsSurfaceUpdate)
@@ -356,7 +358,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         private void ApplyControlState(float percentage)
         {
             if (!VesselLockSystem.Singleton.IsSpectating)
-                Vessel.ctrlState.CopyFrom(FlightState);
+                Vessel?.ctrlState.CopyFrom(FlightState);
             else
             {
                 //We are spectating so move the throttle slider smoothly with a lerp...
@@ -370,8 +372,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         private void ApplyRotationInterpolation(float interpolationValue)
         {
-            if (interpolationValue > 1) return;
-
             var startRot = new Quaternion(Rotation[0], Rotation[1], Rotation[2], Rotation[3]);
             var targetRot = new Quaternion(Target.Rotation[0], Target.Rotation[1], Target.Rotation[2], Target.Rotation[3]);
 
@@ -385,8 +385,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         private void ApplySurfaceInterpolation(float interpolationValue)
         {
-            if (interpolationValue > 1) return;
-
             var startVel = new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
             var targetVel = new Vector3d(Target.Velocity[0], Target.Velocity[1], Target.Velocity[2]);
 
@@ -411,8 +409,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         private void ApplyOrbitInterpolation(float interpolationValue)
         {
-            if (interpolationValue > 1) return;
-
             var startOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
             var targetOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4],
                 Target.Orbit[5], Target.Orbit[6], Body);

@@ -34,7 +34,7 @@ namespace LunaClient.Network
 
         public static void DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway()
         {
-            Debug.Log("Clearing " + InputLockManager.lockStack.Count + " control locks");
+            Debug.Log($"[LMP]: Clearing {InputLockManager.lockStack.Count} control locks");
             InputLockManager.ClearControlLocks();
         }
 
@@ -66,12 +66,12 @@ namespace LunaClient.Network
         {
             if (e.InnerException != null)
             {
-                Debug.LogError("Connection error: " + e.Message + ", " + e.InnerException);
+                Debug.LogError("[LMP]: Connection error: " + e.Message + ", " + e.InnerException);
                 NetworkConnection.Disconnect("Connection error: " + e.Message + ", " + e.InnerException.Message);
             }
             else
             {
-                Debug.LogError("Connection error: " + e);
+                Debug.LogError("[LMP]: Connection error: " + e);
                 NetworkConnection.Disconnect("Connection error: " + e.Message);
             }
         }

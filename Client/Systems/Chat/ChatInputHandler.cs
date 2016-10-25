@@ -41,7 +41,7 @@ namespace LunaClient.Systems.Chat
                         From = SettingsSystem.CurrentSettings.PlayerName,
                         Message = input
                     });
-                    Debug.Log("Server Command: " + input);
+                    Debug.Log("[LMP]: Server Command: " + input);
                 }
                 if (System.SelectedPmChannel != null)
                     System.MessageSender.SendMessage(new ChatPrivateMsgData
@@ -65,12 +65,12 @@ namespace LunaClient.Systems.Chat
                     if (System.RegisteredChatCommands.ContainsKey(commandPart))
                         try
                         {
-                            Debug.Log("Chat Command: " + input.Substring(1));
+                            Debug.Log("[LMP]: Chat Command: " + input.Substring(1));
                             System.RegisteredChatCommands[commandPart].Func(argumentPart);
                         }
                         catch (Exception e)
                         {
-                            Debug.LogError("Error handling chat command " + commandPart + ", Exception " + e);
+                            Debug.LogError("[LMP]: Error handling chat command " + commandPart + ", Exception " + e);
                             System.PrintToSelectedChannel("Error handling chat command: " + commandPart);
                         }
                     else

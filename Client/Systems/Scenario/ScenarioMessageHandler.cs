@@ -35,7 +35,7 @@ namespace LunaClient.Systems.Scenario
                     }
                     else
                     {
-                        Debug.LogError($"Scenario data has been lost for {scenario.Key}");
+                        Debug.LogError($"[LMP]: Scenario data has been lost for {scenario.Key}");
                         ScreenMessages.PostScreenMessage($"Scenario data has been lost for {scenario.Key}", 5f, ScreenMessageStyle.UPPER_CENTER);
                     }
                 }

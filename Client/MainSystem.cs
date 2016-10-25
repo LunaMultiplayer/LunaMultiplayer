@@ -72,8 +72,8 @@ namespace LunaClient
         {
             Profiler.LmpReferenceTime.Start();
             
-            Debug.Log("KSP installed at " + KspPath);
-            Debug.Log("LMP installed at " + AssemblyPath);
+            Debug.Log($"[LMP]: KSP installed at {KspPath}");
+            Debug.Log($"[LMP]: LMP installed at {AssemblyPath}");
 
             if (!SettingsSystem.CurrentSettings.DisclaimerAccepted && HighLogic.LoadedScene == GameScenes.MAINMENU)
             {
@@ -99,7 +99,7 @@ namespace LunaClient
             WindowsHandler.Reset();
 
             HandleCommandLineArgs();
-            Debug.Log("LunaMultiPlayer " + VersionInfo.VersionNumber + " Initialized!");
+            Debug.Log($"[LMP]: LunaMultiPlayer {VersionInfo.VersionNumber} Initialized!");
         }
 
         public override void Update()
@@ -155,7 +155,7 @@ namespace LunaClient
 
                     if (HighLogic.CurrentGame.flagURL != SettingsSystem.CurrentSettings.SelectedFlag)
                     {
-                        Debug.Log("Saving Selected flag");
+                        Debug.Log("[LMP]: Saving Selected flag");
                         SettingsSystem.CurrentSettings.SelectedFlag = HighLogic.CurrentGame.flagURL;
                         SettingsSystem.Singleton.SaveSettings();
                         FlagSystem.Singleton.FlagChangeEvent = true;
@@ -275,7 +275,7 @@ namespace LunaClient
 
         public void HandleException(Exception e, string eventName)
         {
-            Debug.Log($"Threw in {eventName} event, exception: " + e);
+            Debug.LogError($"[LMP]: Threw in {eventName} event, exception: " + e);
             NetworkConnection.Disconnect($"Unhandled error in main system! Detail: {eventName}");
             Reset();
         }
@@ -404,13 +404,13 @@ namespace LunaClient
 
             //This only makes KSP complain
             HighLogic.CurrentGame.CrewRoster.ValidateAssignments(HighLogic.CurrentGame);
-            Debug.Log("Starting " + SettingsSystem.ServerSettings.GameMode + " game...");
+            Debug.Log("[LMP]: Starting " + SettingsSystem.ServerSettings.GameMode + " game...");
 
             //.Start() seems to stupidly .Load() somewhere - Let's overwrite it so it loads correctly.
             GamePersistence.SaveGame(HighLogic.CurrentGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
             HighLogic.CurrentGame.Start();
             ChatWindow.Singleton.Display = true;
-            Debug.Log("Started!");
+            Debug.Log("[LMP]: Started!");
         }
 
 
@@ -488,11 +488,11 @@ namespace LunaClient
                 if (valid)
                 {
                     CommandLineServer = new ServerEntry { Address = address, Port = port };
-                    Debug.Log("Connecting via command line to: " + address + ", port: " + port);
+                    Debug.Log("[LMP]: Connecting via command line to: " + address + ", port: " + port);
                 }
                 else
                 {
-                    Debug.LogError("Command line address is invalid: " + address + ", port: " + port);
+                    Debug.LogError("[LMP]: Command line address is invalid: " + address + ", port: " + port);
                 }
             }
         }
@@ -526,7 +526,7 @@ namespace LunaClient
             var persistentFile = CommonUtil.CombinePaths(Client.KspPath, "saves", "LunaMultiPlayer", "persistent.sfs");
             if (!File.Exists(persistentFile))
             {
-                Debug.Log("Creating new blank persistent.sfs file");
+                Debug.Log("[LMP]: Creating new blank persistent.sfs file");
                 var blankGame = CreateBlankGame();
                 HighLogic.SaveFolder = "LunaMultiPlayer";
                 GamePersistence.SaveGame(blankGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);

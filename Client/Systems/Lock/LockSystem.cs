@@ -76,7 +76,7 @@ namespace LunaClient.Systems.Lock
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("Error thrown in acquire lock event, exception " + e);
+                    Debug.LogError($"[LMP]: Error thrown in acquire lock event, exception {e}");
                 }
             }
         }
@@ -95,7 +95,7 @@ namespace LunaClient.Systems.Lock
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("Error thrown in release lock event, exception " + e);
+                    Debug.LogError($"[LMP]: Error thrown in release lock event, exception {e}");
                 }
             }
         }

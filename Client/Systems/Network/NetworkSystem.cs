@@ -43,7 +43,7 @@ namespace LunaClient.Systems.Network
                     MainSystem.Singleton.NetworkState = ClientState.TIME_SYNCING;
                     break;
                 case ClientState.TIME_SYNCING:
-                    Debug.Log("Sending time sync!");
+                    Debug.Log("[LMP]: Sending time sync!");
                     MainSystem.Singleton.Status = "Handshaking successful, syncing server clock";
                     if (TimeSyncerSystem.Singleton.Synced)
                         MainSystem.Singleton.NetworkState = ClientState.TIME_SYNCED;
@@ -51,7 +51,7 @@ namespace LunaClient.Systems.Network
                         TimeSyncerSystem.Singleton.MessageSender.SendTimeSyncRequest();
                     break;
                 case ClientState.TIME_SYNCED:
-                    Debug.Log("Time Synced!");
+                    Debug.Log("[LMP]: Time Synced!");
                     NetworkSimpleMessageSender.SendKerbalsRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_KERBALS;
                     break;
@@ -140,7 +140,7 @@ namespace LunaClient.Systems.Network
                     MainSystem.Singleton.Status = "Syncing vessels";
                     break;
                 case ClientState.VESSELS_SYNCED:
-                    Debug.Log("Vessels Synced!");
+                    Debug.Log("[LMP]: Vessels Synced!");
                     MainSystem.Singleton.Status = "Syncing universe time";
                     MainSystem.Singleton.NetworkState = ClientState.TIME_LOCKING;
                     TimeSyncerSystem.Singleton.Enabled = true;
@@ -154,8 +154,8 @@ namespace LunaClient.Systems.Network
                 case ClientState.TIME_LOCKING:
                     if (TimeSyncerSystem.Singleton.Synced)
                     {
-                        Debug.Log("Time Locked!");
-                        Debug.Log("Starting Game!");
+                        Debug.Log("[LMP]: Time Locked!");
+                        Debug.Log("[LMP]: Starting Game!");
                         MainSystem.Singleton.Status = "Starting game";
                         MainSystem.Singleton.NetworkState = ClientState.TIME_LOCKED;
                         MainSystem.Singleton.StartGame = true;

@@ -37,7 +37,7 @@ namespace LunaClient.Systems.SettingsSys
 
             if (!File.Exists(BackupSettingsFilePath))
             {
-                Debug.Log("Backing up player token and settings file!");
+                Debug.Log("[LMP]: Backing up player token and settings file!");
                 File.Copy(SettingsFilePath, BackupSettingsFilePath);
             }
 
@@ -111,7 +111,7 @@ namespace LunaClient.Systems.SettingsSys
         {
             if (File.Exists(BackupSettingsFilePath) && !File.Exists(SettingsFilePath))
             {
-                Debug.Log("Restoring player settings file!");
+                Debug.Log("[LMP]: Restoring player settings file!");
                 File.Copy(BackupSettingsFilePath, SettingsFilePath);
             }
         }

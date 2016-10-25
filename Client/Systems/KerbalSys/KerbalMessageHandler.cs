@@ -32,10 +32,10 @@ namespace LunaClient.Systems.KerbalSys
                 if (kerbalNode != null)
                     QueueKerbal(planetTime, kerbal.Key, kerbalNode);
                 else
-                    Debug.LogError("Failed to load kerbal!");
+                    Debug.LogError("[LMP]: Failed to load kerbal!");
             }
 
-            Debug.Log("Kerbals Synced!");
+            Debug.Log("[LMP]: Kerbals Synced!");
             MainSystem.Singleton.NetworkState = ClientState.KERBALS_SYNCED;
         }
 

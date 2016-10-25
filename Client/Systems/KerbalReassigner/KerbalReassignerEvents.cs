@@ -20,9 +20,9 @@ namespace LunaClient.Systems.KerbalReassigner
                     System.VesselToKerbal[vessel.id].Add(protoCrewMember.name);
                     if (System.KerbalToVessel.ContainsKey(protoCrewMember.name) &&
                         (System.KerbalToVessel[protoCrewMember.name] != vessel.id))
-                        Debug.Log("Warning, kerbal double take on " + vessel.id + " ( " + vessel.name + " )");
+                        Debug.LogWarning($"[LMP]: Warning, kerbal double take on {vessel.id} ({vessel.name})");
                     System.KerbalToVessel[protoCrewMember.name] = vessel.id;
-                    Debug.Log("OVC " + protoCrewMember.name + " belongs to " + vessel.id);
+                    Debug.Log($"[LMP]: OVC {protoCrewMember.name} belongs to {vessel.id}");
                 }
             }
         }

@@ -41,7 +41,7 @@ namespace LunaClient.Systems.Mod
                 var fileHash = Common.CalculateSha256Hash(checkFile);
                 DllList.Add(relativeFilePath, fileHash);
 
-                Debug.Log("Hashed file: " + relativeFilePath + ", hash: " + fileHash);
+                Debug.Log($"[LMP]: Hashed file: {relativeFilePath}, hash: {fileHash}");
             }
         }
 
@@ -95,7 +95,7 @@ namespace LunaClient.Systems.Mod
                                 if (cn == null) continue;
                                 foreach (var partName in cn.GetNodes("PART").Select(p => p.GetValue("Name")))
                                 {
-                                    Debug.Log("Part detected in " + relativeFileName + " , Name: " + partName);
+                                    Debug.Log($"[LMP]: Part detected in {relativeFileName} , Name: {partName}");
                                     modIsRequired = true;
                                     fileIsPartFile = true;
                                     partsList.Add(partName.Replace('_', '.'));
@@ -136,15 +136,15 @@ namespace LunaClient.Systems.Mod
 
         public void CheckCommonStockParts()
         {
-            Debug.Log("Missing parts start");
+            Debug.Log("[LMP]: Missing parts start");
             var missingParts = PartLoader.LoadedPartsList.Where(p => !Common.GetStockParts().Contains(p.name)).ToList();
 
             foreach (var part in missingParts)
             {
-                Debug.Log("Missing '" + part.name + "'");
+                Debug.Log($"[LMP]: Missing '{part.name}'");
             }
 
-            Debug.Log("Missing parts end");
+            Debug.Log("[LMP]: Missing parts end");
 
             if (missingParts.Any())
                 ScreenMessages.PostScreenMessage(

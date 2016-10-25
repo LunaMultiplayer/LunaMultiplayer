@@ -4,14 +4,10 @@ using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.KerbalReassigner;
-using LunaClient.Systems.Network;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Message.Client;
-using LunaCommon.Message.Data;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using LunaCommon.Message.Types;
 using UniLinq;
 using UnityEngine;
 
@@ -32,13 +28,13 @@ namespace LunaClient.Systems.VesselProtoSys
 
             SendVesselProtoMessage(vessel);
         }
-        
+
         public void SendVesselProtoMessage(ProtoVessel vessel)
         {
             //Defend against NaN orbits
             if (VesselHasNaNPosition(vessel))
             {
-                Debug.Log("Vessel " + vessel.vesselID + " has NaN position");
+                Debug.Log($"[LMP]: Vessel {vessel.vesselID} has NaN position");
                 return;
             }
 
@@ -46,12 +42,21 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 //Remove tourists from the vessel
                 //TODO: Probably this can be done in the CleanUpVesselNode method
-                foreach (var pcm in pps.protoModuleCrew.Where(pcm => pcm.type == ProtoCrewMember.KerbalType.Tourist).ToArray())
+                foreach (var pcm in
+                    pps.protoModuleCrew.Where(pcm => pcm.type == ProtoCrewMember.KerbalType.Tourist).ToArray())
                     pps.protoModuleCrew.Remove(pcm);
             }
 
             var vesselNode = new ConfigNode();
-            vessel.Save(vesselNode);
+            try
+            {
+                vessel.Save(vesselNode);
+            }
+            catch (Exception)
+            {
+                Debug.LogError("[LMP]: Error while saving vessel");
+                return;
+            }
 
             //Clean up the vessel so we send only the important data
             CleanUpVesselNode(vesselNode, vessel.vesselID);
@@ -63,7 +68,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (vesselBytes.Length > 0)
             {
                 UniverseSyncCache.Singleton.QueueToCache(vesselBytes);
-                Debug.Log($"Sending vessel {vessel.vesselID}, Name {vessel.vesselName}, type: {vessel.vesselType}, size: {vesselBytes.Length}");
+                Debug.Log($"[LMP]: Sending vessel {vessel.vesselID}, Name {vessel.vesselName}, type: {vessel.vesselType}, size: {vesselBytes.Length}");
 
                 SendMessage(new VesselProtoMsgData
                 {
@@ -73,7 +78,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             else
             {
-                Debug.LogError("Failed to create byte[] data for " + vessel.vesselID);
+                Debug.LogError($"[LMP]: Failed to create byte[] data for {vessel.vesselID}");
             }
         }
 
@@ -142,7 +147,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     var valueDodge = DodgeValueIfNeeded(valueCurrent);
                     if (valueCurrent != valueDodge)
                     {
-                        Debug.Log("Dodged actiongroup " + keyName);
+                        Debug.Log($"[LMP]: Dodged actiongroup {keyName}");
                         actiongroupNode.SetValue(keyName, valueDodge);
                     }
                 }
