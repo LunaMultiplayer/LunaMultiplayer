@@ -19,6 +19,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         public VesselUpdate Target { get; set; }
         public Guid Id { get; set; }
         public int Stage { get; set; }
+        public double PlanetTime { get; set; }
 
         #region Vessel parts information fields
 
@@ -69,6 +70,8 @@ namespace LunaClient.Systems.VesselUpdateSys
         #region Private fields
 
         private float _interpolationDuration;
+        private double PlanetariumDifference => Planetarium.GetUniversalTime() - PlanetTime;
+        private const float PlanetariumDifferenceLimit = 3f;
 
         #endregion
 
@@ -90,6 +93,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                 var returnUpdate = new VesselUpdate
                 {
                     VesselId = vessel.id,
+                    PlanetTime = Planetarium.GetUniversalTime(),
                     ActiveEngines = engines.Where(e => e.EngineIgnited)
                         .Select(e => e.part.craftID).ToArray(),
                     StoppedEngines = engines.Where(e => !e.EngineIgnited)
@@ -180,6 +184,11 @@ namespace LunaClient.Systems.VesselUpdateSys
                 Debug.Log($"[LMP]: Failed to get vessel update, exception: {e}");
                 return null;
             }
+        }
+
+        public VesselUpdate Clone()
+        {
+            return MemberwiseClone() as VesselUpdate;
         }
 
         #endregion
@@ -316,9 +325,10 @@ namespace LunaClient.Systems.VesselUpdateSys
                     }
 
                     //Here we use the interpolation facor to make the interpolation duration 
-                    //shorter or longer depending on the amount of updates we have in queue
-                    _interpolationDuration = Target.SentTime - SentTime -
-                                             VesselUpdateInterpolationSystem.GetInterpolationFactor(VesselId);
+                    //shorter or longer depending on the amount of updates we have in queue.
+                    //We never exceed the MaxSInterpolationTime
+                    _interpolationDuration = Target.SentTime - SentTime - VesselUpdateInterpolationSystem.GetInterpolationFactor(VesselId);
+                    _interpolationDuration = Mathf.Clamp(_interpolationDuration, 0, VesselUpdateInterpolationSystem.MaxSInterpolationTime);
                 }
             }
             catch (Exception e)
@@ -384,27 +394,59 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         private void ApplySurfaceInterpolation(float interpolationValue)
         {
-            var startVel = new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
-            var targetVel = new Vector3d(Target.Velocity[0], Target.Velocity[1], Target.Velocity[2]);
-
-            var startAcc = new Vector3d(Acceleration[0], Acceleration[1], Acceleration[2]);
-            var targetAcc = new Vector3d(Target.Acceleration[0], Target.Acceleration[1], Target.Acceleration[2]);
-
-            var startPos = Body.GetWorldSurfacePosition(Position[0], Position[1], Position[2]);
-            var targetPos = Body.GetWorldSurfacePosition(Target.Position[0], Target.Position[1], Target.Position[2]);
-
+            var currentAcc = GetInterpolatedAcceleration(interpolationValue);
+            var currentVelocity = GetInterpolatedVelocity(interpolationValue, currentAcc);
+            var currentPosition = GetInterpolatedPosition(interpolationValue, currentVelocity, currentAcc);
+            
             var radarAlt = Lerp(Position[3], Target.Position[3], interpolationValue);
-
-            Vector3d currentVelocity = Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, interpolationValue);
-            Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
-            Vector3d currentPosition = Vector3d.Lerp(startPos, targetPos, interpolationValue);
-
+            
             Vessel.SetPosition(currentPosition);
             Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
             Vessel.acceleration = currentAcc;
 
-            if (radarAlt < 10) //Only apply radar altitude for vessels on the ground
-                Vessel.radarAltitude = radarAlt;
+            Vessel.radarAltitude = radarAlt;
+        }
+
+        /// <summary>
+        /// Here we get the interpolated position. we should use a fudge as the position we 
+        /// are seeing is the position IN THE PAST but ti's too difficult...
+        /// </summary>
+        private Vector3d GetInterpolatedPosition(float interpolationValue, Vector3d currentVelocity, Vector3d currentAcc)
+        {
+            var startPos = Body.GetWorldSurfacePosition(Position[0], Position[1], Position[2]);
+            var targetPos = Body.GetWorldSurfacePosition(Target.Position[0], Target.Position[1], Target.Position[2]);
+
+            //Use the average velocity to determine the new position
+            //Displacement = v0*t + 1/2at^2.
+            //var positionFudge = (currentVelocity*PlanetariumDifference) + (0.5d*currentAcc*PlanetariumDifference*PlanetariumDifference);
+
+            return Vector3d.Lerp(startPos, targetPos, interpolationValue);
+            //return Vector3d.Lerp(startPos + positionFudge, targetPos, interpolationValue);
+        }
+
+        /// <summary>
+        /// Here we get the interpolated velocity. We fudge it as we should extrapolate the speed as we are seeing the client IN THE PAST
+        /// </summary>
+        private Vector3d GetInterpolatedVelocity(float interpolationValue, Vector3d acceleration)
+        {
+            var startVel = new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
+            var targetVel = new Vector3d(Target.Velocity[0], Target.Velocity[1], Target.Velocity[2]);
+            
+            //Velocity = a*t
+            var velocityFudge = acceleration*PlanetariumDifference;
+
+            return Body.bodyTransform.rotation*Vector3d.Lerp(startVel + velocityFudge, targetVel, interpolationValue);
+        }
+
+        /// <summary>
+        /// Here we get the interpolated acceleration
+        /// </summary>
+        private Vector3d GetInterpolatedAcceleration(float interpolationValue)
+        {
+            var startAcc = new Vector3d(Acceleration[0], Acceleration[1], Acceleration[2]);
+            var targetAcc = new Vector3d(Target.Acceleration[0], Target.Acceleration[1], Target.Acceleration[2]);
+            Vector3d currentAcc = Body.bodyTransform.rotation*Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
+            return currentAcc;
         }
 
         /// <summary>

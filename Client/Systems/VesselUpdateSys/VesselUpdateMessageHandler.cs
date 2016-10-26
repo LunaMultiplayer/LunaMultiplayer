@@ -28,6 +28,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 Id = Guid.NewGuid(),
                 ReceiveTime = Time.fixedTime,
+                PlanetTime = msgData.PlanetTime,
                 Stage = msgData.Stage,
                 SentTime = msgData.SentTime,
                 ActiveEngines = msgData.ActiveEngines,
@@ -79,6 +80,9 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselUpdate>());
             }
+
+            if (System.ReceivedUpdates[update.VesselId].Count + 1 > VesselUpdateInterpolationSystem.MaxTotalUpdatesInQueue)
+                System.ReceivedUpdates[update.VesselId].Dequeue();
 
             System.ReceivedUpdates[update.VesselId].Enqueue(update);
         }

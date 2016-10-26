@@ -23,6 +23,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 SentTime = Time.fixedTime,
                 Stage = update.Stage,
+                PlanetTime = update.PlanetTime,
                 ActiveEngines = update.ActiveEngines,
                 StoppedEngines = update.StoppedEngines,
                 Decouplers = update.Decouplers,

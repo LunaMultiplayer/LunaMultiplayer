@@ -9,6 +9,7 @@ namespace LunaCommon.Message.Data.Vessel
         public Guid VesselId { get; set; }
         public int Stage { get; set; }
         public string BodyName { get; set; }
+        public double PlanetTime { get; set; }
         public uint[] ActiveEngines { get; set; }
         public uint[] StoppedEngines { get; set; }
         public uint[] Decouplers { get; set; }

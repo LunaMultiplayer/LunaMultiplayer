@@ -18,7 +18,8 @@ namespace LunaClient.Systems.VesselUpdateSys
         private const float FactorAdjustValue = 0.05f;
         private const float DefaultFactor = 1.7f;
 
-        private const int MaxTotalUpdatesInQueue = 8;
+        public const int MaxTotalUpdatesInQueue = 8;
+        public const float MaxSInterpolationTime = 0.5f;
         private const int MaxUpdatesInQueue = 4;
         private const int MinUpdatesInQueue = 2;
 
@@ -66,9 +67,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         public void FixedUpdate()
         {
-            foreach (
-                var vesselUpdates in
-                System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
+            foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
             {
                 var success = !CurrentVesselUpdate.ContainsKey(vesselUpdates.Key)
                     ? SetFirstVesselUpdates(GetValidUpdate(vesselUpdates.Key, 0, vesselUpdates.Value))
@@ -98,11 +97,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                     {
                         foreach (var update in System.ReceivedUpdates)
                         {
-                            while (System.GetNumberOfUpdatesInQueue(update.Key) > MaxTotalUpdatesInQueue)
-                            {
-                                System.ReceivedUpdates[update.Key].Dequeue();
-                            }
-
                             if (System.GetNumberOfUpdatesInQueue(update.Key) > MaxUpdatesInQueue)
                                 IncreaseInterpolationFactor(update.Key);
                             else if (System.GetNumberOfUpdatesInQueue(update.Key) < MinUpdatesInQueue)
@@ -214,13 +208,11 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <param name="update"></param>
         private bool SetFirstVesselUpdates(VesselUpdate update)
         {
-            if (update == null) return false;
-
-            var currentPosition = VesselUpdate.CreateFromVesselId(update.VesselId);
-            if (currentPosition != null)
+            var first = update?.Clone();
+            if (first != null)
             {
-                currentPosition.SentTime = update.SentTime - DefaultFactor;
-                CurrentVesselUpdate.Add(update.VesselId, currentPosition);
+                first.SentTime = update.SentTime - DefaultFactor;
+                CurrentVesselUpdate.Add(update.VesselId, first);
                 CurrentVesselUpdate[update.VesselId].Target = update;
                 return true;
             }
@@ -238,7 +230,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             else
                 InterpolationLengthFactor[vesselId] += FactorAdjustValue;
 
-            InterpolationLengthFactor[vesselId] = Mathf.Clamp(InterpolationLengthFactor[vesselId], 1, 3);
+            InterpolationLengthFactor[vesselId] = Mathf.Clamp(InterpolationLengthFactor[vesselId], 1, 100);
         }
 
         /// <summary>
@@ -251,7 +243,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             else
                 InterpolationLengthFactor[vesselId] -= FactorAdjustValue;
 
-            InterpolationLengthFactor[vesselId] = Mathf.Clamp(InterpolationLengthFactor[vesselId], 1, 3);
+            InterpolationLengthFactor[vesselId] = Mathf.Clamp(InterpolationLengthFactor[vesselId], 1, 100);
         }
 
         #endregion
