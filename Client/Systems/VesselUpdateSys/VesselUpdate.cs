@@ -403,13 +403,12 @@ namespace LunaClient.Systems.VesselUpdateSys
             Vessel.SetPosition(currentPosition);
             Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
             Vessel.acceleration = currentAcc;
-
             Vessel.radarAltitude = radarAlt;
         }
 
         /// <summary>
         /// Here we get the interpolated position. we should use a fudge as the position we 
-        /// are seeing is the position IN THE PAST but ti's too difficult...
+        /// are seeing is the position IN THE PAST but it's too difficult... The vessel shakes all the time
         /// </summary>
         private Vector3d GetInterpolatedPosition(float interpolationValue, Vector3d currentVelocity, Vector3d currentAcc)
         {

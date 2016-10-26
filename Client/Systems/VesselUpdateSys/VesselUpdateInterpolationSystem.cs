@@ -18,7 +18,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         private const float FactorAdjustValue = 0.05f;
         private const float DefaultFactor = 1.7f;
 
-        public const int MaxTotalUpdatesInQueue = 8;
+        public const int MaxTotalUpdatesInQueue = 5;
         public const float MaxSInterpolationTime = 0.5f;
         private const int MaxUpdatesInQueue = 4;
         private const int MinUpdatesInQueue = 2;
