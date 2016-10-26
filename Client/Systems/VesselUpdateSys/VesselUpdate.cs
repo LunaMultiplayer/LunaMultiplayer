@@ -134,9 +134,10 @@ namespace LunaClient.Systems.VesselUpdateSys
 
                     returnUpdate.Position = new double[]
                     {
-                        vessel.transform.position.x,
-                        vessel.transform.position.y,
-                        vessel.transform.position.z
+                        vessel.latitude,
+                        vessel.longitude,
+                        vessel.altitude,
+                        vessel.radarAltitude
                     };
 
                     Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation)*vessel.srf_velocity;
@@ -389,17 +390,21 @@ namespace LunaClient.Systems.VesselUpdateSys
             var startAcc = new Vector3d(Acceleration[0], Acceleration[1], Acceleration[2]);
             var targetAcc = new Vector3d(Target.Acceleration[0], Target.Acceleration[1], Target.Acceleration[2]);
 
-            var startPos = new Vector3d(Position[0], Position[1], Position[2]);
-            var targetPos = new Vector3d(Target.Position[0], Target.Position[1], Target.Position[2]);
+            var lat = Lerp(Position[0], Target.Position[0], interpolationValue);
+            var lon = Lerp(Position[1], Target.Position[1], interpolationValue);
+            var alt = Lerp(Position[2], Target.Position[2], interpolationValue);
+            var radarAlt = Lerp(Position[3], Target.Position[3], interpolationValue);
 
             Vector3d currentVelocity = Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, interpolationValue);
             Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
-            Vector3d currentPosition = Vector3d.Lerp(startPos, targetPos, interpolationValue);
+            Vector3d currentPosition = Body.GetWorldSurfacePosition(lat, lon, alt);
 
-            Vessel.SetPosition(currentPosition, true);
-
+            Vessel.SetPosition(currentPosition);
             Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
             Vessel.acceleration = currentAcc;
+
+            if (radarAlt < 10) //Only apply radar altitude for vessels on the ground
+                Vessel.radarAltitude = radarAlt;
         }
 
         /// <summary>
