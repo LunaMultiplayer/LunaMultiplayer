@@ -2,7 +2,6 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
-using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Systems.Asteroid
@@ -13,28 +12,24 @@ namespace LunaClient.Systems.Asteroid
         {
             if (System.Enabled && System.VesselIsAsteroid(checkVessel) && !System.ServerAsteroids.Contains(checkVessel.id.ToString()))
             {
-                lock (System.ServerAsteroidListLock)
+                if (LockSystem.Singleton.LockIsOurs("asteroid"))
                 {
-                    if (LockSystem.Singleton.LockIsOurs("asteroid"))
+                    if (System.GetAsteroidCount() <= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
                     {
-                        if (System.GetAsteroidCount() <= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
-                        {
-                            Debug.Log("[LMP]: Spawned in new server asteroid!");
-                            System.ServerAsteroids.Add(checkVessel.id.ToString());
-                            //TODO change this
-                            VesselProtoSystem.Singleton.MessageSender.SendVesselProtoMessage(checkVessel.protoVessel);
-                        }
-                        else
-                        {
-                            Debug.Log("[LMP]: Killing non-server asteroid " + checkVessel.id);
-                            checkVessel.Die();
-                        }
+                        Debug.Log("[LMP]: Spawned in new server asteroid!");
+                        System.ServerAsteroids.Add(checkVessel.id.ToString());
+                        VesselProtoSystem.Singleton.MessageSender.SendVesselProtoMessage(checkVessel.protoVessel);
                     }
                     else
                     {
-                        Debug.Log($"[LMP]: Killing non-server asteroid {checkVessel.id}, we don't own the asteroid lock");
+                        Debug.Log("[LMP]: Killing non-server asteroid " + checkVessel.id);
                         checkVessel.Die();
                     }
+                }
+                else
+                {
+                    Debug.Log($"[LMP]: Killing non-server asteroid {checkVessel.id}, we don't own the asteroid lock");
+                    checkVessel.Die();
                 }
             }
         }

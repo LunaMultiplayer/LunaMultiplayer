@@ -10,7 +10,43 @@ namespace LunaClient.Base
     {
         #region Fields
         
-        public virtual bool Display { get; set; }
+        private bool _display;
+        public virtual bool Display
+        {
+            get { return _display; }
+            set
+            {
+                if (!_display && value)
+                {
+                    _display = true;
+                    OnDisplay();
+                }
+                else if (_display && !value)
+                {
+                    _display = false;
+                    OnHide();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Override to write code to execute when window is displayed
+        /// </summary>
+        public virtual void OnDisplay()
+        {
+            //Implement your own code
+        }
+
+        /// <summary>
+        /// Override to write code to execute when window is hide
+        /// </summary>
+        public virtual void OnHide()
+        {
+            RemoveWindowLock();
+            //Implement your own code
+        }
+
+
         public bool Initialized { get; set; }
         public bool SafeDisplay { get; set; }
         public bool IsWindowLocked { get; set; }
@@ -50,13 +86,7 @@ namespace LunaClient.Base
         {
             //Implement your own code
         }
-
-        public virtual void Reset()
-        {
-            RemoveWindowLock();
-            //Implement your own code
-        }
-
+        
         public abstract void SetStyles();
         #endregion
     }

@@ -96,7 +96,6 @@ namespace LunaClient
             GameEvents.onShowUI.Add(() => { ShowGui = true; });
 
             SystemsHandler.Reset();
-            WindowsHandler.Reset();
 
             HandleCommandLineArgs();
             Debug.Log($"[LMP]: LunaMultiPlayer {VersionInfo.VersionNumber} Initialized!");
@@ -186,7 +185,6 @@ namespace LunaClient
                 {
                     FireReset = false;
                     SystemsHandler.Reset();
-                    WindowsHandler.Reset();
                 }
 
                 if (StartGame)
@@ -409,7 +407,6 @@ namespace LunaClient
             //.Start() seems to stupidly .Load() somewhere - Let's overwrite it so it loads correctly.
             GamePersistence.SaveGame(HighLogic.CurrentGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
             HighLogic.CurrentGame.Start();
-            ChatWindow.Singleton.Display = true;
             Debug.Log("[LMP]: Started!");
         }
 

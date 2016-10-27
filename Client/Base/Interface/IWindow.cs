@@ -5,7 +5,6 @@
         void Update();
         void SafeUpdate();
         void OnGui();
-        void Reset();
         void RemoveWindowLock();
         void SetStyles();
     }

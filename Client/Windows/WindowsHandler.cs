@@ -28,21 +28,7 @@ namespace LunaClient.Windows
             TryUpdate(UniverseConverterWindow.Singleton);
             TryUpdate(ServerListWindow.Singleton);
         }
-
-        public static void Reset()
-        {
-            OnReset(DisclaimerWindow.Singleton);
-            OnReset(ConnectionWindow.Singleton);
-            OnReset(StatusWindow.Singleton);
-            OnReset(ChatWindow.Singleton);
-            OnReset(CraftLibraryWindow.Singleton);
-            OnReset(DebugWindow.Singleton);
-            OnReset(ModWindow.Singleton);
-            OnReset(OptionsWindow.Singleton);
-            OnReset(UniverseConverterWindow.Singleton);
-            OnReset(ServerListWindow.Singleton);
-        }
-
+        
         public static void OnGui()
         {
             TryOnGui(DisclaimerWindow.Singleton);
@@ -78,18 +64,6 @@ namespace LunaClient.Windows
             catch (Exception e)
             {
                 MainSystem.Singleton.HandleException(e, "WindowsHandler-OnGui");
-            }
-        }
-
-        private static void OnReset(IWindow window)
-        {
-            try
-            {
-                window.Reset();
-            }
-            catch (Exception e)
-            {
-                MainSystem.Singleton.HandleException(e, "WindowsHandler-Reset");
             }
         }
     }

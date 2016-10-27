@@ -45,7 +45,6 @@ namespace LunaClient.Network
                     NetworkMain.ClientConnection.Disconnect(reason);
                     NetworkMain.ClientConnection.Shutdown(reason);
                     NetworkMain.ResetConnectionStaticsAndQueues();
-                    WindowsHandler.Reset();
                 }
             }
             NetworkMain.ClientConnection.Start();

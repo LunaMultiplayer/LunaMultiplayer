@@ -12,6 +12,7 @@ namespace LunaClient.Windows.Status
 
         #region Public
 
+        public override bool Display => MainSystem.Singleton.GameRunning;
         public SubspaceDisplayEntry[] SubspaceDisplay { get; set; }
         public bool DisconnectEventHandled { get; set; } = true;
         public bool ColorEventHandled { get; set; } = true;
@@ -61,13 +62,7 @@ namespace LunaClient.Windows.Status
             }
             CheckWindowLock();
         }
-
-        public override void Reset()
-        {
-            base.Reset();
-            Display = false;
-        }
-
+        
         public override void SetStyles()
         {
             WindowRect = new Rect(Screen.width*0.9f - WindowWidth, Screen.height/2f - WindowHeight/2f, WindowWidth,
@@ -122,7 +117,6 @@ namespace LunaClient.Windows.Status
 
         public override void Update()
         {
-            Display = MainSystem.Singleton.GameRunning;
             if (Display)
             {
                 SafeMinimized = Minmized;

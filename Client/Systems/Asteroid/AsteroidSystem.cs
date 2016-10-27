@@ -35,7 +35,6 @@ namespace LunaClient.Systems.Asteroid
 
         public List<string> ServerAsteroids { get; } = new List<string>();
         public Dictionary<string, string> ServerAsteroidTrackStatus { get; } = new Dictionary<string, string>();
-        public object ServerAsteroidListLock { get; } = new object();
         private AsteroidEventHandler AsteroidEventHandler { get; } = new AsteroidEventHandler();
         
         private const float AsteroidCheckInterval = 5f;
@@ -120,19 +119,16 @@ namespace LunaClient.Systems.Asteroid
         #region Public methods
 
         /// <summary>
-        ///     Registers the server asteroid - Prevents LMP from deleting it.
+        /// Registers the server asteroid - Prevents LMP from deleting it.
         /// </summary>
         /// <param name="asteroidId">Asteroid to register</param>
         public void RegisterServerAsteroid(string asteroidId)
         {
-            lock (ServerAsteroidListLock)
-            {
-                if (!ServerAsteroids.Contains(asteroidId))
-                    ServerAsteroids.Add(asteroidId);
-                //This will ignore Status changes so we don't resend the asteroid.
-                if (ServerAsteroidTrackStatus.ContainsKey(asteroidId))
-                    ServerAsteroidTrackStatus.Remove(asteroidId);
-            }
+            if (!ServerAsteroids.Contains(asteroidId))
+                ServerAsteroids.Add(asteroidId);
+            //This will ignore Status changes so we don't resend the asteroid.
+            if (ServerAsteroidTrackStatus.ContainsKey(asteroidId))
+                ServerAsteroidTrackStatus.Remove(asteroidId);
         }
 
         public bool VesselIsAsteroid(Vessel vessel)

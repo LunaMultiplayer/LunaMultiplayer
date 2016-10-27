@@ -59,6 +59,8 @@ namespace LunaClient.Windows.Connection
             OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, "Options", ButtonStyle);
             if (GUILayout.Button("Servers", ButtonStyle))
                 ServerListWindow.Singleton.Display = true;
+            if (GUILayout.Button("Close", ButtonStyle))
+                Closed = true;
             GUILayout.EndHorizontal();
             if (AddingServerSafe)
             {
