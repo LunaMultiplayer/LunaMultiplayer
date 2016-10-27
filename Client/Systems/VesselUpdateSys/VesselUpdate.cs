@@ -424,17 +424,19 @@ namespace LunaClient.Systems.VesselUpdateSys
         }
 
         /// <summary>
-        /// Here we get the interpolated velocity. We fudge it as we should extrapolate the speed as we are seeing the client IN THE PAST
+        /// Here we get the interpolated velocity. 
+        /// We should fudge it as we are seeing the client IN THE PAST so we need to extrapolate the speed 
         /// </summary>
         private Vector3d GetInterpolatedVelocity(float interpolationValue, Vector3d acceleration)
         {
             var startVel = new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
             var targetVel = new Vector3d(Target.Velocity[0], Target.Velocity[1], Target.Velocity[2]);
-            
-            //Velocity = a*t
-            var velocityFudge = acceleration*PlanetariumDifference;
 
-            return Body.bodyTransform.rotation*Vector3d.Lerp(startVel + velocityFudge, targetVel, interpolationValue);
+            //Velocity = a*t
+            //var velocityFudge = acceleration*PlanetariumDifference;
+
+            return Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, interpolationValue);
+            //return Body.bodyTransform.rotation*Vector3d.Lerp(startVel + velocityFudge, targetVel, interpolationValue);
         }
 
         /// <summary>
