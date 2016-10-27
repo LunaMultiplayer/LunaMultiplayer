@@ -21,7 +21,19 @@ namespace LunaClient.Systems.Lock
         public Dictionary<string, string> ServerLocks { get; } = new Dictionary<string, string>();
         public List<AcquireEvent> LockAcquireEvents { get; } = new List<AcquireEvent>();
         public List<ReleaseEvent> LockReleaseEvents { get; } = new List<ReleaseEvent>();
-        
+
+        #region Base overrides
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            ServerLocks.Clear();
+            LockAcquireEvents.Clear();
+            LockReleaseEvents.Clear();
+        }
+
+        #endregion
+
         #region Public methods
 
         #region Hooks

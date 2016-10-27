@@ -68,7 +68,7 @@ namespace LunaClient
 
         #region Base overrides
         
-        public override void Reset()
+        public void Reset()
         {
             Profiler.LmpReferenceTime.Start();
             

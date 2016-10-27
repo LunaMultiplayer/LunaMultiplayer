@@ -12,14 +12,15 @@ namespace LunaClient.Systems.SettingsSys
             CurrentSettings = SettingsReadSaveHandler.ReadSettings();
         }
 
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            ServerSettings = new SettingsServerStructure();
+        }
+
         public void SaveSettings()
         {
             SettingsReadSaveHandler.SaveSettings(CurrentSettings);
-        }
-
-        public void ResetServerSettings()
-        {
-            ServerSettings = new SettingsServerStructure();
         }
     }
 }

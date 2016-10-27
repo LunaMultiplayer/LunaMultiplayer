@@ -54,7 +54,6 @@ namespace LunaClient.Base
         public virtual void Reset()
         {
             RemoveWindowLock();
-            Singleton = new T();
             //Implement your own code
         }
 

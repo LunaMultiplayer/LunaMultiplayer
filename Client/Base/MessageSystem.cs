@@ -2,8 +2,6 @@
 using System.Collections.Concurrent;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
-using LunaClient.Systems.Network;
-using LunaClient.Utilities;
 using LunaCommon.Message.Interface;
 using UnityEngine;
 
@@ -17,15 +15,18 @@ namespace LunaClient.Base
         public TS MessageSender { get; } = new TS();
         public TH MessageHandler { get; } = new TH();
         public virtual IInputHandler InputHandler { get; } = null;
-
-        public void ClearIncomingMsgQueue()
-        {
-            MessageHandler.IncomingMessages = new ConcurrentQueue<IMessageData>();
-        }
-
+        
         public virtual void EnqueueMessage(IMessageData msg)
         {
-            MessageHandler.IncomingMessages.Enqueue(msg);
+            if (Enabled)
+                MessageHandler.IncomingMessages.Enqueue(msg);
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            //Clear the message queue on disabling
+            MessageHandler.IncomingMessages = new ConcurrentQueue<IMessageData>();
         }
 
         /// <summary>
@@ -45,8 +46,8 @@ namespace LunaClient.Base
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError("[LMP]: Error handling Message type " + msgData.GetType() + ", exception: " + e);
-                    NetworkConnection.Disconnect("Error handling " + msgData.GetType() + " Message");
+                    Debug.LogError($"[LMP]: Error handling Message type {msgData.GetType()}, exception: {e}");
+                    NetworkConnection.Disconnect($"Error handling {msgData.GetType()} Message");
                 }
             }
         }

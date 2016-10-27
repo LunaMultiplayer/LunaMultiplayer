@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using LunaClient.Base;
-using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Systems.KerbalReassigner
@@ -32,6 +31,8 @@ namespace LunaClient.Systems.KerbalReassigner
             GameEvents.onVesselWasModified.Remove(KerbalReassignerEvents.OnVesselWasModified);
             GameEvents.onVesselDestroy.Remove(KerbalReassignerEvents.OnVesselDestroyed);
             GameEvents.onFlightReady.Remove(KerbalReassignerEvents.OnFlightReady);
+            VesselToKerbal.Clear();
+            KerbalToVessel.Clear();
         }
 
         #endregion

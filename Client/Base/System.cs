@@ -56,15 +56,6 @@ namespace LunaClient.Base
         }
 
         /// <summary>
-        /// Override to call your custom reset functionallity
-        /// </summary>
-        public virtual void Reset()
-        {
-            DoReset();
-            Recreate();
-        }
-
-        /// <summary>
         /// Override to call your custom update functionallity
         /// </summary>
         public virtual void Update()
@@ -83,22 +74,6 @@ namespace LunaClient.Base
         public virtual void LateUpdate()
         {
             //Implement your own code
-        }
-
-        /// <summary>
-        /// Override to call your custom destroy functionallity
-        /// </summary>
-        protected virtual void DoReset()
-        {
-            Singleton.Enabled = false;
-        }
-
-        /// <summary>
-        /// Override to call your custom recreation functionallity so the singleton is recreated
-        /// </summary>
-        protected virtual void Recreate()
-        {
-            Singleton = new T();
         }
     }
 }

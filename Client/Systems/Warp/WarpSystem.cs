@@ -64,6 +64,8 @@ namespace LunaClient.Systems.Warp
         public override void OnDisabled()
         {
             GameEvents.onTimeWarpRateChanged.Remove(WarpEvents.OnTimeWarpChanged);
+            ClientSubspaceList.Clear();
+            Subspaces.Clear();
         }
 
         public override void OnEnabled()

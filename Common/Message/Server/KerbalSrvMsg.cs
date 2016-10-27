@@ -13,6 +13,7 @@ namespace LunaCommon.Message.Server
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
             [(ushort)KerbalMessageType.REPLY] = new KerbalReplyMsgData(),
+            [(ushort)KerbalMessageType.PROTO] = new KerbalProtoMsgData(),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.KERBAL;

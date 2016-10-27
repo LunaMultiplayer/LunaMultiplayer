@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Systems.ColorSystem

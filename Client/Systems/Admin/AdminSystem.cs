@@ -12,6 +12,16 @@ namespace LunaClient.Systems.Admin
 
         #endregion
 
+        #region Base overrides
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            ServerAdmins.Clear();
+        }
+
+        #endregion
+
         #region Public methods
 
         public bool IsCurrentPlayerAdmin()

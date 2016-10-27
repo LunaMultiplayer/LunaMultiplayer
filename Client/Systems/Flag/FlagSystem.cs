@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,23 +13,41 @@ namespace LunaClient.Systems.Flag
 {
     public class FlagSystem : MessageSystem<FlagSystem, FlagMessageSender, FlagMessageHandler>
     {
+        #region Fields
+
+        public bool FlagChangeEvent { get; set; }
+        public bool SyncComplete { get; set; }
+        public string FlagPath { get; } = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Flags");
+        public Dictionary<string, FlagInfo> ServerFlags { get; } = new Dictionary<string, FlagInfo>();
+        public Queue<FlagRespondMessage> NewFlags { get; } = new Queue<FlagRespondMessage>();
+
+        private bool FlagSystemReady => Enabled && SyncComplete && HighLogic.CurrentGame != null && HighLogic.CurrentGame.flagURL != null;
+
+        #endregion
+
         #region Base overrides
 
         public override void Update()
         {
             base.Update();
-            if (Enabled && SyncComplete && (HighLogic.CurrentGame != null) && (HighLogic.CurrentGame.flagURL != null))
+            if (FlagSystemReady)
             {
                 if (FlagChangeEvent)
                 {
                     FlagChangeEvent = false;
                     HandleFlagChangeEvent();
                 }
-
-                FlagRespondMessage flagRespond;
-                while (NewFlags.TryDequeue(out flagRespond))
-                    HandleFlagRespondMessage(flagRespond);
+                
+                while (NewFlags.Count > 0)
+                    HandleFlagRespondMessage(NewFlags.Dequeue());
             }
+        }
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            ServerFlags.Clear();
+            NewFlags.Clear();
         }
 
         #endregion
@@ -55,16 +72,6 @@ namespace LunaClient.Systems.Flag
                 FlagFileNames = flags
             });
         }
-
-        #endregion
-
-        #region Fields
-
-        public bool FlagChangeEvent { get; set; }
-        public bool SyncComplete { get; set; }
-        public string FlagPath { get; } = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Flags");
-        public Dictionary<string, FlagInfo> ServerFlags { get; } = new Dictionary<string, FlagInfo>();
-        public ConcurrentQueue<FlagRespondMessage> NewFlags { get; } = new ConcurrentQueue<FlagRespondMessage>();
 
         #endregion
 

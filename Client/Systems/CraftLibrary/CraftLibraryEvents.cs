@@ -11,23 +11,28 @@ namespace LunaClient.Systems.CraftLibrary
 {
     public class CraftLibraryEvents : SubSystem<CraftLibrarySystem>
     {
-        private ScreenMessage CraftUploadMessage { get; set; }
         private bool DisplayCraftUploadingMessage { get; set; }
-        private float LastCraftMessageCheck { get; set; }
-        private float CraftMessageCheckInterval { get; } = 0.2f;
 
         public void HandleCraftLibraryEvents()
         {
-            CraftChangeEntry craftChangeEntry;
-            while (System.CraftAddQueue.TryDequeue(out craftChangeEntry))
+            while (System.CraftAddQueue.Count > 0)
+            {
+                var craftChangeEntry = System.CraftAddQueue.Dequeue();
                 AddCraftEntry(craftChangeEntry.PlayerName, craftChangeEntry.CraftType, craftChangeEntry.CraftName);
+            }
 
-            while (System.CraftDeleteQueue.TryDequeue(out craftChangeEntry))
+            while (System.CraftDeleteQueue.Count > 0)
+            {
+                var craftChangeEntry = System.CraftDeleteQueue.Dequeue();
                 DeleteCraftEntry(craftChangeEntry.PlayerName, craftChangeEntry.CraftType, craftChangeEntry.CraftName);
+            }
 
-            CraftResponseEntry cre;
-            while (System.CraftResponseQueue.TryDequeue(out cre))
+
+            while (System.CraftResponseQueue.Count > 0)
+            {
+                var cre = System.CraftResponseQueue.Dequeue();
                 SaveCraftFile(cre.CraftType, cre.CraftName, cre.CraftData);
+            }
 
             if (System.UploadCraftName != null)
             {
@@ -45,7 +50,8 @@ namespace LunaClient.Systems.CraftLibrary
 
             if (System.DeleteCraftName != null)
             {
-                DeleteCraftEntry(SettingsSystem.CurrentSettings.PlayerName, System.DeleteCraftType, System.DeleteCraftName);
+                DeleteCraftEntry(SettingsSystem.CurrentSettings.PlayerName, System.DeleteCraftType,
+                    System.DeleteCraftName);
                 System.MessageSender.SendMessage(new CraftLibraryDeleteMsgData
                 {
                     PlayerName = SettingsSystem.CurrentSettings.PlayerName,
@@ -56,18 +62,13 @@ namespace LunaClient.Systems.CraftLibrary
                 System.DeleteCraftType = CraftType.VAB;
             }
 
-            if (DisplayCraftUploadingMessage &&
-                (Time.realtimeSinceStartup - LastCraftMessageCheck > CraftMessageCheckInterval))
+            if (DisplayCraftUploadingMessage)
             {
-                LastCraftMessageCheck = Time.realtimeSinceStartup;
-                if (CraftUploadMessage != null)
-                    CraftUploadMessage.duration = 0f;
+                ScreenMessages.PostScreenMessage("Craft uploaded!", 2f, ScreenMessageStyle.UPPER_CENTER);
                 DisplayCraftUploadingMessage = false;
-                CraftUploadMessage = ScreenMessages.PostScreenMessage("Craft uploaded!", 2f,
-                    ScreenMessageStyle.UPPER_CENTER);
             }
         }
-
+        
         private void UploadCraftFile(CraftType type, string name)
         {
             var uploadPath = "";

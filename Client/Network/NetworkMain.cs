@@ -40,9 +40,7 @@ namespace LunaClient.Network
 
         public static void ResetConnectionStaticsAndQueues()
         {
-            SystemsHandler.ClearMessageQueues();
             NetworkSender.OutgoingMessages = new ConcurrentQueue<IMessageBase>();
-            SettingsSystem.Singleton.ResetServerSettings();
             NetworkStatistics.LastReceiveTime = 0;
             NetworkStatistics.LastSendTime = 0;
         }

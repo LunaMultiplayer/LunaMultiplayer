@@ -10,12 +10,12 @@ namespace LunaClient.Systems.Chat
     {
         private static ChatWindow Screen => ChatWindow.Singleton;
 
-        public ConcurrentQueue<string> DisconnectingPlayers { get; } = new ConcurrentQueue<string>();
-        public ConcurrentQueue<JoinLeaveMessage> NewJoinMessages { get; } = new ConcurrentQueue<JoinLeaveMessage>();
-        public ConcurrentQueue<JoinLeaveMessage> NewLeaveMessages { get; } = new ConcurrentQueue<JoinLeaveMessage>();
-        public ConcurrentQueue<ChannelEntry> NewChannelMessages { get; } = new ConcurrentQueue<ChannelEntry>();
-        public ConcurrentQueue<PrivateEntry> NewPrivateMessages { get; } = new ConcurrentQueue<PrivateEntry>();
-        public ConcurrentQueue<ConsoleEntry> NewConsoleMessages { get; } = new ConcurrentQueue<ConsoleEntry>();
+        public ConcurrentQueue<string> DisconnectingPlayers { get; private set; } = new ConcurrentQueue<string>();
+        public ConcurrentQueue<JoinLeaveMessage> NewJoinMessages { get; private set; } = new ConcurrentQueue<JoinLeaveMessage>();
+        public ConcurrentQueue<JoinLeaveMessage> NewLeaveMessages { get; private set; } = new ConcurrentQueue<JoinLeaveMessage>();
+        public ConcurrentQueue<ChannelEntry> NewChannelMessages { get; private set; } = new ConcurrentQueue<ChannelEntry>();
+        public ConcurrentQueue<PrivateEntry> NewPrivateMessages { get; private set; } = new ConcurrentQueue<PrivateEntry>();
+        public ConcurrentQueue<ConsoleEntry> NewConsoleMessages { get; private set; } = new ConcurrentQueue<ConsoleEntry>();
 
         public void QueueChatJoin(string playerName, string channelName)
         {
@@ -84,8 +84,18 @@ namespace LunaClient.Systems.Chat
 
         public void QueueSystemMessage(string message)
         {
-            var ce = new ConsoleEntry {Message = message};
+            var ce = new ConsoleEntry { Message = message };
             NewConsoleMessages.Enqueue(ce);
+        }
+
+        public void Clear()
+        {
+            DisconnectingPlayers = new ConcurrentQueue<string>();
+            NewJoinMessages = new ConcurrentQueue<JoinLeaveMessage>();
+            NewLeaveMessages = new ConcurrentQueue<JoinLeaveMessage>();
+            NewChannelMessages = new ConcurrentQueue<ChannelEntry>();
+            NewPrivateMessages = new ConcurrentQueue<PrivateEntry>();
+            NewConsoleMessages = new ConcurrentQueue<ConsoleEntry>();
         }
     }
 }

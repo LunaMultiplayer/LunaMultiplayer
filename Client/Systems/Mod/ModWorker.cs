@@ -20,6 +20,21 @@ namespace LunaClient.Systems.Mod
         public List<string> AllowedParts { get; set; } = new List<string>();
         public string LastModFileData { get; set; } = "";
 
+        #region Base overrides
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            ModControl = ModControlMode.ENABLED_STOP_INVALID_PART_SYNC;
+            DllListBuilt = false;
+            FailText = "";
+            DllList.Clear();
+            AllowedParts.Clear();
+            LastModFileData = "";
+        }
+
+        #endregion
+
         #region Public methods
 
         public void BuildDllFileList()

@@ -35,6 +35,7 @@ namespace LunaClient.Systems.KerbalSys
                 Debug.Log("[LMP]: VesselWorker: Error sending kerbal - bytes are null or 0");
                 return;
             }
+
             var kerbalHash = Common.CalculateSha256Hash(kerbalBytes);
             var kerbalDifferent = false;
             if (!System.ServerKerbals.ContainsKey(pcm.name))

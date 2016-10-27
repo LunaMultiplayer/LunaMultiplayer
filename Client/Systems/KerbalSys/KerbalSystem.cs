@@ -2,29 +2,30 @@
 using LunaClient.Base;
 using LunaClient.Utilities;
 using LunaCommon;
-using UniLinq;
 using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
 {
+    /// <summary>
+    /// System that handles the kerbals between client and the server.
+    /// TODO: we should add messages that "take" a kerbal and remove that kerbal from other clients roster and messages that "return" the kerbal once we recover a vessel
+    /// </summary>
     public class KerbalSystem : MessageSystem<KerbalSystem, KerbalMessageSender, KerbalMessageHandler>
     {
         #region Fields
         
-        public Dictionary<string, Queue<KerbalEntry>> KerbalProtoQueue { get; } = new Dictionary<string, Queue<KerbalEntry>>();
+        public Queue<ConfigNode> KerbalQueue { get; } = new Queue<ConfigNode>();
         public Dictionary<string, string> ServerKerbals { get; } = new Dictionary<string, string>();
 
         #endregion
 
         #region Base overrides
 
-        public override void FixedUpdate()
+        public override void OnDisabled()
         {
-            base.FixedUpdate();
-            if (Enabled)
-            {
-                ProcessReceivedKerbals();
-            }
+            base.OnDisabled();
+            KerbalQueue.Clear();
+            ServerKerbals.Clear();
         }
 
         #endregion
@@ -38,13 +39,9 @@ namespace LunaClient.Systems.KerbalSys
         public void LoadKerbalsIntoGame()
         {
             Debug.Log("[LMP]: Loading kerbals into game");
-            foreach (var kerbalQueue in KerbalProtoQueue)
+            while (KerbalQueue.Count > 0)
             {
-                while (kerbalQueue.Value.Count > 0)
-                {
-                    var kerbalEntry = kerbalQueue.Value.Dequeue();
-                    LoadKerbal(kerbalEntry.KerbalNode);
-                }
+                LoadKerbal(KerbalQueue.Dequeue());
             }
 
             //Server is new and don't have kerbals at all
@@ -75,11 +72,7 @@ namespace LunaClient.Systems.KerbalSys
             Debug.Log("[LMP]: Kerbals loaded");
         }
 
-        #endregion
-
-        #region Private
-
-        private void LoadKerbal(ConfigNode crewNode)
+        public void LoadKerbal(ConfigNode crewNode)
         {
             var protoCrew = new ProtoCrewMember(HighLogic.CurrentGame.Mode, crewNode);
             if (string.IsNullOrEmpty(protoCrew.name))
@@ -130,19 +123,6 @@ namespace LunaClient.Systems.KerbalSys
                 HighLogic.CurrentGame.CrewRoster[protoCrew.name].seatIdx = protoCrew.seatIdx;
                 HighLogic.CurrentGame.CrewRoster[protoCrew.name].stupidity = protoCrew.stupidity;
                 HighLogic.CurrentGame.CrewRoster[protoCrew.name].UTaR = protoCrew.UTaR;
-            }
-        }
-
-        private void ProcessReceivedKerbals()
-        {
-            foreach (var kerbalProtoSubspace in KerbalProtoQueue.Select(k => k.Value))
-            {
-                //Load kerbals that are in the past, not in the future
-                while ((kerbalProtoSubspace.Count > 0) && (kerbalProtoSubspace.Peek().PlanetTime < Planetarium.GetUniversalTime()))
-                {
-                    var kerbalEntry = kerbalProtoSubspace.Dequeue();
-                    LoadKerbal(kerbalEntry.KerbalNode);
-                }
             }
         }
 

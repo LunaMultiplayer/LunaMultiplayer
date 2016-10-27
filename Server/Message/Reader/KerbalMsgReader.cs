@@ -31,29 +31,23 @@ namespace LunaServer.Message.Reader
 
                     var newMessageData = new KerbalReplyMsgData
                     {
-                        KerbalsData = kerbalsData.ToArray(),
-                        PlanetTime = 0
+                        KerbalsData = kerbalsData.ToArray()
                     };
+
                     MessageQueuer.SendToClient<KerbalSrvMsg>(client, newMessageData);
                     break;
                 case KerbalMessageType.PROTO:
                     var data = (KerbalProtoMsgData)message;
-                    //Don't care about Subspace / send time.
 
                     LunaLog.Debug($"Saving kerbal {data.KerbalName} from {client.PlayerName}");
 
                     var path = Path.Combine(ServerContext.UniverseDirectory, "Kerbals", data.KerbalName + ".txt");
                     FileHandler.WriteToFile(path, data.KerbalData);
 
-                    var replyData = new KerbalReplyMsgData
-                    {
-                        PlanetTime = data.SendTime,
-                        KerbalsData = new[] { new KeyValuePair<string, byte[]>(data.KerbalName, data.KerbalData) },
-                    };
-                    MessageQueuer.RelayMessage<KerbalSrvMsg>(client, replyData);
+                    MessageQueuer.RelayMessage<KerbalSrvMsg>(client, data);
                     break;
                 default:
-                    throw new NotImplementedException("Warp Type not implemented");
+                    throw new NotImplementedException("Kerbal type not implemented");
             }
         }
     }

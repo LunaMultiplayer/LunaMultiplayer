@@ -37,6 +37,8 @@ namespace LunaClient.Systems.ColorSystem
             GameEvents.onVesselCreate.Remove(PlayerColorEvents.SetVesselOrbitColor);
             LockSystem.Singleton.UnregisterAcquireHook(PlayerColorEvents.OnLockAcquire);
             LockSystem.Singleton.UnregisterReleaseHook(PlayerColorEvents.OnLockRelease);
+            PlayerColors.Clear();
+
         }
 
         #endregion

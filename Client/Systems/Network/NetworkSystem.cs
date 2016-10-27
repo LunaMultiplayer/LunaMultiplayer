@@ -22,8 +22,7 @@ namespace LunaClient.Systems.Network
 {
     public class NetworkSystem : System<NetworkSystem>
     {
-        public static string ServerMotd { get; set; }
-        public static bool DisplayMotd { get; set; }
+
 
         public override void Update()
         {
@@ -187,11 +186,11 @@ namespace LunaClient.Systems.Network
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            if (DisplayMotd && (HighLogic.LoadedScene != GameScenes.LOADING))
+            if (MotdSystem.Singleton.DisplayMotd && (HighLogic.LoadedScene != GameScenes.LOADING))
             {
-                DisplayMotd = false;
+                MotdSystem.Singleton.DisplayMotd = false;
                 ScenarioSystem.Singleton.UpgradeTheAstronautComplexSoTheGameDoesntBugOut();
-                ScreenMessages.PostScreenMessage(ServerMotd, 10f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(MotdSystem.Singleton.ServerMotd, 10f, ScreenMessageStyle.UPPER_CENTER);
                 //Control locks will bug out the space centre sceen, so remove them before starting.
                 NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
             }

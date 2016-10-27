@@ -57,6 +57,8 @@ namespace LunaClient.Systems.Asteroid
             base.OnDisabled();
             GameEvents.onGameSceneLoadRequested.Remove(AsteroidEventHandler.OnGameSceneLoadRequested);
             GameEvents.onVesselCreate.Remove(AsteroidEventHandler.OnVesselCreate);
+            ServerAsteroids.Clear();
+            ServerAsteroidTrackStatus.Clear();
         }
         
 

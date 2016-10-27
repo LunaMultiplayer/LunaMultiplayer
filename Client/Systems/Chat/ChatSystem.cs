@@ -10,6 +10,34 @@ namespace LunaClient.Systems.Chat
 {
     public class ChatSystem : MessageSystem<ChatSystem, ChatMessageSender, ChatMessageHandler>
     {
+        #region Fields
+
+        public bool ChatButtonHighlighted { get; set; } = false;
+        public bool LeaveEventHandled { get; set; } = true;
+        public bool SendEventHandled { get; set; } = true;
+
+        //State tracking
+        public Dictionary<string, ChatCommand> RegisteredChatCommands { get; } = new Dictionary<string, ChatCommand>();
+        public Dictionary<string, List<string>> ChannelMessages { get; } = new Dictionary<string, List<string>>();
+        public Dictionary<string, List<string>> PrivateMessages { get; } = new Dictionary<string, List<string>>();
+        public List<string> ConsoleMessages { get; } = new List<string>();
+        public Dictionary<string, List<string>> PlayerChannels { get; } = new Dictionary<string, List<string>>();
+        public List<string> JoinedChannels { get; } = new List<string>();
+        public List<string> JoinedPmChannels { get; } = new List<string>();
+        public List<string> HighlightChannel { get; } = new List<string>();
+        public List<string> HighlightPm { get; } = new List<string>();
+
+        public string SelectedChannel { get; set; } = null;
+        public string SelectedPmChannel { get; set; } = null;
+        public bool ChatLocked { get; set; } = false;
+        public bool SelectTextBox { get; set; } = false;
+        public string SendText { get; set; } = "";
+
+        //const
+        public string LmpChatLock { get; } = "LMP_ChatLock";
+
+        #endregion
+
         public ChatSystem()
         {
             RegisterChatCommand("help", HelpCommand.DisplayHelp, "Displays this help");
@@ -46,35 +74,41 @@ namespace LunaClient.Systems.Chat
 
         #endregion
 
-        #region Fields
-
-        public bool ChatButtonHighlighted { get; set; } = false;
-        public bool LeaveEventHandled { get; set; } = true;
-        public bool SendEventHandled { get; set; } = true;
-
-        //State tracking
-        public Dictionary<string, ChatCommand> RegisteredChatCommands { get; } = new Dictionary<string, ChatCommand>();
-        public Dictionary<string, List<string>> ChannelMessages { get; } = new Dictionary<string, List<string>>();
-        public Dictionary<string, List<string>> PrivateMessages { get; } = new Dictionary<string, List<string>>();
-        public List<string> ConsoleMessages { get; } = new List<string>();
-        public Dictionary<string, List<string>> PlayerChannels { get; } = new Dictionary<string, List<string>>();
-        public List<string> JoinedChannels { get; } = new List<string>();
-        public List<string> JoinedPmChannels { get; } = new List<string>();
-        public List<string> HighlightChannel { get; } = new List<string>();
-        public List<string> HighlightPm { get; } = new List<string>();
-
-        public string SelectedChannel { get; set; } = null;
-        public string SelectedPmChannel { get; set; } = null;
-        public bool ChatLocked { get; set; }
-        public bool SelectTextBox { get; set; } = false;
-        public string SendText { get; set; } = "";
-
-        //const
-        public string LmpChatLock { get; } = "LMP_ChatLock";
-
-        #endregion
-
         #region Base overrides
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+
+            RegisteredChatCommands.Clear();
+            ChatButtonHighlighted = false;
+            LeaveEventHandled = true;
+            SendEventHandled = true;
+
+            RegisteredChatCommands.Clear();
+            ChannelMessages.Clear();
+            PrivateMessages.Clear();
+            ConsoleMessages.Clear();
+            PlayerChannels.Clear();
+            JoinedChannels.Clear();
+            JoinedPmChannels.Clear();
+            HighlightChannel.Clear();
+            HighlightPm.Clear();
+
+            SelectedChannel = null;
+            SelectedPmChannel = null;
+            
+            SelectTextBox = false;
+            SendText = "";
+
+            Queuer.Clear();
+
+            if (ChatLocked)
+            {
+                InputLockManager.RemoveControlLock(LmpChatLock);
+                ChatLocked = false;
+            }
+        }
 
         public override void Update()
         {
@@ -84,17 +118,7 @@ namespace LunaClient.Systems.Chat
                 ChatEventHandler.HandleChatEvents();
             }
         }
-
-        protected override void DoReset()
-        {
-            base.DoReset();
-            if (ChatLocked)
-            {
-                ChatLocked = false;
-                InputLockManager.RemoveControlLock(LmpChatLock);
-            }
-        }
-
+        
         #endregion
 
         #region Public

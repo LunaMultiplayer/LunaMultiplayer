@@ -31,6 +31,14 @@ namespace LunaClient.Systems.Scenario
             Client.Singleton.StartCoroutine(SendScenarioModulesRoutine());
         }
 
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            CheckData.Clear();
+            ScenarioQueue.Clear();
+            AllScenarioTypesInAssemblies.Clear();
+        }
+
         #endregion
 
         #region Public methods

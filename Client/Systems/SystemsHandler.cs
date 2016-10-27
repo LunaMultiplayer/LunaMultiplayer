@@ -37,35 +37,7 @@ namespace LunaClient.Systems
         //end up with variables that are different than it's singleton value (really, it's a nightmare) 
         //for example, if you stop on TimeSyncerSystem.Update and set Synced = true you will se how 
         //the variable value differs from it's singleton value.
-
-        /// <summary>
-        /// Clear the received message queues of all the systems that handle messages
-        /// </summary>
-        public static void ClearMessageQueues()
-        {
-            ModApiSystem.Singleton.ClearIncomingMsgQueue();
-            HandshakeSystem.Singleton.ClearIncomingMsgQueue();
-            TimeSyncerSystem.Singleton.ClearIncomingMsgQueue();
-            KerbalSystem.Singleton.ClearIncomingMsgQueue();
-            VesselUpdateSystem.Singleton.ClearIncomingMsgQueue();
-            VesselChangeSystem.Singleton.ClearIncomingMsgQueue();
-            VesselProtoSystem.Singleton.ClearIncomingMsgQueue();
-            VesselRemoveSystem.Singleton.ClearIncomingMsgQueue();
-            WarpSystem.Singleton.ClearIncomingMsgQueue();
-            LockSystem.Singleton.ClearIncomingMsgQueue();
-            SettingsSystem.Singleton.ClearIncomingMsgQueue();
-            StatusSystem.Singleton.ClearIncomingMsgQueue();
-            ChatSystem.Singleton.ClearIncomingMsgQueue();
-            AdminSystem.Singleton.ClearIncomingMsgQueue();
-            PlayerColorSystem.Singleton.ClearIncomingMsgQueue();
-            PlayerConnectionSystem.Singleton.ClearIncomingMsgQueue();
-            MotdSystem.Singleton.ClearIncomingMsgQueue();
-            CraftLibrarySystem.Singleton.ClearIncomingMsgQueue();
-            FlagSystem.Singleton.ClearIncomingMsgQueue();
-            ScenarioSystem.Singleton.ClearIncomingMsgQueue();
-            HandshakeSystem.Singleton.ClearIncomingMsgQueue();
-        }
-
+        
         /// <summary>
         /// Call all the updates of the systems
         /// </summary>
@@ -170,50 +142,17 @@ namespace LunaClient.Systems
             TryFixedUpdate(ScenarioSystem.Singleton);
             TryFixedUpdate(ToolbarSystem.Singleton);
         }
-
-        /// <summary>
-        /// Call all the resets of the systems
-        /// </summary>
-        public static void Reset(bool resetMainSystems = true)
-        {
-            if (resetMainSystems)
-            {
-                TryReset(NetworkSystem.Singleton);
-                TryReset(ModSystem.Singleton);
-                TryReset(ModApiSystem.Singleton);
-                TryReset(SettingsSystem.Singleton);
-                TryReset(ToolbarSystem.Singleton);
-            }
-            TryReset(HandshakeSystem.Singleton);
-            TryReset(TimeSyncerSystem.Singleton);
-            TryReset(KerbalSystem.Singleton);
-            TryReset(VesselUpdateSystem.Singleton);
-            TryReset(VesselLockSystem.Singleton);
-            TryReset(VesselChangeSystem.Singleton);
-            TryReset(VesselProtoSystem.Singleton);
-            TryReset(VesselRemoveSystem.Singleton);
-            TryReset(VesselWarpSystem.Singleton);
-            TryReset(VesselDockSystem.Singleton);
-            TryReset(WarpSystem.Singleton);
-            TryReset(LockSystem.Singleton);
-            TryReset(AsteroidSystem.Singleton);
-            TryReset(StatusSystem.Singleton);
-            TryReset(ChatSystem.Singleton);
-            TryReset(AdminSystem.Singleton);
-            TryReset(PlayerColorSystem.Singleton);
-            TryReset(PlayerConnectionSystem.Singleton);
-            TryReset(MotdSystem.Singleton);
-            TryReset(CraftLibrarySystem.Singleton);
-            TryReset(FlagSystem.Singleton);
-            TryReset(KerbalReassignerSystem.Singleton);
-            TryReset(ScenarioSystem.Singleton);
-        }
-
+        
         /// <summary>
         /// When connecting, set the systems to false
         /// </summary>
         public static void DisableSystemsOnConnecting()
         {
+            SettingsSystem.Singleton.Enabled = false;
+            LockSystem.Singleton.Enabled = false;
+            KerbalSystem.Singleton.Enabled = false;
+            HandshakeSystem.Singleton.Enabled = false;
+            AdminSystem.Singleton.Enabled = false;
             AsteroidSystem.Singleton.Enabled = false;
             VesselCommon.EnableAllSystems = false;
             StatusSystem.Singleton.Enabled = false;
@@ -221,7 +160,6 @@ namespace LunaClient.Systems
             WarpSystem.Singleton.Enabled = false;
             CraftLibrarySystem.Singleton.Enabled = false;
             TimeSyncerSystem.Singleton.Enabled = false;
-            AdminSystem.Singleton.Enabled = false;
             ChatSystem.Singleton.Enabled = false;
             PlayerColorSystem.Singleton.Enabled = false;
             PlayerConnectionSystem.Singleton.Enabled = false;
@@ -267,16 +205,65 @@ namespace LunaClient.Systems
             }
         }
 
-        private static void TryReset(ISystem system)
+        public static void Reset()
         {
-            try
-            {
-                system.Reset();
-            }
-            catch (Exception e)
-            {
-                MainSystem.Singleton.HandleException(e, "SystemHandler-Reset");
-            }
+            NetworkSystem.Singleton.Enabled = false;
+            ModSystem.Singleton.Enabled = false;
+            ModApiSystem.Singleton.Enabled = false;
+            SettingsSystem.Singleton.Enabled = false;
+            ToolbarSystem.Singleton.Enabled = false;
+            HandshakeSystem.Singleton.Enabled = false;
+            TimeSyncerSystem.Singleton.Enabled = false;
+            KerbalSystem.Singleton.Enabled = false;
+            VesselUpdateSystem.Singleton.Enabled = false;
+            VesselLockSystem.Singleton.Enabled = false;
+            VesselChangeSystem.Singleton.Enabled = false;
+            VesselProtoSystem.Singleton.Enabled = false;
+            VesselRemoveSystem.Singleton.Enabled = false;
+            VesselWarpSystem.Singleton.Enabled = false;
+            VesselDockSystem.Singleton.Enabled = false;
+            WarpSystem.Singleton.Enabled = false;
+            LockSystem.Singleton.Enabled = false;
+            AsteroidSystem.Singleton.Enabled = false;
+            StatusSystem.Singleton.Enabled = false;
+            ChatSystem.Singleton.Enabled = false;
+            AdminSystem.Singleton.Enabled = false;
+            PlayerColorSystem.Singleton.Enabled = false;
+            PlayerConnectionSystem.Singleton.Enabled = false;
+            MotdSystem.Singleton.Enabled = false;
+            CraftLibrarySystem.Singleton.Enabled = false;
+            FlagSystem.Singleton.Enabled = false;
+            KerbalReassignerSystem.Singleton.Enabled = false;
+            ScenarioSystem.Singleton.Enabled = false;
+
+            NetworkSystem.Singleton.Enabled = true;
+            ModSystem.Singleton.Enabled = true;
+            ModApiSystem.Singleton.Enabled = true;
+            SettingsSystem.Singleton.Enabled = true;
+            ToolbarSystem.Singleton.Enabled = true;
+            HandshakeSystem.Singleton.Enabled = true;
+            TimeSyncerSystem.Singleton.Enabled = true;
+            KerbalSystem.Singleton.Enabled = true;
+            VesselUpdateSystem.Singleton.Enabled = true;
+            VesselLockSystem.Singleton.Enabled = true;
+            VesselChangeSystem.Singleton.Enabled = true;
+            VesselProtoSystem.Singleton.Enabled = true;
+            VesselRemoveSystem.Singleton.Enabled = true;
+            VesselWarpSystem.Singleton.Enabled = true;
+            VesselDockSystem.Singleton.Enabled = true;
+            WarpSystem.Singleton.Enabled = true;
+            LockSystem.Singleton.Enabled = true;
+            AsteroidSystem.Singleton.Enabled = true;
+            StatusSystem.Singleton.Enabled = true;
+            ChatSystem.Singleton.Enabled = true;
+            AdminSystem.Singleton.Enabled = true;
+            PlayerColorSystem.Singleton.Enabled = true;
+            PlayerConnectionSystem.Singleton.Enabled = true;
+            MotdSystem.Singleton.Enabled = true;
+            CraftLibrarySystem.Singleton.Enabled = true;
+            FlagSystem.Singleton.Enabled = true;
+            KerbalReassignerSystem.Singleton.Enabled = true;
+            ScenarioSystem.Singleton.Enabled = true;
         }
     }
 }

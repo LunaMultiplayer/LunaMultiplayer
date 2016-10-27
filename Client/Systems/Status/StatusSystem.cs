@@ -1,10 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselLockSys;
-using LunaClient.Utilities;
 using LunaCommon;
 using UnityEngine;
 
@@ -21,39 +21,27 @@ namespace LunaClient.Systems.Status
         };
 
         public Dictionary<string, PlayerStatus> PlayerStatusList { get; } = new Dictionary<string, PlayerStatus>();
+
         private PlayerStatus LastPlayerStatus { get; } = new PlayerStatus();
-        private long LastPlayerStatusCheck { get; set; }
 
         private bool StatusIsDifferent =>
             (MyPlayerStatus.VesselText != LastPlayerStatus.VesselText) ||
             (MyPlayerStatus.StatusText != LastPlayerStatus.StatusText);
-
-
+        
         #endregion
 
         #region Base overrides
 
-        public override void Update()
+        public override void OnEnabled()
         {
-            base.Update();
-            if (Enabled)
-            {
-                if (DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond - LastPlayerStatusCheck > SettingsSystem.CurrentSettings.PlayerStatusCheckMsInterval)
-                {
-                    LastPlayerStatusCheck = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+            base.OnEnabled();
+            Client.Singleton.StartCoroutine(CheckPlayerStatus());
+        }
 
-                    MyPlayerStatus.VesselText = GetVesselText();
-                    MyPlayerStatus.StatusText = GetStatusText();
-                }
-
-                if (StatusIsDifferent)
-                {
-                    LastPlayerStatus.VesselText = MyPlayerStatus.VesselText;
-                    LastPlayerStatus.StatusText = MyPlayerStatus.StatusText;
-
-                    MessageSender.SendPlayerStatus(MyPlayerStatus);
-                }
-            }
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            PlayerStatusList.Clear();
         }
 
         #endregion
@@ -87,7 +75,35 @@ namespace LunaClient.Systems.Status
 
         #region Private methods
 
+        private IEnumerator CheckPlayerStatus()
+        {
+            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.PlayerStatusCheckMsInterval).TotalSeconds);
+            while (true)
+            {
+                if (!Enabled) break;
 
+                try
+                {
+                    MyPlayerStatus.VesselText = GetVesselText();
+                    MyPlayerStatus.StatusText = GetStatusText();
+
+                    if (StatusIsDifferent)
+                    {
+                        LastPlayerStatus.VesselText = MyPlayerStatus.VesselText;
+                        LastPlayerStatus.StatusText = MyPlayerStatus.StatusText;
+
+                        MessageSender.SendPlayerStatus(MyPlayerStatus);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in CheckPlayerStatus {e}");
+                }
+
+                yield return seconds;
+            }
+        }
+        
         #region Status getter
 
         private static string GetVesselText()

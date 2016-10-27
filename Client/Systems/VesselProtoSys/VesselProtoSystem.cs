@@ -53,6 +53,7 @@ namespace LunaClient.Systems.VesselProtoSys
             base.OnDisabled();
             GameEvents.onFlightReady.Remove(VesselProtoEvents.OnFlightReady);
             GameEvents.onVesselWasModified.Remove(VesselProtoEvents.OnVesselWasModified);
+            AllPlayerVessels.Clear();
             BannedPartsStr = string.Empty;
             CurrentVesselSent = false;
             VesselReady = false;

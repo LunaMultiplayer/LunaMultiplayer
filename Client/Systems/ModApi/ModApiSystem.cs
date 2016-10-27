@@ -1,7 +1,6 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using LunaClient.Base;
-using LunaClient.Utilities;
 using LunaCommon.Message.Data;
 using UnityEngine;
 
@@ -31,6 +30,16 @@ namespace LunaClient.Systems.ModApi
         #endregion
 
         #region Base overrides
+
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            RegisteredRawMods.Clear();
+            UpdateQueue.Clear();
+            FixedUpdateQueue.Clear();
+            RegisteredUpdateMods.Clear();
+            RegisteredFixedUpdateMods.Clear();
+        }
 
         public override void Update()
         {

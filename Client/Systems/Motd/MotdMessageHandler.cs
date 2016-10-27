@@ -2,7 +2,6 @@
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Chat;
-using LunaClient.Systems.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Motd;
 using LunaCommon.Message.Interface;
@@ -19,8 +18,8 @@ namespace LunaClient.Systems.Motd
 
             if (!string.IsNullOrEmpty(msgData?.MessageOfTheDay))
             {
-                NetworkSystem.DisplayMotd = true;
-                NetworkSystem.ServerMotd = msgData.MessageOfTheDay;
+                System.DisplayMotd = true;
+                System.ServerMotd = msgData.MessageOfTheDay;
                 ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", msgData.MessageOfTheDay);
             }
         }

@@ -107,7 +107,6 @@
     <Compile Include="Systems\Handshake\HandshakeSystem.cs" />
     <Compile Include="Systems\KerbalSys\KerbalMessageHandler.cs" />
     <Compile Include="Systems\KerbalSys\KerbalMessageSender.cs" />
-    <Compile Include="Systems\KerbalSys\KerbalStructures.cs" />
     <Compile Include="Systems\KerbalSys\KerbalSystem.cs" />
     <Compile Include="Systems\Lock\LockMessageSender.cs" />
     <Compile Include="Systems\ModApi\ModApiMessageSender.cs" />

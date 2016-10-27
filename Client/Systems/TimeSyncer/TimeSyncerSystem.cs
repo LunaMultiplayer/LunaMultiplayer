@@ -67,6 +67,13 @@ namespace LunaClient.Systems.TimeSyncer
         {
             base.OnDisabled();
             SyncSenderThread?.Abort();
+            ServerStartTime = 0;
+            ClockOffset.Clear();
+            NetworkLatency.Clear();
+            Synced = false;
+            ClockOffsetAverage = 0;
+            NetworkLatencyAverage = 0;
+            ServerLag = 0;
         }
 
         #endregion
