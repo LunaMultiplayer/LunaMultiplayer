@@ -27,28 +27,27 @@ namespace LunaClient.Systems.CraftLibrary
                 DeleteCraftEntry(craftChangeEntry.PlayerName, craftChangeEntry.CraftType, craftChangeEntry.CraftName);
             }
 
-
             while (System.CraftResponseQueue.Count > 0)
             {
                 var cre = System.CraftResponseQueue.Dequeue();
                 SaveCraftFile(cre.CraftType, cre.CraftName, cre.CraftData);
             }
 
-            if (System.UploadCraftName != null)
+            if (!string.IsNullOrEmpty(System.UploadCraftName))
             {
                 UploadCraftFile(System.UploadCraftType, System.UploadCraftName);
                 System.UploadCraftName = null;
                 System.UploadCraftType = CraftType.VAB;
             }
 
-            if (System.DownloadCraftName != null)
+            if (!string.IsNullOrEmpty(System.DownloadCraftName))
             {
                 DownloadCraftFile(System.SelectedPlayer, System.DownloadCraftType, System.DownloadCraftName);
                 System.DownloadCraftName = null;
                 System.DownloadCraftType = CraftType.VAB;
             }
 
-            if (System.DeleteCraftName != null)
+            if (!string.IsNullOrEmpty(System.DeleteCraftName))
             {
                 DeleteCraftEntry(SettingsSystem.CurrentSettings.PlayerName, System.DeleteCraftType,
                     System.DeleteCraftName);

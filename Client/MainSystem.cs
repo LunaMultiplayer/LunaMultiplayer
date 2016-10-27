@@ -291,8 +291,7 @@ namespace LunaClient
                     LastDisconnectMessageCheck = Time.realtimeSinceStartup;
                     if (DisconnectMessage != null)
                         DisconnectMessage.duration = 0;
-                    DisconnectMessage = ScreenMessages.PostScreenMessage("You have been disconnected!", 2f,
-                        ScreenMessageStyle.UPPER_CENTER);
+                    DisconnectMessage = ScreenMessages.PostScreenMessage("You have been disconnected!", 2f, ScreenMessageStyle.UPPER_CENTER);
                 }
             }
             else
