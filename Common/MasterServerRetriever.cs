@@ -19,7 +19,8 @@ namespace LunaCommon
         public static string MasterServersListUrl => "https://raw.githubusercontent.com/DaggerES/LunaMultiPlayer/master/MasterServersList";
 
         /// <summary>
-        /// Download the master server list from the MasterServersListUrl and return the ones that respond to a ping and are correctly written
+        /// Download the master server list from the MasterServersListUrl and return the ones that are correctly written
+        /// We should add a ping check aswell...
         /// </summary>
         /// <returns></returns>
         public static string[] RetrieveWorkingMasterServersEndpoints()
