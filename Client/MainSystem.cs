@@ -95,7 +95,7 @@ namespace LunaClient
             GameEvents.onHideUI.Add(() => { ShowGui = false; });
             GameEvents.onShowUI.Add(() => { ShowGui = true; });
 
-            SystemsHandler.Reset();
+            SystemsHandler.KillAllSystems();
 
             HandleCommandLineArgs();
             Debug.Log($"[LMP]: LunaMultiPlayer {VersionInfo.VersionNumber} Initialized!");
@@ -184,7 +184,7 @@ namespace LunaClient
                 if (FireReset)
                 {
                     FireReset = false;
-                    SystemsHandler.Reset();
+                    SystemsHandler.KillAllSystems();
                 }
 
                 if (StartGame)
@@ -254,7 +254,7 @@ namespace LunaClient
         {
             Quit = true;
             NetworkConnection.Disconnect("Quit game");
-            SystemsHandler.Reset();
+            SystemsHandler.KillAllSystems();
         }
 
         public Game.Modes ConvertGameMode(GameMode inputMode)

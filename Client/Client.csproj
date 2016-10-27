@@ -194,7 +194,7 @@
     <Compile Include="Systems\KerbalReassigner\KerbalReassignerSystem.cs" />
     <Compile Include="Systems\Lock\LockSystem.cs" />
     <Compile Include="Client.cs" />
-    <Compile Include="Systems\Mod\ModWorker.cs" />
+    <Compile Include="Systems\Mod\ModSystem.cs" />
     <Compile Include="Utilities\BlockingQueue.cs" />
     <Compile Include="Network\NetworkReceiver.cs" />
     <Compile Include="Network\NetworkConnection.cs" />

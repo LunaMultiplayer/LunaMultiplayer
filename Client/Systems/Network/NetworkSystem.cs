@@ -22,7 +22,7 @@ namespace LunaClient.Systems.Network
 {
     public class NetworkSystem : System<NetworkSystem>
     {
-
+        public override bool Enabled => true;
 
         public override void Update()
         {
@@ -30,7 +30,8 @@ namespace LunaClient.Systems.Network
             {
                 case ClientState.DISCONNECTED:
                 case ClientState.CONNECTING:
-                    SystemsHandler.DisableSystemsOnConnecting();
+                    //Kill all systems while disconnected/connecting
+                    SystemsHandler.KillAllSystems();
                     return;
                 case ClientState.CONNECTED:
                 case ClientState.HANDSHAKING:

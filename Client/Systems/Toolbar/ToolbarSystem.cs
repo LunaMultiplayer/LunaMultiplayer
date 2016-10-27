@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using KSP.UI.Screens;
 using UnityEngine;
 

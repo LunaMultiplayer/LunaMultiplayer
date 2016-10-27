@@ -31,15 +31,7 @@ namespace LunaClient.Systems.ModApi
 
         #region Base overrides
 
-        public override void OnDisabled()
-        {
-            base.OnDisabled();
-            RegisteredRawMods.Clear();
-            UpdateQueue.Clear();
-            FixedUpdateQueue.Clear();
-            RegisteredUpdateMods.Clear();
-            RegisteredFixedUpdateMods.Clear();
-        }
+        public override bool Enabled => true;
 
         public override void Update()
         {
