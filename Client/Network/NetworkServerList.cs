@@ -55,29 +55,27 @@ namespace LunaClient.Network
                 //Therefore we assert that the received message data is of MsReplyServersMsgData
                 if (data != null)
                 {
+                    Servers.Clear();
+
                     for (var i = 0; i < data.Id.Length; i++)
                     {
-                        var id = data.Id[i];
-                        if (!Servers.Any(s => s.Id == id))
+                        Servers.Add(new ServerInfo
                         {
-                            Servers.Add(new ServerInfo
-                            {
-                                Id = id,
-                                Description = data.Description[i],
-                                Cheats = data.Cheats[i],
-                                ServerName = data.ServerName[i],
-                                DropControlOnExit = data.DropControlOnExit[i],
-                                MaxPlayers = data.MaxPlayers[i],
-                                WarpMode = data.WarpMode[i],
-                                PlayerCount = data.PlayerCount[i],
-                                GameMode = data.GameMode[i],
-                                ModControl = data.ModControl[i],
-                                DropControlOnExitFlight = data.DropControlOnExitFlight[i],
-                                VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
-                                DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
-                                Version = data.Version
-                            });
-                        }
+                            Id = data.Id[i],
+                            Description = data.Description[i],
+                            Cheats = data.Cheats[i],
+                            ServerName = data.ServerName[i],
+                            DropControlOnExit = data.DropControlOnExit[i],
+                            MaxPlayers = data.MaxPlayers[i],
+                            WarpMode = data.WarpMode[i],
+                            PlayerCount = data.PlayerCount[i],
+                            GameMode = data.GameMode[i],
+                            ModControl = data.ModControl[i],
+                            DropControlOnExitFlight = data.DropControlOnExitFlight[i],
+                            VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
+                            DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
+                            Version = data.Version
+                        });
                     }
 
                     Servers = Servers.OrderBy(s => s.ServerName).ToList();

@@ -47,7 +47,6 @@ namespace LunaClient.Network
                     NetworkMain.ResetConnectionStaticsAndQueues();
                 }
             }
-            NetworkMain.ClientConnection.Start();
         }
 
         public static void ConnectToServer(string address, int port)
@@ -99,13 +98,15 @@ namespace LunaClient.Network
             {
                 var outmsg = NetworkMain.ClientConnection.CreateMessage(1);
                 outmsg.Write((byte)NetIncomingMessageType.ConnectionApproval);
-
+                
                 NetworkMain.ClientConnection.Start();
                 NetworkMain.ClientConnection.Connect(destination);
                 NetworkMain.ClientConnection.FlushSendQueue();
 
                 var connectionTrials = 0;
-                while ((NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected) && (connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries))
+                while (MainSystem.Singleton.NetworkState == ClientState.CONNECTING && 
+                    (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected) && 
+                    (connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries))
                 {
                     connectionTrials++;
                     Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
@@ -118,7 +119,7 @@ namespace LunaClient.Network
                     MainSystem.Singleton.NetworkState = ClientState.CONNECTED;
                     NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg>(new HandshakeRequestMsgData()));
                 }
-                else
+                else if (MainSystem.Singleton.NetworkState == ClientState.CONNECTING)
                 {
                     Debug.LogError("[LMP]: Failed to connect within the timeout!");
                     Disconnect("Initial connection timeout");

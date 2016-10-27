@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using Lidgren.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
@@ -57,6 +58,9 @@ namespace LunaClient.Network
         /// <param name="message"></param>
         private static void SendNetworkMessage(IMessageBase message)
         {
+            if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
+                NetworkMain.ClientConnection.Start();
+
             var clientMessage = message as IClientMessageBase;
             var masterSrvMessage = message as IMasterServerMessageBase;
 

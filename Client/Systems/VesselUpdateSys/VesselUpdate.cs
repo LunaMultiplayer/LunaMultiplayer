@@ -70,7 +70,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         #region Private fields
 
         private float _interpolationDuration;
-        private double PlanetariumDifference => Planetarium.GetUniversalTime() - PlanetTime;
+        private double PlanetariumDifference { get; set; }
         private const float PlanetariumDifferenceLimit = 3f;
 
         #endregion
@@ -258,6 +258,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
                 if (Body != null && Vessel != null)
                 {
+                    PlanetariumDifference = Planetarium.GetUniversalTime() - PlanetTime;
                     Vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, Target.ActionGrpControls[0]);
                     Vessel.ActionGroups.SetGroup(KSPActionGroup.Light, Target.ActionGrpControls[1]);
                     Vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, Target.ActionGrpControls[2]);
@@ -420,7 +421,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             //var positionFudge = (currentVelocity*PlanetariumDifference) + (0.5d*currentAcc*PlanetariumDifference*PlanetariumDifference);
 
             return Vector3d.Lerp(startPos, targetPos, interpolationValue);
-            //return Vector3d.Lerp(startPos + positionFudge, targetPos, interpolationValue);
+            //return Vector3d.Lerp(startPos + positionFudge, targetPos + positionFudge, interpolationValue);
         }
 
         /// <summary>
@@ -436,7 +437,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             //var velocityFudge = acceleration*PlanetariumDifference;
 
             return Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, interpolationValue);
-            //return Body.bodyTransform.rotation*Vector3d.Lerp(startVel + velocityFudge, targetVel, interpolationValue);
+            //return Body.bodyTransform.rotation*Vector3d.Lerp(startVel + velocityFudge, targetVel + velocityFudge, interpolationValue);
         }
 
         /// <summary>
