@@ -47,9 +47,12 @@ namespace LunaClient.Systems.VesselChangeSys
                 {
                     if (!Enabled) break;
 
-                    while (IncomingChanges.Count > 0 && Time.fixedTime - IncomingChanges.Peek().ReceiveTime >= 0.5)
+                    if (MainSystem.Singleton.GameRunning)
                     {
-                        HandleVesselChange(IncomingChanges.Dequeue());
+                        while (IncomingChanges.Count > 0 && Time.fixedTime - IncomingChanges.Peek().ReceiveTime >= 0.5)
+                        {
+                            HandleVesselChange(IncomingChanges.Dequeue());
+                        }
                     }
                 }
                 catch (Exception e)

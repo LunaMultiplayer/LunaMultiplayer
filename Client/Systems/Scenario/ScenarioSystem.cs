@@ -152,7 +152,11 @@ namespace LunaClient.Systems.Scenario
                 try
                 {
                     if (!Enabled) break;
-                    SendScenarioModules();
+
+                    if (MainSystem.Singleton.GameRunning)
+                    {
+                        SendScenarioModules();
+                    }
                 }
                 catch (Exception e)
                 {

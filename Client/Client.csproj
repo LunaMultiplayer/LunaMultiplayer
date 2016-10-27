@@ -94,8 +94,8 @@
     <Compile Include="Systems\Chat\Command\QueryCommand.cs" />
     <Compile Include="Systems\Chat\Command\ResizeCommand.cs" />
     <Compile Include="Systems\Chat\Command\VersionCommand.cs" />
-    <Compile Include="Systems\ColorSystem\PlayerColorMessageHandler.cs" />
-    <Compile Include="Systems\ColorSystem\PlayerColorMessageSender.cs" />
+    <Compile Include="Systems\PlayerColorSystem\PlayerColorMessageHandler.cs" />
+    <Compile Include="Systems\PlayerColorSystem\PlayerColorMessageSender.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibraryEvents.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibraryMessageHandler.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibraryMessageSender.cs" />
@@ -167,7 +167,7 @@
     <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
     <Compile Include="Base\Interface\ISystem.cs" />
     <Compile Include="Base\System.cs" />
-    <Compile Include="Systems\ColorSystem\PlayerColorEvents.cs" />
+    <Compile Include="Systems\PlayerColorSystem\PlayerColorEvents.cs" />
     <Compile Include="Utilities\DebugTools\LineRendererDebug.cs" />
     <Compile Include="Utilities\DebugTools\PointRendererDebug.cs" />
     <Compile Include="Utilities\DebugTools\QuaternionRendererDebug.cs" />
@@ -200,7 +200,7 @@
     <Compile Include="Network\NetworkConnection.cs" />
     <Compile Include="Network\NetworkSender.cs" />
     <Compile Include="Systems\Network\NetworkSystem.cs" />
-    <Compile Include="Systems\ColorSystem\PlayerColorSystem.cs" />
+    <Compile Include="Systems\PlayerColorSystem\PlayerColorSystem.cs" />
     <Compile Include="Systems\Status\StatusSystem.cs" />
     <Compile Include="Utilities\Profiler.cs" />
     <Compile Include="Systems\Scenario\ScenarioSystem.cs" />

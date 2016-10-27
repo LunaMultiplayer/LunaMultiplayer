@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using LunaClient.Base;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
@@ -16,6 +16,10 @@ using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.Warp;
 using LunaCommon.Enums;
 using LunaClient.Network;
+using LunaClient.Systems.Handshake;
+using LunaClient.Systems.KerbalSys;
+using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LunaClient.Systems.Network
@@ -34,17 +38,20 @@ namespace LunaClient.Systems.Network
                     SystemsHandler.KillAllSystems();
                     return;
                 case ClientState.CONNECTED:
+                    HandshakeSystem.Singleton.Enabled = true;
+                    break;
                 case ClientState.HANDSHAKING:
                     MainSystem.Singleton.Status = "Connection successful, handshaking";
                     break;
                 case ClientState.AUTHENTICATED:
                     PlayerConnectionSystem.Singleton.Enabled = true;
+                    StatusSystem.Singleton.Enabled = true;
                     StatusSystem.Singleton.MessageSender.SendPlayerStatus(StatusSystem.Singleton.MyPlayerStatus);
                     MainSystem.Singleton.NetworkState = ClientState.TIME_SYNCING;
                     break;
                 case ClientState.TIME_SYNCING:
-                    Debug.Log("[LMP]: Sending time sync!");
                     MainSystem.Singleton.Status = "Handshaking successful, syncing server clock";
+                    TimeSyncerSystem.Singleton.Enabled = true;
                     if (TimeSyncerSystem.Singleton.Synced)
                         MainSystem.Singleton.NetworkState = ClientState.TIME_SYNCED;
                     else
@@ -52,6 +59,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.TIME_SYNCED:
                     Debug.Log("[LMP]: Time Synced!");
+                    KerbalSystem.Singleton.Enabled = true;
                     NetworkSimpleMessageSender.SendKerbalsRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_KERBALS;
                     break;
@@ -60,6 +68,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.KERBALS_SYNCED:
                     MainSystem.Singleton.Status = "Kerbals synced";
+                    SettingsSystem.Singleton.Enabled = true;
                     NetworkSimpleMessageSender.SendSettingsRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_SETTINGS;
                     break;
@@ -68,6 +77,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.SETTINGS_SYNCED:
                     MainSystem.Singleton.Status = "Settings synced";
+                    WarpSystem.Singleton.Enabled = true;
                     NetworkSimpleMessageSender.SendWarpSubspacesRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_WARPSUBSPACES;
                     break;
@@ -76,12 +86,12 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.WARPSUBSPACES_SYNCED:
                     MainSystem.Singleton.Status = "Warp subspaces synced";
+                    PlayerColorSystem.Singleton.Enabled = true;
                     NetworkSimpleMessageSender.SendColorsRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_COLORS;
                     break;
                 case ClientState.SYNCING_COLORS:
                     MainSystem.Singleton.Status = "Syncing player colors";
-                    PlayerColorSystem.Singleton.Enabled = true;
                     break;
                 case ClientState.COLORS_SYNCED:
                     MainSystem.Singleton.Status = "Player colors synced";
@@ -93,6 +103,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.PLAYERS_SYNCED:
                     MainSystem.Singleton.Status = "Players synced";
+                    ScenarioSystem.Singleton.Enabled = true;
                     NetworkSimpleMessageSender.SendScenariosRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_SCENARIOS;
                     break;
@@ -101,6 +112,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.SCNEARIOS_SYNCED:
                     MainSystem.Singleton.Status = "Scenarios synced";
+                    CraftLibrarySystem.Singleton.Enabled = true;
                     NetworkSimpleMessageSender.SendCraftLibraryRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_CRAFTLIBRARY;
                     break;
@@ -109,6 +121,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.CRAFTLIBRARY_SYNCED:
                     MainSystem.Singleton.Status = "Craft library synced";
+                    ChatSystem.Singleton.Enabled = true;
                     NetworkSimpleMessageSender.SendChatRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_CHAT;
                     break;
@@ -117,6 +130,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.CHAT_SYNCED:
                     MainSystem.Singleton.Status = "Chat synced";
+                    LockSystem.Singleton.Enabled = true;
                     NetworkSimpleMessageSender.SendLocksRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_LOCKS;
                     break;
@@ -125,6 +139,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.LOCKS_SYNCED:
                     MainSystem.Singleton.Status = "Locks synced";
+                    AdminSystem.Singleton.Enabled = true;
                     NetworkSimpleMessageSender.SendAdminsRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_ADMINS;
                     break;
@@ -133,6 +148,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.ADMINS_SYNCED:
                     MainSystem.Singleton.Status = "Admins synced";
+                    VesselCommon.EnableAllSystems = true;
                     NetworkSimpleMessageSender.SendVesselListRequest();
                     MainSystem.Singleton.NetworkState = ClientState.SYNCING_VESSELS;
                     break;
@@ -143,9 +159,6 @@ namespace LunaClient.Systems.Network
                     Debug.Log("[LMP]: Vessels Synced!");
                     MainSystem.Singleton.Status = "Syncing universe time";
                     MainSystem.Singleton.NetworkState = ClientState.TIME_LOCKING;
-                    TimeSyncerSystem.Singleton.Enabled = true;
-                    AdminSystem.Singleton.Enabled = true;
-                    ChatSystem.Singleton.Enabled = true;
                     FlagSystem.Singleton.Enabled = true;
                     KerbalReassignerSystem.Singleton.Enabled = true;
                     FlagSystem.Singleton.SendFlagList();
@@ -155,7 +168,6 @@ namespace LunaClient.Systems.Network
                     if (TimeSyncerSystem.Singleton.Synced)
                     {
                         Debug.Log("[LMP]: Time Locked!");
-                        Debug.Log("[LMP]: Starting Game!");
                         MainSystem.Singleton.Status = "Starting game";
                         MainSystem.Singleton.NetworkState = ClientState.TIME_LOCKED;
                         MainSystem.Singleton.StartGame = true;
@@ -165,24 +177,23 @@ namespace LunaClient.Systems.Network
                     MainSystem.Singleton.NetworkState = ClientState.STARTING;
                     break;
                 case ClientState.STARTING:
+                    Debug.Log("[LMP]: All systems up and running Poyekhali");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
+                        MainSystem.Singleton.Status = "Running";
+
                         MotdSystem.Singleton.Enabled = true;
+
                         MainSystem.Singleton.DisplayDisconnectMessage = false;
                         MainSystem.Singleton.NetworkState = ClientState.RUNNING;
-                        MainSystem.Singleton.Status = "Running";
-                        MainSystem.Singleton.GameRunning = true;
+                        
                         AsteroidSystem.Singleton.Enabled = true;
-                        VesselCommon.EnableAllSystems = true;
-                        StatusSystem.Singleton.Enabled = true;
-                        ScenarioSystem.Singleton.Enabled = true;
-                        WarpSystem.Singleton.Enabled = true;
-                        CraftLibrarySystem.Singleton.Enabled = true;
                         ToolbarSystem.Singleton.Enabled = true;
                         NetworkSimpleMessageSender.SendMotdRequest();
                     }
                     break;
                 case ClientState.RUNNING:
+                    MainSystem.Singleton.GameRunning = true;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

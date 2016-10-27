@@ -82,22 +82,25 @@ namespace LunaClient.Systems.Status
             {
                 if (!Enabled) break;
 
-                try
+                if (MainSystem.Singleton.GameRunning)
                 {
-                    MyPlayerStatus.VesselText = GetVesselText();
-                    MyPlayerStatus.StatusText = GetStatusText();
-
-                    if (StatusIsDifferent)
+                    try
                     {
-                        LastPlayerStatus.VesselText = MyPlayerStatus.VesselText;
-                        LastPlayerStatus.StatusText = MyPlayerStatus.StatusText;
+                        MyPlayerStatus.VesselText = GetVesselText();
+                        MyPlayerStatus.StatusText = GetStatusText();
 
-                        MessageSender.SendPlayerStatus(MyPlayerStatus);
+                        if (StatusIsDifferent)
+                        {
+                            LastPlayerStatus.VesselText = MyPlayerStatus.VesselText;
+                            LastPlayerStatus.StatusText = MyPlayerStatus.StatusText;
+
+                            MessageSender.SendPlayerStatus(MyPlayerStatus);
+                        }
                     }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in CheckPlayerStatus {e}");
+                    catch (Exception e)
+                    {
+                        Debug.LogError($"[LMP]: Coroutine error in CheckPlayerStatus {e}");
+                    }
                 }
 
                 yield return seconds;

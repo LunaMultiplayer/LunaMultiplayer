@@ -57,17 +57,21 @@ namespace LunaClient.Systems.VesselWarpSys
                 {
                     if (!Enabled) break;
 
-                    var strandedVesselIds = new List<Guid>();
-                    foreach (var vessel in VesselSubspaceList)
+                    if (MainSystem.Singleton.GameRunning)
                     {
-                        var clientsInSubspace = WarpSystem.Singleton.ClientSubspaceList.Count(v => v.Value == vessel.Value);
-                        if (clientsInSubspace < 1)
-                            strandedVesselIds.Add(vessel.Key);
-                    }
+                        var strandedVesselIds = new List<Guid>();
+                        foreach (var vessel in VesselSubspaceList)
+                        {
+                            var clientsInSubspace =
+                                WarpSystem.Singleton.ClientSubspaceList.Count(v => v.Value == vessel.Value);
+                            if (clientsInSubspace < 1)
+                                strandedVesselIds.Add(vessel.Key);
+                        }
 
-                    foreach (var strandedVessel in strandedVesselIds)
-                    {
-                        VesselSubspaceList[strandedVessel] = 0;
+                        foreach (var strandedVessel in strandedVesselIds)
+                        {
+                            VesselSubspaceList[strandedVessel] = 0;
+                        }
                     }
                 }
                 catch (Exception e)

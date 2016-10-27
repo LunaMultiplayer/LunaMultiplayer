@@ -159,11 +159,14 @@ namespace LunaClient.Systems.Warp
                 {
                     if (!Enabled) break;
 
-                    if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
-                        ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
+                    if (MainSystem.Singleton.GameRunning)
                     {
-                        //Follow the warp master into warp if needed
-                        CurrentSubspace = ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster];
+                        if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
+                            ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
+                        {
+                            //Follow the warp master into warp if needed
+                            CurrentSubspace = ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster];
+                        }
                     }
                 }
                 catch (Exception e)
@@ -197,10 +200,13 @@ namespace LunaClient.Systems.Warp
                 {
                     if (!Enabled) break;
 
-                    if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
-                        DisplayMessage(SettingsSystem.ServerSettings.WarpMaster + " has warp control", 1f);
-                    else
-                        DisplayMessage("You have warp control", 1f);
+                    if (MainSystem.Singleton.GameRunning)
+                    {
+                        if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
+                            DisplayMessage(SettingsSystem.ServerSettings.WarpMaster + " has warp control", 1f);
+                        else
+                            DisplayMessage("You have warp control", 1f);
+                    }
                 }
                 catch (Exception e)
                 {

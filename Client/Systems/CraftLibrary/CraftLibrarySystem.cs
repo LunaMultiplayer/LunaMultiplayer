@@ -55,7 +55,7 @@ namespace LunaClient.Systems.CraftLibrary
         public override void Update()
         {
             base.Update();
-            if (Enabled)
+            if (Enabled && MainSystem.Singleton.GameRunning)
             {
                 CraftLibraryEventHandler.HandleCraftLibraryEvents();
             }

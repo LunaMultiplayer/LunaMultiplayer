@@ -149,15 +149,18 @@ namespace LunaClient.Systems.VesselRemoveSys
                 {
                     if (!Enabled) break;
 
-                    var vesselsToKill = VesselProtoSystem.Singleton.AllPlayerVessels
-                        .Where(v => v.Loaded && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) != WarpSystem.Singleton.CurrentSubspace)
-                        .ToList();
-
-                    KillVessels(vesselsToKill.Select(v => FlightGlobals.FindVessel(v.VesselId)).ToArray());
-
-                    foreach (var killedVessel in vesselsToKill)
+                    if (MainSystem.Singleton.GameRunning)
                     {
-                        killedVessel.Loaded = false;
+                        var vesselsToKill = VesselProtoSystem.Singleton.AllPlayerVessels
+                            .Where(v =>v.Loaded && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) != WarpSystem.Singleton.CurrentSubspace)
+                            .ToList();
+
+                        KillVessels(vesselsToKill.Select(v => FlightGlobals.FindVessel(v.VesselId)).ToArray());
+
+                        foreach (var killedVessel in vesselsToKill)
+                        {
+                            killedVessel.Loaded = false;
+                        }
                     }
                 }
                 catch (Exception e)

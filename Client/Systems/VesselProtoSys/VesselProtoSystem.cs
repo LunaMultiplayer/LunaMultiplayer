@@ -141,7 +141,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     if (!Enabled) break;
 
-                    if (!string.IsNullOrEmpty(BannedPartsStr))
+                    if (VesselProtoSystemReady && !string.IsNullOrEmpty(BannedPartsStr))
                     {
                         if (BannedPartsMessage != null)
                             BannedPartsMessage.duration = 0;
