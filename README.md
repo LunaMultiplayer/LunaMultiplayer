@@ -11,6 +11,7 @@ Main features:
 - Better creation of UDP messages so they are easier to modify as you don't need to take care of serialization
 - Based on Tasks instead of Threads
 - Faster message compression algorithm (QuickLZ)
+
 ---
 ####After compiling, adjust the CopyToKSPDirectory.bat file with the correct KSP directory and run it.
 
