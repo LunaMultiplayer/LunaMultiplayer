@@ -47,7 +47,7 @@ namespace LunaCommon.Message.Base
                 }
                 throw new Exception("Message length below header size");
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //Bad message, we couldn't deserialize
                 return null;
