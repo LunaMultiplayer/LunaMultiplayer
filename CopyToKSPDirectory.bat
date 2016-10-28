@@ -1,4 +1,4 @@
-REM set the below path as you need and then run this bat to copy the files and make them debuggeable
+::Set the path below as you need and then run this bat to copy the files and make them debuggeable
 SET KSPPATH=D:\Steam\SteamApps\common\Kerbal Space Program
 
 mkdir "%KSPPATH%\GameData\LunaMultiPlayer\"
