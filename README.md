@@ -1,4 +1,4 @@
-# LunaMultiPlayer
+# Luna Multiplayer Mod
 
 *Multiplayer mod for KSP based on DMP*
 
