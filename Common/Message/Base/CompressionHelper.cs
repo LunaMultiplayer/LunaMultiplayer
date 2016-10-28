@@ -383,7 +383,9 @@ namespace LunaCommon.Message.Base
                             hash = (int)(((fetch >> 12) ^ fetch) & (HASH_VALUES - 1));
                             hashtable[hash] = last_hashed;
                             hash_counter[hash] = 1;
+#pragma warning disable CS0675 // Bitwise-or operator used on a sign-extended operand
                             fetch = (uint)(fetch >> 8 & 0xffff | destination[last_hashed + 3] << 16);
+#pragma warning restore CS0675 // Bitwise-or operator used on a sign-extended operand
                         }
                         fetch = (uint)(source[src] | (source[src + 1] << 8) | (source[src + 2] << 16));
                     }
@@ -412,11 +414,15 @@ namespace LunaCommon.Message.Base
                                 hashtable[hash] = last_hashed;
                                 hash_counter[hash] = 1;
                             }
+#pragma warning disable CS0675 // Bitwise-or operator used on a sign-extended operand
                             fetch = (uint)(fetch >> 8 & 0xffff | source[src + 2] << 16);
+#pragma warning restore CS0675 // Bitwise-or operator used on a sign-extended operand
                         }
                         else
                         {
+#pragma warning disable CS0675 // Bitwise-or operator used on a sign-extended operand
                             fetch = (uint)(fetch >> 8 & 0xffff | source[src + 2] << 16 | source[src + 3] << 24);
+#pragma warning restore CS0675 // Bitwise-or operator used on a sign-extended operand
                         }
                     }
                     else
