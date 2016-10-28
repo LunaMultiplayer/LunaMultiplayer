@@ -21,3 +21,5 @@ Main features:
 ####After compiling, adjust the CopyToKSPDirectory.bat file with the correct KSP directory and run it.
 
 If you want to know how to debug the code, read the .txt in ExternalLibraries\HowToDebugLMP
+
+Build Server: https://ci.appveyor.com/project/DaggerES/lunamultiplayer
