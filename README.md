@@ -3,8 +3,10 @@
 *Multiplayer mod for KSP based on DMP*
 
 ---
+
 Main features:
 - Better and optimized code, easier to read and modify
+- Better usage of coroutines
 - UDP based
 - Uses interpolation so the vessels shouldn't jump from one place to another
 - Uses the Lidgren library for reliable UDP message handling
@@ -15,6 +17,7 @@ Main features:
 - Faster message compression algorithm (QuickLZ)
 
 ---
+
 ####After compiling, adjust the CopyToKSPDirectory.bat file with the correct KSP directory and run it.
 
 If you want to know how to debug the code, read the .txt in ExternalLibraries\HowToDebugLMP
