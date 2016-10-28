@@ -239,12 +239,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\"
-mkdir "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-if /I "$(ConfigurationName)" == "Debug" "$(SolutionDir)\ExternalLibraries\pdb2mdb\pdb2mdb.exe" "$(TargetFileName)"
-if /I "$(ConfigurationName)" == "Debug" xcopy /Y "$(TargetPath)" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-if /I "$(ConfigurationName)" == "Release" xcopy /Y "$(TargetPath)" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-if /I "$(ConfigurationName)" == "Debug" xcopy /Y "$(TargetDir)$(TargetName).pdb" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-if /I "$(ConfigurationName)" == "Debug" xcopy /Y "$(TargetDir)$(TargetName).dll.mdb" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

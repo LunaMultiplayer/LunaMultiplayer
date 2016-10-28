@@ -27,9 +27,7 @@ namespace LunaServer.Lidgren
 
         private int MasterServerRegistrationMsInterval
             => GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval;
-
-        private long LastRegistrationTime { get; set; }
-
+        
         public void SetupLidgrenServer()
         {
             try
@@ -160,55 +158,51 @@ namespace LunaServer.Lidgren
             LunaLog.Normal("Registering with master servers...");
             while (ServerContext.ServerRunning)
             {
-                if (DateTime.UtcNow.Ticks - LastRegistrationTime >
-                    TimeSpan.FromMilliseconds(MasterServerRegistrationMsInterval).Ticks)
+                var msgData = new MsRegisterServerMsgData
                 {
-                    LastRegistrationTime = DateTime.UtcNow.Ticks;
+                    Id = Server.UniqueIdentifier,
+                    Cheats = GeneralSettings.SettingsStore.Cheats,
+                    Description = GeneralSettings.SettingsStore.Description,
+                    DropControlOnExit = GeneralSettings.SettingsStore.Cheats,
+                    DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats,
+                    DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats,
+                    GameMode = (int)GeneralSettings.SettingsStore.GameMode,
+                    InternalEndpoint = endpoint.Address + ":" + endpoint.Port,
+                    MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers,
+                    ModControl = (int)GeneralSettings.SettingsStore.ModControl,
+                    PlayerCount = ServerContext.Clients.Count,
+                    ServerName = GeneralSettings.SettingsStore.ServerName,
+                    VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval,
+                    WarpMode = (int)GeneralSettings.SettingsStore.WarpMode
+                };
 
-                    var msgData = new MsRegisterServerMsgData
+                msgData.Description = msgData.Description.Length > 200
+                    ? msgData.Description.Substring(0, 200)
+                    : msgData.Description;
+
+                msgData.ServerName = msgData.ServerName.Length > 30
+                    ? msgData.ServerName.Substring(0, 30)
+                    : msgData.ServerName;
+
+                var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
+                var msgBytes = ServerContext.MasterServerMessageFactory.Serialize(msg);
+
+                foreach (var masterServer in MasterServerEndpoints)
+                {
+                    try
                     {
-                        Id = Server.UniqueIdentifier,
-                        Cheats = GeneralSettings.SettingsStore.Cheats,
-                        Description = GeneralSettings.SettingsStore.Description,
-                        DropControlOnExit = GeneralSettings.SettingsStore.Cheats,
-                        DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats,
-                        DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats,
-                        GameMode = (int)GeneralSettings.SettingsStore.GameMode,
-                        InternalEndpoint = endpoint.Address + ":" + endpoint.Port,
-                        MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers,
-                        ModControl = (int)GeneralSettings.SettingsStore.ModControl,
-                        PlayerCount = ServerContext.Clients.Count,
-                        ServerName = GeneralSettings.SettingsStore.ServerName,
-                        VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval,
-                        WarpMode = (int)GeneralSettings.SettingsStore.WarpMode
-                    };
-
-                    msgData.Description = msgData.Description.Length > 200
-                        ? msgData.Description.Substring(0, 200)
-                        : msgData.Description;
-
-                    msgData.ServerName = msgData.ServerName.Length > 30
-                        ? msgData.ServerName.Substring(0, 30)
-                        : msgData.ServerName;
-
-                    var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-                    var msgBytes = ServerContext.MasterServerMessageFactory.Serialize(msg);
-
-                    foreach (var masterServer in MasterServerEndpoints)
+                        var outMsg = Server.CreateMessage(msgBytes.Length);
+                        outMsg.Write(msgBytes);
+                        Server.SendUnconnectedMessage(outMsg, masterServer);
+                        Server.FlushSendQueue();
+                    }
+                    catch (Exception)
                     {
-                        try
-                        {
-                            var outMsg = Server.CreateMessage(msgBytes.Length);
-                            outMsg.Write(msgBytes);
-                            Server.SendUnconnectedMessage(outMsg, masterServer);
-                            Server.FlushSendQueue();
-                        }
-                        catch (Exception)
-                        {
-                            // ignored
-                        }
+                        // ignored
                     }
                 }
+
+                Thread.Sleep(MasterServerRegistrationMsInterval);
             }
         }
     }

@@ -243,18 +243,7 @@
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>mkdir "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\"
-mkdir "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-if /I "$(ConfigurationName)" == "Debug" "$(SolutionDir)\ExternalLibraries\pdb2mdb\pdb2mdb.exe" "$(TargetFileName)"
-if /I "$(ConfigurationName)" == "Debug" xcopy /Y "$(TargetPath)" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-if /I "$(ConfigurationName)" == "Release" xcopy /Y "$(TargetPath)" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-if /I "$(ConfigurationName)" == "Debug" xcopy /Y "$(TargetDir)$(TargetName).pdb" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-if /I "$(ConfigurationName)" == "Debug" xcopy /Y "$(TargetDir)$(TargetName).dll.mdb" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-xcopy /Y "$(SolutionDir)ExternalLibraries\FastMember.dll" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-xcopy /Y "$(SolutionDir)ExternalLibraries\Lidgren.Network.dll" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-xcopy /Y "$(SolutionDir)ExternalLibraries\System.Threading.dll" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-xcopy /Y "$(SolutionDir)ExternalLibraries\System.Data.dll" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-xcopy /Y "$(SolutionDir)ExternalLibraries\Mono.Data.Tds.dll" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"
-xcopy /Y "$(SolutionDir)ExternalLibraries\System.Transactions.dll" "D:\Steam\SteamApps\common\Kerbal Space Program\GameData\LunaMultiPlayer\Plugins"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>
