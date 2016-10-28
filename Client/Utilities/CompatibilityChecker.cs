@@ -35,13 +35,13 @@ using UnityEngine;
 
 namespace LunaClient.Utilities
 {
-/**
-             * This utility displays a warning with a list of mods that determine themselves
-             * to be incompatible with the current running version of Kerbal Space Program.
-             * 
-             * See this forum thread for details:
-             * http://forum.kerbalspaceprogram.com/threads/65395-Voluntarily-Locking-Plugins-to-a-Particular-KSP-Version
-             */
+    /**
+                 * This utility displays a warning with a list of mods that determine themselves
+                 * to be incompatible with the current running version of Kerbal Space Program.
+                 * 
+                 * See this forum thread for details:
+                 * http://forum.kerbalspaceprogram.com/threads/65395-Voluntarily-Locking-Plugins-to-a-Particular-KSP-Version
+                 */
 
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     internal class CompatibilityChecker : MonoBehaviour
@@ -53,7 +53,8 @@ namespace LunaClient.Utilities
         {
             const int compatibleMajor = 1;
             const int compatibleMinor = 2;
-            return (Versioning.version_major == compatibleMajor) && (Versioning.version_minor == compatibleMinor);
+            const int compatibleRevision = 0;
+            return (Versioning.version_major == compatibleMajor) && (Versioning.version_minor == compatibleMinor) && (Versioning.Revision == compatibleRevision);
 
             /*-----------------------------------------------*\
             | IMPLEMENTERS SHOULD NOT EDIT BEYOND THIS POINT! |
@@ -85,7 +86,7 @@ namespace LunaClient.Utilities
                     .ToArray();
 
             // Let the latest version of the checker execute.
-            if (_version != fields.Max(f => (int) f.GetValue(null))) return;
+            if (_version != fields.Max(f => (int)f.GetValue(null))) return;
 
             Debug.Log(string.Format("[CompatibilityChecker] Running checker version {0} from '{1}'", _version,
                 Assembly.GetExecutingAssembly().GetName().Name));
@@ -104,7 +105,7 @@ namespace LunaClient.Utilities
                     {
                         try
                         {
-                            return !(bool) m.Invoke(null, new object[0]);
+                            return !(bool)m.Invoke(null, new object[0]);
                         }
                         catch (Exception e)
                         {
@@ -127,7 +128,7 @@ namespace LunaClient.Utilities
                     {
                         try
                         {
-                            return !(bool) m.Invoke(null, new object[0]);
+                            return !(bool)m.Invoke(null, new object[0]);
                         }
                         catch (Exception e)
                         {
