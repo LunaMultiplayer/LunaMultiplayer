@@ -398,8 +398,7 @@ namespace LunaCommon
             sb.AppendLine("#You can comment by starting a line with a #, these are ignored by the server.");
             sb.AppendLine("#Commenting will NOT work unless the line STARTS with a '#'.");
             sb.AppendLine("#You can also indent the file with tabs or spaces.");
-            sb.AppendLine(
-                "#Sections supported are required-files, optional-files, partslist, resource-blacklist and resource-whitelist.");
+            sb.AppendLine("#Sections supported are required-files, optional-files, partslist, resource-blacklist and resource-whitelist.");
             sb.AppendLine(
                 "#The client will be required to have the files found in required-files, and they must match the SHA hash if specified (this is where part mod files and play-altering files should go, like KWRocketry or Ferram Aerospace Research#The client may have the files found in optional-files, but IF they do then they must match the SHA hash (this is where mods that do not affect other players should go, like EditorExtensions or part catalogue managers");
             sb.AppendLine("#You cannot use both resource-blacklist AND resource-whitelist in the same file.");

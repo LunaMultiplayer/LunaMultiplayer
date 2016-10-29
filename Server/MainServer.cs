@@ -71,7 +71,7 @@ namespace LunaServer
                     }
 
                     ServerContext.ServerRestarting = false;
-                    LunaLog.Normal("Starting Luna Server v" + VersionInfo.VersionNumber);
+                    LunaLog.Normal("Starting Luna Server v" + VersionInfo.FullVersionNumber);
 
                     if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.CUSTOM)
                     {

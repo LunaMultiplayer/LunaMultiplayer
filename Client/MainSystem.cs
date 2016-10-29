@@ -98,7 +98,7 @@ namespace LunaClient
             SystemsHandler.KillAllSystems();
 
             HandleCommandLineArgs();
-            Debug.Log($"[LMP]: LunaMultiPlayer {VersionInfo.VersionNumber} Initialized!");
+            Debug.Log($"[LMP]: LunaMultiPlayer {VersionInfo.FullVersionNumber} Initialized!");
         }
 
         public override void Update()
