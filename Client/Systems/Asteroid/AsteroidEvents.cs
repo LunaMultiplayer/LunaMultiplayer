@@ -18,7 +18,7 @@ namespace LunaClient.Systems.Asteroid
                     {
                         Debug.Log("[LMP]: Spawned in new server asteroid!");
                         System.ServerAsteroids.Add(checkVessel.id.ToString());
-                        VesselProtoSystem.Singleton.MessageSender.SendVesselProtoMessage(checkVessel.protoVessel);
+                        VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(checkVessel);
                     }
                     else
                     {

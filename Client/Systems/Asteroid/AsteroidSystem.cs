@@ -101,10 +101,9 @@ namespace LunaClient.Systems.Asteroid
                     {
                         if (asteroid.DiscoveryInfo.trackingStatus.Value != ServerAsteroidTrackStatus[asteroid.id.ToString()])
                         {
-                            var pv = asteroid.BackupVessel();
                             Debug.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
                             ServerAsteroidTrackStatus[asteroid.id.ToString()] = asteroid.DiscoveryInfo.trackingStatus.Value;
-                            VesselProtoSystem.Singleton.MessageSender.SendVesselProtoMessage(pv);
+                            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid);
                         }
                     }
                     yield return null; //Resume on next frame

@@ -61,5 +61,6 @@ namespace LunaCommon.Message.Data.Settings
         public int ClockSetMsInterval { get; set; }
         public int StrandedVesselsCheckMsInterval { get; set; }
         public int VesselDefinitionUpdateMsInterval { get; set; }
+        public int AbandonedVesselsUpdateMsInterval { get; set; }
     }
 }

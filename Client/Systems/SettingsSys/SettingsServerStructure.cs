@@ -25,5 +25,6 @@ namespace LunaClient.Systems.SettingsSys
         public int ClockSetMsInterval { get; set; }
         public int StrandedVesselsCheckMsInterval { get; set; }
         public int VesselDefinitionUpdateMsInterval { get; set; }
+        public int AbandonedVesselsUpdateMsInterval { get; set; }
     }
 }

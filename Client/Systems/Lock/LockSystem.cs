@@ -214,6 +214,11 @@ namespace LunaClient.Systems.Lock
             return ServerLocks.Where(l => l.Value == playerName).Select(l => l.Key).ToArray();
         }
 
+        public string[] GetLocksPrefix(string playerName, string lockPrefix)
+        {
+            return ServerLocks.Where(l => l.Value == playerName && l.Key.StartsWith(lockPrefix)).Select(l => l.Key).ToArray();
+        }
+
         #endregion
 
         #endregion

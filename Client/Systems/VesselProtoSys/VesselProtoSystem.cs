@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
+using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
@@ -44,9 +45,11 @@ namespace LunaClient.Systems.VesselProtoSys
         public override void OnEnabled()
         {
             base.OnEnabled();
-            Client.Singleton.StartCoroutine(SendVesselToServer());
+            Client.Singleton.StartCoroutine(SendVesselsToServer());
+            Client.Singleton.StartCoroutine(SendAbandonedVesselsToServer());
             Client.Singleton.StartCoroutine(CheckVesselsToLoad());
             Client.Singleton.StartCoroutine(UpdateBannedPartsMessage());
+
             GameEvents.onFlightReady.Add(VesselProtoEvents.OnFlightReady);
             GameEvents.onVesselWasModified.Add(VesselProtoEvents.OnVesselWasModified);
         }
@@ -75,17 +78,47 @@ namespace LunaClient.Systems.VesselProtoSys
             if (!CurrentVesselSent && VesselReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
             {
                 CurrentVesselSent = true;
-                MessageSender.SendVesselProtoMessageApplyPosition(FlightGlobals.ActiveVessel.protoVessel);
+                MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
             }
         }
 
+        /// <summary>
+        /// Here we send the vessel that do not have update locks to the server at a given interval. This will update the orbit information etc in the server.
+        /// Bear in mind that the server cannot apply "VesselUpdateMessages" over vessel definitions therefore, to update the information of a vessel in the server
+        /// we must send all the vessel data.
+        /// </summary>
+        private IEnumerator SendAbandonedVesselsToServer()
+        {
+            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval).TotalSeconds);
+            while (true)
+            {
+                try
+                {
+                    if (!Enabled) break;
+
+                    if (VesselProtoSystemReady)
+                    {
+                        foreach (var vessel in FlightGlobals.VesselsUnloaded.Where(v => !LockSystem.Singleton.LockExists("update-" + v.id)))
+                        {
+                            MessageSender.SendVesselMessage(vessel);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in SendAbandonedVesselsToServer {e}");
+                }
+
+                yield return seconds;
+            }
+        }
 
         /// <summary>
         /// Here we send our vessel to the server at a given interval. This will update our active vessel position orbit information etc in the server.
         /// Bear in mind that the server cannot apply "VesselUpdateMessages" over vessel definitions therefore, to update the information of a vessel in the server
         /// we must send all the vessel data.
         /// </summary>
-        private IEnumerator SendVesselToServer()
+        private IEnumerator SendVesselsToServer()
         {
             var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselDefinitionUpdateMsInterval).TotalSeconds);
             while (true)
@@ -96,7 +129,12 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     if (VesselProtoSystemReady)
                     {
-                        MessageSender.SendVesselProtoMessageApplyPosition(FlightGlobals.ActiveVessel.protoVessel);
+                        var updateVesselIds = LockSystem.Singleton.GetLocksPrefix(SettingsSystem.CurrentSettings.PlayerName, "update-").Select(l => l.Substring(7));
+
+                        foreach (var id in updateVesselIds)
+                        {
+                            MessageSender.SendVesselMessage(FlightGlobals.FindVessel(new Guid(id)));
+                        }
                     }
                 }
                 catch (Exception e)
@@ -124,7 +162,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     {
                         //Load vessels when we have at least 1 update for them and are in our subspace
                         var vesselsToLoad = AllPlayerVessels
-                            .Where(v => v.HasUpdates && !v.Loaded 
+                            .Where(v => v.HasUpdates && !v.Loaded
                             && VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == WarpSystem.Singleton.CurrentSubspace)
                             .ToArray();
 

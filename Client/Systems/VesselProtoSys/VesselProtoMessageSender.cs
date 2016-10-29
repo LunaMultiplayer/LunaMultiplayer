@@ -19,26 +19,22 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
-
-        public void SendVesselProtoMessageApplyPosition(ProtoVessel vessel)
+        
+        public void SendVesselMessage(Vessel vessel)
         {
-            vessel.longitude = FlightGlobals.ActiveVessel.longitude;
-            vessel.latitude = FlightGlobals.ActiveVessel.latitude;
-            vessel.altitude = FlightGlobals.ActiveVessel.altitude;
+            if (vessel == null) return;
 
-            SendVesselProtoMessage(vessel);
-        }
+            //Update the protovessel definition!
+            vessel.BackupVessel();
 
-        public void SendVesselProtoMessage(ProtoVessel vessel)
-        {
             //Defend against NaN orbits
-            if (VesselHasNaNPosition(vessel))
+            if (VesselHasNaNPosition(vessel.protoVessel))
             {
-                Debug.Log($"[LMP]: Vessel {vessel.vesselID} has NaN position");
+                Debug.Log($"[LMP]: Vessel {vessel.id} has NaN position");
                 return;
             }
 
-            foreach (var pps in vessel.protoPartSnapshots)
+            foreach (var pps in vessel.protoVessel.protoPartSnapshots)
             {
                 //Remove tourists from the vessel
                 //TODO: Probably this can be done in the CleanUpVesselNode method
@@ -50,7 +46,7 @@ namespace LunaClient.Systems.VesselProtoSys
             var vesselNode = new ConfigNode();
             try
             {
-                vessel.Save(vesselNode);
+                vessel.protoVessel.Save(vesselNode);
             }
             catch (Exception)
             {
@@ -59,7 +55,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             //Clean up the vessel so we send only the important data
-            CleanUpVesselNode(vesselNode, vessel.vesselID);
+            CleanUpVesselNode(vesselNode, vessel.id);
 
             var vesselBytes = ConfigNodeSerializer.Singleton.Serialize(vesselNode);
             var path = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer","Plugins", "Data", "lastVessel.txt");
@@ -68,17 +64,17 @@ namespace LunaClient.Systems.VesselProtoSys
             if (vesselBytes.Length > 0)
             {
                 UniverseSyncCache.Singleton.QueueToCache(vesselBytes);
-                Debug.Log($"[LMP]: Sending vessel {vessel.vesselID}, Name {vessel.vesselName}, type: {vessel.vesselType}, size: {vesselBytes.Length}");
+                Debug.Log($"[LMP]: Sending vessel {vessel.protoVessel.vesselID}, Name {vessel.vesselName}, type: {vessel.vesselType}, size: {vesselBytes.Length}");
 
                 SendMessage(new VesselProtoMsgData
                 {
-                    VesselId = vessel.vesselID,
+                    VesselId = vessel.id,
                     VesselData = vesselBytes
                 });
             }
             else
             {
-                Debug.LogError($"[LMP]: Failed to create byte[] data for {vessel.vesselID}");
+                Debug.LogError($"[LMP]: Failed to create byte[] data for {vessel.id}");
             }
         }
 
