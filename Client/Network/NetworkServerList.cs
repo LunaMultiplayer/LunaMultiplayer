@@ -37,7 +37,7 @@ namespace LunaClient.Network
         /// </summary>
         public static void RequestServers()
         {
-            var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(new MsRequestServersMsgData());
+            var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(new MsRequestServersMsgData{CurrentVersion = VersionInfo.VersionNumber});
             NetworkSender.QueueOutgoingMessage(requestMsg);
         }
 

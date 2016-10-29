@@ -32,4 +32,4 @@ using LunaCommon;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion(VersionInfo.VersionNumber)]
+[assembly: AssemblyVersion("1.0.0.*")]

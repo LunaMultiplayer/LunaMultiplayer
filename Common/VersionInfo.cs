@@ -1,7 +1,10 @@
-﻿namespace LunaCommon
+﻿using System.Net.Mime;
+using System.Reflection;
+
+namespace LunaCommon
 {
     public static class VersionInfo
     {
-        public const string VersionNumber = "1.0.0";
+        public static string VersionNumber { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString();
     }
 }

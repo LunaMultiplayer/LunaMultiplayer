@@ -123,7 +123,8 @@ namespace MasterServer
                     break;
                 case MasterServerMessageSubType.REQUEST_SERVERS:
                     Form.WriteLine("Received LIST REQUEST from:" + netMsg.SenderEndPoint);
-                    SendServerLists(netMsg, peer);
+                    var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
+                    SendServerLists(netMsg, peer, version);
                     break;
                 case MasterServerMessageSubType.INTRODUCTION:
                     Form.WriteLine("Received INTRODUCTION request from:" + netMsg.SenderEndPoint);
@@ -146,9 +147,12 @@ namespace MasterServer
             }
         }
 
-        private static void SendServerLists(NetIncomingMessage netMsg, NetPeer peer)
+        /// <summary>
+        /// Return the list of servers that match the version specified
+        /// </summary>
+        private static void SendServerLists(NetIncomingMessage netMsg, NetPeer peer, string version)
         {
-            var values = ServerDictionary.Values.OrderBy(v => v.Info.Id);
+            var values = ServerDictionary.Values.Where(s=> s.Info.Version == version).OrderBy(v => v.Info.Id);
             var msgData = new MsReplyServersMsgData
             {
                 Id = values.Select(s => s.Info.Id).ToArray(),
