@@ -61,6 +61,7 @@
     <Compile Include="Message\Reader\HandshakeMsgReader.cs" />
     <Compile Include="Message\Reader\SettingsMsgReader.cs" />
     <Compile Include="Message\Reader\VesselMsgReader.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\VesselUpdateRelay.cs" />
     <Compile Include="Server\MessageQueuer.cs" />
     <Compile Include="System\FileHandler.cs" />
