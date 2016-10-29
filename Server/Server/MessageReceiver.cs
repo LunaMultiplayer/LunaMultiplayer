@@ -66,7 +66,7 @@ namespace LunaServer.Server
 
             if (message.VersionMismatch)
             {
-                MessageQueuer.SendConnectionEnd(client, $"Version mismatch. Yours: {message.Data.Version} Server: {VersionInfo.VersionNumber}");
+                MessageQueuer.SendConnectionEnd(client, $"Version mismatch. Your version doesn't match the server's version: {VersionInfo.VersionNumber}.  Update your plugin.");
                 return;
             }
 
