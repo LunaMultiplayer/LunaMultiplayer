@@ -119,6 +119,9 @@ namespace LunaServer.Settings
         [Description("Interval in ms at wich users will check for vessels in empty subspaces and move them to the server subspace")]
         public int StrandedVesselsCheckMsInterval = 100;
 
+        [Description("Interval in ms at wich users will send the active vessel definition to the server")]
+        public int VesselDefinitionUpdateMsInterval = 1000;
+
         public int FarDistanceUpdateIntervalMs { get; set; } = 500; // 2FPS
         public int MediumDistanceUpdateIntervalMs { get; set; } = 250; //4 FPS
         public int CloseDistanceUpdateIntervalMs { get; set; } = 33; //30 FPS

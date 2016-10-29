@@ -172,6 +172,7 @@ namespace LunaServer.Lidgren
                     ModControl = (int)GeneralSettings.SettingsStore.ModControl,
                     PlayerCount = ServerContext.Clients.Count,
                     ServerName = GeneralSettings.SettingsStore.ServerName,
+                    ServerVersion = VersionInfo.VersionNumber,
                     VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval,
                     WarpMode = (int)GeneralSettings.SettingsStore.WarpMode
                 };

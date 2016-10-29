@@ -8,6 +8,7 @@ namespace LunaCommon.Message.Data.MasterServer
         public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.REGISTER_SERVER;
 
         public long Id { get; set; }
+        public string ServerVersion { get; set; }
         public string InternalEndpoint { get; set; }
         public bool Cheats { get; set; }
         public int GameMode { get; set; }

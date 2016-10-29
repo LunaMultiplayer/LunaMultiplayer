@@ -33,16 +33,20 @@ namespace LunaClient.Systems.Warp
             get { return _currentSubspace; }
             set
             {
-                ClientSubspaceList[SettingsSystem.CurrentSettings.PlayerName] = value;
-                SendChangeSubspaceMsg(value);
+                if (_currentSubspace != value)
+                {
+                    _currentSubspace = value;
 
-                if (value != -1 && value != _currentSubspace && !SkipSubspaceProcess)
-                    ProcessNewSubspace();
+                    ClientSubspaceList[SettingsSystem.CurrentSettings.PlayerName] = value;
+                    SendChangeSubspaceMsg(value);
 
-                VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(SettingsSystem.CurrentSettings.PlayerName,
-                    value);
-                _currentSubspace = value;
-                Debug.Log($"[LMP]: Locked to subspace {value}, time: {GetCurrentSubspaceTime()}");
+                    if (value != -1 && !SkipSubspaceProcess)
+                        ProcessNewSubspace();
+
+                    VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(SettingsSystem.CurrentSettings.PlayerName, value);
+
+                    Debug.Log($"[LMP]: Locked to subspace {value}, time: {GetCurrentSubspaceTime()}");
+                }
             }
         }
 

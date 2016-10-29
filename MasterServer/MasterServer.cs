@@ -122,8 +122,8 @@ namespace MasterServer
                     RegisterServer(message, netMsg);
                     break;
                 case MasterServerMessageSubType.REQUEST_SERVERS:
-                    Form.WriteLine("Received LIST REQUEST from:" + netMsg.SenderEndPoint);
                     var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
+                    Form.WriteLine($"Received LIST REQUEST from: {netMsg.SenderEndPoint} version: {version}");
                     SendServerLists(netMsg, peer, version);
                     break;
                 case MasterServerMessageSubType.INTRODUCTION:

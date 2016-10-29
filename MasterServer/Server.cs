@@ -30,7 +30,7 @@ namespace MasterServer
                 ModControl = msg.ModControl,
                 PlayerCount = msg.PlayerCount,
                 ServerName = msg.ServerName,
-                Version = msg.Version,
+                Version = msg.ServerVersion,
                 VesselUpdatesSendMsInterval = msg.VesselUpdatesSendMsInterval,
                 WarpMode = msg.WarpMode
             };

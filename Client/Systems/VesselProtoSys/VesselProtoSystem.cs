@@ -5,6 +5,7 @@ using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Mod;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselWarpSys;
@@ -26,6 +27,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public float CheckVesselsToLoadSInterval = 2.5f;
         public float UpdateScreenMessageInterval = 1f;
+        public float SendVesselToServerSInterval = 5f;
 
         public ScreenMessage BannedPartsMessage { get; set; }
         public string BannedPartsStr { get; set; }
@@ -42,6 +44,7 @@ namespace LunaClient.Systems.VesselProtoSys
         public override void OnEnabled()
         {
             base.OnEnabled();
+            Client.Singleton.StartCoroutine(SendVesselToServer());
             Client.Singleton.StartCoroutine(CheckVesselsToLoad());
             Client.Singleton.StartCoroutine(UpdateBannedPartsMessage());
             GameEvents.onFlightReady.Add(VesselProtoEvents.OnFlightReady);
@@ -73,6 +76,33 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 CurrentVesselSent = true;
                 MessageSender.SendVesselProtoMessageApplyPosition(FlightGlobals.ActiveVessel.protoVessel);
+            }
+        }
+
+
+        /// <summary>
+        /// Here we send our vessel to the server at a given interval.
+        /// </summary>
+        private IEnumerator SendVesselToServer()
+        {
+            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselDefinitionUpdateMsInterval).TotalSeconds);
+            while (true)
+            {
+                try
+                {
+                    if (!Enabled) break;
+
+                    if (VesselProtoSystemReady)
+                    {
+                        MessageSender.SendVesselProtoMessageApplyPosition(FlightGlobals.ActiveVessel.protoVessel);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in SendVesselToServer {e}");
+                }
+
+                yield return seconds;
             }
         }
 

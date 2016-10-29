@@ -29,6 +29,7 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.SendScenarioDataSecInterval = msgData.SendScenarioDataSecInterval;
             SettingsSystem.ServerSettings.VesselKillCheckMsInterval = msgData.VesselKillCheckMsInterval;
             SettingsSystem.ServerSettings.StrandedVesselsCheckMsInterval = msgData.StrandedVesselsCheckMsInterval;
+            SettingsSystem.ServerSettings.VesselDefinitionUpdateMsInterval = msgData.VesselDefinitionUpdateMsInterval;
             SettingsSystem.ServerSettings.ClockSetMsInterval = msgData.ClockSetMsInterval;
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
             SettingsSystem.ServerSettings.DropControlOnExit = msgData.DropControlOnExit;

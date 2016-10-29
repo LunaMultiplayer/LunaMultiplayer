@@ -29,6 +29,7 @@ namespace LunaServer.Message.Reader
                 SendScenarioDataSecInterval = GeneralSettings.SettingsStore.SendScenarioDataSecInterval,
                 VesselKillCheckMsInterval = GeneralSettings.SettingsStore.VesselKillCheckMsInterval,
                 StrandedVesselsCheckMsInterval = GeneralSettings.SettingsStore.StrandedVesselsCheckMsInterval,
+                VesselDefinitionUpdateMsInterval = GeneralSettings.SettingsStore.VesselDefinitionUpdateMsInterval,
                 ClockSetMsInterval = GeneralSettings.SettingsStore.ClockSetMsInterval,
                 WarpMaster = GeneralSettings.SettingsStore.WarpMaster,
             };
