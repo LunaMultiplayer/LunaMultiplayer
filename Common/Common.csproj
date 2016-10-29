@@ -48,11 +48,11 @@
   <ItemGroup>
     <Reference Include="FastMember, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalLibraries\FastMember.dll</HintPath>
+      <HintPath>..\External\Dependencies\FastMember.dll</HintPath>
     </Reference>
     <Reference Include="Lidgren.Network, Version=2012.1.7.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\ExternalLibraries\Lidgren.Network.dll</HintPath>
+      <HintPath>..\External\Dependencies\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

@@ -1,3 +1,4 @@
+*.user
 CopyToKSPDirectory.bat
 .vs/
 Client/*.csproj.user
