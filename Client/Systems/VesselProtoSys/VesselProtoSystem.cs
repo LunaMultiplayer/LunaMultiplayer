@@ -81,7 +81,9 @@ namespace LunaClient.Systems.VesselProtoSys
 
 
         /// <summary>
-        /// Here we send our vessel to the server at a given interval.
+        /// Here we send our vessel to the server at a given interval. This will update our active vessel position orbit information etc in the server.
+        /// Bear in mind that the server cannot apply "VesselUpdateMessages" over vessel definitions therefore, to update the information of a vessel in the server
+        /// we must send all the vessel data.
         /// </summary>
         private IEnumerator SendVesselToServer()
         {
