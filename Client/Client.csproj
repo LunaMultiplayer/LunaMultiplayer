@@ -244,7 +244,6 @@
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
+    <PostBuildEvent>call  $(SolutionDir)CopyToKSPDirectory.bat</PostBuildEvent>
   </PropertyGroup>
 </Project>
