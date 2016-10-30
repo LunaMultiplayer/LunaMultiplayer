@@ -47,7 +47,6 @@ SET KSPPATH=C:\games\Steam\SteamApps\common\Kerbal Space Program
 
 
 ### How to debug LMP:
-You can learn how to debug the code with visual studio on the txt located here here:https://github.com/DaggerES/LunaMultiPlayer/tree/master/ExternalLibraries/HowToDebugLMP
-If you want to know how to debug the code, read the .txt in ExternalLibraries\HowToDebugLMP
+You can learn how to debug the code with visual studio on the txt located here: https://github.com/DaggerES/LunaMultiPlayer/tree/master/External/HowToDebugLMP
 
 Build Server: https://ci.appveyor.com/project/DaggerES/lunamultiplayer
