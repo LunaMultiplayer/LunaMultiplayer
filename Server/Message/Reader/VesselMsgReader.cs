@@ -66,9 +66,11 @@ namespace LunaServer.Message.Reader
         {
             var msgData = (VesselProtoMsgData) message;
 
-            LunaLog.Debug($"Saving vessel {msgData.VesselId} from {client.PlayerName}");
-
             var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", msgData.VesselId + ".txt");
+
+            if (!File.Exists(path))
+                LunaLog.Debug($"Saving vessel {msgData.VesselId} from {client.PlayerName}");
+
             FileHandler.WriteToFile(path, msgData.VesselData);
 
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);

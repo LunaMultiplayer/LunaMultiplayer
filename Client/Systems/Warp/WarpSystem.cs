@@ -18,11 +18,7 @@ namespace LunaClient.Systems.Warp
 
         public bool CurrentlyWarping => CurrentSubspace == -1;
 
-        public bool AloneInCurrentSubspace => ClientSubspaceList
-                                                  .Count(
-                                                      p =>
-                                                          p.Value == CurrentSubspace &&
-                                                          p.Key != SettingsSystem.CurrentSettings.PlayerName) > 0;
+        public bool AloneInCurrentSubspace => ClientSubspaceList.Count(p => p.Value == CurrentSubspace && p.Key != SettingsSystem.CurrentSettings.PlayerName) > 0;
 
         public WarpEntryDisplay WarpEntryDisplay { get; } = new WarpEntryDisplay();
 
@@ -57,6 +53,7 @@ namespace LunaClient.Systems.Warp
         private ScreenMessage WarpMessage { get; set; }
         private WarpEvents WarpEvents { get; } = new WarpEvents();
         public bool SkipSubspaceProcess { get; set; }
+        public bool WaitingSubspaceIdFromServer { get; set; }
 
         private const float UpdateScreenMessageSInterval = 0.2f;
         private const float CheckFollowMasterSInterval = 1f;
@@ -123,7 +120,7 @@ namespace LunaClient.Systems.Warp
             {
                 MessageSender.SendMessage(new WarpNewSubspaceMsgData
                 {
-                    SubspaceTime = Planetarium.GetUniversalTime(),
+                    SubspaceTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.Singleton.GetServerClock(),
                     PlayerCreator = SettingsSystem.CurrentSettings.PlayerName,
                     //we don't send the subspaceKey as that one will be given by the server except when warping that we set it to -1
                 });

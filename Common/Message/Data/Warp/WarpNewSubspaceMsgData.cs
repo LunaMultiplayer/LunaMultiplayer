@@ -8,6 +8,6 @@ namespace LunaCommon.Message.Data.Warp
         public override WarpMessageType WarpMessageType => WarpMessageType.NEW_SUBSPACE;
         public string PlayerCreator { get; set; }
         public int SubspaceKey { get; set; }
-        public double SubspaceTime { get; set; }
+        public double SubspaceTimeDifference { get; set; }
     }
 }

@@ -15,18 +15,18 @@ namespace LunaServer.System
             LunaLog.Debug("Create Subspace");
 
             //Create Subspace
-            WarpContext.Subspaces.TryAdd(WarpContext.NextSubspaceId, message.SubspaceTime);
+            WarpContext.Subspaces.TryAdd(WarpContext.NextSubspaceId, message.SubspaceTimeDifference);
 
             //Tell all Clients about the new Subspace
             var newMessageData = new WarpNewSubspaceMsgData
             {
-                SubspaceTime = message.SubspaceTime,
+                SubspaceTimeDifference = message.SubspaceTimeDifference,
                 PlayerCreator = message.PlayerCreator,
                 SubspaceKey = WarpContext.NextSubspaceId
             };
             MessageQueuer.SendToAllClients<WarpSrvMsg>(newMessageData);
 
-            WarpSystem.SaveSubspace(WarpContext.NextSubspaceId, message.SubspaceTime); //Save to disk
+            WarpSystem.SaveSubspace(WarpContext.NextSubspaceId, message.SubspaceTimeDifference); //Save to disk
             WarpContext.NextSubspaceId++;
         }
 

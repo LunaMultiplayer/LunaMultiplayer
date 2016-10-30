@@ -33,6 +33,7 @@ namespace LunaClient.Systems.Warp
             {
                 //We stopped warping so send our new subspace
                 System.NewSubspaceSent = false;
+                System.WaitingSubspaceIdFromServer = true;
                 System.SendNewSubspace();
             }
         }

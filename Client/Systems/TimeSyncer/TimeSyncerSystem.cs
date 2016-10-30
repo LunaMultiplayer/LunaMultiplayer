@@ -143,6 +143,10 @@ namespace LunaClient.Systems.TimeSyncer
 
         #region Private methods
 
+        /// <summary>
+        /// Coroutine that checks our time against the server time and adjust it if needed.
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator SyncTime()
         {
             var seconds = new WaitForSeconds((float) TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.ClockSetMsInterval).TotalSeconds);
@@ -152,7 +156,7 @@ namespace LunaClient.Systems.TimeSyncer
                 {
                     if (!Enabled) break;
 
-                    if (Synced && !CurrentlyWarping && CanSyncTime())
+                    if (Synced && !CurrentlyWarping && CanSyncTime() && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
                     {
                         var targetTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
                         var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;

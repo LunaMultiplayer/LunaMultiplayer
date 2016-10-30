@@ -54,10 +54,11 @@ namespace LunaClient.Systems.Warp
                 case WarpMessageType.NEW_SUBSPACE:
                     {
                         var data = (WarpNewSubspaceMsgData)messageData;
-                        AddSubspace(data.SubspaceKey, data.SubspaceTime);
+                        AddSubspace(data.SubspaceKey, data.SubspaceTimeDifference);
                         if (data.PlayerCreator == SettingsSystem.CurrentSettings.PlayerName)
                         {
                             //It's our subspace that we just created so set it as ours
+                            System.WaitingSubspaceIdFromServer = false;
                             System.SkipSubspaceProcess = true;
                             System.CurrentSubspace = data.SubspaceKey;
                         }
