@@ -10,7 +10,7 @@ namespace LunaCommon
     {
         public static IPEndPoint CreateEndpointFromString(string endpoint)
         {
-            return new IPEndPoint(IPAddress.Parse(endpoint.Split(':')[0]), int.Parse(endpoint.Split(':')[1]));
+            return new IPEndPoint(Dns.GetHostAddresses(endpoint.Split(':')[0])[0], int.Parse(endpoint.Split(':')[1]));
         }
 
         public static string StringFromEndpoint(IPEndPoint endpoint)
