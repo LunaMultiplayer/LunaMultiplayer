@@ -53,7 +53,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         }
 
         /// <summary>
-        /// This event is called when vessel is terminated from tack station
+        /// This event is called when vessel is terminated from track station
         /// </summary>
         public void OnVesselTerminated(ProtoVessel terminatedVessel)
         {

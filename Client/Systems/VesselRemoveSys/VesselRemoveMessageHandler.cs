@@ -3,8 +3,6 @@ using System.Collections.Concurrent;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.VesselLockSys;
-using LunaClient.Utilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using UniLinq;

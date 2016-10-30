@@ -36,7 +36,8 @@ namespace LunaClient.Systems.VesselProtoSys
                 else
                 {
                     Debug.LogWarning($"[LMP]: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
-                    ChatSystem.Singleton.PmMessageServer($"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
+                    ChatSystem.Singleton.PmMessageServer(
+                        $"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
                 }
                 vessel.Loaded = true;
             }
@@ -49,58 +50,33 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public IEnumerator LoadVessel(ConfigNode vesselNode, Guid protovesselId)
         {
-            //TODO: Surround this with better try cach
+            var seconds = new WaitForSeconds(0.5f);
             var currentProto = CreateSafeProtoVesselFromConfigNode(vesselNode, protovesselId);
 
             if (ProtoVesselValidationsPassed(currentProto))
             {
                 RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
 
-                var vessel =
-                    FlightGlobals.Vessels.FirstOrDefault(
-                        v => !ProtoVesselIsAsteroid(v.protoVessel) && v.id == currentProto.vesselID);
+                var vessel = FlightGlobals.Vessels.FirstOrDefault(v => !ProtoVesselIsAsteroid(v.protoVessel) && v.id == currentProto.vesselID);
                 if (vessel != null)
                 {
-                    if (vessel.packed)
+                    if (!vessel.loaded || vessel.packed)
                         VesselRemoveSystem.Singleton.KillVessel(vessel);
                     else
-                        yield break;
-                    //Vessel is not packed and within range so we handle the vessel changes by it's proper messages
+                        yield break; //Vessel is not packed and within range so we handle the vessel changes by it's proper messages
                 }
 
                 FixProtoVesselFlags(currentProto);
-                yield return null; //Resume on next frame
 
+                yield return seconds; //Wait until vessel is killed
 
-                try
-                {
-                    Debug.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
-                    currentProto.Load(HighLogic.CurrentGame.flightState);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine LoadVessel {e}");
-                }
+                var result = LoadVesselIntoGame(currentProto);
 
                 yield return null; //Resume on next frame
 
-                if (currentProto.vesselRef == null)
+                if (result)
                 {
-                    Debug.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
-                }
-                else
-                {
-                    if (ProtoVesselIsTarget(currentProto))
-                    {
-                        Debug.Log("[LMP]: ProtoVessel update for target vessel!. Set docking target");
-                        FlightGlobals.fetch.SetVesselTarget(currentProto.vesselRef);
-                    }
-
-                    //If we are spectating that vessel and it changed focus to the new vessel
-                    if (FlightGlobals.ActiveVessel.id == currentProto.vesselID)
-                        FlightGlobals.SetActiveVessel(currentProto.vesselRef);
-
-                    Debug.Log("[LMP]: Protovessel Loaded");
+                    FinishVesselLoading(currentProto);
                 }
             }
         }
@@ -252,6 +228,55 @@ namespace LunaClient.Systems.VesselProtoSys
             return (possibleAsteroid.vesselType == VesselType.SpaceObject) &&
                    (possibleAsteroid.protoPartSnapshots?.Count == 1) &&
                    (possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid");
+        }
+
+        /// <summary>
+        /// Sets the vessel as target if needed and set it as active vessel if we were spectating
+        /// </summary>
+        private static void FinishVesselLoading(ProtoVessel currentProto)
+        {
+            try
+            {
+                if (ProtoVesselIsTarget(currentProto))
+                {
+                    Debug.Log("[LMP]: ProtoVessel update for target vessel!. Set docking target");
+                    FlightGlobals.fetch.SetVesselTarget(currentProto.vesselRef);
+                }
+
+                //If we are spectating that vessel and it changed focus to the new vessel
+                if (FlightGlobals.ActiveVessel.id == currentProto.vesselID)
+                    FlightGlobals.SetActiveVessel(currentProto.vesselRef);
+
+                Debug.Log("[LMP]: Protovessel Loaded");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in coroutine LoadVessel {e}");
+            }
+        }
+
+        /// <summary>
+        /// Loads the vessel proto into the current game
+        /// </summary>
+        private static bool LoadVesselIntoGame(ProtoVessel currentProto)
+        {
+            try
+            {
+                Debug.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
+                currentProto.Load(HighLogic.CurrentGame.flightState);
+
+                if (currentProto.vesselRef == null)
+                {
+                    Debug.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in coroutine LoadVessel {e}");
+                return false;
+            }
         }
 
         #endregion
