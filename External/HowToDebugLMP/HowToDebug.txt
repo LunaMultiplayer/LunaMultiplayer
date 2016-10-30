@@ -10,7 +10,8 @@ https://www.visualstudio.com/features/unitytools-vs
 
 1- Copy KSP_x64_Dbg.exe to your KSP directory (example: D:\Steam\SteamApps\common\Kerbal Space Program\)
 
-2- Open a command prompt in that directory (shift right clic in the empty space of the explorer and select "open command window here". In it enter the command "mklink /J KSP_x64_Dbg_Data KSP_x64_Data". You will now have a KSP_x64_Dbg_Data that points to the stock KSP_x64_Data.
+2- Open a command prompt in that directory (shift right clic in the empty space of the explorer and select "open command window here". In it enter the command "mklink /J KSP_x64_Dbg_Data KSP_x64_Data". 
+   You will now have a KSP_x64_Dbg_Data that points to the stock KSP_x64_Data.
 
 3- Put the PlayerConnectionConfigFile in the KSP_x64_Data directory (it makes the mono debugger starts its listening port)
 
