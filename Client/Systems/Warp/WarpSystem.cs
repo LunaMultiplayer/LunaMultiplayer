@@ -22,8 +22,7 @@ namespace LunaClient.Systems.Warp
 
         public WarpEntryDisplay WarpEntryDisplay { get; } = new WarpEntryDisplay();
 
-        private int _currentSubspace;
-
+        private int _currentSubspace = int.MinValue;
         public int CurrentSubspace
         {
             get { return _currentSubspace; }
@@ -67,6 +66,7 @@ namespace LunaClient.Systems.Warp
             GameEvents.onTimeWarpRateChanged.Remove(WarpEvents.OnTimeWarpChanged);
             ClientSubspaceList.Clear();
             Subspaces.Clear();
+            _currentSubspace = int.MinValue;
         }
 
         public override void OnEnabled()

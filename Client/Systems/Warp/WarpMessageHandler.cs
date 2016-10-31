@@ -46,6 +46,7 @@ namespace LunaClient.Systems.Warp
                         AddSubspace(-1, 0);//Add warping subspace
 
                         //Set us into server subspace
+                        System.SkipSubspaceProcess = true;
                         System.CurrentSubspace = 0;
 
                         MainSystem.Singleton.NetworkState = ClientState.WARPSUBSPACES_SYNCED;
