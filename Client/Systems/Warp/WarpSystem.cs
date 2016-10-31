@@ -46,8 +46,7 @@ namespace LunaClient.Systems.Warp
                 }
             }
         }
-
-        public bool NewSubspaceSent { get; set; }
+        
         public Dictionary<string, int> ClientSubspaceList { get; } = new Dictionary<string, int>();
         public Dictionary<int, double> Subspaces { get; } = new Dictionary<int, double>();
 
@@ -69,6 +68,8 @@ namespace LunaClient.Systems.Warp
             ClientSubspaceList.Clear();
             Subspaces.Clear();
             _currentSubspace = int.MinValue;
+            SkipSubspaceProcess = false;
+            WaitingSubspaceIdFromServer = false;
         }
 
         public override void OnEnabled()
@@ -118,16 +119,12 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public void SendNewSubspace()
         {
-            if (!NewSubspaceSent)
+            MessageSender.SendMessage(new WarpNewSubspaceMsgData
             {
-                MessageSender.SendMessage(new WarpNewSubspaceMsgData
-                {
-                    SubspaceTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.Singleton.GetServerClock(),
-                    PlayerCreator = SettingsSystem.CurrentSettings.PlayerName,
-                    //we don't send the subspaceKey as that one will be given by the server except when warping that we set it to -1
-                });
-            }
-            NewSubspaceSent = true;
+                SubspaceTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.Singleton.GetServerClock(),
+                PlayerCreator = SettingsSystem.CurrentSettings.PlayerName,
+                //we don't send the subspaceKey as that one will be given by the server except when warping that we set it to -1
+            });
         }
 
         public void DisplayMessage(string messageText, float messageDuration)

@@ -32,7 +32,6 @@ namespace LunaClient.Systems.Warp
             else if (TimeWarp.CurrentRateIndex == 0 && System.CurrentSubspace == -1)
             {
                 //We stopped warping so send our new subspace
-                System.NewSubspaceSent = false;
                 System.WaitingSubspaceIdFromServer = true;
                 System.SendNewSubspace();
             }
