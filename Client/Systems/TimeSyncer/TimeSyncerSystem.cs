@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
@@ -45,7 +46,7 @@ namespace LunaClient.Systems.TimeSyncer
 
         private List<long> ClockOffset { get; } = new List<long>();
         private List<long> NetworkLatency { get; } = new List<long>();
-        public Thread SyncSenderThread { get; set; }
+        public Task SyncSenderThread { get; private set; }
 
         private static bool CurrentlyWarping => WarpSystem.Singleton.CurrentSubspace == -1;
 
@@ -58,15 +59,15 @@ namespace LunaClient.Systems.TimeSyncer
         public override void OnEnabled()
         {
             base.OnEnabled();
-            SyncSenderThread = new Thread(SyncTimeWithServer) {IsBackground = true};
-            SyncSenderThread.Start();
+            SyncSenderThread = new Task(SyncTimeWithServer);
+            SyncSenderThread.Start(TaskScheduler.Default);
             Client.Singleton.StartCoroutine(SyncTime());
         }
 
         public override void OnDisabled()
         {
             base.OnDisabled();
-            SyncSenderThread?.Abort();
+            SyncSenderThread?.Dispose();
             ServerStartTime = 0;
             ClockOffset.Clear();
             NetworkLatency.Clear();
@@ -93,7 +94,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// </summary>
         private void SyncTimeWithServer()
         {
-            while (MainSystem.Singleton.NetworkState >= ClientState.CONNECTED)
+            while (!MainSystem.Singleton.Quit && MainSystem.Singleton.NetworkState >= ClientState.CONNECTED)
             {
                 MessageSender.SendTimeSyncRequest();
                 Thread.Sleep(SettingsSystem.CurrentSettings.SyncTimeRequestMsInterval);
