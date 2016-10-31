@@ -67,7 +67,7 @@ namespace LunaClient.Systems.TimeSyncer
         public override void OnDisabled()
         {
             base.OnDisabled();
-            SyncSenderThread?.Dispose();
+            SyncSenderThread?.Wait(500);
             ServerStartTime = 0;
             ClockOffset.Clear();
             NetworkLatency.Clear();
@@ -94,7 +94,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// </summary>
         private void SyncTimeWithServer()
         {
-            while (!MainSystem.Singleton.Quit && MainSystem.Singleton.NetworkState >= ClientState.CONNECTED)
+            while (!MainSystem.Singleton.Quit && MainSystem.Singleton.NetworkState >= ClientState.AUTHENTICATED)
             {
                 MessageSender.SendTimeSyncRequest();
                 Thread.Sleep(SettingsSystem.CurrentSettings.SyncTimeRequestMsInterval);
