@@ -5,6 +5,7 @@ using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
+using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using UnityEngine;
 
@@ -60,7 +61,11 @@ namespace LunaClient.Systems.Asteroid
             ServerAsteroidTrackStatus.Clear();
         }
         
-
+        /// <summary>
+        /// This coroutine tries to ackquire the asteroid lock. If we have it spawn the needed asteroids.
+        /// It also handles the asteroid track status between clients
+        /// </summary>
+        /// <returns></returns>
         private IEnumerator CheckAsteroids()
         {
             //TODO: Surround with try catch as other coroutines
@@ -74,11 +79,8 @@ namespace LunaClient.Systems.Asteroid
                     LockSystem.Singleton.AcquireLock("asteroid");
 
                 //We have the spawn lock, lets do stuff.
-                if ((LockSystem.Singleton.LockIsOurs("asteroid") &&
-                     (HighLogic.CurrentGame.flightState.protoVessels != null) &&
-                     (FlightGlobals.Vessels != null) &&
-                     (HighLogic.CurrentGame.flightState.protoVessels.Count == 0)) ||
-                    (FlightGlobals.Vessels?.Count > 0))
+                if (LockSystem.Singleton.LockIsOurs("asteroid") && WarpSystem.Singleton.CurrentSubspace == 0 && 
+                    Time.timeSinceLevelLoad > 1f && MainSystem.Singleton.GameRunning)
                 {
                     var beforeSpawn = GetAsteroidCount();
                     var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;
@@ -106,7 +108,6 @@ namespace LunaClient.Systems.Asteroid
                             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid);
                         }
                     }
-                    yield return null; //Resume on next frame
                 }
 
                 yield return seconds;
