@@ -38,6 +38,8 @@ namespace LunaClient.Systems.Warp
                     if (value != -1 && !SkipSubspaceProcess)
                         ProcessNewSubspace();
 
+                    SkipSubspaceProcess = false;
+
                     VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(SettingsSystem.CurrentSettings.PlayerName, value);
 
                     Debug.Log($"[LMP]: Locked to subspace {value}, time: {GetCurrentSubspaceTime()}");
