@@ -7,6 +7,7 @@ SET KSPPATH=C:\games\Steam\SteamApps\common\Kerbal Space Program
 
 mkdir "%KSPPATH%\GameData\LunaMultiPlayer\"
 mkdir "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
+mkdir "%KSPPATH%\GameData\LunaMultiPlayer\Button"
 
 "%~dp0\External\pdb2mdb\pdb2mdb.exe" "%~dp0\Client\bin\Debug\LunaClient.dll"
 xcopy /Y "%~dp0\Client\bin\Debug\LunaClient.*" "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
@@ -15,3 +16,4 @@ xcopy /Y "%~dp0\Client\bin\Debug\LunaClient.*" "%KSPPATH%\GameData\LunaMultiPlay
 xcopy /Y "%~dp0\Common\bin\Debug\LunaCommon.*" "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
 
 xcopy /Y "%~dp0\External\Dependencies\*.dll" "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
+xcopy /Y "%~dp0\Client\Resources\*.png" "%KSPPATH%\GameData\LunaMultiPlayer\Button"
