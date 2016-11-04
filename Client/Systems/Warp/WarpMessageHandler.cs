@@ -1,9 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿using System;
+using System.Collections.Concurrent;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselWarpSys;
-using LunaClient.Utilities;
+using LunaClient.Systems.VesselLockSys;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Warp;
 using LunaCommon.Message.Interface;
@@ -42,20 +42,15 @@ namespace LunaClient.Systems.Warp
                             }
                         }
                         
-                        AddSubspace(0, 0); //Add server subspace
                         AddSubspace(-1, 0);//Add warping subspace
-
-                        //Set us into server subspace
-                        System.SkipSubspaceProcess = true;
-                        System.CurrentSubspace = 0;
-
+                        
                         MainSystem.Singleton.NetworkState = ClientState.WARPSUBSPACES_SYNCED;
                     }
                     break;
                 case WarpMessageType.NEW_SUBSPACE:
                     {
                         var data = (WarpNewSubspaceMsgData)messageData;
-                        AddSubspace(data.SubspaceKey, data.SubspaceTimeDifference);
+                        AddSubspace(data.SubspaceKey, data.ServerTimeDifference);
                         if (data.PlayerCreator == SettingsSystem.CurrentSettings.PlayerName)
                         {
                             //It's our subspace that we just created so set it as ours
@@ -69,7 +64,6 @@ namespace LunaClient.Systems.Warp
                     {
                         var data = (WarpChangeSubspaceMsgData)messageData;
                         System.ClientSubspaceList[data.PlayerName] = data.Subspace;
-                        VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(data.PlayerName, data.Subspace);
                     }
                     break;
                 default:

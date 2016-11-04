@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace LunaServer.Context
 {
@@ -10,10 +11,6 @@ namespace LunaServer.Context
         public static ConcurrentDictionary<int, double> Subspaces { get; set; } =
             new ConcurrentDictionary<int, double>();
 
-        public static ConcurrentDictionary<string, int> OfflinePlayerSubspaces { get; set; } =
-            new ConcurrentDictionary<string, int>();
-        
-        public static List<string> IgnoreList { get; set; }
-        public static object ListLock { get; } = new object();
+        public static int LatestSubspace => Subspaces.OrderByDescending(s => s.Value).Select(s => s.Key).First();
     }
 }

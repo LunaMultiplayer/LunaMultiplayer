@@ -5,6 +5,7 @@ using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselLockSys;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselUpdateSys
@@ -17,28 +18,21 @@ namespace LunaClient.Systems.VesselUpdateSys
     {
         #region Field & Properties
 
-        private float VesselUpdatesSendSInterval
-            => (float) TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds
-            ;
+        private static float VesselUpdatesSendSInterval => 
+            (float) TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
 
-        public bool UpdateSystemReady
-        {
-            get
-            {
-                if (!Enabled || FlightGlobals.ActiveVessel == null || !HighLogic.LoadedSceneIsFlight ||
-                    !FlightGlobals.ready ||
-                    Time.timeSinceLevelLoad < 1f || !FlightGlobals.ActiveVessel.loaded ||
-                    FlightGlobals.ActiveVessel.state == Vessel.State.DEAD ||
-                    FlightGlobals.ActiveVessel.packed ||
-                    FlightGlobals.ActiveVessel.vesselType == VesselType.Flag ||
-                    VesselCommon.ActiveVesselIsInSafetyBubble())
-                    return false;
-                return true;
-            }
-        }
+        private static float VesselUpdatesSendFarSInterval => 
+            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendFarMsInterval).TotalSeconds;
 
-        public Dictionary<Guid, Queue<VesselUpdate>> ReceivedUpdates { get; } =
-            new Dictionary<Guid, Queue<VesselUpdate>>();
+        public bool UpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
+                                         FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
+                                         FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
+                                         FlightGlobals.ActiveVessel.vesselType != VesselType.Flag && !VesselCommon.ActiveVesselIsInSafetyBubble();
+
+        public bool UpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
+            (UpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
+
+        public Dictionary<Guid, Queue<VesselUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, Queue<VesselUpdate>>();
 
         private VesselUpdateInterpolationSystem InterpolationSystem { get; } = new VesselUpdateInterpolationSystem();
 
@@ -93,11 +87,14 @@ namespace LunaClient.Systems.VesselUpdateSys
         #region Private methods
 
         /// <summary>
-        /// Send the updates of our own vessel and the secondary vessels. We only send them after an interval specified
+        /// Send the updates of our own vessel and the secondary vessels. We only send them after an interval specified.
+        /// If the other player vessels are far we don't send them very often.
         /// </summary>
         private IEnumerator SendVesselUpdates()
         {
             var seconds = new WaitForSeconds(VesselUpdatesSendSInterval);
+            var secondsFar = new WaitForSeconds(VesselUpdatesSendFarSInterval);
+
             while (true)
             {
                 try
@@ -105,7 +102,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                     if (!Enabled)
                         break;
 
-                    if (UpdateSystemReady)
+                    if (UpdateSystemReady && !VesselCommon.IsSpectating)
                     {
                         SendVesselUpdate(FlightGlobals.ActiveVessel);
                         SendSecondaryVesselUpdates();
@@ -116,27 +113,23 @@ namespace LunaClient.Systems.VesselUpdateSys
                     Debug.LogError($"[LMP]: Coroutine error in SendVesselUpdates {e}");
                 }
 
-                yield return seconds;
+                if (VesselCommon.PlayerVesselsNearby())
+                    yield return seconds;
+                else
+                    yield return secondsFar;
             }
         }
 
         /// <summary>
-        /// Send updates for vessels that we own the update lock. 
-        /// Check UpdateUpdateLocks() in VesselMainSystem to see how we get this locks
+        /// Send updates for vessels that we own the update lock.
         /// </summary>
         private void SendSecondaryVesselUpdates()
         {
-            var secondaryVesselsIdsToUpdate = LockSystem.Singleton.GetLocks(SettingsSystem.CurrentSettings.PlayerName)
-                .Where(l => l.StartsWith("update-"))
-                .Select(l => l.Substring(7))
-                .Where(i => i != FlightGlobals.ActiveVessel.id.ToString())
-                .ToArray();
+            var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
 
-            foreach (var secondryVessel in secondaryVesselsIdsToUpdate)
+            foreach (var secondryVessel in secondaryVesselsToUpdate)
             {
-                var vessel = FlightGlobals.Vessels.SingleOrDefault(v => v.id.ToString() == secondryVessel);
-                if (vessel != null)
-                    SendVesselUpdate(vessel);
+                SendVesselUpdate(secondryVessel);
             }
         }
 

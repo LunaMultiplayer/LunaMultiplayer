@@ -21,6 +21,7 @@ namespace MasterServer
             {
                 Id = msg.Id,
                 Cheats = msg.Cheats,
+                ShowVesselsInThePast = msg.ShowVesselsInThePast,
                 Description = msg.Description,
                 DropControlOnExit = msg.DropControlOnExit,
                 DropControlOnExitFlight = msg.DropControlOnExitFlight,

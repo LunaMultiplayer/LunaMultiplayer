@@ -24,7 +24,7 @@ namespace LunaServer.Message.ReceiveHandlers
             valid &= valid && CheckWhitelist(client, data.PlayerName);
             valid &= valid && CheckPlayerIsAlreadyConnected(client, data.PlayerName);
             valid &= valid && CheckUsernameIsReserved(client, data.PlayerName);
-            valid &= valid && CheckPlayerIsBanned(client, data.PlayerName, client.IpAddress.ToString(), data.PublicKey);
+            valid &= valid && CheckPlayerIsBanned(client, data.PlayerName, client.Endpoint.Address.ToString(), data.PublicKey);
             valid &= valid && CheckKey(client, data.PlayerName, data.PublicKey, data.ChallengeSignature);
 
             if (!valid)

@@ -13,7 +13,7 @@
         string Version { get; }
 
         /// <summary>
-        /// Receive time timestamp, useful for interpolation.
+        /// Receive time timestamp.
         /// </summary>
         long ReceiveTime { get; set; }
 
@@ -21,5 +21,10 @@
         /// Subtype message identifier (Chat messages for example)
         /// </summary>
         ushort SubType { get; }
+
+        /// <summary>
+        /// Sent time timestamp.
+        /// </summary>
+        long SentTime { get; set; }
     }
 }

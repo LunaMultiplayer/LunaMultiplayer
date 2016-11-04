@@ -119,6 +119,8 @@ namespace LunaServer.Lidgren
         {
             if (message.MessageType == ServerMessageType.SYNC_TIME)
                 SyncTimeSystem.RewriteMessage(client, message);
+
+            message.Data.SentTime = DateTime.UtcNow.Ticks;
             var messageBytes = message.Serialize(GeneralSettings.SettingsStore.CompressionEnabled);
 
             if (messageBytes == null)
@@ -162,6 +164,7 @@ namespace LunaServer.Lidgren
                 {
                     Id = Server.UniqueIdentifier,
                     Cheats = GeneralSettings.SettingsStore.Cheats,
+                    ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast,
                     Description = GeneralSettings.SettingsStore.Description,
                     DropControlOnExit = GeneralSettings.SettingsStore.Cheats,
                     DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats,

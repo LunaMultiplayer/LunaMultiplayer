@@ -130,7 +130,6 @@
     <Compile Include="Systems\VesselLockSys\VesselLockEvents.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockSystem.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselLoader.cs" />
-    <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageHandler.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageSender.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoSystem.cs" />
@@ -155,7 +154,6 @@
     <Compile Include="Systems\TimeSyncer\TimeSyncerMessageHandler.cs" />
     <Compile Include="Systems\TimeSyncer\TimeSyncerMessageSender.cs" />
     <Compile Include="Systems\Toolbar\ToolbarStructures.cs" />
-    <Compile Include="Systems\VesselWarpSys\VesselWarpSystem.cs" />
     <Compile Include="Systems\Warp\WarpEntryDisplay.cs" />
     <Compile Include="Systems\Warp\WarpEvents.cs" />
     <Compile Include="Systems\Warp\WarpMessageHandler.cs" />

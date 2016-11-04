@@ -46,12 +46,12 @@ namespace LunaClient.Systems.VesselRemoveSys
                     }
                 }
                 Debug.Log($"[LMP]: Removing docked vessel: {vesselId}");
-                System.KillVessel(vessel);
+                System.KillVessel(vessel, true);
             }
             else
             {
                 Debug.Log($"[LMP]: Removing vessel: {vesselId}");
-                System.KillVessel(vessel);
+                System.KillVessel(vessel, true);
             }
         }
     }

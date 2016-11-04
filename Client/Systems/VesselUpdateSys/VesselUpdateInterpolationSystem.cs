@@ -93,7 +93,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                     if (!System.Enabled)
                         break;
 
-                    if (System.UpdateSystemReady)
+                    if (System.UpdateSystemBasicReady)
                     {
                         foreach (var update in System.ReceivedUpdates)
                         {
@@ -125,7 +125,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                 {
                     if (!System.Enabled) break;
 
-                    if (System.UpdateSystemReady)
+                    if (System.UpdateSystemBasicReady)
                     {
                         var vesselsToRemove = CurrentVesselUpdate
                             .Where(u => u.Value.InterpolationFinished && Time.time - u.Value.FinishTime > MaxSecWithuotUpdates)

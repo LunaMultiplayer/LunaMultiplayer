@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.Systems.VesselLockSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using UnityEngine;
@@ -19,7 +17,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             var msgData = messageData as VesselUpdateMsgData;
 
-            if (msgData == null || !System.UpdateSystemReady || UpdateIsForOwnVessel(msgData.VesselId))
+            if (msgData == null || !System.UpdateSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
             {
                 return;
             }
@@ -30,7 +28,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                 ReceiveTime = Time.fixedTime,
                 PlanetTime = msgData.PlanetTime,
                 Stage = msgData.Stage,
-                SentTime = msgData.SentTime,
+                SentTime = msgData.GameSentTime,
                 ActiveEngines = msgData.ActiveEngines,
                 StoppedEngines = msgData.StoppedEngines,
                 Decouplers = msgData.Decouplers,
@@ -85,14 +83,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                 System.ReceivedUpdates[update.VesselId].Dequeue();
 
             System.ReceivedUpdates[update.VesselId].Enqueue(update);
-        }
-
-        private bool UpdateIsForOwnVessel(Guid vesselId)
-        {
-            //Ignore updates to our own vessel if we aren't spectating
-            return !VesselLockSystem.Singleton.IsSpectating &&
-                   (FlightGlobals.ActiveVessel != null) &&
-                   (FlightGlobals.ActiveVessel.id == vesselId);
         }
     }
 }

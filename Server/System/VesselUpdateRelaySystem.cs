@@ -3,27 +3,26 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using LunaCommon.Message.Data;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Context;
 using LunaServer.Log;
+using LunaServer.Server;
 using LunaServer.Settings;
 
-namespace LunaServer.Server
+namespace LunaServer.System
 {
     /// <summary>
     /// This class updates the players with the other players vessel updates based on the distance
     /// </summary>
-    public class VesselUpdateRelay
+    public class VesselUpdateRelaySystem
     {
         public static ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>> IncomingUpdates { get; }=
             new ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>>();
 
         private static readonly ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>>
-            IncomingMediumUpdates =
-                new ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>>();
+            IncomingMediumUpdates = new ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>>();
 
         private static readonly ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>> IncomingFarUpdates =
             new ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>>();
@@ -42,6 +41,11 @@ namespace LunaServer.Server
             VesselsDictionary.TryAdd(client, null);
         }
 
+        public static void RelayVesselUpdateMsg(ClientStructure client, VesselUpdateMsgData msg)
+        {
+            IncomingUpdates.Enqueue(new KeyValuePair<ClientStructure, VesselUpdateMsgData>(client, msg));
+        }
+
         /// <summary>
         /// This method relay the vessel update to players in other planets
         /// </summary>
@@ -54,7 +58,7 @@ namespace LunaServer.Server
                     KeyValuePair<ClientStructure, VesselUpdateMsgData> vesselUpdate;
                     if (IncomingFarUpdates.TryDequeue(out vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
                     {
-                        var farClients = VesselsDictionary.Where(v => v.Key != vesselUpdate.Key && v.Value != null &&
+                        var farClients = VesselsDictionary.Where(v => !Equals(v.Key, vesselUpdate.Key) && v.Value != null &&
                                                                       v.Value.BodyName != vesselUpdate.Value.BodyName)
                             .Select(v => v.Key);
 
@@ -85,7 +89,7 @@ namespace LunaServer.Server
                         IncomingFarUpdates.Enqueue(vesselUpdate);
 
                         var mediumDistanceClients = VesselsDictionary.Where(
-                                v => v.Key != vesselUpdate.Key && v.Value != null &&
+                                v => !Equals(v.Key, vesselUpdate.Key) && v.Value != null &&
                                      v.Value.BodyName == vesselUpdate.Value.BodyName &&
                                      CalculateDistance(v.Value, vesselUpdate.Value) >
                                      GeneralSettings.SettingsStore.CloseDistanceInMeters)
@@ -121,7 +125,7 @@ namespace LunaServer.Server
 
                         IncomingMediumUpdates.Enqueue(vesselUpdate);
 
-                        var closeClients = VesselsDictionary.Where(v => v.Key != vesselUpdate.Key && v.Value != null &&
+                        var closeClients = VesselsDictionary.Where(v => !Equals(v.Key, vesselUpdate.Key) && v.Value != null &&
                                                                         v.Value.BodyName == vesselUpdate.Value.BodyName &&
                                                                         CalculateDistance(v.Value, vesselUpdate.Value) <=
                                                                         GeneralSettings.SettingsStore.CloseDistanceInMeters)

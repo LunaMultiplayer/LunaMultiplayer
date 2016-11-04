@@ -15,7 +15,8 @@ namespace LunaClient.Systems.SettingsSys
         public string ConsoleIdentifier { get; set; } = "";
         public GameDifficulty GameDifficulty { get; set; }
         public float SafetyBubbleDistance { get; set; } = 100f;
-        public int VesselUpdatesSendMsInterval { get; set; } = 30;
+        public int VesselUpdatesSendMsInterval { get; set; }
+        public int VesselUpdatesSendFarMsInterval { get; set; }
         public bool DropControlOnVesselSwitching { get; set; }
         public bool DropControlOnExit { get; set; }
         public bool DropControlOnExitFlight { get; set; }
@@ -24,7 +25,9 @@ namespace LunaClient.Systems.SettingsSys
         public int VesselKillCheckMsInterval { get; set; }
         public int ClockSetMsInterval { get; set; }
         public int StrandedVesselsCheckMsInterval { get; set; }
-        public int VesselDefinitionUpdateMsInterval { get; set; }
+        public int VesselDefinitionSendMsInterval { get; set; }
+        public int VesselDefinitionSendFarMsInterval { get; set; }
         public int AbandonedVesselsUpdateMsInterval { get; set; }
+        public bool ShowVesselsInThePast { get; set; }
     }
 }

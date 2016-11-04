@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.VesselWarpSys;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Warp;
 using UniLinq;
@@ -32,16 +31,17 @@ namespace LunaClient.Systems.Warp
                 {
                     _currentSubspace = value;
 
+                    if (!ClientSubspaceList.ContainsKey(SettingsSystem.CurrentSettings.PlayerName))
+                        ClientSubspaceList.Add(SettingsSystem.CurrentSettings.PlayerName, 0);
+
                     ClientSubspaceList[SettingsSystem.CurrentSettings.PlayerName] = value;
                     SendChangeSubspaceMsg(value);
 
-                    if (value != -1 && !SkipSubspaceProcess)
+                    if (value > 0 && !SkipSubspaceProcess)
                         ProcessNewSubspace();
 
                     SkipSubspaceProcess = false;
-
-                    VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(SettingsSystem.CurrentSettings.PlayerName, value);
-
+                    
                     Debug.Log($"[LMP]: Locked to subspace {value}, time: {GetCurrentSubspaceTime()}");
                 }
             }
@@ -49,6 +49,8 @@ namespace LunaClient.Systems.Warp
         
         public Dictionary<string, int> ClientSubspaceList { get; } = new Dictionary<string, int>();
         public Dictionary<int, double> Subspaces { get; } = new Dictionary<int, double>();
+
+        public int LatestSubspace => Subspaces.OrderByDescending(s => s.Value).Select(s => s.Key).First();
 
         private ScreenMessage WarpMessage { get; set; }
         private WarpEvents WarpEvents { get; } = new WarpEvents();
@@ -58,9 +60,22 @@ namespace LunaClient.Systems.Warp
         private const float UpdateScreenMessageSInterval = 0.2f;
         private const float CheckFollowMasterSInterval = 1f;
 
+        private bool SyncedToLastSubspace { get; set; } = false;
+
         #endregion
 
         #region Base overriden methods
+
+        public override void Update()
+        {
+            base.Update();
+
+            if (!SyncedToLastSubspace && MainSystem.Singleton.GameRunning && HighLogic.LoadedSceneIsGame && Time.timeSinceLevelLoad > 1f)
+            {
+                SyncToLatestSubspace();
+                SyncedToLastSubspace = true;
+            }
+        }
 
         public override void OnDisabled()
         {
@@ -70,6 +85,7 @@ namespace LunaClient.Systems.Warp
             _currentSubspace = int.MinValue;
             SkipSubspaceProcess = false;
             WaitingSubspaceIdFromServer = false;
+            SyncedToLastSubspace = false;
         }
 
         public override void OnEnabled()
@@ -88,6 +104,24 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Public methods
+
+        public bool PlayerIsInPastSubspace(string player)
+        {
+            if (ClientSubspaceList.ContainsKey(player) && CurrentSubspace >= 0)
+            {
+                var playerSubspace = ClientSubspaceList[player];
+                if (playerSubspace == -1)
+                    return false;
+
+                return playerSubspace != CurrentSubspace && Subspaces[playerSubspace] < Subspaces[CurrentSubspace];
+            }
+            return false;
+        }
+
+        public void SyncToLatestSubspace()
+        {
+            CurrentSubspace = LatestSubspace;
+        }
 
         public double GetCurrentSubspaceTime() => GetSubspaceTime(CurrentSubspace);
 
@@ -121,9 +155,9 @@ namespace LunaClient.Systems.Warp
         {
             MessageSender.SendMessage(new WarpNewSubspaceMsgData
             {
-                SubspaceTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.Singleton.GetServerClock(),
+                ServerTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.Singleton.GetServerClock(),
                 PlayerCreator = SettingsSystem.CurrentSettings.PlayerName,
-                //we don't send the subspaceKey as that one will be given by the server except when warping that we set it to -1
+                //we don't send the SubspaceKey as that one will be given by the server except when warping that we set it to -1
             });
         }
 
@@ -138,9 +172,6 @@ namespace LunaClient.Systems.Warp
         {
             if (ClientSubspaceList.ContainsKey(playerName))
                 ClientSubspaceList.Remove(playerName);
-
-            VesselWarpSystem.Singleton.MovePlayerVesselsToNewSubspace(playerName, 0);
-            //Move his vessels back to subspace 0
         }
 
         #endregion

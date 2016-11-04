@@ -111,7 +111,7 @@ namespace LunaClient.Systems.Status
 
         private static string GetVesselText()
         {
-            return !VesselLockSystem.Singleton.IsSpectating && FlightGlobals.ActiveVessel != null
+            return !VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null
                 ? FlightGlobals.ActiveVessel.vesselName
                 : "";
         }
@@ -166,7 +166,7 @@ namespace LunaClient.Systems.Status
             {
                 case GameScenes.FLIGHT:
                     if (FlightGlobals.ActiveVessel != null)
-                        return !VesselLockSystem.Singleton.IsSpectating ? GetCurrentShipStatus() : GetExpectatingShipStatus();
+                        return !VesselCommon.IsSpectating ? GetCurrentShipStatus() : GetExpectatingShipStatus();
                     return "Loading";
                 case GameScenes.EDITOR:
                     switch (EditorDriver.editorFacility)

@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselWarpSys;
 
 namespace LunaClient.Systems.VesselLockSys
 {
@@ -16,6 +15,7 @@ namespace LunaClient.Systems.VesselLockSys
 
             //Always release the update lock and the spectate lock
             LockSystem.Singleton.ReleaseLocksWithPrefix("update-");
+            LockSystem.Singleton.ReleaseSpectatorLock();
             InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
 
             switch (data)
@@ -24,7 +24,6 @@ namespace LunaClient.Systems.VesselLockSys
                 case GameScenes.SETTINGS:
                 case GameScenes.CREDITS:
                     ReleaseAsteroidLock();
-                    VesselWarpSystem.Singleton.MovePlayerVesselsToServerSubspace();
                     if (SettingsSystem.ServerSettings.DropControlOnExit)
                         ReleaseAllControlLocks();
                     break;
@@ -44,7 +43,8 @@ namespace LunaClient.Systems.VesselLockSys
         private static void ReleaseAllControlLocks()
         {
             LockSystem.Singleton.ReleaseLocksWithPrefix("control-");
-            System.IsSpectating = false;
+            LockSystem.Singleton.ReleaseSpectatorLock();
+            VesselCommon.IsSpectating = false;
         }
 
         /// <summary>

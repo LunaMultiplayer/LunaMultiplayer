@@ -367,7 +367,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         private void ApplyControlState(float percentage)
         {
-            if (!VesselLockSystem.Singleton.IsSpectating)
+            if (!VesselCommon.IsSpectating)
                 Vessel?.ctrlState.CopyFrom(FlightState);
             else
             {

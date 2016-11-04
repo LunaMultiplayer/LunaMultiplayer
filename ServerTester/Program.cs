@@ -18,7 +18,7 @@ namespace ServerTester
         [STAThread]
         private static void Main()
         {
-            TestCompression();
+            //TestCompression();
             Test2();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -26,14 +26,16 @@ namespace ServerTester
 
         private static void Test2()
         {
-            var path = @"C:\Users\gavaz\Source\Repos\LunaMultiPlayer\Server\bin\Debug\Universe\Vessels\73ffe5b1-0d95-4074-850a-039f411a8314.txt";
-
             var facS = new ServerMessageFactory(true);
+
+            var bytes = new byte[10000];
+            new Random().NextBytes(bytes);
 
             var msg = facS.CreateNew<VesselSrvMsg>(new VesselProtoMsgData
             {
                 VesselId = Guid.NewGuid(),
-                VesselData = File.ReadAllBytes(path)
+                VesselData = bytes,
+                SentTime = DateTime.UtcNow.Ticks,
             });
 
             //Serialize and compress

@@ -96,9 +96,11 @@ namespace LunaServer
                     Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
                     Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
 
-                    var vesselRelayFarThread = Task.Run(() => VesselUpdateRelay.RelayToFarPlayers());
-                    var vesselRelayMediumThread = Task.Run(() => VesselUpdateRelay.RelayToMediumDistancePlayers());
-                    var vesselRelayCloseThread = Task.Run(() => VesselUpdateRelay.RelayToClosePlayers());
+                    var vesselRelayThread = Task.Run(() => VesselRelaySystem.RelayOldVesselMessages());
+
+                    var vesselRelayFarThread = Task.Run(() => VesselUpdateRelaySystem.RelayToFarPlayers());
+                    var vesselRelayMediumThread = Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
+                    var vesselRelayCloseThread = Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
 
                     while (ServerContext.ServerStarting)
                         Thread.Sleep(500);
@@ -132,6 +134,8 @@ namespace LunaServer
                     LmpPluginHandler.FireOnServerStop();
                     commandThread.Wait();
                     clientThread.Wait();
+                    vesselRelayThread.Wait();
+
                     vesselRelayFarThread.Wait();
                     vesselRelayMediumThread.Wait();
                     vesselRelayCloseThread.Wait();

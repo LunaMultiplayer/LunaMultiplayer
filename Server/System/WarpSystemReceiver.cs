@@ -12,38 +12,48 @@ namespace LunaServer.System
     {
         public void HandleNewSubspace(ClientStructure client, WarpNewSubspaceMsgData message)
         {
-            LunaLog.Debug("Create Subspace");
+            LunaLog.Debug($"{client.PlayerName} created a new subspace. Id {WarpContext.NextSubspaceId}");
 
             //Create Subspace
-            WarpContext.Subspaces.TryAdd(WarpContext.NextSubspaceId, message.SubspaceTimeDifference);
+            WarpContext.Subspaces.TryAdd(WarpContext.NextSubspaceId, message.ServerTimeDifference);
+            VesselRelaySystem.CreateNewSubspace(WarpContext.NextSubspaceId);
 
             //Tell all Clients about the new Subspace
             var newMessageData = new WarpNewSubspaceMsgData
             {
-                SubspaceTimeDifference = message.SubspaceTimeDifference,
+                ServerTimeDifference = message.ServerTimeDifference,
                 PlayerCreator = message.PlayerCreator,
                 SubspaceKey = WarpContext.NextSubspaceId
             };
             MessageQueuer.SendToAllClients<WarpSrvMsg>(newMessageData);
 
-            WarpSystem.SaveSubspace(WarpContext.NextSubspaceId, message.SubspaceTimeDifference); //Save to disk
+            WarpSystem.SaveSubspace(WarpContext.NextSubspaceId, message.ServerTimeDifference); //Save to disk
             WarpContext.NextSubspaceId++;
         }
 
         public void HandleChangeSubspace(ClientStructure client, WarpChangeSubspaceMsgData message)
         {
             var oldSubspace = client.Subspace;
-            client.Subspace = message.Subspace;
+            var newSubspace = message.Subspace;
 
-            MessageQueuer.RelayMessage<WarpSrvMsg>(client, new WarpChangeSubspaceMsgData
+            if (oldSubspace != newSubspace)
             {
-                PlayerName = client.PlayerName,
-                Subspace = client.Subspace
-            });
+                MessageQueuer.RelayMessage<WarpSrvMsg>(client, new WarpChangeSubspaceMsgData
+                {
+                    PlayerName = client.PlayerName,
+                    Subspace = message.Subspace
+                });
 
-            if (!ServerContext.Clients.Any(c => c.Value.Subspace == oldSubspace))
-            {
-                WarpSystem.RemoveSubspace(oldSubspace);
+                if (newSubspace != -1)
+                {
+                    client.Subspace = newSubspace;
+
+                    if (client.Subspace != -1 && !ServerContext.Clients.Any(c => c.Value.Subspace == oldSubspace))
+                    {
+                        WarpSystem.RemoveSubspace(oldSubspace);
+                        VesselRelaySystem.RemoveSubspace(oldSubspace);
+                    }
+                }
             }
         }
     }

@@ -39,8 +39,7 @@ namespace LunaServer.Message.Reader
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
                     break;
                 case VesselMessageType.UPDATE:
-                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
-                    //VesselUpdateRelay.IncomingUpdates.Enqueue(new KeyValuePair<ClientStructure, VesselUpdateMsgData>(client, (VesselUpdateMsgData)messageData));
+                    VesselRelaySystem.HandleVesselMessage(client, message);
                     break;
                 default:
                     throw new NotImplementedException("Warp Type not implemented");
@@ -57,6 +56,7 @@ namespace LunaServer.Message.Reader
                 : $"Removing DOCKED vessel {data.VesselId} from {client.PlayerName}");
 
             Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", data.VesselId + ".txt"));
+            VesselContext.RemovedVessels.Add(data.VesselId);
 
             //Relay the message.
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, data);
@@ -66,6 +66,8 @@ namespace LunaServer.Message.Reader
         {
             var msgData = (VesselProtoMsgData) message;
 
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
             var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", msgData.VesselId + ".txt");
 
             if (!File.Exists(path))
@@ -73,7 +75,7 @@ namespace LunaServer.Message.Reader
 
             FileHandler.WriteToFile(path, msgData.VesselData);
 
-            MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
+            VesselRelaySystem.HandleVesselMessage(client, message);
         }
 
         private static void HandleVesselsRequest(ClientStructure client, IMessageData messageData)

@@ -47,16 +47,18 @@ namespace LunaClient.Systems.Asteroid
         public override void OnEnabled()
         {
             base.OnEnabled();
+            GameEvents.onAsteroidSpawned.Add(AsteroidEventHandler.OnAsteroidSpawned);
             GameEvents.onGameSceneLoadRequested.Add(AsteroidEventHandler.OnGameSceneLoadRequested);
-            GameEvents.onVesselCreate.Add(AsteroidEventHandler.OnVesselCreate);
+
             Client.Singleton.StartCoroutine(CheckAsteroids());
         }
 
         public override void OnDisabled()
         {
             base.OnDisabled();
+            GameEvents.onAsteroidSpawned.Remove(AsteroidEventHandler.OnAsteroidSpawned);
             GameEvents.onGameSceneLoadRequested.Remove(AsteroidEventHandler.OnGameSceneLoadRequested);
-            GameEvents.onVesselCreate.Remove(AsteroidEventHandler.OnVesselCreate);
+
             ServerAsteroids.Clear();
             ServerAsteroidTrackStatus.Clear();
         }

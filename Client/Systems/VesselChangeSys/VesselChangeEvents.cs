@@ -17,7 +17,7 @@ namespace LunaClient.Systems.VesselChangeSys
         /// <param name="data"></param>
         public void OnPartDie(Part data)
         {
-            if (!VesselLockSystem.Singleton.IsSpectating && !VesselCommon.ActiveVesselIsInSafetyBubble() && data.vessel.id == FlightGlobals.ActiveVessel.id)
+            if (!VesselCommon.IsSpectating && !VesselCommon.ActiveVesselIsInSafetyBubble() && data.vessel.id == FlightGlobals.ActiveVessel.id)
             {
                 var msgData = new VesselChangeMsgData
                 {
@@ -37,7 +37,7 @@ namespace LunaClient.Systems.VesselChangeSys
         /// <param name="data"></param>
         public void OnStageSeparation(EventReport data)
         {
-            if (!VesselLockSystem.Singleton.IsSpectating && !VesselCommon.ActiveVesselIsInSafetyBubble())
+            if (!VesselCommon.IsSpectating && !VesselCommon.ActiveVesselIsInSafetyBubble())
             {
                 var debrisVessel = FlightGlobals.FindVessel(data.origin.vessel.id);
                 var missionId = data.origin.missionID;

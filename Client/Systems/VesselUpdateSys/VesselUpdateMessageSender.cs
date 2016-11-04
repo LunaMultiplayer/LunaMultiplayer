@@ -21,7 +21,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             var msg = new VesselUpdateMsgData
             {
-                SentTime = Time.fixedTime,
+                GameSentTime = Time.fixedTime,
                 Stage = update.Stage,
                 PlanetTime = update.PlanetTime,
                 ActiveEngines = update.ActiveEngines,

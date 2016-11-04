@@ -24,13 +24,16 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.ConsoleIdentifier = msgData.ConsoleIdentifier;
             SettingsSystem.ServerSettings.SafetyBubbleDistance = msgData.SafetyBubbleDistance;
             SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval = msgData.VesselUpdatesSendMsInterval;
+            SettingsSystem.ServerSettings.VesselUpdatesSendFarMsInterval = msgData.VesselUpdatesSendFarMsInterval;
             SettingsSystem.ServerSettings.DropControlOnVesselSwitching = msgData.DropControlOnVesselSwitching;
             SettingsSystem.ServerSettings.DropControlOnExitFlight = msgData.DropControlOnExitFlight;
             SettingsSystem.ServerSettings.SendScenarioDataSecInterval = msgData.SendScenarioDataSecInterval;
             SettingsSystem.ServerSettings.VesselKillCheckMsInterval = msgData.VesselKillCheckMsInterval;
             SettingsSystem.ServerSettings.StrandedVesselsCheckMsInterval = msgData.StrandedVesselsCheckMsInterval;
-            SettingsSystem.ServerSettings.VesselDefinitionUpdateMsInterval = msgData.VesselDefinitionUpdateMsInterval;
+            SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval = msgData.VesselDefinitionSendMsInterval;
+            SettingsSystem.ServerSettings.VesselDefinitionSendFarMsInterval = msgData.VesselDefinitionSendFarMsInterval;
             SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval = msgData.AbandonedVesselsUpdateMsInterval;
+            SettingsSystem.ServerSettings.ShowVesselsInThePast = msgData.ShowVesselsInThePast;
             SettingsSystem.ServerSettings.ClockSetMsInterval = msgData.ClockSetMsInterval;
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
             SettingsSystem.ServerSettings.DropControlOnExit = msgData.DropControlOnExit;

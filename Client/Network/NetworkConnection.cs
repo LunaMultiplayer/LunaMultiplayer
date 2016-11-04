@@ -40,6 +40,7 @@ namespace LunaClient.Network
                         MainSystem.Singleton.DisplayDisconnectMessage = true;
                     }
 
+                    MainSystem.Singleton.GameRunning = false;
                     MainSystem.Singleton.Status = "Disconnected: " + reason;
                     MainSystem.Singleton.NetworkState = ClientState.DISCONNECTED;
                     NetworkMain.ClientConnection.Disconnect(reason);

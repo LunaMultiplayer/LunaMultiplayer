@@ -49,9 +49,6 @@ namespace LunaClient.Systems.VesselDockSys
             {
                 Debug.Log("[LMP]: Sending docked protovessel {dockedVessel.id}");
                 
-                //Send the new vessel
-                VesselProtoSystem.Singleton.CurrentVesselSent = false;
-
                 //Update Status if it's us.
                 if (dockedVessel == FlightGlobals.ActiveVessel && LockSystem.Singleton.LockIsOurs("control-" + dockedVessel.id))
                 {

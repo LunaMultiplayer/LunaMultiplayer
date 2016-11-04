@@ -38,18 +38,18 @@ namespace LunaServer.System
 
         public static void ReleasePlayerLocks(string playerName)
         {
-            //He is gone so he''s not gonna spawn more asteroids...
+            //He is gone so he's not gonna spawn more asteroids...
             ReleaseLock("asteroid", playerName);
 
-            if (GeneralSettings.SettingsStore.DropControlOnExit)
+            var removeList = new List<string>();
+            removeList.AddRange(PlayerLocks.Where(p => p.Value == playerName).Select(p => p.Key));
+
+            foreach (var lockToRemove in removeList)
             {
-                var removeList = new List<string>();
-                removeList.AddRange(PlayerLocks.Where(p => p.Value == playerName).Select(p => p.Key));
-                removeList.ForEach(p =>
-                {
-                    string value;
-                    PlayerLocks.TryRemove(p, out value);
-                });
+                string value;
+                if (lockToRemove.StartsWith("control-") && !GeneralSettings.SettingsStore.DropControlOnExit)
+                    continue;
+                PlayerLocks.TryRemove(lockToRemove, out value);
             }
         }
 

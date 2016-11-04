@@ -15,12 +15,17 @@ namespace LunaCommon.Message.Base
         public virtual string Version => VersionInfo.VersionNumber;
 
         /// <summary>
-        /// Receive time timestamp, useful for interpolation.
+        /// Receive time timestamp.
         /// </summary>
         public long ReceiveTime { get; set; }
 
         /// <summary>
-        ///     Returns the message subtype, override in cases that you need, chat for example
+        /// Sent time timestamp.
+        /// </summary>
+        public long SentTime { get; set; }
+
+        /// <summary>
+        /// Returns the message subtype, override in cases that you need, chat for example
         /// </summary>
         public virtual ushort SubType => 0;
     }

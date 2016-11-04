@@ -67,7 +67,7 @@ namespace LunaClient.Systems.VesselChangeSys
         private static void HandleVesselChange(VesselChangeMsgData messageData)
         {
             var vessel = FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == messageData.VesselId);
-            if (vessel != null && !vessel.packed && (VesselLockSystem.Singleton.IsSpectating || vessel.id != FlightGlobals.ActiveVessel.id))
+            if (vessel != null && !vessel.packed && (VesselCommon.IsSpectating || vessel.id != FlightGlobals.ActiveVessel.id))
             {
                 switch ((VesselChangeType)messageData.ChangeType)
                 {

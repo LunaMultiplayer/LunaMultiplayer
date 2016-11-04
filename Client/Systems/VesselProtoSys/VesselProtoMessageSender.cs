@@ -58,13 +58,9 @@ namespace LunaClient.Systems.VesselProtoSys
             CleanUpVesselNode(vesselNode, vessel.id);
 
             var vesselBytes = ConfigNodeSerializer.Singleton.Serialize(vesselNode);
-            var path = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer","Plugins", "Data", "lastVessel.txt");
-            File.WriteAllBytes(path, vesselBytes);
-
             if (vesselBytes.Length > 0)
             {
                 UniverseSyncCache.Singleton.QueueToCache(vesselBytes);
-                Debug.Log($"[LMP]: Sending vessel {vessel.protoVessel.vesselID}, Name {vessel.vesselName}, type: {vessel.vesselType}, size: {vesselBytes.Length}");
 
                 SendMessage(new VesselProtoMsgData
                 {

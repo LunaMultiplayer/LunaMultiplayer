@@ -25,9 +25,12 @@ namespace LunaClient.Systems.Warp
                     return;
                 }
 
-                //We are warping so set the subspace to -1
-                System.CurrentSubspace = -1;
-                System.SendChangeSubspaceMsg(-1);
+                if (System.CurrentSubspace != -1)
+                {
+                    //We are warping so set the subspace to -1
+                    System.CurrentSubspace = -1;
+                    System.SendChangeSubspaceMsg(-1);
+                }
             }
             else if (TimeWarp.CurrentRateIndex == 0 && System.CurrentSubspace == -1)
             {

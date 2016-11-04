@@ -164,7 +164,7 @@ namespace LunaCommon.Message.Base
             }
             catch (Exception e)
             {
-                throw new Exception($"Error serializing message! {e}");
+                throw new Exception($"Error serializing message! MsgDataType: {Data.GetType()} Exception: {e}");
             }
         }
 

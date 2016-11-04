@@ -41,6 +41,6 @@ namespace LunaCommon.Message.Data.Vessel
         public double[] Velocity { get; set; } //Only if IsSurfaceUpdate
         public double[] Acceleration { get; set; } //Only if IsSurfaceUpdate
         public double[] Orbit { get; set; } //Only if NOT IsSurfaceUpdate
-        public float SentTime { get; set; }
+        public float GameSentTime { get; set; }
     }
 }

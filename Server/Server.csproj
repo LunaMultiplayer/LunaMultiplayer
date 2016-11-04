@@ -59,7 +59,9 @@
     <Compile Include="Message\Reader\SettingsMsgReader.cs" />
     <Compile Include="Message\Reader\VesselMsgReader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Server\VesselUpdateRelay.cs" />
+    <Compile Include="System\VesselContext.cs" />
+    <Compile Include="System\VesselRelaySystem.cs" />
+    <Compile Include="System\VesselUpdateRelaySystem.cs" />
     <Compile Include="Server\MessageQueuer.cs" />
     <Compile Include="System\FileHandler.cs" />
     <Compile Include="Message\Reader\KerbalMsgReader.cs" />

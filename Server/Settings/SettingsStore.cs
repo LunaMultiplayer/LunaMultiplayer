@@ -18,6 +18,9 @@ namespace LunaServer.Settings
         [Description("Specify in minutes how often /nukeksc automatically runs. 0 = Disabled")]
         public int AutoNuke = 0;
 
+        [Description("Specify if the vessels that are being CONTROLLED and in a past subspace will be shown for players in future subspaces")]
+        public bool ShowVesselsInThePast = false;
+
         [Description("Enable use of Cheats in-game.")]
         public bool Cheats = true;
 
@@ -91,9 +94,12 @@ namespace LunaServer.Settings
         public int ConnectionMsTimeout = 20000;
 #endif
 
-        [Description("Interval in Ms at wich the client will send updates for his vessels.\n" +
+        [Description("Interval in Ms at wich the client will send updates for his vessels when other players are nearby.\n" +
                      "#Decrease it if your clients have good network connection and you plan to do dogfights")]
         public int VesselUpdatesSendMsInterval = 30;
+
+        [Description("Interval in Ms at wich the client will send updates for his vessels. When nobody is nearby")]
+        public int VesselUpdatesSendFarMsInterval = 5000;
 
         [Description("If this is set to true, vessels can be taken by anyone after a player switch to another vessel.")]
         public bool DropControlOnVesselSwitching = true;
@@ -119,8 +125,11 @@ namespace LunaServer.Settings
         [Description("Interval in ms at wich users will check for vessels in empty subspaces and move them to the server subspace")]
         public int StrandedVesselsCheckMsInterval = 100;
 
-        [Description("Interval in ms at wich users will send the controlled and close vessel definition to the server")]
-        public int VesselDefinitionUpdateMsInterval = 1000;
+        [Description("Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions to the server")]
+        public int VesselDefinitionSendMsInterval = 1000;
+
+        [Description("Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions to the server")]
+        public int VesselDefinitionSendFarMsInterval = 10000;
 
         [Description("Interval in ms at wich users will send the abandoned vessel definition to the server")]
         public int AbandonedVesselsUpdateMsInterval = 30000;
@@ -130,6 +139,5 @@ namespace LunaServer.Settings
         public int CloseDistanceUpdateIntervalMs { get; set; } = 33; //30 FPS
         public int CloseDistanceInMeters { get; set; } = 25000;
         public int SendReceiveThreadTickMs { get; set; } = 5;
-
     }
 }

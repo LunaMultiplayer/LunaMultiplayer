@@ -4,8 +4,6 @@ using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
-using LunaClient.Systems.Network;
-using LunaClient.Systems.VesselWarpSys;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -46,6 +44,11 @@ namespace LunaClient.Systems.VesselProtoSys
         
         private static void HandleVesselProto(VesselProtoMsgData messageData)
         {
+            if (!System.ProtoSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(messageData.VesselId))
+            {
+                return;
+            }
+
             HandleVesselProtoData(messageData.VesselData, messageData.VesselId.ToString(), messageData.Subspace);
         }
 
@@ -127,7 +130,6 @@ namespace LunaClient.Systems.VesselProtoSys
                     {
                         System.AllPlayerVessels.Add(vesselProtoUpdate);
                     }
-                    VesselWarpSystem.Singleton.AddUpdateVesselSubspace(vesselProtoUpdate.VesselId, subspace);
                 }
                 else
                 {

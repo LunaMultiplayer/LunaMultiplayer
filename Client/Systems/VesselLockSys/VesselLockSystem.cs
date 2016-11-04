@@ -20,30 +20,16 @@ namespace LunaClient.Systems.VesselLockSys
         public const string SpectateLock = "LMP_Spectating";
         private ScreenMessage _spectateMessage;
 
-        private bool _isSpectating;
-
-        public bool IsSpectating
-        {
-            get
-            {
-                return HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && _isSpectating;
-            }
-            set { _isSpectating = value; }
-        }
-
-        private string GetVesselOwner
-            => IsSpectating ? LockSystem.Singleton.LockOwner("control-" + FlightGlobals.ActiveVessel.id) : "";
+        private string GetVesselOwner => VesselCommon.IsSpectating ? LockSystem.Singleton.LockOwner("control-" + FlightGlobals.ActiveVessel.id) : "";
 
         private VesselLockEvents VesselMainEvents { get; } = new VesselLockEvents();
 
-        private bool VesselLockSystemReady
-            =>
-            Enabled && HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f &&
+        private bool VesselLockSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f &&
             FlightGlobals.ActiveVessel != null;
 
-        private string SpectatingMessage => IsSpectating ? $"This vessel is being controlled by {GetVesselOwner}." : "";
+        private string SpectatingMessage => VesselCommon.IsSpectating ? $"This vessel is being controlled by {GetVesselOwner}." : "";
 
-        private const float CheckSecondaryVesselsSInterval = 0.5f;
+        private const float CheckSecondaryVesselsSInterval = 1f;
         private const float UpdateScreenMessageInterval = 1f;
 
         #endregion
@@ -87,7 +73,8 @@ namespace LunaClient.Systems.VesselLockSys
         public void StartSpectating()
         {
             InputLockManager.SetControlLock(LmpGuiUtil.BlockAllControls, SpectateLock);
-            IsSpectating = true;
+            LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
+            VesselCommon.IsSpectating = true;
         }
 
         /// <summary>
@@ -101,10 +88,11 @@ namespace LunaClient.Systems.VesselLockSys
                 LockSystem.Singleton.AcquireLock("control-" + vessel.id, force);
             }
 
-            if (IsSpectating)
+            if (VesselCommon.IsSpectating)
             {
                 InputLockManager.RemoveControlLock(SpectateLock);
-                IsSpectating = false;
+                LockSystem.Singleton.ReleaseSpectatorLock();
+                VesselCommon.IsSpectating = false;
             }
         }
 
@@ -125,7 +113,7 @@ namespace LunaClient.Systems.VesselLockSys
                 try
                 {
                     if (!Enabled) break;
-                    if (VesselLockSystemReady && IsSpectating)
+                    if (VesselLockSystemReady && VesselCommon.IsSpectating)
                     {
                         if (!LockSystem.Singleton.LockExists("control-" + FlightGlobals.ActiveVessel.id))
                         {
@@ -192,7 +180,7 @@ namespace LunaClient.Systems.VesselLockSys
                     if (!Enabled) break;
                     if (VesselLockSystemReady)
                     {
-                        if (IsSpectating)
+                        if (VesselCommon.IsSpectating)
                         {
                             if (_spectateMessage != null)
                                 _spectateMessage.duration = 0f;
@@ -220,19 +208,16 @@ namespace LunaClient.Systems.VesselLockSys
         #endregion
 
         /// <summary>
-        /// Return the OTHER vessel ids of the vessels that are loaded and not packed (close to us) not dead, not in safety bubble,
-        /// with a update lock that is free.
-        /// Basically a close vessel without a updater
+        /// Return the OTHER vessel ids of the vessels that are loaded (close to us) not dead and not in safety bubble.
         /// </summary>
         /// <returns></returns>
         private static IEnumerable<Guid> GetValidSecondaryVesselIds()
         {
             return FlightGlobals.Vessels
-                .Where(v => v.loaded && !v.packed && v.state != Vessel.State.DEAD &&
+                .Where(v => v.loaded && v.state != Vessel.State.DEAD &&
                             (v.id != FlightGlobals.ActiveVessel.id) &&
-                            !VesselCommon.IsInSafetyBubble(v.GetWorldPos3D(), v.mainBody) &&
-                            !LockSystem.Singleton.LockExists("update-" + v.id) &&
-                            (!v.parts.Any() || !LockSystem.Singleton.LockExists("debris-" + v.parts.First().missionID + "_" + v.id)))
+                            !VesselCommon.IsInSafetyBubble(v) &&
+                            !LockSystem.Singleton.LockExists("update-" + v.id))
                 .Select(v => v.id);
         }
 
@@ -246,8 +231,8 @@ namespace LunaClient.Systems.VesselLockSys
             return FlightGlobals.Vessels
                 .Where(v => v.id != FlightGlobals.ActiveVessel.id &&
                             LockSystem.Singleton.LockIsOurs("update-" + v.id) &&
-                            (!v.loaded || v.packed || v.state == Vessel.State.DEAD ||
-                            VesselCommon.IsInSafetyBubble(v.GetWorldPos3D(), v.mainBody)))
+                            (!v.loaded || v.state == Vessel.State.DEAD ||
+                            VesselCommon.IsInSafetyBubble(v)))
                 .Select(v => v.id);
         }
 

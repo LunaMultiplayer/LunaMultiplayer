@@ -11,10 +11,12 @@ namespace LunaClient.Systems.Lock
 {
     /// <summary>
     /// This system control the locks.
-    /// Locks are "control", "update" and "asteroid"
+    /// Locks are "control", "update", "spectator-playername" and "asteroid"
     /// If you own the control lock then you can move that vessel.
     /// If you own the update lock you are the one who sends vessel updates (position, speed, etc) to the server
     /// If you own the asteroid lock then you spawn asteroids
+    /// If you own the spectator lock then you are spectating
+    /// The dictionary is defined as "LockName:PlayerName"
     /// </summary>
     public class LockSystem : MessageSystem<LockSystem, LockMessageSender, LockMessageHandler>
     {
@@ -131,6 +133,36 @@ namespace LunaClient.Systems.Lock
             });
         }
 
+        /// <summary>
+        /// Aquire the spectator lock on the given vessel
+        /// </summary>
+        public void AcquireSpectatorLock(Guid vesselId)
+        {
+            MessageSender.SendMessage(new LockAcquireMsgData
+            {
+                PlayerName = SettingsSystem.CurrentSettings.PlayerName,
+                LockName = $"spectator-{SettingsSystem.CurrentSettings.PlayerName}-{vesselId}",
+                Force = false
+            });
+        }
+
+        /// <summary>
+        /// Release the spectator locks
+        /// </summary>
+        public void ReleaseSpectatorLock()
+        {
+            var spectatorLocks = GetLocksWithPrefix($"spectator-{SettingsSystem.CurrentSettings.PlayerName}");
+
+            foreach (var spectatorLock in spectatorLocks)
+            {
+                MessageSender.SendMessage(new LockReleaseMsgData
+                {
+                    PlayerName = SettingsSystem.CurrentSettings.PlayerName,
+                    LockName = spectatorLock,
+                });
+            }
+        }
+
         #endregion
 
         #region ReleaseLocks      
@@ -199,6 +231,11 @@ namespace LunaClient.Systems.Lock
             return ServerLocks.Any(l=> l.Key.StartsWith(lockPrefix));
         }
 
+        public bool SpectatorLockExists(Guid vesselId)
+        {
+            return ServerLocks.Any(l => l.Key.EndsWith(vesselId.ToString()) && l.Key.StartsWith("spectator-"));
+        }
+
         public bool LockExists(string lockName)
         {
             return ServerLocks.ContainsKey(lockName);
@@ -209,14 +246,19 @@ namespace LunaClient.Systems.Lock
             return ServerLocks.ContainsKey(lockName) ? ServerLocks[lockName] : "unknown player";
         }
 
-        public string[] GetLocks(string playerName)
+        public string[] GetPlayerLocks(string playerName)
         {
             return ServerLocks.Where(l => l.Value == playerName).Select(l => l.Key).ToArray();
         }
 
-        public string[] GetLocksPrefix(string playerName, string lockPrefix)
+        public string[] GetPlayerLocksPrefix(string playerName, string lockPrefix)
         {
             return ServerLocks.Where(l => l.Value == playerName && l.Key.StartsWith(lockPrefix)).Select(l => l.Key).ToArray();
+        }
+
+        public string[] GetLocksWithPrefix(string lockPrefix)
+        {
+            return ServerLocks.Where(l => l.Key.StartsWith(lockPrefix)).Select(l => l.Key).ToArray();
         }
 
         #endregion

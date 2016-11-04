@@ -133,9 +133,7 @@ namespace LunaClient.Systems.TimeSyncer
             }
         }
 
-        public double GetServerClock()
-            =>
-            Synced ? TimeSpan.FromTicks(DateTime.UtcNow.Ticks - ServerStartTime + ClockOffsetAverage).TotalSeconds : 0;
+        public double GetServerClock() => Synced ? TimeSpan.FromTicks(DateTime.UtcNow.Ticks - ServerStartTime + ClockOffsetAverage).TotalSeconds : 0;
 
         public double GetCurrentError()
             => Synced ? Planetarium.GetUniversalTime() - WarpSystem.Singleton.GetCurrentSubspaceTime() : 0;

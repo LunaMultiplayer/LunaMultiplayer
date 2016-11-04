@@ -1,8 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselWarpSys;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Interface;
@@ -31,7 +29,6 @@ namespace LunaClient.Systems.Lock
                             System.ServerLocks.Add(lockKey.Key, lockKey.Value);
                         }
 
-                        VesselWarpSystem.Singleton.SyncVesselLocksAndSubspaces();
                         MainSystem.Singleton.NetworkState = ClientState.LOCKS_SYNCED;
                     }
                     break;

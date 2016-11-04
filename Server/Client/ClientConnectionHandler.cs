@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -8,7 +9,6 @@ using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Plugin;
 using LunaServer.Server;
-using LunaServer.Settings;
 using LunaServer.System;
 using Lidgren.Network;
 
@@ -18,13 +18,11 @@ namespace LunaServer.Client
     {
         public static void ConnectClient(NetConnection newClientConnection)
         {
-            var newClientObject = new ClientStructure
+            var newClientObject = new ClientStructure(newClientConnection.RemoteEndPoint)
             {
-                Subspace = 0,
+                Subspace = int.MinValue,
                 PlayerStatus = new PlayerStatus(),
                 ConnectionStatus = ConnectionStatus.CONNECTED,
-                Endpoint = newClientConnection.RemoteEndPoint,
-                IpAddress = newClientConnection.RemoteEndPoint.Address,
                 Connection = newClientConnection,
                 LastSendTime = 0,
                 LastReceiveTime = ServerContext.ServerClock.ElapsedMilliseconds
@@ -35,7 +33,7 @@ namespace LunaServer.Client
             LmpPluginHandler.FireOnClientConnect(newClientObject);
             
             ServerContext.Clients.TryAdd(newClientObject.Endpoint, newClientObject);
-            VesselUpdateRelay.AddPlayer(newClientObject);
+            VesselUpdateRelaySystem.AddPlayer(newClientObject);
             LunaLog.Debug("Online Players: " + ServerContext.PlayerCount + ", connected: " + ServerContext.Clients.Count);
         }
 
@@ -44,15 +42,13 @@ namespace LunaServer.Client
             if (!string.IsNullOrEmpty(reason))
                 LunaLog.Debug($"{client.PlayerName} sent Connection end message, reason: {reason}");
 
-            VesselUpdateRelay.RemovePlayer(client);
+            VesselUpdateRelaySystem.RemovePlayer(client);
 
             //Remove Clients from list
             if (ServerContext.Clients.ContainsKey(client.Endpoint))
             {
                 ServerContext.Clients.TryRemove(client.Endpoint, out client);
                 LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ServerContext.Clients.Count}");
-
-                WarpSystem.DisconnectPlayer(client.PlayerName);
             }
 
             if (client.ConnectionStatus != ConnectionStatus.DISCONNECTED)
@@ -64,6 +60,12 @@ namespace LunaServer.Client
                     ChatSystem.RemovePlayer(client.PlayerName);
                     MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, new PlayerConnectionLeaveMsgData { PlayerName = client.PlayerName });
                     LockSystem.ReleasePlayerLocks(client.PlayerName);
+
+                    if (!ServerContext.Clients.Any(c => c.Value.Subspace == client.Subspace))
+                    {
+                        WarpSystem.RemoveSubspace(client.Subspace);
+                        VesselRelaySystem.RemoveSubspace(client.Subspace);
+                    }
                 }
 
                 try

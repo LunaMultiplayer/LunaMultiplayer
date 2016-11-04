@@ -11,24 +11,9 @@ namespace LunaServer.System
     {
         private static string SubspaceFile { get; } = Path.Combine(ServerContext.UniverseDirectory, "Subspace.txt");
         
-        public static void DisconnectPlayer(string playerName)
-        {
-            lock (WarpContext.ListLock)
-            {
-                if (WarpContext.IgnoreList != null)
-                    if (WarpContext.IgnoreList.Contains(playerName))
-                        WarpContext.IgnoreList.Remove(playerName);
-            }
-        }
-
         public static void Reset()
         {
             WarpContext.Subspaces.Clear();
-            WarpContext.OfflinePlayerSubspaces.Clear();
-            lock (WarpContext.ListLock)
-            {
-                WarpContext.IgnoreList = null;
-            }
             LoadSavedSubspace();
         }
         
@@ -39,8 +24,11 @@ namespace LunaServer.System
         
         public static void RemoveSubspace(int oldSubspace)
         {
+            //We never remove the latest subspace or the only subspace from the server!
+            if (oldSubspace == WarpContext.LatestSubspace || WarpContext.Subspaces.Count == 1) return;
+
             double time;
-            WarpContext.Subspaces.TryRemove(0, out time);
+            WarpContext.Subspaces.TryRemove(oldSubspace, out time);
 
             var allLinesExceptTheDeleted = string.Join(Environment.NewLine, GetSubspaceLinesFromFile()
                 .Where(s => s.Key != oldSubspace)
@@ -57,7 +45,8 @@ namespace LunaServer.System
             var content = "#Incorrectly editing this file will cause weirdness. If there is any errors, " +
                           "the universe time will be reset." + Environment.NewLine;
             content += "#This file can only be edited if the server is stopped." + Environment.NewLine;
-            content += "#Each variable is defined as: subspaceId:subspace time." + Environment.NewLine;
+            content += "#Each variable is defined as: subspaceId:server_time_difference_in_seconds." + Environment.NewLine;
+            content += "#It must always contain at least 1 subspace wich will be the most advanced in the future" + Environment.NewLine;
 
             FileHandler.WriteToFile(SubspaceFile, content);
         }
@@ -92,7 +81,40 @@ namespace LunaServer.System
 
             return subspaceLines;
         }
+        
+        /// <summary>
+        /// Returns the time difference of the given subspace against the server time in ticks
+        /// </summary>
+        public static long GetSubspaceTimeDifference(int subspace)
+        {
+            return WarpContext.Subspaces.ContainsKey(subspace) ? TimeSpan.FromSeconds(WarpContext.Subspaces[subspace]).Ticks : 0;
+        }
+
+        /// <summary>
+        /// Returns the current time in ticks at the given subspace
+        /// </summary>
+        public static long GetCurrentSubspaceTime(int subspace)
+        {
+            return DateTime.UtcNow.Ticks + GetSubspaceTimeDifference(subspace);
+        }
+
+        /// <summary>
+        /// Returns the subspaces that runs in an earlier time (this means the subspaces that have a LOWER time difference)
+        /// </summary>
+        public static int[] GetPastSubspaces(int subspace)
+        {
+            return WarpContext.Subspaces.Where(s => s.Key != subspace && s.Value < WarpContext.Subspaces[subspace]).Select(s => s.Key).ToArray();
+        }
+
+        /// <summary>
+        /// Returns the subspaces that runs in an future time (this means the subspaces that have a HIGHER time difference)
+        /// </summary>
+        public static int[] GetFutureSubspaces(int subspace)
+        {
+            return WarpContext.Subspaces.Where(s => s.Key != subspace && s.Value > WarpContext.Subspaces[subspace]).Select(s => s.Key).ToArray();
+        }
 
         #endregion
+
     }
 }

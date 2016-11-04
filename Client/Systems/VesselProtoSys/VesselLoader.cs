@@ -6,8 +6,6 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselWarpSys;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using UniLinq;
 using UnityEngine;
@@ -24,7 +22,7 @@ namespace LunaClient.Systems.VesselProtoSys
             Debug.Log("[LMP]: Loading vessels in subspace 0 into game");
             var numberOfLoads = 0;
 
-            foreach (var vessel in System.AllPlayerVessels.Where(v => VesselWarpSystem.Singleton.GetVesselSubspace(v.VesselId) == 0))
+            foreach (var vessel in System.AllPlayerVessels)
             {
                 var pv = CreateSafeProtoVesselFromConfigNode(vessel.VesselNode, vessel.VesselId);
                 if ((pv != null) && (pv.vesselID == vessel.VesselId))
@@ -48,10 +46,9 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Load a vessel into the game
         /// </summary>
-        public IEnumerator LoadVessel(ConfigNode vesselNode, Guid protovesselId)
+        public IEnumerator LoadVessel(VesselProtoUpdate vesselProto)
         {
-            var seconds = new WaitForSeconds(0.5f);
-            var currentProto = CreateSafeProtoVesselFromConfigNode(vesselNode, protovesselId);
+            var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
 
             if (ProtoVesselValidationsPassed(currentProto))
             {
@@ -60,16 +57,18 @@ namespace LunaClient.Systems.VesselProtoSys
                 var vessel = FlightGlobals.Vessels.FirstOrDefault(v => !ProtoVesselIsAsteroid(v.protoVessel) && v.id == currentProto.vesselID);
                 if (vessel != null)
                 {
-                    if (!vessel.loaded || vessel.packed)
-                        VesselRemoveSystem.Singleton.KillVessel(vessel);
+                    if (vessel.loaded)
+                    {
+                        vessel.StartFromBackup(currentProto);
+                    }
                     else
-                        yield break; //Vessel is not packed and within range so we handle the vessel changes by it's proper messages
+                    {
+                        vessel.protoVessel = currentProto;
+                    }
+                    //VesselRemoveSystem.Singleton.KillVessel(vessel, false, true);
                 }
 
                 FixProtoVesselFlags(currentProto);
-
-                yield return seconds; //Wait until vessel is killed
-
                 var result = LoadVesselIntoGame(currentProto);
 
                 yield return null; //Resume on next frame
@@ -77,6 +76,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (result)
                 {
                     FinishVesselLoading(currentProto);
+                    vesselProto.Loaded = true;
                 }
             }
         }
@@ -244,7 +244,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
 
                 //If we are spectating that vessel and it changed focus to the new vessel
-                if (FlightGlobals.ActiveVessel.id == currentProto.vesselID)
+                if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == currentProto.vesselID)
                     FlightGlobals.SetActiveVessel(currentProto.vesselRef);
 
                 Debug.Log("[LMP]: Protovessel Loaded");

@@ -9,7 +9,6 @@ using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
 using LunaClient.Windows.Options;
 using LunaCommon;
-using LunaCommon.Enums;
 using UniLinq;
 using UnityEngine;
 
@@ -21,7 +20,11 @@ namespace LunaClient.Windows.Status
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
+
+            #region Horizontal toolbar
+
             GUILayout.BeginHorizontal();
+
             GUILayout.FlexibleSpace();
             var chatButtonStyle = ButtonStyle;
             if (ChatSystem.Singleton.ChatButtonHighlighted)
@@ -34,38 +37,20 @@ namespace LunaClient.Windows.Status
                     VesselLockSystem.Singleton.DropAllOtherVesselControlLocks();
                 }
             }
-
             ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, "Chat", chatButtonStyle);
             CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, "Craft", ButtonStyle);
             DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, "Debug", ButtonStyle);
 
             GUILayout.EndHorizontal();
 
+            #endregion
+
+            #region Players information
+
             ScrollPosition = GUILayout.BeginScrollView(ScrollPosition, ScrollStyle);
-
-            //Draw the server subspace and the players in it
-            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.SUBSPACE)
-            {
-                GUILayout.BeginHorizontal(SubspaceStyle);
-                GUILayout.Label("Server T: " + KSPUtil.PrintTimeCompact(WarpSystem.Singleton.GetSubspaceTime(0), false));
-                if (NotWarpingAndNotInGivenSubspace(0) && GUILayout.Button("Sync", ButtonStyle))
-                    WarpSystem.Singleton.CurrentSubspace = 0;
-                GUILayout.EndHorizontal();
-
-                var playersInServerSubspace = SubspaceDisplay.FirstOrDefault(s => s.SubspaceId == 0);
-                if (playersInServerSubspace != null)
-                {
-                    foreach (var currentPlayer in playersInServerSubspace.Players)
-                    {
-                        DrawPlayerEntry(currentPlayer == SettingsSystem.CurrentSettings.PlayerName
-                            ? StatusSystem.Singleton.MyPlayerStatus
-                            : StatusSystem.Singleton.GetPlayerStatus(currentPlayer));
-                    }
-                }
-            }
-
+            
             //Draw other subspaces
-            foreach (var currentEntry in SubspaceDisplay.Where(s=> s.SubspaceId != 0))
+            foreach (var currentEntry in SubspaceDisplay)
             {
                 if (currentEntry.SubspaceId == -1)
                 {
@@ -79,7 +64,7 @@ namespace LunaClient.Windows.Status
                     GUILayout.BeginHorizontal(SubspaceStyle);
                     GUILayout.Label("T: +" + KSPUtil.PrintTimeCompact(WarpSystem.Singleton.GetSubspaceTime(currentEntry.SubspaceId), false));
                     GUILayout.FlexibleSpace();
-                    if (NotWarpingAndNotInGivenSubspace(currentEntry.SubspaceId) && GUILayout.Button("Sync", ButtonStyle))
+                    if (NotWarpingAndIsFutureSubspace(currentEntry.SubspaceId) && GUILayout.Button("Sync", ButtonStyle))
                         WarpSystem.Singleton.CurrentSubspace = currentEntry.SubspaceId;
                     GUILayout.EndHorizontal();
                 }
@@ -93,18 +78,24 @@ namespace LunaClient.Windows.Status
             }
 
             GUILayout.EndScrollView();
+
+            #endregion
+
             GUILayout.FlexibleSpace();
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Disconnect", ButtonStyle))
                 DisconnectEventHandled = false;
             OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, "Options", ButtonStyle);
             GUILayout.EndHorizontal();
+
             GUILayout.EndVertical();
         }
 
-        private static bool NotWarpingAndNotInGivenSubspace(int subspaceId)
+        private static bool NotWarpingAndIsFutureSubspace(int subspaceId)
         {
-            return !WarpSystem.Singleton.CurrentlyWarping && WarpSystem.Singleton.CurrentSubspace != subspaceId;
+            return !WarpSystem.Singleton.CurrentlyWarping && WarpSystem.Singleton.CurrentSubspace != subspaceId &&
+                WarpSystem.Singleton.Subspaces.ContainsKey(WarpSystem.Singleton.CurrentSubspace) &&
+                WarpSystem.Singleton.Subspaces[WarpSystem.Singleton.CurrentSubspace] < WarpSystem.Singleton.Subspaces[subspaceId];
         }
 
         public void DrawMaximize(int windowId)

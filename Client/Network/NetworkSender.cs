@@ -67,6 +67,7 @@ namespace LunaClient.Network
             if (clientMessage?.MessageType == ClientMessageType.SYNC_TIME)
                 TimeSyncerSystem.Singleton.RewriteMessage(message.Data);
 
+            message.Data.SentTime = DateTime.UtcNow.Ticks;
             var bytes = message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled);
             if (bytes != null)
             {

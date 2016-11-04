@@ -84,7 +84,7 @@ namespace LunaClient.Windows.Debug
                                             $"Interpolation factor:{VesselUpdateInterpolationSystem.GetInterpolationFactor(vessel)}\n";
                     }
                 }
-                VesselUpdateText += $"Spectating: {VesselLockSystem.Singleton.IsSpectating}.\n";
+                VesselUpdateText += $"Spectating: {VesselCommon.IsSpectating}.\n";
                 VesselUpdateText += "Active vessel control lock: " +
                     $"{FlightGlobals.ActiveVessel != null && LockSystem.Singleton.LockIsOurs("control-" + FlightGlobals.ActiveVessel.id)}.\n";
                 VesselUpdateText += "Active vessel update lock: " +

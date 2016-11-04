@@ -39,7 +39,7 @@ namespace LunaServer.Client
 
         public static ClientStructure GetClientByIp(IPAddress ipAddress)
         {
-            return GetAuthenticatedClients().FirstOrDefault(testClient => Equals(testClient.IpAddress, ipAddress));
+            return GetAuthenticatedClients().FirstOrDefault(testClient => Equals(testClient.Endpoint.Address, ipAddress));
         }
 
         public static ClientStructure GetClientByPublicKey(string publicKey)

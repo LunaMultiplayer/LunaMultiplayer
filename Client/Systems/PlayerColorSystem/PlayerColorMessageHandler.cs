@@ -60,7 +60,7 @@ namespace LunaClient.Systems.ColorSystem
         /// </summary>
         public void UpdateVesselColors(string playerName)
         {
-            var controlledVesselIds = LockSystem.Singleton.GetLocks(playerName)
+            var controlledVesselIds = LockSystem.Singleton.GetPlayerLocks(playerName)
                 .Where(l => l.StartsWith("control-"))
                 .Select(l => l.Substring(8)).ToArray();
 

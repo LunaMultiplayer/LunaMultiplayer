@@ -26,7 +26,6 @@ using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
-using LunaClient.Systems.VesselWarpSys;
 using LunaClient.Systems.Warp;
 
 namespace LunaClient.Systems
@@ -54,7 +53,6 @@ namespace LunaClient.Systems
             TryUpdate(VesselChangeSystem.Singleton);
             TryUpdate(VesselProtoSystem.Singleton);
             TryUpdate(VesselRemoveSystem.Singleton);
-            TryUpdate(VesselWarpSystem.Singleton);
             TryUpdate(VesselDockSystem.Singleton);
             TryUpdate(WarpSystem.Singleton);
             TryUpdate(LockSystem.Singleton);
@@ -89,7 +87,6 @@ namespace LunaClient.Systems
             TryLateUpdate(VesselChangeSystem.Singleton);
             TryLateUpdate(VesselProtoSystem.Singleton);
             TryLateUpdate(VesselRemoveSystem.Singleton);
-            TryLateUpdate(VesselWarpSystem.Singleton);
             TryLateUpdate(VesselDockSystem.Singleton);
             TryLateUpdate(WarpSystem.Singleton);
             TryLateUpdate(LockSystem.Singleton);
@@ -124,7 +121,6 @@ namespace LunaClient.Systems
             TryFixedUpdate(VesselChangeSystem.Singleton);
             TryFixedUpdate(VesselProtoSystem.Singleton);
             TryFixedUpdate(VesselRemoveSystem.Singleton);
-            TryFixedUpdate(VesselWarpSystem.Singleton);
             TryFixedUpdate(VesselDockSystem.Singleton);
             TryFixedUpdate(WarpSystem.Singleton);
             TryFixedUpdate(LockSystem.Singleton);
