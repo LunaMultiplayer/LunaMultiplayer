@@ -99,9 +99,20 @@ namespace LunaServer.Command.Command.Base
                 try
                 {
                     if (FileHandler.FileExists(FullPath))
+                    {
                         FileHandler.SetAttributes(FullPath, FileAttributes.Normal);
 
-                    Items.ForEach(u => FileHandler.AppendToFile(FullPath, u + Environment.NewLine));
+                        var newItems = Items.Except(FileHandler.ReadFileLines(FullPath)
+                                .Select(l => l.Trim())
+                                .Where(l => !string.IsNullOrEmpty(l)))
+                            .ToList();
+
+                        newItems.ForEach(u => FileHandler.AppendToFile(FullPath, u + Environment.NewLine));
+                    }
+                    else
+                    {
+                        Items.ForEach(u => FileHandler.AppendToFile(FullPath, u + Environment.NewLine));
+                    }
                 }
                 catch (Exception e)
                 {
