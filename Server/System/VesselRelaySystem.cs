@@ -60,29 +60,32 @@ namespace LunaServer.System
 
             //Here we get the PAST subspace that is closest in time to the one we got as parameter
             var pastSubspaces = WarpSystem.GetPastSubspaces(subspaceId);
-            
-            var closestPastSubspace = WarpContext.Subspaces
-                .Where(s => pastSubspaces.Contains(s.Key))
-                .OrderByDescending(s => s.Value)
-                .Select(s => s.Key)
-                .First();
 
-            var originalqueue = OldVesselMessages[closestPastSubspace];
-
-            var messages = new VesselBaseMsgData[originalqueue.Count];
-            originalqueue.CopyTo(messages, 0);
-
-            var messageQueue = new ConcurrentQueue<VesselBaseMsgData>(messages);
-
-            //Now we remove the messages that are too old for this subspace
-            VesselBaseMsgData msg;
-            while (messageQueue.TryDequeue(out msg))
+            if (pastSubspaces.Any())
             {
-                if (msg.SentTime >= subspaceTime)
-                    break;
-            }
+                var closestPastSubspace = WarpContext.Subspaces
+                    .Where(s => pastSubspaces.Contains(s.Key))
+                    .OrderByDescending(s => s.Value)
+                    .Select(s => s.Key)
+                    .First();
 
-            OldVesselMessages.TryAdd(subspaceId, messageQueue);
+                var originalqueue = OldVesselMessages[closestPastSubspace];
+
+                var messages = new VesselBaseMsgData[originalqueue.Count];
+                originalqueue.CopyTo(messages, 0);
+
+                var messageQueue = new ConcurrentQueue<VesselBaseMsgData>(messages);
+
+                //Now we remove the messages that are too old for this subspace
+                VesselBaseMsgData msg;
+                while (messageQueue.TryDequeue(out msg))
+                {
+                    if (msg.SentTime >= subspaceTime)
+                        break;
+                }
+
+                OldVesselMessages.TryAdd(subspaceId, messageQueue);
+            }
         }
 
         /// <summary>

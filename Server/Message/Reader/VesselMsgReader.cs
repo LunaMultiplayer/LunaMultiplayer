@@ -103,7 +103,7 @@ namespace LunaServer.Message.Reader
             }
 
             MessageQueuer.SendToClient<VesselSrvMsg>(client, new VesselsReplyMsgData {VesselsData = vesselList.ToArray()});
-            LunaLog.Debug($"Sending{client.PlayerName} {sendVesselCount} vessels, cached: {cachedVesselCount}...");
+            LunaLog.Debug($"Sending {client.PlayerName} {sendVesselCount} vessels, cached: {cachedVesselCount}...");
         }
 
         private static void HandleVesselListRequest(ClientStructure client)
