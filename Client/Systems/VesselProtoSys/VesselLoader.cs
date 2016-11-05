@@ -54,18 +54,14 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
 
-                var vessel = FlightGlobals.Vessels.FirstOrDefault(v => !ProtoVesselIsAsteroid(v.protoVessel) && v.id == currentProto.vesselID);
+                //VesselRemoveSystem.Singleton.KillVessel(vessel, false, true);
+
+                var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == currentProto.vesselID);
                 if (vessel != null)
                 {
-                    if (vessel.loaded)
-                    {
-                        vessel.StartFromBackup(currentProto);
-                    }
-                    else
-                    {
-                        vessel.protoVessel = currentProto;
-                    }
-                    //VesselRemoveSystem.Singleton.KillVessel(vessel, false, true);
+                    vessel.protoVessel = currentProto;
+                    vesselProto.Loaded = true;
+                    yield break;
                 }
 
                 FixProtoVesselFlags(currentProto);

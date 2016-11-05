@@ -103,6 +103,9 @@ namespace LunaServer.System
         /// </summary>
         public static int[] GetPastSubspaces(int subspace)
         {
+            if (!WarpContext.Subspaces.ContainsKey(subspace))
+                return new int[0];
+
             return WarpContext.Subspaces.Where(s => s.Key != subspace && s.Value < WarpContext.Subspaces[subspace]).Select(s => s.Key).ToArray();
         }
 

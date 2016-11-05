@@ -36,6 +36,9 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void OnVesselRecovered(ProtoVessel recoveredVessel, bool quick)
         {
+            //quick == true when you press "space center" from the inflight menu
+            if (quick) return;
+
             if (!VesselControlLockIsOurs(recoveredVessel))
             {
                 ScreenMessages.PostScreenMessage("Cannot recover vessel, the vessel is not yours.", 5f, ScreenMessageStyle.UPPER_CENTER);
