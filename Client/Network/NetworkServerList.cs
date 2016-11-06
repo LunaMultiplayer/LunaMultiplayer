@@ -49,36 +49,39 @@ namespace LunaClient.Network
             try
             {
                 var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
-                var data = msgDeserialized.Data as MsReplyServersMsgData;
-
-                //Sometimes we receive other tipe of unconnected messages. 
-                //Therefore we assert that the received message data is of MsReplyServersMsgData
-                if (data != null)
+                if (msgDeserialized != null)
                 {
-                    Servers.Clear();
+                    var data = msgDeserialized.Data as MsReplyServersMsgData;
 
-                    for (var i = 0; i < data.Id.Length; i++)
+                    //Sometimes we receive other tipe of unconnected messages. 
+                    //Therefore we assert that the received message data is of MsReplyServersMsgData
+                    if (data != null)
                     {
-                        Servers.Add(new ServerInfo
-                        {
-                            Id = data.Id[i],
-                            Description = data.Description[i],
-                            Cheats = data.Cheats[i],
-                            ServerName = data.ServerName[i],
-                            DropControlOnExit = data.DropControlOnExit[i],
-                            MaxPlayers = data.MaxPlayers[i],
-                            WarpMode = data.WarpMode[i],
-                            PlayerCount = data.PlayerCount[i],
-                            GameMode = data.GameMode[i],
-                            ModControl = data.ModControl[i],
-                            DropControlOnExitFlight = data.DropControlOnExitFlight[i],
-                            VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
-                            DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
-                            Version = data.Version
-                        });
-                    }
+                        Servers.Clear();
 
-                    Servers = Servers.OrderBy(s => s.ServerName).ToList();
+                        for (var i = 0; i < data.Id.Length; i++)
+                        {
+                            Servers.Add(new ServerInfo
+                            {
+                                Id = data.Id[i],
+                                Description = data.Description[i],
+                                Cheats = data.Cheats[i],
+                                ServerName = data.ServerName[i],
+                                DropControlOnExit = data.DropControlOnExit[i],
+                                MaxPlayers = data.MaxPlayers[i],
+                                WarpMode = data.WarpMode[i],
+                                PlayerCount = data.PlayerCount[i],
+                                GameMode = data.GameMode[i],
+                                ModControl = data.ModControl[i],
+                                DropControlOnExitFlight = data.DropControlOnExitFlight[i],
+                                VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
+                                DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
+                                Version = data.Version
+                            });
+                        }
+
+                        Servers = Servers.OrderBy(s => s.ServerName).ToList();
+                    }
                 }
             }
             catch (Exception e)
