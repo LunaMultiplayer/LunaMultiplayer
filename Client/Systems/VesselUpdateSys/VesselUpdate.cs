@@ -143,7 +143,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                         vessel.radarAltitude
                     };
 
-                    Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation)*vessel.srf_velocity;
+                    Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
                     returnUpdate.Velocity = new[]
                     {
                         srfVel.x,
@@ -151,7 +151,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                         srfVel.z
                     };
 
-                    Vector3d srfAcceleration = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation)*
+                    Vector3d srfAcceleration = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) *
                                                vessel.acceleration;
                     returnUpdate.Acceleration = new[]
                     {
@@ -209,7 +209,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             if (Body != null && Vessel != null && _interpolationDuration > 0)
             {
-                for (float lerp = 0; lerp < 1; lerp += Time.fixedDeltaTime/_interpolationDuration)
+                for (float lerp = 0; lerp < 1; lerp += Time.fixedDeltaTime / _interpolationDuration)
                 {
                     ApplyInterpolations(lerp);
                     yield return fixedUpdate;
@@ -366,15 +366,14 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         private void ApplyControlState(float percentage)
         {
-            FlightState.mainThrottle = Mathf.Lerp(FlightState.mainThrottle, Target.FlightState.mainThrottle, percentage);
+            var currentFlightState = Lerp(FlightState, Target.FlightState, percentage);
 
-            Vessel?.ctrlState.CopyFrom(FlightState);
+            Vessel?.ctrlState.CopyFrom(currentFlightState);
             Vessel?.FeedInputFeed();
 
             if (VesselCommon.IsSpectating)
             {
-                //We are spectating so move the throttle slider smoothly with a lerp...
-                FlightInputHandler.state.CopyFrom(FlightState);
+                FlightInputHandler.state.CopyFrom(currentFlightState);
             }
         }
 
@@ -436,7 +435,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             var startAcc = new Vector3d(Acceleration[0], Acceleration[1], Acceleration[2]);
             var targetAcc = new Vector3d(Target.Acceleration[0], Target.Acceleration[1], Target.Acceleration[2]);
-            Vector3d currentAcc = Body.bodyTransform.rotation*Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
+            Vector3d currentAcc = Body.bodyTransform.rotation * Vector3d.Lerp(startAcc, targetAcc, interpolationValue);
             return currentAcc;
         }
 
@@ -523,6 +522,34 @@ namespace LunaClient.Systems.VesselUpdateSys
         private static double Lerp(double from, double to, float t)
         {
             return from * (1 - t) + to * t;
+        }
+
+        /// <summary>
+        /// Custom lerp for a flight control state
+        /// </summary>
+        private static FlightCtrlState Lerp(FlightCtrlState from, FlightCtrlState to, float t)
+        {
+            return new FlightCtrlState
+            {
+                X = Mathf.Lerp(from.X, to.X, t),
+                Y = Mathf.Lerp(from.Y, to.Y, t),
+                Z = Mathf.Lerp(from.Z, to.Z, t),
+                gearDown = t < 0.5 ? from.gearDown : to.gearDown,
+                gearUp = t < 0.5 ? from.gearUp : to.gearUp,
+                headlight = t < 0.5 ? from.headlight : to.headlight,
+                killRot = t < 0.5 ? from.killRot : to.killRot,
+                mainThrottle = Mathf.Lerp(from.mainThrottle, to.mainThrottle, t),
+                pitch = Mathf.Lerp(from.pitch, to.pitch, t),
+                roll = Mathf.Lerp(from.roll, to.roll, t),
+                yaw = Mathf.Lerp(from.yaw, to.yaw, t),
+                pitchTrim = Mathf.Lerp(from.pitchTrim, to.pitchTrim, t),
+                rollTrim = Mathf.Lerp(from.rollTrim, to.rollTrim, t),
+                yawTrim = Mathf.Lerp(from.yawTrim, to.yawTrim, t),
+                wheelSteer = Mathf.Lerp(from.wheelSteer, to.wheelSteer, t),
+                wheelSteerTrim = Mathf.Lerp(from.wheelSteerTrim, to.wheelSteerTrim, t),
+                wheelThrottle = Mathf.Lerp(from.wheelThrottle, to.wheelThrottle, t),
+                wheelThrottleTrim = Mathf.Lerp(from.wheelThrottleTrim, to.wheelThrottleTrim, t),
+            };
         }
 
         #endregion
