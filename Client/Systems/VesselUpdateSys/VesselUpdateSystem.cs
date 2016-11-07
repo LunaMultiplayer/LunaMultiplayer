@@ -27,7 +27,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         public bool UpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
                                          FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
-                                         FlightGlobals.ActiveVessel.vesselType != VesselType.Flag && !VesselCommon.ActiveVesselIsInSafetyBubble();
+                                         FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
 
         public bool UpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             (UpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
@@ -113,7 +113,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                     Debug.LogError($"[LMP]: Coroutine error in SendVesselUpdates {e}");
                 }
 
-                if (VesselCommon.PlayerVesselsNearby())
+                if (!Enabled || VesselCommon.PlayerVesselsNearby() || VesselCommon.isNearKSC(20000))
                     yield return seconds;
                 else
                     yield return secondsFar;

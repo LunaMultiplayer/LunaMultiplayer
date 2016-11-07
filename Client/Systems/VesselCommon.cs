@@ -16,6 +16,12 @@ namespace LunaClient.Systems
     public class VesselCommon
     {
         public static Guid CurrentVesselId => FlightGlobals.ActiveVessel == null ? Guid.Empty : FlightGlobals.ActiveVessel.id;
+
+        private static readonly double LANDING_PAD_LATITUDE = -0.0971978130377757;
+        private static readonly double LANDING_PAD_LONGITUDE = 285.44237039111;
+        private static readonly double RUNWAY_LATITUDE = -0.0486001121594686;
+        private static readonly double RUNWAY_LONGITUDE = 285.275552559723;
+        private static readonly double KSC_ALTITUDE = 60;
         
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
@@ -104,13 +110,44 @@ namespace LunaClient.Systems
             return !string.IsNullOrEmpty(owner) && WarpSystem.Singleton.PlayerIsInPastSubspace(owner);
         }
 
+        /// <summary>
+        /// Returns whether the active vessel is near KSC or not.  Measures distance from the landing pad, so very small values may not cover all of KSC.
+        /// </summary>
+        /// <param name="distance">The distance to compare</param>
+        /// <returns></returns>
+        public static bool isNearKSC(int distance)
+        {
+            return isNearKSC(FlightGlobals.ActiveVessel, distance);
+        }
+
+        /// <summary>
+        /// Returns whether the given vessel is near KSC or not.  Measures distance from the landing pad, so very small values may not cover all of KSC.
+        /// </summary>
+        /// <param name="vessel">The vessel used to determine the distance.  If null, the vessel is not near KSC.</param>
+        /// <param name="distance">The distance to compare</param>
+        /// <returns></returns>
+        public static bool isNearKSC(Vessel vessel, int distance)
+        {
+            //If not at Kerbin or past ceiling we're definitely clear
+            if (vessel == null || vessel.mainBody.name != "Kerbin")
+                return false;
+            var landingPadPosition = vessel.mainBody.GetWorldSurfacePosition(LANDING_PAD_LATITUDE, LANDING_PAD_LONGITUDE, KSC_ALTITUDE);
+            var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), landingPadPosition);
+            return (landingPadDistance < distance);
+        }
+
+        /// <summary>
+        /// Returns whether the given vessel is in a starting safety bubble or not.
+        /// </summary>
+        /// <param name="vessel">The vessel used to determine the distance.  If null, the vessel is not in the safety bubble.</param>
+        /// <returns></returns>
         public static bool IsInSafetyBubble(Vessel vessel)
         {
             //If not at Kerbin or past ceiling we're definitely clear
-            if (vessel.mainBody.name != "Kerbin")
+            if (vessel == null || vessel.mainBody.name != "Kerbin")
                 return false;
-            var landingPadPosition = vessel.mainBody.GetWorldSurfacePosition(-0.0971978130377757, 285.44237039111, 60);
-            var runwayPosition = vessel.mainBody.GetWorldSurfacePosition(-0.0486001121594686, 285.275552559723, 60);
+            var landingPadPosition = vessel.mainBody.GetWorldSurfacePosition(LANDING_PAD_LATITUDE, LANDING_PAD_LONGITUDE, KSC_ALTITUDE);
+            var runwayPosition = vessel.mainBody.GetWorldSurfacePosition(RUNWAY_LATITUDE, RUNWAY_LONGITUDE, KSC_ALTITUDE);
             var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), landingPadPosition);
             var runwayDistance = Vector3d.Distance(vessel.GetWorldPos3D(), runwayPosition);
             return (runwayDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance) ||
@@ -122,8 +159,8 @@ namespace LunaClient.Systems
             //If not at Kerbin or past ceiling we're definitely clear
             if (body.name != "Kerbin")
                 return false;
-            var landingPadPosition = body.GetWorldSurfacePosition(-0.0971978130377757, 285.44237039111, 60);
-            var runwayPosition = body.GetWorldSurfacePosition(-0.0486001121594686, 285.275552559723, 60);
+            var landingPadPosition = body.GetWorldSurfacePosition(LANDING_PAD_LATITUDE, LANDING_PAD_LONGITUDE, KSC_ALTITUDE);
+            var runwayPosition = body.GetWorldSurfacePosition(RUNWAY_LATITUDE, RUNWAY_LONGITUDE, KSC_ALTITUDE);
             var landingPadDistance = Vector3d.Distance(worlPos, landingPadPosition);
             var runwayDistance = Vector3d.Distance(worlPos, runwayPosition);
             return (runwayDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance) ||
