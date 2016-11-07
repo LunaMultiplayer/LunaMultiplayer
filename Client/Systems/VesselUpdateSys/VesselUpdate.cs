@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
-using LunaClient.Systems.VesselLockSys;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselUpdateSys
@@ -367,13 +366,15 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         private void ApplyControlState(float percentage)
         {
-            if (!VesselCommon.IsSpectating)
-                Vessel?.ctrlState.CopyFrom(FlightState);
-            else
+            FlightState.mainThrottle = Mathf.Lerp(FlightState.mainThrottle, Target.FlightState.mainThrottle, percentage);
+
+            Vessel?.ctrlState.CopyFrom(FlightState);
+            Vessel?.FeedInputFeed();
+
+            if (VesselCommon.IsSpectating)
             {
                 //We are spectating so move the throttle slider smoothly with a lerp...
                 FlightInputHandler.state.CopyFrom(FlightState);
-                FlightInputHandler.state.mainThrottle = Mathf.Lerp(FlightState.mainThrottle, Target.FlightState.mainThrottle, percentage);
             }
         }
 
@@ -397,31 +398,19 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             var currentAcc = GetInterpolatedAcceleration(interpolationValue);
             var currentVelocity = GetInterpolatedVelocity(interpolationValue, currentAcc);
-            var currentPosition = GetInterpolatedPosition(interpolationValue, currentVelocity, currentAcc);
-            
-            var radarAlt = Lerp(Position[3], Target.Position[3], interpolationValue);
-            
-            Vessel.SetPosition(currentPosition);
-            Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
-            Vessel.acceleration = currentAcc;
-            Vessel.radarAltitude = radarAlt;
-        }
-
-        /// <summary>
-        /// Here we get the interpolated position. we should use a fudge as the position we 
-        /// are seeing is the position IN THE PAST but it's too difficult... The vessel shakes all the time
-        /// </summary>
-        private Vector3d GetInterpolatedPosition(float interpolationValue, Vector3d currentVelocity, Vector3d currentAcc)
-        {
-            var startPos = Body.GetWorldSurfacePosition(Position[0], Position[1], Position[2]);
-            var targetPos = Body.GetWorldSurfacePosition(Target.Position[0], Target.Position[1], Target.Position[2]);
 
             //Use the average velocity to determine the new position
             //Displacement = v0*t + 1/2at^2.
             //var positionFudge = (currentVelocity*PlanetariumDifference) + (0.5d*currentAcc*PlanetariumDifference*PlanetariumDifference);
-
-            return Vector3d.Lerp(startPos, targetPos, interpolationValue);
             //return Vector3d.Lerp(startPos + positionFudge, targetPos + positionFudge, interpolationValue);
+
+            Vessel.latitude = Lerp(Position[0], Target.Position[0], interpolationValue);
+            Vessel.longitude = Lerp(Position[1], Target.Position[1], interpolationValue);
+            Vessel.altitude = Lerp(Position[2], Target.Position[2], interpolationValue);
+            Vessel.radarAltitude = Lerp(Position[3], Target.Position[3], interpolationValue);
+
+            Vessel.ChangeWorldVelocity(currentVelocity - Vessel.srf_velocity);
+            Vessel.acceleration = currentAcc;
         }
 
         /// <summary>

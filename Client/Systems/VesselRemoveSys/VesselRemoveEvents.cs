@@ -37,7 +37,6 @@ namespace LunaClient.Systems.VesselRemoveSys
         public void OnVesselRecovered(ProtoVessel recoveredVessel, bool quick)
         {
             //quick == true when you press "space center" from the inflight menu
-            if (quick) return;
 
             if (!VesselControlLockIsOurs(recoveredVessel))
             {
