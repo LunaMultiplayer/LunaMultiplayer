@@ -34,8 +34,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 else
                 {
                     Debug.LogWarning($"[LMP]: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
-                    ChatSystem.Singleton.PmMessageServer(
-                        $"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
+                    ChatSystem.Singleton.PmMessageServer($"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
                 }
                 vessel.Loaded = true;
             }
@@ -53,9 +52,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (ProtoVesselValidationsPassed(currentProto))
             {
                 RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
-
-                //VesselRemoveSystem.Singleton.KillVessel(vessel, false, true);
-
+                
                 var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == currentProto.vesselID);
                 if (vessel != null)
                 {
