@@ -366,13 +366,15 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// </summary>
         private void ApplyControlState(float percentage)
         {
-            if (!VesselCommon.IsSpectating)
-                Vessel?.ctrlState.CopyFrom(FlightState);
-            else
+            FlightState.mainThrottle = Mathf.Lerp(FlightState.mainThrottle, Target.FlightState.mainThrottle, percentage);
+
+            Vessel?.ctrlState.CopyFrom(FlightState);
+            Vessel?.FeedInputFeed();
+
+            if (VesselCommon.IsSpectating)
             {
                 //We are spectating so move the throttle slider smoothly with a lerp...
                 FlightInputHandler.state.CopyFrom(FlightState);
-                FlightInputHandler.state.mainThrottle = Mathf.Lerp(FlightState.mainThrottle, Target.FlightState.mainThrottle, percentage);
             }
         }
 
