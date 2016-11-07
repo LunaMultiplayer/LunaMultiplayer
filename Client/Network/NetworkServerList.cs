@@ -53,7 +53,7 @@ namespace LunaClient.Network
                 {
                     var data = msgDeserialized.Data as MsReplyServersMsgData;
 
-                    //Sometimes we receive other tipe of unconnected messages. 
+                    //Sometimes we receive other type of unconnected messages. 
                     //Therefore we assert that the received message data is of MsReplyServersMsgData
                     if (data != null)
                     {
@@ -82,6 +82,9 @@ namespace LunaClient.Network
 
                         Servers = Servers.OrderBy(s => s.ServerName).ToList();
                     }
+                } else
+                {
+                    Debug.LogError($"[LMP]: Unable to deserialize message: {msg}");
                 }
             }
             catch (Exception e)
