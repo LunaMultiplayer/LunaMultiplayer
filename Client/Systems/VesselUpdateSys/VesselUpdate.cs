@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using LunaClient.Systems.SettingsSys;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -209,10 +210,13 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             if (Body != null && Vessel != null && _interpolationDuration > 0)
             {
-                for (float lerp = 0; lerp < 1; lerp += Time.fixedDeltaTime / _interpolationDuration)
+                if (SettingsSystem.CurrentSettings.InterpolationEnabled)
                 {
-                    ApplyInterpolations(lerp);
-                    yield return fixedUpdate;
+                    for (float lerp = 0; lerp < 1; lerp += Time.fixedDeltaTime / _interpolationDuration)
+                    {
+                        ApplyInterpolations(lerp);
+                        yield return fixedUpdate;
+                    }
                 }
                 ApplyInterpolations(1); //we force to apply the last interpolation
                 yield return fixedUpdate;

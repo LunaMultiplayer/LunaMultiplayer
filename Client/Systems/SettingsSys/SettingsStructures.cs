@@ -37,6 +37,7 @@ namespace LunaClient.Systems.SettingsSys
         public int PlayerStatusCheckMsInterval { get; set; } = 500;
         public int InitialConnectionSyncTimeRequests { get; set; } = 10;
         public bool RevertEnabled { get; set; }
+        public bool InterpolationEnabled { get; set; } = true;
     }
 
     [Serializable]

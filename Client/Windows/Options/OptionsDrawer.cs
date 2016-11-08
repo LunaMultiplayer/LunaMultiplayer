@@ -130,6 +130,12 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.CompressionEnabled = settingCompression;
                 SettingsSystem.Singleton.SaveSettings();
             }
+            var settingInterpolation = GUILayout.Toggle(SettingsSystem.CurrentSettings.InterpolationEnabled, "Enable interpolation", ButtonStyle);
+            if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
+            {
+                SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
+                SettingsSystem.Singleton.SaveSettings();
+            }
             GUILayout.BeginHorizontal();
             GUILayout.Label("Toolbar:", SmallOption);
             if (GUILayout.Button(ToolbarMode, ButtonStyle))
