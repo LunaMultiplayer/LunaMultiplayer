@@ -95,10 +95,11 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (result)
                     {
                         FinishVesselLoading(currentProto);
-                        vesselProto.Loaded = true;
                     }
                 }
             }
+
+            vesselProto.Loaded = true;
         }
 
         #region Private methods
