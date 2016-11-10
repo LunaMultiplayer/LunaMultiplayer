@@ -108,7 +108,6 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// Coroutine that kills or unloads a vessel.
         /// If you set fullKill to true the vessel will be totally removed from the game, 
         /// otherwise is is killed but can be re-created at a later time (once you are in the same subspace for example)
-        /// If you set the fastKill to true it will be removed in just 1 frame (at a higher CPU cost)
         /// </summary>
         private static IEnumerator KillVesselRoutine(Vessel killVessel, bool fullKill)
         {
@@ -139,6 +138,9 @@ namespace LunaClient.Systems.VesselRemoveSys
             UnloadVesselFromScenario(killVessel);
         }
 
+        /// <summary>
+        /// Unloads a vessel from the game in 1 frame.
+        /// </summary>
         public void UnloadVessel(Vessel killVessel)
         {
             if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)

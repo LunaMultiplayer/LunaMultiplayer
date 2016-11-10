@@ -34,8 +34,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 else
                 {
                     Debug.LogWarning($"[LMP]: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
-                    ChatSystem.Singleton.PmMessageServer(
-                        $"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
+                    ChatSystem.Singleton.PmMessageServer($"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
                 }
                 vessel.Loaded = true;
             }
@@ -44,7 +43,7 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Load a vessel into the game
+        /// Load a vessel into the game in 2 frames
         /// </summary>
         public IEnumerator LoadVessel(VesselProtoUpdate vesselProto)
         {
@@ -72,6 +71,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
         /// <summary>
         /// Reloads an existing vessel into the game
+        /// Bear in mind that this method works in just 1 frame and 
+        /// it won't reload the vessel unless the parts have changed.
         /// </summary>
         public void ReloadVessel(VesselProtoUpdate vesselProto)
         {
