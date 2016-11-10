@@ -238,6 +238,6 @@
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>call  "$(SolutionDir)CopyToKSPDirectory.bat"</PostBuildEvent>
+    <PostBuildEvent>call  "$(SolutionDir)CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
 </Project>

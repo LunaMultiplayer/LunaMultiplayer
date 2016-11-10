@@ -54,24 +54,49 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
 
-                var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == currentProto.vesselID);
-                if (vessel != null)
+                if (FlightGlobals.FindVessel(vesselProto.VesselId) == null)
                 {
-                    //VesselRemoveSystem.Singleton.KillVessel(vessel, false, true);
-                    vessel.protoVessel = currentProto;
-                    vesselProto.Loaded = true;
-                    yield break;
+                    FixProtoVesselFlags(currentProto);
+                    var result = LoadVesselIntoGame(currentProto);
+
+                    yield return null; //Resume on next frame
+
+                    if (result)
+                    {
+                        FinishVesselLoading(currentProto);
+                        vesselProto.Loaded = true;
+                    }
                 }
+            }
+        }
 
-                FixProtoVesselFlags(currentProto);
-                var result = LoadVesselIntoGame(currentProto);
-
-                yield return null; //Resume on next frame
-
-                if (result)
+        /// <summary>
+        /// Reloads an existing vessel into the game
+        /// </summary>
+        public void ReloadVessel(VesselProtoUpdate vesselProto)
+        {
+            var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.VesselId);
+            if (vessel != null)
+            {
+                var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
+                if (currentProto.protoPartSnapshots.Count != vessel.Parts.Count)
                 {
-                    FinishVesselLoading(currentProto);
-                    vesselProto.Loaded = true;
+                    currentProto.latitude = vessel.latitude;
+                    currentProto.longitude = vessel.longitude;
+                    currentProto.altitude = vessel.altitude;
+                    currentProto.rotation = vessel.vesselTransform.rotation;
+                    currentProto.position = vessel.vesselTransform.position;
+
+                    VesselRemoveSystem.Singleton.UnloadVessel(vessel);
+
+                    FixProtoVesselFlags(currentProto);
+                    var result = LoadVesselIntoGame(currentProto);
+
+                    if (result)
+                    {
+                        FinishVesselLoading(currentProto);
+                        vesselProto.Loaded = true;
+                    }
                 }
             }
         }

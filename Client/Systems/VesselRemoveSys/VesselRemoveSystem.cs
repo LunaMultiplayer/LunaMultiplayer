@@ -53,18 +53,18 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             foreach (var vessel in killVessel)
             {
-                KillVessel(vessel);
+                KillVessel(vessel, false);
             }
         }
 
         /// <summary>
         /// Kills or unloads the given vessel
         /// </summary>
-        public void KillVessel(Vessel killVessel, bool fullKill = false, bool fastKill = false)
+        public void KillVessel(Vessel killVessel, bool fullKill)
         {
-            Client.Singleton.StartCoroutine(KillVesselRoutine(killVessel, fullKill, fastKill));
+            Client.Singleton.StartCoroutine(KillVesselRoutine(killVessel, fullKill));
         }
-        
+
         #endregion
 
         #region Private methods
@@ -110,7 +110,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// otherwise is is killed but can be re-created at a later time (once you are in the same subspace for example)
         /// If you set the fastKill to true it will be removed in just 1 frame (at a higher CPU cost)
         /// </summary>
-        private static IEnumerator KillVesselRoutine(Vessel killVessel, bool fullKill = false, bool fastKill = false)
+        private static IEnumerator KillVesselRoutine(Vessel killVessel, bool fullKill)
         {
             if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
                 yield break;
@@ -125,18 +125,35 @@ namespace LunaClient.Systems.VesselRemoveSys
                 else
                     VesselProtoSystem.Singleton.AllPlayerVessels.Remove(vessel);
             }
-
+            
             SwitchVesselIfSpectating(killVessel);
-            UnloadVessel(killVessel);
 
-            if (!fastKill)
-                yield return null; //Resume on next frame
+            UnloadVesselFromGame(killVessel);
+
+            yield return null; //Resume on next frame
 
             KillGivenVessel(killVessel);
 
-            if (!fastKill)
-                yield return null; //Resume on next frame
+            yield return null; //Resume on next frame
 
+            UnloadVesselFromScenario(killVessel);
+        }
+
+        public void UnloadVessel(Vessel killVessel)
+        {
+            if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
+                return;
+
+            Debug.Log($"[LMP]: Unloading vessel {killVessel.id}");
+
+            var vessel = VesselProtoSystem.Singleton.AllPlayerVessels.FirstOrDefault(v => v.VesselId == killVessel.id);
+            if (vessel != null)
+            {
+                vessel.Loaded = false;
+            }
+
+            UnloadVesselFromGame(killVessel);
+            KillGivenVessel(killVessel);
             UnloadVesselFromScenario(killVessel);
         }
 
@@ -186,7 +203,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// <summary>
         /// Unload the vessel so the crew is kiled when we remove the vessel.
         /// </summary>
-        private static void UnloadVessel(Vessel killVessel)
+        private static void UnloadVesselFromGame(Vessel killVessel)
         {
             if (killVessel.loaded)
             {
