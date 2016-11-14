@@ -27,6 +27,7 @@ using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
+using LunaClient.Utilities;
 
 namespace LunaClient.Systems
 {
@@ -110,33 +111,88 @@ namespace LunaClient.Systems
         /// </summary>
         public static void FixedUpdate()
         {
+            int LOGGING_INTERVAL = 100;
+            Timer.start("FixedUpdate", LOGGING_INTERVAL);
+            Timer.start("NetworkSystem", LOGGING_INTERVAL);
             TryFixedUpdate(NetworkSystem.Singleton);
+            Timer.stop("NetworkSystem");
+            Timer.start("ModSystem", LOGGING_INTERVAL);
             TryFixedUpdate(ModSystem.Singleton);
+            Timer.stop("ModSystem");
+            Timer.start("ModApiSystem", LOGGING_INTERVAL);
             TryFixedUpdate(ModApiSystem.Singleton);
+            Timer.stop("ModApiSystem");
+            Timer.start("HandshakeSystem", LOGGING_INTERVAL);
             TryFixedUpdate(HandshakeSystem.Singleton);
+            Timer.stop("HandshakeSystem");
+            Timer.start("TimeSyncerSystem", LOGGING_INTERVAL);
             TryFixedUpdate(TimeSyncerSystem.Singleton);
+            Timer.stop("TimeSyncerSystem");
+            Timer.start("KerbalSystem", LOGGING_INTERVAL);
             TryFixedUpdate(KerbalSystem.Singleton);
+            Timer.stop("KerbalSystem");
+            Timer.start("VesselLockSystem", LOGGING_INTERVAL);
             TryFixedUpdate(VesselLockSystem.Singleton);
+            Timer.stop("VesselLockSystem");
+            Timer.start("VesselUpdateSystem", LOGGING_INTERVAL);
             TryFixedUpdate(VesselUpdateSystem.Singleton);
+            Timer.stop("VesselUpdateSystem");
             TryFixedUpdate(VesselChangeSystem.Singleton);
+            Timer.start("VesselProtoSystem", LOGGING_INTERVAL);
             TryFixedUpdate(VesselProtoSystem.Singleton);
+            Timer.stop("VesselProtoSystem");
+            Timer.start("VesselRemoveSystem", LOGGING_INTERVAL);
             TryFixedUpdate(VesselRemoveSystem.Singleton);
+            Timer.stop("VesselRemoveSystem");
+            Timer.start("VesselDockSystem", LOGGING_INTERVAL);
             TryFixedUpdate(VesselDockSystem.Singleton);
+            Timer.stop("VesselDockSystem");
+            Timer.start("WarpSystem", LOGGING_INTERVAL);
             TryFixedUpdate(WarpSystem.Singleton);
+            Timer.stop("WarpSystem");
+            Timer.start("LockSystem", LOGGING_INTERVAL);
             TryFixedUpdate(LockSystem.Singleton);
+            Timer.stop("LockSystem");
+            Timer.start("SettingsSystem", LOGGING_INTERVAL);
             TryFixedUpdate(SettingsSystem.Singleton);
+            Timer.stop("SettingsSystem");
+            Timer.start("AsteroidSystem", LOGGING_INTERVAL);
             TryFixedUpdate(AsteroidSystem.Singleton);
+            Timer.stop("AsteroidSystem");
+            Timer.start("StatusSystem", LOGGING_INTERVAL);
             TryFixedUpdate(StatusSystem.Singleton);
+            Timer.stop("StatusSystem");
+            Timer.start("ChatSystem", LOGGING_INTERVAL);
             TryFixedUpdate(ChatSystem.Singleton);
+            Timer.stop("ChatSystem");
+            Timer.start("AdminSystem", LOGGING_INTERVAL);
             TryFixedUpdate(AdminSystem.Singleton);
+            Timer.stop("AdminSystem");
+            Timer.start("PlayerColorSystem", LOGGING_INTERVAL);
             TryFixedUpdate(PlayerColorSystem.Singleton);
+            Timer.stop("PlayerColorSystem");
+            Timer.start("PlayerConnectionSystem", LOGGING_INTERVAL);
             TryFixedUpdate(PlayerConnectionSystem.Singleton);
+            Timer.stop("PlayerConnectionSystem");
+            Timer.start("MotdSystem", LOGGING_INTERVAL);
             TryFixedUpdate(MotdSystem.Singleton);
+            Timer.stop("MotdSystem");
+            Timer.start("CraftLibrarySystem", LOGGING_INTERVAL);
             TryFixedUpdate(CraftLibrarySystem.Singleton);
+            Timer.stop("CraftLibrarySystem");
+            Timer.start("FlagSystem", LOGGING_INTERVAL);
             TryFixedUpdate(FlagSystem.Singleton);
+            Timer.stop("FlagSystem");
+            Timer.start("KerbalReassignerSystem", LOGGING_INTERVAL);
             TryFixedUpdate(KerbalReassignerSystem.Singleton);
+            Timer.stop("KerbalReassignerSystem");
+            Timer.start("ScenarioSystem", LOGGING_INTERVAL);
             TryFixedUpdate(ScenarioSystem.Singleton);
+            Timer.stop("ScenarioSystem");
+            Timer.start("ToolbarSystem", LOGGING_INTERVAL);
             TryFixedUpdate(ToolbarSystem.Singleton);
+            Timer.stop("ToolbarSystem");
+            Timer.stop("FixedUpdate");
         }
 
         private static void TryUpdate(ISystem system)
