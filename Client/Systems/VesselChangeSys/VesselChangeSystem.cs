@@ -40,7 +40,7 @@ namespace LunaClient.Systems.VesselChangeSys
         /// </summary>
         public IEnumerator HandleVesselChanges()
         {
-            var fixedUpdate = new WaitForFixedUpdate();
+            var seconds = new WaitForSeconds(0.5f);
             while (true)
             {
                 try
@@ -60,7 +60,7 @@ namespace LunaClient.Systems.VesselChangeSys
                     Debug.LogError($"[LMP]: Error in coroutine HandleVesselChanges {e}");
                 }
                 
-                yield return fixedUpdate;
+                yield return seconds;
             }
         }
 

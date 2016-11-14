@@ -7,36 +7,35 @@ namespace LunaClient.Utilities
     {
         #region Fields
 
-        private long iterations = 0;
+        private long _iterations = 0;
         private static readonly long WARM_UP_ITERATIONS = 60;
-        private Stopwatch totalTimeWatch = new Stopwatch();
-        private Stopwatch thisTimeWatch = new Stopwatch();
-        public int logInterval { get; set; }
-        private double tickLengthInMilliseconds = 1000d/Stopwatch.Frequency;
-        private string name;
-        private static Dictionary<string, Timer> timerDictionary = new Dictionary<string, Timer>();
+        private readonly Stopwatch _totalTimeWatch = new Stopwatch();
+        private readonly Stopwatch _thisTimeWatch = new Stopwatch();
+        private int _logInterval;
+        private readonly double _tickLengthInMs = 1000d/Stopwatch.Frequency;
+        private string _name;
+        private static readonly Dictionary<string, Timer> TimerDictionary = new Dictionary<string, Timer>();
 
         #endregion
 
         #region Constructors
         private Timer(string name)
         {
-            this.name = name;
+            _name = name;
         }
 
-        private static Timer getTimer(string name, int logInterval)
+        private static Timer GetTimer(string name, int logInterval)
         {
             Timer timer;
-            if(!timerDictionary.TryGetValue(name, out timer))
+            if(!TimerDictionary.TryGetValue(name, out timer))
             {
                 if(logInterval == 0)
                 {
                     return null;
                 }
 
-                timer = new Timer(name);
-                timer.logInterval = logInterval;
-                timerDictionary.Add(name, timer);
+                timer = new Timer(name) {_logInterval = logInterval};
+                TimerDictionary.Add(name, timer);
             }
             return timer;
         }
@@ -45,44 +44,47 @@ namespace LunaClient.Utilities
 
         #region Methods
 
-        public double getMillisecondsThisTime()
+        public double GetMillisecondsThisTime()
         {
-            long ticks = thisTimeWatch.ElapsedTicks;
-            return ((double)ticks) * tickLengthInMilliseconds;
+            var ticks = _thisTimeWatch.ElapsedTicks;
+            return ((double)ticks) * _tickLengthInMs;
         }
 
-        public static void start(string name, int logInterval)
+        public static void Start(string name, int logInterval)
         {
-            Timer timer = getTimer(name, logInterval);
-            timer.iterations++;
-            timer.thisTimeWatch.Reset();
-            timer.thisTimeWatch.Start();
-            if (timer.iterations > WARM_UP_ITERATIONS)
+#if !DEBUG
+            return;
+#endif
+            var timer = GetTimer(name, logInterval);
+            timer._iterations++;
+            timer._thisTimeWatch.Reset();
+            timer._thisTimeWatch.Start();
+            if (timer._iterations > WARM_UP_ITERATIONS)
             {
-                timer.totalTimeWatch.Start();
+                timer._totalTimeWatch.Start();
                 
             }
         }
 
-        public static void stop(string name)
+        public static void Stop(string name)
         {
-            Timer timer = getTimer(name, 0);
-            if (timer.iterations > WARM_UP_ITERATIONS)
+#if !DEBUG
+            return;
+#endif
+            var timer = GetTimer(name, 0);
+            if (timer._iterations > WARM_UP_ITERATIONS)
             {
-                timer.totalTimeWatch.Stop();
-                timer.thisTimeWatch.Stop();
-                double average = timer.totalTimeWatch.ElapsedMilliseconds / ((double)(timer.iterations - WARM_UP_ITERATIONS));
-                
-                if(average != null)
+                timer._totalTimeWatch.Stop();
+                timer._thisTimeWatch.Stop();
+                var average = timer._totalTimeWatch.ElapsedMilliseconds / ((double)(timer._iterations - WARM_UP_ITERATIONS));
+
+                var msThisTime = timer.GetMillisecondsThisTime();
+                if (msThisTime > (average * 10))
                 {
-                    double msThisTime = timer.getMillisecondsThisTime();
-                    if (msThisTime > (average*10))
-                    {
-                        UnityEngine.Debug.Log($"Long run for {name}:{msThisTime}ms");
-                    }
+                    UnityEngine.Debug.Log($"Long run for {name}:{msThisTime}ms");
                 }
 
-                if ((timer.iterations - WARM_UP_ITERATIONS) % timer.logInterval == 0)
+                if ((timer._iterations - WARM_UP_ITERATIONS) % timer._logInterval == 0)
                 {
                     //Every 15 seconds of updates
                     UnityEngine.Debug.Log($"Average time per {name}:{average}ms");
@@ -90,6 +92,6 @@ namespace LunaClient.Utilities
             }
         }
 
-        #endregion
+#endregion
     }
 }

@@ -12,6 +12,8 @@ namespace LunaClient.Base
         where TS : class, IMessageSender, new()
         where TH : class, IMessageHandler, new()
     {
+        protected virtual bool HandleMessagesInFixedUpdate { get; set; }
+
         public TS MessageSender { get; } = new TS();
         public TH MessageHandler { get; } = new TH();
         public virtual IInputHandler InputHandler { get; } = null;
@@ -30,13 +32,34 @@ namespace LunaClient.Base
         }
 
         /// <summary>
-        /// During the fixed update we receive messages.
-        /// We do it here as fixedUpdate can be called several times per frame 
-        /// so when we reach Update we may have more messages
+        /// During the update we receive messages.
+        /// </summary>
+        public override void Update()
+        {
+            base.Update();
+            if (!HandleMessagesInFixedUpdate)
+            {
+                ReadAndHandleAllReceivedMessages();
+            }
+        }
+
+        /// <summary>
+        /// During the update we receive messages.
         /// </summary>
         public override void FixedUpdate()
         {
             base.FixedUpdate();
+            if (HandleMessagesInFixedUpdate)
+            {
+                ReadAndHandleAllReceivedMessages();
+            }
+        }
+
+        /// <summary>
+        /// Reads all the message queue and calls the handling sub-system
+        /// </summary>
+        private void ReadAndHandleAllReceivedMessages()
+        {
             IMessageData msgData;
             while (MessageHandler.IncomingMessages.TryDequeue(out msgData))
             {

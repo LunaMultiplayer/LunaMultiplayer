@@ -171,6 +171,7 @@
     <Compile Include="Utilities\DebugTools\LineRendererDebug.cs" />
     <Compile Include="Utilities\DebugTools\PointRendererDebug.cs" />
     <Compile Include="Utilities\DebugTools\QuaternionRendererDebug.cs" />
+    <Compile Include="Utilities\Timer.cs" />
     <Compile Include="Windows\Chat\ChatWindow.cs" />
     <Compile Include="Windows\Chat\ChatDrawer.cs" />
     <Compile Include="Windows\Connection\ConnectionDrawer.cs" />
