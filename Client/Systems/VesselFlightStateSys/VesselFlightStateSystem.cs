@@ -23,12 +23,14 @@ namespace LunaClient.Systems.VesselFlightStateSys
                FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
 
         private const float DictionaryUpdateSInterval = 1.5f;
+        private const float FlightStateSendSInterval = 0.5f;
 
         protected override bool HandleMessagesInFixedUpdate => true;
 
         public override void OnEnabled()
         {
             base.OnEnabled();
+            Client.Singleton.StartCoroutine(SendFlightState());
             Client.Singleton.StartCoroutine(AddRemoveActiveVesselFromDictionary());
             Client.Singleton.StartCoroutine(RemovePackedVesselsFromDictionary());
             Client.Singleton.StartCoroutine(AddUnPackedVesselsToDictionary());
@@ -41,7 +43,23 @@ namespace LunaClient.Systems.VesselFlightStateSys
             FlightStatesDictionary.Clear();
         }
 
-        public IEnumerator RemovePackedVesselsFromDictionary()
+        private IEnumerator SendFlightState()
+        {
+            var seconds = new WaitForSeconds(FlightStateSendSInterval);
+            while (true)
+            {
+                if (!Enabled) break;
+
+                if (FlightStateSystemReady)
+                {
+                    MessageSender.SendCurrentFlightState();
+                }
+
+                yield return seconds;
+            }
+        }
+
+        private IEnumerator RemovePackedVesselsFromDictionary()
         {
             var seconds = new WaitForSeconds(DictionaryUpdateSInterval);
             while (true)
@@ -74,7 +92,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
         }
 
-        public IEnumerator AddRemoveActiveVesselFromDictionary()
+        private IEnumerator AddRemoveActiveVesselFromDictionary()
         {
             var seconds = new WaitForSeconds(DictionaryUpdateSInterval);
             while (true)
@@ -116,7 +134,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
         }
 
-        public IEnumerator AddUnPackedVesselsToDictionary()
+        private IEnumerator AddUnPackedVesselsToDictionary()
         {
             var seconds = new WaitForSeconds(DictionaryUpdateSInterval);
             while (true)
