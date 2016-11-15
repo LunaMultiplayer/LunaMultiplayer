@@ -25,6 +25,8 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Lidgren.Network;
 using LunaClient.Systems.VesselChangeSys;
+using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselPositionSys;
 using UnityEngine;
 
 namespace LunaClient.Network
@@ -131,8 +133,10 @@ namespace LunaClient.Network
                             VesselUpdateSystem.Singleton.EnqueueMessage(msg.Data);
                             break;
                         case VesselMessageType.POSITION:
-                            //TODO: Handle the vessel position updates
-                            VesselUpdateSystem.Singleton.EnqueueMessage(msg.Data);
+                            VesselPositionSystem.Singleton.EnqueueMessage(msg.Data);
+                            break;
+                        case VesselMessageType.FLIGHTSTATE:
+                            VesselFlightStateSystem.Singleton.EnqueueMessage(msg.Data);
                             break;
                         case VesselMessageType.CHANGE:
                             VesselChangeSystem.Singleton.EnqueueMessage(msg.Data);
