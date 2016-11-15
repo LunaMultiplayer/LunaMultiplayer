@@ -18,6 +18,7 @@ namespace LunaCommon.Message.Server
             [(ushort)VesselMessageType.UPDATE] = new VesselUpdateMsgData(),
             [(ushort)VesselMessageType.REMOVE] = new VesselRemoveMsgData(),
             [(ushort)VesselMessageType.CHANGE] = new VesselChangeMsgData(),
+            [(ushort)VesselMessageType.POSITION] = new VesselPositionUpdateMsgData(),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.VESSEL;

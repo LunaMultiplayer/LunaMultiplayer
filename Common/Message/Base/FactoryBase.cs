@@ -50,6 +50,7 @@ namespace LunaCommon.Message.Base
             catch (Exception)
             {
                 //Bad message, we couldn't deserialize
+                //TODO: Properly log errors: LunaLog.Error($"Error deserializing message: {e}");
                 return null;
             }
         }

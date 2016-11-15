@@ -29,11 +29,6 @@ namespace LunaClient.Utilities
             Timer timer;
             if(!TimerDictionary.TryGetValue(name, out timer))
             {
-                if(logInterval == 0)
-                {
-                    return null;
-                }
-
                 timer = new Timer(name) {_logInterval = logInterval};
                 TimerDictionary.Add(name, timer);
             }
@@ -79,14 +74,14 @@ namespace LunaClient.Utilities
                 var average = timer._totalTimeWatch.ElapsedMilliseconds / ((double)(timer._iterations - WARM_UP_ITERATIONS));
 
                 var msThisTime = timer.GetMillisecondsThisTime();
-                if (msThisTime > (average * 10))
+                if (msThisTime > .01f && msThisTime > (average * 10))
                 {
                     UnityEngine.Debug.Log($"Long run for {name}:{msThisTime}ms");
                 }
 
-                if ((timer._iterations - WARM_UP_ITERATIONS) % timer._logInterval == 0)
+                if (timer._logInterval != 0 && (timer._iterations - WARM_UP_ITERATIONS) % timer._logInterval == 0)
                 {
-                    //Every 15 seconds of updates
+                    //If we hit the log interval, log the average time.
                     UnityEngine.Debug.Log($"Average time per {name}:{average}ms");
                 }
             }

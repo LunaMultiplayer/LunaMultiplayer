@@ -113,7 +113,7 @@ namespace LunaCommon.Message.Base
         {
             if (!SubTypeDictionary.ContainsKey(subType))
             {
-                throw new Exception("Subtipe not defined in dictionary!");
+                throw new Exception("Subtype not defined in dictionary!");
             }
 
             var dataClass = SubTypeDictionary[subType].Clone();

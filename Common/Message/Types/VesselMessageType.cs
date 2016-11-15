@@ -10,5 +10,6 @@
         REMOVE = 5,
         UPDATE = 6,
         CHANGE = 7,
+        POSITION = 8,
     }
 }

@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
-using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselLockSys;
 using UnityEngine;
+
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -18,10 +16,10 @@ namespace LunaClient.Systems.VesselUpdateSys
     {
         #region Field & Properties
 
-        private static float VesselUpdatesSendSInterval => 
-            (float) TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
+        private static float VesselUpdatesSendSInterval =>
+            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
 
-        private static float VesselUpdatesSendFarSInterval => 
+        private static float VesselUpdatesSendFarSInterval =>
             (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendFarMsInterval).TotalSeconds;
 
         public bool UpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
@@ -32,9 +30,13 @@ namespace LunaClient.Systems.VesselUpdateSys
         public bool UpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             (UpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
 
-        public Dictionary<Guid, Queue<VesselUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, Queue<VesselUpdate>>();
+        public Dictionary<Guid, Queue<VesselPositionUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, Queue<VesselPositionUpdate>>();
 
         private VesselUpdateInterpolationSystem InterpolationSystem { get; } = new VesselUpdateInterpolationSystem();
+
+        public FlightCtrlState FlightState { get; set; }
+
+        private long numUpdates = 0;
 
         #endregion
 
@@ -43,7 +45,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         public override void OnEnabled()
         {
             base.OnEnabled();
-            Client.Singleton.StartCoroutine(SendVesselUpdates());
             Client.Singleton.StartCoroutine(InterpolationSystem.RemoveVessels());
             Client.Singleton.StartCoroutine(InterpolationSystem.AdjustInterpolationLengthFactor());
         }
@@ -57,10 +58,16 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public override void FixedUpdate()
         {
-            if (UpdateSystemReady)
-                InterpolationSystem.FixedUpdate();
-
             base.FixedUpdate();
+            if (UpdateSystemReady) {
+                InterpolationSystem.FixedUpdate();
+                SendVesselUpdates();
+            }
+        }
+
+        public override void LateUpdate()
+        {
+            base.LateUpdate();
         }
 
         #endregion
@@ -82,41 +89,63 @@ namespace LunaClient.Systems.VesselUpdateSys
             return ReceivedUpdates[vesselId].Count;
         }
 
+        /// <summary>
+        /// Applies the current user's flight control state on the vessel's control state.  Used for spectated vessels.
+        /// </summary>
+        /// <param name="flightCtrlState"></param>
+        public void ApplyFlightCtrlState(FlightCtrlState flightCtrlState)
+        {
+            if (FlightState != null)
+            {
+                //Interpolate the flight input state so the vessel controls look smooth
+                flightCtrlState.CopyFrom(FlightState);
+            }
+        }
+
         #endregion
 
         #region Private methods
+
+        private bool shouldSendUpdate()
+        {
+            numUpdates++;
+            if (VesselCommon.PlayerVesselsNearby() || VesselCommon.isNearKSC(20000))
+            {
+                return (numUpdates % 6) == 0;
+            }
+
+            return (numUpdates % 50) == 0;
+        }
 
         /// <summary>
         /// Send the updates of our own vessel and the secondary vessels. We only send them after an interval specified.
         /// If the other player vessels are far we don't send them very often.
         /// </summary>
-        private IEnumerator SendVesselUpdates()
+        private void SendVesselUpdates()
         {
-            var seconds = new WaitForSeconds(VesselUpdatesSendSInterval);
-            var secondsFar = new WaitForSeconds(VesselUpdatesSendFarSInterval);
 
-            while (true)
+            try
             {
-                try
+                if (!Enabled)
                 {
-                    if (!Enabled)
-                        break;
+                    return;
+                }
 
+                if (shouldSendUpdate())
+                {
                     if (UpdateSystemReady && !VesselCommon.IsSpectating)
                     {
+                        
                         SendVesselUpdate(FlightGlobals.ActiveVessel);
-                        SendSecondaryVesselUpdates();
+                        //TODO: We should only send secondary vessels every few seconds or so.
+                        //SendSecondaryVesselUpdates();
+                        
                     }
                 }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in SendVesselUpdates {e}");
-                }
-
-                if (!Enabled || VesselCommon.PlayerVesselsNearby() || VesselCommon.isNearKSC(20000))
-                    yield return seconds;
-                else
-                    yield return secondsFar;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Coroutine error in SendVesselUpdates {e}");
             }
         }
 

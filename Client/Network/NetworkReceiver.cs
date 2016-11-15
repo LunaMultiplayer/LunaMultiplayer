@@ -63,7 +63,7 @@ namespace LunaClient.Network
                                 }
                                 catch (Exception e)
                                 {
-                                    Debug.LogError("[LMP]: Error deserializing message!");
+                                    Debug.LogError("[LMP]: Error deserializing message! {e}");
                                     NetworkMain.HandleDisconnectException(e);
                                 }
                                 break;
@@ -128,6 +128,10 @@ namespace LunaClient.Network
                     switch (((VesselBaseMsgData)msg.Data).VesselMessageType)
                     {
                         case VesselMessageType.UPDATE:
+                            VesselUpdateSystem.Singleton.EnqueueMessage(msg.Data);
+                            break;
+                        case VesselMessageType.POSITION:
+                            //TODO: Handle the vessel position updates
                             VesselUpdateSystem.Singleton.EnqueueMessage(msg.Data);
                             break;
                         case VesselMessageType.CHANGE:

@@ -29,7 +29,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <summary>
         /// The current vessel update that is being handled
         /// </summary>
-        public Dictionary<Guid, VesselUpdate> CurrentVesselUpdate { get; } = new Dictionary<Guid, VesselUpdate>();
+        public Dictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new Dictionary<Guid, VesselPositionUpdate>();
 
         /// <summary>
         /// This dictioanry control the length of the interpolations for each vessel.
@@ -156,7 +156,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// Retrieves an update from the queue that was sent later than the one we have as target 
         /// and that was received close to "MSInthepast". Rmember to call it from fixed update only
         /// </summary>
-        private static VesselUpdate GetValidUpdate(Guid vesselId, float targetSentTime, Queue<VesselUpdate> vesselUpdates)
+        private static VesselPositionUpdate GetValidUpdate(Guid vesselId, float targetSentTime, Queue<VesselPositionUpdate> vesselUpdates)
         {
             var update = vesselUpdates.ToList()
                 .Where(u => u.SentTime > targetSentTime && (u.SentTime - targetSentTime - GetInterpolationFactor(vesselId)) > 0)
@@ -173,7 +173,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             return update;
         }
 
-        private bool HandleVesselUpdate(KeyValuePair<Guid, Queue<VesselUpdate>> vesselUpdates)
+        private bool HandleVesselUpdate(KeyValuePair<Guid, Queue<VesselPositionUpdate>> vesselUpdates)
         {
             var update = GetValidUpdate(vesselUpdates.Key, CurrentVesselUpdate[vesselUpdates.Key].Target.SentTime, vesselUpdates.Value);
             if (update == null) return false;
@@ -206,7 +206,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// Here we set the first vessel updates. We use the current vessel state as the starting point.
         /// </summary>
         /// <param name="update"></param>
-        private bool SetFirstVesselUpdates(VesselUpdate update)
+        private bool SetFirstVesselUpdates(VesselPositionUpdate update)
         {
             var first = update?.Clone();
             if (first != null)

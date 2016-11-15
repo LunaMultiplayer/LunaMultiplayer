@@ -41,6 +41,9 @@ namespace LunaServer.Message.Reader
                 case VesselMessageType.UPDATE:
                     VesselRelaySystem.HandleVesselMessage(client, message);
                     break;
+                case VesselMessageType.POSITION:
+                    VesselRelaySystem.HandleVesselMessage(client, message);
+                    break;
                 default:
                     throw new NotImplementedException("Warp Type not implemented");
             }

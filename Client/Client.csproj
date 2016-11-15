@@ -138,6 +138,7 @@
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageHandler.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageSender.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveSystem.cs" />
+    <Compile Include="Systems\VesselUpdateSys\VesselPositionUpdate.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdate.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateInterpolationSystem.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />

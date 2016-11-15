@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using UniLinq;
 using UnityEngine;
+using LunaClient.Systems.VesselUpdateSys;
 
 namespace LunaClient.Systems.VesselLockSys
 {
@@ -75,6 +75,17 @@ namespace LunaClient.Systems.VesselLockSys
             InputLockManager.SetControlLock(LmpGuiUtil.BlockAllControls, SpectateLock);
             LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
             VesselCommon.IsSpectating = true;
+
+            FlightGlobals.ActiveVessel.OnFlyByWire += VesselUpdateSystem.Singleton.ApplyFlightCtrlState;
+        }
+
+        public void StopSpectating()
+        {
+            InputLockManager.RemoveControlLock(SpectateLock);
+            LockSystem.Singleton.ReleaseSpectatorLock();
+            VesselCommon.IsSpectating = false;
+
+            FlightGlobals.ActiveVessel.OnFlyByWire -= VesselUpdateSystem.Singleton.ApplyFlightCtrlState;
         }
 
         /// <summary>
@@ -90,9 +101,7 @@ namespace LunaClient.Systems.VesselLockSys
 
             if (VesselCommon.IsSpectating)
             {
-                InputLockManager.RemoveControlLock(SpectateLock);
-                LockSystem.Singleton.ReleaseSpectatorLock();
-                VesselCommon.IsSpectating = false;
+                StopSpectating();
             }
         }
 

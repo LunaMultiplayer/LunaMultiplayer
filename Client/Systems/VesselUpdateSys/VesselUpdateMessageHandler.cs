@@ -13,6 +13,48 @@ namespace LunaClient.Systems.VesselUpdateSys
     {
         public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
 
+        public void HandleMessage2(IMessageData messageData)
+        {
+            var msgData = messageData as VesselPositionUpdateMsgData;
+
+            if (msgData == null || !System.UpdateSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
+            {
+                return;
+            }
+
+            var update = new VesselPositionUpdate
+            {
+                Id = Guid.NewGuid(),
+                ReceiveTime = Time.fixedTime,
+                PlanetTime = msgData.PlanetTime,
+                SentTime = msgData.GameSentTime,
+                VesselId = msgData.VesselId,
+                BodyName = msgData.BodyName,
+                Rotation = msgData.Rotation,
+                IsSurfaceUpdate = msgData.IsSurfaceUpdate
+            };
+
+            if (update.IsSurfaceUpdate)
+            {
+                update.Position = msgData.Position;
+                update.Velocity = msgData.Velocity;
+            }
+            else
+            {
+                update.Orbit = msgData.Orbit;
+            }
+
+            if (!System.ReceivedUpdates.ContainsKey(update.VesselId))
+            {
+                System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselPositionUpdate>());
+            }
+
+            if (System.ReceivedUpdates[update.VesselId].Count + 1 > VesselUpdateInterpolationSystem.MaxTotalUpdatesInQueue)
+                System.ReceivedUpdates[update.VesselId].Dequeue();
+
+            System.ReceivedUpdates[update.VesselId].Enqueue(update);
+        }
+
         public void HandleMessage(IMessageData messageData)
         {
             var msgData = messageData as VesselUpdateMsgData;
@@ -67,7 +109,6 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 update.Position = msgData.Position;
                 update.Velocity = msgData.Velocity;
-                update.Acceleration = msgData.Acceleration;
             }
             else
             {
@@ -76,7 +117,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             if (!System.ReceivedUpdates.ContainsKey(update.VesselId))
             {
-                System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselUpdate>());
+                System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselPositionUpdate>());
             }
 
             if (System.ReceivedUpdates[update.VesselId].Count + 1 > VesselUpdateInterpolationSystem.MaxTotalUpdatesInQueue)
