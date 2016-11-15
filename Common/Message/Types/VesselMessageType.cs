@@ -11,5 +11,6 @@
         UPDATE = 6,
         CHANGE = 7,
         POSITION = 8,
+        FLIGHTSTATE = 9,
     }
 }

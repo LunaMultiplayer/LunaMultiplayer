@@ -18,16 +18,18 @@ namespace LunaCommon.Message.Server
             [(ushort)VesselMessageType.UPDATE] = new VesselUpdateMsgData(),
             [(ushort)VesselMessageType.REMOVE] = new VesselRemoveMsgData(),
             [(ushort)VesselMessageType.CHANGE] = new VesselChangeMsgData(),
-            [(ushort)VesselMessageType.POSITION] = new VesselPositionUpdateMsgData(),
+            [(ushort)VesselMessageType.POSITION] = new VesselPositionMsgData(),
+            [(ushort)VesselMessageType.FLIGHTSTATE] = new VesselFlightStateMsgData(),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.VESSEL;
-        protected override int DefaultChannel => IsVesselUpdate() ? 0 : 8;
-        public override NetDeliveryMethod NetDeliveryMethod => IsVesselUpdate() ? NetDeliveryMethod.UnreliableSequenced : NetDeliveryMethod.ReliableOrdered;
+        protected override int DefaultChannel => IsVesselPositionOrFlightState() ? 0 : 8;
+        public override NetDeliveryMethod NetDeliveryMethod => IsVesselPositionOrFlightState() ? 
+            NetDeliveryMethod.UnreliableSequenced : NetDeliveryMethod.ReliableOrdered;
 
-        private bool IsVesselUpdate()
+        private bool IsVesselPositionOrFlightState()
         {
-            return Data.SubType == (ushort)VesselMessageType.UPDATE;
+            return Data.SubType == (ushort)VesselMessageType.POSITION || Data.SubType == (ushort)VesselMessageType.FLIGHTSTATE;
         }
     }
 }

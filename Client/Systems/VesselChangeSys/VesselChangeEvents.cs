@@ -1,8 +1,7 @@
 ﻿using System;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselUpdateSys;
+using LunaClient.Systems.VesselPositionSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Types;
 using UniLinq;
@@ -45,7 +44,7 @@ namespace LunaClient.Systems.VesselChangeSys
                 if (!LockSystem.Singleton.LockWithPrefixExists("debris-" + missionId))
                 {
                     LockSystem.Singleton.AcquireLock("debris-" + missionId + "_" + debrisVessel.id);
-                    VesselUpdateSystem.Singleton.MessageSender.SendVesselUpdate(VesselUpdate.CreateFromVessel(debrisVessel));
+                    VesselPositionSystem.Singleton.MessageSender.SendVesselPositionUpdate(new VesselPositionUpdate(debrisVessel));
                 }
                 else
                 {
@@ -63,7 +62,7 @@ namespace LunaClient.Systems.VesselChangeSys
                     else
                     {
                         LockSystem.Singleton.AcquireLock("debris-" + missionId + "_" + debrisVessel.id);
-                        VesselUpdateSystem.Singleton.MessageSender.SendVesselUpdate(VesselUpdate.CreateFromVessel(debrisVessel));
+                        VesselPositionSystem.Singleton.MessageSender.SendVesselPositionUpdate(new VesselPositionUpdate(debrisVessel));
                     }
                 }
             }

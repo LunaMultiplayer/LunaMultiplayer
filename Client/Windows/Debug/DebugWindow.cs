@@ -6,6 +6,7 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselLockSys;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
@@ -73,15 +74,14 @@ namespace LunaClient.Windows.Debug
 
                 //Vessel update system
                 VesselUpdateText = $"Queued messages: {VesselUpdateSystem.Singleton.MessageHandler.IncomingMessages.Count}.\n";
-                VesselUpdateText += $"Total queued updates: {VesselUpdateSystem.Singleton.GetNumberOfUpdatesInQueue()}.\n";
-                VesselUpdateText += $"Total queued updates: {VesselUpdateSystem.Singleton.GetNumberOfUpdatesInQueue()}.\n";
-                if (VesselUpdateSystem.Singleton.ReceivedUpdates.Any())
+                VesselUpdateText += $"Total queued updates: {VesselPositionSystem.Singleton.GetNumberOfPositionUpdatesInQueue()}.\n";
+                if (VesselPositionSystem.Singleton.ReceivedUpdates.Any())
                 {
                     VesselUpdateText += "Queued updates by vessel:\n";
-                    foreach (var vessel in VesselUpdateSystem.Singleton.ReceivedUpdates.Keys)
+                    foreach (var vessel in VesselPositionSystem.Singleton.ReceivedUpdates.Keys)
                     {
-                        VesselUpdateText += $"{vessel}: {VesselUpdateSystem.Singleton.GetNumberOfUpdatesInQueue(vessel)} - " +
-                                            $"Interpolation factor:{VesselUpdateInterpolationSystem.GetInterpolationFactor(vessel)}\n";
+                        VesselUpdateText += $"{vessel}: {VesselPositionSystem.Singleton.GetNumberOfPositionUpdatesInQueue(vessel)} - " +
+                                            $"Interpolation factor:{VesselPositionInterpolationSystem.GetInterpolationFactor(vessel)}\n";
                     }
                 }
                 VesselUpdateText += $"Spectating: {VesselCommon.IsSpectating}.\n";

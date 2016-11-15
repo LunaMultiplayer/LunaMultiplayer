@@ -16,6 +16,7 @@ namespace LunaClient.Systems.SettingsSys
         public GameDifficulty GameDifficulty { get; set; }
         public float SafetyBubbleDistance { get; set; } = 100f;
         public int VesselUpdatesSendMsInterval { get; set; }
+        public int SecondaryVesselUpdatesSendMsInterval { get; set; }
         public int VesselUpdatesSendFarMsInterval { get; set; }
         public bool DropControlOnVesselSwitching { get; set; }
         public bool DropControlOnExit { get; set; }

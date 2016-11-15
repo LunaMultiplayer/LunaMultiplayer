@@ -5,12 +5,12 @@ using System.Linq;
 using LunaClient.Base;
 using UnityEngine;
 
-namespace LunaClient.Systems.VesselUpdateSys
+namespace LunaClient.Systems.VesselPositionSys
 {
     /// <summary>
     /// Main interpolation system class for vessel updates
     /// </summary>
-    public class VesselUpdateInterpolationSystem : SubSystem<VesselUpdateSystem>
+    public class VesselPositionInterpolationSystem : SubSystem<VesselPositionSystem>
     {
         #region Fields
 
@@ -93,13 +93,13 @@ namespace LunaClient.Systems.VesselUpdateSys
                     if (!System.Enabled)
                         break;
 
-                    if (System.UpdateSystemBasicReady)
+                    if (System.PositionUpdateSystemBasicReady)
                     {
                         foreach (var update in System.ReceivedUpdates)
                         {
-                            if (System.GetNumberOfUpdatesInQueue(update.Key) > MaxUpdatesInQueue)
+                            if (System.GetNumberOfPositionUpdatesInQueue(update.Key) > MaxUpdatesInQueue)
                                 IncreaseInterpolationFactor(update.Key);
-                            else if (System.GetNumberOfUpdatesInQueue(update.Key) < MinUpdatesInQueue)
+                            else if (System.GetNumberOfPositionUpdatesInQueue(update.Key) < MinUpdatesInQueue)
                                 DecreaseInterpolationFactor(update.Key);
                         }
                     }
@@ -125,7 +125,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                 {
                     if (!System.Enabled) break;
 
-                    if (System.UpdateSystemBasicReady)
+                    if (System.PositionUpdateSystemBasicReady)
                     {
                         var vesselsToRemove = CurrentVesselUpdate
                             .Where(u => u.Value.InterpolationFinished && Time.time - u.Value.FinishTime > MaxSecWithuotUpdates)

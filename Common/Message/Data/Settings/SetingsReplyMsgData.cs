@@ -15,7 +15,7 @@ namespace LunaCommon.Message.Data.Settings
         public GameDifficulty GameDifficulty { get; set; }
         public float SafetyBubbleDistance { get; set; }
         public int VesselUpdatesSendMsInterval { get; set; }
-        public int VesselUpdatesSendFarMsInterval { get; set; }
+        public int SecondaryVesselUpdatesSendMsInterval { get; set; }
         public bool AllowStockVessels { get; set; }
         public bool CanQuickLoad { get; set; }
         public bool AutoHireCrews { get; set; }

@@ -1,129 +1,91 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
+using System.Linq;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
     public class VesselUpdateMessageHandler : SubSystem<VesselUpdateSystem>, IMessageHandler
     {
         public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
-
-        public void HandleMessage2(IMessageData messageData)
-        {
-            var msgData = messageData as VesselPositionUpdateMsgData;
-
-            if (msgData == null || !System.UpdateSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
-            {
-                return;
-            }
-
-            var update = new VesselPositionUpdate
-            {
-                Id = Guid.NewGuid(),
-                ReceiveTime = Time.fixedTime,
-                PlanetTime = msgData.PlanetTime,
-                SentTime = msgData.GameSentTime,
-                VesselId = msgData.VesselId,
-                BodyName = msgData.BodyName,
-                Rotation = msgData.Rotation,
-                IsSurfaceUpdate = msgData.IsSurfaceUpdate
-            };
-
-            if (update.IsSurfaceUpdate)
-            {
-                update.Position = msgData.Position;
-                update.Velocity = msgData.Velocity;
-            }
-            else
-            {
-                update.Orbit = msgData.Orbit;
-            }
-
-            if (!System.ReceivedUpdates.ContainsKey(update.VesselId))
-            {
-                System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselPositionUpdate>());
-            }
-
-            if (System.ReceivedUpdates[update.VesselId].Count + 1 > VesselUpdateInterpolationSystem.MaxTotalUpdatesInQueue)
-                System.ReceivedUpdates[update.VesselId].Dequeue();
-
-            System.ReceivedUpdates[update.VesselId].Enqueue(update);
-        }
-
+        
         public void HandleMessage(IMessageData messageData)
         {
             var msgData = messageData as VesselUpdateMsgData;
 
-            if (msgData == null || !System.UpdateSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
+            if (msgData == null || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
             {
                 return;
             }
+            
+            HandleVesselUpdate(msgData);
+        }
 
-            var update = new VesselUpdate
-            {
-                Id = Guid.NewGuid(),
-                ReceiveTime = Time.fixedTime,
-                PlanetTime = msgData.PlanetTime,
-                Stage = msgData.Stage,
-                SentTime = msgData.GameSentTime,
-                ActiveEngines = msgData.ActiveEngines,
-                StoppedEngines = msgData.StoppedEngines,
-                Decouplers = msgData.Decouplers,
-                AnchoredDecouplers = msgData.AnchoredDecouplers,
-                Clamps = msgData.Clamps,
-                Docks = msgData.Docks,
-                VesselId = msgData.VesselId,
-                BodyName = msgData.BodyName,
-                Rotation = msgData.Rotation,
-                FlightState = new FlightCtrlState
-                {
-                    mainThrottle = msgData.MainThrottle,
-                    wheelThrottleTrim = msgData.WheelThrottleTrim,
-                    X = msgData.X,
-                    Y = msgData.Y,
-                    Z = msgData.Z,
-                    killRot = msgData.KillRot,
-                    gearUp = msgData.GearUp,
-                    gearDown = msgData.GearDown,
-                    headlight = msgData.Headlight,
-                    wheelThrottle = msgData.WheelThrottle,
-                    roll = msgData.Roll,
-                    yaw = msgData.Yaw,
-                    pitch = msgData.Pitch,
-                    rollTrim = msgData.RollTrim,
-                    yawTrim = msgData.YawTrim,
-                    pitchTrim = msgData.PitchTrim,
-                    wheelSteer = msgData.WheelSteer,
-                    wheelSteerTrim = msgData.WheelSteerTrim
-                },
-                ActionGrpControls = msgData.ActiongroupControls,
-                IsSurfaceUpdate = msgData.IsSurfaceUpdate
-            };
+        private static void HandleVesselUpdate(VesselUpdateMsgData msg)
+        {
+            var vessel = FlightGlobals.FindVessel(msg.VesselId);
 
-            if (update.IsSurfaceUpdate)
+            if (vessel == null || !vessel.loaded) return;
+
+            vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, msg.ActiongroupControls[0]);
+            vessel.ActionGroups.SetGroup(KSPActionGroup.Light, msg.ActiongroupControls[1]);
+            vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, msg.ActiongroupControls[2]);
+            vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, msg.ActiongroupControls[3]);
+            vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, msg.ActiongroupControls[4]);
+            
+            if (vessel.currentStage != msg.Stage)
             {
-                update.Position = msgData.Position;
-                update.Velocity = msgData.Velocity;
+                vessel.ActionGroups.ToggleGroup(KSPActionGroup.Stage);
+                vessel.currentStage = msg.Stage;
             }
             else
             {
-                update.Orbit = msgData.Orbit;
+                var engines = vessel.FindPartModulesImplementing<ModuleEngines>();
+                var enginesToActivate = engines.Where(e => !e.EngineIgnited && msg.ActiveEngines.Contains(e.part.craftID));
+                var enginesToStop = engines.Where(e => e.EngineIgnited && msg.StoppedEngines.Contains(e.part.craftID));
+
+                var decouplersToLaunch = vessel.FindPartModulesImplementing<ModuleDecouple>()
+                    .Where(d => !d.isDecoupled && !msg.Decouplers.Contains(d.part.craftID));
+
+                var anchoredDecouplersToLaunch = vessel.FindPartModulesImplementing<ModuleAnchoredDecoupler>()
+                    .Where(d => !d.isDecoupled && !msg.Decouplers.Contains(d.part.craftID));
+
+                var clamps = vessel.FindPartModulesImplementing<LaunchClamp>().Where(c => !msg.Clamps.Contains(c.part.craftID));
+
+                var docks = vessel.FindPartModulesImplementing<ModuleDockingNode>().Where(d => !d.IsDisabled && !msg.Docks.Contains(d.part.craftID));
+
+                foreach (var engine in enginesToActivate)
+                {
+                    engine.Activate();
+                }
+
+                foreach (var engine in enginesToStop)
+                {
+                    engine.Shutdown();
+                }
+
+                foreach (var decoupler in decouplersToLaunch)
+                {
+                    decoupler.Decouple();
+                }
+
+                foreach (var anchoredDecoupler in anchoredDecouplersToLaunch)
+                {
+                    anchoredDecoupler.Decouple();
+                }
+
+                foreach (var clamp in clamps)
+                {
+                    clamp.Release();
+                }
+
+                foreach (var dock in docks)
+                {
+                    dock.Decouple();
+                }
             }
-
-            if (!System.ReceivedUpdates.ContainsKey(update.VesselId))
-            {
-                System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselPositionUpdate>());
-            }
-
-            if (System.ReceivedUpdates[update.VesselId].Count + 1 > VesselUpdateInterpolationSystem.MaxTotalUpdatesInQueue)
-                System.ReceivedUpdates[update.VesselId].Dequeue();
-
-            System.ReceivedUpdates[update.VesselId].Enqueue(update);
         }
     }
 }

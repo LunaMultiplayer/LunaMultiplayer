@@ -75,17 +75,13 @@ namespace LunaClient.Systems.VesselLockSys
             InputLockManager.SetControlLock(LmpGuiUtil.BlockAllControls, SpectateLock);
             LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
             VesselCommon.IsSpectating = true;
-
-            FlightGlobals.ActiveVessel.OnFlyByWire += VesselUpdateSystem.Singleton.ApplyFlightCtrlState;
         }
-
+        
         public void StopSpectating()
         {
             InputLockManager.RemoveControlLock(SpectateLock);
             LockSystem.Singleton.ReleaseSpectatorLock();
             VesselCommon.IsSpectating = false;
-
-            FlightGlobals.ActiveVessel.OnFlyByWire -= VesselUpdateSystem.Singleton.ApplyFlightCtrlState;
         }
 
         /// <summary>

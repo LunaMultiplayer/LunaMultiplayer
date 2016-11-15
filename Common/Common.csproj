@@ -70,7 +70,8 @@
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\SyncTime\SyncTimeBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselChangeMsgData.cs" />
-    <Compile Include="Message\Data\Vessel\VesselPositionUpdateMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselPositionMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselFlightStateMsgData.cs" />
     <Compile Include="Message\Interface\IMasterServerMessageBase.cs" />
     <Compile Include="Message\MasterServerMessageFactory.cs" />
     <Compile Include="Message\MasterServer\Base\MstSrvMsgBase.cs" />

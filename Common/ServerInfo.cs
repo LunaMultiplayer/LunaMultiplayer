@@ -13,6 +13,7 @@
         public string Version { get; set; }
         public int WarpMode { get; set; }
         public int VesselUpdatesSendMsInterval { get; set; }
+        public int SecondaryVesselUpdatesSendMsInterval { get; set; }
         public bool DropControlOnVesselSwitching { get; set; }
         public bool DropControlOnExitFlight { get; set; }
         public bool DropControlOnExit { get; set; }

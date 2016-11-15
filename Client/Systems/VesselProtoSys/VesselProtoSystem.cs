@@ -159,7 +159,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                         foreach (var vesselProto in vesselsToLoad)
                         {
-                            Client.Singleton.StartCoroutine(VesselLoader.LoadVessel(vesselProto));
+                            VesselLoader.LoadVessel(vesselProto);
                         }
 
                         //Reload vessels that exist

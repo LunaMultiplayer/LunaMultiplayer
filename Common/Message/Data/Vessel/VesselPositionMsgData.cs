@@ -3,7 +3,7 @@ using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Vessel
 {
-    public class VesselPositionUpdateMsgData : VesselBaseMsgData
+    public class VesselPositionMsgData : VesselBaseMsgData
     {
         public override VesselMessageType VesselMessageType => VesselMessageType.POSITION;
         public Guid VesselId { get; set; }

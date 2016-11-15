@@ -18,21 +18,21 @@ namespace LunaServer.System
     /// </summary>
     public class VesselUpdateRelaySystem
     {
-        public static ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>> IncomingUpdates { get; }=
-            new ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>>();
+        public static ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>> IncomingUpdates { get; }=
+            new ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>>();
 
-        private static readonly ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>>
-            IncomingMediumUpdates = new ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>>();
+        private static readonly ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>>
+            IncomingMediumUpdates = new ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>>();
 
-        private static readonly ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>> IncomingFarUpdates =
-            new ConcurrentQueue<KeyValuePair<ClientStructure, VesselUpdateMsgData>>();
+        private static readonly ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>> IncomingFarUpdates =
+            new ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>>();
 
-        private static readonly ConcurrentDictionary<ClientStructure, VesselUpdateMsgData> VesselsDictionary =
-            new ConcurrentDictionary<ClientStructure, VesselUpdateMsgData>();
+        private static readonly ConcurrentDictionary<ClientStructure, VesselPositionMsgData> VesselsDictionary =
+            new ConcurrentDictionary<ClientStructure, VesselPositionMsgData>();
 
         public static void RemovePlayer(ClientStructure client)
         {
-            VesselUpdateMsgData value;
+            VesselPositionMsgData value;
             VesselsDictionary.TryRemove(client, out value);
         }
 
@@ -41,9 +41,9 @@ namespace LunaServer.System
             VesselsDictionary.TryAdd(client, null);
         }
 
-        public static void RelayVesselUpdateMsg(ClientStructure client, VesselUpdateMsgData msg)
+        public static void RelayVesselUpdateMsg(ClientStructure client, VesselPositionMsgData msg)
         {
-            IncomingUpdates.Enqueue(new KeyValuePair<ClientStructure, VesselUpdateMsgData>(client, msg));
+            IncomingUpdates.Enqueue(new KeyValuePair<ClientStructure, VesselPositionMsgData>(client, msg));
         }
 
         /// <summary>
@@ -55,7 +55,7 @@ namespace LunaServer.System
             {
                 try
                 {
-                    KeyValuePair<ClientStructure, VesselUpdateMsgData> vesselUpdate;
+                    KeyValuePair<ClientStructure, VesselPositionMsgData> vesselUpdate;
                     if (IncomingFarUpdates.TryDequeue(out vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
                     {
                         var farClients = VesselsDictionary.Where(v => !Equals(v.Key, vesselUpdate.Key) && v.Value != null &&
@@ -83,7 +83,7 @@ namespace LunaServer.System
             {
                 try
                 {
-                    KeyValuePair<ClientStructure, VesselUpdateMsgData> vesselUpdate;
+                    KeyValuePair<ClientStructure, VesselPositionMsgData> vesselUpdate;
                     if (IncomingMediumUpdates.TryDequeue(out vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
                     {
                         IncomingFarUpdates.Enqueue(vesselUpdate);
@@ -118,7 +118,7 @@ namespace LunaServer.System
             {
                 try
                 {
-                    KeyValuePair<ClientStructure, VesselUpdateMsgData> vesselUpdate;
+                    KeyValuePair<ClientStructure, VesselPositionMsgData> vesselUpdate;
                     if (IncomingUpdates.TryDequeue(out vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
                     {
                         VesselsDictionary.TryUpdate(vesselUpdate.Key, vesselUpdate.Value, VesselsDictionary[vesselUpdate.Key]);
@@ -143,9 +143,10 @@ namespace LunaServer.System
             }
         }
 
-        private static double CalculateDistance(VesselUpdateMsgData point1, VesselUpdateMsgData point2)
+        private static double CalculateDistance(VesselPositionMsgData point1, VesselPositionMsgData point2)
         {
-            return CalculateDistance(new[] { point1.X, point1.Y, point1.Z }, new[] { point2.X, point2.Y, point2.Z });
+            //return CalculateDistance(new[] { point1.X, point1.Y, point1.Z }, new[] { point2.X, point2.Y, point2.Z });
+            return 0;
         }
 
         private static double CalculateDistance(IReadOnlyList<float> point1, IReadOnlyList<float> point2)

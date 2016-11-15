@@ -5,7 +5,9 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselDockSys;
+using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselLockSys;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
@@ -115,9 +117,9 @@ namespace LunaClient.Systems
         /// </summary>
         /// <param name="distance">The distance to compare</param>
         /// <returns></returns>
-        public static bool isNearKSC(int distance)
+        public static bool IsNearKsc(int distance)
         {
-            return isNearKSC(FlightGlobals.ActiveVessel, distance);
+            return IsNearKsc(FlightGlobals.ActiveVessel, distance);
         }
 
         /// <summary>
@@ -126,7 +128,7 @@ namespace LunaClient.Systems
         /// <param name="vessel">The vessel used to determine the distance.  If null, the vessel is not near KSC.</param>
         /// <param name="distance">The distance to compare</param>
         /// <returns></returns>
-        public static bool isNearKSC(Vessel vessel, int distance)
+        private static bool IsNearKsc(Vessel vessel, int distance)
         {
             //If not at Kerbin or past ceiling we're definitely clear
             if (vessel == null || vessel.mainBody.name != "Kerbin")
@@ -174,6 +176,8 @@ namespace LunaClient.Systems
                 if (value)
                 {
                     VesselLockSystem.Singleton.Enabled = true;
+                    VesselPositionSystem.Singleton.Enabled = true;
+                    VesselFlightStateSystem.Singleton.Enabled = true;
                     VesselUpdateSystem.Singleton.Enabled = true;
                     VesselChangeSystem.Singleton.Enabled = true;
                     VesselProtoSystem.Singleton.Enabled = true;
@@ -183,6 +187,8 @@ namespace LunaClient.Systems
                 else
                 {
                     VesselLockSystem.Singleton.Enabled = false;
+                    VesselPositionSystem.Singleton.Enabled = false;
+                    VesselFlightStateSystem.Singleton.Enabled = false;
                     VesselUpdateSystem.Singleton.Enabled = false;
                     VesselChangeSystem.Singleton.Enabled = false;
                     VesselProtoSystem.Singleton.Enabled = false;

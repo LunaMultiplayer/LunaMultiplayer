@@ -27,7 +27,7 @@ namespace LunaServer.Lidgren
 
         private int MasterServerRegistrationMsInterval
             => GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval;
-        
+
         public void SetupLidgrenServer()
         {
             try
@@ -177,12 +177,13 @@ namespace LunaServer.Lidgren
                     ServerName = GeneralSettings.SettingsStore.ServerName,
                     ServerVersion = VersionInfo.VersionNumber,
                     VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval,
+                    SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval,
                     WarpMode = (int)GeneralSettings.SettingsStore.WarpMode
                 };
 
                 msgData.Description = msgData.Description.Length > 200
-                    ? msgData.Description.Substring(0, 200)
-                    : msgData.Description;
+                            ? msgData.Description.Substring(0, 200)
+                            : msgData.Description;
 
                 msgData.ServerName = msgData.ServerName.Length > 30
                     ? msgData.ServerName.Substring(0, 30)

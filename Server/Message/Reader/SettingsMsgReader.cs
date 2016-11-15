@@ -23,7 +23,7 @@ namespace LunaServer.Message.Reader
                 GameDifficulty = GeneralSettings.SettingsStore.GameDifficulty,
                 SafetyBubbleDistance = GeneralSettings.SettingsStore.SafetyBubbleDistance,
                 VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval,
-                VesselUpdatesSendFarMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendFarMsInterval,
+                SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval,
                 DropControlOnVesselSwitching = GeneralSettings.SettingsStore.DropControlOnVesselSwitching,
                 DropControlOnExitFlight = GeneralSettings.SettingsStore.DropControlOnExitFlight,
                 DropControlOnExit = GeneralSettings.SettingsStore.DropControlOnExit,

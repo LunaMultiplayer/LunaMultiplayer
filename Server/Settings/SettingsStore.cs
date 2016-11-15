@@ -94,9 +94,12 @@ namespace LunaServer.Settings
         public int ConnectionMsTimeout = 20000;
 #endif
 
-        [Description("Interval in Ms at wich the client will send updates for his vessels when other players are nearby.\n" +
+        [Description("Interval in Ms at wich the client will send updates for his vessel when other players are nearby.\n" +
                      "#Decrease it if your clients have good network connection and you plan to do dogfights")]
         public int VesselUpdatesSendMsInterval = 30;
+        
+        [Description("Interval in Ms at wich the client will send updates for vessels that are uncontrolled but nearby him.")]
+        public int SecondaryVesselUpdatesSendMsInterval = 500;
 
         [Description("Interval in Ms at wich the client will send updates for his vessels. When nobody is nearby")]
         public int VesselUpdatesSendFarMsInterval = 5000;

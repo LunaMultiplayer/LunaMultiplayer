@@ -32,7 +32,6 @@ namespace MasterServer
                 PlayerCount = msg.PlayerCount,
                 ServerName = msg.ServerName,
                 Version = msg.ServerVersion,
-                VesselUpdatesSendMsInterval = msg.VesselUpdatesSendMsInterval,
                 WarpMode = msg.WarpMode
             };
 

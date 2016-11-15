@@ -43,9 +43,9 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Load a vessel into the game in 2 frames
+        /// Load a vessel into the game
         /// </summary>
-        public IEnumerator LoadVessel(VesselProtoUpdate vesselProto)
+        public void LoadVessel(VesselProtoUpdate vesselProto)
         {
             var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
 
@@ -56,23 +56,14 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (FlightGlobals.FindVessel(vesselProto.VesselId) == null)
                 {
                     FixProtoVesselFlags(currentProto);
-                    var result = LoadVesselIntoGame(currentProto);
-
-                    yield return null; //Resume on next frame
-
-                    if (result)
-                    {
-                        FinishVesselLoading(currentProto);
-                        vesselProto.Loaded = true;
-                    }
+                    vesselProto.Loaded = LoadVesselIntoGame(currentProto);
                 }
             }
         }
 
         /// <summary>
         /// Reloads an existing vessel into the game
-        /// Bear in mind that this method works in just 1 frame and 
-        /// it won't reload the vessel unless the parts have changed.
+        /// Bear in mind that this method won't reload the vessel unless the part count has changed.
         /// </summary>
         public void ReloadVessel(VesselProtoUpdate vesselProto)
         {
@@ -80,30 +71,31 @@ namespace LunaClient.Systems.VesselProtoSys
             if (vessel != null)
             {
                 var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
-                if (currentProto.protoPartSnapshots.Count != vessel.Parts.Count)
+                if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
                 {
-                    currentProto.latitude = vessel.latitude;
-                    currentProto.longitude = vessel.longitude;
-                    currentProto.altitude = vessel.altitude;
-                    currentProto.rotation = vessel.vesselTransform.rotation;
-                    currentProto.position = vessel.vesselTransform.position;
+                    //currentProto.latitude = vessel.latitude;
+                    //currentProto.longitude = vessel.longitude;
+                    //currentProto.altitude = vessel.altitude;
+                    //currentProto.rotation = vessel.vesselTransform.rotation;
+                    //currentProto.position = vessel.vesselTransform.position;
 
-                    VesselRemoveSystem.Singleton.UnloadVessel(vessel);
-
-                    FixProtoVesselFlags(currentProto);
-                    var result = LoadVesselIntoGame(currentProto);
-
-                    if (result)
-                    {
-                        FinishVesselLoading(currentProto);
-                    }
+                    vessel.protoVessel = currentProto;
                 }
             }
 
             vesselProto.Loaded = true;
         }
 
+
         #region Private methods
+
+        /// <summary>
+        /// Check if we were spectating the vessel
+        /// </summary>
+        private static bool SpectatingProtoVessel(ProtoVessel currentProto)
+        {
+            return FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == currentProto.vesselID;
+        }
 
         /// <summary>
         /// Checks if the protovessel is a target we have locked
@@ -252,30 +244,6 @@ namespace LunaClient.Systems.VesselProtoSys
                    (possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid");
         }
 
-        /// <summary>
-        /// Sets the vessel as target if needed and set it as active vessel if we were spectating
-        /// </summary>
-        private static void FinishVesselLoading(ProtoVessel currentProto)
-        {
-            try
-            {
-                if (ProtoVesselIsTarget(currentProto))
-                {
-                    Debug.Log("[LMP]: ProtoVessel update for target vessel!. Set docking target");
-                    FlightGlobals.fetch.SetVesselTarget(currentProto.vesselRef);
-                }
-
-                //If we are spectating that vessel and it changed focus to the new vessel
-                if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == currentProto.vesselID)
-                    FlightGlobals.SetActiveVessel(currentProto.vesselRef);
-
-                Debug.Log("[LMP]: Protovessel Loaded");
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[LMP]: Error in coroutine LoadVessel {e}");
-            }
-        }
 
         /// <summary>
         /// Loads the vessel proto into the current game
