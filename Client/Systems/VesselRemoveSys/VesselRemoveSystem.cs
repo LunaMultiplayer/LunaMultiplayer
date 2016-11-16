@@ -130,9 +130,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
                 return;
-
-            Debug.Log($"[LMP]: Unloading vessel {killVessel.id}");
-
+            
             var vessel = VesselProtoSystem.Singleton.AllPlayerVessels.FirstOrDefault(v => v.VesselId == killVessel.id);
             if (vessel != null)
             {

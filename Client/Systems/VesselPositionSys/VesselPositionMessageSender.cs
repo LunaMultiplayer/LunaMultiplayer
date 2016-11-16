@@ -34,6 +34,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 TransformPosition = update.TransformPosition,
                 OrbitPosition = update.OrbitPosition,
                 Rotation = update.Rotation,
+                TransformRotation = update.TransformRotation,
                 Velocity = update.Velocity,
                 Acceleration = update.Acceleration
             });

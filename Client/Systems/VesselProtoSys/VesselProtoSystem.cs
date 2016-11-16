@@ -151,6 +151,16 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     if (ProtoSystemBasicReady)
                     {
+                        //Reload vessels that exist
+                        var vesselsToReLoad = AllPlayerVessels
+                           .Where(v => !v.Loaded && FlightGlobals.Vessels.Any(vl => vl.id == v.VesselId))
+                           .ToArray();
+
+                        foreach (var vesselProto in vesselsToReLoad)
+                        {
+                            VesselLoader.ReloadVessel(vesselProto);
+                        }
+
                         //Load vessels that don't exist and are in our subspace
                         var vesselsToLoad = AllPlayerVessels
                             .Where(v => !v.Loaded && FlightGlobals.Vessels.All(vl => vl.id != v.VesselId) &&
@@ -160,16 +170,6 @@ namespace LunaClient.Systems.VesselProtoSys
                         foreach (var vesselProto in vesselsToLoad)
                         {
                             VesselLoader.LoadVessel(vesselProto);
-                        }
-
-                        //Reload vessels that exist
-                        var vesselsToReLoad = AllPlayerVessels
-                           .Where(v => !v.Loaded && FlightGlobals.Vessels.Any(vl => vl.id == v.VesselId))
-                           .ToArray();
-
-                        foreach (var vesselProto in vesselsToReLoad)
-                        {
-                            VesselLoader.ReloadVessel(vesselProto);
                         }
                     }
                 }

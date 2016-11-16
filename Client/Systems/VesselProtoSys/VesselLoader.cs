@@ -73,13 +73,8 @@ namespace LunaClient.Systems.VesselProtoSys
                 var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
                 if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
                 {
-                    //currentProto.latitude = vessel.latitude;
-                    //currentProto.longitude = vessel.longitude;
-                    //currentProto.altitude = vessel.altitude;
-                    //currentProto.rotation = vessel.vesselTransform.rotation;
-                    //currentProto.position = vessel.vesselTransform.position;
-
-                    vessel.protoVessel = currentProto;
+                    VesselRemoveSystem.Singleton.UnloadVessel(vessel);
+                    LoadVessel(vesselProto);
                 }
             }
 
