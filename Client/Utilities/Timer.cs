@@ -47,6 +47,7 @@ namespace LunaClient.Utilities
 
         public static void Start(string name, int logInterval)
         {
+            return;
 #if !DEBUG
             return;
 #endif
@@ -63,6 +64,7 @@ namespace LunaClient.Utilities
 
         public static void Stop(string name)
         {
+            return;
 #if !DEBUG
             return;
 #endif

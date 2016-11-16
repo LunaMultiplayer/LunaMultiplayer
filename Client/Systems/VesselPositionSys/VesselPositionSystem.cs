@@ -6,7 +6,6 @@ using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
-
 namespace LunaClient.Systems.VesselPositionSys
 {
     /// <summary>
@@ -19,8 +18,10 @@ namespace LunaClient.Systems.VesselPositionSys
         private static float SecondaryVesselUpdatesSendSInterval =>
             (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval).TotalSeconds;
 
-        private static float VesselUpdatesSendSInterval =>
-            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
+        private static float VesselUpdatesSendSInterval => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
+
+        private const float MaxSecWithoutUpdates = 20;
+        private const float RemoveVesselsSecInterval = 5;
 
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
@@ -45,8 +46,8 @@ namespace LunaClient.Systems.VesselPositionSys
         public override void OnEnabled()
         {
             base.OnEnabled();
-            Client.Singleton.StartCoroutine(InterpolationSystem.RemoveVessels());
             Client.Singleton.StartCoroutine(InterpolationSystem.AdjustInterpolationLengthFactor());
+            Client.Singleton.StartCoroutine(RemoveVessels());
             Client.Singleton.StartCoroutine(SendSecondaryVesselPositionUpdates());
         }
 
@@ -81,21 +82,43 @@ namespace LunaClient.Systems.VesselPositionSys
             return ReceivedUpdates[vesselId].Count;
         }
 
-        /// <summary>
-        /// Applies the current user's flight control state on the vessel's control state.  Used for spectated vessels.
-        /// </summary>
-        /// <param name="flightCtrlState"></param>
-        public void ApplyFlightCtrlState(FlightCtrlState flightCtrlState)
-        {
-            if (FlightState != null)
-            {
-                flightCtrlState.CopyFrom(FlightState);
-            }
-        }
-
         #endregion
 
         #region Private methods
+
+        /// <summary>
+        /// Remove the vessels that didn't receive and update after the value specified in MsWithoutUpdatesToRemove every 5 seconds
+        /// </summary>
+        private IEnumerator RemoveVessels()
+        {
+            var seconds = new WaitForSeconds(RemoveVesselsSecInterval);
+            while (true)
+            {
+                try
+                {
+                    if (!Enabled) break;
+
+                    if (PositionUpdateSystemBasicReady)
+                    {
+                        var vesselsToRemove = InterpolationSystem.CurrentVesselUpdate
+                            .Where(u => u.Value.InterpolationFinished && Time.time - u.Value.FinishTime > MaxSecWithoutUpdates)
+                            .Select(u => u.Key).ToArray();
+
+                        foreach (var vesselId in vesselsToRemove)
+                        {
+                            InterpolationSystem.RemoveVessel(vesselId);
+                            ReceivedUpdates.Remove(vesselId);
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in RemoveVessels {e}");
+                }
+
+                yield return seconds;
+            }
+        }
 
         /// <summary>
         /// Check if we must send a message or not based on the fixed time that has passed.
@@ -105,18 +128,18 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (VesselCommon.IsSpectating) return false;
 
-            var msSinceLastSend = TimeSpan.FromSeconds(Time.fixedTime - _lastSentTime).TotalMilliseconds;
+            var secSinceLastSend = Time.fixedTime - _lastSentTime;
             
             if (VesselCommon.PlayerVesselsNearby() || VesselCommon.IsNearKsc(20000))
             {
-                return msSinceLastSend > VesselUpdatesSendSInterval;
+                return secSinceLastSend > VesselUpdatesSendSInterval;
             }
 
-            return msSinceLastSend > VesselUpdatesSendSInterval * 10;
+            return secSinceLastSend > VesselUpdatesSendSInterval * 10;
         }
 
         /// <summary>
-        /// Send the updates of our own vessel and the secondary vessels. We only send them after an interval specified.
+        /// Send the updates of our own vessel. We only send them after an interval specified.
         /// If the other player vessels are far we don't send them very often.
         /// </summary>
         private void SendVesselPositionUpdates()
@@ -124,7 +147,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
             {
                 _lastSentTime = Time.fixedTime;
-                SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
+                MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
             }
         }
 
@@ -145,21 +168,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
                     foreach (var secondaryVessel in secondaryVesselsToUpdate)
                     {
-                        SendVesselPositionUpdate(secondaryVessel);
+                        MessageSender.SendVesselPositionUpdate(secondaryVessel);
                     }
                 }
 
                 yield return seconds;
             }
-        }
-
-        /// <summary>
-        /// Create and send the vessel update
-        /// </summary>
-        private void SendVesselPositionUpdate(Vessel vessel)
-        {
-            var update = new VesselPositionUpdate(vessel);
-            MessageSender.SendVesselPositionUpdate(update);
         }
 
         #endregion

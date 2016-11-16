@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
+using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -23,11 +24,8 @@ namespace LunaClient.Systems.VesselPositionSys
         private const int MaxUpdatesInQueue = 4;
         private const int MinUpdatesInQueue = 2;
 
-        private const float MaxSecWithuotUpdates = 10;
-        private const float RemoveVesselsSecInterval = 5;
-
         /// <summary>
-        /// The current vessel update that is being handled
+        /// The vessel update that are being handled for each vessel
         /// </summary>
         public Dictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new Dictionary<Guid, VesselPositionUpdate>();
 
@@ -44,12 +42,21 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Public
 
         /// <summary>
+        /// Remove a vessel from the system
+        /// </summary>
+        public void RemoveVessel(Guid vesselId)
+        {
+            InterpolationLengthFactor.Remove(vesselId);
+            CurrentVesselUpdate.Remove(vesselId);
+        }
+
+        /// <summary>
         /// Retrieves the interpolation factor for given vessel
         /// </summary>
         /// <param name="vesselId"></param>
         /// <returns></returns>
         public static float GetInterpolationFactor(Guid vesselId) => InterpolationLengthFactor.ContainsKey(vesselId)
-            ? Time.fixedDeltaTime*InterpolationLengthFactor[vesselId]
+            ? Time.fixedDeltaTime * InterpolationLengthFactor[vesselId]
             : 0;
 
         /// <summary>
@@ -69,12 +76,16 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
             {
-                var success = !CurrentVesselUpdate.ContainsKey(vesselUpdates.Key)
-                    ? SetFirstVesselUpdates(GetValidUpdate(vesselUpdates.Key, 0, vesselUpdates.Value))
-                    : HandleVesselUpdate(vesselUpdates);
+                if (!CurrentVesselUpdate.ContainsKey(vesselUpdates.Key))
+                    SetFirstVesselUpdates(GetValidUpdate(vesselUpdates.Key, 0, vesselUpdates.Value));
+                else
+                    HandleVesselUpdate(vesselUpdates);
+            }
 
-                if (success)
-                    Client.Singleton.StartCoroutine(CurrentVesselUpdate[vesselUpdates.Key].ApplyVesselUpdate());
+            //Run trough all the updates that are not finished and apply them
+            foreach (var vesselUpdates in CurrentVesselUpdate.Where(u => !u.Value.InterpolationFinished))
+            {
+                vesselUpdates.Value.ApplyVesselUpdate();
             }
         }
 
@@ -93,7 +104,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     if (!System.Enabled)
                         break;
 
-                    if (System.PositionUpdateSystemBasicReady)
+                    if (System.PositionUpdateSystemBasicReady && SettingsSystem.CurrentSettings.InterpolationEnabled)
                     {
                         foreach (var update in System.ReceivedUpdates)
                         {
@@ -107,41 +118,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 catch (Exception e)
                 {
                     Debug.LogError($"[LMP]: Coroutine error in AdjustInterpolationLengthFactor {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
-        /// <summary>
-        /// Remove the vessels that didn't receive and update after the value specified in MsWithoutUpdatesToRemove every 5 seconds
-        /// </summary>
-        public IEnumerator RemoveVessels()
-        {
-            var seconds = new WaitForSeconds(RemoveVesselsSecInterval);
-            while (true)
-            {
-                try
-                {
-                    if (!System.Enabled) break;
-
-                    if (System.PositionUpdateSystemBasicReady)
-                    {
-                        var vesselsToRemove = CurrentVesselUpdate
-                            .Where(u => u.Value.InterpolationFinished && Time.time - u.Value.FinishTime > MaxSecWithuotUpdates)
-                            .Select(u => u.Key).ToArray();
-
-                        foreach (var vesselId in vesselsToRemove)
-                        {
-                            InterpolationLengthFactor.Remove(vesselId);
-                            CurrentVesselUpdate.Remove(vesselId);
-                            System.ReceivedUpdates.Remove(vesselId);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in RemoveVessels {e}");
                 }
 
                 yield return seconds;
@@ -173,19 +149,21 @@ namespace LunaClient.Systems.VesselPositionSys
             return update;
         }
 
-        private bool HandleVesselUpdate(KeyValuePair<Guid, Queue<VesselPositionUpdate>> vesselUpdates)
+        /// <summary>
+        /// Sets the old target as the update and the dequeued new update as it's target
+        /// </summary>
+        private void HandleVesselUpdate(KeyValuePair<Guid, Queue<VesselPositionUpdate>> vesselUpdates)
         {
             var update = GetValidUpdate(vesselUpdates.Key, CurrentVesselUpdate[vesselUpdates.Key].Target.SentTime, vesselUpdates.Value);
-            if (update == null) return false;
-            
+            if (update == null)
+                return;
+
             update.Vessel = CurrentVesselUpdate[vesselUpdates.Key].Vessel;
             if (CurrentVesselUpdate[vesselUpdates.Key].Target.BodyName == update.BodyName)
                 update.Body = CurrentVesselUpdate[vesselUpdates.Key].Target.Body;
 
             CurrentVesselUpdate[vesselUpdates.Key] = CurrentVesselUpdate[vesselUpdates.Key].Target;
             CurrentVesselUpdate[vesselUpdates.Key].Target = update;
-
-            return true;
         }
 
         /// <summary>
@@ -206,7 +184,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// Here we set the first vessel updates. We use the current vessel state as the starting point.
         /// </summary>
         /// <param name="update"></param>
-        private bool SetFirstVesselUpdates(VesselPositionUpdate update)
+        private void SetFirstVesselUpdates(VesselPositionUpdate update)
         {
             var first = update?.Clone();
             if (first != null)
@@ -214,11 +192,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 first.SentTime = update.SentTime - DefaultFactor;
                 CurrentVesselUpdate.Add(update.VesselId, first);
                 CurrentVesselUpdate[update.VesselId].Target = update;
-                return true;
             }
-            return false;
         }
-
         
         /// <summary>
         /// Increases the interpolation factor for the given vessel so we consume faster the updates

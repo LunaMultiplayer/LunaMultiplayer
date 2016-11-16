@@ -10,10 +10,12 @@ namespace LunaCommon.Message.Data.Vessel
         public string BodyName { get; set; }
         public double PlanetTime { get; set; }
         public float[] Rotation { get; set; }
-        public bool IsSurfaceUpdate { get; set; }
-        public double[] Position { get; set; } //Only if IsSurfaceUpdate
-        public double[] Velocity { get; set; } //Only if IsSurfaceUpdate
-        public double[] Orbit { get; set; } //Only if NOT IsSurfaceUpdate
+        public double[] LatLonAlt { get; set; }
+        public float[] TransformPosition { get; set; }
+        public double[] OrbitPosition { get; set; }
+        public double[] Velocity { get; set; }
+        public double[] Orbit { get; set; }
+        public double[] Acceleration { get; set; }
         public float GameSentTime { get; set; }
     }
 }

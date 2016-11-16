@@ -26,9 +26,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         private const float DictionaryUpdateSInterval = 1.5f;
         private const float FlightStateSendSInterval = 0.5f;
-
-        protected override bool HandleMessagesInFixedUpdate => true;
-
+        
         public override void OnEnabled()
         {
             base.OnEnabled();

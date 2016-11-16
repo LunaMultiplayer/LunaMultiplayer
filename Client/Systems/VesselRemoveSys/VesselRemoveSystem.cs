@@ -58,11 +58,30 @@ namespace LunaClient.Systems.VesselRemoveSys
         }
 
         /// <summary>
-        /// Kills or unloads the given vessel
+        /// Kills or unloads a vessel.
+        /// If you set fullKill to true the vessel will be totally removed from the game, 
+        /// otherwise is is killed but can be re-created at a later time (once you are in the same subspace for example)
         /// </summary>
         public void KillVessel(Vessel killVessel, bool fullKill)
         {
-            Client.Singleton.StartCoroutine(KillVesselRoutine(killVessel, fullKill));
+            if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
+                return;
+
+            Debug.Log($"[LMP]: Killing vessel {killVessel.id}");
+
+            var vessel = VesselProtoSystem.Singleton.AllPlayerVessels.FirstOrDefault(v => v.VesselId == killVessel.id);
+            if (vessel != null)
+            {
+                if (!fullKill)
+                    vessel.Loaded = false;
+                else
+                    VesselProtoSystem.Singleton.AllPlayerVessels.Remove(vessel);
+            }
+
+            SwitchVesselIfSpectating(killVessel);
+            UnloadVesselFromGame(killVessel);
+            KillGivenVessel(killVessel);
+            UnloadVesselFromScenario(killVessel);
         }
 
         #endregion
@@ -102,40 +121,6 @@ namespace LunaClient.Systems.VesselRemoveSys
 
                 yield return seconds;
             }
-        }
-
-        /// <summary>
-        /// Coroutine that kills or unloads a vessel.
-        /// If you set fullKill to true the vessel will be totally removed from the game, 
-        /// otherwise is is killed but can be re-created at a later time (once you are in the same subspace for example)
-        /// </summary>
-        private static IEnumerator KillVesselRoutine(Vessel killVessel, bool fullKill)
-        {
-            if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
-                yield break;
-
-            Debug.Log($"[LMP]: Killing vessel {killVessel.id}");
-
-            var vessel = VesselProtoSystem.Singleton.AllPlayerVessels.FirstOrDefault(v => v.VesselId == killVessel.id);
-            if (vessel != null)
-            {
-                if (!fullKill)
-                    vessel.Loaded = false;
-                else
-                    VesselProtoSystem.Singleton.AllPlayerVessels.Remove(vessel);
-            }
-            
-            SwitchVesselIfSpectating(killVessel);
-
-            UnloadVesselFromGame(killVessel);
-
-            yield return null; //Resume on next frame
-
-            KillGivenVessel(killVessel);
-
-            yield return null; //Resume on next frame
-
-            UnloadVesselFromScenario(killVessel);
         }
 
         /// <summary>
