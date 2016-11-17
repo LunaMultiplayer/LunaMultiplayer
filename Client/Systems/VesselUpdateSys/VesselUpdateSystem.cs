@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using LunaClient.Base;
 using UnityEngine;
+using LunaClient.Systems.SettingsSys;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -44,7 +45,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 if (!Enabled) break;
 
-                if(UpdateSystemReady)
+                if(UpdateSystemReady && SettingsSystem.CurrentSettings.UpdatesEnabled)
                     MessageSender.SendVesselUpdate();
 
                 yield return seconds;

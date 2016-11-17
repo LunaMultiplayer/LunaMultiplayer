@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 using LunaCommon.Message.Data.Vessel;
@@ -102,10 +101,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 };
                 Rotation = new[]
                 {
-                    vessel.transform.rotation.x,
-                    vessel.transform.rotation.y,
-                    vessel.transform.rotation.z,
-                    vessel.transform.rotation.w
+                    vessel.srfRelRotation.x,
+                    vessel.srfRelRotation.y,
+                    vessel.srfRelRotation.z,
+                    vessel.srfRelRotation.w
                 };
                 Acceleration = new[]
                 {
@@ -257,11 +256,17 @@ namespace LunaClient.Systems.VesselPositionSys
             var targetRot = new Quaternion(Target.Rotation[0], Target.Rotation[1], Target.Rotation[2], Target.Rotation[3]);
             var currentRot = Quaternion.Slerp(startRot, targetRot, interpolationValue);
 
-            Vessel.transform.rotation = currentRot;
-            Vessel.vesselTransform.rotation = currentTransformRot;
-            Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.vesselTransform.rotation;
-            Vessel.precalc.worldSurfaceRot = Vessel.mainBody.bodyTransform.rotation * Vessel.srfRelRotation;
-            Vessel.SetRotation(currentTransformRot);
+            //Vessel.transform.rotation = currentRot;
+            //Vessel.vesselTransform.rotation = currentTransformRot;
+            //Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.vesselTransform.rotation;
+            //Vessel.precalc.worldSurfaceRot = Vessel.mainBody.bodyTransform.rotation * Vessel.srfRelRotation;
+            Vessel.SetRotation(Vessel.mainBody.bodyTransform.rotation * currentRot);
+            if (Vessel.packed)
+            {
+                Vessel.srfRelRotation = currentRot;
+                Vessel.protoVessel.rotation = Vessel.srfRelRotation;
+            }
+
         }
 
         /// <summary>
@@ -299,9 +304,17 @@ namespace LunaClient.Systems.VesselPositionSys
             var currentAcc = GetInterpolatedAcceleration(interpolationValue);
             var currentVelocity = GetInterpolatedVelocity(interpolationValue, currentAcc);
 
-            Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], interpolationValue);
-            Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], interpolationValue);
-            Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], interpolationValue);
+            var latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], interpolationValue);
+            var longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], interpolationValue);
+            var altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], interpolationValue);
+
+            Vessel.latitude = latitude;
+            Vessel.longitude = longitude;
+            Vessel.altitude = altitude;
+
+            Vessel.protoVessel.latitude = latitude;
+            Vessel.protoVessel.longitude = longitude;
+            Vessel.protoVessel.altitude = altitude;
 
             var startPos = new Vector3(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
             var targetPos = new Vector3(Target.TransformPosition[0], Target.TransformPosition[1], Target.TransformPosition[2]);
@@ -312,19 +325,30 @@ namespace LunaClient.Systems.VesselPositionSys
             //var positionFudge = (currentVelocity*PlanetariumDifference) + (0.5d*currentAcc*PlanetariumDifference*PlanetariumDifference);
             //var currentPos = Vector3d.Lerp(startPos + positionFudge, targetPos + positionFudge, interpolationValue);
 
-            //if (SettingsSystem.CurrentSettings.InterpolationEnabled)
-            //    Vessel.vesselTransform.position = currentPos;
-            Vessel.SetPosition(currentPos, true);
+            Vector3d updatePosition = Body.GetWorldSurfacePosition(latitude, longitude, altitude);
+            if (Vessel.packed)
+            {
+                if (!Vessel.LandedOrSplashed)
+                {
+                    //Not landed but under 10km.
+                    Vector3d orbitalPos = updatePosition - Body.position;
+                    Vector3d surfaceOrbitVelDiff = Body.getRFrmVel(updatePosition);
+                    Vector3d orbitalVel = currentVelocity + surfaceOrbitVelDiff;
+                    Vessel.orbitDriver.orbit.UpdateFromStateVectors(orbitalPos.xzy, orbitalVel.xzy, Body, Planetarium.GetUniversalTime());
+                    Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
+                    Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel;
+                }
+            }
+            else
+            {
+                Vessel.SetPosition(updatePosition, true);
+                Vessel.rb_velocity = currentVelocity;
+            }
 
-            var startOrbitPos = new Vector3d(OrbitPosition[0], OrbitPosition[1], OrbitPosition[2]);
-            var targetOrbitPos = new Vector3d(Target.OrbitPosition[0], Target.OrbitPosition[1], Target.OrbitPosition[2]);
-            var currentOrbitPos = Vector3d.Lerp(startOrbitPos, targetOrbitPos, interpolationValue);
-            Vessel.orbit.pos = currentOrbitPos;
-            
-            Vector3d velocityOffset = currentVelocity - Vessel.srf_velocity;
-            Vessel.ChangeWorldVelocity(velocityOffset);
-            
-            Vessel.precalc.FixedUpdate();
+            Vessel.SetWorldVelocity(currentVelocity);
+            Vessel.srf_velocity = currentVelocity;
+
+            Vessel.acceleration = new Vector3d(Target.Acceleration[0], Target.Acceleration[1], Target.Acceleration[2]);
         }
 
         /// <summary>

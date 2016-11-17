@@ -136,6 +136,12 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
                 SettingsSystem.Singleton.SaveSettings();
             }
+            var settingUpdates = GUILayout.Toggle(SettingsSystem.CurrentSettings.UpdatesEnabled, "Enable updates", ButtonStyle);
+            if (settingUpdates != SettingsSystem.CurrentSettings.UpdatesEnabled)
+            {
+                SettingsSystem.CurrentSettings.UpdatesEnabled = settingUpdates;
+                SettingsSystem.Singleton.SaveSettings();
+            }
             GUILayout.BeginHorizontal();
             GUILayout.Label("Toolbar:", SmallOption);
             if (GUILayout.Button(ToolbarMode, ButtonStyle))
