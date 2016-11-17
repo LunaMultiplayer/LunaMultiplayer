@@ -126,7 +126,10 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private static bool ShouldSendPositionUpdate()
         {
-            if (VesselCommon.IsSpectating) return false;
+            if (VesselCommon.IsSpectating)
+            {
+                return false;
+            }
 
             var secSinceLastSend = Time.fixedTime - _lastSentTime;
             
