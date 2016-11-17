@@ -117,8 +117,7 @@ namespace LunaClient.Windows.Options
                 ModSystem.Singleton.GenerateModControlFile(false);
             if (GUILayout.Button("Generate whitelist LMPModControl.txt"))
                 ModSystem.Singleton.GenerateModControlFile(true);
-            UniverseConverterWindow.Singleton.Display = GUILayout.Toggle(UniverseConverterWindow.Singleton.Display,
-                "Generate Universe from saved game", ButtonStyle);
+            UniverseConverterWindow.Singleton.Display = GUILayout.Toggle(UniverseConverterWindow.Singleton.Display, "Generate Universe from saved game", ButtonStyle);
             if (GUILayout.Button("Reset disclaimer"))
             {
                 SettingsSystem.CurrentSettings.DisclaimerAccepted = false;
@@ -134,6 +133,12 @@ namespace LunaClient.Windows.Options
             if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
             {
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+            var positionFudge = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionFudgeEnable, "Enable position fudge", ButtonStyle);
+            if (positionFudge != SettingsSystem.CurrentSettings.PositionFudgeEnable)
+            {
+                SettingsSystem.CurrentSettings.PositionFudgeEnable = positionFudge;
                 SettingsSystem.Singleton.SaveSettings();
             }
             GUILayout.BeginHorizontal();

@@ -9,11 +9,11 @@ namespace LunaCommon.Message.Data.Vessel
         public Guid VesselId { get; set; }
         public string BodyName { get; set; }
         public double PlanetTime { get; set; }
-        public float[] Rotation { get; set; }
         public double[] LatLonAlt { get; set; }
-        public float[] TransformPosition { get; set; }
+        public double[] TransformPosition { get; set; }
         public double[] OrbitPosition { get; set; }
         public double[] Velocity { get; set; }
+        public double[] OrbitVelocity { get; set; }
         public double[] Orbit { get; set; }
         public double[] Acceleration { get; set; }
         public float GameSentTime { get; set; }

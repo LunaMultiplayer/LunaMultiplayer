@@ -25,7 +25,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
 
         private const float DictionaryUpdateSInterval = 1.5f;
-        private const float FlightStateSendSInterval = 0.5f;
+        private const float FlightStateSendSInterval = 0.1f;
         
         public override void OnEnabled()
         {

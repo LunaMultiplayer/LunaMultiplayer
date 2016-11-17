@@ -31,11 +31,11 @@ namespace LunaClient.Systems.VesselPositionSys
                 BodyName = update.BodyName,
                 Orbit = update.Orbit,
                 LatLonAlt = update.LatLonAlt,
-                TransformPosition = update.TransformPosition,
+                TransformPosition = update.WorldPosition,
                 OrbitPosition = update.OrbitPosition,
-                Rotation = update.Rotation,
                 TransformRotation = update.TransformRotation,
                 Velocity = update.Velocity,
+                OrbitVelocity = update.OrbitVelocity,
                 Acceleration = update.Acceleration
             });
         }

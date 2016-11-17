@@ -38,6 +38,15 @@ namespace LunaClient.Systems.SettingsSys
         public int InitialConnectionSyncTimeRequests { get; set; } = 10;
         public bool RevertEnabled { get; set; }
         public bool InterpolationEnabled { get; set; } = true;
+        public bool PositionFudgeEnable { get; set; } = false;
+
+#if DEBUG
+        public bool Debug1 { get; set; } = false;
+        public bool Debug2 { get; set; } = false;
+        public bool Debug3 { get; set; } = false;
+        public bool Debug4 { get; set; } = false;
+#endif
+
     }
 
     [Serializable]

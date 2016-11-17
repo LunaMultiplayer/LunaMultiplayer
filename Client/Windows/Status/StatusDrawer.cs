@@ -26,6 +26,9 @@ namespace LunaClient.Windows.Status
             GUILayout.BeginHorizontal();
 
             GUILayout.FlexibleSpace();
+#if DEBUG
+            DrawDebugSwitches();
+#endif
             var chatButtonStyle = ButtonStyle;
             if (ChatSystem.Singleton.ChatButtonHighlighted)
                 chatButtonStyle = HighlightStyle;
@@ -89,6 +92,34 @@ namespace LunaClient.Windows.Status
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
+        }
+
+        private void DrawDebugSwitches()
+        {
+            var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, "D1", ButtonStyle);
+            if (d1 != SettingsSystem.CurrentSettings.Debug1)
+            {
+                SettingsSystem.CurrentSettings.Debug1 = d1;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+            var d2 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug2, "D2", ButtonStyle);
+            if (d2 != SettingsSystem.CurrentSettings.Debug2)
+            {
+                SettingsSystem.CurrentSettings.Debug2 = d2;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+            var d3 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug3, "D3", ButtonStyle);
+            if (d3 != SettingsSystem.CurrentSettings.Debug3)
+            {
+                SettingsSystem.CurrentSettings.Debug3 = d3;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+            var d4 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug4, "D4", ButtonStyle);
+            if (d4 != SettingsSystem.CurrentSettings.Debug4)
+            {
+                SettingsSystem.CurrentSettings.Debug4 = d4;
+                SettingsSystem.Singleton.SaveSettings();
+            }
         }
 
         private static bool NotWarpingAndIsFutureSubspace(int subspaceId)
