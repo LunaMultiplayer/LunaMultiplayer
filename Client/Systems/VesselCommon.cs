@@ -51,6 +51,23 @@ namespace LunaClient.Systems
             }
         }
 
+        /// <summary>
+        /// Return the controlled vessels
+        /// </summary>
+        public static Vessel[] GetControlledVessels()
+        {
+            return GetControlledVesselIds()
+                .Select(FlightGlobals.FindVessel)
+                .ToArray();
+        }
+
+        /// <summary>
+        /// Return the controlled vessel ids
+        /// </summary>
+        public static Guid[] GetControlledVesselIds()
+        {
+            return LockSystem.Singleton.GetLocksWithPrefix("control-").Select(v => new Guid(v.Substring(8))).ToArray();
+        }
 
         /// <summary>
         /// Check if there are other player controlled vessels nearby
@@ -64,7 +81,7 @@ namespace LunaClient.Systems
                 if (LockSystem.Singleton.SpectatorLockExists(FlightGlobals.ActiveVessel.id))
                     return true;
 
-                var controlledVesselsIds = LockSystem.Singleton.GetLocksWithPrefix("control-").Select(v => new Guid(v.Substring(8)));
+                var controlledVesselsIds = GetControlledVesselIds();
                 return FlightGlobals.VesselsLoaded.Where(v => v.id != FlightGlobals.ActiveVessel.id).Any(v => controlledVesselsIds.Contains(v.id));
             }
 

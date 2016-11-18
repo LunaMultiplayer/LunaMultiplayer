@@ -42,6 +42,7 @@ namespace LunaClient.Systems.Status
         {
             base.OnDisabled();
             PlayerStatusList.Clear();
+            MyPlayerStatus.StatusText = "Syncing";
         }
 
         #endregion

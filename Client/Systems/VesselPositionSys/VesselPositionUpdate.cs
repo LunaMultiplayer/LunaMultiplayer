@@ -256,7 +256,10 @@ namespace LunaClient.Systems.VesselPositionSys
             var targetTransformRot = new Quaternion(Target.TransformRotation[0], Target.TransformRotation[1], Target.TransformRotation[2], Target.TransformRotation[3]);
             var currentTransformRot = Quaternion.Slerp(startTransformRot, targetTransformRot, interpolationValue);
 
-            Vessel.SetRotation(currentTransformRot, false);
+            Vessel.SetRotation(currentTransformRot);
+            Vessel.vesselTransform.rotation = currentTransformRot;
+            Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.vesselTransform.rotation;
+            Vessel.precalc.worldSurfaceRot = Vessel.mainBody.bodyTransform.rotation * Vessel.srfRelRotation;
         }
 
         /// <summary>
@@ -441,6 +444,11 @@ namespace LunaClient.Systems.VesselPositionSys
                 wheelThrottle = Mathf.Lerp(from.wheelThrottle, to.wheelThrottle, t),
                 wheelThrottleTrim = Mathf.Lerp(from.wheelThrottleTrim, to.wheelThrottleTrim, t),
             };
+        }
+
+        private static Vector3 Round(Vector3 vector, int decimals)
+        {
+            return new Vector3((float)Math.Round(vector.x, decimals), (float)Math.Round(vector.y, decimals), (float)Math.Round(vector.z, decimals));
         }
 
         #endregion

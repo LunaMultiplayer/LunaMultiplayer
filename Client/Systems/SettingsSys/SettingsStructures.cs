@@ -45,6 +45,11 @@ namespace LunaClient.Systems.SettingsSys
         public bool Debug2 { get; set; } = false;
         public bool Debug3 { get; set; } = false;
         public bool Debug4 { get; set; } = false;
+        public bool Debug5 { get; set; } = false;
+        public bool Debug6 { get; set; } = false;
+        public bool Debug7 { get; set; } = false;
+        public bool Debug8 { get; set; } = false;
+        public bool Debug9 { get; set; } = false;
 #endif
 
     }

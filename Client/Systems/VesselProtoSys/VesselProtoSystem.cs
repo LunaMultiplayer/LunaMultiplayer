@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
+using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
@@ -20,6 +21,45 @@ namespace LunaClient.Systems.VesselProtoSys
     {
 
         #region Fields
+
+        private static VesselRanges LmpRanges { get; } = new VesselRanges
+        {
+            escaping = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.escaping)
+            {
+                unpack = 0.01f,
+                pack = 0.1f
+            },
+            flying = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.flying)
+            {
+                unpack = 0.01f,
+                pack = 0.1f
+            },
+            landed = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.landed)
+            {
+                unpack = 0.01f,
+                pack = 0.1f
+            },
+            orbit = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit)
+            {
+                unpack = 0.01f,
+                pack = 0.1f
+            },
+            prelaunch = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit)
+            {
+                unpack = 0.01f,
+                pack = 0.1f
+            },
+            splashed = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit)
+            {
+                unpack = 0.01f,
+                pack = 0.1f
+            },
+            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit)
+            {
+                unpack = 0.01f,
+                pack = 0.1f
+            }
+        };
 
         public List<VesselProtoUpdate> AllPlayerVessels { get; } = new List<VesselProtoUpdate>();
 
@@ -45,6 +85,8 @@ namespace LunaClient.Systems.VesselProtoSys
             (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null) ||
             (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
 
+        private const float VesselPackCheckSInterval = 1f;
+
         #endregion
 
         #region Base overrides
@@ -56,6 +98,7 @@ namespace LunaClient.Systems.VesselProtoSys
             Client.Singleton.StartCoroutine(SendAbandonedVesselsToServer());
             Client.Singleton.StartCoroutine(CheckVesselsToLoad());
             Client.Singleton.StartCoroutine(UpdateBannedPartsMessage());
+            Client.Singleton.StartCoroutine(PackControlledVessels());
         }
 
         public override void OnDisabled()
@@ -63,6 +106,55 @@ namespace LunaClient.Systems.VesselProtoSys
             base.OnDisabled();
             AllPlayerVessels.Clear();
             BannedPartsStr = string.Empty;
+        }
+
+        /// <summary>
+        /// Set all other vessels as packed so the movement is better
+        /// </summary>
+        private IEnumerator PackControlledVessels()
+        {
+            var seconds = new WaitForSeconds(VesselPackCheckSInterval);
+            while (true)
+            {
+                try
+                {
+                    if (!Enabled)
+                        break;
+
+                    if (ProtoSystemReady)
+                    {
+                        var controlledVessels = VesselCommon.GetControlledVessels();
+                        
+                        foreach (var vessel in FlightGlobals.Vessels.Where(v=> v.id != FlightGlobals.ActiveVessel.id))
+                        {
+                            if (controlledVessels.Contains(vessel))
+                            {
+                                if (!vessel.packed) PackVessel(vessel);
+                            }
+                            else
+                            {
+                                UnPackVessel(vessel);
+                            }
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in PackControlledVessels {e}");
+                }
+
+                yield return seconds;
+            }
+        }
+
+        private static void UnPackVessel(Vessel vessel)
+        {
+            vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
+        }
+
+        private static void PackVessel(Vessel vessel)
+        {
+            vessel.vesselRanges = LmpRanges;
         }
 
         /// <summary>

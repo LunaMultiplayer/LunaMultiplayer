@@ -26,9 +26,7 @@ namespace LunaClient.Windows.Status
             GUILayout.BeginHorizontal();
 
             GUILayout.FlexibleSpace();
-#if DEBUG
-            DrawDebugSwitches();
-#endif
+
             var chatButtonStyle = ButtonStyle;
             if (ChatSystem.Singleton.ChatButtonHighlighted)
                 chatButtonStyle = HighlightStyle;
@@ -83,8 +81,13 @@ namespace LunaClient.Windows.Status
             GUILayout.EndScrollView();
 
             #endregion
-
+            
             GUILayout.FlexibleSpace();
+#if DEBUG
+            GUILayout.BeginHorizontal();
+            DrawDebugSwitches();
+            GUILayout.EndHorizontal();
+#endif
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Disconnect", ButtonStyle))
                 DisconnectEventHandled = false;
@@ -118,6 +121,36 @@ namespace LunaClient.Windows.Status
             if (d4 != SettingsSystem.CurrentSettings.Debug4)
             {
                 SettingsSystem.CurrentSettings.Debug4 = d4;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+            var d5 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug5, "D5", ButtonStyle);
+            if (d5 != SettingsSystem.CurrentSettings.Debug5)
+            {
+                SettingsSystem.CurrentSettings.Debug5 = d5;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+            var d6 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug6, "D6", ButtonStyle);
+            if (d6 != SettingsSystem.CurrentSettings.Debug6)
+            {
+                SettingsSystem.CurrentSettings.Debug6 = d6;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+            var d7 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug7, "D7", ButtonStyle);
+            if (d7 != SettingsSystem.CurrentSettings.Debug7)
+            {
+                SettingsSystem.CurrentSettings.Debug7 = d7;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+            var d8 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug8, "D8", ButtonStyle);
+            if (d8 != SettingsSystem.CurrentSettings.Debug8)
+            {
+                SettingsSystem.CurrentSettings.Debug8 = d8;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+            var d9 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug9, "D9", ButtonStyle);
+            if (d9 != SettingsSystem.CurrentSettings.Debug9)
+            {
+                SettingsSystem.CurrentSettings.Debug9 = d9;
                 SettingsSystem.Singleton.SaveSettings();
             }
         }

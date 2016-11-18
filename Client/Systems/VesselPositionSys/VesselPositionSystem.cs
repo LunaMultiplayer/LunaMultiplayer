@@ -50,13 +50,15 @@ namespace LunaClient.Systems.VesselPositionSys
             Client.Singleton.StartCoroutine(RemoveVessels());
             Client.Singleton.StartCoroutine(SendSecondaryVesselPositionUpdates());
         }
-
+        
         public override void OnDisabled()
         {
             base.OnDisabled();
             InterpolationSystem.ResetSystem();
             ReceivedUpdates.Clear();
         }
+
+        protected override bool HandleMessagesInFixedUpdate => true;
 
         public override void FixedUpdate()
         {
@@ -67,7 +69,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 SendVesselPositionUpdates();
             }
         }
-
+        
         #endregion
 
         #region Public methods
