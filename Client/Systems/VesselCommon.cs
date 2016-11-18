@@ -24,7 +24,7 @@ namespace LunaClient.Systems
         private static readonly double RUNWAY_LATITUDE = -0.0486001121594686;
         private static readonly double RUNWAY_LONGITUDE = 285.275552559723;
         private static readonly double KSC_ALTITUDE = 60;
-        
+
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
             //Ignore updates to our own vessel if we aren't spectating
@@ -62,6 +62,13 @@ namespace LunaClient.Systems
         }
 
         /// <summary>
+        /// Check if someone is spectating current vessel
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null && LockSystem.Singleton.SpectatorLockExists(FlightGlobals.ActiveVessel.id);
+        
+
+        /// <summary>
         /// Return the controlled vessel ids
         /// </summary>
         public static Guid[] GetControlledVesselIds()
@@ -78,7 +85,7 @@ namespace LunaClient.Systems
             if (FlightGlobals.ActiveVessel != null)
             {
                 //If there is someone spectating us then return true and update it fast;
-                if (LockSystem.Singleton.SpectatorLockExists(FlightGlobals.ActiveVessel.id))
+                if (IsSomeoneSpectatingUs)
                     return true;
 
                 var controlledVesselsIds = GetControlledVesselIds();
@@ -125,7 +132,7 @@ namespace LunaClient.Systems
             {
                 owner = LockSystem.Singleton.LockOwner("update-" + vesselId);
             }
-            
+
             return !string.IsNullOrEmpty(owner) && WarpSystem.Singleton.PlayerIsInPastSubspace(owner);
         }
 
