@@ -99,6 +99,7 @@ namespace LunaClient.Windows.Status
 
         private void DrawDebugSwitches()
         {
+#if DEBUG
             var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, "D1", ButtonStyle);
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
             {
@@ -153,6 +154,7 @@ namespace LunaClient.Windows.Status
                 SettingsSystem.CurrentSettings.Debug9 = d9;
                 SettingsSystem.Singleton.SaveSettings();
             }
+#endif
         }
 
         private static bool NotWarpingAndIsFutureSubspace(int subspaceId)
