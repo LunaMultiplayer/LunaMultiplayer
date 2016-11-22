@@ -12,7 +12,6 @@ using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using UniLinq;
 using UnityEngine;
-using Profiler = LunaClient.Utilities.Profiler;
 
 namespace LunaClient.Windows.Debug
 {
@@ -90,9 +89,11 @@ namespace LunaClient.Windows.Debug
                 VesselUpdateText += "Active vessel update lock: " +
                     $"{FlightGlobals.ActiveVessel != null && LockSystem.Singleton.LockIsOurs("update-" + FlightGlobals.ActiveVessel.id)}.\n";
 
-                ProfilerText = "Update: \n" + Profiler.UpdateData;
-                ProfilerText += "Fixed Update: \n" + Profiler.FixedUpdateData;
-                ProfilerText += "GUI: \n" + Profiler.GuiData;
+                ProfilerText = "Update: \n" + LunaProfiler.UpdateData;
+                ProfilerText += "Fixed Update: \n" + LunaProfiler.FixedUpdateData;
+                ProfilerText += "GUI: \n" + LunaProfiler.GuiData;
+                ProfilerText += "Custom 1: \n" + LunaProfiler.GuiData;
+                ProfilerText += "Custom 2: \n" + LunaProfiler.GuiData;
             }
         }
 

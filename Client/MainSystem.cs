@@ -27,7 +27,6 @@ using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
 using UnityEngine;
-using Profiler = LunaClient.Utilities.Profiler;
 
 namespace LunaClient
 {
@@ -70,7 +69,7 @@ namespace LunaClient
         
         public void Reset()
         {
-            Profiler.LmpReferenceTime.Start();
+            LunaProfiler.LmpReferenceTime.Start();
             
             Debug.Log($"[LMP]: KSP installed at {KspPath}");
             Debug.Log($"[LMP]: LMP installed at {AssemblyPath}");
@@ -104,7 +103,7 @@ namespace LunaClient
         public override void Update()
         {
             base.Update();
-            var startClock = Profiler.LmpReferenceTime.ElapsedTicks;
+            var startClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
 
             if (!Enabled) return;
 
@@ -197,7 +196,7 @@ namespace LunaClient
             {
                 HandleException(e, "Main system- update");
             }
-            Profiler.UpdateData.ReportTime(startClock);
+            LunaProfiler.UpdateData.ReportTime(startClock);
         }
 
         public void OnGui()
@@ -216,24 +215,24 @@ namespace LunaClient
             //Disclaimer window: 6713
             //Servers window: 6714
 
-            var startClock = Profiler.LmpReferenceTime.ElapsedTicks;
+            var startClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
 
             if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
                 WindowsHandler.OnGui();
 
-            Profiler.GuiData.ReportTime(startClock);
+            LunaProfiler.GuiData.ReportTime(startClock);
         }
 
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            var startClock = Profiler.LmpReferenceTime.ElapsedTicks;
+            var startClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
 
             if (!Enabled)
                 return;
 
             SystemsHandler.FixedUpdate();
-            Profiler.FixedUpdateData.ReportTime(startClock);
+            LunaProfiler.FixedUpdateData.ReportTime(startClock);
         }
 
         public override void LateUpdate()

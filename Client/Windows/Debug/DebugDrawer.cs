@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using LunaClient.Utilities;
 using UnityEngine;
-using Profiler = LunaClient.Utilities.Profiler;
 
 namespace LunaClient.Windows.Debug
 {
@@ -31,9 +30,11 @@ namespace LunaClient.Windows.Debug
                 {
                     if (GUILayout.Button("Reset Profiler history", ButtonStyle))
                     {
-                        Profiler.UpdateData = new ProfilerData();
-                        Profiler.FixedUpdateData = new ProfilerData();
-                        Profiler.GuiData = new ProfilerData();
+                        LunaProfiler.UpdateData = new ProfilerData();
+                        LunaProfiler.FixedUpdateData = new ProfilerData();
+                        LunaProfiler.GuiData = new ProfilerData();
+                        LunaProfiler.Custom1 = new ProfilerData();
+                        LunaProfiler.Custom2 = new ProfilerData();
                     }
                     GUILayout.Label("Timer resolution: " + Stopwatch.Frequency + " hz", LabelStyle);
                     GUILayout.Label(ProfilerText, LabelStyle);

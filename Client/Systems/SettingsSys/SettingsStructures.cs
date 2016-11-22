@@ -39,6 +39,7 @@ namespace LunaClient.Systems.SettingsSys
         public bool RevertEnabled { get; set; }
         public bool InterpolationEnabled { get; set; } = true;
         public bool PositionFudgeEnable { get; set; } = false;
+        public bool PackOtherControlledVessels { get; set; } = false;
 
 #if DEBUG
         public bool Debug1 { get; set; } = false;

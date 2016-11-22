@@ -208,7 +208,7 @@
     <Compile Include="Systems\Network\NetworkSystem.cs" />
     <Compile Include="Systems\PlayerColorSystem\PlayerColorSystem.cs" />
     <Compile Include="Systems\Status\StatusSystem.cs" />
-    <Compile Include="Utilities\Profiler.cs" />
+    <Compile Include="Utilities\LunaProfiler.cs" />
     <Compile Include="Systems\Scenario\ScenarioSystem.cs" />
     <Compile Include="Systems\SettingsSys\SettingsSystem.cs" />
     <Compile Include="Systems\TimeSyncer\TimeSyncerSystem.cs" />

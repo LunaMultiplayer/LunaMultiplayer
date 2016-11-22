@@ -6,12 +6,17 @@ using System.Linq;
 namespace LunaClient.Utilities
 {
     //The lamest profiler in the world!
-    public class Profiler
+    public class LunaProfiler
     {
         public static Stopwatch LmpReferenceTime { get; } = new Stopwatch();
         public static ProfilerData FixedUpdateData { get; set; } = new ProfilerData();
         public static ProfilerData UpdateData { get; set; } = new ProfilerData();
         public static ProfilerData GuiData { get; set; } = new ProfilerData();
+
+#if DEBUG
+        public static ProfilerData Custom1 { get; set; } = new ProfilerData();
+        public static ProfilerData Custom2 { get; set; } = new ProfilerData();
+#endif
         public long Fps { get; set; }
     }
 
@@ -34,7 +39,7 @@ namespace LunaClient.Utilities
 
         public void ReportTime(long startClock)
         {
-            var currentClock = Profiler.LmpReferenceTime.ElapsedTicks;
+            var currentClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
 
             TickTime = currentClock - startClock;
             DeltaTime = startClock - LastDeltaTime;

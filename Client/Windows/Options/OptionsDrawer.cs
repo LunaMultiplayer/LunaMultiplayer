@@ -141,6 +141,13 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.PositionFudgeEnable = positionFudge;
                 SettingsSystem.Singleton.SaveSettings();
             }
+            var packOtherVessels = GUILayout.Toggle(SettingsSystem.CurrentSettings.PackOtherControlledVessels, "Pack other vessels", ButtonStyle);
+            if (packOtherVessels != SettingsSystem.CurrentSettings.PackOtherControlledVessels)
+            {
+                SettingsSystem.CurrentSettings.PackOtherControlledVessels = packOtherVessels;
+                SettingsSystem.Singleton.SaveSettings();
+            }
+
             GUILayout.BeginHorizontal();
             GUILayout.Label("Toolbar:", SmallOption);
             if (GUILayout.Button(ToolbarMode, ButtonStyle))

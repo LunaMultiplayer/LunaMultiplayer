@@ -16,9 +16,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         public void SendCurrentFlightState()
         {
-            //Nodoby is spectating us so don't send flight inputs
-            if (!VesselCommon.IsSomeoneSpectatingUs) return;
-
             var flightState = new FlightCtrlState();
             flightState.CopyFrom(FlightGlobals.ActiveVessel.ctrlState);
 
