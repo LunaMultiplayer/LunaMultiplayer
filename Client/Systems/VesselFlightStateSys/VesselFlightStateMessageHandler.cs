@@ -37,7 +37,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 wheelSteerTrim = msgData.WheelSteerTrim
             };
 
-            System.FlightState = flightState;
+            //System.FlightState = flightState;
         }
     }
 }
