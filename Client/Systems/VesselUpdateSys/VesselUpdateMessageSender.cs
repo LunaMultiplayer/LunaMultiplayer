@@ -2,6 +2,7 @@
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Utilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -10,6 +11,8 @@ namespace LunaClient.Systems.VesselUpdateSys
 {
     public class VesselUpdateMessageSender : SubSystem<VesselUpdateSystem>, IMessageSender
     {
+        private static VesselUpdateMsgData LastMsgSent { get; set; }
+
         public void SendMessage(IMessageData msg)
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
@@ -53,7 +56,23 @@ namespace LunaClient.Systems.VesselUpdateSys
                 ActiongroupControls = actionGrpControls,
             };
 
-            SendMessage(msg);
+            if (MsgIsDifferentThanLastMsgSent(msg))
+            {
+                SendMessage(msg);
+                LastMsgSent = msg;
+            }
+        }
+
+        private bool MsgIsDifferentThanLastMsgSent(VesselUpdateMsgData msg)
+        {
+            return LastMsgSent.Stage == msg.Stage && LastMsgSent.VesselId == msg.VesselId &&
+                   CommonUtil.ScrambledEquals(LastMsgSent.ActiveEngines, msg.ActiveEngines) &&
+                   CommonUtil.ScrambledEquals(LastMsgSent.StoppedEngines, msg.StoppedEngines) &&
+                   CommonUtil.ScrambledEquals(LastMsgSent.Decouplers, msg.Decouplers) &&
+                   CommonUtil.ScrambledEquals(LastMsgSent.AnchoredDecouplers, msg.AnchoredDecouplers) &&
+                   CommonUtil.ScrambledEquals(LastMsgSent.Clamps, msg.Clamps) &&
+                   CommonUtil.ScrambledEquals(LastMsgSent.Docks, msg.Docks) &&
+                   CommonUtil.ScrambledEquals(LastMsgSent.ActiongroupControls, msg.ActiongroupControls);
         }
     }
 }

@@ -46,7 +46,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         private IEnumerator SendFlightState()
         {
-            var seconds = new WaitForSeconds(VesselCommon.IsSomeoneSpectatingUs ? FlightStateSendSInterval : FlightStateSendLowSInterval);
+            var seconds = new WaitForSeconds(FlightStateSendSInterval);
+            var secondsFar = new WaitForSeconds(FlightStateSendLowSInterval);
             while (true)
             {
                 if (!Enabled) break;
@@ -56,7 +57,10 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     MessageSender.SendCurrentFlightState();
                 }
 
-                yield return seconds;
+                if(VesselCommon.IsSomeoneSpectatingUs)
+                    yield return seconds;
+                else
+                    yield return secondsFar;
             }
         }
 

@@ -19,7 +19,8 @@ namespace LunaClient.Systems.VesselUpdateSys
         
         public FlightCtrlState FlightState { get; set; }
         
-        private static float _updateSendSInterval = 0.5f ;
+        private static float _updateSendSInterval = 0.5f;
+        private static float _updateLowSendSInterval = 3f;
 
         #endregion
 
@@ -41,6 +42,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         private IEnumerator SendVesselUpdates()
         {
             var seconds = new WaitForSeconds(_updateSendSInterval);
+            var secondsFar = new WaitForSeconds(_updateLowSendSInterval);
             while (true)
             {
                 if (!Enabled) break;
@@ -48,7 +50,10 @@ namespace LunaClient.Systems.VesselUpdateSys
                 if(UpdateSystemReady)
                     MessageSender.SendVesselUpdate();
 
-                yield return seconds;
+                if(VesselCommon.PlayerVesselsNearby())
+                    yield return seconds;
+                else
+                    yield return secondsFar;
             }
         }
 
