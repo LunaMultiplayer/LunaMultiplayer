@@ -15,29 +15,32 @@ namespace LunaClient.Systems.VesselFlightStateSys
             var msgData = messageData as VesselFlightStateMsgData;
             if (msgData == null) return;
 
-            var flightState = new FlightCtrlState
+            if (System.FlightStatesDictionary.ContainsKey(msgData.VesselId))
             {
-                mainThrottle = msgData.MainThrottle,
-                wheelThrottleTrim = msgData.WheelThrottleTrim,
-                X = msgData.X,
-                Y = msgData.Y,
-                Z = msgData.Z,
-                killRot = msgData.KillRot,
-                gearUp = msgData.GearUp,
-                gearDown = msgData.GearDown,
-                headlight = msgData.Headlight,
-                wheelThrottle = msgData.WheelThrottle,
-                roll = msgData.Roll,
-                yaw = msgData.Yaw,
-                pitch = msgData.Pitch,
-                rollTrim = msgData.RollTrim,
-                yawTrim = msgData.YawTrim,
-                pitchTrim = msgData.PitchTrim,
-                wheelSteer = msgData.WheelSteer,
-                wheelSteerTrim = msgData.WheelSteerTrim
-            };
+                var flightState = new FlightCtrlState
+                {
+                    mainThrottle = msgData.MainThrottle,
+                    wheelThrottleTrim = msgData.WheelThrottleTrim,
+                    X = msgData.X,
+                    Y = msgData.Y,
+                    Z = msgData.Z,
+                    killRot = msgData.KillRot,
+                    gearUp = msgData.GearUp,
+                    gearDown = msgData.GearDown,
+                    headlight = msgData.Headlight,
+                    wheelThrottle = msgData.WheelThrottle,
+                    roll = msgData.Roll,
+                    yaw = msgData.Yaw,
+                    pitch = msgData.Pitch,
+                    rollTrim = msgData.RollTrim,
+                    yawTrim = msgData.YawTrim,
+                    pitchTrim = msgData.PitchTrim,
+                    wheelSteer = msgData.WheelSteer,
+                    wheelSteerTrim = msgData.WheelSteerTrim
+                };
 
-            System.FlightState = flightState;
+                System.FlightStatesDictionary[msgData.VesselId] = flightState;
+            }
         }
     }
 }
