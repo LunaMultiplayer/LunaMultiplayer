@@ -51,7 +51,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             {
                 if (!Enabled) break;
 
-                if (FlightStateSystemReady)
+                if (FlightStateSystemReady && VesselCommon.PlayerVesselsNearby())
                 {
                     MessageSender.SendCurrentFlightState();
                 }
