@@ -65,6 +65,16 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         private bool MsgIsDifferentThanLastMsgSent(VesselUpdateMsgData msg)
         {
+            if(LastMsgSent == msg)
+            {
+                return false;
+            }
+
+            if(LastMsgSent == null || msg == null)
+            {
+                return true;
+            }
+
             return LastMsgSent.Stage == msg.Stage && LastMsgSent.VesselId == msg.VesselId &&
                    CommonUtil.ScrambledEquals(LastMsgSent.ActiveEngines, msg.ActiveEngines) &&
                    CommonUtil.ScrambledEquals(LastMsgSent.StoppedEngines, msg.StoppedEngines) &&
