@@ -53,7 +53,7 @@ namespace LunaClient.Utilities
         {
             const int compatibleMajor = 1;
             const int compatibleMinor = 2;
-            const int compatibleRevision = 1;
+            const int compatibleRevision = 2;
             return (Versioning.version_major == compatibleMajor) && (Versioning.version_minor == compatibleMinor) && (Versioning.Revision == compatibleRevision);
 
             /*-----------------------------------------------*\
