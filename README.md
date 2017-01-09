@@ -37,7 +37,14 @@ https://visualstudiogallery.msdn.microsoft.com/8d26236e-4a64-4d64-8486-7df95156a
 5) Adjust the CopyToKSPDirectory.bat file with the correct KSP Directory.  The line to edit is this one:
 SET KSPPATH=C:\games\Steam\SteamApps\common\Kerbal Space Program
 
-6) Once built, the plugin should automatically be updated in your Kerbal Space Program plugins folder.  You will need to restart Kerbal Space Program, if it's open.
+6) Copy the Assembly-CSharp.dll file from your Kerbal Installation to External/KSPLibraries.  You MUST repeat this process every time KSP is updated.  This file is located in
+the C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\KSP_Data\Managed folder.
+
+7) Make sure you have Debug mode set in Visual studio at the top.  Do not use Release mode as developers only test with Debug.
+
+8) Compile in visual studio by going to build->rebuild project.
+
+9) Once built, the plugin should automatically be updated in your Kerbal Space Program plugins folder.  You will need to restart Kerbal Space Program, if it's open.
 
 
 ### How to run LMP:
