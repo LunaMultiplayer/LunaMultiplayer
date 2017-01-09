@@ -16,3 +16,4 @@ Server/obj/*
 ServerTester/*.csproj.user
 ServerTester/bin/*
 ServerTester/obj/*
+External/KSPLibraries/Assembly-CSharp.dll
