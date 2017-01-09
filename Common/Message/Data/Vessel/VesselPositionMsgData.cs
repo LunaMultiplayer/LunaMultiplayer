@@ -18,5 +18,6 @@ namespace LunaCommon.Message.Data.Vessel
         public double[] Acceleration { get; set; }
         public float GameSentTime { get; set; }
         public float[] TransformRotation { get; set; }
+        public Boolean Landed { get; set; }
     }
 }

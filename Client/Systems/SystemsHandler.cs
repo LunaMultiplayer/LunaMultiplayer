@@ -124,9 +124,9 @@ namespace LunaClient.Systems
             TryFixedUpdate(TimeSyncerSystem.Singleton);
             TryFixedUpdate(KerbalSystem.Singleton);
             TryFixedUpdate(VesselLockSystem.Singleton);
-            TryFixedUpdate(VesselPositionSystem.Singleton);
             TryFixedUpdate(VesselFlightStateSystem.Singleton);
             TryFixedUpdate(VesselUpdateSystem.Singleton);
+            TryFixedUpdate(VesselPositionSystem.Singleton);
             TryFixedUpdate(VesselChangeSystem.Singleton);
             TryFixedUpdate(VesselProtoSystem.Singleton);
             TryFixedUpdate(VesselRemoveSystem.Singleton);

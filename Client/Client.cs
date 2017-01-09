@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 
 namespace LunaClient
@@ -18,7 +17,7 @@ namespace LunaClient
         public void Awake()
         {
             //We set this variable here so KspPath can be used on constructors
-            KspPath = KSPUtil.ApplicationRootPath;
+            KspPath = UrlDir.ApplicationRootPath;
 
             DontDestroyOnLoad(this);
             try

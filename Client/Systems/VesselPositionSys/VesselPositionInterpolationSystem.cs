@@ -29,6 +29,8 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public Dictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new Dictionary<Guid, VesselPositionUpdate>();
 
+
+
         /// <summary>
         /// This dictioanry control the length of the interpolations for each vessel.
         /// If the value is big, then the interpolation will last less so we will consume faster the updates in the queue.
@@ -70,23 +72,48 @@ namespace LunaClient.Systems.VesselPositionSys
 
         /// <summary>
         /// Main system that picks updates received and sets them for further processing. We call it in the 
-        /// fixed update as in deals with phisics
+        /// fixed update as in deals with physics
         /// </summary>
         public void FixedUpdate()
         {
-            foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
+            Profiler.BeginSample("vesselPositionUpdate");
+            //foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
+            foreach (var vesselInfo in System.ReceivedUpdates)
             {
-                if (!CurrentVesselUpdate.ContainsKey(vesselUpdates.Key))
-                    SetFirstVesselUpdates(GetValidUpdate(vesselUpdates.Key, 0, vesselUpdates.Value));
-                else
-                    HandleVesselUpdate(vesselUpdates);
+                var vesselId = vesselInfo.Key;
+                VesselPositionUpdate latestVesselUpdate = null;
+                Queue<VesselPositionUpdate> vesselUpdateQueue = vesselInfo.Value;
+                while (vesselUpdateQueue.Count > 0)
+                {
+                    VesselPositionUpdate vesselUpdate = vesselUpdateQueue.Dequeue();
+                    if(latestVesselUpdate == null || latestVesselUpdate.SentTime < vesselUpdate.SentTime)
+                    {
+                        latestVesselUpdate = vesselUpdate;
+                    }
+                }
+
+                if (latestVesselUpdate != null)
+                {
+                    if (!CurrentVesselUpdate.ContainsKey(vesselId))
+                    {
+                        SetFirstVesselUpdates(latestVesselUpdate);
+                    }
+                    else
+                    {
+                        HandleVesselUpdate(latestVesselUpdate);
+                    }
+                }
             }
 
-            //Run trough all the updates that are not finished and apply them
-            foreach (var vesselUpdates in CurrentVesselUpdate.Where(u => !u.Value.InterpolationFinished))
+            if (SettingsSystem.CurrentSettings.Debug2)
             {
-                vesselUpdates.Value.ApplyVesselUpdate();
+                //Run through all the updates that are not finished and apply them
+                foreach (var vesselUpdates in CurrentVesselUpdate.Where(u => !u.Value.InterpolationFinished))
+                {
+                    vesselUpdates.Value.ApplyVesselUpdate();
+                }
             }
+            Profiler.EndSample();
         }
 
         /// <summary>
@@ -152,6 +179,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// <summary>
         /// Sets the old target as the update and the dequeued new update as it's target
         /// </summary>
+        /// TODO: Remove
         private void HandleVesselUpdate(KeyValuePair<Guid, Queue<VesselPositionUpdate>> vesselUpdates)
         {
             var update = GetValidUpdate(vesselUpdates.Key, CurrentVesselUpdate[vesselUpdates.Key].Target.SentTime, vesselUpdates.Value);
@@ -164,6 +192,20 @@ namespace LunaClient.Systems.VesselPositionSys
 
             CurrentVesselUpdate[vesselUpdates.Key] = CurrentVesselUpdate[vesselUpdates.Key].Target;
             CurrentVesselUpdate[vesselUpdates.Key].Target = update;
+        }
+
+        private void HandleVesselUpdate(VesselPositionUpdate vesselUpdate)
+        {
+            var Key = vesselUpdate.VesselId;
+            if (CurrentVesselUpdate[Key].SentTime < vesselUpdate.SentTime)
+            {
+                vesselUpdate.Vessel = CurrentVesselUpdate[Key].Vessel;
+                if (CurrentVesselUpdate[Key].Target.BodyName == vesselUpdate.BodyName)
+                    vesselUpdate.Body = CurrentVesselUpdate[Key].Target.Body;
+
+                CurrentVesselUpdate[Key] = CurrentVesselUpdate[Key].Target;
+                CurrentVesselUpdate[Key].Target = vesselUpdate;
+            }
         }
 
         /// <summary>

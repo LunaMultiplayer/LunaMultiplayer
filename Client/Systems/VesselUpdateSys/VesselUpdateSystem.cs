@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using LunaClient.Base;
 using UnityEngine;
-using LunaClient.Systems.SettingsSys;
+using System.Diagnostics;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -10,17 +10,23 @@ namespace LunaClient.Systems.VesselUpdateSys
     /// </summary>
     public class VesselUpdateSystem : MessageSystem<VesselUpdateSystem, VesselUpdateMessageSender, VesselUpdateMessageHandler>
     {
+        public VesselUpdateSystem()
+        {
+            msElapsedForNextSend = _updateSendMSInterval;
+        }
+
         #region Field & Properties
-        
+
         public bool UpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded && !VesselCommon.IsSpectating &&
                                          FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
                                          FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
-        
+
         public FlightCtrlState FlightState { get; set; }
-        
-        private static float _updateSendSInterval = 0.5f;
-        private static float _updateLowSendSInterval = 3f;
+
+        private static int _updateNearbySendMSInterval = 500;
+        private static int _updateSendMSInterval = 3000;
+
 
         #endregion
 
@@ -29,31 +35,35 @@ namespace LunaClient.Systems.VesselUpdateSys
         public override void OnEnabled()
         {
             base.OnEnabled();
-            Client.Singleton.StartCoroutine(SendVesselUpdates());
         }
 
         #endregion
-        
+
         #region Private methods
-        
+
         /// <summary>
         /// Send control state, clamps, decouplers and dock ports of our vessel
         /// </summary>
-        private IEnumerator SendVesselUpdates()
+        public override void FixedUpdate()
         {
-            var seconds = new WaitForSeconds(_updateSendSInterval);
-            var secondsFar = new WaitForSeconds(_updateLowSendSInterval);
-            while (true)
+            if (!Enabled || !UpdateSystemReady)
             {
-                if (!Enabled) break;
+                return;
+            }
 
-                if(UpdateSystemReady)
-                    MessageSender.SendVesselUpdate();
+            if (isTimeForNextSend()) {
+                MessageSender.SendVesselUpdate();
+            }
+        }
 
-                if(VesselCommon.PlayerVesselsNearby())
-                    yield return seconds;
-                else
-                    yield return secondsFar;
+        private void setMsElapsedForNextSend()
+        {
+            if(VesselCommon.PlayerVesselsNearby())
+            {
+                msElapsedForNextSend = _updateNearbySendMSInterval;
+            } else
+            {
+                msElapsedForNextSend = _updateSendMSInterval;
             }
         }
 

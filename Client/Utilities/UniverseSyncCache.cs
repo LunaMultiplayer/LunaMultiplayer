@@ -107,8 +107,8 @@ namespace LunaClient.Utilities
         /// <param name="fileData">File data.</param>
         public void QueueToCache(byte[] fileData)
         {
-            IncomingQueue.Enqueue(fileData);
-            IncomingEvent.Set();
+            //IncomingQueue.Enqueue(fileData);
+            //IncomingEvent.Set();
         }
 
         public byte[] GetFromCache(string objectName)
