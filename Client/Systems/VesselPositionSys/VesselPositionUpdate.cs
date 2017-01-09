@@ -335,6 +335,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (SettingsSystem.CurrentSettings.Debug4)
             {
+                //TODO: Need to make sure position setting is working for landed vessels.
                 //Update the vessels's surface position to ensure that it's at the right spot
                 Vessel.latitude = latitude;
                 Vessel.longitude = longitude;
@@ -354,9 +355,12 @@ namespace LunaClient.Systems.VesselPositionSys
                 updatePosition += positionFudge;
             }
 
-            CheatOptions.NoCrashDamage = true;
-            CheatOptions.UnbreakableJoints = true;
+            if (SettingsSystem.CurrentSettings.Debug1) {
+                CheatOptions.NoCrashDamage = true;
+                CheatOptions.UnbreakableJoints = true;
+            }
 
+            //TODO: Need to properly handle landed vessels
             if (Vessel.packed)
             {
                 //TODO: Test--unproven code
@@ -380,10 +384,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vector3d orbitalPos = updatePosition - Vessel.mainBody.position;
                 Vector3d orbitalVel = currentVelocity;
 
-                if (SettingsSystem.CurrentSettings.Debug4)
-                {
-                    //Vessel.GoOnRails();
-                }
                 if (SettingsSystem.CurrentSettings.Debug3)
                 {
                     Vessel.orbitDriver.orbit.UpdateFromStateVectors(orbitalPos.xzy, orbitalVel.xzy, Body, Planetarium.GetUniversalTime());
@@ -424,27 +424,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     //After a single position update, reset the flag so that it only does one update per debug9 click
                     SettingsSystem.CurrentSettings.Debug9 = false;
                 }
-                if (SettingsSystem.CurrentSettings.Debug4)
-                {
-                    //Vessel.GoOffRails();
-                }
             }
-
-            if(!Vessel.packed && false)
-            {
-                //TODO: For these vessels, we may need to update them on every FixedUpdate() call
-                Vessel.SetPosition(updatePosition, true);
-                //TODO: Do we need to set Vessel.localCOM
-                Vessel.CoMD = updatePosition;
-                //Vessel.orbitDriver.TrackRigidbody(Vessel.mainBody, 0);
-            }
-
-
-            //Set the velocity for all of the parts and the vessel's velocity
-            //Vessel.rb_velocity = currentVelocity;
-            //Vessel.angularVelocity = Vector3d.zero;
-            //Vessel.acceleration = currentAcc;
-
             //Need to copy the control states for the vessels
             //Vessel.ctrlState.Neutralize();
         }
