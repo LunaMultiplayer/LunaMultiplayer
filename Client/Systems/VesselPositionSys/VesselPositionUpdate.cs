@@ -141,9 +141,6 @@ namespace LunaClient.Systems.VesselPositionSys
                     orbitVel.x,
                     orbitVel.y,
                     orbitVel.z
-                    //vessel.orbit.vel.x,
-                    //vessel.orbit.vel.y,
-                    //vessel.orbit.vel.z,
                 };
                 Orbit = new[]
                 {
@@ -286,11 +283,6 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private Vector3d GetInterpolatedVelocity(float interpolationValue, Vector3d acceleration)
         {
-            var startVel = new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
-            //var targetVel = new Vector3d(Target.Velocity[0], Target.Velocity[1], Target.Velocity[2]);
-            //var targetVel = Body.bodyTransform.rotation * new Vector3d(Target.Velocity[0], Target.Velocity[1], Target.Velocity[2]);
-            //var currentVel = Body.bodyTransform.rotation * Vector3d.Lerp(startVel, targetVel, interpolationValue);
-
             //KSP reverses the two last components of the orbit vector.  Don't ask me why...
             var targetVel = new Vector3d(Target.OrbitVelocity[0], Target.OrbitVelocity[1], Target.OrbitVelocity[2]);
 
@@ -302,7 +294,6 @@ namespace LunaClient.Systems.VesselPositionSys
             }
 
             return targetVel;
-            //return targetVel - (FlightGlobals.ActiveVessel.srf_velocity - FlightGlobals.ActiveVessel.rb_velocity);
         }
 
         /// <summary>
@@ -386,9 +377,23 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 if (SettingsSystem.CurrentSettings.Debug3)
                 {
-                    Vessel.orbitDriver.orbit.UpdateFromStateVectors(orbitalPos.xzy, orbitalVel.xzy, Body, Planetarium.GetUniversalTime());
-                    Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
-                    Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
+                    //When suborbital, we can just set orbit from velocity and position.  For orbits, this can cause significant jitter.
+                    if (Vessel.altitude < 25000)
+                    {
+                        Vessel.orbitDriver.orbit.UpdateFromStateVectors(orbitalPos.xzy, orbitalVel.xzy, Body, Planetarium.GetUniversalTime());
+                        Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
+                        Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
+                    }
+                    else
+                    {
+                        var targetOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4],
+                                                    Target.Orbit[5], Target.Orbit[6], Body);
+
+                        //The OrbitDriver update call will set the vessel position on the next fixed update
+                        CopyOrbit(targetOrbit, Vessel.orbitDriver.orbit);
+                        Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
+                        Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
+                    }
 
                     if (SettingsSystem.CurrentSettings.Debug8)
                     {
