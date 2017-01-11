@@ -216,7 +216,8 @@ namespace LunaClient.Systems.Warp
         private void ProcessNewSubspace()
         {
             TimeWarp.fetch.WarpTo(GetCurrentSubspaceTime());
-            Planetarium.SetUniversalTime(GetCurrentSubspaceTime());
+            //TODO:Put StepClock in a more central place
+            TimeSyncerSystem.StepClock(GetCurrentSubspaceTime());
         }
 
         /// <summary>

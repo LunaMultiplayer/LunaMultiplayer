@@ -39,6 +39,9 @@ namespace LunaClient.Systems.TimeSyncer
 
         private const int MaxClockMsError = 100;
         private const int SyncTimeMax = 100;
+        private const float MIN_CLOCK_RATE = 0.3f;
+        private const float MAX_CLOCK_RATE = 1.5f;
+        private const float MAX_CLOCK_SKEW = 5f;
 
         #endregion
 
@@ -160,7 +163,18 @@ namespace LunaClient.Systems.TimeSyncer
                         var targetTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
                         var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;
                         if (Math.Abs(currentError) > MaxClockMsError)
-                            Planetarium.SetUniversalTime(targetTime);
+                        {
+                            if (Math.Abs(currentError) > MAX_CLOCK_SKEW)
+                            {
+                                StepClock(targetTime);
+                            }
+                            else
+                            {
+                                //TODO: We should skew the clock, but putting this here for testing to ensure that we don't have floating point errors due to weird skews
+                                StepClock(targetTime);
+                                //SkewClock(currentError);
+                            }
+                        }
                     }
                 }
                 catch (Exception e)
@@ -183,6 +197,99 @@ namespace LunaClient.Systems.TimeSyncer
                 default:
                     return false;
             }
+        }
+
+        public static void StepClock(double targetTick)
+        {
+            if (HighLogic.LoadedScene == GameScenes.LOADING)
+            {
+                Debug.Log("Skipping StepClock in loading screen");
+                return;
+            }
+            if (HighLogic.LoadedSceneIsFlight)
+            {
+                if (FlightGlobals.fetch.activeVessel == null || !FlightGlobals.ready)
+                {
+                    Debug.Log("Skipping StepClock (active vessel is null or not ready)");
+                    return;
+                }
+                try
+                {
+                    OrbitPhysicsManager.HoldVesselUnpack(5);
+                }
+                catch
+                {
+                    Debug.Log("Failed to hold vessel unpack");
+                    return;
+                }
+                foreach (Vessel v in FlightGlobals.fetch.vessels)
+                {
+                    if (!v.packed)
+                    {
+                        if (v != FlightGlobals.fetch.activeVessel)
+                        {
+                            try
+                            {
+                                v.GoOnRails();
+                            }
+                            catch
+                            {
+                                Debug.Log("Error packing vessel " + v.id.ToString());
+                            }
+                        }
+                        if (v == FlightGlobals.fetch.activeVessel)
+                        {
+                            if (SafeToStepClock(v, targetTick))
+                            {
+                                try
+                                {
+                                    v.GoOnRails();
+                                }
+                                catch
+                                {
+                                    Debug.Log("Error packing active vessel " + v.id.ToString());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            Planetarium.SetUniversalTime(targetTick);
+        }
+
+        private static bool SafeToStepClock(Vessel checkVessel, double targetTick)
+        {
+            switch (checkVessel.situation)
+            {
+                case Vessel.Situations.LANDED:
+                case Vessel.Situations.PRELAUNCH:
+                case Vessel.Situations.SPLASHED:
+                    return (checkVessel.srf_velocity.magnitude < 2);
+                case Vessel.Situations.ORBITING:
+                case Vessel.Situations.ESCAPING:
+                    return true;
+                case Vessel.Situations.SUB_ORBITAL:
+                    double altitudeAtUT = checkVessel.orbit.getRelativePositionAtUT(targetTick).magnitude;
+                    return (altitudeAtUT > checkVessel.mainBody.Radius + 10000 && checkVessel.altitude > 10000);
+                default:
+                    return false;
+            }
+        }
+
+        private static void SkewClock(double currentError)
+        {
+            float timeWarpRate = (float)Math.Pow(2, -currentError);
+            if (timeWarpRate > MAX_CLOCK_RATE)
+            {
+                timeWarpRate = MAX_CLOCK_RATE;
+            }
+            if (timeWarpRate < MIN_CLOCK_RATE)
+            {
+                timeWarpRate = MIN_CLOCK_RATE;
+            }
+
+            //Set the physwarp rate
+            Time.timeScale = timeWarpRate;
         }
 
         #endregion
