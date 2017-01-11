@@ -164,14 +164,17 @@ namespace LunaClient.Systems.TimeSyncer
                         var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;
                         if (Math.Abs(currentError) > MaxClockMsError)
                         {
+                            Planetarium.SetUniversalTime(targetTime);
+
                             if (Math.Abs(currentError) > MAX_CLOCK_SKEW)
                             {
                                 //TODO: This causes the throttle to reset when called.  Need to fix.
-                                StepClock(targetTime);
+                                //StepClock(targetTime);
                             }
                             else
                             {
-                                SkewClock(currentError);
+                                //TODO: This causes the throttle to reset when called.  Need to fix.
+                                //SkewClock(currentError);
                             }
                         }
                     }
