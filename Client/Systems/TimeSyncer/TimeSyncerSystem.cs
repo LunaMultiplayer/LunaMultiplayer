@@ -166,13 +166,12 @@ namespace LunaClient.Systems.TimeSyncer
                         {
                             if (Math.Abs(currentError) > MAX_CLOCK_SKEW)
                             {
+                                //TODO: This causes the throttle to reset when called.  Need to fix.
                                 StepClock(targetTime);
                             }
                             else
                             {
-                                //TODO: We should skew the clock, but putting this here for testing to ensure that we don't have floating point errors due to weird skews
-                                StepClock(targetTime);
-                                //SkewClock(currentError);
+                                SkewClock(currentError);
                             }
                         }
                     }
@@ -264,6 +263,8 @@ namespace LunaClient.Systems.TimeSyncer
                 case Vessel.Situations.LANDED:
                 case Vessel.Situations.PRELAUNCH:
                 case Vessel.Situations.SPLASHED:
+                    //TODO: Fix.  We need to be able to adjust the clock on the ground, but then it resets the throttle position and does physics easing.
+                    //TODO: For now, disable stepping the clock while landed.
                     return (checkVessel.srf_velocity.magnitude < 2);
                 case Vessel.Situations.ORBITING:
                 case Vessel.Situations.ESCAPING:
