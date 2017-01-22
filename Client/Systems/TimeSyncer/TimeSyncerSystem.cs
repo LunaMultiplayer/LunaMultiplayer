@@ -41,7 +41,7 @@ namespace LunaClient.Systems.TimeSyncer
         private const int SyncTimeMax = 100;
         private const float MIN_CLOCK_RATE = 0.3f;
         private const float MAX_CLOCK_RATE = 1.5f;
-        private const float MAX_CLOCK_SKEW = 5f;
+        private const int MAX_CLOCK_SKEW = 5000;
 
         #endregion
 
@@ -89,7 +89,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// </summary>
         public void RewriteMessage(IMessageData msg)
         {
-            ((SyncTimeRequestMsgData) msg).ClientSendTime = DateTime.UtcNow.Ticks;
+            ((SyncTimeRequestMsgData)msg).ClientSendTime = DateTime.UtcNow.Ticks;
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace LunaClient.Systems.TimeSyncer
         public void HandleSyncTime(long clientReceive, long clientSend, long serverReceive, long serverSend)
         {
             var clientLatency = clientReceive - clientSend - (serverSend - serverReceive);
-            var clientOffset = (serverReceive - clientSend + (serverSend - clientReceive))/2;
+            var clientOffset = (serverReceive - clientSend + (serverSend - clientReceive)) / 2;
 
             ClockOffset.Add(clientOffset);
             NetworkLatency.Add(clientLatency);
@@ -123,16 +123,16 @@ namespace LunaClient.Systems.TimeSyncer
 
             //Calculate the average for the offset and latency.
             var clockOffsetTotal = ClockOffset.Sum();
-            ClockOffsetAverage = clockOffsetTotal/ClockOffset.Count;
+            ClockOffsetAverage = clockOffsetTotal / ClockOffset.Count;
 
             var networkLatencyTotal = NetworkLatency.Sum();
-            NetworkLatencyAverage = networkLatencyTotal/NetworkLatency.Count;
+            NetworkLatencyAverage = networkLatencyTotal / NetworkLatency.Count;
 
             //Check if we are now synced
             if ((ClockOffset.Count > SettingsSystem.CurrentSettings.InitialConnectionSyncTimeRequests) && !Synced)
             {
                 Synced = true;
-                Debug.Log($"[LMP]: Initial clock syncronized, offset {ClockOffsetAverage/10000}ms, latency {NetworkLatencyAverage/10000}ms");
+                Debug.Log($"[LMP]: Initial clock syncronized, offset {ClockOffsetAverage / 10000}ms, latency {NetworkLatencyAverage / 10000}ms");
             }
         }
 
@@ -151,7 +151,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// <returns></returns>
         private IEnumerator SyncTime()
         {
-            var seconds = new WaitForSeconds((float) TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.ClockSetMsInterval).TotalSeconds);
+            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.ClockSetMsInterval).TotalSeconds);
             while (true)
             {
                 try
@@ -162,19 +162,18 @@ namespace LunaClient.Systems.TimeSyncer
                     {
                         var targetTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
                         var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;
-                        if (Math.Abs(currentError) > MaxClockMsError)
+                        if (targetTime != 0 && Math.Abs(currentError) > MaxClockMsError)
                         {
-                            Planetarium.SetUniversalTime(targetTime);
-
                             if (Math.Abs(currentError) > MAX_CLOCK_SKEW)
                             {
-                                //TODO: This causes the throttle to reset when called.  Need to fix.
-                                //StepClock(targetTime);
+                                Debug.LogWarning("Adjusted time from: "+ Planetarium.GetUniversalTime()+" to: "+targetTime+" due to error:"+currentError);
+                                //TODO: This causes the throttle to reset when called.  This happens due to vessel unpacking resetting the throttle controls.
+                                //TODO: Try to get Squad to change their code.
+                                StepClock(targetTime);
                             }
                             else
                             {
-                                //TODO: This causes the throttle to reset when called.  Need to fix.
-                                //SkewClock(currentError);
+                                SkewClock(currentError);
                             }
                         }
                     }
@@ -187,7 +186,7 @@ namespace LunaClient.Systems.TimeSyncer
                 yield return seconds;
             }
         }
-        
+
         private static bool CanSyncTime()
         {
             switch (HighLogic.LoadedScene)
@@ -232,7 +231,11 @@ namespace LunaClient.Systems.TimeSyncer
                         {
                             try
                             {
-                                v.GoOnRails();
+                                //For prelaunch vessels, we should not go on rails as this will reset the throttles and such, and 
+                                if (v.situation != Vessel.Situations.PRELAUNCH)
+                                {
+                                    v.GoOnRails();
+                                }
                             }
                             catch
                             {
@@ -282,7 +285,7 @@ namespace LunaClient.Systems.TimeSyncer
 
         private static void SkewClock(double currentError)
         {
-            float timeWarpRate = (float)Math.Pow(2, -currentError);
+            float timeWarpRate = (float)Math.Pow(2, -(currentError/1000f));
             if (timeWarpRate > MAX_CLOCK_RATE)
             {
                 timeWarpRate = MAX_CLOCK_RATE;
