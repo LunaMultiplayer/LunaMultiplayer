@@ -62,6 +62,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                 ClosedShieldedDocks = closedShieldDocks
             };
 
+            //TODO: fix this condition as probably LastMsgSent != msg will always be true
             if (LastMsgSent == null || LastMsgSent != msg || !MessageDataEqualsToLastMsgSent(msg))
             {
                 SendMessage(msg);
