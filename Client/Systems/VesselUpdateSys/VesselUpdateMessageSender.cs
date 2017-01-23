@@ -21,7 +21,9 @@ namespace LunaClient.Systems.VesselUpdateSys
         public void SendVesselUpdate()
         {
             var engines = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleEngines>();
-
+            var shieldedDocks = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleDockingNode>()
+                .Where(e => !e.IsDisabled && e.deployAnimator != null).ToArray();
+            
             var activeEngines = engines.Where(e => e.EngineIgnited).Select(e => e.part.craftID).ToArray();
             var stoppedEngines = engines.Where(e => !e.EngineIgnited).Select(e => e.part.craftID).ToArray();
             var decouplers = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleDecouple>()
@@ -30,6 +32,8 @@ namespace LunaClient.Systems.VesselUpdateSys
                 .Where(e => !e.isDecoupled).Select(e => e.part.craftID).ToArray();
             var clamps = FlightGlobals.ActiveVessel.FindPartModulesImplementing<LaunchClamp>().Select(e => e.part.craftID).ToArray();
             var docks = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleDockingNode>().Where(e => !e.IsDisabled).Select(e => e.part.craftID).ToArray();
+            var closedShieldDocks = shieldedDocks.Where(d => d.deployAnimator.animSwitch).Select(e => e.part.craftID).ToArray();
+            var openedShieldDocks = shieldedDocks.Where(d => !d.deployAnimator.animSwitch).Select(e => e.part.craftID).ToArray();
 
             var actionGrpControls = new[]
             {
@@ -54,27 +58,19 @@ namespace LunaClient.Systems.VesselUpdateSys
                 Docks = docks,
                 VesselId = FlightGlobals.ActiveVessel.id,
                 ActiongroupControls = actionGrpControls,
+                OpenedShieldedDocks = openedShieldDocks,
+                ClosedShieldedDocks = closedShieldDocks
             };
 
-            if (MsgIsDifferentThanLastMsgSent(msg))
+            if (LastMsgSent == null || LastMsgSent != msg || !MessageDataEqualsToLastMsgSent(msg))
             {
                 SendMessage(msg);
                 LastMsgSent = msg;
             }
         }
 
-        private bool MsgIsDifferentThanLastMsgSent(VesselUpdateMsgData msg)
+        private bool MessageDataEqualsToLastMsgSent(VesselUpdateMsgData msg)
         {
-            if(LastMsgSent == msg)
-            {
-                return false;
-            }
-
-            if(LastMsgSent == null || msg == null)
-            {
-                return true;
-            }
-
             return LastMsgSent.Stage == msg.Stage && LastMsgSent.VesselId == msg.VesselId &&
                    CommonUtil.ScrambledEquals(LastMsgSent.ActiveEngines, msg.ActiveEngines) &&
                    CommonUtil.ScrambledEquals(LastMsgSent.StoppedEngines, msg.StoppedEngines) &&

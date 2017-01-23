@@ -26,6 +26,8 @@ namespace LunaClient.Utilities
         /// </summary>
         public static bool ScrambledEquals<T>(IEnumerable<T> list1, IEnumerable<T> list2)
         {
+            if (list1.Count() != list2.Count()) return false;
+
             var cnt = new Dictionary<T, int>();
             foreach (var s in list1)
             {

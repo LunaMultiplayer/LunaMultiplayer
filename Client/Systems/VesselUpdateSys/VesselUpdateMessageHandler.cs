@@ -10,7 +10,7 @@ namespace LunaClient.Systems.VesselUpdateSys
     public class VesselUpdateMessageHandler : SubSystem<VesselUpdateSystem>, IMessageHandler
     {
         public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
-        
+
         public void HandleMessage(IMessageData messageData)
         {
             var msgData = messageData as VesselUpdateMsgData;
@@ -19,7 +19,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 return;
             }
-            
+
             HandleVesselUpdate(msgData);
         }
 
@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.ActionGroups.SetGroup(KSPActionGroup.Brakes, msg.ActiongroupControls[2]);
             vessel.ActionGroups.SetGroup(KSPActionGroup.SAS, msg.ActiongroupControls[3]);
             vessel.ActionGroups.SetGroup(KSPActionGroup.RCS, msg.ActiongroupControls[4]);
-            
+
             if (vessel.currentStage != msg.Stage)
             {
                 vessel.ActionGroups.ToggleGroup(KSPActionGroup.Stage);
@@ -55,6 +55,12 @@ namespace LunaClient.Systems.VesselUpdateSys
                 var clamps = vessel.FindPartModulesImplementing<LaunchClamp>().Where(c => !msg.Clamps.Contains(c.part.craftID));
 
                 var docks = vessel.FindPartModulesImplementing<ModuleDockingNode>().Where(d => !d.IsDisabled && !msg.Docks.Contains(d.part.craftID));
+
+                var shieldedDocks = vessel.FindPartModulesImplementing<ModuleDockingNode>().Where(d => !d.IsDisabled && d.deployAnimator != null);
+
+                var shieldedDocksToToggle = shieldedDocks.Where(
+                        d => (d.deployAnimator.animSwitch && msg.OpenedShieldedDocks.Contains(d.part.craftID)) ||
+                             (!d.deployAnimator.animSwitch && msg.ClosedShieldedDocks.Contains(d.part.craftID)));
 
                 foreach (var engine in enginesToActivate)
                 {
@@ -84,6 +90,11 @@ namespace LunaClient.Systems.VesselUpdateSys
                 foreach (var dock in docks)
                 {
                     dock.Decouple();
+                }
+
+                foreach (var shieldedDock in shieldedDocksToToggle)
+                {
+                    shieldedDock.deployAnimator.Toggle();
                 }
             }
         }

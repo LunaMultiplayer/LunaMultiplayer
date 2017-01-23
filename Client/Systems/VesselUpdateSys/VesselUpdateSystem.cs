@@ -12,7 +12,7 @@ namespace LunaClient.Systems.VesselUpdateSys
     {
         public VesselUpdateSystem()
         {
-            msElapsedForNextSend = _updateSendMSInterval;
+            SendTimeIntervalMs = _updateSendMSInterval;
         }
 
         #region Field & Properties
@@ -51,7 +51,7 @@ namespace LunaClient.Systems.VesselUpdateSys
                 return;
             }
 
-            if (isTimeForNextSend()) {
+            if (IsTimeForNextSend()) {
                 MessageSender.SendVesselUpdate();
             }
         }
@@ -60,10 +60,10 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             if(VesselCommon.PlayerVesselsNearby())
             {
-                msElapsedForNextSend = _updateNearbySendMSInterval;
+                SendTimeIntervalMs = _updateNearbySendMSInterval;
             } else
             {
-                msElapsedForNextSend = _updateSendMSInterval;
+                SendTimeIntervalMs = _updateSendMSInterval;
             }
         }
 

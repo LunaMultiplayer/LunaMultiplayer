@@ -15,5 +15,7 @@ namespace LunaCommon.Message.Data.Vessel
         public uint[] Clamps { get; set; }
         public uint[] Docks { get; set; }
         public bool[] ActiongroupControls { get; set; }
+        public uint[] OpenedShieldedDocks { get; set; }
+        public uint[] ClosedShieldedDocks { get; set; }
     }
 }

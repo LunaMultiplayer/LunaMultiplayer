@@ -12,9 +12,9 @@ namespace LunaClient.Base
         where TS : class, IMessageSender, new()
         where TH : class, IMessageHandler, new()
     {
-        private System.Diagnostics.Stopwatch sendTimer = System.Diagnostics.Stopwatch.StartNew();
+        private System.Diagnostics.Stopwatch SendTimer { get; } = System.Diagnostics.Stopwatch.StartNew();
 
-        protected int msElapsedForNextSend { get; set; }
+        protected int SendTimeIntervalMs { get; set; }
         protected virtual bool HandleMessagesInFixedUpdate { get; set; }
 
         public TS MessageSender { get; } = new TS();
@@ -25,12 +25,12 @@ namespace LunaClient.Base
         /// Returns whether it is time to send another update for this system.  
         /// If this method returns true, the internal timer is reset and restarted for the next transmission event.
         /// </summary>
-        public Boolean isTimeForNextSend()
+        public bool IsTimeForNextSend()
         {
-            if(sendTimer.ElapsedMilliseconds > msElapsedForNextSend)
+            if(SendTimer.ElapsedMilliseconds > SendTimeIntervalMs)
             {
-                sendTimer.Reset();
-                sendTimer.Start();
+                SendTimer.Reset();
+                SendTimer.Start();
                 return true;
             }
             return false;

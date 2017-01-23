@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.SyncTime;
 using LunaCommon.Message.Interface;
@@ -20,6 +19,7 @@ namespace LunaClient.Systems.TimeSyncer
     /// Bear in mind that it's a bit complex without using NTP protocol (https://en.wikipedia.org/wiki/Network_Time_Protocol)
     /// Therefore we use the trip time to do some aproximations. It's not perfect but it's enough.
     /// More info: http://www.mine-control.com/zack/timesync/timesync.html
+    /// TODO: fix this documentation
     /// </summary>
     public class TimeSyncerSystem : MessageSystem<TimeSyncerSystem, TimeSyncerMessageSender, TimeSyncerMessageHandler>
     {
@@ -166,7 +166,7 @@ namespace LunaClient.Systems.TimeSyncer
                         {
                             if (Math.Abs(currentError) > MAX_CLOCK_SKEW)
                             {
-                                Debug.LogWarning("Adjusted time from: "+ Planetarium.GetUniversalTime()+" to: "+targetTime+" due to error:"+currentError);
+                                Debug.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
                                 //TODO: This causes the throttle to reset when called.  This happens due to vessel unpacking resetting the throttle controls.
                                 //TODO: Try to get Squad to change their code.
                                 StepClock(targetTime);
@@ -204,14 +204,14 @@ namespace LunaClient.Systems.TimeSyncer
         {
             if (HighLogic.LoadedScene == GameScenes.LOADING)
             {
-                Debug.Log("Skipping StepClock in loading screen");
+                Debug.Log("[LMP] Skipping StepClock in loading screen");
                 return;
             }
             if (HighLogic.LoadedSceneIsFlight)
             {
                 if (FlightGlobals.fetch.activeVessel == null || !FlightGlobals.ready)
                 {
-                    Debug.Log("Skipping StepClock (active vessel is null or not ready)");
+                    Debug.Log($"[LMP] Skipping StepClock (active vessel is null or not ready)");
                     return;
                 }
                 try
@@ -220,41 +220,25 @@ namespace LunaClient.Systems.TimeSyncer
                 }
                 catch
                 {
-                    Debug.Log("Failed to hold vessel unpack");
+                    Debug.LogError("[LMP] Failed to hold vessel unpack");
                     return;
                 }
-                foreach (Vessel v in FlightGlobals.fetch.vessels)
+
+                foreach (var vessel in FlightGlobals.VesselsLoaded.Where(v => !v.packed))
                 {
-                    if (!v.packed)
+                    if ((vessel.isActiveVessel && SafeToStepClock(vessel, targetTick)) || 
+                        (!vessel.isActiveVessel && vessel.situation != Vessel.Situations.PRELAUNCH))
                     {
-                        if (v != FlightGlobals.fetch.activeVessel)
+                        try
                         {
-                            try
-                            {
-                                //For prelaunch vessels, we should not go on rails as this will reset the throttles and such, and 
-                                if (v.situation != Vessel.Situations.PRELAUNCH)
-                                {
-                                    v.GoOnRails();
-                                }
-                            }
-                            catch
-                            {
-                                Debug.Log("Error packing vessel " + v.id.ToString());
-                            }
+                            //For prelaunch vessels, we should not go on rails as this will reset the throttles and such, and 
+                            vessel.GoOnRails();
                         }
-                        if (v == FlightGlobals.fetch.activeVessel)
+                        catch
                         {
-                            if (SafeToStepClock(v, targetTick))
-                            {
-                                try
-                                {
-                                    v.GoOnRails();
-                                }
-                                catch
-                                {
-                                    Debug.Log("Error packing active vessel " + v.id.ToString());
-                                }
-                            }
+                            Debug.LogError(vessel.isActiveVessel
+                                ? $"[LMP] Error packing active vessel {vessel.id}"
+                                : $"[LMP] Error packing vessel {vessel.id}");
                         }
                     }
                 }
@@ -276,8 +260,8 @@ namespace LunaClient.Systems.TimeSyncer
                 case Vessel.Situations.ESCAPING:
                     return true;
                 case Vessel.Situations.SUB_ORBITAL:
-                    double altitudeAtUT = checkVessel.orbit.getRelativePositionAtUT(targetTick).magnitude;
-                    return (altitudeAtUT > checkVessel.mainBody.Radius + 10000 && checkVessel.altitude > 10000);
+                    var altitudeAtUt = checkVessel.orbit.getRelativePositionAtUT(targetTick).magnitude;
+                    return (altitudeAtUt > checkVessel.mainBody.Radius + 10000 && checkVessel.altitude > 10000);
                 default:
                     return false;
             }
@@ -285,12 +269,13 @@ namespace LunaClient.Systems.TimeSyncer
 
         private static void SkewClock(double currentError)
         {
-            float timeWarpRate = (float)Math.Pow(2, -(currentError/1000f));
+            var timeWarpRate = (float)Math.Pow(2, -(currentError / 1000f));
+
             if (timeWarpRate > MAX_CLOCK_RATE)
             {
                 timeWarpRate = MAX_CLOCK_RATE;
             }
-            if (timeWarpRate < MIN_CLOCK_RATE)
+            else if (timeWarpRate < MIN_CLOCK_RATE)
             {
                 timeWarpRate = MIN_CLOCK_RATE;
             }
