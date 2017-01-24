@@ -6,6 +6,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselInmortalSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
@@ -73,7 +74,7 @@ namespace LunaClient.Systems
         /// </summary>
         public static Guid[] GetControlledVesselIds()
         {
-            return LockSystem.Singleton.GetLocksWithPrefix("control-").Select(v => new Guid(v.Substring(8))).ToArray();
+            return LockSystem.Singleton.GetLocksWithPrefix("control-").Select(v => new Guid(LockSystem.TrimLock(v))).ToArray();
         }
 
         /// <summary>
@@ -103,7 +104,7 @@ namespace LunaClient.Systems
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
 
             return LockSystem.Singleton.GetPlayerLocksPrefix(SettingsSystem.CurrentSettings.PlayerName, "update-")
-                .Select(l => new Guid(l.Substring(7)))
+                .Select(l => new Guid(LockSystem.TrimLock(l)))
                 .Where(vi => vi != FlightGlobals.ActiveVessel.id)
                 .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == vi))
                 .Where(v => v != null)
@@ -206,6 +207,7 @@ namespace LunaClient.Systems
                     VesselChangeSystem.Singleton.Enabled = true;
                     VesselProtoSystem.Singleton.Enabled = true;
                     VesselRemoveSystem.Singleton.Enabled = true;
+                    VesselInmortalSystem.Singleton.Enabled = true;
                     VesselDockSystem.Singleton.Enabled = true;
                 }
                 else
@@ -217,6 +219,7 @@ namespace LunaClient.Systems
                     VesselChangeSystem.Singleton.Enabled = false;
                     VesselProtoSystem.Singleton.Enabled = false;
                     VesselRemoveSystem.Singleton.Enabled = false;
+                    VesselInmortalSystem.Singleton.Enabled = false;
                     VesselDockSystem.Singleton.Enabled = false;
                 }
             }

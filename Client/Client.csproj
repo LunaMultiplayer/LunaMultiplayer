@@ -130,6 +130,7 @@
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateMessageHandler.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateMessageSender.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateSystem.cs" />
+    <Compile Include="Systems\VesselInmortalSys\VesselInmortalSystem.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockEvents.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionInterpolationSystem.cs" />
@@ -243,6 +244,7 @@
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PostBuildEvent>call  "$(SolutionDir)CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>

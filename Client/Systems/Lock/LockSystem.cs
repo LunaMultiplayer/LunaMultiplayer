@@ -11,7 +11,7 @@ namespace LunaClient.Systems.Lock
 {
     /// <summary>
     /// This system control the locks.
-    /// Locks are "control", "update", "spectator-playername" and "asteroid"
+    /// Locks are "control", "update", "spectator-playername", "asteroid" and "debris"
     /// If you own the control lock then you can move that vessel.
     /// If you own the update lock you are the one who sends vessel updates (position, speed, etc) to the server
     /// If you own the asteroid lock then you spawn asteroids
@@ -256,9 +256,27 @@ namespace LunaClient.Systems.Lock
             return ServerLocks.Where(l => l.Value == playerName && l.Key.StartsWith(lockPrefix)).Select(l => l.Key).ToArray();
         }
 
+        public string[] GetOwnedLocksPrefix(string lockPrefix)
+        {
+            return ServerLocks.Where(l => l.Value == SettingsSystem.CurrentSettings.PlayerName && l.Key.StartsWith(lockPrefix))
+                .Select(l => l.Key).ToArray();
+        }
+
         public string[] GetLocksWithPrefix(string lockPrefix)
         {
             return ServerLocks.Where(l => l.Key.StartsWith(lockPrefix)).Select(l => l.Key).ToArray();
+        }
+
+        #endregion
+
+        #region Other
+
+        public static string TrimLock(string lockToTrim)
+        {
+            if (lockToTrim.StartsWith("control")) return lockToTrim.Substring(8);
+            if (lockToTrim.StartsWith("update")) return lockToTrim.Substring(7);
+
+            return lockToTrim;
         }
 
         #endregion
