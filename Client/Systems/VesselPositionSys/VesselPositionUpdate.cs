@@ -21,6 +21,8 @@ namespace LunaClient.Systems.VesselPositionSys
         public Guid Id { get; set; }
         public double PlanetTime { get; set; }
 
+        private static int counter = 0;
+
         #region Vessel position information fields
 
         public Guid VesselId { get; set; }
@@ -389,14 +391,36 @@ namespace LunaClient.Systems.VesselPositionSys
                         var targetOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4],
                                                     Target.Orbit[5], Target.Orbit[6], Body);
 
-                        //The OrbitDriver update call will set the vessel position on the next fixed update
-                        CopyOrbit(targetOrbit, Vessel.orbitDriver.orbit);
-                        Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
-                        Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
+
+                        if (true || Vessel.packed)
+                        {
+                            //The OrbitDriver update call will set the vessel position on the next fixed update
+                            CopyOrbit(targetOrbit, Vessel.orbitDriver.orbit);
+                            Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
+                            Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
+                        } 
+
+
+                        if( SettingsSystem.CurrentSettings.Debug6) {
+                            var targetPosition = targetOrbit.getPositionAtUT(Planetarium.GetUniversalTime());
+                            Vessel.SetPosition(targetPosition);
+                        }
+
+                        if (false && SettingsSystem.CurrentSettings.Debug5)
+                        {
+                            //Also, It's quite difficult to figure out the world velocity due to Krakensbane, and the reference frame.
+                            Vector3d posDelta = targetOrbit.getPositionAtUT(Planetarium.GetUniversalTime()) - Vessel.orbitDriver.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
+                            Vector3d velDelta = targetOrbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy - Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy;
+                            //Vector3d velDelta = updateOrbit.vel.xzy - updateVessel.orbitDriver.orbit.vel.xzy;
+                            Vessel.Translate(posDelta);
+                            Vessel.ChangeWorldVelocity(velDelta);
+                        }
                     }
 
                     if (SettingsSystem.CurrentSettings.Debug8)
                     {
+                        //TODO: Maybe this could be replaced with Vessel.ChangeWorldVelocity?
+
                         //Set the velocity on each part and its rigidbody (if it exists)
                         Vector3d vesselUniverseVelocity = (Vessel.orbit.GetVel() - (!Vessel.orbit.referenceBody.inverseRotation ? Vector3d.zero : Vessel.orbit.referenceBody.getRFrmVel(Vessel.vesselTransform.position)));
                         Vector3d vel = vesselUniverseVelocity - Krakensbane.GetFrameVelocity();
@@ -423,8 +447,10 @@ namespace LunaClient.Systems.VesselPositionSys
                     }
                 }
 
-                if (SettingsSystem.CurrentSettings.Debug9)
+                counter++;
+                if (Vessel.altitude > 25000 || SettingsSystem.CurrentSettings.Debug9 || counter > 75)
                 {
+                    counter = 0;
                     Vessel.orbitDriver.updateFromParameters();
                     //After a single position update, reset the flag so that it only does one update per debug9 click
                     SettingsSystem.CurrentSettings.Debug9 = false;
