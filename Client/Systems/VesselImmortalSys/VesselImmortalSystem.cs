@@ -5,19 +5,19 @@ using LunaClient.Systems.Lock;
 using UniLinq;
 using UnityEngine;
 
-namespace LunaClient.Systems.VesselInmortalSys
+namespace LunaClient.Systems.VesselImmortalSys
 {
     /// <summary>
     /// This class makes the other vessels inmortal, this way if we crash against them they are not destroyed but we do.
     /// In the other player screens they will be destroyed and they will send their new vessel definition.
     /// </summary>
-    public class VesselInmortalSystem : System<VesselInmortalSystem>
+    public class VesselInmortalSystem : System<VesselImmortalSystem>
     {
         #region Fields & properties
         
-        private bool VesselInmortalSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
+        private bool VesselImmortalSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
 
-        private const float MakeOtherPlayerVesselsInmortalSInterval = 2f;
+        private const float MakeOtherPlayerVesselsImmortalSInterval = 2f;
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace LunaClient.Systems.VesselInmortalSys
         public override void OnEnabled()
         {
             base.OnEnabled();
-            Client.Singleton.StartCoroutine(MakeOtherPlayerVesselsInmortal());
+            //Client.Singleton.StartCoroutine(MakeOtherPlayerVesselsImmortal());
         }
 
         #endregion
@@ -38,15 +38,15 @@ namespace LunaClient.Systems.VesselInmortalSys
         /// <summary>
         /// Make the other player vessels inmortal
         /// </summary>
-        private IEnumerator MakeOtherPlayerVesselsInmortal()
+        private IEnumerator MakeOtherPlayerVesselsImmortal()
         {
-            var seconds = new WaitForSeconds(MakeOtherPlayerVesselsInmortalSInterval);
+            var seconds = new WaitForSeconds(MakeOtherPlayerVesselsImmortalSInterval);
             while (true)
             {
                 try
                 {
                     if (!Enabled) break;
-                    if (VesselInmortalSystemReady)
+                    if (VesselImmortalSystemReady)
                     {
                         var ownedVessels = LockSystem.Singleton.GetOwnedLocksPrefix("control-").Select(LockSystem.TrimLock)
                             .Union(LockSystem.Singleton.GetLocksWithPrefix("update-").Select(LockSystem.TrimLock))
