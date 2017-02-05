@@ -95,6 +95,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 VesselId = vessel.id;
                 PlanetTime = Planetarium.GetUniversalTime();
                 BodyName = vessel.mainBody.bodyName;
+                vessel.orbitDriver.TrackRigidbody(vessel.mainBody, 0);
+
                 TransformRotation = new[]
                 {
                     vessel.vesselTransform.rotation.x,
@@ -398,13 +400,18 @@ namespace LunaClient.Systems.VesselPositionSys
                             CopyOrbit(targetOrbit, Vessel.orbitDriver.orbit);
                             Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
                             Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
-                        } 
+                        } else
+                        {
+                            if (SettingsSystem.CurrentSettings.Debug6)
+                            {
+                                var targetPosition = targetOrbit.getPositionAtUT(Planetarium.GetUniversalTime());
+                                Vessel.SetPosition(targetPosition);
+                            }
 
-
-                        if( SettingsSystem.CurrentSettings.Debug6) {
-                            var targetPosition = targetOrbit.getPositionAtUT(Planetarium.GetUniversalTime());
-                            Vessel.SetPosition(targetPosition);
                         }
+
+
+                        
 
                         if (false && SettingsSystem.CurrentSettings.Debug5)
                         {
