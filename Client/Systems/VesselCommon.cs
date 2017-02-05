@@ -6,7 +6,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
-using LunaClient.Systems.VesselInmortalSys;
+using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
@@ -207,7 +207,7 @@ namespace LunaClient.Systems
                     VesselChangeSystem.Singleton.Enabled = true;
                     VesselProtoSystem.Singleton.Enabled = true;
                     VesselRemoveSystem.Singleton.Enabled = true;
-                    VesselInmortalSystem.Singleton.Enabled = true;
+                    VesselImmortalSystem.Singleton.Enabled = true;
                     VesselDockSystem.Singleton.Enabled = true;
                 }
                 else
@@ -219,7 +219,7 @@ namespace LunaClient.Systems
                     VesselChangeSystem.Singleton.Enabled = false;
                     VesselProtoSystem.Singleton.Enabled = false;
                     VesselRemoveSystem.Singleton.Enabled = false;
-                    VesselInmortalSystem.Singleton.Enabled = false;
+                    VesselImmortalSystem.Singleton.Enabled = false;
                     VesselDockSystem.Singleton.Enabled = false;
                 }
             }

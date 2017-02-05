@@ -11,7 +11,7 @@ namespace LunaClient.Systems.VesselImmortalSys
     /// This class makes the other vessels inmortal, this way if we crash against them they are not destroyed but we do.
     /// In the other player screens they will be destroyed and they will send their new vessel definition.
     /// </summary>
-    public class VesselInmortalSystem : System<VesselImmortalSystem>
+    public class VesselImmortalSystem : System<VesselImmortalSystem>
     {
         #region Fields & properties
         
