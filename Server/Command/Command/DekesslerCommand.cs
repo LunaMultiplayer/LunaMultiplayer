@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using LunaCommon.Message.Data;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using LunaServer.Command.Command.Base;
@@ -14,23 +12,40 @@ using LunaServer.System;
 
 namespace LunaServer.Command.Command
 {
-    public class Dekessler : SimpleCommand
+    public class DekesslerCommand : SimpleCommand
     {
-        public static long LastDekesslerTime;
+        private static long _lastDekesslerTime;
 
-        public static void RunDekessler(string commandText)
+        public static void CheckTimer()
+        {
+            //0 or less is disabled.
+            if (GeneralSettings.SettingsStore.AutoDekessler > 0 &&
+                ServerContext.ServerClock.ElapsedMilliseconds - _lastDekesslerTime >
+                TimeSpan.FromMinutes(GeneralSettings.SettingsStore.AutoDekessler).TotalMilliseconds)
+            {
+                _lastDekesslerTime = ServerContext.ServerClock.ElapsedMilliseconds;
+                RunDekessler();
+            }
+        }
+
+        public override void Execute(string commandArgs)
+        {
+            RunDekessler();
+        }
+
+        private static void RunDekessler()
         {
             var vesselList = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels"));
             var removalCount = 0;
             foreach (var vesselFilePath in vesselList)
             {
+                var vesselId = Path.GetFileNameWithoutExtension(vesselFilePath);
                 var vesselIsDebris = FileHandler.ReadFileLines(vesselFilePath)
                     .Any(l => l.Contains("Type = ") && l.Contains("Debris"));
 
-                if (vesselIsDebris)
+                if (vesselId != null && vesselIsDebris)
                 {
-                    var vesselId = Path.GetFileNameWithoutExtension(vesselFilePath);
-                    LunaLog.Normal("Removing vessel: " + vesselId);
+                    LunaLog.Normal($"Removing debris vessel: {vesselId}");
 
                     //Delete it from the universe
                     Universe.RemoveFromUniverse(vesselFilePath);
@@ -44,27 +59,11 @@ namespace LunaServer.Command.Command
                     });
 
                     removalCount++;
-                    LunaLog.Debug("Removed debris vessel " + vesselId);
                 }
             }
-            LunaLog.Normal("Removed " + removalCount + " debris");
-        }
 
-        public static void CheckTimer()
-        {
-            //0 or less is disabled.
-            if (GeneralSettings.SettingsStore.AutoDekessler > 0)
-                if ((ServerContext.ServerClock.ElapsedMilliseconds - LastDekesslerTime >
-                     GeneralSettings.SettingsStore.AutoDekessler*60*1000) || (LastDekesslerTime == 0))
-                {
-                    LastDekesslerTime = ServerContext.ServerClock.ElapsedMilliseconds;
-                    RunDekessler("");
-                }
-        }
-
-        public override void Execute(string commandArgs)
-        {
-            RunDekessler("");
+            if (removalCount > 0)
+                LunaLog.Normal($"Removed {removalCount} debris");
         }
     }
 }

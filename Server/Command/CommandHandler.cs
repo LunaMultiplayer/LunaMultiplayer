@@ -31,13 +31,12 @@ namespace LunaServer.Command
             RegisterCommand("kick", new KickCommand().Execute, "Kicks a player from the server");
             RegisterCommand("pm", new PmCommand().Execute, "Sends a message to a player");
             RegisterCommand("ban", new BanCommands().HandleCommand, "Bans someone from the server");
-            RegisterCommand("admin", new AdminCommands().HandleCommand,
-                "Sets a player as admin/removes admin from the player");
+            RegisterCommand("admin", new AdminCommands().HandleCommand, "Sets a player as admin/removes admin from the player");
             RegisterCommand("whitelist", new WhitelistCommands().HandleCommand, "Change the server whitelist");
             RegisterCommand("help", new DisplayHelpCommand().Execute, "Displays this help");
             RegisterCommand("say", new SayCommand().Execute, "Broadcasts a message to Clients");
-            RegisterCommand("dekessler", Dekessler.RunDekessler, "Clears out debris from the server");
-            RegisterCommand("nukeksc", NukeCommand.RunNuke, "Clears ALL vessels from KSC and the Runway");
+            RegisterCommand("dekessler", new DekesslerCommand().Execute, "Clears out debris from the server");
+            RegisterCommand("nukeksc", new NukeCommand().Execute, "Clears ALL vessels from KSC and the Runway");
             RegisterCommand("listclients", new ListClientsCommand().Execute, "Lists connected Clients");
             RegisterCommand("countclients", new CountClientsCommand().Execute, "Counts connected Clients");
             RegisterCommand("connectionstats", new ConnectionStatsCommand().Execute, "Displays network traffic usage");

@@ -23,7 +23,7 @@ namespace LunaServer.Client
                 {
                     //Check timers
                     NukeCommand.CheckTimer();
-                    Dekessler.CheckTimer();
+                    DekesslerCommand.CheckTimer();
 
                     LmpPluginHandler.FireOnUpdate(); //Run plugin update
 

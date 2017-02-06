@@ -13,10 +13,10 @@ namespace LunaServer.Settings
         public int MasterServerRegistrationMsInterval = 5000;
 
         [Description("Specify in minutes how often /dekessler automatically runs. 0 = Disabled")]
-        public int AutoDekessler = 30;
+        public float AutoDekessler = 0.5f;
 
         [Description("Specify in minutes how often /nukeksc automatically runs. 0 = Disabled")]
-        public int AutoNuke = 0;
+        public float AutoNuke = 0.0f;
 
         [Description("Specify if the vessels that are being CONTROLLED and in a past subspace will be shown for players in future subspaces")]
         public bool ShowVesselsInThePast = false;
