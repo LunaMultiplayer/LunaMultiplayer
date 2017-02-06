@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.VesselProtoSys;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Utilities;
 using UnityEngine;
 
@@ -42,18 +44,31 @@ namespace LunaClient.Systems.VesselDockSys
         public void HandleDocking(Guid from, Guid to)
         {
             //Find the docked craft
-            var dockedVessel = FlightGlobals.Vessels.FindLast(v => v.id == from) ??
+            var resultVessel = FlightGlobals.Vessels.FindLast(v => v.id == from) ??
                                FlightGlobals.Vessels.FindLast(v => v.id == to);
 
-            if ((dockedVessel != null) && !dockedVessel.packed)
+            if ((resultVessel != null) && !resultVessel.packed)
             {
                 Debug.Log("[LMP]: Sending docked protovessel {dockedVessel.id}");
                 
                 //Update Status if it's us.
-                if (dockedVessel == FlightGlobals.ActiveVessel && LockSystem.Singleton.LockIsOurs("control-" + dockedVessel.id))
+                if (resultVessel == FlightGlobals.ActiveVessel && !VesselCommon.IsSpectating)
                 {
                     //Force the control lock off any other player
-                    LockSystem.Singleton.AcquireLock("control-" + dockedVessel.id, true);
+                    LockSystem.Singleton.AcquireLock("control-" + resultVessel.id, true);
+                }
+                else
+                {
+                    //They docked into us so we must kill our vessel.
+                    var oldVesselId = FlightGlobals.ActiveVessel;
+                    VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel, true);
+
+                    //Prehaps instead of kicking to track station we can switch the vessels....
+                    //FlightGlobals.ForceSetActiveVessel(resultVessel);
+                    HighLogic.LoadScene(GameScenes.TRACKSTATION);
+                    ScreenMessages.PostScreenMessage("Kicked to tracking station, a player docked with you.");
+                    
+                    Debug.Log($"[LMP]: Removing docked vessel: {oldVesselId}");
                 }
 
                 if (DockingMessage != null)

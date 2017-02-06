@@ -19,36 +19,14 @@ namespace LunaClient.Systems.VesselRemoveSys
             var msgData = messageData as VesselRemoveMsgData;
             if (msgData == null) return;
 
-            RemoveVessel(msgData.VesselId, msgData.IsDockingUpdate, msgData.DockingPlayerName);
+            RemoveVessel(msgData.VesselId);
         }
 
-        public void RemoveVessel(Guid vesselId, bool isDockingUpdate, string dockingPlayer)
+        public void RemoveVessel(Guid vesselId)
         {
             var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselId);
 
-            if (vessel == null) return;
-
-            if (isDockingUpdate)
-            {
-                if (FlightGlobals.ActiveVessel?.id == vessel.id)
-                {
-                    var dockingPlayerVessel = FlightGlobals.Vessels
-                        .FirstOrDefault(v => LockSystem.Singleton.LockOwner("control-" + v.id) == dockingPlayer);
-
-                    if (dockingPlayerVessel != null)
-                    {
-                        FlightGlobals.ForceSetActiveVessel(dockingPlayerVessel);
-                    }
-                    else
-                    {
-                        HighLogic.LoadScene(GameScenes.TRACKSTATION);
-                        ScreenMessages.PostScreenMessage("Kicked to tracking station, a player docked with you but they were not loaded into the game.");
-                    }
-                }
-                Debug.Log($"[LMP]: Removing docked vessel: {vesselId}");
-                System.KillVessel(vessel, true);
-            }
-            else
+            if (vessel != null)
             {
                 Debug.Log($"[LMP]: Removing vessel: {vesselId}");
                 System.KillVessel(vessel, true);

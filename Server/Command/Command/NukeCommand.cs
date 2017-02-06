@@ -40,7 +40,8 @@ namespace LunaServer.Command.Command
             foreach (var vesselFilePath in vesselList)
             {
                 var vesselId = Path.GetFileNameWithoutExtension(vesselFilePath);
-                var landed = FileHandler.ReadFileLines(vesselFilePath).Any(l => l.Contains("landed At = ") && (l.Contains("KSC") || l.Contains("Runway")));
+                var landed = FileHandler.ReadFileLines(vesselFilePath).Select(l => l.ToLower())
+                    .Any(l => l.Contains("landed at = ") && (l.Contains("ksc") || l.Contains("runway")));
 
                 if (vesselId != null && landed)
                 {
@@ -53,7 +54,6 @@ namespace LunaServer.Command.Command
                     //Send it with a delete time of 0 so it shows up for all Players.
                     MessageQueuer.SendToAllClients<VesselSrvMsg>(new VesselRemoveMsgData
                     {
-                        PlanetTime = 0,
                         VesselId = Guid.Parse(vesselId)
                     });
 

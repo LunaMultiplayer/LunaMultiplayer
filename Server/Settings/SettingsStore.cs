@@ -55,8 +55,13 @@ namespace LunaServer.Settings
         [Description("The UDP port the server listens on. You don't need to open it in your router if RegisterWithMasterServer = true")]
         public int Port = 6702;
 
+#if DEBUG
+        [Description("Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
+        public float SafetyBubbleDistance = 5.0f;
+#else
         [Description("Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
         public float SafetyBubbleDistance = 100.0f;
+#endif
 
         [Description("If true, sends the player to the latest Subspace upon connecting. If false, sends the player to the " +
                      "previous Subspace they were in.\n# NOTE: This may cause time-paradoxes, and will not work across server restarts.")]

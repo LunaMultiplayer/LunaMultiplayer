@@ -24,9 +24,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             Debug.Log($"[LMP]: Removing {vesselId} from the server");
             var msg = new VesselRemoveMsgData
             {
-                PlanetTime = Planetarium.GetUniversalTime(),
                 VesselId = vesselId,
-                IsDockingUpdate = false
             };
 
             SendMessage(msg);

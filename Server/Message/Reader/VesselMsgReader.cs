@@ -57,9 +57,7 @@ namespace LunaServer.Message.Reader
             var data = (VesselRemoveMsgData) message;
 
             //Don't care about the Subspace on the server.
-            LunaLog.Debug(!data.IsDockingUpdate
-                ? $"Removing vessel {data.VesselId} from {client.PlayerName}"
-                : $"Removing DOCKED vessel {data.VesselId} from {client.PlayerName}");
+            LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
 
             Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", data.VesselId + ".txt"));
             VesselContext.RemovedVessels.Add(data.VesselId);
