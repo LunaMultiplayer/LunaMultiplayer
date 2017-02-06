@@ -12,7 +12,7 @@ namespace LunaClient.Systems.KerbalReassigner
         private KerbalReassignerEvents KerbalReassignerEvents { get; } = new KerbalReassignerEvents();
         public Dictionary<Guid, List<string>> VesselToKerbal { get; } = new Dictionary<Guid, List<string>>();
         public Dictionary<string, Guid> KerbalToVessel { get; } = new Dictionary<string, Guid>();
-        
+
         #region Base overrides
 
         public override void OnEnabled()
@@ -124,7 +124,7 @@ namespace LunaClient.Systems.KerbalReassigner
         #endregion
 
         #region Private methods
-        
+
         //Better not use a bool for this and enforce the gender binary on xir!
         private static ProtoCrewMember.Gender GetKerbalGender(string kerbalName)
         {
@@ -152,12 +152,15 @@ namespace LunaClient.Systems.KerbalReassigner
                 if (trimmedName == "Valentina")
                     return ProtoCrewMember.Gender.Female;
 
-                if (femaleNames.Any(name => name == trimmedName))
+                if (femaleNames != null && femaleNames.Any(name => name == trimmedName))
                     return ProtoCrewMember.Gender.Female;
 
-                foreach (var prefixName in femaleNamesPrefix.Where(fp => trimmedName.StartsWith(fp)))
-                    if (femaleNamesPostfix.Any(postfixName => trimmedName == prefixName + postfixName))
-                        return ProtoCrewMember.Gender.Female;
+                if (femaleNamesPrefix != null && femaleNamesPostfix != null &&
+                    femaleNamesPrefix.Where(fp => trimmedName.StartsWith(fp))
+                        .Any(prefixName => femaleNamesPostfix.Any(postfixName => trimmedName == prefixName + postfixName)))
+                {
+                    return ProtoCrewMember.Gender.Female;
+                }
             }
             catch (Exception e)
             {
