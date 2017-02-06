@@ -8,7 +8,7 @@ using UnityEngine;
 namespace LunaClient.Systems.VesselImmortalSys
 {
     /// <summary>
-    /// This class makes the other vessels inmortal, this way if we crash against them they are not destroyed but we do.
+    /// This class makes the other vessels immortal, this way if we crash against them they are not destroyed but we do.
     /// In the other player screens they will be destroyed and they will send their new vessel definition.
     /// </summary>
     public class VesselImmortalSystem : System<VesselImmortalSystem>
@@ -26,7 +26,7 @@ namespace LunaClient.Systems.VesselImmortalSys
         public override void OnEnabled()
         {
             base.OnEnabled();
-            //Client.Singleton.StartCoroutine(MakeOtherPlayerVesselsImmortal());
+            Client.Singleton.StartCoroutine(MakeOtherPlayerVesselsImmortal());
         }
 
         #endregion
@@ -51,7 +51,8 @@ namespace LunaClient.Systems.VesselImmortalSys
                         var ownedVessels = LockSystem.Singleton.GetOwnedLocksPrefix("control-").Select(LockSystem.TrimLock)
                             .Union(LockSystem.Singleton.GetLocksWithPrefix("update-").Select(LockSystem.TrimLock))
                             .Select(i => FlightGlobals.FindVessel(new Guid(i)))
-                            .Where(v => v != null).ToArray(); ;
+                            .Where(v => v != null)
+                            .ToArray();
 
                         var othersPeopleVessels = LockSystem.Singleton.GetLocksWithPrefix("control-").Select(LockSystem.TrimLock)
                             .Union(LockSystem.Singleton.GetLocksWithPrefix("update-").Select(LockSystem.TrimLock))
@@ -62,12 +63,14 @@ namespace LunaClient.Systems.VesselImmortalSys
 
                         foreach (var vessel in ownedVessels)
                         {
-                            vessel.Parts.ForEach(p=> p.attachJoint.SetUnbreakable(false, false));
+                            vessel.Parts.Where(p=> p.attachJoint != null).ToList()
+                                .ForEach(p=> p.attachJoint.SetUnbreakable(false, false));
                         }
 
                         foreach (var vessel in othersPeopleVessels)
                         {
-                            vessel.Parts.ForEach(p => p.attachJoint.SetUnbreakable(true, true));
+                            vessel.Parts.Where(p => p.attachJoint != null).ToList()
+                                .ForEach(p => p.attachJoint.SetUnbreakable(true, true));
                         }
                     }
                 }
