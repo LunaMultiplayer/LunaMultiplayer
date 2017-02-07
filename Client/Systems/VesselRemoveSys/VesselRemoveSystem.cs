@@ -144,7 +144,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         private static void SwitchVesselIfSpectating(Vessel killVessel)
         {
-            if (FlightGlobals.ActiveVessel.id == killVessel.id)
+            if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == killVessel.id)
             {
                 var otherVessels = FlightGlobals.Vessels.Where(v => v.id != killVessel.id).ToArray();
 
