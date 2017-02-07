@@ -12,11 +12,7 @@ namespace LunaClient.Utilities
         public static ProfilerData FixedUpdateData { get; set; } = new ProfilerData();
         public static ProfilerData UpdateData { get; set; } = new ProfilerData();
         public static ProfilerData GuiData { get; set; } = new ProfilerData();
-
-#if DEBUG
-        public static ProfilerData Custom1 { get; set; } = new ProfilerData();
-        public static ProfilerData Custom2 { get; set; } = new ProfilerData();
-#endif
+        
         public long Fps { get; set; }
     }
 

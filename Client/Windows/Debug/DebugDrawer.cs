@@ -33,8 +33,6 @@ namespace LunaClient.Windows.Debug
                         LunaProfiler.UpdateData = new ProfilerData();
                         LunaProfiler.FixedUpdateData = new ProfilerData();
                         LunaProfiler.GuiData = new ProfilerData();
-                        LunaProfiler.Custom1 = new ProfilerData();
-                        LunaProfiler.Custom2 = new ProfilerData();
                     }
                     GUILayout.Label("Timer resolution: " + Stopwatch.Frequency + " hz", LabelStyle);
                     GUILayout.Label(ProfilerText, LabelStyle);
