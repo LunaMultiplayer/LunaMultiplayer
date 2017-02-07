@@ -1,8 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
@@ -29,7 +27,6 @@ namespace LunaClient.Systems.VesselDockSys
                         Debug.Log($"[LMP]: Vessel docking, from: {partAction.from.vessel.id}, Name: {partAction.from.vessel.vesselName}");
                         Debug.Log($"[LMP]: Vessel docking, to: {partAction.to.vessel.id}, Name: {partAction.to.vessel.vesselName}");
                         
-                        System.PrintDockingInProgress();
                         System.HandleDocking(partAction.from.vessel.id, partAction.to.vessel.id);
                     }
                     else
