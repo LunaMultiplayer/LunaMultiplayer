@@ -43,32 +43,48 @@ namespace LunaClient.Systems.VesselDockSys
 
         public void HandleDocking(Guid from, Guid to)
         {
-            //Find the docked craft
-            var resultVessel = FlightGlobals.Vessels.FindLast(v => v.id == from) ??
-                               FlightGlobals.Vessels.FindLast(v => v.id == to);
+            var fromVessel = FlightGlobals.FindVessel(from);
+            var toVessel = FlightGlobals.FindVessel(to);
+            Vessel resultVessel;
 
-            if ((resultVessel != null) && !resultVessel.packed)
+            //Find the docked craft
+            if (fromVessel != null && toVessel != null)
             {
-                Debug.Log("[LMP]: Sending docked protovessel {dockedVessel.id}");
-                
+                resultVessel = Vessel.GetDominantVessel(fromVessel, toVessel);
+            }
+            else
+            {
+                resultVessel = fromVessel ?? toVessel;
+            }
+            
+            if (resultVessel != null)
+            {
                 //Update Status if it's us.
-                if (resultVessel == FlightGlobals.ActiveVessel && !VesselCommon.IsSpectating)
+                if (resultVessel == FlightGlobals.ActiveVessel)
                 {
-                    //Force the control lock off any other player
-                    LockSystem.Singleton.AcquireLock("control-" + resultVessel.id, true);
+                    Debug.Log($"[LMP]: Docking: We own the dominant vessel {resultVessel.id}");
+                    if (!VesselCommon.IsSpectating)
+                    {
+                        //Force the control lock off any other player
+                        LockSystem.Singleton.AcquireLock("control-" + resultVessel.id, true);
+                    }
                 }
                 else
                 {
                     //They docked into us so we must kill our vessel.
                     var oldVesselId = FlightGlobals.ActiveVessel;
+                    Debug.Log($"[LMP]: Docking: We DON'T own the dominant vessel {resultVessel.id}. Killing our own old vessel {oldVesselId}");
+
+                    if (!VesselCommon.IsSpectating)
+                    {
+                        VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(oldVesselId.id);
+                    }
                     VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel, true);
 
-                    //Prehaps instead of kicking to track station we can switch the vessels....
+                    //Perhaps instead of kicking to track station we can switch the vessels....
                     //FlightGlobals.ForceSetActiveVessel(resultVessel);
                     HighLogic.LoadScene(GameScenes.TRACKSTATION);
                     ScreenMessages.PostScreenMessage("Kicked to tracking station, a player docked with you.");
-                    
-                    Debug.Log($"[LMP]: Removing docked vessel: {oldVesselId}");
                 }
 
                 if (DockingMessage != null)
