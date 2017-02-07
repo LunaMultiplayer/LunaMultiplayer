@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
-using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
@@ -110,6 +109,36 @@ namespace LunaClient.Systems.VesselProtoSys
             BannedPartsStr = string.Empty;
         }
 
+        #endregion
+
+        #region Public
+        
+        /// <summary>
+        /// Checks the vessel for invalid parts
+        /// </summary>
+        public bool CheckVessel()
+        {
+            if (HighLogic.LoadedScene != GameScenes.FLIGHT ||
+                FlightGlobals.ActiveVessel == null ||
+                !FlightGlobals.ActiveVessel.loaded ||
+                VesselCommon.IsSpectating)
+                return false;
+
+            if (ModSystem.Singleton.ModControl != ModControlMode.DISABLED)
+            {
+                BannedPartsStr = GetInvalidVesselParts(FlightGlobals.ActiveVessel);
+                return string.IsNullOrEmpty(BannedPartsStr);
+            }
+
+            return true;
+        }
+
+        #endregion
+
+        #region Private
+        
+        #region Coroutines
+
         /// <summary>
         /// Set all other vessels as packed so the movement is better
         /// </summary>
@@ -126,8 +155,8 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (ProtoSystemReady)
                     {
                         var controlledVessels = VesselCommon.GetControlledVessels();
-                        
-                        foreach (var vessel in FlightGlobals.Vessels.Where(v=> v.id != FlightGlobals.ActiveVessel.id))
+
+                        foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
                         {
                             if (controlledVessels.Contains(vessel))
                             {
@@ -149,15 +178,6 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
-        private static void UnPackVessel(Vessel vessel)
-        {
-            vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
-        }
-
-        private static void PackVessel(Vessel vessel)
-        {
-            vessel.vesselRanges = LmpRanges;
-        }
 
         /// <summary>
         /// Send the definition of our own vessel and the secondary vessels. We only send them after an interval specified.
@@ -198,7 +218,37 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
-        #endregion
+        private IEnumerator UpdateBannedPartsMessage()
+        {
+            var seconds = new WaitForSeconds(UpdateScreenMessageInterval);
+            while (true)
+            {
+                try
+                {
+                    if (!Enabled) break;
+
+                    if (ProtoSystemReady && !string.IsNullOrEmpty(BannedPartsStr))
+                    {
+                        if (BannedPartsMessage != null)
+                            BannedPartsMessage.duration = 0;
+                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_SYNC)
+                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
+                                    "Active vessel contains the following banned parts, it will not be saved to the server:\n" + BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_LAUNCH)
+                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
+                                    "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
+                                    BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+
+                    }
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in UpdateBannedPartsMessage {e}");
+                }
+
+                yield return seconds;
+            }
+        }
 
         /// <summary>
         /// Here we send the vessel that do not have update locks to the server at a given interval. This will update the orbit information etc in the server.
@@ -276,56 +326,16 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
-        /// <summary>
-        /// Checks the vessel for invalid parts
-        /// </summary>
-        public bool CheckVessel()
+        #endregion
+
+        private static void UnPackVessel(Vessel vessel)
         {
-            if (HighLogic.LoadedScene != GameScenes.FLIGHT ||
-                FlightGlobals.ActiveVessel == null ||
-                !FlightGlobals.ActiveVessel.loaded ||
-                VesselCommon.IsSpectating)
-                return false;
-
-            if (ModSystem.Singleton.ModControl != ModControlMode.DISABLED)
-            {
-                BannedPartsStr = GetInvalidVesselParts(FlightGlobals.ActiveVessel);
-                return string.IsNullOrEmpty(BannedPartsStr);
-            }
-
-            return true;
+            vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
         }
 
-        private IEnumerator UpdateBannedPartsMessage()
+        private static void PackVessel(Vessel vessel)
         {
-            var seconds = new WaitForSeconds(UpdateScreenMessageInterval);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-
-                    if (ProtoSystemReady && !string.IsNullOrEmpty(BannedPartsStr))
-                    {
-                        if (BannedPartsMessage != null)
-                            BannedPartsMessage.duration = 0;
-                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_SYNC)
-                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                    "Active vessel contains the following banned parts, it will not be saved to the server:\n" + BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
-                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_LAUNCH)
-                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                    "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
-                                    BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
-
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in UpdateBannedPartsMessage {e}");
-                }
-
-                yield return seconds;
-            }
+            vessel.vesselRanges = LmpRanges;
         }
 
         private static string GetInvalidVesselParts(Vessel checkVessel)
@@ -349,5 +359,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 AsteroidSystem.Singleton.RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
         }
 
+        #endregion
     }
 }

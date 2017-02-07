@@ -31,9 +31,48 @@ namespace LunaClient.Systems.VesselImmortalSys
 
         #endregion
 
+        #region Public methods
+
+        /// <summary>
+        /// Makes a vessel immortal or not for the given amount of seconds.
+        /// </summary>
+        public void MakeVesselMortalOrImmortal(Vessel vessel, bool immortal, float seconds)
+        {
+            Client.Singleton.StartCoroutine(MakeVesselImmortalRoutine(vessel, immortal, seconds));
+        }
+
+        #endregion
+
         #region Private methods
 
         #region Coroutines
+
+        /// <summary>
+        /// Coroutine that makes a vessel immortal or mortal for the given amount of seconds
+        /// </summary>
+        private IEnumerator MakeVesselImmortalRoutine(Vessel vessel, bool immortal, float durationInSeconds)
+        {
+            var start = Time.time;
+            while (true)
+            {
+                try
+                {
+                    if (!Enabled || !VesselImmortalSystemReady || Time.time - start > durationInSeconds)
+                    {
+                        SetVesselImmortalState(vessel, !immortal);
+                        break;
+                    }
+
+                    SetVesselImmortalState(vessel, immortal);
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Error in coroutine MakeVesselImmortalRoutine {e}");
+                }
+
+                yield return null;
+            }
+        }
 
         /// <summary>
         /// Make the other player vessels inmortal
@@ -63,14 +102,12 @@ namespace LunaClient.Systems.VesselImmortalSys
 
                         foreach (var vessel in ownedVessels)
                         {
-                            vessel.Parts.Where(p=> p.attachJoint != null).ToList()
-                                .ForEach(p=> p.attachJoint.SetUnbreakable(false, false));
+                            SetVesselImmortalState(vessel, false);
                         }
 
                         foreach (var vessel in othersPeopleVessels)
                         {
-                            vessel.Parts.Where(p => p.attachJoint != null).ToList()
-                                .ForEach(p => p.attachJoint.SetUnbreakable(true, true));
+                            SetVesselImmortalState(vessel, true);
                         }
                     }
                 }
@@ -81,6 +118,19 @@ namespace LunaClient.Systems.VesselImmortalSys
 
                 yield return seconds;
             }
+        }
+
+        #endregion
+
+        #region Methods
+        
+        /// <summary>
+        /// Set all vessel parts to unbreakable or not (makes the vessel immortal or not)
+        /// </summary>
+        private static void SetVesselImmortalState(Vessel vessel, bool immortal)
+        {
+            vessel.Parts.Where(p => p.attachJoint != null).ToList()
+                .ForEach(p => p.attachJoint.SetUnbreakable(immortal, immortal));
         }
 
         #endregion

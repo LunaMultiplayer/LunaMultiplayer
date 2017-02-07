@@ -1,5 +1,7 @@
 ﻿using System;
 using LunaClient.Base;
+using LunaClient.Systems.VesselProtoSys;
+using UniLinq;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
@@ -11,6 +13,7 @@ namespace LunaClient.Systems.VesselDockSys
         public override void OnEnabled()
         {
             base.OnEnabled();
+            GameEvents.onPartUndock.Add(VesselDockEvents.OnVesselUndock);
             GameEvents.onPartCouple.Add(VesselDockEvents.OnVesselDock);
             GameEvents.onCrewBoardVessel.Add(VesselDockEvents.OnCrewBoard);
         }
@@ -33,6 +36,8 @@ namespace LunaClient.Systems.VesselDockSys
             
             if (finalVessel != null)
             {
+                var vesselIdToRemove = finalVessel.id == from ? to : from;
+                
                 if (finalVessel == FlightGlobals.ActiveVessel)
                 {
                     Debug.Log($"[LMP]: Docking: We own the dominant vessel {finalVessel.id}");
@@ -42,7 +47,13 @@ namespace LunaClient.Systems.VesselDockSys
                     Debug.Log($"[LMP]: Docking: We DON'T own the dominant vessel {finalVessel.id}. Switching");
                     FlightGlobals.SetActiveVessel(finalVessel);
                 }
-                
+
+                var vessel = VesselProtoSystem.Singleton.AllPlayerVessels.FirstOrDefault(v => v.VesselId == vesselIdToRemove);
+                if (vessel != null)
+                {
+                    VesselProtoSystem.Singleton.AllPlayerVessels.Remove(vessel);
+                }
+
                 Debug.Log("[LMP]: Docking event over!");
             }
         }

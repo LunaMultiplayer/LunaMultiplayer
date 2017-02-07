@@ -15,7 +15,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             var msgData = messageData as VesselUpdateMsgData;
 
-            if (msgData == null || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
+            if (msgData == null || !System.UpdateSystemReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
             {
                 return;
             }
@@ -64,37 +64,37 @@ namespace LunaClient.Systems.VesselUpdateSys
 
                 foreach (var engine in enginesToActivate)
                 {
-                    engine.Activate();
+                    engine?.Activate();
                 }
 
                 foreach (var engine in enginesToStop)
                 {
-                    engine.Shutdown();
+                    engine?.Shutdown();
                 }
 
                 foreach (var decoupler in decouplersToLaunch)
                 {
-                    decoupler.Decouple();
+                    decoupler?.Decouple();
                 }
 
                 foreach (var anchoredDecoupler in anchoredDecouplersToLaunch)
                 {
-                    anchoredDecoupler.Decouple();
+                    anchoredDecoupler?.Decouple();
                 }
 
                 foreach (var clamp in clamps)
                 {
-                    clamp.Release();
+                    clamp?.Release();
                 }
 
                 foreach (var dock in docks)
                 {
-                    dock.Decouple();
+                    dock?.Decouple();
                 }
 
                 foreach (var shieldedDock in shieldedDocksToToggle)
                 {
-                    shieldedDock.deployAnimator.Toggle();
+                    shieldedDock?.deployAnimator?.Toggle();
                 }
             }
         }

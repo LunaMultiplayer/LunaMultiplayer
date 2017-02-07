@@ -57,7 +57,7 @@ namespace LunaServer.Settings
 
 #if DEBUG
         [Description("Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
-        public float SafetyBubbleDistance = 5.0f;
+        public float SafetyBubbleDistance = 10.0f;
 #else
         [Description("Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
         public float SafetyBubbleDistance = 100.0f;

@@ -56,5 +56,13 @@ namespace LunaClient.Systems.VesselDockSys
                 System.HandleDocking(partAction.from.vessel.id, partAction.to.vessel.id);
             }
         }
+
+        public void OnVesselUndock(Part data)
+        {
+            if (VesselCommon.IsSpectating)
+            {
+                FlightGlobals.SetActiveVessel(data.vessel);
+            }
+        }
     }
 }
