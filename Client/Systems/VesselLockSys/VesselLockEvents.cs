@@ -69,8 +69,8 @@ namespace LunaClient.Systems.VesselLockSys
                 //Drop all the control locks if we are switching and the above setting is on
                 LockSystem.Singleton.ReleaseLocksWithPrefix("control-");
             }
-
-            if (!LockSystem.Singleton.LockExists("control-" + vessel.id) || LockSystem.Singleton.LockIsOurs("control-" + vessel.id))
+            
+            if (vessel != null && (!LockSystem.Singleton.LockExists("control-" + vessel.id) || LockSystem.Singleton.LockIsOurs("control-" + vessel.id)))
             {
                 //We managed to get the ship so set the update lock and in case we don't have the control lock aquire it.
                 System.StopSpectatingAndGetControl(vessel, true);

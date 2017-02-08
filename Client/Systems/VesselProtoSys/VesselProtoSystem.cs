@@ -112,6 +112,19 @@ namespace LunaClient.Systems.VesselProtoSys
         #endregion
 
         #region Public
+
+        /// <summary>
+        /// Removes a vessel from the loading system. If we receive a protovessel msg after this method is called it will be reloaded
+        /// </summary>
+        /// <param name="vesselId"></param>
+        public void RemoveVesselFromLoadingSystem(Guid vesselId)
+        {
+            var vessel = AllPlayerVessels.FirstOrDefault(v => v.VesselId == vesselId);
+            if (vessel != null)
+            {
+                AllPlayerVessels.Remove(vessel);
+            }
+        }
         
         /// <summary>
         /// Checks the vessel for invalid parts

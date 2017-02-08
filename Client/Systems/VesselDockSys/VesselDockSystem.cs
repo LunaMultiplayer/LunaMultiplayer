@@ -1,6 +1,8 @@
 ﻿using System;
 using LunaClient.Base;
+using LunaClient.Systems.Lock;
 using LunaClient.Systems.VesselProtoSys;
+using LunaClient.Systems.VesselRemoveSys;
 using UniLinq;
 using UnityEngine;
 
@@ -48,12 +50,9 @@ namespace LunaClient.Systems.VesselDockSys
                     FlightGlobals.SetActiveVessel(finalVessel);
                 }
 
-                var vessel = VesselProtoSystem.Singleton.AllPlayerVessels.FirstOrDefault(v => v.VesselId == vesselIdToRemove);
-                if (vessel != null)
-                {
-                    VesselProtoSystem.Singleton.AllPlayerVessels.Remove(vessel);
-                }
-
+                VesselProtoSystem.Singleton.RemoveVesselFromLoadingSystem(vesselIdToRemove);
+                VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(vesselIdToRemove, true, 5);
+                
                 Debug.Log("[LMP]: Docking event over!");
             }
         }

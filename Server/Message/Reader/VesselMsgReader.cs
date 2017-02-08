@@ -63,13 +63,16 @@ namespace LunaServer.Message.Reader
             VesselContext.RemovedVessels.Add(data.VesselId);
 
             //Relay the message.
-            MessageQueuer.RelayMessage<VesselSrvMsg>(client, data);
+            if (data.Broadcast)
+                MessageQueuer.SendToAllClients<VesselSrvMsg>(data);
+            else
+                MessageQueuer.RelayMessage<VesselSrvMsg>(client, data);
         }
 
         private static void HandleVesselProto(ClientStructure client, VesselBaseMsgData message)
         {
             var msgData = (VesselProtoMsgData) message;
-
+            
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 
             var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", msgData.VesselId + ".txt");
@@ -78,6 +81,9 @@ namespace LunaServer.Message.Reader
                 LunaLog.Debug($"Saving vessel {msgData.VesselId} from {client.PlayerName}");
 
             FileHandler.WriteToFile(path, msgData.VesselData);
+
+            if (!FileHandler.ReadFileText(path).Contains("PotatoRoid"))
+                LunaLog.Debug($"Received PROTO vessel: {msgData.VesselId} from {client.PlayerName}");
 
             VesselRelaySystem.HandleVesselMessage(client, message);
         }

@@ -93,7 +93,7 @@ namespace LunaServer.Settings
 
 #if DEBUG
         [Description("Connection timeout in Ms")]
-        public int ConnectionMsTimeout = 120000;
+        public int ConnectionMsTimeout = int.MaxValue;
 #else
         [Description("Connection timeout in Ms")]
         public int ConnectionMsTimeout = 20000;

@@ -8,5 +8,7 @@ namespace LunaCommon.Message.Data.Vessel
         public override VesselMessageType VesselMessageType => VesselMessageType.REMOVE;
 
         public Guid VesselId { get; set; }
+
+        public bool Broadcast { get; set; }
     }
 }
