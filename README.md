@@ -54,6 +54,7 @@ the C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\KSP_x64_D
 
 
 ### How to debug LMP:
-You can learn how to debug the code with visual studio on the txt located here: https://github.com/DaggerES/LunaMultiPlayer/tree/master/External/HowToDebugLMP
+You can learn how to debug the code with visual studio here: 
+https://github.com/DaggerES/LunaMultiPlayer/wiki/Debugging-in-VS2015
 
 Build Server: https://ci.appveyor.com/project/DaggerES/lunamultiplayer
