@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.IO;
 using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
@@ -9,6 +8,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaCommon.Enums;
 using UniLinq;
 using UnityEngine;
+using LunaClient.Systems.SettingsSys;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -71,8 +71,10 @@ namespace LunaClient.Systems.VesselProtoSys
             if (vessel != null)
             {
                 var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
-                if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
+                if (SettingsSystem.CurrentSettings.Debug4 || currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
                 {
+                    //This is a really bad idea, as this makes the vessel blink.  It also causes the other person to lose target of the vessel.
+                    //We really need to update the vessel in place.
                     VesselRemoveSystem.Singleton.UnloadVessel(vessel);
                     LoadVessel(vesselProto);
                 }

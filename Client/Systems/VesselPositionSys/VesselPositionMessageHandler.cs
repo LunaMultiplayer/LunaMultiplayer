@@ -27,9 +27,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselPositionUpdate>());
             }
 
-            if (System.ReceivedUpdates[update.VesselId].Count + 1 > VesselPositionInterpolationSystem.MaxTotalUpdatesInQueue)
-                System.ReceivedUpdates[update.VesselId].Dequeue();
-
             System.ReceivedUpdates[update.VesselId].Enqueue(update);
         }
     }

@@ -98,8 +98,10 @@ namespace LunaClient.Systems.VesselProtoSys
             Client.Singleton.StartCoroutine(CheckVesselsToLoad());
             Client.Singleton.StartCoroutine(UpdateBannedPartsMessage());
 
-            if(SettingsSystem.CurrentSettings.PackOtherControlledVessels)
+            if (SettingsSystem.CurrentSettings.PackOtherControlledVessels)
+            {
                 Client.Singleton.StartCoroutine(PackControlledVessels());
+            }
         }
 
         public override void OnDisabled()

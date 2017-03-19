@@ -79,8 +79,7 @@ namespace LunaClient.Windows.Debug
                     VesselUpdateText += "Queued updates by vessel:\n";
                     foreach (var vessel in VesselPositionSystem.Singleton.ReceivedUpdates.Keys)
                     {
-                        VesselUpdateText += $"{vessel}: {VesselPositionSystem.Singleton.GetNumberOfPositionUpdatesInQueue(vessel)} - " +
-                                            $"Interpolation factor:{VesselPositionInterpolationSystem.GetInterpolationFactor(vessel)}\n";
+                        VesselUpdateText += $"{vessel}: {VesselPositionSystem.Singleton.GetNumberOfPositionUpdatesInQueue(vessel)}\n";
                     }
                 }
                 VesselUpdateText += $"Spectating: {VesselCommon.IsSpectating}.\n";
