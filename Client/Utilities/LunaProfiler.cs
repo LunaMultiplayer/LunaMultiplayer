@@ -81,7 +81,7 @@ namespace LunaClient.Utilities
 
         public override string ToString()
         {
-            var returnString = $"Current: {Math.Round(TimeSpan.FromTicks(CurrentTime).TotalMilliseconds, 2)}ms (min/max/avg) " +
+            var returnString = $"{Math.Round(TimeSpan.FromTicks(CurrentTime).TotalMilliseconds, 2)}ms (min/max/avg) " +
                                $"{Math.Round(TimeSpan.FromTicks(MinTime).TotalMilliseconds, 2)}/" +
                                $"{Math.Round(TimeSpan.FromTicks(MaxTime).TotalMilliseconds, 2)}/" +
                                $"{Math.Round(TimeSpan.FromTicks(Average).TotalMilliseconds, 2)}\n";
