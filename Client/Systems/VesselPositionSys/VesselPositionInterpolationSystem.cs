@@ -75,19 +75,15 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void Update()
         {
-            foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key) && v.Value.Count > 0))
+            foreach (var vesselUpdates in System.ReceivedUpdates.Where(v => InterpolationFinished(v.Key)))
             {
-                var latestVesselUpdate = GetNewestVesselUpdate(vesselUpdates);
-                if (latestVesselUpdate != null)
+                if (!CurrentVesselUpdate.ContainsKey(vesselUpdates.Key))
                 {
-                    if (!CurrentVesselUpdate.ContainsKey(latestVesselUpdate.VesselId))
-                    {
-                        SetFirstVesselUpdates(latestVesselUpdate);
-                    }
-                    else
-                    {
-                        HandleVesselUpdate(latestVesselUpdate);
-                    }
+                    SetFirstVesselUpdates(vesselUpdates.Value);
+                }
+                else
+                {
+                    HandleVesselUpdate(vesselUpdates.Value);
                 }
             }
 
@@ -97,60 +93,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 vesselUpdates.Value.ApplyVesselUpdate();
             }
         }
-
-        /// <summary>
-        /// Gets the newest vessel update from the queue
-        /// </summary>
-        private static VesselPositionUpdate GetNewestVesselUpdate(KeyValuePair<Guid, Queue<VesselPositionUpdate>> vesselUpdates)
-        {
-            VesselPositionUpdate newestVesselUpdate = null;
-            while (vesselUpdates.Value.Count > 0)
-            {
-                var vesselUpdate = vesselUpdates.Value.Dequeue();
-                if (newestVesselUpdate == null || newestVesselUpdate.SentTime < vesselUpdate.SentTime)
-                {
-                    newestVesselUpdate = vesselUpdate;
-                }
-            }
-
-            return newestVesselUpdate;
-        }
-
-        /// <summary>
-        /// This coroutine adjust the interpolation factor so the interpolation lengths are dynamically adjusted in order 
-        /// to have maximum MaxUpdatesInQueue packets in the queue and MinUpdatesInQueue minimum
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerator AdjustInterpolationLengthFactor()
-        {
-            var seconds = new WaitForSeconds(FactorAdjustSecInterval);
-            while (true)
-            {
-                try
-                {
-                    if (!System.Enabled)
-                        break;
-
-                    if (System.PositionUpdateSystemBasicReady && SettingsSystem.CurrentSettings.InterpolationEnabled)
-                    {
-                        foreach (var update in System.ReceivedUpdates)
-                        {
-                            if (System.GetNumberOfPositionUpdatesInQueue(update.Key) > MaxUpdatesInQueue)
-                                IncreaseInterpolationFactor(update.Key);
-                            else if (System.GetNumberOfPositionUpdatesInQueue(update.Key) < MinUpdatesInQueue)
-                                DecreaseInterpolationFactor(update.Key);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in AdjustInterpolationLengthFactor {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
+        
         #endregion
 
         #region Private

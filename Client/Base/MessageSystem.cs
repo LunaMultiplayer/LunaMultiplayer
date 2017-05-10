@@ -13,8 +13,6 @@ namespace LunaClient.Base
         where TS : class, IMessageSender, new()
         where TH : class, IMessageHandler, new()
     {
-        protected virtual bool HandleMessagesInFixedUpdate { get; set; }
-
         public TS MessageSender { get; } = new TS();
         public TH MessageHandler { get; } = new TH();
         public virtual IInputHandler InputHandler { get; } = null;
@@ -38,24 +36,9 @@ namespace LunaClient.Base
         public override void Update()
         {
             base.Update();
-            if (!HandleMessagesInFixedUpdate)
-            {
-                ReadAndHandleAllReceivedMessages();
-            }
+            ReadAndHandleAllReceivedMessages();
         }
-
-        /// <summary>
-        /// During the update we receive messages.
-        /// </summary>
-        public override void FixedUpdate()
-        {
-            base.FixedUpdate();
-            if (HandleMessagesInFixedUpdate)
-            {
-                ReadAndHandleAllReceivedMessages();
-            }
-        }
-
+        
         /// <summary>
         /// Reads all the message queue and calls the handling sub-system
         /// </summary>

@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaCommon.Message.Interface;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -31,7 +33,8 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             (PositionUpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
 
-        public Dictionary<Guid, Queue<VesselPositionUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, Queue<VesselPositionUpdate>>();
+        public ConcurrentDictionary<Guid, VesselPositionUpdate> ReceivedUpdates { get; } = 
+            new ConcurrentDictionary<Guid, VesselPositionUpdate>();
 
         private VesselPositionInterpolationSystem InterpolationSystem { get; } = new VesselPositionInterpolationSystem();
 
@@ -46,7 +49,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public override void OnEnabled()
         {
             base.OnEnabled();
-            Client.Singleton.StartCoroutine(InterpolationSystem.AdjustInterpolationLengthFactor());
             Client.Singleton.StartCoroutine(RemoveVessels());
             Client.Singleton.StartCoroutine(SendSecondaryVesselPositionUpdates());
         }
@@ -57,35 +59,30 @@ namespace LunaClient.Systems.VesselPositionSys
             InterpolationSystem.ResetSystem();
             ReceivedUpdates.Clear();
         }
-
-        protected override bool HandleMessagesInFixedUpdate => true;
-
+        
         public override void Update()
         {
             base.Update();
             if (PositionUpdateSystemReady)
             {
-                InterpolationSystem.Update();
                 SendVesselPositionUpdates();
+                InterpolationSystem.Update();
             }
         }
+
+        /// <summary>
+        /// This method is called on another thread so it won't affect the performance of KSP
+        /// </summary>
+        public override void EnqueueMessage(IMessageData msg)
+        {
+            if (Enabled)
+            {
+                MessageHandler.EnqueueNewMessage(msg);
+            }
+        }
+
+        #endregion
         
-        #endregion
-
-        #region Public methods
-
-        public int GetNumberOfPositionUpdatesInQueue()
-        {
-            return ReceivedUpdates.Sum(u => u.Value.Count);
-        }
-
-        public int GetNumberOfPositionUpdatesInQueue(Guid vesselId)
-        {
-            return ReceivedUpdates[vesselId].Count;
-        }
-
-        #endregion
-
         #region Private methods
 
         /// <summary>
@@ -109,7 +106,8 @@ namespace LunaClient.Systems.VesselPositionSys
                         foreach (var vesselId in vesselsToRemove)
                         {
                             InterpolationSystem.RemoveVessel(vesselId);
-                            ReceivedUpdates.Remove(vesselId);
+                            VesselPositionUpdate v;
+                            ReceivedUpdates.TryRemove(vesselId, out v);
                         }
                     }
                 }

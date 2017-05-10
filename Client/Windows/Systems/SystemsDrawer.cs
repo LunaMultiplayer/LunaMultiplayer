@@ -20,7 +20,6 @@ namespace LunaClient.Windows.Systems
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
             DisplayFast = GUILayout.Toggle(DisplayFast, "Fast debug update", ButtonStyle);
-            GUILayout.Label("Timer resolution: " + Stopwatch.Frequency + " hz", LabelStyle);
             if (GUILayout.Button("Reset Profiler history", ButtonStyle))
             {
                 VesselChangeSystem.Singleton.UpdateProfiler.Reset();

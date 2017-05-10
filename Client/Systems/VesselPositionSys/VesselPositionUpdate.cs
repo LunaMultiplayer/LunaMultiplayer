@@ -51,7 +51,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public float SentTime { get; set; }
         public bool InterpolationStarted { get; set; }
         public bool InterpolationFinished { get; set; }
-        public float ReceiveTime { get; set; }
         public float FinishTime { get; set; }
 
         #endregion
@@ -71,7 +70,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public VesselPositionUpdate(VesselPositionMsgData msgData)
         {
             Id = Guid.NewGuid();
-            ReceiveTime = Time.fixedTime;
             PlanetTime = msgData.PlanetTime;
             SentTime = msgData.GameSentTime;
             VesselId = msgData.VesselId;

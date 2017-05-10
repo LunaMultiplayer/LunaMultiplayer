@@ -71,15 +71,6 @@ namespace LunaClient.Windows.Debug
 
                 //Vessel update system
                 VesselUpdateText = $"Queued messages: {VesselUpdateSystem.Singleton.MessageHandler.IncomingMessages.Count}.\n";
-                VesselUpdateText += $"Total queued updates: {VesselPositionSystem.Singleton.GetNumberOfPositionUpdatesInQueue()}.\n";
-                if (VesselPositionSystem.Singleton.ReceivedUpdates.Any())
-                {
-                    VesselUpdateText += "Queued updates by vessel:\n";
-                    foreach (var vessel in VesselPositionSystem.Singleton.ReceivedUpdates.Keys)
-                    {
-                        VesselUpdateText += $"{vessel}: {VesselPositionSystem.Singleton.GetNumberOfPositionUpdatesInQueue(vessel)}\n";
-                    }
-                }
                 VesselUpdateText += $"Spectating: {VesselCommon.IsSpectating}.\n";
                 VesselUpdateText += "Active vessel control lock: " +
                     $"{FlightGlobals.ActiveVessel != null && LockSystem.Singleton.LockIsOurs("control-" + FlightGlobals.ActiveVessel.id)}.\n";

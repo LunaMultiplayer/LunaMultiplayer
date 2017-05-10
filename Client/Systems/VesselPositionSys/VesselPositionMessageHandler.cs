@@ -13,9 +13,23 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public void HandleMessage(IMessageData messageData)
         {
+            //Nothing done here
+        }
+
+        /// <summary>
+        /// This system is particulary heavy in the amount of data it receives so we do the 
+        /// queueing in another thread and we just keep the last message received.
+        /// </summary>
+        public void EnqueueNewMessage(IMessageData messageData)
+        {
             var msgData = messageData as VesselPositionMsgData;
 
-            if (msgData == null || !System.PositionUpdateSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
+            //if (msgData == null || !System.PositionUpdateSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
+            //{
+            //    return;
+            //}
+
+            if (msgData == null)
             {
                 return;
             }
@@ -24,10 +38,15 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (!System.ReceivedUpdates.ContainsKey(update.VesselId))
             {
-                System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselPositionUpdate>());
+                System.ReceivedUpdates.TryAdd(update.VesselId, update);
             }
-
-            System.ReceivedUpdates[update.VesselId].Enqueue(update);
+            else
+            {
+                if (System.ReceivedUpdates[update.VesselId].SentTime < update.SentTime)
+                {
+                    System.ReceivedUpdates[update.VesselId] = update;
+                }
+            }
         }
     }
 }

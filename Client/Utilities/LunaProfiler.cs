@@ -17,88 +17,78 @@ namespace LunaClient.Utilities
     {
         public static Stopwatch LmpReferenceTime { get; } = Stopwatch.StartNew();
 
-        //Tick time is how long the method takes to run.
-        private long TickMinTime { get; set; } = long.MaxValue;
-        private long TickMaxTime { get; set; } = long.MinValue;
-        private long TickTime { get; set; }
-        private List<long> TickHistory { get; } = new List<long>();
-        private long TickAverage { get; set; }
+        private long MinTime { get; set; } = long.MaxValue;
+        private long MaxTime { get; set; } = long.MinValue;
+        private long CurrentTime { get; set; }
+
+        private List<long> History { get; } = new List<long>();
+        private long Average => History.Sum() / History.Count;
 
         //Delta time is how long it takes inbetween the method runs.
         private long DeltaMinTime { get; set; } = long.MaxValue;
         private long DeltaMaxTime { get; set; } = long.MinValue;
         private long LastDeltaTime { get; set; }
-        private long DeltaTime { get; set; }
+        private long CurrentDeltaTime { get; set; }
+
         private List<long> DeltaHistory { get; } = new List<long>();
-        private long DeltaAverage { get; set; }
+        private long DeltaAverage => DeltaHistory.Sum() / DeltaHistory.Count;
 
         public void Reset()
         {
-            TickMinTime = long.MaxValue;
-            TickMaxTime = long.MinValue;
-            TickTime = 0;
-            TickHistory.Clear();
-            TickAverage = 0;
+            MinTime = long.MaxValue;
+            MaxTime = long.MinValue;
+            CurrentTime = 0;
+            History.Clear();
+
             DeltaMinTime = long.MaxValue;
             DeltaMaxTime = long.MinValue;
             LastDeltaTime = 0;
-            DeltaTime = 0;
+            CurrentDeltaTime = 0;
             DeltaHistory.Clear();
-            DeltaAverage = 0;
         }
 
-    public void ReportTime(long startClock)
-    {
-        var currentClock = LmpReferenceTime.ElapsedTicks;
-
-        TickTime = currentClock - startClock;
-        DeltaTime = startClock - LastDeltaTime;
-        LastDeltaTime = currentClock;
-
-        if (TickTime < TickMinTime)
-            TickMinTime = TickTime;
-        if (TickTime > TickMaxTime)
-            TickMaxTime = TickTime;
-
-        //Ignore the first delta as it will be incorrect on reset.
-        if (DeltaHistory.Count != 0)
+        public void ReportTime(long startClock)
         {
-            if (DeltaTime < DeltaMinTime)
-                DeltaMinTime = DeltaTime;
-            if (DeltaTime > DeltaMaxTime)
-                DeltaMaxTime = DeltaTime;
+            var currentClock = LmpReferenceTime.ElapsedTicks;
+
+            CurrentTime = currentClock - startClock;
+            CurrentDeltaTime = startClock - LastDeltaTime;
+
+            LastDeltaTime = currentClock;
+
+            if (CurrentTime < MinTime)
+                MinTime = CurrentTime;
+            if (CurrentTime > MaxTime)
+                MaxTime = CurrentTime;
+
+            //Ignore the first delta as it will be incorrect on reset.
+            if (DeltaHistory.Count != 0)
+            {
+                if (CurrentDeltaTime < DeltaMinTime)
+                    DeltaMinTime = CurrentDeltaTime;
+                if (CurrentDeltaTime > DeltaMaxTime)
+                    DeltaMaxTime = CurrentDeltaTime;
+            }
+
+            History.Add(CurrentTime);
+            if (History.Count > 300)
+                History.RemoveAt(0);
+
+            DeltaHistory.Add(CurrentDeltaTime);
+            if (DeltaHistory.Count > 300)
+                DeltaHistory.RemoveAt(0);
         }
 
-        TickHistory.Add(TickTime);
-        if (TickHistory.Count > 300)
-            TickHistory.RemoveAt(0);
-        TickAverage = TickHistory.Sum();
-        TickAverage /= TickHistory.Count;
+        public override string ToString()
+        {
+            var returnString = $"Current: {Math.Round(TimeSpan.FromTicks(CurrentTime).TotalMilliseconds, 2)}ms (min/max/avg) " +
+                               $"{Math.Round(TimeSpan.FromTicks(MinTime).TotalMilliseconds, 2)}/" +
+                               $"{Math.Round(TimeSpan.FromTicks(MaxTime).TotalMilliseconds, 2)}/" +
+                               $"{Math.Round(TimeSpan.FromTicks(Average).TotalMilliseconds, 2)}\n";
 
-        DeltaHistory.Add(DeltaTime);
-        if (DeltaHistory.Count > 300)
-            DeltaHistory.RemoveAt(0);
-        DeltaAverage = DeltaHistory.Sum();
-        DeltaAverage /= DeltaHistory.Count;
+            //returnString += $"D: {CurrentDeltaTime}ms (min/max/avg) {DeltaMinTime}/{DeltaMaxTime}/{DeltaAverage}\n";
+            
+            return returnString;
+        }
     }
-
-    public override string ToString()
-    {
-        var tickMs = Math.Round(TickTime / (double)(Stopwatch.Frequency / 1000), 3);
-        var tickMinMs = Math.Round(TickMinTime / (double)(Stopwatch.Frequency / 1000), 3);
-        var tickMaxMs = Math.Round(TickMaxTime / (double)(Stopwatch.Frequency / 1000), 3);
-        var tickAverageMs = Math.Round(TickAverage / (double)(Stopwatch.Frequency / 1000), 3);
-        var deltaMs = Math.Round(DeltaTime / (double)(Stopwatch.Frequency / 1000), 3);
-        var deltaMinMs = Math.Round(DeltaMinTime / (double)(Stopwatch.Frequency / 1000), 3);
-        var deltaMaxMs = Math.Round(DeltaMaxTime / (double)(Stopwatch.Frequency / 1000), 3);
-        var deltaAverageMs = Math.Round(DeltaAverage / (double)(Stopwatch.Frequency / 1000), 3);
-        var returnString = "tick: " + tickMs + " (min/max/avg) " + tickMinMs + "/" + tickMaxMs + "/" + tickAverageMs +
-                           "\n";
-
-        //returnString += "delta: " + deltaMs + " (min/max/avg) " + deltaMinMs + "/" + deltaMaxMs + "/" +
-        //                deltaAverageMs + "\n";
-
-        return returnString;
-    }
-}
 }

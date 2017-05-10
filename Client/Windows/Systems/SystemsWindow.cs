@@ -19,7 +19,7 @@ namespace LunaClient.Windows.Systems
         public override void Update()
         {
             SafeDisplay = Display;
-            if ((Display && (Time.realtimeSinceStartup - LastUpdateTime > DisplayUpdateInterval)) || DisplayFast)
+            if (Display && (DisplayFast || Time.realtimeSinceStartup - LastUpdateTime > DisplayUpdateSInterval))
             {
                 LastUpdateTime = Time.realtimeSinceStartup;
                 VesselChangeProfilerText = "Upd: " + VesselChangeSystem.Singleton.UpdateProfiler;
@@ -136,7 +136,7 @@ namespace LunaClient.Windows.Systems
         private bool VesselSystems { get; set; }
         private bool DisplayFast { get; set; }
         private float LastUpdateTime { get; set; }
-        private float DisplayUpdateInterval { get; } = .2f;
+        private float DisplayUpdateSInterval { get; } = 1f;
 
         #region Vessel systems
 
