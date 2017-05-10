@@ -9,6 +9,7 @@ using LunaClient.Windows.Mod;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.ServerList;
 using LunaClient.Windows.Status;
+using LunaClient.Windows.Systems;
 using LunaClient.Windows.UniverseConverter;
 
 namespace LunaClient.Windows
@@ -23,6 +24,7 @@ namespace LunaClient.Windows
             TryUpdate(ChatWindow.Singleton);
             TryUpdate(CraftLibraryWindow.Singleton);
             TryUpdate(DebugWindow.Singleton);
+            TryUpdate(SystemsWindow.Singleton);
             TryUpdate(ModWindow.Singleton);
             TryUpdate(OptionsWindow.Singleton);
             TryUpdate(UniverseConverterWindow.Singleton);
@@ -37,6 +39,7 @@ namespace LunaClient.Windows
             TryOnGui(ChatWindow.Singleton);
             TryOnGui(CraftLibraryWindow.Singleton);
             TryOnGui(DebugWindow.Singleton);
+            TryOnGui(SystemsWindow.Singleton);
             TryOnGui(ModWindow.Singleton);
             TryOnGui(OptionsWindow.Singleton);
             TryOnGui(UniverseConverterWindow.Singleton);

@@ -3,9 +3,7 @@ using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.Network;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
@@ -88,11 +86,9 @@ namespace LunaClient.Windows.Debug
                 VesselUpdateText += "Active vessel update lock: " +
                     $"{FlightGlobals.ActiveVessel != null && LockSystem.Singleton.LockIsOurs("update-" + FlightGlobals.ActiveVessel.id)}.\n";
 
-                ProfilerText = "Update: \n" + LunaProfiler.UpdateData;
-                ProfilerText += "Fixed Update: \n" + LunaProfiler.FixedUpdateData;
-                ProfilerText += "GUI: \n" + LunaProfiler.GuiData;
-                ProfilerText += "Custom 1: \n" + LunaProfiler.GuiData;
-                ProfilerText += "Custom 2: \n" + LunaProfiler.GuiData;
+                ProfilerText = "Update: " + LunaProfiler.UpdateData;
+                ProfilerText += "Fixed Update: " + LunaProfiler.FixedUpdateData;
+                ProfilerText += "GUI: " + LunaProfiler.GuiData;
             }
         }
 
@@ -187,7 +183,7 @@ namespace LunaClient.Windows.Debug
         #endregion
 
         private float WindowHeight { get; } = 400;
-        private float WindowWidth { get; } = 350;
+        private float WindowWidth { get; } = 400;
 
         protected bool DisplayVectors { get; set; }
         protected bool DisplayNtp { get; set; }

@@ -17,13 +17,11 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static float SecondaryVesselUpdatesSendSInterval =>
             (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval).TotalSeconds;
-        private float lastSecondaryVesselSendTime = 0;
 
         private static float VesselUpdatesSendSInterval => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
 
-        private const float MaxSecWithoutUpdates = 30;
+        private const float MaxSecWithoutUpdates = 20;
         private const float RemoveVesselsSecInterval = 5;
-        private float lastVesselRemovalTime = 0;
 
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
@@ -33,19 +31,13 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             (PositionUpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
 
-        /// <summary>
-        /// The queue of updates recieved from the network
-        /// </summary>
         public Dictionary<Guid, Queue<VesselPositionUpdate>> ReceivedUpdates { get; } = new Dictionary<Guid, Queue<VesselPositionUpdate>>();
+
+        private VesselPositionInterpolationSystem InterpolationSystem { get; } = new VesselPositionInterpolationSystem();
 
         public FlightCtrlState FlightState { get; set; }
 
         private static float _lastSentTime;
-
-        /// <summary>
-        /// The vessel update that are being handled for each vessel
-        /// </summary>
-        public Dictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new Dictionary<Guid, VesselPositionUpdate>();
 
         #endregion
 
@@ -54,35 +46,30 @@ namespace LunaClient.Systems.VesselPositionSys
         public override void OnEnabled()
         {
             base.OnEnabled();
+            Client.Singleton.StartCoroutine(InterpolationSystem.AdjustInterpolationLengthFactor());
+            Client.Singleton.StartCoroutine(RemoveVessels());
+            Client.Singleton.StartCoroutine(SendSecondaryVesselPositionUpdates());
         }
 
         public override void OnDisabled()
         {
             base.OnDisabled();
-            ResetSystem();
+            InterpolationSystem.ResetSystem();
             ReceivedUpdates.Clear();
         }
 
         protected override bool HandleMessagesInFixedUpdate => true;
 
-        public override void FixedUpdate()
+        public override void Update()
         {
-            base.FixedUpdate();
-
-            if (SettingsSystem.CurrentSettings.Debug2)
-            {
-                removeOldVessels();
-            }
-
+            base.Update();
             if (PositionUpdateSystemReady)
             {
-                handleReceivedUpdates();
+                InterpolationSystem.Update();
                 SendVesselPositionUpdates();
             }
-
-            sendSecondaryVesselPositionUpdates();
         }
-
+        
         #endregion
 
         #region Public methods
@@ -97,116 +84,41 @@ namespace LunaClient.Systems.VesselPositionSys
             return ReceivedUpdates[vesselId].Count;
         }
 
-        /// <summary>
-        /// Remove a vessel from the system
-        /// </summary>
-        public void RemoveVessel(Guid vesselId)
-        {
-            ReceivedUpdates.Remove(vesselId);
-            CurrentVesselUpdate.Remove(vesselId);
-        }
-
-        /// <summary>
-        /// Clear all the properties
-        /// </summary>
-        public void ResetSystem()
-        {
-            CurrentVesselUpdate.Clear();
-            ReceivedUpdates.Clear();
-        }
-
         #endregion
 
         #region Private methods
 
         /// <summary>
-        /// Main system that picks updates received and sets them for further processing. We call it in the 
-        /// fixed update as in deals with physics
-        /// </summary>
-        private void handleReceivedUpdates()
-        {
-            HashSet<Guid> vesselsUpdated = new HashSet<Guid>();
-            Profiler.BeginSample("vesselPositionUpdate");
-            foreach (KeyValuePair<Guid, Queue<VesselPositionUpdate>> vesselInfo in ReceivedUpdates)
-            {
-                Guid vesselId = vesselInfo.Key;
-                VesselPositionUpdate latestVesselUpdate = null;
-                Queue<VesselPositionUpdate> vesselUpdateQueue = vesselInfo.Value;
-                while (vesselUpdateQueue.Count > 0)
-                {
-                    VesselPositionUpdate vesselUpdate = vesselUpdateQueue.Dequeue();
-                    if (latestVesselUpdate == null || latestVesselUpdate.SentTime < vesselUpdate.SentTime)
-                    {
-                        latestVesselUpdate = vesselUpdate;
-                    }
-                }
-
-                if (latestVesselUpdate != null)
-                {
-                    HandleVesselUpdate(latestVesselUpdate);
-                    vesselsUpdated.Add(vesselId);
-                }
-            }
-
-            //Disable debug1 to stop vessel updates from being applied
-            if (SettingsSystem.CurrentSettings.Debug1)
-            {
-                //Run through all the updates that are not finished and apply them
-                foreach (Guid vesselId in vesselsUpdated)
-                {
-                    CurrentVesselUpdate[vesselId].applyVesselUpdate();
-
-                }
-            }
-            Profiler.EndSample();
-        }
-
-        /// <summary>
-        /// Handles a vessel update received from the network.  If the vessel update is later than any existing vessel updates for that vessel, updates the current update dictionary.
-        /// </summary>
-        /// <param name="vesselUpdate"></param>
-        private void HandleVesselUpdate(VesselPositionUpdate vesselUpdate)
-        {
-            var Key = vesselUpdate.VesselId;
-            if (!CurrentVesselUpdate.ContainsKey(Key) || CurrentVesselUpdate[Key].SentTime < vesselUpdate.SentTime)
-            {
-                CurrentVesselUpdate[Key] = vesselUpdate;
-                vesselUpdate.initVesselUpdate();
-            }
-        }
-
-        /// <summary>
         /// Remove the vessels that didn't receive and update after the value specified in MsWithoutUpdatesToRemove every 5 seconds
         /// </summary>
-        private void removeOldVessels()
+        private IEnumerator RemoveVessels()
         {
-            //Only remove vessels every RemoveVesselsSecInterval
-            if ((Time.fixedTime - lastVesselRemovalTime) < RemoveVesselsSecInterval)
+            var seconds = new WaitForSeconds(RemoveVesselsSecInterval);
+            while (true)
             {
-                return;
-            }
-            lastVesselRemovalTime = Time.fixedTime;
-
-            try
-            {
-                if (PositionUpdateSystemBasicReady)
+                try
                 {
-                    foreach (KeyValuePair<Guid, VesselPositionUpdate> vesselInfo in CurrentVesselUpdate)
-                    {
-                        Guid vesselId = vesselInfo.Key;
-                        VesselPositionUpdate vesselUpdate = vesselInfo.Value;
+                    if (!Enabled) break;
 
-                        //If our last update for this vessel was > 20 seconds ago and we have no pending vessel updates for this vessel, remove the vessel
-                        if (vesselUpdate.ReceiveTime > MaxSecWithoutUpdates && !ReceivedUpdates.ContainsKey(vesselId))
+                    if (PositionUpdateSystemBasicReady)
+                    {
+                        var vesselsToRemove = InterpolationSystem.CurrentVesselUpdate
+                            .Where(u => u.Value.InterpolationFinished && Time.time - u.Value.FinishTime > MaxSecWithoutUpdates)
+                            .Select(u => u.Key).ToArray();
+
+                        foreach (var vesselId in vesselsToRemove)
                         {
-                            RemoveVessel(vesselId);
+                            InterpolationSystem.RemoveVessel(vesselId);
+                            ReceivedUpdates.Remove(vesselId);
                         }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[LMP]: Coroutine error in RemoveVessels {e}");
+                catch (Exception e)
+                {
+                    Debug.LogError($"[LMP]: Coroutine error in RemoveVessels {e}");
+                }
+
+                yield return seconds;
             }
         }
 
@@ -247,30 +159,25 @@ namespace LunaClient.Systems.VesselPositionSys
         /// <summary>
         /// Send updates for vessels that we own the update lock.
         /// </summary>
-        private void sendSecondaryVesselPositionUpdates()
+        private IEnumerator SendSecondaryVesselPositionUpdates()
         {
-            //Only send secondary vessel updates every SecondaryVesselUpdatesSendSInterval
-            if ((Time.fixedTime - lastSecondaryVesselSendTime) < SecondaryVesselUpdatesSendSInterval)
+            var seconds = new WaitForSeconds(SecondaryVesselUpdatesSendSInterval);
+            while (true)
             {
-                return;
-            }
+                if (!Enabled)
+                    break;
 
-            //If debug3 isn't enabled, don't send secondary vesselPositionUpdates
-            if(!SettingsSystem.CurrentSettings.Debug3)
-            {
-                return;
-            }
-
-            lastSecondaryVesselSendTime = Time.fixedTime;
-
-            if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
-            {
-                var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
-
-                foreach (var secondaryVessel in secondaryVesselsToUpdate)
+                if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
                 {
-                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
+                    var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
+
+                    foreach (var secondaryVessel in secondaryVesselsToUpdate)
+                    {
+                        MessageSender.SendVesselPositionUpdate(secondaryVessel);
+                    }
                 }
+
+                yield return seconds;
             }
         }
 

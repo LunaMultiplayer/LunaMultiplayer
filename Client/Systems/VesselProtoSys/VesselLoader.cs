@@ -71,7 +71,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (vessel != null)
             {
                 var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
-                if (SettingsSystem.CurrentSettings.Debug4 || currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
+                if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
                 {
                     //This is a really bad idea, as this makes the vessel blink.  It also causes the other person to lose target of the vessel.
                     //We really need to update the vessel in place.

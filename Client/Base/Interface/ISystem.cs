@@ -1,13 +1,16 @@
-﻿namespace LunaClient.Base.Interface
+﻿using LunaClient.Utilities;
+
+namespace LunaClient.Base.Interface
 {
     /// <summary>
     /// System base interface
     /// </summary>
     public interface ISystem
     {
+        ProfilerData UpdateProfiler { get; }
+        ProfilerData FixedUpdateProfiler { get; }
         bool Enabled { get; set; }
-        void Update();
-        void LateUpdate();
-        void FixedUpdate();
+        void RunUpdate();
+        void RunFixedUpdate();
     }
 }

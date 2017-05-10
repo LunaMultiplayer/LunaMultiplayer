@@ -4,7 +4,7 @@
 ::Make sure to pass the solution configuration when calling it (either Debug or Release)
 
 ::Set the path below as you need and then run this bat to copy the files and make them debuggeable
-SET KSPPATH=C:\games\Steam\SteamApps\common\Kerbal Space Program
+SET KSPPATH=D:\Steam Games\steamapps\common\Kerbal Space Program
 SET SOLUTIONCONFIGURATION=%1
 
 mkdir "%KSPPATH%\GameData\LunaMultiPlayer\"

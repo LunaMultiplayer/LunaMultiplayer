@@ -133,6 +133,7 @@
     <Compile Include="Systems\VesselImmortalSys\VesselImmortalSystem.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockEvents.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockSystem.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionInterpolationSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
@@ -142,6 +143,7 @@
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageSender.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoSystem.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoStructures.cs" />
+    <Compile Include="Systems\VesselRangeSys\VesselRangeSystem.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveEvents.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageHandler.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageSender.cs" />
@@ -216,6 +218,8 @@
     <Compile Include="Utilities\UniverseConverter.cs" />
     <Compile Include="Windows\ServerList\ServerListDrawer.cs" />
     <Compile Include="Windows\ServerList\ServerListWindow.cs" />
+    <Compile Include="Windows\Systems\SystemsDrawer.cs" />
+    <Compile Include="Windows\Systems\SystemsWindow.cs" />
     <Compile Include="Windows\UniverseConverter\UniverseConverterDrawer.cs" />
     <Compile Include="Windows\UniverseConverter\UniverseConverterWindow.cs" />
     <Compile Include="Utilities\UniverseSyncCache.cs" />

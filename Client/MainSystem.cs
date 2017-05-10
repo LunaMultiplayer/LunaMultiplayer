@@ -69,8 +69,6 @@ namespace LunaClient
         
         public void Reset()
         {
-            LunaProfiler.LmpReferenceTime.Start();
-            
             Debug.Log($"[LMP]: KSP installed at {KspPath}");
             Debug.Log($"[LMP]: LMP installed at {AssemblyPath}");
 
@@ -103,7 +101,7 @@ namespace LunaClient
         public override void Update()
         {
             base.Update();
-            var startClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             if (!Enabled) return;
 
@@ -214,8 +212,9 @@ namespace LunaClient
             //Converter window: 6712
             //Disclaimer window: 6713
             //Servers window: 6714
+            //Systems window: 6715
 
-            var startClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
                 WindowsHandler.OnGui();
@@ -226,23 +225,13 @@ namespace LunaClient
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            var startClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             if (!Enabled)
                 return;
 
             SystemsHandler.FixedUpdate();
             LunaProfiler.FixedUpdateData.ReportTime(startClock);
-        }
-
-        public override void LateUpdate()
-        {
-            base.LateUpdate();
-
-            if (!Enabled)
-                return;
-
-            SystemsHandler.LateUpdate();
         }
 
         #endregion

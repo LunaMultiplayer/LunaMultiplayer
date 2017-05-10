@@ -51,19 +51,7 @@ namespace LunaClient
                 MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(Update));
             }
         }
-
-        public void LateUpdate()
-        {
-            try
-            {
-                MainSystem.Singleton.LateUpdate();
-            }
-            catch (Exception e)
-            {
-                MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(LateUpdate));
-            }
-        }
-
+        
         public void OnGUI()
         {
             try

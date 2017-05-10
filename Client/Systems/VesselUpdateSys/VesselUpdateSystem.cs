@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using UnityEngine;
-using System.Diagnostics;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -10,11 +8,6 @@ namespace LunaClient.Systems.VesselUpdateSys
     /// </summary>
     public class VesselUpdateSystem : MessageSystem<VesselUpdateSystem, VesselUpdateMessageSender, VesselUpdateMessageHandler>
     {
-        public VesselUpdateSystem()
-        {
-            SendTimeIntervalMs = _updateSendMSInterval;
-        }
-
         #region Field & Properties
 
         public bool UpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
@@ -24,18 +17,8 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public FlightCtrlState FlightState { get; set; }
 
-        private static int _updateNearbySendMSInterval = 500;
-        private static int _updateSendMSInterval = 3000;
-
-
-        #endregion
-
-        #region Base overrides
-
-        public override void OnEnabled()
-        {
-            base.OnEnabled();
-        }
+        private const int UpdateNearbySendMsInterval = 500;
+        private const int UpdateSendMsInterval = 3000;
 
         #endregion
 
@@ -44,29 +27,21 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <summary>
         /// Send control state, clamps, decouplers and dock ports of our vessel
         /// </summary>
-        public override void FixedUpdate()
+        public override void Update()
         {
             if (!Enabled || !UpdateSystemReady)
             {
                 return;
             }
-
-            if (IsTimeForNextSend()) {
+            
+            var intervalMs = VesselCommon.PlayerVesselsNearby() ? UpdateNearbySendMsInterval : UpdateSendMsInterval;
+            if (Timer.ElapsedMilliseconds > intervalMs)
+            {
                 MessageSender.SendVesselUpdate();
+                ResetTimer();
             }
         }
-
-        private void setMsElapsedForNextSend()
-        {
-            if(VesselCommon.PlayerVesselsNearby())
-            {
-                SendTimeIntervalMs = _updateNearbySendMSInterval;
-            } else
-            {
-                SendTimeIntervalMs = _updateSendMSInterval;
-            }
-        }
-
+        
         #endregion
     }
 }

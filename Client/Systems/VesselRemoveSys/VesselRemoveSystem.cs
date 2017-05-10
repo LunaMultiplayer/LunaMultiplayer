@@ -28,9 +28,6 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselDestroy.Add(VesselRemoveEvents.OnVesselDestroyed);
-
-            if (!SettingsSystem.ServerSettings.ShowVesselsInThePast)
-                Client.Singleton.StartCoroutine(RemoveVesselsInPastSubspace());
         }
 
         public override void OnDisabled()
@@ -39,6 +36,32 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselDestroy.Remove(VesselRemoveEvents.OnVesselDestroyed);
+        }
+
+        /// <summary>
+        /// Get the vessels that are in a past subspace and kill them
+        /// </summary>
+        public override void Update()
+        {
+            base.Update();
+
+            if (SettingsSystem.ServerSettings.ShowVesselsInThePast) return;
+
+            if (Enabled && MainSystem.Singleton.GameRunning && 
+                Timer.ElapsedMilliseconds > SettingsSystem.ServerSettings.VesselKillCheckMsInterval)
+            {
+                var vesselsToUnload = VesselProtoSystem.Singleton.AllPlayerVessels
+                                       .Where(v => v.Loaded && VesselCommon.VesselIsControlledAndInPastSubspace(v.VesselId))
+                                       .Select(v => FlightGlobals.FindVessel(v.VesselId))
+                                       .ToArray();
+
+                if (vesselsToUnload.Any())
+                {
+                    Debug.Log($"[LMP]: Unloading {vesselsToUnload.Length} vessels that are in a past subspace");
+                    UnloadVessels(vesselsToUnload);
+                }
+                ResetTimer();
+            }
         }
 
         #endregion
@@ -87,42 +110,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         #endregion
 
         #region Private methods
-
-        /// <summary>
-        /// Get the vessels that are in a past subspace and kill them
-        /// </summary>
-        private IEnumerator RemoveVesselsInPastSubspace()
-        {
-            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselKillCheckMsInterval).TotalSeconds);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-
-                    if (MainSystem.Singleton.GameRunning)
-                    {
-                        var vesselsToUnload = VesselProtoSystem.Singleton.AllPlayerVessels
-                            .Where(v => v.Loaded && VesselCommon.VesselIsControlledAndInPastSubspace(v.VesselId))
-                            .Select(v => FlightGlobals.FindVessel(v.VesselId))
-                            .ToArray();
-
-                        if (vesselsToUnload.Any())
-                        {
-                            Debug.Log($"[LMP]: Unloading {vesselsToUnload.Length} vessels that are in a past subspace");
-                            UnloadVessels(vesselsToUnload);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in CheckVesselsToKill {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
+        
         /// <summary>
         /// Unloads a vessel from the game in 1 frame.
         /// </summary>

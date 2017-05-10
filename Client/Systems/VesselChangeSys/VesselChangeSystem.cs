@@ -19,10 +19,11 @@ namespace LunaClient.Systems.VesselChangeSys
         public Queue<VesselChangeMsgData> IncomingChanges { get; set; } = new Queue<VesselChangeMsgData>();
         public VesselChangeEvents VesselChangeEvents { get; } = new VesselChangeEvents();
 
+        #region Base overrides
+
         public override void OnEnabled()
         {
             base.OnEnabled();
-            Client.Singleton.StartCoroutine(HandleVesselChanges());
             GameEvents.onStageSeparation.Add(VesselChangeEvents.OnStageSeparation);
             GameEvents.onPartDie.Add(VesselChangeEvents.OnPartDie);
         }
@@ -36,34 +37,22 @@ namespace LunaClient.Systems.VesselChangeSys
         }
 
         /// <summary>
-        /// Main system that picks changes received and process them
+        /// Picks changes received and process them
         /// </summary>
-        public IEnumerator HandleVesselChanges()
+        public override void Update()
         {
-            var seconds = new WaitForSeconds(0.5f);
-            while (true)
+            base.Update();
+            if (Enabled && MainSystem.Singleton.GameRunning && Timer.ElapsedMilliseconds > 500)
             {
-                try
+                while (IncomingChanges.Count > 0 && Time.fixedTime - IncomingChanges.Peek().ReceiveTime >= 0.5)
                 {
-                    if (!Enabled) break;
-
-                    if (MainSystem.Singleton.GameRunning)
-                    {
-                        while (IncomingChanges.Count > 0 && Time.fixedTime - IncomingChanges.Peek().ReceiveTime >= 0.5)
-                        {
-                            HandleVesselChange(IncomingChanges.Dequeue());
-                        }
-                    }
+                    HandleVesselChange(IncomingChanges.Dequeue());
                 }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine HandleVesselChanges {e}");
-                }
-                
-                yield return seconds;
             }
         }
 
+        #endregion
+        
         private static void HandleVesselChange(VesselChangeMsgData messageData)
         {
             var vessel = FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == messageData.VesselId);
