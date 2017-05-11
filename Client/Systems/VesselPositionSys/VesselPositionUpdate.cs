@@ -262,7 +262,7 @@ namespace LunaClient.Systems.VesselPositionSys
             var targetWorldPos = new Vector3d(Target.WorldPosition[0], Target.WorldPosition[1], Target.WorldPosition[2]);
             var currentWorldPos = Vector3d.Lerp(startWorldPos, targetWorldPos, interpolationValue);
 
-            Vessel.SetPosition(worldSurfacePosition, SettingsSystem.CurrentSettings.Debug2);
+            Vessel.SetPosition(worldSurfacePosition);
             Vessel.CoMD = currentWorldPos;
 
             var startOrbitPos = new Vector3d(OrbitPosition[0], OrbitPosition[1], OrbitPosition[2]);
@@ -362,40 +362,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             return from * (1 - t) + to * t;
         }
-
-        /// <summary>
-        /// Custom lerp for a flight control state
-        /// </summary>
-        private static FlightCtrlState LerpFlightControlState(FlightCtrlState from, FlightCtrlState to, float t)
-        {
-            return new FlightCtrlState
-            {
-                X = Mathf.Lerp(from.X, to.X, t),
-                Y = Mathf.Lerp(from.Y, to.Y, t),
-                Z = Mathf.Lerp(from.Z, to.Z, t),
-                gearDown = t < 0.5 ? from.gearDown : to.gearDown,
-                gearUp = t < 0.5 ? from.gearUp : to.gearUp,
-                headlight = t < 0.5 ? from.headlight : to.headlight,
-                killRot = t < 0.5 ? from.killRot : to.killRot,
-                mainThrottle = Mathf.Lerp(from.mainThrottle, to.mainThrottle, t),
-                pitch = Mathf.Lerp(from.pitch, to.pitch, t),
-                roll = Mathf.Lerp(from.roll, to.roll, t),
-                yaw = Mathf.Lerp(from.yaw, to.yaw, t),
-                pitchTrim = Mathf.Lerp(from.pitchTrim, to.pitchTrim, t),
-                rollTrim = Mathf.Lerp(from.rollTrim, to.rollTrim, t),
-                yawTrim = Mathf.Lerp(from.yawTrim, to.yawTrim, t),
-                wheelSteer = Mathf.Lerp(from.wheelSteer, to.wheelSteer, t),
-                wheelSteerTrim = Mathf.Lerp(from.wheelSteerTrim, to.wheelSteerTrim, t),
-                wheelThrottle = Mathf.Lerp(from.wheelThrottle, to.wheelThrottle, t),
-                wheelThrottleTrim = Mathf.Lerp(from.wheelThrottleTrim, to.wheelThrottleTrim, t),
-            };
-        }
-
-        private static Vector3 Round(Vector3 vector, int decimals)
-        {
-            return new Vector3((float)Math.Round(vector.x, decimals), (float)Math.Round(vector.y, decimals), (float)Math.Round(vector.z, decimals));
-        }
-
+        
         #endregion
     }
 }
