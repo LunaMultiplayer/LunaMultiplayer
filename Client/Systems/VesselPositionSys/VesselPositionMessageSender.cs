@@ -25,7 +25,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             SendMessage(new VesselPositionMsgData
             {
-                GameSentTime = Time.fixedTime,
+                GameSentTime = Time.time,
                 PlanetTime = update.PlanetTime,
                 VesselId = update.VesselId,
                 BodyName = update.BodyName,

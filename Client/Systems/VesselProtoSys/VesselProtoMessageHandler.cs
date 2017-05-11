@@ -59,9 +59,14 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 HandleVesselProtoData(vesselDataKv.Value, new Guid(vesselDataKv.Key), 0);
             }
+
             MainSystem.Singleton.NetworkState = ClientState.VESSELS_SYNCED;
         }
 
+        /// <summary>
+        /// Here we receive the vessel list msg from the server.We rty to get the vessels from the cache and if
+        /// it fails or we don't have it in the cache we request that vessel info to the server.
+        /// </summary>
         private static void HandleVesselList(VesselListReplyMsgData messageData)
         {
             var serverVessels = new List<string>(messageData.Vessels);
@@ -69,11 +74,7 @@ namespace LunaClient.Systems.VesselProtoSys
             var requestedObjects = new List<string>();
             foreach (var serverVessel in serverVessels)
             {
-                if (!cacheObjects.Contains(serverVessel))
-                {
-                    requestedObjects.Add(serverVessel);
-                }
-                else
+                if (cacheObjects.Contains(serverVessel))
                 {
                     //Try to get it from cache...
                     var vesselBytes = UniverseSyncCache.GetFromCache(serverVessel);
@@ -98,12 +99,22 @@ namespace LunaClient.Systems.VesselProtoSys
                         }
                     }
                 }
+                else
+                {
+                    requestedObjects.Add(serverVessel);
+                }
             }
 
+            //Request the vessel data that we don't have.
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>
                 (new VesselsRequestMsgData { RequestList = requestedObjects.ToArray() }));
         }
 
+        /// <summary>
+        /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
+        /// We set it as UNLOADED as perhaps vessel data has changed.
+        /// We also do all of this asynchronously to improve performance
+        /// </summary>
         private static void HandleVesselProtoData(byte[] vesselData, Guid vesselId, int subspace)
         {
             new Thread(() =>
@@ -134,11 +145,13 @@ namespace LunaClient.Systems.VesselProtoSys
                     }
                     else
                     {
+                        //Cannot call debug from another thread...
                         //Debug.LogError($"[LMP]: Failed to load vessel {vesselId}!");
                     }
                 }
                 else
                 {
+                    //Cannot call debug from another thread...
                     //Debug.LogError($"[LMP]: Failed to load vessel {vesselId}!");
                 }
             }).Start();

@@ -36,7 +36,7 @@ namespace LunaClient.Windows.Systems
 
                 VesselLockProfilerText = "Upd: " + VesselLockSystem.Singleton.UpdateProfiler;
                 VesselLockProfilerText += "Fixed Upd: " + VesselLockSystem.Singleton.FixedUpdateProfiler;
-
+                
                 VesselPositionProfilerText = "Upd: " + VesselPositionSystem.Singleton.UpdateProfiler;
                 VesselPositionProfilerText += "Fixed Upd: " + VesselPositionSystem.Singleton.FixedUpdateProfiler;
 

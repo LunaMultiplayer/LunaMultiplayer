@@ -95,7 +95,7 @@ namespace LunaClient.Utilities
             }
 
             //While the directory is over (cacheSize) MB
-            while (CurrentCacheSize > SettingsSystem.CurrentSettings.CacheSize*1024*1024)
+            while (CacheSizeExceeded())
             {
                 string deleteObject = null;
                 //Find oldest file
@@ -136,7 +136,7 @@ namespace LunaClient.Utilities
             var objectFile = CommonUtil.CombinePaths(CacheDirectory, objectName + ".txt");
             if (File.Exists(objectFile))
                 return File.ReadAllBytes(objectFile);
-            throw new IOException("Cached object " + objectName + " does not exist");
+            throw new IOException($"Cached object {objectName} does not exist");
         }
 
         /// <summary>
@@ -170,6 +170,11 @@ namespace LunaClient.Utilities
                     IncomingEvent.WaitOne(500);
             }
         }
+        
+        private static bool CacheSizeExceeded()
+        {
+            return CurrentCacheSize > SettingsSystem.CurrentSettings.CacheSize * 1024 * 1024;
+        }
 
         private static string[] GetCachedFiles()
         {
@@ -178,8 +183,9 @@ namespace LunaClient.Utilities
 
         private static void SaveToCache(byte[] fileData)
         {
-            if ((fileData == null) || (fileData.Length == 0))
+            if ((fileData == null) || (fileData.Length == 0) || CacheSizeExceeded())
                 return;
+
             var objectName = Common.CalculateSha256Hash(fileData);
             var objectFile = CommonUtil.CombinePaths(CacheDirectory, objectName + ".txt");
             var incomingFile = CommonUtil.CombinePaths(CacheDirectory, "Incoming", objectName + ".txt");

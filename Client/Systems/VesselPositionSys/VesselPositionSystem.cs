@@ -3,8 +3,10 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using UnityEngine;
 
@@ -33,13 +35,13 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             (PositionUpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
 
-        public ConcurrentDictionary<Guid, VesselPositionUpdate> ReceivedUpdates { get; } = 
+        public ConcurrentDictionary<Guid, VesselPositionUpdate> FutureVesselUpdate { get; } =
             new ConcurrentDictionary<Guid, VesselPositionUpdate>();
 
-        private VesselPositionInterpolationSystem InterpolationSystem { get; } = new VesselPositionInterpolationSystem();
+        public Dictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new Dictionary<Guid, VesselPositionUpdate>();
 
         public FlightCtrlState FlightState { get; set; }
-
+        
         private static float _lastSentTime;
 
         #endregion
@@ -49,77 +51,111 @@ namespace LunaClient.Systems.VesselPositionSys
         public override void OnEnabled()
         {
             base.OnEnabled();
-            Client.Singleton.StartCoroutine(RemoveVessels());
             Client.Singleton.StartCoroutine(SendSecondaryVesselPositionUpdates());
         }
 
         public override void OnDisabled()
         {
             base.OnDisabled();
-            InterpolationSystem.ResetSystem();
-            ReceivedUpdates.Clear();
+            CurrentVesselUpdate.Clear();
+            FutureVesselUpdate.Clear();
         }
-        
+
         public override void Update()
         {
             base.Update();
             if (PositionUpdateSystemReady)
             {
                 SendVesselPositionUpdates();
-                InterpolationSystem.Update();
+                HandleVesselUpdates();
+            }
+        }
+
+        private void HandleVesselUpdates()
+        {
+            //Run to the new updates with vessels that are still not computed
+            var newUpdates = FutureVesselUpdate.Where(v => !CurrentVesselUpdate.ContainsKey(v.Key)).ToList();
+            foreach (var vesselUpdates in newUpdates)
+            {
+                SetFirstVesselUpdates(vesselUpdates.Value);
+            }
+
+            //Run trough all the vessels. Do this way or you get an out of sync in the dictionary!
+            var vesselIds = CurrentVesselUpdate.Keys.ToList();
+            foreach (var vesselId in vesselIds)
+            {
+                ProcessNewVesselUpdate(vesselId);
+                CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
+            }
+        }
+
+        private void ProcessNewVesselUpdate(Guid vesselId)
+        {
+            if (CurrentVesselUpdate[vesselId].Id == FutureVesselUpdate[vesselId].Id)
+            {
+                //No message to process!!
+                return;
+            }
+
+            FutureVesselUpdate[vesselId].Vessel = CurrentVesselUpdate[vesselId].Vessel;
+            if (FutureVesselUpdate[vesselId].BodyName == CurrentVesselUpdate[vesselId].BodyName)
+                FutureVesselUpdate[vesselId].Body = CurrentVesselUpdate[vesselId].Body;
+
+            CurrentVesselUpdate[vesselId] = CurrentVesselUpdate[vesselId].Target;
+            CurrentVesselUpdate[vesselId].Target = FutureVesselUpdate[vesselId];
+        }
+
+        /// <summary>
+        /// Here we set the first vessel updates. We use the current vessel state as the starting point.
+        /// </summary>
+        private void SetFirstVesselUpdates(VesselPositionUpdate update)
+        {
+            var first = update?.Clone();
+            if (first != null)
+            {
+                first.SentTime = update.SentTime;
+                update.SentTime += 0.5f;
+
+                CurrentVesselUpdate.Add(update.VesselId, first);
+                CurrentVesselUpdate[update.VesselId].Target = update;
             }
         }
 
         /// <summary>
-        /// This method is called on another thread so it won't affect the performance of KSP
+        /// Do the message handling asynchronously for performance
         /// </summary>
         public override void EnqueueMessage(IMessageData msg)
         {
             if (Enabled)
             {
-                MessageHandler.EnqueueNewMessage(msg);
+                new Thread(() =>
+                {
+                    var msgData = msg as VesselPositionMsgData;
+                    if (msgData == null)
+                    {
+                        return;
+                    }
+
+                    var update = new VesselPositionUpdate(msgData);
+                    if (!FutureVesselUpdate.ContainsKey(update.VesselId))
+                    {
+                        FutureVesselUpdate.TryAdd(update.VesselId, update);
+                    }
+                    else
+                    {
+                        if (FutureVesselUpdate[update.VesselId].SentTime < update.SentTime)
+                        {
+                            FutureVesselUpdate[update.VesselId] = update;
+                        }
+                    }
+                }).Start();
             }
         }
 
         #endregion
-        
+
         #region Private methods
-
-        /// <summary>
-        /// Remove the vessels that didn't receive and update after the value specified in MsWithoutUpdatesToRemove every 5 seconds
-        /// </summary>
-        private IEnumerator RemoveVessels()
-        {
-            var seconds = new WaitForSeconds(RemoveVesselsSecInterval);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-
-                    if (PositionUpdateSystemBasicReady)
-                    {
-                        var vesselsToRemove = InterpolationSystem.CurrentVesselUpdate
-                            .Where(u => u.Value.InterpolationFinished && Time.time - u.Value.FinishTime > MaxSecWithoutUpdates)
-                            .Select(u => u.Key).ToArray();
-
-                        foreach (var vesselId in vesselsToRemove)
-                        {
-                            InterpolationSystem.RemoveVessel(vesselId);
-                            VesselPositionUpdate v;
-                            ReceivedUpdates.TryRemove(vesselId, out v);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in RemoveVessels {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
+        
         /// <summary>
         /// Check if we must send a message or not based on the fixed time that has passed.
         /// Note that when no vessels are nearby or we are not in KSC the time is multiplied by 10

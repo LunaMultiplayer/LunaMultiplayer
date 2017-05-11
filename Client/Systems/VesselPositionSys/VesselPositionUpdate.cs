@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselPositionSys
     {
         #region Fields
 
-        private float LerpPercentage { get; set; }
+        public float SentTime { get; set; }
         public Vessel Vessel { get; set; }
         public CelestialBody Body { get; set; }
         public VesselPositionUpdate Target { get; set; }
@@ -45,19 +45,9 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #endregion
-
-        #region Interpolation fields
-
-        public float SentTime { get; set; }
-        public bool InterpolationStarted { get; set; }
-        public bool InterpolationFinished { get; set; }
-        public float FinishTime { get; set; }
-
-        #endregion
-
+        
         #region Private fields
-
-        private float _interpolationDuration;
+        
         private double PlanetariumDifference { get; set; }
         private const float PlanetariumDifferenceLimit = 3f;
 
@@ -116,24 +106,29 @@ namespace LunaClient.Systems.VesselPositionSys
                     vessel.longitude,
                     vessel.altitude
                 };
+                Vector3d worldPosition = vessel.GetWorldPos3D();
                 WorldPosition = new double[]
                 {
-                    vessel.GetWorldPos3D().x,
-                    vessel.GetWorldPos3D().y,
-                    vessel.GetWorldPos3D().z
+                    worldPosition.x,
+                    worldPosition.y,
+                    worldPosition.z
                 };
                 Vector3d srfVel = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
                 Velocity = new[]
                 {
-                    Math.Abs(Math.Round(vessel.rb_velocityD.x, 2)) < 0.01 ? 0 : vessel.rb_velocityD.x,
-                    Math.Abs(Math.Round(vessel.rb_velocityD.y, 2)) < 0.01 ? 0 : vessel.rb_velocityD.y,
-                    Math.Abs(Math.Round(vessel.rb_velocityD.z, 2)) < 0.01 ? 0 : vessel.rb_velocityD.z,
+                    Math.Abs(Math.Round(srfVel.x, 2)) < 0.01 ? 0 : srfVel.x,
+                    Math.Abs(Math.Round(srfVel.y, 2)) < 0.01 ? 0 : srfVel.y,
+                    Math.Abs(Math.Round(srfVel.z, 2)) < 0.01 ? 0 : srfVel.z,
+                    //Math.Abs(Math.Round(vessel.velocityD.x, 2)) < 0.01 ? 0 : vessel.velocityD.x,
+                    //Math.Abs(Math.Round(vessel.velocityD.y, 2)) < 0.01 ? 0 : vessel.velocityD.y,
+                    //Math.Abs(Math.Round(vessel.velocityD.z, 2)) < 0.01 ? 0 : vessel.velocityD.z,
                 };
+                Vector3d orbitVel = vessel.orbit.GetVel();
                 OrbitVelocity = new[]
                 {
-                    vessel.orbit.vel.x,
-                    vessel.orbit.vel.y,
-                    vessel.orbit.vel.z,
+                    orbitVel.x,
+                    orbitVel.y,
+                    orbitVel.z
                 };
                 Orbit = new[]
                 {
@@ -151,12 +146,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Debug.Log($"[LMP]: Failed to get vessel position update, exception: {e}");
             }
         }
-
-
-        public VesselPositionUpdate(Guid vesselId) : this(FlightGlobals.Vessels.FindLast(v => v.id == vesselId))
-        {
-        }
-
+        
         public virtual VesselPositionUpdate Clone()
         {
             return this.MemberwiseClone() as VesselPositionUpdate;
@@ -164,7 +154,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #endregion
 
-        #region Main interpolation method
+        #region Main method
 
         /// <summary>
         /// This coroutine is run at every fixed update as we are updating rigid bodies (physics are involved)
@@ -173,65 +163,22 @@ namespace LunaClient.Systems.VesselPositionSys
         /// <returns></returns>
         public void ApplyVesselUpdate()
         {
-            if (!InterpolationStarted)
-            {
-                StartupInterpolation();
-            }
-
-            if (Body != null && Vessel != null && _interpolationDuration > 0)
-            {
-                if (SettingsSystem.CurrentSettings.InterpolationEnabled && LerpPercentage < 1)
-                {
-                    ApplyInterpolations(LerpPercentage);
-                    LerpPercentage += Time.fixedDeltaTime / _interpolationDuration;
-                    return;
-                }
-
-                if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
-                {
-                    ApplyInterpolations(1);
-                }
-            }
-
-            FinishInterpolation();
-        }
-
-        #endregion
-
-        #region Private interpolation methods
-
-        /// <summary>
-        /// Finish the interpolation
-        /// </summary>
-        private void FinishInterpolation()
-        {
-            InterpolationFinished = true;
-            FinishTime = Time.time;
-        }
-
-        /// <summary>
-        /// Start the interpolation and set it's needed values
-        /// </summary>
-        private void StartupInterpolation()
-        {
             if (Body == null)
                 Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
             if (Vessel == null)
                 Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
 
-            InterpolationStarted = true;
-
             if (Body != null && Vessel != null)
             {
+                //Vessel.orbitDriver.TrackRigidbody(Vessel.mainBody, 0);
                 PlanetariumDifference = Planetarium.GetUniversalTime() - PlanetTime;
-
-                //Here we use the interpolation factor to make the interpolation duration 
-                //shorter or longer depending on the amount of updates we have in queue.
-                //We never exceed the MaxSInterpolationTime
-                _interpolationDuration = Target.SentTime - SentTime - VesselPositionInterpolationSystem.GetInterpolationFactor(VesselId);
-                _interpolationDuration = Mathf.Clamp(_interpolationDuration, 0, VesselPositionInterpolationSystem.MaxSInterpolationTime);
+                ApplyInterpolations(1);
             }
         }
+
+        #endregion
+
+        #region Private interpolation methods
 
         /// <summary>
         /// Apply the interpolation based on a percentage
@@ -242,7 +189,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             ApplyRotationInterpolation(percentage);
             ApplySurfaceInterpolation(percentage);
-            //ApplyOrbitInterpolation(percentage);
+            ApplyOrbitInterpolation(percentage);
         }
 
         /// <summary>
@@ -254,7 +201,7 @@ namespace LunaClient.Systems.VesselPositionSys
             var targetTransformRot = new Quaternion(Target.TransformRotation[0], Target.TransformRotation[1], Target.TransformRotation[2], Target.TransformRotation[3]);
             var currentTransformRot = Quaternion.Slerp(startTransformRot, targetTransformRot, interpolationValue);
 
-            Vessel.SetRotation(currentTransformRot);
+            Vessel.SetRotation(currentTransformRot, true);
             Vessel.vesselTransform.rotation = currentTransformRot;
             Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.vesselTransform.rotation;
             Vessel.precalc.worldSurfaceRot = Vessel.mainBody.bodyTransform.rotation * Vessel.srfRelRotation;
@@ -315,7 +262,7 @@ namespace LunaClient.Systems.VesselPositionSys
             var targetWorldPos = new Vector3d(Target.WorldPosition[0], Target.WorldPosition[1], Target.WorldPosition[2]);
             var currentWorldPos = Vector3d.Lerp(startWorldPos, targetWorldPos, interpolationValue);
 
-            Vessel.SetPosition(worldSurfacePosition, true);
+            Vessel.SetPosition(worldSurfacePosition, SettingsSystem.CurrentSettings.Debug2);
             Vessel.CoMD = currentWorldPos;
 
             var startOrbitPos = new Vector3d(OrbitPosition[0], OrbitPosition[1], OrbitPosition[2]);
@@ -419,7 +366,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// <summary>
         /// Custom lerp for a flight control state
         /// </summary>
-        private static FlightCtrlState Lerp(FlightCtrlState from, FlightCtrlState to, float t)
+        private static FlightCtrlState LerpFlightControlState(FlightCtrlState from, FlightCtrlState to, float t)
         {
             return new FlightCtrlState
             {

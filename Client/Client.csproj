@@ -133,7 +133,6 @@
     <Compile Include="Systems\VesselImmortalSys\VesselImmortalSystem.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockEvents.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockSystem.cs" />
-    <Compile Include="Systems\VesselPositionSys\VesselPositionInterpolationSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
