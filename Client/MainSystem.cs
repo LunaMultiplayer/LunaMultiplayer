@@ -85,7 +85,7 @@ namespace LunaClient
             }
 
             SetupDirectoriesIfNeeded();
-            UniverseSyncCache.Singleton.ExpireCache();
+            UniverseSyncCache.ExpireCache();
             NetworkMain.StartNetworkSystem();
 
             //Register events needed to bootstrap the workers.
@@ -242,6 +242,7 @@ namespace LunaClient
         {
             Quit = true;
             NetworkConnection.Disconnect("Quit game");
+            UniverseSyncCache.Stop();
             SystemsHandler.KillAllSystems();
         }
 

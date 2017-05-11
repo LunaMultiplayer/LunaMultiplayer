@@ -24,8 +24,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
             foreach (var vessel in System.AllPlayerVessels)
             {
-                var pv = CreateSafeProtoVesselFromConfigNode(vessel.VesselNode, vessel.VesselId);
-                if ((pv != null) && (pv.vesselID == vessel.VesselId))
+                var pv = CreateSafeProtoVesselFromConfigNode(vessel.Value.VesselNode, vessel.Key);
+                if ((pv != null) && (pv.vesselID == vessel.Key))
                 {
                     RegisterServerAsteriodIfVesselIsAsteroid(pv);
                     HighLogic.CurrentGame.flightState.protoVessels.Add(pv);
@@ -33,10 +33,10 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
                 else
                 {
-                    Debug.LogWarning($"[LMP]: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
-                    ChatSystem.Singleton.PmMessageServer($"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
+                    Debug.LogWarning($"[LMP]: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
+                    ChatSystem.Singleton.PmMessageServer($"WARNING: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
                 }
-                vessel.Loaded = true;
+                vessel.Value.Loaded = true;
             }
 
             Debug.Log($"[LMP]: {numberOfLoads} Vessels loaded into game");

@@ -11,29 +11,38 @@ namespace LunaClient.Utilities
 {
     public class UniverseSyncCache
     {
-        public UniverseSyncCache()
+        static UniverseSyncCache()
         {
-            var processingThread = new Thread(ProcessingThreadMain) {IsBackground = true};
-            processingThread.Start();
+            MainThread.Start();
         }
 
         #region Fields
 
-        public static UniverseSyncCache Singleton { get; } = new UniverseSyncCache();
-        public long CurrentCacheSize { get; private set; }
+        private static bool _stop;
+        public static long CurrentCacheSize { get; private set; }
 
         private static string CacheDirectory => CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Cache");
 
-        private AutoResetEvent IncomingEvent { get; } = new AutoResetEvent(false);
-        private ConcurrentQueue<byte[]> IncomingQueue { get; } = new ConcurrentQueue<byte[]>();
-        private Dictionary<string, long> FileLengths { get; } = new Dictionary<string, long>();
-        private Dictionary<string, DateTime> FileCreationTimes { get; } = new Dictionary<string, DateTime>();
+        private static Thread MainThread { get; } = new Thread(ProcessingThreadMain) { IsBackground = true};
+        private static AutoResetEvent IncomingEvent { get; } = new AutoResetEvent(false);
+        private static ConcurrentQueue<byte[]> IncomingQueue { get; } = new ConcurrentQueue<byte[]>();
+        private static Dictionary<string, long> FileLengths { get; } = new Dictionary<string, long>();
+        private static Dictionary<string, DateTime> FileCreationTimes { get; } = new Dictionary<string, DateTime>();
 
         #endregion
 
         #region Public methods
 
-        public string[] GetCachedObjects()
+        public static void Stop()
+        {
+            _stop = true;
+            Thread.Sleep(250);
+
+            if (MainThread != null && MainThread.IsAlive)
+                MainThread.Abort();
+        }
+
+        public static string[] GetCachedObjects()
         {
             var cacheFiles = GetCachedFiles();
             var cacheObjects = new string[cacheFiles.Length];
@@ -42,15 +51,20 @@ namespace LunaClient.Utilities
             return cacheObjects;
         }
 
-        public void ExpireCache()
+        /// <summary>
+        /// Delete old cache files or if size is bigger than the limit.
+        /// </summary>
+        public static void ExpireCache()
         {
             Debug.Log("[LMP]: Expiring cache!");
+
             //No folder, no delete.
             if (!Directory.Exists(CommonUtil.CombinePaths(CacheDirectory, "Incoming")))
             {
                 Debug.Log("[LMP]: No sync cache folder, skipping expire.");
                 return;
             }
+
             //Delete partial incoming files
             var incomingFiles = Directory.GetFiles(CommonUtil.CombinePaths(CacheDirectory, "Incoming"));
             foreach (var incomingFile in incomingFiles)
@@ -58,6 +72,7 @@ namespace LunaClient.Utilities
                 Debug.Log($"[LMP]: Deleting partially cached object {incomingFile}");
                 File.Delete(incomingFile);
             }
+
             //Delete old files
             var cacheObjects = GetCachedObjects();
             CurrentCacheSize = 0;
@@ -78,6 +93,7 @@ namespace LunaClient.Utilities
                     CurrentCacheSize += fi.Length;
                 }
             }
+
             //While the directory is over (cacheSize) MB
             while (CurrentCacheSize > SettingsSystem.CurrentSettings.CacheSize*1024*1024)
             {
@@ -102,17 +118,20 @@ namespace LunaClient.Utilities
         }
 
         /// <summary>
-        ///     Queues to cache. This method is non-blocking, using SaveToCache for a blocking method.
+        /// Queues to cache. This method is non-blocking, use SaveToCache for a blocking method.
         /// </summary>
-        /// <param name="fileData">File data.</param>
-        public void QueueToCache(byte[] fileData)
+        public static void QueueToCache(byte[] fileData)
         {
-            //TODO: Ask Lothan why this is commented
-            //IncomingQueue.Enqueue(fileData);
-            //IncomingEvent.Set();
+            IncomingQueue.Enqueue(fileData);
+            IncomingEvent.Set();
         }
 
-        public byte[] GetFromCache(string objectName)
+        /// <summary>
+        /// Tries to get an object from cache
+        /// </summary>
+        /// <param name="objectName"></param>
+        /// <returns></returns>
+        public static byte[] GetFromCache(string objectName)
         {
             var objectFile = CommonUtil.CombinePaths(CacheDirectory, objectName + ".txt");
             if (File.Exists(objectFile))
@@ -120,7 +139,10 @@ namespace LunaClient.Utilities
             throw new IOException("Cached object " + objectName + " does not exist");
         }
 
-        public void DeleteCache()
+        /// <summary>
+        /// Deletes all cache files
+        /// </summary>
+        public static void DeleteCache()
         {
             Debug.Log("[LMP]: Deleting cache!");
             foreach (var cacheFile in GetCachedFiles())
@@ -134,9 +156,12 @@ namespace LunaClient.Utilities
 
         #region Private methods
 
-        private void ProcessingThreadMain()
+        /// <summary>
+        /// Processes the queued objects and save them as files in async mode
+        /// </summary>
+        private static void ProcessingThreadMain()
         {
-            while (true)
+            while (!_stop)
             {
                 byte[] incomingBytes;
                 if (IncomingQueue.TryDequeue(out incomingBytes))
@@ -151,7 +176,7 @@ namespace LunaClient.Utilities
             return Directory.GetFiles(CacheDirectory);
         }
 
-        private void SaveToCache(byte[] fileData)
+        private static void SaveToCache(byte[] fileData)
         {
             if ((fileData == null) || (fileData.Length == 0))
                 return;

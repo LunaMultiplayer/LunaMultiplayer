@@ -51,8 +51,8 @@ namespace LunaClient.Systems.VesselRemoveSys
                 Timer.ElapsedMilliseconds > SettingsSystem.ServerSettings.VesselKillCheckMsInterval)
             {
                 var vesselsToUnload = VesselProtoSystem.Singleton.AllPlayerVessels
-                                       .Where(v => v.Loaded && VesselCommon.VesselIsControlledAndInPastSubspace(v.VesselId))
-                                       .Select(v => FlightGlobals.FindVessel(v.VesselId))
+                                       .Where(v => v.Value.Loaded && VesselCommon.VesselIsControlledAndInPastSubspace(v.Key))
+                                       .Select(v => FlightGlobals.FindVessel(v.Key))
                                        .ToArray();
 
                 if (vesselsToUnload.Any())
@@ -91,14 +91,16 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
 
             Debug.Log($"[LMP]: Killing vessel {killVessel.id}");
-
-            var vessel = VesselProtoSystem.Singleton.AllPlayerVessels.FirstOrDefault(v => v.VesselId == killVessel.id);
-            if (vessel != null)
+            
+            if (VesselProtoSystem.Singleton.AllPlayerVessels.ContainsKey(killVessel.id))
             {
                 if (!fullKill)
-                    vessel.Loaded = false;
+                    VesselProtoSystem.Singleton.AllPlayerVessels[killVessel.id].Loaded = false;
                 else
-                    VesselProtoSystem.Singleton.AllPlayerVessels.Remove(vessel);
+                {
+                    VesselProtoUpdate val;
+                    VesselProtoSystem.Singleton.AllPlayerVessels.TryRemove(killVessel.id, out val);
+                }
             }
 
             SwitchVesselIfSpectating(killVessel);
@@ -119,10 +121,9 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
                 return;
             
-            var vessel = VesselProtoSystem.Singleton.AllPlayerVessels.FirstOrDefault(v => v.VesselId == killVessel.id);
-            if (vessel != null)
+            if (VesselProtoSystem.Singleton.AllPlayerVessels.ContainsKey(killVessel.id))
             {
-                vessel.Loaded = false;
+                VesselProtoSystem.Singleton.AllPlayerVessels[killVessel.id].Loaded = false;
             }
 
             UnloadVesselFromGame(killVessel);

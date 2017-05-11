@@ -23,7 +23,7 @@ namespace LunaClient.Systems.Scenario
                 var data = ((ScenarioDataMsgData)messageData).ScenarioNameData;
                 foreach (var scenario in data)
                 {
-                    var scenarioNode = ConfigNodeSerializer.Singleton.Deserialize(scenario.Value);
+                    var scenarioNode = ConfigNodeSerializer.Deserialize(scenario.Value);
                     if (scenarioNode != null)
                     {
                         var entry = new ScenarioEntry

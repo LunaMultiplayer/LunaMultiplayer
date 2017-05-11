@@ -41,7 +41,7 @@ namespace LunaClient.Systems.KerbalSys
         /// <param name="messageData"></param>
         private static void HandleKerbalProto(KerbalProtoMsgData messageData)
         {
-            var kerbalNode = ConfigNodeSerializer.Singleton.Deserialize(messageData.KerbalData);
+            var kerbalNode = ConfigNodeSerializer.Deserialize(messageData.KerbalData);
             if (kerbalNode != null)
                 System.LoadKerbal(kerbalNode);
             else
@@ -56,7 +56,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             foreach (var kerbal in messageData.KerbalsData)
             {
-                var kerbalNode = ConfigNodeSerializer.Singleton.Deserialize(kerbal.Value);
+                var kerbalNode = ConfigNodeSerializer.Deserialize(kerbal.Value);
                 if (kerbalNode != null)
                     System.KerbalQueue.Enqueue(kerbalNode);
                 else

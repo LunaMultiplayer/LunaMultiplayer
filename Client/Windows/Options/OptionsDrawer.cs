@@ -58,9 +58,8 @@ namespace LunaClient.Windows.Options
             GUILayout.Space(10);
             //Cache
             GUILayout.Label("Cache size");
-            GUILayout.Label("Current size: " +
-                            Math.Round(UniverseSyncCache.Singleton.CurrentCacheSize/(float) (1024*1024), 3) + "MB.");
-            GUILayout.Label("Max size: " + SettingsSystem.CurrentSettings.CacheSize + "MB.");
+            GUILayout.Label($"Current size: {Math.Round(UniverseSyncCache.CurrentCacheSize/(float) (1024*1024), 3)} MB.");
+            GUILayout.Label($"Max size: {SettingsSystem.CurrentSettings.CacheSize} MB.");
             NewCacheSize = GUILayout.TextArea(NewCacheSize);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Set", ButtonStyle))
@@ -87,9 +86,9 @@ namespace LunaClient.Windows.Options
                 }
             }
             if (GUILayout.Button("Expire cache"))
-                UniverseSyncCache.Singleton.ExpireCache();
+                UniverseSyncCache.ExpireCache();
             if (GUILayout.Button("Delete cache"))
-                UniverseSyncCache.Singleton.DeleteCache();
+                UniverseSyncCache.DeleteCache();
             GUILayout.EndHorizontal();
             //Key bindings
             GUILayout.Space(10);

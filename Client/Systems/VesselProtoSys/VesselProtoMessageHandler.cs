@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
@@ -49,14 +50,14 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
             }
 
-            HandleVesselProtoData(messageData.VesselData, messageData.VesselId.ToString(), messageData.Subspace);
+            HandleVesselProtoData(messageData.VesselData, messageData.VesselId, messageData.Subspace);
         }
 
         private static void HandleVesselResponse(VesselsReplyMsgData messageData)
         {
             foreach (var vesselDataKv in messageData.VesselsData)
             {
-                HandleVesselProtoData(vesselDataKv.Value, vesselDataKv.Key, 0);
+                HandleVesselProtoData(vesselDataKv.Value, new Guid(vesselDataKv.Key), 0);
             }
             MainSystem.Singleton.NetworkState = ClientState.VESSELS_SYNCED;
         }
@@ -64,7 +65,7 @@ namespace LunaClient.Systems.VesselProtoSys
         private static void HandleVesselList(VesselListReplyMsgData messageData)
         {
             var serverVessels = new List<string>(messageData.Vessels);
-            var cacheObjects = new List<string>(UniverseSyncCache.Singleton.GetCachedObjects());
+            var cacheObjects = new List<string>(UniverseSyncCache.GetCachedObjects());
             var requestedObjects = new List<string>();
             foreach (var serverVessel in serverVessels)
             {
@@ -75,15 +76,15 @@ namespace LunaClient.Systems.VesselProtoSys
                 else
                 {
                     //Try to get it from cache...
-                    var vesselBytes = UniverseSyncCache.Singleton.GetFromCache(serverVessel);
-                    var vesselNode = ConfigNodeSerializer.Singleton.Deserialize(vesselBytes);
+                    var vesselBytes = UniverseSyncCache.GetFromCache(serverVessel);
+                    var vesselNode = ConfigNodeSerializer.Deserialize(vesselBytes);
                     if (vesselNode != null)
                     {
                         var vesselIdString = Common.ConvertConfigStringToGuidString(vesselNode.GetValue("pid"));
                         var vesselId = new Guid(vesselIdString);
                         if (vesselBytes.Length != 0 && vesselId != Guid.Empty)
                         {
-                            System.AllPlayerVessels.Add(new VesselProtoUpdate
+                            System.AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate
                             {
                                 Loaded = false,
                                 VesselId = vesselId,
@@ -103,43 +104,44 @@ namespace LunaClient.Systems.VesselProtoSys
                 (new VesselsRequestMsgData { RequestList = requestedObjects.ToArray() }));
         }
 
-        private static void HandleVesselProtoData(byte[] vesselData, string vesselId, int subspace)
+        private static void HandleVesselProtoData(byte[] vesselData, Guid vesselId, int subspace)
         {
-            UniverseSyncCache.Singleton.QueueToCache(vesselData);
-            var vesselNode = ConfigNodeSerializer.Singleton.Deserialize(vesselData);
-            if (vesselNode != null)
+            new Thread(() =>
             {
-                var configGuid = vesselNode.GetValue("pid");
-                if (!string.IsNullOrEmpty(configGuid) && vesselId == Common.ConvertConfigStringToGuidString(configGuid))
+                UniverseSyncCache.QueueToCache(vesselData);
+                var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
+                if (vesselNode != null)
                 {
-                    var vesselProtoUpdate = new VesselProtoUpdate
+                    var configGuid = vesselNode.GetValue("pid");
+                    if (!string.IsNullOrEmpty(configGuid) && vesselId.ToString() == Common.ConvertConfigStringToGuidString(configGuid))
                     {
-                        VesselId = new Guid(vesselId),
-                        VesselNode = vesselNode,
-                        Loaded = false
-                    };
+                        var vesselProtoUpdate = new VesselProtoUpdate
+                        {
+                            VesselId = vesselId,
+                            VesselNode = vesselNode,
+                            Loaded = false
+                        };
 
-                    var oldVessel = System.AllPlayerVessels.FirstOrDefault(v => v.VesselId.ToString() == vesselId);
-                    if (oldVessel != null)
-                    {
-                        //Vessel exists so replace it
-                        var index = System.AllPlayerVessels.IndexOf(oldVessel);
-                        System.AllPlayerVessels[index] = vesselProtoUpdate;
+                        if (System.AllPlayerVessels.ContainsKey(vesselId))
+                        {
+                            //Vessel exists so replace it
+                            System.AllPlayerVessels[vesselId] = vesselProtoUpdate;
+                        }
+                        else
+                        {
+                            System.AllPlayerVessels.TryAdd(vesselId, vesselProtoUpdate);
+                        }
                     }
                     else
                     {
-                        System.AllPlayerVessels.Add(vesselProtoUpdate);
+                        //Debug.LogError($"[LMP]: Failed to load vessel {vesselId}!");
                     }
                 }
                 else
                 {
-                    Debug.LogError($"[LMP]: Failed to load vessel {vesselId}!");
+                    //Debug.LogError($"[LMP]: Failed to load vessel {vesselId}!");
                 }
-            }
-            else
-            {
-                Debug.LogError($"[LMP]: Failed to load vessel {vesselId}!");
-            }
+            }).Start();
         }
     }
 }
