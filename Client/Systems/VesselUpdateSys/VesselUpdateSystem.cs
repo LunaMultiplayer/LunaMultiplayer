@@ -10,10 +10,12 @@ namespace LunaClient.Systems.VesselUpdateSys
     /// </summary>
     public class VesselUpdateSystem : MessageSystem<VesselUpdateSystem, VesselUpdateMessageSender, VesselUpdateMessageHandler>
     {
-        public VesselUpdateSystem()
+        #region Constructors
+        public VesselUpdateSystem() : base()
         {
-            SendTimeIntervalMs = _updateSendMSInterval;
+            setupTimer(SEND_TIMER_NAME, _updateSendMSInterval);
         }
+        #endregion
 
         #region Field & Properties
 
@@ -26,6 +28,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         private static int _updateNearbySendMSInterval = 500;
         private static int _updateSendMSInterval = 3000;
+        private static string SEND_TIMER_NAME = "SEND";
 
 
         #endregion
@@ -51,8 +54,11 @@ namespace LunaClient.Systems.VesselUpdateSys
                 return;
             }
 
-            if (IsTimeForNextSend()) {
+            if (IsTimeForNextSend(SEND_TIMER_NAME))
+            {
+                Profiler.BeginSample("VesselUpdateSystem");
                 MessageSender.SendVesselUpdate();
+                Profiler.EndSample();
             }
         }
 
@@ -60,10 +66,10 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             if(VesselCommon.PlayerVesselsNearby())
             {
-                SendTimeIntervalMs = _updateNearbySendMSInterval;
+                setupTimer(SEND_TIMER_NAME, _updateNearbySendMSInterval);
             } else
             {
-                SendTimeIntervalMs = _updateSendMSInterval;
+                setupTimer(SEND_TIMER_NAME, _updateSendMSInterval);
             }
         }
 

@@ -6,6 +6,7 @@ using LunaClient.Utilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -20,12 +21,17 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public void SendVesselUpdate()
         {
-            var engines = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleEngines>();
+            List<ModuleEngines> engines = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleEngines>();
             var shieldedDocks = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleDockingNode>()
                 .Where(e => !e.IsDisabled && e.deployAnimator != null).ToArray();
-            
-            var activeEngines = engines.Where(e => e.EngineIgnited).Select(e => e.part.craftID).ToArray();
-            var stoppedEngines = engines.Where(e => !e.EngineIgnited).Select(e => e.part.craftID).ToArray();
+            List<IScalarModule> iScalars = FlightGlobals.ActiveVessel.FindPartModulesImplementing<IScalarModule>();
+            //This throws a nullpointerexception if you don't have any IScalarModules on the craft.  For example, a buggy with only a rovermate core (the white box) and wheels.
+            //IScalarModule module = iScalars.First();
+            //Put a hook that when the module stops, we send an event
+            //module.OnStop();
+
+            uint[] activeEngines = engines.Where(e => e.EngineIgnited).Select(e => e.part.craftID).ToArray();
+            uint[] stoppedEngines = engines.Where(e => !e.EngineIgnited).Select(e => e.part.craftID).ToArray();
             var decouplers = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleDecouple>()
                 .Where(e => !e.isDecoupled).Select(e => e.part.craftID).ToArray();
             var anchoredDecouplers = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleAnchoredDecoupler>()

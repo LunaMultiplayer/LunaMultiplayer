@@ -88,6 +88,8 @@ namespace LunaClient
 
             SetupDirectoriesIfNeeded();
             UniverseSyncCache.Singleton.ExpireCache();
+            //TODO: This fails if Reset() is called more than once because the receieve and send threads aren't reconstructed properly.
+            //TODO: This happens whenever any system's FixedUpdate() throws an error all the way up, as the system tries to reconnect unsuccessfully by calling Reset()
             NetworkMain.StartNetworkSystem();
 
             //Register events needed to bootstrap the workers.

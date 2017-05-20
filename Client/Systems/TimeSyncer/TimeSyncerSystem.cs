@@ -231,7 +231,7 @@ namespace LunaClient.Systems.TimeSyncer
                     {
                         try
                         {
-                            //For prelaunch vessels, we should not go on rails as this will reset the throttles and such, and 
+                            //For prelaunch vessels, we should not go on rails as this will reset the throttles and such 
                             vessel.GoOnRails();
                         }
                         catch

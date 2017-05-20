@@ -51,7 +51,7 @@ namespace LunaClient.Systems.VesselDockSys
                 }
 
                 VesselProtoSystem.Singleton.RemoveVesselFromLoadingSystem(vesselIdToRemove);
-                VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(vesselIdToRemove, true, 5);
+                VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(vesselIdToRemove, true);
                 
                 Debug.Log("[LMP]: Docking event over!");
             }

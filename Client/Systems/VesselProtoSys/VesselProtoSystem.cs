@@ -8,6 +8,7 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
 using UnityEngine;
+using LunaClient.Systems.VesselPositionSys;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -18,6 +19,17 @@ namespace LunaClient.Systems.VesselProtoSys
     public class VesselProtoSystem :
         MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
+
+        #region Constructors
+        public VesselProtoSystem() : base()
+        {
+            setupTimer(VESSEL_LOAD_TIMER_NAME, CheckVesselsToLoadMsInterval);
+            setupTimer(VESSEL_MESSAGE_TIMER_NAME, UpdateScreenMessageInterval);
+            setupTimer(VESSEL_PACK_TIMER_NAME, VesselPackCheckMsInterval);
+            setupTimer(VESSEL_ABANDONED_TIMER_NAME, SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval);
+            setupTimer(VESSEL_SEND_TIMER_NAME, SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval);
+        }
+        #endregion
 
         #region Fields
 
@@ -62,14 +74,20 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public List<VesselProtoUpdate> AllPlayerVessels { get; } = new List<VesselProtoUpdate>();
 
-        private static float VesselDefinitionSendSInterval =>
-            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval).TotalSeconds;
+        private const int CheckVesselsToLoadMsInterval = 2500;
+        private const String VESSEL_LOAD_TIMER_NAME = "LOAD";
 
-        private static float VesselDefinitionSendFarSInterval =>
-            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselDefinitionSendFarMsInterval).TotalSeconds;
+        private const int UpdateScreenMessageInterval = 1000;
+        private const String VESSEL_MESSAGE_TIMER_NAME = "MESSAGE";
 
-        public float CheckVesselsToLoadSInterval = 2.5f;
-        public float UpdateScreenMessageInterval = 1f;
+        private const int VesselPackCheckMsInterval = 1000;
+        private const String VESSEL_PACK_TIMER_NAME = "PACK";
+
+        private const String VESSEL_ABANDONED_TIMER_NAME = "ABANDONED";
+
+        private const String VESSEL_SEND_TIMER_NAME = "SEND";
+
+
 
         public ScreenMessage BannedPartsMessage { get; set; }
         public string BannedPartsStr { get; set; }
@@ -84,31 +102,67 @@ namespace LunaClient.Systems.VesselProtoSys
             (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null) ||
             (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
 
-        private const float VesselPackCheckSInterval = 1f;
+        
 
         #endregion
 
         #region Base overrides
-
-        public override void OnEnabled()
-        {
-            base.OnEnabled();
-            Client.Singleton.StartCoroutine(SendVesselDefinition());
-            Client.Singleton.StartCoroutine(SendAbandonedVesselsToServer());
-            Client.Singleton.StartCoroutine(CheckVesselsToLoad());
-            Client.Singleton.StartCoroutine(UpdateBannedPartsMessage());
-
-            if (SettingsSystem.CurrentSettings.PackOtherControlledVessels)
-            {
-                Client.Singleton.StartCoroutine(PackControlledVessels());
-            }
-        }
 
         public override void OnDisabled()
         {
             base.OnDisabled();
             AllPlayerVessels.Clear();
             BannedPartsStr = string.Empty;
+        }
+
+        public override void FixedUpdate()
+        {
+            base.FixedUpdate();
+
+            if (!Enabled || !SettingsSystem.CurrentSettings.Debug3)
+            {
+                return;
+            }
+
+            if (IsTimeForNextSend(VESSEL_LOAD_TIMER_NAME))
+            {
+                Profiler.BeginSample("VesselProtoSystem: Load");
+                CheckVesselsToLoad();
+                Profiler.EndSample();
+            }
+
+            if (IsTimeForNextSend(VESSEL_MESSAGE_TIMER_NAME))
+            {
+                Profiler.BeginSample("VesselProtoSystem: Banned Message");
+                UpdateBannedPartsMessage();
+                Profiler.EndSample();
+            }
+
+            if (IsTimeForNextSend(VESSEL_PACK_TIMER_NAME))
+            {
+                if (SettingsSystem.CurrentSettings.PackOtherControlledVessels)
+                {
+                    Profiler.BeginSample("VesselProtoSystem: Pack");
+                    PackControlledVessels();
+                    Profiler.EndSample();
+                }
+            }
+
+            if (IsTimeForNextSend(VESSEL_ABANDONED_TIMER_NAME))
+            {
+                Profiler.BeginSample("VesselProtoSystem: Abandoned");
+                SendAbandonedVesselsToServer();
+                Profiler.EndSample();
+            }
+
+            if (IsTimeForNextSend(VESSEL_SEND_TIMER_NAME))
+            {
+                Profiler.BeginSample("VesselProtoSystem: Send");
+                SendVesselDefinition();
+                Profiler.EndSample();
+            }
+
+
         }
 
         #endregion
@@ -151,45 +205,36 @@ namespace LunaClient.Systems.VesselProtoSys
         #endregion
 
         #region Private
-        
+
         #region Coroutines
 
         /// <summary>
         /// Set all other vessels as packed so the movement is better
         /// </summary>
-        private IEnumerator PackControlledVessels()
+        private void PackControlledVessels()
         {
-            var seconds = new WaitForSeconds(VesselPackCheckSInterval);
-            while (true)
+            try
             {
-                try
+                if (ProtoSystemReady)
                 {
-                    if (!Enabled)
-                        break;
+                    var controlledVessels = VesselCommon.GetControlledVessels();
 
-                    if (ProtoSystemReady)
+                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
                     {
-                        var controlledVessels = VesselCommon.GetControlledVessels();
-
-                        foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
+                        if (controlledVessels.Contains(vessel))
                         {
-                            if (controlledVessels.Contains(vessel))
-                            {
-                                if (!vessel.packed) PackVessel(vessel);
-                            }
-                            else
-                            {
-                                UnPackVessel(vessel);
-                            }
+                            if (!vessel.packed) PackVessel(vessel);
+                        }
+                        else
+                        {
+                            UnPackVessel(vessel);
                         }
                     }
                 }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in PackControlledVessels {e}");
-                }
-
-                yield return seconds;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in PackControlledVessels {e}");
             }
         }
 
@@ -198,70 +243,58 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Send the definition of our own vessel and the secondary vessels. We only send them after an interval specified.
         /// If the other player vessels are far we don't send them very often.
         /// </summary>
-        private IEnumerator SendVesselDefinition()
+        private void SendVesselDefinition()
         {
-            var seconds = new WaitForSeconds(VesselDefinitionSendSInterval);
-            var secondsFar = new WaitForSeconds(VesselDefinitionSendFarSInterval);
-
-            while (true)
+            try
             {
-                try
+                if (ProtoSystemReady)
                 {
-                    if (!Enabled)
-                        break;
+                    if (!VesselCommon.ActiveVesselIsInSafetyBubble())
+                        MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
 
-                    if (ProtoSystemReady)
+                    foreach (var vessel in VesselCommon.GetSecondaryVessels())
                     {
-                        if (!VesselCommon.ActiveVesselIsInSafetyBubble())
-                            MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
-
-                        foreach (var vessel in VesselCommon.GetSecondaryVessels())
-                        {
-                            MessageSender.SendVesselMessage(vessel);
-                        }
+                        MessageSender.SendVesselMessage(vessel);
                     }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in SendVesselDefinition {e}");
                 }
 
                 if (VesselCommon.PlayerVesselsNearby())
-                    yield return seconds;
+                {
+                    setupTimer(VESSEL_SEND_TIMER_NAME, SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval);
+                }
                 else
-                    yield return secondsFar;
+                {
+                    setupTimer(VESSEL_SEND_TIMER_NAME, SettingsSystem.ServerSettings.VesselDefinitionSendFarMsInterval);
+                }
             }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in SendVesselDefinition {e}");
+            }
+
         }
 
-        private IEnumerator UpdateBannedPartsMessage()
+        private void UpdateBannedPartsMessage()
         {
-            var seconds = new WaitForSeconds(UpdateScreenMessageInterval);
-            while (true)
+            try
             {
-                try
+                if (ProtoSystemReady && !string.IsNullOrEmpty(BannedPartsStr))
                 {
-                    if (!Enabled) break;
+                    if (BannedPartsMessage != null)
+                        BannedPartsMessage.duration = 0;
+                    if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_SYNC)
+                        BannedPartsMessage = ScreenMessages.PostScreenMessage(
+                                "Active vessel contains the following banned parts, it will not be saved to the server:\n" + BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+                    if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_LAUNCH)
+                        BannedPartsMessage = ScreenMessages.PostScreenMessage(
+                                "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
+                                BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
 
-                    if (ProtoSystemReady && !string.IsNullOrEmpty(BannedPartsStr))
-                    {
-                        if (BannedPartsMessage != null)
-                            BannedPartsMessage.duration = 0;
-                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_SYNC)
-                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                    "Active vessel contains the following banned parts, it will not be saved to the server:\n" + BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
-                        if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_LAUNCH)
-                            BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                    "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
-                                    BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
-
-                    }
                 }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in UpdateBannedPartsMessage {e}");
-                }
-
-                yield return seconds;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in UpdateBannedPartsMessage {e}");
             }
         }
 
@@ -270,74 +303,62 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Bear in mind that the server cannot apply "VesselUpdateMessages" over vessel definitions therefore, to update the information of a vessel in the server
         /// we must send all the vessel data.
         /// </summary>
-        private IEnumerator SendAbandonedVesselsToServer()
+        private void SendAbandonedVesselsToServer()
         {
-            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval).TotalSeconds);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
 
-                    if (ProtoSystemBasicReady)
+            setupTimer(VESSEL_ABANDONED_TIMER_NAME, SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval);
+            try
+            {
+                if (ProtoSystemBasicReady)
+                {
+                    foreach (var vessel in VesselCommon.GetAbandonedVessels())
                     {
-                        foreach (var vessel in VesselCommon.GetAbandonedVessels())
-                        {
-                            MessageSender.SendVesselMessage(vessel);
-                        }
+                        MessageSender.SendVesselMessage(vessel);
                     }
                 }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in SendAbandonedVesselsToServer {e}");
-                }
-
-                yield return seconds;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in SendAbandonedVesselsToServer {e}");
             }
         }
 
         /// <summary>
         /// Check vessels that must be loaded
         /// </summary>
-        private IEnumerator CheckVesselsToLoad()
+        private void CheckVesselsToLoad()
         {
-            var seconds = new WaitForSeconds(CheckVesselsToLoadSInterval);
-            while (true)
+            try
             {
-                try
+                if (ProtoSystemBasicReady)
                 {
-                    if (!Enabled) break;
+                    //Reload vessels that exist
+                    var vesselsToReLoad = AllPlayerVessels
+                       .Where(v => !v.Loaded && FlightGlobals.Vessels.Any(vl => vl.id == v.VesselId))
+                       .ToArray();
 
-                    if (ProtoSystemBasicReady)
+                    foreach (var vesselProto in vesselsToReLoad)
                     {
-                        //Reload vessels that exist
-                        var vesselsToReLoad = AllPlayerVessels
-                           .Where(v => !v.Loaded && FlightGlobals.Vessels.Any(vl => vl.id == v.VesselId))
-                           .ToArray();
+                        VesselLoader.ReloadVessel(vesselProto);
+                        VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.VesselId);   
+                    }
 
-                        foreach (var vesselProto in vesselsToReLoad)
-                        {
-                            VesselLoader.ReloadVessel(vesselProto);
-                        }
+                    //Load vessels that don't exist and are in our subspace
+                    var vesselsToLoad = AllPlayerVessels
+                        .Where(v => !v.Loaded && FlightGlobals.Vessels.All(vl => vl.id != v.VesselId) &&
+                        (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.VesselId)))
+                        .ToArray();
 
-                        //Load vessels that don't exist and are in our subspace
-                        var vesselsToLoad = AllPlayerVessels
-                            .Where(v => !v.Loaded && FlightGlobals.Vessels.All(vl => vl.id != v.VesselId) &&
-                            (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.VesselId)))
-                            .ToArray();
-
-                        foreach (var vesselProto in vesselsToLoad)
-                        {
-                            VesselLoader.LoadVessel(vesselProto);
-                        }
+                    foreach (var vesselProto in vesselsToLoad)
+                    {
+                        VesselLoader.LoadVessel(vesselProto);
+                        VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.VesselId);
                     }
                 }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in CheckVesselsToLoad {e}");
-                }
-
-                yield return seconds;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
             }
         }
 

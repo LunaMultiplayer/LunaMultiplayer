@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using UniLinq;
@@ -13,117 +12,83 @@ namespace LunaClient.Systems.VesselImmortalSys
     /// </summary>
     public class VesselImmortalSystem : System<VesselImmortalSystem>
     {
+        #region Constructors
+        public VesselImmortalSystem() : base()
+        {
+            setupTimer(VESSEL_IMMORTAL_TIMER_NAME, MakeOtherPlayerVesselsImmortalMSInterval);
+        }
+        #endregion
+
         #region Fields & properties
-        
+
         private bool VesselImmortalSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
 
-        private const float MakeOtherPlayerVesselsImmortalSInterval = 2f;
+        private const String VESSEL_IMMORTAL_TIMER_NAME = "IMMORTAL";
+        private const int MakeOtherPlayerVesselsImmortalMSInterval = 2000;
 
         #endregion
 
         #region base overrides
-
-        public override void OnEnabled()
+        public override void FixedUpdate()
         {
-            base.OnEnabled();
-            Client.Singleton.StartCoroutine(MakeOtherPlayerVesselsImmortal());
-        }
+            base.FixedUpdate();
+            if (!Enabled || !VesselImmortalSystemReady)
+            {
+                return;
+            }
 
+            if ( IsTimeForNextSend(VESSEL_IMMORTAL_TIMER_NAME))
+            {
+                Profiler.BeginSample("VesselImmortalSystem");
+                MakeOtherPlayerVesselsImmortal();
+                Profiler.EndSample();
+            }
+        }
         #endregion
 
         #region Public methods
-
-        /// <summary>
-        /// Makes a vessel immortal or not for the given amount of seconds.
-        /// </summary>
-        public void MakeVesselMortalOrImmortal(Vessel vessel, bool immortal, float seconds)
-        {
-            Client.Singleton.StartCoroutine(MakeVesselImmortalRoutine(vessel, immortal, seconds));
-        }
-
         #endregion
 
         #region Private methods
-
-        #region Coroutines
-
-        /// <summary>
-        /// Coroutine that makes a vessel immortal or mortal for the given amount of seconds
-        /// </summary>
-        private IEnumerator MakeVesselImmortalRoutine(Vessel vessel, bool immortal, float durationInSeconds)
-        {
-            var start = Time.time;
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled || !VesselImmortalSystemReady || Time.time - start > durationInSeconds)
-                    {
-                        SetVesselImmortalState(vessel, !immortal);
-                        break;
-                    }
-
-                    SetVesselImmortalState(vessel, immortal);
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine MakeVesselImmortalRoutine {e}");
-                }
-
-                yield return null;
-            }
-        }
-
         /// <summary>
         /// Make the other player vessels inmortal
         /// </summary>
-        private IEnumerator MakeOtherPlayerVesselsImmortal()
+        private void MakeOtherPlayerVesselsImmortal()
         {
-            var seconds = new WaitForSeconds(MakeOtherPlayerVesselsImmortalSInterval);
-            while (true)
+            try
             {
-                try
+                if (VesselImmortalSystemReady)
                 {
-                    if (!Enabled) break;
-                    if (VesselImmortalSystemReady)
+                    var ownedVessels = LockSystem.Singleton.GetOwnedLocksPrefix("control-").Select(LockSystem.TrimLock)
+                        .Union(LockSystem.Singleton.GetLocksWithPrefix("update-").Select(LockSystem.TrimLock))
+                        .Select(i => FlightGlobals.FindVessel(new Guid(i)))
+                        .Where(v => v != null)
+                        .ToArray();
+
+                    var othersPeopleVessels = LockSystem.Singleton.GetLocksWithPrefix("control-").Select(LockSystem.TrimLock)
+                        .Union(LockSystem.Singleton.GetLocksWithPrefix("update-").Select(LockSystem.TrimLock))
+                        .Except(ownedVessels.Select(v => v.id.ToString()))
+                        .Select(i => FlightGlobals.FindVessel(new Guid(i)))
+                        //Select the vessels and filter out the nulls
+                        .Where(v => v != null).ToArray();
+
+                    foreach (var vessel in ownedVessels)
                     {
-                        var ownedVessels = LockSystem.Singleton.GetOwnedLocksPrefix("control-").Select(LockSystem.TrimLock)
-                            .Union(LockSystem.Singleton.GetLocksWithPrefix("update-").Select(LockSystem.TrimLock))
-                            .Select(i => FlightGlobals.FindVessel(new Guid(i)))
-                            .Where(v => v != null)
-                            .ToArray();
+                        SetVesselImmortalState(vessel, false);
+                    }
 
-                        var othersPeopleVessels = LockSystem.Singleton.GetLocksWithPrefix("control-").Select(LockSystem.TrimLock)
-                            .Union(LockSystem.Singleton.GetLocksWithPrefix("update-").Select(LockSystem.TrimLock))
-                            .Except(ownedVessels.Select(v=> v.id.ToString()))
-                            .Select(i => FlightGlobals.FindVessel(new Guid(i)))
-                            //Select the vessels and filter out the nulls
-                            .Where(v => v != null).ToArray();
-
-                        foreach (var vessel in ownedVessels)
-                        {
-                            SetVesselImmortalState(vessel, false);
-                        }
-
-                        foreach (var vessel in othersPeopleVessels)
-                        {
-                            SetVesselImmortalState(vessel, true);
-                        }
+                    foreach (var vessel in othersPeopleVessels)
+                    {
+                        SetVesselImmortalState(vessel, true);
                     }
                 }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine MakeOtherPlayerVesselsInmortal {e}");
-                }
-
-                yield return seconds;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in coroutine MakeOtherPlayerVesselsInmortal {e}");
             }
         }
 
-        #endregion
-
-        #region Methods
-        
         /// <summary>
         /// Set all vessel parts to unbreakable or not (makes the vessel immortal or not)
         /// </summary>
@@ -132,8 +97,6 @@ namespace LunaClient.Systems.VesselImmortalSys
             vessel.Parts.Where(p => p.attachJoint != null).ToList()
                 .ForEach(p => p.attachJoint.SetUnbreakable(immortal, immortal));
         }
-
-        #endregion
 
         #endregion
     }

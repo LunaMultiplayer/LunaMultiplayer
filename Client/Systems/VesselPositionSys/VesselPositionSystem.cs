@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
@@ -13,6 +12,13 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
+        #region Constructors
+        public VesselPositionSystem() : base()
+        {
+            setupTimer(VESSEL_REMOVE_TIMER_NAME, RemoveVesselsMsInterval);
+        }
+        #endregion
+
         #region Field & Properties
 
         private static float SecondaryVesselUpdatesSendSInterval =>
@@ -22,8 +28,8 @@ namespace LunaClient.Systems.VesselPositionSys
         private static float VesselUpdatesSendSInterval => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
 
         private const float MaxSecWithoutUpdates = 30;
-        private const float RemoveVesselsSecInterval = 5;
-        private float lastVesselRemovalTime = 0;
+        private const int RemoveVesselsMsInterval = 5000;
+        private const String VESSEL_REMOVE_TIMER_NAME = "REMOVE";
 
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
@@ -69,18 +75,43 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.FixedUpdate();
 
-            if (SettingsSystem.CurrentSettings.Debug2)
+            if (!Enabled || !PositionUpdateSystemReady)
             {
-                removeOldVessels();
+                return;
             }
 
             if (PositionUpdateSystemReady)
             {
                 handleReceivedUpdates();
-                SendVesselPositionUpdates();
+            }
+        }
+
+        public override void LateUpdate()
+        {
+            base.LateUpdate();
+
+            if (!Enabled || !PositionUpdateSystemReady)
+            {
+                return;
             }
 
-            sendSecondaryVesselPositionUpdates();
+            if (SettingsSystem.CurrentSettings.Debug2 && IsTimeForNextSend(VESSEL_REMOVE_TIMER_NAME))
+            {
+                Profiler.BeginSample("VesselPositionUpdateRemoveOld");
+                removeOldVessels();
+                Profiler.EndSample();
+            }
+
+            if (PositionUpdateSystemReady)
+            {
+                if (SettingsSystem.CurrentSettings.Debug9)
+                {
+                    Profiler.BeginSample("VesselPositionUpdateSend");
+                    SendVesselPositionUpdates();
+                    sendSecondaryVesselPositionUpdates();
+                    Profiler.EndSample();
+                }
+            }
         }
 
         #endregion
@@ -113,6 +144,21 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             CurrentVesselUpdate.Clear();
             ReceivedUpdates.Clear();
+        }
+
+        /// <summary>
+        /// Applies the latest position update (if any) for the given vessel and moves it to that position
+        /// </summary>
+        /// <param name="VesselId"></param>
+        public void updateVesselPosition(Guid vesselId)
+        {
+            if (PositionUpdateSystemReady)
+            {
+                if (CurrentVesselUpdate.ContainsKey(vesselId))
+                {
+                    CurrentVesselUpdate[vesselId].initVesselUpdate();
+                }
+            }
         }
 
         #endregion
@@ -148,7 +194,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
             }
 
-            //Disable debug1 to stop vessel updates from being applied
+            //Disable debug1 to stop vessel position updates from being applied
             if (SettingsSystem.CurrentSettings.Debug1)
             {
                 //Run through all the updates that are not finished and apply them
@@ -180,13 +226,6 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void removeOldVessels()
         {
-            //Only remove vessels every RemoveVesselsSecInterval
-            if ((Time.fixedTime - lastVesselRemovalTime) < RemoveVesselsSecInterval)
-            {
-                return;
-            }
-            lastVesselRemovalTime = Time.fixedTime;
-
             try
             {
                 if (PositionUpdateSystemBasicReady)
@@ -213,6 +252,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// <summary>
         /// Check if we must send a message or not based on the fixed time that has passed.
         /// Note that when no vessels are nearby or we are not in KSC the time is multiplied by 10
+        /// //TODO: Should change this to use a timer in MessageSystem
         /// </summary>
         private static bool ShouldSendPositionUpdate()
         {
@@ -251,12 +291,6 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             //Only send secondary vessel updates every SecondaryVesselUpdatesSendSInterval
             if ((Time.fixedTime - lastSecondaryVesselSendTime) < SecondaryVesselUpdatesSendSInterval)
-            {
-                return;
-            }
-
-            //If debug3 isn't enabled, don't send secondary vesselPositionUpdates
-            if(!SettingsSystem.CurrentSettings.Debug3)
             {
                 return;
             }

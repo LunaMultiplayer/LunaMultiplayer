@@ -87,7 +87,9 @@ namespace LunaClient.Systems
             {
                 //If there is someone spectating us then return true and update it fast;
                 if (IsSomeoneSpectatingUs)
+                {
                     return true;
+                }
 
                 var controlledVesselsIds = GetControlledVesselIds();
                 return FlightGlobals.VesselsLoaded.Where(v => v.id != FlightGlobals.ActiveVessel.id).Any(v => controlledVesselsIds.Contains(v.id));
@@ -148,6 +150,16 @@ namespace LunaClient.Systems
         }
 
         /// <summary>
+        /// Returns whether the given vessel is in a starting safety bubble or not.
+        /// </summary>
+        /// <param name="vessel">The vessel used to determine the distance.  If null, the vessel is not in the safety bubble.</param>
+        /// <returns></returns>
+        public static bool IsInSafetyBubble(Vessel vessel)
+        {
+            return IsNearKsc(vessel, (int)SettingsSystem.ServerSettings.SafetyBubbleDistance);
+        }
+
+        /// <summary>
         /// Returns whether the given vessel is near KSC or not.  Measures distance from the landing pad, so very small values may not cover all of KSC.
         /// </summary>
         /// <param name="vessel">The vessel used to determine the distance.  If null, the vessel is not near KSC.</param>
@@ -157,41 +169,31 @@ namespace LunaClient.Systems
         {
             //If not at Kerbin or past ceiling we're definitely clear
             if (vessel == null || vessel.mainBody.name != "Kerbin")
+            {
                 return false;
-            var landingPadPosition = vessel.mainBody.GetWorldSurfacePosition(LANDING_PAD_LATITUDE, LANDING_PAD_LONGITUDE, KSC_ALTITUDE);
-            var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), landingPadPosition);
-            return (landingPadDistance < distance);
-        }
+            }
 
-        /// <summary>
-        /// Returns whether the given vessel is in a starting safety bubble or not.
-        /// </summary>
-        /// <param name="vessel">The vessel used to determine the distance.  If null, the vessel is not in the safety bubble.</param>
-        /// <returns></returns>
-        public static bool IsInSafetyBubble(Vessel vessel)
-        {
-            //If not at Kerbin or past ceiling we're definitely clear
-            if (vessel == null || vessel.mainBody.name != "Kerbin")
-                return false;
+            Vector3d vesselPosition = vessel.GetWorldPos3D();
             var landingPadPosition = vessel.mainBody.GetWorldSurfacePosition(LANDING_PAD_LATITUDE, LANDING_PAD_LONGITUDE, KSC_ALTITUDE);
-            var runwayPosition = vessel.mainBody.GetWorldSurfacePosition(RUNWAY_LATITUDE, RUNWAY_LONGITUDE, KSC_ALTITUDE);
-            var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), landingPadPosition);
-            var runwayDistance = Vector3d.Distance(vessel.GetWorldPos3D(), runwayPosition);
-            return (runwayDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance) ||
-                (landingPadDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance);
-        }
-
-        public static bool IsInSafetyBubble(Vector3d worlPos, CelestialBody body)
-        {
-            //If not at Kerbin or past ceiling we're definitely clear
-            if (body.name != "Kerbin")
-                return false;
-            var landingPadPosition = body.GetWorldSurfacePosition(LANDING_PAD_LATITUDE, LANDING_PAD_LONGITUDE, KSC_ALTITUDE);
-            var runwayPosition = body.GetWorldSurfacePosition(RUNWAY_LATITUDE, RUNWAY_LONGITUDE, KSC_ALTITUDE);
-            var landingPadDistance = Vector3d.Distance(worlPos, landingPadPosition);
-            var runwayDistance = Vector3d.Distance(worlPos, runwayPosition);
-            return (runwayDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance) ||
-                (landingPadDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance);
+            var landingPadDistance = Vector3d.Distance(vesselPosition, landingPadPosition);
+            if (landingPadDistance < distance)
+            {
+                return true;
+            } else
+            {
+                if (distance > 500)
+                {
+                    //Performance optimization: If distance is > 500, then we only check based on the landing pad.  However, for very short distances, we need to also check the 
+                    //runway, as a vessel could be on the runway, but not on the pad.
+                    return false;
+                }
+                else
+                {
+                    var runwayPosition = vessel.mainBody.GetWorldSurfacePosition(RUNWAY_LATITUDE, RUNWAY_LONGITUDE, KSC_ALTITUDE);
+                    var runwayDistance = Vector3d.Distance(vesselPosition, runwayPosition);
+                    return runwayDistance < distance;
+                }
+            }
         }
 
         public static bool EnableAllSystems

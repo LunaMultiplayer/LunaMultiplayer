@@ -128,8 +128,12 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void UnloadVessel(Vessel killVessel)
         {
+            return;
+
             if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
+            {
                 return;
+            }
             
             var vessel = VesselProtoSystem.Singleton.AllPlayerVessels.FirstOrDefault(v => v.VesselId == killVessel.id);
             if (vessel != null)
@@ -137,9 +141,21 @@ namespace LunaClient.Systems.VesselRemoveSys
                 vessel.Loaded = false;
             }
 
+            //TODO: Should we put the vessel on rails so that we don't run into bugs destroying the vessel?
+            //killVessel.GoOnRails();
+
+            FlightGlobals.fetch.SetVesselTarget(null, true);
             UnloadVesselFromGame(killVessel);
             KillGivenVessel(killVessel);
             UnloadVesselFromScenario(killVessel);
+
+            //TODO: Do we need to do this?  DMP has this code
+            //Add it to the delay kill list to make sure it dies.
+            //With KSP, If it doesn't work first time, keeping doing it until it does.
+            //if (!delayKillVessels.Contains(killVessel))
+            //{
+            //   delayKillVessels.Add(killVessel);
+            //}
         }
 
         private static void SwitchVesselIfSpectating(Vessel killVessel)

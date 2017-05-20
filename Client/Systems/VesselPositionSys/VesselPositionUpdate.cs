@@ -41,6 +41,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] Velocity { get; set; }
         public double[] OrbitVelocity { get; set; }
         public double[] Acceleration { get; set; }
+        public bool Landed;
 
         #endregion
 
@@ -80,6 +81,7 @@ namespace LunaClient.Systems.VesselPositionSys
             OrbitVelocity = msgData.OrbitVelocity;
             Velocity = msgData.Velocity;
             Orbit = msgData.Orbit;
+            Landed = msgData.Landed;
         }
 
         public VesselPositionUpdate(Vessel vessel)
@@ -91,13 +93,14 @@ namespace LunaClient.Systems.VesselPositionSys
                 BodyName = vessel.mainBody.bodyName;
                 //Update the vessel's orbital information from the current position of the rigidbodies
                 vessel.orbitDriver.TrackRigidbody(vessel.mainBody, 0);
+                vessel.UpdatePosVel();
 
                 TransformRotation = new[]
                 {
-                    vessel.vesselTransform.rotation.x,
-                    vessel.vesselTransform.rotation.y,
-                    vessel.vesselTransform.rotation.z,
-                    vessel.vesselTransform.rotation.w
+                    vessel.ReferenceTransform.rotation.x,
+                    vessel.ReferenceTransform.rotation.y,
+                    vessel.ReferenceTransform.rotation.z,
+                    vessel.ReferenceTransform.rotation.w
                 };
                 Acceleration = new[]
                 {
@@ -151,10 +154,12 @@ namespace LunaClient.Systems.VesselPositionSys
                     vessel.orbit.meanAnomalyAtEpoch,
                     vessel.orbit.epoch
                 };
+                Landed = vessel.Landed;
             }
             catch (Exception e)
             {
                 Debug.Log($"[LMP]: Failed to get vessel position update, exception: {e}");
+                throw e;
             }
         }
 
@@ -207,11 +212,26 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
+            setLandedSplashed();
             applyVesselRotation();
             applyVesselPosition();
 
             //Calculate the srfRelRotation, height from terrain, radar altitude, altitude, and orbit values from the various items set in the above methods.
             //Vessel.UpdatePosVel();
+        }
+
+        private void setLandedSplashed()
+        {
+            Vessel.checkSplashed();
+            if (Vessel.packed)
+            {
+                Vessel.Landed = Landed;
+            }
+            else
+            {
+                Vessel.checkLanded();
+            }
+            
         }
 
         /// <summary>
@@ -223,11 +243,25 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (SettingsSystem.CurrentSettings.Debug7)
             {
-                //TODO: Hack to make sure vessels are never landed for now.  Remove when landed vessels are fixed.
-                Vessel.Landed = false;
-                Vessel.Splashed = false;
-                Vessel.vesselTransform.rotation = targetTransformRot;
-                Vessel.SetRotation(targetTransformRot, true);
+                //We use a tolerance because the coordinate systems do not perfectly match between clients.
+                //If the vessel is landed, use a higher tolerance because we want to avoid jitter.  This will cause landed vessels to "jump", but not wiggle and explode.
+                double tolerance = Vessel.Landed ? .05 : .01;
+
+                Quaternion rotation = Vessel.vesselTransform.rotation;
+                if (Math.Abs(targetTransformRot.w - rotation.w) > tolerance || Math.Abs(targetTransformRot.x - rotation.x) > tolerance || 
+                    Math.Abs(targetTransformRot.y - rotation.y) > tolerance || Math.Abs(targetTransformRot.z - rotation.z) > tolerance)
+                {
+                    //It is necessary to set the position as well, or the parts may jitter if their position is not also set later in the applyVesselPosition method.
+                    //It's possible that the threshold for rotation is met, but the threshold for position is not.  In this case, we'll adjust the position of the pieces
+                    //by the rotation, but not translate them.
+                    Vessel.SetRotation(targetTransformRot, true);
+                    Vessel.vesselTransform.rotation = targetTransformRot;
+
+                    if(SettingsSystem.CurrentSettings.Debug6)
+                    {
+                        Vessel.precalc.SetLandedPosRot();
+                    }
+                }
             }
         }
 
@@ -246,58 +280,26 @@ namespace LunaClient.Systems.VesselPositionSys
             var longitude = LatLonAlt[1];
             var altitude = LatLonAlt[2];
 
-            if (false)
-            {
-                //TODO: Need to make sure position setting is working for landed vessels.
-                //Update the vessels's surface position to ensure that it's at the right spot
-                Vessel.latitude = latitude;
-                Vessel.longitude = longitude;
-                Vessel.altitude = altitude;
-
-                //Update the protovessel, so if the vessel gets saved out, it's at the right spot
-                Vessel.protoVessel.latitude = latitude;
-                Vessel.protoVessel.longitude = longitude;
-                Vessel.protoVessel.altitude = altitude;
-            }
-
-            Vector3d updatePosition = Body.GetWorldSurfacePosition(latitude, longitude, altitude);
-            if (SettingsSystem.CurrentSettings.PositionFudgeEnable)
-            {
-                //Use the average velocity to determine the new position --- Displacement = v0*t + 1/2at^2.
-                var positionFudge = (currentVelocity * PlanetariumDifference);
-                updatePosition += positionFudge;
-            }
-
-            //TODO: Need to properly handle landed vessels
-            if (Vessel.packed)
-            {
-                //TODO: Test--unproven code
-                //TODO: Returns -1 when above the surface.  FIX.
-                if (true || Vessel.GetHeightFromSurface() > 10)
-                {
-                    Vessel.Landed = false;
-                    Vessel.Splashed = false;
-                }
-            }
-            else
-            {
-                Vessel.Landed = false;
-                Vessel.Splashed = false;
-                //This doesn't work for packed vessels
-                //Vessel.UpdateLandedSplashed();
-            }
-            
             if (!Vessel.LandedOrSplashed)
             {
-                Vector3d orbitalPos = updatePosition - Vessel.mainBody.position;
-                Vector3d orbitalVel = currentVelocity;
-
                 //When suborbital, we can just set orbit from velocity and position.  For orbits, this can cause significant jitter.
-                if (Vessel.altitude < 25000)
+                if (false && Vessel.altitude < 25000)
                 {
+                    Vector3d updatePosition = Body.GetWorldSurfacePosition(latitude, longitude, altitude);
+                    if (SettingsSystem.CurrentSettings.PositionFudgeEnable)
+                    {
+                        //Use the average velocity to determine the new position --- Displacement = v0*t + 1/2at^2.
+                        var positionFudge = (currentVelocity * PlanetariumDifference);
+                        updatePosition += positionFudge;
+                    }
+
+                    Vector3d orbitalPos = updatePosition - Vessel.mainBody.position;
+                    Vector3d orbitalVel = currentVelocity;
                     Vessel.orbitDriver.orbit.UpdateFromStateVectors(orbitalPos.xzy, orbitalVel.xzy, Body, Planetarium.GetUniversalTime());
                     Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
                     Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
+
+                    
                 }
                 else
                 {
@@ -310,66 +312,83 @@ namespace LunaClient.Systems.VesselPositionSys
                         Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
                         Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
                     }
-
-                    if (SettingsSystem.CurrentSettings.Debug6)
-                    {
-                        var targetPosition = targetOrbit.getPositionAtUT(Planetarium.GetUniversalTime());
-                        Vessel.SetPosition(targetPosition);
-                    }
-
-
-                    if (SettingsSystem.CurrentSettings.Debug5)
-                    {
-                        //Also, It's quite difficult to figure out the world velocity due to Krakensbane, and the reference frame.
-                        Vector3d posDelta = targetOrbit.getPositionAtUT(Planetarium.GetUniversalTime()) - Vessel.orbitDriver.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
-                        Vector3d velDelta = targetOrbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy - Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy;
-                        //Vector3d velDelta = updateOrbit.vel.xzy - updateVessel.orbitDriver.orbit.vel.xzy;
-                        Vessel.Translate(posDelta);
-                        Vessel.ChangeWorldVelocity(velDelta);
-                    }
-                }
-
-                if (SettingsSystem.CurrentSettings.Debug8)
-                {
-                    //TODO: Maybe this could be replaced with Vessel.ChangeWorldVelocity?
-
-                    //Set the velocity on each part and its rigidbody (if it exists)
-                    Vector3d vesselUniverseVelocity = (Vessel.orbit.GetVel() - (!Vessel.orbit.referenceBody.inverseRotation ? Vector3d.zero : Vessel.orbit.referenceBody.getRFrmVel(Vessel.vesselTransform.position)));
-                    Vector3d vel = vesselUniverseVelocity - Krakensbane.GetFrameVelocity();
-                    int numParts = Vessel.Parts.Count;
-                    for (int i = 0; i < numParts; i++)
-                    {
-                        Part item = this.Vessel.parts[i];
-                        //This is based on the behavior of Part.ResumeVelocity()
-                        item.vel = Vector3.zero;
-                        if (!Vessel.LandedOrSplashed)
-                        {
-                            Vector3 partUniverseVelocity = (item.orbit.GetVel() - (!item.orbit.referenceBody.inverseRotation ? Vector3d.zero : item.orbit.referenceBody.getRFrmVel(item.partTransform.position)));
-                            Vector3 newVelocity = partUniverseVelocity - Krakensbane.GetFrameVelocity();
-                            item.vel = newVelocity;
-                        }
-                        if (item.rb != null)
-                        {
-                            item.rb.velocity = item.vel;
-                        }
-
-                    }
-                    Vessel.angularVelocityD = Vector3d.zero;
-                    Vessel.angularVelocity = Vector3.zero;
-                }
-
-                counter++;
-                if ((Vessel.altitude > 25000 || counter > 75) && SettingsSystem.CurrentSettings.Debug9)
-                {
-                    counter = 0;
-                    Vessel.orbitDriver.updateFromParameters();
-                    //After a single position update, reset the flag so that it only does one update per debug9 click
-                    //SettingsSystem.CurrentSettings.Debug9 = false;
                 }
             }
-            //Need to copy the control states for the vessels
-            //Vessel.ctrlState.Neutralize();
+            else
+            {
+                //TODO: Need to make sure position setting is working for landed vessels.
+                //Update the vessels's surface position to ensure that it's at the right spot
+                Vessel.latitude = latitude;
+                Vessel.longitude = longitude;
+                Vessel.altitude = altitude;
+
+                //Update the protovessel, so if the vessel gets saved out, it's at the right spot
+                Vessel.protoVessel.latitude = latitude;
+                Vessel.protoVessel.longitude = longitude;
+                Vessel.protoVessel.altitude = altitude;
+
+                Vector3d position = Body.GetWorldSurfacePosition(latitude, longitude, altitude);
+                if (true || SettingsSystem.CurrentSettings.Debug6)
+                {
+                    Vector3 currentPosition = Vessel.vesselTransform.position;
+                    double cur_x = currentPosition.x;
+                    double cur_y = currentPosition.y;
+                    double cur_z = currentPosition.z;
+
+                    //We use a tolerance because the coordinate systems do not perfectly match between clients.
+                    //If the vessel is landed, use a higher tolerance because we want to avoid jitter.  This will cause landed vessels to "jump", but not wiggle and explode.
+                    double tolerance = Vessel.Landed ? .1 : .01;
+
+                    if (Math.Abs(position.x-cur_x) > tolerance || Math.Abs(position.y-cur_y) > tolerance || Math.Abs(position.z-cur_z) > tolerance) {
+                        Vessel.SetPosition(position);
+                    }
+                }
+            }
+
+            if (SettingsSystem.CurrentSettings.Debug8)
+            {
+                //Set the velocity on each part and its rigidbody (if it exists)
+                //Vector3d vesselUniverseVelocity = (Vessel.orbit.GetVel() - (!Vessel.orbit.referenceBody.inverseRotation ? Vector3d.zero : Vessel.orbit.referenceBody.getRFrmVel(Vessel.vesselTransform.position)));
+                //Vector3d vel = vesselUniverseVelocity - Krakensbane.GetFrameVelocity();
+                int numParts = Vessel.Parts.Count;
+                for (int i = 0; i < numParts; i++)
+                {
+                    Part item = this.Vessel.parts[i];
+                    item.ResumeVelocity();
+
+                    //This is based on the behavior of Part.ResumeVelocity()
+                    //item.vel = Vector3.zero;
+                    //if (!Vessel.LandedOrSplashed)
+                    //{
+                    //    Vector3 partUniverseVelocity = (item.orbit.GetVel() - (!item.orbit.referenceBody.inverseRotation ? Vector3d.zero : item.orbit.referenceBody.getRFrmVel(item.partTransform.position)));
+                    //    Vector3 newVelocity = partUniverseVelocity - Krakensbane.GetFrameVelocity();
+                    //    item.vel = newVelocity;
+                    //}
+                    //if (item.rb != null)
+                    //{
+                    //    item.rb.velocity = item.vel;
+                    //}
+                }
+                Vessel.angularVelocityD = Vector3d.zero;
+                Vessel.angularVelocity = Vector3.zero;
+            }
+
+            counter++;
+            if (SettingsSystem.CurrentSettings.Debug6 && (Vessel.altitude > 25000 || counter > 75))
+            {
+                counter = 0;
+                //Vessel.orbitDriver.updateFromParameters();
+                //After a single position update, reset the flag so that it only does one update per debug9 click
+                //SettingsSystem.CurrentSettings.Debug9 = false;
+            }
+
+            if (Vessel.loaded && !Vessel.packed)
+            {
+                Vessel.GetHeightFromTerrain();
+            }
         }
+        //Need to copy the control states for the vessels
+        //Vessel.ctrlState.Neutralize();
 
         //Credit where credit is due, Thanks hyperedit.
         private static void CopyOrbit(Orbit sourceOrbit, Orbit destinationOrbit)
