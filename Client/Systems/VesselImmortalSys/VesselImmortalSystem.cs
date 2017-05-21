@@ -15,7 +15,7 @@ namespace LunaClient.Systems.VesselImmortalSys
         #region Constructors
         public VesselImmortalSystem() : base()
         {
-            setupTimer(VESSEL_IMMORTAL_TIMER_NAME, MakeOtherPlayerVesselsImmortalMSInterval);
+            setupTimer(VESSEL_IMMORTAL_TIMER_NAME, MakeOtherPlayerVesselsImmortalMsInterval);
         }
         #endregion
 
@@ -29,10 +29,9 @@ namespace LunaClient.Systems.VesselImmortalSys
         #endregion
 
         #region base overrides
-		//TODO: Should this be Update() instead?
-        public override void FixedUpdate()
+        public override void Update()
         {
-            base.FixedUpdate();
+            base.Update();
             if (!Enabled || !VesselImmortalSystemReady)
             {
                 return;
@@ -46,8 +45,6 @@ namespace LunaClient.Systems.VesselImmortalSys
             }
         }
         #endregion
-
-        #region Public methods
 
         #region Private methods
         /// <summary>

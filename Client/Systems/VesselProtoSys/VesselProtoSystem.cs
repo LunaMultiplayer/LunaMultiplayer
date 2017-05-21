@@ -26,7 +26,6 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             setupTimer(VESSEL_LOAD_TIMER_NAME, CheckVesselsToLoadMsInterval);
             setupTimer(VESSEL_MESSAGE_TIMER_NAME, UpdateScreenMessageInterval);
-            setupTimer(VESSEL_PACK_TIMER_NAME, VesselPackCheckMsInterval);
             setupTimer(VESSEL_ABANDONED_TIMER_NAME, SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval);
             setupTimer(VESSEL_SEND_TIMER_NAME, SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval);
         }
@@ -42,9 +41,6 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private const int UpdateScreenMessageInterval = 1000;
         private const String VESSEL_MESSAGE_TIMER_NAME = "MESSAGE";
-
-        private const int VesselPackCheckMsInterval = 1000;
-        private const String VESSEL_PACK_TIMER_NAME = "PACK";
 
         private const String VESSEL_ABANDONED_TIMER_NAME = "ABANDONED";
 
@@ -105,16 +101,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 Profiler.EndSample();
             }
 
-            if (IsTimeForNextSend(VESSEL_PACK_TIMER_NAME))
-            {
-                if (SettingsSystem.CurrentSettings.PackOtherControlledVessels)
-                {
-                    Profiler.BeginSample("VesselProtoSystem: Pack");
-                    PackControlledVessels();
-                    Profiler.EndSample();
-                }
-            }
-
             if (IsTimeForNextSend(VESSEL_ABANDONED_TIMER_NAME))
             {
                 Profiler.BeginSample("VesselProtoSystem: Abandoned");
@@ -136,7 +122,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Check vessels that must be loaded
         /// </summary>
         //TODO: Properly merge this method into Update()
-        public override void UpdateDagger()
+        public void UpdateDagger()
         {
             base.Update();
             if (Enabled && ProtoSystemBasicReady && Timer.ElapsedMilliseconds > CheckVesselsToLoadMsInterval)
@@ -206,40 +192,6 @@ namespace LunaClient.Systems.VesselProtoSys
         #endregion
 
         #region Private
-
-        #region Coroutines
-        /// <summary>
-        /// Set all other vessels as packed so the movement is better
-        /// </summary>
-        //TODO: Should this method be removed?
-        private void PackControlledVessels()
-        {
-            try
-            {
-                if (ProtoSystemReady)
-                {
-                    var controlledVessels = VesselCommon.GetControlledVessels();
-
-                    foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
-                    {
-                        if (controlledVessels.Contains(vessel))
-                        {
-                            if (!vessel.packed) PackVessel(vessel);
-                        }
-                        else
-                        {
-                            UnPackVessel(vessel);
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[LMP]: Error in PackControlledVessels {e}");
-            }
-        }
-
-
         /// <summary>
         /// Send the definition of our own vessel and the secondary vessels. We only send them after an interval specified.
         /// If the other player vessels are far we don't send them very often.
@@ -335,25 +287,25 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     //Reload vessels that exist
                     var vesselsToReLoad = AllPlayerVessels
-                       .Where(v => !v.Loaded && FlightGlobals.Vessels.Any(vl => vl.id == v.VesselId))
+                       .Where(v => !v.Value.Loaded && FlightGlobals.Vessels.Any(vl => vl.id == v.Value.VesselId))
                        .ToArray();
 
                     foreach (var vesselProto in vesselsToReLoad)
                     {
-                        VesselLoader.ReloadVessel(vesselProto);
-                        VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.VesselId);   
+                        VesselLoader.ReloadVessel(vesselProto.Value);
+                        VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.Value.VesselId);   
                     }
 
                     //Load vessels that don't exist and are in our subspace
                     var vesselsToLoad = AllPlayerVessels
-                        .Where(v => !v.Loaded && FlightGlobals.Vessels.All(vl => vl.id != v.VesselId) &&
-                        (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.VesselId)))
+                        .Where(v => !v.Value.Loaded && FlightGlobals.Vessels.All(vl => vl.id != v.Value.VesselId) &&
+                        (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.Value.VesselId)))
                         .ToArray();
 
                     foreach (var vesselProto in vesselsToLoad)
                     {
-                        VesselLoader.LoadVessel(vesselProto);
-                        VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.VesselId);
+                        VesselLoader.LoadVessel(vesselProto.Value);
+                        VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.Value.VesselId);
                     }
                 }
             }
@@ -362,8 +314,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 Debug.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
             }
         }
-
-        #endregion
 
         private static string GetInvalidVesselParts(Vessel checkVessel)
         {

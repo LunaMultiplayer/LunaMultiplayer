@@ -107,7 +107,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     //TODO: Handle when it's the active vessel for the FlightGlobals as well.  If you delete the active vessel, it ends badly.  Very badly.
 
-                    //Do actually compare by reference--we want to see if the vessel object we're unloading and reloading is the one that's targeted.  If so, we need to
+                    //We do want to actually compare by reference--we want to see if the vessel object we're unloading and reloading is the one that's targeted.  If so, we need to
                     //reset the target to the new instance of the vessel
                     if (vesselLoaded && (currentTarget == vessel))
                     {

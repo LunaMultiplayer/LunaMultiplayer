@@ -68,13 +68,16 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
 		//TODO: FixedUpdate or Update()?
-        public override void Update()
+        public override void FixedUpdate()
         {
             if (PositionUpdateSystemReady)
             {
                 HandleVesselUpdates();
             }
         }
+        #endregion
+
+        #region Private methods
 
         private void HandleVesselUpdates()
         {
@@ -89,6 +92,7 @@ namespace LunaClient.Systems.VesselPositionSys
             var vesselIds = CurrentVesselUpdate.Keys.ToList();
             foreach (var vesselId in vesselIds)
             {
+                //TODO: Won't this apply the current vessel updates over and over?  Shouldn't we remove them once processed?  Every position update should be processed once.
                 ProcessNewVesselUpdate(vesselId);
                 CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
             }
@@ -102,12 +106,12 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
+            //TODO: What is the point of this code?
             FutureVesselUpdate[vesselId].Vessel = CurrentVesselUpdate[vesselId].Vessel;
             if (FutureVesselUpdate[vesselId].BodyName == CurrentVesselUpdate[vesselId].BodyName)
                 FutureVesselUpdate[vesselId].Body = CurrentVesselUpdate[vesselId].Body;
 
-            CurrentVesselUpdate[vesselId] = CurrentVesselUpdate[vesselId].Target;
-            CurrentVesselUpdate[vesselId].Target = FutureVesselUpdate[vesselId];
+            CurrentVesselUpdate[vesselId] = FutureVesselUpdate[vesselId];
         }
 
         /// <summary>
@@ -119,10 +123,29 @@ namespace LunaClient.Systems.VesselPositionSys
             if (first != null)
             {
                 first.SentTime = update.SentTime;
+                //TODO: Why do we do this?  Shouldn't we just set the update and start processing them?  We shouldn't alter the time the updates were sent...
                 update.SentTime += 0.5f;
 
                 CurrentVesselUpdate.Add(update.VesselId, first);
-                CurrentVesselUpdate[update.VesselId].Target = update;
+                CurrentVesselUpdate[update.VesselId] = update;
+            }
+        }
+
+        #endregion
+
+        #region Public methods
+        /// <summary>
+        /// Applies the latest position update (if any) for the given vessel and moves it to that position
+        /// </summary>
+        /// <param name="VesselId"></param>
+        public void updateVesselPosition(Guid vesselId)
+        {
+            if (PositionUpdateSystemReady)
+            {
+                if (CurrentVesselUpdate.ContainsKey(vesselId))
+                {
+                    CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
+                }
             }
         }
 
@@ -159,7 +182,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #endregion
 
-        #region Private methods
+        #region Private methods 2
         
         /// <summary>
         /// Check if we must send a message or not based on the fixed time that has passed.
@@ -199,24 +222,16 @@ namespace LunaClient.Systems.VesselPositionSys
         /// <summary>
         /// Send updates for vessels that we own the update lock.
         /// </summary>
-        private IEnumerator SendSecondaryVesselPositionUpdates()
+        /// TODO: Who calls this method now?  How do we make sure we only infrequently send updates for secondary vessels, as opposed to primary vessels?
+        private void SendSecondaryVesselPositionUpdates()
         {
-            var seconds = new WaitForSeconds(SecondaryVesselUpdatesSendSInterval);
-            while (true)
+            if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
             {
-                if (!Enabled)
-                    break;
-
-                if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
+                var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
+                foreach (var secondaryVessel in secondaryVesselsToUpdate)
                 {
-                    var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
-                    foreach (var secondaryVessel in secondaryVesselsToUpdate)
-                    {
-                        MessageSender.SendVesselPositionUpdate(secondaryVessel);
-                    }
+                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
                 }
-
-                yield return seconds;
             }
         }
 

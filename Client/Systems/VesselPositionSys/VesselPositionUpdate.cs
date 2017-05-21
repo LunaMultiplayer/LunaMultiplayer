@@ -17,7 +17,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public float SentTime { get; set; }
         public Vessel Vessel { get; set; }
         public CelestialBody Body { get; set; }
-        public VesselPositionUpdate Target { get; set; }
         public Guid Id { get; set; }
         public double PlanetTime { get; set; }
 
@@ -51,6 +50,7 @@ namespace LunaClient.Systems.VesselPositionSys
         
         private double PlanetariumDifference { get; set; }
         private const float PlanetariumDifferenceLimit = 3f;
+        private int counter = 0;
 
         #endregion
 
@@ -171,35 +171,24 @@ namespace LunaClient.Systems.VesselPositionSys
         public void ApplyVesselUpdate()
         {
             if (Body == null)
+            {
                 Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
+            }
             if (Vessel == null)
+            {
                 Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
+            }
 
             if (Body != null && Vessel != null)
             {
                 PlanetariumDifference = Planetarium.GetUniversalTime() - PlanetTime;
-                ApplyInterpolations(1);
+                setLandedSplashed();
+                applyVesselRotation();
+                applyVesselPosition();
+
+                //Calculate the srfRelRotation, height from terrain, radar altitude, altitude, and orbit values from the various items set in the above methods.
+                //Vessel.UpdatePosVel();
             }
-        }
-
-        /// <summary>
-        /// Apply the Vessel Updates provided by the vesselUpdateSystem
-        /// Must be run during FixedUpdate
-        /// </summary>
-        //TODO: Get rid of interpolations
-        private void ApplyInterpolations(float percentage)
-        {
-            if (Vessel == null)
-            {
-                return;
-            }
-
-            setLandedSplashed();
-            applyVesselRotation();
-            applyVesselPosition();
-
-            //Calculate the srfRelRotation, height from terrain, radar altitude, altitude, and orbit values from the various items set in the above methods.
-            //Vessel.UpdatePosVel();
         }
 
         private void setLandedSplashed()
