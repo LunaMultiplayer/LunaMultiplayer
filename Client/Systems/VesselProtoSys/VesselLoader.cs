@@ -25,8 +25,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
             foreach (var vessel in System.AllPlayerVessels)
             {
-                var pv = CreateSafeProtoVesselFromConfigNode(vessel.VesselNode, vessel.VesselId);
-                if ((pv != null) && (pv.vesselID == vessel.VesselId))
+                var pv = CreateSafeProtoVesselFromConfigNode(vessel.Value.VesselNode, vessel.Key);
+                if ((pv != null) && (pv.vesselID == vessel.Key))
                 {
                     RegisterServerAsteriodIfVesselIsAsteroid(pv);
                     HighLogic.CurrentGame.flightState.protoVessels.Add(pv);
@@ -34,10 +34,10 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
                 else
                 {
-                    Debug.LogWarning($"[LMP]: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
-                    ChatSystem.Singleton.PmMessageServer($"WARNING: Protovessel {vessel.VesselId} is DAMAGED!. Skipping load.");
+                    Debug.LogWarning($"[LMP]: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
+                    ChatSystem.Singleton.PmMessageServer($"WARNING: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
                 }
-                vessel.Loaded = true;
+                vessel.Value.Loaded = true;
             }
 
             Debug.Log($"[LMP]: {numberOfLoads} Vessels loaded into game");
@@ -97,7 +97,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     Boolean vesselLoaded = false;
                     var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
                     //TODO: Is BackupVessel() needed or can we just look at the protoVessel?
-                    if (SettingsSystem.CurrentSettings.Debug4 || (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count))
+                    if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
                     {
                         //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
                         VesselRemoveSystem.Singleton.UnloadVessel(vessel);

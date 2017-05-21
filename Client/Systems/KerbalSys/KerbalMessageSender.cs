@@ -29,7 +29,7 @@ namespace LunaClient.Systems.KerbalSys
 
             var kerbalNode = new ConfigNode();
             pcm.Save(kerbalNode);
-            var kerbalBytes = ConfigNodeSerializer.Singleton.Serialize(kerbalNode);
+            var kerbalBytes = ConfigNodeSerializer.Serialize(kerbalNode);
             if ((kerbalBytes == null) || (kerbalBytes.Length == 0))
             {
                 Debug.Log("[LMP]: VesselWorker: Error sending kerbal - bytes are null or 0");

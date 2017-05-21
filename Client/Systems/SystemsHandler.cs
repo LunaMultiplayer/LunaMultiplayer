@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
@@ -20,16 +21,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
-using LunaClient.Systems.VesselChangeSys;
-using LunaClient.Systems.VesselDockSys;
-using LunaClient.Systems.VesselFlightStateSys;
-using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselPositionSys;
-using LunaClient.Systems.VesselProtoSys;
-using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
-using LunaClient.Utilities;
 
 namespace LunaClient.Systems
 {
@@ -37,7 +29,7 @@ namespace LunaClient.Systems
     {
         //DO NOT! use a list of ISystem and run trough each method. I don't know what happens but you will 
         //end up with variables that are different than it's singleton value (really, it's a nightmare) 
-        //for example, if you stop on TimeSyncerSystem.Update and set Synced = true you will se how 
+        //for example, if you stop on TimeSyncerSystem.Update and set Synced = true you will see how 
         //the variable value differs from it's singleton value.
         
         /// <summary>
@@ -51,14 +43,7 @@ namespace LunaClient.Systems
             TryUpdate(HandshakeSystem.Singleton);
             TryUpdate(TimeSyncerSystem.Singleton);
             TryUpdate(KerbalSystem.Singleton);
-            TryUpdate(VesselLockSystem.Singleton);
-            TryUpdate(VesselPositionSystem.Singleton);
-            TryUpdate(VesselFlightStateSystem.Singleton);
-            TryUpdate(VesselUpdateSystem.Singleton);
-            TryUpdate(VesselChangeSystem.Singleton);
-            TryUpdate(VesselProtoSystem.Singleton);
-            TryUpdate(VesselRemoveSystem.Singleton);
-            TryUpdate(VesselDockSystem.Singleton);
+            TryUpdate(VesselCommon.GetSingletons);
             TryUpdate(WarpSystem.Singleton);
             TryUpdate(LockSystem.Singleton);
             TryUpdate(SettingsSystem.Singleton);
@@ -75,43 +60,7 @@ namespace LunaClient.Systems
             TryUpdate(ScenarioSystem.Singleton);
             TryUpdate(ToolbarSystem.Singleton);
         }
-
-        /// <summary>
-        /// Call all the updates of the systems
-        /// </summary>
-        public static void LateUpdate()
-        {
-            TryLateUpdate(NetworkSystem.Singleton);
-            TryLateUpdate(ModSystem.Singleton);
-            TryLateUpdate(ModApiSystem.Singleton);
-            TryLateUpdate(HandshakeSystem.Singleton);
-            TryLateUpdate(TimeSyncerSystem.Singleton);
-            TryLateUpdate(KerbalSystem.Singleton);
-            TryLateUpdate(VesselLockSystem.Singleton);
-            TryLateUpdate(VesselPositionSystem.Singleton);
-            TryLateUpdate(VesselFlightStateSystem.Singleton);
-            TryLateUpdate(VesselUpdateSystem.Singleton);
-            TryLateUpdate(VesselChangeSystem.Singleton);
-            TryLateUpdate(VesselProtoSystem.Singleton);
-            TryLateUpdate(VesselRemoveSystem.Singleton);
-            TryLateUpdate(VesselDockSystem.Singleton);
-            TryLateUpdate(WarpSystem.Singleton);
-            TryLateUpdate(LockSystem.Singleton);
-            TryLateUpdate(SettingsSystem.Singleton);
-            TryLateUpdate(AsteroidSystem.Singleton);
-            TryLateUpdate(StatusSystem.Singleton);
-            TryLateUpdate(ChatSystem.Singleton);
-            TryLateUpdate(AdminSystem.Singleton);
-            TryLateUpdate(PlayerColorSystem.Singleton);
-            TryLateUpdate(PlayerConnectionSystem.Singleton);
-            TryLateUpdate(MotdSystem.Singleton);
-            TryLateUpdate(CraftLibrarySystem.Singleton);
-            TryLateUpdate(FlagSystem.Singleton);
-            TryLateUpdate(KerbalReassignerSystem.Singleton);
-            TryLateUpdate(ScenarioSystem.Singleton);
-            TryLateUpdate(ToolbarSystem.Singleton);
-        }
-
+        
         /// <summary>
         /// Call all the fixed updates of the systems
         /// </summary>
@@ -123,14 +72,7 @@ namespace LunaClient.Systems
             TryFixedUpdate(HandshakeSystem.Singleton);
             TryFixedUpdate(TimeSyncerSystem.Singleton);
             TryFixedUpdate(KerbalSystem.Singleton);
-            TryFixedUpdate(VesselLockSystem.Singleton);
-            TryFixedUpdate(VesselFlightStateSystem.Singleton);
-            TryFixedUpdate(VesselUpdateSystem.Singleton);
-            TryFixedUpdate(VesselPositionSystem.Singleton);
-            TryFixedUpdate(VesselChangeSystem.Singleton);
-            TryFixedUpdate(VesselProtoSystem.Singleton);
-            TryFixedUpdate(VesselRemoveSystem.Singleton);
-            TryFixedUpdate(VesselDockSystem.Singleton);
+            TryFixedUpdate(VesselCommon.GetSingletons);
             TryFixedUpdate(WarpSystem.Singleton);
             TryFixedUpdate(LockSystem.Singleton);
             TryFixedUpdate(SettingsSystem.Singleton);
@@ -148,39 +90,33 @@ namespace LunaClient.Systems
             TryFixedUpdate(ToolbarSystem.Singleton);
         }
 
-        private static void TryUpdate(ISystem system)
+        private static void TryUpdate(params ISystem[] systems)
         {
-            try
+            foreach (var system in systems)
             {
-                system.Update();
-            }
-            catch (Exception e)
-            {
-                MainSystem.Singleton.HandleException(e, "SystemHandler-Update");
+                try
+                {
+                    system.RunUpdate();
+                }
+                catch (Exception e)
+                {
+                    MainSystem.Singleton.HandleException(e, "SystemHandler-Update");
+                }
             }
         }
-
-        private static void TryLateUpdate(ISystem system)
+        
+        private static void TryFixedUpdate(params ISystem[] systems)
         {
-            try
+            foreach (var system in systems)
             {
-                system.LateUpdate();
-            }
-            catch (Exception e)
-            {
-                MainSystem.Singleton.HandleException(e, "SystemHandler-LateUpdate");
-            }
-        }
-
-        private static void TryFixedUpdate(ISystem system)
-        {
-            try
-            {
-                system.FixedUpdate();
-            }
-            catch (Exception e)
-            {
-                MainSystem.Singleton.HandleException(e, "SystemHandler-FixedUpdate");
+                try
+                {
+                    system.RunFixedUpdate();
+                }
+                catch (Exception e)
+                {
+                    MainSystem.Singleton.HandleException(e, "SystemHandler-FixedUpdate");
+                }
             }
         }
 

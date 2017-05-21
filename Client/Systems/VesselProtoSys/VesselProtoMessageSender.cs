@@ -57,10 +57,10 @@ namespace LunaClient.Systems.VesselProtoSys
             //Clean up the vessel so we send only the important data
             CleanUpVesselNode(vesselNode, vessel.id);
 
-            var vesselBytes = ConfigNodeSerializer.Singleton.Serialize(vesselNode);
+            var vesselBytes = ConfigNodeSerializer.Serialize(vesselNode);
             if (vesselBytes.Length > 0)
             {
-                UniverseSyncCache.Singleton.QueueToCache(vesselBytes);
+                UniverseSyncCache.QueueToCache(vesselBytes);
 
                 SendMessage(new VesselProtoMsgData
                 {

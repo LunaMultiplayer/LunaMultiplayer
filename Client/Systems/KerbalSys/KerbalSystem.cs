@@ -105,7 +105,7 @@ namespace LunaClient.Systems.KerbalSys
             HighLogic.CurrentGame.CrewRoster.AddCrewMember(protoCrew);
             var kerbalNode = new ConfigNode();
             protoCrew.Save(kerbalNode);
-            var kerbalBytes = ConfigNodeSerializer.Singleton.Serialize(kerbalNode);
+            var kerbalBytes = ConfigNodeSerializer.Serialize(kerbalNode);
             if ((kerbalBytes != null) && (kerbalBytes.Length != 0))
                 ServerKerbals[protoCrew.name] = Common.CalculateSha256Hash(kerbalBytes);
         }

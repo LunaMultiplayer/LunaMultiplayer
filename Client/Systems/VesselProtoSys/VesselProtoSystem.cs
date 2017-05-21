@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
@@ -32,47 +33,9 @@ namespace LunaClient.Systems.VesselProtoSys
         #endregion
 
         #region Fields
-
-        private static VesselRanges LmpRanges { get; } = new VesselRanges
-        {
-            escaping = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.escaping)
-            {
-                unpack = 0.01f,
-                pack = 0.1f
-            },
-            flying = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.flying)
-            {
-                unpack = 0.01f,
-                pack = 0.1f
-            },
-            landed = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.landed)
-            {
-                unpack = 0.01f,
-                pack = 0.1f
-            },
-            orbit = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit)
-            {
-                unpack = 0.01f,
-                pack = 0.1f
-            },
-            prelaunch = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit)
-            {
-                unpack = 0.01f,
-                pack = 0.1f
-            },
-            splashed = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit)
-            {
-                unpack = 0.01f,
-                pack = 0.1f
-            },
-            subOrbital = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit)
-            {
-                unpack = 0.01f,
-                pack = 0.1f
-            }
-        };
-
-        public List<VesselProtoUpdate> AllPlayerVessels { get; } = new List<VesselProtoUpdate>();
+        
+        public ConcurrentDictionary<Guid,VesselProtoUpdate> AllPlayerVessels { get; } = 
+            new ConcurrentDictionary<Guid, VesselProtoUpdate>();
 
         private const int CheckVesselsToLoadMsInterval = 2500;
         private const String VESSEL_LOAD_TIMER_NAME = "LOAD";
@@ -115,9 +78,13 @@ namespace LunaClient.Systems.VesselProtoSys
             BannedPartsStr = string.Empty;
         }
 
-        public override void FixedUpdate()
+        /// <summary>
+        /// Check vessels that must be loaded
+        /// </summary>
+        public override void Update()
         {
-            base.FixedUpdate();
+            base.Update();
+            if (Enabled && ProtoSystemBasicReady && Timer.ElapsedMilliseconds > CheckVesselsToLoadMsInterval)
 
             if (!Enabled || !SettingsSystem.CurrentSettings.Debug3)
             {
@@ -165,6 +132,40 @@ namespace LunaClient.Systems.VesselProtoSys
 
         }
 
+       /// <summary>
+        /// Check vessels that must be loaded
+        /// </summary>
+        //TODO: Properly merge this method into Update()
+        public override void UpdateDagger()
+        {
+            base.Update();
+            if (Enabled && ProtoSystemBasicReady && Timer.ElapsedMilliseconds > CheckVesselsToLoadMsInterval)
+            {
+                //Reload vessels that exist
+                var vesselsToReLoad = AllPlayerVessels
+                   .Where(v => !v.Value.Loaded && FlightGlobals.Vessels.Any(vl => vl.id == v.Key))
+                   .ToArray();
+
+                foreach (var vesselProto in vesselsToReLoad)
+                {
+                    VesselLoader.ReloadVessel(vesselProto.Value);
+                }
+
+                //Load vessels that don't exist and are in our subspace
+                var vesselsToLoad = AllPlayerVessels
+                    .Where(v => !v.Value.Loaded && FlightGlobals.Vessels.All(vl => vl.id != v.Key) &&
+                    (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.Key)))
+                    .ToArray();
+
+                foreach (var vesselProto in vesselsToLoad)
+                {
+                    VesselLoader.LoadVessel(vesselProto.Value);
+                }
+
+                ResetTimer();
+            }
+        }
+
         #endregion
 
         #region Public
@@ -175,13 +176,13 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <param name="vesselId"></param>
         public void RemoveVesselFromLoadingSystem(Guid vesselId)
         {
-            var vessel = AllPlayerVessels.FirstOrDefault(v => v.VesselId == vesselId);
-            if (vessel != null)
+            if (AllPlayerVessels.ContainsKey(vesselId))
             {
-                AllPlayerVessels.Remove(vessel);
+                VesselProtoUpdate val;
+                AllPlayerVessels.TryRemove(vesselId, out val);
             }
         }
-        
+
         /// <summary>
         /// Checks the vessel for invalid parts
         /// </summary>
@@ -207,10 +208,10 @@ namespace LunaClient.Systems.VesselProtoSys
         #region Private
 
         #region Coroutines
-
         /// <summary>
         /// Set all other vessels as packed so the movement is better
         /// </summary>
+        //TODO: Should this method be removed?
         private void PackControlledVessels()
         {
             try
@@ -363,16 +364,6 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         #endregion
-
-        private static void UnPackVessel(Vessel vessel)
-        {
-            vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
-        }
-
-        private static void PackVessel(Vessel vessel)
-        {
-            vessel.vesselRanges = LmpRanges;
-        }
 
         private static string GetInvalidVesselParts(Vessel checkVessel)
         {

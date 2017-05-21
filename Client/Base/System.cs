@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using LunaClient.Base.Interface;
+using LunaClient.Utilities;
 
 namespace LunaClient.Base
 {
@@ -88,6 +89,16 @@ namespace LunaClient.Base
         }
 
         /// <summary>
+        /// Used to control the performance of the system
+        /// </summary>
+        public ProfilerData UpdateProfiler { get; } = new ProfilerData();
+
+        /// <summary>
+        /// Used to control the performance of the system
+        /// </summary>
+        public ProfilerData FixedUpdateProfiler { get; } = new ProfilerData();
+
+        /// <summary>
         /// Override to write code to execute when system is enabled
         /// </summary>
         public virtual void OnEnabled()
@@ -104,6 +115,26 @@ namespace LunaClient.Base
         }
 
         /// <summary>
+        /// Update wrapper
+        /// </summary>
+        public void RunUpdate()
+        {
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
+            Update();
+            UpdateProfiler.ReportTime(startClock);
+        }
+
+        /// <summary>
+        /// Fixed update wrapper
+        /// </summary>
+        public void RunFixedUpdate()
+        {
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
+            FixedUpdate();
+            FixedUpdateProfiler.ReportTime(startClock);
+        }
+        
+        /// <summary>
         /// Override to call your custom update functionallity
         /// </summary>
         public virtual void Update()
@@ -115,11 +146,6 @@ namespace LunaClient.Base
         /// Override to call your custom FixedUpdate functionallity
         /// </summary>
         public virtual void FixedUpdate()
-        {
-            //Implement your own code
-        }
-        
-        public virtual void LateUpdate()
         {
             //Implement your own code
         }

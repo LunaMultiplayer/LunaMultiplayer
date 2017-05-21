@@ -76,7 +76,7 @@ namespace LunaClient.Systems.Scenario
                 var scenarioNode = new ConfigNode();
                 scenarioModule.Save(scenarioNode);
 
-                var scenarioBytes = ConfigNodeSerializer.Singleton.Serialize(scenarioNode);
+                var scenarioBytes = ConfigNodeSerializer.Serialize(scenarioNode);
                 var scenarioHash = Common.CalculateSha256Hash(scenarioBytes);
 
                 if (scenarioBytes.Length == 0)

@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using UnityEngine;
-using System.Diagnostics;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -47,7 +45,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         /// <summary>
         /// Send control state, clamps, decouplers and dock ports of our vessel
         /// </summary>
-        public override void FixedUpdate()
+        public override void Update()
         {
             if (!Enabled || !UpdateSystemReady)
             {
@@ -58,6 +56,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 Profiler.BeginSample("VesselUpdateSystem");
                 MessageSender.SendVesselUpdate();
+                ResetTimer();
                 Profiler.EndSample();
             }
         }

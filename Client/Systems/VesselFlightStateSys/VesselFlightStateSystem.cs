@@ -12,7 +12,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
     /// </summary>
     public class VesselFlightStateSystem : MessageSystem<VesselFlightStateSystem, VesselFlightStateMessageSender, VesselFlightStateMessageHandler>
     {
-        public Dictionary<Guid, FlightInputCallback> FlyByWireDictionary { get; } =
+        private static Dictionary<Guid, FlightInputCallback> FlyByWireDictionary { get; } =
             new Dictionary<Guid, FlightInputCallback>();
 
         public Dictionary<Guid, FlightCtrlState> FlightStatesDictionary { get; } =
@@ -33,8 +33,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
             base.OnEnabled();
             Client.Singleton.StartCoroutine(SendFlightState());
             Client.Singleton.StartCoroutine(AddRemoveActiveVesselFromDictionary());
-            Client.Singleton.StartCoroutine(RemovePackedVesselsFromDictionary());
-            Client.Singleton.StartCoroutine(AddUnPackedVesselsToDictionary());
+            Client.Singleton.StartCoroutine(RemoveUnloadedVesselsFromDictionary());
+            Client.Singleton.StartCoroutine(AddLoadedVesselsToDictionary());
         }
 
         public override void OnDisabled()
@@ -64,7 +64,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
         }
 
-        private IEnumerator RemovePackedVesselsFromDictionary()
+        private IEnumerator RemoveUnloadedVesselsFromDictionary()
         {
             var seconds = new WaitForSeconds(DictionaryUpdateSInterval);
             while (true)
@@ -73,7 +73,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
                 if (FlightStateSystemReady)
                 {
-                    var vesselsToRemove = FlightGlobals.Vessels.Where(v => v.packed)
+                    var vesselsToRemove = FlightGlobals.VesselsUnloaded
                         .Where(v => FlyByWireDictionary.Keys.Contains(v.id))
                         .ToList();
 
@@ -139,7 +139,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
         }
 
-        private IEnumerator AddUnPackedVesselsToDictionary()
+        private IEnumerator AddLoadedVesselsToDictionary()
         {
             var seconds = new WaitForSeconds(DictionaryUpdateSInterval);
             while (true)
@@ -148,8 +148,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
                 if (FlightStateSystemReady)
                 {
-                    var vesselsToAdd = FlightGlobals.Vessels
-                        .Where(v => !v.packed && v.id != FlightGlobals.ActiveVessel.id && !FlyByWireDictionary.Keys.Contains(v.id))
+                    var vesselsToAdd = FlightGlobals.VesselsLoaded
+                        .Where(v => v.id != FlightGlobals.ActiveVessel.id && !FlyByWireDictionary.Keys.Contains(v.id))
                         .ToArray();
 
                     foreach (var vesselToAdd in vesselsToAdd)

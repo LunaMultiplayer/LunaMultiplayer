@@ -8,6 +8,7 @@ using LunaClient.Windows.Chat;
 using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
 using LunaClient.Windows.Options;
+using LunaClient.Windows.Systems;
 using LunaCommon;
 using UniLinq;
 using UnityEngine;
@@ -41,6 +42,9 @@ namespace LunaClient.Windows.Status
             ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, "Chat", chatButtonStyle);
             CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, "Craft", ButtonStyle);
             DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, "Debug", ButtonStyle);
+#if DEBUG
+            SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, "Systems", ButtonStyle);
+#endif
 
             GUILayout.EndHorizontal();
 
@@ -175,6 +179,9 @@ namespace LunaClient.Windows.Status
             ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, "C", chatButtonStyle);
             DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, "D", ButtonStyle);
             OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, "O", ButtonStyle);
+#if DEBUG
+            SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, "S", ButtonStyle);
+#endif
             if (GUILayout.Button("+", ButtonStyle))
             {
                 WindowRect.xMax = MinWindowRect.xMax;

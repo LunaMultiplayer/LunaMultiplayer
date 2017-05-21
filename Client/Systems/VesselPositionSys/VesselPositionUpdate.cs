@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 using LunaCommon.Message.Data.Vessel;
@@ -13,13 +14,12 @@ namespace LunaClient.Systems.VesselPositionSys
     {
         #region Fields
 
-        private float LerpPercentage { get; set; }
+        public float SentTime { get; set; }
         public Vessel Vessel { get; set; }
         public CelestialBody Body { get; set; }
+        public VesselPositionUpdate Target { get; set; }
         public Guid Id { get; set; }
         public double PlanetTime { get; set; }
-
-        private static int counter = 0;
 
         #region Vessel position information fields
 
@@ -46,16 +46,9 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #endregion
-
-        #region Interpolation fields
-
-        public float SentTime { get; set; }
-        public float ReceiveTime { get; set; }
-
-        #endregion
-
+        
         #region Private fields
-
+        
         private double PlanetariumDifference { get; set; }
         private const float PlanetariumDifferenceLimit = 3f;
 
@@ -68,7 +61,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public VesselPositionUpdate(VesselPositionMsgData msgData)
         {
             Id = Guid.NewGuid();
-            ReceiveTime = Time.fixedTime;
             PlanetTime = msgData.PlanetTime;
             SentTime = msgData.GameSentTime;
             VesselId = msgData.VesselId;
@@ -162,12 +154,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 throw e;
             }
         }
-
-
-        public VesselPositionUpdate(Guid vesselId) : this(FlightGlobals.Vessels.FindLast(v => v.id == vesselId))
-        {
-        }
-
+        
         public virtual VesselPositionUpdate Clone()
         {
             return this.MemberwiseClone() as VesselPositionUpdate;
@@ -175,29 +162,23 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #endregion
 
-        #region Main interpolation method
-
-        #endregion
-
-        #region Private methods
+        #region Main method
 
         /// <summary>
-        /// Initialize the vessel update so that it can be applied later.
-        /// Does not need to be run during FixedUpdate
+        /// Apply the vessel update.  Run on FixedUpdate as we're updating physics, therefore it cannot be run in update()
         /// </summary>
-        public void initVesselUpdate()
+        /// <returns></returns>
+        public void ApplyVesselUpdate()
         {
-            if (Body == null) {
+            if (Body == null)
                 Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
-            }
             if (Vessel == null)
-            {
                 Vessel = FlightGlobals.Vessels.FindLast(v => v.id == VesselId);
-            }
 
             if (Body != null && Vessel != null)
             {
                 PlanetariumDifference = Planetarium.GetUniversalTime() - PlanetTime;
+                ApplyInterpolations(1);
             }
         }
 
@@ -205,7 +186,8 @@ namespace LunaClient.Systems.VesselPositionSys
         /// Apply the Vessel Updates provided by the vesselUpdateSystem
         /// Must be run during FixedUpdate
         /// </summary>
-        public void applyVesselUpdate()
+        //TODO: Get rid of interpolations
+        private void ApplyInterpolations(float percentage)
         {
             if (Vessel == null)
             {

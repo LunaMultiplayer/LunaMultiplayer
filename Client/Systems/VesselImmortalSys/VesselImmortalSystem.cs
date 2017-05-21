@@ -24,11 +24,12 @@ namespace LunaClient.Systems.VesselImmortalSys
         private bool VesselImmortalSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
 
         private const String VESSEL_IMMORTAL_TIMER_NAME = "IMMORTAL";
-        private const int MakeOtherPlayerVesselsImmortalMSInterval = 2000;
+        private const int MakeOtherPlayerVesselsImmortalMsInterval = 2000;
 
         #endregion
 
         #region base overrides
+		//TODO: Should this be Update() instead?
         public override void FixedUpdate()
         {
             base.FixedUpdate();
@@ -47,7 +48,6 @@ namespace LunaClient.Systems.VesselImmortalSys
         #endregion
 
         #region Public methods
-        #endregion
 
         #region Private methods
         /// <summary>

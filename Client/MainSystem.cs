@@ -69,8 +69,6 @@ namespace LunaClient
         
         public void Reset()
         {
-            LunaProfiler.LmpReferenceTime.Start();
-            
             Debug.Log($"[LMP]: KSP installed at {KspPath}");
             Debug.Log($"[LMP]: LMP installed at {AssemblyPath}");
 
@@ -87,7 +85,7 @@ namespace LunaClient
             }
 
             SetupDirectoriesIfNeeded();
-            UniverseSyncCache.Singleton.ExpireCache();
+            UniverseSyncCache.ExpireCache();
             //TODO: This fails if Reset() is called more than once because the receieve and send threads aren't reconstructed properly.
             //TODO: This happens whenever any system's FixedUpdate() throws an error all the way up, as the system tries to reconnect unsuccessfully by calling Reset()
             NetworkMain.StartNetworkSystem();
@@ -105,7 +103,7 @@ namespace LunaClient
         public override void Update()
         {
             base.Update();
-            var startClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             if (!Enabled) return;
 
@@ -216,8 +214,9 @@ namespace LunaClient
             //Converter window: 6712
             //Disclaimer window: 6713
             //Servers window: 6714
+            //Systems window: 6715
 
-            var startClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
                 WindowsHandler.OnGui();
@@ -228,23 +227,13 @@ namespace LunaClient
         public override void FixedUpdate()
         {
             base.FixedUpdate();
-            var startClock = LunaProfiler.LmpReferenceTime.ElapsedTicks;
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             if (!Enabled)
                 return;
 
             SystemsHandler.FixedUpdate();
             LunaProfiler.FixedUpdateData.ReportTime(startClock);
-        }
-
-        public override void LateUpdate()
-        {
-            base.LateUpdate();
-
-            if (!Enabled)
-                return;
-
-            SystemsHandler.LateUpdate();
         }
 
         #endregion
@@ -255,6 +244,7 @@ namespace LunaClient
         {
             Quit = true;
             NetworkConnection.Disconnect("Quit game");
+            UniverseSyncCache.Stop();
             SystemsHandler.KillAllSystems();
         }
 

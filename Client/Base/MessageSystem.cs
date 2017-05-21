@@ -3,7 +3,7 @@ using System.Collections.Concurrent;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaCommon.Message.Interface;
-using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace LunaClient.Base
 {
@@ -12,8 +12,6 @@ namespace LunaClient.Base
         where TS : class, IMessageSender, new()
         where TH : class, IMessageHandler, new()
     {
-        protected virtual bool HandleMessagesInFixedUpdate { get; set; }
-
         public TS MessageSender { get; } = new TS();
         public TH MessageHandler { get; } = new TH();
         public virtual IInputHandler InputHandler { get; } = null;
@@ -37,23 +35,8 @@ namespace LunaClient.Base
         public override void Update()
         {
             base.Update();
-            if (!HandleMessagesInFixedUpdate)
-            {
                 ReadAndHandleAllReceivedMessages();
             }
-        }
-
-        /// <summary>
-        /// During the update we receive messages.
-        /// </summary>
-        public override void FixedUpdate()
-        {
-            base.FixedUpdate();
-            if (HandleMessagesInFixedUpdate)
-            {
-                ReadAndHandleAllReceivedMessages();
-            }
-        }
 
         /// <summary>
         /// Reads all the message queue and calls the handling sub-system

@@ -26,22 +26,15 @@ namespace LunaClient.Windows.Debug
                 GUILayout.Label(VesselUpdateText, LabelStyle);
             DisplayProfilerStatistics = GUILayout.Toggle(DisplayProfilerStatistics, "Display Profiler Statistics", ButtonStyle);
             if (DisplayProfilerStatistics)
-                if (Stopwatch.IsHighResolution)
+            {
+                if (GUILayout.Button("Reset Profiler history", ButtonStyle))
                 {
-                    if (GUILayout.Button("Reset Profiler history", ButtonStyle))
-                    {
-                        LunaProfiler.UpdateData = new ProfilerData();
-                        LunaProfiler.FixedUpdateData = new ProfilerData();
-                        LunaProfiler.GuiData = new ProfilerData();
-                    }
-                    GUILayout.Label("Timer resolution: " + Stopwatch.Frequency + " hz", LabelStyle);
-                    GUILayout.Label(ProfilerText, LabelStyle);
+                    LunaProfiler.UpdateData.Reset();
+                    LunaProfiler.FixedUpdateData.Reset();
+                    LunaProfiler.GuiData.Reset();
                 }
-                else
-                {
-                    GUILayout.Label("Timer resolution: " + Stopwatch.Frequency + " hz", LabelStyle);
-                    GUILayout.Label("Profiling statistics unavailable without a high resolution timer");
-                }
+                GUILayout.Label(ProfilerText, LabelStyle);
+            }
             GUILayout.EndVertical();
         }
     }

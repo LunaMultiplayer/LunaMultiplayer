@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using LunaClient.Base.Interface;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselChangeSys;
@@ -10,6 +11,7 @@ using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
+using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
@@ -67,7 +69,7 @@ namespace LunaClient.Systems
         /// </summary>
         /// <returns></returns>
         public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null && LockSystem.Singleton.SpectatorLockExists(FlightGlobals.ActiveVessel.id);
-        
+
 
         /// <summary>
         /// Return the controlled vessel ids
@@ -92,7 +94,10 @@ namespace LunaClient.Systems
                 }
 
                 var controlledVesselsIds = GetControlledVesselIds();
-                return FlightGlobals.VesselsLoaded.Where(v => v.id != FlightGlobals.ActiveVessel.id).Any(v => controlledVesselsIds.Contains(v.id));
+                var vesselsLoaded = FlightGlobals.VesselsLoaded.Where(v => v.id != FlightGlobals.ActiveVessel.id)
+                    .Select(v => v.id);
+
+                return controlledVesselsIds.Intersect(vesselsLoaded).Any();
             }
 
             return false;
@@ -196,6 +201,20 @@ namespace LunaClient.Systems
             }
         }
 
+        public static ISystem[] GetSingletons => new ISystem[]
+        {
+            VesselLockSystem.Singleton,
+            VesselPositionSystem.Singleton,
+            VesselFlightStateSystem.Singleton,
+            VesselUpdateSystem.Singleton,
+            VesselChangeSystem.Singleton,
+            VesselProtoSystem.Singleton,
+            VesselRemoveSystem.Singleton,
+            VesselImmortalSystem.Singleton,
+            VesselDockSystem.Singleton,
+            VesselRangeSystem.Singleton
+        };
+
         public static bool EnableAllSystems
         {
             set
@@ -211,6 +230,7 @@ namespace LunaClient.Systems
                     VesselRemoveSystem.Singleton.Enabled = true;
                     VesselImmortalSystem.Singleton.Enabled = true;
                     VesselDockSystem.Singleton.Enabled = true;
+                    VesselRangeSystem.Singleton.Enabled = true;
                 }
                 else
                 {
@@ -223,6 +243,7 @@ namespace LunaClient.Systems
                     VesselRemoveSystem.Singleton.Enabled = false;
                     VesselImmortalSystem.Singleton.Enabled = false;
                     VesselDockSystem.Singleton.Enabled = false;
+                    VesselRangeSystem.Singleton.Enabled = false;
                 }
             }
         }
