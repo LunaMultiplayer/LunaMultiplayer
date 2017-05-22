@@ -80,9 +80,13 @@ namespace LunaClient.Systems.VesselProtoSys
         public override void Update()
         {
             base.Update();
-            if (Enabled && ProtoSystemBasicReady && Timer.ElapsedMilliseconds > CheckVesselsToLoadMsInterval)
+            if (!Enabled || !ProtoSystemBasicReady || Timer.ElapsedMilliseconds < CheckVesselsToLoadMsInterval)
+            {
+                return;
+            }
 
-            if (!Enabled || !SettingsSystem.CurrentSettings.Debug3)
+            //If debug3 isn't enabled, don't load vessels
+            if (!SettingsSystem.CurrentSettings.Debug3)
             {
                 return;
             }

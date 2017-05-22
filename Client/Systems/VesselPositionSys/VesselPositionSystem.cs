@@ -42,7 +42,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             (PositionUpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
 
-        public ConcurrentDictionary<Guid, VesselPositionUpdate> FutureVesselUpdate { get; } =
+        public ConcurrentDictionary<Guid, VesselPositionUpdate> FutureVesselUpdates { get; } =
             new ConcurrentDictionary<Guid, VesselPositionUpdate>();
 
         public Dictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new Dictionary<Guid, VesselPositionUpdate>();
@@ -64,15 +64,24 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
-            FutureVesselUpdate.Clear();
+            FutureVesselUpdates.Clear();
         }
 
-		//TODO: FixedUpdate or Update()?
         public override void FixedUpdate()
         {
+            base.FixedUpdate();
+
             if (PositionUpdateSystemReady)
             {
+                if (SettingsSystem.CurrentSettings.Debug2)
+                {
+                    //TODO: Do we need to remove old vessels anymore?  Does this happen in the VesselRemoveSys?
+                    //removeOldVessels();
+                }
+
                 HandleVesselUpdates();
+                SendVesselPositionUpdates();
+                SendSecondaryVesselPositionUpdates();
             }
         }
         #endregion
@@ -81,53 +90,45 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void HandleVesselUpdates()
         {
+            HashSet<Guid> vesselIdsUpdated = new HashSet<Guid>();
+
             //Run to the new updates with vessels that are still not computed
-            var newUpdates = FutureVesselUpdate.Where(v => !CurrentVesselUpdate.ContainsKey(v.Key)).ToList();
-            foreach (var vesselUpdates in newUpdates)
+            foreach (KeyValuePair<Guid, VesselPositionUpdate> entry in FutureVesselUpdates)
             {
-                SetFirstVesselUpdates(vesselUpdates.Value);
+                Guid vesselId = entry.Key;
+                VesselPositionUpdate positionUpdate;
+                FutureVesselUpdates.TryRemove(vesselId, out positionUpdate);
+
+                if (positionUpdate != null)
+                {
+                    setBodyOnNewVesselUpdate(vesselId, positionUpdate);
+                    CurrentVesselUpdate[vesselId] = positionUpdate;
+
+                    //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've processed this.
+                    vesselIdsUpdated.Add(vesselId);
+                }
             }
 
-            //Run through all the vessels. Do this way or you get an out of sync in the dictionary!
-            var vesselIds = CurrentVesselUpdate.Keys.ToList();
-            foreach (var vesselId in vesselIds)
+            //NOTE: The below code must run in FixedUpdate.  However, the previous code could run outside fixedUpdate, potentially even in another thread.
+            foreach (Guid vesselId in vesselIdsUpdated)
             {
-                //TODO: Won't this apply the current vessel updates over and over?  Shouldn't we remove them once processed?  Every position update should be processed once.
-                ProcessNewVesselUpdate(vesselId);
                 CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
             }
         }
 
-        private void ProcessNewVesselUpdate(Guid vesselId)
-        {
-            if (CurrentVesselUpdate[vesselId].Id == FutureVesselUpdate[vesselId].Id)
-            {
-                //No message to process!!
-                return;
-            }
-
-            //TODO: What is the point of this code?
-            FutureVesselUpdate[vesselId].Vessel = CurrentVesselUpdate[vesselId].Vessel;
-            if (FutureVesselUpdate[vesselId].BodyName == CurrentVesselUpdate[vesselId].BodyName)
-                FutureVesselUpdate[vesselId].Body = CurrentVesselUpdate[vesselId].Body;
-
-            CurrentVesselUpdate[vesselId] = FutureVesselUpdate[vesselId];
-        }
-
         /// <summary>
-        /// Here we set the first vessel updates. We use the current vessel state as the starting point.
+        /// Performance Improvement: If the body for this position update is the same as the old one, copy the body so that we don't have to look up the
+        /// body in the ApplyVesselUpdate() call below (which must run during FixedUpdate)
         /// </summary>
-        private void SetFirstVesselUpdates(VesselPositionUpdate update)
+        /// <param name="vesselId">The ID of the vessel being updated</param>
+        /// <param name="newPositionUpdate">The new position update for the vessel.  Cannot be null</param>
+        private void setBodyOnNewVesselUpdate(Guid vesselId, VesselPositionUpdate newPositionUpdate)
         {
-            var first = update?.Clone();
-            if (first != null)
+            VesselPositionUpdate existingPositionUpdate;
+            CurrentVesselUpdate.TryGetValue(vesselId, out existingPositionUpdate);
+            if (existingPositionUpdate != null && newPositionUpdate.BodyName == existingPositionUpdate.BodyName)
             {
-                first.SentTime = update.SentTime;
-                //TODO: Why do we do this?  Shouldn't we just set the update and start processing them?  We shouldn't alter the time the updates were sent...
-                update.SentTime += 0.5f;
-
-                CurrentVesselUpdate.Add(update.VesselId, first);
-                CurrentVesselUpdate[update.VesselId] = update;
+                newPositionUpdate.Body = existingPositionUpdate.Body;
             }
         }
 
@@ -165,15 +166,15 @@ namespace LunaClient.Systems.VesselPositionSys
                     }
 
                     var update = new VesselPositionUpdate(msgData);
-                    if (!FutureVesselUpdate.ContainsKey(update.VesselId))
+                    if (!FutureVesselUpdates.ContainsKey(update.VesselId))
                     {
-                        FutureVesselUpdate.TryAdd(update.VesselId, update);
+                        FutureVesselUpdates.TryAdd(update.VesselId, update);
                     }
                     else
                     {
-                        if (FutureVesselUpdate[update.VesselId].SentTime < update.SentTime)
+                        if (FutureVesselUpdates[update.VesselId].SentTime < update.SentTime)
                         {
-                            FutureVesselUpdate[update.VesselId] = update;
+                            FutureVesselUpdates[update.VesselId] = update;
                         }
                     }
                 }).Start();
