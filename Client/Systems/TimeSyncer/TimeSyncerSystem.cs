@@ -57,6 +57,15 @@ namespace LunaClient.Systems.TimeSyncer
 
         #endregion
 
+        #region Constructor
+
+        public TimeSyncerSystem()
+        {
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.ClockSetMsInterval, RoutineExecution.Update, SyncTime));
+        }
+
+        #endregion
+
         #region Base overrides
 
         public override void OnEnabled()
@@ -64,7 +73,6 @@ namespace LunaClient.Systems.TimeSyncer
             base.OnEnabled();
             SyncSenderThread = new Task(SyncTimeWithServer);
             SyncSenderThread.Start(TaskScheduler.Default);
-            Client.Singleton.StartCoroutine(SyncTime());
         }
 
         public override void OnDisabled()
@@ -78,6 +86,37 @@ namespace LunaClient.Systems.TimeSyncer
             ClockOffsetAverage = 0;
             NetworkLatencyAverage = 0;
             ServerLag = 0;
+        }
+
+        #endregion
+
+        #region Update methods
+        
+        /// <summary>
+        /// Routine that checks our time against the server time and adjust it if needed.
+        /// </summary>
+        /// <returns></returns>
+        private void SyncTime()
+        {
+            if (Enabled && Synced && !CurrentlyWarping && CanSyncTime() && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
+            {
+                var targetTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
+                var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;
+                if (targetTime != 0 && Math.Abs(currentError) > MaxClockMsError)
+                {
+                    if (Math.Abs(currentError) > MAX_CLOCK_SKEW)
+                    {
+                        Debug.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
+                        //TODO: This causes the throttle to reset when called.  This happens due to vessel unpacking resetting the throttle controls.
+                        //TODO: Try to get Squad to change their code.
+                        StepClock(targetTime);
+                    }
+                    else
+                    {
+                        SkewClock(currentError);
+                    }
+                }
+            }
         }
 
         #endregion
@@ -145,48 +184,6 @@ namespace LunaClient.Systems.TimeSyncer
 
         #region Private methods
 
-        /// <summary>
-        /// Coroutine that checks our time against the server time and adjust it if needed.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator SyncTime()
-        {
-            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.ClockSetMsInterval).TotalSeconds);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-
-                    if (Synced && !CurrentlyWarping && CanSyncTime() && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
-                    {
-                        var targetTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
-                        var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;
-                        if (targetTime != 0 && Math.Abs(currentError) > MaxClockMsError)
-                        {
-                            if (Math.Abs(currentError) > MAX_CLOCK_SKEW)
-                            {
-                                Debug.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
-                                //TODO: This causes the throttle to reset when called.  This happens due to vessel unpacking resetting the throttle controls.
-                                //TODO: Try to get Squad to change their code.
-                                StepClock(targetTime);
-                            }
-                            else
-                            {
-                                SkewClock(currentError);
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine SyncTime {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
         private static bool CanSyncTime()
         {
             switch (HighLogic.LoadedScene)
@@ -226,7 +223,7 @@ namespace LunaClient.Systems.TimeSyncer
 
                 foreach (var vessel in FlightGlobals.VesselsLoaded.Where(v => !v.packed))
                 {
-                    if ((vessel.isActiveVessel && SafeToStepClock(vessel, targetTick)) || 
+                    if ((vessel.isActiveVessel && SafeToStepClock(vessel, targetTick)) ||
                         (!vessel.isActiveVessel && vessel.situation != Vessel.Situations.PRELAUNCH))
                     {
                         try

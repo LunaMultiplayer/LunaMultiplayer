@@ -25,11 +25,30 @@ namespace LunaClient.Systems.Flag
 
         #endregion
 
-        #region Base overrides
+        #region Constructor
 
-        public override void Update()
+        public FlagSystem()
         {
-            base.Update();
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleFlags));
+        }
+
+        #endregion
+
+        #region Base overrides
+        
+        public override void OnDisabled()
+        {
+            base.OnDisabled();
+            ServerFlags.Clear();
+            NewFlags.Clear();
+        }
+
+        #endregion
+
+        #region Update methods
+
+        private void HandleFlags()
+        {
             if (FlagSystemReady)
             {
                 if (FlagChangeEvent)
@@ -37,17 +56,10 @@ namespace LunaClient.Systems.Flag
                     FlagChangeEvent = false;
                     HandleFlagChangeEvent();
                 }
-                
+
                 while (NewFlags.Count > 0)
                     HandleFlagRespondMessage(NewFlags.Dequeue());
             }
-        }
-
-        public override void OnDisabled()
-        {
-            base.OnDisabled();
-            ServerFlags.Clear();
-            NewFlags.Clear();
         }
 
         #endregion

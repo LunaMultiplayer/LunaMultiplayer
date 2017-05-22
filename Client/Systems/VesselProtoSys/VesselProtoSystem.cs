@@ -17,36 +17,27 @@ namespace LunaClient.Systems.VesselProtoSys
     /// This system handles the vessel loading into the game and sending our vessel structure to other players.
     /// We only load vesels that are in our subspace
     /// </summary>
-    public class VesselProtoSystem :
-        MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
+    public class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
 
-        #region Constructors
-        public VesselProtoSystem() : base()
+        #region Constructor
+
+        public VesselProtoSystem()
         {
-            setupTimer(VESSEL_LOAD_TIMER_NAME, CheckVesselsToLoadMsInterval);
-            setupTimer(VESSEL_MESSAGE_TIMER_NAME, UpdateScreenMessageInterval);
-            setupTimer(VESSEL_ABANDONED_TIMER_NAME, SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval);
-            setupTimer(VESSEL_SEND_TIMER_NAME, SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval);
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckVesselsToLoad));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval, 
+                RoutineExecution.Update, SendAbandonedVesselsToServer));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval, 
+                RoutineExecution.Update, SendVesselDefinition));
         }
+
         #endregion
 
-        #region Fields
+        #region Fields & properties
         
         public ConcurrentDictionary<Guid,VesselProtoUpdate> AllPlayerVessels { get; } = 
             new ConcurrentDictionary<Guid, VesselProtoUpdate>();
-
-        private const int CheckVesselsToLoadMsInterval = 2500;
-        private const String VESSEL_LOAD_TIMER_NAME = "LOAD";
-
-        private const int UpdateScreenMessageInterval = 1000;
-        private const String VESSEL_MESSAGE_TIMER_NAME = "MESSAGE";
-
-        private const String VESSEL_ABANDONED_TIMER_NAME = "ABANDONED";
-
-        private const String VESSEL_SEND_TIMER_NAME = "SEND";
-
-
 
         public ScreenMessage BannedPartsMessage { get; set; }
         public string BannedPartsStr { get; set; }
@@ -60,9 +51,7 @@ namespace LunaClient.Systems.VesselProtoSys
         public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null) ||
             (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
-
         
-
         #endregion
 
         #region Base overrides
@@ -72,88 +61,6 @@ namespace LunaClient.Systems.VesselProtoSys
             base.OnDisabled();
             AllPlayerVessels.Clear();
             BannedPartsStr = string.Empty;
-        }
-
-        /// <summary>
-        /// Check vessels that must be loaded
-        /// </summary>
-        public override void Update()
-        {
-            base.Update();
-            if (!Enabled || !ProtoSystemBasicReady || Timer.ElapsedMilliseconds < CheckVesselsToLoadMsInterval)
-            {
-                return;
-            }
-
-            //If debug3 isn't enabled, don't load vessels
-            if (!SettingsSystem.CurrentSettings.Debug3)
-            {
-                return;
-            }
-
-            if (IsTimeForNextSend(VESSEL_LOAD_TIMER_NAME))
-            {
-                Profiler.BeginSample("VesselProtoSystem: Load");
-                CheckVesselsToLoad();
-                Profiler.EndSample();
-            }
-
-            if (IsTimeForNextSend(VESSEL_MESSAGE_TIMER_NAME))
-            {
-                Profiler.BeginSample("VesselProtoSystem: Banned Message");
-                UpdateBannedPartsMessage();
-                Profiler.EndSample();
-            }
-
-            if (IsTimeForNextSend(VESSEL_ABANDONED_TIMER_NAME))
-            {
-                Profiler.BeginSample("VesselProtoSystem: Abandoned");
-                SendAbandonedVesselsToServer();
-                Profiler.EndSample();
-            }
-
-            if (IsTimeForNextSend(VESSEL_SEND_TIMER_NAME))
-            {
-                Profiler.BeginSample("VesselProtoSystem: Send");
-                SendVesselDefinition();
-                Profiler.EndSample();
-            }
-
-
-        }
-
-       /// <summary>
-        /// Check vessels that must be loaded
-        /// </summary>
-        //TODO: Properly merge this method into Update()
-        public void UpdateDagger()
-        {
-            base.Update();
-            if (Enabled && ProtoSystemBasicReady && Timer.ElapsedMilliseconds > CheckVesselsToLoadMsInterval)
-            {
-                //Reload vessels that exist
-                var vesselsToReLoad = AllPlayerVessels
-                   .Where(v => !v.Value.Loaded && FlightGlobals.Vessels.Any(vl => vl.id == v.Key))
-                   .ToArray();
-
-                foreach (var vesselProto in vesselsToReLoad)
-                {
-                    VesselLoader.ReloadVessel(vesselProto.Value);
-                }
-
-                //Load vessels that don't exist and are in our subspace
-                var vesselsToLoad = AllPlayerVessels
-                    .Where(v => !v.Value.Loaded && FlightGlobals.Vessels.All(vl => vl.id != v.Key) &&
-                    (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.Key)))
-                    .ToArray();
-
-                foreach (var vesselProto in vesselsToLoad)
-                {
-                    VesselLoader.LoadVessel(vesselProto.Value);
-                }
-
-                ResetTimer();
-            }
         }
 
         #endregion
@@ -195,7 +102,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
         #endregion
 
-        #region Private
+        #region Update methods
+
         /// <summary>
         /// Send the definition of our own vessel and the secondary vessels. We only send them after an interval specified.
         /// If the other player vessels are far we don't send them very often.
@@ -215,14 +123,10 @@ namespace LunaClient.Systems.VesselProtoSys
                     }
                 }
 
-                if (VesselCommon.PlayerVesselsNearby())
-                {
-                    setupTimer(VESSEL_SEND_TIMER_NAME, SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval);
-                }
-                else
-                {
-                    setupTimer(VESSEL_SEND_TIMER_NAME, SettingsSystem.ServerSettings.VesselDefinitionSendFarMsInterval);
-                }
+                ChangeRoutineExecutionInterval("SendVesselDefinition",
+                    VesselCommon.PlayerVesselsNearby()
+                        ? SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval
+                        : SettingsSystem.ServerSettings.VesselDefinitionSendFarMsInterval);
             }
             catch (Exception e)
             {
@@ -231,6 +135,9 @@ namespace LunaClient.Systems.VesselProtoSys
 
         }
 
+        /// <summary>
+        /// Prints the banned parts message
+        /// </summary>
         private void UpdateBannedPartsMessage()
         {
             try
@@ -262,8 +169,6 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private void SendAbandonedVesselsToServer()
         {
-
-            setupTimer(VESSEL_ABANDONED_TIMER_NAME, SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval);
             try
             {
                 if (ProtoSystemBasicReady)
@@ -318,6 +223,10 @@ namespace LunaClient.Systems.VesselProtoSys
                 Debug.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
             }
         }
+
+        #endregion
+
+        #region Private
 
         private static string GetInvalidVesselParts(Vessel checkVessel)
         {

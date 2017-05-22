@@ -5,7 +5,6 @@ using System.Linq;
 
 namespace LunaClient.Utilities
 {
-    //The lamest profiler in the world!
     public class LunaProfiler
     {
         public static ProfilerData FixedUpdateData { get; } = new ProfilerData();

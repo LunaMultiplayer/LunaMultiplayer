@@ -28,7 +28,18 @@ namespace LunaClient.Systems.Network
     {
         public override bool Enabled => true;
 
-        public override void Update()
+        #region Constructor
+
+        public NetworkSystem()
+        {
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, NetworkUpdate));
+        }
+
+        #endregion
+
+        #region Update method
+
+        private static void NetworkUpdate()
         {
             switch (MainSystem.Singleton.NetworkState)
             {
@@ -207,5 +218,7 @@ namespace LunaClient.Systems.Network
                 NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
             }
         }
+
+        #endregion
     }
 }

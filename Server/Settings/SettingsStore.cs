@@ -118,8 +118,8 @@ namespace LunaServer.Settings
         [Description("If this is set to true, vessels can be taken by anyone after a player disconnects.")]
         public bool DropControlOnExit = true;
 
-        [Description("Interval in seconds at wich players will check and send scenario changes to the server.")]
-        public int SendScenarioDataSecInterval = 60;
+        [Description("Interval in mili seconds at wich players will check and send scenario changes to the server.")]
+        public int SendScenarioDataMsInterval = 60000;
         
         [Description("Username of the player who control the warp if WarpMode is set to MASTER")]
         public string WarpMaster = "";

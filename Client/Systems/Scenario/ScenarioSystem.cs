@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.KerbalSys;
@@ -23,14 +21,18 @@ namespace LunaClient.Systems.Scenario
 
         #endregion
 
-        #region Base overrides
+        #region Constructor
 
-        public override void OnEnabled()
+        public ScenarioSystem()
         {
-            base.OnEnabled();
-            Client.Singleton.StartCoroutine(SendScenarioModulesRoutine());
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SendScenarioDataMsInterval, 
+                RoutineExecution.Update, SendScenarioModules));
         }
 
+        #endregion
+
+        #region Base overrides
+        
         public override void OnDisabled()
         {
             base.OnDisabled();
@@ -63,6 +65,8 @@ namespace LunaClient.Systems.Scenario
         /// </summary>
         public void SendScenarioModules()
         {
+            if (!Enabled || !MainSystem.Singleton.GameRunning) return;
+
             var scenarioName = new List<string>();
             var scenarioData = new List<byte[]>();
 
@@ -144,29 +148,6 @@ namespace LunaClient.Systems.Scenario
 
         #region Private methods
 
-        private IEnumerator SendScenarioModulesRoutine()
-        {
-            var seconds = new WaitForSeconds(SettingsSystem.ServerSettings.SendScenarioDataSecInterval);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-
-                    if (MainSystem.Singleton.GameRunning)
-                    {
-                        SendScenarioModules();
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine SendScenarioModulesRoutine {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
         private static void CreateMissingTourists(ConfigNode contractSystemNode)
         {
             var contractsNode = contractSystemNode.GetNode("CONTRACTS");
@@ -184,7 +165,6 @@ namespace LunaClient.Systems.Scenario
             }
         }
 
-        //Defends against bug #172
         private static void SpawnStrandedKerbalsForRescueMissions(ConfigNode contractSystemNode)
         {
             var rescueContracts = contractSystemNode.GetNode("CONTRACTS").GetNodes("CONTRACT").Where(c => c.GetValue("type") == "RecoverAsset");
@@ -248,8 +228,7 @@ namespace LunaClient.Systems.Scenario
             HighLogic.CurrentGame.flightState.protoVessels.Add(protoVessel);
         }
 
-        //Defends against bug #172
-        private void CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(ConfigNode progressTrackingNode)
+        private static void CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(ConfigNode progressTrackingNode)
         {
             foreach (ConfigNode possibleNode in progressTrackingNode.nodes)
                 CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(possibleNode);

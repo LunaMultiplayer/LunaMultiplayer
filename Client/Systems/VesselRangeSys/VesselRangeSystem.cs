@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Linq;
+﻿using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselRangeSys
 {
+    /// <summary>
+    /// This system packs the other player vessels. 
+    /// Theorically this should make the movement better as we won't fight with the flight integrator syste,
+    /// </summary>
     public class VesselRangeSystem : System<VesselRangeSystem>
     {
         #region Fields & properties
@@ -51,21 +52,27 @@ namespace LunaClient.Systems.VesselRangeSys
             }
         };
 
-        private const float VesselPackCheckMsInterval = 1000;
-
         public bool VesselRangeSystemReady => VesselProtoSystem.Singleton.ProtoSystemReady;
 
         #endregion
 
-        #region base overrides
-        
+        #region Constructor
+
+        public VesselRangeSystem()
+        {
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, PackUnpackVessels));
+        }
+
+        #endregion
+
+        #region Update methods
+
         /// <summary>
         /// Set all other vessels as packed so the movement is better
         /// </summary>
-        public override void Update()
+        private void PackUnpackVessels()
         {
-            base.Update();
-            if (Enabled && VesselRangeSystemReady && Timer.ElapsedMilliseconds > VesselPackCheckMsInterval)
+            if (Enabled && VesselRangeSystemReady)
             {
                 var controlledVessels = VesselCommon.GetControlledVessels();
 
@@ -87,12 +94,11 @@ namespace LunaClient.Systems.VesselRangeSys
                         UnPackVessel(vessel);
                     }
                 }
-                ResetTimer();
             }
         }
 
         #endregion
-        
+
         #region Private methods
 
         private static void UnPackVessel(Vessel vessel)

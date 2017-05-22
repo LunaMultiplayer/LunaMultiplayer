@@ -29,13 +29,26 @@ namespace LunaClient.Systems.ModApi
 
         #endregion
 
+        #region Constructor
+
+        public ModApiSystem()
+        {
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ModApiUpdate));
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ModApiFixedUpdate));
+        }
+
+        #endregion
+
         #region Base overrides
 
         public override bool Enabled => true;
+        
+        #endregion
 
-        public override void Update()
+        #region Update methods
+
+        private void ModApiUpdate()
         {
-            base.Update();
             lock (EventLock)
             {
                 foreach (var currentModQueue in UpdateQueue)
@@ -47,9 +60,12 @@ namespace LunaClient.Systems.ModApi
             }
         }
 
-        public override void FixedUpdate()
+        #endregion
+
+        #region Fixed update methods
+
+        private void ModApiFixedUpdate()
         {
-            base.FixedUpdate();
             lock (EventLock)
             {
                 foreach (var currentModQueue in FixedUpdateQueue)

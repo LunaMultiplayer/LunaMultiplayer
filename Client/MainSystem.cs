@@ -30,6 +30,9 @@ using UnityEngine;
 
 namespace LunaClient
 {
+    /// <summary>
+    /// Main system. It handle all the other systems in LMP
+    /// </summary>
     public class MainSystem : System<MainSystem>
     {
         #region Fields
@@ -65,44 +68,10 @@ namespace LunaClient
 
         #endregion
 
-        #region Base overrides
-        
-        public void Reset()
+        #region Update methods
+
+        public void MainSystemUpdate()
         {
-            Debug.Log($"[LMP]: KSP installed at {KspPath}");
-            Debug.Log($"[LMP]: LMP installed at {AssemblyPath}");
-
-            if (!SettingsSystem.CurrentSettings.DisclaimerAccepted && HighLogic.LoadedScene == GameScenes.MAINMENU)
-            {
-                Enabled = false;
-                DisclaimerWindow.Singleton.Display = true;
-            }
-
-            if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
-            {
-                Enabled = false;
-                return;
-            }
-
-            SetupDirectoriesIfNeeded();
-            UniverseSyncCache.ExpireCache();
-            //TODO: This fails if Reset() is called more than once because the receieve and send threads aren't reconstructed properly.
-            //TODO: This happens whenever any system's FixedUpdate() throws an error all the way up, as the system tries to reconnect unsuccessfully by calling Reset()
-            NetworkMain.StartNetworkSystem();
-
-            //Register events needed to bootstrap the workers.
-            GameEvents.onHideUI.Add(() => { ShowGui = false; });
-            GameEvents.onShowUI.Add(() => { ShowGui = true; });
-
-            SystemsHandler.KillAllSystems();
-
-            HandleCommandLineArgs();
-            Debug.Log($"[LMP]: LunaMultiPlayer {VersionInfo.FullVersionNumber} Initialized!");
-        }
-
-        public override void Update()
-        {
-            base.Update();
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             if (!Enabled) return;
@@ -199,6 +168,58 @@ namespace LunaClient
             LunaProfiler.UpdateData.ReportTime(startClock);
         }
 
+        #endregion
+
+        #region Fixed update methods
+        
+        public void MainSystemFixedUpdate()
+        {
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
+
+            if (!Enabled)
+                return;
+
+            SystemsHandler.FixedUpdate();
+            LunaProfiler.FixedUpdateData.ReportTime(startClock);
+        }
+
+        #endregion
+
+        #region Public methods
+        
+        public void Reset()
+        {
+            Debug.Log($"[LMP]: KSP installed at {KspPath}");
+            Debug.Log($"[LMP]: LMP installed at {AssemblyPath}");
+
+            if (!SettingsSystem.CurrentSettings.DisclaimerAccepted && HighLogic.LoadedScene == GameScenes.MAINMENU)
+            {
+                Enabled = false;
+                DisclaimerWindow.Singleton.Display = true;
+            }
+
+            if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
+            {
+                Enabled = false;
+                return;
+            }
+
+            SetupDirectoriesIfNeeded();
+            UniverseSyncCache.ExpireCache();
+            //TODO: This fails if Reset() is called more than once because the receieve and send threads aren't reconstructed properly.
+            //TODO: This happens whenever any system's FixedUpdate() throws an error all the way up, as the system tries to reconnect unsuccessfully by calling Reset()
+            NetworkMain.StartNetworkSystem();
+
+            //Register events needed to bootstrap the workers.
+            GameEvents.onHideUI.Add(() => { ShowGui = false; });
+            GameEvents.onShowUI.Add(() => { ShowGui = true; });
+
+            SystemsHandler.KillAllSystems();
+
+            HandleCommandLineArgs();
+            Debug.Log($"[LMP]: LunaMultiPlayer {VersionInfo.FullVersionNumber} Initialized!");
+        }
+
         public void OnGui()
         {
             //Window ID's - Doesn't include "random" offset.
@@ -223,22 +244,6 @@ namespace LunaClient
 
             LunaProfiler.GuiData.ReportTime(startClock);
         }
-
-        public override void FixedUpdate()
-        {
-            base.FixedUpdate();
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
-            if (!Enabled)
-                return;
-
-            SystemsHandler.FixedUpdate();
-            LunaProfiler.FixedUpdateData.ReportTime(startClock);
-        }
-
-        #endregion
-
-        #region Public methods
         
         public void OnExit()
         {
@@ -550,23 +555,6 @@ namespace LunaClient
 
             return returnGame;
         }
-
-        #endregion
-
-        #region Unused methods
-
-        //if (ScreenshotWorker.fetch.uploadScreenshot)
-        //{
-        //    ScreenshotWorker.fetch.uploadScreenshot = false;
-        //    StartCoroutine(UploadScreenshot());
-        //}
-
-        //public IEnumerator<WaitForEndOfFrame> UploadScreenshot()
-        //{
-        //    yield return new WaitForEndOfFrame();
-        //    ScreenshotWorker.fetch.SendScreenshot();
-        //    ScreenshotWorker.fetch.screenshotTaken = true;
-        //}
 
         #endregion
     }

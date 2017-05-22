@@ -33,38 +33,5 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             SendMessage(msg);
         }
-
-        /// <summary>
-        /// Sends a vessel remove to the server, it will then broadcast this message to the OTHER clients.
-        /// If you set broadcast to true the server will broadcast the msg to ALL the clients.
-        /// </summary>
-        public void SendVesselRemove(Guid vesselId, bool broadcast, int secondsDelay)
-        {
-            Client.Singleton.StartCoroutine(SendVesselRemoveCoroutine(vesselId, broadcast, secondsDelay));
-        }
-        
-        private IEnumerator SendVesselRemoveCoroutine(Guid vesselId, bool broadcast, int secondsDelay)
-        {
-            var startTime = Time.time;
-            while (true)
-            {
-                try
-                {
-                    if (!System.Enabled) break;
-
-                    if (Time.time - startTime > secondsDelay)
-                    {
-                        SendVesselRemove(vesselId, broadcast);
-                        break;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Coroutine error in SendVesselRemoveCoroutine {e}");
-                }
-
-                yield return null;
-            }
-        }
     }
 }

@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LunaClient.Base;
@@ -6,7 +5,6 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
-using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Systems.Asteroid
@@ -42,6 +40,15 @@ namespace LunaClient.Systems.Asteroid
 
         #endregion
 
+        #region Constructor
+
+        public AsteroidSystem()
+        {
+            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroids));
+        }
+
+        #endregion
+
         #region Base overrides
 
         public override void OnEnabled()
@@ -49,8 +56,6 @@ namespace LunaClient.Systems.Asteroid
             base.OnEnabled();
             GameEvents.onAsteroidSpawned.Add(AsteroidEventHandler.OnAsteroidSpawned);
             GameEvents.onGameSceneLoadRequested.Add(AsteroidEventHandler.OnGameSceneLoadRequested);
-
-            Client.Singleton.StartCoroutine(CheckAsteroids());
         }
 
         public override void OnDisabled()
@@ -62,58 +67,55 @@ namespace LunaClient.Systems.Asteroid
             ServerAsteroids.Clear();
             ServerAsteroidTrackStatus.Clear();
         }
-        
+
+        #endregion
+
+        #region Update methods
+
         /// <summary>
-        /// This coroutine tries to ackquire the asteroid lock. If we have it spawn the needed asteroids.
+        /// This routine tries to ackquire the asteroid lock. If we have it spawn the needed asteroids.
         /// It also handles the asteroid track status between clients
         /// </summary>
         /// <returns></returns>
-        private IEnumerator CheckAsteroids()
+        private void CheckAsteroids()
         {
-            //TODO: Surround with try catch as other coroutines
-            var seconds = new WaitForSeconds(AsteroidCheckInterval);
-            while (true)
+            if (!Enabled) return;
+
+            //Try to acquire the asteroid-spawning lock if nobody else has it.
+            if (!LockSystem.Singleton.LockExists("asteroid"))
+                LockSystem.Singleton.AcquireLock("asteroid");
+
+            //We have the spawn lock, lets do stuff.
+            if (LockSystem.Singleton.LockIsOurs("asteroid") && WarpSystem.Singleton.CurrentSubspace == 0 &&
+                Time.timeSinceLevelLoad > 1f && MainSystem.Singleton.GameRunning)
             {
-                if (!Enabled) break;
-
-                //Try to acquire the asteroid-spawning lock if nobody else has it.
-                if (!LockSystem.Singleton.LockExists("asteroid"))
-                    LockSystem.Singleton.AcquireLock("asteroid");
-
-                //We have the spawn lock, lets do stuff.
-                if (LockSystem.Singleton.LockIsOurs("asteroid") && WarpSystem.Singleton.CurrentSubspace == 0 && 
-                    Time.timeSinceLevelLoad > 1f && MainSystem.Singleton.GameRunning)
+                var beforeSpawn = GetAsteroidCount();
+                var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;
+                for (var asteroidsSpawned = 0; asteroidsSpawned < asteroidsToSpawn; asteroidsSpawned++)
                 {
-                    var beforeSpawn = GetAsteroidCount();
-                    var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;
-                    for (var asteroidsSpawned = 0; asteroidsSpawned < asteroidsToSpawn; asteroidsSpawned++)
-                    {
-                        Debug.Log($"[LMP]: Spawning asteroid, have {beforeSpawn + asteroidsSpawned}, need {SettingsSystem.ServerSettings.MaxNumberOfAsteroids}");
-                        ScenarioController.SpawnAsteroid();
-                        yield return null; //Resume on next frame
-                    }
+                    Debug.Log($"[LMP]: Spawning asteroid, have {beforeSpawn + asteroidsSpawned}, need {SettingsSystem.ServerSettings.MaxNumberOfAsteroids}");
+                    ScenarioController.SpawnAsteroid();
                 }
-
-                //Check for changes to tracking
-                foreach (var asteroid in GetCurrentAsteroids().Where(asteroid => asteroid.state != Vessel.State.DEAD))
-                {
-                    if (!ServerAsteroidTrackStatus.ContainsKey(asteroid.id.ToString()))
-                    {
-                        ServerAsteroidTrackStatus.Add(asteroid.id.ToString(), asteroid.DiscoveryInfo.trackingStatus.Value);
-                    }
-                    else
-                    {
-                        if (asteroid.DiscoveryInfo.trackingStatus.Value != ServerAsteroidTrackStatus[asteroid.id.ToString()])
-                        {
-                            Debug.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
-                            ServerAsteroidTrackStatus[asteroid.id.ToString()] = asteroid.DiscoveryInfo.trackingStatus.Value;
-                            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid);
-                        }
-                    }
-                }
-
-                yield return seconds;
             }
+
+            //Check for changes to tracking
+            foreach (var asteroid in GetCurrentAsteroids().Where(asteroid => asteroid.state != Vessel.State.DEAD))
+            {
+                if (!ServerAsteroidTrackStatus.ContainsKey(asteroid.id.ToString()))
+                {
+                    ServerAsteroidTrackStatus.Add(asteroid.id.ToString(), asteroid.DiscoveryInfo.trackingStatus.Value);
+                }
+                else
+                {
+                    if (asteroid.DiscoveryInfo.trackingStatus.Value != ServerAsteroidTrackStatus[asteroid.id.ToString()])
+                    {
+                        Debug.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
+                        ServerAsteroidTrackStatus[asteroid.id.ToString()] = asteroid.DiscoveryInfo.trackingStatus.Value;
+                        VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid);
+                    }
+                }
+            }
+
         }
 
         #endregion

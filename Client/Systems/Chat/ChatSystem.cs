@@ -38,6 +38,15 @@ namespace LunaClient.Systems.Chat
 
         #endregion
 
+        #region Properties
+        public ChatQueuer Queuer { get; } = new ChatQueuer();
+        public ChatEvents ChatEventHandler { get; } = new ChatEvents();
+        public override IInputHandler InputHandler { get; } = new ChatInputHandler();
+
+        #endregion
+
+        #region Constructor
+
         public ChatSystem()
         {
             RegisterChatCommand("help", HelpCommand.DisplayHelp, "Displays this help");
@@ -48,20 +57,11 @@ namespace LunaClient.Systems.Chat
             RegisterChatCommand("motd", MotdCommand.ServerMotd, "Gets the current Message of the Day");
             RegisterChatCommand("resize", ResizeCommand.ResizeChat, "Resized the chat window");
             RegisterChatCommand("version", VersionCommand.DisplayVersion, "Displays the current version of LMP");
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleChatEvents));
         }
 
-        public ChatQueuer Queuer { get; } = new ChatQueuer();
-        public ChatEvents ChatEventHandler { get; } = new ChatEvents();
-
-        public override IInputHandler InputHandler { get; } = new ChatInputHandler();
-
-        private void RegisterChatCommand(string command, Action<string> func, string description)
-        {
-            var cmd = new ChatCommand(command, func, description);
-            if (!RegisteredChatCommands.ContainsKey(command))
-                RegisteredChatCommands.Add(command, cmd);
-        }
-
+        #endregion
+        
         #region Commands
 
         private static HelpCommand HelpCommand { get; } = new HelpCommand();
@@ -110,9 +110,12 @@ namespace LunaClient.Systems.Chat
             }
         }
 
-        public override void Update()
+        #endregion
+
+        #region Update methods
+
+        private void HandleChatEvents()
         {
-            base.Update();
             if (Enabled)
             {
                 ChatEventHandler.HandleChatEvents();
@@ -143,6 +146,17 @@ namespace LunaClient.Systems.Chat
                 Text = message,
                 To = SettingsSystem.ServerSettings.ConsoleIdentifier
             });
+        }
+
+        #endregion
+
+        #region Private
+
+        private void RegisterChatCommand(string command, Action<string> func, string description)
+        {
+            var cmd = new ChatCommand(command, func, description);
+            if (!RegisteredChatCommands.ContainsKey(command))
+                RegisteredChatCommands.Add(command, cmd);
         }
 
         #endregion

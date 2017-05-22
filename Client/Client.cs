@@ -44,7 +44,7 @@ namespace LunaClient
         {
             try
             {
-                MainSystem.Singleton.Update();
+                MainSystem.Singleton.MainSystemUpdate();
             }
             catch (Exception e)
             {
@@ -68,7 +68,7 @@ namespace LunaClient
         {
             try
             {
-                MainSystem.Singleton.FixedUpdate();
+                MainSystem.Singleton.MainSystemFixedUpdate();
             }
             catch (Exception e)
             {

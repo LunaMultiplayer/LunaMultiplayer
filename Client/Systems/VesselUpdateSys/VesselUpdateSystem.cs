@@ -8,11 +8,14 @@ namespace LunaClient.Systems.VesselUpdateSys
     /// </summary>
     public class VesselUpdateSystem : MessageSystem<VesselUpdateSystem, VesselUpdateMessageSender, VesselUpdateMessageHandler>
     {
-        #region Constructors
-        public VesselUpdateSystem() : base()
+        #region Constructor
+
+        public VesselUpdateSystem()
         {
+            SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, SendVesselUpdates));
             setupTimer(SEND_TIMER_NAME, _updateSendMSInterval);
         }
+
         #endregion
 
         #region Field & Properties
@@ -40,35 +43,20 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         #endregion
 
-        #region Private methods
+        #region Update methods
 
         /// <summary>
         /// Send control state, clamps, decouplers and dock ports of our vessel
         /// </summary>
-        public override void Update()
+        private void SendVesselUpdates()
         {
-            if (!Enabled || !UpdateSystemReady)
+            if (Enabled && UpdateSystemReady)
             {
-                return;
-            }
-
-            if (IsTimeForNextSend(SEND_TIMER_NAME))
-            {
-                Profiler.BeginSample("VesselUpdateSystem");
                 MessageSender.SendVesselUpdate();
-                ResetTimer();
-                Profiler.EndSample();
-            }
-        }
-
-        private void setMsElapsedForNextSend()
-        {
-            if(VesselCommon.PlayerVesselsNearby())
-            {
-                setupTimer(SEND_TIMER_NAME, _updateNearbySendMSInterval);
-            } else
-            {
-                setupTimer(SEND_TIMER_NAME, _updateSendMSInterval);
+                ChangeRoutineExecutionInterval("SendVesselUpdates",
+                     VesselCommon.PlayerVesselsNearby()
+                         ? _updateNearbySendMSInterval
+                         : _updateSendMSInterval);
             }
         }
 

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.Diagnostics;
 using LunaClient.Base.Interface;
 using LunaClient.Utilities;
+using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 namespace LunaClient.Base
 {
@@ -25,6 +27,10 @@ namespace LunaClient.Base
         #endregion
 
         #region Field & Properties
+
+        private Dictionary<string, RoutineDefinition> UpdateRoutines { get; } = new Dictionary<string, RoutineDefinition>();
+        private Dictionary<string, RoutineDefinition> FixedUpdateRoutines { get; } = new Dictionary<string, RoutineDefinition>();
+
         private Dictionary<String, System.Diagnostics.Stopwatch> timerMap { get; } = new Dictionary<String, System.Diagnostics.Stopwatch>();
         private Dictionary<String, int> timerDuration { get; } = new Dictionary<String, int>();
         #endregion
@@ -66,6 +72,38 @@ namespace LunaClient.Base
             return false;
         }
         #endregion
+
+        protected void SetupRoutine(RoutineDefinition routine)
+        {
+            if (routine.Execution == RoutineExecution.Update && !UpdateRoutines.ContainsKey(routine.Name))
+            {
+                UpdateRoutines.Add(routine.Name, routine);
+            }
+            else if (routine.Execution == RoutineExecution.FixedUpdate && !FixedUpdateRoutines.ContainsKey(routine.Name))
+            {
+                FixedUpdateRoutines.Add(routine.Name, routine);
+            }
+            else
+            {
+                Debug.LogError($"[LMP]: Routine {routine.Name} already defined");
+            }
+        }
+
+        protected void ChangeRoutineExecutionInterval(string routineName, int newIntervalInMs)
+        {
+            if (UpdateRoutines.ContainsKey(routineName))
+            {
+                UpdateRoutines[routineName].IntervalInMs = newIntervalInMs;
+            }
+            else if (FixedUpdateRoutines.ContainsKey(routineName))
+            {
+                FixedUpdateRoutines[routineName].IntervalInMs = newIntervalInMs;
+            }
+            else
+            {
+                Debug.LogError($"[LMP]: Routine {routineName} not defined");
+            }
+        }
 
         public static T Singleton { get; set; }
 
@@ -115,39 +153,33 @@ namespace LunaClient.Base
         }
 
         /// <summary>
-        /// Update wrapper
+        /// Update method. It will call the subscribed routines
         /// </summary>
-        public void RunUpdate()
+        public void Update()
         {
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-            Update();
+
+            foreach (var routine in UpdateRoutines)
+            {
+                routine.Value.RunRoutine();
+            }
+
             UpdateProfiler.ReportTime(startClock);
         }
 
         /// <summary>
-        /// Fixed update wrapper
+        /// Fixed update method. It will call the subscribed routines
         /// </summary>
         public void RunFixedUpdate()
         {
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-            FixedUpdate();
-            FixedUpdateProfiler.ReportTime(startClock);
-        }
-        
-        /// <summary>
-        /// Override to call your custom update functionallity
-        /// </summary>
-        public virtual void Update()
-        {
-            //Implement your own code
-        }
 
-        /// <summary>
-        /// Override to call your custom FixedUpdate functionallity
-        /// </summary>
-        public virtual void FixedUpdate()
-        {
-            //Implement your own code
+            foreach (var routine in FixedUpdateRoutines)
+            {
+                routine.Value.RunRoutine();
+            }
+
+            FixedUpdateProfiler.ReportTime(startClock);
         }
     }
 }

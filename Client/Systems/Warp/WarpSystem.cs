@@ -41,12 +41,12 @@ namespace LunaClient.Systems.Warp
                         ProcessNewSubspace();
 
                     SkipSubspaceProcess = false;
-                    
+
                     Debug.Log($"[LMP]: Locked to subspace {value}, time: {GetCurrentSubspaceTime()}");
                 }
             }
         }
-        
+
         public Dictionary<string, int> ClientSubspaceList { get; } = new Dictionary<string, int>();
         public Dictionary<int, double> Subspaces { get; } = new Dictionary<int, double>();
 
@@ -56,26 +56,27 @@ namespace LunaClient.Systems.Warp
         private WarpEvents WarpEvents { get; } = new WarpEvents();
         public bool SkipSubspaceProcess { get; set; }
         public bool WaitingSubspaceIdFromServer { get; set; }
-
-        private const float UpdateScreenMessageSInterval = 0.2f;
-        private const float CheckFollowMasterSInterval = 1f;
-
         private bool SyncedToLastSubspace { get; set; } = false;
 
         #endregion
 
-        #region Base overriden methods
+        #region Constructor
 
-        public override void Update()
+        public WarpSystem()
         {
-            base.Update();
-
-            if (!SyncedToLastSubspace && MainSystem.Singleton.GameRunning && HighLogic.LoadedSceneIsGame && Time.timeSinceLevelLoad > 1f)
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, SyncToLastSubspace));
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.MASTER &&
+                !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) &&
+                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
             {
-                SyncToLatestSubspace();
-                SyncedToLastSubspace = true;
+                SetupRoutine(new RoutineDefinition(200, RoutineExecution.Update, UpdateScreenMessage));
+                SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, FollowWarpMaster));
             }
         }
+
+        #endregion
+
+        #region Base overrides
 
         public override void OnDisabled()
         {
@@ -91,13 +92,55 @@ namespace LunaClient.Systems.Warp
         public override void OnEnabled()
         {
             GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);
+        }
 
-            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.MASTER &&
-                !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) &&
-                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
+        #endregion
+
+        #region Update methods
+
+        /// <summary>
+        /// Checks if you are synced with the last subspace and if not it does it
+        /// </summary>
+        private void SyncToLastSubspace()
+        {
+            if (!SyncedToLastSubspace && MainSystem.Singleton.GameRunning && HighLogic.LoadedSceneIsGame && Time.timeSinceLevelLoad > 1f)
             {
-                Client.Singleton.StartCoroutine(UpdateScreenMessage());
-                Client.Singleton.StartCoroutine(FollowWarpMaster());
+                SyncToLatestSubspace();
+                SyncedToLastSubspace = true;
+            }
+        }
+
+        #endregion
+
+        #region Update methods
+
+        /// <summary>
+        /// Follows the warp master if the warp mode is set to MASTER and warp master is in another subspace
+        /// </summary>
+        private void FollowWarpMaster()
+        {
+            if (Enabled && MainSystem.Singleton.GameRunning)
+            {
+                if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
+                    ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
+                {
+                    //Follow the warp master into warp if needed
+                    CurrentSubspace = ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the screen message if warp mode is set to Master
+        /// </summary>
+        private void UpdateScreenMessage()
+        {
+            if (Enabled && MainSystem.Singleton.GameRunning)
+            {
+                if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
+                    DisplayMessage(SettingsSystem.ServerSettings.WarpMaster + " has warp control", 1f);
+                else
+                    DisplayMessage("You have warp control", 1f);
             }
         }
 
@@ -177,39 +220,7 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Private methods
-
-        /// <summary>
-        /// Follows the warp master if the warp mode is set to MASTER and warp master is in another subspace
-        /// </summary>
-        private IEnumerator FollowWarpMaster()
-        {
-            var seconds = new WaitForSeconds(CheckFollowMasterSInterval);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-
-                    if (MainSystem.Singleton.GameRunning)
-                    {
-                        if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
-                            ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
-                        {
-                            //Follow the warp master into warp if needed
-                            CurrentSubspace = ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster];
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine FollowWarpMaster {e}");
-                    throw;
-                }
-
-                yield return seconds;
-            }
-        }
-
+       
         /// <summary>
         /// Here we warp and we set the time to the current subspace
         /// </summary>
@@ -219,36 +230,7 @@ namespace LunaClient.Systems.Warp
             //TODO:Put StepClock in a more central place
             TimeSyncerSystem.StepClock(GetCurrentSubspaceTime());
         }
-
-        /// <summary>
-        /// Updates the screen message if warp mode is set to Master
-        /// </summary>
-        private IEnumerator UpdateScreenMessage()
-        {
-            var seconds = new WaitForSeconds(UpdateScreenMessageSInterval);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-
-                    if (MainSystem.Singleton.GameRunning)
-                    {
-                        if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
-                            DisplayMessage(SettingsSystem.ServerSettings.WarpMaster + " has warp control", 1f);
-                        else
-                            DisplayMessage("You have warp control", 1f);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine CheckAbandonedVessels {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
+        
         #endregion
     }
 }

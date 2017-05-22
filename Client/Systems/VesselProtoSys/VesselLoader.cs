@@ -63,7 +63,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Performs the operation of actually loading the vessel into the game.  Does not handle errors.
         /// </summary>
         /// <param name="vesselProto"></param>
-        private void LoadVesselImpl(VesselProtoUpdate vesselProto)
+        private static void LoadVesselImpl(VesselProtoUpdate vesselProto)
         {
             var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
 
@@ -200,25 +200,18 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static void FixProtoVesselFlags(ProtoVessel vesselProto)
         {
-            try
+            foreach (var part in vesselProto.protoPartSnapshots)
             {
-                foreach (var part in vesselProto.protoPartSnapshots)
+                //Fix up flag URLS.
+                if (!string.IsNullOrEmpty(part.flagURL))
                 {
-                    //Fix up flag URLS.
-                    if (!string.IsNullOrEmpty(part.flagURL))
+                    var flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), part.flagURL + ".png");
+                    if (!File.Exists(flagFile))
                     {
-                        string flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), part.flagURL + ".png");
-                        if (!File.Exists(flagFile))
-                        {
-                            Debug.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
-                            part.flagURL = "Squad/Flags/default";
-                        }
+                        Debug.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
+                        part.flagURL = "Squad/Flags/default";
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[LMP]: Error in coroutine FixProtoVesselFlags {e}");
             }
         }
 
@@ -311,23 +304,15 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static bool LoadVesselIntoGame(ProtoVessel currentProto)
         {
-            try
-            {
-                Debug.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
-                currentProto.Load(HighLogic.CurrentGame.flightState);
+            Debug.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
+            currentProto.Load(HighLogic.CurrentGame.flightState);
 
-                if (currentProto.vesselRef == null)
-                {
-                    Debug.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
-                    return false;
-                }
-                return true;
-            }
-            catch (Exception e)
+            if (currentProto.vesselRef == null)
             {
-                Debug.LogError($"[LMP]: Error in coroutine LoadVessel {e}");
+                Debug.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
                 return false;
             }
+            return true;
         }
 
         #endregion

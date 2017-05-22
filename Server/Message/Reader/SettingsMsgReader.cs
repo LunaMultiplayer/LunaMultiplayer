@@ -27,7 +27,7 @@ namespace LunaServer.Message.Reader
                 DropControlOnVesselSwitching = GeneralSettings.SettingsStore.DropControlOnVesselSwitching,
                 DropControlOnExitFlight = GeneralSettings.SettingsStore.DropControlOnExitFlight,
                 DropControlOnExit = GeneralSettings.SettingsStore.DropControlOnExit,
-                SendScenarioDataSecInterval = GeneralSettings.SettingsStore.SendScenarioDataSecInterval,
+                SendScenarioDataMsInterval = GeneralSettings.SettingsStore.SendScenarioDataMsInterval,
                 VesselKillCheckMsInterval = GeneralSettings.SettingsStore.VesselKillCheckMsInterval,
                 StrandedVesselsCheckMsInterval = GeneralSettings.SettingsStore.StrandedVesselsCheckMsInterval,
                 VesselDefinitionSendMsInterval = GeneralSettings.SettingsStore.VesselDefinitionSendMsInterval,

@@ -29,8 +29,16 @@ namespace LunaClient.Systems.VesselLockSys
 
         private string SpectatingMessage => VesselCommon.IsSpectating ? $"This vessel is being controlled by {GetVesselOwner}." : "";
 
-        private const float CheckSecondaryVesselsSInterval = 1f;
-        private const float UpdateScreenMessageInterval = 1f;
+        #endregion
+
+        #region Constructor
+
+        public VesselLockSystem()
+        {
+            SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, TryGetControlLock));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateSecondaryVesselsLocks));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
+        }
 
         #endregion
 
@@ -41,9 +49,6 @@ namespace LunaClient.Systems.VesselLockSys
             base.OnEnabled();
             GameEvents.onLevelWasLoadedGUIReady.Add(VesselMainEvents.OnSceneChanged);
             GameEvents.onVesselChange.Add(VesselMainEvents.OnVesselChange);
-            Client.Singleton.StartCoroutine(TryGetControlLock());
-            Client.Singleton.StartCoroutine(UpdateSecondaryVesselsLocks());
-            Client.Singleton.StartCoroutine(UpdateOnScreenSpectateMessage());
         }
 
         public override void OnDisabled()
@@ -51,6 +56,71 @@ namespace LunaClient.Systems.VesselLockSys
             base.OnDisabled();
             GameEvents.onLevelWasLoadedGUIReady.Remove(VesselMainEvents.OnSceneChanged);
             GameEvents.onVesselChange.Remove(VesselMainEvents.OnVesselChange);
+        }
+
+        #endregion
+
+        #region Update methods
+
+        /// <summary>
+        /// In case the player who control the ship drops the control, here we try to get it.
+        /// </summary>
+        private void TryGetControlLock()
+        {
+            if (Enabled && VesselLockSystemReady && VesselCommon.IsSpectating)
+            {
+                if (!LockSystem.Singleton.LockExists("control-" + FlightGlobals.ActiveVessel.id))
+                {
+                    //Don't force as maybe other players are spectating too so the fastests is the winner :)
+                    StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// After some ms get the update lock for vessels that are close to us (not packed and not ours) not dead and that nobody has the update lock
+        /// </summary>
+        private void UpdateSecondaryVesselsLocks()
+        {
+            if (Enabled && VesselLockSystemReady)
+            {
+                var validSecondaryVessels = GetValidSecondaryVesselIds().ToArray();
+                foreach (var checkVessel in validSecondaryVessels)
+                {
+                    //Don't force it as maybe another player sent this request aswell
+                    LockSystem.Singleton.AcquireLock("update-" + checkVessel);
+                }
+
+                var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased().ToArray();
+                foreach (var releaseVessel in vesselsToRelease)
+                {
+                    LockSystem.Singleton.ReleaseLock("update-" + releaseVessel);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Show a message on the screen if we are spectating
+        /// </summary>
+        private void UpdateOnScreenSpectateMessage()
+        {
+            if (Enabled && VesselLockSystemReady)
+            {
+                if (VesselCommon.IsSpectating)
+                {
+                    if (_spectateMessage != null)
+                        _spectateMessage.duration = 0f;
+                    _spectateMessage = ScreenMessages.PostScreenMessage(SpectatingMessage, 1000 * 2, ScreenMessageStyle.UPPER_CENTER);
+                }
+                else
+                {
+                    if (_spectateMessage != null)
+                    {
+                        _spectateMessage.duration = 0f;
+                        _spectateMessage = null;
+                    }
+                }
+            }
         }
 
         #endregion
@@ -105,113 +175,6 @@ namespace LunaClient.Systems.VesselLockSys
         #endregion
 
         #region Private methods
-
-        #region Coroutines
-
-        /// <summary>
-        /// In case the player who control the ship drops the control, here we try to get it.
-        /// </summary>
-        private IEnumerator TryGetControlLock()
-        {
-            var seconds = new WaitForSeconds(3);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-                    if (VesselLockSystemReady && VesselCommon.IsSpectating)
-                    {
-                        if (!LockSystem.Singleton.LockExists("control-" + FlightGlobals.ActiveVessel.id))
-                        {
-                            //Don't force as maybe other players are spectating too so the fastests is the winner :)
-                            StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine TryGetControlLock {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
-        /// <summary>
-        /// After some ms get the update lock for vessels that are close to us (not packed and not ours) not dead and that nobody has the update lock
-        /// </summary>
-        private IEnumerator UpdateSecondaryVesselsLocks()
-        {
-            var seconds = new WaitForSeconds(CheckSecondaryVesselsSInterval);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-                    if (VesselLockSystemReady)
-                    {
-                        var validSecondaryVessels = GetValidSecondaryVesselIds().ToArray();
-                        foreach (var checkVessel in validSecondaryVessels)
-                        {
-                            //Don't force it as maybe another player sent this request aswell
-                            LockSystem.Singleton.AcquireLock("update-" + checkVessel);
-                        }
-
-                        var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased().ToArray();
-                        foreach (var releaseVessel in vesselsToRelease)
-                        {
-                            LockSystem.Singleton.ReleaseLock("update-" + releaseVessel);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine UpdateSecondaryVesselsLocks {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
-        /// <summary>
-        /// Show a message on the screen if we are spectating
-        /// </summary>
-        private IEnumerator UpdateOnScreenSpectateMessage()
-        {
-            var seconds = new WaitForSeconds(UpdateScreenMessageInterval);
-            while (true)
-            {
-                try
-                {
-                    if (!Enabled) break;
-                    if (VesselLockSystemReady)
-                    {
-                        if (VesselCommon.IsSpectating)
-                        {
-                            if (_spectateMessage != null)
-                                _spectateMessage.duration = 0f;
-                            _spectateMessage = ScreenMessages.PostScreenMessage(SpectatingMessage, UpdateScreenMessageInterval * 2, ScreenMessageStyle.UPPER_CENTER);
-                        }
-                        else
-                        {
-                            if (_spectateMessage != null)
-                            {
-                                _spectateMessage.duration = 0f;
-                                _spectateMessage = null;
-                            }
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    Debug.LogError($"[LMP]: Error in coroutine UpdateOnScreenSpectateMessage {e}");
-                }
-
-                yield return seconds;
-            }
-        }
-
-        #endregion
 
         /// <summary>
         /// Return the OTHER vessel ids of the vessels that are loaded (close to us) not dead and not in safety bubble.

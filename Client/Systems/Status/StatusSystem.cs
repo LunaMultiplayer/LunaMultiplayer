@@ -1,10 +1,7 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselLockSys;
 using LunaCommon;
 using UnityEngine;
 
@@ -27,17 +24,21 @@ namespace LunaClient.Systems.Status
         private bool StatusIsDifferent =>
             (MyPlayerStatus.VesselText != LastPlayerStatus.VesselText) ||
             (MyPlayerStatus.StatusText != LastPlayerStatus.StatusText);
-        
+
+        #endregion
+
+        #region Constructor
+
+        public StatusSystem()
+        {
+            SetupRoutine(new RoutineDefinition(SettingsSystem.CurrentSettings.PlayerStatusCheckMsInterval,
+                RoutineExecution.Update, CheckPlayerStatus));
+        }
+
         #endregion
 
         #region Base overrides
-
-        public override void OnEnabled()
-        {
-            base.OnEnabled();
-            Client.Singleton.StartCoroutine(CheckPlayerStatus());
-        }
-
+        
         public override void OnDisabled()
         {
             base.OnDisabled();
@@ -74,40 +75,27 @@ namespace LunaClient.Systems.Status
 
         #endregion
 
-        #region Private methods
+        #region Update methods
 
-        private IEnumerator CheckPlayerStatus()
+        private void CheckPlayerStatus()
         {
-            var seconds = new WaitForSeconds((float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.PlayerStatusCheckMsInterval).TotalSeconds);
-            while (true)
+            if (Enabled && MainSystem.Singleton.GameRunning)
             {
-                if (!Enabled) break;
+                MyPlayerStatus.VesselText = GetVesselText();
+                MyPlayerStatus.StatusText = GetStatusText();
 
-                if (MainSystem.Singleton.GameRunning)
+                if (StatusIsDifferent)
                 {
-                    try
-                    {
-                        MyPlayerStatus.VesselText = GetVesselText();
-                        MyPlayerStatus.StatusText = GetStatusText();
+                    LastPlayerStatus.VesselText = MyPlayerStatus.VesselText;
+                    LastPlayerStatus.StatusText = MyPlayerStatus.StatusText;
 
-                        if (StatusIsDifferent)
-                        {
-                            LastPlayerStatus.VesselText = MyPlayerStatus.VesselText;
-                            LastPlayerStatus.StatusText = MyPlayerStatus.StatusText;
-
-                            MessageSender.SendPlayerStatus(MyPlayerStatus);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogError($"[LMP]: Coroutine error in CheckPlayerStatus {e}");
-                    }
+                    MessageSender.SendPlayerStatus(MyPlayerStatus);
                 }
-
-                yield return seconds;
             }
         }
-        
+
+        #endregion
+
         #region Status getter
 
         private static string GetVesselText()
@@ -188,8 +176,6 @@ namespace LunaClient.Systems.Status
                     return "Error";
             }
         }
-
-        #endregion
 
         #endregion
     }

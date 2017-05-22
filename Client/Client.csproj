@@ -71,6 +71,7 @@
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
     <Compile Include="Base\MessageSystem.cs" />
+    <Compile Include="Base\RoutineDefinition.cs" />
     <Compile Include="Base\StyleLibrary.cs" />
     <Compile Include="Base\SubSystem.cs" />
     <Compile Include="Base\SystemBase.cs" />

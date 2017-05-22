@@ -12,6 +12,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
     /// </summary>
     public class VesselFlightStateSystem : MessageSystem<VesselFlightStateSystem, VesselFlightStateMessageSender, VesselFlightStateMessageHandler>
     {
+        #region Fields & properties
+
         private static Dictionary<Guid, FlightInputCallback> FlyByWireDictionary { get; } =
             new Dictionary<Guid, FlightInputCallback>();
 
@@ -24,18 +26,21 @@ namespace LunaClient.Systems.VesselFlightStateSys
                FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
                FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
 
-        private const float DictionaryUpdateSInterval = 1.5f;
-        private const float FlightStateSendSInterval = 0.1f;
-        private const float FlightStateSendLowSInterval = 1f;
+        #endregion
 
-        public override void OnEnabled()
+        #region Constructor
+
+        public VesselFlightStateSystem()
         {
-            base.OnEnabled();
-            Client.Singleton.StartCoroutine(SendFlightState());
-            Client.Singleton.StartCoroutine(AddRemoveActiveVesselFromDictionary());
-            Client.Singleton.StartCoroutine(RemoveUnloadedVesselsFromDictionary());
-            Client.Singleton.StartCoroutine(AddLoadedVesselsToDictionary());
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, RemoveUnloadedVesselsFromDictionary));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddRemoveActiveVesselFromDictionary));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddLoadedVesselsToDictionary));
         }
+
+        #endregion
+
+        #region Base overrides
 
         public override void OnDisabled()
         {
@@ -44,125 +49,99 @@ namespace LunaClient.Systems.VesselFlightStateSys
             FlightStatesDictionary.Clear();
         }
 
-        private IEnumerator SendFlightState()
+        #endregion
+
+        #region Update methods
+
+        private void SendFlightState()
         {
-            var seconds = new WaitForSeconds(FlightStateSendSInterval);
-            var secondsFar = new WaitForSeconds(FlightStateSendLowSInterval);
-            while (true)
+            if (Enabled && FlightStateSystemReady && VesselCommon.PlayerVesselsNearby())
             {
-                if (!Enabled) break;
+                MessageSender.SendCurrentFlightState();
+            }
 
-                if (FlightStateSystemReady && VesselCommon.PlayerVesselsNearby())
+            ChangeRoutineExecutionInterval("SendFlightState", VesselCommon.IsSomeoneSpectatingUs ? 100 : 1000);
+        }
+
+        private void RemoveUnloadedVesselsFromDictionary()
+        {
+            if (Enabled && FlightStateSystemReady)
+            {
+                var vesselsToRemove = FlightGlobals.VesselsUnloaded
+                    .Where(v => FlyByWireDictionary.Keys.Contains(v.id))
+                    .ToList();
+
+                foreach (var vesselToRemove in vesselsToRemove)
                 {
-                    MessageSender.SendCurrentFlightState();
-                }
+                    try
+                    {
+                        vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
 
-                if(VesselCommon.IsSomeoneSpectatingUs)
-                    yield return seconds;
-                else
-                    yield return secondsFar;
+                    FlyByWireDictionary.Remove(vesselToRemove.id);
+                    FlightStatesDictionary.Remove(vesselToRemove.id);
+                }
             }
         }
 
-        private IEnumerator RemoveUnloadedVesselsFromDictionary()
+        private void AddRemoveActiveVesselFromDictionary()
         {
-            var seconds = new WaitForSeconds(DictionaryUpdateSInterval);
-            while (true)
+            if (Enabled && FlightStateSystemReady)
             {
-                if (!Enabled) break;
-
-                if (FlightStateSystemReady)
+                if (VesselCommon.IsSpectating)
                 {
-                    var vesselsToRemove = FlightGlobals.VesselsUnloaded
-                        .Where(v => FlyByWireDictionary.Keys.Contains(v.id))
-                        .ToList();
-
-                    foreach (var vesselToRemove in vesselsToRemove)
+                    if (!FlyByWireDictionary.ContainsKey(FlightGlobals.ActiveVessel.id) &&
+                        !FlightStatesDictionary.ContainsKey(FlightGlobals.ActiveVessel.id))
+                    {
+                        FlightStatesDictionary.Add(FlightGlobals.ActiveVessel.id, FlightGlobals.ActiveVessel.ctrlState);
+                        FlyByWireDictionary.Add(FlightGlobals.ActiveVessel.id, st => OnVesselFlyByWire(FlightGlobals.ActiveVessel.id, st));
+                        FlightGlobals.ActiveVessel.OnFlyByWire += FlyByWireDictionary[FlightGlobals.ActiveVessel.id];
+                    }
+                }
+                else
+                {
+                    if (FlyByWireDictionary.ContainsKey(FlightGlobals.ActiveVessel.id) &&
+                        FlightStatesDictionary.ContainsKey(FlightGlobals.ActiveVessel.id))
                     {
                         try
                         {
-                            vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
+                            FlightGlobals.ActiveVessel.OnFlyByWire -= FlyByWireDictionary[FlightGlobals.ActiveVessel.id];
                         }
                         catch (Exception)
                         {
                             // ignored
                         }
-
-                        FlyByWireDictionary.Remove(vesselToRemove.id);
-                        FlightStatesDictionary.Remove(vesselToRemove.id);
+                        FlyByWireDictionary.Remove(FlightGlobals.ActiveVessel.id);
+                        FlightStatesDictionary.Remove(FlightGlobals.ActiveVessel.id);
                     }
                 }
-
-                yield return seconds;
             }
         }
 
-        private IEnumerator AddRemoveActiveVesselFromDictionary()
+        private void AddLoadedVesselsToDictionary()
         {
-            var seconds = new WaitForSeconds(DictionaryUpdateSInterval);
-            while (true)
+            if (Enabled && FlightStateSystemReady)
             {
-                if (!Enabled) break;
+                var vesselsToAdd = FlightGlobals.VesselsLoaded
+                    .Where(v => v.id != FlightGlobals.ActiveVessel.id && !FlyByWireDictionary.Keys.Contains(v.id))
+                    .ToArray();
 
-                if (FlightStateSystemReady)
+                foreach (var vesselToAdd in vesselsToAdd)
                 {
-                    if (VesselCommon.IsSpectating)
-                    {
-                        if (!FlyByWireDictionary.ContainsKey(FlightGlobals.ActiveVessel.id) &&
-                            !FlightStatesDictionary.ContainsKey(FlightGlobals.ActiveVessel.id))
-                        {
-                            FlightStatesDictionary.Add(FlightGlobals.ActiveVessel.id, FlightGlobals.ActiveVessel.ctrlState);
-                            FlyByWireDictionary.Add(FlightGlobals.ActiveVessel.id, st => OnVesselFlyByWire(FlightGlobals.ActiveVessel.id, st));
-                            FlightGlobals.ActiveVessel.OnFlyByWire += FlyByWireDictionary[FlightGlobals.ActiveVessel.id];
-                        }
-                    }
-                    else
-                    {
-                        if (FlyByWireDictionary.ContainsKey(FlightGlobals.ActiveVessel.id) &&
-                            FlightStatesDictionary.ContainsKey(FlightGlobals.ActiveVessel.id))
-                        {
-                            try
-                            {
-                                FlightGlobals.ActiveVessel.OnFlyByWire -= FlyByWireDictionary[FlightGlobals.ActiveVessel.id];
-                            }
-                            catch (Exception)
-                            {
-                                // ignored
-                            }
-                            FlyByWireDictionary.Remove(FlightGlobals.ActiveVessel.id);
-                            FlightStatesDictionary.Remove(FlightGlobals.ActiveVessel.id);
-                        }
-                    }
+                    FlightStatesDictionary.Add(vesselToAdd.id, vesselToAdd.ctrlState);
+                    FlyByWireDictionary.Add(vesselToAdd.id, st => OnVesselFlyByWire(vesselToAdd.id, st));
+                    vesselToAdd.OnFlyByWire += FlyByWireDictionary[vesselToAdd.id];
                 }
-
-                yield return seconds;
             }
         }
 
-        private IEnumerator AddLoadedVesselsToDictionary()
-        {
-            var seconds = new WaitForSeconds(DictionaryUpdateSInterval);
-            while (true)
-            {
-                if (!Enabled) break;
+        #endregion
 
-                if (FlightStateSystemReady)
-                {
-                    var vesselsToAdd = FlightGlobals.VesselsLoaded
-                        .Where(v => v.id != FlightGlobals.ActiveVessel.id && !FlyByWireDictionary.Keys.Contains(v.id))
-                        .ToArray();
-
-                    foreach (var vesselToAdd in vesselsToAdd)
-                    {
-                        FlightStatesDictionary.Add(vesselToAdd.id, vesselToAdd.ctrlState);
-                        FlyByWireDictionary.Add(vesselToAdd.id, st => OnVesselFlyByWire(vesselToAdd.id, st));
-                        vesselToAdd.OnFlyByWire += FlyByWireDictionary[vesselToAdd.id];
-                    }
-                }
-
-                yield return seconds;
-            }
-        }
+        #region Private methods
 
         private void OnVesselFlyByWire(Guid id, FlightCtrlState st)
         {
@@ -171,5 +150,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 st.CopyFrom(FlightStatesDictionary[id]);
             }
         }
+
+        #endregion
     }
 }

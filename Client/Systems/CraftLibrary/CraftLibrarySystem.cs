@@ -50,16 +50,16 @@ namespace LunaClient.Systems.CraftLibrary
 
         #endregion
 
-        #region Base overrides
+        #region Constructor
 
-        public override void Update()
+        public CraftLibrarySystem()
         {
-            base.Update();
-            if (Enabled && MainSystem.Singleton.GameRunning)
-            {
-                CraftLibraryEventHandler.HandleCraftLibraryEvents();
-            }
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleCraftLibraryEvents));
         }
+
+        #endregion
+
+        #region Base overrides
 
         public override void OnEnabled()
         {
@@ -83,6 +83,18 @@ namespace LunaClient.Systems.CraftLibrary
             DownloadCraftName = "";
             DeleteCraftType = CraftType.VAB;
             DeleteCraftName = "";
+        }
+
+        #endregion
+
+        #region Update methods
+
+        private void HandleCraftLibraryEvents()
+        {
+            if (Enabled && MainSystem.Singleton.GameRunning)
+            {
+                CraftLibraryEventHandler.HandleCraftLibraryEvents();
+            }
         }
 
         #endregion

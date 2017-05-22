@@ -16,11 +16,13 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
-        #region Constructors
-        public VesselPositionSystem() : base()
+        #region Constructor
+
+        public VesselPositionSystem()
         {
-            setupTimer(VESSEL_REMOVE_TIMER_NAME, RemoveVesselsMsInterval);
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ProcessPositions));
         }
+
         #endregion
 
         #region Field & Properties
@@ -29,11 +31,7 @@ namespace LunaClient.Systems.VesselPositionSys
             (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval).TotalSeconds;
 
         private static float VesselUpdatesSendSInterval => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
-
-        private const float MaxSecWithoutUpdates = 20;
-        private const int RemoveVesselsMsInterval = 5000;
-        private const String VESSEL_REMOVE_TIMER_NAME = "REMOVE";
-
+        
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
                                          FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
@@ -55,35 +53,27 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Base overrides
 
-        public override void OnEnabled()
-        {
-            base.OnEnabled();
-        }
-
         public override void OnDisabled()
         {
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
             FutureVesselUpdates.Clear();
         }
+        
+        #endregion
 
-        public override void FixedUpdate()
+        #region Fixed update methods
+
+        private void ProcessPositions()
         {
-            base.FixedUpdate();
-
             if (PositionUpdateSystemReady)
             {
-                if (SettingsSystem.CurrentSettings.Debug2)
-                {
-                    //TODO: Do we need to remove old vessels anymore?  Does this happen in the VesselRemoveSys?
-                    //removeOldVessels();
-                }
-
                 HandleVesselUpdates();
                 SendVesselPositionUpdates();
                 SendSecondaryVesselPositionUpdates();
             }
         }
+
         #endregion
 
         #region Private methods

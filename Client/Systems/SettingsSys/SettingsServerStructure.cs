@@ -21,7 +21,7 @@ namespace LunaClient.Systems.SettingsSys
         public bool DropControlOnVesselSwitching { get; set; }
         public bool DropControlOnExit { get; set; }
         public bool DropControlOnExitFlight { get; set; }
-        public int SendScenarioDataSecInterval { get; set; }
+        public int SendScenarioDataMsInterval { get; set; }
         public string WarpMaster { get; set; }
         public int VesselKillCheckMsInterval { get; set; }
         public int ClockSetMsInterval { get; set; }
