@@ -13,7 +13,6 @@ namespace LunaClient.Systems.VesselUpdateSys
         public VesselUpdateSystem()
         {
             SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, SendVesselUpdates));
-            setupTimer(SEND_TIMER_NAME, _updateSendMSInterval);
         }
 
         #endregion
