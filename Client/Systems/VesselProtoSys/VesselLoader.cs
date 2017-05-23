@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
@@ -46,24 +45,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Load a vessel into the game
         /// </summary>
-        /// 
         public void LoadVessel(VesselProtoUpdate vesselProto)
-        {
-            try
-            {
-                LoadVesselImpl(vesselProto);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError($"[LMP]: Error loading vessel: {e}");
-            }
-        }
-
-        /// <summary>
-        /// Performs the operation of actually loading the vessel into the game.  Does not handle errors.
-        /// </summary>
-        /// <param name="vesselProto"></param>
-        private static void LoadVesselImpl(VesselProtoUpdate vesselProto)
         {
             var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
 
@@ -85,66 +67,20 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public void ReloadVessel(VesselProtoUpdate vesselProto)
         {
-            try
+            var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.VesselId);
+            if (vessel != null)
             {
-                var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.VesselId);
-                if (vessel != null)
+                var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
+                if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
                 {
-                    //Load the existing target, if any.  We will use this to reset the target to the newly loaded vessel, if the vessel we're reloading is the one that is targeted.
-                    ITargetable currentTarget = FlightGlobals.fetch.VesselTarget;
-
-
-                    Boolean vesselLoaded = false;
-                    var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
-                    //TODO: Is BackupVessel() needed or can we just look at the protoVessel?
-                    if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
-                    {
-                        //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
-                        VesselRemoveSystem.Singleton.UnloadVessel(vessel);
-                        LoadVesselImpl(vesselProto);
-                        vesselLoaded = true;
-                    }
-
-                    //TODO: Handle when it's the active vessel for the FlightGlobals as well.  If you delete the active vessel, it ends badly.  Very badly.
-
-                    //We do want to actually compare by reference--we want to see if the vessel object we're unloading and reloading is the one that's targeted.  If so, we need to
-                    //reset the target to the new instance of the vessel
-                    if (vesselLoaded && (currentTarget == vessel))
-                    {
-                        //Fetch the new vessel information for the same vessel ID, as the unload/load creates a new game object, and we need to refer to the new one for the target
-                        var newVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.VesselId);
-
-                        //Record the time immediately before calling SetVesselTarget
-                        float currentTime = Time.realtimeSinceStartup;
-                        FlightGlobals.fetch.SetVesselTarget(newVessel, true);
-
-                        List<ScreenMessage> messagesToRemove = new List<ScreenMessage>();
-                        //Remove the "Target:" message created by SetVesselTarget
-                        foreach (ScreenMessage message in ScreenMessages.Instance.ActiveMessages)
-                        {
-                            //If the message started on or after the SetVesselTarget call time, remove it, as it's the target message created by SetVesselTarget
-                            if (message.startTime >= currentTime)
-                            {
-                                messagesToRemove.Add(message);   
-                            }
-                        }
-
-                        foreach(ScreenMessage message in messagesToRemove)
-                        {
-                            ScreenMessages.RemoveMessage(message);
-                        }
-                    }
-
-                } else
-                {
-                    LoadVesselImpl(vesselProto);
+                    //This is a really bad idea, as this makes the vessel blink.  It also causes the other person to lose target of the vessel.
+                    //We really need to update the vessel in place.
+                    VesselRemoveSystem.Singleton.UnloadVessel(vessel);
+                    LoadVessel(vesselProto);
                 }
-                
             }
-            catch (Exception e)
-            {
-                Debug.LogError($"[LMP]: Error reloading vessel: {e}");
-            }
+
+            vesselProto.Loaded = true;
         }
 
 
@@ -200,18 +136,25 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static void FixProtoVesselFlags(ProtoVessel vesselProto)
         {
-            foreach (var part in vesselProto.protoPartSnapshots)
+            try
             {
-                //Fix up flag URLS.
-                if (!string.IsNullOrEmpty(part.flagURL))
+                foreach (var part in vesselProto.protoPartSnapshots)
                 {
-                    var flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), part.flagURL + ".png");
-                    if (!File.Exists(flagFile))
+                    //Fix up flag URLS.
+                    if (!string.IsNullOrEmpty(part.flagURL))
                     {
-                        Debug.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
-                        part.flagURL = "Squad/Flags/default";
+                        var flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), part.flagURL + ".png");
+                        if (!File.Exists(flagFile))
+                        {
+                            Debug.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
+                            part.flagURL = "Squad/Flags/default";
+                        }
                     }
                 }
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in coroutine FixProtoVesselFlags {e}");
             }
         }
 
@@ -304,15 +247,23 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static bool LoadVesselIntoGame(ProtoVessel currentProto)
         {
-            Debug.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
-            currentProto.Load(HighLogic.CurrentGame.flightState);
-
-            if (currentProto.vesselRef == null)
+            try
             {
-                Debug.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
+                Debug.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
+                currentProto.Load(HighLogic.CurrentGame.flightState);
+
+                if (currentProto.vesselRef == null)
+                {
+                    Debug.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
+                    return false;
+                }
+                return true;
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[LMP]: Error in coroutine LoadVessel {e}");
                 return false;
             }
-            return true;
         }
 
         #endregion
