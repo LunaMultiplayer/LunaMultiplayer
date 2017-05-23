@@ -188,7 +188,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             try
             {
-                if (Enabled && ProtoSystemBasicReady)
+                if (ProtoSystemBasicReady)
                 {
                     //Reload vessels that exist
                     var vesselsToReLoad = AllPlayerVessels
@@ -198,7 +198,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToReLoad)
                     {
                         VesselLoader.ReloadVessel(vesselProto.Value);
-                        //VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.Value.VesselId);   
+                        VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.Value.VesselId);   
                     }
 
                     //Load vessels that don't exist and are in our subspace
@@ -210,7 +210,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToLoad)
                     {
                         VesselLoader.LoadVessel(vesselProto.Value);
-                        //VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.Value.VesselId);
+                        VesselPositionSystem.Singleton.updateVesselPosition(vesselProto.Value.VesselId);
                     }
                 }
             }

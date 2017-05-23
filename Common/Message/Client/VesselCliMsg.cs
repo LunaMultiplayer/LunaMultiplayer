@@ -23,8 +23,9 @@ namespace LunaCommon.Message.Client
         };
 
         public override ClientMessageType MessageType => ClientMessageType.VESSEL;
-        protected override int DefaultChannel => IsVesselPositionOrFlightState() ? 0 : 8;
-        public override NetDeliveryMethod NetDeliveryMethod => IsVesselPositionOrFlightState() ? NetDeliveryMethod.UnreliableSequenced : NetDeliveryMethod.ReliableOrdered;
+        protected override int DefaultChannel => IsVesselPositionOrFlightState() ? 0: 8;
+        //TODO: Make UnreliableSequenced after fixing docking/undocking bugs
+        public override NetDeliveryMethod NetDeliveryMethod => IsVesselPositionOrFlightState() ? NetDeliveryMethod.ReliableOrdered : NetDeliveryMethod.ReliableOrdered;
 
         private bool IsVesselPositionOrFlightState()
         {

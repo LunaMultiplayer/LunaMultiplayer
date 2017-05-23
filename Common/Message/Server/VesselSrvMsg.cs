@@ -24,6 +24,7 @@ namespace LunaCommon.Message.Server
 
         public override ServerMessageType MessageType => ServerMessageType.VESSEL;
         protected override int DefaultChannel => IsVesselPositionOrFlightState() ? 0 : 8;
+        //TODO: Make it UnreliableSequenced if it's position or flight state, after addressing issues where dock/undock could arrive out of order.
         public override NetDeliveryMethod NetDeliveryMethod => IsVesselPositionOrFlightState() ? 
             NetDeliveryMethod.UnreliableSequenced : NetDeliveryMethod.ReliableOrdered;
 
