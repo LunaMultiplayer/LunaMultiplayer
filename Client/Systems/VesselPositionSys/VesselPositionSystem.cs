@@ -61,7 +61,6 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region FixedUpdate methods
-
         private void ProcessPositions()
         {
             if (PositionUpdateSystemReady)
@@ -71,11 +70,9 @@ namespace LunaClient.Systems.VesselPositionSys
                 SendSecondaryVesselPositionUpdates();
             }
         }
-
         #endregion
 
         #region Private methods
-
         private void HandleVesselUpdates()
         {
             foreach (Guid vesselId in updatedVesselIds.Keys)
@@ -104,7 +101,57 @@ namespace LunaClient.Systems.VesselPositionSys
                 newPositionUpdate.Vessel = existingPositionUpdate.Vessel;
             }
         }
+        
+        /// <summary>
+        /// Check if we must send a message or not based on the fixed time that has passed.
+        /// Note that when no vessels are nearby or we are not in KSC the time is multiplied by 10
+        /// //TODO: Should change this to use a timer in MessageSystem
+        /// </summary>
+        private static bool ShouldSendPositionUpdate()
+        {
+            if (VesselCommon.IsSpectating)
+            {
+                return false;
+            }
 
+            var secSinceLastSend = Time.fixedTime - _lastSentTime;
+
+            if (VesselCommon.PlayerVesselsNearby() || VesselCommon.IsNearKsc(20000))
+            {
+                return secSinceLastSend > VesselUpdatesSendSInterval;
+            }
+
+            return secSinceLastSend > VesselUpdatesSendSInterval * 10;
+        }
+
+        /// <summary>
+        /// Send the updates of our own vessel. We only send them after an interval specified.
+        /// If the other player vessels are far we don't send them very often.
+        /// </summary>
+        private void SendVesselPositionUpdates()
+        {
+            if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
+            {
+                _lastSentTime = Time.fixedTime;
+                MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
+            }
+        }
+
+        /// <summary>
+        /// Send updates for vessels that we own the update lock.
+        /// </summary>
+        /// TODO: Who calls this method now?  How do we make sure we only infrequently send updates for secondary vessels, as opposed to primary vessels?
+        private void SendSecondaryVesselPositionUpdates()
+        {
+            if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
+            {
+                var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
+                foreach (var secondaryVessel in secondaryVesselsToUpdate)
+                {
+                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
+                }
+            }
+        }
         #endregion
 
         #region Public methods
@@ -163,62 +210,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 }).Start();
             }
         }
-
-        #endregion
-
-        #region Private methods 2
-
-        /// <summary>
-        /// Check if we must send a message or not based on the fixed time that has passed.
-        /// Note that when no vessels are nearby or we are not in KSC the time is multiplied by 10
-        /// //TODO: Should change this to use a timer in MessageSystem
-        /// </summary>
-        private static bool ShouldSendPositionUpdate()
-        {
-            if (VesselCommon.IsSpectating)
-            {
-                return false;
-            }
-
-            var secSinceLastSend = Time.fixedTime - _lastSentTime;
-
-            if (VesselCommon.PlayerVesselsNearby() || VesselCommon.IsNearKsc(20000))
-            {
-                return secSinceLastSend > VesselUpdatesSendSInterval;
-            }
-
-            return secSinceLastSend > VesselUpdatesSendSInterval * 10;
-        }
-
-        /// <summary>
-        /// Send the updates of our own vessel. We only send them after an interval specified.
-        /// If the other player vessels are far we don't send them very often.
-        /// </summary>
-        private void SendVesselPositionUpdates()
-        {
-            if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
-            {
-                _lastSentTime = Time.fixedTime;
-                MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
-            }
-        }
-
-        /// <summary>
-        /// Send updates for vessels that we own the update lock.
-        /// </summary>
-        /// TODO: Who calls this method now?  How do we make sure we only infrequently send updates for secondary vessels, as opposed to primary vessels?
-        private void SendSecondaryVesselPositionUpdates()
-        {
-            if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
-            {
-                var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
-                foreach (var secondaryVessel in secondaryVesselsToUpdate)
-                {
-                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
-                }
-            }
-        }
-
         #endregion
     }
 }
