@@ -9,9 +9,8 @@ namespace LunaCommon.Message.Server
     {
         public override ServerMessageType MessageType => ServerMessageType.MOD;
         protected override int DefaultChannel => SendReliably() ? 15 : 0;
-        //TODO: Make UnreliableSequenced for !sendReliably
         public override NetDeliveryMethod NetDeliveryMethod => SendReliably() ?
-            NetDeliveryMethod.ReliableOrdered : NetDeliveryMethod.ReliableOrdered;
+            NetDeliveryMethod.ReliableOrdered : NetDeliveryMethod.UnreliableSequenced;
 
         private bool SendReliably()
         {
