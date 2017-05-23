@@ -16,7 +16,7 @@ namespace LunaClient.Utilities
         {
             var builder = new StringBuilder();
 
-            builder.AppendLine("Times in ms (average/max/min/now) ");
+            builder.AppendLine("LMP profiler. Times in ms (average/max/min/now) ");
             builder.Append("Update: ").Append(UpdateData).AppendLine();
             builder.Append("Fixed update: ").Append(FixedUpdateData).AppendLine();
             builder.Append("GUI: ").Append(GuiData).AppendLine();
