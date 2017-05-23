@@ -36,7 +36,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
 
@@ -49,7 +49,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 RoutineExecution.FixedUpdate, SendSecondaryVesselPositionUpdates));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             CurrentVesselUpdate.Clear();

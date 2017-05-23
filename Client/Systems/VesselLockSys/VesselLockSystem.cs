@@ -33,7 +33,7 @@ namespace LunaClient.Systems.VesselLockSys
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onLevelWasLoadedGUIReady.Add(VesselMainEvents.OnSceneChanged);
@@ -43,7 +43,7 @@ namespace LunaClient.Systems.VesselLockSys
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             GameEvents.onLevelWasLoadedGUIReady.Remove(VesselMainEvents.OnSceneChanged);

@@ -29,7 +29,7 @@ namespace LunaClient.Systems.Toolbar
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             ButtonTexture = GameDatabase.Instance.GetTexture("LunaMultiPlayer/Button/LMPButton", false);
             if (SettingsSystem.CurrentSettings.ToolbarType == LmpToolbarType.Disabled)
@@ -51,7 +51,7 @@ namespace LunaClient.Systems.Toolbar
             }
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             if (BlizzyRegistered)
                 DisableBlizzyToolbar();

@@ -11,11 +11,11 @@ namespace LunaClient.Base
     /// System base class. This class is made for a grouping logic.
     /// If you create a new system remember to call it on the SystemsHandler class
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public abstract class System<T> : SystemBase, ISystem
         where T : class, ISystem, new()
     {
         #region Constructors
+
         /// <summary>
         /// Static constructor that creates the needed singleton
         /// </summary>
@@ -23,11 +23,21 @@ namespace LunaClient.Base
         {
             Singleton = new T();
         }
+
         #endregion
 
         #region Field & Properties
 
+        /// <summary>
+        /// This dictionary hold all the routines that will be executed during the Update()
+        /// The key is the method name that will be executed
+        /// </summary>
         private Dictionary<string, RoutineDefinition> UpdateRoutines { get; } = new Dictionary<string, RoutineDefinition>();
+
+        /// <summary>
+        /// This dictionary hold all the routines that will be executed during the FixedUpdate()
+        /// The key is the method name that will be executed
+        /// </summary>
         private Dictionary<string, RoutineDefinition> FixedUpdateRoutines { get; } = new Dictionary<string, RoutineDefinition>();
 
         #endregion
@@ -35,7 +45,6 @@ namespace LunaClient.Base
         /// <summary>
         /// Setups a routine that will be executed. You should normally call this method from the OnEnabled
         /// </summary>
-        /// <param name="routine"></param>
         protected void SetupRoutine(RoutineDefinition routine)
         {
             if (routine.Execution == RoutineExecution.Update && !UpdateRoutines.ContainsKey(routine.Name))
@@ -94,7 +103,7 @@ namespace LunaClient.Base
                 else if (_enabled && !value)
                 {
                     _enabled = false;
-                    DisableRoutines();
+                    RemoveRoutines();
                     OnDisabled();
                 }
             }
@@ -111,17 +120,20 @@ namespace LunaClient.Base
         private ProfilerData FixedUpdateProfiler { get; } = new ProfilerData();
 
         /// <summary>
-        /// Override to write code to execute when system is enabled
+        /// Override to write code to execute when system is enabled.
+        /// Use this method to SetupRoutines or to subscribe to game events
         /// </summary>
-        public virtual void OnEnabled()
+        protected virtual void OnEnabled()
         {
             //Implement your own code
         }
 
         /// <summary>
-        /// Override to write code to execute when system is disabled
+        /// Override to write code to execute when system is disabled.
+        /// Use this method to unsubscribe from game events
+        /// After this method is run, RemoveRoutines() will be called
         /// </summary>
-        public virtual void OnDisabled()
+        protected virtual void OnDisabled()
         {
             //Implement your own code
         }
@@ -130,14 +142,15 @@ namespace LunaClient.Base
         /// When the system is disabled this method is called and it removes all the defined routines.
         /// Override it if you want to avoid it.
         /// </summary>
-        public virtual void DisableRoutines()
+        protected virtual void RemoveRoutines()
         {
             UpdateRoutines.Clear();
             FixedUpdateRoutines.Clear();
         }
 
         /// <summary>
-        /// Update method. It will call the subscribed routines
+        /// Update method. It will call the subscribed routines. 
+        /// Should be called only by the SystemsHandler class
         /// </summary>
         public void Update()
         {
@@ -152,7 +165,8 @@ namespace LunaClient.Base
         }
 
         /// <summary>
-        /// Fixed update method. It will call the subscribed routines
+        /// Fixed update method. It will call the subscribed routines        
+        /// Should be called only by the SystemsHandler class
         /// </summary>
         public void FixedUpdate()
         {

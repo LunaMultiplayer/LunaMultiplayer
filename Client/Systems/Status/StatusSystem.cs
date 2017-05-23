@@ -29,14 +29,14 @@ namespace LunaClient.Systems.Status
         
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(SettingsSystem.CurrentSettings.PlayerStatusCheckMsInterval,
                 RoutineExecution.Update, CheckPlayerStatus));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             PlayerStatusList.Clear();

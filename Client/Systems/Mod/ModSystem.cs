@@ -26,7 +26,7 @@ namespace LunaClient.Systems.Mod
 
         #region Base overrides
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             ModControl = ModControlMode.ENABLED_STOP_INVALID_PART_SYNC;

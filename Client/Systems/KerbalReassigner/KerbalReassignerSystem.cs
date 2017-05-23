@@ -15,7 +15,7 @@ namespace LunaClient.Systems.KerbalReassigner
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onVesselCreate.Add(KerbalReassignerEvents.OnVesselCreate);
@@ -24,7 +24,7 @@ namespace LunaClient.Systems.KerbalReassigner
             GameEvents.onFlightReady.Add(KerbalReassignerEvents.OnFlightReady);
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             GameEvents.onVesselCreate.Remove(KerbalReassignerEvents.OnVesselCreate);

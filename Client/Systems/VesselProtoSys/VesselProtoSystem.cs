@@ -41,7 +41,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckVesselsToLoad));
@@ -52,7 +52,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 RoutineExecution.Update, SendVesselDefinition));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             AllPlayerVessels.Clear();

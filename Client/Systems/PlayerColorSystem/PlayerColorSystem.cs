@@ -23,7 +23,7 @@ namespace LunaClient.Systems.ColorSystem
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onVesselCreate.Add(PlayerColorEvents.SetVesselOrbitColor);
@@ -31,7 +31,7 @@ namespace LunaClient.Systems.ColorSystem
             LockSystem.Singleton.RegisterReleaseHook(PlayerColorEvents.OnLockRelease);
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             GameEvents.onVesselCreate.Remove(PlayerColorEvents.SetVesselOrbitColor);

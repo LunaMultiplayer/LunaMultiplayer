@@ -62,7 +62,7 @@ namespace LunaClient.Systems.Warp
         
         #region Base overrides
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             GameEvents.onTimeWarpRateChanged.Remove(WarpEvents.OnTimeWarpChanged);
@@ -75,7 +75,7 @@ namespace LunaClient.Systems.Warp
             SyncedToLastSubspace = false;
         }
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);

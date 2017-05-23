@@ -52,14 +52,14 @@ namespace LunaClient.Systems.CraftLibrary
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             BuildUploadList();
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleCraftLibraryEvents));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             CraftAddQueue.Clear();

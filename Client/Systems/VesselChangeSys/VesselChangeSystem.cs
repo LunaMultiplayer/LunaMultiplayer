@@ -22,7 +22,7 @@ namespace LunaClient.Systems.VesselChangeSys
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onStageSeparation.Add(VesselChangeEvents.OnStageSeparation);
@@ -30,7 +30,7 @@ namespace LunaClient.Systems.VesselChangeSys
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, ProcessVesselChanges));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             IncomingChanges.Clear();

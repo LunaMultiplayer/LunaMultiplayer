@@ -22,14 +22,14 @@ namespace LunaClient.Base
                 MessageHandler.IncomingMessages.Enqueue(msg);
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             //Clear the message queue on disabling
             MessageHandler.IncomingMessages = new ConcurrentQueue<IMessageData>();
         }
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             //During the update we receive and handle all received messages

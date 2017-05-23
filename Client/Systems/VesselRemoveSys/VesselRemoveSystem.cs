@@ -21,7 +21,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
@@ -31,7 +31,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 RoutineExecution.Update, KillPastSubspaceVessels));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);

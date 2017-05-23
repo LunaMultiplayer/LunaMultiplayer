@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message;
 
 namespace LunaClient.Base

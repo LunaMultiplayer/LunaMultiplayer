@@ -23,14 +23,14 @@ namespace LunaClient.Systems.Scenario
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SendScenarioDataMsInterval,
                 RoutineExecution.Update, SendScenarioModules));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             CheckData.Clear();

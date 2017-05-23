@@ -26,7 +26,7 @@ namespace LunaClient.Systems.Lock
 
         #region Base overrides
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             ServerLocks.Clear();

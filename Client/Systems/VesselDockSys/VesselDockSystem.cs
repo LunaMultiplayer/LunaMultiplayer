@@ -1,9 +1,7 @@
 ﻿using System;
 using LunaClient.Base;
-using LunaClient.Systems.Lock;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
-using UniLinq;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
@@ -12,7 +10,7 @@ namespace LunaClient.Systems.VesselDockSys
     {
         private VesselDockEvents VesselDockEvents { get; } = new VesselDockEvents();
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onPartUndock.Add(VesselDockEvents.OnVesselUndock);
@@ -20,7 +18,7 @@ namespace LunaClient.Systems.VesselDockSys
             GameEvents.onCrewBoardVessel.Add(VesselDockEvents.OnCrewBoard);
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             GameEvents.onPartCouple.Remove(VesselDockEvents.OnVesselDock);

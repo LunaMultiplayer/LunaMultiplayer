@@ -21,7 +21,7 @@ namespace LunaClient.Systems.KerbalSys
 
         #region Base overrides
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             KerbalQueue.Clear();

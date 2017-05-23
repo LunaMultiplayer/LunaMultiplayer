@@ -40,7 +40,7 @@ namespace LunaClient.Systems.Asteroid
         
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onAsteroidSpawned.Add(AsteroidEventHandler.OnAsteroidSpawned);
@@ -48,7 +48,7 @@ namespace LunaClient.Systems.Asteroid
             SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroids));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             GameEvents.onAsteroidSpawned.Remove(AsteroidEventHandler.OnAsteroidSpawned);

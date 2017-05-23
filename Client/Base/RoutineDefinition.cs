@@ -10,6 +10,9 @@ namespace LunaClient.Base
         FixedUpdate
     }
 
+    /// <summary>
+    /// This class defines a routine that must be executed during an update or a fixed update
+    /// </summary>
     public class RoutineDefinition
     {
         private readonly Stopwatch _stopwatch = new Stopwatch();

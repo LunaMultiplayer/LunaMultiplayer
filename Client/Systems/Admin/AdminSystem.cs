@@ -14,7 +14,7 @@ namespace LunaClient.Systems.Admin
 
         #region Base overrides
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             ServerAdmins.Clear();

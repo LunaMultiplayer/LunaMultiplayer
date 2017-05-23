@@ -27,13 +27,13 @@ namespace LunaClient.Systems.Flag
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleFlags));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             ServerFlags.Clear();

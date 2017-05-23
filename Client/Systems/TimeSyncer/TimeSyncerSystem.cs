@@ -55,7 +55,7 @@ namespace LunaClient.Systems.TimeSyncer
 
         #region Base overrides
 
-        public override void OnEnabled()
+        protected override void OnEnabled()
         {
             base.OnEnabled();
             SyncSenderThread = new Task(SyncTimeWithServer);
@@ -63,7 +63,7 @@ namespace LunaClient.Systems.TimeSyncer
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.ClockSetMsInterval, RoutineExecution.Update, SyncTime));
         }
 
-        public override void OnDisabled()
+        protected override void OnDisabled()
         {
             base.OnDisabled();
             SyncSenderThread?.Wait(500);
