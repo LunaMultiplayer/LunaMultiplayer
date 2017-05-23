@@ -57,10 +57,14 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (Enabled && FlightStateSystemReady && VesselCommon.PlayerVesselsNearby())
             {
+                //TODO: Don't we want to send the current flight state even if nobody is nearby--on some infrequent interval?
                 MessageSender.SendCurrentFlightState();
             }
 
-            ChangeRoutineExecutionInterval("SendFlightState", VesselCommon.IsSomeoneSpectatingUs ? 100 : 1000);
+            if (Enabled)
+            {
+                ChangeRoutineExecutionInterval("SendFlightState", VesselCommon.IsSomeoneSpectatingUs ? 100 : 1000);
+            }
         }
 
         private void RemoveUnloadedVesselsFromDictionary()

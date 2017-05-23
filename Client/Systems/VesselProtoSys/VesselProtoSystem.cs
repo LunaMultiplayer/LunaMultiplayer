@@ -121,12 +121,12 @@ namespace LunaClient.Systems.VesselProtoSys
                     {
                         MessageSender.SendVesselMessage(vessel);
                     }
-                }
 
-                ChangeRoutineExecutionInterval("SendVesselDefinition",
-                    VesselCommon.PlayerVesselsNearby()
-                        ? SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval
-                        : SettingsSystem.ServerSettings.VesselDefinitionSendFarMsInterval);
+                    ChangeRoutineExecutionInterval("SendVesselDefinition",
+                        VesselCommon.PlayerVesselsNearby()
+                            ? SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval
+                            : SettingsSystem.ServerSettings.VesselDefinitionSendFarMsInterval);
+                }
             }
             catch (Exception e)
             {
