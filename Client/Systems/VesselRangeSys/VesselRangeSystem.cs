@@ -7,7 +7,7 @@ namespace LunaClient.Systems.VesselRangeSys
 {
     /// <summary>
     /// This system packs the other player vessels. 
-    /// Theorically this should make the movement better as we won't fight with the flight integrator syste,
+    /// Theorically this should make the movement better as we won't fight with the flight integrator system,
     /// </summary>
     public class VesselRangeSystem : System<VesselRangeSystem>
     {
