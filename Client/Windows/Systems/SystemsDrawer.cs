@@ -26,6 +26,8 @@ namespace LunaClient.Windows.Systems
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
+
+            GUILayout.BeginHorizontal();
             DisplayFast = GUILayout.Toggle(DisplayFast, "Fast debug update", ButtonStyle);
             if (GUILayout.Button("Reset Profiler history", ButtonStyle))
             {
@@ -48,6 +50,8 @@ namespace LunaClient.Windows.Systems
                 KerbalSystem.Singleton.ResetProfilers();
                 WarpSystem.Singleton.ResetProfilers();
             }
+            GUILayout.EndHorizontal();
+
             CraftLibrary = GUILayout.Toggle(CraftLibrary, "Craft library system", ButtonStyle);
             if (CraftLibrary)
             {
@@ -110,20 +114,6 @@ namespace LunaClient.Windows.Systems
             VesselSystems = GUILayout.Toggle(VesselSystems, "Vessel systems", ButtonStyle);
             if (VesselSystems)
             {
-                if (GUILayout.Button("Turn on/off all vessel systems", ButtonStyle))
-                {
-                    VesselChangeSystem.Singleton.Enabled = !VesselChangeSystem.Singleton.Enabled;
-                    VesselDockSystem.Singleton.Enabled = !VesselDockSystem.Singleton.Enabled;
-                    VesselFlightStateSystem.Singleton.Enabled = !VesselFlightStateSystem.Singleton.Enabled;
-                    VesselImmortalSystem.Singleton.Enabled = !VesselImmortalSystem.Singleton.Enabled;
-                    VesselLockSystem.Singleton.Enabled = !VesselLockSystem.Singleton.Enabled;
-                    VesselPositionSystem.Singleton.Enabled = !VesselPositionSystem.Singleton.Enabled;
-                    VesselProtoSystem.Singleton.Enabled = !VesselProtoSystem.Singleton.Enabled;
-                    VesselRangeSystem.Singleton.Enabled = !VesselRangeSystem.Singleton.Enabled;
-                    VesselRemoveSystem.Singleton.Enabled = !VesselRemoveSystem.Singleton.Enabled;
-                    VesselUpdateSystem.Singleton.Enabled = !VesselUpdateSystem.Singleton.Enabled;
-                }
-
                 VesselChange = GUILayout.Toggle(VesselChange, "Vessel change", ButtonStyle);
                 if (VesselChange)
                 {

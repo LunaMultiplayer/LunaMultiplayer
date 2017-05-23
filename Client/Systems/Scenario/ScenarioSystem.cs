@@ -66,9 +66,7 @@ namespace LunaClient.Systems.Scenario
 
             var scenarioName = new List<string>();
             var scenarioData = new List<byte[]>();
-
-            Debug.Log($"[LMP]: Saving scenarios {SettingsSystem.ServerSettings.SendScenarioDataMsInterval}");
-
+            
             foreach (var scenarioModule in ScenarioRunner.GetLoadedModules())
             {
                 var scenarioType = scenarioModule.GetType().Name;

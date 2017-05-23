@@ -33,7 +33,7 @@ namespace LunaClient.Base
         #endregion
 
         /// <summary>
-        /// Setups a routine that will be executed
+        /// Setups a routine that will be executed. You should normally call this method from the OnEnabled
         /// </summary>
         /// <param name="routine"></param>
         protected void SetupRoutine(RoutineDefinition routine)
@@ -51,26 +51,7 @@ namespace LunaClient.Base
                 Debug.LogError($"[LMP]: Routine {routine.Name} already defined");
             }
         }
-
-        /// <summary>
-        /// Removes a routine from the pool
-        /// </summary>
-        protected void RemoveRoutine(string routineName)
-        {
-            if (UpdateRoutines.ContainsKey(routineName))
-            {
-                UpdateRoutines.Remove(routineName);
-            }
-            else if (FixedUpdateRoutines.ContainsKey(routineName))
-            {
-                FixedUpdateRoutines.Remove(routineName);
-            }
-            else
-            {
-                Debug.LogError($"[LMP]: Routine {routineName} not found");
-            }
-        }
-
+        
         /// <summary>
         /// Changes the routine execution interval on the fly
         /// </summary>
@@ -96,6 +77,10 @@ namespace LunaClient.Base
         public static T Singleton { get; set; }
 
         private bool _enabled;
+
+        /// <summary>
+        /// Enables or disables the system. When disabling, all the defined routines will be removed
+        /// </summary>
         public virtual bool Enabled
         {
             get { return _enabled; }
@@ -142,7 +127,8 @@ namespace LunaClient.Base
         }
 
         /// <summary>
-        /// When the system is disabled this method is called and it removes all the defined routines
+        /// When the system is disabled this method is called and it removes all the defined routines.
+        /// Override it if you want to avoid it.
         /// </summary>
         public virtual void DisableRoutines()
         {
