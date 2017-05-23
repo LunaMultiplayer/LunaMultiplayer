@@ -16,13 +16,12 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
-        #region Field & Properties
+        #region Fields & properties
 
-        private static float SecondaryVesselUpdatesSendSInterval =>
-            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval).TotalSeconds;
+        private static bool MustSendFastUpdates => VesselCommon.PlayerVesselsNearby() || VesselCommon.IsNearKsc(20000);
+        private static int FastVesselUpdatesSendMsInterval => SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval;
+        private static int SlowVesselUpdatesSendMsInterval => FastVesselUpdatesSendMsInterval * 5;
 
-        private static float VesselUpdatesSendSInterval => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
-        
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
                                          FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
@@ -32,12 +31,8 @@ namespace LunaClient.Systems.VesselPositionSys
             (PositionUpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
 
         private ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new ConcurrentDictionary<Guid, VesselPositionUpdate>();
-        private ConcurrentDictionary<Guid, byte> updatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();
-        
-
+        private ConcurrentDictionary<Guid, byte> UpdatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();
         public FlightCtrlState FlightState { get; set; }
-        
-        private static float _lastSentTime;
 
         #endregion
 
@@ -46,7 +41,14 @@ namespace LunaClient.Systems.VesselPositionSys
         public override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ProcessPositions));
+
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, HandleVesselUpdates));
+
+            SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval, 
+                RoutineExecution.FixedUpdate, SendVesselPositionUpdates));
+
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval, 
+                RoutineExecution.FixedUpdate, SendSecondaryVesselPositionUpdates));
         }
 
         public override void OnDisabled()
@@ -55,118 +57,6 @@ namespace LunaClient.Systems.VesselPositionSys
             CurrentVesselUpdate.Clear();
         }
         
-        #endregion
-
-        #region FixedUpdate methods
-        private void ProcessPositions()
-        {
-            if (PositionUpdateSystemReady)
-            {
-                HandleVesselUpdates();
-                SendVesselPositionUpdates();
-                SendSecondaryVesselPositionUpdates();
-            }
-        }
-        #endregion
-
-        #region Private methods
-        private void HandleVesselUpdates()
-        {
-            foreach (Guid vesselId in updatedVesselIds.Keys)
-            {
-                //NOTE: ApplyVesselUpdate must run in FixedUpdate as it's updating the physics of the vessels
-                CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
-                byte ignored;
-                updatedVesselIds.TryRemove(vesselId, out ignored);
-            }
-        }
-
-        /// <summary>
-        /// Performance Improvement: If the body for this position update is the same as the old one, copy the body so that we don't have to look up the
-        /// body in the ApplyVesselUpdate() call below (which must run during FixedUpdate)
-        /// </summary>
-        /// <param name="existingPositionUpdate">The position update currently in the map.  Cannot be null.</param>
-        /// <param name="newPositionUpdate">The new position update for the vessel.  Cannot be null.</param>
-        private void setBodyAndVesselOnNewUpdate(VesselPositionUpdate existingPositionUpdate, VesselPositionUpdate newPositionUpdate)
-        {
-            if (existingPositionUpdate.BodyName == newPositionUpdate.BodyName)
-            {
-                newPositionUpdate.Body = existingPositionUpdate.Body;
-            }
-            if (existingPositionUpdate.VesselId == newPositionUpdate.VesselId)
-            {
-                newPositionUpdate.Vessel = existingPositionUpdate.Vessel;
-            }
-        }
-        
-        /// <summary>
-        /// Check if we must send a message or not based on the fixed time that has passed.
-        /// Note that when no vessels are nearby or we are not in KSC the time is multiplied by 10
-        /// //TODO: Should change this to use a timer in MessageSystem
-        /// </summary>
-        private static bool ShouldSendPositionUpdate()
-        {
-            if (VesselCommon.IsSpectating)
-            {
-                return false;
-            }
-
-            var secSinceLastSend = Time.fixedTime - _lastSentTime;
-
-            if (VesselCommon.PlayerVesselsNearby() || VesselCommon.IsNearKsc(20000))
-            {
-                return secSinceLastSend > VesselUpdatesSendSInterval;
-            }
-
-            return secSinceLastSend > VesselUpdatesSendSInterval * 10;
-        }
-
-        /// <summary>
-        /// Send the updates of our own vessel. We only send them after an interval specified.
-        /// If the other player vessels are far we don't send them very often.
-        /// </summary>
-        private void SendVesselPositionUpdates()
-        {
-            if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
-            {
-                _lastSentTime = Time.fixedTime;
-                MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
-            }
-        }
-
-        /// <summary>
-        /// Send updates for vessels that we own the update lock.
-        /// </summary>
-        /// TODO: Who calls this method now?  How do we make sure we only infrequently send updates for secondary vessels, as opposed to primary vessels?
-        private void SendSecondaryVesselPositionUpdates()
-        {
-            if (PositionUpdateSystemReady && ShouldSendPositionUpdate())
-            {
-                var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
-                foreach (var secondaryVessel in secondaryVesselsToUpdate)
-                {
-                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
-                }
-            }
-        }
-        #endregion
-
-        #region Public methods
-        /// <summary>
-        /// Applies the latest position update (if any) for the given vessel and moves it to that position
-        /// </summary>
-        /// <param name="VesselId"></param>
-        public void updateVesselPosition(Guid vesselId)
-        {
-            if (PositionUpdateSystemReady)
-            {
-                if (CurrentVesselUpdate.ContainsKey(vesselId))
-                {
-                    CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
-                }
-            }
-        }
-
         /// <summary>
         /// Do the message handling asynchronously for performance
         /// </summary>
@@ -183,30 +73,118 @@ namespace LunaClient.Systems.VesselPositionSys
                     }
 
                     var update = new VesselPositionUpdate(msgData);
-                    Guid vesselId = update.VesselId;
+                    var vesselId = update.VesselId;
 
                     VesselPositionUpdate existingPositionUpdate;
                     if (!CurrentVesselUpdate.TryGetValue(update.VesselId, out existingPositionUpdate))
                     {
                         CurrentVesselUpdate[vesselId] = update;
                         //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                        updatedVesselIds[vesselId] = 0;
+                        UpdatedVesselIds[vesselId] = 0;
                     }
                     else
                     {
                         if (existingPositionUpdate.SentTime < update.SentTime)
                         {
                             //If there's an existing update, copy the body and vessel objects so they don't have to be looked up later.
-                            setBodyAndVesselOnNewUpdate(existingPositionUpdate, update);
+                            SetBodyAndVesselOnNewUpdate(existingPositionUpdate, update);
                             CurrentVesselUpdate[vesselId] = update;
 
                             //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                            updatedVesselIds[vesselId] = 0;
+                            UpdatedVesselIds[vesselId] = 0;
                         }
                     }
                 }).Start();
             }
         }
+
+        #endregion
+
+        #region FixedUpdate methods
+
+        /// <summary>
+        /// Read and apply position updates from other vessels
+        /// </summary>
+        private void HandleVesselUpdates()
+        {
+            if (PositionUpdateSystemReady)
+            {
+                foreach (var vesselId in UpdatedVesselIds.Keys)
+                {
+                    //NOTE: ApplyVesselUpdate must run in FixedUpdate as it's updating the physics of the vessels
+                    CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
+                    byte ignored;
+                    UpdatedVesselIds.TryRemove(vesselId, out ignored);
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Send the updates of our own vessel. We only send them after an interval specified.
+        /// If the other player vessels are far we don't send them very often.
+        /// </summary>
+        private void SendVesselPositionUpdates()
+        {
+            if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
+            {
+                MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
+                ChangeRoutineExecutionInterval("SendVesselPositionUpdates", 
+                    MustSendFastUpdates ? FastVesselUpdatesSendMsInterval : SlowVesselUpdatesSendMsInterval);
+            }
+        }
+
+        /// <summary>
+        /// Send updates for vessels that we own the update lock.
+        /// </summary>
+        private void SendSecondaryVesselPositionUpdates()
+        {
+            if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
+            {
+                var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
+                foreach (var secondaryVessel in secondaryVesselsToUpdate)
+                {
+                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Applies the latest position update (if any) for the given vessel and moves it to that position
+        /// </summary>
+        public void UpdateVesselPosition(Guid vesselId)
+        {
+            if (PositionUpdateSystemReady && CurrentVesselUpdate.ContainsKey(vesselId))
+            {
+                CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
+            }
+        }
+
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Performance Improvement: If the body for this position update is the same as the old one, copy the body so that we don't have to look up the
+        /// body in the ApplyVesselUpdate() call below (which must run during FixedUpdate)
+        /// </summary>
+        /// <param name="existingPositionUpdate">The position update currently in the map.  Cannot be null.</param>
+        /// <param name="newPositionUpdate">The new position update for the vessel.  Cannot be null.</param>
+        private static void SetBodyAndVesselOnNewUpdate(VesselPositionUpdate existingPositionUpdate, VesselPositionUpdate newPositionUpdate)
+        {
+            if (existingPositionUpdate.BodyName == newPositionUpdate.BodyName)
+            {
+                newPositionUpdate.Body = existingPositionUpdate.Body;
+            }
+            if (existingPositionUpdate.VesselId == newPositionUpdate.VesselId)
+            {
+                newPositionUpdate.Vessel = existingPositionUpdate.Vessel;
+            }
+        }
+
         #endregion
     }
 }

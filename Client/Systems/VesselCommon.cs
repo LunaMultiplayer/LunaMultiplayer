@@ -94,10 +94,10 @@ namespace LunaClient.Systems
                 }
 
                 var controlledVesselsIds = GetControlledVesselIds();
-                var vesselsLoaded = FlightGlobals.VesselsLoaded.Where(v => v.id != FlightGlobals.ActiveVessel.id)
+                var loadedVesselIds = FlightGlobals.VesselsLoaded.Where(v => v.id != FlightGlobals.ActiveVessel.id)
                     .Select(v => v.id);
 
-                return controlledVesselsIds.Intersect(vesselsLoaded).Any();
+                return controlledVesselsIds.Intersect(loadedVesselIds).Any();
             }
 
             return false;
