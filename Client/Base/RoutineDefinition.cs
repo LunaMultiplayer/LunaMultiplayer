@@ -46,6 +46,7 @@ namespace LunaClient.Base
 
                 _profiler.ReportTime(startClock);
                 _stopwatch.Reset();
+                _stopwatch.Start();
             }
         }
     }
