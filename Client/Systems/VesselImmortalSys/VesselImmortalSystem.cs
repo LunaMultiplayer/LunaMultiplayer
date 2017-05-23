@@ -26,6 +26,18 @@ namespace LunaClient.Systems.VesselImmortalSys
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, MakeOtherPlayerVesselsImmortal));
         }
 
+        protected override void OnDisabled()
+        {
+            base.OnDisabled();
+            RemoveRoutines();
+
+            //In case we disable this system, set all the vessels back as mortal...
+            foreach (var vessel in FlightGlobals.Vessels)
+            {
+                SetVesselImmortalState(vessel, false);
+            }
+        }
+
         #endregion
 
         #region Update methods

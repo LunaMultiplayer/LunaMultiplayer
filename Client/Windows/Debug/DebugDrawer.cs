@@ -24,17 +24,6 @@ namespace LunaClient.Windows.Debug
             DisplayVesselUpdatesData = GUILayout.Toggle(DisplayVesselUpdatesData, "Display vessel updates statistics", ButtonStyle);
             if (DisplayVesselUpdatesData)
                 GUILayout.Label(VesselUpdateText, LabelStyle);
-            DisplayProfilerStatistics = GUILayout.Toggle(DisplayProfilerStatistics, "Display Profiler Statistics", ButtonStyle);
-            if (DisplayProfilerStatistics)
-            {
-                if (GUILayout.Button("Reset Profiler history", ButtonStyle))
-                {
-                    LunaProfiler.UpdateData.Reset();
-                    LunaProfiler.FixedUpdateData.Reset();
-                    LunaProfiler.GuiData.Reset();
-                }
-                GUILayout.Label(ProfilerText, LabelStyle);
-            }
             GUILayout.EndVertical();
         }
     }

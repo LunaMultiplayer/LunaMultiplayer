@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;

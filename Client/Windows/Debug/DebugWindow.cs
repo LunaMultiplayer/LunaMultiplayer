@@ -74,10 +74,6 @@ namespace LunaClient.Windows.Debug
                     $"{FlightGlobals.ActiveVessel != null && LockSystem.Singleton.LockIsOurs("control-" + FlightGlobals.ActiveVessel.id)}.\n";
                 VesselUpdateText += "Active vessel update lock: " +
                     $"{FlightGlobals.ActiveVessel != null && LockSystem.Singleton.LockIsOurs("update-" + FlightGlobals.ActiveVessel.id)}.\n";
-
-                ProfilerText = $"Update: {LunaProfiler.UpdateData}\n";
-                ProfilerText += $"Fixed Update: {LunaProfiler.FixedUpdateData}\n";
-                ProfilerText += $"GUI: {LunaProfiler.GuiData}";
             }
         }
 
@@ -165,7 +161,6 @@ namespace LunaClient.Windows.Debug
         public string VesselUpdateText { get; set; } = "";
         public string NtpText { get; set; } = "";
         public string ConnectionText { get; set; } = "";
-        public string ProfilerText { get; set; } = "";
         public float LastUpdateTime { get; set; }
         private float DisplayUpdateInterval { get; } = .2f;
 
@@ -178,7 +173,6 @@ namespace LunaClient.Windows.Debug
         protected bool DisplayNtp { get; set; }
         protected bool DisplayConnectionQueue { get; set; }
         protected bool DisplayVesselUpdatesData { get; set; }
-        protected bool DisplayProfilerStatistics { get; set; }
 
         #endregion
     }

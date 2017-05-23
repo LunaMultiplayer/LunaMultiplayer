@@ -188,7 +188,7 @@ namespace LunaClient.Base
             var builder = new StringBuilder();
 
             if (UpdateRoutines.Any() || FixedUpdateRoutines.Any())
-                builder.AppendLine("Times in ms (average/min/max/now) ");
+                builder.AppendLine("Times in ms (average/max/min/now) ");
 
             if (UpdateRoutines.Any())
             {

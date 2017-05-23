@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.KerbalSys;
@@ -33,6 +34,8 @@ namespace LunaClient.Windows.Systems
         private bool DisplayFast { get; set; }
         private float LastUpdateTime { get; set; }
         private float DisplayUpdateSInterval { get; } = 1f;
+
+        private string LmpProfilerText { get; set; }
 
         #region Vessel systems
 
@@ -70,6 +73,9 @@ namespace LunaClient.Windows.Systems
 
         #region Other systems
 
+        private bool Asteroid { get; set; }
+        private string AsteroidProfilerText { get; set; }
+
         private bool CraftLibrary { get; set; }
         private string CraftLibraryProfilerText { get; set; }
 
@@ -105,6 +111,16 @@ namespace LunaClient.Windows.Systems
             {
                 LastUpdateTime = Time.realtimeSinceStartup;
 
+                LmpProfilerText = LunaProfiler.GetProfilersData();
+
+                AsteroidProfilerText = AsteroidSystem.Singleton.GetProfilersData();
+                CraftLibraryProfilerText = CraftLibrarySystem.Singleton.GetProfilersData();
+                FlagProfilerText = FlagSystem.Singleton.GetProfilersData();
+                ScenarioProfilerText = ScenarioSystem.Singleton.GetProfilersData();
+                TimeSyncerProfilerText = TimeSyncerSystem.Singleton.GetProfilersData();
+                ModApiProfilerText = ModApiSystem.Singleton.GetProfilersData();
+                LockProfilerText = LockSystem.Singleton.GetProfilersData();
+                KerbalProfilerText = KerbalSystem.Singleton.GetProfilersData();
                 VesselChangeProfilerText = VesselChangeSystem.Singleton.GetProfilersData();
                 VesselDockProfilerText = VesselDockSystem.Singleton.GetProfilersData();
                 VesselFlightStateProfilerText = VesselFlightStateSystem.Singleton.GetProfilersData();
@@ -115,13 +131,6 @@ namespace LunaClient.Windows.Systems
                 VesselRangeProfilerText = VesselRangeSystem.Singleton.GetProfilersData();
                 VesselRemoveProfilerText = VesselRemoveSystem.Singleton.GetProfilersData();
                 VesselUpdateProfilerText = VesselUpdateSystem.Singleton.GetProfilersData();
-                CraftLibraryProfilerText = CraftLibrarySystem.Singleton.GetProfilersData();
-                FlagProfilerText = FlagSystem.Singleton.GetProfilersData();
-                ScenarioProfilerText = ScenarioSystem.Singleton.GetProfilersData();
-                TimeSyncerProfilerText = TimeSyncerSystem.Singleton.GetProfilersData();
-                ModApiProfilerText = ModApiSystem.Singleton.GetProfilersData();
-                LockProfilerText = LockSystem.Singleton.GetProfilersData();
-                KerbalProfilerText = KerbalSystem.Singleton.GetProfilersData();
                 WarpProfilerText = WarpSystem.Singleton.GetProfilersData();
             }
         }

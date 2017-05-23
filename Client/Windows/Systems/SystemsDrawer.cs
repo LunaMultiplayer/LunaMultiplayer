@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.CraftLibrary;
+﻿using LunaClient.Systems.Asteroid;
+using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
@@ -16,6 +17,7 @@ using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
+using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Windows.Systems
@@ -31,7 +33,19 @@ namespace LunaClient.Windows.Systems
             DisplayFast = GUILayout.Toggle(DisplayFast, "Fast debug update", ButtonStyle);
             if (GUILayout.Button("Reset Profiler history", ButtonStyle))
             {
-                VesselChangeSystem.Singleton.ResetProfilers();;
+                LunaProfiler.UpdateData.Reset();
+                LunaProfiler.FixedUpdateData.Reset();
+                LunaProfiler.GuiData.Reset();
+
+                AsteroidSystem.Singleton.ResetProfilers();
+                CraftLibrarySystem.Singleton.ResetProfilers();
+                FlagSystem.Singleton.ResetProfilers();
+                ScenarioSystem.Singleton.ResetProfilers();
+                TimeSyncerSystem.Singleton.ResetProfilers();
+                ModApiSystem.Singleton.ResetProfilers();
+                LockSystem.Singleton.ResetProfilers();
+                KerbalSystem.Singleton.ResetProfilers();
+                VesselChangeSystem.Singleton.ResetProfilers();
                 VesselDockSystem.Singleton.ResetProfilers();
                 VesselFlightStateSystem.Singleton.ResetProfilers();
                 VesselImmortalSystem.Singleton.ResetProfilers();
@@ -41,19 +55,13 @@ namespace LunaClient.Windows.Systems
                 VesselRangeSystem.Singleton.ResetProfilers();
                 VesselRemoveSystem.Singleton.ResetProfilers();
                 VesselUpdateSystem.Singleton.ResetProfilers();
-                CraftLibrarySystem.Singleton.ResetProfilers();
-                FlagSystem.Singleton.ResetProfilers();
-                ScenarioSystem.Singleton.ResetProfilers();
-                TimeSyncerSystem.Singleton.ResetProfilers();
-                ModApiSystem.Singleton.ResetProfilers();
-                LockSystem.Singleton.ResetProfilers();
-                KerbalSystem.Singleton.ResetProfilers();
                 WarpSystem.Singleton.ResetProfilers();
             }
             GUILayout.EndHorizontal();
 
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5), GUILayout.Height(WindowHeight - 100));
 
+            GUILayout.Label(LmpProfilerText, LabelStyle);
             PrintSystemButtons();
 
             GUILayout.EndScrollView();
@@ -63,6 +71,14 @@ namespace LunaClient.Windows.Systems
 
         private void PrintSystemButtons()
         {
+            Asteroid = GUILayout.Toggle(Asteroid, "Asteroid system", ButtonStyle);
+            if (Asteroid)
+            {
+                //This system should never be toggled
+                //AsteroidSystem.Singleton.Enabled = GUILayout.Toggle(AsteroidSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                if (!string.IsNullOrEmpty(AsteroidProfilerText))
+                    GUILayout.Label(AsteroidProfilerText, LabelStyle);
+            }
             CraftLibrary = GUILayout.Toggle(CraftLibrary, "Craft library system", ButtonStyle);
             if (CraftLibrary)
             {
