@@ -60,7 +60,7 @@ namespace LunaClient.Systems.VesselPositionSys
         
         #endregion
 
-        #region Fixed update methods
+        #region FixedUpdate methods
 
         private void ProcessPositions()
         {
@@ -78,10 +78,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void HandleVesselUpdates()
         {
-            //NOTE: The below code must run in FixedUpdate.  However, the previous code could run outside fixedUpdate, potentially even in another thread.
             foreach (Guid vesselId in updatedVesselIds.Keys)
             {
+                //NOTE: ApplyVesselUpdate must run in FixedUpdate as it's updating the physics of the vessels
                 CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
+                byte ignored;
+                updatedVesselIds.TryRemove(vesselId, out ignored);
             }
         }
 
