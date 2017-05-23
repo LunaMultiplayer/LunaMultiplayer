@@ -29,8 +29,9 @@ namespace LunaClient.Base
             MessageHandler.IncomingMessages = new ConcurrentQueue<IMessageData>();
         }
 
-        protected MessageSystem()
+        public override void OnEnabled()
         {
+            base.OnEnabled();
             //During the update we receive and handle all received messages
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ReadAndHandleAllReceivedMessages));
         }

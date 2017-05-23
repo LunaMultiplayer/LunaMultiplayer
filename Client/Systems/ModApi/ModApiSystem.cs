@@ -42,6 +42,9 @@ namespace LunaClient.Systems.ModApi
 
         #region Base overrides
 
+        /// <summary>
+        /// This system must be ALWAYS enabled!
+        /// </summary>
         public override bool Enabled => true;
         
         #endregion

@@ -26,6 +26,9 @@ namespace LunaClient.Systems.Network
 {
     public class NetworkSystem : System<NetworkSystem>
     {
+        /// <summary>
+        /// This system must be ALWAYS enabled!
+        /// </summary>
         public override bool Enabled => true;
 
         #region Constructor
