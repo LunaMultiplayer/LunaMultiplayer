@@ -40,10 +40,9 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             (PositionUpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
 
-        public ConcurrentDictionary<Guid, VesselPositionUpdate> FutureVesselUpdates { get; } =
-            new ConcurrentDictionary<Guid, VesselPositionUpdate>();
-
-        public Dictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new Dictionary<Guid, VesselPositionUpdate>();
+        private ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new ConcurrentDictionary<Guid, VesselPositionUpdate>();
+        private ConcurrentDictionary<Guid, byte> updatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();
+        
 
         public FlightCtrlState FlightState { get; set; }
         
@@ -57,7 +56,6 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
-            FutureVesselUpdates.Clear();
         }
         
         #endregion
@@ -80,27 +78,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void HandleVesselUpdates()
         {
-            HashSet<Guid> vesselIdsUpdated = new HashSet<Guid>();
-
-            //Run to the new updates with vessels that are still not computed
-            foreach (KeyValuePair<Guid, VesselPositionUpdate> entry in FutureVesselUpdates)
-            {
-                Guid vesselId = entry.Key;
-                VesselPositionUpdate positionUpdate;
-                FutureVesselUpdates.TryRemove(vesselId, out positionUpdate);
-
-                if (positionUpdate != null)
-                {
-                    setBodyOnNewVesselUpdate(vesselId, positionUpdate);
-                    CurrentVesselUpdate[vesselId] = positionUpdate;
-
-                    //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've processed this.
-                    vesselIdsUpdated.Add(vesselId);
-                }
-            }
-
             //NOTE: The below code must run in FixedUpdate.  However, the previous code could run outside fixedUpdate, potentially even in another thread.
-            foreach (Guid vesselId in vesselIdsUpdated)
+            foreach (Guid vesselId in updatedVesselIds.Keys)
             {
                 CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
             }
@@ -110,15 +89,17 @@ namespace LunaClient.Systems.VesselPositionSys
         /// Performance Improvement: If the body for this position update is the same as the old one, copy the body so that we don't have to look up the
         /// body in the ApplyVesselUpdate() call below (which must run during FixedUpdate)
         /// </summary>
-        /// <param name="vesselId">The ID of the vessel being updated</param>
-        /// <param name="newPositionUpdate">The new position update for the vessel.  Cannot be null</param>
-        private void setBodyOnNewVesselUpdate(Guid vesselId, VesselPositionUpdate newPositionUpdate)
+        /// <param name="existingPositionUpdate">The position update currently in the map.  Cannot be null.</param>
+        /// <param name="newPositionUpdate">The new position update for the vessel.  Cannot be null.</param>
+        private void setBodyAndVesselOnNewUpdate(VesselPositionUpdate existingPositionUpdate, VesselPositionUpdate newPositionUpdate)
         {
-            VesselPositionUpdate existingPositionUpdate;
-            CurrentVesselUpdate.TryGetValue(vesselId, out existingPositionUpdate);
-            if (existingPositionUpdate != null && newPositionUpdate.BodyName == existingPositionUpdate.BodyName)
+            if (existingPositionUpdate.BodyName == newPositionUpdate.BodyName)
             {
                 newPositionUpdate.Body = existingPositionUpdate.Body;
+            }
+            if (existingPositionUpdate.VesselId == newPositionUpdate.VesselId)
+            {
+                newPositionUpdate.Vessel = existingPositionUpdate.Vessel;
             }
         }
 
@@ -156,15 +137,25 @@ namespace LunaClient.Systems.VesselPositionSys
                     }
 
                     var update = new VesselPositionUpdate(msgData);
-                    if (!FutureVesselUpdates.ContainsKey(update.VesselId))
+                    Guid vesselId = update.VesselId;
+
+                    VesselPositionUpdate existingPositionUpdate;
+                    if (!CurrentVesselUpdate.TryGetValue(update.VesselId, out existingPositionUpdate))
                     {
-                        FutureVesselUpdates.TryAdd(update.VesselId, update);
+                        CurrentVesselUpdate[vesselId] = update;
+                        //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
+                        updatedVesselIds[vesselId] = 0;
                     }
                     else
                     {
-                        if (FutureVesselUpdates[update.VesselId].SentTime < update.SentTime)
+                        if (existingPositionUpdate.SentTime < update.SentTime)
                         {
-                            FutureVesselUpdates[update.VesselId] = update;
+                            //If there's an existing update, copy the body and vessel objects so they don't have to be looked up later.
+                            setBodyAndVesselOnNewUpdate(existingPositionUpdate, update);
+                            CurrentVesselUpdate[vesselId] = update;
+
+                            //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
+                            updatedVesselIds[vesselId] = 0;
                         }
                     }
                 }).Start();
@@ -174,7 +165,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Private methods 2
-        
+
         /// <summary>
         /// Check if we must send a message or not based on the fixed time that has passed.
         /// Note that when no vessels are nearby or we are not in KSC the time is multiplied by 10
