@@ -64,12 +64,24 @@ namespace LunaClient.Systems.VesselRangeSys
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, PackUnpackVessels));
         }
 
+        protected override void OnDisabled()
+        {
+            base.OnDisabled();
+
+            //In case we disable this system, set all the vessels to the normal pack range...
+            foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
+            {
+                UnPackVessel(vessel);
+            }
+        }
+
         #endregion
 
         #region Update methods
 
         /// <summary>
-        /// Set all other vessels as packed so the movement is better
+        /// Set all other controlled vessels as packed so the movement is better.
+        /// Our vessel must be always unpacked
         /// </summary>
         private void PackUnpackVessels()
         {
