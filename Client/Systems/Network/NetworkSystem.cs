@@ -192,7 +192,7 @@ namespace LunaClient.Systems.Network
                     MainSystem.Singleton.NetworkState = ClientState.STARTING;
                     break;
                 case ClientState.STARTING:
-                    Debug.Log("[LMP]: All systems up and running Poyekhali");
+                    Debug.Log("[LMP]: All systems up and running! Poyekhali!!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
                         MainSystem.Singleton.Status = "Running";
