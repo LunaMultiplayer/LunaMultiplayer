@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
+using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Warp;
 using UniLinq;
@@ -200,8 +201,7 @@ namespace LunaClient.Systems.Warp
         private void ProcessNewSubspace()
         {
             TimeWarp.fetch.WarpTo(GetCurrentSubspaceTime());
-            //TODO:Put StepClock in a more central place
-            TimeSyncerSystem.StepClock(GetCurrentSubspaceTime());
+            ClockHandler.StepClock(GetCurrentSubspaceTime());
         }
 
         #endregion

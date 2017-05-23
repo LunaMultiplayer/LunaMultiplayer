@@ -18,8 +18,8 @@ namespace LunaClient.Network
         public static ServerMessageFactory SrvMsgFactory { get; } = new ServerMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
         public static MasterServerMessageFactory MstSrvMsgFactory { get; } = new MasterServerMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
 
-        public static Task ReceiveThread { get; } = new Task(NetworkReceiver.ReceiveMain);
-        public static Task SendThread { get; } = new Task(NetworkSender.SendMain);
+        public static Task ReceiveThread { get; set; }
+        public static Task SendThread { get; set; }
 
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
         {
@@ -55,8 +55,16 @@ namespace LunaClient.Network
             ClientConnection.Start();
 
             NetworkServerList.RefreshMasterServers();
+
+            SendThread?.Dispose();
+            ReceiveThread?.Dispose();
+
+            ReceiveThread = new Task(NetworkReceiver.ReceiveMain);
+            SendThread = new Task(NetworkSender.SendMain);
+
             SendThread.Start(TaskScheduler.Default);
             ReceiveThread.Start(TaskScheduler.Default);
+
             NetworkServerList.RequestServers();
         }
         

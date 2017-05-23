@@ -19,7 +19,7 @@ namespace LunaCommon.Message.Base
         }
 
         /// <summary>
-        ///     Call this method to deserialize a message
+        /// Call this method to deserialize a message
         /// </summary>
         /// <param name="data">Array of bytes with data</param>
         /// <param name="receiveTime">Lidgren msg receive time property or Datetime.Now</param>
@@ -77,7 +77,7 @@ namespace LunaCommon.Message.Base
         }
 
         /// <summary>
-        ///     Method to retrieve a new message
+        /// Method to retrieve a new message
         /// </summary>
         /// <typeparam name="T">Message type</typeparam>
         /// <returns>New empty message</returns>
@@ -87,10 +87,11 @@ namespace LunaCommon.Message.Base
         }
 
         /// <summary>
+        /// Method to retrieve a new message
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="data"></param>
-        /// <returns></returns>
+        /// <typeparam name="T">Message type</typeparam>
+        /// <param name="data">Message data implementation</param>
+        /// <returns>New message with the specified data</returns>
         public T CreateNew<T>(IMessageData data) where T : IMessageBase, new()
         {
             var msg = new T();
@@ -99,7 +100,7 @@ namespace LunaCommon.Message.Base
         }
 
         /// <summary>
-        ///     Retrieves the message type
+        /// Retrieves the message type
         /// </summary>
         /// <param name="data">Full message data</param>
         /// <returns>Message type to be parsed as an enum</returns>
@@ -113,7 +114,7 @@ namespace LunaCommon.Message.Base
         }
 
         /// <summary>
-        ///     Retrieves the message sub-type
+        /// Retrieves the message sub-type
         /// </summary>
         /// <param name="data">Full message data</param>
         /// <returns>Message sub-type to be parsed as an enum</returns>
@@ -127,7 +128,7 @@ namespace LunaCommon.Message.Base
         }
 
         /// <summary>
-        ///     Retrieves the message length
+        /// Retrieves the message length
         /// </summary>
         /// <param name="data">Full message data</param>
         /// <returns>Message length</returns>
@@ -142,7 +143,7 @@ namespace LunaCommon.Message.Base
         }
 
         /// <summary>
-        ///     Retrieves the message length
+        /// Retrieves the message length
         /// </summary>
         /// <param name="data">Full message data</param>
         /// <returns>Message is compressed or not</returns>

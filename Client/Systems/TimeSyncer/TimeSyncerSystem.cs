@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,6 +6,7 @@ using System.Threading.Tasks;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
+using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.SyncTime;
 using LunaCommon.Message.Interface;
@@ -15,11 +15,7 @@ using UnityEngine;
 namespace LunaClient.Systems.TimeSyncer
 {
     /// <summary>
-    /// This class syncs the server time with your time.
-    /// Bear in mind that it's a bit complex without using NTP protocol (https://en.wikipedia.org/wiki/Network_Time_Protocol)
-    /// Therefore we use the trip time to do some aproximations. It's not perfect but it's enough.
-    /// More info: http://www.mine-control.com/zack/timesync/timesync.html
-    /// TODO: fix this documentation
+    /// This system syncs the server time with your time.
     /// </summary>
     public class TimeSyncerSystem : MessageSystem<TimeSyncerSystem, TimeSyncerMessageSender, TimeSyncerMessageHandler>
     {
@@ -101,7 +97,7 @@ namespace LunaClient.Systems.TimeSyncer
                         Debug.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
                         //TODO: This causes the throttle to reset when called.  This happens due to vessel unpacking resetting the throttle controls.
                         //TODO: Try to get Squad to change their code.
-                        StepClock(targetTime);
+                        ClockHandler.StepClock(targetTime);
                     }
                     else
                     {
@@ -189,72 +185,7 @@ namespace LunaClient.Systems.TimeSyncer
             }
         }
 
-        public static void StepClock(double targetTick)
-        {
-            if (HighLogic.LoadedScene == GameScenes.LOADING)
-            {
-                Debug.Log("[LMP] Skipping StepClock in loading screen");
-                return;
-            }
-            if (HighLogic.LoadedSceneIsFlight)
-            {
-                if (FlightGlobals.fetch.activeVessel == null || !FlightGlobals.ready)
-                {
-                    Debug.Log($"[LMP] Skipping StepClock (active vessel is null or not ready)");
-                    return;
-                }
-                try
-                {
-                    OrbitPhysicsManager.HoldVesselUnpack(5);
-                }
-                catch
-                {
-                    Debug.LogError("[LMP] Failed to hold vessel unpack");
-                    return;
-                }
 
-                foreach (var vessel in FlightGlobals.VesselsLoaded.Where(v => !v.packed))
-                {
-                    if ((vessel.isActiveVessel && SafeToStepClock(vessel, targetTick)) ||
-                        (!vessel.isActiveVessel && vessel.situation != Vessel.Situations.PRELAUNCH))
-                    {
-                        try
-                        {
-                            //For prelaunch vessels, we should not go on rails as this will reset the throttles and such 
-                            vessel.GoOnRails();
-                        }
-                        catch
-                        {
-                            Debug.LogError(vessel.isActiveVessel
-                                ? $"[LMP] Error packing active vessel {vessel.id}"
-                                : $"[LMP] Error packing vessel {vessel.id}");
-                        }
-                    }
-                }
-            }
-            Planetarium.SetUniversalTime(targetTick);
-        }
-
-        private static bool SafeToStepClock(Vessel checkVessel, double targetTick)
-        {
-            switch (checkVessel.situation)
-            {
-                case Vessel.Situations.LANDED:
-                case Vessel.Situations.PRELAUNCH:
-                case Vessel.Situations.SPLASHED:
-                    //TODO: Fix.  We need to be able to adjust the clock on the ground, but then it resets the throttle position and does physics easing.
-                    //TODO: For now, disable stepping the clock while landed.
-                    return (checkVessel.srf_velocity.magnitude < 2);
-                case Vessel.Situations.ORBITING:
-                case Vessel.Situations.ESCAPING:
-                    return true;
-                case Vessel.Situations.SUB_ORBITAL:
-                    var altitudeAtUt = checkVessel.orbit.getRelativePositionAtUT(targetTick).magnitude;
-                    return (altitudeAtUt > checkVessel.mainBody.Radius + 10000 && checkVessel.altitude > 10000);
-                default:
-                    return false;
-            }
-        }
 
         private static void SkewClock(double currentError)
         {
