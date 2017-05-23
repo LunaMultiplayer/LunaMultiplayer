@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using LunaClient.Base.Interface;
 using LunaClient.Utilities;
-using UnityEngine;
 using Debug = UnityEngine.Debug;
 
 namespace LunaClient.Base
@@ -99,12 +98,12 @@ namespace LunaClient.Base
         /// <summary>
         /// Used to control the performance of the system
         /// </summary>
-        public ProfilerData UpdateProfiler { get; } = new ProfilerData();
+        private ProfilerData UpdateProfiler { get; } = new ProfilerData();
 
         /// <summary>
         /// Used to control the performance of the system
         /// </summary>
-        public ProfilerData FixedUpdateProfiler { get; } = new ProfilerData();
+        private ProfilerData FixedUpdateProfiler { get; } = new ProfilerData();
 
         /// <summary>
         /// Override to write code to execute when system is enabled
@@ -140,7 +139,7 @@ namespace LunaClient.Base
         /// <summary>
         /// Fixed update method. It will call the subscribed routines
         /// </summary>
-        public void RunFixedUpdate()
+        public void FixedUpdate()
         {
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
@@ -150,6 +149,53 @@ namespace LunaClient.Base
             }
 
             FixedUpdateProfiler.ReportTime(startClock);
+        }
+
+        /// <summary>
+        /// Get the performance counter of the system and it's routines
+        /// </summary>
+        public string GetProfilersData()
+        {
+            var builder = new StringBuilder();
+
+            if (UpdateRoutines.Any())
+            {
+                builder.Append("Total upd: ").Append(UpdateProfiler).AppendLine();
+                foreach (var routine in UpdateRoutines)
+                {
+                    builder.Append(routine.Key).Append(":").Append(routine.Value.Profiler).AppendLine();
+                }
+            }
+
+            if (FixedUpdateRoutines.Any())
+            {
+                builder.Append("Total Fix upd: ").Append(FixedUpdateProfiler).AppendLine();
+                foreach (var routine in FixedUpdateRoutines)
+                {
+                    builder.Append(routine.Key).Append(":").Append(routine.Value.Profiler).AppendLine();
+                }
+            }
+
+            return builder.ToString();
+        }
+
+        /// <summary>
+        /// Reset the performance counter of the system and it's routines
+        /// </summary>
+        public void ResetProfilers()
+        {
+            UpdateProfiler.Reset();
+            FixedUpdateProfiler.Reset();
+
+            foreach (var routine in UpdateRoutines)
+            {
+                routine.Value.Profiler.Reset();
+            }
+
+            foreach (var routine in FixedUpdateRoutines)
+            {
+                routine.Value.Profiler.Reset();
+            }
         }
     }
 }

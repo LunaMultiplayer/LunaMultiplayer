@@ -22,16 +22,16 @@ namespace LunaClient.Windows.Systems
             DisplayFast = GUILayout.Toggle(DisplayFast, "Fast debug update", ButtonStyle);
             if (GUILayout.Button("Reset Profiler history", ButtonStyle))
             {
-                VesselChangeSystem.Singleton.UpdateProfiler.Reset();
-                VesselDockSystem.Singleton.UpdateProfiler.Reset();
-                VesselFlightStateSystem.Singleton.UpdateProfiler.Reset();
-                VesselImmortalSystem.Singleton.UpdateProfiler.Reset();
-                VesselLockSystem.Singleton.UpdateProfiler.Reset();
-                VesselPositionSystem.Singleton.UpdateProfiler.Reset();
-                VesselProtoSystem.Singleton.UpdateProfiler.Reset();
-                VesselRangeSystem.Singleton.UpdateProfiler.Reset();
-                VesselRemoveSystem.Singleton.UpdateProfiler.Reset();
-                VesselUpdateSystem.Singleton.UpdateProfiler.Reset();
+                VesselChangeSystem.Singleton.ResetProfilers();;
+                VesselDockSystem.Singleton.ResetProfilers();
+                VesselFlightStateSystem.Singleton.ResetProfilers();
+                VesselImmortalSystem.Singleton.ResetProfilers();
+                VesselLockSystem.Singleton.ResetProfilers();
+                VesselPositionSystem.Singleton.ResetProfilers();
+                VesselProtoSystem.Singleton.ResetProfilers();
+                VesselRangeSystem.Singleton.ResetProfilers();
+                VesselRemoveSystem.Singleton.ResetProfilers();
+                VesselUpdateSystem.Singleton.ResetProfilers();
             }
             VesselSystems = GUILayout.Toggle(VesselSystems, "Vessel systems", ButtonStyle);
             if (VesselSystems)

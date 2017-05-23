@@ -111,7 +111,7 @@ namespace LunaClient.Systems
             {
                 try
                 {
-                    system.RunFixedUpdate();
+                    system.FixedUpdate();
                 }
                 catch (Exception e)
                 {

@@ -22,35 +22,17 @@ namespace LunaClient.Windows.Systems
             if (Display && (DisplayFast || Time.realtimeSinceStartup - LastUpdateTime > DisplayUpdateSInterval))
             {
                 LastUpdateTime = Time.realtimeSinceStartup;
-                VesselChangeProfilerText = "Upd: " + VesselChangeSystem.Singleton.UpdateProfiler;
-                VesselChangeProfilerText += "Fixed Upd: " + VesselChangeSystem.Singleton.FixedUpdateProfiler;
 
-                VesselDockProfilerText = "Upd: " + VesselDockSystem.Singleton.UpdateProfiler;
-                VesselDockProfilerText += "Fixed Upd: " + VesselDockSystem.Singleton.FixedUpdateProfiler;
-
-                VesselFlightStateProfilerText = "Upd: " + VesselFlightStateSystem.Singleton.UpdateProfiler;
-                VesselFlightStateProfilerText += "Fixed Upd: " + VesselFlightStateSystem.Singleton.FixedUpdateProfiler;
-
-                VesselImmortalProfilerText = "Upd: " + VesselImmortalSystem.Singleton.UpdateProfiler;
-                VesselImmortalProfilerText += "Fixed Upd: " + VesselImmortalSystem.Singleton.FixedUpdateProfiler;
-
-                VesselLockProfilerText = "Upd: " + VesselLockSystem.Singleton.UpdateProfiler;
-                VesselLockProfilerText += "Fixed Upd: " + VesselLockSystem.Singleton.FixedUpdateProfiler;
-                
-                VesselPositionProfilerText = "Upd: " + VesselPositionSystem.Singleton.UpdateProfiler;
-                VesselPositionProfilerText += "Fixed Upd: " + VesselPositionSystem.Singleton.FixedUpdateProfiler;
-
-                VesselProtoProfilerText = "Upd: " + VesselProtoSystem.Singleton.UpdateProfiler;
-                VesselProtoProfilerText += "Fixed Upd: " + VesselProtoSystem.Singleton.FixedUpdateProfiler;
-
-                VesselRangeProfilerText = "Upd: " + VesselRangeSystem.Singleton.UpdateProfiler;
-                VesselRangeProfilerText += "Fixed Upd: " + VesselRangeSystem.Singleton.FixedUpdateProfiler;
-
-                VesselRemoveProfilerText = "Upd: " + VesselRemoveSystem.Singleton.UpdateProfiler;
-                VesselRemoveProfilerText += "Fixed Upd: " + VesselRemoveSystem.Singleton.FixedUpdateProfiler;
-
-                VesselUpdateProfilerText = "Upd: " + VesselUpdateSystem.Singleton.UpdateProfiler;
-                VesselUpdateProfilerText += "Fixed Upd: " + VesselUpdateSystem.Singleton.FixedUpdateProfiler;
+                VesselChangeProfilerText = VesselChangeSystem.Singleton.GetProfilersData();
+                VesselDockProfilerText = VesselDockSystem.Singleton.GetProfilersData();
+                VesselFlightStateProfilerText = VesselFlightStateSystem.Singleton.GetProfilersData();
+                VesselImmortalProfilerText = VesselImmortalSystem.Singleton.GetProfilersData();
+                VesselLockProfilerText = VesselLockSystem.Singleton.GetProfilersData();
+                VesselPositionProfilerText = VesselPositionSystem.Singleton.GetProfilersData();
+                VesselProtoProfilerText = VesselProtoSystem.Singleton.GetProfilersData();
+                VesselRangeProfilerText = VesselRangeSystem.Singleton.GetProfilersData();
+                VesselRemoveProfilerText = VesselRemoveSystem.Singleton.GetProfilersData();
+                VesselUpdateProfilerText = VesselUpdateSystem.Singleton.GetProfilersData();
             }
         }
 

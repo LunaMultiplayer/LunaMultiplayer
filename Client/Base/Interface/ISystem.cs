@@ -7,10 +7,10 @@ namespace LunaClient.Base.Interface
     /// </summary>
     public interface ISystem
     {
-        ProfilerData UpdateProfiler { get; }
-        ProfilerData FixedUpdateProfiler { get; }
         bool Enabled { get; set; }
         void Update();
-        void RunFixedUpdate();
+        void FixedUpdate();
+        string GetProfilersData();
+        void ResetProfilers();
     }
 }

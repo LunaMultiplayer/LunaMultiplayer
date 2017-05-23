@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace LunaClient.Utilities
 {
@@ -80,14 +81,16 @@ namespace LunaClient.Utilities
 
         public override string ToString()
         {
-            var returnString = $"{Math.Round(TimeSpan.FromTicks(CurrentTime).TotalMilliseconds, 2)}ms (min/max/avg) " +
-                               $"{Math.Round(TimeSpan.FromTicks(MinTime).TotalMilliseconds, 2)}/" +
-                               $"{Math.Round(TimeSpan.FromTicks(MaxTime).TotalMilliseconds, 2)}/" +
-                               $"{Math.Round(TimeSpan.FromTicks(Average).TotalMilliseconds, 2)}\n";
+            var builder = new StringBuilder();
+
+            builder.Append(Math.Round(TimeSpan.FromTicks(CurrentTime).TotalMilliseconds, 2)).Append("ms(min / max / avg)");
+            builder.Append(Math.Round(TimeSpan.FromTicks(MinTime).TotalMilliseconds, 2)).Append("/");
+            builder.Append(Math.Round(TimeSpan.FromTicks(MaxTime).TotalMilliseconds, 2)).Append("/");
+            builder.Append(Math.Round(TimeSpan.FromTicks(Average).TotalMilliseconds, 2));
 
             //returnString += $"D: {CurrentDeltaTime}ms (min/max/avg) {DeltaMinTime}/{DeltaMaxTime}/{DeltaAverage}\n";
             
-            return returnString;
+            return builder.ToString();
         }
     }
 }
