@@ -39,5 +39,17 @@ namespace LunaClient.Systems.Warp
                 System.SendNewSubspace();
             }
         }
+
+        /// <summary>
+        /// Event triggered when scene has changed
+        /// </summary>
+        public void OnSceneChanged(GameScenes data)
+        {
+            if (!System.SyncedToLastSubspace && MainSystem.Singleton.GameRunning && HighLogic.LoadedSceneIsGame)
+            {
+                System.CurrentSubspace = System.LatestSubspace;
+                System.SyncedToLastSubspace = true;
+            }
+        }
     }
 }

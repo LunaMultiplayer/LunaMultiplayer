@@ -21,18 +21,15 @@ namespace LunaClient.Systems.Scenario
 
         #endregion
 
-        #region Constructor
+        #region Base overrides
 
-        public ScenarioSystem()
+        public override void OnEnabled()
         {
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SendScenarioDataMsInterval, 
+            base.OnEnabled();
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SendScenarioDataMsInterval,
                 RoutineExecution.Update, SendScenarioModules));
         }
 
-        #endregion
-
-        #region Base overrides
-        
         public override void OnDisabled()
         {
             base.OnDisabled();
@@ -69,6 +66,8 @@ namespace LunaClient.Systems.Scenario
 
             var scenarioName = new List<string>();
             var scenarioData = new List<byte[]>();
+
+            Debug.Log($"[LMP]: Saving scenarios {SettingsSystem.ServerSettings.SendScenarioDataMsInterval}");
 
             foreach (var scenarioModule in ScenarioRunner.GetLoadedModules())
             {
@@ -207,11 +206,11 @@ namespace LunaClient.Systems.Scenario
             //Atmo: 10km above atmo, to half the planets radius out.
             //Non-atmo: 30km above ground, to half the planets radius out.
             var minAltitude = CelestialUtilities.GetMinimumOrbitalDistance(contractBody, 1.1f);
-            var maxAltitude = minAltitude + contractBody.Radius*0.5;
+            var maxAltitude = minAltitude + contractBody.Radius * 0.5;
 
             var strandedOrbit = Orbit.CreateRandomOrbitAround(FlightGlobals.Bodies[bodyId], minAltitude, maxAltitude);
 
-            var kerbalPartNode = new[] {ProtoVessel.CreatePartNode("kerbalEVA", newPartId, pcm)};
+            var kerbalPartNode = new[] { ProtoVessel.CreatePartNode("kerbalEVA", newPartId, pcm) };
 
             var protoVesselNode = ProtoVessel.CreateVesselNode(kerbalName, VesselType.EVA, strandedOrbit, 0,
                 kerbalPartNode);
@@ -239,7 +238,7 @@ namespace LunaClient.Systems.Scenario
                 var kerbalNames = progressTrackingNode.GetValue("crews");
                 if (!string.IsNullOrEmpty(kerbalNames))
                 {
-                    var kerbalNamesSplit = kerbalNames.Split(new[] {", "}, StringSplitOptions.RemoveEmptyEntries);
+                    var kerbalNamesSplit = kerbalNames.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
                     foreach (var kerbalName in kerbalNamesSplit.Where(k => !HighLogic.CurrentGame.CrewRoster.Exists(k)))
                     {
                         Debug.Log($"[LMP]: Generating missing kerbal from ProgressTracking: {kerbalName}");
@@ -306,7 +305,7 @@ namespace LunaClient.Systems.Scenario
 
             var scenarioType = AllScenarioTypesInAssemblies[scenarioName];
 
-            var scenarioAttributes = (KSPScenario[]) scenarioType.GetCustomAttributes(typeof(KSPScenario), true);
+            var scenarioAttributes = (KSPScenario[])scenarioType.GetCustomAttributes(typeof(KSPScenario), true);
             if (scenarioAttributes.Length > 0)
             {
                 var attribute = scenarioAttributes[0];

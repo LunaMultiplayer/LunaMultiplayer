@@ -8,15 +8,6 @@ namespace LunaClient.Systems.VesselUpdateSys
     /// </summary>
     public class VesselUpdateSystem : MessageSystem<VesselUpdateSystem, VesselUpdateMessageSender, VesselUpdateMessageHandler>
     {
-        #region Constructor
-
-        public VesselUpdateSystem()
-        {
-            SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, SendVesselUpdates));
-        }
-
-        #endregion
-
         #region Field & Properties
 
         public bool UpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
@@ -38,6 +29,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         public override void OnEnabled()
         {
             base.OnEnabled();
+            SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, SendVesselUpdates));
         }
 
         #endregion

@@ -31,24 +31,16 @@ namespace LunaClient.Systems.VesselLockSys
 
         #endregion
 
-        #region Constructor
-
-        public VesselLockSystem()
-        {
-            SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, TryGetControlLock));
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateSecondaryVesselsLocks));
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
-        }
-
-        #endregion
-
-        #region base overrides
+        #region Base overrides
 
         public override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onLevelWasLoadedGUIReady.Add(VesselMainEvents.OnSceneChanged);
             GameEvents.onVesselChange.Add(VesselMainEvents.OnVesselChange);
+            SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, TryGetControlLock));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateSecondaryVesselsLocks));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
         }
 
         public override void OnDisabled()

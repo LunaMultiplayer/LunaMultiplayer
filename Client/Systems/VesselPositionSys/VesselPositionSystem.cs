@@ -16,15 +16,6 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
-        #region Constructor
-
-        public VesselPositionSystem()
-        {
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ProcessPositions));
-        }
-
-        #endregion
-
         #region Field & Properties
 
         private static float SecondaryVesselUpdatesSendSInterval =>
@@ -51,6 +42,12 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Base overrides
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ProcessPositions));
+        }
 
         public override void OnDisabled()
         {

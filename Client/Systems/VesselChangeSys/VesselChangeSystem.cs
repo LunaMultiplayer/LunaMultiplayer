@@ -20,15 +20,6 @@ namespace LunaClient.Systems.VesselChangeSys
 
         #endregion
 
-        #region Constructor
-
-        public VesselChangeSystem()
-        {
-            SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, ProcessVesselChanges));
-        }
-
-        #endregion
-
         #region Base overrides
 
         public override void OnEnabled()
@@ -36,6 +27,7 @@ namespace LunaClient.Systems.VesselChangeSys
             base.OnEnabled();
             GameEvents.onStageSeparation.Add(VesselChangeEvents.OnStageSeparation);
             GameEvents.onPartDie.Add(VesselChangeEvents.OnPartDie);
+            SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, ProcessVesselChanges));
         }
 
         public override void OnDisabled()

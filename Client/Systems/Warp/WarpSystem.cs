@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
@@ -13,7 +11,7 @@ namespace LunaClient.Systems.Warp
 {
     public class WarpSystem : MessageSystem<WarpSystem, WarpMessageSender, WarpMessageHandler>
     {
-        #region Fields
+        #region Fields & properties
 
         public bool CurrentlyWarping => CurrentSubspace == -1;
 
@@ -50,37 +48,24 @@ namespace LunaClient.Systems.Warp
         public Dictionary<string, int> ClientSubspaceList { get; } = new Dictionary<string, int>();
         public Dictionary<int, double> Subspaces { get; } = new Dictionary<int, double>();
 
-        public int LatestSubspace => Subspaces.OrderByDescending(s => s.Value).Select(s => s.Key).First();
+        public int LatestSubspace => Subspaces.Any() ?
+            Subspaces.OrderByDescending(s => s.Value).Select(s => s.Key).First() : 0;
 
         private ScreenMessage WarpMessage { get; set; }
         private WarpEvents WarpEvents { get; } = new WarpEvents();
         public bool SkipSubspaceProcess { get; set; }
         public bool WaitingSubspaceIdFromServer { get; set; }
-        private bool SyncedToLastSubspace { get; set; } = false;
+        public bool SyncedToLastSubspace { get; set; } = false;
 
         #endregion
-
-        #region Constructor
-
-        public WarpSystem()
-        {
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, SyncToLastSubspace));
-            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.MASTER &&
-                !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) &&
-                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
-            {
-                SetupRoutine(new RoutineDefinition(200, RoutineExecution.Update, UpdateScreenMessage));
-                SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, FollowWarpMaster));
-            }
-        }
-
-        #endregion
-
+        
         #region Base overrides
 
         public override void OnDisabled()
         {
+            base.OnDisabled();
             GameEvents.onTimeWarpRateChanged.Remove(WarpEvents.OnTimeWarpChanged);
+            GameEvents.onLevelWasLoadedGUIReady.Remove(WarpEvents.OnSceneChanged);
             ClientSubspaceList.Clear();
             Subspaces.Clear();
             _currentSubspace = int.MinValue;
@@ -91,27 +76,20 @@ namespace LunaClient.Systems.Warp
 
         public override void OnEnabled()
         {
+            base.OnEnabled();
             GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);
-        }
-
-        #endregion
-
-        #region Update methods
-
-        /// <summary>
-        /// Checks if you are synced with the last subspace and if not it does it
-        /// </summary>
-        private void SyncToLastSubspace()
-        {
-            if (!SyncedToLastSubspace && MainSystem.Singleton.GameRunning && HighLogic.LoadedSceneIsGame && Time.timeSinceLevelLoad > 1f)
+            GameEvents.onLevelWasLoadedGUIReady.Add(WarpEvents.OnSceneChanged);
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.MASTER &&
+                !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) &&
+                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
             {
-                SyncToLatestSubspace();
-                SyncedToLastSubspace = true;
+                SetupRoutine(new RoutineDefinition(200, RoutineExecution.Update, UpdateScreenMessage));
+                SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, FollowWarpMaster));
             }
         }
 
         #endregion
-
+        
         #region Update methods
 
         /// <summary>
@@ -160,12 +138,7 @@ namespace LunaClient.Systems.Warp
             }
             return false;
         }
-
-        public void SyncToLatestSubspace()
-        {
-            CurrentSubspace = LatestSubspace;
-        }
-
+        
         public double GetCurrentSubspaceTime() => GetSubspaceTime(CurrentSubspace);
 
         public double GetSubspaceTime(int subspace)
@@ -220,7 +193,7 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Private methods
-       
+
         /// <summary>
         /// Here we warp and we set the time to the current subspace
         /// </summary>
@@ -230,7 +203,7 @@ namespace LunaClient.Systems.Warp
             //TODO:Put StepClock in a more central place
             TimeSyncerSystem.StepClock(GetCurrentSubspaceTime());
         }
-        
+
         #endregion
     }
 }

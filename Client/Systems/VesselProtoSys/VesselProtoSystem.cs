@@ -19,21 +19,6 @@ namespace LunaClient.Systems.VesselProtoSys
     /// </summary>
     public class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
-
-        #region Constructor
-
-        public VesselProtoSystem()
-        {
-            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckVesselsToLoad));
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval, 
-                RoutineExecution.Update, SendAbandonedVesselsToServer));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval, 
-                RoutineExecution.Update, SendVesselDefinition));
-        }
-
-        #endregion
-
         #region Fields & properties
         
         public ConcurrentDictionary<Guid,VesselProtoUpdate> AllPlayerVessels { get; } = 
@@ -55,6 +40,17 @@ namespace LunaClient.Systems.VesselProtoSys
         #endregion
 
         #region Base overrides
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckVesselsToLoad));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval,
+                RoutineExecution.Update, SendAbandonedVesselsToServer));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval,
+                RoutineExecution.Update, SendVesselDefinition));
+        }
 
         public override void OnDisabled()
         {

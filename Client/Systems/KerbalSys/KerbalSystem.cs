@@ -95,8 +95,7 @@ namespace LunaClient.Systems.KerbalSys
         #endregion
 
         #region Private
-
-
+        
         /// <summary>
         /// Creates a new Kerbal
         /// </summary>

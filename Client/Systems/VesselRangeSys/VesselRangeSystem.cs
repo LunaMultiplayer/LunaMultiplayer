@@ -56,10 +56,11 @@ namespace LunaClient.Systems.VesselRangeSys
 
         #endregion
 
-        #region Constructor
+        #region Base overrides
 
-        public VesselRangeSystem()
+        public override void OnEnabled()
         {
+            base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, PackUnpackVessels));
         }
 
@@ -112,6 +113,5 @@ namespace LunaClient.Systems.VesselRangeSys
         }
 
         #endregion
-
     }
 }

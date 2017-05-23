@@ -12,18 +12,19 @@ namespace LunaClient.Systems.VesselImmortalSys
     /// </summary>
     public class VesselImmortalSystem : System<VesselImmortalSystem>
     {
-        #region Constructor
-
-        public VesselImmortalSystem()
-        {
-            SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, MakeOtherPlayerVesselsImmortal));
-        }
-
-        #endregion
-
         #region Fields & properties
 
         private bool VesselImmortalSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
+
+        #endregion
+
+        #region Base overrides
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, MakeOtherPlayerVesselsImmortal));
+        }
 
         #endregion
 

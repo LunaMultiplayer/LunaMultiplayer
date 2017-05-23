@@ -8,7 +8,7 @@ namespace LunaClient.Systems.ModApi
 {
     public class ModApiSystem : MessageSystem<ModApiSystem, ModApiMessageSender, ModApiMessageHandler>
     {
-        #region Fields
+        #region Fields & properties
 
         public Dictionary<string, MessageCallback> RegisteredRawMods { get; } =
             new Dictionary<string, MessageCallback>();
@@ -33,6 +33,7 @@ namespace LunaClient.Systems.ModApi
 
         public ModApiSystem()
         {
+            //We setup the routines in the constructor as this system is always enabled
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ModApiUpdate));
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ModApiFixedUpdate));
         }

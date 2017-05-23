@@ -22,7 +22,7 @@ namespace LunaClient.Utilities
         private long CurrentTime { get; set; }
 
         private List<long> History { get; } = new List<long>();
-        private long Average => History.Sum() / History.Count;
+        private long Average => History.Count > 0 ? History.Sum() / History.Count : 0;
 
         //Delta time is how long it takes inbetween the method runs.
         private long DeltaMinTime { get; set; } = long.MaxValue;
@@ -31,7 +31,7 @@ namespace LunaClient.Utilities
         private long CurrentDeltaTime { get; set; }
 
         private List<long> DeltaHistory { get; } = new List<long>();
-        private long DeltaAverage => DeltaHistory.Sum() / DeltaHistory.Count;
+        private long DeltaAverage => DeltaHistory.Count > 0 ? DeltaHistory.Sum() / DeltaHistory.Count : 0;
 
         public void Reset()
         {
@@ -83,13 +83,13 @@ namespace LunaClient.Utilities
         {
             var builder = new StringBuilder();
 
-            builder.Append(Math.Round(TimeSpan.FromTicks(CurrentTime).TotalMilliseconds, 2)).Append("ms(min / max / avg)");
+            builder.Append(Math.Round(TimeSpan.FromTicks(Average).TotalMilliseconds, 2)).Append("/");
             builder.Append(Math.Round(TimeSpan.FromTicks(MinTime).TotalMilliseconds, 2)).Append("/");
             builder.Append(Math.Round(TimeSpan.FromTicks(MaxTime).TotalMilliseconds, 2)).Append("/");
-            builder.Append(Math.Round(TimeSpan.FromTicks(Average).TotalMilliseconds, 2));
+            builder.Append(Math.Round(TimeSpan.FromTicks(CurrentTime).TotalMilliseconds, 2));
 
             //returnString += $"D: {CurrentDeltaTime}ms (min/max/avg) {DeltaMinTime}/{DeltaMaxTime}/{DeltaAverage}\n";
-            
+
             return builder.ToString();
         }
     }

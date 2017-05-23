@@ -26,19 +26,16 @@ namespace LunaClient.Systems.Status
             (MyPlayerStatus.StatusText != LastPlayerStatus.StatusText);
 
         #endregion
+        
+        #region Base overrides
 
-        #region Constructor
-
-        public StatusSystem()
+        public override void OnEnabled()
         {
+            base.OnEnabled();
             SetupRoutine(new RoutineDefinition(SettingsSystem.CurrentSettings.PlayerStatusCheckMsInterval,
                 RoutineExecution.Update, CheckPlayerStatus));
         }
 
-        #endregion
-
-        #region Base overrides
-        
         public override void OnDisabled()
         {
             base.OnDisabled();

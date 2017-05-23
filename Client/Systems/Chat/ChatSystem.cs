@@ -57,7 +57,6 @@ namespace LunaClient.Systems.Chat
             RegisterChatCommand("motd", MotdCommand.ServerMotd, "Gets the current Message of the Day");
             RegisterChatCommand("resize", ResizeCommand.ResizeChat, "Resized the chat window");
             RegisterChatCommand("version", VersionCommand.DisplayVersion, "Displays the current version of LMP");
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleChatEvents));
         }
 
         #endregion
@@ -75,6 +74,12 @@ namespace LunaClient.Systems.Chat
         #endregion
 
         #region Base overrides
+
+        public override void OnEnabled()
+        {
+            base.OnEnabled();
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleChatEvents));
+        }
 
         public override void OnDisabled()
         {

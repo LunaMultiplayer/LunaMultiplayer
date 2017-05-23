@@ -36,19 +36,8 @@ namespace LunaClient.Systems.Asteroid
         public Dictionary<string, string> ServerAsteroidTrackStatus { get; } = new Dictionary<string, string>();
         private AsteroidEventHandler AsteroidEventHandler { get; } = new AsteroidEventHandler();
         
-        private const float AsteroidCheckInterval = 5f;
-
         #endregion
-
-        #region Constructor
-
-        public AsteroidSystem()
-        {
-            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroids));
-        }
-
-        #endregion
-
+        
         #region Base overrides
 
         public override void OnEnabled()
@@ -56,6 +45,7 @@ namespace LunaClient.Systems.Asteroid
             base.OnEnabled();
             GameEvents.onAsteroidSpawned.Add(AsteroidEventHandler.OnAsteroidSpawned);
             GameEvents.onGameSceneLoadRequested.Add(AsteroidEventHandler.OnGameSceneLoadRequested);
+            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroids));
         }
 
         public override void OnDisabled()

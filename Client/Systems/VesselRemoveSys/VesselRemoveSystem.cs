@@ -14,22 +14,11 @@ namespace LunaClient.Systems.VesselRemoveSys
     /// </summary>
     public class VesselRemoveSystem : MessageSystem<VesselRemoveSystem, VesselRemoveMessageSender, VesselRemoveMessageHandler>
     {
-        #region Fields
-
+        #region Fields & properties
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
 
         #endregion
-
-        #region Constructor
-
-        public VesselRemoveSystem()
-        {
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselKillCheckMsInterval,
-                RoutineExecution.Update, KillPastSubspaceVessels));
-        }
-
-        #endregion
-
+        
         #region Base overrides
 
         public override void OnEnabled()
@@ -38,6 +27,8 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselDestroy.Add(VesselRemoveEvents.OnVesselDestroyed);
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselKillCheckMsInterval,
+                RoutineExecution.Update, KillPastSubspaceVessels));
         }
 
         public override void OnDisabled()

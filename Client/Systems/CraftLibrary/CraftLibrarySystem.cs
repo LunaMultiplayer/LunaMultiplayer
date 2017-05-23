@@ -50,21 +50,13 @@ namespace LunaClient.Systems.CraftLibrary
 
         #endregion
 
-        #region Constructor
-
-        public CraftLibrarySystem()
-        {
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleCraftLibraryEvents));
-        }
-
-        #endregion
-
         #region Base overrides
 
         public override void OnEnabled()
         {
             base.OnEnabled();
             BuildUploadList();
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleCraftLibraryEvents));
         }
 
         public override void OnDisabled()

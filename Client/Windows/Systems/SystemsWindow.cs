@@ -1,4 +1,11 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.CraftLibrary;
+using LunaClient.Systems.Flag;
+using LunaClient.Systems.KerbalSys;
+using LunaClient.Systems.Lock;
+using LunaClient.Systems.ModApi;
+using LunaClient.Systems.Scenario;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
@@ -9,6 +16,7 @@ using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
+using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using UnityEngine;
 
@@ -16,6 +24,80 @@ namespace LunaClient.Windows.Systems
 {
     public partial class SystemsWindow : Window<SystemsWindow>
     {
+        #region Fields & properties
+
+        private float WindowHeight { get; } = 400;
+        private float WindowWidth { get; } = 400;
+
+        private bool VesselSystems { get; set; }
+        private bool DisplayFast { get; set; }
+        private float LastUpdateTime { get; set; }
+        private float DisplayUpdateSInterval { get; } = 1f;
+
+        #region Vessel systems
+
+        private bool VesselChange { get; set; }
+        private string VesselChangeProfilerText { get; set; }
+
+        private bool VesselDock { get; set; }
+        private string VesselDockProfilerText { get; set; }
+
+        private bool VesselFlightState { get; set; }
+        private string VesselFlightStateProfilerText { get; set; }
+
+        private bool VesselImmortal { get; set; }
+        private string VesselImmortalProfilerText { get; set; }
+
+        private bool VesselLock { get; set; }
+        private string VesselLockProfilerText { get; set; }
+
+        private bool VesselPosition { get; set; }
+        private string VesselPositionProfilerText { get; set; }
+
+        private bool VesselProto { get; set; }
+        private string VesselProtoProfilerText { get; set; }
+
+        private bool VesselRange { get; set; }
+        private string VesselRangeProfilerText { get; set; }
+
+        private bool VesselRemove { get; set; }
+        private string VesselRemoveProfilerText { get; set; }
+
+        private bool VesselUpdate { get; set; }
+        private string VesselUpdateProfilerText { get; set; }
+
+        #endregion
+
+        #region Other systems
+
+        private bool CraftLibrary { get; set; }
+        private string CraftLibraryProfilerText { get; set; }
+
+        private bool Flag { get; set; }
+        private string FlagProfilerText { get; set; }
+
+        private bool Scenario { get; set; }
+        private string ScenarioProfilerText { get; set; }
+
+        private bool TimeSyncer { get; set; }
+        private string TimeSyncerProfilerText { get; set; }
+
+        private bool ModApi { get; set; }
+        private string ModApiProfilerText { get; set; }
+
+        private bool Lock { get; set; }
+        private string LockProfilerText { get; set; }
+
+        private bool Kerbal { get; set; }
+        private string KerbalProfilerText { get; set; }
+
+        private bool Warp { get; set; }
+        private string WarpProfilerText { get; set; }
+
+        #endregion
+
+        #endregion
+
         public override void Update()
         {
             SafeDisplay = Display;
@@ -33,6 +115,14 @@ namespace LunaClient.Windows.Systems
                 VesselRangeProfilerText = VesselRangeSystem.Singleton.GetProfilersData();
                 VesselRemoveProfilerText = VesselRemoveSystem.Singleton.GetProfilersData();
                 VesselUpdateProfilerText = VesselUpdateSystem.Singleton.GetProfilersData();
+                CraftLibraryProfilerText = CraftLibrarySystem.Singleton.GetProfilersData();
+                FlagProfilerText = FlagSystem.Singleton.GetProfilersData();
+                ScenarioProfilerText = ScenarioSystem.Singleton.GetProfilersData();
+                TimeSyncerProfilerText = TimeSyncerSystem.Singleton.GetProfilersData();
+                ModApiProfilerText = ModApiSystem.Singleton.GetProfilersData();
+                LockProfilerText = LockSystem.Singleton.GetProfilersData();
+                KerbalProfilerText = KerbalSystem.Singleton.GetProfilersData();
+                WarpProfilerText = WarpSystem.Singleton.GetProfilersData();
             }
         }
 
@@ -109,51 +199,5 @@ namespace LunaClient.Windows.Systems
             if (!SafeDisplay && IsWindowLocked)
                 RemoveWindowLock();
         }
-
-        #region Fields
-
-        private float WindowHeight { get; } = 400;
-        private float WindowWidth { get; } = 400;
-
-        private bool VesselSystems { get; set; }
-        private bool DisplayFast { get; set; }
-        private float LastUpdateTime { get; set; }
-        private float DisplayUpdateSInterval { get; } = 1f;
-
-        #region Vessel systems
-
-        private bool VesselChange { get; set; }
-        private string VesselChangeProfilerText { get; set; }
-
-        private bool VesselDock { get; set; }
-        private string VesselDockProfilerText { get; set; }
-
-        private bool VesselFlightState { get; set; }
-        private string VesselFlightStateProfilerText { get; set; }
-
-        private bool VesselImmortal { get; set; }
-        private string VesselImmortalProfilerText { get; set; }
-
-        private bool VesselLock { get; set; }
-        private string VesselLockProfilerText { get; set; }
-
-        private bool VesselPosition { get; set; }
-        private string VesselPositionProfilerText { get; set; }
-
-        private bool VesselProto { get; set; }
-        private string VesselProtoProfilerText { get; set; }
-
-        private bool VesselRange { get; set; }
-        private string VesselRangeProfilerText { get; set; }
-
-        private bool VesselRemove { get; set; }
-        private string VesselRemoveProfilerText { get; set; }
-
-        private bool VesselUpdate { get; set; }
-        private string VesselUpdateProfilerText { get; set; }
-
-        #endregion
-
-        #endregion
     }
 }

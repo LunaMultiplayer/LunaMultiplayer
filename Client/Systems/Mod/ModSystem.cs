@@ -12,6 +12,8 @@ namespace LunaClient.Systems.Mod
 {
     public class ModSystem : System<ModSystem>
     {
+        #region Fields & properties
+
         public ModControlMode ModControl { get; set; } = ModControlMode.ENABLED_STOP_INVALID_PART_SYNC;
         public bool DllListBuilt { get; set; } = false;
         public string FailText { get; set; }
@@ -19,6 +21,8 @@ namespace LunaClient.Systems.Mod
         public Dictionary<string, string> DllList { get; } = new Dictionary<string, string>();
         public List<string> AllowedParts { get; set; } = new List<string>();
         public string LastModFileData { get; set; } = "";
+
+        #endregion
 
         #region Base overrides
 

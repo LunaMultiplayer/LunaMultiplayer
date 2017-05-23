@@ -25,17 +25,14 @@ namespace LunaClient.Systems.Flag
 
         #endregion
 
-        #region Constructor
+        #region Base overrides
 
-        public FlagSystem()
+        public override void OnEnabled()
         {
+            base.OnEnabled();
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleFlags));
         }
 
-        #endregion
-
-        #region Base overrides
-        
         public override void OnDisabled()
         {
             base.OnDisabled();

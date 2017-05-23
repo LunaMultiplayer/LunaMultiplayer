@@ -53,6 +53,25 @@ namespace LunaClient.Base
         }
 
         /// <summary>
+        /// Removes a routine from the pool
+        /// </summary>
+        protected void RemoveRoutine(string routineName)
+        {
+            if (UpdateRoutines.ContainsKey(routineName))
+            {
+                UpdateRoutines.Remove(routineName);
+            }
+            else if (FixedUpdateRoutines.ContainsKey(routineName))
+            {
+                FixedUpdateRoutines.Remove(routineName);
+            }
+            else
+            {
+                Debug.LogError($"[LMP]: Routine {routineName} not found");
+            }
+        }
+
+        /// <summary>
         /// Changes the routine execution interval on the fly
         /// </summary>
         protected void ChangeRoutineExecutionInterval(string routineName, int newIntervalInMs)
@@ -90,6 +109,7 @@ namespace LunaClient.Base
                 else if (_enabled && !value)
                 {
                     _enabled = false;
+                    DisableRoutines();
                     OnDisabled();
                 }
             }
@@ -119,6 +139,15 @@ namespace LunaClient.Base
         public virtual void OnDisabled()
         {
             //Implement your own code
+        }
+
+        /// <summary>
+        /// When the system is disabled this method is called and it removes all the defined routines
+        /// </summary>
+        public virtual void DisableRoutines()
+        {
+            UpdateRoutines.Clear();
+            FixedUpdateRoutines.Clear();
         }
 
         /// <summary>
@@ -158,12 +187,15 @@ namespace LunaClient.Base
         {
             var builder = new StringBuilder();
 
+            if (UpdateRoutines.Any() || FixedUpdateRoutines.Any())
+                builder.AppendLine("Times in ms (average/min/max/now) ");
+
             if (UpdateRoutines.Any())
             {
                 builder.Append("Total upd: ").Append(UpdateProfiler).AppendLine();
                 foreach (var routine in UpdateRoutines)
                 {
-                    builder.Append(routine.Key).Append(":").Append(routine.Value.Profiler).AppendLine();
+                    builder.Append(routine.Key).Append(": ").Append(routine.Value.Profiler).AppendLine();
                 }
             }
 
@@ -172,7 +204,7 @@ namespace LunaClient.Base
                 builder.Append("Total Fix upd: ").Append(FixedUpdateProfiler).AppendLine();
                 foreach (var routine in FixedUpdateRoutines)
                 {
-                    builder.Append(routine.Key).Append(":").Append(routine.Value.Profiler).AppendLine();
+                    builder.Append(routine.Key).Append(": ").Append(routine.Value.Profiler).AppendLine();
                 }
             }
 
