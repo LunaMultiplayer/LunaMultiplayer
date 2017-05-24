@@ -271,17 +271,28 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     var targetOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
 
-                    if (true || Vessel.packed)
+                    if (SettingsSystem.CurrentSettings.Debug8)
                     {
                         //The OrbitDriver update call will set the vessel position on the next fixed update
                         CopyOrbit(targetOrbit, Vessel.orbitDriver.orbit);
                         Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
                         Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
+
+                        if (!Vessel.packed)
+                        {
+                            Vessel.orbitDriver.updateFromParameters();
+                        }
                     }
                 }
             }
             else
             {
+                if (SettingsSystem.CurrentSettings.Debug9)
+                {
+                    SettingsSystem.CurrentSettings.Debug9 = false;
+                    altitude = altitude + 25;
+                }
+
                 //TODO: Need to make sure position setting is working for landed vessels.
                 //Update the vessels's surface position to ensure that it's at the right spot
                 Vessel.latitude = latitude;
@@ -338,7 +349,6 @@ namespace LunaClient.Systems.VesselPositionSys
             if (Vessel.altitude > 25000 || counter > 75)
             {
                 counter = 0;
-                //Vessel.orbitDriver.updateFromParameters();
             }
 
             if (Vessel.loaded && !Vessel.packed)
