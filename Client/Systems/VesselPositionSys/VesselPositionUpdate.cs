@@ -290,7 +290,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (SettingsSystem.CurrentSettings.Debug9)
                 {
                     SettingsSystem.CurrentSettings.Debug9 = false;
-                    altitude = altitude + 25;
+                    altitude = altitude + 5;
                 }
 
                 //TODO: Need to make sure position setting is working for landed vessels.
