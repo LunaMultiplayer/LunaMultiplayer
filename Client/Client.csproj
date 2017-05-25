@@ -138,6 +138,7 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionUpdateAlternative.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselLoader.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageHandler.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageSender.cs" />
