@@ -61,7 +61,7 @@ namespace LunaClient.Systems.VesselRangeSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, PackUnpackVessels));
+            SetupRoutine(new RoutineDefinition(200, RoutineExecution.Update, PackUnpackVessels));
         }
 
         protected override void OnDisabled()
