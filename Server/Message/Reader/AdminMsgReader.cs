@@ -1,7 +1,5 @@
 ﻿using System;
-using LunaCommon.Enums;
 using LunaCommon.Message.Data.Admin;
-using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using LunaServer.Client;
@@ -17,7 +15,7 @@ namespace LunaServer.Message.Reader
             var data = (AdminBaseMsgData)messageData;
             switch (data.AdminMessageType)
             {
-                case AdminMessageType.LIST_REQUEST:
+                case AdminMessageType.ListRequest:
                     AdminSystemSender.SendAdminList(client);
                     break;
                 default:

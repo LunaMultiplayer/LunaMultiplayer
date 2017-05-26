@@ -2,8 +2,8 @@
 {
     public enum KerbalMessageType
     {
-        REQUEST = 0,
-        REPLY = 1,
-        PROTO = 2
+        Request = 0,
+        Reply = 1,
+        Proto = 2
     }
 }

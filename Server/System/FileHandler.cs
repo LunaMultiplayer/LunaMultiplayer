@@ -250,8 +250,7 @@ namespace LunaServer.System
             var realPath = Path.HasExtension(path) ? Path.GetDirectoryName(path) : path;
             if (!string.IsNullOrEmpty(realPath))
             {
-                object semaphore;
-                if (!LockSemaphore.TryGetValue(realPath, out semaphore))
+                if (!LockSemaphore.TryGetValue(realPath, out var semaphore))
                 {
                     semaphore = new object();
                     LockSemaphore.TryAdd(realPath, semaphore);

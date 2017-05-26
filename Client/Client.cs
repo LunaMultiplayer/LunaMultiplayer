@@ -52,7 +52,7 @@ namespace LunaClient
             }
         }
         
-        public void OnGUI()
+        public void OnGui()
         {
             try
             {
@@ -60,7 +60,7 @@ namespace LunaClient
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(OnGUI));
+                MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(OnGui));
             }
         }
 

@@ -1,7 +1,6 @@
-﻿using System;
-using LunaCommon.Enums;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Kerbal
 {
@@ -9,9 +8,6 @@ namespace LunaCommon.Message.Data.Kerbal
     {
         public override ushort SubType => (ushort)(int)KerbalMessageType;
 
-        public virtual KerbalMessageType KerbalMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual KerbalMessageType KerbalMessageType => throw new NotImplementedException();
     }
 }

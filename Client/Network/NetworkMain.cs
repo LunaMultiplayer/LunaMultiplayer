@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
-using Lidgren.Network;
-using LunaClient.Systems;
+﻿using Lidgren.Network;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaCommon.Message;
 using LunaCommon.Message.Interface;
+using System;
+using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace LunaClient.Network
@@ -67,7 +64,7 @@ namespace LunaClient.Network
 
             NetworkServerList.RequestServers();
         }
-        
+
         public static void HandleDisconnectException(Exception e)
         {
             if (e.InnerException != null)

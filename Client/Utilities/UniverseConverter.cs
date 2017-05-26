@@ -76,9 +76,9 @@ namespace LunaClient.Utilities
             if (vesselNodes != null)
                 foreach (var cn in vesselNodes)
                 {
-                    var vesselID = Common.ConvertConfigStringToGuidString(cn.GetValue("pid"));
-                    Debug.Log($"[LMP]: Saving vessel {vesselID}, Name: {cn.GetValue("Name")}");
-                    cn.Save(CommonUtil.CombinePaths(vesselFolder, vesselID + ".txt"));
+                    var vesselId = Common.ConvertConfigStringToGuidString(cn.GetValue("pid"));
+                    Debug.Log($"[LMP]: Saving vessel {vesselId}, Name: {cn.GetValue("Name")}");
+                    cn.Save(CommonUtil.CombinePaths(vesselFolder, vesselId + ".txt"));
                 }
             //Save scenario data
             var scenarioNodes = gameData.GetNodes("SCENARIO");

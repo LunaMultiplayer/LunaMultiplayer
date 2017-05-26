@@ -1,5 +1,4 @@
 ﻿using System;
-using LunaClient.Systems.VesselUpdateSys;
 
 namespace LunaClient.Systems.VesselProtoSys
 {

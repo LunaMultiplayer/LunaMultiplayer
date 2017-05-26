@@ -10,9 +10,7 @@ namespace LunaServer.Command.Command
     {
         public override void Execute(string commandArgs)
         {
-            string playerName;
-            string reason;
-            CommandSystemHelperMethods.SplitCommand(commandArgs, out playerName, out reason);
+            CommandSystemHelperMethods.SplitCommand(commandArgs, out var playerName, out var reason);
             reason = string.IsNullOrEmpty(reason) ? "No reason specified" : reason;
 
             if (playerName != "")

@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
-using LunaCommon.Enums;
-using UnityEngine;
 using LunaClient.Systems.VesselPositionSys;
+using LunaCommon.Enums;
+using System;
+using System.Collections.Concurrent;
+using System.Linq;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -20,8 +18,8 @@ namespace LunaClient.Systems.VesselProtoSys
     public class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
         #region Fields & properties
-        
-        public ConcurrentDictionary<Guid,VesselProtoUpdate> AllPlayerVessels { get; } = 
+
+        public ConcurrentDictionary<Guid, VesselProtoUpdate> AllPlayerVessels { get; } =
             new ConcurrentDictionary<Guid, VesselProtoUpdate>();
 
         public ScreenMessage BannedPartsMessage { get; set; }
@@ -36,7 +34,7 @@ namespace LunaClient.Systems.VesselProtoSys
         public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null) ||
             (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
-        
+
         #endregion
 
         #region Base overrides
@@ -71,8 +69,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (AllPlayerVessels.ContainsKey(vesselId))
             {
-                VesselProtoUpdate val;
-                AllPlayerVessels.TryRemove(vesselId, out val);
+                AllPlayerVessels.TryRemove(vesselId, out var _);
             }
         }
 
@@ -87,7 +84,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 VesselCommon.IsSpectating)
                 return false;
 
-            if (ModSystem.Singleton.ModControl != ModControlMode.DISABLED)
+            if (ModSystem.Singleton.ModControl != ModControlMode.Disabled)
             {
                 BannedPartsStr = GetInvalidVesselParts(FlightGlobals.ActiveVessel);
                 return string.IsNullOrEmpty(BannedPartsStr);
@@ -142,10 +139,10 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     if (BannedPartsMessage != null)
                         BannedPartsMessage.duration = 0;
-                    if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_SYNC)
+                    if (ModSystem.Singleton.ModControl == ModControlMode.EnabledStopInvalidPartSync)
                         BannedPartsMessage = ScreenMessages.PostScreenMessage(
                                 "Active vessel contains the following banned parts, it will not be saved to the server:\n" + BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
-                    if (ModSystem.Singleton.ModControl == ModControlMode.ENABLED_STOP_INVALID_PART_LAUNCH)
+                    if (ModSystem.Singleton.ModControl == ModControlMode.EnabledStopInvalidPartLaunch)
                         BannedPartsMessage = ScreenMessages.PostScreenMessage(
                                 "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
                                 BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
@@ -198,7 +195,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToReLoad)
                     {
                         VesselLoader.ReloadVessel(vesselProto.Value);
-                        VesselPositionSystem.Singleton.UpdateVesselPosition(vesselProto.Value.VesselId);   
+                        VesselPositionSystem.Singleton.UpdateVesselPosition(vesselProto.Value.VesselId);
                     }
 
                     //Load vessels that don't exist and are in our subspace

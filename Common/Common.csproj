@@ -191,7 +191,7 @@
     <Compile Include="Message\Interface\IMessageBase.cs" />
     <Compile Include="Message\Base\MessageConstants.cs" />
     <Compile Include="Message\Serialization\BaseSerializer.cs" />
-    <Compile Include="Message\Serialization\CustomTypes\CustomTypeDeserializers.cs" />
+    <Compile Include="Message\Serialization\CustomTypeDeserializers.cs" />
     <Compile Include="Message\Serialization\DataDeserializer.cs" />
     <Compile Include="Message\Serialization\DataSerializer.cs" />
     <Compile Include="Message\Base\MessageBase.cs" />
@@ -199,11 +199,11 @@
     <Compile Include="Message\Client\Base\CliMsgBase.cs" />
     <Compile Include="Message\ClientMessageFactory.cs" />
     <Compile Include="Message\Base\FactoryBase.cs" />
-    <Compile Include="Message\Serialization\EnumerableTypes\EnumerableTypeDeserializers.cs" />
-    <Compile Include="Message\Serialization\EnumerableTypes\EnumerableTypeSerializers.cs" />
-    <Compile Include="Message\Serialization\SimpleTypes\SimpleTypeDeserializers.cs" />
-    <Compile Include="Message\Serialization\CustomTypes\CustomTypeSerializers.cs" />
-    <Compile Include="Message\Serialization\SimpleTypes\SimpleTypeSerializers.cs" />
+    <Compile Include="Message\Serialization\EnumerableTypeDeserializers.cs" />
+    <Compile Include="Message\Serialization\EnumerableTypeSerializers.cs" />
+    <Compile Include="Message\Serialization\SimpleTypeDeserializers.cs" />
+    <Compile Include="Message\Serialization\CustomTypeSerializers.cs" />
+    <Compile Include="Message\Serialization\SimpleTypeSerializers.cs" />
     <Compile Include="Message\Server\LockSrvMsg.cs" />
     <Compile Include="Message\Server\AdminSrvMsg.cs" />
     <Compile Include="Message\Server\ModSrvMsg.cs" />

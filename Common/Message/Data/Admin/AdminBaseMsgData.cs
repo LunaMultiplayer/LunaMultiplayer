@@ -1,7 +1,6 @@
-﻿using System;
-using LunaCommon.Enums;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Admin
 {
@@ -9,9 +8,6 @@ namespace LunaCommon.Message.Data.Admin
     {
         public override ushort SubType => (ushort)(int)AdminMessageType;
 
-        public virtual AdminMessageType AdminMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual AdminMessageType AdminMessageType => throw new NotImplementedException();
     }
 }

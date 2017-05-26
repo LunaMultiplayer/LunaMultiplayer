@@ -1,10 +1,10 @@
-using System.Collections.Generic;
-using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace LunaClient.Systems.Asteroid
@@ -29,15 +29,15 @@ namespace LunaClient.Systems.Asteroid
                 }
                 return _scenarioDiscoverableObjects;
             }
-            set { _scenarioDiscoverableObjects = value; }
+            set => _scenarioDiscoverableObjects = value;
         }
 
         public List<string> ServerAsteroids { get; } = new List<string>();
         public Dictionary<string, string> ServerAsteroidTrackStatus { get; } = new Dictionary<string, string>();
         private AsteroidEventHandler AsteroidEventHandler { get; } = new AsteroidEventHandler();
-        
+
         #endregion
-        
+
         #region Base overrides
 
         protected override void OnEnabled()

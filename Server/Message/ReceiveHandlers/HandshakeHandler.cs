@@ -45,7 +45,7 @@ namespace LunaServer.Message.ReceiveHandlers
 
                 CreatePlayerScenarioFiles(client, data.PlayerName);
 
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.HANDSHOOK_SUCCESSFULLY, "success");
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.HandshookSuccessfully, "success");
                 MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, new PlayerConnectionJoinMsgData { PlayerName = client.PlayerName });
 
                 LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ClientRetriever.GetClients().Length}");

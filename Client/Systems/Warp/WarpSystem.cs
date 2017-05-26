@@ -1,10 +1,10 @@
-using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Warp;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 
@@ -23,7 +23,7 @@ namespace LunaClient.Systems.Warp
         private int _currentSubspace = int.MinValue;
         public int CurrentSubspace
         {
-            get { return _currentSubspace; }
+            get => _currentSubspace;
             set
             {
                 if (_currentSubspace != value)
@@ -56,10 +56,10 @@ namespace LunaClient.Systems.Warp
         private WarpEvents WarpEvents { get; } = new WarpEvents();
         public bool SkipSubspaceProcess { get; set; }
         public bool WaitingSubspaceIdFromServer { get; set; }
-        public bool SyncedToLastSubspace { get; set; } = false;
+        public bool SyncedToLastSubspace { get; set; }
 
         #endregion
-        
+
         #region Base overrides
 
         protected override void OnDisabled()
@@ -80,7 +80,7 @@ namespace LunaClient.Systems.Warp
             base.OnEnabled();
             GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);
             GameEvents.onLevelWasLoadedGUIReady.Add(WarpEvents.OnSceneChanged);
-            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.MASTER &&
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.Master &&
                 !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) &&
                 SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
             {
@@ -90,7 +90,7 @@ namespace LunaClient.Systems.Warp
         }
 
         #endregion
-        
+
         #region Update methods
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace LunaClient.Systems.Warp
             }
             return false;
         }
-        
+
         public double GetCurrentSubspaceTime() => GetSubspaceTime(CurrentSubspace);
 
         public double GetSubspaceTime(int subspace)
@@ -173,7 +173,7 @@ namespace LunaClient.Systems.Warp
             MessageSender.SendMessage(new WarpNewSubspaceMsgData
             {
                 ServerTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.Singleton.GetServerClock(),
-                PlayerCreator = SettingsSystem.CurrentSettings.PlayerName,
+                PlayerCreator = SettingsSystem.CurrentSettings.PlayerName
                 //we don't send the SubspaceKey as that one will be given by the server except when warping that we set it to -1
             });
         }

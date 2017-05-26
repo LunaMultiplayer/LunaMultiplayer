@@ -31,10 +31,10 @@ namespace LunaServer.Settings
         public double ExpireLogs = 0;
 
         [Description("Specify the gameplay difficulty of the server.")]
-        public GameDifficulty GameDifficulty = GameDifficulty.NORMAL;
+        public GameDifficulty GameDifficulty = GameDifficulty.Normal;
 
         [Description("Specify the game Type.")]
-        public GameMode GameMode = GameMode.SANDBOX;
+        public GameMode GameMode = GameMode.Sandbox;
         
         [Description("Minimum log level.")]
         public LogLevels LogLevel = LogLevels.Debug;
@@ -47,7 +47,7 @@ namespace LunaServer.Settings
 
         [Description("Enable mod control.\n# WARNING: Only consider turning off mod control for private servers.\n# " +
                      "The game will constantly complain about missing parts if there are missing mods.")]
-        public ModControlMode ModControl = ModControlMode.ENABLED_STOP_INVALID_PART_SYNC;
+        public ModControlMode ModControl = ModControlMode.EnabledStopInvalidPartSync;
 
         [Description("How many untracked asteroids to spawn into the universe. 0 = Disabled")]
         public int NumberOfAsteroids = 30;
@@ -80,7 +80,7 @@ namespace LunaServer.Settings
         public bool UseUtcTimeInLog = false;
 
         [Description("Specify the warp Type.")]
-        public WarpMode WarpMode = WarpMode.SUBSPACE;
+        public WarpMode WarpMode = WarpMode.Subspace;
 
         [Description("Enable white-listing.")]
         public bool Whitelisted = false;

@@ -1,19 +1,19 @@
 ﻿using LunaClient.Base.Interface;
 
 namespace LunaClient.Base
-{    
+{
     /// <summary>
-     /// Base class for windows.
-     /// </summary>
+    /// Base class for windows.
+    /// </summary>
     public abstract class Window<T> : StyleLibrary, IWindow
         where T : class, IWindow, new()
     {
         #region Fields
-        
+
         private bool _display;
         public virtual bool Display
         {
-            get { return _display; }
+            get => _display;
             set
             {
                 if (!_display && value)
@@ -86,7 +86,7 @@ namespace LunaClient.Base
         {
             //Implement your own code
         }
-        
+
         public abstract void SetStyles();
         #endregion
     }

@@ -53,8 +53,7 @@ namespace LunaCommon.Message.Serialization
         {
             lock (SyncRootPropertyDict)
             {
-                IEnumerable<ReducedPropertyInfo> properties;
-                if (!PropertyDictionary.TryGetValue(type, out properties))
+                if (!PropertyDictionary.TryGetValue(type, out var properties))
                 {
                     //We never store the Version or the receive time property of the MessageData class
                     //Order them with the get only properties on top to increase speed
@@ -77,8 +76,7 @@ namespace LunaCommon.Message.Serialization
         {
             lock (SyncRootAccessorDict)
             {
-                TypeAccessor accessor;
-                if (!AccessorDictionary.TryGetValue(type, out accessor))
+                if (!AccessorDictionary.TryGetValue(type, out var accessor))
                 {
                     accessor = TypeAccessor.Create(type);
                     AccessorDictionary.Add(type, accessor);

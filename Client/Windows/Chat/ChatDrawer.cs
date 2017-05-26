@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using LunaClient.Base.Interface;
-using LunaClient.Systems.Admin;
+﻿using LunaClient.Systems.Admin;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Utilities;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Windows.Chat

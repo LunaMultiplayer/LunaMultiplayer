@@ -4,6 +4,6 @@ namespace LunaCommon.Message.Data.Warp
 {
     public class WarpSubspacesRequestMsgData : WarpBaseMsgData
     {
-        public override WarpMessageType WarpMessageType => WarpMessageType.SUBSPACES_REQUEST;
+        public override WarpMessageType WarpMessageType => WarpMessageType.SubspacesRequest;
     }
 }

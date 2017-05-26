@@ -23,28 +23,28 @@ namespace LunaServer.Message.Reader
             var message = messageData as VesselBaseMsgData;
             switch (message?.VesselMessageType)
             {
-                case VesselMessageType.LIST_REQUEST:
+                case VesselMessageType.ListRequest:
                     HandleVesselListRequest(client);
                     break;
-                case VesselMessageType.VESSELS_REQUEST:
+                case VesselMessageType.VesselsRequest:
                     HandleVesselsRequest(client, messageData);
                     break;
-                case VesselMessageType.PROTO:
+                case VesselMessageType.Proto:
                     HandleVesselProto(client, message);
                     break;
-                case VesselMessageType.REMOVE:
+                case VesselMessageType.Remove:
                     HandleVesselRemove(client, message);
                     break;
-                case VesselMessageType.CHANGE:
+                case VesselMessageType.Change:
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
                     break;
-                case VesselMessageType.UPDATE:
+                case VesselMessageType.Update:
                     VesselRelaySystem.HandleVesselMessage(client, message);
                     break;
-                case VesselMessageType.POSITION:
+                case VesselMessageType.Position:
                     VesselRelaySystem.HandleVesselMessage(client, message);
                     break;
-                case VesselMessageType.FLIGHTSTATE:
+                case VesselMessageType.Flightstate:
                     VesselRelaySystem.HandleVesselMessage(client, message);
                     break;
                 default:

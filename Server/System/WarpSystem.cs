@@ -1,34 +1,33 @@
-﻿using System;
+﻿using LunaServer.Context;
+using LunaServer.Log;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LunaServer.Context;
-using LunaServer.Log;
 
 namespace LunaServer.System
 {
     public class WarpSystem
     {
         private static string SubspaceFile { get; } = Path.Combine(ServerContext.UniverseDirectory, "Subspace.txt");
-        
+
         public static void Reset()
         {
             WarpContext.Subspaces.Clear();
             LoadSavedSubspace();
         }
-        
+
         public static void SaveSubspace(int subspaceId, double subspaceTime)
         {
             FileHandler.AppendToFile(SubspaceFile, subspaceId + ":" + subspaceTime + Environment.NewLine);
         }
-        
+
         public static void RemoveSubspace(int oldSubspace)
         {
             //We never remove the latest subspace or the only subspace from the server!
             if (oldSubspace == WarpContext.LatestSubspace || WarpContext.Subspaces.Count == 1) return;
 
-            double time;
-            WarpContext.Subspaces.TryRemove(oldSubspace, out time);
+            WarpContext.Subspaces.TryRemove(oldSubspace, out var _);
 
             var allLinesExceptTheDeleted = string.Join(Environment.NewLine, GetSubspaceLinesFromFile()
                 .Where(s => s.Key != oldSubspace)
@@ -61,7 +60,7 @@ namespace LunaServer.System
                     WarpContext.Subspaces.TryAdd(line.Key, line.Value);
                 }
 
-                WarpContext.NextSubspaceId = WarpContext.Subspaces.Any() ? WarpContext.Subspaces.Max(s=> s.Key) + 1: 1;
+                WarpContext.NextSubspaceId = WarpContext.Subspaces.Any() ? WarpContext.Subspaces.Max(s => s.Key) + 1 : 1;
             }
             else
             {
@@ -81,7 +80,7 @@ namespace LunaServer.System
 
             return subspaceLines;
         }
-        
+
         /// <summary>
         /// Returns the time difference of the given subspace against the server time in ticks
         /// </summary>

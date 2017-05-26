@@ -163,8 +163,7 @@ namespace LunaClient.Utilities
         {
             while (!_stop)
             {
-                byte[] incomingBytes;
-                if (IncomingQueue.TryDequeue(out incomingBytes))
+                if (IncomingQueue.TryDequeue(out var incomingBytes))
                     SaveToCache(incomingBytes);
                 else
                     IncomingEvent.WaitOne(500);

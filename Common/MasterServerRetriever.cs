@@ -45,9 +45,7 @@ namespace LunaCommon
                     foreach (var server in servers)
                     {
                         var ipPort = server.Split(':');
-                        IPAddress ip;
-                        ushort port;
-                        if (!IPAddress.TryParse(ipPort[0], out ip))
+                        if (!IPAddress.TryParse(ipPort[0], out var ip))
                         {
                             var hostEntry = Dns.GetHostEntry(ipPort[0]);
                             if (hostEntry.AddressList.Length > 0)
@@ -56,7 +54,7 @@ namespace LunaCommon
                             }
                         }
 
-                        if (ip != null && ushort.TryParse(ipPort[1], out port))
+                        if (ip != null && ushort.TryParse(ipPort[1], out var port))
                         {
                             parsedServers.Add(new IPEndPoint(ip, port));
                         }
@@ -74,19 +72,19 @@ namespace LunaCommon
         /// <returns></returns>
         public static bool MyRemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
         {
-            bool isOk = true;
+            var isOk = true;
             // If there are errors in the certificate chain, look at each error to determine the cause.
             if (sslPolicyErrors != SslPolicyErrors.None)
             {
-                for (var i = 0; i < chain.ChainStatus.Length; i++)
+                foreach (var chainStatus in chain.ChainStatus)
                 {
-                    if (chain.ChainStatus[i].Status != X509ChainStatusFlags.RevocationStatusUnknown)
+                    if (chainStatus.Status != X509ChainStatusFlags.RevocationStatusUnknown)
                     {
                         chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
                         chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
                         chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan(0, 1, 0);
                         chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
-                        bool chainIsValid = chain.Build((X509Certificate2)certificate);
+                        var chainIsValid = chain.Build((X509Certificate2)certificate);
                         if (!chainIsValid)
                         {
                             isOk = false;

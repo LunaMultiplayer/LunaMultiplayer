@@ -7,8 +7,8 @@ namespace LunaClient.Utilities
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     internal class InstallChecker : MonoBehaviour
     {
-        private static string currentPath = "";
-        private static string correctPath = "";
+        private static string _currentPath = "";
+        private static string _correctPath = "";
 
         public static bool IsCorrectlyInstalled()
         {
@@ -16,8 +16,8 @@ namespace LunaClient.Utilities
             var kspPath = new DirectoryInfo(Client.KspPath).FullName;
             var shouldBeInstalledAt = CommonUtil.CombinePaths(kspPath, "GameData", "LunaMultiPlayer", "Plugins", "LunaClient.dll");
 
-            currentPath = assemblyInstalledAt;
-            correctPath = shouldBeInstalledAt;
+            _currentPath = assemblyInstalledAt;
+            _correctPath = shouldBeInstalledAt;
 
             if (File.Exists(shouldBeInstalledAt))
                 return true;
@@ -31,10 +31,10 @@ namespace LunaClient.Utilities
             if (!IsCorrectlyInstalled())
             {
                 Debug.Log($"[InstallChecker] Mod '{Assembly.GetExecutingAssembly().GetName().Name}' is not correctly installed.");
-                Debug.Log($"[InstallChecker] LMP is Currently installed on '{currentPath}', should be installed at '{correctPath}'");
+                Debug.Log($"[InstallChecker] LMP is Currently installed on '{_currentPath}', should be installed at '{_correctPath}'");
                 PopupDialog.SpawnPopupDialog(new Vector2(0, 0),
                     new Vector2(float.PositiveInfinity, float.PositiveInfinity), "Incorrect Install Detected",
-                    $"LunaMultiPlayer is not correctly installed.\n\nCurrent location: {currentPath}\n\nCorrect location: {correctPath}\n", "OK", false, HighLogic.UISkin);
+                    $"LunaMultiPlayer is not correctly installed.\n\nCurrent location: {_currentPath}\n\nCorrect location: {_correctPath}\n", "OK", false, HighLogic.UISkin);
             }
         }
     }

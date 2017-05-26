@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using LunaCommon.Enums;
-using LunaCommon.Message.Data;
 using LunaCommon.Message.Data.PlayerStatus;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
@@ -18,10 +16,10 @@ namespace LunaServer.Message.Reader
             var message = messageData as PlayerStatusBaseMsgData;
             switch (message?.PlayerStatusMessageType)
             {
-                case PlayerStatusMessageType.REQUEST:
+                case PlayerStatusMessageType.Request:
                     SendOtherPlayerStatusToNewPlayer(client);
                     break;
-                case PlayerStatusMessageType.SET:
+                case PlayerStatusMessageType.Set:
                     var data = (PlayerStatusSetMsgData)message;
                     if (data.PlayerName == client.PlayerName)
                     {

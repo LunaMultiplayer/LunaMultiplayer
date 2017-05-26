@@ -5,7 +5,7 @@ namespace LunaCommon.Message.Data.Settings
 {
     public class SettingsReplyMsgData : SettingsBaseMsgData
     {
-        public override SettingsMessageType SettingsMessageType => SettingsMessageType.REPLY;
+        public override SettingsMessageType SettingsMessageType => SettingsMessageType.Reply;
 
         public WarpMode WarpMode { get; set; }
         public GameMode GameMode { get; set; }

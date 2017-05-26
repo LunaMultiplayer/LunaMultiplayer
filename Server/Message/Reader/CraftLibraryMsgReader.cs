@@ -1,5 +1,4 @@
 ﻿using System;
-using LunaCommon.Enums;
 using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
@@ -20,25 +19,25 @@ namespace LunaServer.Message.Reader
 
             switch (data.CraftMessageType)
             {
-                case CraftMessageType.UPLOAD_FILE:
+                case CraftMessageType.UploadFile:
                     CraftLibraryHandler.HandleUploadFileMessage(client, (CraftLibraryUploadMsgData)message);
                     break;
-                case CraftMessageType.REQUEST_FILE:
+                case CraftMessageType.RequestFile:
                     CraftLibraryHandler.HandleRequestFileMessage(client, (CraftLibraryRequestMsgData)message);
                     break;
-                case CraftMessageType.DELETE_FILE:
+                case CraftMessageType.DeleteFile:
                     CraftLibraryHandler.HandleDeleteFileMessage(client, (CraftLibraryDeleteMsgData)message);
                     break;
-                case CraftMessageType.LIST_REQUEST:
+                case CraftMessageType.ListRequest:
                     CraftLibraryHandler.SendCraftList(client);
                     break;
-                case CraftMessageType.LIST_REPLY:
+                case CraftMessageType.ListReply:
                     //Do not handle this
                     break;
-                case CraftMessageType.RESPOND_FILE:
+                case CraftMessageType.RespondFile:
                     //Do not handle this
                     break;
-                case CraftMessageType.ADD_FILE:
+                case CraftMessageType.AddFile:
                     //Do not handle this
                     break;
                 default:

@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
-using LunaCommon.Message.Types;
 using LunaServer.Client;
 using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Message.Reader;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Plugin;
-using LunaServer.System;
-using Lidgren.Network;
 
 namespace LunaServer.Server
 {
@@ -24,22 +20,22 @@ namespace LunaServer.Server
         private static readonly Dictionary<ClientMessageType, ReaderBase> HandlerDictionary = new Dictionary
             <ClientMessageType, ReaderBase>
         {
-            [ClientMessageType.ADMIN] = new AdminMsgReader(),
-            [ClientMessageType.HANDSHAKE] = new HandshakeMsgReader(),
-            [ClientMessageType.CHAT] = new ChatMsgReader(),
-            [ClientMessageType.PLAYER_STATUS] = new PlayerStatusMsgReader(),
-            [ClientMessageType.PLAYER_COLOR] = new PlayerColorMsgReader(),
-            [ClientMessageType.SCENARIO] = new ScenarioDataMsgReader(),
-            [ClientMessageType.SYNC_TIME] = new SyncTimeRequestMsgReader(),
-            [ClientMessageType.KERBAL] = new KerbalMsgReader(),
-            [ClientMessageType.SETTINGS] = new SettingsMsgReader(),
-            [ClientMessageType.VESSEL] = new VesselMsgReader(),
-            [ClientMessageType.CRAFT_LIBRARY] = new CraftLibraryMsgReader(),
-            [ClientMessageType.FLAG] = new FlagSyncMsgReader(),
-            [ClientMessageType.MOTD] = new MotdMsgReader(),
-            [ClientMessageType.WARP] = new WarpControlMsgReader(),
-            [ClientMessageType.LOCK] = new LockSystemMsgReader(),
-            [ClientMessageType.MOD] = new ModDataMsgReader()
+            [ClientMessageType.Admin] = new AdminMsgReader(),
+            [ClientMessageType.Handshake] = new HandshakeMsgReader(),
+            [ClientMessageType.Chat] = new ChatMsgReader(),
+            [ClientMessageType.PlayerStatus] = new PlayerStatusMsgReader(),
+            [ClientMessageType.PlayerColor] = new PlayerColorMsgReader(),
+            [ClientMessageType.Scenario] = new ScenarioDataMsgReader(),
+            [ClientMessageType.SyncTime] = new SyncTimeRequestMsgReader(),
+            [ClientMessageType.Kerbal] = new KerbalMsgReader(),
+            [ClientMessageType.Settings] = new SettingsMsgReader(),
+            [ClientMessageType.Vessel] = new VesselMsgReader(),
+            [ClientMessageType.CraftLibrary] = new CraftLibraryMsgReader(),
+            [ClientMessageType.Flag] = new FlagSyncMsgReader(),
+            [ClientMessageType.Motd] = new MotdMsgReader(),
+            [ClientMessageType.Warp] = new WarpControlMsgReader(),
+            [ClientMessageType.Lock] = new LockSystemMsgReader(),
+            [ClientMessageType.Mod] = new ModDataMsgReader()
         };
 
         #endregion
@@ -48,7 +44,7 @@ namespace LunaServer.Server
         {
             if (client == null || msg.LengthBytes <= 1) return;
 
-            if (client.ConnectionStatus == ConnectionStatus.CONNECTED)
+            if (client.ConnectionStatus == ConnectionStatus.Connected)
                 client.LastReceiveTime = ServerContext.ServerClock.ElapsedMilliseconds;
 
             var messageBytes = msg.ReadBytes(msg.LengthBytes);
@@ -71,7 +67,7 @@ namespace LunaServer.Server
             }
 
             //Clients can only send HANDSHAKE until they are Authenticated.
-            if (!client.Authenticated && message.MessageType != ClientMessageType.HANDSHAKE)
+            if (!client.Authenticated && message.MessageType != ClientMessageType.Handshake)
             {
                 MessageQueuer.SendConnectionEnd(client, $"You must authenticate before sending a {message.MessageType} message");
                 return;

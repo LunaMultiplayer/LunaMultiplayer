@@ -1,8 +1,7 @@
-﻿using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaClient.Windows.Chat;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Chat
 {

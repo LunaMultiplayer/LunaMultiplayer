@@ -1,6 +1,6 @@
-﻿using System;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Handshake
 {
@@ -8,9 +8,6 @@ namespace LunaCommon.Message.Data.Handshake
     {
         public override ushort SubType => (ushort)(int)HandshakeMessageType;
 
-        public virtual HandshakeMessageType HandshakeMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual HandshakeMessageType HandshakeMessageType => throw new NotImplementedException();
     }
 }

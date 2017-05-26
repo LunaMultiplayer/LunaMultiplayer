@@ -2,12 +2,12 @@
 {
     public enum ChatMessageType
     {
-        LIST_REQUEST = 0,
-        LIST_REPLY = 1,
-        JOIN = 2,
-        LEAVE = 3,
-        CHANNEL_MESSAGE = 4,
-        PRIVATE_MESSAGE = 5,
-        CONSOLE_MESSAGE = 6
+        ListRequest = 0,
+        ListReply = 1,
+        Join = 2,
+        Leave = 3,
+        ChannelMessage = 4,
+        PrivateMessage = 5,
+        ConsoleMessage = 6
     }
 }

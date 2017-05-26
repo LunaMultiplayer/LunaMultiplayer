@@ -73,8 +73,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     var update = new VesselPositionUpdate(msgData);
                     var vesselId = update.VesselId;
 
-                    VesselPositionUpdate existingPositionUpdate;
-                    if (!CurrentVesselUpdate.TryGetValue(update.VesselId, out existingPositionUpdate))
+                    if (!CurrentVesselUpdate.TryGetValue(update.VesselId, out var existingPositionUpdate))
                     {
                         CurrentVesselUpdate[vesselId] = update;
                         //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
@@ -111,8 +110,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     //NOTE: ApplyVesselUpdate must run in FixedUpdate as it's updating the physics of the vessels
                     CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
-                    byte ignored;
-                    UpdatedVesselIds.TryRemove(vesselId, out ignored);
+                    UpdatedVesselIds.TryRemove(vesselId, out var ignored);
                 }
             }
         }

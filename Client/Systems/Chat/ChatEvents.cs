@@ -46,8 +46,7 @@ namespace LunaClient.Systems.Chat
 
         private void HandlePlayerDisconnectEvent()
         {
-            string disconnectingPlayer;
-            if (System.Queuer.DisconnectingPlayers.TryDequeue(out disconnectingPlayer))
+            if (System.Queuer.DisconnectingPlayers.TryDequeue(out var disconnectingPlayer))
             {
                 if (System.PlayerChannels.ContainsKey(disconnectingPlayer))
                     System.PlayerChannels.Remove(disconnectingPlayer);
@@ -62,8 +61,7 @@ namespace LunaClient.Systems.Chat
 
         private void HandleConsoleMessageEvent()
         {
-            ConsoleEntry ce;
-            if (System.Queuer.NewConsoleMessages.TryDequeue(out ce))
+            if (System.Queuer.NewConsoleMessages.TryDequeue(out var ce))
             {
                 //Highlight if the Channel isn't Selected.
                 if (System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier)
@@ -83,8 +81,7 @@ namespace LunaClient.Systems.Chat
 
         private void HandlePrivateMessageEvent()
         {
-            PrivateEntry pe;
-            if (System.Queuer.NewPrivateMessages.TryDequeue(out pe))
+            if (System.Queuer.NewPrivateMessages.TryDequeue(out var pe))
             {
                 if (pe.FromPlayer != SettingsSystem.CurrentSettings.PlayerName)
                 {
@@ -117,8 +114,7 @@ namespace LunaClient.Systems.Chat
 
         private void HandleChannelMessageEvent()
         {
-            ChannelEntry ce;
-            if (System.Queuer.NewChannelMessages.TryDequeue(out ce))
+            if (System.Queuer.NewChannelMessages.TryDequeue(out var ce))
             {
                 if (!System.ChannelMessages.ContainsKey(ce.Channel))
                     System.ChannelMessages.Add(ce.Channel, new List<string>());
@@ -150,9 +146,8 @@ namespace LunaClient.Systems.Chat
 
         private void HandlePlayerLeaveEvent()
         {
-            JoinLeaveMessage jlm;
-            if (System.Queuer.NewLeaveMessages.TryDequeue(out jlm) &&
-                System.PlayerChannels.ContainsKey(jlm.FromPlayer))
+            if (System.Queuer.NewLeaveMessages.TryDequeue(out var jlm) &&
+    System.PlayerChannels.ContainsKey(jlm.FromPlayer))
             {
                 if (System.PlayerChannels[jlm.FromPlayer].Contains(jlm.Channel))
                     System.PlayerChannels[jlm.FromPlayer].Remove(jlm.Channel);
@@ -163,8 +158,7 @@ namespace LunaClient.Systems.Chat
 
         private void HandlePlayerJoinEvent()
         {
-            JoinLeaveMessage jlm;
-            if (System.Queuer.NewJoinMessages.TryDequeue(out jlm))
+            if (System.Queuer.NewJoinMessages.TryDequeue(out var jlm))
             {
                 if (!System.PlayerChannels.ContainsKey(jlm.FromPlayer))
                     System.PlayerChannels.Add(jlm.FromPlayer, new List<string>());

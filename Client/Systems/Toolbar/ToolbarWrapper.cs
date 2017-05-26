@@ -29,20 +29,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+// ReSharper disable All
 
 namespace LunaClient.Systems.Toolbar
 {
-/**********************************************************\
-            *          --- DO NOT EDIT BELOW THIS COMMENT ---          *
-            *                                                          *
-            * This file contains classes and interfaces to use the     *
-            * Toolbar Plugin without creating a hard dependency on it. *
-            *                                                          *
-            * There is nothing in this file that needs to be edited    *
-            * by hand.                                                 *
-            *                                                          *
-            *          --- DO NOT EDIT BELOW THIS COMMENT ---          *
-            \**********************************************************/
+    /**********************************************************\
+                *          --- DO NOT EDIT BELOW THIS COMMENT ---          *
+                *                                                          *
+                * This file contains classes and interfaces to use the     *
+                * Toolbar Plugin without creating a hard dependency on it. *
+                *                                                          *
+                * There is nothing in this file that needs to be edited    *
+                * by hand.                                                 *
+                *                                                          *
+                *          --- DO NOT EDIT BELOW THIS COMMENT ---          *
+                \**********************************************************/
 
 
     /// <summary>
@@ -58,7 +59,7 @@ namespace LunaClient.Systems.Toolbar
             get
             {
                 if (toolbarAvailable == null) toolbarAvailable = Instance != null;
-                return (bool) toolbarAvailable;
+                return (bool)toolbarAvailable;
             }
         }
 
@@ -405,7 +406,7 @@ namespace LunaClient.Systems.Toolbar
 
         public bool Visible
         {
-            get { return (bool) visibleProperty.GetValue(realGameScenesVisibility, null); }
+            get { return (bool)visibleProperty.GetValue(realGameScenesVisibility, null); }
         }
     }
 
@@ -446,7 +447,7 @@ namespace LunaClient.Systems.Toolbar
 
         public Vector2 Draw(Vector2 position)
         {
-            return (Vector2) drawMethod.Invoke(realPopupMenuDrawable, new object[] {position});
+            return (Vector2)drawMethod.Invoke(realPopupMenuDrawable, new object[] { position });
         }
 
         /// <summary>
@@ -465,7 +466,7 @@ namespace LunaClient.Systems.Toolbar
         /// <returns>A button that can be used to register clicks on the menu option.</returns>
         public IButton AddOption(string text)
         {
-            var realButton = addOptionMethod.Invoke(realPopupMenuDrawable, new object[] {text});
+            var realButton = addOptionMethod.Invoke(realPopupMenuDrawable, new object[] { text });
             return new Button(realButton, new ToolbarTypes());
         }
 
@@ -509,7 +510,7 @@ namespace LunaClient.Systems.Toolbar
 
         public IButton add(string ns, string id)
         {
-            var realButton = addMethod.Invoke(realToolbarManager, new object[] {ns, id});
+            var realButton = addMethod.Invoke(realToolbarManager, new object[] { ns, id });
             IButton button = new Button(realButton, types);
             buttons.Add(realButton, button);
             return button;
@@ -539,31 +540,31 @@ namespace LunaClient.Systems.Toolbar
         public string Text
         {
             set { types.button.textProperty.SetValue(realButton, value, null); }
-            get { return (string) types.button.textProperty.GetValue(realButton, null); }
+            get { return (string)types.button.textProperty.GetValue(realButton, null); }
         }
 
         public Color TextColor
         {
             set { types.button.textColorProperty.SetValue(realButton, value, null); }
-            get { return (Color) types.button.textColorProperty.GetValue(realButton, null); }
+            get { return (Color)types.button.textColorProperty.GetValue(realButton, null); }
         }
 
         public string TexturePath
         {
             set { types.button.texturePathProperty.SetValue(realButton, value, null); }
-            get { return (string) types.button.texturePathProperty.GetValue(realButton, null); }
+            get { return (string)types.button.texturePathProperty.GetValue(realButton, null); }
         }
 
         public string ToolTip
         {
             set { types.button.toolTipProperty.SetValue(realButton, value, null); }
-            get { return (string) types.button.toolTipProperty.GetValue(realButton, null); }
+            get { return (string)types.button.toolTipProperty.GetValue(realButton, null); }
         }
 
         public bool Visible
         {
             set { types.button.visibleProperty.SetValue(realButton, value, null); }
-            get { return (bool) types.button.visibleProperty.GetValue(realButton, null); }
+            get { return (bool)types.button.visibleProperty.GetValue(realButton, null); }
         }
 
         public IVisibility Visibility
@@ -582,19 +583,19 @@ namespace LunaClient.Systems.Toolbar
 
         public bool EffectivelyVisible
         {
-            get { return (bool) types.button.effectivelyVisibleProperty.GetValue(realButton, null); }
+            get { return (bool)types.button.effectivelyVisibleProperty.GetValue(realButton, null); }
         }
 
         public bool Enabled
         {
             set { types.button.enabledProperty.SetValue(realButton, value, null); }
-            get { return (bool) types.button.enabledProperty.GetValue(realButton, null); }
+            get { return (bool)types.button.enabledProperty.GetValue(realButton, null); }
         }
 
         public bool Important
         {
             set { types.button.importantProperty.SetValue(realButton, value, null); }
-            get { return (bool) types.button.importantProperty.GetValue(realButton, null); }
+            get { return (bool)types.button.importantProperty.GetValue(realButton, null); }
         }
 
         public IDrawable Drawable
@@ -662,7 +663,7 @@ namespace LunaClient.Systems.Toolbar
             var type = realEvent.GetType();
             Button = button;
             MouseButton =
-                (int) type.GetField("MouseButton", BindingFlags.Public | BindingFlags.Instance).GetValue(realEvent);
+                (int)type.GetField("MouseButton", BindingFlags.Public | BindingFlags.Instance).GetValue(realEvent);
         }
     }
 

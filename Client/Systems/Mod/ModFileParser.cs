@@ -15,7 +15,7 @@ namespace LunaClient.Systems.Mod
     {
         public static bool ParseModFile(string modFileData)
         {
-            if (ModSystem.Singleton.ModControl == ModControlMode.DISABLED) return true;
+            if (ModSystem.Singleton.ModControl == ModControlMode.Disabled) return true;
 
             ModSystem.Singleton.LastModFileData = modFileData; //Save mod file so we can recheck it.
 

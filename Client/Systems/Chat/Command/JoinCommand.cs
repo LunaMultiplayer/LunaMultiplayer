@@ -1,5 +1,4 @@
 ﻿using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaCommon.Message.Data.Chat;
 using UnityEngine;
 

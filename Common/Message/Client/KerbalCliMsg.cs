@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
-using Lidgren.Network;
 
 namespace LunaCommon.Message.Client
 {
@@ -12,11 +12,11 @@ namespace LunaCommon.Message.Client
     {
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [(ushort)KerbalMessageType.REQUEST] = new KerbalsRequestMsgData(),
-            [(ushort)KerbalMessageType.PROTO] = new KerbalProtoMsgData()
+            [(ushort)KerbalMessageType.Request] = new KerbalsRequestMsgData(),
+            [(ushort)KerbalMessageType.Proto] = new KerbalProtoMsgData()
         };
 
-        public override ClientMessageType MessageType => ClientMessageType.KERBAL;
+        public override ClientMessageType MessageType => ClientMessageType.Kerbal;
         protected override int DefaultChannel => 7;
         public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }

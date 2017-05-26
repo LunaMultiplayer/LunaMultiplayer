@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Admin;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
-using Lidgren.Network;
 
 namespace LunaCommon.Message.Client
 {
@@ -12,10 +12,10 @@ namespace LunaCommon.Message.Client
     {
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {        
-            [(ushort)AdminMessageType.LIST_REQUEST] = new AdminListRequestMsgData()
+            [(ushort)AdminMessageType.ListRequest] = new AdminListRequestMsgData()
         };
 
-        public override ClientMessageType MessageType => ClientMessageType.ADMIN;
+        public override ClientMessageType MessageType => ClientMessageType.Admin;
 
         protected override int DefaultChannel => 16;
 

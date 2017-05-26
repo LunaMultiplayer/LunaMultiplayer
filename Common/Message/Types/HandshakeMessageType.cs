@@ -3,9 +3,9 @@ namespace LunaCommon.Message.Types
 {
     public enum HandshakeMessageType
     {
-        REQUEST = 0,
-        CHALLENGE = 1,
-        RESPONSE = 2,
-        REPLY = 3
+        Request = 0,
+        Challenge = 1,
+        Response = 2,
+        Reply = 3
     }
 }

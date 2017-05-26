@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
-using Lidgren.Network;
 
 namespace LunaCommon.Message.Server
 {
@@ -13,15 +12,15 @@ namespace LunaCommon.Message.Server
     {
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [(ushort)CraftMessageType.LIST_REPLY] = new CraftLibraryListReplyMsgData(),
-            [(ushort)CraftMessageType.REQUEST_FILE] = new CraftLibraryRequestMsgData(),
-            [(ushort)CraftMessageType.RESPOND_FILE] = new CraftLibraryRespondMsgData(),
-            [(ushort)CraftMessageType.UPLOAD_FILE] = new CraftLibraryUploadMsgData(),
-            [(ushort)CraftMessageType.ADD_FILE] = new CraftLibraryAddMsgData(),
-            [(ushort)CraftMessageType.DELETE_FILE] = new CraftLibraryDeleteMsgData(),
+            [(ushort)CraftMessageType.ListReply] = new CraftLibraryListReplyMsgData(),
+            [(ushort)CraftMessageType.RequestFile] = new CraftLibraryRequestMsgData(),
+            [(ushort)CraftMessageType.RespondFile] = new CraftLibraryRespondMsgData(),
+            [(ushort)CraftMessageType.UploadFile] = new CraftLibraryUploadMsgData(),
+            [(ushort)CraftMessageType.AddFile] = new CraftLibraryAddMsgData(),
+            [(ushort)CraftMessageType.DeleteFile] = new CraftLibraryDeleteMsgData()
         };
 
-        public override ServerMessageType MessageType => ServerMessageType.CRAFT_LIBRARY;
+        public override ServerMessageType MessageType => ServerMessageType.CraftLibrary;
         protected override int DefaultChannel => 9;
         public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LunaClient.DebugTools
+namespace LunaClient.Utilities.DebugTools
 {
     public class LineRendererDebug
     {
@@ -20,7 +20,7 @@ namespace LunaClient.DebugTools
             _lineRenderer.SetWidth(0.1f, 0.1f);
             _lineRenderer.SetVertexCount(2);
             _lineRenderer.SetColors(Color.red, Color.red);
-            _lineRenderer.material = new Material(Shader.Find("Unlit/Texture")) {mainTexture = newTex};
+            _lineRenderer.material = new Material(Shader.Find("Unlit/Texture")) { mainTexture = newTex };
         }
 
         public void UpdatePosition(Vector3 startPos, Vector3 endPos)

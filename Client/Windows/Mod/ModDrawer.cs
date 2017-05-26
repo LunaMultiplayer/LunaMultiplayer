@@ -1,5 +1,4 @@
-﻿using LunaClient.Base.Interface;
-using LunaClient.Systems.Mod;
+﻿using LunaClient.Systems.Mod;
 using UnityEngine;
 
 namespace LunaClient.Windows.Mod

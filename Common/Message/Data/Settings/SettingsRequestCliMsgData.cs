@@ -4,7 +4,7 @@ namespace LunaCommon.Message.Data.Settings
 {
     public class SettingsRequestMsgData : SettingsBaseMsgData
     {
-        public override SettingsMessageType SettingsMessageType => SettingsMessageType.REQUEST;
+        public override SettingsMessageType SettingsMessageType => SettingsMessageType.Request;
         //Empty message
     }
 }

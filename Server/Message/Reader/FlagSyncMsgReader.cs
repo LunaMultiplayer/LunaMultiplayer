@@ -1,5 +1,4 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Message.Data.Flag;
+﻿using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using LunaServer.Client;
@@ -17,13 +16,13 @@ namespace LunaServer.Message.Reader
 
             switch (data.FlagMessageType)
             {
-                case FlagMessageType.LIST:
+                case FlagMessageType.List:
                     FlagSyncMsgSender.HandleListFlagMessage(client, (FlagListMsgData) message);
                     break;
-                case FlagMessageType.DELETE_FILE:
+                case FlagMessageType.DeleteFile:
                     FlagSyncMsgSender.HandleDeleteFlagMessage(client, (FlagDeleteMsgData) message);
                     break;
-                case FlagMessageType.UPLOAD_FILE:
+                case FlagMessageType.UploadFile:
                     FlagSyncMsgSender.HandleUploadFlagMessage(client, (FlagUploadMsgData) message);
                     break;
             }

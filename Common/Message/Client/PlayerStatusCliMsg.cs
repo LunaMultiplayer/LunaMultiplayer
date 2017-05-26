@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.PlayerStatus;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
-using Lidgren.Network;
 
 namespace LunaCommon.Message.Client
 {
@@ -12,11 +12,11 @@ namespace LunaCommon.Message.Client
     {
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [(ushort)PlayerStatusMessageType.REQUEST] = new PlayerStatusRequestMsgData(),
-            [(ushort)PlayerStatusMessageType.SET] = new PlayerStatusSetMsgData()
+            [(ushort)PlayerStatusMessageType.Request] = new PlayerStatusRequestMsgData(),
+            [(ushort)PlayerStatusMessageType.Set] = new PlayerStatusSetMsgData()
         };
 
-        public override ClientMessageType MessageType => ClientMessageType.PLAYER_STATUS;
+        public override ClientMessageType MessageType => ClientMessageType.PlayerStatus;
         protected override int DefaultChannel => 4;
         public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }

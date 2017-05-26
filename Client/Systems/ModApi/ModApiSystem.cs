@@ -57,8 +57,7 @@ namespace LunaClient.Systems.ModApi
             {
                 foreach (var currentModQueue in UpdateQueue)
                 {
-                    byte[] value;
-                    while (currentModQueue.Value.TryDequeue(out value))
+                    while (currentModQueue.Value.TryDequeue(out var value))
                         RegisteredUpdateMods[currentModQueue.Key](value);
                 }
             }
@@ -74,8 +73,7 @@ namespace LunaClient.Systems.ModApi
             {
                 foreach (var currentModQueue in FixedUpdateQueue)
                 {
-                    byte[] value;
-                    while (currentModQueue.Value.TryDequeue(out value))
+                    while (currentModQueue.Value.TryDequeue(out var value))
                         RegisteredFixedUpdateMods[currentModQueue.Key](value);
                 }
             }

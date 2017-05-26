@@ -14,10 +14,9 @@ namespace LunaServer.Server
     {
         public static void StartSendingOutgoingMessages(ClientStructure client)
         {
-            while (client.ConnectionStatus == ConnectionStatus.CONNECTED)
+            while (client.ConnectionStatus == ConnectionStatus.Connected)
             {
-                IServerMessageBase message;
-                if (client.SendMessageQueue.TryDequeue(out message) && message != null)
+                if (client.SendMessageQueue.TryDequeue(out var message) && message != null)
                 {
                     SendNetworkMessage(client, message);
                 }
@@ -30,7 +29,7 @@ namespace LunaServer.Server
 
         private static void SendNetworkMessage(ClientStructure client, IServerMessageBase message)
         {
-            if (client.ConnectionStatus == ConnectionStatus.CONNECTED)
+            if (client.ConnectionStatus == ConnectionStatus.Connected)
             {
                 try
                 {

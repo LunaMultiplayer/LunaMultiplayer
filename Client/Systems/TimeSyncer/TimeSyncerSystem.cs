@@ -35,9 +35,9 @@ namespace LunaClient.Systems.TimeSyncer
 
         private const int MaxClockMsError = 100;
         private const int SyncTimeMax = 100;
-        private const float MIN_CLOCK_RATE = 0.3f;
-        private const float MAX_CLOCK_RATE = 1.5f;
-        private const int MAX_CLOCK_SKEW = 5000;
+        private const float MinClockRate = 0.3f;
+        private const float MaxClockRate = 1.5f;
+        private const int MaxClockSkew = 5000;
 
         #endregion
 
@@ -92,7 +92,7 @@ namespace LunaClient.Systems.TimeSyncer
                 var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;
                 if (targetTime != 0 && Math.Abs(currentError) > MaxClockMsError)
                 {
-                    if (Math.Abs(currentError) > MAX_CLOCK_SKEW)
+                    if (Math.Abs(currentError) > MaxClockSkew)
                     {
                         Debug.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
                         //TODO: This causes the throttle to reset when called.  This happens due to vessel unpacking resetting the throttle controls.
@@ -124,7 +124,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// </summary>
         private void SyncTimeWithServer()
         {
-            while (!MainSystem.Singleton.Quit && MainSystem.Singleton.NetworkState >= ClientState.AUTHENTICATED)
+            while (!MainSystem.Singleton.Quit && MainSystem.Singleton.NetworkState >= ClientState.Authenticated)
             {
                 MessageSender.SendTimeSyncRequest();
                 Thread.Sleep(SettingsSystem.CurrentSettings.SyncTimeRequestMsInterval);
@@ -191,13 +191,13 @@ namespace LunaClient.Systems.TimeSyncer
         {
             var timeWarpRate = (float)Math.Pow(2, -(currentError / 1000f));
 
-            if (timeWarpRate > MAX_CLOCK_RATE)
+            if (timeWarpRate > MaxClockRate)
             {
-                timeWarpRate = MAX_CLOCK_RATE;
+                timeWarpRate = MaxClockRate;
             }
-            else if (timeWarpRate < MIN_CLOCK_RATE)
+            else if (timeWarpRate < MinClockRate)
             {
-                timeWarpRate = MIN_CLOCK_RATE;
+                timeWarpRate = MinClockRate;
             }
 
             //Set the physwarp rate

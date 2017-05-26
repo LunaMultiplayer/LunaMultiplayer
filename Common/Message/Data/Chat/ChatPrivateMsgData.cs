@@ -1,11 +1,10 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Chat
 {
     public class ChatPrivateMsgData : ChatBaseMsgData
     {
-        public override ChatMessageType ChatMessageType => ChatMessageType.PRIVATE_MESSAGE;
+        public override ChatMessageType ChatMessageType => ChatMessageType.PrivateMessage;
         public string To { get; set; }
         public string Text { get; set; }
     }

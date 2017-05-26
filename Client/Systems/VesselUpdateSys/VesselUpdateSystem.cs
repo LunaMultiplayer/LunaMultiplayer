@@ -17,10 +17,8 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public FlightCtrlState FlightState { get; set; }
 
-        private static int _updateNearbySendMSInterval = 500;
-        private static int _updateSendMSInterval = 3000;
-        private static string SEND_TIMER_NAME = "SEND";
-
+        private const int UpdateNearbySendMsInterval = 500;
+        private const int UpdateSendMsInterval = 3000;
 
         #endregion
 
@@ -46,8 +44,8 @@ namespace LunaClient.Systems.VesselUpdateSys
                 MessageSender.SendVesselUpdate();
                 ChangeRoutineExecutionInterval("SendVesselUpdates",
                      VesselCommon.PlayerVesselsNearby()
-                         ? _updateNearbySendMSInterval
-                         : _updateSendMSInterval);
+                         ? UpdateNearbySendMsInterval
+                         : UpdateSendMsInterval);
             }
         }
 

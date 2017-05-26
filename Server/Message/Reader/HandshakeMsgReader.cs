@@ -22,10 +22,10 @@ namespace LunaServer.Message.Reader
             var message = messageData as HandshakeBaseMsgData;
             switch (message?.HandshakeMessageType)
             {
-                case HandshakeMessageType.REQUEST:
+                case HandshakeMessageType.Request:
                     SetAndSendHandshakeChallangeMessage(client);
                     break;
-                case HandshakeMessageType.RESPONSE:
+                case HandshakeMessageType.Response:
                     var data = (HandshakeResponseMsgData)message;
                     try
                     {
@@ -34,7 +34,7 @@ namespace LunaServer.Message.Reader
                     catch (Exception e)
                     {
                         LunaLog.Debug($"Error in HANDSHAKE_REQUEST from {data.PlayerName}: {e}");
-                        HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.MALFORMED_HANDSHAKE, "Malformed handshake");
+                        HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.MalformedHandshake, "Malformed handshake");
                     }
                     break;
                 default:

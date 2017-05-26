@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Message;
 using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.MasterServer;
 using LunaCommon.Message.Types;
+using System;
+using System.Collections.Concurrent;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace MasterServer
 {
@@ -55,13 +54,13 @@ namespace MasterServer
                         case NetIncomingMessageType.VerboseDebugMessage:
                         case NetIncomingMessageType.WarningMessage:
                         case NetIncomingMessageType.ErrorMessage:
-                            Form.WriteLine("ERROR! :" + msg.ReadString());
-                            break;
+                        Form.WriteLine("ERROR! :" + msg.ReadString());
+                        break;
                         case NetIncomingMessageType.UnconnectedData:
-                            var messageBytes = msg.ReadBytes(msg.LengthBytes);
-                            var message = MasterServerMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IMasterServerMessageBase;
-                            HandleMessage(message, msg, peer);
-                            break;
+                        var messageBytes = msg.ReadBytes(msg.LengthBytes);
+                        var message = MasterServerMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IMasterServerMessageBase;
+                        HandleMessage(message, msg, peer);
+                        break;
                     }
                 }
             }
@@ -106,8 +105,7 @@ namespace MasterServer
                     var ipRegEx = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
                     var result = ipRegEx.Matches(reader.ReadToEnd());
 
-                    IPAddress ip;
-                    if (IPAddress.TryParse(result[0].Value, out ip))
+                    if (IPAddress.TryParse(result[0].Value, out var ip))
                         return ip.ToString();
                 }
             }
@@ -118,32 +116,32 @@ namespace MasterServer
         {
             switch ((message?.Data as MsBaseMsgData)?.MasterServerMessageSubType)
             {
-                case MasterServerMessageSubType.REGISTER_SERVER:
-                    RegisterServer(message, netMsg);
-                    break;
-                case MasterServerMessageSubType.REQUEST_SERVERS:
-                    var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
-                    Form.WriteLine($"Received LIST REQUEST from: {netMsg.SenderEndPoint} version: {version}");
-                    SendServerLists(netMsg, peer, version);
-                    break;
-                case MasterServerMessageSubType.INTRODUCTION:
-                    Form.WriteLine("Received INTRODUCTION request from:" + netMsg.SenderEndPoint);
-                    var msgData = (MsIntroductionMsgData)message.Data;
-                    Server server;
-                    if (ServerDictionary.TryGetValue(msgData.Id, out server))
-                    {
-                        peer.Introduce(
-                            server.InternalEndpoint,
-                            server.ExternalEndpoint,
-                            Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
-                            netMsg.SenderEndPoint,// client external
-                            msgData.Token); // request token
-                    }
-                    else
-                    {
-                        Form.WriteLine("Client requested introduction to nonlisted host!");
-                    }
-                    break;
+                case MasterServerMessageSubType.RegisterServer:
+                RegisterServer(message, netMsg);
+                break;
+                case MasterServerMessageSubType.RequestServers:
+                var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
+                Form.WriteLine($"Received LIST REQUEST from: {netMsg.SenderEndPoint} version: {version}");
+                SendServerLists(netMsg, peer, version);
+                break;
+                case MasterServerMessageSubType.Introduction:
+                Form.WriteLine("Received INTRODUCTION request from:" + netMsg.SenderEndPoint);
+                var msgData = (MsIntroductionMsgData)message.Data;
+                Server server;
+                if (ServerDictionary.TryGetValue(msgData.Id, out server))
+                {
+                    peer.Introduce(
+                        server.InternalEndpoint,
+                        server.ExternalEndpoint,
+                        Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
+                        netMsg.SenderEndPoint,// client external
+                        msgData.Token); // request token
+                }
+                else
+                {
+                    Form.WriteLine("Client requested introduction to nonlisted host!");
+                }
+                break;
             }
         }
 
@@ -152,7 +150,7 @@ namespace MasterServer
         /// </summary>
         private static void SendServerLists(NetIncomingMessage netMsg, NetPeer peer, string version)
         {
-            var values = ServerDictionary.Values.Where(s=> s.Info.Version == version).OrderBy(v => v.Info.Id);
+            var values = ServerDictionary.Values.Where(s => s.Info.Version == version).OrderBy(v => v.Info.Id);
             var msgData = new MsReplyServersMsgData
             {
                 Id = values.Select(s => s.Info.Id).ToArray(),
@@ -183,7 +181,7 @@ namespace MasterServer
 
         private static void RegisterServer(IMessageBase message, NetIncomingMessage netMsg)
         {
-            var msgData = (MsRegisterServerMsgData) message.Data;
+            var msgData = (MsRegisterServerMsgData)message.Data;
 
             if (!ServerDictionary.ContainsKey(msgData.Id))
             {
@@ -213,8 +211,7 @@ namespace MasterServer
 
                     foreach (var serverId in serversIdsToRemove)
                     {
-                        Server outSrv;
-                        ServerDictionary.TryRemove(serverId, out outSrv);
+                        ServerDictionary.TryRemove(serverId, out var _);
                     }
 
                     if (serversIdsToRemove.Any())

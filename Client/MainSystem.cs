@@ -1,31 +1,28 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
+﻿using CommNet;
 using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Mod;
-using LunaClient.Systems.Network;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
-using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaClient.Windows;
-using LunaClient.Windows.Chat;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.Disclaimer;
 using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace LunaClient
@@ -40,8 +37,12 @@ namespace LunaClient
         /// <summary>
         /// This property has a backing static field for faster access
         /// </summary>
-        private static ClientState _networkState = ClientState.DISCONNECTED;
-        public ClientState NetworkState { get { return _networkState; } set { _networkState = value; } }
+        private static ClientState _networkState = ClientState.Disconnected;
+        public ClientState NetworkState
+        {
+            get => _networkState;
+            set => _networkState = value;
+        }
 
         public string Status { get; set; }
         public const int WindowOffset = 1664147604;
@@ -62,7 +63,7 @@ namespace LunaClient
         private ScreenMessage DisconnectMessage { get; set; }
         public override bool Enabled { get; set; } = true;
         public bool Quit { get; set; }
-        
+
         //Hack gravity fix.
         private Dictionary<CelestialBody, double> BodiesGees { get; } = new Dictionary<CelestialBody, double>();
 
@@ -171,7 +172,7 @@ namespace LunaClient
         #endregion
 
         #region Fixed update methods
-        
+
         public void MainSystemFixedUpdate()
         {
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
@@ -186,7 +187,7 @@ namespace LunaClient
         #endregion
 
         #region Public methods
-        
+
         public void Reset()
         {
             Debug.Log($"[LMP]: KSP installed at {KspPath}");
@@ -242,7 +243,7 @@ namespace LunaClient
 
             LunaProfiler.GuiData.ReportTime(startClock);
         }
-        
+
         public void OnExit()
         {
             Quit = true;
@@ -255,12 +256,12 @@ namespace LunaClient
         {
             switch (inputMode)
             {
-                case GameMode.SANDBOX:
-                    return Game.Modes.SANDBOX;
-                case GameMode.SCIENCE:
-                    return Game.Modes.SCIENCE_SANDBOX;
-                case GameMode.CAREER:
-                    return Game.Modes.CAREER;
+                case GameMode.Sandbox:
+                return Game.Modes.SANDBOX;
+                case GameMode.Science:
+                return Game.Modes.SCIENCE_SANDBOX;
+                case GameMode.Career:
+                return Game.Modes.CAREER;
             }
             return Game.Modes.SANDBOX;
         }
@@ -362,7 +363,7 @@ namespace LunaClient
                 ConnectionWindow.DisconnectEventHandled = true;
                 GameRunning = false;
                 FireReset = true;
-                NetworkConnection.Disconnect(Singleton.NetworkState <= ClientState.STARTING
+                NetworkConnection.Disconnect(Singleton.NetworkState <= ClientState.Starting
                     ? "Cancelled connection to server"
                     : "Quit");
             }
@@ -435,17 +436,17 @@ namespace LunaClient
             }
             if (SettingsSystem.ServerSettings.ServerCommNetParameters != null)
             {
-                currentGame.Parameters.CustomParams<CommNet.CommNetParams>().enableGroundStations =
+                currentGame.Parameters.CustomParams<CommNetParams>().enableGroundStations =
                     SettingsSystem.ServerSettings.ServerCommNetParameters.enableGroundStations;
-                currentGame.Parameters.CustomParams<CommNet.CommNetParams>().requireSignalForControl =
+                currentGame.Parameters.CustomParams<CommNetParams>().requireSignalForControl =
                     SettingsSystem.ServerSettings.ServerCommNetParameters.requireSignalForControl;
-                currentGame.Parameters.CustomParams<CommNet.CommNetParams>().rangeModifier =
+                currentGame.Parameters.CustomParams<CommNetParams>().rangeModifier =
                     SettingsSystem.ServerSettings.ServerCommNetParameters.rangeModifier;
-                currentGame.Parameters.CustomParams<CommNet.CommNetParams>().DSNModifier =
+                currentGame.Parameters.CustomParams<CommNetParams>().DSNModifier =
                     SettingsSystem.ServerSettings.ServerCommNetParameters.DSNModifier;
-                currentGame.Parameters.CustomParams<CommNet.CommNetParams>().occlusionMultiplierVac =
+                currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierVac =
                     SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierVac;
-                currentGame.Parameters.CustomParams<CommNet.CommNetParams>().occlusionMultiplierAtm =
+                currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierAtm =
                     SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierAtm;
             }
         }
@@ -498,7 +499,7 @@ namespace LunaClient
             var lunaMultiPlayerCacheDirectory = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Cache");
             CreateIfNeeded(lunaMultiPlayerCacheDirectory);
             var lunaMultiPlayerIncomingCacheDirectory = CommonUtil.CombinePaths(Client.KspPath, "GameData",
-                "LunaMultiPlayer", "Cache","Incoming");
+                "LunaMultiPlayer", "Cache", "Incoming");
 
             CreateIfNeeded(lunaMultiPlayerIncomingCacheDirectory);
             var lunaMultiPlayerFlagsDirectory = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Flags");
@@ -537,7 +538,7 @@ namespace LunaClient
             returnGame.startScene = GameScenes.SPACECENTER;
             returnGame.flagURL = SettingsSystem.CurrentSettings.SelectedFlag;
             returnGame.Title = "LunaMultiPlayer";
-            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.SUBSPACE)
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.Subspace)
             {
                 returnGame.Parameters.Flight.CanQuickLoad = true;
                 returnGame.Parameters.Flight.CanRestart = true;

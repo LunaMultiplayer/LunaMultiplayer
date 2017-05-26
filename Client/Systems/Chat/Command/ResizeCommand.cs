@@ -1,5 +1,5 @@
-﻿using System;
-using LunaClient.Windows.Chat;
+﻿using LunaClient.Windows.Chat;
+using System;
 
 namespace LunaClient.Systems.Chat.Command
 {
@@ -12,7 +12,7 @@ namespace LunaClient.Systems.Chat.Command
             var func = commandArgs;
             if (commandArgs.Contains(" "))
             {
-                func = commandArgs.Substring(0, commandArgs.IndexOf(" "));
+                func = commandArgs.Substring(0, commandArgs.IndexOf(" ", StringComparison.Ordinal));
                 if (commandArgs.Substring(func.Length).Contains(" "))
                     try
                     {
@@ -28,32 +28,32 @@ namespace LunaClient.Systems.Chat.Command
             switch (func)
             {
                 default:
-                    ChatSystem.Singleton.PrintToSelectedChannel(
-                        "Undefined function. Usage: /resize [default|medium|large], /resize [x|y] size, or /resize show");
-                    ChatSystem.Singleton.PrintToSelectedChannel("Chat window size is currently: " +
-                                                                ChatWindow.Singleton.WindowWidth + "x" +
-                                                                ChatWindow.Singleton.WindowHeight);
-                    break;
+                ChatSystem.Singleton.PrintToSelectedChannel(
+                    "Undefined function. Usage: /resize [default|medium|large], /resize [x|y] size, or /resize show");
+                ChatSystem.Singleton.PrintToSelectedChannel("Chat window size is currently: " +
+                                                            ChatWindow.Singleton.WindowWidth + "x" +
+                                                            ChatWindow.Singleton.WindowHeight);
+                break;
                 case "x":
-                    SetWindowSize(size);
-                    break;
+                SetWindowSize(size);
+                break;
                 case "y":
-                    SetWindowSize(null, size);
-                    break;
+                SetWindowSize(null, size);
+                break;
                 case "default":
-                    SetWindowSize(400, 300);
-                    break;
+                SetWindowSize(400, 300);
+                break;
                 case "medium":
-                    SetWindowSize(600, 600);
-                    break;
+                SetWindowSize(600, 600);
+                break;
                 case "large":
-                    SetWindowSize(800, 800);
-                    break;
+                SetWindowSize(800, 800);
+                break;
                 case "show":
-                    ChatSystem.Singleton.PrintToSelectedChannel("Chat window size is currently: " +
-                                                                ChatWindow.Singleton.WindowWidth + "x" +
-                                                                ChatWindow.Singleton.WindowHeight);
-                    break;
+                ChatSystem.Singleton.PrintToSelectedChannel("Chat window size is currently: " +
+                                                            ChatWindow.Singleton.WindowWidth + "x" +
+                                                            ChatWindow.Singleton.WindowHeight);
+                break;
             }
         }
 

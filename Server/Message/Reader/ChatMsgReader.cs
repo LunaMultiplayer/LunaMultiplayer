@@ -1,5 +1,4 @@
 ﻿using System;
-using LunaCommon.Enums;
 using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
@@ -20,22 +19,22 @@ namespace LunaServer.Message.Reader
 
             switch (data.ChatMessageType)
             {
-                case ChatMessageType.LIST_REQUEST:
+                case ChatMessageType.ListRequest:
                     ChatSystem.SendPlayerChatChannels(client);
                     break;
-                case ChatMessageType.JOIN:
+                case ChatMessageType.Join:
                     ChatSystemReceiver.HandleJoinMessage(client, (ChatJoinMsgData) message);
                     break;
-                case ChatMessageType.LEAVE:
+                case ChatMessageType.Leave:
                     ChatSystemReceiver.HandleLeaveMessage(client, (ChatLeaveMsgData) message);
                     break;
-                case ChatMessageType.CHANNEL_MESSAGE:
+                case ChatMessageType.ChannelMessage:
                     ChatSystemReceiver.HandleChannelMessage(client, (ChatChannelMsgData) message);
                     break;
-                case ChatMessageType.PRIVATE_MESSAGE:
+                case ChatMessageType.PrivateMessage:
                     ChatSystemReceiver.HandlePrivateMessage(client, (ChatPrivateMsgData) message);
                     break;
-                case ChatMessageType.CONSOLE_MESSAGE:
+                case ChatMessageType.ConsoleMessage:
                     ChatSystemReceiver.HandleConsoleMessage(client, (ChatConsoleMsgData) message);
                     break;
                 default:

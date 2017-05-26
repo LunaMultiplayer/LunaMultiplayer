@@ -23,7 +23,7 @@ namespace LunaClient.Systems.Flag
 
             switch (msgData.FlagMessageType)
             {
-                case FlagMessageType.LIST:
+                case FlagMessageType.List:
                 {
                     var data = (FlagListMsgData) messageData;
                     var serverFlagFiles = data.FlagFileNames;
@@ -43,7 +43,7 @@ namespace LunaClient.Systems.Flag
                     System.FlagChangeEvent = true;
                 }
                     break;
-                case FlagMessageType.FLAG_DATA:
+                case FlagMessageType.FlagData:
                 {
                     var data = (FlagDataMsgData) messageData;
                     var frm = new FlagRespondMessage
@@ -56,7 +56,7 @@ namespace LunaClient.Systems.Flag
                     System.NewFlags.Enqueue(frm);
                 }
                     break;
-                case FlagMessageType.DELETE_FILE:
+                case FlagMessageType.DeleteFile:
                 {
                     var data = (FlagDeleteMsgData) messageData;
                     var flagName = data.FlagName;

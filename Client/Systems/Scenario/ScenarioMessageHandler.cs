@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 namespace LunaClient.Systems.Scenario
@@ -18,7 +17,7 @@ namespace LunaClient.Systems.Scenario
         public void HandleMessage(IMessageData messageData)
         {
             var msgData = messageData as ScenarioBaseMsgData;
-            if (msgData?.ScenarioMessageType == ScenarioMessageType.DATA)
+            if (msgData?.ScenarioMessageType == ScenarioMessageType.Data)
             {
                 var data = ((ScenarioDataMsgData)messageData).ScenarioNameData;
                 foreach (var scenario in data)
@@ -39,7 +38,7 @@ namespace LunaClient.Systems.Scenario
                         ScreenMessages.PostScreenMessage($"Scenario data has been lost for {scenario.Key}", 5f, ScreenMessageStyle.UPPER_CENTER);
                     }
                 }
-                MainSystem.Singleton.NetworkState = ClientState.SCNEARIOS_SYNCED;
+                MainSystem.Singleton.NetworkState = ClientState.ScneariosSynced;
             }
         }
     }

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using LunaCommon.Enums;
-using LunaCommon.Message.Interface;
-using LunaCommon.Message.Types;
 using Lidgren.Network;
+using LunaCommon.Enums;
 using LunaCommon.Message.Data.MasterServer;
+using LunaCommon.Message.Interface;
 using LunaCommon.Message.MasterServer.Base;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.MasterServer
 {
@@ -12,13 +12,13 @@ namespace LunaCommon.Message.MasterServer
     {
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [(ushort)MasterServerMessageSubType.REGISTER_SERVER] = new MsRegisterServerMsgData(),
-            [(ushort)MasterServerMessageSubType.REQUEST_SERVERS] = new MsRequestServersMsgData(),
-            [(ushort)MasterServerMessageSubType.REPLY_SERVERS] = new MsReplyServersMsgData(),
-            [(ushort)MasterServerMessageSubType.INTRODUCTION] = new MsIntroductionMsgData(),
+            [(ushort)MasterServerMessageSubType.RegisterServer] = new MsRegisterServerMsgData(),
+            [(ushort)MasterServerMessageSubType.RequestServers] = new MsRequestServersMsgData(),
+            [(ushort)MasterServerMessageSubType.ReplyServers] = new MsReplyServersMsgData(),
+            [(ushort)MasterServerMessageSubType.Introduction] = new MsIntroductionMsgData()
         };
 
-        public override MasterServerMessageType MessageType => MasterServerMessageType.MAIN;
+        public override MasterServerMessageType MessageType => MasterServerMessageType.Main;
         protected override int DefaultChannel => 1;
         public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }

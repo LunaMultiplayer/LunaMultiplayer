@@ -1,5 +1,4 @@
 ﻿using System;
-using LunaCommon.Enums;
 using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
@@ -16,16 +15,16 @@ namespace LunaServer.Message.Reader
             var data = (LockBaseMsgData) message;
             switch (data.LockMessageType)
             {
-                case LockMessageType.LIST_REQUEST:
+                case LockMessageType.ListRequest:
                     LockSystemSender.SendAllLocks(client);
                     break;
-                case LockMessageType.ACQUIRE:
+                case LockMessageType.Acquire:
                     var acquireData = (LockAcquireMsgData) message;
                     if (acquireData.PlayerName == client.PlayerName)
                         LockSystemSender.SendLockAquireMessage(acquireData.LockName, acquireData.PlayerName,
                             acquireData.Force);
                     break;
-                case LockMessageType.RELEASE:
+                case LockMessageType.Release:
                     var releaseData = (LockReleaseMsgData) message;
                     if (releaseData.PlayerName == client.PlayerName)
                         LockSystemSender.SendLockReleaseMessage(releaseData.LockName, releaseData.PlayerName);

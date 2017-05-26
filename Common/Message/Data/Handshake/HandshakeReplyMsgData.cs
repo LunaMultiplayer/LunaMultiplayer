@@ -5,7 +5,7 @@ namespace LunaCommon.Message.Data.Handshake
 {
     public class HandshakeReplyMsgData : HandshakeBaseMsgData
     {
-        public override HandshakeMessageType HandshakeMessageType => HandshakeMessageType.REPLY;
+        public override HandshakeMessageType HandshakeMessageType => HandshakeMessageType.Reply;
         public HandshakeReply Response { get; set; }
         public string Reason { get; set; }
         public ModControlMode ModControlMode { get; set; }

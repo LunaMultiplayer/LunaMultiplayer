@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Utilities;
@@ -12,7 +8,10 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
-using UniLinq;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -28,21 +27,21 @@ namespace LunaClient.Systems.VesselProtoSys
 
             switch (msgData.VesselMessageType)
             {
-                case VesselMessageType.LIST_REPLY:
-                    HandleVesselList((VesselListReplyMsgData)messageData);
-                    break;
-                case VesselMessageType.VESSELS_REPLY:
-                    HandleVesselResponse((VesselsReplyMsgData)messageData);
-                    break;
-                case VesselMessageType.PROTO:
-                    HandleVesselProto((VesselProtoMsgData)messageData);
-                    break;
+                case VesselMessageType.ListReply:
+                HandleVesselList((VesselListReplyMsgData)messageData);
+                break;
+                case VesselMessageType.VesselsReply:
+                HandleVesselResponse((VesselsReplyMsgData)messageData);
+                break;
+                case VesselMessageType.Proto:
+                HandleVesselProto((VesselProtoMsgData)messageData);
+                break;
                 default:
-                    Debug.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");
-                    break;
+                Debug.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");
+                break;
             }
         }
-        
+
         private static void HandleVesselProto(VesselProtoMsgData messageData)
         {
             if (!System.ProtoSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(messageData.VesselId))
@@ -60,7 +59,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 HandleVesselProtoData(vesselDataKv.Value, new Guid(vesselDataKv.Key), 0);
             }
 
-            MainSystem.Singleton.NetworkState = ClientState.VESSELS_SYNCED;
+            MainSystem.Singleton.NetworkState = ClientState.VesselsSynced;
         }
 
         /// <summary>
@@ -121,38 +120,25 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 UniverseSyncCache.QueueToCache(vesselData);
                 var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
-                if (vesselNode != null)
+                var configGuid = vesselNode?.GetValue("pid");
+                if (!string.IsNullOrEmpty(configGuid) && vesselId.ToString() == Common.ConvertConfigStringToGuidString(configGuid))
                 {
-                    var configGuid = vesselNode.GetValue("pid");
-                    if (!string.IsNullOrEmpty(configGuid) && vesselId.ToString() == Common.ConvertConfigStringToGuidString(configGuid))
+                    var vesselProtoUpdate = new VesselProtoUpdate
                     {
-                        var vesselProtoUpdate = new VesselProtoUpdate
-                        {
-                            VesselId = vesselId,
-                            VesselNode = vesselNode,
-                            Loaded = false
-                        };
+                        VesselId = vesselId,
+                        VesselNode = vesselNode,
+                        Loaded = false
+                    };
 
-                        if (System.AllPlayerVessels.ContainsKey(vesselId))
-                        {
-                            //Vessel exists so replace it
-                            System.AllPlayerVessels[vesselId] = vesselProtoUpdate;
-                        }
-                        else
-                        {
-                            System.AllPlayerVessels.TryAdd(vesselId, vesselProtoUpdate);
-                        }
+                    if (System.AllPlayerVessels.ContainsKey(vesselId))
+                    {
+                        //Vessel exists so replace it
+                        System.AllPlayerVessels[vesselId] = vesselProtoUpdate;
                     }
                     else
                     {
-                        //Cannot call debug from another thread...
-                        //Debug.LogError($"[LMP]: Failed to load vessel {vesselId}!");
+                        System.AllPlayerVessels.TryAdd(vesselId, vesselProtoUpdate);
                     }
-                }
-                else
-                {
-                    //Cannot call debug from another thread...
-                    //Debug.LogError($"[LMP]: Failed to load vessel {vesselId}!");
                 }
             }).Start();
         }

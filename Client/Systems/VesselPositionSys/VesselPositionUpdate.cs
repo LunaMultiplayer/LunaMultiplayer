@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections;
-using LunaClient.Systems.SettingsSys;
-using UnityEngine;
+﻿using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Vessel;
+using System;
+using UnityEngine;
+// ReSharper disable All
 
 namespace LunaClient.Systems.VesselPositionSys
 {
@@ -45,12 +45,12 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #endregion
-        
+
         #region Private fields
-        
+
         private double PlanetariumDifference { get; set; }
         private const float PlanetariumDifferenceLimit = 3f;
-        private int counter = 0;
+        private int _counter;
 
         #endregion
 
@@ -100,20 +100,20 @@ namespace LunaClient.Systems.VesselPositionSys
                     vessel.acceleration.y,
                     vessel.acceleration.z
                 };
-                OrbitPosition = new double[]
+                OrbitPosition = new[]
                 {
                     vessel.orbit.pos.x,
                     vessel.orbit.pos.y,
                     vessel.orbit.pos.z
                 };
-                LatLonAlt = new double[]
+                LatLonAlt = new[]
                 {
                     vessel.latitude,
                     vessel.longitude,
                     vessel.altitude
                 };
-                Vector3d worldPosition = vessel.GetWorldPos3D();
-                WorldPosition = new double[]
+                var worldPosition = vessel.GetWorldPos3D();
+                WorldPosition = new[]
                 {
                     worldPosition.x,
                     worldPosition.y,
@@ -124,12 +124,12 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     Math.Abs(Math.Round(srfVel.x, 2)) < 0.01 ? 0 : srfVel.x,
                     Math.Abs(Math.Round(srfVel.y, 2)) < 0.01 ? 0 : srfVel.y,
-                    Math.Abs(Math.Round(srfVel.z, 2)) < 0.01 ? 0 : srfVel.z,
+                    Math.Abs(Math.Round(srfVel.z, 2)) < 0.01 ? 0 : srfVel.z
                     //Math.Abs(Math.Round(vessel.velocityD.x, 2)) < 0.01 ? 0 : vessel.velocityD.x,
                     //Math.Abs(Math.Round(vessel.velocityD.y, 2)) < 0.01 ? 0 : vessel.velocityD.y,
                     //Math.Abs(Math.Round(vessel.velocityD.z, 2)) < 0.01 ? 0 : vessel.velocityD.z,
                 };
-                Vector3d orbitVel = vessel.orbit.GetVel();
+                var orbitVel = vessel.orbit.GetVel();
                 OrbitVelocity = new[]
                 {
                     orbitVel.x,
@@ -151,13 +151,13 @@ namespace LunaClient.Systems.VesselPositionSys
             catch (Exception e)
             {
                 Debug.Log($"[LMP]: Failed to get vessel position update, exception: {e}");
-                throw e;
+                throw;
             }
         }
-        
+
         public virtual VesselPositionUpdate Clone()
         {
-            return this.MemberwiseClone() as VesselPositionUpdate;
+            return MemberwiseClone() as VesselPositionUpdate;
         }
 
         #endregion
@@ -182,16 +182,16 @@ namespace LunaClient.Systems.VesselPositionSys
             if (Body != null && Vessel != null)
             {
                 PlanetariumDifference = Planetarium.GetUniversalTime() - PlanetTime;
-                setLandedSplashed();
-                applyVesselRotation();
-                applyVesselPosition();
+                SetLandedSplashed();
+                ApplyVesselRotation();
+                ApplyVesselPosition();
 
                 //Calculate the srfRelRotation, height from terrain, radar altitude, altitude, and orbit values from the various items set in the above methods.
                 //Vessel.UpdatePosVel();
             }
         }
 
-        private void setLandedSplashed()
+        private void SetLandedSplashed()
         {
             Vessel.checkSplashed();
             if (Vessel.packed)
@@ -202,13 +202,13 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 Vessel.checkLanded();
             }
-            
+
         }
 
         /// <summary>
         /// Applies common interpolation values
         /// </summary>
-        private void applyVesselRotation()
+        private void ApplyVesselRotation()
         {
             var targetTransformRot = new Quaternion(TransformRotation[0], TransformRotation[1], TransformRotation[2], TransformRotation[3]);
 
@@ -216,10 +216,10 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 //We use a tolerance because the coordinate systems do not perfectly match between clients.
                 //If the vessel is landed, use a higher tolerance because we want to avoid jitter.  This will cause landed vessels to "jump", but not wiggle and explode.
-                double tolerance = Vessel.Landed ? .05 : .01;
+                var tolerance = Vessel.Landed ? .05 : .01;
 
-                Quaternion rotation = Vessel.vesselTransform.rotation;
-                if (Math.Abs(targetTransformRot.w - rotation.w) > tolerance || Math.Abs(targetTransformRot.x - rotation.x) > tolerance || 
+                var rotation = Vessel.vesselTransform.rotation;
+                if (Math.Abs(targetTransformRot.w - rotation.w) > tolerance || Math.Abs(targetTransformRot.x - rotation.x) > tolerance ||
                     Math.Abs(targetTransformRot.y - rotation.y) > tolerance || Math.Abs(targetTransformRot.z - rotation.z) > tolerance)
                 {
                     //It is necessary to set the position as well, or the parts may jitter if their position is not also set later in the applyVesselPosition method.
@@ -235,7 +235,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// <summary>
         /// Applies surface interpolation values
         /// </summary>
-        private void applyVesselPosition()
+        private void ApplyVesselPosition()
         {
             //May need to call TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Late, aMethod) to call this at the end of FixedUpdate.
             //It'll happen after the FlightIntegrator code, at least.
@@ -251,7 +251,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 //When suborbital, we can just set orbit from velocity and position.  For orbits, this can cause significant jitter.
                 if (false && Vessel.altitude < 25000)
                 {
-                    Vector3d updatePosition = Body.GetWorldSurfacePosition(latitude, longitude, altitude);
+                    var updatePosition = Body.GetWorldSurfacePosition(latitude, longitude, altitude);
                     if (SettingsSystem.CurrentSettings.PositionFudgeEnable)
                     {
                         //Use the average velocity to determine the new position --- Displacement = v0*t + 1/2at^2.
@@ -259,29 +259,26 @@ namespace LunaClient.Systems.VesselPositionSys
                         updatePosition += positionFudge;
                     }
 
-                    Vector3d orbitalPos = updatePosition - Vessel.mainBody.position;
-                    Vector3d orbitalVel = currentVelocity;
+                    var orbitalPos = updatePosition - Vessel.mainBody.position;
+                    var orbitalVel = currentVelocity;
                     Vessel.orbitDriver.orbit.UpdateFromStateVectors(orbitalPos.xzy, orbitalVel.xzy, Body, Planetarium.GetUniversalTime());
                     Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
                     Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
 
-                    
+
                 }
-                else
+                var targetOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
+
+                if (SettingsSystem.CurrentSettings.Debug8)
                 {
-                    var targetOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
+                    //The OrbitDriver update call will set the vessel position on the next fixed update
+                    CopyOrbit(targetOrbit, Vessel.orbitDriver.orbit);
+                    Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
+                    Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
 
-                    if (SettingsSystem.CurrentSettings.Debug8)
+                    if (!Vessel.packed)
                     {
-                        //The OrbitDriver update call will set the vessel position on the next fixed update
-                        CopyOrbit(targetOrbit, Vessel.orbitDriver.orbit);
-                        Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
-                        Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
-
-                        if (!Vessel.packed)
-                        {
-                            Vessel.orbitDriver.updateFromParameters();
-                        }
+                        Vessel.orbitDriver.updateFromParameters();
                     }
                 }
             }
@@ -304,17 +301,17 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.protoVessel.longitude = longitude;
                 Vessel.protoVessel.altitude = altitude;
 
-                Vector3d position = Body.GetWorldSurfacePosition(latitude, longitude, altitude);
-                Vector3 currentPosition = Vessel.vesselTransform.position;
-                double cur_x = currentPosition.x;
-                double cur_y = currentPosition.y;
-                double cur_z = currentPosition.z;
+                var position = Body.GetWorldSurfacePosition(latitude, longitude, altitude);
+                var currentPosition = Vessel.vesselTransform.position;
+                double curX = currentPosition.x;
+                double curY = currentPosition.y;
+                double curZ = currentPosition.z;
 
                 //We use a tolerance because the coordinate systems do not perfectly match between clients.
                 //If the vessel is landed, use a higher tolerance because we want to avoid jitter.  This will cause landed vessels to "jump", but not wiggle and explode.
-                double tolerance = Vessel.Landed ? .1 : .01;
+                var tolerance = Vessel.Landed ? .1 : .01;
 
-                if (Math.Abs(position.x - cur_x) > tolerance || Math.Abs(position.y - cur_y) > tolerance || Math.Abs(position.z - cur_z) > tolerance)
+                if (Math.Abs(position.x - curX) > tolerance || Math.Abs(position.y - curY) > tolerance || Math.Abs(position.z - curZ) > tolerance)
                 {
                     Vessel.SetPosition(position);
                 }
@@ -323,10 +320,10 @@ namespace LunaClient.Systems.VesselPositionSys
             //Set the velocity on each part and its rigidbody (if it exists)
             //Vector3d vesselUniverseVelocity = (Vessel.orbit.GetVel() - (!Vessel.orbit.referenceBody.inverseRotation ? Vector3d.zero : Vessel.orbit.referenceBody.getRFrmVel(Vessel.vesselTransform.position)));
             //Vector3d vel = vesselUniverseVelocity - Krakensbane.GetFrameVelocity();
-            int numParts = Vessel.Parts.Count;
-            for (int i = 0; i < numParts; i++)
+            var numParts = Vessel.Parts.Count;
+            for (var i = 0; i < numParts; i++)
             {
-                Part item = this.Vessel.parts[i];
+                var item = Vessel.parts[i];
                 item.ResumeVelocity();
 
                 //This is based on the behavior of Part.ResumeVelocity()
@@ -345,10 +342,10 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.angularVelocityD = Vector3d.zero;
             Vessel.angularVelocity = Vector3.zero;
 
-            counter++;
-            if (Vessel.altitude > 25000 || counter > 75)
+            _counter++;
+            if (Vessel.altitude > 25000 || _counter > 75)
             {
-                counter = 0;
+                _counter = 0;
             }
 
             if (Vessel.loaded && !Vessel.packed)
@@ -406,7 +403,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 wheelSteer = Mathf.Lerp(from.wheelSteer, to.wheelSteer, t),
                 wheelSteerTrim = Mathf.Lerp(from.wheelSteerTrim, to.wheelSteerTrim, t),
                 wheelThrottle = Mathf.Lerp(from.wheelThrottle, to.wheelThrottle, t),
-                wheelThrottleTrim = Mathf.Lerp(from.wheelThrottleTrim, to.wheelThrottleTrim, t),
+                wheelThrottleTrim = Mathf.Lerp(from.wheelThrottleTrim, to.wheelThrottleTrim, t)
             };
         }
 

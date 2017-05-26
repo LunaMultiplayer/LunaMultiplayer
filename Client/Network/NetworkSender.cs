@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
-using LunaCommon.Message.MasterServer;
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
 using UnityEngine;
 
 namespace LunaClient.Network
@@ -26,8 +24,7 @@ namespace LunaClient.Network
             {
                 while (!MainSystem.Singleton.Quit)
                 {
-                    IMessageBase sendMessage;
-                    if (OutgoingMessages.TryDequeue(out sendMessage))
+                    if (OutgoingMessages.TryDequeue(out var sendMessage))
                     {
                         SendNetworkMessage(sendMessage);
                     }
@@ -64,7 +61,7 @@ namespace LunaClient.Network
             var clientMessage = message as IClientMessageBase;
             var masterSrvMessage = message as IMasterServerMessageBase;
 
-            if (clientMessage?.MessageType == ClientMessageType.SYNC_TIME)
+            if (clientMessage?.MessageType == ClientMessageType.SyncTime)
                 TimeSyncerSystem.Singleton.RewriteMessage(message.Data);
 
             message.Data.SentTime = DateTime.UtcNow.Ticks;
@@ -89,7 +86,7 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        if (MainSystem.Singleton.NetworkState >= ClientState.CONNECTED)
+                        if (MainSystem.Singleton.NetworkState >= ClientState.Connected)
                         {
                             var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
                             lidgrenMsg.Write(message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled));

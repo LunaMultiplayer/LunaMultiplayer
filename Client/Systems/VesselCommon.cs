@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using LunaClient.Base.Interface;
+﻿using LunaClient.Base.Interface;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselChangeSys;
@@ -15,6 +12,9 @@ using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LunaClient.Systems
 {
@@ -47,14 +47,8 @@ namespace LunaClient.Systems
         private static bool _isSpectating;
         public static bool IsSpectating
         {
-            get
-            {
-                return HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && _isSpectating;
-            }
-            set
-            {
-                _isSpectating = value;
-            }
+            get => HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && _isSpectating;
+            set => _isSpectating = value;
         }
 
         /// <summary>
@@ -172,7 +166,7 @@ namespace LunaClient.Systems
             var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), landingPadPosition);
 
             if (landingPadDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance) return true;
-            
+
             //We are far from the pad, let's see if happens the same in the runway...
             var runwayPosition = vessel.mainBody.GetWorldSurfacePosition(RunwayLatitude, RunwayLongitude, KscAltitude);
             var runwayDistance = Vector3d.Distance(vessel.GetWorldPos3D(), runwayPosition);

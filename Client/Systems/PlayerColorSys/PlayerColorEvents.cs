@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
+using System.Linq;
 using UnityEngine;
 
-namespace LunaClient.Systems.ColorSystem
+namespace LunaClient.Systems.PlayerColorSys
 {
     /// <summary>
     /// In this subsystem we handle the color events.

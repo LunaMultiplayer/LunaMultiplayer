@@ -17,13 +17,13 @@ namespace LunaServer.Message.Reader
             var message = messageData as WarpBaseMsgData;
             switch (message?.WarpMessageType)
             {
-                case WarpMessageType.NEW_SUBSPACE:
+                case WarpMessageType.NewSubspace:
                     WarpReceiver.HandleNewSubspace(client, (WarpNewSubspaceMsgData)messageData);
                     break;
-                case WarpMessageType.CHANGE_SUBSPACE:
+                case WarpMessageType.ChangeSubspace:
                     WarpReceiver.HandleChangeSubspace(client, (WarpChangeSubspaceMsgData)messageData);
                     break;
-                case WarpMessageType.SUBSPACES_REQUEST:
+                case WarpMessageType.SubspacesRequest:
                     WarpSystemSender.SendAllSubspaces(client);
                     break;
                 default:

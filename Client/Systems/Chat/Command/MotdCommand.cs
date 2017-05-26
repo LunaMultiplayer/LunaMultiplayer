@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
-using LunaClient.Systems.Network;
 
 namespace LunaClient.Systems.Chat.Command
 {

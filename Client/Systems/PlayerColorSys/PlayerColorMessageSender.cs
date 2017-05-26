@@ -6,7 +6,7 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Color;
 using LunaCommon.Message.Interface;
 
-namespace LunaClient.Systems.ColorSystem
+namespace LunaClient.Systems.PlayerColorSys
 {
     public class PlayerColorMessageSender : SubSystem<PlayerColorSystem>, IMessageSender
     {

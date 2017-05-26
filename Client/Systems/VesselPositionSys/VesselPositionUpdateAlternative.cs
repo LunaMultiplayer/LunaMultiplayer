@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Message.Data.Vessel;
+using System;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -104,20 +101,20 @@ namespace LunaClient.Systems.VesselPositionSys
                     vessel.acceleration.y,
                     vessel.acceleration.z
                 };
-                OrbitPosition = new double[]
+                OrbitPosition = new[]
                 {
                     vessel.orbit.pos.x,
                     vessel.orbit.pos.y,
                     vessel.orbit.pos.z
                 };
-                LatLonAlt = new double[]
+                LatLonAlt = new[]
                 {
                     vessel.latitude,
                     vessel.longitude,
                     vessel.altitude
                 };
-                Vector3d worldPosition = vessel.GetWorldPos3D();
-                WorldPosition = new double[]
+                var worldPosition = vessel.GetWorldPos3D();
+                WorldPosition = new[]
                 {
                     worldPosition.x,
                     worldPosition.y,
@@ -128,9 +125,9 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     Math.Abs(Math.Round(srfVel.x, 2)) < 0.01 ? 0 : srfVel.x,
                     Math.Abs(Math.Round(srfVel.y, 2)) < 0.01 ? 0 : srfVel.y,
-                    Math.Abs(Math.Round(srfVel.z, 2)) < 0.01 ? 0 : srfVel.z,
+                    Math.Abs(Math.Round(srfVel.z, 2)) < 0.01 ? 0 : srfVel.z
                 };
-                Vector3d orbitVel = vessel.orbit.GetVel();
+                var orbitVel = vessel.orbit.GetVel();
                 OrbitVelocity = new[]
                 {
                     orbitVel.x,
@@ -156,7 +153,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public virtual VesselPositionUpdate Clone()
         {
-            return this.MemberwiseClone() as VesselPositionUpdate;
+            return MemberwiseClone() as VesselPositionUpdate;
         }
 
         #endregion

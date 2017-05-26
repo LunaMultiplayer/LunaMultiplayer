@@ -1,11 +1,10 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.MasterServer
 {
     public class MsRegisterServerMsgData : MsBaseMsgData
     {
-        public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.REGISTER_SERVER;
+        public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.RegisterServer;
 
         public long Id { get; set; }
         public string ServerVersion { get; set; }

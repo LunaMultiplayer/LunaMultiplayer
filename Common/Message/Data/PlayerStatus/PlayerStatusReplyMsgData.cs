@@ -1,11 +1,10 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.PlayerStatus
 {
     public class PlayerStatusReplyMsgData: PlayerStatusBaseMsgData
     {
-        public override PlayerStatusMessageType PlayerStatusMessageType => PlayerStatusMessageType.REPLY;
+        public override PlayerStatusMessageType PlayerStatusMessageType => PlayerStatusMessageType.Reply;
 
         public string[] PlayerName { get; set; }
         public string[] VesselText { get; set; }

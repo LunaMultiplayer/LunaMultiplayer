@@ -1,10 +1,9 @@
-﻿using System.Collections.Concurrent;
+﻿using LunaClient.Base;
+using LunaClient.Utilities;
+using LunaCommon.Enums;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LunaClient.Base;
-using LunaClient.Utilities;
-using LunaCommon.Enums;
 
 namespace LunaClient.Systems.CraftLibrary
 {
@@ -69,11 +68,11 @@ namespace LunaClient.Systems.CraftLibrary
             PlayerList.Clear();
             UploadList.Clear();
             SelectedPlayer = "";
-            UploadCraftType = CraftType.VAB;
+            UploadCraftType = CraftType.Vab;
             UploadCraftName = "";
-            DownloadCraftType = CraftType.VAB;
+            DownloadCraftType = CraftType.Vab;
             DownloadCraftName = "";
-            DeleteCraftType = CraftType.VAB;
+            DeleteCraftType = CraftType.Vab;
             DeleteCraftName = "";
         }
 
@@ -97,13 +96,13 @@ namespace LunaClient.Systems.CraftLibrary
         {
             UploadList.Clear();
             if (Directory.Exists(VabPath))
-                UploadList.Add(CraftType.VAB,
+                UploadList.Add(CraftType.Vab,
                     Directory.GetFiles(VabPath).Select(Path.GetFileNameWithoutExtension).ToList());
             if (Directory.Exists(SphPath))
-                UploadList.Add(CraftType.SPH,
+                UploadList.Add(CraftType.Sph,
                     Directory.GetFiles(SphPath).Select(Path.GetFileNameWithoutExtension).ToList());
             if (Directory.Exists(VabPath))
-                UploadList.Add(CraftType.SUBASSEMBLY,
+                UploadList.Add(CraftType.Subassembly,
                     Directory.GetFiles(SubassemblyPath).Select(Path.GetFileNameWithoutExtension).ToList());
         }
 

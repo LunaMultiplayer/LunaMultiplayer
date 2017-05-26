@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Message.MasterServer;
+using System;
+using System.Collections.Generic;
+using System.Net;
 using UniLinq;
 using UnityEngine;
 using Random = System.Random;
@@ -37,7 +37,7 @@ namespace LunaClient.Network
         /// </summary>
         public static void RequestServers()
         {
-            var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(new MsRequestServersMsgData{CurrentVersion = VersionInfo.VersionNumber});
+            var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(new MsRequestServersMsgData { CurrentVersion = VersionInfo.VersionNumber });
             NetworkSender.QueueOutgoingMessage(requestMsg);
         }
 
@@ -51,11 +51,10 @@ namespace LunaClient.Network
                 var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
                 if (msgDeserialized != null)
                 {
-                    var data = msgDeserialized.Data as MsReplyServersMsgData;
 
                     //Sometimes we receive other type of unconnected messages. 
                     //Therefore we assert that the received message data is of MsReplyServersMsgData
-                    if (data != null)
+                    if (msgDeserialized.Data is MsReplyServersMsgData data)
                     {
                         Servers.Clear();
 
@@ -82,7 +81,8 @@ namespace LunaClient.Network
 
                         Servers = Servers.OrderBy(s => s.ServerName).ToList();
                     }
-                } else
+                }
+                else
                 {
                     Debug.LogError($"[LMP]: Unable to deserialize message: {msg}");
                 }
@@ -99,8 +99,7 @@ namespace LunaClient.Network
         public static void IntroduceToServer(long currentEntryId)
         {
             var token = RandomString(10);
-            IPAddress mask;
-            var ownEndpoint = new IPEndPoint(NetUtility.GetMyAddress(out mask), NetworkMain.Config.Port);
+            var ownEndpoint = new IPEndPoint(NetUtility.GetMyAddress(out var _), NetworkMain.Config.Port);
 
             var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(new MsIntroductionMsgData
             {

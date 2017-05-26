@@ -1,11 +1,10 @@
-﻿using LunaCommon.Message.Base;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.SyncTime
 {
     public class SyncTimeRequestMsgData : SyncTimeBaseMsgData
     {
-        public override SyncTimeMessageType SyncTimeMessageType => SyncTimeMessageType.REQUEST;
+        public override SyncTimeMessageType SyncTimeMessageType => SyncTimeMessageType.Request;
         public long ClientSendTime { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using LunaClient.Utilities;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LunaClient.Windows.Debug
 {

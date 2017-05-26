@@ -38,15 +38,15 @@ namespace LunaServer.Plugin
         /// <summary>
         ///     Fires every time a message is received from a client
         /// </summary>
-        /// <param Name="client">The client that has sent the message</param>
-        /// <param Name="messageData">The message payload (Null for certain types)</param>
+        /// <param name="client"></param>
+        /// <param name="messageData">The message payload (Null for certain types)</param>
         void OnMessageReceived(ClientStructure client, IClientMessageBase messageData);
 
         /// <summary>
         ///     Fires every time a message is sent to a client
         /// </summary>
-        /// <param Name="client">The client that has sent the message</param>
-        /// <param Name="messageData">The message payload (Null for certain types)</param>
+        /// <param name="client">The client that has sent the message</param>
+        /// <param name="messageData">The message payload (Null for certain types)</param>
         void OnMessageSent(ClientStructure client, IServerMessageBase messageData);
     }
 }

@@ -1,7 +1,7 @@
+using LunaServer.Settings;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using LunaServer.Settings;
 
 namespace LunaServer.System
 {
@@ -29,8 +29,7 @@ namespace LunaServer.System
         {
             if (PlayerLocks.ContainsKey(lockName) && (PlayerLocks[lockName] == playerName))
             {
-                string value;
-                PlayerLocks.TryRemove(lockName, out value);
+                PlayerLocks.TryRemove(lockName, out var _);
                 return true;
             }
             return false;
@@ -46,10 +45,9 @@ namespace LunaServer.System
 
             foreach (var lockToRemove in removeList)
             {
-                string value;
                 if (lockToRemove.StartsWith("control-") && !GeneralSettings.SettingsStore.DropControlOnExit)
                     continue;
-                PlayerLocks.TryRemove(lockToRemove, out value);
+                PlayerLocks.TryRemove(lockToRemove, out var _);
             }
         }
 

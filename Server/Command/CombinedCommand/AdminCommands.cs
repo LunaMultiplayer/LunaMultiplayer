@@ -14,9 +14,7 @@ namespace LunaServer.Command.CombinedCommand
 
         public override void HandleCommand(string commandArgs)
         {
-            string playerName;
-            string func;
-            CommandSystemHelperMethods.SplitCommand(commandArgs, out func, out playerName);
+            CommandSystemHelperMethods.SplitCommand(commandArgs, out var func, out var playerName);
 
             switch (func)
             {

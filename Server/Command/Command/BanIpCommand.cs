@@ -14,13 +14,10 @@ namespace LunaServer.Command.Command
 
         public override void Execute(string commandArgs)
         {
-            string ip;
-            string reason;
-            CommandSystemHelperMethods.SplitCommand(commandArgs, out ip, out reason);
+            CommandSystemHelperMethods.SplitCommand(commandArgs, out var ip, out var reason);
             reason = string.IsNullOrEmpty(reason) ? "No reason specified" : reason;
 
-            IPAddress ipAddress;
-            if (IPAddress.TryParse(ip, out ipAddress))
+            if (IPAddress.TryParse(ip, out var ipAddress))
             {
                 var player = ClientRetriever.GetClientByIp(ipAddress);
 

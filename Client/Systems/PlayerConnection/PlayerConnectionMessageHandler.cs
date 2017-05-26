@@ -1,14 +1,13 @@
-﻿using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Chat;
-using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.Warp;
 using LunaCommon.Message.Data.PlayerConnection;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.PlayerConnection
 {
@@ -24,15 +23,15 @@ namespace LunaClient.Systems.PlayerConnection
             var playerName = msgData.PlayerName;
             switch (msgData.PlayerConnectionMessageType)
             {
-                case PlayerConnectionMessageType.JOIN:
-                    ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", playerName + " has joined the server");
-                    break;
-                case PlayerConnectionMessageType.LEAVE:
-                    WarpSystem.Singleton.RemovePlayer(playerName);
-                    StatusSystem.Singleton.RemovePlayer(playerName);
-                    ChatSystem.Singleton.Queuer.QueueRemovePlayer(playerName);
-                    ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", playerName + " has left the server");
-                    break;
+                case PlayerConnectionMessageType.Join:
+                ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", playerName + " has joined the server");
+                break;
+                case PlayerConnectionMessageType.Leave:
+                WarpSystem.Singleton.RemovePlayer(playerName);
+                StatusSystem.Singleton.RemovePlayer(playerName);
+                ChatSystem.Singleton.Queuer.QueueRemovePlayer(playerName);
+                ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", playerName + " has left the server");
+                break;
             }
         }
     }

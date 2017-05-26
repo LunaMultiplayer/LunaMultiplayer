@@ -21,10 +21,10 @@ namespace LunaClient.Systems.Status
 
             switch (msgData.PlayerStatusMessageType)
             {
-                case PlayerStatusMessageType.REPLY:
+                case PlayerStatusMessageType.Reply:
                     HandlePlayerStatusReply(messageData);
                     break;
-                case PlayerStatusMessageType.SET:
+                case PlayerStatusMessageType.Set:
                     AddNewPlayerStatus(messageData);
                     break;
                 default:
@@ -45,7 +45,7 @@ namespace LunaClient.Systems.Status
                     VesselText = msg.VesselText[i]
                 });
             }
-            MainSystem.Singleton.NetworkState = ClientState.PLAYERS_SYNCED;
+            MainSystem.Singleton.NetworkState = ClientState.PlayersSynced;
         }
 
         private static void AddNewPlayerStatus(IMessageData messageData)

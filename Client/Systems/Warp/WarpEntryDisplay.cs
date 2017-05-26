@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
-using Smooth.Algebraics;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LunaClient.Systems.Warp
 {
@@ -18,7 +17,7 @@ namespace LunaClient.Systems.Warp
         /// <returns></returns>
         public SubspaceDisplayEntry[] GetSubspaceDisplayEntries()
         {
-            return SettingsSystem.ServerSettings.WarpMode == WarpMode.SUBSPACE ? 
+            return SettingsSystem.ServerSettings.WarpMode == WarpMode.Subspace ?
                 GetSubspaceDisplayEntriesSubspace() : GetSubspaceDisplayEntriesNoneSubspace();
         }
 
@@ -33,7 +32,7 @@ namespace LunaClient.Systems.Warp
             allPlayers.AddRange(System.ClientSubspaceList.Keys);
             allPlayers.Sort(PlayerSorter);
 
-            var sde = new SubspaceDisplayEntry { Players = allPlayers, SubspaceId = 0, SubspaceTime = 0};
+            var sde = new SubspaceDisplayEntry { Players = allPlayers, SubspaceId = 0, SubspaceTime = 0 };
             return new[] { sde };
         }
 
@@ -71,7 +70,7 @@ namespace LunaClient.Systems.Warp
                     subspaceDisplay.Add(newSubspaceDisplay);
                 }
             }
-            
+
             return subspaceDisplay.ToArray();
         }
 

@@ -20,7 +20,7 @@ namespace LunaClient.Systems.VesselChangeSys
             {
                 var msgData = new VesselChangeMsgData
                 {
-                    ChangeType = (int)VesselChangeType.EXPLODE,
+                    ChangeType = (int)VesselChangeType.Explode,
                     PartCraftId = data.craftID,
                     PartFlightId = data.flightID,
                     VesselId = data.vessel.id

@@ -1,11 +1,10 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Chat
 {
     public class ChatConsoleMsgData : ChatBaseMsgData
     {
-        public override ChatMessageType ChatMessageType => ChatMessageType.CONSOLE_MESSAGE;
+        public override ChatMessageType ChatMessageType => ChatMessageType.ConsoleMessage;
         public string Message { get; set; }
     }
 }

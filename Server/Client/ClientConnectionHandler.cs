@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.PlayerConnection;
@@ -10,7 +11,6 @@ using LunaServer.Log;
 using LunaServer.Plugin;
 using LunaServer.Server;
 using LunaServer.System;
-using Lidgren.Network;
 
 namespace LunaServer.Client
 {
@@ -22,7 +22,7 @@ namespace LunaServer.Client
             {
                 Subspace = int.MinValue,
                 PlayerStatus = new PlayerStatus(),
-                ConnectionStatus = ConnectionStatus.CONNECTED,
+                ConnectionStatus = ConnectionStatus.Connected,
                 Connection = newClientConnection,
                 LastSendTime = 0,
                 LastReceiveTime = ServerContext.ServerClock.ElapsedMilliseconds
@@ -51,9 +51,9 @@ namespace LunaServer.Client
                 LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ServerContext.Clients.Count}");
             }
 
-            if (client.ConnectionStatus != ConnectionStatus.DISCONNECTED)
+            if (client.ConnectionStatus != ConnectionStatus.Disconnected)
             {
-                client.ConnectionStatus = ConnectionStatus.DISCONNECTED;
+                client.ConnectionStatus = ConnectionStatus.Disconnected;
                 LmpPluginHandler.FireOnClientDisconnect(client);
                 if (client.Authenticated)
                 {

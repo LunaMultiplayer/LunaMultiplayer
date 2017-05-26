@@ -2,7 +2,7 @@
 {
     public enum ScenarioMessageType
     {
-        REQUEST = 0,
-        DATA = 1,
+        Request = 0,
+        Data = 1
     }
 }

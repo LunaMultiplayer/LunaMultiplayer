@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
+using FinePrint.Utilities;
 using LunaClient.Base;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon;
-using FinePrint.Utilities;
+using System;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 
@@ -66,7 +66,7 @@ namespace LunaClient.Systems.Scenario
 
             var scenarioName = new List<string>();
             var scenarioData = new List<byte[]>();
-            
+
             foreach (var scenarioModule in ScenarioRunner.GetLoadedModules())
             {
                 var scenarioType = scenarioModule.GetType().Name;
@@ -268,13 +268,13 @@ namespace LunaClient.Systems.Scenario
             switch (HighLogic.CurrentGame.Mode)
             {
                 case Game.Modes.CAREER:
-                    return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewCareerGames);
+                return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewCareerGames);
                 case Game.Modes.SCIENCE_SANDBOX:
-                    return
-                        validScenario.ScenarioAttributes.HasCreateOption(
-                            ScenarioCreationOptions.AddToNewScienceSandboxGames);
+                return
+                    validScenario.ScenarioAttributes.HasCreateOption(
+                        ScenarioCreationOptions.AddToNewScienceSandboxGames);
                 case Game.Modes.SANDBOX:
-                    return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewSandboxGames);
+                return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewSandboxGames);
             }
             return false;
         }

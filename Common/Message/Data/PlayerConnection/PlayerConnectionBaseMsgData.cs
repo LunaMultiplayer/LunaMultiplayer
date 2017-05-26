@@ -1,6 +1,6 @@
-﻿using System;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.PlayerConnection
 {
@@ -9,9 +9,6 @@ namespace LunaCommon.Message.Data.PlayerConnection
         public override ushort SubType => (ushort)(int)PlayerConnectionMessageType;
         public string PlayerName { get; set; }
 
-        public virtual PlayerConnectionMessageType PlayerConnectionMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual PlayerConnectionMessageType PlayerConnectionMessageType => throw new NotImplementedException();
     }
 }

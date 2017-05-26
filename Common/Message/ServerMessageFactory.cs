@@ -18,23 +18,23 @@ namespace LunaCommon.Message
         /// <param name="compress">Compress the messages or not</param>
         public ServerMessageFactory(bool compress) : base(compress)
         {
-            MessageDictionary.Add((uint)ServerMessageType.HANDSHAKE, new HandshakeSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.SETTINGS, new SetingsSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.CHAT, new ChatSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.PLAYER_STATUS, new PlayerStatusSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.PLAYER_COLOR, new PlayerColorSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.PLAYER_CONNECTION, new PlayerConnectionSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.SCENARIO, new ScenarioSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.KERBAL, new KerbalSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.VESSEL, new VesselSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.CRAFT_LIBRARY, new CraftLibrarySrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.FLAG, new FlagSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.SYNC_TIME, new SyncTimeSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.MOTD, new MotdSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.WARP, new WarpSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.ADMIN, new AdminSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.LOCK, new LockSrvMsg());
-            MessageDictionary.Add((uint)ServerMessageType.MOD, new ModSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Handshake, new HandshakeSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Settings, new SetingsSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Chat, new ChatSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.PlayerStatus, new PlayerStatusSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.PlayerColor, new PlayerColorSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.PlayerConnection, new PlayerConnectionSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Scenario, new ScenarioSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Kerbal, new KerbalSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Vessel, new VesselSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.CraftLibrary, new CraftLibrarySrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Flag, new FlagSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.SyncTime, new SyncTimeSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Motd, new MotdSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Warp, new WarpSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Admin, new AdminSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Lock, new LockSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Mod, new ModSrvMsg());
         }
     }
 }

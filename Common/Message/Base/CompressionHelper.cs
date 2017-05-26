@@ -12,6 +12,7 @@
 //
 // Version: 1.5.0 final
 using System;
+// ReSharper disable All
 
 namespace LunaCommon.Message.Base
 {
@@ -36,7 +37,7 @@ namespace LunaCommon.Message.Base
         private const int DEFAULT_HEADERLEN = 9;
         private const int QLZ_POINTERS_1 = 1;
         private const int QLZ_POINTERS_3 = 16;
-        
+
         public static byte[] CompressBytes(byte[] source, int level = 3)
         {
             int src = 0;
@@ -261,7 +262,7 @@ namespace LunaCommon.Message.Base
             System.Array.Copy(destination, d2, dst);
             return d2;
         }
-    
+
         public static byte[] DecompressBytes(byte[] source)
         {
             int level;

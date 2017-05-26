@@ -22,7 +22,7 @@ namespace LunaServer.Message.Reader
             var message = messageData as KerbalBaseMsgData;
             switch (message?.KerbalMessageType)
             {
-                case KerbalMessageType.REQUEST:
+                case KerbalMessageType.Request:
                     var kerbalFiles = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Kerbals"));
                     var kerbalsData = kerbalFiles.Select(k => new KeyValuePair<string, byte[]>(Path.GetFileNameWithoutExtension(k),
                         FileHandler.ReadFile(k)));
@@ -36,7 +36,7 @@ namespace LunaServer.Message.Reader
 
                     MessageQueuer.SendToClient<KerbalSrvMsg>(client, newMessageData);
                     break;
-                case KerbalMessageType.PROTO:
+                case KerbalMessageType.Proto:
                     var data = (KerbalProtoMsgData)message;
 
                     LunaLog.Debug($"Saving kerbal {data.KerbalName} from {client.PlayerName}");

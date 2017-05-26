@@ -20,35 +20,35 @@ namespace LunaClient.Systems.Chat
 
             switch (msgData.ChatMessageType)
             {
-                case ChatMessageType.LIST_REPLY:
+                case ChatMessageType.ListReply:
                 {
                     var data = (ChatListReplyMsgData) messageData;
                     foreach (var keyVal in data.PlayerChannels)
                         foreach (var channelName in keyVal.Value)
                             System.Queuer.QueueChatJoin(keyVal.Key, channelName);
 
-                    MainSystem.Singleton.NetworkState = ClientState.CHAT_SYNCED;
+                    MainSystem.Singleton.NetworkState = ClientState.ChatSynced;
                 }
                     break;
-                case ChatMessageType.JOIN:
+                case ChatMessageType.Join:
                 {
                     var data = (ChatJoinMsgData) messageData;
                     System.Queuer.QueueChatJoin(data.From, data.Channel);
                 }
                     break;
-                case ChatMessageType.LEAVE:
+                case ChatMessageType.Leave:
                 {
                     var data = (ChatLeaveMsgData) messageData;
                     System.Queuer.QueueChatLeave(data.From, data.Channel);
                 }
                     break;
-                case ChatMessageType.CHANNEL_MESSAGE:
+                case ChatMessageType.ChannelMessage:
                 {
                     var data = (ChatChannelMsgData) messageData;
                     System.Queuer.QueueChannelMessage(data.From, data.Channel, data.Text);
                 }
                     break;
-                case ChatMessageType.PRIVATE_MESSAGE:
+                case ChatMessageType.PrivateMessage:
                 {
                     var data = (ChatPrivateMsgData) messageData;
                     if ((data.To == SettingsSystem.CurrentSettings.PlayerName) ||
@@ -56,7 +56,7 @@ namespace LunaClient.Systems.Chat
                         System.Queuer.QueuePrivateMessage(data.From, data.To, data.Text);
                 }
                     break;
-                case ChatMessageType.CONSOLE_MESSAGE:
+                case ChatMessageType.ConsoleMessage:
                 {
                     var data = (ChatConsoleMsgData) messageData;
                     System.Queuer.QueueSystemMessage(data.Message);

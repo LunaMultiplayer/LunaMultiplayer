@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
-using LunaCommon.Enums;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Chat
 {
     public class ChatListReplyMsgData : ChatBaseMsgData
     {
-        public override ChatMessageType ChatMessageType => ChatMessageType.LIST_REPLY;
+        public override ChatMessageType ChatMessageType => ChatMessageType.ListReply;
 
         /// <summary>
         ///     Player  -->List of channels of this player

@@ -1,9 +1,8 @@
-﻿using System;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaCommon.Message.Data.Chat;
+using System;
 using UnityEngine;
 
 namespace LunaClient.Systems.Chat

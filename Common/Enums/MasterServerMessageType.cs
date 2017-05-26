@@ -2,6 +2,6 @@
 {
     public enum MasterServerMessageType
     {
-        MAIN = 0,
+        Main = 0
     }
 }

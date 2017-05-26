@@ -1,11 +1,10 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Admin
 {
     public class AdminAddMsgData : AdminBaseMsgData
     {
-        public override AdminMessageType AdminMessageType => AdminMessageType.ADD;
+        public override AdminMessageType AdminMessageType => AdminMessageType.Add;
         public string PlayerName { get; set; }
     }
 }

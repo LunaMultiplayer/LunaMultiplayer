@@ -1,6 +1,6 @@
-﻿using System;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -8,9 +8,6 @@ namespace LunaCommon.Message.Data.Vessel
     {
         public override ushort SubType => (ushort)(int)VesselMessageType;
 
-        public virtual VesselMessageType VesselMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual VesselMessageType VesselMessageType => throw new NotImplementedException();
     }
 }

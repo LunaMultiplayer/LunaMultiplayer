@@ -1,5 +1,4 @@
-﻿using LunaClient.Base.Interface;
-using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LunaClient.Windows.CraftLibrary

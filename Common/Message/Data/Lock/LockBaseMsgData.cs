@@ -1,7 +1,6 @@
-﻿using System;
-using LunaCommon.Enums;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Lock
 {
@@ -9,9 +8,6 @@ namespace LunaCommon.Message.Data.Lock
     {
         public override ushort SubType => (ushort)(int)LockMessageType;
 
-        public virtual LockMessageType LockMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual LockMessageType LockMessageType => throw new NotImplementedException();
     }
 }

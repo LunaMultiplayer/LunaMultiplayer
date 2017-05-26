@@ -3,7 +3,7 @@ namespace LunaCommon.Message.Types
 {
     public enum SyncTimeMessageType
     {
-        REQUEST = 0,
-        REPLY = 1,
+        Request = 0,
+        Reply = 1
     }
 }

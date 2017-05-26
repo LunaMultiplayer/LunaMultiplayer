@@ -1,6 +1,6 @@
-﻿using System;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Motd
 {
@@ -8,9 +8,6 @@ namespace LunaCommon.Message.Data.Motd
     {
         public override ushort SubType => (ushort)(int)MotdMessageType;
 
-        public virtual MotdMessageType MotdMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual MotdMessageType MotdMessageType => throw new NotImplementedException();
     }
 }

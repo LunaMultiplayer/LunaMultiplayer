@@ -19,21 +19,21 @@ namespace LunaClient.Systems.Admin
 
             switch (msgData.AdminMessageType)
             {
-                case AdminMessageType.LIST_REPLY:
+                case AdminMessageType.ListReply:
                     {
                         var data = (AdminListReplyMsgData)messageData;
                         foreach (var adminName in data.Admins)
                             System.RegisterServerAdmin(adminName);
-                        MainSystem.Singleton.NetworkState = ClientState.ADMINS_SYNCED;
+                        MainSystem.Singleton.NetworkState = ClientState.AdminsSynced;
                     }
                     break;
-                case AdminMessageType.ADD:
+                case AdminMessageType.Add:
                     {
                         var data = (AdminAddMsgData)messageData;
                         System.RegisterServerAdmin(data.PlayerName);
                     }
                     break;
-                case AdminMessageType.REMOVE:
+                case AdminMessageType.Remove:
                     {
                         var data = (AdminRemoveMsgData)messageData;
                         System.UnregisterServerAdmin(data.PlayerName);

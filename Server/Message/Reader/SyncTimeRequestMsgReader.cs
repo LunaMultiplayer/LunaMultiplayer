@@ -19,7 +19,7 @@ namespace LunaServer.Message.Reader
             {
                 ClientSendTime = data.ClientSendTime,
                 ServerReceiveTime = DateTime.UtcNow.Ticks,
-                ServerStartTime = ServerContext.StartTime,
+                ServerStartTime = ServerContext.StartTime
             };
 
             MessageQueuer.SendToClient<SyncTimeSrvMsg>(client, newMessageData);

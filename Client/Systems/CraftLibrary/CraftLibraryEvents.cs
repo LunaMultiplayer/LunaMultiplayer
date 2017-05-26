@@ -37,14 +37,14 @@ namespace LunaClient.Systems.CraftLibrary
             {
                 UploadCraftFile(System.UploadCraftType, System.UploadCraftName);
                 System.UploadCraftName = null;
-                System.UploadCraftType = CraftType.VAB;
+                System.UploadCraftType = CraftType.Vab;
             }
 
             if (!string.IsNullOrEmpty(System.DownloadCraftName))
             {
                 DownloadCraftFile(System.SelectedPlayer, System.DownloadCraftType, System.DownloadCraftName);
                 System.DownloadCraftName = null;
-                System.DownloadCraftType = CraftType.VAB;
+                System.DownloadCraftType = CraftType.Vab;
             }
 
             if (!string.IsNullOrEmpty(System.DeleteCraftName))
@@ -58,7 +58,7 @@ namespace LunaClient.Systems.CraftLibrary
                     CraftName = System.DeleteCraftName
                 });
                 System.DeleteCraftName = null;
-                System.DeleteCraftType = CraftType.VAB;
+                System.DeleteCraftType = CraftType.Vab;
             }
 
             if (DisplayCraftUploadingMessage)
@@ -73,13 +73,13 @@ namespace LunaClient.Systems.CraftLibrary
             var uploadPath = "";
             switch (System.UploadCraftType)
             {
-                case CraftType.VAB:
+                case CraftType.Vab:
                     uploadPath = System.VabPath;
                     break;
-                case CraftType.SPH:
+                case CraftType.Sph:
                     uploadPath = System.SphPath;
                     break;
-                case CraftType.SUBASSEMBLY:
+                case CraftType.Subassembly:
                     uploadPath = System.SubassemblyPath;
                     break;
             }
@@ -153,13 +153,13 @@ namespace LunaClient.Systems.CraftLibrary
             var savePath = "";
             switch (craftType)
             {
-                case CraftType.VAB:
+                case CraftType.Vab:
                     savePath = System.VabPath;
                     break;
-                case CraftType.SPH:
+                case CraftType.Sph:
                     savePath = System.SphPath;
                     break;
-                case CraftType.SUBASSEMBLY:
+                case CraftType.Subassembly:
                     savePath = System.SubassemblyPath;
                     break;
             }

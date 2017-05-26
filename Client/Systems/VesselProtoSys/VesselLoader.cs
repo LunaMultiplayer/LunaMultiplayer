@@ -1,15 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaCommon.Enums;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using UniLinq;
 using UnityEngine;
-using LunaClient.Systems.SettingsSys;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -91,10 +90,9 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (vessel != null)
                 {
                     //Load the existing target, if any.  We will use this to reset the target to the newly loaded vessel, if the vessel we're reloading is the one that is targeted.
-                    ITargetable currentTarget = FlightGlobals.fetch.VesselTarget;
+                    var currentTarget = FlightGlobals.fetch.VesselTarget;
 
-
-                    Boolean vesselLoaded = false;
+                    var vesselLoaded = false;
                     var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
                     //TODO: Is BackupVessel() needed or can we just look at the protoVessel?
                     if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
@@ -109,37 +107,38 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     //We do want to actually compare by reference--we want to see if the vessel object we're unloading and reloading is the one that's targeted.  If so, we need to
                     //reset the target to the new instance of the vessel
-                    if (vesselLoaded && (currentTarget == vessel))
+                    if (vesselLoaded && currentTarget?.GetVessel() == vessel)
                     {
                         //Fetch the new vessel information for the same vessel ID, as the unload/load creates a new game object, and we need to refer to the new one for the target
                         var newVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.VesselId);
 
                         //Record the time immediately before calling SetVesselTarget
-                        float currentTime = Time.realtimeSinceStartup;
+                        var currentTime = Time.realtimeSinceStartup;
                         FlightGlobals.fetch.SetVesselTarget(newVessel, true);
 
-                        List<ScreenMessage> messagesToRemove = new List<ScreenMessage>();
+                        var messagesToRemove = new List<ScreenMessage>();
                         //Remove the "Target:" message created by SetVesselTarget
-                        foreach (ScreenMessage message in ScreenMessages.Instance.ActiveMessages)
+                        foreach (var message in ScreenMessages.Instance.ActiveMessages)
                         {
                             //If the message started on or after the SetVesselTarget call time, remove it, as it's the target message created by SetVesselTarget
                             if (message.startTime >= currentTime)
                             {
-                                messagesToRemove.Add(message);   
+                                messagesToRemove.Add(message);
                             }
                         }
 
-                        foreach(ScreenMessage message in messagesToRemove)
+                        foreach (var message in messagesToRemove)
                         {
                             ScreenMessages.RemoveMessage(message);
                         }
                     }
 
-                } else
+                }
+                else
                 {
                     LoadVesselImpl(vesselProto);
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -228,7 +227,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                 foreach (var pps in pv.protoPartSnapshots)
                 {
-                    if (ModSystem.Singleton.ModControl != ModControlMode.DISABLED &&
+                    if (ModSystem.Singleton.ModControl != ModControlMode.Disabled &&
                         !ModSystem.Singleton.AllowedParts.Contains(pps.partName.ToLower()))
                     {
                         var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the banned " +

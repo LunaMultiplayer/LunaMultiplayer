@@ -39,7 +39,7 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.DropControlOnExit = msgData.DropControlOnExit;
             SettingsSystem.ServerSettings.GameDifficulty = msgData.GameDifficulty;
 
-            if (SettingsSystem.ServerSettings.GameDifficulty != GameDifficulty.CUSTOM)
+            if (SettingsSystem.ServerSettings.GameDifficulty != GameDifficulty.Custom)
             {
                 SettingsSystem.ServerSettings.ServerParameters =
                     GameParameters.GetDefaultParameters(
@@ -110,7 +110,7 @@ namespace LunaClient.Systems.SettingsSys
                 };
             }
 
-            MainSystem.Singleton.NetworkState = ClientState.SETTINGS_SYNCED;
+            MainSystem.Singleton.NetworkState = ClientState.SettingsSynced;
         }
     }
 }

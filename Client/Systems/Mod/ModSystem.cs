@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using LunaClient.Base;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace LunaClient.Systems.Mod
@@ -14,8 +14,8 @@ namespace LunaClient.Systems.Mod
     {
         #region Fields & properties
 
-        public ModControlMode ModControl { get; set; } = ModControlMode.ENABLED_STOP_INVALID_PART_SYNC;
-        public bool DllListBuilt { get; set; } = false;
+        public ModControlMode ModControl { get; set; } = ModControlMode.EnabledStopInvalidPartSync;
+        public bool DllListBuilt { get; set; }
         public string FailText { get; set; }
 
         public Dictionary<string, string> DllList { get; } = new Dictionary<string, string>();
@@ -29,7 +29,7 @@ namespace LunaClient.Systems.Mod
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            ModControl = ModControlMode.ENABLED_STOP_INVALID_PART_SYNC;
+            ModControl = ModControlMode.EnabledStopInvalidPartSync;
             DllListBuilt = false;
             FailText = "";
             DllList.Clear();
@@ -103,27 +103,27 @@ namespace LunaClient.Systems.Mod
                     switch (Path.GetExtension(file).ToLower())
                     {
                         case ".dll":
-                            modDllFiles.Add(relativeFileName);
-                            break;
+                        modDllFiles.Add(relativeFileName);
+                        break;
                         case ".cfg":
-                            if (Path.GetExtension(file).ToLower() == ".cfg")
+                        if (Path.GetExtension(file).ToLower() == ".cfg")
+                        {
+                            var fileIsPartFile = false;
+
+                            var cn = ConfigNode.Load(file);
+                            if (cn == null) continue;
+                            foreach (var partName in cn.GetNodes("PART").Select(p => p.GetValue("Name")))
                             {
-                                var fileIsPartFile = false;
-
-                                var cn = ConfigNode.Load(file);
-                                if (cn == null) continue;
-                                foreach (var partName in cn.GetNodes("PART").Select(p => p.GetValue("Name")))
-                                {
-                                    Debug.Log($"[LMP]: Part detected in {relativeFileName} , Name: {partName}");
-                                    modIsRequired = true;
-                                    fileIsPartFile = true;
-                                    partsList.Add(partName.Replace('_', '.'));
-                                }
-
-                                if (fileIsPartFile)
-                                    modPartCfgFiles.Add(relativeFileName);
+                                Debug.Log($"[LMP]: Part detected in {relativeFileName} , Name: {partName}");
+                                modIsRequired = true;
+                                fileIsPartFile = true;
+                                partsList.Add(partName.Replace('_', '.'));
                             }
-                            break;
+
+                            if (fileIsPartFile)
+                                modPartCfgFiles.Add(relativeFileName);
+                        }
+                        break;
                     }
                 }
 

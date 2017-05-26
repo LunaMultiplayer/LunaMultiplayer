@@ -4,6 +4,6 @@ namespace LunaCommon.Message.Data.Motd
 {
     public class MotdRequestMsgData : MotdBaseMsgData
     {
-        public override MotdMessageType MotdMessageType => MotdMessageType.REQUEST;
+        public override MotdMessageType MotdMessageType => MotdMessageType.Request;
     }
 }

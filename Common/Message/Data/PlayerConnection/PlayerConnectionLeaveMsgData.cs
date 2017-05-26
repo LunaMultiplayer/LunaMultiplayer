@@ -4,6 +4,6 @@ namespace LunaCommon.Message.Data.PlayerConnection
 {
     public class PlayerConnectionLeaveMsgData : PlayerConnectionBaseMsgData
     {
-        public override PlayerConnectionMessageType PlayerConnectionMessageType => PlayerConnectionMessageType.LEAVE;
+        public override PlayerConnectionMessageType PlayerConnectionMessageType => PlayerConnectionMessageType.Leave;
     }
 }

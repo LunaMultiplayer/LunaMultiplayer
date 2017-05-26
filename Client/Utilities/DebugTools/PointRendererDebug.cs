@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LunaClient.DebugTools
+namespace LunaClient.Utilities.DebugTools
 {
     public class PointRendererDebug
     {
@@ -20,9 +20,9 @@ namespace LunaClient.DebugTools
             var xOffset = new Vector3(0.25f, 0f, 0f);
             var yOffset = new Vector3(0f, 0.25f, 0f);
             var zOffset = new Vector3(0f, 0f, 0.25f);
-            _xAxis.UpdatePosition(centrePos - referenceTransform*xOffset, centrePos + referenceTransform*xOffset);
-            _yAxis.UpdatePosition(centrePos - referenceTransform*yOffset, centrePos + referenceTransform*yOffset);
-            _zAxis.UpdatePosition(centrePos - referenceTransform*zOffset, centrePos + referenceTransform*zOffset);
+            _xAxis.UpdatePosition(centrePos - referenceTransform * xOffset, centrePos + referenceTransform * xOffset);
+            _yAxis.UpdatePosition(centrePos - referenceTransform * yOffset, centrePos + referenceTransform * yOffset);
+            _zAxis.UpdatePosition(centrePos - referenceTransform * zOffset, centrePos + referenceTransform * zOffset);
         }
 
         public void Destroy()

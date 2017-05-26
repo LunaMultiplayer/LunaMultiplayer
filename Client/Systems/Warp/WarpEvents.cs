@@ -11,14 +11,14 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public void OnTimeWarpChanged()
         {
-            var resetWarp = SettingsSystem.ServerSettings.WarpMode == WarpMode.NONE ||
-                            SettingsSystem.ServerSettings.WarpMode == WarpMode.MASTER && SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName;
+            var resetWarp = SettingsSystem.ServerSettings.WarpMode == WarpMode.None ||
+                            SettingsSystem.ServerSettings.WarpMode == WarpMode.Master && SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName;
 
             if (TimeWarp.CurrentRateIndex > 0)
             {
                 if (resetWarp)
                 {
-                    if (SettingsSystem.ServerSettings.WarpMode == WarpMode.NONE)
+                    if (SettingsSystem.ServerSettings.WarpMode == WarpMode.None)
                         System.DisplayMessage("Cannot warp, warping is disabled on this server", 5f);
 
                     TimeWarp.SetRate(0, true);

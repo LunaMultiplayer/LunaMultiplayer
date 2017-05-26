@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LunaClient.Base.Interface;
+﻿using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaCommon.Message.Interface;
-using Debug = UnityEngine.Debug;
+using System;
+using System.Collections.Concurrent;
+using UnityEngine;
 
 namespace LunaClient.Base
 {
@@ -15,7 +15,7 @@ namespace LunaClient.Base
         public TS MessageSender { get; } = new TS();
         public TH MessageHandler { get; } = new TH();
         public virtual IInputHandler InputHandler { get; } = null;
-        
+
         public virtual void EnqueueMessage(IMessageData msg)
         {
             if (Enabled)
@@ -35,14 +35,13 @@ namespace LunaClient.Base
             //During the update we receive and handle all received messages
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ReadAndHandleAllReceivedMessages));
         }
-        
+
         /// <summary>
         /// Reads all the message queue and calls the handling sub-system
         /// </summary>
         private void ReadAndHandleAllReceivedMessages()
         {
-            IMessageData msgData;
-            while (MessageHandler.IncomingMessages.TryDequeue(out msgData))
+            while (MessageHandler.IncomingMessages.TryDequeue(out var msgData))
             {
                 try
                 {

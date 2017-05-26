@@ -1,10 +1,10 @@
-using System;
-using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Chat.Command;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Chat;
+using System;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.Chat
 {
@@ -12,7 +12,7 @@ namespace LunaClient.Systems.Chat
     {
         #region Fields
 
-        public bool ChatButtonHighlighted { get; set; } = false;
+        public bool ChatButtonHighlighted { get; set; }
         public bool LeaveEventHandled { get; set; } = true;
         public bool SendEventHandled { get; set; } = true;
 
@@ -27,10 +27,10 @@ namespace LunaClient.Systems.Chat
         public List<string> HighlightChannel { get; } = new List<string>();
         public List<string> HighlightPm { get; } = new List<string>();
 
-        public string SelectedChannel { get; set; } = null;
-        public string SelectedPmChannel { get; set; } = null;
-        public bool ChatLocked { get; set; } = false;
-        public bool SelectTextBox { get; set; } = false;
+        public string SelectedChannel { get; set; }
+        public string SelectedPmChannel { get; set; }
+        public bool ChatLocked { get; set; }
+        public bool SelectTextBox { get; set; }
         public string SendText { get; set; } = "";
 
         //const
@@ -60,7 +60,7 @@ namespace LunaClient.Systems.Chat
         }
 
         #endregion
-        
+
         #region Commands
 
         private static HelpCommand HelpCommand { get; } = new HelpCommand();
@@ -102,7 +102,7 @@ namespace LunaClient.Systems.Chat
 
             SelectedChannel = null;
             SelectedPmChannel = null;
-            
+
             SelectTextBox = false;
             SendText = "";
 
@@ -126,7 +126,7 @@ namespace LunaClient.Systems.Chat
                 ChatEventHandler.HandleChatEvents();
             }
         }
-        
+
         #endregion
 
         #region Public

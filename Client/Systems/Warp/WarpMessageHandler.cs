@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselLockSys;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Warp;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 namespace LunaClient.Systems.Warp
@@ -23,54 +21,54 @@ namespace LunaClient.Systems.Warp
 
             switch (msgData.WarpMessageType)
             {
-                case WarpMessageType.SUBSPACES_REPLY:
+                case WarpMessageType.SubspacesReply:
+                {
+                    var data = (WarpSubspacesReplyMsgData)messageData;
+                    for (var i = 0; i < data.SubspaceKey.Length; i++)
                     {
-                        var data = (WarpSubspacesReplyMsgData)messageData;
-                        for (var i = 0; i < data.SubspaceKey.Length; i++)
-                        {
-                            AddSubspace(data.SubspaceKey[i], data.SubspaceTime[i]);
-                        }
-                        foreach (var ps in data.Players)
-                        {
-                            if (System.ClientSubspaceList.ContainsKey(ps.Value))
-                            {
-                                System.ClientSubspaceList[ps.Value] = ps.Key;
-                            }
-                            else
-                            {
-                                System.ClientSubspaceList.Add(ps.Value, ps.Key);
-                            }
-                        }
-                        
-                        AddSubspace(-1, 0);//Add warping subspace
-                        
-                        MainSystem.Singleton.NetworkState = ClientState.WARPSUBSPACES_SYNCED;
+                        AddSubspace(data.SubspaceKey[i], data.SubspaceTime[i]);
                     }
-                    break;
-                case WarpMessageType.NEW_SUBSPACE:
+                    foreach (var ps in data.Players)
                     {
-                        var data = (WarpNewSubspaceMsgData)messageData;
-                        AddSubspace(data.SubspaceKey, data.ServerTimeDifference);
-                        if (data.PlayerCreator == SettingsSystem.CurrentSettings.PlayerName)
+                        if (System.ClientSubspaceList.ContainsKey(ps.Value))
                         {
-                            //It's our subspace that we just created so set it as ours
-                            System.WaitingSubspaceIdFromServer = false;
-                            System.SkipSubspaceProcess = true;
-                            System.CurrentSubspace = data.SubspaceKey;
+                            System.ClientSubspaceList[ps.Value] = ps.Key;
+                        }
+                        else
+                        {
+                            System.ClientSubspaceList.Add(ps.Value, ps.Key);
                         }
                     }
-                    break;
-                case WarpMessageType.CHANGE_SUBSPACE:
+
+                    AddSubspace(-1, 0);//Add warping subspace
+
+                    MainSystem.Singleton.NetworkState = ClientState.WarpsubspacesSynced;
+                }
+                break;
+                case WarpMessageType.NewSubspace:
+                {
+                    var data = (WarpNewSubspaceMsgData)messageData;
+                    AddSubspace(data.SubspaceKey, data.ServerTimeDifference);
+                    if (data.PlayerCreator == SettingsSystem.CurrentSettings.PlayerName)
                     {
-                        var data = (WarpChangeSubspaceMsgData)messageData;
-                        System.ClientSubspaceList[data.PlayerName] = data.Subspace;
+                        //It's our subspace that we just created so set it as ours
+                        System.WaitingSubspaceIdFromServer = false;
+                        System.SkipSubspaceProcess = true;
+                        System.CurrentSubspace = data.SubspaceKey;
                     }
-                    break;
+                }
+                break;
+                case WarpMessageType.ChangeSubspace:
+                {
+                    var data = (WarpChangeSubspaceMsgData)messageData;
+                    System.ClientSubspaceList[data.PlayerName] = data.Subspace;
+                }
+                break;
                 default:
-                    {
-                        Debug.LogError($"[LMP]: Unhandled WARP_MESSAGE type: {((WarpBaseMsgData)messageData).WarpMessageType}");
-                        break;
-                    }
+                {
+                    Debug.LogError($"[LMP]: Unhandled WARP_MESSAGE type: {((WarpBaseMsgData)messageData).WarpMessageType}");
+                    break;
+                }
             }
         }
 

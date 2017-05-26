@@ -1,6 +1,6 @@
-﻿using System;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.MasterServer
 {
@@ -13,9 +13,6 @@ namespace LunaCommon.Message.Data.MasterServer
 
         public override ushort SubType => (ushort)(int)MasterServerMessageSubType;
 
-        public virtual MasterServerMessageSubType MasterServerMessageSubType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual MasterServerMessageSubType MasterServerMessageSubType => throw new NotImplementedException();
     }
 }

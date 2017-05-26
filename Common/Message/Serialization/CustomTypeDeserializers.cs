@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using LunaCommon.Message.Data.CraftLibrary;
+using System.Collections.Generic;
 using System.IO;
-using LunaCommon.Message.Data.CraftLibrary;
 
 namespace LunaCommon.Message.Serialization
 {

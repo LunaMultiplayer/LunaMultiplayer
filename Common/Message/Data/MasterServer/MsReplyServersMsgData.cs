@@ -4,7 +4,7 @@ namespace LunaCommon.Message.Data.MasterServer
 {
     public class MsReplyServersMsgData : MsBaseMsgData
     {
-        public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.REPLY_SERVERS;
+        public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.ReplyServers;
 
         public long[] Id { get; set; }
         public string[] InternalEndpoint { get; set; }

@@ -18,10 +18,10 @@ namespace LunaServer.System
                 Reason = reason
             };
 
-            if (enumResponse == HandshakeReply.HANDSHOOK_SUCCESSFULLY)
+            if (enumResponse == HandshakeReply.HandshookSuccessfully)
             {
                 messageData.ModControlMode = GeneralSettings.SettingsStore.ModControl;
-                if (GeneralSettings.SettingsStore.ModControl != ModControlMode.DISABLED)
+                if (GeneralSettings.SettingsStore.ModControl != ModControlMode.Disabled)
                 {
                     if (!FileHandler.FileExists(ServerContext.ModFilePath))
                         ModFileSystem.GenerateNewModFile();

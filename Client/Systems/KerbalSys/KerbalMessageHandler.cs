@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
@@ -23,15 +21,15 @@ namespace LunaClient.Systems.KerbalSys
 
             switch (msgData.KerbalMessageType)
             {
-                case KerbalMessageType.REPLY:
-                    HandleKerbalReply(msgData as KerbalReplyMsgData);
-                    break;
-                case KerbalMessageType.PROTO:
-                    HandleKerbalProto(msgData as KerbalProtoMsgData);
-                    break;
+                case KerbalMessageType.Reply:
+                HandleKerbalReply(msgData as KerbalReplyMsgData);
+                break;
+                case KerbalMessageType.Proto:
+                HandleKerbalProto(msgData as KerbalProtoMsgData);
+                break;
                 default:
-                    Debug.LogError("[LMP]: Invalid Kerbal message type");
-                    break;
+                Debug.LogError("[LMP]: Invalid Kerbal message type");
+                break;
             }
         }
 
@@ -64,7 +62,7 @@ namespace LunaClient.Systems.KerbalSys
             }
 
             Debug.Log("[LMP]: Kerbals Synced!");
-            MainSystem.Singleton.NetworkState = ClientState.KERBALS_SYNCED;
+            MainSystem.Singleton.NetworkState = ClientState.KerbalsSynced;
         }
     }
 }

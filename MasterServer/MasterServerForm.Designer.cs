@@ -1,11 +1,14 @@
-﻿namespace MasterServer
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+
+namespace MasterServer
 {
     partial class MasterServerForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -29,7 +32,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MasterServerForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(MasterServerForm));
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.tbStatus = new System.Windows.Forms.TextBox();
             this.serverList = new System.Windows.Forms.ListBox();
@@ -152,15 +155,15 @@
 
         #endregion
 
-        private System.Windows.Forms.NotifyIcon notifyIcon;
-        private System.Windows.Forms.TextBox tbStatus;
-        private System.Windows.Forms.ListBox serverList;
-        private System.Windows.Forms.TextBox tbPort;
-        private System.Windows.Forms.Label lblPort;
-        private System.Windows.Forms.Label lblStatus;
-        private System.Windows.Forms.Label lblServers;
-        private System.Windows.Forms.Button btnStart;
-        private System.Windows.Forms.Label lblInfo;
+        private NotifyIcon notifyIcon;
+        private TextBox tbStatus;
+        private ListBox serverList;
+        private TextBox tbPort;
+        private Label lblPort;
+        private Label lblStatus;
+        private Label lblServers;
+        private Button btnStart;
+        private Label lblInfo;
     }
 }
 

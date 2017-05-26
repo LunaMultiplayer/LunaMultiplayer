@@ -1,11 +1,10 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Chat
 {
     public class ChatJoinMsgData : ChatBaseMsgData
     {
-        public override ChatMessageType ChatMessageType => ChatMessageType.JOIN;
+        public override ChatMessageType ChatMessageType => ChatMessageType.Join;
         public string Channel { get; set; }
     }
 }

@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Security.Cryptography;
-using System.Text;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.Mod;
-using LunaClient.Systems.Network;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
+using System;
+using System.Collections.Concurrent;
+using System.Security.Cryptography;
+using System.Text;
 using UnityEngine;
 
 namespace LunaClient.Systems.Handshake
@@ -24,9 +22,9 @@ namespace LunaClient.Systems.Handshake
         public void HandleMessage(IMessageData messageData)
         {
             if (messageData.GetType() == typeof(HandshakeChallengeMsgData))
-                HandleChallengeReceivedMessage((HandshakeChallengeMsgData) messageData);
+                HandleChallengeReceivedMessage((HandshakeChallengeMsgData)messageData);
             else if (messageData.GetType() == typeof(HandshakeReplyMsgData))
-                HandleHandshakeReplyReceivedMessage((HandshakeReplyMsgData) messageData);
+                HandleHandshakeReplyReceivedMessage((HandshakeReplyMsgData)messageData);
         }
 
         #region Private
@@ -42,7 +40,7 @@ namespace LunaClient.Systems.Handshake
                     rsa.FromXmlString(SettingsSystem.CurrentSettings.PrivateKey);
                     var signature = rsa.SignData(challange, CryptoConfig.CreateFromName("SHA256"));
                     System.MessageSender.SendHandshakeResponse(signature);
-                    MainSystem.Singleton.NetworkState = ClientState.HANDSHAKING;
+                    MainSystem.Singleton.NetworkState = ClientState.Handshaking;
                 }
             }
             catch (Exception e)
@@ -61,28 +59,28 @@ namespace LunaClient.Systems.Handshake
                 reply = data.Response;
                 reason = data.Reason;
                 //If we handshook successfully, the mod data will be available to read.
-                if (reply == HandshakeReply.HANDSHOOK_SUCCESSFULLY)
+                if (reply == HandshakeReply.HandshookSuccessfully)
                 {
                     ModSystem.Singleton.ModControl = data.ModControlMode;
-                    if (ModSystem.Singleton.ModControl != ModControlMode.DISABLED)
+                    if (ModSystem.Singleton.ModControl != ModControlMode.Disabled)
                         modFileData = Encoding.UTF8.GetString(data.ModFileData);
                 }
             }
             catch (Exception e)
             {
                 Debug.LogError($"[LMP]: Error handling HANDSHAKE_REPLY Message, exception: {e}");
-                reply = HandshakeReply.MALFORMED_HANDSHAKE;
+                reply = HandshakeReply.MalformedHandshake;
                 reason = "Incompatible HANDSHAKE_REPLY Message";
             }
 
             switch (reply)
             {
-                case HandshakeReply.HANDSHOOK_SUCCESSFULLY:
+                case HandshakeReply.HandshookSuccessfully:
                 {
                     if (ModFileParser.ParseModFile(modFileData))
                     {
                         Debug.Log("[LMP]: Handshake successful");
-                        MainSystem.Singleton.NetworkState = ClientState.AUTHENTICATED;
+                        MainSystem.Singleton.NetworkState = ClientState.Authenticated;
                     }
                     else
                     {
@@ -90,17 +88,17 @@ namespace LunaClient.Systems.Handshake
                         NetworkConnection.Disconnect("[LMP]: Failed mod validation");
                     }
                 }
-                    break;
+                break;
                 default:
-                    var disconnectReason = "Handshake failure: " + reason;
-                    //If it's a protocol mismatch, append the client/server version.
-                    if (reply == HandshakeReply.PROTOCOL_MISMATCH)
-                    {
-                        disconnectReason += "\nClient: " + VersionInfo.VersionNumber + ", Server: " + data.Version;
-                    }
-                    Debug.Log(disconnectReason);
-                    NetworkConnection.Disconnect(disconnectReason);
-                    break;
+                var disconnectReason = "Handshake failure: " + reason;
+                //If it's a protocol mismatch, append the client/server version.
+                if (reply == HandshakeReply.ProtocolMismatch)
+                {
+                    disconnectReason += "\nClient: " + VersionInfo.VersionNumber + ", Server: " + data.Version;
+                }
+                Debug.Log(disconnectReason);
+                NetworkConnection.Disconnect(disconnectReason);
+                break;
             }
         }
 

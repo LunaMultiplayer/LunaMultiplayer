@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
-using Lidgren.Network;
 
 namespace LunaCommon.Message.Client
 {
@@ -12,23 +12,23 @@ namespace LunaCommon.Message.Client
     {
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [(ushort)VesselMessageType.LIST_REQUEST] = new VesselListRequestMsgData(),
-            [(ushort)VesselMessageType.VESSELS_REQUEST] = new VesselsRequestMsgData(),
-            [(ushort)VesselMessageType.PROTO] = new VesselProtoMsgData(),
-            [(ushort)VesselMessageType.UPDATE] = new VesselUpdateMsgData(),
-            [(ushort)VesselMessageType.REMOVE] = new VesselRemoveMsgData(),
-            [(ushort)VesselMessageType.CHANGE] = new VesselChangeMsgData(),
-            [(ushort)VesselMessageType.POSITION] = new VesselPositionMsgData(),
-            [(ushort)VesselMessageType.FLIGHTSTATE] = new VesselFlightStateMsgData(),
+            [(ushort)VesselMessageType.ListRequest] = new VesselListRequestMsgData(),
+            [(ushort)VesselMessageType.VesselsRequest] = new VesselsRequestMsgData(),
+            [(ushort)VesselMessageType.Proto] = new VesselProtoMsgData(),
+            [(ushort)VesselMessageType.Update] = new VesselUpdateMsgData(),
+            [(ushort)VesselMessageType.Remove] = new VesselRemoveMsgData(),
+            [(ushort)VesselMessageType.Change] = new VesselChangeMsgData(),
+            [(ushort)VesselMessageType.Position] = new VesselPositionMsgData(),
+            [(ushort)VesselMessageType.Flightstate] = new VesselFlightStateMsgData()
         };
 
-        public override ClientMessageType MessageType => ClientMessageType.VESSEL;
+        public override ClientMessageType MessageType => ClientMessageType.Vessel;
         protected override int DefaultChannel => IsVesselPositionOrFlightState() ? 0 : 8;
         public override NetDeliveryMethod NetDeliveryMethod => IsVesselPositionOrFlightState() ? NetDeliveryMethod.UnreliableSequenced : NetDeliveryMethod.ReliableOrdered;
 
         private bool IsVesselPositionOrFlightState()
         {
-            return Data.SubType == (ushort)VesselMessageType.POSITION || Data.SubType == (ushort)VesselMessageType.FLIGHTSTATE;
+            return Data.SubType == (ushort)VesselMessageType.Position || Data.SubType == (ushort)VesselMessageType.Flightstate;
         }
     }
 }

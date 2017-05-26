@@ -1,8 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Lidgren.Network;
 using LunaCommon.Message.Interface;
-using LunaCommon.Message.Serialization;
-using Lidgren.Network;
+using System;
+using System.Collections.Generic;
+using DataDeserializer = LunaCommon.Message.Serialization.DataDeserializer;
+using DataSerializer = LunaCommon.Message.Serialization.DataSerializer;
 
 namespace LunaCommon.Message.Base
 {
@@ -62,7 +63,7 @@ namespace LunaCommon.Message.Base
         /// </summary>
         public IMessageData Data
         {
-            get { return _data; }
+            get => _data;
             private set
             {
                 if (!(value is T) && (typeof(T) != value.GetType()))
@@ -142,7 +143,7 @@ namespace LunaCommon.Message.Base
             try
             {
                 var data = DataSerializer.Serialize(Data) ?? new byte[0];
-                
+
                 if (compress)
                 {
                     var dataCompressed = CompressionHelper.CompressBytes(data);

@@ -2,8 +2,8 @@
 {
     public enum CraftType
     {
-        VAB = 0,
-        SPH = 1,
-        SUBASSEMBLY = 2
+        Vab = 0,
+        Sph = 1,
+        Subassembly = 2
     }
 }

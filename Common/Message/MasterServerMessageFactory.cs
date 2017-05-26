@@ -2,7 +2,6 @@
 using LunaCommon.Enums;
 using LunaCommon.Message.Base;
 using LunaCommon.Message.MasterServer;
-using LunaCommon.Message.Server;
 
 namespace LunaCommon.Message
 {
@@ -19,7 +18,7 @@ namespace LunaCommon.Message
         /// <param name="compress">Compress the messages or not</param>
         public MasterServerMessageFactory(bool compress) : base(compress)
         {
-            MessageDictionary.Add((uint)MasterServerMessageType.MAIN, new MainMstSrvMsg());
+            MessageDictionary.Add((uint)MasterServerMessageType.Main, new MainMstSrvMsg());
         }
     }
 }

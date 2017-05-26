@@ -1,6 +1,4 @@
-﻿using System;
-using System.IO;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.KerbalReassigner;
@@ -8,6 +6,7 @@ using LunaClient.Utilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System;
 using UniLinq;
 using UnityEngine;
 
@@ -19,7 +18,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
-        
+
         public void SendVesselMessage(Vessel vessel)
         {
             if (vessel == null) return;
@@ -151,8 +150,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private string DodgeValueIfNeeded(string input)
         {
-            var boolValue = input.Substring(0, input.IndexOf(", "));
-            var timeValue = input.Substring(input.IndexOf(", ") + 1);
+            var boolValue = input.Substring(0, input.IndexOf(", ", StringComparison.Ordinal));
+            var timeValue = input.Substring(input.IndexOf(", ", StringComparison.Ordinal) + 1);
             var vesselPlanetTime = double.Parse(timeValue);
             var currentPlanetTime = Planetarium.GetUniversalTime();
             if (vesselPlanetTime > currentPlanetTime)

@@ -1,6 +1,6 @@
-﻿using System;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Settings
 {
@@ -8,9 +8,6 @@ namespace LunaCommon.Message.Data.Settings
     {
         public override ushort SubType => (ushort)(int)SettingsMessageType;
 
-        public virtual SettingsMessageType SettingsMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual SettingsMessageType SettingsMessageType => throw new NotImplementedException();
     }
 }

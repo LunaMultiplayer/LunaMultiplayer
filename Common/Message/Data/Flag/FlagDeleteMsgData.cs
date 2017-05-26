@@ -1,11 +1,10 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Flag
 {
     public class FlagDeleteMsgData : FlagBaseMsgData
     {
-        public override FlagMessageType FlagMessageType => FlagMessageType.DELETE_FILE;
+        public override FlagMessageType FlagMessageType => FlagMessageType.DeleteFile;
         public string FlagName { get; set; }
     }
 }

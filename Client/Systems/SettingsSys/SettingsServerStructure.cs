@@ -5,7 +5,7 @@ namespace LunaClient.Systems.SettingsSys
 {
     public class SettingsServerStructure
     {
-        public WarpMode WarpMode { get; set; } = WarpMode.SUBSPACE;
+        public WarpMode WarpMode { get; set; } = WarpMode.Subspace;
         public GameParameters ServerParameters { get; set; }
         public GameParameters.AdvancedParams ServerAdvancedParameters { get; set; } = new GameParameters.AdvancedParams();
         public CommNetParams ServerCommNetParameters { get; set; } = new CommNetParams();

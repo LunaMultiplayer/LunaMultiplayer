@@ -1,6 +1,6 @@
-﻿using System;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Warp
 {
@@ -8,9 +8,6 @@ namespace LunaCommon.Message.Data.Warp
     {
         public override ushort SubType => (ushort)(int)WarpMessageType;
 
-        public virtual WarpMessageType WarpMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual WarpMessageType WarpMessageType => throw new NotImplementedException();
     }
 }

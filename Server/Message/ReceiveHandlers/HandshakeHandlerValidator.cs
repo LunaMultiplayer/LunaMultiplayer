@@ -19,7 +19,7 @@ namespace LunaServer.Message.ReceiveHandlers
             if (username.Length > 10)
             {
                 Reason = "User too long. Max: 10";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.SERVER_FULL, Reason);
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.ServerFull, Reason);
                 return false;
             }
             return true;
@@ -30,7 +30,7 @@ namespace LunaServer.Message.ReceiveHandlers
             if (ClientRetriever.GetActiveClientCount() >= GeneralSettings.SettingsStore.MaxPlayers)
             {
                 Reason = "Server full";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.SERVER_FULL, Reason);
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.ServerFull, Reason);
                 return false;
             }
             return true;
@@ -41,7 +41,7 @@ namespace LunaServer.Message.ReceiveHandlers
             if (GeneralSettings.SettingsStore.Whitelisted && !WhitelistCommands.Retrieve().Contains(playerName))
             {
                 Reason = "Not on whitelist";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.NOT_WHITELISTED, Reason);
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.NotWhitelisted, Reason);
                 return false;
             }
             return true;
@@ -54,7 +54,7 @@ namespace LunaServer.Message.ReceiveHandlers
                 BanCommands.RetrieveBannedKeys().Contains(publicKey))
             {
                 Reason = "Banned";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.PLAYER_BANNED, Reason);
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.PlayerBanned, Reason);
                 return false;
             }
             return true;
@@ -65,7 +65,7 @@ namespace LunaServer.Message.ReceiveHandlers
             if ((playerName == "Initial") || (playerName == GeneralSettings.SettingsStore.ConsoleIdentifier))
             {
                 Reason = "Using reserved name";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.RESERVED_NAME, Reason);
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.ReservedName, Reason);
                 return false;
             }
             return true;
@@ -77,7 +77,7 @@ namespace LunaServer.Message.ReceiveHandlers
             if (existingClient != null)
             {
                 Reason = "Username already connected";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.ALREADY_CONNECTED, Reason);
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.AlreadyConnected, Reason);
                 return false;
             }
             return true;
@@ -89,7 +89,7 @@ namespace LunaServer.Message.ReceiveHandlers
             if (!regex.IsMatch(playerName))
             {
                 Reason = "Invalid username characters";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.INVALID_PLAYERNAME, Reason);
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidPlayername, Reason);
                 return false;
             }
             return true;
@@ -106,7 +106,7 @@ namespace LunaServer.Message.ReceiveHandlers
                 if (playerPublicKey != storedPlayerPublicKey)
                 {
                     Reason = "Invalid key. Username already taken";
-                    HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.INVALID_KEY, Reason);
+                    HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidKey, Reason);
                     return false;
                 }
                 using (var rsa = new RSACryptoServiceProvider(1024))
@@ -118,7 +118,7 @@ namespace LunaServer.Message.ReceiveHandlers
                     if (!result)
                     {
                         Reason = "Public/priv key mismatch";
-                        HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.INVALID_KEY, Reason);
+                        HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidKey, Reason);
                         return false;
                     }
                 }
@@ -133,7 +133,7 @@ namespace LunaServer.Message.ReceiveHandlers
                 catch
                 {
                     Reason = "Invalid username";
-                    HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.INVALID_PLAYERNAME, Reason);
+                    HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidPlayername, Reason);
                     return false;
                 }
             }

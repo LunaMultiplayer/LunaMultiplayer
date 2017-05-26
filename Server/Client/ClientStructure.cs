@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
 using System.Net;
+using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
-using Lidgren.Network;
 
 namespace LunaServer.Client
 {

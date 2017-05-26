@@ -2,9 +2,9 @@
 {
     public enum MasterServerMessageSubType
     {
-        REGISTER_SERVER = 0,
-        REQUEST_SERVERS = 1,
-        REPLY_SERVERS = 2,
-        INTRODUCTION = 3,
+        RegisterServer = 0,
+        RequestServers = 1,
+        ReplyServers = 2,
+        Introduction = 3
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,10 +8,8 @@ using LunaServer.Client;
 using LunaServer.Command;
 using LunaServer.Command.Command;
 using LunaServer.Context;
-using LunaServer.Lidgren;
 using LunaServer.Log;
 using LunaServer.Plugin;
-using LunaServer.Server;
 using LunaServer.Settings;
 using LunaServer.System;
 
@@ -41,7 +38,7 @@ namespace LunaServer
                 ServerContext.ServerStarting = true;
 
                 LunaLog.Debug("Loading settings...");
-                if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.CUSTOM)
+                if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
                 {
                     GameplaySettings.Reset();
                     GameplaySettings.Load();
@@ -62,7 +59,7 @@ namespace LunaServer
                         LunaLog.Debug("Reloading settings...");
                         GeneralSettings.Reset();
                         GeneralSettings.Load();
-                        if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.CUSTOM)
+                        if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
                         {
                             LunaLog.Debug("Reloading gameplay settings...");
                             GameplaySettings.Reset();
@@ -73,7 +70,7 @@ namespace LunaServer
                     ServerContext.ServerRestarting = false;
                     LunaLog.Normal("Starting Luna Server v" + VersionInfo.FullVersionNumber);
 
-                    if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.CUSTOM)
+                    if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
                     {
                         //Generate the config file by accessing the object.
                         LunaLog.Debug("Loading gameplay settings...");

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using LunaCommon.Enums;
 using LunaCommon.Message.Data.Color;
-using LunaCommon.Message.Data.Warp;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
@@ -19,10 +17,10 @@ namespace LunaServer.Message.Reader
             var message = messageData as PlayerColorBaseMsgData;
             switch (message?.PlayerColorMessageType)
             {
-                case PlayerColorMessageType.REQUEST:
+                case PlayerColorMessageType.Request:
                     SendAllPlayerColors(client);
                     break;
-                case PlayerColorMessageType.SET:
+                case PlayerColorMessageType.Set:
                     var data = message as PlayerColorSetMsgData;
                     {
                         if ((data != null) && (data.PlayerName == client.PlayerName))

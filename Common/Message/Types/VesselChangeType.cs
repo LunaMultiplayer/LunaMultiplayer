@@ -2,6 +2,6 @@
 {
     public enum VesselChangeType
     {
-        EXPLODE = 1
+        Explode = 1
     }
 }

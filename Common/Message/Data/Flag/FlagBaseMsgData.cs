@@ -1,7 +1,6 @@
-﻿using System;
-using LunaCommon.Enums;
-using LunaCommon.Message.Base;
+﻿using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Flag
 {
@@ -9,10 +8,7 @@ namespace LunaCommon.Message.Data.Flag
     {
         public override ushort SubType => (ushort)(int)FlagMessageType;
 
-        public virtual FlagMessageType FlagMessageType
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public virtual FlagMessageType FlagMessageType => throw new NotImplementedException();
 
         public string PlayerName { get; set; }
     }

@@ -2,8 +2,8 @@
 {
     public enum ModControlMode
     {
-        DISABLED = 0,
-        ENABLED_STOP_INVALID_PART_SYNC = 1,
-        ENABLED_STOP_INVALID_PART_LAUNCH = 2
+        Disabled = 0,
+        EnabledStopInvalidPartSync = 1,
+        EnabledStopInvalidPartLaunch = 2
     }
 }

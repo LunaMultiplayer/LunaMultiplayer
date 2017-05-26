@@ -1,10 +1,9 @@
+using LunaClient.Base;
+using LunaClient.Systems.SettingsSys;
+using LunaCommon.Message.Data.Lock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LunaClient.Base;
-using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
-using LunaCommon.Message.Data.Lock;
 using UnityEngine;
 
 namespace LunaClient.Systems.Lock
@@ -158,7 +157,7 @@ namespace LunaClient.Systems.Lock
                 MessageSender.SendMessage(new LockReleaseMsgData
                 {
                     PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-                    LockName = spectatorLock,
+                    LockName = spectatorLock
                 });
             }
         }
@@ -220,7 +219,7 @@ namespace LunaClient.Systems.Lock
         #endregion
 
         #region Query
-        
+
         public bool LockIsOurs(string lockName)
         {
             return ServerLocks.ContainsKey(lockName) && (ServerLocks[lockName] == SettingsSystem.CurrentSettings.PlayerName);
@@ -228,7 +227,7 @@ namespace LunaClient.Systems.Lock
 
         public bool LockWithPrefixExists(string lockPrefix)
         {
-            return ServerLocks.Any(l=> l.Key.StartsWith(lockPrefix));
+            return ServerLocks.Any(l => l.Key.StartsWith(lockPrefix));
         }
 
         public bool SpectatorLockExists(Guid vesselId)

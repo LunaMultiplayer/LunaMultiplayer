@@ -5,7 +5,7 @@ namespace LunaCommon.Message.Data.Vessel
 {
     public class VesselsReplyMsgData : VesselBaseMsgData
     {
-        public override VesselMessageType VesselMessageType => VesselMessageType.VESSELS_REPLY;
+        public override VesselMessageType VesselMessageType => VesselMessageType.VesselsReply;
         public KeyValuePair<string, byte[]>[] VesselsData { get; set; }
     }
 }

@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using LunaClient.Base.Interface;
+using LunaClient.Utilities;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using LunaClient.Base.Interface;
-using LunaClient.Utilities;
-using Debug = UnityEngine.Debug;
+using UnityEngine;
 
 namespace LunaClient.Base
 {
@@ -60,7 +60,7 @@ namespace LunaClient.Base
                 Debug.LogError($"[LMP]: Routine {routine.Name} already defined");
             }
         }
-        
+
         /// <summary>
         /// Changes the routine execution interval on the fly
         /// </summary>
@@ -92,7 +92,7 @@ namespace LunaClient.Base
         /// </summary>
         public virtual bool Enabled
         {
-            get { return _enabled; }
+            get => _enabled;
             set
             {
                 if (!_enabled && value)

@@ -35,10 +35,10 @@ namespace LunaServer.Message.Reader
                 AbandonedVesselsUpdateMsInterval = GeneralSettings.SettingsStore.AbandonedVesselsUpdateMsInterval,
                 ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast,
                 ClockSetMsInterval = GeneralSettings.SettingsStore.ClockSetMsInterval,
-                WarpMaster = GeneralSettings.SettingsStore.WarpMaster,
+                WarpMaster = GeneralSettings.SettingsStore.WarpMaster
             };
 
-            if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.CUSTOM)
+            if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
             {
                 settingsData.EnableCommNet = GameplaySettings.SettingsStore.CommNetwork;
                 settingsData.RespawnTimer = GameplaySettings.SettingsStore.RespawnTime;

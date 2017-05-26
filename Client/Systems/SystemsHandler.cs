@@ -1,9 +1,7 @@
-﻿using System;
-using LunaClient.Base.Interface;
+﻿using LunaClient.Base.Interface;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
-using LunaClient.Systems.ColorSystem;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.Handshake;
@@ -14,6 +12,7 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.ModApi;
 using LunaClient.Systems.Motd;
 using LunaClient.Systems.Network;
+using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
@@ -21,6 +20,7 @@ using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.Warp;
+using System;
 
 namespace LunaClient.Systems
 {
@@ -30,7 +30,7 @@ namespace LunaClient.Systems
         //end up with variables that are different than it's singleton value (really, it's a nightmare) 
         //for example, if you stop on TimeSyncerSystem.Update and set Synced = true you will see how 
         //the variable value differs from it's singleton value.
-        
+
         /// <summary>
         /// Call all the updates of the systems
         /// </summary>
@@ -59,7 +59,7 @@ namespace LunaClient.Systems
             TryUpdate(ScenarioSystem.Singleton);
             TryUpdate(ToolbarSystem.Singleton);
         }
-        
+
         /// <summary>
         /// Call all the fixed updates of the systems
         /// </summary>
@@ -103,7 +103,7 @@ namespace LunaClient.Systems
                 }
             }
         }
-        
+
         private static void TryFixedUpdate(params ISystem[] systems)
         {
             foreach (var system in systems)

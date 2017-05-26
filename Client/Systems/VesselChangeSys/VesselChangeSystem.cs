@@ -67,7 +67,7 @@ namespace LunaClient.Systems.VesselChangeSys
             {
                 switch ((VesselChangeType)messageData.ChangeType)
                 {
-                    case VesselChangeType.EXPLODE:
+                    case VesselChangeType.Explode:
                         var part = vessel.Parts.FirstOrDefault(p => p.flightID == messageData.PartFlightId) ??
                                     vessel.Parts.FirstOrDefault(p => p.craftID == messageData.PartCraftId);
 

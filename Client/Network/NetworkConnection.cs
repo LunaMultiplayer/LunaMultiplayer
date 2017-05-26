@@ -1,15 +1,13 @@
-﻿using System;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using Lidgren.Network;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
-using LunaClient.Windows;
+using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Handshake;
-using Lidgren.Network;
-using LunaCommon;
+using System;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace LunaClient.Network
@@ -27,7 +25,7 @@ namespace LunaClient.Network
         {
             lock (DisconnectLock)
             {
-                if (MainSystem.Singleton.NetworkState != ClientState.DISCONNECTED)
+                if (MainSystem.Singleton.NetworkState != ClientState.Disconnected)
                 {
                     Debug.Log("[LMP]: Disconnected, reason: " + reason);
                     if (!HighLogic.LoadedSceneIsEditor && !HighLogic.LoadedSceneIsFlight)
@@ -42,7 +40,7 @@ namespace LunaClient.Network
 
                     MainSystem.Singleton.GameRunning = false;
                     MainSystem.Singleton.Status = "Disconnected: " + reason;
-                    MainSystem.Singleton.NetworkState = ClientState.DISCONNECTED;
+                    MainSystem.Singleton.NetworkState = ClientState.Disconnected;
                     NetworkMain.ClientConnection.Disconnect(reason);
                     NetworkMain.ClientConnection.Shutdown(reason);
                     NetworkMain.ResetConnectionStaticsAndQueues();
@@ -73,13 +71,13 @@ namespace LunaClient.Network
         {
             try
             {
-                if (MainSystem.Singleton.NetworkState == ClientState.DISCONNECTED)
+                if (MainSystem.Singleton.NetworkState == ClientState.Disconnected)
                 {
                     var endpoint = Common.CreateEndpointFromString(endpointString);
                     MainSystem.Singleton.Status = $"Connecting to {endpoint.Address} port {endpoint.Port}";
                     Debug.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
 
-                    MainSystem.Singleton.NetworkState = ClientState.CONNECTING;
+                    MainSystem.Singleton.NetworkState = ClientState.Connecting;
                     ConnectToServerAddress(endpoint);
                 }
                 else
@@ -99,14 +97,14 @@ namespace LunaClient.Network
             {
                 var outmsg = NetworkMain.ClientConnection.CreateMessage(1);
                 outmsg.Write((byte)NetIncomingMessageType.ConnectionApproval);
-                
+
                 NetworkMain.ClientConnection.Start();
                 NetworkMain.ClientConnection.Connect(destination);
                 NetworkMain.ClientConnection.FlushSendQueue();
 
                 var connectionTrials = 0;
-                while (MainSystem.Singleton.NetworkState == ClientState.CONNECTING && 
-                    (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected) && 
+                while (MainSystem.Singleton.NetworkState == ClientState.Connecting &&
+                    (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected) &&
                     (connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries))
                 {
                     connectionTrials++;
@@ -117,10 +115,10 @@ namespace LunaClient.Network
                 {
                     Debug.Log("[LMP]: Connected to " + destination.Address + " port " + destination.Port);
                     MainSystem.Singleton.Status = "Connected";
-                    MainSystem.Singleton.NetworkState = ClientState.CONNECTED;
+                    MainSystem.Singleton.NetworkState = ClientState.Connected;
                     NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg>(new HandshakeRequestMsgData()));
                 }
-                else if (MainSystem.Singleton.NetworkState == ClientState.CONNECTING)
+                else if (MainSystem.Singleton.NetworkState == ClientState.Connecting)
                 {
                     Debug.LogError("[LMP]: Failed to connect within the timeout!");
                     Disconnect("Initial connection timeout");

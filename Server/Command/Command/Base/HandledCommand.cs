@@ -1,9 +1,9 @@
-﻿using System;
+﻿using LunaServer.Log;
+using LunaServer.System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LunaServer.Log;
-using LunaServer.System;
 
 namespace LunaServer.Command.Command.Base
 {
@@ -74,7 +74,7 @@ namespace LunaServer.Command.Command.Base
                 {
                     Items.Remove(item);
                     Save();
-                };
+                }
             }
         }
 

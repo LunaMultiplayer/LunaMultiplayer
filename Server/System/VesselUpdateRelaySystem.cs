@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Server;
 using LunaServer.Settings;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading;
 
 namespace LunaServer.System
 {
@@ -18,7 +19,7 @@ namespace LunaServer.System
     /// </summary>
     public class VesselUpdateRelaySystem
     {
-        public static ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>> IncomingUpdates { get; }=
+        public static ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>> IncomingUpdates { get; } =
             new ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>>();
 
         private static readonly ConcurrentQueue<KeyValuePair<ClientStructure, VesselPositionMsgData>>
@@ -32,8 +33,7 @@ namespace LunaServer.System
 
         public static void RemovePlayer(ClientStructure client)
         {
-            VesselPositionMsgData value;
-            VesselsDictionary.TryRemove(client, out value);
+            VesselsDictionary.TryRemove(client, out var _);
         }
 
         public static void AddPlayer(ClientStructure client)
@@ -55,8 +55,7 @@ namespace LunaServer.System
             {
                 try
                 {
-                    KeyValuePair<ClientStructure, VesselPositionMsgData> vesselUpdate;
-                    if (IncomingFarUpdates.TryDequeue(out vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
+                    if (IncomingFarUpdates.TryDequeue(out var vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
                     {
                         var farClients = VesselsDictionary.Where(v => !Equals(v.Key, vesselUpdate.Key) && v.Value != null &&
                                                                       v.Value.BodyName != vesselUpdate.Value.BodyName)
@@ -83,8 +82,7 @@ namespace LunaServer.System
             {
                 try
                 {
-                    KeyValuePair<ClientStructure, VesselPositionMsgData> vesselUpdate;
-                    if (IncomingMediumUpdates.TryDequeue(out vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
+                    if (IncomingMediumUpdates.TryDequeue(out var vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
                     {
                         IncomingFarUpdates.Enqueue(vesselUpdate);
 
@@ -118,8 +116,7 @@ namespace LunaServer.System
             {
                 try
                 {
-                    KeyValuePair<ClientStructure, VesselPositionMsgData> vesselUpdate;
-                    if (IncomingUpdates.TryDequeue(out vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
+                    if (IncomingUpdates.TryDequeue(out var vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
                     {
                         VesselsDictionary.TryUpdate(vesselUpdate.Key, vesselUpdate.Value, VesselsDictionary[vesselUpdate.Key]);
 
@@ -143,12 +140,14 @@ namespace LunaServer.System
             }
         }
 
+        [SuppressMessage("ReSharper", "UnusedParameter.Local")]
         private static double CalculateDistance(VesselPositionMsgData point1, VesselPositionMsgData point2)
         {
             //return CalculateDistance(new[] { point1.X, point1.Y, point1.Z }, new[] { point2.X, point2.Y, point2.Z });
             return 0;
         }
 
+        [SuppressMessage("ReSharper", "UnusedMember.Local")]
         private static double CalculateDistance(IReadOnlyList<float> point1, IReadOnlyList<float> point2)
         {
             return Math.Sqrt(Math.Pow(point1[0] - point2[0], 2) + Math.Pow(point1[1] - point2[1], 2) + Math.Pow(point1[2] - point2[2], 2));

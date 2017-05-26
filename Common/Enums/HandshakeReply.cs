@@ -2,15 +2,15 @@
 {
     public enum HandshakeReply
     {
-        HANDSHOOK_SUCCESSFULLY = 0,
-        PROTOCOL_MISMATCH = 1,
-        ALREADY_CONNECTED = 2,
-        RESERVED_NAME = 3,
-        INVALID_KEY = 4,
-        PLAYER_BANNED = 5,
-        SERVER_FULL = 6,
-        NOT_WHITELISTED = 7,
-        INVALID_PLAYERNAME = 98,
-        MALFORMED_HANDSHAKE = 99
+        HandshookSuccessfully = 0,
+        ProtocolMismatch = 1,
+        AlreadyConnected = 2,
+        ReservedName = 3,
+        InvalidKey = 4,
+        PlayerBanned = 5,
+        ServerFull = 6,
+        NotWhitelisted = 7,
+        InvalidPlayername = 98,
+        MalformedHandshake = 99
     }
 }

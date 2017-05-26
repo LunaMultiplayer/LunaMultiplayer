@@ -5,7 +5,7 @@ namespace LunaCommon.Message.Data.Vessel
 {
     public class VesselUpdateMsgData : VesselBaseMsgData
     {
-        public override VesselMessageType VesselMessageType => VesselMessageType.UPDATE;
+        public override VesselMessageType VesselMessageType => VesselMessageType.Update;
         public Guid VesselId { get; set; }
         public int Stage { get; set; }
         public uint[] ActiveEngines { get; set; }

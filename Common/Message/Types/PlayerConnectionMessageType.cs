@@ -2,7 +2,7 @@
 {
     public enum PlayerConnectionMessageType
     {
-        JOIN = 0,
-        LEAVE = 1
+        Join = 0,
+        Leave = 1
     }
 }

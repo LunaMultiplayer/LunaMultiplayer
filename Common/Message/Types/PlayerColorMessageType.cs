@@ -2,8 +2,8 @@
 {
     public enum PlayerColorMessageType
     {
-        REQUEST = 0,
-        REPLY = 1,
-        SET = 2
+        Request = 0,
+        Reply = 1,
+        Set = 2
     }
 }

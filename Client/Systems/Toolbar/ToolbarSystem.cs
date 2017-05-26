@@ -1,6 +1,6 @@
-﻿using LunaClient.Base;
+﻿using KSP.UI.Screens;
+using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using KSP.UI.Screens;
 using UnityEngine;
 
 namespace LunaClient.Systems.Toolbar
@@ -17,7 +17,7 @@ namespace LunaClient.Systems.Toolbar
         }
 
         #region Fields
-        
+
         private bool StockDelayRegister { get; set; }
         private bool BlizzyRegistered { get; set; }
         private bool StockRegistered { get; set; }
@@ -62,7 +62,7 @@ namespace LunaClient.Systems.Toolbar
         #endregion
 
         #region Private methods
-        
+
         private void EnableBlizzyToolbar()
         {
             BlizzyRegistered = true;

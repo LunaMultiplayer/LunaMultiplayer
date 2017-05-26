@@ -1,13 +1,12 @@
-﻿using System;
-using LunaClient.Base.Interface;
-using LunaClient.Systems.ColorSystem;
-using LunaClient.Systems.Mod;
+﻿using LunaClient.Systems.Mod;
+using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Utilities;
 using LunaClient.Windows.Status;
 using LunaClient.Windows.UniverseConverter;
 using LunaCommon.Enums;
+using System;
 using UnityEngine;
 
 namespace LunaClient.Windows.Options
@@ -51,21 +50,20 @@ namespace LunaClient.Windows.Options
                 StatusWindow.Singleton.ColorEventHandled = false;
                 SettingsSystem.CurrentSettings.PlayerColor = TempColor;
                 SettingsSystem.Singleton.SaveSettings();
-                if (MainSystem.Singleton.NetworkState == ClientState.RUNNING)
+                if (MainSystem.Singleton.NetworkState == ClientState.Running)
                     PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
             }
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
             //Cache
             GUILayout.Label("Cache size");
-            GUILayout.Label($"Current size: {Math.Round(UniverseSyncCache.CurrentCacheSize/(float) (1024*1024), 3)} MB.");
+            GUILayout.Label($"Current size: {Math.Round(UniverseSyncCache.CurrentCacheSize / (float)(1024 * 1024), 3)} MB.");
             GUILayout.Label($"Max size: {SettingsSystem.CurrentSettings.CacheSize} MB.");
             NewCacheSize = GUILayout.TextArea(NewCacheSize);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Set", ButtonStyle))
             {
-                int tempCacheSize;
-                if (int.TryParse(NewCacheSize, out tempCacheSize))
+                if (int.TryParse(NewCacheSize, out var tempCacheSize))
                 {
                     if (tempCacheSize < 1)
                     {
@@ -122,7 +120,7 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.DisclaimerAccepted = false;
                 SettingsSystem.Singleton.SaveSettings();
             }
-            var settingCompression = GUILayout.Toggle(SettingsSystem.CurrentSettings.CompressionEnabled, "Enable compression",ButtonStyle);
+            var settingCompression = GUILayout.Toggle(SettingsSystem.CurrentSettings.CompressionEnabled, "Enable compression", ButtonStyle);
             if (settingCompression != SettingsSystem.CurrentSettings.CompressionEnabled)
             {
                 SettingsSystem.CurrentSettings.CompressionEnabled = settingCompression;
@@ -151,11 +149,11 @@ namespace LunaClient.Windows.Options
             GUILayout.Label("Toolbar:", SmallOption);
             if (GUILayout.Button(ToolbarMode, ButtonStyle))
             {
-                var newSetting = (int) SettingsSystem.CurrentSettings.ToolbarType + 1;
+                var newSetting = (int)SettingsSystem.CurrentSettings.ToolbarType + 1;
                 //Overflow to 0
                 if (!Enum.IsDefined(typeof(LmpToolbarType), newSetting))
                     newSetting = 0;
-                SettingsSystem.CurrentSettings.ToolbarType = (LmpToolbarType) newSetting;
+                SettingsSystem.CurrentSettings.ToolbarType = (LmpToolbarType)newSetting;
                 SettingsSystem.Singleton.SaveSettings();
                 UpdateToolbarString();
                 ToolbarSystem.Singleton.ToolbarChanged();

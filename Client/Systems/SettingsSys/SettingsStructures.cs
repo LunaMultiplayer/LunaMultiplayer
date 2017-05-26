@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using LunaClient.Systems.ColorSystem;
+﻿using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.Toolbar;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Systems.SettingsSys

@@ -1,6 +1,4 @@
-﻿using LunaClient.Utilities;
-
-namespace LunaClient.Base.Interface
+﻿namespace LunaClient.Base.Interface
 {
     /// <summary>
     /// System base interface

@@ -5,7 +5,7 @@ namespace LunaCommon.Message.Data.Vessel
 {
     public class VesselFlightStateMsgData : VesselBaseMsgData
     {
-        public override VesselMessageType VesselMessageType => VesselMessageType.FLIGHTSTATE;
+        public override VesselMessageType VesselMessageType => VesselMessageType.Flightstate;
         public Guid VesselId { get; set; }
         public float MainThrottle { get; set; }
         public float WheelThrottleTrim { get; set; }

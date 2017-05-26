@@ -1,11 +1,10 @@
-﻿using LunaCommon.Enums;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Kerbal
 {
     public class KerbalsRequestMsgData : KerbalBaseMsgData
     {
-        public override KerbalMessageType KerbalMessageType => KerbalMessageType.REQUEST;
+        public override KerbalMessageType KerbalMessageType => KerbalMessageType.Request;
         //Empty message
     }
 }

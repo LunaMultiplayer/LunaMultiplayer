@@ -13,10 +13,7 @@ namespace LunaServer.Command.CombinedCommand
 
         public override void HandleCommand(string commandArgs)
         {
-            string type;
-            string data;
-            string reason;
-            SplitCommand(commandArgs, out type, out data, out reason);
+            SplitCommand(commandArgs, out var type, out var data, out var reason);
 
             switch (type)
             {

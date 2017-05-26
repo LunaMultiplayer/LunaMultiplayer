@@ -1,12 +1,12 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using LunaCommon.Message.Data.Chat;
+﻿using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Command.CombinedCommand;
 using LunaServer.Server;
 using LunaServer.Settings;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LunaServer.System
 {
@@ -33,8 +33,7 @@ namespace LunaServer.System
         {
             if (PlayerChatChannels.ContainsKey(playerName))
             {
-                List<string> chatChannels;
-                PlayerChatChannels.TryRemove(playerName, out chatChannels);
+                PlayerChatChannels.TryRemove(playerName, out var _);
             }
         }
 

@@ -14,8 +14,8 @@ namespace LunaServer.Command.Command.Base
 
         protected override List<string> Items
         {
-            get { return _sharedItems; }
-            set { _sharedItems = value; }
+            get => _sharedItems;
+            set => _sharedItems = value;
         }
     }
 }

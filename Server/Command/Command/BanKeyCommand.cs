@@ -13,9 +13,7 @@ namespace LunaServer.Command.Command
 
         public override void Execute(string commandArgs)
         {
-            string publicKey;
-            string reason;
-            CommandSystemHelperMethods.SplitCommand(commandArgs, out publicKey, out reason);
+            CommandSystemHelperMethods.SplitCommand(commandArgs, out var publicKey, out var reason);
             reason = string.IsNullOrEmpty(reason) ? "No reason specified" : reason;
 
             var player = ClientRetriever.GetClientByPublicKey(publicKey);

@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LunaCommon.Enums;
-using LunaCommon.Message.Data.PlayerStatus;
 using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
@@ -23,10 +21,10 @@ namespace LunaServer.Message.Reader
             var message = messageData as ScenarioBaseMsgData;
             switch (message?.ScenarioMessageType)
             {
-                case ScenarioMessageType.REQUEST:
+                case ScenarioMessageType.Request:
                     SendScenarioModules(client);
                     break;
-                case ScenarioMessageType.DATA:
+                case ScenarioMessageType.Data:
                     var data = (ScenarioDataMsgData)message;
                     LunaLog.Debug($"Saving {data.ScenarioNameData.Length} scenario modules from {client.PlayerName}");
                     foreach (var scenario in data.ScenarioNameData)

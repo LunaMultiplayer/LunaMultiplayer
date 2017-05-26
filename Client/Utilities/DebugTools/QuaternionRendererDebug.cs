@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace LunaClient.DebugTools
+namespace LunaClient.Utilities.DebugTools
 {
     public class QuaternionRendererDebug
     {
@@ -22,20 +22,18 @@ namespace LunaClient.DebugTools
             var vec05 = new Vector3(0.5f, 0.5f, 0.5f);
             var vec025 = new Vector3(0.25f, 0.25f, 0.25f);
 
-            float inputTheta;
-            Vector3 inputAxis;
-            inputQuat.ToAngleAxis(out inputTheta, out inputAxis);
+            inputQuat.ToAngleAxis(out var inputTheta, out var inputAxis);
 
             //Theta stuff
-            var thetaStart = startPos + Vector3.Scale(referenceTransform*inputAxis, vec15);
+            var thetaStart = startPos + Vector3.Scale(referenceTransform * inputAxis, vec15);
             var refDirection = Vector3.up;
-            var thetaX = Mathf.Sin(inputTheta*Mathf.Deg2Rad);
-            var thetaY = Mathf.Cos(inputTheta*Mathf.Deg2Rad);
+            var thetaX = Mathf.Sin(inputTheta * Mathf.Deg2Rad);
+            var thetaY = Mathf.Cos(inputTheta * Mathf.Deg2Rad);
             var thetaDirection = new Vector3(thetaX, thetaY, 0f);
 
-            _axis.UpdatePosition(startPos, startPos + Vector3.Scale(referenceTransform*inputAxis, vec3));
-            _reference0.UpdatePosition(thetaStart, thetaStart + Vector3.Scale(referenceTransform*refDirection, vec025));
-            _theta.UpdatePosition(thetaStart, thetaStart + Vector3.Scale(referenceTransform*thetaDirection, vec05));
+            _axis.UpdatePosition(startPos, startPos + Vector3.Scale(referenceTransform * inputAxis, vec3));
+            _reference0.UpdatePosition(thetaStart, thetaStart + Vector3.Scale(referenceTransform * refDirection, vec025));
+            _theta.UpdatePosition(thetaStart, thetaStart + Vector3.Scale(referenceTransform * thetaDirection, vec05));
         }
 
         public void Destroy()

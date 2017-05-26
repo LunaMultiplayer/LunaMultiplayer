@@ -18,22 +18,22 @@ namespace LunaCommon.Message
         /// <param name="compress">Compress the messages or not</param>
         public ClientMessageFactory(bool compress) : base(compress)
         {
-            MessageDictionary.Add((uint)ClientMessageType.HANDSHAKE, new HandshakeCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.CHAT, new ChatCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.PLAYER_STATUS, new PlayerStatusCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.PLAYER_COLOR, new PlayerColorCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.SCENARIO, new ScenarioCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.KERBAL, new KerbalCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.SETTINGS, new SettingsCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.VESSEL, new VesselCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.CRAFT_LIBRARY, new CraftLibraryCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.FLAG, new FlagCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.SYNC_TIME, new SyncTimeCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.MOTD, new MotdCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.WARP, new WarpCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.LOCK, new LockCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.MOD, new ModCliMsg());
-            MessageDictionary.Add((uint)ClientMessageType.ADMIN, new AdminCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Handshake, new HandshakeCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Chat, new ChatCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.PlayerStatus, new PlayerStatusCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.PlayerColor, new PlayerColorCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Scenario, new ScenarioCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Kerbal, new KerbalCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Settings, new SettingsCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Vessel, new VesselCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.CraftLibrary, new CraftLibraryCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Flag, new FlagCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.SyncTime, new SyncTimeCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Motd, new MotdCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Warp, new WarpCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Lock, new LockCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Mod, new ModCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Admin, new AdminCliMsg());
         }
     }
 }

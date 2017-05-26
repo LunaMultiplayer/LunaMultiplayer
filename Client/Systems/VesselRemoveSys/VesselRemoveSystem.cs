@@ -1,7 +1,7 @@
-﻿using System;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
+using System;
 using UniLinq;
 using UnityEngine;
 
@@ -17,7 +17,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
 
         #endregion
-        
+
         #region Base overrides
 
         protected override void OnEnabled()
@@ -72,8 +72,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                     VesselProtoSystem.Singleton.AllPlayerVessels[killVessel.id].Loaded = false;
                 else
                 {
-                    VesselProtoUpdate val;
-                    VesselProtoSystem.Singleton.AllPlayerVessels.TryRemove(killVessel.id, out val);
+                    VesselProtoSystem.Singleton.AllPlayerVessels.TryRemove(killVessel.id, out var _);
                 }
             }
 
@@ -86,7 +85,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         #endregion
 
         #region Update methods
-        
+
         /// <summary>
         /// Get the vessels that are in a past subspace and kill them
         /// </summary>

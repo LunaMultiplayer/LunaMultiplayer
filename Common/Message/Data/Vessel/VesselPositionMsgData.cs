@@ -5,7 +5,7 @@ namespace LunaCommon.Message.Data.Vessel
 {
     public class VesselPositionMsgData : VesselBaseMsgData
     {
-        public override VesselMessageType VesselMessageType => VesselMessageType.POSITION;
+        public override VesselMessageType VesselMessageType => VesselMessageType.Position;
         public Guid VesselId { get; set; }
         public string BodyName { get; set; }
         public double PlanetTime { get; set; }

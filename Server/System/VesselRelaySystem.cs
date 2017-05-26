@@ -1,12 +1,12 @@
-﻿using System.Collections.Concurrent;
-using System.Linq;
-using System.Threading;
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Context;
 using LunaServer.Server;
 using LunaServer.Settings;
+using System.Collections.Concurrent;
+using System.Linq;
+using System.Threading;
 
 namespace LunaServer.System
 {
@@ -15,7 +15,7 @@ namespace LunaServer.System
     /// </summary>
     public class VesselRelaySystem
     {
-        private static readonly ConcurrentDictionary<int, ConcurrentQueue<VesselBaseMsgData>> OldVesselMessages = 
+        private static readonly ConcurrentDictionary<int, ConcurrentQueue<VesselBaseMsgData>> OldVesselMessages =
             new ConcurrentDictionary<int, ConcurrentQueue<VesselBaseMsgData>>();
 
         /// <summary>
@@ -77,8 +77,7 @@ namespace LunaServer.System
                 var messageQueue = new ConcurrentQueue<VesselBaseMsgData>(messages);
 
                 //Now we remove the messages that are too old for this subspace
-                VesselBaseMsgData msg;
-                while (messageQueue.TryDequeue(out msg))
+                while (messageQueue.TryDequeue(out var msg))
                 {
                     if (msg.SentTime >= subspaceTime)
                         break;
@@ -93,8 +92,7 @@ namespace LunaServer.System
         /// </summary>
         public static void RemoveSubspace(int subspaceId)
         {
-            ConcurrentQueue<VesselBaseMsgData> messageQueue;
-            OldVesselMessages.TryRemove(subspaceId, out messageQueue);
+            OldVesselMessages.TryRemove(subspaceId, out var _);
         }
 
         /// <summary>
@@ -109,8 +107,7 @@ namespace LunaServer.System
                 {
                     var subspaceTime = WarpSystem.GetCurrentSubspaceTime(keyVal.Key);
 
-                    VesselBaseMsgData msg;
-                    while(keyVal.Value.TryPeek(out msg) && subspaceTime >= msg.SentTime)
+                    while (keyVal.Value.TryPeek(out var msg) && subspaceTime >= msg.SentTime)
                     {
                         keyVal.Value.TryDequeue(out msg);
                         MessageQueuer.SendMessageToSubspace<VesselSrvMsg>(msg, keyVal.Key);

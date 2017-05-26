@@ -1,5 +1,5 @@
 ﻿using LunaClient.Systems.Chat;
-using LunaClient.Systems.ColorSystem;
+using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselLockSys;
@@ -10,7 +10,6 @@ using LunaClient.Windows.Debug;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.Systems;
 using LunaCommon;
-using UniLinq;
 using UnityEngine;
 
 namespace LunaClient.Windows.Status
@@ -53,7 +52,7 @@ namespace LunaClient.Windows.Status
             #region Players information
 
             ScrollPosition = GUILayout.BeginScrollView(ScrollPosition, ScrollStyle);
-            
+
             //Draw other subspaces
             foreach (var currentEntry in SubspaceDisplay)
             {
@@ -73,7 +72,7 @@ namespace LunaClient.Windows.Status
                         WarpSystem.Singleton.CurrentSubspace = currentEntry.SubspaceId;
                     GUILayout.EndHorizontal();
                 }
-                
+
                 foreach (var currentPlayer in currentEntry.Players)
                 {
                     DrawPlayerEntry(currentPlayer == SettingsSystem.CurrentSettings.PlayerName
@@ -85,7 +84,7 @@ namespace LunaClient.Windows.Status
             GUILayout.EndScrollView();
 
             #endregion
-            
+
             GUILayout.FlexibleSpace();
 #if DEBUG
             GUILayout.BeginHorizontal();
@@ -201,16 +200,15 @@ namespace LunaClient.Windows.Status
             GUILayout.BeginHorizontal();
             if (!PlayerNameStyle.ContainsKey(playerStatus.PlayerName))
             {
-                PlayerNameStyle[playerStatus.PlayerName] = new GUIStyle(GUI.skin.label);
-                PlayerNameStyle[playerStatus.PlayerName].normal.textColor =
-                    PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName);
-                PlayerNameStyle[playerStatus.PlayerName].hover.textColor =
-                    PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName);
-                PlayerNameStyle[playerStatus.PlayerName].active.textColor =
-                    PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName);
-                PlayerNameStyle[playerStatus.PlayerName].fontStyle = FontStyle.Bold;
-                PlayerNameStyle[playerStatus.PlayerName].stretchWidth = true;
-                PlayerNameStyle[playerStatus.PlayerName].wordWrap = false;
+                PlayerNameStyle[playerStatus.PlayerName] = new GUIStyle(GUI.skin.label)
+                {
+                    normal = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
+                    hover = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
+                    active = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
+                    fontStyle = FontStyle.Bold,
+                    stretchWidth = true,
+                    wordWrap = false
+                };
             }
             GUILayout.Label(playerStatus.PlayerName, PlayerNameStyle[playerStatus.PlayerName]);
             GUILayout.FlexibleSpace();

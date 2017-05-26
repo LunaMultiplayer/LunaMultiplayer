@@ -1,20 +1,20 @@
 ﻿using System;
-using System.IO;
-using System.Net;
-using System.Linq;
-using System.Reflection;
 using System.Collections;
-using System.ComponentModel;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Globalization;
+using System.IO;
+using System.Linq;
 using System.Text;
+using System.Threading;
 
-namespace LunaCommon
+namespace LunaServer.Utilities
 {
     public class ConfigParser<T> where T : class
     {
-        public T Settings { get; private set; }
-        private Dictionary<Type, Func<string, object>> fromString = new Dictionary<Type, Func<string, object>>();
-        private string filePath;
+        public T Settings { get; }
+        private readonly Dictionary<Type, Func<string, object>> _fromString = new Dictionary<Type, Func<string, object>>();
+        private readonly string _filePath;
 
         /// <summary>
         /// The parser's constructor.
@@ -23,33 +23,28 @@ namespace LunaCommon
         /// <param name="filePath">The path to the file the parser should load/write values from/to.</param>
         public ConfigParser(T settings, string filePath)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException("settings");
-            }
-
             if (string.IsNullOrEmpty(filePath))
             {
-                throw new ArgumentNullException("filePath");
+                throw new ArgumentNullException(nameof(filePath));
             }
 
-            this.Settings = settings;
-            this.filePath = filePath;
+            Settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _filePath = filePath;
 
-            fromString[typeof(string)] = (string x) => x;
-            fromString[typeof(decimal)] = (string x) => { decimal parse; if (decimal.TryParse(x, out parse)) return parse; return null; };
-            fromString[typeof(short)] = (string x) => { short parse; if (short.TryParse(x, out parse)) return parse; return null; };
-            fromString[typeof(ushort)] = (string x) => { ushort parse; if (ushort.TryParse(x, out parse)) return parse; return null; };
-            fromString[typeof(int)] = (string x) => { int parse; if (int.TryParse(x, out parse)) return parse; return null; };
-            fromString[typeof(uint)] = (string x) => { uint parse; if (uint.TryParse(x, out parse)) return parse; return null; };
-            fromString[typeof(long)] = (string x) => { long parse; if (long.TryParse(x, out parse)) return parse; return null; };
-            fromString[typeof(ulong)] = (string x) => { ulong parse; if (ulong.TryParse(x, out parse)) return parse; return null; };
-            fromString[typeof(float)] = (string x) => { float parse; if (float.TryParse(x, out parse)) return parse; return null; };
-            fromString[typeof(double)] = (string x) => { double parse; if (double.TryParse(x, out parse)) return parse; return null; };
-            fromString[typeof(bool)] = (string x) => { return (x == "1" || x.ToLower() == bool.TrueString.ToLower()); };
-            fromString[typeof(char)] = (string x) => { char parse; if (char.TryParse(x, out parse)) return parse; return null; };
+            _fromString[typeof(string)] = x => x;
+            _fromString[typeof(decimal)] = x => { if (decimal.TryParse(x, out var parse)) return parse; return null; };
+            _fromString[typeof(short)] = x => { if (short.TryParse(x, out var parse)) return parse; return null; };
+            _fromString[typeof(ushort)] = x => { if (ushort.TryParse(x, out var parse)) return parse; return null; };
+            _fromString[typeof(int)] = x => { if (int.TryParse(x, out var parse)) return parse; return null; };
+            _fromString[typeof(uint)] = x => { if (uint.TryParse(x, out var parse)) return parse; return null; };
+            _fromString[typeof(long)] = x => { if (long.TryParse(x, out var parse)) return parse; return null; };
+            _fromString[typeof(ulong)] = x => { if (ulong.TryParse(x, out var parse)) return parse; return null; };
+            _fromString[typeof(float)] = x => { if (float.TryParse(x, out var parse)) return parse; return null; };
+            _fromString[typeof(double)] = x => { if (double.TryParse(x, out var parse)) return parse; return null; };
+            _fromString[typeof(bool)] = x => (x == "1" || x.ToLower() == bool.TrueString.ToLower());
+            _fromString[typeof(char)] = x => { if (char.TryParse(x, out var parse)) return parse; return null; };
 
-            System.Threading.Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.GetCultureInfo("en-US");
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
         }
 
         #region Load Settings
@@ -58,26 +53,26 @@ namespace LunaCommon
         /// </summary>
         public void LoadSettings()
         {
-            FieldInfo[] settingFields = typeof(T).GetFields();
+            var settingFields = typeof(T).GetFields();
 
-            if (!File.Exists(filePath))
+            if (!File.Exists(_filePath))
             {
                 SaveSettings();
             }
 
-            using (FileStream fs = new FileStream(filePath, FileMode.Open))
+            using (var fs = new FileStream(_filePath, FileMode.Open))
             {
-                using (StreamReader sr = new StreamReader(fs))
+                using (var sr = new StreamReader(fs))
                 {
                     while (!sr.EndOfStream)
                     {
-                        string currentLine = sr.ReadLine();
+                        var currentLine = sr.ReadLine();
                         if (currentLine == null)
                         {
                             break;
                         }
 
-                        string trimmedLine = currentLine.Trim();
+                        var trimmedLine = currentLine.Trim();
                         if (String.IsNullOrEmpty(trimmedLine))
                         {
                             continue;
@@ -88,10 +83,10 @@ namespace LunaCommon
                             continue;
                         }
 
-                        string currentKey = trimmedLine.Substring(0, trimmedLine.IndexOf("="));
-                        string currentValue = trimmedLine.Substring(trimmedLine.IndexOf("=") + 1);
+                        var currentKey = trimmedLine.Substring(0, trimmedLine.IndexOf("=", StringComparison.Ordinal));
+                        var currentValue = trimmedLine.Substring(trimmedLine.IndexOf("=", StringComparison.Ordinal) + 1);
 
-                        foreach (FieldInfo settingField in settingFields)
+                        foreach (var settingField in settingFields)
                         {
                             if (settingField.Name == currentKey)
                             {
@@ -100,15 +95,14 @@ namespace LunaCommon
                                 {
                                     if (Enum.IsDefined(settingField.FieldType, currentValue))
                                     {
-                                        object enumValue = Enum.Parse(settingField.FieldType, currentValue);
+                                        var enumValue = Enum.Parse(settingField.FieldType, currentValue);
                                         settingField.SetValue(Settings, enumValue);
                                     }
                                     else
                                     {
                                         if (settingField.FieldType.GetEnumUnderlyingType() == typeof(int))
                                         {
-                                            int intValue;
-                                            if (int.TryParse(currentValue, out intValue))
+                                            if (int.TryParse(currentValue, out var intValue))
                                             {
                                                 if (Enum.IsDefined(settingField.FieldType, intValue))
                                                 {
@@ -122,20 +116,20 @@ namespace LunaCommon
                                 //List
                                 if (settingField.FieldType.IsGenericType && settingField.FieldType.GetGenericTypeDefinition() == typeof(List<>))
                                 {
-                                    object newList = Activator.CreateInstance(settingField.FieldType);
+                                    var newList = Activator.CreateInstance(settingField.FieldType);
                                     settingField.SetValue(Settings, newList);
-                                    Type listType = settingField.FieldType.GetGenericArguments()[0];
-                                    if (!fromString.ContainsKey(listType))
+                                    var listType = settingField.FieldType.GetGenericArguments()[0];
+                                    if (!_fromString.ContainsKey(listType))
                                     {
                                         continue;
                                     }
-                                    MethodInfo addMethodInfo = newList.GetType().GetMethod("Add");
-                                    foreach (string splitValue in SplitArrayValues(currentValue))
+                                    var addMethodInfo = newList.GetType().GetMethod("Add");
+                                    foreach (var splitValue in SplitArrayValues(currentValue))
                                     {
-                                        object insertObject = fromString[listType](splitValue);
+                                        var insertObject = _fromString[listType](splitValue);
                                         if (insertObject != null)
                                         {
-                                            addMethodInfo.Invoke(newList, new object[] { insertObject });
+                                            addMethodInfo.Invoke(newList, new[] { insertObject });
                                         }
                                     }
                                     continue;
@@ -143,33 +137,33 @@ namespace LunaCommon
                                 //Array
                                 if (settingField.FieldType.IsArray)
                                 {
-                                    Type elementType = settingField.FieldType.GetElementType();
-                                    if (!fromString.ContainsKey(elementType))
+                                    var elementType = settingField.FieldType.GetElementType();
+                                    if (!_fromString.ContainsKey(elementType))
                                     {
-                                        object emptyArray = Activator.CreateInstance(settingField.FieldType, new object[] { 0 });
+                                        var emptyArray = Activator.CreateInstance(settingField.FieldType, 0);
                                         settingField.SetValue(Settings, emptyArray);
                                         continue;
                                     }
-                                    Type genericListType = typeof(List<>).MakeGenericType(new Type[] { elementType });
-                                    object newList = Activator.CreateInstance(genericListType);
-                                    MethodInfo addMethodInfo = genericListType.GetMethod("Add");
-                                    foreach (string splitValue in SplitArrayValues(currentValue))
+                                    var genericListType = typeof(List<>).MakeGenericType(elementType);
+                                    var newList = Activator.CreateInstance(genericListType);
+                                    var addMethodInfo = genericListType.GetMethod("Add");
+                                    foreach (var splitValue in SplitArrayValues(currentValue))
                                     {
-                                        object insertObject = fromString[elementType](splitValue);
+                                        var insertObject = _fromString[elementType](splitValue);
                                         if (insertObject != null)
                                         {
-                                            addMethodInfo.Invoke(newList, new object[] { insertObject });
+                                            addMethodInfo.Invoke(newList, new[] { insertObject });
                                         }
                                     }
-                                    MethodInfo toArrayMethodInfo = genericListType.GetMethod("ToArray");
-                                    object newArray = toArrayMethodInfo.Invoke(newList, new object[0]);
+                                    var toArrayMethodInfo = genericListType.GetMethod("ToArray");
+                                    var newArray = toArrayMethodInfo.Invoke(newList, new object[0]);
                                     settingField.SetValue(Settings, newArray);
                                     continue;
                                 }
                                 //Field
-                                if (fromString.ContainsKey(settingField.FieldType))
+                                if (_fromString.ContainsKey(settingField.FieldType))
                                 {
-                                    object parseValue = fromString[settingField.FieldType](currentValue);
+                                    var parseValue = _fromString[settingField.FieldType](currentValue);
                                     if (parseValue != null)
                                     {
                                         settingField.SetValue(Settings, parseValue);
@@ -189,14 +183,14 @@ namespace LunaCommon
         /// </summary>
         public void SaveSettings()
         {
-            FieldInfo[] settingFields = typeof(T).GetFields();
-            if (File.Exists(filePath + ".tmp"))
+            var settingFields = typeof(T).GetFields();
+            if (File.Exists(_filePath + ".tmp"))
             {
-                File.Delete(filePath + ".tmp");
+                File.Delete(_filePath + ".tmp");
             }
-            using (FileStream fs = new FileStream(filePath + ".tmp", FileMode.CreateNew))
+            using (var fs = new FileStream(_filePath + ".tmp", FileMode.CreateNew))
             {
-                using (StreamWriter sw = new StreamWriter(fs))
+                using (var sw = new StreamWriter(fs))
                 {
                     sw.WriteLine("# Lines starting with hashtags are ignored by the reader");
                     sw.WriteLine("# Setting file format: (key)=(value)");
@@ -204,87 +198,86 @@ namespace LunaCommon
                     sw.WriteLine("# Invalid values will be reset to default");
                     sw.WriteLine("#");
                     sw.WriteLine("");
-                    foreach (FieldInfo settingField in settingFields)
+                    foreach (var settingField in settingFields)
                     {
-                        object descriptionAttribute = settingField.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault();
-                        string settingDescription = descriptionAttribute != null ? ((DescriptionAttribute)descriptionAttribute).Description.Replace("\n", String.Format("{0}# ", Environment.NewLine)) : string.Empty;
+                        var descriptionAttribute = settingField.GetCustomAttributes(typeof(DescriptionAttribute), true).FirstOrDefault();
+                        var settingDescription = ((DescriptionAttribute)descriptionAttribute)?.Description.Replace("\n", $"{Environment.NewLine}# ") ?? string.Empty;
 
                         if (!string.IsNullOrEmpty(settingDescription))
                         {
-                            sw.WriteLine(string.Format("# {0} - {1}", settingField.Name, settingDescription));
+                            sw.WriteLine("# {0} - {1}", settingField.Name, settingDescription);
                         }
                         if (settingField.FieldType == typeof(string))
                         {
-                            sw.WriteLine(string.Format("{0}={1}", settingField.Name, settingField.GetValue(Settings)));
+                            sw.WriteLine("{0}={1}", settingField.Name, settingField.GetValue(Settings));
                         }
                         if (settingField.FieldType == typeof(int) || settingField.FieldType == typeof(uint) || settingField.FieldType == typeof(short) || settingField.FieldType == typeof(long) || settingField.FieldType == typeof(ushort) || settingField.FieldType == typeof(ulong) || settingField.FieldType == typeof(float) || settingField.FieldType == typeof(double) || settingField.FieldType == typeof(decimal) || settingField.FieldType == typeof(bool))
                         {
-                            sw.WriteLine(string.Format("{0}={1}", settingField.Name, settingField.GetValue(Settings).ToString()));
+                            sw.WriteLine("{0}={1}", settingField.Name, settingField.GetValue(Settings));
                         }
                         if (settingField.FieldType.IsEnum)
                         {
                             sw.WriteLine("#");
                             sw.WriteLine("# Valid values are:");
-                            foreach (object enumValue in settingField.FieldType.GetEnumValues())
+                            foreach (var enumValue in settingField.FieldType.GetEnumValues())
                             {
-                                sw.WriteLine(string.Format("#   {0}", enumValue.ToString()));
+                                sw.WriteLine("#   {0}", enumValue);
                             }
-                            sw.WriteLine(string.Format("{0}={1}", settingField.Name, settingField.GetValue(Settings)));
+                            sw.WriteLine("{0}={1}", settingField.Name, settingField.GetValue(Settings));
                         }
                         if (settingField.FieldType.IsGenericType && settingField.FieldType.GetGenericTypeDefinition() == typeof(List<>))
                         {
                             //Get list
-                            object settingsList = settingField.GetValue(Settings);
+                            var settingsList = settingField.GetValue(Settings);
                             //Get enumerator
-                            MethodInfo iEnumeratorInfo = settingField.FieldType.GetMethod("GetEnumerator");
-                            object listEnumerator = iEnumeratorInfo.Invoke(settingsList, new object[0]);
+                            var iEnumeratorInfo = settingField.FieldType.GetMethod("GetEnumerator");
+                            var listEnumerator = iEnumeratorInfo.Invoke(settingsList, new object[0]);
                             //Get enumerator methods
-                            MethodInfo moveNextInfo = listEnumerator.GetType().GetMethod("MoveNext");
-                            MethodInfo currentInfo = listEnumerator.GetType().GetProperty("Current").GetGetMethod();
-                            MethodInfo disposeInfo = listEnumerator.GetType().GetMethod("Dispose");
-                            List<string> escapedList = new List<string>();
+                            var moveNextInfo = listEnumerator.GetType().GetMethod("MoveNext");
+                            var currentInfo = listEnumerator.GetType().GetProperty("Current").GetGetMethod();
+                            var disposeInfo = listEnumerator.GetType().GetMethod("Dispose");
+                            var escapedList = new List<string>();
                             //Foreach object in list...
                             while ((bool)moveNextInfo.Invoke(listEnumerator, null))
                             {
-                                object current = currentInfo.Invoke(listEnumerator, null);
+                                var current = currentInfo.Invoke(listEnumerator, null);
                                 escapedList.Add(EscapeString(current.ToString()));
                             }
                             disposeInfo.Invoke(listEnumerator, null);
-                            sw.WriteLine(string.Format("{0}={1}", settingField.Name, string.Join(",", escapedList)));
+                            sw.WriteLine("{0}={1}", settingField.Name, string.Join(",", escapedList));
                         }
                         if (settingField.FieldType.IsArray)
                         {
-                            MethodInfo IEnumeratorInfo = settingField.FieldType.GetMethod("GetEnumerator");
-                            object settingsList = settingField.GetValue(Settings);
-                            IEnumerator objectEnum = (IEnumerator)IEnumeratorInfo.Invoke(settingsList, new object[0]);
-                            List<string> escapedList = new List<string>();
+                            var enumeratorInfo = settingField.FieldType.GetMethod("GetEnumerator");
+                            var settingsList = settingField.GetValue(Settings);
+                            var objectEnum = (IEnumerator)enumeratorInfo.Invoke(settingsList, new object[0]);
+                            var escapedList = new List<string>();
                             while (objectEnum.MoveNext())
                             {
                                 escapedList.Add(EscapeString(objectEnum.Current.ToString()));
                             }
-                            sw.WriteLine(string.Format("{0}={1}", settingField.Name, string.Join(",", escapedList)));
+                            sw.WriteLine("{0}={1}", settingField.Name, string.Join(",", escapedList));
                         }
                         sw.WriteLine();
                     }
                 }
             }
-            if (File.Exists(filePath))
+            if (File.Exists(_filePath))
             {
-                File.Delete(filePath);
+                File.Delete(_filePath);
             }
-            File.Move(filePath + ".tmp", filePath);
+            File.Move(_filePath + ".tmp", _filePath);
         }
         #endregion
 
 
         public static IEnumerable<string> SplitArrayValues(string inputString)
         {
-            List<string> retList = new List<string>();
-            bool isEscaped = false;
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < inputString.Length; i++)
+            var retList = new List<string>();
+            var isEscaped = false;
+            var sb = new StringBuilder();
+            foreach (var currentChar in inputString)
             {
-                char currentChar = inputString[i];
                 if (isEscaped)
                 {
                     isEscaped = false;
@@ -303,21 +296,18 @@ namespace LunaCommon
                 }
                 else
                 {
-                    if (currentChar == '\\')
+                    switch (currentChar)
                     {
+                        case '\\':
                         isEscaped = true;
-                    }
-                    else
-                    {
-                        if (currentChar == ',')
-                        {
-                            retList.Add(sb.ToString());
-                            sb.Clear();
-                        }
-                        else
-                        {
-                            sb.Append(currentChar);
-                        }
+                        break;
+                        case ',':
+                        retList.Add(sb.ToString());
+                        sb.Clear();
+                        break;
+                        default:
+                        sb.Append(currentChar);
+                        break;
                     }
                 }
             }
@@ -330,26 +320,20 @@ namespace LunaCommon
 
         public static string EscapeString(string inputString)
         {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < inputString.Length; i++)
+            var sb = new StringBuilder();
+            foreach (var currentChar in inputString)
             {
-                char currentChar = inputString[i];
-                if (currentChar == '\\')
+                switch (currentChar)
                 {
+                    case '\\':
                     sb.Append(@"\\");
                     continue;
-                }
-                if (currentChar == ',')
-                {
+                    case ',':
                     sb.Append(@"\,");
                     continue;
-                }
-                if (currentChar == '\r')
-                {
+                    case '\r':
                     continue;
-                }
-                if (currentChar == '\n')
-                {
+                    case '\n':
                     sb.Append(@"\n");
                     continue;
                 }
