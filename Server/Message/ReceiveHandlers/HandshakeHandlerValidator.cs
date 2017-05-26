@@ -1,14 +1,14 @@
-﻿using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
-using LunaCommon.Enums;
+﻿using LunaCommon.Enums;
 using LunaServer.Client;
 using LunaServer.Command.CombinedCommand;
 using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Settings;
 using LunaServer.System;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace LunaServer.Message.ReceiveHandlers
 {
@@ -62,7 +62,7 @@ namespace LunaServer.Message.ReceiveHandlers
 
         private bool CheckUsernameIsReserved(ClientStructure client, string playerName)
         {
-            if ((playerName == "Initial") || (playerName == GeneralSettings.SettingsStore.ConsoleIdentifier))
+            if (playerName == "Initial" || playerName == GeneralSettings.SettingsStore.ConsoleIdentifier)
             {
                 Reason = "Using reserved name";
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.ReservedName, Reason);

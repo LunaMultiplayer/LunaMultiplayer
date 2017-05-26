@@ -10,7 +10,7 @@ namespace LunaServer.System
     {
         public static void SendLmpModMessageToAll(ClientStructure excludeClient, string modName, byte[] messageData)
         {
-            if ((modName == null) || (messageData == null))
+            if (modName == null || messageData == null)
             {
                 LunaLog.Debug("Attemped to send a null mod message");
                 return;
@@ -24,7 +24,7 @@ namespace LunaServer.System
 
         public static void SendLmpModMessageToClient(ClientStructure client, string modName, byte[] messageData)
         {
-            if ((modName == null) || (messageData == null))
+            if (modName == null || messageData == null)
             {
                 LunaLog.Debug("Attemped to send a null mod message");
                 return;

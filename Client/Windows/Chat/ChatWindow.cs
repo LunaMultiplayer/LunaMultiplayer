@@ -12,7 +12,8 @@ namespace LunaClient.Windows.Chat
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width/10, Screen.height/2f - WindowHeight/2f, WindowWidth, WindowHeight);
+            // ReSharper disable once PossibleLossOfFraction
+            WindowRect = new Rect(Screen.width / 10, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
             WindowLayoutOptions = new GUILayoutOption[4];
@@ -22,7 +23,7 @@ namespace LunaClient.Windows.Chat
             WindowLayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
 
             SmallSizeOption = new GUILayoutOption[1];
-            SmallSizeOption[0] = GUILayout.Width(WindowWidth*.25f);
+            SmallSizeOption[0] = GUILayout.Width(WindowWidth * .25f);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
             ScrollStyle = new GUIStyle(GUI.skin.scrollView);
@@ -32,9 +33,9 @@ namespace LunaClient.Windows.Chat
             ButtonStyle = new GUIStyle(GUI.skin.button);
             HighlightStyle = new GUIStyle(GUI.skin.button)
             {
-                normal = {textColor = Color.red},
-                active = {textColor = Color.red},
-                hover = {textColor = Color.red}
+                normal = { textColor = Color.red },
+                active = { textColor = Color.red },
+                hover = { textColor = Color.red }
             };
             TextAreaStyle = new GUIStyle(GUI.skin.textArea);
         }

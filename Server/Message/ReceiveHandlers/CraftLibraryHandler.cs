@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using LunaCommon.Message.Data.CraftLibrary;
+﻿using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Server;
 using LunaServer.System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace LunaServer.Message.ReceiveHandlers
 {
@@ -74,7 +74,7 @@ namespace LunaServer.Message.ReceiveHandlers
                 Universe.RemoveFromUniverse(craftFile);
                 LunaLog.Debug($"Removing {message.CraftName}, type: {message.CraftType} from {message.PlayerName}");
             }
-            if (FileHandler.FolderExists(playerPath) && (FileHandler.GetFilesInPath(typePath).Length == 0))
+            if (FileHandler.FolderExists(playerPath) && FileHandler.GetFilesInPath(typePath).Length == 0)
                 FileHandler.FolderDelete(typePath);
             if (FileHandler.GetDirectoriesInPath(playerPath).Length == 0)
                 FileHandler.FolderDelete(playerPath);

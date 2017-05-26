@@ -1,8 +1,8 @@
-﻿using System;
-using System.IO;
-using LunaServer.Context;
+﻿using LunaServer.Context;
 using LunaServer.Settings;
 using LunaServer.System;
+using System;
+using System.IO;
 
 namespace LunaServer.Log
 {
@@ -14,7 +14,7 @@ namespace LunaServer.Log
         public static void ExpireLogs()
         {
             //Check if the ExpireLogs setting is enabled and directory exists
-            if ((GeneralSettings.SettingsStore.ExpireLogs > 0) && FileHandler.FolderExists(LogDirectory))
+            if (GeneralSettings.SettingsStore.ExpireLogs > 0 && FileHandler.FolderExists(LogDirectory))
                 foreach (var logFile in FileHandler.GetFilesInPath(LogDirectory))
                     RemoveExpiredLog(logFile);
         }

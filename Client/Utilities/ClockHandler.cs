@@ -22,7 +22,7 @@ namespace LunaClient.Utilities
             {
                 if (FlightGlobals.fetch.activeVessel == null || !FlightGlobals.ready)
                 {
-                    Debug.Log($"[LMP] Skipping StepClock (active vessel is null or not ready)");
+                    Debug.Log("[LMP] Skipping StepClock (active vessel is null or not ready)");
                     return;
                 }
                 try
@@ -64,17 +64,17 @@ namespace LunaClient.Utilities
                 case Vessel.Situations.LANDED:
                 case Vessel.Situations.PRELAUNCH:
                 case Vessel.Situations.SPLASHED:
-                    //TODO: Fix.  We need to be able to adjust the clock on the ground, but then it resets the throttle position and does physics easing.
-                    //TODO: For now, disable stepping the clock while landed.
-                    return (checkVessel.srf_velocity.magnitude < 2);
+                //TODO: Fix.  We need to be able to adjust the clock on the ground, but then it resets the throttle position and does physics easing.
+                //TODO: For now, disable stepping the clock while landed.
+                return (checkVessel.srf_velocity.magnitude < 2);
                 case Vessel.Situations.ORBITING:
                 case Vessel.Situations.ESCAPING:
-                    return true;
+                return true;
                 case Vessel.Situations.SUB_ORBITAL:
-                    var altitudeAtUt = checkVessel.orbit.getRelativePositionAtUT(targetTick).magnitude;
-                    return (altitudeAtUt > checkVessel.mainBody.Radius + 10000 && checkVessel.altitude > 10000);
+                var altitudeAtUt = checkVessel.orbit.getRelativePositionAtUT(targetTick).magnitude;
+                return (altitudeAtUt > checkVessel.mainBody.Radius + 10000 && checkVessel.altitude > 10000);
                 default:
-                    return false;
+                return false;
             }
         }
     }

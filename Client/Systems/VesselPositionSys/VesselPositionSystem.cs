@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -42,10 +42,10 @@ namespace LunaClient.Systems.VesselPositionSys
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, HandleVesselUpdates));
 
-            SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval, 
+            SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval,
                 RoutineExecution.FixedUpdate, SendVesselPositionUpdates));
 
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval, 
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
                 RoutineExecution.FixedUpdate, SendSecondaryVesselPositionUpdates));
         }
 
@@ -54,7 +54,7 @@ namespace LunaClient.Systems.VesselPositionSys
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
         }
-        
+
         /// <summary>
         /// Do the message handling asynchronously for performance
         /// </summary>
@@ -110,11 +110,11 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     //NOTE: ApplyVesselUpdate must run in FixedUpdate as it's updating the physics of the vessels
                     CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
-                    UpdatedVesselIds.TryRemove(vesselId, out var ignored);
+                    UpdatedVesselIds.TryRemove(vesselId, out var _);
                 }
             }
         }
-        
+
         /// <summary>
         /// Send the updates of our own vessel. We only send them after an interval specified.
         /// If the other player vessels are far we don't send them very often.
@@ -124,7 +124,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
             {
                 MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
-                ChangeRoutineExecutionInterval("SendVesselPositionUpdates", 
+                ChangeRoutineExecutionInterval("SendVesselPositionUpdates",
                     MustSendFastUpdates ? FastVesselUpdatesSendMsInterval : SlowVesselUpdatesSendMsInterval);
             }
         }

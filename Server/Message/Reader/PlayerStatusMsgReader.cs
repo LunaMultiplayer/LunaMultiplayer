@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using LunaCommon.Message.Data.PlayerStatus;
+﻿using LunaCommon.Message.Data.PlayerStatus;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
 using LunaServer.Client;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Server;
+using System.Linq;
 
 namespace LunaServer.Message.Reader
 {
@@ -17,27 +17,27 @@ namespace LunaServer.Message.Reader
             switch (message?.PlayerStatusMessageType)
             {
                 case PlayerStatusMessageType.Request:
-                    SendOtherPlayerStatusToNewPlayer(client);
-                    break;
+                SendOtherPlayerStatusToNewPlayer(client);
+                break;
                 case PlayerStatusMessageType.Set:
-                    var data = (PlayerStatusSetMsgData)message;
-                    if (data.PlayerName == client.PlayerName)
-                    {
-                        client.PlayerStatus.VesselText = data.VesselText;
-                        client.PlayerStatus.StatusText = data.StatusText;
-                    }
-                    MessageQueuer.RelayMessage<PlayerStatusSrvMsg>(client, data);
-                    break;
+                var data = (PlayerStatusSetMsgData)message;
+                if (data.PlayerName == client.PlayerName)
+                {
+                    client.PlayerStatus.VesselText = data.VesselText;
+                    client.PlayerStatus.StatusText = data.StatusText;
+                }
+                MessageQueuer.RelayMessage<PlayerStatusSrvMsg>(client, data);
+                break;
             }
         }
 
         private static void SendOtherPlayerStatusToNewPlayer(ClientStructure client)
         {
-            var otherClients = ClientRetriever.GetAuthenticatedClients().Where(c => c != client).ToArray();
+            var otherClients = ClientRetriever.GetAuthenticatedClients().Where(c => !Equals(c, client)).ToArray();
 
             var otherPlayerStatusMsgData = new PlayerStatusReplyMsgData
             {
-                PlayerName = otherClients.Select(c=> c.PlayerName).ToArray(),
+                PlayerName = otherClients.Select(c => c.PlayerName).ToArray(),
                 StatusText = otherClients.Select(c => c.PlayerStatus.StatusText).ToArray(),
                 VesselText = otherClients.Select(c => c.PlayerStatus.VesselText).ToArray()
             };

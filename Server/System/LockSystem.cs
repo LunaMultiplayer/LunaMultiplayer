@@ -27,7 +27,7 @@ namespace LunaServer.System
 
         public static bool ReleaseLock(string lockName, string playerName)
         {
-            if (PlayerLocks.ContainsKey(lockName) && (PlayerLocks[lockName] == playerName))
+            if (PlayerLocks.ContainsKey(lockName) && PlayerLocks[lockName] == playerName)
             {
                 PlayerLocks.TryRemove(lockName, out var _);
                 return true;

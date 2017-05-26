@@ -7,7 +7,7 @@ namespace LunaClient.Utilities
 {
     public class CommonUtil
     {
-        public static double Now => (double)DateTime.UtcNow.Ticks/TimeSpan.TicksPerMillisecond;
+        public static double Now => (double)DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
 
         /// <summary>
         /// Combine the paths specified as .net 3.5 doesn't give you a good method
@@ -26,13 +26,15 @@ namespace LunaClient.Utilities
         /// </summary>
         public static bool ScrambledEquals<T>(IEnumerable<T> list1, IEnumerable<T> list2)
         {
-            if (list1.Count() != list2.Count())
+            var list1Enu = list1 as T[] ?? list1.ToArray();
+            var list2Enu = list2 as T[] ?? list2.ToArray();
+            if (list1Enu.Length != list2Enu.Length)
             {
                 return false;
             }
 
             var cnt = new Dictionary<T, int>();
-            foreach (var s in list1)
+            foreach (var s in list1Enu)
             {
                 if (cnt.ContainsKey(s))
                 {
@@ -43,7 +45,7 @@ namespace LunaClient.Utilities
                     cnt.Add(s, 1);
                 }
             }
-            foreach (var s in list2)
+            foreach (var s in list2Enu)
             {
                 if (cnt.ContainsKey(s))
                 {

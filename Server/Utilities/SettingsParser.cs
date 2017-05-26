@@ -41,7 +41,7 @@ namespace LunaServer.Utilities
             _fromString[typeof(ulong)] = x => { if (ulong.TryParse(x, out var parse)) return parse; return null; };
             _fromString[typeof(float)] = x => { if (float.TryParse(x, out var parse)) return parse; return null; };
             _fromString[typeof(double)] = x => { if (double.TryParse(x, out var parse)) return parse; return null; };
-            _fromString[typeof(bool)] = x => (x == "1" || x.ToLower() == bool.TrueString.ToLower());
+            _fromString[typeof(bool)] = x => x == "1" || x.ToLower() == bool.TrueString.ToLower();
             _fromString[typeof(char)] = x => { if (char.TryParse(x, out var parse)) return parse; return null; };
 
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("en-US");
@@ -234,17 +234,21 @@ namespace LunaServer.Utilities
                             var listEnumerator = iEnumeratorInfo.Invoke(settingsList, new object[0]);
                             //Get enumerator methods
                             var moveNextInfo = listEnumerator.GetType().GetMethod("MoveNext");
-                            var currentInfo = listEnumerator.GetType().GetProperty("Current").GetGetMethod();
-                            var disposeInfo = listEnumerator.GetType().GetMethod("Dispose");
-                            var escapedList = new List<string>();
-                            //Foreach object in list...
-                            while ((bool)moveNextInfo.Invoke(listEnumerator, null))
+                            var propertyInfo = listEnumerator.GetType().GetProperty("Current");
+                            if (propertyInfo != null)
                             {
-                                var current = currentInfo.Invoke(listEnumerator, null);
-                                escapedList.Add(EscapeString(current.ToString()));
+                                var currentInfo = propertyInfo.GetGetMethod();
+                                var disposeInfo = listEnumerator.GetType().GetMethod("Dispose");
+                                var escapedList = new List<string>();
+                                //Foreach object in list...
+                                while ((bool)moveNextInfo.Invoke(listEnumerator, null))
+                                {
+                                    var current = currentInfo.Invoke(listEnumerator, null);
+                                    escapedList.Add(EscapeString(current.ToString()));
+                                }
+                                disposeInfo.Invoke(listEnumerator, null);
+                                sw.WriteLine("{0}={1}", settingField.Name, string.Join(",", escapedList));
                             }
-                            disposeInfo.Invoke(listEnumerator, null);
-                            sw.WriteLine("{0}={1}", settingField.Name, string.Join(",", escapedList));
                         }
                         if (settingField.FieldType.IsArray)
                         {

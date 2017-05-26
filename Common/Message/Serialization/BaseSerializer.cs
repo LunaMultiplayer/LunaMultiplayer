@@ -1,8 +1,9 @@
-﻿using System;
+﻿using FastMember;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
-using FastMember;
 
 namespace LunaCommon.Message.Serialization
 {
@@ -49,6 +50,7 @@ namespace LunaCommon.Message.Serialization
         ///     Method to retrieve the properties of a MessageData. We catch them as reflection is very slow
         /// </summary>
         /// <returns>List of properties</returns>
+        [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         internal static List<ReducedPropertyInfo> GetCachedProperties(Type type)
         {
             lock (SyncRootPropertyDict)
