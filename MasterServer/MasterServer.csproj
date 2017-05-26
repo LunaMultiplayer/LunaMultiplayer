@@ -46,6 +46,7 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MasterServer.cs" />
     <Compile Include="MasterServerForm.cs">
       <SubType>Form</SubType>

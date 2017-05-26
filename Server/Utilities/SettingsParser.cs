@@ -61,114 +61,109 @@ namespace LunaServer.Utilities
             }
 
             using (var fs = new FileStream(_filePath, FileMode.Open))
+            using (var sr = new StreamReader(fs))
             {
-                using (var sr = new StreamReader(fs))
+                while (!sr.EndOfStream)
                 {
-                    while (!sr.EndOfStream)
+                    var currentLine = sr.ReadLine();
+                    if (currentLine == null)
                     {
-                        var currentLine = sr.ReadLine();
-                        if (currentLine == null)
-                        {
-                            break;
-                        }
+                        break;
+                    }
 
-                        var trimmedLine = currentLine.Trim();
-                        if (String.IsNullOrEmpty(trimmedLine))
-                        {
-                            continue;
-                        }
+                    var trimmedLine = currentLine.Trim();
+                    if (string.IsNullOrEmpty(trimmedLine))
+                    {
+                        continue;
+                    }
 
-                        if (!trimmedLine.Contains("=") || trimmedLine.StartsWith("#"))
-                        {
-                            continue;
-                        }
+                    if (!trimmedLine.Contains("=") || trimmedLine.StartsWith("#"))
+                    {
+                        continue;
+                    }
 
-                        var currentKey = trimmedLine.Substring(0, trimmedLine.IndexOf("=", StringComparison.Ordinal));
-                        var currentValue = trimmedLine.Substring(trimmedLine.IndexOf("=", StringComparison.Ordinal) + 1);
+                    var currentKey = trimmedLine.Substring(0, trimmedLine.IndexOf("=", StringComparison.Ordinal));
+                    var currentValue = trimmedLine.Substring(trimmedLine.IndexOf("=", StringComparison.Ordinal) + 1);
 
-                        foreach (var settingField in settingFields)
+                    foreach (var settingField in settingFields.Where(s => s.Name == currentKey))
+                    {
+                        //Enums
+                        if (settingField.FieldType.IsEnum)
                         {
-                            if (settingField.Name == currentKey)
+                            if (Enum.IsDefined(settingField.FieldType, currentValue))
                             {
-                                //Enums
-                                if (settingField.FieldType.IsEnum)
+                                var enumValue = Enum.Parse(settingField.FieldType, currentValue);
+                                settingField.SetValue(Settings, enumValue);
+                            }
+                            else
+                            {
+                                if (settingField.FieldType.GetEnumUnderlyingType() == typeof(int))
                                 {
-                                    if (Enum.IsDefined(settingField.FieldType, currentValue))
+                                    if (int.TryParse(currentValue, out var intValue))
                                     {
-                                        var enumValue = Enum.Parse(settingField.FieldType, currentValue);
-                                        settingField.SetValue(Settings, enumValue);
-                                    }
-                                    else
-                                    {
-                                        if (settingField.FieldType.GetEnumUnderlyingType() == typeof(int))
+                                        if (Enum.IsDefined(settingField.FieldType, intValue))
                                         {
-                                            if (int.TryParse(currentValue, out var intValue))
-                                            {
-                                                if (Enum.IsDefined(settingField.FieldType, intValue))
-                                                {
-                                                    settingField.SetValue(Settings, intValue);
-                                                }
-                                            }
+                                            settingField.SetValue(Settings, intValue);
                                         }
                                     }
-                                    continue;
                                 }
-                                //List
-                                if (settingField.FieldType.IsGenericType && settingField.FieldType.GetGenericTypeDefinition() == typeof(List<>))
+                            }
+                            continue;
+                        }
+                        //List
+                        if (settingField.FieldType.IsGenericType && settingField.FieldType.GetGenericTypeDefinition() == typeof(List<>))
+                        {
+                            var newList = Activator.CreateInstance(settingField.FieldType);
+                            settingField.SetValue(Settings, newList);
+                            var listType = settingField.FieldType.GetGenericArguments()[0];
+                            if (!_fromString.ContainsKey(listType))
+                            {
+                                continue;
+                            }
+                            var addMethodInfo = newList.GetType().GetMethod("Add");
+                            foreach (var splitValue in SplitArrayValues(currentValue))
+                            {
+                                var insertObject = _fromString[listType](splitValue);
+                                if (insertObject != null)
                                 {
-                                    var newList = Activator.CreateInstance(settingField.FieldType);
-                                    settingField.SetValue(Settings, newList);
-                                    var listType = settingField.FieldType.GetGenericArguments()[0];
-                                    if (!_fromString.ContainsKey(listType))
-                                    {
-                                        continue;
-                                    }
-                                    var addMethodInfo = newList.GetType().GetMethod("Add");
-                                    foreach (var splitValue in SplitArrayValues(currentValue))
-                                    {
-                                        var insertObject = _fromString[listType](splitValue);
-                                        if (insertObject != null)
-                                        {
-                                            addMethodInfo.Invoke(newList, new[] { insertObject });
-                                        }
-                                    }
-                                    continue;
+                                    addMethodInfo.Invoke(newList, new[] { insertObject });
                                 }
-                                //Array
-                                if (settingField.FieldType.IsArray)
+                            }
+                            continue;
+                        }
+                        //Array
+                        if (settingField.FieldType.IsArray)
+                        {
+                            var elementType = settingField.FieldType.GetElementType();
+                            if (!_fromString.ContainsKey(elementType))
+                            {
+                                var emptyArray = Activator.CreateInstance(settingField.FieldType, 0);
+                                settingField.SetValue(Settings, emptyArray);
+                                continue;
+                            }
+                            var genericListType = typeof(List<>).MakeGenericType(elementType);
+                            var newList = Activator.CreateInstance(genericListType);
+                            var addMethodInfo = genericListType.GetMethod("Add");
+                            foreach (var splitValue in SplitArrayValues(currentValue))
+                            {
+                                var insertObject = _fromString[elementType](splitValue);
+                                if (insertObject != null)
                                 {
-                                    var elementType = settingField.FieldType.GetElementType();
-                                    if (!_fromString.ContainsKey(elementType))
-                                    {
-                                        var emptyArray = Activator.CreateInstance(settingField.FieldType, 0);
-                                        settingField.SetValue(Settings, emptyArray);
-                                        continue;
-                                    }
-                                    var genericListType = typeof(List<>).MakeGenericType(elementType);
-                                    var newList = Activator.CreateInstance(genericListType);
-                                    var addMethodInfo = genericListType.GetMethod("Add");
-                                    foreach (var splitValue in SplitArrayValues(currentValue))
-                                    {
-                                        var insertObject = _fromString[elementType](splitValue);
-                                        if (insertObject != null)
-                                        {
-                                            addMethodInfo.Invoke(newList, new[] { insertObject });
-                                        }
-                                    }
-                                    var toArrayMethodInfo = genericListType.GetMethod("ToArray");
-                                    var newArray = toArrayMethodInfo.Invoke(newList, new object[0]);
-                                    settingField.SetValue(Settings, newArray);
-                                    continue;
+                                    addMethodInfo.Invoke(newList, new[] { insertObject });
                                 }
-                                //Field
-                                if (_fromString.ContainsKey(settingField.FieldType))
-                                {
-                                    var parseValue = _fromString[settingField.FieldType](currentValue);
-                                    if (parseValue != null)
-                                    {
-                                        settingField.SetValue(Settings, parseValue);
-                                    }
-                                }
+                            }
+                            var toArrayMethodInfo = genericListType.GetMethod("ToArray");
+                            var newArray = toArrayMethodInfo.Invoke(newList, new object[0]);
+                            settingField.SetValue(Settings, newArray);
+                            continue;
+                        }
+                        //Field
+                        if (_fromString.ContainsKey(settingField.FieldType))
+                        {
+                            var parseValue = _fromString[settingField.FieldType](currentValue);
+                            if (parseValue != null)
+                            {
+                                settingField.SetValue(Settings, parseValue);
                             }
                         }
                     }

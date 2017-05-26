@@ -16,7 +16,7 @@ namespace LunaClient.Systems.Warp
 
         public bool CurrentlyWarping => CurrentSubspace == -1;
 
-        public bool AloneInCurrentSubspace => ClientSubspaceList.Count(p => p.Value == CurrentSubspace && p.Key != SettingsSystem.CurrentSettings.PlayerName) > 0;
+        //public bool AloneInCurrentSubspace => !ClientSubspaceList.Any() || ClientSubspaceList.Count(p => p.Value == CurrentSubspace && p.Key != SettingsSystem.CurrentSettings.PlayerName) > 0;
 
         public WarpEntryDisplay WarpEntryDisplay { get; } = new WarpEntryDisplay();
 
@@ -48,10 +48,7 @@ namespace LunaClient.Systems.Warp
 
         public Dictionary<string, int> ClientSubspaceList { get; } = new Dictionary<string, int>();
         public Dictionary<int, double> Subspaces { get; } = new Dictionary<int, double>();
-
-        public int LatestSubspace => Subspaces.Any() ?
-            Subspaces.OrderByDescending(s => s.Value).Select(s => s.Key).First() : 0;
-
+        public int LatestSubspace => Subspaces.Any() ? Subspaces.OrderByDescending(s => s.Value).First().Key : 0;
         private ScreenMessage WarpMessage { get; set; }
         private WarpEvents WarpEvents { get; } = new WarpEvents();
         public bool SkipSubspaceProcess { get; set; }

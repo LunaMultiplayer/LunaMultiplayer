@@ -4,7 +4,7 @@ using LunaCommon.Enums;
 
 namespace LunaClient.Systems.Warp
 {
-    public class WarpEvents: SubSystem<WarpSystem>
+    public class WarpEvents : SubSystem<WarpSystem>
     {
         /// <summary>
         /// Event triggered when time warp is changed

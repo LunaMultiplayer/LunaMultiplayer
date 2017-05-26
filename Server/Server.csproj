@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\CommandDefinition.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Message\Reader\AdminMsgReader.cs" />
     <Compile Include="Message\Reader\HandshakeMsgReader.cs" />
     <Compile Include="Message\Reader\SettingsMsgReader.cs" />

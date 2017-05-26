@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MasterServerRetriever.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalBaseMsgData.cs" />
     <Compile Include="Message\Data\MasterServer\MsBaseMsgData.cs" />
