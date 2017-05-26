@@ -20,7 +20,7 @@ Main features:
 
 
 ### How to build LMP:
-1) Download and install Visual Studio 2015 to write and build the dll. Any version will work.
+1) Download and install Visual Studio 2017 to write and build the dll. Any version will work.
 
 You can get the community version here:
 https://www.visualstudio.com/es/downloads/
@@ -32,7 +32,7 @@ https://visualstudiogallery.msdn.microsoft.com/8d26236e-4a64-4d64-8486-7df95156a
 
 3) Now that you've downloaded the necessary tools, use git to checkout and pull the latest copy of the LunaMultiplayer project.  However, you've probably already done this, since you're reading this document.
 
-4) Go to the main folder and double click the LunaMultiPlayer.sln file, opening it in Visual Studio 2015.
+4) Go to the main folder and double click the LunaMultiPlayer.sln file, opening it in Visual Studio.
 
 5) Adjust the CopyToKSPDirectory.bat file with the correct KSP Directory.  The line to edit is this one:
 SET KSPPATH=C:\games\Steam\SteamApps\common\Kerbal Space Program
@@ -55,6 +55,6 @@ the C:\Program Files (x86)\Steam\steamapps\common\Kerbal Space Program\KSP_x64_D
 
 ### How to debug LMP:
 You can learn how to debug the code with visual studio here: 
-https://github.com/DaggerES/LunaMultiPlayer/wiki/Debugging-in-VS2015
+https://github.com/DaggerES/LunaMultiPlayer/wiki/Debugging-in-Visual-studio
 
 Build Server: https://ci.appveyor.com/project/DaggerES/lunamultiplayer
