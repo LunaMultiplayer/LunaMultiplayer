@@ -1,8 +1,8 @@
-﻿using System;
+﻿using LunaCommon.Message.Data.CraftLibrary;
+using LunaCommon.Message.Interface;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using LunaCommon.Message.Data.CraftLibrary;
-using LunaCommon.Message.Interface;
 
 namespace LunaCommon.Message.Serialization
 {
@@ -148,7 +148,7 @@ namespace LunaCommon.Message.Serialization
         private static void CheckDataLeft(long length, int size)
         {
             if (size > length)
-                throw new IOException("Cannot read past the end of the stream!");
+                throw new IOException($"Cannot read past the end of the stream! Size: {size} Length: {length}");
         }
     }
 }

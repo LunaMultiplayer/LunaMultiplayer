@@ -43,7 +43,7 @@ namespace LunaClient.Utilities
         private long CurrentDeltaTime { get; set; }
 
         private List<long> DeltaHistory { get; } = new List<long>();
-        private long DeltaAverage => DeltaHistory.Count > 0 ? DeltaHistory.Sum() / DeltaHistory.Count : 0;
+        //private long DeltaAverage => DeltaHistory.Count > 0 ? DeltaHistory.Sum() / DeltaHistory.Count : 0;
 
         public void Reset()
         {

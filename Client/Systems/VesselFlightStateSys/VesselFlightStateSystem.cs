@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using UniLinq;
 using UnityEngine;
 
@@ -9,6 +10,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
     /// <summary>
     /// System that controls the flight state (user control inputs) for all the vessesl that are in flight
     /// </summary>
+    [SuppressMessage("ReSharper", "DelegateSubtraction")]
     public class VesselFlightStateSystem : MessageSystem<VesselFlightStateSystem, VesselFlightStateMessageSender, VesselFlightStateMessageHandler>
     {
         #region Fields & properties

@@ -233,6 +233,7 @@ namespace LunaClient.Systems.VesselProtoSys
             return bannedPartsStr;
         }
 
+        // ReSharper disable once UnusedMember.Local
         private void RegisterServerAsteriodIfVesselIsAsteroid(ProtoVessel possibleAsteroid)
         {
             //Register asteroids from other players

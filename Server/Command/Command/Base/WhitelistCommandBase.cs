@@ -8,9 +8,9 @@ namespace LunaServer.Command.Command.Base
         private static List<string> _sharedItems = new List<string>();
 
         //Share the lock between all instances of whitelist as the file is the same
-        private static readonly object _commandLock = new object();
+        private static readonly object CommandLck = new object();
         protected override string FileName => "LMPWhitelist.txt";
-        protected override object CommandLock => _commandLock;
+        protected override object CommandLock => CommandLck;
 
         protected override List<string> Items
         {

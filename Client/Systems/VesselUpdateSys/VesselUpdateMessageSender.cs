@@ -23,6 +23,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             var engines = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleEngines>();
             var shieldedDocks = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleDockingNode>()
                 .Where(e => !e.IsDisabled && e.deployAnimator != null).ToArray();
+            // ReSharper disable once UnusedVariable
             var iScalars = FlightGlobals.ActiveVessel.FindPartModulesImplementing<IScalarModule>();
             //This throws a nullpointerexception if you don't have any IScalarModules on the craft.  For example, a buggy with only a rovermate core (the white box) and wheels.
             //IScalarModule module = iScalars.First();

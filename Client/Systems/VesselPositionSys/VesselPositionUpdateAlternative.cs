@@ -50,12 +50,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #endregion
 
-        #region Private fields
-
-        private double PlanetariumDifference { get; set; }
-
-        #endregion
-
         #endregion
 
         #region Constructors/Creation
@@ -151,9 +145,9 @@ namespace LunaClient.Systems.VesselPositionSys
             }
         }
 
-        public virtual VesselPositionUpdate Clone()
+        public virtual VesselPositionUpdateAlternative Clone()
         {
-            return MemberwiseClone() as VesselPositionUpdate;
+            return MemberwiseClone() as VesselPositionUpdateAlternative;
         }
 
         #endregion
@@ -177,8 +171,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (Body != null && Vessel != null)
             {
-                PlanetariumDifference = Planetarium.GetUniversalTime() - PlanetTime;
-
                 ApplyVesselPositionAndRotation();
                 ApplyVesselPosition();
 
@@ -225,6 +217,7 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         //Credit where credit is due, Thanks hyperedit.
+        // ReSharper disable once UnusedMember.Local
         private static void CopyOrbit(Orbit sourceOrbit, Orbit destinationOrbit)
         {
             destinationOrbit.inclination = sourceOrbit.inclination;
@@ -242,6 +235,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// <summary>
         /// Custom lerp as Unity does not have a lerp for double values
         /// </summary>
+        // ReSharper disable once UnusedMember.Local
         private static double Lerp(double from, double to, float t)
         {
             return from * (1 - t) + to * t;

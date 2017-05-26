@@ -152,6 +152,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Check if we were spectating the vessel
         /// </summary>
+        // ReSharper disable once UnusedMember.Local
         private static bool SpectatingProtoVessel(ProtoVessel currentProto)
         {
             return FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == currentProto.vesselID;
@@ -160,6 +161,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Checks if the protovessel is a target we have locked
         /// </summary>
+        // ReSharper disable once UnusedMember.Local
         private static bool ProtoVesselIsTarget(ProtoVessel currentProto)
         {
             return (FlightGlobals.fetch.VesselTarget != null) && (FlightGlobals.fetch.VesselTarget.GetVessel() != null) &&

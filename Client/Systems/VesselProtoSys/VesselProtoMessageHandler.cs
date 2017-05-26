@@ -49,14 +49,14 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
             }
 
-            HandleVesselProtoData(messageData.VesselData, messageData.VesselId, messageData.Subspace);
+            HandleVesselProtoData(messageData.VesselData, messageData.VesselId);
         }
 
         private static void HandleVesselResponse(VesselsReplyMsgData messageData)
         {
             foreach (var vesselDataKv in messageData.VesselsData)
             {
-                HandleVesselProtoData(vesselDataKv.Value, new Guid(vesselDataKv.Key), 0);
+                HandleVesselProtoData(vesselDataKv.Value, new Guid(vesselDataKv.Key));
             }
 
             MainSystem.Singleton.NetworkState = ClientState.VesselsSynced;
@@ -114,7 +114,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// We set it as UNLOADED as perhaps vessel data has changed.
         /// We also do all of this asynchronously to improve performance
         /// </summary>
-        private static void HandleVesselProtoData(byte[] vesselData, Guid vesselId, int subspace)
+        private static void HandleVesselProtoData(byte[] vesselData, Guid vesselId)
         {
             new Thread(() =>
             {

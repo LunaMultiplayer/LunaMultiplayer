@@ -1,10 +1,10 @@
+using LunaClient.Systems.SettingsSys;
+using LunaCommon;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using LunaClient.Systems.SettingsSys;
-using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Utilities
@@ -23,7 +23,7 @@ namespace LunaClient.Utilities
 
         private static string CacheDirectory => CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Cache");
 
-        private static Thread MainThread { get; } = new Thread(ProcessingThreadMain) { IsBackground = true};
+        private static Thread MainThread { get; } = new Thread(ProcessingThreadMain) { IsBackground = true };
         private static AutoResetEvent IncomingEvent { get; } = new AutoResetEvent(false);
         private static ConcurrentQueue<byte[]> IncomingQueue { get; } = new ConcurrentQueue<byte[]>();
         private static Dictionary<string, long> FileLengths { get; } = new Dictionary<string, long>();
@@ -97,7 +97,7 @@ namespace LunaClient.Utilities
             //While the directory is over (cacheSize) MB
             while (CacheSizeExceeded())
             {
-                string deleteObject = null;
+                var deleteObject = "";
                 //Find oldest file
                 foreach (var testFile in FileCreationTimes)
                 {
@@ -106,10 +106,13 @@ namespace LunaClient.Utilities
                     if (testFile.Value < FileCreationTimes[deleteObject])
                         deleteObject = testFile.Key;
                 }
+
                 Debug.Log($"[LMP]: Deleting cached object {deleteObject}, reason: Cache full!");
                 var deleteFile = CommonUtil.CombinePaths(CacheDirectory, deleteObject + ".txt");
                 File.Delete(deleteFile);
+
                 CurrentCacheSize -= FileLengths[deleteObject];
+
                 if (FileCreationTimes.ContainsKey(deleteObject))
                     FileCreationTimes.Remove(deleteObject);
                 if (FileLengths.ContainsKey(deleteObject))
@@ -169,7 +172,7 @@ namespace LunaClient.Utilities
                     IncomingEvent.WaitOne(500);
             }
         }
-        
+
         private static bool CacheSizeExceeded()
         {
             return CurrentCacheSize > SettingsSystem.CurrentSettings.CacheSize * 1024 * 1024;
