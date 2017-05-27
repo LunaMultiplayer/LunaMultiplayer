@@ -51,8 +51,9 @@ namespace LunaClient
                 MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(Update));
             }
         }
-        
-        public void OnGui()
+
+        // ReSharper disable once InconsistentNaming
+        public void OnGUI()
         {
             try
             {
@@ -60,7 +61,7 @@ namespace LunaClient
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(OnGui));
+                MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(OnGUI));
             }
         }
 
