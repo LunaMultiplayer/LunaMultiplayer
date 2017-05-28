@@ -182,6 +182,7 @@
     <Compile Include="Utilities\DebugTools\LineRendererDebug.cs" />
     <Compile Include="Utilities\DebugTools\PointRendererDebug.cs" />
     <Compile Include="Utilities\DebugTools\QuaternionRendererDebug.cs" />
+    <Compile Include="Utilities\DisclaimerDialog.cs" />
     <Compile Include="Windows\Chat\ChatWindow.cs" />
     <Compile Include="Windows\Chat\ChatDrawer.cs" />
     <Compile Include="Windows\Connection\ConnectionDrawer.cs" />
@@ -230,8 +231,6 @@
     <Compile Include="Systems\Warp\WarpSystem.cs" />
     <Compile Include="Windows\Debug\DebugDrawer.cs" />
     <Compile Include="Windows\Debug\DebugWindow.cs" />
-    <Compile Include="Windows\Disclaimer\DisclaimerWindow.cs" />
-    <Compile Include="Windows\Disclaimer\DisclaimerDrawer.cs" />
     <Compile Include="Windows\Mod\ModDrawer.cs" />
     <Compile Include="Windows\Mod\ModWindow.cs" />
     <Compile Include="Windows\Options\OptionsDrawer.cs" />

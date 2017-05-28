@@ -4,7 +4,6 @@ using LunaClient.Windows.Chat;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
-using LunaClient.Windows.Disclaimer;
 using LunaClient.Windows.Mod;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.ServerList;
@@ -18,7 +17,6 @@ namespace LunaClient.Windows
     {
         public static void Update()
         {
-            TryUpdate(DisclaimerWindow.Singleton);
             TryUpdate(ConnectionWindow.Singleton);
             TryUpdate(StatusWindow.Singleton);
             TryUpdate(ChatWindow.Singleton);
@@ -33,7 +31,6 @@ namespace LunaClient.Windows
         
         public static void OnGui()
         {
-            TryOnGui(DisclaimerWindow.Singleton);
             TryOnGui(ConnectionWindow.Singleton);
             TryOnGui(StatusWindow.Singleton);
             TryOnGui(ChatWindow.Singleton);

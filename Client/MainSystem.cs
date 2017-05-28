@@ -14,7 +14,6 @@ using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaClient.Windows;
 using LunaClient.Windows.Connection;
-using LunaClient.Windows.Disclaimer;
 using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -196,7 +195,7 @@ namespace LunaClient
             if (!SettingsSystem.CurrentSettings.DisclaimerAccepted && HighLogic.LoadedScene == GameScenes.MAINMENU)
             {
                 Enabled = false;
-                DisclaimerWindow.Singleton.Display = true;
+                DisclaimerDialog.SpawnDialog();
             }
 
             if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
