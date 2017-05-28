@@ -32,7 +32,7 @@
     <ConsolePause>false</ConsolePause>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'DebugCompileOnly|AnyCPU'">
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'BuildServer|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\DebugCompileOnly\</OutputPath>
     <DefineConstants>DEBUG;</DefineConstants>
@@ -252,6 +252,6 @@
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
-    <PostBuildEvent>call  "$(SolutionDir)CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent>if /I "$(ConfigurationName)" NEQ "BuildServer" call  "$(SolutionDir)CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
 </Project>
