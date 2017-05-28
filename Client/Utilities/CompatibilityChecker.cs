@@ -53,8 +53,8 @@ namespace LunaClient.Utilities
         public static bool IsCompatible()
         {
             const int compatibleMajor = 1;
-            const int compatibleMinor = 2;
-            const int compatibleRevision = 2;
+            const int compatibleMinor = 3;
+            const int compatibleRevision = 0;
             return (Versioning.version_major == compatibleMajor) && (Versioning.version_minor == compatibleMinor) && (Versioning.Revision == compatibleRevision);
 
             /*-----------------------------------------------*\
@@ -162,9 +162,7 @@ namespace LunaClient.Utilities
             }
 
             if ((incompatible.Length > 0) || (incompatibleUnity.Length > 0))
-                PopupDialog.SpawnPopupDialog(new Vector2(0, 0),
-                    new Vector2(float.PositiveInfinity, float.PositiveInfinity), "dialogCompChecker", "Incompatible Mods Detected", message,
-                    "OK", true, HighLogic.UISkin);
+                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("CompatibilityChecker", message, "Incompatible Mods Detected", HighLogic.UISkin), true, HighLogic.UISkin);
         }
 
         private static IEnumerable<Type> GetAllTypes()
