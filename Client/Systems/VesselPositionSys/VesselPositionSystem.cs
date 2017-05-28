@@ -26,7 +26,7 @@ namespace LunaClient.Systems.VesselPositionSys
                                          FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
 
         public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
-            (PositionUpdateSystemReady) || (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
+            PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
         private ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new ConcurrentDictionary<Guid, VesselPositionUpdate>();
         private ConcurrentDictionary<Guid, byte> UpdatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();

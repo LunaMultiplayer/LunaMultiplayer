@@ -38,7 +38,7 @@ namespace LunaCommon
 
         public static string ConvertConfigStringToGuidString(string configNodeString)
         {
-            if ((configNodeString == null) || (configNodeString.Length != 32))
+            if (configNodeString == null || configNodeString.Length != 32)
                 return null;
             var returnString = new string[5];
             returnString[0] = configNodeString.Substring(0, 8);
@@ -394,7 +394,7 @@ namespace LunaCommon
             //This is the same format as KMPModControl.txt. It's a fairly sane format, and it makes sense to remain compatible.
             var sb = new StringBuilder();
             //Header stuff
-            sb.AppendLine("#MODCONTROLVERSION=" + VersionInfo.VersionNumber);
+            sb.AppendLine($"#MODCONTROLVERSION={VersionInfo.VersionNumber}");
             sb.AppendLine("#You can comment by starting a line with a #, these are ignored by the server.");
             sb.AppendLine("#Commenting will NOT work unless the line STARTS with a '#'.");
             sb.AppendLine("#You can also indent the file with tabs or spaces.");

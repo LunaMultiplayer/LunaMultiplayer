@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using LunaCommon.Message.Data.Kerbal;
+﻿using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
@@ -12,6 +8,10 @@ using LunaServer.Log;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Server;
 using LunaServer.System;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace LunaServer.Message.Reader
 {
@@ -41,7 +41,7 @@ namespace LunaServer.Message.Reader
 
                     LunaLog.Debug($"Saving kerbal {data.KerbalName} from {client.PlayerName}");
 
-                    var path = Path.Combine(ServerContext.UniverseDirectory, "Kerbals", data.KerbalName + ".txt");
+                    var path = Path.Combine(ServerContext.UniverseDirectory, "Kerbals", $"{data.KerbalName}.txt");
                     FileHandler.WriteToFile(path, data.KerbalData);
 
                     MessageQueuer.RelayMessage<KerbalSrvMsg>(client, data);

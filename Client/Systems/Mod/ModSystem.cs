@@ -103,27 +103,27 @@ namespace LunaClient.Systems.Mod
                     switch (Path.GetExtension(file).ToLower())
                     {
                         case ".dll":
-                        modDllFiles.Add(relativeFileName);
-                        break;
+                            modDllFiles.Add(relativeFileName);
+                            break;
                         case ".cfg":
-                        if (Path.GetExtension(file).ToLower() == ".cfg")
-                        {
-                            var fileIsPartFile = false;
-
-                            var cn = ConfigNode.Load(file);
-                            if (cn == null) continue;
-                            foreach (var partName in cn.GetNodes("PART").Select(p => p.GetValue("Name")))
+                            if (Path.GetExtension(file).ToLower() == ".cfg")
                             {
-                                Debug.Log($"[LMP]: Part detected in {relativeFileName} , Name: {partName}");
-                                modIsRequired = true;
-                                fileIsPartFile = true;
-                                partsList.Add(partName.Replace('_', '.'));
-                            }
+                                var fileIsPartFile = false;
 
-                            if (fileIsPartFile)
-                                modPartCfgFiles.Add(relativeFileName);
-                        }
-                        break;
+                                var cn = ConfigNode.Load(file);
+                                if (cn == null) continue;
+                                foreach (var partName in cn.GetNodes("PART").Select(p => p.GetValue("Name")))
+                                {
+                                    Debug.Log($"[LMP]: Part detected in {relativeFileName} , Name: {partName}");
+                                    modIsRequired = true;
+                                    fileIsPartFile = true;
+                                    partsList.Add(partName.Replace('_', '.'));
+                                }
+
+                                if (fileIsPartFile)
+                                    modPartCfgFiles.Add(relativeFileName);
+                            }
+                            break;
                     }
                 }
 
@@ -165,14 +165,11 @@ namespace LunaClient.Systems.Mod
 
             Debug.Log("[LMP]: Missing parts end");
 
-            if (missingParts.Any())
-                ScreenMessages.PostScreenMessage(
-                    missingParts.Count + " missing part(s) from Common.dll printed to debug log (" +
-                    PartLoader.LoadedPartsList.Count + " total)", 5f, ScreenMessageStyle.UPPER_CENTER);
-            else
-                ScreenMessages.PostScreenMessage(
-                    "No missing parts out of from Common.dll (" + PartLoader.LoadedPartsList.Count + " total)", 5f,
-                    ScreenMessageStyle.UPPER_CENTER);
+            ScreenMessages.PostScreenMessage(
+                missingParts.Any()
+                    ? $"{missingParts.Count} missing part(s) from Common.dll printed to debug log ({PartLoader.LoadedPartsList.Count} total)"
+                    : $"No missing parts out of from Common.dll ({PartLoader.LoadedPartsList.Count} total)",
+                5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
         #endregion

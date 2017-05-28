@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.PlayerConnection;
@@ -11,6 +8,9 @@ using LunaServer.Log;
 using LunaServer.Plugin;
 using LunaServer.Server;
 using LunaServer.System;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace LunaServer.Client
 {
@@ -31,13 +31,13 @@ namespace LunaServer.Client
             Task.Run(() => MessageSender.StartSendingOutgoingMessages(newClientObject));
 
             LmpPluginHandler.FireOnClientConnect(newClientObject);
-            
+
             ServerContext.Clients.TryAdd(newClientObject.Endpoint, newClientObject);
             VesselUpdateRelaySystem.AddPlayer(newClientObject);
-            LunaLog.Debug("Online Players: " + ServerContext.PlayerCount + ", connected: " + ServerContext.Clients.Count);
+            LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ServerContext.Clients.Count}");
         }
 
-        public static void DisconnectClient(ClientStructure client, string reason ="")
+        public static void DisconnectClient(ClientStructure client, string reason = "")
         {
             if (!string.IsNullOrEmpty(reason))
                 LunaLog.Debug($"{client.PlayerName} sent Connection end message, reason: {reason}");
@@ -74,7 +74,7 @@ namespace LunaServer.Client
                 }
                 catch (Exception e)
                 {
-                    LunaLog.Debug("Error closing client Connection: " + e.Message);
+                    LunaLog.Debug($"Error closing client Connection: {e.Message}");
                 }
                 ServerContext.LastPlayerActivity = ServerContext.ServerClock.ElapsedMilliseconds;
             }

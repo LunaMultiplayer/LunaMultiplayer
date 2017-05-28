@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Utilities;
 using LunaCommon;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
@@ -13,7 +13,7 @@ namespace LunaClient.Systems.KerbalSys
     public class KerbalSystem : MessageSystem<KerbalSystem, KerbalMessageSender, KerbalMessageHandler>
     {
         #region Fields
-        
+
         public Queue<ConfigNode> KerbalQueue { get; } = new Queue<ConfigNode>();
         public Dictionary<string, string> ServerKerbals { get; } = new Dictionary<string, string>();
 
@@ -95,7 +95,7 @@ namespace LunaClient.Systems.KerbalSys
         #endregion
 
         #region Private
-        
+
         /// <summary>
         /// Creates a new Kerbal
         /// </summary>
@@ -105,7 +105,7 @@ namespace LunaClient.Systems.KerbalSys
             var kerbalNode = new ConfigNode();
             protoCrew.Save(kerbalNode);
             var kerbalBytes = ConfigNodeSerializer.Serialize(kerbalNode);
-            if ((kerbalBytes != null) && (kerbalBytes.Length != 0))
+            if (kerbalBytes != null && kerbalBytes.Length != 0)
                 ServerKerbals[protoCrew.name] = Common.CalculateSha256Hash(kerbalBytes);
         }
 

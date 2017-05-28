@@ -17,17 +17,17 @@ namespace LunaServer.Message.Reader
             switch (message?.PlayerStatusMessageType)
             {
                 case PlayerStatusMessageType.Request:
-                SendOtherPlayerStatusToNewPlayer(client);
-                break;
+                    SendOtherPlayerStatusToNewPlayer(client);
+                    break;
                 case PlayerStatusMessageType.Set:
-                var data = (PlayerStatusSetMsgData)message;
-                if (data.PlayerName == client.PlayerName)
-                {
-                    client.PlayerStatus.VesselText = data.VesselText;
-                    client.PlayerStatus.StatusText = data.StatusText;
-                }
-                MessageQueuer.RelayMessage<PlayerStatusSrvMsg>(client, data);
-                break;
+                    var data = (PlayerStatusSetMsgData)message;
+                    if (data.PlayerName == client.PlayerName)
+                    {
+                        client.PlayerStatus.VesselText = data.VesselText;
+                        client.PlayerStatus.StatusText = data.StatusText;
+                    }
+                    MessageQueuer.RelayMessage<PlayerStatusSrvMsg>(client, data);
+                    break;
             }
         }
 

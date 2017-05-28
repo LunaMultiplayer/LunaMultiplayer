@@ -90,7 +90,7 @@ namespace LunaClient.Windows.Options
             GUILayout.EndHorizontal();
             //Key bindings
             GUILayout.Space(10);
-            var chatDescription = "Set chat key (current: " + SettingsSystem.CurrentSettings.ChatKey + ")";
+            var chatDescription = $"Set chat key (current: {SettingsSystem.CurrentSettings.ChatKey})";
             if (SettingChat)
             {
                 chatDescription = "Setting chat key (click to cancel)...";

@@ -76,29 +76,29 @@ namespace LunaClient.Systems.Handshake
             switch (reply)
             {
                 case HandshakeReply.HandshookSuccessfully:
-                {
-                    if (ModFileParser.ParseModFile(modFileData))
                     {
-                        Debug.Log("[LMP]: Handshake successful");
-                        MainSystem.Singleton.NetworkState = ClientState.Authenticated;
+                        if (ModFileParser.ParseModFile(modFileData))
+                        {
+                            Debug.Log("[LMP]: Handshake successful");
+                            MainSystem.Singleton.NetworkState = ClientState.Authenticated;
+                        }
+                        else
+                        {
+                            Debug.LogError("[LMP]: Failed to pass mod validation");
+                            NetworkConnection.Disconnect("[LMP]: Failed mod validation");
+                        }
                     }
-                    else
-                    {
-                        Debug.LogError("[LMP]: Failed to pass mod validation");
-                        NetworkConnection.Disconnect("[LMP]: Failed mod validation");
-                    }
-                }
-                break;
+                    break;
                 default:
-                var disconnectReason = "Handshake failure: " + reason;
-                //If it's a protocol mismatch, append the client/server version.
-                if (reply == HandshakeReply.ProtocolMismatch)
-                {
-                    disconnectReason += "\nClient: " + VersionInfo.VersionNumber + ", Server: " + data.Version;
-                }
-                Debug.Log(disconnectReason);
-                NetworkConnection.Disconnect(disconnectReason);
-                break;
+                    var disconnectReason = $"Handshake failure: {reason}";
+                    //If it's a protocol mismatch, append the client/server version.
+                    if (reply == HandshakeReply.ProtocolMismatch)
+                    {
+                        disconnectReason += $"\nClient: {VersionInfo.VersionNumber}, Server: {data.Version}";
+                    }
+                    Debug.Log(disconnectReason);
+                    NetworkConnection.Disconnect(disconnectReason);
+                    break;
             }
         }
 

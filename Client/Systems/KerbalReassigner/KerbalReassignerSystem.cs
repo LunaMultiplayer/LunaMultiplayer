@@ -1,8 +1,8 @@
-﻿using System;
+﻿using LunaClient.Base;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using LunaClient.Base;
 using UnityEngine;
 
 namespace LunaClient.Systems.KerbalReassigner
@@ -47,7 +47,7 @@ namespace LunaClient.Systems.KerbalReassigner
                 var crewIndex = 0;
                 foreach (var currentKerbalName in partNode.GetValues("crew"))
                 {
-                    if (KerbalToVessel.ContainsKey(currentKerbalName) && (KerbalToVessel[currentKerbalName] != protovesselId))
+                    if (KerbalToVessel.ContainsKey(currentKerbalName) && KerbalToVessel[currentKerbalName] != protovesselId)
                     {
                         ProtoCrewMember newKerbal = null;
                         var newKerbalGender = GetKerbalGender(currentKerbalName);
@@ -63,12 +63,12 @@ namespace LunaClient.Systems.KerbalReassigner
                             var kerbalOk =
                                 !(KerbalToVessel.ContainsKey(possibleKerbal.name) &&
                                   (takenKerbals.Contains(possibleKerbal.name) ||
-                                   (KerbalToVessel[possibleKerbal.name] != protovesselId)));
+                                   KerbalToVessel[possibleKerbal.name] != protovesselId));
 
                             kerbalOk &= possibleKerbal.gender == newKerbalGender;
                             kerbalOk &=
-                                !((newExperienceTrait != null) &&
-                                  (newExperienceTrait != possibleKerbal.experienceTrait.TypeName));
+                                !(newExperienceTrait != null &&
+                                  newExperienceTrait != possibleKerbal.experienceTrait.TypeName);
 
                             if (kerbalOk)
                             {
@@ -82,8 +82,8 @@ namespace LunaClient.Systems.KerbalReassigner
 
                             var kerbalOk = possibleKerbal.gender == newKerbalGender;
                             kerbalOk &=
-                                !((newExperienceTrait != null) &&
-                                  (newExperienceTrait != possibleKerbal.experienceTrait.TypeName));
+                                !(newExperienceTrait != null &&
+                                  newExperienceTrait != possibleKerbal.experienceTrait.TypeName);
 
                             if (kerbalOk)
                                 newKerbal = possibleKerbal;

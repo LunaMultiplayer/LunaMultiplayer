@@ -1,11 +1,11 @@
-﻿using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Chat
 {
@@ -21,46 +21,46 @@ namespace LunaClient.Systems.Chat
             switch (msgData.ChatMessageType)
             {
                 case ChatMessageType.ListReply:
-                {
-                    var data = (ChatListReplyMsgData) messageData;
-                    foreach (var keyVal in data.PlayerChannels)
-                        foreach (var channelName in keyVal.Value)
-                            System.Queuer.QueueChatJoin(keyVal.Key, channelName);
+                    {
+                        var data = (ChatListReplyMsgData)messageData;
+                        foreach (var keyVal in data.PlayerChannels)
+                            foreach (var channelName in keyVal.Value)
+                                System.Queuer.QueueChatJoin(keyVal.Key, channelName);
 
-                    MainSystem.Singleton.NetworkState = ClientState.ChatSynced;
-                }
+                        MainSystem.Singleton.NetworkState = ClientState.ChatSynced;
+                    }
                     break;
                 case ChatMessageType.Join:
-                {
-                    var data = (ChatJoinMsgData) messageData;
-                    System.Queuer.QueueChatJoin(data.From, data.Channel);
-                }
+                    {
+                        var data = (ChatJoinMsgData)messageData;
+                        System.Queuer.QueueChatJoin(data.From, data.Channel);
+                    }
                     break;
                 case ChatMessageType.Leave:
-                {
-                    var data = (ChatLeaveMsgData) messageData;
-                    System.Queuer.QueueChatLeave(data.From, data.Channel);
-                }
+                    {
+                        var data = (ChatLeaveMsgData)messageData;
+                        System.Queuer.QueueChatLeave(data.From, data.Channel);
+                    }
                     break;
                 case ChatMessageType.ChannelMessage:
-                {
-                    var data = (ChatChannelMsgData) messageData;
-                    System.Queuer.QueueChannelMessage(data.From, data.Channel, data.Text);
-                }
+                    {
+                        var data = (ChatChannelMsgData)messageData;
+                        System.Queuer.QueueChannelMessage(data.From, data.Channel, data.Text);
+                    }
                     break;
                 case ChatMessageType.PrivateMessage:
-                {
-                    var data = (ChatPrivateMsgData) messageData;
-                    if ((data.To == SettingsSystem.CurrentSettings.PlayerName) ||
-                        (data.From == SettingsSystem.CurrentSettings.PlayerName))
-                        System.Queuer.QueuePrivateMessage(data.From, data.To, data.Text);
-                }
+                    {
+                        var data = (ChatPrivateMsgData)messageData;
+                        if (data.To == SettingsSystem.CurrentSettings.PlayerName ||
+                            data.From == SettingsSystem.CurrentSettings.PlayerName)
+                            System.Queuer.QueuePrivateMessage(data.From, data.To, data.Text);
+                    }
                     break;
                 case ChatMessageType.ConsoleMessage:
-                {
-                    var data = (ChatConsoleMsgData) messageData;
-                    System.Queuer.QueueSystemMessage(data.Message);
-                }
+                    {
+                        var data = (ChatConsoleMsgData)messageData;
+                        System.Queuer.QueueSystemMessage(data.Message);
+                    }
                     break;
             }
         }

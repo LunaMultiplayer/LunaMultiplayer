@@ -19,7 +19,7 @@ namespace LunaServer.System
 
         public static void SaveSubspace(int subspaceId, double subspaceTime)
         {
-            FileHandler.AppendToFile(SubspaceFile, subspaceId + ":" + subspaceTime + Environment.NewLine);
+            FileHandler.AppendToFile(SubspaceFile, $"{subspaceId}:{subspaceTime}{Environment.NewLine}");
         }
 
         public static void RemoveSubspace(int oldSubspace)
@@ -31,7 +31,7 @@ namespace LunaServer.System
 
             var allLinesExceptTheDeleted = string.Join(Environment.NewLine, GetSubspaceLinesFromFile()
                 .Where(s => s.Key != oldSubspace)
-                .Select(s => s.Key + ":" + s.Value));
+                .Select(s => $"{s.Key}:{s.Value}"));
 
             WriteHeaderToSubspaceFile();
             FileHandler.AppendToFile(SubspaceFile, allLinesExceptTheDeleted);
@@ -41,11 +41,10 @@ namespace LunaServer.System
 
         private static void WriteHeaderToSubspaceFile()
         {
-            var content = "#Incorrectly editing this file will cause weirdness. If there is any errors, " +
-                          "the universe time will be reset." + Environment.NewLine;
-            content += "#This file can only be edited if the server is stopped." + Environment.NewLine;
-            content += "#Each variable is defined as: subspaceId:server_time_difference_in_seconds." + Environment.NewLine;
-            content += "#It must always contain at least 1 subspace wich will be the most advanced in the future" + Environment.NewLine;
+            var content = $"#Incorrectly editing this file will cause weirdness. If there is any errors, the universe time will be reset.{Environment.NewLine}";
+            content += $"#This file can only be edited if the server is stopped.{Environment.NewLine}";
+            content += $"#Each variable is defined as: subspaceId:server_time_difference_in_seconds.{Environment.NewLine}";
+            content += $"#It must always contain at least 1 subspace wich will be the most advanced in the future{Environment.NewLine}";
 
             FileHandler.WriteToFile(SubspaceFile, content);
         }

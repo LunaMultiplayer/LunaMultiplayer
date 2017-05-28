@@ -1,12 +1,12 @@
-﻿using System;
+﻿using LunaClient.Utilities;
+using LunaClient.Windows.Mod;
+using LunaCommon;
+using LunaCommon.Enums;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using LunaClient.Utilities;
-using LunaClient.Windows.Mod;
-using LunaCommon;
-using LunaCommon.Enums;
 using UnityEngine;
 
 namespace LunaClient.Systems.Mod
@@ -198,7 +198,7 @@ namespace LunaClient.Systems.Mod
                 {
                     ModCheckOk = false;
                     Debug.Log($"[LMP]: Non-whitelisted resource {dllResource.Key} exists on client!");
-                    StringBuilder.AppendLine("Non-whitelisted resource " + dllResource.Key + " exists on client!");
+                    StringBuilder.AppendLine($"Non-whitelisted resource {dllResource.Key} exists on client!");
                 }
             }
 
@@ -226,8 +226,8 @@ namespace LunaClient.Systems.Mod
                 return;
             }
 
-            if (fileExists && (requiredEntry.Value != "") &&
-                (ModSystem.Singleton.DllList[requiredEntry.Key] != requiredEntry.Value))
+            if (fileExists && requiredEntry.Value != "" &&
+                ModSystem.Singleton.DllList[requiredEntry.Key] != requiredEntry.Value)
             {
                 ModCheckOk = false;
                 Debug.Log($"[LMP]: Required file {requiredEntry.Key} does not match hash {requiredEntry.Value}!");
@@ -250,7 +250,7 @@ namespace LunaClient.Systems.Mod
             }
 
             //If the entry exists and has a SHA sum, we need to check it.
-            if (!string.IsNullOrEmpty(filePath) && (requiredEntry.Value != ""))
+            if (!string.IsNullOrEmpty(filePath) && requiredEntry.Value != "")
                 EvaluateShaSum(filePath, requiredEntry);
         }
 

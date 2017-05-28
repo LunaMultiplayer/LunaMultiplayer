@@ -23,110 +23,110 @@ namespace LunaClient.Systems.CraftLibrary
             switch (msgData.CraftMessageType)
             {
                 case CraftMessageType.ListReply:
-                {
-                    var data = (CraftLibraryListReplyMsgData)messageData;
-                    var playerList = data.PlayerCrafts;
-                    foreach (var playerCraft in playerList)
                     {
-                        var vabExists = playerCraft.Value.VabExists;
-                        var sphExists = playerCraft.Value.SphExists;
-                        var subassemblyExists = playerCraft.Value.SubassemblyExists;
-                        Debug.Log($"[LMP]: Player: {playerCraft.Key}, VAB: {vabExists}, SPH: {sphExists}, SUBASSEMBLY {subassemblyExists}");
-                        if (vabExists)
+                        var data = (CraftLibraryListReplyMsgData)messageData;
+                        var playerList = data.PlayerCrafts;
+                        foreach (var playerCraft in playerList)
                         {
-                            var vabCrafts = playerCraft.Value.VabCraftNames;
-                            foreach (var vabCraft in vabCrafts)
+                            var vabExists = playerCraft.Value.VabExists;
+                            var sphExists = playerCraft.Value.SphExists;
+                            var subassemblyExists = playerCraft.Value.SubassemblyExists;
+                            Debug.Log($"[LMP]: Player: {playerCraft.Key}, VAB: {vabExists}, SPH: {sphExists}, SUBASSEMBLY {subassemblyExists}");
+                            if (vabExists)
                             {
-                                var cce = new CraftChangeEntry
+                                var vabCrafts = playerCraft.Value.VabCraftNames;
+                                foreach (var vabCraft in vabCrafts)
                                 {
-                                    PlayerName = playerCraft.Key,
-                                    CraftType = CraftType.Vab,
-                                    CraftName = vabCraft
-                                };
-                                System.QueueCraftAdd(cce);
+                                    var cce = new CraftChangeEntry
+                                    {
+                                        PlayerName = playerCraft.Key,
+                                        CraftType = CraftType.Vab,
+                                        CraftName = vabCraft
+                                    };
+                                    System.QueueCraftAdd(cce);
+                                }
+                            }
+                            if (sphExists)
+                            {
+                                var sphCrafts = playerCraft.Value.SphCraftNames;
+                                foreach (var sphCraft in sphCrafts)
+                                {
+                                    var cce = new CraftChangeEntry
+                                    {
+                                        PlayerName = playerCraft.Key,
+                                        CraftType = CraftType.Sph,
+                                        CraftName = sphCraft
+                                    };
+                                    System.QueueCraftAdd(cce);
+                                }
+                            }
+                            if (subassemblyExists)
+                            {
+                                var subassemblyCrafts = playerCraft.Value.SubassemblyCraftNames;
+                                foreach (var subassemblyCraft in subassemblyCrafts)
+                                {
+                                    var cce = new CraftChangeEntry
+                                    {
+                                        PlayerName = playerCraft.Key,
+                                        CraftType = CraftType.Subassembly,
+                                        CraftName = subassemblyCraft
+                                    };
+                                    System.QueueCraftAdd(cce);
+                                }
                             }
                         }
-                        if (sphExists)
-                        {
-                            var sphCrafts = playerCraft.Value.SphCraftNames;
-                            foreach (var sphCraft in sphCrafts)
-                            {
-                                var cce = new CraftChangeEntry
-                                {
-                                    PlayerName = playerCraft.Key,
-                                    CraftType = CraftType.Sph,
-                                    CraftName = sphCraft
-                                };
-                                System.QueueCraftAdd(cce);
-                            }
-                        }
-                        if (subassemblyExists)
-                        {
-                            var subassemblyCrafts = playerCraft.Value.SubassemblyCraftNames;
-                            foreach (var subassemblyCraft in subassemblyCrafts)
-                            {
-                                var cce = new CraftChangeEntry
-                                {
-                                    PlayerName = playerCraft.Key,
-                                    CraftType = CraftType.Subassembly,
-                                    CraftName = subassemblyCraft
-                                };
-                                System.QueueCraftAdd(cce);
-                            }
-                        }
+                        MainSystem.Singleton.NetworkState = ClientState.CraftlibrarySynced;
                     }
-                    MainSystem.Singleton.NetworkState = ClientState.CraftlibrarySynced;
-                }
-                break;
+                    break;
                 case CraftMessageType.AddFile:
-                {
-                    var data = (CraftLibraryAddMsgData)messageData;
-                    var cce = new CraftChangeEntry
                     {
-                        PlayerName = data.PlayerName,
-                        CraftType = data.UploadType,
-                        CraftName = data.UploadName
-                    };
-                    System.QueueCraftAdd(cce);
-                    ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "",
-                        cce.PlayerName + " shared " + cce.CraftName + " (" + cce.CraftType + ")");
-                }
-                break;
+                        var data = (CraftLibraryAddMsgData)messageData;
+                        var cce = new CraftChangeEntry
+                        {
+                            PlayerName = data.PlayerName,
+                            CraftType = data.UploadType,
+                            CraftName = data.UploadName
+                        };
+                        System.QueueCraftAdd(cce);
+                        ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "",
+                            $"{cce.PlayerName} shared {cce.CraftName} ({cce.CraftType})");
+                    }
+                    break;
                 case CraftMessageType.DeleteFile:
-                {
-                    var data = (CraftLibraryDeleteMsgData)messageData;
-                    var cce = new CraftChangeEntry
                     {
-                        PlayerName = data.PlayerName,
-                        CraftType = data.CraftType,
-                        CraftName = data.CraftName
-                    };
-                    System.QueueCraftDelete(cce);
-                }
-                break;
+                        var data = (CraftLibraryDeleteMsgData)messageData;
+                        var cce = new CraftChangeEntry
+                        {
+                            PlayerName = data.PlayerName,
+                            CraftType = data.CraftType,
+                            CraftName = data.CraftName
+                        };
+                        System.QueueCraftDelete(cce);
+                    }
+                    break;
                 case CraftMessageType.RespondFile:
-                {
-                    var data = (CraftLibraryRespondMsgData)messageData;
-                    var cre = new CraftResponseEntry
                     {
-                        PlayerName = data.PlayerName,
-                        CraftType = data.RequestedType,
-                        CraftName = data.RequestedName
-                    };
-                    var hasCraft = data.HasCraft;
-                    if (hasCraft)
-                    {
-                        cre.CraftData = data.CraftData;
-                        System.QueueCraftResponse(cre);
+                        var data = (CraftLibraryRespondMsgData)messageData;
+                        var cre = new CraftResponseEntry
+                        {
+                            PlayerName = data.PlayerName,
+                            CraftType = data.RequestedType,
+                            CraftName = data.RequestedName
+                        };
+                        var hasCraft = data.HasCraft;
+                        if (hasCraft)
+                        {
+                            cre.CraftData = data.CraftData;
+                            System.QueueCraftResponse(cre);
+                        }
+                        else
+                        {
+                            ScreenMessages.PostScreenMessage(
+                                $"Craft {cre.CraftName} from {cre.PlayerName} not available", 5f,
+                                ScreenMessageStyle.UPPER_CENTER);
+                        }
                     }
-                    else
-                    {
-                        ScreenMessages.PostScreenMessage(
-                            "Craft " + cre.CraftName + " from " + cre.PlayerName + " not available", 5f,
-                            ScreenMessageStyle.UPPER_CENTER);
-                    }
-                }
-                break;
+                    break;
             }
         }
     }

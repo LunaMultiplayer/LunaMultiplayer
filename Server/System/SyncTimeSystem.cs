@@ -1,8 +1,8 @@
-﻿using System;
-using LunaCommon.Message.Data.SyncTime;
+﻿using LunaCommon.Message.Data.SyncTime;
 using LunaCommon.Message.Interface;
 using LunaServer.Client;
 using LunaServer.Log;
+using System;
 
 namespace LunaServer.System
 {
@@ -13,11 +13,11 @@ namespace LunaServer.System
         {
             try
             {
-                ((SyncTimeReplyMsgData) message.Data).ServerSendTime = DateTime.UtcNow.Ticks;
+                ((SyncTimeReplyMsgData)message.Data).ServerSendTime = DateTime.UtcNow.Ticks;
             }
             catch (Exception e)
             {
-                LunaLog.Debug("Error rewriting SYNC_TIME packet, Exception " + e);
+                LunaLog.Debug($"Error rewriting SYNC_TIME packet, Exception {e}");
             }
         }
     }

@@ -1,12 +1,12 @@
-using System;
-using System.Linq;
-using System.Threading;
 using LunaServer.Command.Command;
 using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Plugin;
 using LunaServer.Settings;
 using LunaServer.System;
+using System;
+using System.Linq;
+using System.Threading;
 
 namespace LunaServer.Client
 {
@@ -32,7 +32,7 @@ namespace LunaServer.Client
             }
             catch (Exception e)
             {
-                LunaLog.Error("Fatal error thrown, exception: " + e);
+                LunaLog.Error($"Fatal error thrown, exception: {e}");
                 new ShutDownCommand().Execute("Crashed!");
             }
 
@@ -56,7 +56,7 @@ namespace LunaServer.Client
             }
             catch (Exception e)
             {
-                LunaLog.Fatal("Fatal error thrown during shutdown, exception: " + e);
+                LunaLog.Fatal($"Fatal error thrown during shutdown, exception: {e}");
                 throw;
             }
         }

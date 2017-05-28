@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using LunaServer.Client;
 using LunaServer.Log;
+using System.Collections.Generic;
 
 namespace LunaServer.Plugin
 {
@@ -29,10 +29,10 @@ namespace LunaServer.Plugin
             {
                 if (RegisteredMods.ContainsKey(modName))
                 {
-                    LunaLog.Debug("Failed to register mod handler for " + modName + ", mod already registered");
+                    LunaLog.Debug($"Failed to register mod handler for {modName}, mod already registered");
                     return false;
                 }
-                LunaLog.Debug("Registered mod handler for " + modName);
+                LunaLog.Debug($"Registered mod handler for {modName}");
                 RegisteredMods.Add(modName, handlerFunction);
             }
             return true;

@@ -179,11 +179,11 @@ namespace LunaServer.Utilities
         public void SaveSettings()
         {
             var settingFields = typeof(T).GetFields();
-            if (File.Exists(_filePath + ".tmp"))
+            if (File.Exists($"{_filePath}.tmp"))
             {
-                File.Delete(_filePath + ".tmp");
+                File.Delete($"{_filePath}.tmp");
             }
-            using (var fs = new FileStream(_filePath + ".tmp", FileMode.CreateNew))
+            using (var fs = new FileStream($"{_filePath}.tmp", FileMode.CreateNew))
             {
                 using (var sw = new StreamWriter(fs))
                 {
@@ -265,7 +265,7 @@ namespace LunaServer.Utilities
             {
                 File.Delete(_filePath);
             }
-            File.Move(_filePath + ".tmp", _filePath);
+            File.Move($"{_filePath}.tmp", _filePath);
         }
         #endregion
 
@@ -298,15 +298,15 @@ namespace LunaServer.Utilities
                     switch (currentChar)
                     {
                         case '\\':
-                        isEscaped = true;
-                        break;
+                            isEscaped = true;
+                            break;
                         case ',':
-                        retList.Add(sb.ToString());
-                        sb.Clear();
-                        break;
+                            retList.Add(sb.ToString());
+                            sb.Clear();
+                            break;
                         default:
-                        sb.Append(currentChar);
-                        break;
+                            sb.Append(currentChar);
+                            break;
                     }
                 }
             }
@@ -325,16 +325,16 @@ namespace LunaServer.Utilities
                 switch (currentChar)
                 {
                     case '\\':
-                    sb.Append(@"\\");
-                    continue;
+                        sb.Append(@"\\");
+                        continue;
                     case ',':
-                    sb.Append(@"\,");
-                    continue;
+                        sb.Append(@"\,");
+                        continue;
                     case '\r':
-                    continue;
+                        continue;
                     case '\n':
-                    sb.Append(@"\n");
-                    continue;
+                        sb.Append(@"\n");
+                        continue;
                 }
                 sb.Append(currentChar);
             }

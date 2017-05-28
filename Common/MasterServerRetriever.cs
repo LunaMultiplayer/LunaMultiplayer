@@ -62,7 +62,7 @@ namespace LunaCommon
                 }
             }
 
-            return parsedServers.Select(s => s.Address.ToString() + ":" + s.Port).ToArray();
+            return parsedServers.Select(s => $"{s.Address.ToString()}:{s.Port}").ToArray();
         }
 
         /// <summary>

@@ -68,7 +68,7 @@ namespace LunaServer.Message.ReceiveHandlers
         {
             var playerPath = Path.Combine(Path.Combine(ServerContext.UniverseDirectory, "Crafts"), message.PlayerName);
             var typePath = Path.Combine(playerPath, message.CraftType.ToString());
-            var craftFile = Path.Combine(typePath, message.CraftName + ".craft");
+            var craftFile = Path.Combine(typePath, $"{message.CraftName}.craft");
             if (FileHandler.FolderExists(playerPath) && FileHandler.FolderExists(typePath))
             {
                 Universe.RemoveFromUniverse(craftFile);
@@ -86,7 +86,7 @@ namespace LunaServer.Message.ReceiveHandlers
         {
             var playerPath = Path.Combine(Path.Combine(ServerContext.UniverseDirectory, "Crafts"), message.CraftOwner);
             var typePath = Path.Combine(playerPath, message.RequestedType.ToString());
-            var craftFile = Path.Combine(typePath, message.RequestedName + ".craft");
+            var craftFile = Path.Combine(typePath, $"{message.RequestedName}.craft");
 
             var hasCraft = FileHandler.FolderExists(playerPath) && FileHandler.FolderExists(typePath) &&
                            FileHandler.FileExists(craftFile);
@@ -113,7 +113,7 @@ namespace LunaServer.Message.ReceiveHandlers
             var typePath = Path.Combine(playerPath, message.UploadType.ToString());
             if (!FileHandler.FolderExists(typePath))
                 FileHandler.FolderCreate(typePath);
-            var craftFile = Path.Combine(typePath, message.UploadName + ".craft");
+            var craftFile = Path.Combine(typePath, $"{message.UploadName}.craft");
             FileHandler.WriteToFile(craftFile, message.CraftData);
             LunaLog.Debug($"Saving {message.UploadName}, Type: {message.UploadType} from {message.PlayerName}");
 

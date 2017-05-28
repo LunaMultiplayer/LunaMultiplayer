@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using LunaServer.Command.Command.Base;
+﻿using LunaServer.Command.Command.Base;
 using LunaServer.Log;
+using System.Collections.Generic;
 
 namespace LunaServer.Command.Command
 {
@@ -17,7 +17,7 @@ namespace LunaServer.Command.Command
                     longestName = cmd.Name.Length;
             }
             foreach (var cmd in commands)
-                LunaLog.Normal(cmd.Name.PadRight(longestName) + " - " + cmd.Description);
+                LunaLog.Normal($"{cmd.Name.PadRight(longestName)} - {cmd.Description}");
         }
     }
 }

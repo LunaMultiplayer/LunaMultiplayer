@@ -50,10 +50,10 @@ namespace LunaClient.Systems.Chat
                 if (ce.FromPlayer != SettingsSystem.ServerSettings.ConsoleIdentifier)
                     System.ChatButtonHighlighted = true;
                 if (ce.Channel != "")
-                    ScreenMessages.PostScreenMessage(ce.FromPlayer + " -> #" + ce.Channel + ": " + ce.Message, 5f,
+                    ScreenMessages.PostScreenMessage($"{ce.FromPlayer} -> #{ce.Channel}: {ce.Message}", 5f,
                         ScreenMessageStyle.UPPER_LEFT);
                 else
-                    ScreenMessages.PostScreenMessage(ce.FromPlayer + " -> #Global : " + ce.Message, 5f,
+                    ScreenMessages.PostScreenMessage($"{ce.FromPlayer} -> #Global : {ce.Message}", 5f,
                         ScreenMessageStyle.UPPER_LEFT);
             }
         }
@@ -71,7 +71,7 @@ namespace LunaClient.Systems.Chat
             {
                 System.ChatButtonHighlighted = true;
                 if (pe.FromPlayer != SettingsSystem.CurrentSettings.PlayerName)
-                    ScreenMessages.PostScreenMessage(pe.FromPlayer + " -> @" + pe.ToPlayer + ": " + pe.Message, 5f,
+                    ScreenMessages.PostScreenMessage($"{pe.FromPlayer} -> @{pe.ToPlayer}: {pe.Message}", 5f,
                         ScreenMessageStyle.UPPER_LEFT);
             }
         }

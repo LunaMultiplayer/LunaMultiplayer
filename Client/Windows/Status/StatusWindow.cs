@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Windows.Status
@@ -62,10 +62,10 @@ namespace LunaClient.Windows.Status
             }
             CheckWindowLock();
         }
-        
+
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width*0.9f - WindowWidth, Screen.height/2f - WindowHeight/2f, WindowWidth,
+            WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth,
                 WindowHeight);
             MinWindowRect = new Rect(float.NegativeInfinity, float.NegativeInfinity, 0, 0);
             MoveRect = new Rect(0, 0, 10000, 20);
@@ -74,12 +74,12 @@ namespace LunaClient.Windows.Status
             ButtonStyle = new GUIStyle(GUI.skin.button);
             HighlightStyle = new GUIStyle(GUI.skin.button)
             {
-                normal = {textColor = Color.red},
-                active = {textColor = Color.red},
-                hover = {textColor = Color.red}
+                normal = { textColor = Color.red },
+                active = { textColor = Color.red },
+                hover = { textColor = Color.red }
             };
             ScrollStyle = new GUIStyle(GUI.skin.scrollView);
-            SubspaceStyle = new GUIStyle {normal = {background = new Texture2D(1, 1)}};
+            SubspaceStyle = new GUIStyle { normal = { background = new Texture2D(1, 1) } };
             SubspaceStyle.normal.background.SetPixel(0, 0, Color.black);
             SubspaceStyle.normal.background.Apply();
 
@@ -98,14 +98,14 @@ namespace LunaClient.Windows.Status
             //Adapted from KMP.
             PlayerNameStyle = new Dictionary<string, GUIStyle>();
 
-            VesselNameStyle = new GUIStyle(GUI.skin.label) {normal = {textColor = Color.white}};
+            VesselNameStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.white } };
             VesselNameStyle.hover.textColor = VesselNameStyle.normal.textColor;
             VesselNameStyle.active.textColor = VesselNameStyle.normal.textColor;
             VesselNameStyle.fontStyle = FontStyle.Normal;
             VesselNameStyle.fontSize = 12;
             VesselNameStyle.stretchWidth = true;
 
-            StateTextStyle = new GUIStyle(GUI.skin.label) {normal = {textColor = new Color(0.75f, 0.75f, 0.75f)}};
+            StateTextStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = new Color(0.75f, 0.75f, 0.75f) } };
             StateTextStyle.hover.textColor = StateTextStyle.normal.textColor;
             StateTextStyle.active.textColor = StateTextStyle.normal.textColor;
             StateTextStyle.fontStyle = FontStyle.Normal;
@@ -120,7 +120,7 @@ namespace LunaClient.Windows.Status
             if (Display)
             {
                 SafeMinimized = Minmized;
-                if (!CalculatedMinSize && (MinWindowRect.width != 0) && (MinWindowRect.height != 0))
+                if (!CalculatedMinSize && MinWindowRect.width != 0 && MinWindowRect.height != 0)
                     CalculatedMinSize = true;
                 if (Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
                 {

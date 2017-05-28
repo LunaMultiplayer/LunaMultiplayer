@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using LunaCommon.Message.Data.Chat;
+﻿using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Command;
@@ -7,6 +6,7 @@ using LunaServer.Command.CombinedCommand;
 using LunaServer.Log;
 using LunaServer.Server;
 using LunaServer.Settings;
+using System.Linq;
 
 namespace LunaServer.System
 {
@@ -27,18 +27,18 @@ namespace LunaServer.System
                 {
                     MessageQueuer.SendToClient<ChatSrvMsg>(client, message); //Send it to the sender
                     MessageQueuer.SendToClient<ChatSrvMsg>(findClient, message); //Send it to destination
-                    LunaLog.ChatMessage(message.From + " -> @" + message.To + ": " + message.Text);
+                    LunaLog.ChatMessage($"{message.From} -> @{message.To}: {message.Text}");
                 }
                 else
                 {
-                    LunaLog.ChatMessage(message.From + " -X-> @" + message.To + ": " + message.Text);
+                    LunaLog.ChatMessage($"{message.From} -X-> @{message.To}: {message.Text}");
                 }
             }
             else
             {
                 //Send it to the sender only as we as server already received it
                 MessageQueuer.SendToClient<ChatSrvMsg>(client, message);
-                LunaLog.ChatMessage(message.From + " -> @" + message.To + ": " + message.Text);
+                LunaLog.ChatMessage($"{message.From} -> @{message.To}: {message.Text}");
             }
         }
 

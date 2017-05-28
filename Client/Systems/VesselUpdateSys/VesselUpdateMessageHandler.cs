@@ -59,8 +59,8 @@ namespace LunaClient.Systems.VesselUpdateSys
                 var shieldedDocks = vessel.FindPartModulesImplementing<ModuleDockingNode>().Where(d => !d.IsDisabled && d.deployAnimator != null);
 
                 var shieldedDocksToToggle = shieldedDocks.Where(
-                        d => (d.deployAnimator.animSwitch && msg.OpenedShieldedDocks.Contains(d.part.craftID)) ||
-                             (!d.deployAnimator.animSwitch && msg.ClosedShieldedDocks.Contains(d.part.craftID)));
+                        d => d.deployAnimator.animSwitch && msg.OpenedShieldedDocks.Contains(d.part.craftID) ||
+                             !d.deployAnimator.animSwitch && msg.ClosedShieldedDocks.Contains(d.part.craftID));
 
                 foreach (var engine in enginesToActivate)
                 {

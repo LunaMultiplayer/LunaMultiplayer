@@ -116,7 +116,7 @@ namespace LunaServer.Command.Command.Base
                 }
                 catch (Exception e)
                 {
-                    LunaLog.Error("Error saving!, Exception: " + e);
+                    LunaLog.Error($"Error saving!, Exception: {e}");
                 }
             }
         }

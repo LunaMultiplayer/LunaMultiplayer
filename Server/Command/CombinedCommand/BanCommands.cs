@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using LunaServer.Command.CombinedCommand.Base;
+﻿using LunaServer.Command.CombinedCommand.Base;
 using LunaServer.Command.Command;
 using LunaServer.Log;
+using System.Collections.Generic;
 
 namespace LunaServer.Command.CombinedCommand
 {
@@ -21,13 +21,13 @@ namespace LunaServer.Command.CombinedCommand
                     LunaLog.Normal("Undefined function. Usage: /ban [key|ip|username] Data [reason]");
                     break;
                 case "ip":
-                    BanIpCommand.Execute(data + " " + reason);
+                    BanIpCommand.Execute($"{data} {reason}");
                     break;
                 case "key":
-                    BanKeyCommand.Execute(data + " " + reason);
+                    BanKeyCommand.Execute($"{data} {reason}");
                     break;
                 case "username":
-                    BanPlayerCommand.Execute(data + " " + reason);
+                    BanPlayerCommand.Execute($"{data} {reason}");
                     break;
             }
         }

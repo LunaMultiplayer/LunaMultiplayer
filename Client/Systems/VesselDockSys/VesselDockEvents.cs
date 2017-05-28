@@ -12,12 +12,12 @@ namespace LunaClient.Systems.VesselDockSys
             Debug.Log("[LMP]: Vessel docking detected!");
             if (!VesselCommon.IsSpectating)
             {
-                if ((partAction.from.vessel != null) && (partAction.to.vessel != null))
+                if (partAction.@from.vessel != null && partAction.to.vessel != null)
                 {
-                    var fromVesselUpdateLockExists = LockSystem.Singleton.LockExists("update-" + partAction.from.vessel.id);
-                    var toVesselUpdateLockExists = LockSystem.Singleton.LockExists("update-" + partAction.to.vessel.id);
-                    var fromVesselUpdateLockIsOurs = LockSystem.Singleton.LockIsOurs("update-" + partAction.from.vessel.id);
-                    var toVesselUpdateLockIsOurs = LockSystem.Singleton.LockIsOurs("update-" + partAction.to.vessel.id);
+                    var fromVesselUpdateLockExists = LockSystem.Singleton.LockExists($"update-{partAction.from.vessel.id}");
+                    var toVesselUpdateLockExists = LockSystem.Singleton.LockExists($"update-{partAction.to.vessel.id}");
+                    var fromVesselUpdateLockIsOurs = LockSystem.Singleton.LockIsOurs($"update-{partAction.from.vessel.id}");
+                    var toVesselUpdateLockIsOurs = LockSystem.Singleton.LockIsOurs($"update-{partAction.to.vessel.id}");
 
                     if (fromVesselUpdateLockIsOurs || toVesselUpdateLockIsOurs || !fromVesselUpdateLockExists || !toVesselUpdateLockExists)
                     {
@@ -26,7 +26,7 @@ namespace LunaClient.Systems.VesselDockSys
 
                         Debug.Log($"[LMP]: Vessel docking, from: {partAction.from.vessel.id}, Name: {partAction.from.vessel.vesselName}");
                         Debug.Log($"[LMP]: Vessel docking, to: {partAction.to.vessel.id}, Name: {partAction.to.vessel.vesselName}");
-                        
+
                         System.HandleDocking(partAction.from.vessel.id, partAction.to.vessel.id);
                     }
                     else

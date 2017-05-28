@@ -11,29 +11,29 @@ namespace LunaClient.Windows.Chat
     {
         public void DrawContent(int windowId)
         {
-            var pressedEnter = (Event.current.type == EventType.KeyDown) && !Event.current.shift &&
-                               (Event.current.character == '\n');
+            var pressedEnter = Event.current.type == EventType.KeyDown && !Event.current.shift &&
+                               Event.current.character == '\n';
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
             GUILayout.BeginHorizontal();
             DrawRooms();
             GUILayout.FlexibleSpace();
-            if (((System.SelectedChannel != null) && (System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier)) ||
-                (System.SelectedPmChannel != null))
+            if (System.SelectedChannel != null && System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier ||
+                System.SelectedPmChannel != null)
                 if (GUILayout.Button("Leave", ButtonStyle))
                     System.LeaveEventHandled = false;
             DrawConsole();
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             ChatScrollPos = GUILayout.BeginScrollView(ChatScrollPos, ScrollStyle);
-            if ((System.SelectedChannel == null) && (System.SelectedPmChannel == null))
+            if (System.SelectedChannel == null && System.SelectedPmChannel == null)
             {
                 if (!System.ChannelMessages.ContainsKey(""))
                     System.ChannelMessages.Add("", new List<string>());
                 foreach (var channelMessage in System.ChannelMessages[""])
                     GUILayout.Label(channelMessage, LabelStyle);
             }
-            if ((System.SelectedChannel != null) && (System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier))
+            if (System.SelectedChannel != null && System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier)
             {
                 if (!System.ChannelMessages.ContainsKey(System.SelectedChannel))
                     System.ChannelMessages.Add(System.SelectedChannel, new List<string>());
@@ -72,7 +72,7 @@ namespace LunaClient.Windows.Chat
                     }
                 else
                     foreach (var playerEntry in System.PlayerChannels)
-                        if ((playerEntry.Key != SettingsSystem.CurrentSettings.PlayerName) &&
+                        if (playerEntry.Key != SettingsSystem.CurrentSettings.PlayerName &&
                             playerEntry.Value.Contains(System.SelectedChannel))
                         {
                             if (System.JoinedPmChannels.Contains(playerEntry.Key))
@@ -112,12 +112,12 @@ namespace LunaClient.Windows.Chat
             GUILayout.EndVertical();
             if (!System.SelectTextBox)
             {
-                if ((GUI.GetNameOfFocusedControl() == "ChatBase.SendTextArea") && !System.ChatLocked)
+                if (GUI.GetNameOfFocusedControl() == "ChatBase.SendTextArea" && !System.ChatLocked)
                 {
                     System.ChatLocked = true;
                     InputLockManager.SetControlLock(LmpGuiUtil.BlockAllControls, System.LmpChatLock);
                 }
-                if ((GUI.GetNameOfFocusedControl() != "ChatBase.SendTextArea") && System.ChatLocked)
+                if (GUI.GetNameOfFocusedControl() != "ChatBase.SendTextArea" && System.ChatLocked)
                 {
                     System.ChatLocked = false;
                     InputLockManager.RemoveControlLock(System.LmpChatLock);
@@ -138,7 +138,7 @@ namespace LunaClient.Windows.Chat
                 ? HighlightStyle
                 : ButtonStyle;
             if (AdminSystem.Singleton.IsCurrentPlayerAdmin() &&
-                GUILayout.Button("#" + SettingsSystem.ServerSettings.ConsoleIdentifier, possibleHighlightButtonStyle))
+                GUILayout.Button($"#{SettingsSystem.ServerSettings.ConsoleIdentifier}", possibleHighlightButtonStyle))
             {
                 if (System.HighlightChannel.Contains(SettingsSystem.ServerSettings.ConsoleIdentifier))
                     System.HighlightChannel.Remove(SettingsSystem.ServerSettings.ConsoleIdentifier);
@@ -151,7 +151,7 @@ namespace LunaClient.Windows.Chat
 
         private void DrawRooms()
         {
-            if ((System.SelectedChannel == null) && (System.SelectedPmChannel == null))
+            if (System.SelectedChannel == null && System.SelectedPmChannel == null)
                 GUI.enabled = false;
             var possibleHighlightButtonStyle = System.HighlightChannel.Contains("") ? HighlightStyle : ButtonStyle;
             if (GUILayout.Button("#Global", possibleHighlightButtonStyle))
@@ -170,7 +170,7 @@ namespace LunaClient.Windows.Chat
                     : ButtonStyle;
                 if (System.SelectedChannel == joinedChannel)
                     GUI.enabled = false;
-                if (GUILayout.Button("#" + joinedChannel, possibleHighlightButtonStyle))
+                if (GUILayout.Button($"#{joinedChannel}", possibleHighlightButtonStyle))
                 {
                     if (System.HighlightChannel.Contains(joinedChannel))
                         System.HighlightChannel.Remove(joinedChannel);
@@ -186,7 +186,7 @@ namespace LunaClient.Windows.Chat
                 possibleHighlightButtonStyle = System.HighlightPm.Contains(joinedPlayer) ? HighlightStyle : ButtonStyle;
                 if (System.SelectedPmChannel == joinedPlayer)
                     GUI.enabled = false;
-                if (GUILayout.Button("@" + joinedPlayer, possibleHighlightButtonStyle))
+                if (GUILayout.Button($"@{joinedPlayer}", possibleHighlightButtonStyle))
                 {
                     if (System.HighlightPm.Contains(joinedPlayer))
                         System.HighlightPm.Remove(joinedPlayer);

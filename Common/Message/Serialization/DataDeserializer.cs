@@ -108,7 +108,7 @@ namespace LunaCommon.Message.Serialization
             }
             catch (Exception e)
             {
-                throw new Exception("Cannot deserialize this message with the bytes provided: " + e);
+                throw new Exception($"Cannot deserialize this message with the bytes provided: {e}");
             }
 
             return dataClass;
@@ -124,7 +124,7 @@ namespace LunaCommon.Message.Serialization
         private static object GetValue(Stream messageData, Type type)
         {
             //Switches don't work with types so we use the dictionary
-            if (SerializerDictionary.ContainsKey(type) && (type.BaseType != typeof(Enum)))
+            if (SerializerDictionary.ContainsKey(type) && type.BaseType != typeof(Enum))
                 return SerializerDictionary[type].Invoke(messageData);
             if (type.BaseType == typeof(Enum))
             {

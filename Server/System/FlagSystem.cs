@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using LunaCommon;
+﻿using LunaCommon;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Server;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.IO;
 
 namespace LunaServer.System
 {
@@ -65,7 +65,7 @@ namespace LunaServer.System
                 if (!isMatched || shaDifferent)
                     if (flagOwner == client.PlayerName)
                     {
-                        LunaLog.Debug("Deleting flag " + trimmedName);
+                        LunaLog.Debug($"Deleting flag {trimmedName}");
                         FileHandler.FileDelete(serverFlag);
 
                         MessageQueuer.RelayMessage<FlagSrvMsg>(client,

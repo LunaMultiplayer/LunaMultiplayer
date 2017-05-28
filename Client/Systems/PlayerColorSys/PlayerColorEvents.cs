@@ -19,9 +19,9 @@ namespace LunaClient.Systems.PlayerColorSys
         {
             if (System.Enabled)
             {
-                if (LockSystem.Singleton.LockExists("control-" + colorVessel.id) && !LockSystem.Singleton.LockIsOurs("control-" + colorVessel.id))
+                if (LockSystem.Singleton.LockExists($"control-{colorVessel.id}") && !LockSystem.Singleton.LockIsOurs($"control-{colorVessel.id}"))
                 {
-                    var vesselOwner = LockSystem.Singleton.LockOwner("control-" + colorVessel.id);
+                    var vesselOwner = LockSystem.Singleton.LockOwner($"control-{colorVessel.id}");
                     Debug.Log($"[LMP]: Vessel {colorVessel.id} owner is {vesselOwner}");
                     colorVessel.orbitDriver.orbitColor = System.GetPlayerColor(vesselOwner);
                 }

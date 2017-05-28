@@ -66,7 +66,7 @@ namespace LunaClient.Windows.Status
                 else
                 {
                     GUILayout.BeginHorizontal(SubspaceStyle);
-                    GUILayout.Label("T: +" + KSPUtil.PrintTimeCompact(WarpSystem.Singleton.GetSubspaceTime(currentEntry.SubspaceId), false));
+                    GUILayout.Label($"T: +{KSPUtil.PrintTimeCompact(WarpSystem.Singleton.GetSubspaceTime(currentEntry.SubspaceId), false)}");
                     GUILayout.FlexibleSpace();
                     if (NotWarpingAndIsFutureSubspace(currentEntry.SubspaceId) && GUILayout.Button("Sync", ButtonStyle))
                         WarpSystem.Singleton.CurrentSubspace = currentEntry.SubspaceId;
@@ -215,7 +215,7 @@ namespace LunaClient.Windows.Status
             GUILayout.Label(playerStatus.StatusText, StateTextStyle);
             GUILayout.EndHorizontal();
             if (playerStatus.VesselText != "")
-                GUILayout.Label("Pilot: " + playerStatus.VesselText, VesselNameStyle);
+                GUILayout.Label($"Pilot: {playerStatus.VesselText}", VesselNameStyle);
         }
     }
 }

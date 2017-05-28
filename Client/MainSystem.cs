@@ -130,7 +130,7 @@ namespace LunaClient
                     }
 
                     // save every GeeASL from each body in FlightGlobals
-                    if ((HighLogic.LoadedScene == GameScenes.FLIGHT) && (BodiesGees.Count == 0))
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && BodiesGees.Count == 0)
                         foreach (var body in FlightGlobals.Bodies)
                             BodiesGees.Add(body, body.GeeASL);
 
@@ -144,7 +144,7 @@ namespace LunaClient
                             gravityEntry.Key.GeeASL = gravityEntry.Value;
                     }
 
-                    if ((HighLogic.LoadedScene == GameScenes.FLIGHT) && FlightGlobals.ready)
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready)
                         HighLogic.CurrentGame.Parameters.Flight.CanLeaveToSpaceCenter = PauseMenu.canSaveAndExit == ClearToSaveStatus.CLEAR;
                     else
                         HighLogic.CurrentGame.Parameters.Flight.CanLeaveToSpaceCenter = true;
@@ -257,18 +257,18 @@ namespace LunaClient
             switch (inputMode)
             {
                 case GameMode.Sandbox:
-                return Game.Modes.SANDBOX;
+                    return Game.Modes.SANDBOX;
                 case GameMode.Science:
-                return Game.Modes.SCIENCE_SANDBOX;
+                    return Game.Modes.SCIENCE_SANDBOX;
                 case GameMode.Career:
-                return Game.Modes.CAREER;
+                    return Game.Modes.CAREER;
             }
             return Game.Modes.SANDBOX;
         }
 
         public void HandleException(Exception e, string eventName)
         {
-            Debug.LogError($"[LMP]: Threw in {eventName} event, exception: " + e);
+            Debug.LogError($"[LMP]: Threw in {eventName} event, exception: {e}");
             NetworkConnection.Disconnect($"Unhandled error in main system! Detail: {eventName}");
             Reset();
         }
@@ -351,8 +351,8 @@ namespace LunaClient
                     SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Address,
                     SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Port);
             }
-            if ((CommandLineServer != null) && (HighLogic.LoadedScene == GameScenes.MAINMENU) &&
-                (Time.timeSinceLevelLoad > 1f))
+            if (CommandLineServer != null && HighLogic.LoadedScene == GameScenes.MAINMENU &&
+                Time.timeSinceLevelLoad > 1f)
             {
                 NetworkConnection.ConnectToServer(CommandLineServer.Address, CommandLineServer.Port);
                 CommandLineServer = null;
@@ -396,7 +396,7 @@ namespace LunaClient
 
             //This only makes KSP complain
             HighLogic.CurrentGame.CrewRoster.ValidateAssignments(HighLogic.CurrentGame);
-            Debug.Log("[LMP]: Starting " + SettingsSystem.ServerSettings.GameMode + " game...");
+            Debug.Log($"[LMP]: Starting {SettingsSystem.ServerSettings.GameMode} game...");
 
             //.Start() seems to stupidly .Load() somewhere - Let's overwrite it so it loads correctly.
             GamePersistence.SaveGame(HighLogic.CurrentGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
@@ -458,7 +458,7 @@ namespace LunaClient
 
             var commands = Environment.GetCommandLineArgs();
             var addressIndex = commands.IndexOf("-lmp") + 1;
-            if (commands.Any() && (addressIndex > 0) && (commands.Length > addressIndex))
+            if (commands.Any() && addressIndex > 0 && commands.Length > addressIndex)
             {
                 var address = commands[addressIndex];
                 if (address.Contains("lmp://"))
@@ -479,11 +479,11 @@ namespace LunaClient
                 if (valid)
                 {
                     CommandLineServer = new ServerEntry { Address = address, Port = port };
-                    Debug.Log("[LMP]: Connecting via command line to: " + address + ", port: " + port);
+                    Debug.Log($"[LMP]: Connecting via command line to: {address}, port: {port}");
                 }
                 else
                 {
-                    Debug.LogError("[LMP]: Command line address is invalid: " + address + ", port: " + port);
+                    Debug.LogError($"[LMP]: Command line address is invalid: {address}, port: {port}");
                 }
             }
         }

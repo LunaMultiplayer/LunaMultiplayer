@@ -11,7 +11,7 @@ namespace LunaServer.Command.Command
     {
         public override void Execute(string commandArgs)
         {
-            LunaLog.Normal("Broadcasting " + commandArgs);
+            LunaLog.Normal($"Broadcasting {commandArgs}");
 
             var newMessageData = new ChatChannelMsgData
             {

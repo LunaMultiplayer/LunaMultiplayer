@@ -25,33 +25,33 @@ namespace LunaClient.Systems.PlayerColorSys
             switch (msgData.PlayerColorMessageType)
             {
                 case PlayerColorMessageType.Reply:
-                {
-                    var data = (PlayerColorReplyMsgData)messageData;
-                    System.PlayerColors.Clear();
-                    for (var i = 0; i < data.Count; i++)
                     {
-                        var playerName = data.PlayersColors[i].Key;
-                        var playerColor = System.ConvertStringToColor(data.PlayersColors[i].Value);
-                        System.PlayerColors.Add(playerName, playerColor);
+                        var data = (PlayerColorReplyMsgData)messageData;
+                        System.PlayerColors.Clear();
+                        for (var i = 0; i < data.Count; i++)
+                        {
+                            var playerName = data.PlayersColors[i].Key;
+                            var playerColor = System.ConvertStringToColor(data.PlayersColors[i].Value);
+                            System.PlayerColors.Add(playerName, playerColor);
 
-                        StatusWindow.Singleton.ColorEventHandled = false; //Refresh colors in status window
+                            StatusWindow.Singleton.ColorEventHandled = false; //Refresh colors in status window
+                        }
+                        MainSystem.Singleton.NetworkState = ClientState.ColorsSynced;
                     }
-                    MainSystem.Singleton.NetworkState = ClientState.ColorsSynced;
-                }
-                break;
+                    break;
                 case PlayerColorMessageType.Set:
-                {
-                    //Player joined or changed it's color so update his controlled vessel orbit colors
-                    var data = (PlayerColorSetMsgData)messageData;
-                    var playerName = data.PlayerName;
-                    var playerColor = System.ConvertStringToColor(data.Color);
-                    Debug.Log("[LMP]: Color Message, Name: " + playerName + " , color: " + playerColor);
-                    System.PlayerColors[playerName] = playerColor;
-                    UpdateVesselColors(playerName);
+                    {
+                        //Player joined or changed it's color so update his controlled vessel orbit colors
+                        var data = (PlayerColorSetMsgData)messageData;
+                        var playerName = data.PlayerName;
+                        var playerColor = System.ConvertStringToColor(data.Color);
+                        Debug.Log($"[LMP]: Color Message, Name: {playerName} , color: {playerColor}");
+                        System.PlayerColors[playerName] = playerColor;
+                        UpdateVesselColors(playerName);
 
-                    StatusWindow.Singleton.ColorEventHandled = false;//Refresh colors in status window
-                }
-                break;
+                        StatusWindow.Singleton.ColorEventHandled = false;//Refresh colors in status window
+                    }
+                    break;
             }
         }
 

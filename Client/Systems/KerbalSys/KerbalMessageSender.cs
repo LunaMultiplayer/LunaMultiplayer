@@ -17,7 +17,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<KerbalCliMsg>(msg));
         }
-        
+
         public void SendKerbalIfDifferent(ProtoCrewMember pcm)
         {
             if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
@@ -30,7 +30,7 @@ namespace LunaClient.Systems.KerbalSys
             var kerbalNode = new ConfigNode();
             pcm.Save(kerbalNode);
             var kerbalBytes = ConfigNodeSerializer.Serialize(kerbalNode);
-            if ((kerbalBytes == null) || (kerbalBytes.Length == 0))
+            if (kerbalBytes == null || kerbalBytes.Length == 0)
             {
                 Debug.Log("[LMP]: VesselWorker: Error sending kerbal - bytes are null or 0");
                 return;
@@ -79,10 +79,10 @@ namespace LunaClient.Systems.KerbalSys
                     SendKerbalIfDifferent(pcm);
             }
         }
-        
+
         private void SendKerbalProtoMessage(string kerbalName, byte[] kerbalBytes)
         {
-            if ((kerbalBytes != null) && (kerbalBytes.Length > 0))
+            if (kerbalBytes != null && kerbalBytes.Length > 0)
             {
                 Debug.Log("[LMP]: Sending kerbal {kerbalName}");
                 var msgData = new KerbalProtoMsgData

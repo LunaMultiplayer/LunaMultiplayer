@@ -1,8 +1,8 @@
-﻿using System;
+﻿using LunaCommon.Message.Data.CraftLibrary;
+using LunaCommon.Message.Interface;
+using System;
 using System.Collections.Generic;
 using System.IO;
-using LunaCommon.Message.Data.CraftLibrary;
-using LunaCommon.Message.Interface;
 
 namespace LunaCommon.Message.Serialization
 {
@@ -134,7 +134,7 @@ namespace LunaCommon.Message.Serialization
                 inputData = DefaultNullValues(type);
 
             //Switches can't type type parameters so we use the dictionary
-            if (DeserializerDictionary.ContainsKey(type) && (type.BaseType != typeof(Enum)))
+            if (DeserializerDictionary.ContainsKey(type) && type.BaseType != typeof(Enum))
                 DeserializerDictionary[type].Invoke(messageData, inputData);
             else if (type.BaseType == typeof(Enum))
                 DeserializerDictionary[typeof(Enum)].Invoke(messageData, inputData);

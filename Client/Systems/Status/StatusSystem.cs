@@ -1,8 +1,8 @@
-using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Systems.Status
@@ -22,11 +22,11 @@ namespace LunaClient.Systems.Status
         private PlayerStatus LastPlayerStatus { get; } = new PlayerStatus();
 
         private bool StatusIsDifferent =>
-            (MyPlayerStatus.VesselText != LastPlayerStatus.VesselText) ||
-            (MyPlayerStatus.StatusText != LastPlayerStatus.StatusText);
+            MyPlayerStatus.VesselText != LastPlayerStatus.VesselText ||
+            MyPlayerStatus.StatusText != LastPlayerStatus.StatusText;
 
         #endregion
-        
+
         #region Base overrides
 
         protected override void OnEnabled()
@@ -66,7 +66,7 @@ namespace LunaClient.Systems.Status
             }
             else
             {
-                Debug.LogError("[LMP]: Cannot remove non-existant player " + playerToRemove);
+                Debug.LogError($"[LMP]: Cannot remove non-existant player {playerToRemove}");
             }
         }
 
@@ -109,25 +109,25 @@ namespace LunaClient.Systems.Status
             switch (FlightGlobals.ActiveVessel.situation)
             {
                 case Vessel.Situations.DOCKED:
-                    return "Docked above " + bodyName;
+                    return $"Docked above {bodyName}";
                 case Vessel.Situations.ESCAPING:
                     if (FlightGlobals.ActiveVessel.orbit.timeToPe < 0)
-                        return "Escaping " + bodyName;
-                    return "Encountering " + bodyName;
+                        return $"Escaping {bodyName}";
+                    return $"Encountering {bodyName}";
                 case Vessel.Situations.FLYING:
-                    return "Flying above " + bodyName;
+                    return $"Flying above {bodyName}";
                 case Vessel.Situations.LANDED:
-                    return "Landed on " + bodyName;
+                    return $"Landed on {bodyName}";
                 case Vessel.Situations.ORBITING:
-                    return "Orbiting " + bodyName;
+                    return $"Orbiting {bodyName}";
                 case Vessel.Situations.PRELAUNCH:
-                    return "Launching from " + bodyName;
+                    return $"Launching from {bodyName}";
                 case Vessel.Situations.SPLASHED:
-                    return "Splashed on " + bodyName;
+                    return $"Splashed on {bodyName}";
                 case Vessel.Situations.SUB_ORBITAL:
                     if (FlightGlobals.ActiveVessel.verticalSpeed > 0)
-                        return "Ascending from " + bodyName;
-                    return "Descending to " + bodyName;
+                        return $"Ascending from {bodyName}";
+                    return $"Descending to {bodyName}";
                 default:
                     return "Error";
             }
@@ -135,12 +135,10 @@ namespace LunaClient.Systems.Status
 
         private static string GetExpectatingShipStatus()
         {
-            if (LockSystem.Singleton.LockExists("control-" + FlightGlobals.ActiveVessel.id))
+            if (LockSystem.Singleton.LockExists($"control-{FlightGlobals.ActiveVessel.id}"))
             {
-                if (LockSystem.Singleton.LockIsOurs("control-" + FlightGlobals.ActiveVessel.id))
-                    return "Waiting for vessel control";
-
-                return $"Spectating {LockSystem.Singleton.LockOwner("control-" + FlightGlobals.ActiveVessel.id)}";
+                return LockSystem.Singleton.LockIsOurs($"control-{FlightGlobals.ActiveVessel.id}") ?
+                    "Waiting for vessel control" : $"Spectating {LockSystem.Singleton.LockOwner($"control-{FlightGlobals.ActiveVessel.id}")}";
             }
 
             return "Spectating future updates";

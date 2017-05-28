@@ -10,13 +10,13 @@ namespace LunaServer.Command.Command
         {
             if (Exists(commandArgs))
             {
-                LunaLog.Normal("Removed '" + commandArgs + "' from the admin list.");
+                LunaLog.Normal($"Removed '{commandArgs}' from the admin list.");
                 Remove(commandArgs);
                 AdminSystemSender.NotifyPlayersRemovedAdmin(commandArgs);
             }
             else
             {
-                LunaLog.Normal("'" + commandArgs + "' is not an admin.");
+                LunaLog.Normal($"'{commandArgs}' is not an admin.");
             }
         }
     }

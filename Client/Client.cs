@@ -26,7 +26,7 @@ namespace LunaClient
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(Awake));
+                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(Awake)}");
             }
         }
 
@@ -48,7 +48,7 @@ namespace LunaClient
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(Update));
+                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(Update)}");
             }
         }
 
@@ -61,7 +61,7 @@ namespace LunaClient
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(OnGUI));
+                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(OnGUI)}");
             }
         }
 
@@ -73,7 +73,7 @@ namespace LunaClient
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, "MainClient-" + nameof(FixedUpdate));
+                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(FixedUpdate)}");
             }
         }
     }

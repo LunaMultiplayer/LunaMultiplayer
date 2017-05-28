@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using LunaClient.Base;
+﻿using LunaClient.Base;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Systems.KerbalReassigner
@@ -18,7 +18,7 @@ namespace LunaClient.Systems.KerbalReassigner
                 {
                     System.VesselToKerbal[vessel.id].Add(protoCrewMember.name);
                     if (System.KerbalToVessel.ContainsKey(protoCrewMember.name) &&
-                        (System.KerbalToVessel[protoCrewMember.name] != vessel.id))
+                        System.KerbalToVessel[protoCrewMember.name] != vessel.id)
                         Debug.LogWarning($"[LMP]: Warning, kerbal double take on {vessel.id} ({vessel.name})");
                     System.KerbalToVessel[protoCrewMember.name] = vessel.id;
                     Debug.Log($"[LMP]: OVC {protoCrewMember.name} belongs to {vessel.id}");

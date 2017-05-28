@@ -87,7 +87,7 @@ namespace LunaClient.Systems.Scenario
                 }
 
                 //Data is the same since last time - Skip it.
-                if (CheckData.ContainsKey(scenarioType) && (CheckData[scenarioType] == scenarioHash)) continue;
+                if (CheckData.ContainsKey(scenarioType) && CheckData[scenarioType] == scenarioHash) continue;
 
                 CheckData[scenarioType] = scenarioHash;
 
@@ -130,7 +130,7 @@ namespace LunaClient.Systems.Scenario
         public void UpgradeTheAstronautComplexSoTheGameDoesntBugOut()
         {
             var sm = HighLogic.CurrentGame.scenarios.Find(psm => psm.moduleName == "ScenarioUpgradeableFacilities");
-            if ((sm != null) &&
+            if (sm != null &&
                 ScenarioUpgradeableFacilities.protoUpgradeables.ContainsKey("SpaceCenter/AstronautComplex"))
             {
                 foreach (var uf in ScenarioUpgradeableFacilities.protoUpgradeables["SpaceCenter/AstronautComplex"].facilityRefs)
@@ -150,7 +150,7 @@ namespace LunaClient.Systems.Scenario
             var contractsNode = contractSystemNode.GetNode("CONTRACTS");
 
             var kerbalNames = contractsNode.GetNodes("CONTRACT")
-                .Where(c => (c.GetValue("type") == "TourismContract") && (c.GetValue("state") == "Active"))
+                .Where(c => c.GetValue("type") == "TourismContract" && c.GetValue("state") == "Active")
                 .SelectMany(c => c.GetNodes("PARAM"))
                 .SelectMany(p => p.GetValues("kerbalName"));
 
@@ -227,8 +227,8 @@ namespace LunaClient.Systems.Scenario
 
         private static void CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(ConfigNode progressTrackingNode)
         {
-            foreach (ConfigNode possibleNode in progressTrackingNode.nodes)
-                CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(possibleNode);
+            foreach (var possibleNode in progressTrackingNode.nodes)
+                CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(possibleNode as ConfigNode);
 
             //The kerbals are kept in a ConfigNode named 'crew', with 'crews' as a comma space delimited array of names.
             if (progressTrackingNode.name == "crew")
@@ -257,7 +257,7 @@ namespace LunaClient.Systems.Scenario
             if (scenarioEntry.ScenarioNode.GetValue("scene") == string.Empty)
             {
                 var nodeName = scenarioEntry.ScenarioName;
-                ScreenMessages.PostScreenMessage(nodeName + " is badly behaved!");
+                ScreenMessages.PostScreenMessage($"{nodeName} is badly behaved!");
                 Debug.Log($"[LMP]: {nodeName} is badly behaved!");
                 scenarioEntry.ScenarioNode.SetValue("scene", "7, 8, 5, 6, 9");
             }
@@ -268,13 +268,13 @@ namespace LunaClient.Systems.Scenario
             switch (HighLogic.CurrentGame.Mode)
             {
                 case Game.Modes.CAREER:
-                return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewCareerGames);
+                    return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewCareerGames);
                 case Game.Modes.SCIENCE_SANDBOX:
-                return
-                    validScenario.ScenarioAttributes.HasCreateOption(
-                        ScenarioCreationOptions.AddToNewScienceSandboxGames);
+                    return
+                        validScenario.ScenarioAttributes.HasCreateOption(
+                            ScenarioCreationOptions.AddToNewScienceSandboxGames);
                 case Game.Modes.SANDBOX:
-                return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewSandboxGames);
+                    return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewSandboxGames);
             }
             return false;
         }
@@ -295,7 +295,7 @@ namespace LunaClient.Systems.Scenario
         {
             //Blacklist asteroid module from every game mode
             //We hijack this and enable / disable it if we need to.
-            if (string.IsNullOrEmpty(scenarioName) || (scenarioName == "ScenarioDiscoverableObjects")) return false;
+            if (string.IsNullOrEmpty(scenarioName) || scenarioName == "ScenarioDiscoverableObjects") return false;
 
             if (!AllScenarioTypesInAssemblies.Any()) LoadScenarioTypes(); //Load type dictionary on first use
 

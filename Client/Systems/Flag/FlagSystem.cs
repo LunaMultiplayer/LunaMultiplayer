@@ -1,12 +1,12 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Flag;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using UnityEngine;
 
 namespace LunaClient.Systems.Flag
@@ -97,7 +97,7 @@ namespace LunaClient.Systems.Flag
 
             //If the flag is owned by someone else don't sync it
             if (ServerFlags.ContainsKey(flagName) &&
-                (ServerFlags[flagName].Owner != SettingsSystem.CurrentSettings.PlayerName)) return;
+                ServerFlags[flagName].Owner != SettingsSystem.CurrentSettings.PlayerName) return;
 
             var flagFiles = Directory.GetFiles(FlagPath, "*", SearchOption.TopDirectoryOnly);
             var flagFile = flagFiles.FirstOrDefault(f => string.Equals(flagName, Path.GetFileNameWithoutExtension(f),
@@ -109,7 +109,7 @@ namespace LunaClient.Systems.Flag
                 var shaSum = Common.CalculateSha256Hash(flagFile);
 
                 //Don't send the flag when the SHA sum already matches
-                if (ServerFlags.ContainsKey(flagName) && (ServerFlags[flagName].ShaSum == shaSum)) return;
+                if (ServerFlags.ContainsKey(flagName) && ServerFlags[flagName].ShaSum == shaSum) return;
 
                 Debug.Log($"[LMP]: Uploading {Path.GetFileName(flagFile)}");
                 MessageSender.SendMessage(new FlagUploadMsgData

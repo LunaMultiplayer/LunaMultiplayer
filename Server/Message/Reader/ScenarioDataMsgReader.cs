@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using LunaCommon.Message.Data.Scenario;
+﻿using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
@@ -11,6 +8,9 @@ using LunaServer.Log;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Server;
 using LunaServer.System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace LunaServer.Message.Reader
 {
@@ -29,7 +29,7 @@ namespace LunaServer.Message.Reader
                     LunaLog.Debug($"Saving {data.ScenarioNameData.Length} scenario modules from {client.PlayerName}");
                     foreach (var scenario in data.ScenarioNameData)
                     {
-                        var path = Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName, scenario.Key + ".txt");
+                        var path = Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName, $"{scenario.Key}.txt");
                         FileHandler.WriteToFile(path, scenario.Value);
                     }
                     break;

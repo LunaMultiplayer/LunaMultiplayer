@@ -31,9 +31,8 @@ namespace LunaClient.Systems.VesselProtoSys
             HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating
             && FlightGlobals.ActiveVessel.state != Vessel.State.DEAD;
 
-        public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
-            (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null) ||
-            (HighLogic.LoadedScene == GameScenes.TRACKSTATION);
+        public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null ||
+            HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
         #endregion
 
@@ -140,12 +139,9 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (BannedPartsMessage != null)
                         BannedPartsMessage.duration = 0;
                     if (ModSystem.Singleton.ModControl == ModControlMode.EnabledStopInvalidPartSync)
-                        BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                "Active vessel contains the following banned parts, it will not be saved to the server:\n" + BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+                        BannedPartsMessage = ScreenMessages.PostScreenMessage($"Active vessel contains the following banned parts, it will not be saved to the server:\n{BannedPartsStr}", 2f, ScreenMessageStyle.UPPER_CENTER);
                     if (ModSystem.Singleton.ModControl == ModControlMode.EnabledStopInvalidPartLaunch)
-                        BannedPartsMessage = ScreenMessages.PostScreenMessage(
-                                "Active vessel contains the following banned parts, you will be unable to launch on this server:\n" +
-                                BannedPartsStr, 2f, ScreenMessageStyle.UPPER_CENTER);
+                        BannedPartsMessage = ScreenMessages.PostScreenMessage($"Active vessel contains the following banned parts, you will be unable to launch on this server:\n{BannedPartsStr}", 2f, ScreenMessageStyle.UPPER_CENTER);
 
                 }
             }
@@ -226,7 +222,7 @@ namespace LunaClient.Systems.VesselProtoSys
             var bannedParts = checkVessel.BackupVessel().protoPartSnapshots
                 .Where(p => !ModSystem.Singleton.AllowedParts.Contains(p.partName.ToLower())).Distinct().ToArray();
 
-            var bannedPartsStr = bannedParts.Aggregate("", (current, bannedPart) => current + (bannedPart + "\n"));
+            var bannedPartsStr = bannedParts.Aggregate("", (current, bannedPart) => current + $"{bannedPart}\n");
 
             Debug.Log($"[LMP]: Checked vessel {checkVessel.id } for banned parts, is ok: {bannedParts.Length == 0}");
 
@@ -237,9 +233,9 @@ namespace LunaClient.Systems.VesselProtoSys
         private void RegisterServerAsteriodIfVesselIsAsteroid(ProtoVessel possibleAsteroid)
         {
             //Register asteroids from other players
-            if ((possibleAsteroid.vesselType == VesselType.SpaceObject) &&
-                (possibleAsteroid.protoPartSnapshots?.Count == 1) &&
-                (possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid"))
+            if (possibleAsteroid.vesselType == VesselType.SpaceObject &&
+                possibleAsteroid.protoPartSnapshots?.Count == 1 &&
+                possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid")
                 AsteroidSystem.Singleton.RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
         }
 

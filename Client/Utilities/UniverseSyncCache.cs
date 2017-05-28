@@ -78,7 +78,7 @@ namespace LunaClient.Utilities
             CurrentCacheSize = 0;
             foreach (var cacheObject in cacheObjects)
             {
-                var cacheFile = CommonUtil.CombinePaths(CacheDirectory, cacheObject + ".txt");
+                var cacheFile = CommonUtil.CombinePaths(CacheDirectory, $"{cacheObject}.txt");
                 //If the file is older than a week, delete it.
                 if (File.GetCreationTime(cacheFile).AddDays(7d) < DateTime.Now)
                 {
@@ -108,7 +108,7 @@ namespace LunaClient.Utilities
                 }
 
                 Debug.Log($"[LMP]: Deleting cached object {deleteObject}, reason: Cache full!");
-                var deleteFile = CommonUtil.CombinePaths(CacheDirectory, deleteObject + ".txt");
+                var deleteFile = CommonUtil.CombinePaths(CacheDirectory, $"{deleteObject}.txt");
                 File.Delete(deleteFile);
 
                 CurrentCacheSize -= FileLengths[deleteObject];
@@ -136,7 +136,7 @@ namespace LunaClient.Utilities
         /// <returns></returns>
         public static byte[] GetFromCache(string objectName)
         {
-            var objectFile = CommonUtil.CombinePaths(CacheDirectory, objectName + ".txt");
+            var objectFile = CommonUtil.CombinePaths(CacheDirectory, $"{objectName}.txt");
             if (File.Exists(objectFile))
                 return File.ReadAllBytes(objectFile);
             throw new IOException($"Cached object {objectName} does not exist");
@@ -185,12 +185,12 @@ namespace LunaClient.Utilities
 
         private static void SaveToCache(byte[] fileData)
         {
-            if ((fileData == null) || (fileData.Length == 0) || CacheSizeExceeded())
+            if (fileData == null || fileData.Length == 0 || CacheSizeExceeded())
                 return;
 
             var objectName = Common.CalculateSha256Hash(fileData);
-            var objectFile = CommonUtil.CombinePaths(CacheDirectory, objectName + ".txt");
-            var incomingFile = CommonUtil.CombinePaths(CacheDirectory, "Incoming", objectName + ".txt");
+            var objectFile = CommonUtil.CombinePaths(CacheDirectory, $"{objectName}.txt");
+            var incomingFile = CommonUtil.CombinePaths(CacheDirectory, "Incoming", $"{objectName}.txt");
             if (!File.Exists(objectFile))
             {
                 File.WriteAllBytes(incomingFile, fileData);

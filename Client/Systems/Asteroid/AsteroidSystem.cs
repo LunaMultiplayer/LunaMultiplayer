@@ -21,7 +21,7 @@ namespace LunaClient.Systems.Asteroid
                 if (_scenarioDiscoverableObjects == null)
                 {
                     foreach (var psm in HighLogic.CurrentGame.scenarios
-                        .Where(psm => (psm?.moduleName == "ScenarioDiscoverableObjects") && (psm.moduleRef != null)))
+                        .Where(psm => psm?.moduleName == "ScenarioDiscoverableObjects" && psm.moduleRef != null))
                     {
                         _scenarioDiscoverableObjects = (ScenarioDiscoverableObjects)psm.moduleRef;
                         ScenarioController.spawnInterval = float.MaxValue;
@@ -127,17 +127,17 @@ namespace LunaClient.Systems.Asteroid
 
         public bool VesselIsAsteroid(Vessel vessel)
         {
-            if ((vessel != null) && !vessel.loaded)
+            if (vessel != null && !vessel.loaded)
                 return ProtoVesselIsAsteroid(vessel.protoVessel);
 
             //Check the vessel has exactly one part.
-            return (vessel?.parts != null) && (vessel.parts.Count == 1) && (vessel.parts[0].partName == "PotatoRoid");
+            return vessel?.parts != null && vessel.parts.Count == 1 && vessel.parts[0].partName == "PotatoRoid";
         }
 
         public bool ProtoVesselIsAsteroid(ProtoVessel protoVessel)
         {
-            return (protoVessel?.protoPartSnapshots != null) && (protoVessel.protoPartSnapshots.Count == 1) &&
-                   (protoVessel.protoPartSnapshots[0].partName == "PotatoRoid");
+            return protoVessel?.protoPartSnapshots != null && protoVessel.protoPartSnapshots.Count == 1 &&
+                   protoVessel.protoPartSnapshots[0].partName == "PotatoRoid";
         }
 
         public int GetAsteroidCount()

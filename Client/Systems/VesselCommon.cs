@@ -35,8 +35,8 @@ namespace LunaClient.Systems
         {
             //Ignore updates to our own vessel if we aren't spectating
             return !IsSpectating &&
-                   (FlightGlobals.ActiveVessel != null) &&
-                   (FlightGlobals.ActiveVessel.id == vesselId);
+                   FlightGlobals.ActiveVessel != null &&
+                   FlightGlobals.ActiveVessel.id == vesselId;
         }
 
         public static bool ActiveVesselIsInSafetyBubble()
@@ -120,7 +120,7 @@ namespace LunaClient.Systems
         /// </summary>
         public static IEnumerable<Vessel> GetAbandonedVessels()
         {
-            return FlightGlobals.VesselsUnloaded.Where(v => !LockSystem.Singleton.LockExists("update-" + v.id));
+            return FlightGlobals.VesselsUnloaded.Where(v => !LockSystem.Singleton.LockExists($"update-{v.id}"));
         }
 
         /// <summary>
@@ -129,13 +129,13 @@ namespace LunaClient.Systems
         public static bool VesselIsControlledAndInPastSubspace(Guid vesselId)
         {
             var owner = "";
-            if (LockSystem.Singleton.LockExists("control-" + vesselId))
+            if (LockSystem.Singleton.LockExists($"control-{vesselId}"))
             {
-                owner = LockSystem.Singleton.LockOwner("control-" + vesselId);
+                owner = LockSystem.Singleton.LockOwner($"control-{vesselId}");
             }
-            else if (LockSystem.Singleton.LockExists("update-" + vesselId))
+            else if (LockSystem.Singleton.LockExists($"update-{vesselId}"))
             {
-                owner = LockSystem.Singleton.LockOwner("update-" + vesselId);
+                owner = LockSystem.Singleton.LockOwner($"update-{vesselId}");
             }
 
             return !string.IsNullOrEmpty(owner) && WarpSystem.Singleton.PlayerIsInPastSubspace(owner);

@@ -99,7 +99,7 @@ namespace LunaServer.Message.ReceiveHandlers
             byte[] playerChallangeSignature)
         {
             //Check the client matches any database entry
-            var storedPlayerFile = Path.Combine(ServerContext.UniverseDirectory, "Players", playerName + ".txt");
+            var storedPlayerFile = Path.Combine(ServerContext.UniverseDirectory, "Players", $"{playerName}.txt");
             if (FileHandler.FileExists(storedPlayerFile))
             {
                 var storedPlayerPublicKey = FileHandler.ReadFileText(storedPlayerFile);

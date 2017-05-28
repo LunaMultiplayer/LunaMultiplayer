@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.CraftLibrary;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace LunaClient.Systems.CraftLibrary
@@ -67,7 +67,7 @@ namespace LunaClient.Systems.CraftLibrary
                 DisplayCraftUploadingMessage = false;
             }
         }
-        
+
         private void UploadCraftFile(CraftType type, string name)
         {
             var uploadPath = "";
@@ -83,7 +83,7 @@ namespace LunaClient.Systems.CraftLibrary
                     uploadPath = System.SubassemblyPath;
                     break;
             }
-            var filePath = CommonUtil.CombinePaths(uploadPath, name + ".craft");
+            var filePath = CommonUtil.CombinePaths(uploadPath, $"{name}.craft");
             if (File.Exists(filePath))
             {
                 var fileData = File.ReadAllBytes(filePath);
@@ -100,7 +100,7 @@ namespace LunaClient.Systems.CraftLibrary
             }
             else
             {
-                Debug.LogError("[LMP]: Cannot upload file, " + filePath + " does not exist!");
+                Debug.LogError($"[LMP]: Cannot upload file, {filePath} does not exist!");
             }
         }
 
@@ -139,7 +139,7 @@ namespace LunaClient.Systems.CraftLibrary
                 System.PlayerList[playerName][craftType].Remove(craftName);
                 if (System.PlayerList[playerName][craftType].Count == 0)
                     System.PlayerList[playerName].Remove(craftType);
-                if ((System.PlayerList[playerName].Count == 0) && (playerName != SettingsSystem.CurrentSettings.PlayerName))
+                if (System.PlayerList[playerName].Count == 0 && playerName != SettingsSystem.CurrentSettings.PlayerName)
                 {
                     System.PlayerList.Remove(playerName);
                     if (System.PlayersWithCrafts.Contains(playerName))
@@ -167,9 +167,9 @@ namespace LunaClient.Systems.CraftLibrary
             if (!Directory.Exists(savePath))
                 Directory.CreateDirectory(savePath);
 
-            var craftFile = CommonUtil.CombinePaths(savePath, craftName + ".craft");
+            var craftFile = CommonUtil.CombinePaths(savePath, $"{craftName}.craft");
             File.WriteAllBytes(craftFile, craftData);
-            ScreenMessages.PostScreenMessage("Craft " + craftName + " saved!", 5f, ScreenMessageStyle.UPPER_CENTER);
+            ScreenMessages.PostScreenMessage($"Craft {craftName} saved!", 5f, ScreenMessageStyle.UPPER_CENTER);
         }
     }
 }

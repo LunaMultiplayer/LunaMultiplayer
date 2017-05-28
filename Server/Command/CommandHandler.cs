@@ -1,11 +1,11 @@
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
 using LunaServer.Command.CombinedCommand;
 using LunaServer.Command.Command;
 using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Settings;
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
 
 namespace LunaServer.Command
 {
@@ -63,7 +63,7 @@ namespace LunaServer.Command
                             LunaLog.Debug("Ignored mono Console.ReadLine() bug");
                         Thread.Sleep(500);
                     }
-                    LunaLog.Normal("Command input: " + input);
+                    LunaLog.Normal($"Command input: {input}");
                     if (!string.IsNullOrEmpty(input))
                         if (input.StartsWith("/"))
                         {
@@ -81,7 +81,7 @@ namespace LunaServer.Command
             {
                 if (ServerContext.ServerRunning)
                 {
-                    LunaLog.Fatal("Error in command handler thread, Exception: " + e);
+                    LunaLog.Fatal($"Error in command handler thread, Exception: {e}");
                     throw;
                 }
             }
@@ -105,10 +105,10 @@ namespace LunaServer.Command
                     }
                     catch (Exception e)
                     {
-                        LunaLog.Error("Error handling server command " + commandPart + ", Exception " + e);
+                        LunaLog.Error($"Error handling server command {commandPart}, Exception {e}");
                     }
                 else
-                    LunaLog.Normal("Unknown server command: " + commandPart);
+                    LunaLog.Normal($"Unknown server command: {commandPart}");
         }
 
         private static void RegisterCommand(string command, Action<string> func, string description)

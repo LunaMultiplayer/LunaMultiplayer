@@ -54,13 +54,13 @@ namespace MasterServer
                         case NetIncomingMessageType.VerboseDebugMessage:
                         case NetIncomingMessageType.WarningMessage:
                         case NetIncomingMessageType.ErrorMessage:
-                        Form.WriteLine("ERROR! :" + msg.ReadString());
-                        break;
+                            Form.WriteLine($"ERROR! :{msg.ReadString()}");
+                            break;
                         case NetIncomingMessageType.UnconnectedData:
-                        var messageBytes = msg.ReadBytes(msg.LengthBytes);
-                        var message = MasterServerMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IMasterServerMessageBase;
-                        HandleMessage(message, msg, peer);
-                        break;
+                            var messageBytes = msg.ReadBytes(msg.LengthBytes);
+                            var message = MasterServerMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IMasterServerMessageBase;
+                            HandleMessage(message, msg, peer);
+                            break;
                     }
                 }
             }
@@ -70,7 +70,7 @@ namespace MasterServer
         private static void CheckMasterServerListed()
         {
             var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-            var ownEndpoint = GetOwnIpAddress() + ":" + Port;
+            var ownEndpoint = $"{GetOwnIpAddress()}:{Port}";
 
             Form.WriteLine(!servers.Contains(ownEndpoint)
                 ? "CAUTION! This server is not listed in the master-servers URL " +
@@ -117,31 +117,31 @@ namespace MasterServer
             switch ((message?.Data as MsBaseMsgData)?.MasterServerMessageSubType)
             {
                 case MasterServerMessageSubType.RegisterServer:
-                RegisterServer(message, netMsg);
-                break;
+                    RegisterServer(message, netMsg);
+                    break;
                 case MasterServerMessageSubType.RequestServers:
-                var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
-                Form.WriteLine($"Received LIST REQUEST from: {netMsg.SenderEndPoint} version: {version}");
-                SendServerLists(netMsg, peer, version);
-                break;
+                    var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
+                    Form.WriteLine($"Received LIST REQUEST from: {netMsg.SenderEndPoint} version: {version}");
+                    SendServerLists(netMsg, peer, version);
+                    break;
                 case MasterServerMessageSubType.Introduction:
-                Form.WriteLine("Received INTRODUCTION request from:" + netMsg.SenderEndPoint);
-                var msgData = (MsIntroductionMsgData)message.Data;
-                Server server;
-                if (ServerDictionary.TryGetValue(msgData.Id, out server))
-                {
-                    peer.Introduce(
-                        server.InternalEndpoint,
-                        server.ExternalEndpoint,
-                        Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
-                        netMsg.SenderEndPoint,// client external
-                        msgData.Token); // request token
-                }
-                else
-                {
-                    Form.WriteLine("Client requested introduction to nonlisted host!");
-                }
-                break;
+                    Form.WriteLine($"Received INTRODUCTION request from: {netMsg.SenderEndPoint}");
+                    var msgData = (MsIntroductionMsgData)message.Data;
+                    Server server;
+                    if (ServerDictionary.TryGetValue(msgData.Id, out server))
+                    {
+                        peer.Introduce(
+                            server.InternalEndpoint,
+                            server.ExternalEndpoint,
+                            Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
+                            netMsg.SenderEndPoint,// client external
+                            msgData.Token); // request token
+                    }
+                    else
+                    {
+                        Form.WriteLine("Client requested introduction to nonlisted host!");
+                    }
+                    break;
             }
         }
 
@@ -159,9 +159,9 @@ namespace MasterServer
                 DropControlOnExit = values.Select(s => s.Info.DropControlOnExit).ToArray(),
                 DropControlOnExitFlight = values.Select(s => s.Info.DropControlOnExit).ToArray(),
                 DropControlOnVesselSwitching = values.Select(s => s.Info.DropControlOnExit).ToArray(),
-                ExternalEndpoint = values.Select(s => s.ExternalEndpoint.Address + ":" + s.ExternalEndpoint.Port).ToArray(),
+                ExternalEndpoint = values.Select(s => $"{s.ExternalEndpoint.Address}:{s.ExternalEndpoint.Port}").ToArray(),
                 GameMode = values.Select(s => s.Info.GameMode).ToArray(),
-                InternalEndpoint = values.Select(s => s.InternalEndpoint.Address + ":" + s.InternalEndpoint.Port).ToArray(),
+                InternalEndpoint = values.Select(s => $"{s.InternalEndpoint.Address}:{s.InternalEndpoint.Port}").ToArray(),
                 MaxPlayers = values.Select(s => s.Info.MaxPlayers).ToArray(),
                 ModControl = values.Select(s => s.Info.ModControl).ToArray(),
                 PlayerCount = values.Select(s => s.Info.PlayerCount).ToArray(),

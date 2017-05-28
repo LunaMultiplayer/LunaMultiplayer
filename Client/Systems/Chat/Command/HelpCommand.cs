@@ -17,7 +17,7 @@ namespace LunaClient.Systems.Chat.Command
             commands.Sort();
             foreach (var cmd in commands)
             {
-                var helpText = cmd.Name.PadRight(longestName) + " - " + cmd.Description;
+                var helpText = $"{cmd.Name.PadRight(longestName)} - {cmd.Description}";
                 ChatSystem.Singleton.PrintToSelectedChannel(helpText);
             }
         }

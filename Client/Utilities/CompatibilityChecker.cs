@@ -148,9 +148,8 @@ namespace LunaClient.Utilities
 
             if (incompatible.Length > 0)
             {
-                Debug.LogWarning("[CompatibilityChecker] Incompatible mods detected: " + string.Join(", ", incompatible));
-                message +=
-                    $"\n\nThese mods are incompatible with KSP {Versioning.version_major}.{Versioning.version_minor}.{Versioning.Revision}:\n\n";
+                Debug.LogWarning($"[CompatibilityChecker] Incompatible mods detected: {string.Join(", ", incompatible)}");
+                message += $"\n\nThese mods are incompatible with KSP {Versioning.version_major}.{Versioning.version_minor}.{Versioning.Revision}:\n\n";
                 message += string.Join("\n", incompatible);
             }
 

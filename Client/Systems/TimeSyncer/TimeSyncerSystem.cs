@@ -1,8 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
@@ -10,6 +5,11 @@ using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.SyncTime;
 using LunaCommon.Message.Interface;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace LunaClient.Systems.TimeSyncer
@@ -79,7 +79,7 @@ namespace LunaClient.Systems.TimeSyncer
         #endregion
 
         #region Update methods
-        
+
         /// <summary>
         /// Routine that checks our time against the server time and adjust it if needed.
         /// </summary>
@@ -156,7 +156,7 @@ namespace LunaClient.Systems.TimeSyncer
             NetworkLatencyAverage = networkLatencyTotal / NetworkLatency.Count;
 
             //Check if we are now synced
-            if ((ClockOffset.Count > SettingsSystem.CurrentSettings.InitialConnectionSyncTimeRequests) && !Synced)
+            if (ClockOffset.Count > SettingsSystem.CurrentSettings.InitialConnectionSyncTimeRequests && !Synced)
             {
                 Synced = true;
                 Debug.Log($"[LMP]: Initial clock syncronized, offset {ClockOffsetAverage / 10000}ms, latency {NetworkLatencyAverage / 10000}ms");

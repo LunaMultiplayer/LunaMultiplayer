@@ -25,7 +25,7 @@ namespace LunaClient.Systems.VesselProtoSys
             foreach (var vessel in System.AllPlayerVessels)
             {
                 var pv = CreateSafeProtoVesselFromConfigNode(vessel.Value.VesselNode, vessel.Key);
-                if ((pv != null) && (pv.vesselID == vessel.Key))
+                if (pv != null && pv.vesselID == vessel.Key)
                 {
                     RegisterServerAsteriodIfVesselIsAsteroid(pv);
                     HighLogic.CurrentGame.flightState.protoVessels.Add(pv);
@@ -164,7 +164,7 @@ namespace LunaClient.Systems.VesselProtoSys
         // ReSharper disable once UnusedMember.Local
         private static bool ProtoVesselIsTarget(ProtoVessel currentProto)
         {
-            return (FlightGlobals.fetch.VesselTarget != null) && (FlightGlobals.fetch.VesselTarget.GetVessel() != null) &&
+            return FlightGlobals.fetch.VesselTarget != null && FlightGlobals.fetch.VesselTarget.GetVessel() != null &&
                    FlightGlobals.fetch.VesselTarget.GetVessel().id == currentProto.vesselID;
         }
 
@@ -206,7 +206,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 //Fix up flag URLS.
                 if (!string.IsNullOrEmpty(part.flagURL))
                 {
-                    var flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), part.flagURL + ".png");
+                    var flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), $"{part.flagURL}.png");
                     if (!File.Exists(flagFile))
                     {
                         Debug.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
@@ -294,9 +294,9 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static bool ProtoVesselIsAsteroid(ProtoVessel possibleAsteroid)
         {
-            return (possibleAsteroid.vesselType == VesselType.SpaceObject) &&
-                   (possibleAsteroid.protoPartSnapshots?.Count == 1) &&
-                   (possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid");
+            return possibleAsteroid.vesselType == VesselType.SpaceObject &&
+                   possibleAsteroid.protoPartSnapshots?.Count == 1 &&
+                   possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid";
         }
 
 

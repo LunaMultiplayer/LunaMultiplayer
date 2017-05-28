@@ -28,17 +28,17 @@ namespace LunaClient.Systems.VesselProtoSys
             switch (msgData.VesselMessageType)
             {
                 case VesselMessageType.ListReply:
-                HandleVesselList((VesselListReplyMsgData)messageData);
-                break;
+                    HandleVesselList((VesselListReplyMsgData)messageData);
+                    break;
                 case VesselMessageType.VesselsReply:
-                HandleVesselResponse((VesselsReplyMsgData)messageData);
-                break;
+                    HandleVesselResponse((VesselsReplyMsgData)messageData);
+                    break;
                 case VesselMessageType.Proto:
-                HandleVesselProto((VesselProtoMsgData)messageData);
-                break;
+                    HandleVesselProto((VesselProtoMsgData)messageData);
+                    break;
                 default:
-                Debug.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");
-                break;
+                    Debug.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");
+                    break;
             }
         }
 

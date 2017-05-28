@@ -148,15 +148,14 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Checks if the action group was true or false and fix it's planet time
         /// </summary>
-        private string DodgeValueIfNeeded(string input)
+        private static string DodgeValueIfNeeded(string input)
         {
             var boolValue = input.Substring(0, input.IndexOf(", ", StringComparison.Ordinal));
             var timeValue = input.Substring(input.IndexOf(", ", StringComparison.Ordinal) + 1);
             var vesselPlanetTime = double.Parse(timeValue);
             var currentPlanetTime = Planetarium.GetUniversalTime();
-            if (vesselPlanetTime > currentPlanetTime)
-                return boolValue + ", " + currentPlanetTime;
-            return input;
+
+            return vesselPlanetTime > currentPlanetTime ? $"{boolValue}, {currentPlanetTime}" : input;
         }
 
         #endregion

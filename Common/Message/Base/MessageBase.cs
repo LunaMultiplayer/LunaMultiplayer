@@ -66,7 +66,7 @@ namespace LunaCommon.Message.Base
             get => _data;
             private set
             {
-                if (!(value is T) && (typeof(T) != value.GetType()))
+                if (!(value is T) && typeof(T) != value.GetType())
                     throw new InvalidOperationException("Cannot cast this mesage data to this type of message");
                 _data = value;
             }
@@ -80,8 +80,8 @@ namespace LunaCommon.Message.Base
         {
             get
             {
-                if ((NetDeliveryMethod == NetDeliveryMethod.Unreliable) ||
-                    (NetDeliveryMethod == NetDeliveryMethod.ReliableUnordered))
+                if (NetDeliveryMethod == NetDeliveryMethod.Unreliable ||
+                    NetDeliveryMethod == NetDeliveryMethod.ReliableUnordered)
                     return 0;
                 if (DefaultChannel > 32)
                     throw new Exception("Cannot set a channel above 32!");

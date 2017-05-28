@@ -50,7 +50,7 @@ namespace LunaClient.Utilities
 
         public static ConfigNode Deserialize(byte[] data)
         {
-            if ((data == null) || (data.Length == 0)) return null;
+            if (data == null || data.Length == 0) return null;
 
             using (var stream = new MemoryStream(data))
             using (var reader = new StreamReader(stream))

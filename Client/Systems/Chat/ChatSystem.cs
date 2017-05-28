@@ -133,9 +133,9 @@ namespace LunaClient.Systems.Chat
 
         public void PrintToSelectedChannel(string text)
         {
-            if ((SelectedChannel == null) && (SelectedPmChannel == null))
+            if (SelectedChannel == null && SelectedPmChannel == null)
                 Queuer.QueueChannelMessage(SettingsSystem.CurrentSettings.PlayerName, "", text);
-            if ((SelectedChannel != null) && (SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier))
+            if (SelectedChannel != null && SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier)
                 Queuer.QueueChannelMessage(SettingsSystem.CurrentSettings.PlayerName, SelectedChannel, text);
             if (SelectedChannel == SettingsSystem.ServerSettings.ConsoleIdentifier)
                 Queuer.QueueSystemMessage(text);

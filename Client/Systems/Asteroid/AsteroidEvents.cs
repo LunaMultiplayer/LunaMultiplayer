@@ -26,7 +26,7 @@ namespace LunaClient.Systems.Asteroid
                 }
                 else
                 {
-                    Debug.Log("[LMP]: Killing non-server asteroid " + asteroid.id);
+                    Debug.Log($"[LMP]: Killing non-server asteroid {asteroid.id}");
                     asteroid.Die();
                 }
             }

@@ -11,8 +11,8 @@ namespace LunaServer.Command.Command
         {
             if (commandArgs != "")
             {
-                LunaLog.Normal("Restarting - " + commandArgs);
-                MessageQueuer.SendConnectionEndToAll("Server is restarting - " + commandArgs);
+                LunaLog.Normal($"Restarting - {commandArgs}");
+                MessageQueuer.SendConnectionEndToAll($"Server is restarting - {commandArgs}");
             }
             else
             {

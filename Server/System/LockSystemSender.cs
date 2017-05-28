@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using LunaCommon.Message.Data.Lock;
+﻿using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Log;
 using LunaServer.Server;
+using System.Linq;
 
 namespace LunaServer.System
 {
@@ -11,7 +11,7 @@ namespace LunaServer.System
     {
         public static void SendAllLocks(ClientStructure client)
         {
-            MessageQueuer.SendToClient<LockSrvMsg>(client, new LockListReplyMsgData {Locks = LockSystem.GetLockList().ToArray()});
+            MessageQueuer.SendToClient<LockSrvMsg>(client, new LockListReplyMsgData { Locks = LockSystem.GetLockList().ToArray() });
         }
 
         public static void SendLockReleaseMessage(string lockName, string playerName)
@@ -26,11 +26,11 @@ namespace LunaServer.System
                     LockResult = true
                 };
                 MessageQueuer.SendToAllClients<LockSrvMsg>(newMessageData);
-                LunaLog.Debug(playerName + " released lock " + lockName);
+                LunaLog.Debug($"{playerName} released lock {lockName}");
             }
             else
             {
-                LunaLog.Debug(playerName + " failed to release lock " + lockName);
+                LunaLog.Debug($"{playerName} failed to release lock {lockName}");
             }
         }
 
@@ -47,10 +47,9 @@ namespace LunaServer.System
             };
             MessageQueuer.SendToAllClients<LockSrvMsg>(newMessageData);
 
-            if (lockResult)
-                LunaLog.Debug(playerName + " acquired lock " + lockName);
-            else
-                LunaLog.Debug(playerName + " failed to acquire lock " + lockName);
+            LunaLog.Debug(lockResult
+                ? $"{playerName} acquired lock {lockName}"
+                : $"{playerName} failed to acquire lock {lockName}");
         }
     }
 }

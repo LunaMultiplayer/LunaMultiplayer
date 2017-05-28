@@ -27,7 +27,7 @@ namespace LunaClient.Network
             {
                 if (MainSystem.Singleton.NetworkState != ClientState.Disconnected)
                 {
-                    Debug.Log("[LMP]: Disconnected, reason: " + reason);
+                    Debug.Log($"[LMP]: Disconnected, reason: {reason}");
                     if (!HighLogic.LoadedSceneIsEditor && !HighLogic.LoadedSceneIsFlight)
                     {
                         MainSystem.Singleton.ForceQuit = true;
@@ -39,7 +39,7 @@ namespace LunaClient.Network
                     }
 
                     MainSystem.Singleton.GameRunning = false;
-                    MainSystem.Singleton.Status = "Disconnected: " + reason;
+                    MainSystem.Singleton.Status = $"Disconnected: {reason}";
                     MainSystem.Singleton.NetworkState = ClientState.Disconnected;
                     NetworkMain.ClientConnection.Disconnect(reason);
                     NetworkMain.ClientConnection.Shutdown(reason);
@@ -56,7 +56,7 @@ namespace LunaClient.Network
 
                 Disconnect("Started a new connection");
 
-                ConnectThread = new Task(() => ConnectToServer(address + ":" + port));
+                ConnectThread = new Task(() => ConnectToServer($"{address}:{port}"));
                 ConnectThread.Start(TaskScheduler.Default);
             }
             catch (Exception e)
@@ -87,7 +87,7 @@ namespace LunaClient.Network
             }
             catch (Exception)
             {
-                MainSystem.Singleton.Status = "Invalid IP address: " + endpointString;
+                MainSystem.Singleton.Status = $"Invalid IP address: {endpointString}";
             }
         }
 
@@ -104,8 +104,8 @@ namespace LunaClient.Network
 
                 var connectionTrials = 0;
                 while (MainSystem.Singleton.NetworkState == ClientState.Connecting &&
-                    (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected) &&
-                    (connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries))
+                    NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected &&
+                    connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries)
                 {
                     connectionTrials++;
                     Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
@@ -113,7 +113,7 @@ namespace LunaClient.Network
 
                 if (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Disconnected)
                 {
-                    Debug.Log("[LMP]: Connected to " + destination.Address + " port " + destination.Port);
+                    Debug.Log($"[LMP]: Connected to {destination.Address} port {destination.Port}");
                     MainSystem.Singleton.Status = "Connected";
                     MainSystem.Singleton.NetworkState = ClientState.Connected;
                     NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg>(new HandshakeRequestMsgData()));

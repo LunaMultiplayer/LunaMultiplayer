@@ -236,7 +236,7 @@ namespace LunaClient.Systems.Toolbar
         ///     <code>
         /// IButton button = ...
         /// button.OnClick += (e) => {
-        ///     Debug.Log("button clicked, mouseButton: " + e.MouseButton);
+        ///     Debug.Log($"button clicked, mouseButton: {e.MouseButton}");
         /// };
         /// </code>
         /// </example>

@@ -11,8 +11,8 @@ namespace LunaServer.Command.Command
         {
             if (commandArgs != "")
             {
-                LunaLog.Normal("Shutting down - " + commandArgs);
-                MessageQueuer.SendConnectionEndToAll("Server is shutting down - " + commandArgs);
+                LunaLog.Normal($"Shutting down - {commandArgs}");
+                MessageQueuer.SendConnectionEndToAll($"Server is shutting down - {commandArgs}");
             }
             else
             {

@@ -18,18 +18,18 @@ namespace LunaServer.Message.Reader
             switch (message?.PlayerColorMessageType)
             {
                 case PlayerColorMessageType.Request:
-                SendAllPlayerColors(client);
-                break;
+                    SendAllPlayerColors(client);
+                    break;
                 case PlayerColorMessageType.Set:
-                var data = message as PlayerColorSetMsgData;
-                {
-                    if (data != null && data.PlayerName == client.PlayerName)
+                    var data = message as PlayerColorSetMsgData;
                     {
-                        client.PlayerColor = data.Color;
-                        MessageQueuer.RelayMessage<PlayerColorSrvMsg>(client, data);
+                        if (data != null && data.PlayerName == client.PlayerName)
+                        {
+                            client.PlayerColor = data.Color;
+                            MessageQueuer.RelayMessage<PlayerColorSrvMsg>(client, data);
+                        }
                     }
-                }
-                break;
+                    break;
             }
         }
 

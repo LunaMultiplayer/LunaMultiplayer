@@ -23,13 +23,13 @@ namespace LunaClient.Windows.CraftLibrary
                 PlayerWindowRect =
                     LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset, PlayerWindowRect,
                         DrawContent, "LunaMultiPlayer - Craft Library", WindowStyle, PlayerLayoutOptions));
-            if (SafeDisplay && (System.SelectedPlayer != null))
+            if (SafeDisplay && System.SelectedPlayer != null)
                 if (System.PlayersWithCrafts.Contains(System.SelectedPlayer) ||
-                    (System.SelectedPlayer == SettingsSystem.CurrentSettings.PlayerName))
+                    System.SelectedPlayer == SettingsSystem.CurrentSettings.PlayerName)
                     LibraryWindowRect =
                         LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6708 + MainSystem.WindowOffset,
                             LibraryWindowRect, DrawLibraryContent,
-                            "LunaMultiPlayer - " + System.SelectedPlayer + " Craft Library", WindowStyle,
+                            $"LunaMultiPlayer - {System.SelectedPlayer} Craft Library", WindowStyle,
                             LibraryLayoutOptions));
                 else
                     System.SelectedPlayer = null;
@@ -40,11 +40,11 @@ namespace LunaClient.Windows.CraftLibrary
         {
             //Setup GUI stuff
             //left 50, middle height
-            PlayerWindowRect = new Rect(50, Screen.height/2f - PlayerWindowHeight/2f, PlayerWindowWidth,
+            PlayerWindowRect = new Rect(50, Screen.height / 2f - PlayerWindowHeight / 2f, PlayerWindowWidth,
                 PlayerWindowHeight);
             //middle of the screen
-            LibraryWindowRect = new Rect(Screen.width/2f - LibraryWindowWidth/2f,
-                Screen.height/2f - LibraryWindowHeight/2f, LibraryWindowWidth, LibraryWindowHeight);
+            LibraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f,
+                Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
             PlayerLayoutOptions = new GUILayoutOption[4];

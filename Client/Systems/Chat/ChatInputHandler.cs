@@ -17,7 +17,7 @@ namespace LunaClient.Systems.Chat
                 if (input.StartsWith("//"))
                     input = input.Substring(1);
 
-                if ((System.SelectedChannel == null) && (System.SelectedPmChannel == null))
+                if (System.SelectedChannel == null && System.SelectedPmChannel == null)
                     System.MessageSender.SendMessage(new ChatChannelMsgData
                     {
                         From = SettingsSystem.CurrentSettings.PlayerName,
@@ -25,7 +25,7 @@ namespace LunaClient.Systems.Chat
                         SendToAll = true,
                         Text = input
                     });
-                if ((System.SelectedChannel != null) && (System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier))
+                if (System.SelectedChannel != null && System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier)
                     System.MessageSender.SendMessage(new ChatChannelMsgData
                     {
                         From = SettingsSystem.CurrentSettings.PlayerName,
@@ -40,7 +40,7 @@ namespace LunaClient.Systems.Chat
                         From = SettingsSystem.CurrentSettings.PlayerName,
                         Message = input
                     });
-                    Debug.Log("[LMP]: Server Command: " + input);
+                    Debug.Log($"[LMP]: Server Command: {input}");
                 }
                 if (System.SelectedPmChannel != null)
                     System.MessageSender.SendMessage(new ChatPrivateMsgData
@@ -64,16 +64,16 @@ namespace LunaClient.Systems.Chat
                     if (System.RegisteredChatCommands.ContainsKey(commandPart))
                         try
                         {
-                            Debug.Log("[LMP]: Chat Command: " + input.Substring(1));
+                            Debug.Log($"[LMP]: Chat Command: {input.Substring(1)}");
                             System.RegisteredChatCommands[commandPart].Func(argumentPart);
                         }
                         catch (Exception e)
                         {
-                            Debug.LogError("[LMP]: Error handling chat command " + commandPart + ", Exception " + e);
-                            System.PrintToSelectedChannel("Error handling chat command: " + commandPart);
+                            Debug.LogError($"[LMP]: Error handling chat command {commandPart}, Exception {e}");
+                            System.PrintToSelectedChannel($"Error handling chat command: {commandPart}");
                         }
                     else
-                        System.PrintToSelectedChannel("Unknown chat command: " + commandPart);
+                        System.PrintToSelectedChannel($"Unknown chat command: {commandPart}");
             }
         }
     }

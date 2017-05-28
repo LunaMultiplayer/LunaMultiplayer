@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaServer.Client;
@@ -12,6 +8,10 @@ using LunaServer.Log;
 using LunaServer.Plugin;
 using LunaServer.Settings;
 using LunaServer.System;
+using System;
+using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace LunaServer
 {
@@ -50,7 +50,7 @@ namespace LunaServer
                 //Load plugins
                 LmpPluginHandler.LoadPlugins();
 
-                Console.Title = "LMPServer v" + VersionInfo.VersionNumber;
+                Console.Title = $"LMPServer v{VersionInfo.VersionNumber}";
 
                 while (ServerContext.ServerStarting || ServerContext.ServerRestarting)
                 {
@@ -68,7 +68,7 @@ namespace LunaServer
                     }
 
                     ServerContext.ServerRestarting = false;
-                    LunaLog.Normal("Starting Luna Server v" + VersionInfo.FullVersionNumber);
+                    LunaLog.Normal($"Starting Luna Server v{VersionInfo.FullVersionNumber}");
 
                     if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
                     {
@@ -81,11 +81,10 @@ namespace LunaServer
                     LunaLog.Normal("Loading universe... ");
                     Universe.CheckUniverse();
 
-                    LunaLog.Normal("Starting " + GeneralSettings.SettingsStore.WarpMode + " server on Port " +
-                                   GeneralSettings.SettingsStore.Port + "... ");
+                    LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
 
                     ServerContext.ServerRunning = true;
-                    
+
                     var commandThread = Task.Run(() => new CommandHandler().ThreadMain());
                     var clientThread = Task.Run(() => new ClientMainThread().ThreadMain());
 
@@ -142,7 +141,7 @@ namespace LunaServer
             }
             catch (Exception e)
             {
-                LunaLog.Fatal("Error in main server thread, Exception: " + e);
+                LunaLog.Fatal($"Error in main server thread, Exception: {e}");
                 throw;
             }
         }

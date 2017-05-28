@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using LunaCommon;
+﻿using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
@@ -13,6 +9,10 @@ using LunaServer.Log;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Server;
 using LunaServer.System;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace LunaServer.Message.Reader
 {
@@ -54,12 +54,12 @@ namespace LunaServer.Message.Reader
 
         private static void HandleVesselRemove(ClientStructure client, VesselBaseMsgData message)
         {
-            var data = (VesselRemoveMsgData) message;
+            var data = (VesselRemoveMsgData)message;
 
             //Don't care about the Subspace on the server.
             LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
 
-            Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", data.VesselId + ".txt"));
+            Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt"));
             VesselContext.RemovedVessels.Add(data.VesselId);
 
             //Relay the message.
@@ -71,11 +71,11 @@ namespace LunaServer.Message.Reader
 
         private static void HandleVesselProto(ClientStructure client, VesselBaseMsgData message)
         {
-            var msgData = (VesselProtoMsgData) message;
-            
+            var msgData = (VesselProtoMsgData)message;
+
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 
-            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", msgData.VesselId + ".txt");
+            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
 
             if (!File.Exists(path))
                 LunaLog.Debug($"Saving vessel {msgData.VesselId} from {client.PlayerName}");
@@ -112,7 +112,7 @@ namespace LunaServer.Message.Reader
                 }
             }
 
-            MessageQueuer.SendToClient<VesselSrvMsg>(client, new VesselsReplyMsgData {VesselsData = vesselList.ToArray()});
+            MessageQueuer.SendToClient<VesselSrvMsg>(client, new VesselsReplyMsgData { VesselsData = vesselList.ToArray() });
             LunaLog.Debug($"Sending {client.PlayerName} {sendVesselCount} vessels, cached: {cachedVesselCount}...");
         }
 

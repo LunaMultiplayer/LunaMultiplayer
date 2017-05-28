@@ -1,7 +1,7 @@
-using System.Collections.Generic;
-using System.IO;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
+using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 namespace LunaClient.Utilities
@@ -20,7 +20,7 @@ namespace LunaClient.Utilities
             if (!Directory.Exists(saveFolder))
             {
                 Debug.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', Save directory doesn't exist");
-                ScreenMessages.PostScreenMessage("Failed to generate a LMP universe for '" + saveName + "', Save directory doesn't exist", 5f,
+                ScreenMessages.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', Save directory doesn't exist", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
@@ -29,7 +29,7 @@ namespace LunaClient.Utilities
             if (!File.Exists(persistentFile))
             {
                 Debug.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', persistent.sfs doesn't exist");
-                ScreenMessages.PostScreenMessage("Failed to generate a LMP universe for '" + saveName + "', persistent.sfs doesn't exist", 5f,
+                ScreenMessages.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', persistent.sfs doesn't exist", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
@@ -67,7 +67,7 @@ namespace LunaClient.Utilities
             if (flightState == null)
             {
                 Debug.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load flight state data");
-                ScreenMessages.PostScreenMessage("Failed to generate a LMP universe for '" + saveName + "', failed to load flight state data", 5f,
+                ScreenMessages.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load flight state data", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
@@ -78,7 +78,7 @@ namespace LunaClient.Utilities
                 {
                     var vesselId = Common.ConvertConfigStringToGuidString(cn.GetValue("pid"));
                     Debug.Log($"[LMP]: Saving vessel {vesselId}, Name: {cn.GetValue("Name")}");
-                    cn.Save(CommonUtil.CombinePaths(vesselFolder, vesselId + ".txt"));
+                    cn.Save(CommonUtil.CombinePaths(vesselFolder, $"{vesselId}.txt"));
                 }
             //Save scenario data
             var scenarioNodes = gameData.GetNodes("SCENARIO");
@@ -87,7 +87,7 @@ namespace LunaClient.Utilities
                 {
                     var scenarioName = cn.GetValue("Name");
                     Debug.Log($"[LMP]: Saving scenario: {scenarioName}");
-                    cn.Save(CommonUtil.CombinePaths(playerScenarioFolder, scenarioName + ".txt"));
+                    cn.Save(CommonUtil.CombinePaths(playerScenarioFolder, $"{scenarioName}.txt"));
                 }
             //Save kerbal data
             var kerbalNodes = gameData.GetNode("ROSTER").GetNodes("CREW");
@@ -97,12 +97,12 @@ namespace LunaClient.Utilities
                 foreach (var cn in kerbalNodes)
                 {
                     Debug.Log($"[LMP]: Saving kerbal {kerbalIndex}, Name: {cn.GetValue("Name")}");
-                    cn.Save(CommonUtil.CombinePaths(kerbalFolder, kerbalIndex + ".txt"));
+                    cn.Save(CommonUtil.CombinePaths(kerbalFolder, $"{kerbalIndex}.txt"));
                     kerbalIndex++;
                 }
             }
             Debug.Log($"[LMP]: Generated KSP_folder/Universe from {saveName}");
-            ScreenMessages.PostScreenMessage("Generated KSP_folder/Universe from " + saveName, 5f,
+            ScreenMessages.PostScreenMessage($"Generated KSP_folder/Universe from {saveName}", 5f,
                 ScreenMessageStyle.UPPER_CENTER);
         }
 
@@ -117,7 +117,7 @@ namespace LunaClient.Utilities
                 if (saveDirectory[saveDirectory.Length - 1] == Path.DirectorySeparatorChar)
                     trimmedDirectory = saveDirectory.Substring(0, saveDirectory.Length - 2);
                 var saveName = trimmedDirectory.Substring(trimmedDirectory.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                if ((saveName.ToLower() != "training") && (saveName.ToLower() != "scenarios") &&
+                if (saveName.ToLower() != "training" && saveName.ToLower() != "scenarios" &&
                     File.Exists(CommonUtil.CombinePaths(saveDirectory, "persistent.sfs")))
                     returnList.Add(saveName);
             }

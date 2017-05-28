@@ -1,10 +1,10 @@
+using LunaClient.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
 using System.Xml;
 using System.Xml.Serialization;
-using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Systems.SettingsSys
@@ -52,7 +52,7 @@ namespace LunaClient.Systems.SettingsSys
             }
             catch (Exception e)
             {
-                throw new Exception("Could not open and read settings file. Details: " + e);
+                throw new Exception($"Could not open and read settings file. Details: {e}");
             }
         }
 
@@ -96,7 +96,7 @@ namespace LunaClient.Systems.SettingsSys
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("Error generating RSA key: " + e);
+                    Console.WriteLine($"Error generating RSA key: {e}");
                 }
                 finally
                 {

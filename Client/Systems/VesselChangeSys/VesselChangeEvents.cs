@@ -1,9 +1,9 @@
-﻿using System;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.VesselPositionSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Types;
+using System;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselChangeSys
@@ -29,7 +29,7 @@ namespace LunaClient.Systems.VesselChangeSys
                 System.MessageSender.SendMessage(msgData);
             }
         }
-        
+
         /// <summary>
         /// When a stage of ANY vessel is separated, try to get the update lock of that debris
         /// </summary>
@@ -41,16 +41,16 @@ namespace LunaClient.Systems.VesselChangeSys
                 var debrisVessel = FlightGlobals.FindVessel(data.origin.vessel.id);
                 var missionId = data.origin.missionID;
 
-                if (!LockSystem.Singleton.LockWithPrefixExists("debris-" + missionId))
+                if (!LockSystem.Singleton.LockWithPrefixExists($"debris-{missionId}"))
                 {
-                    LockSystem.Singleton.AcquireLock("debris-" + missionId + "_" + debrisVessel.id);
+                    LockSystem.Singleton.AcquireLock($"debris-{missionId}_{debrisVessel.id}");
                     VesselPositionSystem.Singleton.MessageSender.SendVesselPositionUpdate(new VesselPositionUpdate(debrisVessel));
                 }
                 else
                 {
-                    var debrisLocks = LockSystem.Singleton.ServerLocks.Where(l => l.Key.StartsWith("debris-" + missionId))
+                    var debrisLocks = LockSystem.Singleton.ServerLocks.Where(l => l.Key.StartsWith($"debris-{missionId}"))
                             .Select(l => l.Key.Substring(l.Key.IndexOf('_') + 1)).ToArray();
-                    
+
                     var otherVesselsWIthSameMissionId = FlightGlobals.Vessels
                             .Where(v => v.Parts.Any() && v.Parts.First().missionID == missionId && v.id != debrisVessel.id)
                             .Select(v => v.id.ToString()).ToArray();
@@ -61,7 +61,7 @@ namespace LunaClient.Systems.VesselChangeSys
                     }
                     else
                     {
-                        LockSystem.Singleton.AcquireLock("debris-" + missionId + "_" + debrisVessel.id);
+                        LockSystem.Singleton.AcquireLock($"debris-{missionId}_{debrisVessel.id}");
                         VesselPositionSystem.Singleton.MessageSender.SendVesselPositionUpdate(new VesselPositionUpdate(debrisVessel));
                     }
                 }

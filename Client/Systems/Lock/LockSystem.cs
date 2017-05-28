@@ -173,7 +173,7 @@ namespace LunaClient.Systems.Lock
         public void ReleaseControlLocksExcept(params string[] lockNames)
         {
             var removeList = ServerLocks
-                .Where(l => !lockNames.Contains(l.Key) && l.Key.StartsWith("control-") && (l.Value == SettingsSystem.CurrentSettings.PlayerName))
+                .Where(l => !lockNames.Contains(l.Key) && l.Key.StartsWith("control-") && l.Value == SettingsSystem.CurrentSettings.PlayerName)
                 .Select(l => l.Key)
                 .ToArray();
 
@@ -204,7 +204,7 @@ namespace LunaClient.Systems.Lock
         public void ReleaseLocksWithPrefix(string prefix)
         {
             var removeList = ServerLocks
-                .Where(l => l.Key.StartsWith(prefix) && (l.Value == SettingsSystem.CurrentSettings.PlayerName))
+                .Where(l => l.Key.StartsWith(prefix) && l.Value == SettingsSystem.CurrentSettings.PlayerName)
                 .Select(l => l.Key)
                 .ToArray();
 
@@ -222,7 +222,7 @@ namespace LunaClient.Systems.Lock
 
         public bool LockIsOurs(string lockName)
         {
-            return ServerLocks.ContainsKey(lockName) && (ServerLocks[lockName] == SettingsSystem.CurrentSettings.PlayerName);
+            return ServerLocks.ContainsKey(lockName) && ServerLocks[lockName] == SettingsSystem.CurrentSettings.PlayerName;
         }
 
         public bool LockWithPrefixExists(string lockPrefix)

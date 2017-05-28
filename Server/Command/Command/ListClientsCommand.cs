@@ -9,7 +9,7 @@ namespace LunaServer.Command.Command
         public override void Execute(string commandArgs)
         {
             if (ServerContext.Players != "")
-                LunaLog.Normal("Online Players: " + ServerContext.Players);
+                LunaLog.Normal($"Online Players: {ServerContext.Players}");
             else
                 LunaLog.Normal("No Clients connected");
         }

@@ -68,8 +68,8 @@ namespace LunaClient.Windows.Chat
             base.OnGui();
             if (SafeDisplay)
             {
-                var pressedChatShortcutKey = (Event.current.type == EventType.KeyDown) &&
-                                             (Event.current.keyCode == SettingsSystem.CurrentSettings.ChatKey);
+                var pressedChatShortcutKey = Event.current.type == EventType.KeyDown &&
+                                             Event.current.keyCode == SettingsSystem.CurrentSettings.ChatKey;
                 if (pressedChatShortcutKey)
                 {
                     IgnoreChatInput = true;
@@ -86,7 +86,7 @@ namespace LunaClient.Windows.Chat
         public void SizeChanged()
         {
             Initialized = false;
-            System.PrintToSelectedChannel("New window size is: " + WindowWidth + "x" + WindowHeight);
+            System.PrintToSelectedChannel($"New window size is: {WindowWidth}x{WindowHeight}");
         }
 
         private void CheckWindowLock()

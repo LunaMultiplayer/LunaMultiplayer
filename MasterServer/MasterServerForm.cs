@@ -12,7 +12,7 @@ namespace MasterServer
         {
             InitializeComponent();
         }
-        
+
         public void WriteLine(string line)
         {
             if (InvokeRequired)
@@ -20,9 +20,9 @@ namespace MasterServer
                 Invoke(new Action<string>(WriteLine), line);
                 return;
             }
-            tbStatus.AppendText(DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss") + " - " + line + Environment.NewLine);
+            tbStatus.AppendText($"{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - {line}{Environment.NewLine}");
         }
-        
+
         private void MasterServerForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             notifyIcon.Dispose();
@@ -66,9 +66,9 @@ namespace MasterServer
             MasterServer.Port = ushort.Parse(tbPort.Text);
             tbPort.ReadOnly = true;
             btnStart.Enabled = false;
-            Task.Run(()=> MasterServer.Start(this));
+            Task.Run(() => MasterServer.Start(this));
         }
-        
+
         public void UpdateServerList(IEnumerable<Server> servers)
         {
             if (InvokeRequired)

@@ -22,9 +22,9 @@ namespace LunaClient.Windows.CraftLibrary
         private void DrawPlayerButton(string playerName)
         {
             var buttonSelected = GUILayout.Toggle(System.SelectedPlayer == playerName, playerName, ButtonStyle);
-            if (buttonSelected && (System.SelectedPlayer != playerName))
+            if (buttonSelected && System.SelectedPlayer != playerName)
                 System.SelectedPlayer = playerName;
-            if (!buttonSelected && (System.SelectedPlayer == playerName))
+            if (!buttonSelected && System.SelectedPlayer == playerName)
                 System.SelectedPlayer = null;
         }
 

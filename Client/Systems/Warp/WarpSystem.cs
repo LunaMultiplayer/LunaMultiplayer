@@ -114,7 +114,7 @@ namespace LunaClient.Systems.Warp
             if (Enabled && MainSystem.Singleton.GameRunning)
             {
                 if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
-                    DisplayMessage(SettingsSystem.ServerSettings.WarpMaster + " has warp control", 1f);
+                    DisplayMessage($"{SettingsSystem.ServerSettings.WarpMaster} has warp control", 1f);
                 else
                     DisplayMessage("You have warp control", 1f);
             }

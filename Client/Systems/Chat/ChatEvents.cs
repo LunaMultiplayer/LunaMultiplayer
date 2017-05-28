@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.Chat;
 using LunaCommon.Message.Data.Chat;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.Chat
 {
@@ -68,8 +68,8 @@ namespace LunaClient.Systems.Chat
                     if (!System.HighlightChannel.Contains(SettingsSystem.ServerSettings.ConsoleIdentifier))
                         System.HighlightChannel.Add(SettingsSystem.ServerSettings.ConsoleIdentifier);
                 //Move the bar to the bottom on a new Message
-                if ((System.SelectedChannel != null) && (System.SelectedPmChannel == null) &&
-                    (SettingsSystem.ServerSettings.ConsoleIdentifier == System.SelectedChannel))
+                if (System.SelectedChannel != null && System.SelectedPmChannel == null &&
+                    SettingsSystem.ServerSettings.ConsoleIdentifier == System.SelectedChannel)
                 {
                     Screen.ChatScrollPos.y = float.PositiveInfinity;
                     if (System.ChatLocked)
@@ -97,18 +97,18 @@ namespace LunaClient.Systems.Chat
                 if (!System.PrivateMessages.ContainsKey(pe.ToPlayer))
                     System.PrivateMessages.Add(pe.ToPlayer, new List<string>());
                 //Move the bar to the bottom on a new Message
-                if ((System.SelectedPmChannel != null) && (System.SelectedChannel == null) &&
-                    ((pe.FromPlayer == System.SelectedPmChannel) ||
-                     (pe.FromPlayer == SettingsSystem.CurrentSettings.PlayerName)))
+                if (System.SelectedPmChannel != null && System.SelectedChannel == null &&
+                    (pe.FromPlayer == System.SelectedPmChannel ||
+                     pe.FromPlayer == SettingsSystem.CurrentSettings.PlayerName))
                 {
                     Screen.ChatScrollPos.y = float.PositiveInfinity;
                     if (System.ChatLocked)
                         System.SelectTextBox = true;
                 }
                 if (pe.FromPlayer != SettingsSystem.CurrentSettings.PlayerName)
-                    System.PrivateMessages[pe.FromPlayer].Add(pe.FromPlayer + ": " + pe.Message);
+                    System.PrivateMessages[pe.FromPlayer].Add($"{pe.FromPlayer}: {pe.Message}");
                 else
-                    System.PrivateMessages[pe.ToPlayer].Add(pe.FromPlayer + ": " + pe.Message);
+                    System.PrivateMessages[pe.ToPlayer].Add($"{pe.FromPlayer}: {pe.Message}");
             }
         }
 
@@ -119,28 +119,28 @@ namespace LunaClient.Systems.Chat
                 if (!System.ChannelMessages.ContainsKey(ce.Channel))
                     System.ChannelMessages.Add(ce.Channel, new List<string>());
                 //Highlight if the Channel isn't Selected.
-                if ((System.SelectedChannel != null) && (ce.Channel == "") &&
-                    (ce.FromPlayer != SettingsSystem.ServerSettings.ConsoleIdentifier))
+                if (System.SelectedChannel != null && ce.Channel == "" &&
+                    ce.FromPlayer != SettingsSystem.ServerSettings.ConsoleIdentifier)
                     if (!System.HighlightChannel.Contains(ce.Channel))
                         System.HighlightChannel.Add(ce.Channel);
-                if ((ce.Channel != System.SelectedChannel) && (ce.Channel != ""))
+                if (ce.Channel != System.SelectedChannel && ce.Channel != "")
                     if (!System.HighlightChannel.Contains(ce.Channel))
                         System.HighlightChannel.Add(ce.Channel);
                 //Move the bar to the bottom on a new Message
-                if ((System.SelectedChannel == null) && (System.SelectedPmChannel == null) && (ce.Channel == ""))
+                if (System.SelectedChannel == null && System.SelectedPmChannel == null && ce.Channel == "")
                 {
                     Screen.ChatScrollPos.y = float.PositiveInfinity;
                     if (System.ChatLocked)
                         System.SelectTextBox = true;
                 }
-                if ((System.SelectedChannel != null) && (System.SelectedPmChannel == null) &&
-                    (ce.Channel == System.SelectedChannel))
+                if (System.SelectedChannel != null && System.SelectedPmChannel == null &&
+                    ce.Channel == System.SelectedChannel)
                 {
                     Screen.ChatScrollPos.y = float.PositiveInfinity;
                     if (System.ChatLocked)
                         System.SelectTextBox = true;
                 }
-                System.ChannelMessages[ce.Channel].Add(ce.FromPlayer + ": " + ce.Message);
+                System.ChannelMessages[ce.Channel].Add($"{ce.FromPlayer}: {ce.Message}");
             }
         }
 
@@ -169,7 +169,7 @@ namespace LunaClient.Systems.Chat
 
         private void HandleLeaveEvent()
         {
-            if ((System.SelectedChannel != null) && (System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier))
+            if (System.SelectedChannel != null && System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier)
             {
                 System.MessageSender.SendMessage(new ChatLeaveMsgData
                 {

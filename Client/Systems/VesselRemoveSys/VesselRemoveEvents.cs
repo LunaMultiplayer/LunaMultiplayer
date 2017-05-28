@@ -18,7 +18,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
 
             //Only remove the vessel if we own the update lock
-            if (LockSystem.Singleton.LockIsOurs("update-" + dyingVessel.id))
+            if (LockSystem.Singleton.LockIsOurs($"update-{dyingVessel.id}"))
             {
                 Debug.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
                 KerbalSystem.Singleton.MessageSender.SendKerbalsInVessel(dyingVessel);
@@ -81,7 +81,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// <returns></returns>
         private static bool VesselControlLockIsOurs(ProtoVessel vessel)
         {
-            return !LockSystem.Singleton.LockExists("control-" + vessel.vesselID) || LockSystem.Singleton.LockIsOurs("control-" + vessel.vesselID);
+            return !LockSystem.Singleton.LockExists($"control-{vessel.vesselID}") || LockSystem.Singleton.LockIsOurs($"control-{vessel.vesselID}");
         }
     }
 }

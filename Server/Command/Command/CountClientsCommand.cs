@@ -8,7 +8,7 @@ namespace LunaServer.Command.Command
     {
         public override void Execute(string commandArgs)
         {
-            LunaLog.Normal("Online Players: " + ServerContext.PlayerCount);
+            LunaLog.Normal($"Online Players: {ServerContext.PlayerCount}");
         }
     }
 }

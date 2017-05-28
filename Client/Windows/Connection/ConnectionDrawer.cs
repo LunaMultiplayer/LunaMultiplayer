@@ -30,7 +30,7 @@ namespace LunaClient.Windows.Connection
             if (AddingServer)
                 buttonAddMode = "Cancel";
             AddingServer = GUILayout.Toggle(AddingServer, buttonAddMode, ButtonStyle);
-            if (AddingServer && !AddingServerSafe && (Selected != -1))
+            if (AddingServer && !AddingServerSafe && Selected != -1)
             {
                 //Load the existing server settings
                 ServerName = SettingsSystem.CurrentSettings.Servers[Selected].Name;
@@ -75,7 +75,7 @@ namespace LunaClient.Windows.Connection
                 GUILayout.Label("Port:", LabelOptions);
                 ServerPort = GUILayout.TextArea(ServerPort, TextAreaStyle).Trim();
                 GUILayout.EndHorizontal();
-                if (GUILayout.Button(addMode + " server", ButtonStyle))
+                if (GUILayout.Button($"{addMode} server", ButtonStyle))
                     if (AddEventHandled)
                         if (Selected == -1)
                         {

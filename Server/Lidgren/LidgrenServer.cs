@@ -38,7 +38,7 @@ namespace LunaServer.Lidgren
             }
             catch (Exception e)
             {
-                LunaLog.Normal("Error setting up server, Exception: " + e);
+                LunaLog.Normal($"Error setting up server, Exception: {e}");
                 ServerContext.ServerRunning = false;
             }
             ServerContext.ServerStarting = false;
@@ -57,37 +57,37 @@ namespace LunaServer.Lidgren
                         switch (msg.MessageType)
                         {
                             case NetIncomingMessageType.ConnectionApproval:
-                            msg.SenderConnection.Approve();
-                            break;
+                                msg.SenderConnection.Approve();
+                                break;
                             case NetIncomingMessageType.Data:
-                            ClientMessageReceiver.ReceiveCallback(client, msg);
-                            break;
+                                ClientMessageReceiver.ReceiveCallback(client, msg);
+                                break;
                             case NetIncomingMessageType.WarningMessage:
-                            LunaLog.Error($"Lidgren WARNING: {msg.ReadString()}");
-                            break;
+                                LunaLog.Error($"Lidgren WARNING: {msg.ReadString()}");
+                                break;
                             case NetIncomingMessageType.DebugMessage:
                             case NetIncomingMessageType.VerboseDebugMessage:
-                            LunaLog.Debug("Lidgren DEBUG: " + msg.MessageType + "-- " + msg.PeekString());
-                            break;
+                                LunaLog.Debug($"Lidgren DEBUG: {msg.MessageType}-- {msg.PeekString()}");
+                                break;
                             case NetIncomingMessageType.StatusChanged:
-                            switch ((NetConnectionStatus)msg.ReadByte())
-                            {
-                                case NetConnectionStatus.Connected:
-                                var endpoint = msg.SenderConnection.RemoteEndPoint;
-                                LunaLog.Normal($"New client Connection from {endpoint.Address}:{endpoint.Port}");
-                                ClientConnectionHandler.ConnectClient(msg.SenderConnection);
+                                switch ((NetConnectionStatus)msg.ReadByte())
+                                {
+                                    case NetConnectionStatus.Connected:
+                                        var endpoint = msg.SenderConnection.RemoteEndPoint;
+                                        LunaLog.Normal($"New client Connection from {endpoint.Address}:{endpoint.Port}");
+                                        ClientConnectionHandler.ConnectClient(msg.SenderConnection);
+                                        break;
+                                    case NetConnectionStatus.Disconnected:
+                                        var reason = msg.ReadString();
+                                        if (client != null)
+                                            ClientConnectionHandler.DisconnectClient(client, reason);
+                                        break;
+                                }
                                 break;
-                                case NetConnectionStatus.Disconnected:
-                                var reason = msg.ReadString();
-                                if (client != null)
-                                    ClientConnectionHandler.DisconnectClient(client, reason);
-                                break;
-                            }
-                            break;
                             default:
-                            var details = msg.PeekString();
-                            LunaLog.Debug("Lidgren: " + msg.MessageType.ToString().ToUpper() + " -- " + details);
-                            break;
+                                var details = msg.PeekString();
+                                LunaLog.Debug($"Lidgren: {msg.MessageType.ToString().ToUpper()} -- {details}");
+                                break;
                         }
                     }
                     else
@@ -166,7 +166,7 @@ namespace LunaServer.Lidgren
                     DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats,
                     DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats,
                     GameMode = (int)GeneralSettings.SettingsStore.GameMode,
-                    InternalEndpoint = endpoint.Address + ":" + endpoint.Port,
+                    InternalEndpoint = $"{endpoint.Address}:{endpoint.Port}",
                     MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers,
                     ModControl = (int)GeneralSettings.SettingsStore.ModControl,
                     PlayerCount = ServerContext.Clients.Count,

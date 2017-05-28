@@ -1,7 +1,7 @@
-using System;
-using System.IO;
 using LunaServer.Settings;
 using LunaServer.System;
+using System;
+using System.IO;
 
 namespace LunaServer.Log
 {
@@ -16,7 +16,7 @@ namespace LunaServer.Log
         public static string LogFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
 
         public static string LogFilename = Path.Combine(LogFolder,
-            "lmpserver " + DateTime.Now.ToString("yyyy-MM-dd HH-mm-ss") + ".log");
+            $"lmpserver {DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
 
         #region Private methods
 

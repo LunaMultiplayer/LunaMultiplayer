@@ -69,13 +69,13 @@ namespace LunaClient.Network
         {
             if (e.InnerException != null)
             {
-                Debug.LogError("[LMP]: Connection error: " + e.Message + ", " + e.InnerException);
-                NetworkConnection.Disconnect("Connection error: " + e.Message + ", " + e.InnerException.Message);
+                Debug.LogError($"[LMP]: Connection error: {e.Message}, {e.InnerException}");
+                NetworkConnection.Disconnect($"Connection error: {e.Message}, {e.InnerException.Message}");
             }
             else
             {
-                Debug.LogError("[LMP]: Connection error: " + e);
-                NetworkConnection.Disconnect("Connection error: " + e.Message);
+                Debug.LogError($"[LMP]: Connection error: {e}");
+                NetworkConnection.Disconnect($"Connection error: {e.Message}");
             }
         }
     }

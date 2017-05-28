@@ -48,41 +48,41 @@ namespace LunaClient.Network
                         switch (msg.MessageType)
                         {
                             case NetIncomingMessageType.NatIntroductionSuccess:
-                            NetworkServerList.HandleNatIntroduction(msg);
-                            break;
-                            case NetIncomingMessageType.ConnectionLatencyUpdated:
-                            NetworkStatistics.PingMs = (float)TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
-                            break;
-                            case NetIncomingMessageType.UnconnectedData:
-                            NetworkServerList.HandleServersList(msg);
-                            break;
-                            case NetIncomingMessageType.Data:
-                            try
-                            {
-                                var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
-                                if (deserializedMsg != null)
-                                {
-                                    EnqueueMessageToSystem(deserializedMsg as IServerMessageBase);
-                                }
-                            }
-                            catch (Exception e)
-                            {
-                                Debug.LogError("[LMP]: Error deserializing message! {e}");
-                                NetworkMain.HandleDisconnectException(e);
-                            }
-                            break;
-                            case NetIncomingMessageType.StatusChanged:
-                            switch ((NetConnectionStatus)msg.ReadByte())
-                            {
-                                case NetConnectionStatus.Disconnected:
-                                var reason = msg.ReadString();
-                                NetworkConnection.Disconnect(reason);
+                                NetworkServerList.HandleNatIntroduction(msg);
                                 break;
-                            }
-                            break;
+                            case NetIncomingMessageType.ConnectionLatencyUpdated:
+                                NetworkStatistics.PingMs = (float)TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
+                                break;
+                            case NetIncomingMessageType.UnconnectedData:
+                                NetworkServerList.HandleServersList(msg);
+                                break;
+                            case NetIncomingMessageType.Data:
+                                try
+                                {
+                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
+                                    if (deserializedMsg != null)
+                                    {
+                                        EnqueueMessageToSystem(deserializedMsg as IServerMessageBase);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    Debug.LogError($"[LMP]: Error deserializing message! {e}");
+                                    NetworkMain.HandleDisconnectException(e);
+                                }
+                                break;
+                            case NetIncomingMessageType.StatusChanged:
+                                switch ((NetConnectionStatus)msg.ReadByte())
+                                {
+                                    case NetConnectionStatus.Disconnected:
+                                        var reason = msg.ReadString();
+                                        NetworkConnection.Disconnect(reason);
+                                        break;
+                                }
+                                break;
                             default:
-                            Debug.Log("[LMP]: LIDGREN: " + msg.MessageType + "-- " + msg.PeekString());
-                            break;
+                                Debug.Log($"[LMP]: LIDGREN: {msg.MessageType}-- {msg.PeekString()}");
+                                break;
                         }
                     }
 
@@ -91,7 +91,7 @@ namespace LunaClient.Network
             }
             catch (Exception e)
             {
-                Debug.LogError("[LMP]: Receive message thread error: " + e);
+                Debug.LogError($"[LMP]: Receive message thread error: {e}");
                 NetworkMain.HandleDisconnectException(e);
             }
         }
@@ -105,81 +105,81 @@ namespace LunaClient.Network
             switch (msg.MessageType)
             {
                 case ServerMessageType.Handshake:
-                HandshakeSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    HandshakeSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Chat:
-                ChatSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    ChatSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Settings:
-                SettingsSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    SettingsSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.PlayerStatus:
-                StatusSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    StatusSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.PlayerColor:
-                PlayerColorSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    PlayerColorSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.PlayerConnection:
-                PlayerConnectionSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    PlayerConnectionSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Scenario:
-                ScenarioSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    ScenarioSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Kerbal:
-                KerbalSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    KerbalSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Vessel:
-                switch (((VesselBaseMsgData)msg.Data).VesselMessageType)
-                {
-                    case VesselMessageType.Update:
-                    VesselUpdateSystem.Singleton.EnqueueMessage(msg.Data);
+                    switch (((VesselBaseMsgData)msg.Data).VesselMessageType)
+                    {
+                        case VesselMessageType.Update:
+                            VesselUpdateSystem.Singleton.EnqueueMessage(msg.Data);
+                            break;
+                        case VesselMessageType.Position:
+                            VesselPositionSystem.Singleton.EnqueueMessage(msg.Data);
+                            break;
+                        case VesselMessageType.Flightstate:
+                            VesselFlightStateSystem.Singleton.EnqueueMessage(msg.Data);
+                            break;
+                        case VesselMessageType.Change:
+                            VesselChangeSystem.Singleton.EnqueueMessage(msg.Data);
+                            break;
+                        case VesselMessageType.ListReply:
+                        case VesselMessageType.VesselsReply:
+                        case VesselMessageType.Proto:
+                            VesselProtoSystem.Singleton.EnqueueMessage(msg.Data);
+                            break;
+                        case VesselMessageType.Remove:
+                            VesselRemoveSystem.Singleton.EnqueueMessage(msg.Data);
+                            break;
+                    }
                     break;
-                    case VesselMessageType.Position:
-                    VesselPositionSystem.Singleton.EnqueueMessage(msg.Data);
-                    break;
-                    case VesselMessageType.Flightstate:
-                    VesselFlightStateSystem.Singleton.EnqueueMessage(msg.Data);
-                    break;
-                    case VesselMessageType.Change:
-                    VesselChangeSystem.Singleton.EnqueueMessage(msg.Data);
-                    break;
-                    case VesselMessageType.ListReply:
-                    case VesselMessageType.VesselsReply:
-                    case VesselMessageType.Proto:
-                    VesselProtoSystem.Singleton.EnqueueMessage(msg.Data);
-                    break;
-                    case VesselMessageType.Remove:
-                    VesselRemoveSystem.Singleton.EnqueueMessage(msg.Data);
-                    break;
-                }
-                break;
                 case ServerMessageType.CraftLibrary:
-                CraftLibrarySystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    CraftLibrarySystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Flag:
-                FlagSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    FlagSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.SyncTime:
-                TimeSyncerSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    TimeSyncerSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Motd:
-                MotdSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    MotdSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Warp:
-                WarpSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    WarpSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Admin:
-                AdminSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    AdminSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Lock:
-                LockSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    LockSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 case ServerMessageType.Mod:
-                ModApiSystem.Singleton.EnqueueMessage(msg.Data);
-                break;
+                    ModApiSystem.Singleton.EnqueueMessage(msg.Data);
+                    break;
                 default:
-                Debug.LogError("[LMP]: Unhandled Message type " + msg.MessageType);
-                break;
+                    Debug.LogError($"[LMP]: Unhandled Message type {msg.MessageType}");
+                    break;
             }
         }
     }

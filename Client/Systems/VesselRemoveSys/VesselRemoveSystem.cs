@@ -168,7 +168,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             }
             catch (Exception destroyException)
             {
-                Debug.LogError("[LMP]: Error destroying vessel from the scenario: " + destroyException);
+                Debug.LogError($"[LMP]: Error destroying vessel from the scenario: {destroyException}");
             }
         }
 
@@ -183,7 +183,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             }
             catch (Exception killException)
             {
-                Debug.LogError("[LMP]: Error destroying vessel: " + killException);
+                Debug.LogError($"[LMP]: Error destroying vessel: {killException}");
             }
         }
 
