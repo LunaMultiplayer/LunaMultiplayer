@@ -1,5 +1,4 @@
-﻿using LunaClient.Base;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -7,7 +6,7 @@ using UnityEngine;
 
 namespace LunaClient.Systems.KerbalReassigner
 {
-    public class KerbalReassignerSystem : System<KerbalReassignerSystem>
+    public class KerbalReassignerSystem : Base.System
     {
         private KerbalReassignerEvents KerbalReassignerEvents { get; } = new KerbalReassignerEvents();
         public Dictionary<Guid, List<string>> VesselToKerbal { get; } = new Dictionary<Guid, List<string>>();

@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems;
+using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LunaClient.Utilities
@@ -28,8 +29,8 @@ namespace LunaClient.Utilities
                                 delegate
                                 {
                                     SettingsSystem.CurrentSettings.DisclaimerAccepted = true;
-                                    MainSystem.Singleton.Enabled = true;
-                                    SettingsSystem.Singleton.SaveSettings();
+                                    SystemsContainer.Get<MainSystem>().Enabled = true;
+                                    SystemsContainer.Get<SettingsSystem>().SaveSettings();
                                 }
                             ),
                             new DialogGUIFlexibleSpace(),

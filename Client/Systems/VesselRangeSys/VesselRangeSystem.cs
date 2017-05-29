@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
+using System.Linq;
 
 namespace LunaClient.Systems.VesselRangeSys
 {
@@ -9,7 +9,7 @@ namespace LunaClient.Systems.VesselRangeSys
     /// This system packs the other player vessels. 
     /// Theorically this should make the movement better as we won't fight with the flight integrator system,
     /// </summary>
-    public class VesselRangeSystem : System<VesselRangeSystem>
+    public class VesselRangeSystem : Base.System
     {
         #region Fields & properties
 
@@ -52,7 +52,7 @@ namespace LunaClient.Systems.VesselRangeSys
             }
         };
 
-        public bool VesselRangeSystemReady => VesselProtoSystem.Singleton.ProtoSystemReady;
+        public bool VesselRangeSystemReady => SystemsContainer.Get<VesselProtoSystem>().ProtoSystemReady;
 
         #endregion
 

@@ -1,10 +1,10 @@
-﻿using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Lock
 {
@@ -29,7 +29,7 @@ namespace LunaClient.Systems.Lock
                             System.ServerLocks.Add(lockKey.Key, lockKey.Value);
                         }
 
-                        MainSystem.Singleton.NetworkState = ClientState.LocksSynced;
+                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.LocksSynced;
                     }
                     break;
                 case LockMessageType.Acquire:

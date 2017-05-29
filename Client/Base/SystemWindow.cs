@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base.Interface;
+using LunaClient.Systems;
 
 namespace LunaClient.Base
 {
@@ -9,6 +10,6 @@ namespace LunaClient.Base
         where T : class, IWindow, new()
         where TS : class, ISystem
     {
-        public abstract TS System { get; }
+        public TS System => SystemsContainer.Get<TS>();
     }
 }

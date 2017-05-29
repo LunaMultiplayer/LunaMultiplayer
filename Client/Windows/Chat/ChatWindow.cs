@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
@@ -8,8 +9,6 @@ namespace LunaClient.Windows.Chat
 {
     public partial class ChatWindow : SystemWindow<ChatWindow, ChatSystem>
     {
-        public override ChatSystem System => ChatSystem.Singleton;
-
         public override void SetStyles()
         {
             // ReSharper disable once PossibleLossOfFraction
@@ -51,7 +50,7 @@ namespace LunaClient.Windows.Chat
 
         public override void Update()
         {
-            Display &= MainSystem.Singleton.GameRunning;
+            Display &= SystemsContainer.Get<MainSystem>().GameRunning;
             SafeDisplay = Display;
             IgnoreChatInput = false;
             if (System.ChatButtonHighlighted && Display)
@@ -91,7 +90,7 @@ namespace LunaClient.Windows.Chat
 
         private void CheckWindowLock()
         {
-            if (!MainSystem.Singleton.GameRunning)
+            if (!SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 RemoveWindowLock();
                 return;

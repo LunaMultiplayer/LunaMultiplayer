@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Utilities;
@@ -25,7 +26,7 @@ namespace LunaClient.Windows.Options
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width/2f - WindowWidth/2f, Screen.height/2f - WindowHeight/2f, WindowWidth,
+            WindowRect = new Rect(Screen.width / 2f - WindowWidth / 2f, Screen.height / 2f - WindowHeight / 2f, WindowWidth,
                 WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
@@ -58,7 +59,7 @@ namespace LunaClient.Windows.Options
 
         private void CheckWindowLock()
         {
-            if (!MainSystem.Singleton.GameRunning)
+            if (!SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 RemoveWindowLock();
                 return;

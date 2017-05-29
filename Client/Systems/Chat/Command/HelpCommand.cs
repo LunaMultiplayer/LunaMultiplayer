@@ -8,7 +8,7 @@ namespace LunaClient.Systems.Chat.Command
         {
             var commands = new List<ChatCommand>();
             var longestName = 0;
-            foreach (var cmd in ChatSystem.Singleton.RegisteredChatCommands.Values)
+            foreach (var cmd in SystemsContainer.Get<ChatSystem>().RegisteredChatCommands.Values)
             {
                 commands.Add(cmd);
                 if (cmd.Name.Length > longestName)
@@ -18,7 +18,7 @@ namespace LunaClient.Systems.Chat.Command
             foreach (var cmd in commands)
             {
                 var helpText = $"{cmd.Name.PadRight(longestName)} - {cmd.Description}";
-                ChatSystem.Singleton.PrintToSelectedChannel(helpText);
+                SystemsContainer.Get<ChatSystem>().PrintToSelectedChannel(helpText);
             }
         }
     }

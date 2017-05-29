@@ -12,12 +12,12 @@ namespace LunaClient.Systems.VesselDockSys
             Debug.Log("[LMP]: Vessel docking detected!");
             if (!VesselCommon.IsSpectating)
             {
-                if (partAction.@from.vessel != null && partAction.to.vessel != null)
+                if (partAction.from.vessel != null && partAction.to.vessel != null)
                 {
-                    var fromVesselUpdateLockExists = LockSystem.Singleton.LockExists($"update-{partAction.from.vessel.id}");
-                    var toVesselUpdateLockExists = LockSystem.Singleton.LockExists($"update-{partAction.to.vessel.id}");
-                    var fromVesselUpdateLockIsOurs = LockSystem.Singleton.LockIsOurs($"update-{partAction.from.vessel.id}");
-                    var toVesselUpdateLockIsOurs = LockSystem.Singleton.LockIsOurs($"update-{partAction.to.vessel.id}");
+                    var fromVesselUpdateLockExists = SystemsContainer.Get<LockSystem>().LockExists($"update-{partAction.from.vessel.id}");
+                    var toVesselUpdateLockExists = SystemsContainer.Get<LockSystem>().LockExists($"update-{partAction.to.vessel.id}");
+                    var fromVesselUpdateLockIsOurs = SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{partAction.from.vessel.id}");
+                    var toVesselUpdateLockIsOurs = SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{partAction.to.vessel.id}");
 
                     if (fromVesselUpdateLockIsOurs || toVesselUpdateLockIsOurs || !fromVesselUpdateLockExists || !toVesselUpdateLockExists)
                     {
@@ -33,9 +33,9 @@ namespace LunaClient.Systems.VesselDockSys
                     {
                         Debug.Log("[LMP]: Inconsistent docking state detected, killing both vessels if possible.");
                         if (partAction.from.vessel != FlightGlobals.ActiveVessel)
-                            VesselRemoveSystem.Singleton.KillVessel(partAction.from.vessel, true);
+                            SystemsContainer.Get<VesselRemoveSystem>().KillVessel(partAction.from.vessel, true);
                         if (partAction.to.vessel != FlightGlobals.ActiveVessel)
-                            VesselRemoveSystem.Singleton.KillVessel(partAction.to.vessel, true);
+                            SystemsContainer.Get<VesselRemoveSystem>().KillVessel(partAction.to.vessel, true);
                     }
                 }
             }

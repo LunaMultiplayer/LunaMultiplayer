@@ -1,10 +1,10 @@
-﻿using System.Collections.Concurrent;
-using CommNet;
+﻿using CommNet;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Settings;
 using LunaCommon.Message.Interface;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.SettingsSys
 {
@@ -43,7 +43,7 @@ namespace LunaClient.Systems.SettingsSys
             {
                 SettingsSystem.ServerSettings.ServerParameters =
                     GameParameters.GetDefaultParameters(
-                        MainSystem.Singleton.ConvertGameMode(SettingsSystem.ServerSettings.GameMode),
+                        SystemsContainer.Get<MainSystem>().ConvertGameMode(SettingsSystem.ServerSettings.GameMode),
                         (GameParameters.Preset)SettingsSystem.ServerSettings.GameDifficulty);
             }
             else
@@ -110,7 +110,7 @@ namespace LunaClient.Systems.SettingsSys
                 };
             }
 
-            MainSystem.Singleton.NetworkState = ClientState.SettingsSynced;
+            SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SettingsSynced;
         }
     }
 }

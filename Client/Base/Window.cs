@@ -51,14 +51,7 @@ namespace LunaClient.Base
         public bool SafeDisplay { get; set; }
         public bool IsWindowLocked { get; set; }
 
-        public static T Singleton { get; set; }
-
         #endregion
-
-        static Window()
-        {
-            Singleton = new T();
-        }
 
         #region Methods
 

@@ -47,12 +47,12 @@ namespace LunaClient.Windows.Debug
 
                 //NTP text
                 NtpText = $"Warp rate: {Math.Round(Time.timeScale, 3)}x.\n";
-                NtpText += $"Current subspace: {WarpSystem.Singleton.CurrentSubspace}.\n";
-                NtpText += $"Current Error: {Math.Round(TimeSyncerSystem.Singleton.GetCurrentError() * 1000, 0)}ms.\n";
+                NtpText += $"Current subspace: {SystemsContainer.Get<WarpSystem>().CurrentSubspace}.\n";
+                NtpText += $"Current Error: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().GetCurrentError() * 1000, 0)}ms.\n";
                 NtpText += $"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT\n";
-                NtpText += $"Network latency: {Math.Round(TimeSyncerSystem.Singleton.NetworkLatencyAverage / 10000f, 3)}ms\n";
-                NtpText += $"Server clock difference: {Math.Round(TimeSyncerSystem.Singleton.ClockOffsetAverage / 10000f, 3)}ms\n";
-                NtpText += $"Server lag: {Math.Round(TimeSyncerSystem.Singleton.ServerLag / 10000f, 3)}ms\n";
+                NtpText += $"Network latency: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().NetworkLatencyAverage / 10000f, 3)}ms\n";
+                NtpText += $"Server clock difference: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ClockOffsetAverage / 10000f, 3)}ms\n";
+                NtpText += $"Server lag: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ServerLag / 10000f, 3)}ms\n";
 
                 //Connection queue text
                 ConnectionText = $"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.\n";
@@ -63,12 +63,12 @@ namespace LunaClient.Windows.Debug
                 ConnectionText += $"Queued out msgs: {NetworkStatistics.GetStatistics("QueuedOutgoingMessages")}.\n";
 
                 //Vessel update system
-                VesselUpdateText = $"Queued messages: {VesselUpdateSystem.Singleton.MessageHandler.IncomingMessages.Count}.\n";
+                VesselUpdateText = $"Queued messages: {SystemsContainer.Get<VesselUpdateSystem>().MessageHandler.IncomingMessages.Count}.\n";
                 VesselUpdateText += $"Spectating: {VesselCommon.IsSpectating}.\n";
                 VesselUpdateText += "Active vessel control lock: " +
-                    $"{FlightGlobals.ActiveVessel != null && LockSystem.Singleton.LockIsOurs($"control-{FlightGlobals.ActiveVessel.id}")}.\n";
+                    $"{FlightGlobals.ActiveVessel != null && SystemsContainer.Get<LockSystem>().LockIsOurs($"control-{FlightGlobals.ActiveVessel.id}")}.\n";
                 VesselUpdateText += "Active vessel update lock: " +
-                    $"{FlightGlobals.ActiveVessel != null && LockSystem.Singleton.LockIsOurs($"update-{FlightGlobals.ActiveVessel.id}")}.\n";
+                    $"{FlightGlobals.ActiveVessel != null && SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{FlightGlobals.ActiveVessel.id}")}.\n";
             }
         }
 
@@ -114,7 +114,7 @@ namespace LunaClient.Windows.Debug
 
         private void CheckWindowLock()
         {
-            if (!MainSystem.Singleton.GameRunning)
+            if (!SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 RemoveWindowLock();
                 return;

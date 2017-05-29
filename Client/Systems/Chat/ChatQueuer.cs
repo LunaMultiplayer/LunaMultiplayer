@@ -2,12 +2,13 @@
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.Chat;
 using System.Collections.Concurrent;
+using LunaClient.Windows;
 
 namespace LunaClient.Systems.Chat
 {
     public class ChatQueuer : SubSystem<ChatSystem>
     {
-        private static ChatWindow Screen => ChatWindow.Singleton;
+        private static ChatWindow Screen => WindowsContainer.Get<ChatWindow>();
 
         public ConcurrentQueue<string> DisconnectingPlayers { get; private set; } = new ConcurrentQueue<string>();
         public ConcurrentQueue<JoinLeaveMessage> NewJoinMessages { get; private set; } = new ConcurrentQueue<JoinLeaveMessage>();

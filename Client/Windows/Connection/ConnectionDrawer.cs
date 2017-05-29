@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.ServerList;
 using LunaCommon.Enums;
@@ -39,7 +40,7 @@ namespace LunaClient.Windows.Connection
             }
 
             //Draw connect button
-            if (MainSystem.Singleton.NetworkState == ClientState.Disconnected)
+            if (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Disconnected)
             {
                 GUI.enabled = SelectedSafe != -1;
                 if (GUILayout.Button("Connect", ButtonStyle))
@@ -55,9 +56,9 @@ namespace LunaClient.Windows.Connection
                 if (RemoveEventHandled)
                     RemoveEventHandled = false;
             GUI.enabled = true;
-            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, "Options", ButtonStyle);
+            WindowsContainer.Get<OptionsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<OptionsWindow>().Display, "Options", ButtonStyle);
             if (GUILayout.Button("Servers", ButtonStyle))
-                ServerListWindow.Singleton.Display = true;
+                WindowsContainer.Get<ServerListWindow>().Display = true;
             if (GUILayout.Button("Close", ButtonStyle))
                 Closed = true;
             GUILayout.EndHorizontal();

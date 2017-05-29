@@ -82,7 +82,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             RemoveManeuverNodesFromProtoVessel(vesselNode);
             FixVesselActionGroupsNodes(vesselNode);
-            KerbalReassignerSystem.Singleton.DodgeKerbals(vesselNode, vesselId);
+            SystemsContainer.Get<KerbalReassignerSystem>().DodgeKerbals(vesselNode, vesselId);
         }
 
         private static bool VesselHasNaNPosition(ProtoVessel pv)

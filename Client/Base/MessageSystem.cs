@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace LunaClient.Base
 {
-    public abstract class MessageSystem<T, TS, TH> : System<T>
+    public abstract class MessageSystem<T, TS, TH> : System
         where T : class, ISystem, new()
         where TS : class, IMessageSender, new()
         where TH : class, IMessageHandler, new()

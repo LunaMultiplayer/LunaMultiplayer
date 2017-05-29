@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.Asteroid;
+﻿using LunaClient.Systems;
+using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.KerbalSys;
@@ -37,25 +38,25 @@ namespace LunaClient.Windows.Systems
                 LunaProfiler.FixedUpdateData.Reset();
                 LunaProfiler.GuiData.Reset();
 
-                AsteroidSystem.Singleton.ResetProfilers();
-                CraftLibrarySystem.Singleton.ResetProfilers();
-                FlagSystem.Singleton.ResetProfilers();
-                ScenarioSystem.Singleton.ResetProfilers();
-                TimeSyncerSystem.Singleton.ResetProfilers();
-                ModApiSystem.Singleton.ResetProfilers();
-                LockSystem.Singleton.ResetProfilers();
-                KerbalSystem.Singleton.ResetProfilers();
-                VesselChangeSystem.Singleton.ResetProfilers();
-                VesselDockSystem.Singleton.ResetProfilers();
-                VesselFlightStateSystem.Singleton.ResetProfilers();
-                VesselImmortalSystem.Singleton.ResetProfilers();
-                VesselLockSystem.Singleton.ResetProfilers();
-                VesselPositionSystem.Singleton.ResetProfilers();
-                VesselProtoSystem.Singleton.ResetProfilers();
-                VesselRangeSystem.Singleton.ResetProfilers();
-                VesselRemoveSystem.Singleton.ResetProfilers();
-                VesselUpdateSystem.Singleton.ResetProfilers();
-                WarpSystem.Singleton.ResetProfilers();
+                SystemsContainer.Get<AsteroidSystem>().ResetProfilers();
+                SystemsContainer.Get<CraftLibrarySystem>().ResetProfilers();
+                SystemsContainer.Get<FlagSystem>().ResetProfilers();
+                SystemsContainer.Get<ScenarioSystem>().ResetProfilers();
+                SystemsContainer.Get<TimeSyncerSystem>().ResetProfilers();
+                SystemsContainer.Get<ModApiSystem>().ResetProfilers();
+                SystemsContainer.Get<LockSystem>().ResetProfilers();
+                SystemsContainer.Get<KerbalSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselChangeSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselDockSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselFlightStateSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselImmortalSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselLockSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselPositionSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselProtoSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselRangeSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselRemoveSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselUpdateSystem>().ResetProfilers();
+                SystemsContainer.Get<WarpSystem>().ResetProfilers();
             }
             GUILayout.EndHorizontal();
 
@@ -75,14 +76,14 @@ namespace LunaClient.Windows.Systems
             if (Asteroid)
             {
                 //This system should never be toggled
-                //AsteroidSystem.Singleton.Enabled = GUILayout.Toggle(AsteroidSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                //SystemContainer.Get<AsteroidSystem>().Enabled = GUILayout.Toggle(SystemContainer.Get<AsteroidSystem>().Enabled, "ON/OFF", ButtonStyle);
                 if (!string.IsNullOrEmpty(AsteroidProfilerText))
                     GUILayout.Label(AsteroidProfilerText, LabelStyle);
             }
             CraftLibrary = GUILayout.Toggle(CraftLibrary, "Craft library system", ButtonStyle);
             if (CraftLibrary)
             {
-                CraftLibrarySystem.Singleton.Enabled = GUILayout.Toggle(CraftLibrarySystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<CraftLibrarySystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<CraftLibrarySystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(CraftLibraryProfilerText))
                     GUILayout.Label(CraftLibraryProfilerText, LabelStyle);
@@ -90,7 +91,7 @@ namespace LunaClient.Windows.Systems
             Flag = GUILayout.Toggle(Flag, "Flag system", ButtonStyle);
             if (Flag)
             {
-                FlagSystem.Singleton.Enabled = GUILayout.Toggle(FlagSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                SystemsContainer.Get<FlagSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<FlagSystem>().Enabled, "ON/OFF", ButtonStyle);
                 if (!string.IsNullOrEmpty(FlagProfilerText))
                     GUILayout.Label(FlagProfilerText, LabelStyle);
             }
@@ -98,14 +99,14 @@ namespace LunaClient.Windows.Systems
             if (Scenario)
             {
                 //This system should never be toggled
-                //ScenarioSystem.Singleton.Enabled = GUILayout.Toggle(ScenarioSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                //SystemContainer.Get<ScenarioSystem>().Enabled = GUILayout.Toggle(SystemContainer.Get<ScenarioSystem>().Enabled, "ON/OFF", ButtonStyle);
                 if (!string.IsNullOrEmpty(ScenarioProfilerText))
                     GUILayout.Label(ScenarioProfilerText, LabelStyle);
             }
             TimeSyncer = GUILayout.Toggle(TimeSyncer, "Time sync system", ButtonStyle);
             if (TimeSyncer)
             {
-                TimeSyncerSystem.Singleton.Enabled = GUILayout.Toggle(TimeSyncerSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                SystemsContainer.Get<TimeSyncerSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<TimeSyncerSystem>().Enabled, "ON/OFF", ButtonStyle);
                 if (!string.IsNullOrEmpty(TimeSyncerProfilerText))
                     GUILayout.Label(TimeSyncerProfilerText, LabelStyle);
             }
@@ -113,21 +114,21 @@ namespace LunaClient.Windows.Systems
             if (ModApi)
             {
                 //This system cannot be toggled
-                //ModApiSystem.Singleton.Enabled = GUILayout.Toggle(ModApiSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                //SystemContainer.Get<ModApiSystem>().Enabled = GUILayout.Toggle(SystemContainer.Get<ModApiSystem>().Enabled, "ON/OFF", ButtonStyle);
                 if (!string.IsNullOrEmpty(ModApiProfilerText))
                     GUILayout.Label(ModApiProfilerText, LabelStyle);
             }
             Lock = GUILayout.Toggle(Lock, "Lock system", ButtonStyle);
             if (Lock)
             {
-                LockSystem.Singleton.Enabled = GUILayout.Toggle(LockSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                SystemsContainer.Get<LockSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<LockSystem>().Enabled, "ON/OFF", ButtonStyle);
                 if (!string.IsNullOrEmpty(LockProfilerText))
                     GUILayout.Label(LockProfilerText, LabelStyle);
             }
             Kerbal = GUILayout.Toggle(Kerbal, "Kerbal system", ButtonStyle);
             if (Kerbal)
             {
-                KerbalSystem.Singleton.Enabled = GUILayout.Toggle(KerbalSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                SystemsContainer.Get<KerbalSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<KerbalSystem>().Enabled, "ON/OFF", ButtonStyle);
                 if (!string.IsNullOrEmpty(KerbalProfilerText))
                     GUILayout.Label(KerbalProfilerText, LabelStyle);
             }
@@ -135,7 +136,7 @@ namespace LunaClient.Windows.Systems
             if (Warp)
             {
                 //This system should never be toggled
-                //WarpSystem.Singleton.Enabled = GUILayout.Toggle(WarpSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                //SystemContainer.Get<WarpSystem>().Enabled = GUILayout.Toggle(SystemContainer.Get<WarpSystem>().Enabled, "ON/OFF", ButtonStyle);
                 if (!string.IsNullOrEmpty(WarpProfilerText))
                     GUILayout.Label(WarpProfilerText, LabelStyle);
             }
@@ -151,7 +152,7 @@ namespace LunaClient.Windows.Systems
             VesselChange = GUILayout.Toggle(VesselChange, "Vessel change", ButtonStyle);
             if (VesselChange)
             {
-                VesselChangeSystem.Singleton.Enabled = GUILayout.Toggle(VesselChangeSystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<VesselChangeSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselChangeSystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselChangeProfilerText))
                     GUILayout.Label(VesselChangeProfilerText, LabelStyle);
@@ -160,7 +161,7 @@ namespace LunaClient.Windows.Systems
             VesselDock = GUILayout.Toggle(VesselDock, "Vessel dock", ButtonStyle);
             if (VesselDock)
             {
-                VesselDockSystem.Singleton.Enabled = GUILayout.Toggle(VesselDockSystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<VesselDockSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselDockSystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselDockProfilerText))
                     GUILayout.Label(VesselDockProfilerText, LabelStyle);
@@ -169,7 +170,7 @@ namespace LunaClient.Windows.Systems
             VesselFlightState = GUILayout.Toggle(VesselFlightState, "Vessel flightstate", ButtonStyle);
             if (VesselFlightState)
             {
-                VesselFlightStateSystem.Singleton.Enabled = GUILayout.Toggle(VesselFlightStateSystem.Singleton.Enabled,
+                SystemsContainer.Get<VesselFlightStateSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselFlightStateSystem>().Enabled,
                     "ON/OFF", ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselFlightStateProfilerText))
                     GUILayout.Label(VesselFlightStateProfilerText, LabelStyle);
@@ -178,7 +179,7 @@ namespace LunaClient.Windows.Systems
             VesselImmortal = GUILayout.Toggle(VesselImmortal, "Vessel immortal", ButtonStyle);
             if (VesselImmortal)
             {
-                VesselImmortalSystem.Singleton.Enabled = GUILayout.Toggle(VesselImmortalSystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<VesselImmortalSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselImmortalSystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselImmortalProfilerText))
                     GUILayout.Label(VesselImmortalProfilerText, LabelStyle);
@@ -187,7 +188,7 @@ namespace LunaClient.Windows.Systems
             VesselLock = GUILayout.Toggle(VesselLock, "Vessel lock", ButtonStyle);
             if (VesselLock)
             {
-                VesselLockSystem.Singleton.Enabled = GUILayout.Toggle(VesselLockSystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<VesselLockSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselLockSystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselLockProfilerText))
                     GUILayout.Label(VesselLockProfilerText, LabelStyle);
@@ -196,7 +197,7 @@ namespace LunaClient.Windows.Systems
             VesselPosition = GUILayout.Toggle(VesselPosition, "Vessel position", ButtonStyle);
             if (VesselPosition)
             {
-                VesselPositionSystem.Singleton.Enabled = GUILayout.Toggle(VesselPositionSystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<VesselPositionSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselPositionSystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselPositionProfilerText))
                     GUILayout.Label(VesselPositionProfilerText, LabelStyle);
@@ -205,7 +206,7 @@ namespace LunaClient.Windows.Systems
             VesselProto = GUILayout.Toggle(VesselProto, "Vessel proto", ButtonStyle);
             if (VesselProto)
             {
-                VesselProtoSystem.Singleton.Enabled = GUILayout.Toggle(VesselProtoSystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<VesselProtoSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselProtoSystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselProtoProfilerText))
                     GUILayout.Label(VesselProtoProfilerText, LabelStyle);
@@ -214,7 +215,7 @@ namespace LunaClient.Windows.Systems
             VesselRange = GUILayout.Toggle(VesselRange, "Vessel range", ButtonStyle);
             if (VesselRange)
             {
-                VesselRangeSystem.Singleton.Enabled = GUILayout.Toggle(VesselRangeSystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<VesselRangeSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselRangeSystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselRangeProfilerText))
                     GUILayout.Label(VesselRangeProfilerText, LabelStyle);
@@ -223,7 +224,7 @@ namespace LunaClient.Windows.Systems
             VesselRemove = GUILayout.Toggle(VesselRemove, "Vessel remove", ButtonStyle);
             if (VesselRemove)
             {
-                VesselRemoveSystem.Singleton.Enabled = GUILayout.Toggle(VesselRemoveSystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<VesselRemoveSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselRemoveSystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselRemoveProfilerText))
                     GUILayout.Label(VesselRemoveProfilerText, LabelStyle);
@@ -232,7 +233,7 @@ namespace LunaClient.Windows.Systems
             VesselUpdate = GUILayout.Toggle(VesselUpdate, "Vessel update", ButtonStyle);
             if (VesselUpdate)
             {
-                VesselUpdateSystem.Singleton.Enabled = GUILayout.Toggle(VesselUpdateSystem.Singleton.Enabled, "ON/OFF",
+                SystemsContainer.Get<VesselUpdateSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselUpdateSystem>().Enabled, "ON/OFF",
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselUpdateProfilerText))
                     GUILayout.Label(VesselUpdateProfilerText, LabelStyle);

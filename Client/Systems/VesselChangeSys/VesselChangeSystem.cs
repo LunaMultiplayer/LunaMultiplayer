@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Types;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselChangeSys
@@ -47,7 +47,7 @@ namespace LunaClient.Systems.VesselChangeSys
         /// </summary>
         private void ProcessVesselChanges()
         {
-            if (Enabled && MainSystem.Singleton.GameRunning)
+            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 while (IncomingChanges.Count > 0 && Time.fixedTime - IncomingChanges.Peek().ReceiveTime >= 0.5)
                 {

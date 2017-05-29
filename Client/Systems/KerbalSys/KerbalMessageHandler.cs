@@ -22,14 +22,14 @@ namespace LunaClient.Systems.KerbalSys
             switch (msgData.KerbalMessageType)
             {
                 case KerbalMessageType.Reply:
-                HandleKerbalReply(msgData as KerbalReplyMsgData);
-                break;
+                    HandleKerbalReply(msgData as KerbalReplyMsgData);
+                    break;
                 case KerbalMessageType.Proto:
-                HandleKerbalProto(msgData as KerbalProtoMsgData);
-                break;
+                    HandleKerbalProto(msgData as KerbalProtoMsgData);
+                    break;
                 default:
-                Debug.LogError("[LMP]: Invalid Kerbal message type");
-                break;
+                    Debug.LogError("[LMP]: Invalid Kerbal message type");
+                    break;
             }
         }
 
@@ -62,7 +62,7 @@ namespace LunaClient.Systems.KerbalSys
             }
 
             Debug.Log("[LMP]: Kerbals Synced!");
-            MainSystem.Singleton.NetworkState = ClientState.KerbalsSynced;
+            SystemsContainer.Get<MainSystem>().NetworkState = ClientState.KerbalsSynced;
         }
     }
 }

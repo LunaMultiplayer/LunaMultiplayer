@@ -20,11 +20,21 @@ using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.Warp;
 using LunaCommon.Enums;
 using System;
+using LunaClient.Systems.VesselChangeSys;
+using LunaClient.Systems.VesselDockSys;
+using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselImmortalSys;
+using LunaClient.Systems.VesselLockSys;
+using LunaClient.Systems.VesselPositionSys;
+using LunaClient.Systems.VesselProtoSys;
+using LunaClient.Systems.VesselRangeSys;
+using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselUpdateSys;
 using UnityEngine;
 
 namespace LunaClient.Systems.Network
 {
-    public class NetworkSystem : System<NetworkSystem>
+    public class NetworkSystem : Base.System
     {
         /// <summary>
         /// This system must be ALWAYS enabled!
@@ -45,7 +55,7 @@ namespace LunaClient.Systems.Network
 
         private static void NetworkUpdate()
         {
-            switch (MainSystem.Singleton.NetworkState)
+            switch (SystemsContainer.Get<MainSystem>().NetworkState)
             {
                 case ClientState.Disconnected:
                 case ClientState.Connecting:
@@ -53,171 +63,180 @@ namespace LunaClient.Systems.Network
                     SystemsHandler.KillAllSystems();
                     return;
                 case ClientState.Connected:
-                    HandshakeSystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<HandshakeSystem>().Enabled = true;
                     break;
                 case ClientState.Handshaking:
-                    MainSystem.Singleton.Status = "Connection successful, handshaking";
+                    SystemsContainer.Get<MainSystem>().Status = "Connection successful, handshaking";
                     break;
                 case ClientState.Authenticated:
-                    PlayerConnectionSystem.Singleton.Enabled = true;
-                    StatusSystem.Singleton.Enabled = true;
-                    StatusSystem.Singleton.MessageSender.SendPlayerStatus(StatusSystem.Singleton.MyPlayerStatus);
-                    MainSystem.Singleton.NetworkState = ClientState.TimeSyncing;
+                    SystemsContainer.Get<PlayerConnectionSystem>().Enabled = true;
+                    SystemsContainer.Get<StatusSystem>().Enabled = true;
+                    SystemsContainer.Get<StatusSystem>().MessageSender.SendPlayerStatus(SystemsContainer.Get<StatusSystem>().MyPlayerStatus);
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.TimeSyncing;
                     break;
                 case ClientState.TimeSyncing:
-                    MainSystem.Singleton.Status = "Handshaking successful, syncing server clock";
-                    TimeSyncerSystem.Singleton.Enabled = true;
-                    if (TimeSyncerSystem.Singleton.Synced)
-                        MainSystem.Singleton.NetworkState = ClientState.TimeSynced;
+                    SystemsContainer.Get<MainSystem>().Status = "Handshaking successful, syncing server clock";
+                    SystemsContainer.Get<TimeSyncerSystem>().Enabled = true;
+                    if (SystemsContainer.Get<TimeSyncerSystem>().Synced)
+                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.TimeSynced;
                     else
-                        TimeSyncerSystem.Singleton.MessageSender.SendTimeSyncRequest();
+                        SystemsContainer.Get<TimeSyncerSystem>().MessageSender.SendTimeSyncRequest();
                     break;
                 case ClientState.TimeSynced:
                     Debug.Log("[LMP]: Time Synced!");
-                    KerbalSystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<KerbalSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendKerbalsRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingKerbals;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingKerbals;
                     break;
                 case ClientState.SyncingKerbals:
-                    MainSystem.Singleton.Status = "Syncing kerbals";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing kerbals";
                     break;
                 case ClientState.KerbalsSynced:
-                    MainSystem.Singleton.Status = "Kerbals synced";
-                    SettingsSystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Kerbals synced";
+                    SystemsContainer.Get<SettingsSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendSettingsRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingSettings;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingSettings;
                     break;
                 case ClientState.SyncingSettings:
-                    MainSystem.Singleton.Status = "Syncing settings";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing settings";
                     break;
                 case ClientState.SettingsSynced:
-                    MainSystem.Singleton.Status = "Settings synced";
-                    WarpSystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Settings synced";
+                    SystemsContainer.Get<WarpSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendWarpSubspacesRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingWarpsubspaces;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingWarpsubspaces;
                     break;
                 case ClientState.SyncingWarpsubspaces:
-                    MainSystem.Singleton.Status = "Syncing warp subspaces";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing warp subspaces";
                     break;
                 case ClientState.WarpsubspacesSynced:
-                    MainSystem.Singleton.Status = "Warp subspaces synced";
-                    PlayerColorSystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Warp subspaces synced";
+                    SystemsContainer.Get<PlayerColorSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendColorsRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingColors;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingColors;
                     break;
                 case ClientState.SyncingColors:
-                    MainSystem.Singleton.Status = "Syncing player colors";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing player colors";
                     break;
                 case ClientState.ColorsSynced:
-                    MainSystem.Singleton.Status = "Player colors synced";
+                    SystemsContainer.Get<MainSystem>().Status = "Player colors synced";
                     NetworkSimpleMessageSender.SendPlayersRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingPlayers;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingPlayers;
                     break;
                 case ClientState.SyncingPlayers:
-                    MainSystem.Singleton.Status = "Syncing players";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing players";
                     break;
                 case ClientState.PlayersSynced:
-                    MainSystem.Singleton.Status = "Players synced";
-                    ScenarioSystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Players synced";
+                    SystemsContainer.Get<ScenarioSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendScenariosRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingScenarios;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingScenarios;
                     break;
                 case ClientState.SyncingScenarios:
-                    MainSystem.Singleton.Status = "Syncing scenarios";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing scenarios";
                     break;
                 case ClientState.ScneariosSynced:
-                    MainSystem.Singleton.Status = "Scenarios synced";
-                    CraftLibrarySystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Scenarios synced";
+                    SystemsContainer.Get<CraftLibrarySystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendCraftLibraryRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingCraftlibrary;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingCraftlibrary;
                     break;
                 case ClientState.SyncingCraftlibrary:
-                    MainSystem.Singleton.Status = "Syncing craft library";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing craft library";
                     break;
                 case ClientState.CraftlibrarySynced:
-                    MainSystem.Singleton.Status = "Craft library synced";
-                    ChatSystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Craft library synced";
+                    SystemsContainer.Get<ChatSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendChatRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingChat;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingChat;
                     break;
                 case ClientState.SyncingChat:
-                    MainSystem.Singleton.Status = "Syncing chat";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing chat";
                     break;
                 case ClientState.ChatSynced:
-                    MainSystem.Singleton.Status = "Chat synced";
-                    LockSystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Chat synced";
+                    SystemsContainer.Get<LockSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendLocksRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingLocks;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingLocks;
                     break;
                 case ClientState.SyncingLocks:
-                    MainSystem.Singleton.Status = "Syncing locks";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing locks";
                     break;
                 case ClientState.LocksSynced:
-                    MainSystem.Singleton.Status = "Locks synced";
-                    AdminSystem.Singleton.Enabled = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Locks synced";
+                    SystemsContainer.Get<AdminSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendAdminsRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingAdmins;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingAdmins;
                     break;
                 case ClientState.SyncingAdmins:
-                    MainSystem.Singleton.Status = "Syncing admins";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing admins";
                     break;
                 case ClientState.AdminsSynced:
-                    MainSystem.Singleton.Status = "Admins synced";
-                    VesselCommon.EnableAllSystems = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Admins synced";
+                    SystemsContainer.Get<VesselLockSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselPositionSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselFlightStateSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselUpdateSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselChangeSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselRemoveSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselImmortalSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselDockSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselRangeSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendVesselListRequest();
-                    MainSystem.Singleton.NetworkState = ClientState.SyncingVessels;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingVessels;
                     break;
                 case ClientState.SyncingVessels:
-                    MainSystem.Singleton.Status = "Syncing vessels";
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing vessels";
                     break;
                 case ClientState.VesselsSynced:
                     Debug.Log("[LMP]: Vessels Synced!");
-                    MainSystem.Singleton.Status = "Syncing universe time";
-                    MainSystem.Singleton.NetworkState = ClientState.TimeLocking;
-                    FlagSystem.Singleton.Enabled = true;
-                    KerbalReassignerSystem.Singleton.Enabled = true;
-                    FlagSystem.Singleton.SendFlagList();
-                    PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing universe time";
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.TimeLocking;
+                    SystemsContainer.Get<FlagSystem>().Enabled = true;
+                    SystemsContainer.Get<KerbalReassignerSystem>().Enabled = true;
+                    SystemsContainer.Get<FlagSystem>().SendFlagList();
+                    SystemsContainer.Get<PlayerColorSystem>().MessageSender.SendPlayerColorToServer();
                     break;
                 case ClientState.TimeLocking:
-                    if (TimeSyncerSystem.Singleton.Synced)
+                    if (SystemsContainer.Get<TimeSyncerSystem>().Synced)
                     {
                         Debug.Log("[LMP]: Time Locked!");
-                        MainSystem.Singleton.Status = "Starting game";
-                        MainSystem.Singleton.NetworkState = ClientState.TimeLocked;
-                        MainSystem.Singleton.StartGame = true;
+                        SystemsContainer.Get<MainSystem>().Status = "Starting game";
+                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.TimeLocked;
+                        SystemsContainer.Get<MainSystem>().StartGame = true;
                     }
                     break;
                 case ClientState.TimeLocked:
-                    MainSystem.Singleton.NetworkState = ClientState.Starting;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Starting;
                     break;
                 case ClientState.Starting:
                     Debug.Log("[LMP]: All systems up and running! Poyekhali!!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
-                        MainSystem.Singleton.Status = "Running";
+                        SystemsContainer.Get<MainSystem>().Status = "Running";
 
-                        MotdSystem.Singleton.Enabled = true;
+                        SystemsContainer.Get<MotdSystem>().Enabled = true;
 
-                        MainSystem.Singleton.DisplayDisconnectMessage = false;
-                        MainSystem.Singleton.NetworkState = ClientState.Running;
+                        SystemsContainer.Get<MainSystem>().DisplayDisconnectMessage = false;
+                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Running;
 
-                        AsteroidSystem.Singleton.Enabled = true;
-                        ToolbarSystem.Singleton.Enabled = true;
+                        SystemsContainer.Get<AsteroidSystem>().Enabled = true;
+                        SystemsContainer.Get<ToolbarSystem>().Enabled = true;
                         NetworkSimpleMessageSender.SendMotdRequest();
                     }
                     break;
                 case ClientState.Running:
-                    MainSystem.Singleton.GameRunning = true;
+                    SystemsContainer.Get<MainSystem>().GameRunning = true;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            if (MotdSystem.Singleton.DisplayMotd && HighLogic.LoadedScene != GameScenes.LOADING)
+            if (SystemsContainer.Get<MotdSystem>().DisplayMotd && HighLogic.LoadedScene != GameScenes.LOADING)
             {
-                MotdSystem.Singleton.DisplayMotd = false;
-                ScenarioSystem.Singleton.UpgradeTheAstronautComplexSoTheGameDoesntBugOut();
-                ScreenMessages.PostScreenMessage(MotdSystem.Singleton.ServerMotd, 10f, ScreenMessageStyle.UPPER_CENTER);
+                SystemsContainer.Get<MotdSystem>().DisplayMotd = false;
+                SystemsContainer.Get<ScenarioSystem>().UpgradeTheAstronautComplexSoTheGameDoesntBugOut();
+                ScreenMessages.PostScreenMessage(SystemsContainer.Get<MotdSystem>().ServerMotd, 10f, ScreenMessageStyle.UPPER_CENTER);
                 //Control locks will bug out the space centre sceen, so remove them before starting.
                 NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
             }

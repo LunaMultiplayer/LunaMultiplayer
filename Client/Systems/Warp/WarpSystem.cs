@@ -95,7 +95,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private void FollowWarpMaster()
         {
-            if (Enabled && MainSystem.Singleton.GameRunning)
+            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
                     ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
@@ -111,7 +111,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private void UpdateScreenMessage()
         {
-            if (Enabled && MainSystem.Singleton.GameRunning)
+            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
                     DisplayMessage($"{SettingsSystem.ServerSettings.WarpMaster} has warp control", 1f);
@@ -141,8 +141,8 @@ namespace LunaClient.Systems.Warp
 
         public double GetSubspaceTime(int subspace)
         {
-            return TimeSyncerSystem.Singleton.Synced && Subspaces.ContainsKey(subspace)
-                ? TimeSyncerSystem.Singleton.GetServerClock() + Subspaces[subspace]
+            return SystemsContainer.Get<TimeSyncerSystem>().Synced && Subspaces.ContainsKey(subspace)
+                ? SystemsContainer.Get<TimeSyncerSystem>().GetServerClock() + Subspaces[subspace]
                 : 0;
         }
 
@@ -169,7 +169,7 @@ namespace LunaClient.Systems.Warp
         {
             MessageSender.SendMessage(new WarpNewSubspaceMsgData
             {
-                ServerTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.Singleton.GetServerClock(),
+                ServerTimeDifference = Planetarium.GetUniversalTime() - SystemsContainer.Get<TimeSyncerSystem>().GetServerClock(),
                 PlayerCreator = SettingsSystem.CurrentSettings.PlayerName
                 //we don't send the SubspaceKey as that one will be given by the server except when warping that we set it to -1
             });

@@ -97,11 +97,11 @@ namespace LunaClient.Utilities
             //While the directory is over (cacheSize) MB
             while (CacheSizeExceeded())
             {
-                var deleteObject = "";
+                var deleteObject = string.Empty;
                 //Find oldest file
                 foreach (var testFile in FileCreationTimes)
                 {
-                    if (deleteObject == null)
+                    if (string.IsNullOrEmpty(deleteObject))
                         deleteObject = testFile.Key;
                     if (testFile.Value < FileCreationTimes[deleteObject])
                         deleteObject = testFile.Key;

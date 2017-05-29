@@ -66,13 +66,13 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             Debug.Log($"[LMP]: Killing vessel {killVessel.id}");
 
-            if (VesselProtoSystem.Singleton.AllPlayerVessels.ContainsKey(killVessel.id))
+            if (SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels.ContainsKey(killVessel.id))
             {
                 if (!fullKill)
-                    VesselProtoSystem.Singleton.AllPlayerVessels[killVessel.id].Loaded = false;
+                    SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels[killVessel.id].Loaded = false;
                 else
                 {
-                    VesselProtoSystem.Singleton.AllPlayerVessels.TryRemove(killVessel.id, out var _);
+                    SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels.TryRemove(killVessel.id, out var _);
                 }
             }
 
@@ -93,9 +93,9 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             if (SettingsSystem.ServerSettings.ShowVesselsInThePast) return;
 
-            if (Enabled && MainSystem.Singleton.GameRunning)
+            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
             {
-                var vesselsToUnload = VesselProtoSystem.Singleton.AllPlayerVessels
+                var vesselsToUnload = SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels
                                        .Where(v => v.Value.Loaded && VesselCommon.VesselIsControlledAndInPastSubspace(v.Key))
                                        .Select(v => FlightGlobals.FindVessel(v.Key))
                                        .ToArray();
@@ -122,9 +122,9 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
             }
 
-            if (VesselProtoSystem.Singleton.AllPlayerVessels.ContainsKey(killVessel.id))
+            if (SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels.ContainsKey(killVessel.id))
             {
-                VesselProtoSystem.Singleton.AllPlayerVessels[killVessel.id].Loaded = false;
+                SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels[killVessel.id].Loaded = false;
             }
 
             //TODO: Should we put the vessel on rails so that we don't run into bugs destroying the vessel?

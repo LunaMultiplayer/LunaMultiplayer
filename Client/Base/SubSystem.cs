@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base.Interface;
+using LunaClient.Systems;
 
 namespace LunaClient.Base
 {
@@ -9,6 +10,6 @@ namespace LunaClient.Base
     public abstract class SubSystem<T> : SystemBase
         where T : class, ISystem, new()
     {
-        protected static T System => System<T>.Singleton;
+        protected static T System => SystemsContainer.Get<T>();
     }
 }

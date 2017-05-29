@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon;
@@ -39,7 +40,7 @@ namespace LunaClient.Windows.Connection
         #endregion
 
         #region Base overrides
-        
+
         public override bool Display => !Closed && HighLogic.LoadedScene == GameScenes.MAINMENU && SettingsSystem.CurrentSettings.DisclaimerAccepted;
 
         public override void SetStyles()
@@ -77,7 +78,7 @@ namespace LunaClient.Windows.Connection
 
         public override void Update()
         {
-            Status = MainSystem.Singleton.Status;
+            Status = SystemsContainer.Get<MainSystem>().Status;
             SelectedSafe = Selected;
             AddingServerSafe = AddingServer;
         }

@@ -75,7 +75,7 @@ namespace LunaClient.Systems.CraftLibrary
                                 }
                             }
                         }
-                        MainSystem.Singleton.NetworkState = ClientState.CraftlibrarySynced;
+                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.CraftlibrarySynced;
                     }
                     break;
                 case CraftMessageType.AddFile:
@@ -88,7 +88,7 @@ namespace LunaClient.Systems.CraftLibrary
                             CraftName = data.UploadName
                         };
                         System.QueueCraftAdd(cce);
-                        ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "",
+                        SystemsContainer.Get<ChatSystem>().Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "",
                             $"{cce.PlayerName} shared {cce.CraftName} ({cce.CraftType})");
                     }
                     break;

@@ -1,10 +1,10 @@
-﻿using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Motd;
 using LunaCommon.Message.Interface;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Motd
 {
@@ -20,7 +20,7 @@ namespace LunaClient.Systems.Motd
             {
                 System.DisplayMotd = true;
                 System.ServerMotd = msgData.MessageOfTheDay;
-                ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", msgData.MessageOfTheDay);
+                SystemsContainer.Get<ChatSystem>().Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", msgData.MessageOfTheDay);
             }
         }
     }

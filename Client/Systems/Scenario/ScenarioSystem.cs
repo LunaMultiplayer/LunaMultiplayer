@@ -62,7 +62,7 @@ namespace LunaClient.Systems.Scenario
         /// </summary>
         public void SendScenarioModules()
         {
-            if (!Enabled || !MainSystem.Singleton.GameRunning) return;
+            if (!Enabled || !SystemsContainer.Get<MainSystem>().GameRunning) return;
 
             var scenarioName = new List<string>();
             var scenarioData = new List<byte[]>();
@@ -245,7 +245,7 @@ namespace LunaClient.Systems.Scenario
                         HighLogic.CurrentGame.CrewRoster.AddCrewMember(pcm);
 
                         //Also send it off to the server
-                        KerbalSystem.Singleton.MessageSender.SendKerbalIfDifferent(pcm);
+                        SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalIfDifferent(pcm);
                     }
                 }
             }

@@ -11,21 +11,8 @@ namespace LunaClient.Base
     /// System base class. This class is made for a grouping logic.
     /// If you create a new system remember to call it on the SystemsHandler class
     /// </summary>
-    public abstract class System<T> : SystemBase, ISystem
-        where T : class, ISystem, new()
+    public abstract class System : SystemBase, ISystem
     {
-        #region Constructors
-
-        /// <summary>
-        /// Static constructor that creates the needed singleton
-        /// </summary>
-        static System()
-        {
-            Singleton = new T();
-        }
-
-        #endregion
-
         #region Field & Properties
 
         /// <summary>
@@ -79,11 +66,6 @@ namespace LunaClient.Base
                 Debug.LogError($"[LMP]: Routine {routineName} not defined");
             }
         }
-
-        /// <summary>
-        /// System singleton
-        /// </summary>
-        public static T Singleton { get; set; }
 
         private bool _enabled;
 

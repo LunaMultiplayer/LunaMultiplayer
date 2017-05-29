@@ -1,5 +1,4 @@
 ﻿using CommNet;
-using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Flag;
@@ -29,7 +28,7 @@ namespace LunaClient
     /// <summary>
     /// Main system. It handle all the other systems in LMP
     /// </summary>
-    public class MainSystem : System<MainSystem>
+    public class MainSystem : Base.System
     {
         #region Fields
 
@@ -80,10 +79,10 @@ namespace LunaClient
             {
                 if (HighLogic.LoadedScene == GameScenes.MAINMENU)
                 {
-                    if (!ModSystem.Singleton.DllListBuilt)
+                    if (!SystemsContainer.Get<ModSystem>().DllListBuilt)
                     {
-                        ModSystem.Singleton.DllListBuilt = true;
-                        ModSystem.Singleton.BuildDllFileList();
+                        SystemsContainer.Get<ModSystem>().DllListBuilt = true;
+                        SystemsContainer.Get<ModSystem>().BuildDllFileList();
                     }
                     if (!LmpSaveChecked)
                     {
@@ -116,7 +115,7 @@ namespace LunaClient
                     {
                         GameRunning = false;
                         FireReset = true;
-                        ToolbarSystem.Singleton.Enabled = false; //Always disable toolbar in main menu
+                        SystemsContainer.Get<ToolbarSystem>().Enabled = false; //Always disable toolbar in main menu
                         NetworkConnection.Disconnect("Quit to main menu");
                     }
 
@@ -124,8 +123,8 @@ namespace LunaClient
                     {
                         Debug.Log("[LMP]: Saving Selected flag");
                         SettingsSystem.CurrentSettings.SelectedFlag = HighLogic.CurrentGame.flagURL;
-                        SettingsSystem.Singleton.SaveSettings();
-                        FlagSystem.Singleton.FlagChangeEvent = true;
+                        SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                        SystemsContainer.Get<FlagSystem>().FlagChangeEvent = true;
                     }
 
                     // save every GeeASL from each body in FlightGlobals
@@ -305,18 +304,18 @@ namespace LunaClient
 
         private void HandleWindowEvents()
         {
-            if (!StatusWindow.Singleton.DisconnectEventHandled)
+            if (!WindowsContainer.Get<StatusWindow>().DisconnectEventHandled)
             {
-                StatusWindow.Singleton.DisconnectEventHandled = true;
+                WindowsContainer.Get<StatusWindow>().DisconnectEventHandled = true;
                 ForceQuit = true;
                 NetworkConnection.Disconnect("Quit");
-                ScenarioSystem.Singleton.SendScenarioModules(); // Send scenario modules before disconnecting
+                SystemsContainer.Get<ScenarioSystem>().SendScenarioModules(); // Send scenario modules before disconnecting
             }
             if (!ConnectionWindow.RenameEventHandled)
             {
-                StatusSystem.Singleton.MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+                SystemsContainer.Get<StatusSystem>().MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
                 ConnectionWindow.RenameEventHandled = true;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
             }
             if (!ConnectionWindow.AddEventHandled)
             {
@@ -324,7 +323,7 @@ namespace LunaClient
                 ConnectionWindow.AddEntry = null;
                 ConnectionWindow.AddingServer = false;
                 ConnectionWindow.AddEventHandled = true;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
             }
             if (!ConnectionWindow.EditEventHandled)
             {
@@ -334,14 +333,14 @@ namespace LunaClient
                 ConnectionWindow.EditEntry = null;
                 ConnectionWindow.AddingServer = false;
                 ConnectionWindow.EditEventHandled = true;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
             }
             if (!ConnectionWindow.RemoveEventHandled)
             {
                 SettingsSystem.CurrentSettings.Servers.RemoveAt(ConnectionWindow.Selected);
                 ConnectionWindow.Selected = -1;
                 ConnectionWindow.RemoveEventHandled = true;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
             }
             if (!ConnectionWindow.ConnectEventHandled)
             {
@@ -362,7 +361,7 @@ namespace LunaClient
                 ConnectionWindow.DisconnectEventHandled = true;
                 GameRunning = false;
                 FireReset = true;
-                NetworkConnection.Disconnect(Singleton.NetworkState <= ClientState.Starting
+                NetworkConnection.Disconnect(NetworkState <= ClientState.Starting
                     ? "Cancelled connection to server"
                     : "Quit");
             }
@@ -381,17 +380,17 @@ namespace LunaClient
             SetAdvancedAndCommNetParams(HighLogic.CurrentGame);
 
             //Set universe time
-            HighLogic.CurrentGame.flightState.universalTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
+            HighLogic.CurrentGame.flightState.universalTime = SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
 
             //Load LMP stuff
-            KerbalSystem.Singleton.LoadKerbalsIntoGame();
-            VesselProtoSystem.Singleton.VesselLoader.LoadVesselsIntoGame();
+            SystemsContainer.Get<KerbalSystem>().LoadKerbalsIntoGame();
+            SystemsContainer.Get<VesselProtoSystem>().VesselLoader.LoadVesselsIntoGame();
 
             //Load the scenarios from the server
-            ScenarioSystem.Singleton.LoadScenarioDataIntoGame();
+            SystemsContainer.Get<ScenarioSystem>().LoadScenarioDataIntoGame();
 
             //Load the missing scenarios as well (Eg, Contracts and stuff for career mode
-            ScenarioSystem.Singleton.LoadMissingScenarioDataIntoGame();
+            SystemsContainer.Get<ScenarioSystem>().LoadMissingScenarioDataIntoGame();
 
             //This only makes KSP complain
             HighLogic.CurrentGame.CrewRoster.ValidateAssignments(HighLogic.CurrentGame);

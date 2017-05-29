@@ -47,7 +47,7 @@ namespace LunaClient.Systems.TimeSyncer
         private List<long> NetworkLatency { get; } = new List<long>();
         public Task SyncSenderThread { get; private set; }
 
-        private static bool CurrentlyWarping => WarpSystem.Singleton.CurrentSubspace == -1;
+        private static bool CurrentlyWarping => SystemsContainer.Get<WarpSystem>().CurrentSubspace == -1;
 
         #endregion
 
@@ -86,9 +86,9 @@ namespace LunaClient.Systems.TimeSyncer
         /// <returns></returns>
         private void SyncTime()
         {
-            if (Enabled && Synced && !CurrentlyWarping && CanSyncTime() && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
+            if (Enabled && Synced && !CurrentlyWarping && CanSyncTime() && !SystemsContainer.Get<WarpSystem>().WaitingSubspaceIdFromServer)
             {
-                var targetTime = WarpSystem.Singleton.GetCurrentSubspaceTime();
+                var targetTime = SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
                 var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;
                 if (targetTime != 0 && Math.Abs(currentError) > MaxClockMsError)
                 {
@@ -124,7 +124,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// </summary>
         private void SyncTimeWithServer()
         {
-            while (!MainSystem.Singleton.Quit && MainSystem.Singleton.NetworkState >= ClientState.Authenticated)
+            while (!SystemsContainer.Get<MainSystem>().Quit && SystemsContainer.Get<MainSystem>().NetworkState >= ClientState.Authenticated)
             {
                 MessageSender.SendTimeSyncRequest();
                 Thread.Sleep(SettingsSystem.CurrentSettings.SyncTimeRequestMsInterval);
@@ -166,7 +166,7 @@ namespace LunaClient.Systems.TimeSyncer
         public double GetServerClock() => Synced ? TimeSpan.FromTicks(DateTime.UtcNow.Ticks - ServerStartTime + ClockOffsetAverage).TotalSeconds : 0;
 
         public double GetCurrentError()
-            => Synced ? Planetarium.GetUniversalTime() - WarpSystem.Singleton.GetCurrentSubspaceTime() : 0;
+            => Synced ? Planetarium.GetUniversalTime() - SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime() : 0;
 
         #endregion
 

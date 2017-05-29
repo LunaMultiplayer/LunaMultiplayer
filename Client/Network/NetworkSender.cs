@@ -6,6 +6,7 @@ using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using LunaClient.Systems;
 using UnityEngine;
 
 namespace LunaClient.Network
@@ -22,7 +23,7 @@ namespace LunaClient.Network
         {
             try
             {
-                while (!MainSystem.Singleton.Quit)
+                while (!SystemsContainer.Get<MainSystem>().Quit)
                 {
                     if (OutgoingMessages.TryDequeue(out var sendMessage))
                     {
@@ -62,7 +63,7 @@ namespace LunaClient.Network
             var masterSrvMessage = message as IMasterServerMessageBase;
 
             if (clientMessage?.MessageType == ClientMessageType.SyncTime)
-                TimeSyncerSystem.Singleton.RewriteMessage(message.Data);
+                SystemsContainer.Get<TimeSyncerSystem>().RewriteMessage(message.Data);
 
             message.Data.SentTime = DateTime.UtcNow.Ticks;
             var bytes = message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled);
@@ -86,7 +87,7 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        if (MainSystem.Singleton.NetworkState >= ClientState.Connected)
+                        if (SystemsContainer.Get<MainSystem>().NetworkState >= ClientState.Connected)
                         {
                             var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
                             lidgrenMsg.Write(message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled));

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using LunaClient.Windows;
 using UnityEngine;
 
 namespace LunaClient.Systems.Mod
@@ -15,9 +16,9 @@ namespace LunaClient.Systems.Mod
     {
         public static bool ParseModFile(string modFileData)
         {
-            if (ModSystem.Singleton.ModControl == ModControlMode.Disabled) return true;
+            if (SystemsContainer.Get<ModSystem>().ModControl == ModControlMode.Disabled) return true;
 
-            ModSystem.Singleton.LastModFileData = modFileData; //Save mod file so we can recheck it.
+            SystemsContainer.Get<ModSystem>().LastModFileData = modFileData; //Save mod file so we can recheck it.
 
             StringBuilder = new StringBuilder();
             ParseRequired.Clear();
@@ -34,12 +35,12 @@ namespace LunaClient.Systems.Mod
 
             if (!ModCheckOk)
             {
-                ModSystem.Singleton.FailText = StringBuilder.ToString();
-                ModWindow.Singleton.Display = true;
+                SystemsContainer.Get<ModSystem>().FailText = StringBuilder.ToString();
+                WindowsContainer.Get<ModWindow>().Display = true;
                 return false;
             }
 
-            ModSystem.Singleton.AllowedParts = PartsList;
+            SystemsContainer.Get<ModSystem>().AllowedParts = PartsList;
             Debug.Log("[LMP]: Mod check passed!");
             return true;
         }
@@ -52,7 +53,7 @@ namespace LunaClient.Systems.Mod
             using (var sw = new StreamWriter(tempModFilePath))
             {
                 sw.WriteLine("#This file is downloaded from the server during connection. It is saved here for convenience.");
-                sw.WriteLine(ModSystem.Singleton.LastModFileData);
+                sw.WriteLine(SystemsContainer.Get<ModSystem>().LastModFileData);
             }
         }
 
@@ -190,7 +191,7 @@ namespace LunaClient.Systems.Mod
                 //Check whitelist
 
                 foreach (var dllResource in
-                    ModSystem.Singleton.DllList.Where(
+                    SystemsContainer.Get<ModSystem>().DllList.Where(
                         dllResource =>
                             !autoAllowed.Contains(dllResource.Key) && !dllResource.Key.StartsWith("squad/plugins") &&
                             !ParseRequired.ContainsKey(dllResource.Key) && !ParseOptional.ContainsKey(dllResource.Key) &&
@@ -205,7 +206,7 @@ namespace LunaClient.Systems.Mod
             if (!WhiteList.Any() && BlackList.Any()) //Check Resource blacklist
             {
                 foreach (var blacklistEntry in
-                    BlackList.Keys.Where(blacklistEntry => ModSystem.Singleton.DllList.ContainsKey(blacklistEntry)))
+                    BlackList.Keys.Where(blacklistEntry => SystemsContainer.Get<ModSystem>().DllList.ContainsKey(blacklistEntry)))
                 {
                     ModCheckOk = false;
                     Debug.Log($"[LMP]: Banned resource {blacklistEntry} exists on client!");
@@ -216,7 +217,7 @@ namespace LunaClient.Systems.Mod
 
         private static void CheckDllFile(KeyValuePair<string, string> requiredEntry, bool required)
         {
-            var fileExists = ModSystem.Singleton.DllList.ContainsKey(requiredEntry.Key);
+            var fileExists = SystemsContainer.Get<ModSystem>().DllList.ContainsKey(requiredEntry.Key);
 
             if (!fileExists && required)
             {
@@ -227,7 +228,7 @@ namespace LunaClient.Systems.Mod
             }
 
             if (fileExists && requiredEntry.Value != "" &&
-                ModSystem.Singleton.DllList[requiredEntry.Key] != requiredEntry.Value)
+                SystemsContainer.Get<ModSystem>().DllList[requiredEntry.Key] != requiredEntry.Value)
             {
                 ModCheckOk = false;
                 Debug.Log($"[LMP]: Required file {requiredEntry.Key} does not match hash {requiredEntry.Value}!");

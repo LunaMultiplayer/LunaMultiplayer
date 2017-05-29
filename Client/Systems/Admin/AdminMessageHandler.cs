@@ -1,10 +1,10 @@
-﻿using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Admin;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Admin
 {
@@ -24,7 +24,7 @@ namespace LunaClient.Systems.Admin
                         var data = (AdminListReplyMsgData)messageData;
                         foreach (var adminName in data.Admins)
                             System.RegisterServerAdmin(adminName);
-                        MainSystem.Singleton.NetworkState = ClientState.AdminsSynced;
+                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.AdminsSynced;
                     }
                     break;
                 case AdminMessageType.Add:

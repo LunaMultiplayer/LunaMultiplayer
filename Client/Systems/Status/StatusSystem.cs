@@ -76,7 +76,7 @@ namespace LunaClient.Systems.Status
 
         private void CheckPlayerStatus()
         {
-            if (Enabled && MainSystem.Singleton.GameRunning)
+            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 MyPlayerStatus.VesselText = GetVesselText();
                 MyPlayerStatus.StatusText = GetStatusText();
@@ -135,10 +135,10 @@ namespace LunaClient.Systems.Status
 
         private static string GetExpectatingShipStatus()
         {
-            if (LockSystem.Singleton.LockExists($"control-{FlightGlobals.ActiveVessel.id}"))
+            if (SystemsContainer.Get<LockSystem>().LockExists($"control-{FlightGlobals.ActiveVessel.id}"))
             {
-                return LockSystem.Singleton.LockIsOurs($"control-{FlightGlobals.ActiveVessel.id}") ?
-                    "Waiting for vessel control" : $"Spectating {LockSystem.Singleton.LockOwner($"control-{FlightGlobals.ActiveVessel.id}")}";
+                return SystemsContainer.Get<LockSystem>().LockIsOurs($"control-{FlightGlobals.ActiveVessel.id}") ?
+                    "Waiting for vessel control" : $"Spectating {SystemsContainer.Get<LockSystem>().LockOwner($"control-{FlightGlobals.ActiveVessel.id}")}";
             }
 
             return "Spectating future updates";

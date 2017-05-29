@@ -19,6 +19,16 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
+using LunaClient.Systems.VesselChangeSys;
+using LunaClient.Systems.VesselDockSys;
+using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselImmortalSys;
+using LunaClient.Systems.VesselLockSys;
+using LunaClient.Systems.VesselPositionSys;
+using LunaClient.Systems.VesselProtoSys;
+using LunaClient.Systems.VesselRangeSys;
+using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using System;
 
@@ -26,72 +36,47 @@ namespace LunaClient.Systems
 {
     public static class SystemsHandler
     {
-        //DO NOT! use a list of ISystem and run trough each method. I don't know what happens but you will 
-        //end up with variables that are different than it's singleton value (really, it's a nightmare) 
-        //for example, if you stop on TimeSyncerSystem.Update and set Synced = true you will see how 
-        //the variable value differs from it's singleton value.
+        private static readonly ISystem[] Systems =
+        {
+            SystemsContainer.Get<NetworkSystem>(),
+            SystemsContainer.Get<ModSystem>(),
+            SystemsContainer.Get<ModApiSystem>(),
+            SystemsContainer.Get<HandshakeSystem>(),
+            SystemsContainer.Get<TimeSyncerSystem>(),
+            SystemsContainer.Get<KerbalSystem>(),
+            SystemsContainer.Get<VesselLockSystem>(),
+            SystemsContainer.Get<VesselPositionSystem>(),
+            SystemsContainer.Get<VesselFlightStateSystem>(),
+            SystemsContainer.Get<VesselUpdateSystem>(),
+            SystemsContainer.Get<VesselChangeSystem>(),
+            SystemsContainer.Get<VesselProtoSystem>(),
+            SystemsContainer.Get<VesselRemoveSystem>(),
+            SystemsContainer.Get<VesselImmortalSystem>(),
+            SystemsContainer.Get<VesselDockSystem>(),
+            SystemsContainer.Get<VesselRangeSystem>(),
+            SystemsContainer.Get<WarpSystem>(),
+            SystemsContainer.Get<LockSystem>(),
+            SystemsContainer.Get<SettingsSystem>(),
+            SystemsContainer.Get<AsteroidSystem>(),
+            SystemsContainer.Get<StatusSystem>(),
+            SystemsContainer.Get<ChatSystem>(),
+            SystemsContainer.Get<AdminSystem>(),
+            SystemsContainer.Get<PlayerColorSystem>(),
+            SystemsContainer.Get<PlayerConnectionSystem>(),
+            SystemsContainer.Get<MotdSystem>(),
+            SystemsContainer.Get<CraftLibrarySystem>(),
+            SystemsContainer.Get<FlagSystem>(),
+            SystemsContainer.Get<KerbalReassignerSystem>(),
+            SystemsContainer.Get<ScenarioSystem>(),
+            SystemsContainer.Get<ToolbarSystem>()
+        };
 
         /// <summary>
         /// Call all the updates of the systems
         /// </summary>
         public static void Update()
         {
-            TryUpdate(NetworkSystem.Singleton);
-            TryUpdate(ModSystem.Singleton);
-            TryUpdate(ModApiSystem.Singleton);
-            TryUpdate(HandshakeSystem.Singleton);
-            TryUpdate(TimeSyncerSystem.Singleton);
-            TryUpdate(KerbalSystem.Singleton);
-            TryUpdate(VesselCommon.GetSingletons);
-            TryUpdate(WarpSystem.Singleton);
-            TryUpdate(LockSystem.Singleton);
-            TryUpdate(SettingsSystem.Singleton);
-            TryUpdate(AsteroidSystem.Singleton);
-            TryUpdate(StatusSystem.Singleton);
-            TryUpdate(ChatSystem.Singleton);
-            TryUpdate(AdminSystem.Singleton);
-            TryUpdate(PlayerColorSystem.Singleton);
-            TryUpdate(PlayerConnectionSystem.Singleton);
-            TryUpdate(MotdSystem.Singleton);
-            TryUpdate(CraftLibrarySystem.Singleton);
-            TryUpdate(FlagSystem.Singleton);
-            TryUpdate(KerbalReassignerSystem.Singleton);
-            TryUpdate(ScenarioSystem.Singleton);
-            TryUpdate(ToolbarSystem.Singleton);
-        }
-
-        /// <summary>
-        /// Call all the fixed updates of the systems
-        /// </summary>
-        public static void FixedUpdate()
-        {
-            TryFixedUpdate(NetworkSystem.Singleton);
-            TryFixedUpdate(ModSystem.Singleton);
-            TryFixedUpdate(ModApiSystem.Singleton);
-            TryFixedUpdate(HandshakeSystem.Singleton);
-            TryFixedUpdate(TimeSyncerSystem.Singleton);
-            TryFixedUpdate(KerbalSystem.Singleton);
-            TryFixedUpdate(VesselCommon.GetSingletons);
-            TryFixedUpdate(WarpSystem.Singleton);
-            TryFixedUpdate(LockSystem.Singleton);
-            TryFixedUpdate(SettingsSystem.Singleton);
-            TryFixedUpdate(AsteroidSystem.Singleton);
-            TryFixedUpdate(StatusSystem.Singleton);
-            TryFixedUpdate(ChatSystem.Singleton);
-            TryFixedUpdate(AdminSystem.Singleton);
-            TryFixedUpdate(PlayerColorSystem.Singleton);
-            TryFixedUpdate(PlayerConnectionSystem.Singleton);
-            TryFixedUpdate(MotdSystem.Singleton);
-            TryFixedUpdate(CraftLibrarySystem.Singleton);
-            TryFixedUpdate(FlagSystem.Singleton);
-            TryFixedUpdate(KerbalReassignerSystem.Singleton);
-            TryFixedUpdate(ScenarioSystem.Singleton);
-            TryFixedUpdate(ToolbarSystem.Singleton);
-        }
-
-        private static void TryUpdate(params ISystem[] systems)
-        {
-            foreach (var system in systems)
+            foreach (var system in Systems)
             {
                 try
                 {
@@ -99,14 +84,17 @@ namespace LunaClient.Systems
                 }
                 catch (Exception e)
                 {
-                    MainSystem.Singleton.HandleException(e, "SystemHandler-Update");
+                    SystemsContainer.Get<MainSystem>().HandleException(e, "SystemHandler-Update");
                 }
             }
         }
 
-        private static void TryFixedUpdate(params ISystem[] systems)
+        /// <summary>
+        /// Call all the fixed updates of the systems
+        /// </summary>
+        public static void FixedUpdate()
         {
-            foreach (var system in systems)
+            foreach (var system in Systems)
             {
                 try
                 {
@@ -114,35 +102,20 @@ namespace LunaClient.Systems
                 }
                 catch (Exception e)
                 {
-                    MainSystem.Singleton.HandleException(e, "SystemHandler-FixedUpdate");
+                    SystemsContainer.Get<MainSystem>().HandleException(e, "SystemHandler-FixedUpdate");
                 }
             }
         }
 
+        /// <summary>
+        /// Set all systems as disabled
+        /// </summary>
         public static void KillAllSystems()
         {
-            VesselCommon.EnableAllSystems = false;
-            NetworkSystem.Singleton.Enabled = false;
-            ModSystem.Singleton.Enabled = false;
-            ModApiSystem.Singleton.Enabled = false;
-            SettingsSystem.Singleton.Enabled = false;
-            ToolbarSystem.Singleton.Enabled = false;
-            HandshakeSystem.Singleton.Enabled = false;
-            TimeSyncerSystem.Singleton.Enabled = false;
-            KerbalSystem.Singleton.Enabled = false;
-            WarpSystem.Singleton.Enabled = false;
-            LockSystem.Singleton.Enabled = false;
-            AsteroidSystem.Singleton.Enabled = false;
-            StatusSystem.Singleton.Enabled = false;
-            ChatSystem.Singleton.Enabled = false;
-            AdminSystem.Singleton.Enabled = false;
-            PlayerColorSystem.Singleton.Enabled = false;
-            PlayerConnectionSystem.Singleton.Enabled = false;
-            MotdSystem.Singleton.Enabled = false;
-            CraftLibrarySystem.Singleton.Enabled = false;
-            FlagSystem.Singleton.Enabled = false;
-            KerbalReassignerSystem.Singleton.Enabled = false;
-            ScenarioSystem.Singleton.Enabled = false;
+            foreach (var system in Systems)
+            {
+                system.Enabled = false;
+            }
         }
     }
 }

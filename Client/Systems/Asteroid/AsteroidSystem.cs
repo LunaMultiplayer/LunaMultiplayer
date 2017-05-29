@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace LunaClient.Systems.Asteroid
 {
-    public class AsteroidSystem : System<AsteroidSystem>
+    public class AsteroidSystem : Base.System
     {
         #region Fields
 
@@ -72,12 +72,12 @@ namespace LunaClient.Systems.Asteroid
             if (!Enabled) return;
 
             //Try to acquire the asteroid-spawning lock if nobody else has it.
-            if (!LockSystem.Singleton.LockExists("asteroid"))
-                LockSystem.Singleton.AcquireLock("asteroid");
+            if (!SystemsContainer.Get<LockSystem>().LockExists("asteroid"))
+                SystemsContainer.Get<LockSystem>().AcquireLock("asteroid");
 
             //We have the spawn lock, lets do stuff.
-            if (LockSystem.Singleton.LockIsOurs("asteroid") && WarpSystem.Singleton.CurrentSubspace == 0 &&
-                Time.timeSinceLevelLoad > 1f && MainSystem.Singleton.GameRunning)
+            if (SystemsContainer.Get<LockSystem>().LockIsOurs("asteroid") && SystemsContainer.Get<WarpSystem>().CurrentSubspace == 0 &&
+                Time.timeSinceLevelLoad > 1f && SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 var beforeSpawn = GetAsteroidCount();
                 var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;
@@ -101,7 +101,7 @@ namespace LunaClient.Systems.Asteroid
                     {
                         Debug.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
                         ServerAsteroidTrackStatus[asteroid.id.ToString()] = asteroid.DiscoveryInfo.trackingStatus.Value;
-                        VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid);
+                        SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid);
                     }
                 }
             }

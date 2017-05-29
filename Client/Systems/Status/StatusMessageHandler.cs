@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.PlayerStatus;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Status
 {
@@ -45,12 +45,12 @@ namespace LunaClient.Systems.Status
                     VesselText = msg.VesselText[i]
                 });
             }
-            MainSystem.Singleton.NetworkState = ClientState.PlayersSynced;
+            SystemsContainer.Get<MainSystem>().NetworkState = ClientState.PlayersSynced;
         }
 
         private static void AddNewPlayerStatus(IMessageData messageData)
         {
-            var msg = (PlayerStatusSetMsgData) messageData;
+            var msg = (PlayerStatusSetMsgData)messageData;
             var newStatus = new PlayerStatus
             {
                 PlayerName = msg.PlayerName,

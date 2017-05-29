@@ -1,12 +1,11 @@
-﻿using System;
-using LunaClient.Base;
-using LunaClient.Systems.VesselProtoSys;
+﻿using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
+using System;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
 {
-    public class VesselDockSystem : System<VesselDockSystem>
+    public class VesselDockSystem : Base.System
     {
         private VesselDockEvents VesselDockEvents { get; } = new VesselDockEvents();
 
@@ -24,7 +23,7 @@ namespace LunaClient.Systems.VesselDockSys
             GameEvents.onPartCouple.Remove(VesselDockEvents.OnVesselDock);
             GameEvents.onCrewBoardVessel.Add(VesselDockEvents.OnCrewBoard);
         }
-        
+
         public void HandleDocking(Guid from, Guid to)
         {
             var fromVessel = FlightGlobals.FindVessel(from);
@@ -33,11 +32,11 @@ namespace LunaClient.Systems.VesselDockSys
             var finalVessel = fromVessel != null && toVessel != null
                 ? Vessel.GetDominantVessel(fromVessel, toVessel)
                 : fromVessel ?? toVessel;
-            
+
             if (finalVessel != null)
             {
                 var vesselIdToRemove = finalVessel.id == from ? to : from;
-                
+
                 if (finalVessel == FlightGlobals.ActiveVessel)
                 {
                     Debug.Log($"[LMP]: Docking: We own the dominant vessel {finalVessel.id}");
@@ -48,9 +47,9 @@ namespace LunaClient.Systems.VesselDockSys
                     FlightGlobals.SetActiveVessel(finalVessel);
                 }
 
-                VesselProtoSystem.Singleton.RemoveVesselFromLoadingSystem(vesselIdToRemove);
-                VesselRemoveSystem.Singleton.MessageSender.SendVesselRemove(vesselIdToRemove, true);
-                
+                SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(vesselIdToRemove);
+                SystemsContainer.Get<VesselRemoveSystem>().MessageSender.SendVesselRemove(vesselIdToRemove, true);
+
                 Debug.Log("[LMP]: Docking event over!");
             }
         }

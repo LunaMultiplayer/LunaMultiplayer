@@ -1,4 +1,3 @@
-using LunaClient.Base;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -10,7 +9,7 @@ using UnityEngine;
 
 namespace LunaClient.Systems.Mod
 {
-    public class ModSystem : System<ModSystem>
+    public class ModSystem : Base.System
     {
         #region Fields & properties
 

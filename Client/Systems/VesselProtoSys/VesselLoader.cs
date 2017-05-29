@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 else
                 {
                     Debug.LogWarning($"[LMP]: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
-                    ChatSystem.Singleton.PmMessageServer($"WARNING: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
+                    SystemsContainer.Get<ChatSystem>().PmMessageServer($"WARNING: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
                 }
                 vessel.Value.Loaded = true;
             }
@@ -98,7 +98,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
                     {
                         //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
-                        VesselRemoveSystem.Singleton.UnloadVessel(vessel);
+                        SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vessel);
                         LoadVesselImpl(vesselProto);
                         vesselLoaded = true;
                     }
@@ -229,14 +229,14 @@ namespace LunaClient.Systems.VesselProtoSys
 
                 foreach (var pps in pv.protoPartSnapshots)
                 {
-                    if (ModSystem.Singleton.ModControl != ModControlMode.Disabled &&
-                        !ModSystem.Singleton.AllowedParts.Contains(pps.partName.ToLower()))
+                    if (SystemsContainer.Get<ModSystem>().ModControl != ModControlMode.Disabled &&
+                        !SystemsContainer.Get<ModSystem>().AllowedParts.Contains(pps.partName.ToLower()))
                     {
                         var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the banned " +
                                   $"part '{pps.partName}'!. Skipping load.";
 
                         Debug.LogWarning(msg);
-                        ChatSystem.Singleton.PmMessageServer(msg);
+                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
 
                         return null;
                     }
@@ -246,7 +246,7 @@ namespace LunaClient.Systems.VesselProtoSys
                                   $"part '{pps.partName}'!. Skipping load.";
 
                         Debug.LogWarning(msg);
-                        ChatSystem.Singleton.PmMessageServer(msg);
+                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
 
                         ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing {pps.partName}", 10f,
                             ScreenMessageStyle.UPPER_CENTER);
@@ -263,7 +263,7 @@ namespace LunaClient.Systems.VesselProtoSys
                                   $"contains the missing resource '{missingeResource.resourceName}'!. Skipping load.";
 
                         Debug.LogWarning(msg);
-                        ChatSystem.Singleton.PmMessageServer(msg);
+                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
 
                         ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing the resource " +
                                                          $"{missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
@@ -286,7 +286,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             //Register asteroids from other players
             if (ProtoVesselIsAsteroid(possibleAsteroid))
-                AsteroidSystem.Singleton.RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
+                SystemsContainer.Get<AsteroidSystem>().RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
         }
 
         /// <summary>

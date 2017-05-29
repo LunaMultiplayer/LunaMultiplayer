@@ -14,8 +14,8 @@ namespace LunaClient.Systems.VesselLockSys
             if (data == GameScenes.FLIGHT) return;
 
             //Always release the update lock and the spectate lock
-            LockSystem.Singleton.ReleaseLocksWithPrefix("update-");
-            LockSystem.Singleton.ReleaseSpectatorLock();
+            SystemsContainer.Get<LockSystem>().ReleaseLocksWithPrefix("update-");
+            SystemsContainer.Get<LockSystem>().ReleaseSpectatorLock();
             InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
 
             switch (data)
@@ -42,8 +42,8 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         private static void ReleaseAllControlLocks()
         {
-            LockSystem.Singleton.ReleaseLocksWithPrefix("control-");
-            LockSystem.Singleton.ReleaseSpectatorLock();
+            SystemsContainer.Get<LockSystem>().ReleaseLocksWithPrefix("control-");
+            SystemsContainer.Get<LockSystem>().ReleaseSpectatorLock();
             VesselCommon.IsSpectating = false;
         }
 
@@ -52,7 +52,7 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         private static void ReleaseAsteroidLock()
         {
-            LockSystem.Singleton.ReleaseLocksWithPrefix("asteroid");
+            SystemsContainer.Get<LockSystem>().ReleaseLocksWithPrefix("asteroid");
         }
 
         /// <summary>
@@ -62,15 +62,15 @@ namespace LunaClient.Systems.VesselLockSys
         {
             //Release all update locks as we are switching to a new vessel. 
             //Anyway, we would still have the control lock of our old vessel
-            LockSystem.Singleton.ReleaseLocksWithPrefix("update-");
+            SystemsContainer.Get<LockSystem>().ReleaseLocksWithPrefix("update-");
 
             if (SettingsSystem.ServerSettings.DropControlOnVesselSwitching)
             {
                 //Drop all the control locks if we are switching and the above setting is on
-                LockSystem.Singleton.ReleaseLocksWithPrefix("control-");
+                SystemsContainer.Get<LockSystem>().ReleaseLocksWithPrefix("control-");
             }
 
-            if (vessel != null && (!LockSystem.Singleton.LockExists($"control-{vessel.id}") || LockSystem.Singleton.LockIsOurs($"control-{vessel.id}")))
+            if (vessel != null && (!SystemsContainer.Get<LockSystem>().LockExists($"control-{vessel.id}") || SystemsContainer.Get<LockSystem>().LockIsOurs($"control-{vessel.id}")))
             {
                 //We managed to get the ship so set the update lock and in case we don't have the control lock aquire it.
                 System.StopSpectatingAndGetControl(vessel, true);

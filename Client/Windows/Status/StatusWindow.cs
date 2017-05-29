@@ -2,6 +2,7 @@
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using System.Collections.Generic;
+using LunaClient.Systems;
 using UnityEngine;
 
 namespace LunaClient.Windows.Status
@@ -12,7 +13,7 @@ namespace LunaClient.Windows.Status
 
         #region Public
 
-        public override bool Display => MainSystem.Singleton.GameRunning;
+        public override bool Display => SystemsContainer.Get<MainSystem>().GameRunning;
         public SubspaceDisplayEntry[] SubspaceDisplay { get; set; }
         public bool DisconnectEventHandled { get; set; } = true;
         public bool ColorEventHandled { get; set; } = true;
@@ -125,7 +126,7 @@ namespace LunaClient.Windows.Status
                 if (Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
                 {
                     LastStatusUpdate = Time.realtimeSinceStartup;
-                    SubspaceDisplay = WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries();
+                    SubspaceDisplay = SystemsContainer.Get<WarpSystem>().WarpEntryDisplay.GetSubspaceDisplayEntries();
                 }
             }
         }
@@ -141,7 +142,7 @@ namespace LunaClient.Windows.Status
 
         private void CheckWindowLock()
         {
-            if (!MainSystem.Singleton.GameRunning)
+            if (!SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 RemoveWindowLock();
                 return;

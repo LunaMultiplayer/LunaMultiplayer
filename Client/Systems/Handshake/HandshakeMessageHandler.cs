@@ -40,7 +40,7 @@ namespace LunaClient.Systems.Handshake
                     rsa.FromXmlString(SettingsSystem.CurrentSettings.PrivateKey);
                     var signature = rsa.SignData(challange, CryptoConfig.CreateFromName("SHA256"));
                     System.MessageSender.SendHandshakeResponse(signature);
-                    MainSystem.Singleton.NetworkState = ClientState.Handshaking;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Handshaking;
                 }
             }
             catch (Exception e)
@@ -61,8 +61,8 @@ namespace LunaClient.Systems.Handshake
                 //If we handshook successfully, the mod data will be available to read.
                 if (reply == HandshakeReply.HandshookSuccessfully)
                 {
-                    ModSystem.Singleton.ModControl = data.ModControlMode;
-                    if (ModSystem.Singleton.ModControl != ModControlMode.Disabled)
+                    SystemsContainer.Get<ModSystem>().ModControl = data.ModControlMode;
+                    if (SystemsContainer.Get<ModSystem>().ModControl != ModControlMode.Disabled)
                         modFileData = Encoding.UTF8.GetString(data.ModFileData);
                 }
             }
@@ -80,7 +80,7 @@ namespace LunaClient.Systems.Handshake
                         if (ModFileParser.ParseModFile(modFileData))
                         {
                             Debug.Log("[LMP]: Handshake successful");
-                            MainSystem.Singleton.NetworkState = ClientState.Authenticated;
+                            SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Authenticated;
                         }
                         else
                         {

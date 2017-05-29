@@ -1,16 +1,5 @@
-﻿using LunaClient.Base.Interface;
-using LunaClient.Systems.Lock;
+﻿using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselChangeSys;
-using LunaClient.Systems.VesselDockSys;
-using LunaClient.Systems.VesselFlightStateSys;
-using LunaClient.Systems.VesselImmortalSys;
-using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselPositionSys;
-using LunaClient.Systems.VesselProtoSys;
-using LunaClient.Systems.VesselRangeSys;
-using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using System;
 using System.Collections.Generic;
@@ -65,7 +54,7 @@ namespace LunaClient.Systems
         /// Check if someone is spectating current vessel
         /// </summary>
         /// <returns></returns>
-        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null && LockSystem.Singleton.SpectatorLockExists(FlightGlobals.ActiveVessel.id);
+        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null && SystemsContainer.Get<LockSystem>().SpectatorLockExists(FlightGlobals.ActiveVessel.id);
 
 
         /// <summary>
@@ -73,7 +62,7 @@ namespace LunaClient.Systems
         /// </summary>
         public static Guid[] GetControlledVesselIds()
         {
-            return LockSystem.Singleton.GetLocksWithPrefix("control-").Select(v => new Guid(LockSystem.TrimLock(v))).ToArray();
+            return SystemsContainer.Get<LockSystem>().GetLocksWithPrefix("control-").Select(v => new Guid(LockSystem.TrimLock(v))).ToArray();
         }
 
         /// <summary>
@@ -107,7 +96,7 @@ namespace LunaClient.Systems
         {
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
 
-            return LockSystem.Singleton.GetPlayerLocksPrefix(SettingsSystem.CurrentSettings.PlayerName, "update-")
+            return SystemsContainer.Get<LockSystem>().GetPlayerLocksPrefix(SettingsSystem.CurrentSettings.PlayerName, "update-")
                 .Select(l => new Guid(LockSystem.TrimLock(l)))
                 .Where(vi => vi != FlightGlobals.ActiveVessel.id)
                 .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == vi))
@@ -120,7 +109,7 @@ namespace LunaClient.Systems
         /// </summary>
         public static IEnumerable<Vessel> GetAbandonedVessels()
         {
-            return FlightGlobals.VesselsUnloaded.Where(v => !LockSystem.Singleton.LockExists($"update-{v.id}"));
+            return FlightGlobals.VesselsUnloaded.Where(v => !SystemsContainer.Get<LockSystem>().LockExists($"update-{v.id}"));
         }
 
         /// <summary>
@@ -129,16 +118,16 @@ namespace LunaClient.Systems
         public static bool VesselIsControlledAndInPastSubspace(Guid vesselId)
         {
             var owner = "";
-            if (LockSystem.Singleton.LockExists($"control-{vesselId}"))
+            if (SystemsContainer.Get<LockSystem>().LockExists($"control-{vesselId}"))
             {
-                owner = LockSystem.Singleton.LockOwner($"control-{vesselId}");
+                owner = SystemsContainer.Get<LockSystem>().LockOwner($"control-{vesselId}");
             }
-            else if (LockSystem.Singleton.LockExists($"update-{vesselId}"))
+            else if (SystemsContainer.Get<LockSystem>().LockExists($"update-{vesselId}"))
             {
-                owner = LockSystem.Singleton.LockOwner($"update-{vesselId}");
+                owner = SystemsContainer.Get<LockSystem>().LockOwner($"update-{vesselId}");
             }
 
-            return !string.IsNullOrEmpty(owner) && WarpSystem.Singleton.PlayerIsInPastSubspace(owner);
+            return !string.IsNullOrEmpty(owner) && SystemsContainer.Get<WarpSystem>().PlayerIsInPastSubspace(owner);
         }
 
         /// <summary>
@@ -189,53 +178,6 @@ namespace LunaClient.Systems
             var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), landingPadPosition);
 
             return landingPadDistance < distance;
-        }
-
-        public static ISystem[] GetSingletons => new ISystem[]
-        {
-            VesselLockSystem.Singleton,
-            VesselPositionSystem.Singleton,
-            VesselFlightStateSystem.Singleton,
-            VesselUpdateSystem.Singleton,
-            VesselChangeSystem.Singleton,
-            VesselProtoSystem.Singleton,
-            VesselRemoveSystem.Singleton,
-            VesselImmortalSystem.Singleton,
-            VesselDockSystem.Singleton,
-            VesselRangeSystem.Singleton
-        };
-
-        public static bool EnableAllSystems
-        {
-            set
-            {
-                if (value)
-                {
-                    VesselLockSystem.Singleton.Enabled = true;
-                    VesselPositionSystem.Singleton.Enabled = true;
-                    VesselFlightStateSystem.Singleton.Enabled = true;
-                    VesselUpdateSystem.Singleton.Enabled = true;
-                    VesselChangeSystem.Singleton.Enabled = true;
-                    VesselProtoSystem.Singleton.Enabled = true;
-                    VesselRemoveSystem.Singleton.Enabled = true;
-                    VesselImmortalSystem.Singleton.Enabled = true;
-                    VesselDockSystem.Singleton.Enabled = true;
-                    VesselRangeSystem.Singleton.Enabled = true;
-                }
-                else
-                {
-                    VesselLockSystem.Singleton.Enabled = false;
-                    VesselPositionSystem.Singleton.Enabled = false;
-                    VesselFlightStateSystem.Singleton.Enabled = false;
-                    VesselUpdateSystem.Singleton.Enabled = false;
-                    VesselChangeSystem.Singleton.Enabled = false;
-                    VesselProtoSystem.Singleton.Enabled = false;
-                    VesselRemoveSystem.Singleton.Enabled = false;
-                    VesselImmortalSystem.Singleton.Enabled = false;
-                    VesselDockSystem.Singleton.Enabled = false;
-                    VesselRangeSystem.Singleton.Enabled = false;
-                }
-            }
         }
     }
 }

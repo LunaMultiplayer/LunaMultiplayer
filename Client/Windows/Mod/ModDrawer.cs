@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.Mod;
+﻿using LunaClient.Systems;
+using LunaClient.Systems.Mod;
 using UnityEngine;
 
 namespace LunaClient.Windows.Mod
@@ -11,7 +12,7 @@ namespace LunaClient.Windows.Mod
             GUI.DragWindow(MoveRect);
             GUILayout.Label("Failed mod validation", LabelStyle);
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
-            GUILayout.Label(ModSystem.Singleton.FailText, LabelStyle);
+            GUILayout.Label(SystemsContainer.Get<ModSystem>().FailText, LabelStyle);
             GUILayout.EndScrollView();
             if (GUILayout.Button("Close", ButtonStyle))
                 Display = false;

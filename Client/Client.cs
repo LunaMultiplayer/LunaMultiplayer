@@ -1,4 +1,5 @@
 using System;
+using LunaClient.Systems;
 using UnityEngine;
 
 namespace LunaClient
@@ -22,33 +23,33 @@ namespace LunaClient
             DontDestroyOnLoad(this);
             try
             {
-                MainSystem.Singleton.Reset();
+                SystemsContainer.Get<MainSystem>().Reset();
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(Awake)}");
+                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(Awake)}");
             }
         }
 
         public void OnApplicationQuit()
         {
-            MainSystem.Singleton.OnExit();
+            SystemsContainer.Get<MainSystem>().OnExit();
         }
 
         public void OnDestroy()
         {
-            MainSystem.Singleton.OnExit();
+            SystemsContainer.Get<MainSystem>().OnExit();
         }
 
         public void Update()
         {
             try
             {
-                MainSystem.Singleton.MainSystemUpdate();
+                SystemsContainer.Get<MainSystem>().MainSystemUpdate();
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(Update)}");
+                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(Update)}");
             }
         }
 
@@ -57,11 +58,11 @@ namespace LunaClient
         {
             try
             {
-                MainSystem.Singleton.OnGui();
+                SystemsContainer.Get<MainSystem>().OnGui();
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(OnGUI)}");
+                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(OnGUI)}");
             }
         }
 
@@ -69,11 +70,11 @@ namespace LunaClient
         {
             try
             {
-                MainSystem.Singleton.MainSystemFixedUpdate();
+                SystemsContainer.Get<MainSystem>().MainSystemFixedUpdate();
             }
             catch (Exception e)
             {
-                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(FixedUpdate)}");
+                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(FixedUpdate)}");
             }
         }
     }

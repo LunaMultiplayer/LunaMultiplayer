@@ -18,16 +18,16 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
 
             //Only remove the vessel if we own the update lock
-            if (LockSystem.Singleton.LockIsOurs($"update-{dyingVessel.id}"))
+            if (SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{dyingVessel.id}"))
             {
                 Debug.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
-                KerbalSystem.Singleton.MessageSender.SendKerbalsInVessel(dyingVessel);
+                SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(dyingVessel);
 
                 System.MessageSender.SendVesselRemove(dyingVessel.id);
 
                 //Vessel is dead so remove the locks
-                LockSystem.Singleton.ReleaseLock($"control-{dyingVessel.id}");
-                LockSystem.Singleton.ReleaseLock($"update-{dyingVessel.id}");
+                SystemsContainer.Get<LockSystem>().ReleaseLock($"control-{dyingVessel.id}");
+                SystemsContainer.Get<LockSystem>().ReleaseLock($"update-{dyingVessel.id}");
             }
         }
 
@@ -45,13 +45,13 @@ namespace LunaClient.Systems.VesselRemoveSys
             }
 
             Debug.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
-            KerbalSystem.Singleton.MessageSender.SendKerbalsInVessel(recoveredVessel);
+            SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(recoveredVessel);
 
             System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
 
             //Vessel is recovered so remove the locks
-            LockSystem.Singleton.ReleaseLock($"control-{recoveredVessel.vesselID}");
-            LockSystem.Singleton.ReleaseLock($"update-{recoveredVessel.vesselID}");
+            SystemsContainer.Get<LockSystem>().ReleaseLock($"control-{recoveredVessel.vesselID}");
+            SystemsContainer.Get<LockSystem>().ReleaseLock($"update-{recoveredVessel.vesselID}");
         }
 
         /// <summary>
@@ -66,13 +66,13 @@ namespace LunaClient.Systems.VesselRemoveSys
             }
 
             Debug.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
-            KerbalSystem.Singleton.MessageSender.SendKerbalsInVessel(terminatedVessel);
+            SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(terminatedVessel);
 
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
 
             //Vessel is terminated so remove locks
-            LockSystem.Singleton.ReleaseLock($"control-{terminatedVessel.vesselID}");
-            LockSystem.Singleton.ReleaseLock($"update-{terminatedVessel.vesselID}");
+            SystemsContainer.Get<LockSystem>().ReleaseLock($"control-{terminatedVessel.vesselID}");
+            SystemsContainer.Get<LockSystem>().ReleaseLock($"update-{terminatedVessel.vesselID}");
         }
 
         /// <summary>
@@ -81,7 +81,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// <returns></returns>
         private static bool VesselControlLockIsOurs(ProtoVessel vessel)
         {
-            return !LockSystem.Singleton.LockExists($"control-{vessel.vesselID}") || LockSystem.Singleton.LockIsOurs($"control-{vessel.vesselID}");
+            return !SystemsContainer.Get<LockSystem>().LockExists($"control-{vessel.vesselID}") || SystemsContainer.Get<LockSystem>().LockIsOurs($"control-{vessel.vesselID}");
         }
     }
 }

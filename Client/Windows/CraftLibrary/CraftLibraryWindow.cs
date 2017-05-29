@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
@@ -8,11 +9,9 @@ namespace LunaClient.Windows.CraftLibrary
 {
     public partial class CraftLibraryWindow : SystemWindow<CraftLibraryWindow, CraftLibrarySystem>
     {
-        public override CraftLibrarySystem System => CraftLibrarySystem.Singleton;
-
         public override void Update()
         {
-            Display &= MainSystem.Singleton.GameRunning;
+            Display &= SystemsContainer.Get<MainSystem>().GameRunning;
             SafeDisplay = Display;
         }
 
@@ -80,7 +79,7 @@ namespace LunaClient.Windows.CraftLibrary
 
         public void CheckWindowLock()
         {
-            if (!MainSystem.Singleton.GameRunning)
+            if (!SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 RemoveWindowLock();
                 return;

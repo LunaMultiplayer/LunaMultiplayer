@@ -1,11 +1,10 @@
 ﻿using KSP.UI.Screens;
-using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LunaClient.Systems.Toolbar
 {
-    public class ToolbarSystem : System<ToolbarSystem>
+    public class ToolbarSystem : Base.System
     {
         public void ToolbarChanged()
         {
@@ -124,7 +123,7 @@ namespace LunaClient.Systems.Toolbar
         private static void OnBlizzyClick(ClickEvent clickArgs) => HandleButtonClick();
 
         private static void HandleButtonClick()
-            => MainSystem.Singleton.ToolbarShowGui = !MainSystem.Singleton.ToolbarShowGui;
+            => SystemsContainer.Get<MainSystem>().ToolbarShowGui = !SystemsContainer.Get<MainSystem>().ToolbarShowGui;
 
         private static void DoNothing()
         {

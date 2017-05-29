@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Windows;
 using LunaClient.Windows.Chat;
 using LunaCommon.Message.Data.Chat;
 using System.Collections.Generic;
@@ -8,7 +9,7 @@ namespace LunaClient.Systems.Chat
 {
     public class ChatEvents : SubSystem<ChatSystem>
     {
-        private static ChatWindow Screen => ChatWindow.Singleton;
+        private static ChatWindow Screen => WindowsContainer.Get<ChatWindow>();
 
         public void HandleChatEvents()
         {

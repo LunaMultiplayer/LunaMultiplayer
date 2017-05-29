@@ -16,13 +16,13 @@ namespace LunaClient.Systems.Asteroid
 
         public void OnAsteroidSpawned(Vessel asteroid)
         {
-            if (LockSystem.Singleton.LockIsOurs("asteroid"))
+            if (SystemsContainer.Get<LockSystem>().LockIsOurs("asteroid"))
             {
                 if (System.GetAsteroidCount() <= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
                 {
                     Debug.Log("[LMP]: Spawned in new server asteroid!");
                     System.ServerAsteroids.Add(asteroid.id.ToString());
-                    VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid);
+                    SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid);
                 }
                 else
                 {

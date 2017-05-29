@@ -7,6 +7,7 @@ using LunaClient.Windows.Status;
 using LunaClient.Windows.UniverseConverter;
 using LunaCommon.Enums;
 using System;
+using LunaClient.Systems;
 using UnityEngine;
 
 namespace LunaClient.Windows.Options
@@ -47,11 +48,11 @@ namespace LunaClient.Windows.Options
                 TempColor = PlayerColorSystem.GenerateRandomColor();
             if (GUILayout.Button("Set", ButtonStyle))
             {
-                StatusWindow.Singleton.ColorEventHandled = false;
+                WindowsContainer.Get<StatusWindow>().ColorEventHandled = false;
                 SettingsSystem.CurrentSettings.PlayerColor = TempColor;
-                SettingsSystem.Singleton.SaveSettings();
-                if (MainSystem.Singleton.NetworkState == ClientState.Running)
-                    PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                if (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Running)
+                    SystemsContainer.Get<PlayerColorSystem>().MessageSender.SendPlayerColorToServer();
             }
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
@@ -76,7 +77,7 @@ namespace LunaClient.Windows.Options
                         NewCacheSize = tempCacheSize.ToString();
                     }
                     SettingsSystem.CurrentSettings.CacheSize = tempCacheSize;
-                    SettingsSystem.Singleton.SaveSettings();
+                    SystemsContainer.Get<SettingsSystem>().SaveSettings();
                 }
                 else
                 {
@@ -98,7 +99,7 @@ namespace LunaClient.Windows.Options
                     if (Event.current.keyCode != KeyCode.Escape)
                     {
                         SettingsSystem.CurrentSettings.ChatKey = Event.current.keyCode;
-                        SettingsSystem.Singleton.SaveSettings();
+                        SystemsContainer.Get<SettingsSystem>().SaveSettings();
                         SettingChat = false;
                     }
                     else
@@ -111,38 +112,38 @@ namespace LunaClient.Windows.Options
             GUILayout.Space(10);
             GUILayout.Label("Generate a server LMPModControl:");
             if (GUILayout.Button("Generate blacklist LMPModControl.txt"))
-                ModSystem.Singleton.GenerateModControlFile(false);
+                SystemsContainer.Get<ModSystem>().GenerateModControlFile(false);
             if (GUILayout.Button("Generate whitelist LMPModControl.txt"))
-                ModSystem.Singleton.GenerateModControlFile(true);
-            UniverseConverterWindow.Singleton.Display = GUILayout.Toggle(UniverseConverterWindow.Singleton.Display, "Generate Universe from saved game", ButtonStyle);
+                SystemsContainer.Get<ModSystem>().GenerateModControlFile(true);
+            WindowsContainer.Get<UniverseConverterWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<UniverseConverterWindow>().Display, "Generate Universe from saved game", ButtonStyle);
             if (GUILayout.Button("Reset disclaimer"))
             {
                 SettingsSystem.CurrentSettings.DisclaimerAccepted = false;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
             }
             var settingCompression = GUILayout.Toggle(SettingsSystem.CurrentSettings.CompressionEnabled, "Enable compression", ButtonStyle);
             if (settingCompression != SettingsSystem.CurrentSettings.CompressionEnabled)
             {
                 SettingsSystem.CurrentSettings.CompressionEnabled = settingCompression;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
             }
             var settingInterpolation = GUILayout.Toggle(SettingsSystem.CurrentSettings.InterpolationEnabled, "Enable interpolation", ButtonStyle);
             if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
             {
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
             }
             var positionFudge = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionFudgeEnable, "Enable position fudge", ButtonStyle);
             if (positionFudge != SettingsSystem.CurrentSettings.PositionFudgeEnable)
             {
                 SettingsSystem.CurrentSettings.PositionFudgeEnable = positionFudge;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
             }
             var packOtherVessels = GUILayout.Toggle(SettingsSystem.CurrentSettings.PackOtherControlledVessels, "Pack other vessels", ButtonStyle);
             if (packOtherVessels != SettingsSystem.CurrentSettings.PackOtherControlledVessels)
             {
                 SettingsSystem.CurrentSettings.PackOtherControlledVessels = packOtherVessels;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
             }
 
             GUILayout.BeginHorizontal();
@@ -154,14 +155,14 @@ namespace LunaClient.Windows.Options
                 if (!Enum.IsDefined(typeof(LmpToolbarType), newSetting))
                     newSetting = 0;
                 SettingsSystem.CurrentSettings.ToolbarType = (LmpToolbarType)newSetting;
-                SettingsSystem.Singleton.SaveSettings();
+                SystemsContainer.Get<SettingsSystem>().SaveSettings();
                 UpdateToolbarString();
-                ToolbarSystem.Singleton.ToolbarChanged();
+                SystemsContainer.Get<ToolbarSystem>().ToolbarChanged();
             }
             GUILayout.EndHorizontal();
 #if DEBUG
             if (GUILayout.Button("Check Common.dll stock parts"))
-                ModSystem.Singleton.CheckCommonStockParts();
+                SystemsContainer.Get<ModSystem>().CheckCommonStockParts();
 #endif
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Close", ButtonStyle))

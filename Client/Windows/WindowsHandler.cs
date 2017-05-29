@@ -1,5 +1,5 @@
-﻿using System;
-using LunaClient.Base.Interface;
+﻿using LunaClient.Base.Interface;
+using LunaClient.Systems;
 using LunaClient.Windows.Chat;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.CraftLibrary;
@@ -10,60 +10,53 @@ using LunaClient.Windows.ServerList;
 using LunaClient.Windows.Status;
 using LunaClient.Windows.Systems;
 using LunaClient.Windows.UniverseConverter;
+using System;
 
 namespace LunaClient.Windows
 {
     public static class WindowsHandler
     {
+        private static readonly IWindow[] Windows =
+        {
+            WindowsContainer.Get<ConnectionWindow>(),
+            WindowsContainer.Get<StatusWindow>(),
+            WindowsContainer.Get<ChatWindow>(),
+            WindowsContainer.Get<CraftLibraryWindow>(),
+            WindowsContainer.Get<DebugWindow>(),
+            WindowsContainer.Get<SystemsWindow>(),
+            WindowsContainer.Get<ModWindow>(),
+            WindowsContainer.Get<OptionsWindow>(),
+            WindowsContainer.Get<UniverseConverterWindow>(),
+            WindowsContainer.Get<ServerListWindow>(),
+        };
+
         public static void Update()
         {
-            TryUpdate(ConnectionWindow.Singleton);
-            TryUpdate(StatusWindow.Singleton);
-            TryUpdate(ChatWindow.Singleton);
-            TryUpdate(CraftLibraryWindow.Singleton);
-            TryUpdate(DebugWindow.Singleton);
-            TryUpdate(SystemsWindow.Singleton);
-            TryUpdate(ModWindow.Singleton);
-            TryUpdate(OptionsWindow.Singleton);
-            TryUpdate(UniverseConverterWindow.Singleton);
-            TryUpdate(ServerListWindow.Singleton);
+            foreach (var window in Windows)
+            {
+                try
+                {
+                    window.Update();
+                }
+                catch (Exception e)
+                {
+                    SystemsContainer.Get<MainSystem>().HandleException(e, "WindowsHandler-Update");
+                }
+            }
         }
-        
+
         public static void OnGui()
         {
-            TryOnGui(ConnectionWindow.Singleton);
-            TryOnGui(StatusWindow.Singleton);
-            TryOnGui(ChatWindow.Singleton);
-            TryOnGui(CraftLibraryWindow.Singleton);
-            TryOnGui(DebugWindow.Singleton);
-            TryOnGui(SystemsWindow.Singleton);
-            TryOnGui(ModWindow.Singleton);
-            TryOnGui(OptionsWindow.Singleton);
-            TryOnGui(UniverseConverterWindow.Singleton);
-            TryOnGui(ServerListWindow.Singleton);
-        }
-
-        private static void TryUpdate(IWindow window)
-        {
-            try
+            foreach (var window in Windows)
             {
-                window.Update();
-            }
-            catch (Exception e)
-            {
-                MainSystem.Singleton.HandleException(e, "WindowsHandler-Update");
-            }
-        }
-
-        private static void TryOnGui(IWindow window)
-        {
-            try
-            {
-                window.OnGui();
-            }
-            catch (Exception e)
-            {
-                MainSystem.Singleton.HandleException(e, "WindowsHandler-OnGui");
+                try
+                {
+                    window.OnGui();
+                }
+                catch (Exception e)
+                {
+                    SystemsContainer.Get<MainSystem>().HandleException(e, "WindowsHandler-OnGui");
+                }
             }
         }
     }

@@ -83,7 +83,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 VesselCommon.IsSpectating)
                 return false;
 
-            if (ModSystem.Singleton.ModControl != ModControlMode.Disabled)
+            if (SystemsContainer.Get<ModSystem>().ModControl != ModControlMode.Disabled)
             {
                 BannedPartsStr = GetInvalidVesselParts(FlightGlobals.ActiveVessel);
                 return string.IsNullOrEmpty(BannedPartsStr);
@@ -138,9 +138,9 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     if (BannedPartsMessage != null)
                         BannedPartsMessage.duration = 0;
-                    if (ModSystem.Singleton.ModControl == ModControlMode.EnabledStopInvalidPartSync)
+                    if (SystemsContainer.Get<ModSystem>().ModControl == ModControlMode.EnabledStopInvalidPartSync)
                         BannedPartsMessage = ScreenMessages.PostScreenMessage($"Active vessel contains the following banned parts, it will not be saved to the server:\n{BannedPartsStr}", 2f, ScreenMessageStyle.UPPER_CENTER);
-                    if (ModSystem.Singleton.ModControl == ModControlMode.EnabledStopInvalidPartLaunch)
+                    if (SystemsContainer.Get<ModSystem>().ModControl == ModControlMode.EnabledStopInvalidPartLaunch)
                         BannedPartsMessage = ScreenMessages.PostScreenMessage($"Active vessel contains the following banned parts, you will be unable to launch on this server:\n{BannedPartsStr}", 2f, ScreenMessageStyle.UPPER_CENTER);
 
                 }
@@ -191,7 +191,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToReLoad)
                     {
                         VesselLoader.ReloadVessel(vesselProto.Value);
-                        VesselPositionSystem.Singleton.UpdateVesselPosition(vesselProto.Value.VesselId);
+                        SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPosition(vesselProto.Value.VesselId);
                     }
 
                     //Load vessels that don't exist and are in our subspace
@@ -203,7 +203,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToLoad)
                     {
                         VesselLoader.LoadVessel(vesselProto.Value);
-                        VesselPositionSystem.Singleton.UpdateVesselPosition(vesselProto.Value.VesselId);
+                        SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPosition(vesselProto.Value.VesselId);
                     }
                 }
             }
@@ -220,7 +220,7 @@ namespace LunaClient.Systems.VesselProtoSys
         private static string GetInvalidVesselParts(Vessel checkVessel)
         {
             var bannedParts = checkVessel.BackupVessel().protoPartSnapshots
-                .Where(p => !ModSystem.Singleton.AllowedParts.Contains(p.partName.ToLower())).Distinct().ToArray();
+                .Where(p => !SystemsContainer.Get<ModSystem>().AllowedParts.Contains(p.partName.ToLower())).Distinct().ToArray();
 
             var bannedPartsStr = bannedParts.Aggregate("", (current, bannedPart) => current + $"{bannedPart}\n");
 
@@ -236,7 +236,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (possibleAsteroid.vesselType == VesselType.SpaceObject &&
                 possibleAsteroid.protoPartSnapshots?.Count == 1 &&
                 possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid")
-                AsteroidSystem.Singleton.RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
+                SystemsContainer.Get<AsteroidSystem>().RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
         }
 
         #endregion

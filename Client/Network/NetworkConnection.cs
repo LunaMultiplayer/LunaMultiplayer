@@ -8,6 +8,7 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using LunaClient.Systems;
 using UnityEngine;
 
 namespace LunaClient.Network
@@ -25,22 +26,22 @@ namespace LunaClient.Network
         {
             lock (DisconnectLock)
             {
-                if (MainSystem.Singleton.NetworkState != ClientState.Disconnected)
+                if (SystemsContainer.Get<MainSystem>().NetworkState != ClientState.Disconnected)
                 {
                     Debug.Log($"[LMP]: Disconnected, reason: {reason}");
                     if (!HighLogic.LoadedSceneIsEditor && !HighLogic.LoadedSceneIsFlight)
                     {
-                        MainSystem.Singleton.ForceQuit = true;
+                        SystemsContainer.Get<MainSystem>().ForceQuit = true;
                     }
                     else
                     {
                         //User is in flight so just display a message but don't force him to main menu...
-                        MainSystem.Singleton.DisplayDisconnectMessage = true;
+                        SystemsContainer.Get<MainSystem>().DisplayDisconnectMessage = true;
                     }
 
-                    MainSystem.Singleton.GameRunning = false;
-                    MainSystem.Singleton.Status = $"Disconnected: {reason}";
-                    MainSystem.Singleton.NetworkState = ClientState.Disconnected;
+                    SystemsContainer.Get<MainSystem>().GameRunning = false;
+                    SystemsContainer.Get<MainSystem>().Status = $"Disconnected: {reason}";
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Disconnected;
                     NetworkMain.ClientConnection.Disconnect(reason);
                     NetworkMain.ClientConnection.Shutdown(reason);
                     NetworkMain.ResetConnectionStaticsAndQueues();
@@ -71,13 +72,13 @@ namespace LunaClient.Network
         {
             try
             {
-                if (MainSystem.Singleton.NetworkState == ClientState.Disconnected)
+                if (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Disconnected)
                 {
                     var endpoint = Common.CreateEndpointFromString(endpointString);
-                    MainSystem.Singleton.Status = $"Connecting to {endpoint.Address} port {endpoint.Port}";
+                    SystemsContainer.Get<MainSystem>().Status = $"Connecting to {endpoint.Address} port {endpoint.Port}";
                     Debug.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
 
-                    MainSystem.Singleton.NetworkState = ClientState.Connecting;
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Connecting;
                     ConnectToServerAddress(endpoint);
                 }
                 else
@@ -87,7 +88,7 @@ namespace LunaClient.Network
             }
             catch (Exception)
             {
-                MainSystem.Singleton.Status = $"Invalid IP address: {endpointString}";
+                SystemsContainer.Get<MainSystem>().Status = $"Invalid IP address: {endpointString}";
             }
         }
 
@@ -103,7 +104,7 @@ namespace LunaClient.Network
                 NetworkMain.ClientConnection.FlushSendQueue();
 
                 var connectionTrials = 0;
-                while (MainSystem.Singleton.NetworkState == ClientState.Connecting &&
+                while (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Connecting &&
                     NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected &&
                     connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries)
                 {
@@ -114,11 +115,11 @@ namespace LunaClient.Network
                 if (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Disconnected)
                 {
                     Debug.Log($"[LMP]: Connected to {destination.Address} port {destination.Port}");
-                    MainSystem.Singleton.Status = "Connected";
-                    MainSystem.Singleton.NetworkState = ClientState.Connected;
+                    SystemsContainer.Get<MainSystem>().Status = "Connected";
+                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Connected;
                     NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg>(new HandshakeRequestMsgData()));
                 }
-                else if (MainSystem.Singleton.NetworkState == ClientState.Connecting)
+                else if (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Connecting)
                 {
                     Debug.LogError("[LMP]: Failed to connect within the timeout!");
                     Disconnect("Initial connection timeout");

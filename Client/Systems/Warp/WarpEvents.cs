@@ -45,7 +45,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public void OnSceneChanged(GameScenes data)
         {
-            if (!System.SyncedToLastSubspace && MainSystem.Singleton.GameRunning && HighLogic.LoadedSceneIsGame)
+            if (!System.SyncedToLastSubspace && SystemsContainer.Get<MainSystem>().GameRunning && HighLogic.LoadedSceneIsGame)
             {
                 System.CurrentSubspace = System.LatestSubspace;
                 System.SyncedToLastSubspace = true;

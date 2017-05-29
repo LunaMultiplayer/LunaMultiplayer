@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
@@ -113,25 +114,25 @@ namespace LunaClient.Windows.Systems
 
                 LmpProfilerText = LunaProfiler.GetProfilersData();
 
-                AsteroidProfilerText = AsteroidSystem.Singleton.GetProfilersData();
-                CraftLibraryProfilerText = CraftLibrarySystem.Singleton.GetProfilersData();
-                FlagProfilerText = FlagSystem.Singleton.GetProfilersData();
-                ScenarioProfilerText = ScenarioSystem.Singleton.GetProfilersData();
-                TimeSyncerProfilerText = TimeSyncerSystem.Singleton.GetProfilersData();
-                ModApiProfilerText = ModApiSystem.Singleton.GetProfilersData();
-                LockProfilerText = LockSystem.Singleton.GetProfilersData();
-                KerbalProfilerText = KerbalSystem.Singleton.GetProfilersData();
-                VesselChangeProfilerText = VesselChangeSystem.Singleton.GetProfilersData();
-                VesselDockProfilerText = VesselDockSystem.Singleton.GetProfilersData();
-                VesselFlightStateProfilerText = VesselFlightStateSystem.Singleton.GetProfilersData();
-                VesselImmortalProfilerText = VesselImmortalSystem.Singleton.GetProfilersData();
-                VesselLockProfilerText = VesselLockSystem.Singleton.GetProfilersData();
-                VesselPositionProfilerText = VesselPositionSystem.Singleton.GetProfilersData();
-                VesselProtoProfilerText = VesselProtoSystem.Singleton.GetProfilersData();
-                VesselRangeProfilerText = VesselRangeSystem.Singleton.GetProfilersData();
-                VesselRemoveProfilerText = VesselRemoveSystem.Singleton.GetProfilersData();
-                VesselUpdateProfilerText = VesselUpdateSystem.Singleton.GetProfilersData();
-                WarpProfilerText = WarpSystem.Singleton.GetProfilersData();
+                AsteroidProfilerText = SystemsContainer.Get<AsteroidSystem>().GetProfilersData();
+                CraftLibraryProfilerText = SystemsContainer.Get<CraftLibrarySystem>().GetProfilersData();
+                FlagProfilerText = SystemsContainer.Get<FlagSystem>().GetProfilersData();
+                ScenarioProfilerText = SystemsContainer.Get<ScenarioSystem>().GetProfilersData();
+                TimeSyncerProfilerText = SystemsContainer.Get<TimeSyncerSystem>().GetProfilersData();
+                ModApiProfilerText = SystemsContainer.Get<ModApiSystem>().GetProfilersData();
+                LockProfilerText = SystemsContainer.Get<LockSystem>().GetProfilersData();
+                KerbalProfilerText = SystemsContainer.Get<KerbalSystem>().GetProfilersData();
+                VesselChangeProfilerText = SystemsContainer.Get<VesselChangeSystem>().GetProfilersData();
+                VesselDockProfilerText = SystemsContainer.Get<VesselDockSystem>().GetProfilersData();
+                VesselFlightStateProfilerText = SystemsContainer.Get<VesselFlightStateSystem>().GetProfilersData();
+                VesselImmortalProfilerText = SystemsContainer.Get<VesselImmortalSystem>().GetProfilersData();
+                VesselLockProfilerText = SystemsContainer.Get<VesselLockSystem>().GetProfilersData();
+                VesselPositionProfilerText = SystemsContainer.Get<VesselPositionSystem>().GetProfilersData();
+                VesselProtoProfilerText = SystemsContainer.Get<VesselProtoSystem>().GetProfilersData();
+                VesselRangeProfilerText = SystemsContainer.Get<VesselRangeSystem>().GetProfilersData();
+                VesselRemoveProfilerText = SystemsContainer.Get<VesselRemoveSystem>().GetProfilersData();
+                VesselUpdateProfilerText = SystemsContainer.Get<VesselUpdateSystem>().GetProfilersData();
+                WarpProfilerText = SystemsContainer.Get<WarpSystem>().GetProfilersData();
             }
         }
 
@@ -177,7 +178,7 @@ namespace LunaClient.Windows.Systems
 
         private void CheckWindowLock()
         {
-            if (!MainSystem.Singleton.GameRunning)
+            if (!SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 RemoveWindowLock();
                 return;

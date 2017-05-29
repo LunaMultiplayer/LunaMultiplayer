@@ -27,6 +27,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Threading;
+using LunaClient.Systems;
 using UnityEngine;
 
 namespace LunaClient.Network
@@ -40,7 +41,7 @@ namespace LunaClient.Network
         {
             try
             {
-                while (!MainSystem.Singleton.Quit)
+                while (!SystemsContainer.Get<MainSystem>().Quit)
                 {
                     while (NetworkMain.ClientConnection.ReadMessage(out var msg))
                     {
@@ -105,77 +106,77 @@ namespace LunaClient.Network
             switch (msg.MessageType)
             {
                 case ServerMessageType.Handshake:
-                    HandshakeSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<HandshakeSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Chat:
-                    ChatSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<ChatSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Settings:
-                    SettingsSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<SettingsSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.PlayerStatus:
-                    StatusSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<StatusSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.PlayerColor:
-                    PlayerColorSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<PlayerColorSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.PlayerConnection:
-                    PlayerConnectionSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<PlayerConnectionSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Scenario:
-                    ScenarioSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<ScenarioSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Kerbal:
-                    KerbalSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<KerbalSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Vessel:
                     switch (((VesselBaseMsgData)msg.Data).VesselMessageType)
                     {
                         case VesselMessageType.Update:
-                            VesselUpdateSystem.Singleton.EnqueueMessage(msg.Data);
+                            SystemsContainer.Get<VesselUpdateSystem>().EnqueueMessage(msg.Data);
                             break;
                         case VesselMessageType.Position:
-                            VesselPositionSystem.Singleton.EnqueueMessage(msg.Data);
+                            SystemsContainer.Get<VesselPositionSystem>().EnqueueMessage(msg.Data);
                             break;
                         case VesselMessageType.Flightstate:
-                            VesselFlightStateSystem.Singleton.EnqueueMessage(msg.Data);
+                            SystemsContainer.Get<VesselFlightStateSystem>().EnqueueMessage(msg.Data);
                             break;
                         case VesselMessageType.Change:
-                            VesselChangeSystem.Singleton.EnqueueMessage(msg.Data);
+                            SystemsContainer.Get<VesselChangeSystem>().EnqueueMessage(msg.Data);
                             break;
                         case VesselMessageType.ListReply:
                         case VesselMessageType.VesselsReply:
                         case VesselMessageType.Proto:
-                            VesselProtoSystem.Singleton.EnqueueMessage(msg.Data);
+                            SystemsContainer.Get<VesselProtoSystem>().EnqueueMessage(msg.Data);
                             break;
                         case VesselMessageType.Remove:
-                            VesselRemoveSystem.Singleton.EnqueueMessage(msg.Data);
+                            SystemsContainer.Get<VesselRemoveSystem>().EnqueueMessage(msg.Data);
                             break;
                     }
                     break;
                 case ServerMessageType.CraftLibrary:
-                    CraftLibrarySystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<CraftLibrarySystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Flag:
-                    FlagSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<FlagSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.SyncTime:
-                    TimeSyncerSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<TimeSyncerSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Motd:
-                    MotdSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<MotdSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Warp:
-                    WarpSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<WarpSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Admin:
-                    AdminSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<AdminSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Lock:
-                    LockSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<LockSystem>().EnqueueMessage(msg.Data);
                     break;
                 case ServerMessageType.Mod:
-                    ModApiSystem.Singleton.EnqueueMessage(msg.Data);
+                    SystemsContainer.Get<ModApiSystem>().EnqueueMessage(msg.Data);
                     break;
                 default:
                     Debug.LogError($"[LMP]: Unhandled Message type {msg.MessageType}");

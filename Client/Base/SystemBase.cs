@@ -8,6 +8,9 @@ namespace LunaClient.Base
     /// </summary>
     public abstract class SystemBase
     {
+        /// <summary>
+        /// Use this property to generate messages
+        /// </summary>
         public static ClientMessageFactory MessageFactory { get; } = new ClientMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
     }
 }

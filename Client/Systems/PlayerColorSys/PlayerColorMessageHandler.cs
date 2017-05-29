@@ -8,6 +8,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
+using LunaClient.Windows;
 using UniLinq;
 using UnityEngine;
 
@@ -34,9 +35,9 @@ namespace LunaClient.Systems.PlayerColorSys
                             var playerColor = System.ConvertStringToColor(data.PlayersColors[i].Value);
                             System.PlayerColors.Add(playerName, playerColor);
 
-                            StatusWindow.Singleton.ColorEventHandled = false; //Refresh colors in status window
+                            WindowsContainer.Get<StatusWindow>().ColorEventHandled = false; //Refresh colors in status window
                         }
-                        MainSystem.Singleton.NetworkState = ClientState.ColorsSynced;
+                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.ColorsSynced;
                     }
                     break;
                 case PlayerColorMessageType.Set:
@@ -49,7 +50,7 @@ namespace LunaClient.Systems.PlayerColorSys
                         System.PlayerColors[playerName] = playerColor;
                         UpdateVesselColors(playerName);
 
-                        StatusWindow.Singleton.ColorEventHandled = false;//Refresh colors in status window
+                        WindowsContainer.Get<StatusWindow>().ColorEventHandled = false;//Refresh colors in status window
                     }
                     break;
             }
@@ -60,7 +61,7 @@ namespace LunaClient.Systems.PlayerColorSys
         /// </summary>
         public void UpdateVesselColors(string playerName)
         {
-            var controlledVesselIds = LockSystem.Singleton.GetPlayerLocks(playerName)
+            var controlledVesselIds = SystemsContainer.Get<LockSystem>().GetPlayerLocks(playerName)
                 .Where(l => l.StartsWith("control-"))
                 .Select(l => l.Substring(8)).ToArray();
 
