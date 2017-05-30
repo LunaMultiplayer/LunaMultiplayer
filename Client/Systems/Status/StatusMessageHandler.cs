@@ -65,7 +65,7 @@ namespace LunaClient.Systems.Status
             }
             else
             {
-                System.PlayerStatusList.Add(newStatus.PlayerName, newStatus);
+                System.PlayerStatusList.TryAdd(newStatus.PlayerName, newStatus);
             }
         }
     }

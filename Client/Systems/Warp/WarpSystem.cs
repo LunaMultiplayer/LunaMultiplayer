@@ -4,7 +4,7 @@ using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Warp;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UniLinq;
 
 namespace LunaClient.Systems.Warp
@@ -30,7 +30,7 @@ namespace LunaClient.Systems.Warp
                     _currentSubspace = value;
 
                     if (!ClientSubspaceList.ContainsKey(SettingsSystem.CurrentSettings.PlayerName))
-                        ClientSubspaceList.Add(SettingsSystem.CurrentSettings.PlayerName, 0);
+                        ClientSubspaceList.TryAdd(SettingsSystem.CurrentSettings.PlayerName, 0);
 
                     ClientSubspaceList[SettingsSystem.CurrentSettings.PlayerName] = value;
                     SendChangeSubspaceMsg(value);
@@ -45,8 +45,8 @@ namespace LunaClient.Systems.Warp
             }
         }
 
-        public Dictionary<string, int> ClientSubspaceList { get; } = new Dictionary<string, int>();
-        public Dictionary<int, double> Subspaces { get; } = new Dictionary<int, double>();
+        public ConcurrentDictionary<string, int> ClientSubspaceList { get; } = new ConcurrentDictionary<string, int>();
+        public ConcurrentDictionary<int, double> Subspaces { get; } = new ConcurrentDictionary<int, double>();
         public int LatestSubspace => Subspaces.Any() ? Subspaces.OrderByDescending(s => s.Value).First().Key : 0;
         private ScreenMessage WarpMessage { get; set; }
         private WarpEvents WarpEvents { get; } = new WarpEvents();
@@ -57,6 +57,8 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Base overrides
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnDisabled()
         {
@@ -112,10 +114,9 @@ namespace LunaClient.Systems.Warp
         {
             if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
             {
-                if (SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
-                    DisplayMessage($"{SettingsSystem.ServerSettings.WarpMaster} has warp control", 1f);
-                else
-                    DisplayMessage("You have warp control", 1f);
+                DisplayMessage(SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName
+                        ? $"{SettingsSystem.ServerSettings.WarpMaster} has warp control"
+                        : "You have warp control", 1f);
             }
         }
 
@@ -184,7 +185,7 @@ namespace LunaClient.Systems.Warp
         public void RemovePlayer(string playerName)
         {
             if (ClientSubspaceList.ContainsKey(playerName))
-                ClientSubspaceList.Remove(playerName);
+                ClientSubspaceList.TryRemove(playerName, out _);
         }
 
         #endregion

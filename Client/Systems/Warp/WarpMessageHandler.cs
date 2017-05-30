@@ -35,7 +35,7 @@ namespace LunaClient.Systems.Warp
                             }
                             else
                             {
-                                System.ClientSubspaceList.Add(ps.Value, ps.Key);
+                                System.ClientSubspaceList.TryAdd(ps.Value, ps.Key);
                             }
                         }
 
@@ -74,7 +74,7 @@ namespace LunaClient.Systems.Warp
         private static void AddSubspace(int subspaceId, double subspaceTime)
         {
             if (!System.Subspaces.ContainsKey(subspaceId))
-                System.Subspaces.Add(subspaceId, subspaceTime);
+                System.Subspaces.TryAdd(subspaceId, subspaceTime);
         }
     }
 }

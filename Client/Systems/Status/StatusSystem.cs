@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
@@ -16,7 +17,7 @@ namespace LunaClient.Systems.Status
             StatusText = "Syncing"
         };
 
-        public Dictionary<string, PlayerStatus> PlayerStatusList { get; } = new Dictionary<string, PlayerStatus>();
+        public ConcurrentDictionary<string, PlayerStatus> PlayerStatusList { get; } = new ConcurrentDictionary<string, PlayerStatus>();
 
         private PlayerStatus LastPlayerStatus { get; } = new PlayerStatus();
 
@@ -27,6 +28,8 @@ namespace LunaClient.Systems.Status
         #endregion
 
         #region Base overrides
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
         {
@@ -60,7 +63,7 @@ namespace LunaClient.Systems.Status
         {
             if (PlayerStatusList.ContainsKey(playerToRemove))
             {
-                PlayerStatusList.Remove(playerToRemove);
+                PlayerStatusList.TryRemove(playerToRemove, out _);
                 LunaLog.Log($"[LMP]: Removed {playerToRemove} from Status list");
             }
             else

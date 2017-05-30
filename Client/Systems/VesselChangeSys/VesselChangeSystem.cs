@@ -2,9 +2,8 @@
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Types;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselChangeSys
 {
@@ -15,12 +14,14 @@ namespace LunaClient.Systems.VesselChangeSys
     {
         #region Fields & properties
 
-        public Queue<VesselChangeMsgData> IncomingChanges { get; set; } = new Queue<VesselChangeMsgData>();
+        public ConcurrentQueue<VesselChangeMsgData> IncomingChanges { get; private set; } = new ConcurrentQueue<VesselChangeMsgData>();
         public VesselChangeEvents VesselChangeEvents { get; } = new VesselChangeEvents();
 
         #endregion
 
         #region Base overrides
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
         {
@@ -33,7 +34,7 @@ namespace LunaClient.Systems.VesselChangeSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            IncomingChanges.Clear();
+            IncomingChanges = new ConcurrentQueue<VesselChangeMsgData>();
             GameEvents.onStageSeparation.Remove(VesselChangeEvents.OnStageSeparation);
             GameEvents.onPartDie.Remove(VesselChangeEvents.OnPartDie);
         }
@@ -49,9 +50,9 @@ namespace LunaClient.Systems.VesselChangeSys
         {
             if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
             {
-                while (IncomingChanges.Count > 0 && Time.fixedTime - IncomingChanges.Peek().ReceiveTime >= 0.5)
+                while (IncomingChanges.TryDequeue(out var value))
                 {
-                    HandleVesselChange(IncomingChanges.Dequeue());
+                    HandleVesselChange(value);
                 }
             }
         }

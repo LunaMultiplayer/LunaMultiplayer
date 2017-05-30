@@ -52,6 +52,8 @@ namespace LunaClient.Systems.CraftLibrary
 
         #region Base overrides
 
+        protected override bool ProcessMessagesInUnityThread => false;
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

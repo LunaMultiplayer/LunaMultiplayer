@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using UniLinq;
@@ -18,8 +19,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
         private static Dictionary<Guid, FlightInputCallback> FlyByWireDictionary { get; } =
             new Dictionary<Guid, FlightInputCallback>();
 
-        public Dictionary<Guid, FlightCtrlState> FlightStatesDictionary { get; } =
-            new Dictionary<Guid, FlightCtrlState>();
+        public ConcurrentDictionary<Guid, FlightCtrlState> FlightStatesDictionary { get; } =
+            new ConcurrentDictionary<Guid, FlightCtrlState>();
 
         public bool FlightStateSystemReady
             => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
@@ -30,6 +31,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
         #endregion
 
         #region Base overrides
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
         {
@@ -85,7 +88,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     }
 
                     FlyByWireDictionary.Remove(vesselToRemove.id);
-                    FlightStatesDictionary.Remove(vesselToRemove.id);
+                    FlightStatesDictionary.TryRemove(vesselToRemove.id, out _);
                 }
             }
         }
@@ -99,7 +102,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     if (!FlyByWireDictionary.ContainsKey(FlightGlobals.ActiveVessel.id) &&
                         !FlightStatesDictionary.ContainsKey(FlightGlobals.ActiveVessel.id))
                     {
-                        FlightStatesDictionary.Add(FlightGlobals.ActiveVessel.id, FlightGlobals.ActiveVessel.ctrlState);
+                        FlightStatesDictionary.TryAdd(FlightGlobals.ActiveVessel.id, FlightGlobals.ActiveVessel.ctrlState);
                         FlyByWireDictionary.Add(FlightGlobals.ActiveVessel.id, st => OnVesselFlyByWire(FlightGlobals.ActiveVessel.id, st));
                         FlightGlobals.ActiveVessel.OnFlyByWire += FlyByWireDictionary[FlightGlobals.ActiveVessel.id];
                     }
@@ -118,7 +121,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                             // ignored
                         }
                         FlyByWireDictionary.Remove(FlightGlobals.ActiveVessel.id);
-                        FlightStatesDictionary.Remove(FlightGlobals.ActiveVessel.id);
+                        FlightStatesDictionary.TryRemove(FlightGlobals.ActiveVessel.id, out _);
                     }
                 }
             }
@@ -134,7 +137,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
                 foreach (var vesselToAdd in vesselsToAdd)
                 {
-                    FlightStatesDictionary.Add(vesselToAdd.id, vesselToAdd.ctrlState);
+                    FlightStatesDictionary.TryAdd(vesselToAdd.id, vesselToAdd.ctrlState);
                     FlyByWireDictionary.Add(vesselToAdd.id, st => OnVesselFlyByWire(vesselToAdd.id, st));
                     vesselToAdd.OnFlyByWire += FlyByWireDictionary[vesselToAdd.id];
                 }
