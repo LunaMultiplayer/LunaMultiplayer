@@ -37,8 +37,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 Velocity = update.Velocity,
                 OrbitVelocity = update.OrbitVelocity,
                 Acceleration = update.Acceleration,
-                RefTransformPos = update.RefTransformPos,
-                RefTransformRot = update.RefTransformRot
             });
         }
     }
