@@ -38,6 +38,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
         #region Base overrides
 
+        protected override bool ProcessMessagesInUnityThread => false;
+
         protected override void OnEnabled()
         {
             base.OnEnabled();
@@ -183,6 +185,10 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemBasicReady)
                 {
+                    //Try to remove proto messages to own vessel
+                    if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
+                        AllPlayerVessels.TryRemove(FlightGlobals.ActiveVessel.id, out _);
+
                     //Reload vessels that exist
                     var vesselsToReLoad = AllPlayerVessels
                        .Where(v => !v.Value.Loaded && FlightGlobals.Vessels.Any(vl => vl.id == v.Value.VesselId))

@@ -1,10 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using LunaCommon.Message.Data.Vessel;
-using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
-using System.Threading;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -28,13 +25,15 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
-        private ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new ConcurrentDictionary<Guid, VesselPositionUpdate>();
-        private ConcurrentDictionary<Guid, byte> UpdatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();
+        public ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new ConcurrentDictionary<Guid, VesselPositionUpdate>();
+        public ConcurrentDictionary<Guid, byte> UpdatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();
         public FlightCtrlState FlightState { get; set; }
 
         #endregion
 
         #region Base overrides
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
         {
@@ -53,46 +52,6 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
-        }
-
-        /// <summary>
-        /// Do the message handling asynchronously for performance
-        /// </summary>
-        public override void EnqueueMessage(IMessageData msg)
-        {
-            if (Enabled)
-            {
-                new Thread(() =>
-                {
-                    var msgData = msg as VesselPositionMsgData;
-                    if (msgData == null)
-                    {
-                        return;
-                    }
-
-                    var update = new VesselPositionUpdate(msgData);
-                    var vesselId = update.VesselId;
-
-                    if (!CurrentVesselUpdate.TryGetValue(update.VesselId, out var existingPositionUpdate))
-                    {
-                        CurrentVesselUpdate[vesselId] = update;
-                        //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                        UpdatedVesselIds[vesselId] = 0;
-                    }
-                    else
-                    {
-                        if (existingPositionUpdate.SentTime < update.SentTime)
-                        {
-                            //If there's an existing update, copy the body and vessel objects so they don't have to be looked up later.
-                            SetBodyAndVesselOnNewUpdate(existingPositionUpdate, update);
-                            CurrentVesselUpdate[vesselId] = update;
-
-                            //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                            UpdatedVesselIds[vesselId] = 0;
-                        }
-                    }
-                }).Start();
-            }
         }
 
         #endregion
@@ -149,27 +108,12 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Public methods
 
         /// <summary>
-        /// Applies the latest position update (if any) for the given vessel and moves it to that position
-        /// </summary>
-        public void UpdateVesselPosition(Guid vesselId)
-        {
-            if (PositionUpdateSystemReady && CurrentVesselUpdate.ContainsKey(vesselId))
-            {
-                CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
-            }
-        }
-
-        #endregion
-
-        #region Private methods
-
-        /// <summary>
         /// Performance Improvement: If the body for this position update is the same as the old one, copy the body so that we don't have to look up the
         /// body in the ApplyVesselUpdate() call below (which must run during FixedUpdate)
         /// </summary>
         /// <param name="existingPositionUpdate">The position update currently in the map.  Cannot be null.</param>
         /// <param name="newPositionUpdate">The new position update for the vessel.  Cannot be null.</param>
-        private static void SetBodyAndVesselOnNewUpdate(VesselPositionUpdate existingPositionUpdate, VesselPositionUpdate newPositionUpdate)
+        public void SetBodyAndVesselOnNewUpdate(VesselPositionUpdate existingPositionUpdate, VesselPositionUpdate newPositionUpdate)
         {
             if (existingPositionUpdate.BodyName == newPositionUpdate.BodyName)
             {
@@ -178,6 +122,17 @@ namespace LunaClient.Systems.VesselPositionSys
             if (existingPositionUpdate.VesselId == newPositionUpdate.VesselId)
             {
                 newPositionUpdate.Vessel = existingPositionUpdate.Vessel;
+            }
+        }
+
+        /// <summary>
+        /// Applies the latest position update (if any) for the given vessel and moves it to that position
+        /// </summary>
+        public void UpdateVesselPosition(Guid vesselId)
+        {
+            if (PositionUpdateSystemReady && CurrentVesselUpdate.ContainsKey(vesselId))
+            {
+                CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
             }
         }
 

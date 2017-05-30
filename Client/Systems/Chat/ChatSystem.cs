@@ -75,6 +75,8 @@ namespace LunaClient.Systems.Chat
 
         #region Base overrides
 
+        protected override bool ProcessMessagesInUnityThread => false;
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

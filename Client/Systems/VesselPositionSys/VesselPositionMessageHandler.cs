@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
 
@@ -11,26 +12,33 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            //Nothing done here
+            var msgData = messageData as VesselPositionMsgData;
+            if (msgData == null)
+            {
+                return;
+            }
+
+            var update = new VesselPositionUpdate(msgData);
+            var vesselId = update.VesselId;
+
+            if (!System.CurrentVesselUpdate.TryGetValue(update.VesselId, out var existingPositionUpdate))
+            {
+                System.CurrentVesselUpdate[vesselId] = update;
+                //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
+                System.UpdatedVesselIds[vesselId] = 0;
+            }
+            else
+            {
+                if (existingPositionUpdate.SentTime < update.SentTime)
+                {
+                    //If there's an existing update, copy the body and vessel objects so they don't have to be looked up later.
+                    System.SetBodyAndVesselOnNewUpdate(existingPositionUpdate, update);
+                    System.CurrentVesselUpdate[vesselId] = update;
+
+                    //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
+                    System.UpdatedVesselIds[vesselId] = 0;
+                }
+            }
         }
-
-        //public void HandleMessage(IMessageData messageData)
-        //{
-        //    var msgData = messageData as VesselPositionMsgData;
-
-        //    if (msgData == null || !System.PositionUpdateSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
-        //    {
-        //        return;
-        //    }
-
-        //    var update = new VesselPositionUpdate(msgData);
-
-        //    if (!System.ReceivedUpdates.ContainsKey(update.VesselId))
-        //    {
-        //        System.ReceivedUpdates.Add(update.VesselId, new Queue<VesselPositionUpdate>());
-        //    }
-
-        //    System.ReceivedUpdates[update.VesselId].Enqueue(update);
-        //}
     }
 }

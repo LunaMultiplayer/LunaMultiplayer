@@ -3,7 +3,6 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace LunaClient.Systems.Status
 {

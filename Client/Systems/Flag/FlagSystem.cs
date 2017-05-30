@@ -13,6 +13,7 @@ namespace LunaClient.Systems.Flag
 {
     public class FlagSystem : MessageSystem<FlagSystem, FlagMessageSender, FlagMessageHandler>
     {
+        //TODO: Make the messagesystem async
         #region Fields
 
         public bool FlagChangeEvent { get; set; }

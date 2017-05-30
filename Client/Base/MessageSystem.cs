@@ -3,7 +3,7 @@ using LunaClient.Network;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
-using UnityEngine;
+using System.Threading;
 
 namespace LunaClient.Base
 {
@@ -12,14 +12,28 @@ namespace LunaClient.Base
         where TS : class, IMessageSender, new()
         where TH : class, IMessageHandler, new()
     {
+        /// <summary>
+        /// You can set this property to false if your MessageHandler.HandleMessage doesn't call anything 
+        /// from Unity and you have your collections as concurrent
+        /// </summary>
+        protected virtual bool ProcessMessagesInUnityThread => true;
+
         public TS MessageSender { get; } = new TS();
         public TH MessageHandler { get; } = new TH();
         public virtual IInputHandler InputHandler { get; } = null;
 
         public virtual void EnqueueMessage(IMessageData msg)
         {
-            if (Enabled)
+            if (!Enabled) return;
+
+            if (ProcessMessagesInUnityThread)
+            {
                 MessageHandler.IncomingMessages.Enqueue(msg);
+            }
+            else
+            {
+                new Thread(() => HandleMessage(msg)).Start();
+            }
         }
 
         protected override void OnDisabled()
@@ -41,17 +55,25 @@ namespace LunaClient.Base
         /// </summary>
         private void ReadAndHandleAllReceivedMessages()
         {
+            if (!ProcessMessagesInUnityThread)
+                return;
+
             while (MessageHandler.IncomingMessages.TryDequeue(out var msgData))
             {
-                try
-                {
-                    MessageHandler.HandleMessage(msgData);
-                }
-                catch (Exception e)
-                {
-                    LunaLog.LogError($"[LMP]: Error handling Message type {msgData.GetType()}, exception: {e}");
-                    NetworkConnection.Disconnect($"Error handling {msgData.GetType()} Message");
-                }
+                HandleMessage(msgData);
+            }
+        }
+
+        private void HandleMessage(IMessageData msgData)
+        {
+            try
+            {
+                MessageHandler.HandleMessage(msgData);
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Error handling Message type {msgData.GetType()}, exception: {e}");
+                NetworkConnection.Disconnect($"Error handling {msgData.GetType()} Message");
             }
         }
     }

@@ -5,7 +5,6 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Data.CraftLibrary;
 using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
 
 namespace LunaClient.Systems.CraftLibrary
 {
@@ -17,20 +16,20 @@ namespace LunaClient.Systems.CraftLibrary
         {
             while (System.CraftAddQueue.Count > 0)
             {
-                var craftChangeEntry = System.CraftAddQueue.Dequeue();
-                AddCraftEntry(craftChangeEntry.PlayerName, craftChangeEntry.CraftType, craftChangeEntry.CraftName);
+                if (System.CraftAddQueue.TryDequeue(out var craftChangeEntry))
+                    AddCraftEntry(craftChangeEntry.PlayerName, craftChangeEntry.CraftType, craftChangeEntry.CraftName);
             }
 
             while (System.CraftDeleteQueue.Count > 0)
             {
-                var craftChangeEntry = System.CraftDeleteQueue.Dequeue();
-                DeleteCraftEntry(craftChangeEntry.PlayerName, craftChangeEntry.CraftType, craftChangeEntry.CraftName);
+                if (System.CraftDeleteQueue.TryDequeue(out var craftDeleteEntry))
+                    DeleteCraftEntry(craftDeleteEntry.PlayerName, craftDeleteEntry.CraftType, craftDeleteEntry.CraftName);
             }
 
             while (System.CraftResponseQueue.Count > 0)
             {
-                var cre = System.CraftResponseQueue.Dequeue();
-                SaveCraftFile(cre.CraftType, cre.CraftName, cre.CraftData);
+                if (System.CraftResponseQueue.TryDequeue(out var cre))
+                    SaveCraftFile(cre.CraftType, cre.CraftName, cre.CraftData);
             }
 
             if (!string.IsNullOrEmpty(System.UploadCraftName))

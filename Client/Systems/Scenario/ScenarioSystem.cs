@@ -5,9 +5,9 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UniLinq;
-using UnityEngine;
 
 namespace LunaClient.Systems.Scenario
 {
@@ -15,13 +15,15 @@ namespace LunaClient.Systems.Scenario
     {
         #region Fields
 
-        private Dictionary<string, string> CheckData { get; } = new Dictionary<string, string>();
-        public Queue<ScenarioEntry> ScenarioQueue { get; } = new Queue<ScenarioEntry>();
-        private Dictionary<string, Type> AllScenarioTypesInAssemblies { get; } = new Dictionary<string, Type>();
+        private ConcurrentDictionary<string, string> CheckData { get; } = new ConcurrentDictionary<string, string>();
+        public ConcurrentQueue<ScenarioEntry> ScenarioQueue { get; private set; } = new ConcurrentQueue<ScenarioEntry>();
+        private ConcurrentDictionary<string, Type> AllScenarioTypesInAssemblies { get; } = new ConcurrentDictionary<string, Type>();
 
         #endregion
 
         #region Base overrides
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
         {
@@ -34,7 +36,7 @@ namespace LunaClient.Systems.Scenario
         {
             base.OnDisabled();
             CheckData.Clear();
-            ScenarioQueue.Clear();
+            ScenarioQueue = new ConcurrentQueue<ScenarioEntry>();
             AllScenarioTypesInAssemblies.Clear();
         }
 
@@ -59,15 +61,20 @@ namespace LunaClient.Systems.Scenario
 
         /// <summary>
         /// Check if the scenario has changed and sends it to the server
+        /// This method is not optimized and take several ms to run
         /// </summary>
         public void SendScenarioModules()
         {
             if (!Enabled || !SystemsContainer.Get<MainSystem>().GameRunning) return;
 
+            var modules = ScenarioRunner.GetLoadedModules().ToArray();
+
+            //I tried to do this method in another thread as it takes a lot of time to run 
+            //but appear several empty lines in the log... Perhaps we cannot do it :(
             var scenarioName = new List<string>();
             var scenarioData = new List<byte[]>();
 
-            foreach (var scenarioModule in ScenarioRunner.GetLoadedModules())
+            foreach (var scenarioModule in modules)
             {
                 var scenarioType = scenarioModule.GetType().Name;
 
@@ -101,9 +108,8 @@ namespace LunaClient.Systems.Scenario
 
         public void LoadScenarioDataIntoGame()
         {
-            while (ScenarioQueue.Count > 0)
+            while (ScenarioQueue.TryDequeue(out var scenarioEntry))
             {
-                var scenarioEntry = ScenarioQueue.Dequeue();
                 if (scenarioEntry.ScenarioName == "ContractSystem")
                 {
                     SpawnStrandedKerbalsForRescueMissions(scenarioEntry.ScenarioNode);
@@ -288,7 +294,7 @@ namespace LunaClient.Systems.Scenario
                 .Where(s => s.IsSubclassOf(typeof(ScenarioModule)) && !AllScenarioTypesInAssemblies.ContainsKey(s.Name));
 
             foreach (var scenarioType in scenarioTypes)
-                AllScenarioTypesInAssemblies.Add(scenarioType.Name, scenarioType);
+                AllScenarioTypesInAssemblies.TryAdd(scenarioType.Name, scenarioType);
         }
 
         private bool IsScenarioModuleAllowed(string scenarioName)

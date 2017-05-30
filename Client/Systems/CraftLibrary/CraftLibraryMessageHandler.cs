@@ -7,7 +7,6 @@ using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System.Collections.Concurrent;
-using UnityEngine;
 
 namespace LunaClient.Systems.CraftLibrary
 {
@@ -118,12 +117,6 @@ namespace LunaClient.Systems.CraftLibrary
                         {
                             cre.CraftData = data.CraftData;
                             System.QueueCraftResponse(cre);
-                        }
-                        else
-                        {
-                            ScreenMessages.PostScreenMessage(
-                                $"Craft {cre.CraftName} from {cre.PlayerName} not available", 5f,
-                                ScreenMessageStyle.UPPER_CENTER);
                         }
                     }
                     break;

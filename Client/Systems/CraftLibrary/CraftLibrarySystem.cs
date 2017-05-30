@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,9 +16,9 @@ namespace LunaClient.Systems.CraftLibrary
         #region Fields
 
         //Public
-        public Queue<CraftChangeEntry> CraftAddQueue { get; } = new Queue<CraftChangeEntry>();
-        public Queue<CraftChangeEntry> CraftDeleteQueue { get; } = new Queue<CraftChangeEntry>();
-        public Queue<CraftResponseEntry> CraftResponseQueue { get; } = new Queue<CraftResponseEntry>();
+        public ConcurrentQueue<CraftChangeEntry> CraftAddQueue { get; private set; } = new ConcurrentQueue<CraftChangeEntry>();
+        public ConcurrentQueue<CraftChangeEntry> CraftDeleteQueue { get; private set; } = new ConcurrentQueue<CraftChangeEntry>();
+        public ConcurrentQueue<CraftResponseEntry> CraftResponseQueue { get; private set; } = new ConcurrentQueue<CraftResponseEntry>();
 
         public string SelectedPlayer { get; set; }
         public List<string> PlayersWithCrafts { get; } = new List<string>();
@@ -61,9 +62,9 @@ namespace LunaClient.Systems.CraftLibrary
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            CraftAddQueue.Clear();
-            CraftDeleteQueue.Clear();
-            CraftResponseQueue.Clear();
+            CraftAddQueue = new ConcurrentQueue<CraftChangeEntry>();
+            CraftDeleteQueue = new ConcurrentQueue<CraftChangeEntry>();
+            CraftResponseQueue = new ConcurrentQueue<CraftResponseEntry>();
             PlayersWithCrafts.Clear();
             PlayerList.Clear();
             UploadList.Clear();

@@ -11,8 +11,6 @@ using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -44,11 +42,6 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private static void HandleVesselProto(VesselProtoMsgData messageData)
         {
-            if (!System.ProtoSystemBasicReady || VesselCommon.UpdateIsForOwnVessel(messageData.VesselId))
-            {
-                return;
-            }
-
             HandleVesselProtoData(messageData.VesselData, messageData.VesselId);
         }
 
@@ -112,35 +105,31 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
         /// We set it as UNLOADED as perhaps vessel data has changed.
-        /// We also do all of this asynchronously to improve performance
         /// </summary>
         private static void HandleVesselProtoData(byte[] vesselData, Guid vesselId)
         {
-            new Thread(() =>
+            UniverseSyncCache.QueueToCache(vesselData);
+            var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
+            var configGuid = vesselNode?.GetValue("pid");
+            if (!string.IsNullOrEmpty(configGuid) && vesselId.ToString() == Common.ConvertConfigStringToGuidString(configGuid))
             {
-                UniverseSyncCache.QueueToCache(vesselData);
-                var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
-                var configGuid = vesselNode?.GetValue("pid");
-                if (!string.IsNullOrEmpty(configGuid) && vesselId.ToString() == Common.ConvertConfigStringToGuidString(configGuid))
+                var vesselProtoUpdate = new VesselProtoUpdate
                 {
-                    var vesselProtoUpdate = new VesselProtoUpdate
-                    {
-                        VesselId = vesselId,
-                        VesselNode = vesselNode,
-                        Loaded = false
-                    };
+                    VesselId = vesselId,
+                    VesselNode = vesselNode,
+                    Loaded = false
+                };
 
-                    if (System.AllPlayerVessels.ContainsKey(vesselId))
-                    {
-                        //Vessel exists so replace it
-                        System.AllPlayerVessels[vesselId] = vesselProtoUpdate;
-                    }
-                    else
-                    {
-                        System.AllPlayerVessels.TryAdd(vesselId, vesselProtoUpdate);
-                    }
+                if (System.AllPlayerVessels.ContainsKey(vesselId))
+                {
+                    //Vessel exists so replace it
+                    System.AllPlayerVessels[vesselId] = vesselProtoUpdate;
                 }
-            }).Start();
+                else
+                {
+                    System.AllPlayerVessels.TryAdd(vesselId, vesselProtoUpdate);
+                }
+            }
         }
     }
 }

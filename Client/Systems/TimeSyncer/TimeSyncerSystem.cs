@@ -19,7 +19,7 @@ namespace LunaClient.Systems.TimeSyncer
     /// </summary>
     public class TimeSyncerSystem : MessageSystem<TimeSyncerSystem, TimeSyncerMessageSender, TimeSyncerMessageHandler>
     {
-        #region Fields
+        #region Fields & properties
 
         #region Public
 
@@ -43,6 +43,8 @@ namespace LunaClient.Systems.TimeSyncer
 
         #region Private
 
+        private static readonly object ListLock = new object();
+
         private List<long> ClockOffset { get; } = new List<long>();
         private List<long> NetworkLatency { get; } = new List<long>();
         public Task SyncSenderThread { get; private set; }
@@ -54,6 +56,8 @@ namespace LunaClient.Systems.TimeSyncer
         #endregion
 
         #region Base overrides
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
         {
@@ -136,30 +140,34 @@ namespace LunaClient.Systems.TimeSyncer
         /// </summary>
         public void HandleSyncTime(long clientReceive, long clientSend, long serverReceive, long serverSend)
         {
-            var clientLatency = clientReceive - clientSend - (serverSend - serverReceive);
-            var clientOffset = (serverReceive - clientSend + (serverSend - clientReceive)) / 2;
-
-            ClockOffset.Add(clientOffset);
-            NetworkLatency.Add(clientLatency);
-            ServerLag = serverSend - serverReceive;
-
-            if (ClockOffset.Count > SyncTimeMax)
-                ClockOffset.RemoveAt(0);
-            if (NetworkLatency.Count > SyncTimeMax)
-                NetworkLatency.RemoveAt(0);
-
-            //Calculate the average for the offset and latency.
-            var clockOffsetTotal = ClockOffset.Sum();
-            ClockOffsetAverage = clockOffsetTotal / ClockOffset.Count;
-
-            var networkLatencyTotal = NetworkLatency.Sum();
-            NetworkLatencyAverage = networkLatencyTotal / NetworkLatency.Count;
-
-            //Check if we are now synced
-            if (ClockOffset.Count > SettingsSystem.CurrentSettings.InitialConnectionSyncTimeRequests && !Synced)
+            lock (ListLock)
             {
-                Synced = true;
-                LunaLog.Log($"[LMP]: Initial clock syncronized, offset {ClockOffsetAverage / 10000}ms, latency {NetworkLatencyAverage / 10000}ms");
+                var clientLatency = clientReceive - clientSend - (serverSend - serverReceive);
+                var clientOffset = (serverReceive - clientSend + (serverSend - clientReceive)) / 2;
+
+                ClockOffset.Add(clientOffset);
+                NetworkLatency.Add(clientLatency);
+                ServerLag = serverSend - serverReceive;
+
+                if (ClockOffset.Count > SyncTimeMax)
+                    ClockOffset.RemoveAt(0);
+                if (NetworkLatency.Count > SyncTimeMax)
+                    NetworkLatency.RemoveAt(0);
+
+                //Calculate the average for the offset and latency.
+                var clockOffsetTotal = ClockOffset.Sum();
+                ClockOffsetAverage = clockOffsetTotal / ClockOffset.Count;
+
+                var networkLatencyTotal = NetworkLatency.Sum();
+                NetworkLatencyAverage = networkLatencyTotal / NetworkLatency.Count;
+
+                //Check if we are now synced
+                if (ClockOffset.Count > SettingsSystem.CurrentSettings.InitialConnectionSyncTimeRequests && !Synced)
+                {
+                    Synced = true;
+                    LunaLog.Log(
+                        $"[LMP]: Initial clock syncronized, offset {ClockOffsetAverage / 10000}ms, latency {NetworkLatencyAverage / 10000}ms");
+                }
             }
         }
 
