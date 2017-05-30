@@ -1,8 +1,7 @@
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using LunaClient.Base;
 using LunaCommon.Message.Data;
-using UnityEngine;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.ModApi
 {
@@ -46,7 +45,7 @@ namespace LunaClient.Systems.ModApi
         /// This system must be ALWAYS enabled!
         /// </summary>
         public override bool Enabled => true;
-        
+
         #endregion
 
         #region Update methods
@@ -193,7 +192,7 @@ namespace LunaClient.Systems.ModApi
                 LunaLog.LogError($"[LMP]: {modName} attemped to send a null Message");
                 return;
             }
-            MessageSender.SendMessage(new ModMsgData {Data = messageData, Relay = relay, ModName = modName});
+            MessageSender.SendMessage(new ModMsgData { Data = messageData, Relay = relay, ModName = modName });
         }
 
         #endregion

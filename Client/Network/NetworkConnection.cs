@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using LunaClient.Systems;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -8,8 +9,6 @@ using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using LunaClient.Systems;
-using UnityEngine;
 
 namespace LunaClient.Network
 {

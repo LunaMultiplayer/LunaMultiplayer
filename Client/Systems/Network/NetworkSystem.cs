@@ -17,9 +17,6 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
-using LunaClient.Systems.Warp;
-using LunaCommon.Enums;
-using System;
 using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
@@ -30,7 +27,9 @@ using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
-using UnityEngine;
+using LunaClient.Systems.Warp;
+using LunaCommon.Enums;
+using System;
 
 namespace LunaClient.Systems.Network
 {

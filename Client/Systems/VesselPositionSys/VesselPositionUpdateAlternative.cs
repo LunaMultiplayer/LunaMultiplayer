@@ -35,14 +35,16 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] OrbitVelocity { get; set; }
         public double[] Acceleration { get; set; }
 
-        private Vector3d _surfacePosition = Vector3d.zero;
-        private Vector3d SurfacePosition
+        private Vector3d _position = Vector3d.zero;
+        private Vector3d Position
         {
             get
             {
-                if (_surfacePosition == Vector3d.zero && Body != null)
-                    _surfacePosition = Body.GetWorldSurfacePosition(LatLonAlt[0], LatLonAlt[1], LatLonAlt[2]);
-                return _surfacePosition;
+                if (_position == Vector3d.zero && Body != null)
+                {
+                    _position = Body.GetWorldSurfacePosition(LatLonAlt[0], LatLonAlt[1], LatLonAlt[2]);
+                }
+                return _position;
             }
         }
 
@@ -145,9 +147,9 @@ namespace LunaClient.Systems.VesselPositionSys
             }
         }
 
-        public virtual VesselPositionUpdateAlternative Clone()
+        public virtual VesselPositionUpdate Clone()
         {
-            return MemberwiseClone() as VesselPositionUpdateAlternative;
+            return MemberwiseClone() as VesselPositionUpdate;
         }
 
         #endregion
@@ -186,10 +188,13 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             var targetTransformRot = new Quaternion(TransformRotation[0], TransformRotation[1], TransformRotation[2], TransformRotation[3]);
 
-            Vessel.vesselTransform.position = SurfacePosition;
+            Vessel.vesselTransform.position = Position;
             Vessel.vesselTransform.rotation = targetTransformRot;
             Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.vesselTransform.rotation;
             Vessel.precalc.worldSurfaceRot = Vessel.mainBody.bodyTransform.rotation * Vessel.srfRelRotation;
+            Vessel.upAxis = FlightGlobals.getUpAxis(Body, Position);
+            Vessel.heightFromTerrain = Vector3.Dot(Position, Vessel.upAxis);
+            Vessel.terrainNormal = Vessel.vesselTransform.InverseTransformDirection(Vessel.upAxis);
 
             //If vessel is packed then set the position (it will call vessel.SetPosition(vessel.vesselTransform.position, true))
             //If the vessel is NOT packed WE must call vessel.SetPosition(pos, FALSE)
@@ -210,10 +215,10 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.longitude = LatLonAlt[1];
             Vessel.protoVessel.altitude = LatLonAlt[2];
             Vessel.protoVessel.position = Vessel.vesselTransform.position;
-            Vessel.precalc.worldSurfacePos = SurfacePosition;
+            Vessel.precalc.worldSurfacePos = Position;
 
             if (!Vessel.packed) //Call SetPosition ONLY when vessel is unpacked!
-                Vessel.SetPosition(SurfacePosition, false);
+                Vessel.SetPosition(Position, false);
         }
 
         //Credit where credit is due, Thanks hyperedit.

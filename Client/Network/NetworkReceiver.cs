@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using LunaClient.Systems;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
@@ -27,8 +28,6 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Threading;
-using LunaClient.Systems;
-using UnityEngine;
 
 namespace LunaClient.Network
 {

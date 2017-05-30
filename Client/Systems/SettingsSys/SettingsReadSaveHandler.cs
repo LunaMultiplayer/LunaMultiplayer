@@ -5,7 +5,6 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Xml;
 using System.Xml.Serialization;
-using UnityEngine;
 
 namespace LunaClient.Systems.SettingsSys
 {

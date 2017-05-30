@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselRemoveSys
 {

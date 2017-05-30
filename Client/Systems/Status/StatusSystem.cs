@@ -103,7 +103,7 @@ namespace LunaClient.Systems.Status
 
         private static string GetCurrentShipStatus()
         {
-            var bodyName = VesselCommon.ActiveVesselIsInSafetyBubble() ? "safety bubble" : FlightGlobals.ActiveVessel.mainBody.bodyName;
+            var bodyName = VesselCommon.IsInSafetyBubble(FlightGlobals.ActiveVessel) ? "safety bubble" : FlightGlobals.ActiveVessel.mainBody.bodyName;
 
             switch (FlightGlobals.ActiveVessel.situation)
             {

@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Lock;
+using LunaClient.Windows;
 using LunaClient.Windows.Status;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Color;
@@ -8,9 +9,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
-using LunaClient.Windows;
 using UniLinq;
-using UnityEngine;
 
 namespace LunaClient.Systems.PlayerColorSys
 {

@@ -2,7 +2,6 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
-using UnityEngine;
 
 namespace LunaClient.Systems.Asteroid
 {

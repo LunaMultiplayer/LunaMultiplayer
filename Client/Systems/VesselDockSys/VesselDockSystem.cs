@@ -1,7 +1,6 @@
 ﻿using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using System;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
 {

@@ -82,9 +82,6 @@ namespace LunaServer.Message.Reader
 
             FileHandler.WriteToFile(path, msgData.VesselData);
 
-            if (!FileHandler.ReadFileText(path).Contains("PotatoRoid"))
-                LunaLog.Debug($"Received PROTO vessel: {msgData.VesselId} from {client.PlayerName}");
-
             VesselRelaySystem.HandleVesselMessage(client, message);
         }
 
