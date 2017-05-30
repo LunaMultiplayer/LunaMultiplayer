@@ -19,7 +19,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public void LoadVesselsIntoGame()
         {
-            Debug.Log("[LMP]: Loading vessels in subspace 0 into game");
+            LunaLog.Log("[LMP]: Loading vessels in subspace 0 into game");
             var numberOfLoads = 0;
 
             foreach (var vessel in System.AllPlayerVessels)
@@ -33,13 +33,13 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
                 else
                 {
-                    Debug.LogWarning($"[LMP]: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
+                    LunaLog.LogWarning($"[LMP]: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
                     SystemsContainer.Get<ChatSystem>().PmMessageServer($"WARNING: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
                 }
                 vessel.Value.Loaded = true;
             }
 
-            Debug.Log($"[LMP]: {numberOfLoads} Vessels loaded into game");
+            LunaLog.Log($"[LMP]: {numberOfLoads} Vessels loaded into game");
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error loading vessel: {e}");
+                LunaLog.LogError($"[LMP]: Error loading vessel: {e}");
             }
         }
 
@@ -142,7 +142,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error reloading vessel: {e}");
+                LunaLog.LogError($"[LMP]: Error reloading vessel: {e}");
             }
         }
 
@@ -175,7 +175,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (vesselProto == null)
             {
-                Debug.LogError("[LMP]: protoVessel is null!");
+                LunaLog.LogError("[LMP]: protoVessel is null!");
                 return false;
             }
 
@@ -183,13 +183,13 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (vesselProto.orbitSnapShot == null)
                 {
-                    Debug.Log("[LMP]: Skipping flying vessel load - Protovessel does not have an orbit snapshot");
+                    LunaLog.Log("[LMP]: Skipping flying vessel load - Protovessel does not have an orbit snapshot");
                     return false;
                 }
                 var updateBody = FlightGlobals.Bodies[vesselProto.orbitSnapShot.ReferenceBodyIndex];
                 if (updateBody == null)
                 {
-                    Debug.Log("[LMP]: Skipping flying vessel load - Could not find celestial body index {currentProto.orbitSnapShot.ReferenceBodyIndex}");
+                    LunaLog.Log("[LMP]: Skipping flying vessel load - Could not find celestial body index {currentProto.orbitSnapShot.ReferenceBodyIndex}");
                     return false;
                 }
             }
@@ -209,7 +209,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     var flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), $"{part.flagURL}.png");
                     if (!File.Exists(flagFile))
                     {
-                        Debug.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
+                        LunaLog.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
                         part.flagURL = "Squad/Flags/default";
                     }
                 }
@@ -235,7 +235,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the banned " +
                                   $"part '{pps.partName}'!. Skipping load.";
 
-                        Debug.LogWarning(msg);
+                        LunaLog.LogWarning(msg);
                         SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
 
                         return null;
@@ -245,7 +245,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the missing " +
                                   $"part '{pps.partName}'!. Skipping load.";
 
-                        Debug.LogWarning(msg);
+                        LunaLog.LogWarning(msg);
                         SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
 
                         ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing {pps.partName}", 10f,
@@ -262,7 +262,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) " +
                                   $"contains the missing resource '{missingeResource.resourceName}'!. Skipping load.";
 
-                        Debug.LogWarning(msg);
+                        LunaLog.LogWarning(msg);
                         SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
 
                         ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing the resource " +
@@ -274,7 +274,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Damaged vessel {protoVesselId}, exception: {e}");
+                LunaLog.LogError($"[LMP]: Damaged vessel {protoVesselId}, exception: {e}");
                 return null;
             }
         }
@@ -305,12 +305,12 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static bool LoadVesselIntoGame(ProtoVessel currentProto)
         {
-            Debug.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
+            LunaLog.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
             currentProto.Load(HighLogic.CurrentGame.flightState);
 
             if (currentProto.vesselRef == null)
             {
-                Debug.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
+                LunaLog.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
                 return false;
             }
             return true;

@@ -118,11 +118,13 @@ namespace LunaClient.Systems.VesselRangeSys
         private static void UnPackVessel(Vessel vessel)
         {
             vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
+            vessel.maxControlLevel = Vessel.ControlLevel.FULL;
         }
 
         private static void PackVessel(Vessel vessel)
         {
             vessel.vesselRanges = LmpRanges;
+            vessel.maxControlLevel = Vessel.ControlLevel.NONE;
         }
 
         #endregion

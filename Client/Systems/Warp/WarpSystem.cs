@@ -41,7 +41,7 @@ namespace LunaClient.Systems.Warp
 
                     SkipSubspaceProcess = false;
 
-                    Debug.Log($"[LMP]: Locked to subspace {value}, time: {GetCurrentSubspaceTime()}");
+                    LunaLog.Log($"[LMP]: Locked to subspace {value}, time: {GetCurrentSubspaceTime()}");
                 }
             }
         }

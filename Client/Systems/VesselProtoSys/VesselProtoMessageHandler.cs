@@ -37,7 +37,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     HandleVesselProto((VesselProtoMsgData)messageData);
                     break;
                 default:
-                    Debug.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");
+                    LunaLog.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");
                     break;
             }
         }
@@ -93,7 +93,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         }
                         else
                         {
-                            Debug.LogError($"[LMP]: Cached object {serverVessel} is damaged");
+                            LunaLog.LogError($"[LMP]: Cached object {serverVessel} is damaged");
                             requestedObjects.Add(serverVessel);
                         }
                     }

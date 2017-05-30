@@ -90,7 +90,7 @@ namespace LunaClient.Utilities
             // Let the latest version of the checker execute.
             if (_version != fields.Max(f => (int)f.GetValue(null))) return;
 
-            Debug.Log($"[CompatibilityChecker] Running checker version {_version} from '{Assembly.GetExecutingAssembly().GetName().Name}'");
+            LunaLog.Log($"[CompatibilityChecker] Running checker version {_version} from '{Assembly.GetExecutingAssembly().GetName().Name}'");
 
             // Other checkers will see this version and not run.
             // This accomplishes the same as an explicit "ran" flag with fewer moving parts.
@@ -111,7 +111,7 @@ namespace LunaClient.Utilities
                         catch (Exception e)
                         {
                             // If a mod throws an exception from IsCompatible, it's not compatible.
-                            Debug.LogWarning($"[CompatibilityChecker] Exception while invoking IsCompatible() from '{m.DeclaringType?.Assembly.GetName().Name}':\n\n{e}");
+                            LunaLog.LogWarning($"[CompatibilityChecker] Exception while invoking IsCompatible() from '{m.DeclaringType?.Assembly.GetName().Name}':\n\n{e}");
                             return true;
                         }
                     })
@@ -134,7 +134,7 @@ namespace LunaClient.Utilities
                         catch (Exception e)
                         {
                             // If a mod throws an exception from IsUnityCompatible, it's not compatible.
-                            Debug.LogWarning($"[CompatibilityChecker] Exception while invoking IsUnityCompatible() from '{m.DeclaringType?.Assembly.GetName().Name}':\n\n{e}");
+                            LunaLog.LogWarning($"[CompatibilityChecker] Exception while invoking IsUnityCompatible() from '{m.DeclaringType?.Assembly.GetName().Name}':\n\n{e}");
                             return true;
                         }
                     })
@@ -149,14 +149,14 @@ namespace LunaClient.Utilities
 
             if (incompatible.Length > 0)
             {
-                Debug.LogWarning($"[CompatibilityChecker] Incompatible mods detected: {string.Join(", ", incompatible)}");
+                LunaLog.LogWarning($"[CompatibilityChecker] Incompatible mods detected: {string.Join(", ", incompatible)}");
                 message += $"\n\nThese mods are incompatible with KSP {Versioning.version_major}.{Versioning.version_minor}.{Versioning.Revision}:\n\n";
                 message += string.Join("\n", incompatible);
             }
 
             if (incompatibleUnity.Length > 0)
             {
-                Debug.LogWarning("[CompatibilityChecker] Incompatible mods (Unity) detected: " +
+                LunaLog.LogWarning("[CompatibilityChecker] Incompatible mods (Unity) detected: " +
                                  string.Join(", ", incompatibleUnity));
                 message += $"\n\nThese mods are incompatible with Unity {Application.unityVersion}:\n\n";
                 message += string.Join("\n", incompatibleUnity);

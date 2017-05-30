@@ -77,13 +77,13 @@ namespace LunaClient.Systems.Flag
             {
                 if (File.Exists(flagFile))
                 {
-                    Debug.Log($"[LMP]: Deleting flag {flagFile}");
+                    LunaLog.Log($"[LMP]: Deleting flag {flagFile}");
                     File.Delete(flagFile);
                 }
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error deleting flag {flagFile}, exception: {e}");
+                LunaLog.LogError($"[LMP]: Error deleting flag {flagFile}, exception: {e}");
             }
         }
     }

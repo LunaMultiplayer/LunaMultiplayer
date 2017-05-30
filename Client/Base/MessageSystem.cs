@@ -49,7 +49,7 @@ namespace LunaClient.Base
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"[LMP]: Error handling Message type {msgData.GetType()}, exception: {e}");
+                    LunaLog.LogError($"[LMP]: Error handling Message type {msgData.GetType()}, exception: {e}");
                     NetworkConnection.Disconnect($"Error handling {msgData.GetType()} Message");
                 }
             }

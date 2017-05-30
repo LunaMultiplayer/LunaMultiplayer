@@ -83,7 +83,7 @@ namespace LunaClient.Systems.Asteroid
                 var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;
                 for (var asteroidsSpawned = 0; asteroidsSpawned < asteroidsToSpawn; asteroidsSpawned++)
                 {
-                    Debug.Log($"[LMP]: Spawning asteroid, have {beforeSpawn + asteroidsSpawned}, need {SettingsSystem.ServerSettings.MaxNumberOfAsteroids}");
+                    LunaLog.Log($"[LMP]: Spawning asteroid, have {beforeSpawn + asteroidsSpawned}, need {SettingsSystem.ServerSettings.MaxNumberOfAsteroids}");
                     ScenarioController.SpawnAsteroid();
                 }
             }
@@ -99,7 +99,7 @@ namespace LunaClient.Systems.Asteroid
                 {
                     if (asteroid.DiscoveryInfo.trackingStatus.Value != ServerAsteroidTrackStatus[asteroid.id.ToString()])
                     {
-                        Debug.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
+                        LunaLog.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
                         ServerAsteroidTrackStatus[asteroid.id.ToString()] = asteroid.DiscoveryInfo.trackingStatus.Value;
                         SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid);
                     }

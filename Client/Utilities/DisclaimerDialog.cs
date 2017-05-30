@@ -44,7 +44,7 @@ namespace LunaClient.Utilities
                             new DialogGUIButton("Decline",
                                 delegate
                                 {
-                                    Debug.LogError("[LMP]: User did not accept disclaimer");
+                                    LunaLog.LogError("[LMP]: User did not accept disclaimer");
                                 }
                             )
                         )

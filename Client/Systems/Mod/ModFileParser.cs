@@ -41,7 +41,7 @@ namespace LunaClient.Systems.Mod
             }
 
             SystemsContainer.Get<ModSystem>().AllowedParts = PartsList;
-            Debug.Log("[LMP]: Mod check passed!");
+            LunaLog.Log("[LMP]: Mod check passed!");
             return true;
         }
 
@@ -198,7 +198,7 @@ namespace LunaClient.Systems.Mod
                             !WhiteList.ContainsKey(dllResource.Key)))
                 {
                     ModCheckOk = false;
-                    Debug.Log($"[LMP]: Non-whitelisted resource {dllResource.Key} exists on client!");
+                    LunaLog.Log($"[LMP]: Non-whitelisted resource {dllResource.Key} exists on client!");
                     StringBuilder.AppendLine($"Non-whitelisted resource {dllResource.Key} exists on client!");
                 }
             }
@@ -209,7 +209,7 @@ namespace LunaClient.Systems.Mod
                     BlackList.Keys.Where(blacklistEntry => SystemsContainer.Get<ModSystem>().DllList.ContainsKey(blacklistEntry)))
                 {
                     ModCheckOk = false;
-                    Debug.Log($"[LMP]: Banned resource {blacklistEntry} exists on client!");
+                    LunaLog.Log($"[LMP]: Banned resource {blacklistEntry} exists on client!");
                     StringBuilder.AppendLine($"Banned resource {blacklistEntry} exists on client!");
                 }
             }
@@ -222,7 +222,7 @@ namespace LunaClient.Systems.Mod
             if (!fileExists && required)
             {
                 ModCheckOk = false;
-                Debug.Log($"[LMP]: Required file {requiredEntry.Key} is missing!");
+                LunaLog.Log($"[LMP]: Required file {requiredEntry.Key} is missing!");
                 StringBuilder.AppendLine($"Required file {requiredEntry.Key} is missing!");
                 return;
             }
@@ -231,7 +231,7 @@ namespace LunaClient.Systems.Mod
                 SystemsContainer.Get<ModSystem>().DllList[requiredEntry.Key] != requiredEntry.Value)
             {
                 ModCheckOk = false;
-                Debug.Log($"[LMP]: Required file {requiredEntry.Key} does not match hash {requiredEntry.Value}!");
+                LunaLog.Log($"[LMP]: Required file {requiredEntry.Key} does not match hash {requiredEntry.Value}!");
                 StringBuilder.AppendLine($"Required file {requiredEntry.Key} does not match hash {requiredEntry.Value}!");
             }
         }
@@ -245,7 +245,7 @@ namespace LunaClient.Systems.Mod
             if (string.IsNullOrEmpty(filePath) && required) //Only show error if the file is required
             {
                 ModCheckOk = false;
-                Debug.Log($"[LMP]: Required file {requiredEntry.Key} is missing!");
+                LunaLog.Log($"[LMP]: Required file {requiredEntry.Key} is missing!");
                 StringBuilder.AppendLine($"Required file {requiredEntry.Key} is missing!");
                 return;
             }
@@ -261,7 +261,7 @@ namespace LunaClient.Systems.Mod
             if (!CheckFile(fullFilePath, fileEntry.Value))
             {
                 ModCheckOk = false;
-                Debug.Log($"[LMP]: File {fileEntry.Key} does not match hash {fileEntry.Value}!");
+                LunaLog.Log($"[LMP]: File {fileEntry.Key} does not match hash {fileEntry.Value}!");
                 StringBuilder.AppendLine($"File {fileEntry.Key} does not match hash {fileEntry.Value}!");
             }
         }

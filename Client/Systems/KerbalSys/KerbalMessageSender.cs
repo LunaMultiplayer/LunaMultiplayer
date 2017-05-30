@@ -23,7 +23,7 @@ namespace LunaClient.Systems.KerbalSys
             if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
             {
                 //Don't send tourists
-                Debug.Log($"[LMP]: Skipping sending of tourist: {pcm.name}");
+                LunaLog.Log($"[LMP]: Skipping sending of tourist: {pcm.name}");
                 return;
             }
 
@@ -32,7 +32,7 @@ namespace LunaClient.Systems.KerbalSys
             var kerbalBytes = ConfigNodeSerializer.Serialize(kerbalNode);
             if (kerbalBytes == null || kerbalBytes.Length == 0)
             {
-                Debug.Log("[LMP]: VesselWorker: Error sending kerbal - bytes are null or 0");
+                LunaLog.Log("[LMP]: VesselWorker: Error sending kerbal - bytes are null or 0");
                 return;
             }
 
@@ -41,12 +41,12 @@ namespace LunaClient.Systems.KerbalSys
             if (!System.ServerKerbals.ContainsKey(pcm.name))
             {
                 //New kerbal
-                Debug.Log("[LMP]: Found new kerbal, sending...");
+                LunaLog.Log("[LMP]: Found new kerbal, sending...");
                 kerbalDifferent = true;
             }
             else if (System.ServerKerbals[pcm.name] != kerbalHash)
             {
-                Debug.Log($"[LMP]: Found changed kerbal ({pcm.name}), sending...");
+                LunaLog.Log($"[LMP]: Found changed kerbal ({pcm.name}), sending...");
                 kerbalDifferent = true;
             }
             if (kerbalDifferent)
@@ -84,7 +84,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (kerbalBytes != null && kerbalBytes.Length > 0)
             {
-                Debug.Log("[LMP]: Sending kerbal {kerbalName}");
+                LunaLog.Log("[LMP]: Sending kerbal {kerbalName}");
                 var msgData = new KerbalProtoMsgData
                 {
                     KerbalName = kerbalName,
@@ -95,7 +95,7 @@ namespace LunaClient.Systems.KerbalSys
             }
             else
             {
-                Debug.LogError($"[LMP]: Failed to create byte[] data for kerbal {kerbalName}");
+                LunaLog.LogError($"[LMP]: Failed to create byte[] data for kerbal {kerbalName}");
             }
         }
     }

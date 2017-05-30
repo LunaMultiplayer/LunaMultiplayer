@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using UniLinq;
-using UnityEngine;
 using Random = System.Random;
 
 namespace LunaClient.Network
@@ -84,12 +83,12 @@ namespace LunaClient.Network
                 }
                 else
                 {
-                    Debug.LogError($"[LMP]: Unable to deserialize message: {msg}");
+                    LunaLog.LogError($"[LMP]: Unable to deserialize message: {msg}");
                 }
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Invalid server list reply msg: {e}");
+                LunaLog.LogError($"[LMP]: Invalid server list reply msg: {e}");
             }
         }
 
@@ -108,7 +107,7 @@ namespace LunaClient.Network
                 InternalEndpoint = Common.StringFromEndpoint(ownEndpoint)
             });
 
-            Debug.Log($"[LMP]: Sending NAT introduction to server. Token: {token}");
+            LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {token}");
             NetworkSender.QueueOutgoingMessage(introduceMsg);
         }
 
@@ -120,12 +119,12 @@ namespace LunaClient.Network
             try
             {
                 var token = msg.ReadString();
-                Debug.Log($"[LMP]: Nat introduction success to {msg.SenderEndPoint} token is: {token}");
+                LunaLog.Log($"[LMP]: Nat introduction success to {msg.SenderEndPoint} token is: {token}");
                 NetworkConnection.ConnectToServer(msg.SenderEndPoint.Address.ToString(), msg.SenderEndPoint.Port);
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error handling NAT introduction: {e}");
+                LunaLog.LogError($"[LMP]: Error handling NAT introduction: {e}");
             }
         }
 

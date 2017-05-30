@@ -68,7 +68,7 @@ namespace LunaClient.Network
                                 }
                                 catch (Exception e)
                                 {
-                                    Debug.LogError($"[LMP]: Error deserializing message! {e}");
+                                    LunaLog.LogError($"[LMP]: Error deserializing message! {e}");
                                     NetworkMain.HandleDisconnectException(e);
                                 }
                                 break;
@@ -82,7 +82,7 @@ namespace LunaClient.Network
                                 }
                                 break;
                             default:
-                                Debug.Log($"[LMP]: LIDGREN: {msg.MessageType}-- {msg.PeekString()}");
+                                LunaLog.Log($"[LMP]: LIDGREN: {msg.MessageType}-- {msg.PeekString()}");
                                 break;
                         }
                     }
@@ -92,7 +92,7 @@ namespace LunaClient.Network
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Receive message thread error: {e}");
+                LunaLog.LogError($"[LMP]: Receive message thread error: {e}");
                 NetworkMain.HandleDisconnectException(e);
             }
         }
@@ -179,7 +179,7 @@ namespace LunaClient.Network
                     SystemsContainer.Get<ModApiSystem>().EnqueueMessage(msg.Data);
                     break;
                 default:
-                    Debug.LogError($"[LMP]: Unhandled Message type {msg.MessageType}");
+                    LunaLog.LogError($"[LMP]: Unhandled Message type {msg.MessageType}");
                     break;
             }
         }

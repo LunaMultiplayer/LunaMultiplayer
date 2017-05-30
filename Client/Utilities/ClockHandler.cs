@@ -15,14 +15,14 @@ namespace LunaClient.Utilities
         {
             if (HighLogic.LoadedScene == GameScenes.LOADING)
             {
-                Debug.Log("[LMP] Skipping StepClock in loading screen");
+                LunaLog.Log("[LMP] Skipping StepClock in loading screen");
                 return;
             }
             if (HighLogic.LoadedSceneIsFlight)
             {
                 if (FlightGlobals.fetch.activeVessel == null || !FlightGlobals.ready)
                 {
-                    Debug.Log("[LMP] Skipping StepClock (active vessel is null or not ready)");
+                    LunaLog.Log("[LMP] Skipping StepClock (active vessel is null or not ready)");
                     return;
                 }
                 try
@@ -31,7 +31,7 @@ namespace LunaClient.Utilities
                 }
                 catch
                 {
-                    Debug.LogError("[LMP] Failed to hold vessel unpack");
+                    LunaLog.LogError("[LMP] Failed to hold vessel unpack");
                     return;
                 }
 
@@ -47,7 +47,7 @@ namespace LunaClient.Utilities
                         }
                         catch
                         {
-                            Debug.LogError(vessel.isActiveVessel
+                            LunaLog.LogError(vessel.isActiveVessel
                                 ? $"[LMP] Error packing active vessel {vessel.id}"
                                 : $"[LMP] Error packing vessel {vessel.id}");
                         }

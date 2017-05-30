@@ -94,7 +94,7 @@ namespace LunaClient.Systems.TimeSyncer
                 {
                     if (Math.Abs(currentError) > MaxClockSkew)
                     {
-                        Debug.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
+                        LunaLog.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
                         //TODO: This causes the throttle to reset when called.  This happens due to vessel unpacking resetting the throttle controls.
                         //TODO: Try to get Squad to change their code.
                         ClockHandler.StepClock(targetTime);
@@ -159,7 +159,7 @@ namespace LunaClient.Systems.TimeSyncer
             if (ClockOffset.Count > SettingsSystem.CurrentSettings.InitialConnectionSyncTimeRequests && !Synced)
             {
                 Synced = true;
-                Debug.Log($"[LMP]: Initial clock syncronized, offset {ClockOffsetAverage / 10000}ms, latency {NetworkLatencyAverage / 10000}ms");
+                LunaLog.Log($"[LMP]: Initial clock syncronized, offset {ClockOffsetAverage / 10000}ms, latency {NetworkLatencyAverage / 10000}ms");
             }
         }
 

@@ -29,7 +29,7 @@ namespace LunaClient.Systems.VesselProtoSys
             //Defend against NaN orbits
             if (VesselHasNaNPosition(vessel.protoVessel))
             {
-                Debug.Log($"[LMP]: Vessel {vessel.id} has NaN position");
+                LunaLog.Log($"[LMP]: Vessel {vessel.id} has NaN position");
                 return;
             }
 
@@ -49,7 +49,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             catch (Exception)
             {
-                Debug.LogError("[LMP]: Error while saving vessel");
+                LunaLog.LogError("[LMP]: Error while saving vessel");
                 return;
             }
 
@@ -69,7 +69,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             else
             {
-                Debug.LogError($"[LMP]: Failed to create byte[] data for {vessel.id}");
+                LunaLog.LogError($"[LMP]: Failed to create byte[] data for {vessel.id}");
             }
         }
 
@@ -138,7 +138,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     var valueDodge = DodgeValueIfNeeded(valueCurrent);
                     if (valueCurrent != valueDodge)
                     {
-                        Debug.Log($"[LMP]: Dodged actiongroup {keyName}");
+                        LunaLog.Log($"[LMP]: Dodged actiongroup {keyName}");
                         actiongroupNode.SetValue(keyName, valueDodge);
                     }
                 }

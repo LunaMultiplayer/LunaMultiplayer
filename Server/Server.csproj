@@ -112,7 +112,7 @@
     <Compile Include="Client\ClientMainThread.cs" />
     <Compile Include="Settings\GameplaySettingsStore.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
-    <Compile Include="Log\Log.cs" />
+    <Compile Include="Log\LunaLog.cs" />
     <Compile Include="Command\Command\DekesslerCommand.cs" />
     <Compile Include="Command\Command\NukeCommand.cs" />
     <Compile Include="System\LockSystem.cs" />

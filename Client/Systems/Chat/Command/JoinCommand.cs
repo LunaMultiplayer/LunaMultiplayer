@@ -18,7 +18,7 @@ namespace LunaClient.Systems.Chat.Command
                     commandArgs = commandArgs.Substring(1);
                 if (!SystemsContainer.Get<ChatSystem>().JoinedChannels.Contains(commandArgs))
                 {
-                    Debug.Log($"[LMP]: Joining Channel {commandArgs}");
+                    LunaLog.Log($"[LMP]: Joining Channel {commandArgs}");
                     SystemsContainer.Get<ChatSystem>().JoinedChannels.Add(commandArgs);
                     SystemsContainer.Get<ChatSystem>().SelectedChannel = commandArgs;
                     SystemsContainer.Get<ChatSystem>().SelectedPmChannel = null;

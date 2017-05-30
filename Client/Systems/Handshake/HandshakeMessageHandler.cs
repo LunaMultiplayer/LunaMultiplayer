@@ -45,7 +45,7 @@ namespace LunaClient.Systems.Handshake
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error handling HANDSHAKE_CHALLANGE Message, exception: {e}");
+                LunaLog.LogError($"[LMP]: Error handling HANDSHAKE_CHALLANGE Message, exception: {e}");
             }
         }
 
@@ -68,7 +68,7 @@ namespace LunaClient.Systems.Handshake
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error handling HANDSHAKE_REPLY Message, exception: {e}");
+                LunaLog.LogError($"[LMP]: Error handling HANDSHAKE_REPLY Message, exception: {e}");
                 reply = HandshakeReply.MalformedHandshake;
                 reason = "Incompatible HANDSHAKE_REPLY Message";
             }
@@ -79,12 +79,12 @@ namespace LunaClient.Systems.Handshake
                     {
                         if (ModFileParser.ParseModFile(modFileData))
                         {
-                            Debug.Log("[LMP]: Handshake successful");
+                            LunaLog.Log("[LMP]: Handshake successful");
                             SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Authenticated;
                         }
                         else
                         {
-                            Debug.LogError("[LMP]: Failed to pass mod validation");
+                            LunaLog.LogError("[LMP]: Failed to pass mod validation");
                             NetworkConnection.Disconnect("[LMP]: Failed mod validation");
                         }
                     }
@@ -96,7 +96,7 @@ namespace LunaClient.Systems.Handshake
                     {
                         disconnectReason += $"\nClient: {VersionInfo.VersionNumber}, Server: {data.Version}";
                     }
-                    Debug.Log(disconnectReason);
+                    LunaLog.Log(disconnectReason);
                     NetworkConnection.Disconnect(disconnectReason);
                     break;
             }

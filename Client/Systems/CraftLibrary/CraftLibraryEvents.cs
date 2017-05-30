@@ -100,7 +100,7 @@ namespace LunaClient.Systems.CraftLibrary
             }
             else
             {
-                Debug.LogError($"[LMP]: Cannot upload file, {filePath} does not exist!");
+                LunaLog.LogError($"[LMP]: Cannot upload file, {filePath} does not exist!");
             }
         }
 
@@ -125,7 +125,7 @@ namespace LunaClient.Systems.CraftLibrary
                 System.PlayerList[playerName].Add(craftType, new List<string>());
             if (!System.PlayerList[playerName][craftType].Contains(craftName))
             {
-                Debug.Log($"[LMP]: Adding {craftName}, type: {craftType} from {playerName}");
+                LunaLog.Log($"[LMP]: Adding {craftName}, type: {craftType} from {playerName}");
                 System.PlayerList[playerName][craftType].Add(craftName);
             }
         }

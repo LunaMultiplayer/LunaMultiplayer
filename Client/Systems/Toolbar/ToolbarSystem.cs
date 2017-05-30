@@ -71,14 +71,14 @@ namespace LunaClient.Systems.Toolbar
             BlizzyButton.TexturePath = "LunaMultiPlayer/Button/LMPButtonLow";
             BlizzyButton.Visibility = new GameScenesVisibility(GameScenes.EDITOR, GameScenes.FLIGHT,
                 GameScenes.SPACECENTER, GameScenes.TRACKSTATION);
-            Debug.Log("[LMP]: Registered blizzy toolbar");
+            LunaLog.Log("[LMP]: Registered blizzy toolbar");
         }
 
         private void DisableBlizzyToolbar()
         {
             BlizzyRegistered = false;
             BlizzyButton?.Destroy();
-            Debug.Log("[LMP]: Unregistered blizzy toolbar");
+            LunaLog.Log("[LMP]: Unregistered blizzy toolbar");
         }
 
         private void EnableStockToolbar()
@@ -93,7 +93,7 @@ namespace LunaClient.Systems.Toolbar
                 StockDelayRegister = true;
                 GameEvents.onGUIApplicationLauncherReady.Add(EnableStockForRealsies);
             }
-            Debug.Log("[LMP]: Registered stock toolbar");
+            LunaLog.Log("[LMP]: Registered stock toolbar");
         }
 
         private void EnableStockForRealsies()
@@ -117,7 +117,7 @@ namespace LunaClient.Systems.Toolbar
             }
             if (StockLmpButton != null)
                 ApplicationLauncher.Instance.RemoveModApplication(StockLmpButton);
-            Debug.Log("[LMP]: Unregistered stock toolbar");
+            LunaLog.Log("[LMP]: Unregistered stock toolbar");
         }
 
         private static void OnBlizzyClick(ClickEvent clickArgs) => HandleButtonClick();

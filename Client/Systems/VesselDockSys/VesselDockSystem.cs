@@ -39,18 +39,18 @@ namespace LunaClient.Systems.VesselDockSys
 
                 if (finalVessel == FlightGlobals.ActiveVessel)
                 {
-                    Debug.Log($"[LMP]: Docking: We own the dominant vessel {finalVessel.id}");
+                    LunaLog.Log($"[LMP]: Docking: We own the dominant vessel {finalVessel.id}");
                 }
                 else
                 {
-                    Debug.Log($"[LMP]: Docking: We DON'T own the dominant vessel {finalVessel.id}. Switching");
+                    LunaLog.Log($"[LMP]: Docking: We DON'T own the dominant vessel {finalVessel.id}. Switching");
                     FlightGlobals.SetActiveVessel(finalVessel);
                 }
 
                 SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(vesselIdToRemove);
                 SystemsContainer.Get<VesselRemoveSystem>().MessageSender.SendVesselRemove(vesselIdToRemove, true);
 
-                Debug.Log("[LMP]: Docking event over!");
+                LunaLog.Log("[LMP]: Docking event over!");
             }
         }
     }

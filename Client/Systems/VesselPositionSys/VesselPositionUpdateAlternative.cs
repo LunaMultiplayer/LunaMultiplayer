@@ -141,7 +141,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             catch (Exception e)
             {
-                Debug.Log($"[LMP]: Failed to get vessel position update, exception: {e}");
+                LunaLog.Log($"[LMP]: Failed to get vessel position update, exception: {e}");
             }
         }
 

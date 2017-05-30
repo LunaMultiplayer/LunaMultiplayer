@@ -27,7 +27,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             if (vessel != null)
             {
-                Debug.Log($"[LMP]: Removing vessel: {vesselId}");
+                LunaLog.Log($"[LMP]: Removing vessel: {vesselId}");
                 System.KillVessel(vessel, true);
             }
         }

@@ -44,7 +44,7 @@ namespace LunaClient.Base
             }
             else
             {
-                Debug.LogError($"[LMP]: Routine {routine.Name} already defined");
+                LunaLog.LogError($"[LMP]: Routine {routine.Name} already defined");
             }
         }
 
@@ -63,7 +63,7 @@ namespace LunaClient.Base
             }
             else
             {
-                Debug.LogError($"[LMP]: Routine {routineName} not defined");
+                LunaLog.LogError($"[LMP]: Routine {routineName} not defined");
             }
         }
 

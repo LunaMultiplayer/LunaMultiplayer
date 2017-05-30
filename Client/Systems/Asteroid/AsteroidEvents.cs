@@ -20,19 +20,19 @@ namespace LunaClient.Systems.Asteroid
             {
                 if (System.GetAsteroidCount() <= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
                 {
-                    Debug.Log("[LMP]: Spawned in new server asteroid!");
+                    LunaLog.Log("[LMP]: Spawned in new server asteroid!");
                     System.ServerAsteroids.Add(asteroid.id.ToString());
                     SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid);
                 }
                 else
                 {
-                    Debug.Log($"[LMP]: Killing non-server asteroid {asteroid.id}");
+                    LunaLog.Log($"[LMP]: Killing non-server asteroid {asteroid.id}");
                     asteroid.Die();
                 }
             }
             else
             {
-                Debug.Log($"[LMP]: Killing non-server asteroid {asteroid.id}, we don't own the asteroid lock");
+                LunaLog.Log($"[LMP]: Killing non-server asteroid {asteroid.id}, we don't own the asteroid lock");
                 asteroid.Die();
             }
         }

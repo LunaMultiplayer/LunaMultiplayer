@@ -66,7 +66,7 @@ namespace LunaClient.Systems.Warp
                     break;
                 default:
                     {
-                        Debug.LogError($"[LMP]: Unhandled WARP_MESSAGE type: {((WarpBaseMsgData)messageData).WarpMessageType}");
+                        LunaLog.LogError($"[LMP]: Unhandled WARP_MESSAGE type: {((WarpBaseMsgData)messageData).WarpMessageType}");
                         break;
                     }
             }

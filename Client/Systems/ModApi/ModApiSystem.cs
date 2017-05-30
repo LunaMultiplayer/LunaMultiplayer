@@ -127,10 +127,10 @@ namespace LunaClient.Systems.ModApi
             {
                 if (RegisteredRawMods.ContainsKey(modName))
                 {
-                    Debug.Log($"[LMP]: Failed to register raw mod handler for {modName}, mod already registered");
+                    LunaLog.Log($"[LMP]: Failed to register raw mod handler for {modName}, mod already registered");
                     return false;
                 }
-                Debug.Log($"[LMP]: Registered raw mod handler for {modName}");
+                LunaLog.Log($"[LMP]: Registered raw mod handler for {modName}");
                 RegisteredRawMods.Add(modName, handlerFunction);
             }
             return true;
@@ -147,10 +147,10 @@ namespace LunaClient.Systems.ModApi
             {
                 if (RegisteredUpdateMods.ContainsKey(modName))
                 {
-                    Debug.Log($"[LMP]: Failed to register Update mod handler for {modName}, mod already registered");
+                    LunaLog.Log($"[LMP]: Failed to register Update mod handler for {modName}, mod already registered");
                     return false;
                 }
-                Debug.Log($"[LMP]: Registered Update mod handler for {modName}");
+                LunaLog.Log($"[LMP]: Registered Update mod handler for {modName}");
                 RegisteredUpdateMods.Add(modName, handlerFunction);
                 UpdateQueue.Add(modName, new ConcurrentQueue<byte[]>());
             }
@@ -168,10 +168,10 @@ namespace LunaClient.Systems.ModApi
             {
                 if (RegisteredFixedUpdateMods.ContainsKey(modName))
                 {
-                    Debug.Log($"[LMP]: Failed to register FixedUpdate mod handler for {modName}, mod already registered");
+                    LunaLog.Log($"[LMP]: Failed to register FixedUpdate mod handler for {modName}, mod already registered");
                     return false;
                 }
-                Debug.Log($"[LMP]: Registered FixedUpdate mod handler for {modName}");
+                LunaLog.Log($"[LMP]: Registered FixedUpdate mod handler for {modName}");
                 RegisteredFixedUpdateMods.Add(modName, handlerFunction);
                 FixedUpdateQueue.Add(modName, new ConcurrentQueue<byte[]>());
             }
@@ -190,7 +190,7 @@ namespace LunaClient.Systems.ModApi
                 return;
             if (messageData == null)
             {
-                Debug.LogError($"[LMP]: {modName} attemped to send a null Message");
+                LunaLog.LogError($"[LMP]: {modName} attemped to send a null Message");
                 return;
             }
             MessageSender.SendMessage(new ModMsgData {Data = messageData, Relay = relay, ModName = modName});

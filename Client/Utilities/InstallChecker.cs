@@ -31,12 +31,12 @@ namespace LunaClient.Utilities
 
         public void Awake()
         {
-            Debug.Log($"[InstallChecker] Running checker from '{Assembly.GetExecutingAssembly().GetName().Name}'");
+            LunaLog.Log($"[InstallChecker] Running checker from '{Assembly.GetExecutingAssembly().GetName().Name}'");
 
             if (!IsCorrectlyInstalled())
             {
-                Debug.Log($"[InstallChecker] Mod '{Assembly.GetExecutingAssembly().GetName().Name}' is not correctly installed.");
-                Debug.Log($"[InstallChecker] LMP is Currently installed on '{_currentPath}', should be installed at '{_correctPath}'");
+                LunaLog.Log($"[InstallChecker] Mod '{Assembly.GetExecutingAssembly().GetName().Name}' is not correctly installed.");
+                LunaLog.Log($"[InstallChecker] LMP is Currently installed on '{_currentPath}', should be installed at '{_correctPath}'");
                 PopupDialog.SpawnPopupDialog(new MultiOptionDialog("InstallChecker", $"LunaMultiPlayer is not correctly installed.\n\nCurrent location: {_currentPath}\n\nCorrect location: {_correctPath}\n",
                     "Incorrect Install Detected", HighLogic.UISkin), true, HighLogic.UISkin);
             }

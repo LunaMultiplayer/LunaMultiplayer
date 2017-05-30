@@ -22,7 +22,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void SendVesselRemove(Guid vesselId, bool broadcast = false)
         {
-            Debug.Log($"[LMP]: Removing {vesselId} from the server");
+            LunaLog.Log($"[LMP]: Removing {vesselId} from the server");
             var msg = new VesselRemoveMsgData
             {
                 VesselId = vesselId,

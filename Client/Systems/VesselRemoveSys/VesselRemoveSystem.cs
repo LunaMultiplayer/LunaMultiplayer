@@ -64,7 +64,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
                 return;
 
-            Debug.Log($"[LMP]: Killing vessel {killVessel.id}");
+            LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}");
 
             if (SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels.ContainsKey(killVessel.id))
             {
@@ -102,7 +102,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
                 if (vesselsToUnload.Any())
                 {
-                    Debug.Log($"[LMP]: Unloading {vesselsToUnload.Length} vessels that are in a past subspace");
+                    LunaLog.Log($"[LMP]: Unloading {vesselsToUnload.Length} vessels that are in a past subspace");
                     UnloadVessels(vesselsToUnload);
                 }
             }
@@ -168,7 +168,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             }
             catch (Exception destroyException)
             {
-                Debug.LogError($"[LMP]: Error destroying vessel from the scenario: {destroyException}");
+                LunaLog.LogError($"[LMP]: Error destroying vessel from the scenario: {destroyException}");
             }
         }
 
@@ -183,7 +183,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             }
             catch (Exception killException)
             {
-                Debug.LogError($"[LMP]: Error destroying vessel: {killException}");
+                LunaLog.LogError($"[LMP]: Error destroying vessel: {killException}");
             }
         }
 
@@ -200,7 +200,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 }
                 catch (Exception unloadException)
                 {
-                    Debug.LogError($"[LMP]: Error unloading vessel: {unloadException}");
+                    LunaLog.LogError($"[LMP]: Error unloading vessel: {unloadException}");
                 }
             }
         }

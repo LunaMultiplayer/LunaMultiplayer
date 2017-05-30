@@ -31,7 +31,7 @@ namespace LunaClient.Systems.CraftLibrary
                             var vabExists = playerCraft.Value.VabExists;
                             var sphExists = playerCraft.Value.SphExists;
                             var subassemblyExists = playerCraft.Value.SubassemblyExists;
-                            Debug.Log($"[LMP]: Player: {playerCraft.Key}, VAB: {vabExists}, SPH: {sphExists}, SUBASSEMBLY {subassemblyExists}");
+                            LunaLog.Log($"[LMP]: Player: {playerCraft.Key}, VAB: {vabExists}, SPH: {sphExists}, SUBASSEMBLY {subassemblyExists}");
                             if (vabExists)
                             {
                                 var vabCrafts = playerCraft.Value.VabCraftNames;

@@ -38,7 +38,7 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void LoadKerbalsIntoGame()
         {
-            Debug.Log("[LMP]: Loading kerbals into game");
+            LunaLog.Log("[LMP]: Loading kerbals into game");
             while (KerbalQueue.Count > 0)
             {
                 LoadKerbal(KerbalQueue.Dequeue());
@@ -60,7 +60,7 @@ namespace LunaClient.Systems.KerbalSys
                 var generateKerbals = ServerKerbals.Count < 20 ? 20 - ServerKerbals.Count : 0;
                 if (generateKerbals > 0)
                 {
-                    Debug.Log($"[LMP]: Generating {generateKerbals} new kerbals");
+                    LunaLog.Log($"[LMP]: Generating {generateKerbals} new kerbals");
                     for (var i = 0; i < generateKerbals; i++)
                     {
                         var protoKerbal = HighLogic.CurrentGame.CrewRoster.GetNewKerbal();
@@ -69,7 +69,7 @@ namespace LunaClient.Systems.KerbalSys
                 }
             }
 
-            Debug.Log("[LMP]: Kerbals loaded");
+            LunaLog.Log("[LMP]: Kerbals loaded");
         }
 
         public void LoadKerbal(ConfigNode crewNode)
@@ -77,7 +77,7 @@ namespace LunaClient.Systems.KerbalSys
             var protoCrew = new ProtoCrewMember(HighLogic.CurrentGame.Mode, crewNode);
             if (string.IsNullOrEmpty(protoCrew.name))
             {
-                Debug.LogError("[LMP]: protoName is blank!");
+                LunaLog.LogError("[LMP]: protoName is blank!");
                 return;
             }
 
@@ -123,7 +123,7 @@ namespace LunaClient.Systems.KerbalSys
             }
             else
             {
-                Debug.Log($"[LMP]: Career log node for {protoCrew.name} is empty!");
+                LunaLog.Log($"[LMP]: Career log node for {protoCrew.name} is empty!");
             }
 
             var flightLogNode = crewNode.GetNode("FLIGHT_LOG");

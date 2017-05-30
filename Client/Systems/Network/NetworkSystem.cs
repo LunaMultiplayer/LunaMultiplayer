@@ -83,7 +83,7 @@ namespace LunaClient.Systems.Network
                         SystemsContainer.Get<TimeSyncerSystem>().MessageSender.SendTimeSyncRequest();
                     break;
                 case ClientState.TimeSynced:
-                    Debug.Log("[LMP]: Time Synced!");
+                    LunaLog.Log("[LMP]: Time Synced!");
                     SystemsContainer.Get<KerbalSystem>().Enabled = true;
                     NetworkSimpleMessageSender.SendKerbalsRequest();
                     SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SyncingKerbals;
@@ -190,7 +190,7 @@ namespace LunaClient.Systems.Network
                     SystemsContainer.Get<MainSystem>().Status = "Syncing vessels";
                     break;
                 case ClientState.VesselsSynced:
-                    Debug.Log("[LMP]: Vessels Synced!");
+                    LunaLog.Log("[LMP]: Vessels Synced!");
                     SystemsContainer.Get<MainSystem>().Status = "Syncing universe time";
                     SystemsContainer.Get<MainSystem>().NetworkState = ClientState.TimeLocking;
                     SystemsContainer.Get<FlagSystem>().Enabled = true;
@@ -201,7 +201,7 @@ namespace LunaClient.Systems.Network
                 case ClientState.TimeLocking:
                     if (SystemsContainer.Get<TimeSyncerSystem>().Synced)
                     {
-                        Debug.Log("[LMP]: Time Locked!");
+                        LunaLog.Log("[LMP]: Time Locked!");
                         SystemsContainer.Get<MainSystem>().Status = "Starting game";
                         SystemsContainer.Get<MainSystem>().NetworkState = ClientState.TimeLocked;
                         SystemsContainer.Get<MainSystem>().StartGame = true;
@@ -211,7 +211,7 @@ namespace LunaClient.Systems.Network
                     SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Starting;
                     break;
                 case ClientState.Starting:
-                    Debug.Log("[LMP]: All systems up and running! Poyekhali!!");
+                    LunaLog.Log("[LMP]: All systems up and running! Poyekhali!!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
                         SystemsContainer.Get<MainSystem>().Status = "Running";

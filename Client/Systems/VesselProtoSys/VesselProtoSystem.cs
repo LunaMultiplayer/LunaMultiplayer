@@ -122,7 +122,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error in SendVesselDefinition {e}");
+                LunaLog.LogError($"[LMP]: Error in SendVesselDefinition {e}");
             }
 
         }
@@ -147,7 +147,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error in UpdateBannedPartsMessage {e}");
+                LunaLog.LogError($"[LMP]: Error in UpdateBannedPartsMessage {e}");
             }
         }
 
@@ -170,7 +170,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error in SendAbandonedVesselsToServer {e}");
+                LunaLog.LogError($"[LMP]: Error in SendAbandonedVesselsToServer {e}");
             }
         }
 
@@ -209,7 +209,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             catch (Exception e)
             {
-                Debug.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
+                LunaLog.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
             }
         }
 
@@ -224,7 +224,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             var bannedPartsStr = bannedParts.Aggregate("", (current, bannedPart) => current + $"{bannedPart}\n");
 
-            Debug.Log($"[LMP]: Checked vessel {checkVessel.id } for banned parts, is ok: {bannedParts.Length == 0}");
+            LunaLog.Log($"[LMP]: Checked vessel {checkVessel.id } for banned parts, is ok: {bannedParts.Length == 0}");
 
             return bannedPartsStr;
         }

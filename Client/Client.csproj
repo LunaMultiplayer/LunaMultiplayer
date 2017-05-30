@@ -70,6 +70,7 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
     <Compile Include="Windows\WindowContainer.cs" />
     <Compile Include="Systems\SystemsContainer.cs" />

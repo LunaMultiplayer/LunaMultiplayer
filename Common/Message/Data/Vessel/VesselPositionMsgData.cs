@@ -1,5 +1,5 @@
-﻿using System;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -18,6 +18,8 @@ namespace LunaCommon.Message.Data.Vessel
         public double[] Acceleration { get; set; }
         public float GameSentTime { get; set; }
         public float[] TransformRotation { get; set; }
+        public float[] RefTransformRot { get; set; }
+        public float[] RefTransformPos { get; set; }
         public bool Landed { get; set; }
     }
 }

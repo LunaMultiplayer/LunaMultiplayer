@@ -13,7 +13,7 @@ namespace LunaClient.Systems.Chat.Command
 
             if (playerFound && !SystemsContainer.Get<ChatSystem>().JoinedPmChannels.Contains(commandArgs))
             {
-                Debug.Log($"[LMP]: Starting query with {commandArgs}");
+                LunaLog.Log($"[LMP]: Starting query with {commandArgs}");
                 SystemsContainer.Get<ChatSystem>().JoinedPmChannels.Add(commandArgs);
                 SystemsContainer.Get<ChatSystem>().SelectedChannel = null;
                 SystemsContainer.Get<ChatSystem>().SelectedPmChannel = commandArgs;

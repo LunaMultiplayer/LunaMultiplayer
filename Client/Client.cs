@@ -1,5 +1,5 @@
-using System;
 using LunaClient.Systems;
+using System;
 using UnityEngine;
 
 namespace LunaClient
@@ -8,12 +8,6 @@ namespace LunaClient
     public class Client : MonoBehaviour
     {
         public static string KspPath { get; private set; }
-        public static Client Singleton { get; set; }
-
-        public Client()
-        {
-            Singleton = this;
-        }
 
         public void Awake()
         {

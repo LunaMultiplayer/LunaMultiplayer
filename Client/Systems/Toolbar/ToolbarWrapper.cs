@@ -237,7 +237,7 @@ namespace LunaClient.Systems.Toolbar
         ///     <code>
         /// IButton button = ...
         /// button.OnClick += (e) => {
-        ///     Debug.Log($"button clicked, mouseButton: {e.MouseButton}");
+        ///     LunaLog.Log($"button clicked, mouseButton: {e.MouseButton}");
         /// };
         /// </code>
         /// </example>
@@ -250,7 +250,7 @@ namespace LunaClient.Systems.Toolbar
         ///     <code>
         /// IButton button = ...
         /// button.OnMouseEnter += (e) => {
-        ///     Debug.Log("mouse entered button");
+        ///     LunaLog.Log("mouse entered button");
         /// };
         /// </code>
         /// </example>
@@ -263,7 +263,7 @@ namespace LunaClient.Systems.Toolbar
         ///     <code>
         /// IButton button = ...
         /// button.OnMouseLeave += (e) => {
-        ///     Debug.Log("mouse left button");
+        ///     LunaLog.Log("mouse left button");
         /// };
         /// </code>
         /// </example>

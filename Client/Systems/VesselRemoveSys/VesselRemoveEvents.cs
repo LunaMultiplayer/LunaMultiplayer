@@ -20,7 +20,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             //Only remove the vessel if we own the update lock
             if (SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{dyingVessel.id}"))
             {
-                Debug.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
+                LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
                 SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(dyingVessel);
 
                 System.MessageSender.SendVesselRemove(dyingVessel.id);
@@ -44,7 +44,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
             }
 
-            Debug.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
+            LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
             SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(recoveredVessel);
 
             System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
@@ -65,7 +65,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
             }
 
-            Debug.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
+            LunaLog.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
             SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(terminatedVessel);
 
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);

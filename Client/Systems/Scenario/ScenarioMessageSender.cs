@@ -23,7 +23,7 @@ namespace LunaClient.Systems.Scenario
             var list = scenarioNames.Select((t, i) => new KeyValuePair<string, byte[]>(t, scenarioData[i])).ToList();
             data.ScenarioNameData = list.ToArray();
 
-            Debug.Log($"[LMP]: Sending {scenarioNames.Length} scenario modules");
+            LunaLog.Log($"[LMP]: Sending {scenarioNames.Length} scenario modules");
             SendMessage(data);
         }
     }
