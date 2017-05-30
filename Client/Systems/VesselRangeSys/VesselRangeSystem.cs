@@ -119,7 +119,7 @@ namespace LunaClient.Systems.VesselRangeSys
         {
             vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
             vessel.maxControlLevel = Vessel.ControlLevel.FULL;
-            vessel.orbitDriver.updateMode = OrbitDriver.UpdateMode.UPDATE;
+            //vessel.orbitDriver.updateMode = OrbitDriver.UpdateMode.UPDATE;
         }
 
         private static void PackVessel(Vessel vessel)
