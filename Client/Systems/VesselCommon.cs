@@ -1,6 +1,9 @@
-﻿using LunaClient.Systems.Lock;
+﻿using LunaClient.Systems.Chat;
+using LunaClient.Systems.Lock;
+using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
+using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -161,6 +164,69 @@ namespace LunaClient.Systems
             var runwayDistance = Vector3d.Distance(vessel.GetWorldPos3D(), runwayPosition);
 
             return runwayDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance;
+        }
+
+        /// <summary>
+        /// Creates a protovessel from a ConfigNode
+        /// </summary>
+        public static ProtoVessel CreateSafeProtoVesselFromConfigNode(ConfigNode inputNode, Guid protoVesselId)
+        {
+            try
+            {
+                var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
+                var cn = new ConfigNode();
+                pv.Save(cn);
+
+                foreach (var pps in pv.protoPartSnapshots)
+                {
+                    if (SystemsContainer.Get<ModSystem>().ModControl != ModControlMode.Disabled &&
+                        !SystemsContainer.Get<ModSystem>().AllowedParts.Contains(pps.partName.ToLower()))
+                    {
+                        var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the banned " +
+                                  $"part '{pps.partName}'!. Skipping load.";
+
+                        LunaLog.LogWarning(msg);
+                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
+
+                        return null;
+                    }
+                    if (pps.partInfo == null)
+                    {
+                        var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the missing " +
+                                  $"part '{pps.partName}'!. Skipping load.";
+
+                        LunaLog.LogWarning(msg);
+                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
+
+                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing {pps.partName}", 10f,
+                            ScreenMessageStyle.UPPER_CENTER);
+
+                        return null;
+                    }
+
+                    var missingeResource = pps.resources
+                        .FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
+
+                    if (missingeResource != null)
+                    {
+                        var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) " +
+                                  $"contains the missing resource '{missingeResource.resourceName}'!. Skipping load.";
+
+                        LunaLog.LogWarning(msg);
+                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
+
+                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing the resource " +
+                                                         $"{missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
+                        return null;
+                    }
+                }
+                return pv;
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Damaged vessel {protoVesselId}, exception: {e}");
+                return null;
+            }
         }
 
         /// <summary>

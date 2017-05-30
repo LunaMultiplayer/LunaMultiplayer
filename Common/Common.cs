@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -47,6 +48,18 @@ namespace LunaCommon
             returnString[3] = configNodeString.Substring(16, 4);
             returnString[4] = configNodeString.Substring(20);
             return string.Join("-", returnString);
+        }
+
+        public static Guid ConvertConfigStringToGuid(string configNodeString)
+        {
+            try
+            {
+                return new Guid(ConvertConfigStringToGuidString(configNodeString));
+            }
+            catch (Exception)
+            {
+                return Guid.Empty;
+            }
         }
 
         public static List<string> GetStockParts()

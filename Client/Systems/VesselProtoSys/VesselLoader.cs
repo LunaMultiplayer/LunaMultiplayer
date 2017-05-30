@@ -1,9 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
-using LunaClient.Systems.Mod;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -24,11 +22,10 @@ namespace LunaClient.Systems.VesselProtoSys
 
             foreach (var vessel in System.AllPlayerVessels)
             {
-                var pv = CreateSafeProtoVesselFromConfigNode(vessel.Value.VesselNode, vessel.Key);
-                if (pv != null && pv.vesselID == vessel.Key)
+                if (vessel.Value.ProtoVessel != null && vessel.Value.ProtoVessel.vesselID == vessel.Key)
                 {
-                    RegisterServerAsteriodIfVesselIsAsteroid(pv);
-                    HighLogic.CurrentGame.flightState.protoVessels.Add(pv);
+                    RegisterServerAsteriodIfVesselIsAsteroid(vessel.Value.ProtoVessel);
+                    HighLogic.CurrentGame.flightState.protoVessels.Add(vessel.Value.ProtoVessel);
                     numberOfLoads++;
                 }
                 else
@@ -64,16 +61,14 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <param name="vesselProto"></param>
         private static void LoadVesselImpl(VesselProtoUpdate vesselProto)
         {
-            var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
-
-            if (ProtoVesselValidationsPassed(currentProto))
+            if (ProtoVesselValidationsPassed(vesselProto.ProtoVessel))
             {
-                RegisterServerAsteriodIfVesselIsAsteroid(currentProto);
+                RegisterServerAsteriodIfVesselIsAsteroid(vesselProto.ProtoVessel);
 
                 if (FlightGlobals.FindVessel(vesselProto.VesselId) == null)
                 {
-                    FixProtoVesselFlags(currentProto);
-                    vesselProto.Loaded = LoadVesselIntoGame(currentProto);
+                    FixProtoVesselFlags(vesselProto.ProtoVessel);
+                    vesselProto.Loaded = LoadVesselIntoGame(vesselProto.ProtoVessel);
                 }
             }
         }
@@ -93,9 +88,8 @@ namespace LunaClient.Systems.VesselProtoSys
                     var currentTarget = FlightGlobals.fetch.VesselTarget;
 
                     var vesselLoaded = false;
-                    var currentProto = CreateSafeProtoVesselFromConfigNode(vesselProto.VesselNode, vesselProto.VesselId);
                     //TODO: Is BackupVessel() needed or can we just look at the protoVessel?
-                    if (currentProto.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
+                    if (vesselProto.ProtoVessel.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
                     {
                         //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
                         SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vessel);
@@ -213,69 +207,6 @@ namespace LunaClient.Systems.VesselProtoSys
                         part.flagURL = "Squad/Flags/default";
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Creates a protovessel from a ConfigNode
-        /// </summary>
-        private static ProtoVessel CreateSafeProtoVesselFromConfigNode(ConfigNode inputNode, Guid protoVesselId)
-        {
-            try
-            {
-                var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
-                var cn = new ConfigNode();
-                pv.Save(cn);
-
-                foreach (var pps in pv.protoPartSnapshots)
-                {
-                    if (SystemsContainer.Get<ModSystem>().ModControl != ModControlMode.Disabled &&
-                        !SystemsContainer.Get<ModSystem>().AllowedParts.Contains(pps.partName.ToLower()))
-                    {
-                        var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the banned " +
-                                  $"part '{pps.partName}'!. Skipping load.";
-
-                        LunaLog.LogWarning(msg);
-                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
-
-                        return null;
-                    }
-                    if (pps.partInfo == null)
-                    {
-                        var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the missing " +
-                                  $"part '{pps.partName}'!. Skipping load.";
-
-                        LunaLog.LogWarning(msg);
-                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
-
-                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing {pps.partName}", 10f,
-                            ScreenMessageStyle.UPPER_CENTER);
-
-                        return null;
-                    }
-
-                    var missingeResource = pps.resources
-                        .FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
-
-                    if (missingeResource != null)
-                    {
-                        var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) " +
-                                  $"contains the missing resource '{missingeResource.resourceName}'!. Skipping load.";
-
-                        LunaLog.LogWarning(msg);
-                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
-
-                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing the resource " +
-                                                         $"{missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
-                        return null;
-                    }
-                }
-                return pv;
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Damaged vessel {protoVesselId}, exception: {e}");
-                return null;
             }
         }
 

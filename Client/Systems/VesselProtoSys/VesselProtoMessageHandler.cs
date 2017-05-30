@@ -73,16 +73,12 @@ namespace LunaClient.Systems.VesselProtoSys
                     var vesselNode = ConfigNodeSerializer.Deserialize(vesselBytes);
                     if (vesselNode != null)
                     {
-                        var vesselIdString = Common.ConvertConfigStringToGuidString(vesselNode.GetValue("pid"));
-                        var vesselId = new Guid(vesselIdString);
+                        var vesselId = Common.ConvertConfigStringToGuid(vesselNode.GetValue("pid"));
                         if (vesselBytes.Length != 0 && vesselId != Guid.Empty)
                         {
-                            System.AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate
-                            {
-                                Loaded = false,
-                                VesselId = vesselId,
-                                VesselNode = vesselNode
-                            });
+                            var update = new VesselProtoUpdate(vesselNode, vesselId);
+                            if (update.ProtoVessel != null)
+                                System.AllPlayerVessels.TryAdd(vesselId, update);
                         }
                         else
                         {
@@ -111,14 +107,11 @@ namespace LunaClient.Systems.VesselProtoSys
             UniverseSyncCache.QueueToCache(vesselData);
             var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
             var configGuid = vesselNode?.GetValue("pid");
-            if (!string.IsNullOrEmpty(configGuid) && vesselId.ToString() == Common.ConvertConfigStringToGuidString(configGuid))
+            if (!string.IsNullOrEmpty(configGuid) && vesselId == Common.ConvertConfigStringToGuid(configGuid))
             {
-                var vesselProtoUpdate = new VesselProtoUpdate
-                {
-                    VesselId = vesselId,
-                    VesselNode = vesselNode,
-                    Loaded = false
-                };
+                var vesselProtoUpdate = new VesselProtoUpdate(vesselNode, vesselId);
+                if (vesselProtoUpdate.ProtoVessel == null)
+                    return;
 
                 if (System.AllPlayerVessels.ContainsKey(vesselId))
                 {
