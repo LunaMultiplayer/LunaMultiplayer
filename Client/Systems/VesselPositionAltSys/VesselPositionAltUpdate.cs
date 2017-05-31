@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Message.Data.Vessel;
 using System;
 using UnityEngine;
 
@@ -11,7 +10,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
     /// This class handle the vessel position updates that we received and applies it to the correct vessel. 
     /// It also handle it's interpolations
     /// </summary>
-    public class VesselPositionUpdate
+    public class VesselPositionAltUpdate
     {
         #region Fields
 
@@ -78,7 +77,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
             };
         }
 
-        public VesselPositionUpdate(VesselPositionMsgData msgData)
+        public VesselPositionAltUpdate(VesselPositionMsgData msgData)
         {
             Id = Guid.NewGuid();
             PlanetTime = msgData.PlanetTime;
@@ -91,7 +90,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
             Orbit = msgData.Orbit;
         }
 
-        public VesselPositionUpdate(Vessel vessel)
+        public VesselPositionAltUpdate(Vessel vessel)
         {
             try
             {
@@ -138,9 +137,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
             }
         }
 
-        public virtual VesselPositionUpdate Clone()
+        public virtual VesselPositionAltUpdate Clone()
         {
-            return MemberwiseClone() as VesselPositionUpdate;
+            return MemberwiseClone() as VesselPositionAltUpdate;
         }
 
         #endregion

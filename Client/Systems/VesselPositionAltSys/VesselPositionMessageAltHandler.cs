@@ -6,7 +6,7 @@ using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.VesselPositionAltSys
 {
-    public class VesselPositionMessageHandler : SubSystem<VesselPositionSystem>, IMessageHandler
+    public class VesselPositionMessageAltHandler : SubSystem<VesselPositionAltSystem>, IMessageHandler
     {
         public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
 
@@ -18,7 +18,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 return;
             }
 
-            var update = new VesselPositionUpdate(msgData);
+            var update = new VesselPositionAltUpdate(msgData);
             var vesselId = update.VesselId;
 
             if (!System.CurrentVesselUpdate.TryGetValue(update.VesselId, out var existingPositionUpdate))

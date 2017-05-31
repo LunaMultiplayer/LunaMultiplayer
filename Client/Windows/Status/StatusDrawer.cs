@@ -110,55 +110,55 @@ namespace LunaClient.Windows.Status
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
             {
                 SettingsSystem.CurrentSettings.Debug1 = d1;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var d2 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug2, "D2", ButtonStyle);
             if (d2 != SettingsSystem.CurrentSettings.Debug2)
             {
                 SettingsSystem.CurrentSettings.Debug2 = d2;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var d3 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug3, "D3", ButtonStyle);
             if (d3 != SettingsSystem.CurrentSettings.Debug3)
             {
                 SettingsSystem.CurrentSettings.Debug3 = d3;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var d4 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug4, "D4", ButtonStyle);
             if (d4 != SettingsSystem.CurrentSettings.Debug4)
             {
                 SettingsSystem.CurrentSettings.Debug4 = d4;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var d5 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug5, "D5", ButtonStyle);
             if (d5 != SettingsSystem.CurrentSettings.Debug5)
             {
                 SettingsSystem.CurrentSettings.Debug5 = d5;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var d6 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug6, "D6", ButtonStyle);
             if (d6 != SettingsSystem.CurrentSettings.Debug6)
             {
                 SettingsSystem.CurrentSettings.Debug6 = d6;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var d7 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug7, "D7", ButtonStyle);
             if (d7 != SettingsSystem.CurrentSettings.Debug7)
             {
                 SettingsSystem.CurrentSettings.Debug7 = d7;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var d8 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug8, "D8", ButtonStyle);
             if (d8 != SettingsSystem.CurrentSettings.Debug8)
             {
                 SettingsSystem.CurrentSettings.Debug8 = d8;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var d9 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug9, "D9", ButtonStyle);
             if (d9 != SettingsSystem.CurrentSettings.Debug9)
             {
                 SettingsSystem.CurrentSettings.Debug9 = d9;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
 #endif
         }

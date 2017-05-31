@@ -122,7 +122,7 @@ namespace LunaClient
                     {
                         LunaLog.Log("[LMP]: Saving Selected flag");
                         SettingsSystem.CurrentSettings.SelectedFlag = HighLogic.CurrentGame.flagURL;
-                        SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                        SettingsSystem.SaveSettings();
                         SystemsContainer.Get<FlagSystem>().FlagChangeEvent = true;
                     }
 
@@ -333,7 +333,7 @@ namespace LunaClient
             {
                 SystemsContainer.Get<StatusSystem>().MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
                 ConnectionWindow.RenameEventHandled = true;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             if (!ConnectionWindow.AddEventHandled)
             {
@@ -341,7 +341,7 @@ namespace LunaClient
                 ConnectionWindow.AddEntry = null;
                 ConnectionWindow.AddingServer = false;
                 ConnectionWindow.AddEventHandled = true;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             if (!ConnectionWindow.EditEventHandled)
             {
@@ -351,14 +351,14 @@ namespace LunaClient
                 ConnectionWindow.EditEntry = null;
                 ConnectionWindow.AddingServer = false;
                 ConnectionWindow.EditEventHandled = true;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             if (!ConnectionWindow.RemoveEventHandled)
             {
                 SettingsSystem.CurrentSettings.Servers.RemoveAt(ConnectionWindow.Selected);
                 ConnectionWindow.Selected = -1;
                 ConnectionWindow.RemoveEventHandled = true;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             if (!ConnectionWindow.ConnectEventHandled)
             {

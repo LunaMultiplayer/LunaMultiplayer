@@ -9,7 +9,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
     /// <summary>
     /// System that handle the received vessel update messages and also sends them
     /// </summary>
-    public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
+    public class VesselPositionAltSystem : MessageSystem<VesselPositionAltSystem, VesselPositionMessageAltSender, VesselPositionMessageAltHandler>
     {
         #region Fields & properties
 
@@ -25,7 +25,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
         public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
-        public ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new ConcurrentDictionary<Guid, VesselPositionUpdate>();
+        public ConcurrentDictionary<Guid, VesselPositionAltUpdate> CurrentVesselUpdate { get; } =
+            new ConcurrentDictionary<Guid, VesselPositionAltUpdate>();
         public ConcurrentDictionary<Guid, byte> UpdatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();
         public FlightCtrlState FlightState { get; set; }
 
@@ -37,6 +38,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         protected override void OnEnabled()
         {
+            if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem) return;
+
             base.OnEnabled();
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, HandleVesselUpdates));
@@ -50,6 +53,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         protected override void OnDisabled()
         {
+            if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem) return;
+
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
         }
@@ -115,7 +120,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
         /// </summary>
         /// <param name="existingPositionUpdate">The position update currently in the map.  Cannot be null.</param>
         /// <param name="newPositionUpdate">The new position update for the vessel.  Cannot be null.</param>
-        public void SetBodyAndVesselOnNewUpdate(VesselPositionUpdate existingPositionUpdate, VesselPositionUpdate newPositionUpdate)
+        public void SetBodyAndVesselOnNewUpdate(VesselPositionAltUpdate existingPositionUpdate, VesselPositionAltUpdate newPositionUpdate)
         {
             if (existingPositionUpdate.BodyName == newPositionUpdate.BodyName)
             {

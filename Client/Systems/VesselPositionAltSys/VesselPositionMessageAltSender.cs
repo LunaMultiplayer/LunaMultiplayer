@@ -6,7 +6,7 @@ using LunaCommon.Message.Interface;
 
 namespace LunaClient.Systems.VesselPositionAltSys
 {
-    public class VesselPositionMessageSender : SubSystem<VesselPositionSystem>, IMessageSender
+    public class VesselPositionMessageAltSender : SubSystem<VesselPositionAltSystem>, IMessageSender
     {
         public void SendMessage(IMessageData msg)
         {
@@ -15,11 +15,11 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         public void SendVesselPositionUpdate(Vessel vessel)
         {
-            var update = new VesselPositionUpdate(vessel);
+            var update = new VesselPositionAltUpdate(vessel);
             SendVesselPositionUpdate(update);
         }
 
-        public void SendVesselPositionUpdate(VesselPositionUpdate update)
+        public void SendVesselPositionUpdate(VesselPositionAltUpdate update)
         {
             SendMessage(update.GetParsedMessage());
         }

@@ -30,7 +30,7 @@ namespace LunaClient.Utilities
                                 {
                                     SettingsSystem.CurrentSettings.DisclaimerAccepted = true;
                                     SystemsContainer.Get<MainSystem>().Enabled = true;
-                                    SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                                    SettingsSystem.SaveSettings();
                                 }
                             ),
                             new DialogGUIFlexibleSpace(),

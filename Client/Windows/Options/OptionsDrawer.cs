@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.Mod;
+﻿using LunaClient.Systems;
+using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Toolbar;
@@ -7,7 +8,6 @@ using LunaClient.Windows.Status;
 using LunaClient.Windows.UniverseConverter;
 using LunaCommon.Enums;
 using System;
-using LunaClient.Systems;
 using UnityEngine;
 
 namespace LunaClient.Windows.Options
@@ -50,7 +50,7 @@ namespace LunaClient.Windows.Options
             {
                 WindowsContainer.Get<StatusWindow>().ColorEventHandled = false;
                 SettingsSystem.CurrentSettings.PlayerColor = TempColor;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
                 if (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Running)
                     SystemsContainer.Get<PlayerColorSystem>().MessageSender.SendPlayerColorToServer();
             }
@@ -77,7 +77,7 @@ namespace LunaClient.Windows.Options
                         NewCacheSize = tempCacheSize.ToString();
                     }
                     SettingsSystem.CurrentSettings.CacheSize = tempCacheSize;
-                    SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                    SettingsSystem.SaveSettings();
                 }
                 else
                 {
@@ -99,7 +99,7 @@ namespace LunaClient.Windows.Options
                     if (Event.current.keyCode != KeyCode.Escape)
                     {
                         SettingsSystem.CurrentSettings.ChatKey = Event.current.keyCode;
-                        SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                        SettingsSystem.SaveSettings();
                         SettingChat = false;
                     }
                     else
@@ -119,31 +119,37 @@ namespace LunaClient.Windows.Options
             if (GUILayout.Button("Reset disclaimer"))
             {
                 SettingsSystem.CurrentSettings.DisclaimerAccepted = false;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var settingCompression = GUILayout.Toggle(SettingsSystem.CurrentSettings.CompressionEnabled, "Enable compression", ButtonStyle);
             if (settingCompression != SettingsSystem.CurrentSettings.CompressionEnabled)
             {
                 SettingsSystem.CurrentSettings.CompressionEnabled = settingCompression;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var settingInterpolation = GUILayout.Toggle(SettingsSystem.CurrentSettings.InterpolationEnabled, "Enable interpolation", ButtonStyle);
             if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
             {
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
             var positionFudge = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionFudgeEnable, "Enable position fudge", ButtonStyle);
             if (positionFudge != SettingsSystem.CurrentSettings.PositionFudgeEnable)
             {
                 SettingsSystem.CurrentSettings.PositionFudgeEnable = positionFudge;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
+            }
+            var altPositionSystem = GUILayout.Toggle(SettingsSystem.CurrentSettings.UseAlternativePositionSystem, "Use alterative position system", ButtonStyle);
+            if (altPositionSystem != SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
+            {
+                SettingsSystem.CurrentSettings.UseAlternativePositionSystem = altPositionSystem;
+                SettingsSystem.SaveSettings();
             }
             var packOtherVessels = GUILayout.Toggle(SettingsSystem.CurrentSettings.PackOtherControlledVessels, "Pack other vessels", ButtonStyle);
             if (packOtherVessels != SettingsSystem.CurrentSettings.PackOtherControlledVessels)
             {
                 SettingsSystem.CurrentSettings.PackOtherControlledVessels = packOtherVessels;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
             }
 
             GUILayout.BeginHorizontal();
@@ -155,7 +161,7 @@ namespace LunaClient.Windows.Options
                 if (!Enum.IsDefined(typeof(LmpToolbarType), newSetting))
                     newSetting = 0;
                 SettingsSystem.CurrentSettings.ToolbarType = (LmpToolbarType)newSetting;
-                SystemsContainer.Get<SettingsSystem>().SaveSettings();
+                SettingsSystem.SaveSettings();
                 UpdateToolbarString();
                 SystemsContainer.Get<ToolbarSystem>().ToolbarChanged();
             }

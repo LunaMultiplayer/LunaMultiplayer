@@ -18,7 +18,7 @@ namespace LunaClient.Systems.SettingsSys
             ServerSettings = new SettingsServerStructure();
         }
 
-        public void SaveSettings()
+        public static void SaveSettings()
         {
             SettingsReadSaveHandler.SaveSettings(CurrentSettings);
         }

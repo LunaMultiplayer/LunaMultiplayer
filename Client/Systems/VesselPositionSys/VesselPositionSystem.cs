@@ -37,6 +37,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         protected override void OnEnabled()
         {
+            if (SettingsSystem.CurrentSettings.UseAlternativePositionSystem) return;
+
             base.OnEnabled();
 
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, HandleVesselUpdates));
@@ -50,6 +52,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         protected override void OnDisabled()
         {
+            if (SettingsSystem.CurrentSettings.UseAlternativePositionSystem) return;
+
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
         }
