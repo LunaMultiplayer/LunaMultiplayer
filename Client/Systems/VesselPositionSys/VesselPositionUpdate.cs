@@ -213,22 +213,19 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             var targetTransformRot = new Quaternion(TransformRotation[0], TransformRotation[1], TransformRotation[2], TransformRotation[3]);
 
-            if (SettingsSystem.CurrentSettings.Debug7)
-            {
-                //We use a tolerance because the coordinate systems do not perfectly match between clients.
-                //If the vessel is landed, use a higher tolerance because we want to avoid jitter.  This will cause landed vessels to "jump", but not wiggle and explode.
-                var tolerance = Vessel.Landed ? .05 : .01;
+            //We use a tolerance because the coordinate systems do not perfectly match between clients.
+            //If the vessel is landed, use a higher tolerance because we want to avoid jitter.  This will cause landed vessels to "jump", but not wiggle and explode.
+            var tolerance = Vessel.Landed ? .05 : .01;
 
-                var rotation = Vessel.vesselTransform.rotation;
-                if (Math.Abs(targetTransformRot.w - rotation.w) > tolerance || Math.Abs(targetTransformRot.x - rotation.x) > tolerance ||
-                    Math.Abs(targetTransformRot.y - rotation.y) > tolerance || Math.Abs(targetTransformRot.z - rotation.z) > tolerance)
-                {
-                    //It is necessary to set the position as well, or the parts may jitter if their position is not also set later in the applyVesselPosition method.
-                    //It's possible that the threshold for rotation is met, but the threshold for position is not.  In this case, we'll adjust the position of the pieces
-                    //by the rotation, but not translate them.
-                    Vessel.SetRotation(targetTransformRot, true);
-                    Vessel.vesselTransform.rotation = targetTransformRot;
-                }
+            var rotation = Vessel.vesselTransform.rotation;
+            if (Math.Abs(targetTransformRot.w - rotation.w) > tolerance || Math.Abs(targetTransformRot.x - rotation.x) > tolerance ||
+                Math.Abs(targetTransformRot.y - rotation.y) > tolerance || Math.Abs(targetTransformRot.z - rotation.z) > tolerance)
+            {
+                //It is necessary to set the position as well, or the parts may jitter if their position is not also set later in the applyVesselPosition method.
+                //It's possible that the threshold for rotation is met, but the threshold for position is not.  In this case, we'll adjust the position of the pieces
+                //by the rotation, but not translate them.
+                Vessel.SetRotation(targetTransformRot, true);
+                Vessel.vesselTransform.rotation = targetTransformRot;
             }
         }
 
@@ -270,27 +267,18 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
                 var targetOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
 
-                if (SettingsSystem.CurrentSettings.Debug8)
-                {
-                    //The OrbitDriver update call will set the vessel position on the next fixed update
-                    CopyOrbit(targetOrbit, Vessel.orbitDriver.orbit);
-                    Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
-                    Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
+                //The OrbitDriver update call will set the vessel position on the next fixed update
+                CopyOrbit(targetOrbit, Vessel.orbitDriver.orbit);
+                Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
+                Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
 
-                    if (!Vessel.packed)
-                    {
-                        Vessel.orbitDriver.updateFromParameters();
-                    }
+                if (!Vessel.packed)
+                {
+                    Vessel.orbitDriver.updateFromParameters();
                 }
             }
             else
             {
-                if (SettingsSystem.CurrentSettings.Debug9)
-                {
-                    SettingsSystem.CurrentSettings.Debug9 = false;
-                    altitude = altitude + 3;
-                }
-
                 //TODO: Need to make sure position setting is working for landed vessels.
                 //Update the vessels's surface position to ensure that it's at the right spot
                 Vessel.latitude = latitude;

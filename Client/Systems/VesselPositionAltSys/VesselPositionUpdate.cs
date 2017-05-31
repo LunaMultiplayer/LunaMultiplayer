@@ -187,11 +187,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 Vessel.longitude = LatLonAlt[1];
                 Vessel.altitude = LatLonAlt[2];
 
-                if (SettingsSystem.CurrentSettings.Debug1)
-                {
-                    foreach (var part in Vessel.parts)
-                        part.ResumeVelocity();
-                }
+                foreach (var part in Vessel.parts)
+                    part.ResumeVelocity();
             }
         }
 
