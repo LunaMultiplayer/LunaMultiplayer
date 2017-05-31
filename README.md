@@ -6,6 +6,7 @@
 
 Main features:
 - Better and optimized code, easier to read and modify
+- Multi threaded (as much as Unity allows)
 - Better usage of coroutines
 - UDP based
 - Uses interpolation so the vessels shouldn't jump from one place to another
@@ -13,8 +14,8 @@ Main features:
 - Nat-punchtrough feature so a server doesn't need to open ports on it's router
 - Servers are displayed within the application
 - Better creation of UDP messages so they are easier to modify as you don't need to take care of serialization
-- Based on Tasks instead of Threads
-- Faster message compression algorithm (QuickLZ)
+- Based on Tasks instead of Threads (Server side only)
+- Improved message compression algorithm (QuickLZ)
 
 ---
 
