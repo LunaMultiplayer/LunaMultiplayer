@@ -52,8 +52,8 @@ namespace LunaClient.Network
 
             NetworkServerList.RefreshMasterServers();
 
-            SendThread?.Dispose();
-            ReceiveThread?.Dispose();
+            SendThread?.Wait(1000);
+            ReceiveThread?.Wait(1000);
 
             ReceiveThread = new Task(NetworkReceiver.ReceiveMain);
             SendThread = new Task(NetworkSender.SendMain);

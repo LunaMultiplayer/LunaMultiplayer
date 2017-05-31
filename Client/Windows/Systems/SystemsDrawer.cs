@@ -34,8 +34,9 @@ namespace LunaClient.Windows.Systems
             DisplayFast = GUILayout.Toggle(DisplayFast, "Fast debug update", ButtonStyle);
             if (GUILayout.Button("Reset Profiler history", ButtonStyle))
             {
-                LunaProfiler.UpdateData.Reset();
                 LunaProfiler.FixedUpdateData.Reset();
+                LunaProfiler.UpdateData.Reset();
+                LunaProfiler.LateUpdateData.Reset();
                 LunaProfiler.GuiData.Reset();
 
                 SystemsContainer.Get<AsteroidSystem>().ResetProfilers();

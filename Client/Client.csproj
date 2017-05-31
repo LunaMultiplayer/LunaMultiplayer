@@ -72,6 +72,10 @@
     <Compile Include="Base\Interface\IWindow.cs" />
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
+    <Compile Include="Systems\VesselPositionAltSys\VesselPositionMessageHandler.cs" />
+    <Compile Include="Systems\VesselPositionAltSys\VesselPositionMessageSender.cs" />
+    <Compile Include="Systems\VesselPositionAltSys\VesselPositionSystem.cs" />
+    <Compile Include="Systems\VesselPositionAltSys\VesselPositionUpdate.cs" />
     <Compile Include="Windows\WindowContainer.cs" />
     <Compile Include="Systems\SystemsContainer.cs" />
     <Compile Include="Base\RoutineDefinition.cs" />
@@ -142,7 +146,6 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
-    <Compile Include="Systems\VesselPositionSys\VesselPositionUpdateAlternative.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselLoader.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageHandler.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageSender.cs" />

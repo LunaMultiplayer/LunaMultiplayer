@@ -72,6 +72,24 @@ namespace LunaClient.Systems
         };
 
         /// <summary>
+        /// Call all the fixed updates of the systems
+        /// </summary>
+        public static void FixedUpdate()
+        {
+            foreach (var system in Systems)
+            {
+                try
+                {
+                    system.FixedUpdate();
+                }
+                catch (Exception e)
+                {
+                    SystemsContainer.Get<MainSystem>().HandleException(e, "SystemHandler-FixedUpdate");
+                }
+            }
+        }
+
+        /// <summary>
         /// Call all the updates of the systems
         /// </summary>
         public static void Update()
@@ -90,19 +108,19 @@ namespace LunaClient.Systems
         }
 
         /// <summary>
-        /// Call all the fixed updates of the systems
+        /// Call all the updates of the systems
         /// </summary>
-        public static void FixedUpdate()
+        public static void LateUpdate()
         {
             foreach (var system in Systems)
             {
                 try
                 {
-                    system.FixedUpdate();
+                    system.LateUpdate();
                 }
                 catch (Exception e)
                 {
-                    SystemsContainer.Get<MainSystem>().HandleException(e, "SystemHandler-FixedUpdate");
+                    SystemsContainer.Get<MainSystem>().HandleException(e, "SystemHandler-Update");
                 }
             }
         }

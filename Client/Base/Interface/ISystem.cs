@@ -6,8 +6,9 @@
     public interface ISystem
     {
         bool Enabled { get; set; }
-        void Update();
         void FixedUpdate();
+        void Update();
+        void LateUpdate();
         string GetProfilersData();
         void ResetProfilers();
     }

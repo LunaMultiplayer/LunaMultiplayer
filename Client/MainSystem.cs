@@ -183,6 +183,21 @@ namespace LunaClient
 
         #endregion
 
+        #region Late update methods
+
+        public void MainSystemLateUpdate()
+        {
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
+
+            if (!Enabled)
+                return;
+
+            SystemsHandler.LateUpdate();
+            LunaProfiler.LateUpdateData.ReportTime(startClock);
+        }
+
+        #endregion
+
         #region Public methods
 
         public void Reset()

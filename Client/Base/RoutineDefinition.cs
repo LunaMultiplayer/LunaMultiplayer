@@ -1,13 +1,14 @@
-﻿using System;
+﻿using LunaClient.Utilities;
+using System;
 using System.Diagnostics;
-using LunaClient.Utilities;
 
 namespace LunaClient.Base
 {
     public enum RoutineExecution
     {
+        FixedUpdate,
         Update,
-        FixedUpdate
+        LateUpdate
     }
 
     /// <summary>

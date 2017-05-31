@@ -71,5 +71,17 @@ namespace LunaClient
                 SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(FixedUpdate)}");
             }
         }
+
+        public void LateUpdate()
+        {
+            try
+            {
+                SystemsContainer.Get<MainSystem>().MainSystemLateUpdate();
+            }
+            catch (Exception e)
+            {
+                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(LateUpdate)}");
+            }
+        }
     }
 }

@@ -10,6 +10,7 @@ namespace LunaClient.Utilities
     {
         public static ProfilerData FixedUpdateData { get; } = new ProfilerData();
         public static ProfilerData UpdateData { get; } = new ProfilerData();
+        public static ProfilerData LateUpdateData { get; } = new ProfilerData();
         public static ProfilerData GuiData { get; } = new ProfilerData();
 
         public static string GetProfilersData()
@@ -17,8 +18,9 @@ namespace LunaClient.Utilities
             var builder = new StringBuilder();
 
             builder.AppendLine("LMP profiler. Times in ms (average/max/min/now) ");
-            builder.Append("Update: ").Append(UpdateData).AppendLine();
             builder.Append("Fixed update: ").Append(FixedUpdateData).AppendLine();
+            builder.Append("Update: ").Append(UpdateData).AppendLine();
+            builder.Append("Late Update: ").Append(LateUpdateData).AppendLine();
             builder.Append("GUI: ").Append(GuiData).AppendLine();
 
             return builder.ToString();

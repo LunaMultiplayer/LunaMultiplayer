@@ -17,6 +17,8 @@ namespace LunaClient.Windows.Status
 {
     public partial class StatusWindow
     {
+        private static readonly WarpSystem WarpSystem = SystemsContainer.Get<WarpSystem>();
+
         public void DrawContent(int windowId)
         {
             GUILayout.BeginVertical();
@@ -67,10 +69,10 @@ namespace LunaClient.Windows.Status
                 else
                 {
                     GUILayout.BeginHorizontal(SubspaceStyle);
-                    GUILayout.Label($"T: +{KSPUtil.PrintTimeCompact(SystemsContainer.Get<WarpSystem>().GetSubspaceTime(currentEntry.SubspaceId), false)}");
+                    GUILayout.Label($"T: +{KSPUtil.PrintTimeCompact(WarpSystem.GetSubspaceTime(currentEntry.SubspaceId), false)}");
                     GUILayout.FlexibleSpace();
                     if (NotWarpingAndIsFutureSubspace(currentEntry.SubspaceId) && GUILayout.Button("Sync", ButtonStyle))
-                        SystemsContainer.Get<WarpSystem>().CurrentSubspace = currentEntry.SubspaceId;
+                        WarpSystem.CurrentSubspace = currentEntry.SubspaceId;
                     GUILayout.EndHorizontal();
                 }
 
@@ -163,9 +165,9 @@ namespace LunaClient.Windows.Status
 
         private static bool NotWarpingAndIsFutureSubspace(int subspaceId)
         {
-            return !SystemsContainer.Get<WarpSystem>().CurrentlyWarping && SystemsContainer.Get<WarpSystem>().CurrentSubspace != subspaceId &&
-                SystemsContainer.Get<WarpSystem>().Subspaces.ContainsKey(SystemsContainer.Get<WarpSystem>().CurrentSubspace) &&
-                SystemsContainer.Get<WarpSystem>().Subspaces[SystemsContainer.Get<WarpSystem>().CurrentSubspace] < SystemsContainer.Get<WarpSystem>().Subspaces[subspaceId];
+            return !WarpSystem.CurrentlyWarping && WarpSystem.CurrentSubspace != subspaceId &&
+                   WarpSystem.Subspaces.ContainsKey(WarpSystem.CurrentSubspace) && WarpSystem.Subspaces.ContainsKey(subspaceId) &&
+                   WarpSystem.Subspaces[WarpSystem.CurrentSubspace] < WarpSystem.Subspaces[subspaceId];
         }
 
         public void DrawMaximize(int windowId)

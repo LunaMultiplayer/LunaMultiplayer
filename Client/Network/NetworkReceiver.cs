@@ -42,7 +42,7 @@ namespace LunaClient.Network
             {
                 while (!SystemsContainer.Get<MainSystem>().Quit)
                 {
-                    while (NetworkMain.ClientConnection.ReadMessage(out var msg))
+                    if (NetworkMain.ClientConnection.ReadMessage(out var msg))
                     {
                         NetworkStatistics.LastReceiveTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
                         switch (msg.MessageType)
@@ -51,7 +51,8 @@ namespace LunaClient.Network
                                 NetworkServerList.HandleNatIntroduction(msg);
                                 break;
                             case NetIncomingMessageType.ConnectionLatencyUpdated:
-                                NetworkStatistics.PingMs = (float)TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
+                                NetworkStatistics.PingMs =
+                                    (float)TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
                                 break;
                             case NetIncomingMessageType.UnconnectedData:
                                 NetworkServerList.HandleServersList(msg);
@@ -59,7 +60,9 @@ namespace LunaClient.Network
                             case NetIncomingMessageType.Data:
                                 try
                                 {
-                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
+                                    var deserializedMsg =
+                                        NetworkMain.SrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes),
+                                            DateTime.UtcNow.Ticks);
                                     if (deserializedMsg != null)
                                     {
                                         EnqueueMessageToSystem(deserializedMsg as IServerMessageBase);
@@ -81,12 +84,14 @@ namespace LunaClient.Network
                                 }
                                 break;
                             default:
-                                LunaLog.Log($"[LMP]: LIDGREN: {msg.MessageType}-- {msg.PeekString()}");
+                                LunaLog.Log($"[LMP]: LIDGREN: {msg.MessageType} -- {msg.PeekString()}");
                                 break;
                         }
                     }
-
-                    Thread.Sleep(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
+                    else
+                    {
+                        Thread.Sleep(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
+                    }
                 }
             }
             catch (Exception e)
