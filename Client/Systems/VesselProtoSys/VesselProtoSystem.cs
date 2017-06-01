@@ -197,7 +197,8 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToReLoad)
                     {
                         VesselLoader.ReloadVessel(vesselProto.Value);
-                        SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPosition(vesselProto.Value.VesselId);
+                        if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
+                            SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPosition(vesselProto.Value.VesselId);
                     }
 
                     //Load vessels that don't exist and are in our subspace
@@ -209,7 +210,9 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToLoad)
                     {
                         VesselLoader.LoadVessel(vesselProto.Value);
-                        SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPosition(vesselProto.Value.VesselId);
+
+                        if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
+                            SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPosition(vesselProto.Value.VesselId);
                     }
                 }
             }
