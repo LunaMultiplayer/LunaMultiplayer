@@ -41,8 +41,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
             base.OnEnabled();
 
-            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
-            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, HandleVesselUpdates);
 
             SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval,
                 RoutineExecution.LateUpdate, SendVesselPositionUpdates));

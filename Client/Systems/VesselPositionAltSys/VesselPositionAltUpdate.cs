@@ -221,7 +221,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         public void ApplyVesselUpdateSimple()
         {
-            if (Body == null || Vessel == null) return;
+            if (Body == null || Vessel == null || Vessel.precalc == null) return;
 
             if (!Vessel.loaded)
             {
@@ -236,14 +236,17 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 Vessel.vesselTransform.position = TransformPos;
                 Vessel.SetRotation(Rotation, true);
                 Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.vesselTransform.rotation;
-                //Vessel.precalc.worldSurfaceRot = Vessel.mainBody.bodyTransform.rotation * Vessel.srfRelRotation;
                 Vessel.mainBody.GetLatLonAlt(TransformPos, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
             }
             else
             {
-                Vessel.vesselTransform.position = TransformPos;
                 Vessel.vesselTransform.rotation = Rotation;
+                Vessel.vesselTransform.position = TransformPos;
+                Vessel.mainBody.GetLatLonAlt(TransformPos, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
             }
+
+            Vessel.precalc.enabled = true;
+            Vessel.precalc.MainPhysics(true);
         }
 
         /// <summary>

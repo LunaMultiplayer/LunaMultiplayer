@@ -37,10 +37,10 @@ namespace LunaClient.Systems.VesselFlightStateSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, RemoveUnloadedVesselsFromDictionary));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddRemoveActiveVesselFromDictionary));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddLoadedVesselsToDictionary));
+            //SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
+            //SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, RemoveUnloadedVesselsFromDictionary));
+            //SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddRemoveActiveVesselFromDictionary));
+            //SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddLoadedVesselsToDictionary));
         }
 
         protected override void OnDisabled()
