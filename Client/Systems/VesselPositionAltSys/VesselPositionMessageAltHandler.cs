@@ -19,24 +19,20 @@ namespace LunaClient.Systems.VesselPositionAltSys
             }
 
             var update = new VesselPositionAltUpdate(msgData);
+
             var vesselId = update.VesselId;
 
-            if (!System.CurrentVesselUpdate.TryGetValue(update.VesselId, out var existingPositionUpdate))
+            if (!VesselPositionAltSystem.CurrentVesselUpdate.TryGetValue(update.VesselId, out var existingPositionUpdate))
             {
-                System.CurrentVesselUpdate[vesselId] = update;
-                //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                System.UpdatedVesselIds[vesselId] = 0;
+                VesselPositionAltSystem.CurrentVesselUpdate.TryAdd(vesselId, update);
             }
             else
             {
                 if (existingPositionUpdate.SentTime < update.SentTime)
                 {
-                    //If there's an existing update, copy the body and vessel objects so they don't have to be looked up later.
-                    System.SetBodyAndVesselOnNewUpdate(existingPositionUpdate, update);
-                    System.CurrentVesselUpdate[vesselId] = update;
-
-                    //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                    System.UpdatedVesselIds[vesselId] = 0;
+                    update.Vessel = VesselPositionAltSystem.CurrentVesselUpdate[vesselId].Vessel;
+                    update.Body = VesselPositionAltSystem.CurrentVesselUpdate[vesselId].Body;
+                    VesselPositionAltSystem.CurrentVesselUpdate[vesselId] = update;
                 }
             }
         }

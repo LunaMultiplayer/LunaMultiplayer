@@ -7,6 +7,13 @@ namespace LunaClient
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class Client : MonoBehaviour
     {
+        public static Client Singleton { get; set; }
+
+        public Client()
+        {
+            Singleton = this;
+        }
+
         public static string KspPath { get; private set; }
 
         public void Awake()

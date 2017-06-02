@@ -206,7 +206,7 @@ namespace LunaClient.Windows.Systems
                     GUILayout.Label(VesselPositionProfilerText, LabelStyle);
             }
 
-            VesselPositionAlt = GUILayout.Toggle(VesselPosition, "Vessel position alternative", ButtonStyle);
+            VesselPositionAlt = GUILayout.Toggle(VesselPositionAlt, "Vessel position alternative", ButtonStyle);
             if (VesselPositionAlt)
             {
                 SystemsContainer.Get<VesselPositionAltSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselPositionAltSystem>().Enabled, "ON/OFF",

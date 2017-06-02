@@ -15,8 +15,39 @@ namespace LunaClient.Systems.VesselPositionAltSys
         #region Fields
 
         public float SentTime { get; set; }
-        public Vessel Vessel { get; set; }
-        public CelestialBody Body { get; set; }
+
+        private Vessel _vessel;
+        public Vessel Vessel
+        {
+            get
+            {
+                if (_vessel == null)
+                {
+                    _vessel = FlightGlobals.Vessels.Find(v => v.id == VesselId);
+                }
+
+                return _vessel;
+            }
+            set { _vessel = value; }
+        }
+
+        private CelestialBody _body;
+        public CelestialBody Body
+        {
+            get
+            {
+                if (_body == null)
+                {
+                    _body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
+                }
+
+                return _body;
+            }
+            set { _body = value; }
+        }
+
+
+        public bool AlreadyApplied { get; set; }
         public Guid Id { get; set; }
         public double PlanetTime { get; set; }
 
@@ -25,11 +56,22 @@ namespace LunaClient.Systems.VesselPositionAltSys
         public Guid VesselId { get; set; }
         public string BodyName { get; set; }
         public float[] TransformRotation { get; set; }
+        public float[] RefTransformRotation { get; set; }
+        public float[] ComVector { get; set; }
+        public float[] LocalComVector { get; set; }
         public double[] TransformPosition { get; set; }
+        public double[] RefTransformPosition { get; set; }
+        public double[] ComdVector { get; set; }
 
         public Quaternion Rotation => new Quaternion(TransformRotation[0], TransformRotation[1], TransformRotation[2], TransformRotation[3]);
-
         public Vector3 TransformPos => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
+
+        public Quaternion RefRotation => new Quaternion(RefTransformRotation[0], RefTransformRotation[1], RefTransformRotation[2], RefTransformRotation[3]);
+
+        public Vector3 RefTransformPos => new Vector3d(RefTransformPosition[0], RefTransformPosition[1], RefTransformPosition[2]);
+        public Vector3 Com => new Vector3d(ComVector[0], ComVector[1], ComVector[2]);
+        public Vector3 LocalCoM => new Vector3d(LocalComVector[0], LocalComVector[1], LocalComVector[2]);
+        public Vector3d ComD => new Vector3d(ComdVector[0], ComdVector[1], ComdVector[2]);
 
         #region Orbit field
 
@@ -42,7 +84,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
         public double[] LatLonAlt { get; set; }
 
         private Vector3d _position = Vector3d.zero;
-        private Vector3d Position
+        public Vector3d Position
         {
             get
             {
@@ -74,6 +116,11 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 LatLonAlt = LatLonAlt,
                 TransformPosition = TransformPosition,
                 TransformRotation = TransformRotation,
+                RefTransformRotation = RefTransformRotation,
+                RefTransformPosition = RefTransformPosition,
+                ComVector = ComVector,
+                ComdVector = ComdVector,
+                LocalComVector = LocalComVector
             };
         }
 
@@ -86,6 +133,11 @@ namespace LunaClient.Systems.VesselPositionAltSys
             BodyName = msgData.BodyName;
             TransformRotation = msgData.TransformRotation;
             TransformPosition = msgData.TransformPosition;
+            RefTransformRotation = msgData.RefTransformRotation;
+            RefTransformPosition = msgData.RefTransformPosition;
+            ComVector = msgData.ComVector;
+            ComdVector = msgData.ComdVector;
+            LocalComVector = msgData.LocalComVector;
             LatLonAlt = msgData.LatLonAlt;
             Orbit = msgData.Orbit;
         }
@@ -101,12 +153,43 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 //vessel.orbitDriver.TrackRigidbody(vessel.mainBody, 0);
                 //vessel.UpdatePosVel();
 
+                ComVector = new[]
+                {
+                    vessel.CoM.x,
+                    vessel.CoM.y,
+                    vessel.CoM.z,
+                };
+                ComdVector = new[]
+                {
+                    vessel.CoMD.x,
+                    vessel.CoMD.y,
+                    vessel.CoMD.z,
+                };
+                LocalComVector = new[]
+                {
+                    vessel.localCoM.x,
+                    vessel.localCoM.y,
+                    vessel.localCoM.z,
+                };
                 TransformRotation = new[]
                 {
                     vessel.vesselTransform.rotation.x,
                     vessel.vesselTransform.rotation.y,
                     vessel.vesselTransform.rotation.z,
                     vessel.vesselTransform.rotation.w
+                };
+                RefTransformRotation = new[]
+                {
+                    vessel.ReferenceTransform.rotation.x,
+                    vessel.ReferenceTransform.rotation.y,
+                    vessel.ReferenceTransform.rotation.z,
+                    vessel.ReferenceTransform.rotation.w
+                };
+                RefTransformPosition = new[]
+                {
+                    (double)vessel.ReferenceTransform.position.x,
+                    (double)vessel.ReferenceTransform.position.y,
+                    (double)vessel.ReferenceTransform.position.z
                 };
                 TransformPosition = new[]
                 {
@@ -146,13 +229,40 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         #region Main method
 
+        public void ApplyVesselUpdateSimple()
+        {
+            if (Body == null || Vessel == null) return;
+
+            if (!Vessel.loaded)
+            {
+                Vessel.latitude = LatLonAlt[0];
+                Vessel.longitude = LatLonAlt[1];
+                Vessel.altitude = LatLonAlt[2];
+                return;
+            }
+
+            if (Vessel.packed)
+            {
+                Vessel.vesselTransform.position = TransformPos;
+                Vessel.SetRotation(Rotation, true);
+                Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.vesselTransform.rotation;
+                //Vessel.precalc.worldSurfaceRot = Vessel.mainBody.bodyTransform.rotation * Vessel.srfRelRotation;
+                Vessel.mainBody.GetLatLonAlt(TransformPos, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+            }
+            else
+            {
+                Vessel.vesselTransform.position = TransformPos;
+                Vessel.vesselTransform.rotation = Rotation;
+            }
+        }
+
         /// <summary>
         /// Apply the vessel update.  Run on FixedUpdate as we're updating physics, therefore it cannot be run in update()
         /// </summary>
         /// <returns></returns>
         public void ApplyVesselUpdate()
         {
-            if (!SetBodyAndVessel()) return;
+            if (Body == null || Vessel == null) return;
 
             Vessel.checkSplashed();
             Vessel.checkLanded();
@@ -171,7 +281,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
             if (Vessel.packed)
             {
-                Vessel.transform.position = TransformPos;
+                Vessel.vesselTransform.position = TransformPos;
                 Vessel.SetRotation(Rotation, true);
                 Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.vesselTransform.rotation;
                 //Vessel.precalc.worldSurfaceRot = Vessel.mainBody.bodyTransform.rotation * Vessel.srfRelRotation;
@@ -186,24 +296,12 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 Vessel.longitude = LatLonAlt[1];
                 Vessel.altitude = LatLonAlt[2];
 
-                foreach (var part in Vessel.parts)
-                    part.ResumeVelocity();
-            }
-        }
+                Vessel.precalc.enabled = true;
+                Vessel.precalc.MainPhysics(true);
 
-        private bool SetBodyAndVessel()
-        {
-            if (Body == null)
-            {
-                Body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
-                if (Body == null) return false;
+                //foreach (var part in Vessel.parts)
+                //    part.ResumeVelocity();
             }
-            if (Vessel == null)
-            {
-                Vessel = FlightGlobals.Vessels.Find(v => v.id == VesselId);
-                if (Vessel == null) return false;
-            }
-            return true;
         }
 
         private void ApplyOrbitData()
