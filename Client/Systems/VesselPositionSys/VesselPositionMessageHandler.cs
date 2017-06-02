@@ -25,7 +25,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 System.CurrentVesselUpdate[vesselId] = update;
                 //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                System.UpdatedVesselIds[vesselId] = 0;
+                System.UpdateVesselPositionOnNextFixedUpdate(vesselId);
             }
             else
             {
@@ -36,7 +36,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     System.CurrentVesselUpdate[vesselId] = update;
 
                     //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                    System.UpdatedVesselIds[vesselId] = 0;
+                    System.UpdateVesselPositionOnNextFixedUpdate(vesselId);
                 }
             }
         }
