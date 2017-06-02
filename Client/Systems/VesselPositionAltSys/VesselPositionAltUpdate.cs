@@ -116,11 +116,6 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 LatLonAlt = LatLonAlt,
                 TransformPosition = TransformPosition,
                 TransformRotation = TransformRotation,
-                RefTransformRotation = RefTransformRotation,
-                RefTransformPosition = RefTransformPosition,
-                ComVector = ComVector,
-                ComdVector = ComdVector,
-                LocalComVector = LocalComVector
             };
         }
 
@@ -133,11 +128,6 @@ namespace LunaClient.Systems.VesselPositionAltSys
             BodyName = msgData.BodyName;
             TransformRotation = msgData.TransformRotation;
             TransformPosition = msgData.TransformPosition;
-            RefTransformRotation = msgData.RefTransformRotation;
-            RefTransformPosition = msgData.RefTransformPosition;
-            ComVector = msgData.ComVector;
-            ComdVector = msgData.ComdVector;
-            LocalComVector = msgData.LocalComVector;
             LatLonAlt = msgData.LatLonAlt;
             Orbit = msgData.Orbit;
         }
