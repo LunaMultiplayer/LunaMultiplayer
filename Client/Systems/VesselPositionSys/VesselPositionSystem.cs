@@ -26,7 +26,7 @@ namespace LunaClient.Systems.VesselPositionSys
             PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
         public ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new ConcurrentDictionary<Guid, VesselPositionUpdate>();
-        public ConcurrentDictionary<Guid, byte> UpdatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();
+        private ConcurrentDictionary<Guid, byte> UpdatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();
         public FlightCtrlState FlightState { get; set; }
 
         #endregion
@@ -71,8 +71,11 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 foreach (var vesselId in UpdatedVesselIds.Keys)
                 {
-                    //NOTE: ApplyVesselUpdate must run in FixedUpdate as it's updating the physics of the vessels
-                    CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
+                    if (CurrentVesselUpdate.TryGetValue(vesselId, out VesselPositionUpdate currentUpdate))
+                    {
+                        //NOTE: ApplyVesselUpdate must run in FixedUpdate as it's updating the physics of the vessels
+                        currentUpdate.ApplyVesselUpdate();
+                    }
                     UpdatedVesselIds.TryRemove(vesselId, out var _);
                 }
             }
@@ -130,14 +133,11 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         /// <summary>
-        /// Applies the latest position update (if any) for the given vessel and moves it to that position
+        /// Applies the latest position update (if any) for the given vessel and moves it to that position on the next FixedUpdate
         /// </summary>
-        public void UpdateVesselPosition(Guid vesselId)
+        public void UpdateVesselPositionOnNextFixedUpdate(Guid vesselId)
         {
-            if (PositionUpdateSystemReady && CurrentVesselUpdate.ContainsKey(vesselId))
-            {
-                CurrentVesselUpdate[vesselId].ApplyVesselUpdate();
-            }
+            UpdatedVesselIds[vesselId] = 0;
         }
 
         #endregion
