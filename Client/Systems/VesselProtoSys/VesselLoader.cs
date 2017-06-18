@@ -77,7 +77,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Reloads an existing vessel into the game
         /// Bear in mind that this method won't reload the vessel unless the part count has changed.
         /// </summary>
-        public void ReloadVessel(VesselProtoUpdate vesselProto)
+        public bool ReloadVesselIfChanged(VesselProtoUpdate vesselProto)
         {
             try
             {
@@ -126,17 +126,20 @@ namespace LunaClient.Systems.VesselProtoSys
                             ScreenMessages.RemoveMessage(message);
                         }
                     }
+                    return vesselLoaded;
 
                 }
                 else
                 {
                     LoadVesselImpl(vesselProto);
+                    return true;
                 }
 
             }
             catch (Exception e)
             {
                 LunaLog.LogError($"[LMP]: Error reloading vessel: {e}");
+                return false;
             }
         }
 

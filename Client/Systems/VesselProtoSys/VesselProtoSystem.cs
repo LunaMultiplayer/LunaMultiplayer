@@ -196,9 +196,11 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     foreach (var vesselProto in vesselsToReLoad)
                     {
-                        VesselLoader.ReloadVessel(vesselProto.Value);
-                        if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
+                        bool vesselLoaded = VesselLoader.ReloadVesselIfChanged(vesselProto.Value);
+                        if (vesselLoaded && !SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
                         {
+                            //TODO: This call will not put the vessel in the right position if a long time has elapsed between when the update was generated and when it's being applied, if in atmo.
+                            //TODO: This is because positions are set via ballistic orbits, which don't extrapolate properly in atmo.
                             SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPositionOnNextFixedUpdate(vesselProto.Value.VesselId);
                         }
                     }
@@ -215,6 +217,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
                         if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
                         {
+                            //TODO: This call will not put the vessel in the right position if a long time has elapsed between when the update was generated and when it's being applied, if in atmo.
+                            //TODO: This is because positions are set via ballistic orbits, which don't extrapolate properly in atmo.
                             SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPositionOnNextFixedUpdate(vesselProto.Value.VesselId);
                         }
                     }
