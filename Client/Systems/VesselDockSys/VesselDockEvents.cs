@@ -60,7 +60,8 @@ namespace LunaClient.Systems.VesselDockSys
         {
             if (VesselCommon.IsSpectating)
             {
-                FlightGlobals.SetActiveVessel(data.vessel);
+                FlightCamera.SetTarget(data.vessel);
+                data.vessel.MakeActive();
             }
         }
     }
