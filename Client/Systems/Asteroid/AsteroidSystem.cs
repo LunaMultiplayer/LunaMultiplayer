@@ -3,6 +3,8 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
+using SentinelMission;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -81,10 +83,11 @@ namespace LunaClient.Systems.Asteroid
             {
                 var beforeSpawn = GetAsteroidCount();
                 var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;
-                for (var asteroidsSpawned = 0; asteroidsSpawned < asteroidsToSpawn; asteroidsSpawned++)
+
+                if (asteroidsToSpawn > 0)
                 {
-                    LunaLog.Log($"[LMP]: Spawning asteroid, have {beforeSpawn + asteroidsSpawned}, need {SettingsSystem.ServerSettings.MaxNumberOfAsteroids}");
-                    ScenarioController.SpawnAsteroid();
+                    LunaLog.Log($"[LMP]: Spawning {asteroidsToSpawn} asteroids");
+                    Client.Singleton.StartCoroutine(SpawnAsteroids(asteroidsToSpawn));
                 }
             }
 
@@ -106,6 +109,25 @@ namespace LunaClient.Systems.Asteroid
                 }
             }
 
+        }
+
+        /// <summary>
+        /// Coroutine that spawns the specified number of asteroids at a 0.5 seconds interval
+        /// </summary>
+        private static IEnumerator SpawnAsteroids(int quantity)
+        {
+            var random = new System.Random();
+            for (var i = 0; i < quantity; i++)
+            {
+                var baseDays = 21 + random.NextDouble() * 360;
+                var orbit = Orbit.CreateRandomOrbitFlyBy(Planetarium.fetch.Home, baseDays);
+
+                DiscoverableObjectsUtil.SpawnAsteroid(DiscoverableObjectsUtil.GenerateAsteroidName(),
+                    orbit, (uint)SentinelUtilities.RandomRange(random), SentinelUtilities.WeightedAsteroidClass(random),
+                    double.PositiveInfinity, double.PositiveInfinity);
+
+                yield return new WaitForSeconds(0.5f);
+            }
         }
 
         #endregion

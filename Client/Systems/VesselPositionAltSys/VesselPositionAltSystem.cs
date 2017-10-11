@@ -74,6 +74,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         private static void HandleVesselUpdates()
         {
+            if (FlightGlobals.ActiveVessel == null) return;
+
             foreach (var keyVal in CurrentVesselUpdate)
             {
                 FlightGlobals.ActiveVessel.StartCoroutine(ApplyVesselUpdate(keyVal.Value));

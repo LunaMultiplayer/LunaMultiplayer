@@ -1,6 +1,8 @@
 ﻿using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using System;
+using System.Collections;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
 {
@@ -43,7 +45,8 @@ namespace LunaClient.Systems.VesselDockSys
                 else
                 {
                     LunaLog.Log($"[LMP]: Docking: We DON'T own the dominant vessel {finalVessel.id}. Switching");
-                    FlightGlobals.SetActiveVessel(finalVessel);
+                    SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(finalVessel.id);
+                    Client.Singleton.StartCoroutine(SwitchToVessel(finalVessel.id));
                 }
 
                 SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(vesselIdToRemove);
@@ -51,6 +54,12 @@ namespace LunaClient.Systems.VesselDockSys
 
                 LunaLog.Log("[LMP]: Docking event over!");
             }
+        }
+
+        public IEnumerator SwitchToVessel(Guid vesselId)
+        {
+            yield return new WaitForSeconds(10.5f);
+            FlightGlobals.SetActiveVessel(FlightGlobals.FindVessel(vesselId));
         }
     }
 }
