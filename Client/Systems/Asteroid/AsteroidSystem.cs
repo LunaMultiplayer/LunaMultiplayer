@@ -21,7 +21,7 @@ namespace LunaClient.Systems.Asteroid
                 if (_scenarioDiscoverableObjects == null)
                 {
                     foreach (var psm in HighLogic.CurrentGame.scenarios
-                        .Where(psm => psm?.moduleName == "ScenarioDiscoverableObjects" && psm.moduleRef != null))
+                        .Where(psm => psm?.moduleName == "DiscoverableObjects" && psm.moduleRef != null))
                     {
                         _scenarioDiscoverableObjects = (ScenarioDiscoverableObjects)psm.moduleRef;
                         ScenarioController.spawnInterval = float.MaxValue;
