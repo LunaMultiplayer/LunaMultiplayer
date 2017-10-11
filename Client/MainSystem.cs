@@ -200,18 +200,21 @@ namespace LunaClient
 
         #region Public methods
 
+        public void Start()
+        {
+            if (!SettingsSystem.CurrentSettings.DisclaimerAccepted)
+            {
+                Enabled = false;
+                DisclaimerDialog.SpawnDialog();
+            }
+        }
+
         public void Reset()
         {
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
             LunaLog.Log($"[LMP]: KSP installed at {Client.KspPath}");
             LunaLog.Log($"[LMP]: LMP installed at {AssemblyPath}");
-
-            if (!SettingsSystem.CurrentSettings.DisclaimerAccepted && HighLogic.LoadedScene == GameScenes.MAINMENU)
-            {
-                Enabled = false;
-                DisclaimerDialog.SpawnDialog();
-            }
 
             if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
             {

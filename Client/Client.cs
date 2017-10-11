@@ -32,6 +32,11 @@ namespace LunaClient
             }
         }
 
+        public void Start()
+        {
+            SystemsContainer.Get<MainSystem>().Start();
+        }
+
         public void OnApplicationQuit()
         {
             SystemsContainer.Get<MainSystem>().OnExit();
