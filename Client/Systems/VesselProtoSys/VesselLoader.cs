@@ -74,67 +74,36 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Reloads an existing vessel into the game
-        /// Bear in mind that this method won't reload the vessel unless the part count has changed.
+        /// Reloads an existing vessel into the game. We assume that the vessel exists!
+        /// We are sure that the vessel has changed as we handle that on the msg receive which runs in another thread
         /// </summary>
-        public bool ReloadVesselIfChanged(VesselProtoUpdate vesselProto)
+        public bool ReloadVessel(VesselProtoUpdate vesselProto)
         {
             try
             {
-                var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.VesselId);
-                if (vessel != null)
+                //TODO: Handle when it's the active vessel in case we are spectating. If you delete the active vessel, it ends badly.
+
+                //Load the existing target, if any.  We will use this to reset the target to the newly loaded vessel, if the vessel we're reloading is the one that is targeted.
+                var currentTargetId = FlightGlobals.fetch.VesselTarget?.GetVessel()?.id;
+
+                //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
+                SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vesselProto.Vessel);
+                LoadVesselImpl(vesselProto);
+
+                //Case when the target is the vessel we are changing
+                if (currentTargetId == vesselProto.VesselId)
                 {
-                    //Load the existing target, if any.  We will use this to reset the target to the newly loaded vessel, if the vessel we're reloading is the one that is targeted.
-                    var currentTarget = FlightGlobals.fetch.VesselTarget;
+                    //Fetch the new vessel information for the same vessel ID, as the unload/load creates a new game object, 
+                    //and we need to refer to the new one for the target
+                    var newVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.VesselId);
 
-                    var vesselLoaded = false;
-                    //TODO: Is BackupVessel() needed or can we just look at the protoVessel?
-                    if (vesselProto.ProtoVessel.protoPartSnapshots.Count != vessel.BackupVessel().protoPartSnapshots.Count)
-                    {
-                        //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
-                        SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vessel);
-                        LoadVesselImpl(vesselProto);
-                        vesselLoaded = true;
-                    }
+                    //Record the time immediately before calling SetVesselTarget to remove it's message
+                    var currentTime = Time.realtimeSinceStartup;
+                    FlightGlobals.fetch.SetVesselTarget(newVessel, true);
 
-                    //TODO: Handle when it's the active vessel for the FlightGlobals as well.  If you delete the active vessel, it ends badly.  Very badly.
-
-                    //We do want to actually compare by reference--we want to see if the vessel object we're unloading and reloading is the one that's targeted.  If so, we need to
-                    //reset the target to the new instance of the vessel
-                    if (vesselLoaded && currentTarget?.GetVessel() == vessel)
-                    {
-                        //Fetch the new vessel information for the same vessel ID, as the unload/load creates a new game object, and we need to refer to the new one for the target
-                        var newVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.VesselId);
-
-                        //Record the time immediately before calling SetVesselTarget
-                        var currentTime = Time.realtimeSinceStartup;
-                        FlightGlobals.fetch.SetVesselTarget(newVessel, true);
-
-                        var messagesToRemove = new List<ScreenMessage>();
-                        //Remove the "Target:" message created by SetVesselTarget
-                        foreach (var message in ScreenMessages.Instance.ActiveMessages)
-                        {
-                            //If the message started on or after the SetVesselTarget call time, remove it, as it's the target message created by SetVesselTarget
-                            if (message.startTime >= currentTime)
-                            {
-                                messagesToRemove.Add(message);
-                            }
-                        }
-
-                        foreach (var message in messagesToRemove)
-                        {
-                            ScreenMessages.RemoveMessage(message);
-                        }
-                    }
-                    return vesselLoaded;
-
+                    RemoveSetTargetMessages(currentTime);
                 }
-                else
-                {
-                    LoadVesselImpl(vesselProto);
-                    return true;
-                }
-
+                return true;
             }
             catch (Exception e)
             {
@@ -142,7 +111,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 return false;
             }
         }
-
 
         #region Private methods
 
@@ -233,7 +201,6 @@ namespace LunaClient.Systems.VesselProtoSys
                    possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid";
         }
 
-
         /// <summary>
         /// Loads the vessel proto into the current game
         /// </summary>
@@ -248,6 +215,26 @@ namespace LunaClient.Systems.VesselProtoSys
                 return false;
             }
             return true;
+        }
+
+        /// <summary>
+        /// This method removes the "Target: xxx" message created by SetVesselTarget
+        /// </summary>
+        /// <param name="currentTime"></param>
+        private static void RemoveSetTargetMessages(float currentTime)
+        {
+            var messagesToRemove = new List<ScreenMessage>();
+
+            foreach (var message in ScreenMessages.Instance.ActiveMessages.Where(m => m.startTime >= currentTime))
+            {
+                //If the message started on or after the SetVesselTarget call time, remove it
+                messagesToRemove.Add(message);
+            }
+
+            foreach (var message in messagesToRemove)
+            {
+                ScreenMessages.RemoveMessage(message);
+            }
         }
 
         #endregion

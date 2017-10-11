@@ -7,6 +7,7 @@ using LunaCommon;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Threading;
 using UniLinq;
 
 namespace LunaClient.Systems.Scenario
@@ -67,10 +68,13 @@ namespace LunaClient.Systems.Scenario
         {
             if (!Enabled || !SystemsContainer.Get<MainSystem>().GameRunning) return;
 
-            var modules = ScenarioRunner.GetLoadedModules().ToArray();
+            var modules = (ScenarioModule[])ScenarioRunner.GetLoadedModules().ToArray().Clone();
 
-            //I tried to do this method in another thread as it takes a lot of time to run 
-            //but appear several empty lines in the log... Perhaps we cannot do it :(
+            new Thread(() => ParseAndSendModules(modules)).Start();
+        }
+
+        private void ParseAndSendModules(IEnumerable<ScenarioModule> modules)
+        {
             var scenarioName = new List<string>();
             var scenarioData = new List<byte[]>();
 

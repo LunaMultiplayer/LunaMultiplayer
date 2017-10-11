@@ -136,7 +136,8 @@ namespace LunaClient.Systems.Asteroid
 
         public bool ProtoVesselIsAsteroid(ProtoVessel protoVessel)
         {
-            return protoVessel?.protoPartSnapshots != null && protoVessel.protoPartSnapshots.Count == 1 &&
+            return (protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast.")
+                || protoVessel.protoPartSnapshots != null && protoVessel.protoPartSnapshots.Count == 1 &&
                    protoVessel.protoPartSnapshots[0].partName == "PotatoRoid";
         }
 

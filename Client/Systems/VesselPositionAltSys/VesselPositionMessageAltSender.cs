@@ -2,6 +2,7 @@
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaCommon.Message.Client;
+using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 
 namespace LunaClient.Systems.VesselPositionAltSys
@@ -21,7 +22,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         public void SendVesselPositionUpdate(VesselPositionAltUpdate update)
         {
-            SendMessage(update.GetParsedMessage());
+            SendMessage(update.AsSimpleMessage());
         }
     }
 }

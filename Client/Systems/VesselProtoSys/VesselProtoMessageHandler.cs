@@ -113,16 +113,23 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (vesselProtoUpdate.ProtoVessel == null)
                     return;
 
-                if (System.AllPlayerVessels.ContainsKey(vesselId))
-                {
-                    //Vessel exists so replace it
-                    System.AllPlayerVessels[vesselId] = vesselProtoUpdate;
-                }
-                else
+                if (!System.AllPlayerVessels.ContainsKey(vesselId))
                 {
                     System.AllPlayerVessels.TryAdd(vesselId, vesselProtoUpdate);
+
+                }
+                else if (NewProtoVesselHasChanges(vesselProtoUpdate.ProtoVessel))
+                {
+                    //Vessel exists and contain changes so replace it
+                    System.AllPlayerVessels[vesselId] = vesselProtoUpdate;
                 }
             }
+        }
+
+        private static bool NewProtoVesselHasChanges(ProtoVessel protoVessel)
+        {
+            return System.AllPlayerVessels[protoVessel.vesselID].ProtoVessel.protoPartSnapshots.Count !=
+                protoVessel.protoPartSnapshots.Count;
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using UniLinq;
 using UnityEngine;
@@ -29,6 +30,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
         public static ConcurrentDictionary<Guid, VesselPositionAltUpdate> CurrentVesselUpdate { get; } =
             new ConcurrentDictionary<Guid, VesselPositionAltUpdate>();
 
+        public static ConcurrentDictionary<Guid, VesselPositionAltUpdate> TargetVesselUpdate { get; } =
+            new ConcurrentDictionary<Guid, VesselPositionAltUpdate>();
+
         #endregion
 
         #region Base overrides
@@ -42,7 +46,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
             base.OnEnabled();
 
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
-            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, HandleVesselUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, ActivatePrecalc);
+
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, HandleVesselUpdates));
 
             SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval,
                 RoutineExecution.LateUpdate, SendVesselPositionUpdates));
@@ -51,21 +57,42 @@ namespace LunaClient.Systems.VesselPositionAltSys
             //    RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
         }
 
+        private static void ActivatePrecalc()
+        {
+            for (var i = FlightGlobals.Vessels.Count - 1; i >= 0; --i)
+            {
+                var vessel = FlightGlobals.Vessels[i];
+                if (vessel.precalc == null || vessel.id == FlightGlobals.ActiveVessel?.id)
+                {
+                    continue;
+                }
+
+                vessel.precalc.enabled = true;
+                vessel.precalc.MainPhysics(true);
+            }
+        }
+
         private static void HandleVesselUpdates()
         {
             if (FlightGlobals.ActiveVessel == null) return;
 
             foreach (var keyVal in CurrentVesselUpdate.Where(v => v.Key != FlightGlobals.ActiveVessel.id))
             {
-                keyVal.Value.ApplyVesselUpdateSimple();
+                FlightGlobals.ActiveVessel.StartCoroutine(ApplyVesselUpdate(keyVal.Value));
             }
+        }
+
+        private static IEnumerator ApplyVesselUpdate(VesselPositionAltUpdate vesselPosition)
+        {
+            yield return new WaitForFixedUpdate();
+            vesselPosition.ApplyVesselUpdate();
         }
 
         private static void DisableVesselPrecalculate()
         {
             if (FlightGlobals.ActiveVessel == null) return;
 
-            foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
+            foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id && v.precalc != null))
             {
                 vessel.precalc.enabled = false;
             }

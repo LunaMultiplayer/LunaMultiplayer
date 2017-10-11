@@ -24,45 +24,48 @@ namespace LunaCommon
         /// <returns></returns>
         public static string[] RetrieveWorkingMasterServersEndpoints()
         {
-            ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
-            var parsedServers = new List<IPEndPoint>();
-            using (var client = new WebClient())
-            using (var stream = client.OpenRead(MasterServersListUrl))
+            try
             {
-                if (stream == null)
+                ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
+                var parsedServers = new List<IPEndPoint>();
+                using (var client = new WebClient())
+                using (var stream = client.OpenRead(MasterServersListUrl))
                 {
-                    throw new Exception($"Cannot open the master servers list file from: {MasterServersListUrl}");
-                }
-                using (var reader = new StreamReader(stream))
-                {
-                    var content = reader.ReadToEnd();
-                    var servers = content
-                        .Trim()
-                        .Split('\n')
-                        .Where(s => !s.StartsWith("#") && s.Contains(":"))
-                        .ToArray();
-
-                    foreach (var server in servers)
+                    using (var reader = new StreamReader(stream))
                     {
-                        var ipPort = server.Split(':');
-                        if (!IPAddress.TryParse(ipPort[0], out var ip))
-                        {
-                            var hostEntry = Dns.GetHostEntry(ipPort[0]);
-                            if (hostEntry.AddressList.Length > 0)
-                            {
-                                ip = hostEntry.AddressList[0];
-                            }
-                        }
+                        var content = reader.ReadToEnd();
+                        var servers = content
+                            .Trim()
+                            .Split('\n')
+                            .Where(s => !s.StartsWith("#") && s.Contains(":"))
+                            .ToArray();
 
-                        if (ip != null && ushort.TryParse(ipPort[1], out var port))
+                        foreach (var server in servers)
                         {
-                            parsedServers.Add(new IPEndPoint(ip, port));
+                            var ipPort = server.Split(':');
+                            if (!IPAddress.TryParse(ipPort[0], out var ip))
+                            {
+                                var hostEntry = Dns.GetHostEntry(ipPort[0]);
+                                if (hostEntry.AddressList.Length > 0)
+                                {
+                                    ip = hostEntry.AddressList[0];
+                                }
+                            }
+
+                            if (ip != null && ushort.TryParse(ipPort[1], out var port))
+                            {
+                                parsedServers.Add(new IPEndPoint(ip, port));
+                            }
                         }
                     }
                 }
-            }
 
-            return parsedServers.Select(s => $"{s.Address.ToString()}:{s.Port}").ToArray();
+                return parsedServers.Select(s => $"{s.Address.ToString()}:{s.Port}").ToArray();
+            }
+            catch (Exception)
+            {
+                return new string[0];
+            }
         }
 
         /// <summary>

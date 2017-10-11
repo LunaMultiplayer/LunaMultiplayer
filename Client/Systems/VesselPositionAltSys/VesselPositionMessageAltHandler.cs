@@ -13,10 +13,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
         public void HandleMessage(IMessageData messageData)
         {
             var msgData = messageData as VesselPositionMsgData;
-            if (msgData == null)
-            {
-                return;
-            }
+            if (msgData == null) return;
 
             var update = new VesselPositionAltUpdate(msgData);
 
@@ -25,14 +22,17 @@ namespace LunaClient.Systems.VesselPositionAltSys
             if (!VesselPositionAltSystem.CurrentVesselUpdate.TryGetValue(update.VesselId, out var existingPositionUpdate))
             {
                 VesselPositionAltSystem.CurrentVesselUpdate.TryAdd(vesselId, update);
+                VesselPositionAltSystem.TargetVesselUpdate.TryAdd(vesselId, update);
             }
             else
             {
-                if (existingPositionUpdate.SentTime < update.SentTime)
+                if (existingPositionUpdate.SentTime < update.SentTime && existingPositionUpdate.InterpolationFinished)
                 {
                     update.Vessel = VesselPositionAltSystem.CurrentVesselUpdate[vesselId].Vessel;
                     update.Body = VesselPositionAltSystem.CurrentVesselUpdate[vesselId].Body;
-                    VesselPositionAltSystem.CurrentVesselUpdate[vesselId] = update;
+
+                    VesselPositionAltSystem.CurrentVesselUpdate[vesselId] = VesselPositionAltSystem.TargetVesselUpdate[vesselId];
+                    VesselPositionAltSystem.TargetVesselUpdate[vesselId] = update;
                 }
             }
         }
