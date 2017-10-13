@@ -7,7 +7,7 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
-using System.Threading;
+using System.Threading.Tasks;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -23,12 +23,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (vessel == null) return;
 
-            var protoVessel = new ProtoVessel(vessel);
-            new Thread(() =>
-            {
-                //Update the protovessel definition and send it in another thread
-                PrepareAndSendProtoVessel(protoVessel);
-            }).Start();
+            new Task(() => PrepareAndSendProtoVessel(vessel.protoVessel)).Start(TaskScheduler.Default);
         }
 
         /// <summary>
@@ -36,22 +31,6 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private void PrepareAndSendProtoVessel(ProtoVessel protoVessel)
         {
-            //Defend against NaN orbits
-            if (VesselHasNaNPosition(protoVessel))
-            {
-                LunaLog.Log($"[LMP]: Vessel {protoVessel.vesselID} has NaN position");
-                return;
-            }
-
-            foreach (var pps in protoVessel.protoPartSnapshots)
-            {
-                //Remove tourists from the vessel
-                //TODO: Probably this can be done in the CleanUpVesselNode method
-                foreach (var pcm in
-                    pps.protoModuleCrew.Where(pcm => pcm.type == ProtoCrewMember.KerbalType.Tourist).ToArray())
-                    pps.protoModuleCrew.Remove(pcm);
-            }
-
             var vesselNode = new ConfigNode();
             try
             {
@@ -63,8 +42,25 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
             }
 
+            var vesselId = new Guid(vesselNode.GetValue("pid"));
+
+            //Defend against NaN orbits
+            if (VesselHasNaNPosition(vesselNode))
+            {
+                LunaLog.Log($"[LMP]: Vessel {vesselId} has NaN position");
+                return;
+            }
+
             //Clean up the vessel so we send only the important data
-            CleanUpVesselNode(vesselNode, protoVessel.vesselID);
+            CleanUpVesselNode(vesselNode, vesselId);
+
+            //TODO: Remove tourists from the vessel. This must be done in the CleanUpVesselNode method
+            //foreach (var pps in protoVessel.protoPartSnapshots)
+            //{
+            //    foreach (var pcm in
+            //        pps.protoModuleCrew.Where(pcm => pcm.type == ProtoCrewMember.KerbalType.Tourist).ToArray())
+            //        pps.protoModuleCrew.Remove(pcm);
+            //}
 
             var vesselBytes = ConfigNodeSerializer.Serialize(vesselNode);
             if (vesselBytes.Length > 0)
@@ -73,7 +69,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                 SendMessage(new VesselProtoMsgData
                 {
-                    VesselId = protoVessel.vesselID,
+                    VesselId = vesselId,
                     VesselData = vesselBytes
                 });
             }
@@ -95,39 +91,41 @@ namespace LunaClient.Systems.VesselProtoSys
             SystemsContainer.Get<KerbalReassignerSystem>().DodgeKerbals(vesselNode, vesselId);
         }
 
-        private static bool VesselHasNaNPosition(ProtoVessel pv)
+        #region Config node fixing
+
+        private static bool VesselHasNaNPosition(ConfigNode vesselNode)
         {
-            if (pv.landed || pv.splashed)
+            if (vesselNode.GetValue("landed") == "True" || vesselNode.GetValue("splashed") == "True")
             {
-                //Ground checks
-                if (double.IsNaN(pv.latitude) || double.IsInfinity(pv.latitude) ||
-                    double.IsNaN(pv.longitude) || double.IsInfinity(pv.longitude) ||
-                    double.IsNaN(pv.altitude) || double.IsInfinity(pv.altitude))
+                if (double.TryParse(vesselNode.values.GetValue("lat"), out var latitude)
+                    && (double.IsNaN(latitude) || double.IsInfinity(latitude)))
+                    return true;
+
+                if (double.TryParse(vesselNode.values.GetValue("lon"), out var longitude)
+                    && (double.IsNaN(longitude) || double.IsInfinity(longitude)))
+                    return true;
+
+                if (double.TryParse(vesselNode.values.GetValue("alt"), out var altitude)
+                    && (double.IsNaN(altitude) || double.IsInfinity(altitude)))
                     return true;
             }
             else
             {
-                //Orbit checks
-                if (double.IsNaN(pv.orbitSnapShot.argOfPeriapsis) || double.IsInfinity(pv.orbitSnapShot.argOfPeriapsis) ||
-                    double.IsNaN(pv.orbitSnapShot.eccentricity) || double.IsInfinity(pv.orbitSnapShot.eccentricity) ||
-                    double.IsNaN(pv.orbitSnapShot.epoch) || double.IsInfinity(pv.orbitSnapShot.epoch) ||
-                    double.IsNaN(pv.orbitSnapShot.inclination) || double.IsInfinity(pv.orbitSnapShot.inclination) ||
-                    double.IsNaN(pv.orbitSnapShot.LAN) || double.IsInfinity(pv.orbitSnapShot.LAN) ||
-                    double.IsNaN(pv.orbitSnapShot.meanAnomalyAtEpoch) ||
-                    double.IsInfinity(pv.orbitSnapShot.meanAnomalyAtEpoch) ||
-                    double.IsNaN(pv.orbitSnapShot.semiMajorAxis) || double.IsInfinity(pv.orbitSnapShot.semiMajorAxis))
-                    return true;
+                var orbitNode = vesselNode?.GetNode("ORBIT");
+                if (orbitNode != null)
+                {
+                    return orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v))
+                        .Any(val => double.TryParse(val, out var value) && (double.IsNaN(value) || double.IsInfinity(value)));
+                }
             }
 
             return false;
         }
 
-        #region Config node fixing
-
         /// <summary>
         /// Removes maneuver nodes from the vessel
         /// </summary>
-        private void RemoveManeuverNodesFromProtoVessel(ConfigNode vesselNode)
+        private static void RemoveManeuverNodesFromProtoVessel(ConfigNode vesselNode)
         {
             var flightPlanNode = vesselNode?.GetNode("FLIGHTPLAN");
             flightPlanNode?.ClearData();
@@ -137,7 +135,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Fixes the nodes of the action groups so they are correct
         /// </summary>
         /// <param name="vesselNode"></param>
-        private void FixVesselActionGroupsNodes(ConfigNode vesselNode)
+        private static void FixVesselActionGroupsNodes(ConfigNode vesselNode)
         {
             var actiongroupNode = vesselNode?.GetNode("ACTIONGROUPS");
             if (actiongroupNode != null)

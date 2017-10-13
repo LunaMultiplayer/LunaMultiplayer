@@ -1,6 +1,6 @@
-﻿using System.ComponentModel;
-using LunaCommon.Enums;
+﻿using LunaCommon.Enums;
 using LunaServer.Log;
+using System.ComponentModel;
 
 namespace LunaServer.Settings
 {
@@ -35,7 +35,7 @@ namespace LunaServer.Settings
 
         [Description("Specify the game Type.")]
         public GameMode GameMode = GameMode.Sandbox;
-        
+
         [Description("Minimum log level.")]
         public LogLevels LogLevel = LogLevels.Debug;
 
@@ -102,7 +102,7 @@ namespace LunaServer.Settings
         [Description("Interval in Ms at wich the client will send updates for his vessel when other players are nearby.\n" +
                      "#Decrease it if your clients have good network connection and you plan to do dogfights")]
         public int VesselUpdatesSendMsInterval = 30;
-        
+
         [Description("Interval in Ms at wich the client will send updates for vessels that are uncontrolled but nearby him.")]
         public int SecondaryVesselUpdatesSendMsInterval = 500;
 
@@ -119,8 +119,8 @@ namespace LunaServer.Settings
         public bool DropControlOnExit = true;
 
         [Description("Interval in mili seconds at wich players will check and send scenario changes to the server.")]
-        public int SendScenarioDataMsInterval = 60000;
-        
+        public int SendScenarioDataMsInterval = 15000;
+
         [Description("Username of the player who control the warp if WarpMode is set to MASTER")]
         public string WarpMaster = "";
 
@@ -137,10 +137,10 @@ namespace LunaServer.Settings
         public int VesselDefinitionSendMsInterval = 1000;
 
         [Description("Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions to the server")]
-        public int VesselDefinitionSendFarMsInterval = 10000;
+        public int VesselDefinitionSendFarMsInterval = 5000;
 
         [Description("Interval in ms at wich users will send the abandoned vessel definition to the server")]
-        public int AbandonedVesselsUpdateMsInterval = 30000;
+        public int AbandonedVesselsUpdateMsInterval = 15000;
 
         public int FarDistanceUpdateIntervalMs { get; set; } = 500; // 2FPS
         public int MediumDistanceUpdateIntervalMs { get; set; } = 250; //4 FPS

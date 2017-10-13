@@ -3,7 +3,7 @@ using LunaClient.Network;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace LunaClient.Base
 {
@@ -32,7 +32,7 @@ namespace LunaClient.Base
             }
             else
             {
-                new Thread(() => HandleMessage(msg)).Start();
+                new Task(() => HandleMessage(msg)).Start(TaskScheduler.Default);
             }
         }
 

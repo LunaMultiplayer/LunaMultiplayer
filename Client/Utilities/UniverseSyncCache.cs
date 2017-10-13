@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace LunaClient.Utilities
 {
@@ -12,7 +13,7 @@ namespace LunaClient.Utilities
     {
         static UniverseSyncCache()
         {
-            MainThread.Start();
+            MainThread.Start(TaskScheduler.Default);
         }
 
         #region Fields
@@ -22,7 +23,7 @@ namespace LunaClient.Utilities
 
         private static string CacheDirectory => CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Cache");
 
-        private static Thread MainThread { get; } = new Thread(ProcessingThreadMain) { IsBackground = true };
+        private static Task MainThread { get; } = new Task(ProcessingThreadMain);
         private static AutoResetEvent IncomingEvent { get; } = new AutoResetEvent(false);
         private static ConcurrentQueue<byte[]> IncomingQueue { get; } = new ConcurrentQueue<byte[]>();
         private static Dictionary<string, long> FileLengths { get; } = new Dictionary<string, long>();
@@ -35,19 +36,21 @@ namespace LunaClient.Utilities
         public static void Stop()
         {
             _stop = true;
-            Thread.Sleep(250);
-
-            if (MainThread != null && MainThread.IsAlive)
-                MainThread.Abort();
+            Thread.Sleep(500);
         }
 
         public static string[] GetCachedObjects()
         {
-            var cacheFiles = GetCachedFiles();
-            var cacheObjects = new string[cacheFiles.Length];
-            for (var i = 0; i < cacheFiles.Length; i++)
-                cacheObjects[i] = Path.GetFileNameWithoutExtension(cacheFiles[i]);
-            return cacheObjects;
+            if (SettingsSystem.CurrentSettings.EnableCache)
+            {
+                var cacheFiles = GetCachedFiles();
+                var cacheObjects = new string[cacheFiles.Length];
+                for (var i = 0; i < cacheFiles.Length; i++)
+                    cacheObjects[i] = Path.GetFileNameWithoutExtension(cacheFiles[i]);
+                return cacheObjects;
+            }
+
+            return new string[0];
         }
 
         /// <summary>
@@ -124,8 +127,11 @@ namespace LunaClient.Utilities
         /// </summary>
         public static void QueueToCache(byte[] fileData)
         {
-            IncomingQueue.Enqueue(fileData);
-            IncomingEvent.Set();
+            if (SettingsSystem.CurrentSettings.EnableCache)
+            {
+                IncomingQueue.Enqueue(fileData);
+                IncomingEvent.Set();
+            }
         }
 
         /// <summary>
@@ -163,7 +169,7 @@ namespace LunaClient.Utilities
         /// </summary>
         private static void ProcessingThreadMain()
         {
-            while (!_stop)
+            while (!_stop && SettingsSystem.CurrentSettings.EnableCache)
             {
                 if (IncomingQueue.TryDequeue(out var incomingBytes))
                     SaveToCache(incomingBytes);

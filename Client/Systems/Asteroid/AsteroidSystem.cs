@@ -26,7 +26,8 @@ namespace LunaClient.Systems.Asteroid
                         .Where(psm => psm?.moduleName == "DiscoverableObjects" && psm.moduleRef != null))
                     {
                         _scenarioDiscoverableObjects = (ScenarioDiscoverableObjects)psm.moduleRef;
-                        ScenarioController.spawnInterval = float.MaxValue;
+                        _scenarioDiscoverableObjects.spawnInterval = float.MaxValue;
+                        _scenarioDiscoverableObjects.lastSeed = new System.Random().Next(1000000);
                     }
                 }
                 return _scenarioDiscoverableObjects;
@@ -47,7 +48,10 @@ namespace LunaClient.Systems.Asteroid
             base.OnEnabled();
             GameEvents.onAsteroidSpawned.Add(AsteroidEventHandler.OnAsteroidSpawned);
             GameEvents.onGameSceneLoadRequested.Add(AsteroidEventHandler.OnGameSceneLoadRequested);
-            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroids));
+
+            SetupRoutine(new RoutineDefinition(RoutineExecution.Update, Initialize));
+            SetupRoutine(new RoutineDefinition(60000, RoutineExecution.Update, CheckAsteroidsToSpawn));
+            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroidsStatus));
         }
 
         protected override void OnDisabled()
@@ -65,11 +69,26 @@ namespace LunaClient.Systems.Asteroid
         #region Update methods
 
         /// <summary>
+        /// Here we set up some initial values.
+        /// We set the last feed to a low number as otherwise KSP throws an ugly error when it tries to convert
+        /// lastSeed from a string to a int (it cannot handle numbers that have an exponential number)
+        /// </summary>
+        private static void Initialize()
+        {
+            foreach (var psm in HighLogic.CurrentGame.scenarios
+                .Where(psm => psm?.moduleName == "ScenarioDiscoverableObjects" && psm.moduleRef != null))
+            {
+                var scenario = (ScenarioDiscoverableObjects)psm.moduleRef;
+                scenario.spawnInterval = float.MaxValue;
+                scenario.lastSeed = Random.Range(0, 1000000);
+            }
+        }
+
+        /// <summary>
         /// This routine tries to ackquire the asteroid lock. If we have it spawn the needed asteroids.
-        /// It also handles the asteroid track status between clients
         /// </summary>
         /// <returns></returns>
-        private void CheckAsteroids()
+        private void CheckAsteroidsToSpawn()
         {
             if (!Enabled) return;
 
@@ -87,9 +106,18 @@ namespace LunaClient.Systems.Asteroid
                 if (asteroidsToSpawn > 0)
                 {
                     LunaLog.Log($"[LMP]: Spawning {asteroidsToSpawn} asteroids");
-                    Client.Singleton.StartCoroutine(SpawnAsteroids(asteroidsToSpawn));
+                    Client.Singleton.StartCoroutine(SpawnAsteroids(asteroidsToSpawn / 2));
                 }
             }
+
+        }
+
+        /// <summary>
+        /// This routine handles the asteroid track status between clients
+        /// </summary>
+        private void CheckAsteroidsStatus()
+        {
+            if (!Enabled) return;
 
             //Check for changes to tracking
             foreach (var asteroid in GetCurrentAsteroids().Where(asteroid => asteroid.state != Vessel.State.DEAD))
@@ -108,7 +136,6 @@ namespace LunaClient.Systems.Asteroid
                     }
                 }
             }
-
         }
 
         /// <summary>

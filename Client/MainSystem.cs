@@ -211,6 +211,7 @@ namespace LunaClient
 
         public void Reset()
         {
+            //We are sure that we are in the unity thread as Reset() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
             LunaLog.Log($"[LMP]: KSP installed at {Client.KspPath}");

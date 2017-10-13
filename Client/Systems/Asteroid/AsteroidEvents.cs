@@ -19,7 +19,6 @@ namespace LunaClient.Systems.Asteroid
             {
                 if (System.GetAsteroidCount() <= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
                 {
-                    LunaLog.Log("[LMP]: Spawned in new server asteroid!");
                     System.ServerAsteroids.Add(asteroid.id.ToString());
                     SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid);
                 }

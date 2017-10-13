@@ -57,38 +57,50 @@ namespace LunaClient.Windows.Options
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
             //Cache
-            GUILayout.Label("Cache size");
-            GUILayout.Label($"Current size: {Math.Round(UniverseSyncCache.CurrentCacheSize / (float)(1024 * 1024), 3)} MB.");
-            GUILayout.Label($"Max size: {SettingsSystem.CurrentSettings.CacheSize} MB.");
-            NewCacheSize = GUILayout.TextArea(NewCacheSize);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Set", ButtonStyle))
+            var enableCache = GUILayout.Toggle(SettingsSystem.CurrentSettings.EnableCache, "Enable cache", ButtonStyle);
+            if (enableCache != SettingsSystem.CurrentSettings.EnableCache)
             {
-                if (int.TryParse(NewCacheSize, out var tempCacheSize))
-                {
-                    if (tempCacheSize < 1)
-                    {
-                        tempCacheSize = 1;
-                        NewCacheSize = tempCacheSize.ToString();
-                    }
-                    if (tempCacheSize > 1000)
-                    {
-                        tempCacheSize = 1000;
-                        NewCacheSize = tempCacheSize.ToString();
-                    }
-                    SettingsSystem.CurrentSettings.CacheSize = tempCacheSize;
-                    SettingsSystem.SaveSettings();
-                }
-                else
-                {
-                    NewCacheSize = SettingsSystem.CurrentSettings.CacheSize.ToString();
-                }
+                if (!enableCache) UniverseSyncCache.DeleteCache(); //Remove all cache when deactivating it
+
+                SettingsSystem.CurrentSettings.EnableCache = enableCache;
+                SettingsSystem.SaveSettings();
             }
-            if (GUILayout.Button("Expire cache"))
-                UniverseSyncCache.ExpireCache();
-            if (GUILayout.Button("Delete cache"))
-                UniverseSyncCache.DeleteCache();
-            GUILayout.EndHorizontal();
+            if (SettingsSystem.CurrentSettings.EnableCache)
+            {
+                GUILayout.Label("Cache size");
+                GUILayout.Label($"Current size: {Math.Round(UniverseSyncCache.CurrentCacheSize / (float)(1024 * 1024), 3)} MB.");
+                GUILayout.Label($"Max size: {SettingsSystem.CurrentSettings.CacheSize} MB.");
+                NewCacheSize = GUILayout.TextArea(NewCacheSize);
+                GUILayout.BeginHorizontal();
+                if (GUILayout.Button("Set", ButtonStyle))
+                {
+                    if (int.TryParse(NewCacheSize, out var tempCacheSize))
+                    {
+                        if (tempCacheSize < 1)
+                        {
+                            tempCacheSize = 1;
+                            NewCacheSize = tempCacheSize.ToString();
+                        }
+                        if (tempCacheSize > 1000)
+                        {
+                            tempCacheSize = 1000;
+                            NewCacheSize = tempCacheSize.ToString();
+                        }
+                        SettingsSystem.CurrentSettings.CacheSize = tempCacheSize;
+                        SettingsSystem.SaveSettings();
+                    }
+                    else
+                    {
+                        NewCacheSize = SettingsSystem.CurrentSettings.CacheSize.ToString();
+                    }
+                }
+                if (GUILayout.Button("Expire cache"))
+                    UniverseSyncCache.ExpireCache();
+                if (GUILayout.Button("Delete cache"))
+                    UniverseSyncCache.DeleteCache();
+                GUILayout.EndHorizontal();
+            }
+
             //Key bindings
             GUILayout.Space(10);
             var chatDescription = $"Set chat key (current: {SettingsSystem.CurrentSettings.ChatKey})";

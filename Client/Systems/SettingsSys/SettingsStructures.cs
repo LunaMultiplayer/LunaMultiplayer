@@ -11,6 +11,7 @@ namespace LunaClient.Systems.SettingsSys
     {
         public string PlayerName { get; set; } = "Player";
         public int CacheSize { get; set; } = 100;
+        public bool EnableCache { get; set; } = true;
         public int ConnectionTries { get; set; } = 3;
         public int InitialConnectionMsTimeout { get; set; } = 5000;
         public int SendReceiveMsInterval { get; set; } = 5;

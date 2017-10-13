@@ -7,7 +7,7 @@ using LunaCommon;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
+using System.Threading.Tasks;
 using UniLinq;
 
 namespace LunaClient.Systems.Scenario
@@ -62,7 +62,6 @@ namespace LunaClient.Systems.Scenario
 
         /// <summary>
         /// Check if the scenario has changed and sends it to the server
-        /// This method is not optimized and take several ms to run
         /// </summary>
         public void SendScenarioModules()
         {
@@ -70,7 +69,7 @@ namespace LunaClient.Systems.Scenario
 
             var modules = (ScenarioModule[])ScenarioRunner.GetLoadedModules().ToArray().Clone();
 
-            new Thread(() => ParseAndSendModules(modules)).Start();
+            new Task(() => ParseAndSendModules(modules)).Start(TaskScheduler.Default);
         }
 
         private void ParseAndSendModules(IEnumerable<ScenarioModule> modules)
