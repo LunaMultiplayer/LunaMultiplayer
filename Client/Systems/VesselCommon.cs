@@ -108,7 +108,7 @@ namespace LunaClient.Systems
         }
 
         /// <summary>
-        /// Return all the abandoned vessels (vessels that are not loaded and don't have update lock
+        /// Return all the abandoned vessels (vessels that are not loaded and don't have update lock)
         /// </summary>
         public static IEnumerable<Vessel> GetAbandonedVessels()
         {

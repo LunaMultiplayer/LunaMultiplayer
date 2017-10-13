@@ -10,7 +10,7 @@ namespace LunaClient.Systems.Asteroid
         public void OnGameSceneLoadRequested(GameScenes scene)
         {
             //Force the worker to find the scenario module again.
-            System.ScenarioController = null;
+            System.ResetAsteroidsSeed();
         }
 
         public void OnAsteroidSpawned(Vessel asteroid)

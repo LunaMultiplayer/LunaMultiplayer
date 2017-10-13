@@ -3,8 +3,6 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
-using SentinelMission;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -23,11 +21,11 @@ namespace LunaClient.Systems.Asteroid
                 if (_scenarioDiscoverableObjects == null)
                 {
                     foreach (var psm in HighLogic.CurrentGame.scenarios
-                        .Where(psm => psm?.moduleName == "DiscoverableObjects" && psm.moduleRef != null))
+                        .Where(psm => psm?.moduleName == "ScenarioDiscoverableObjects" && psm.moduleRef != null))
                     {
                         _scenarioDiscoverableObjects = (ScenarioDiscoverableObjects)psm.moduleRef;
                         _scenarioDiscoverableObjects.spawnInterval = float.MaxValue;
-                        _scenarioDiscoverableObjects.lastSeed = new System.Random().Next(1000000);
+                        _scenarioDiscoverableObjects.lastSeed = Random.Range(0, 1000000);
                     }
                 }
                 return _scenarioDiscoverableObjects;
@@ -49,8 +47,8 @@ namespace LunaClient.Systems.Asteroid
             GameEvents.onAsteroidSpawned.Add(AsteroidEventHandler.OnAsteroidSpawned);
             GameEvents.onGameSceneLoadRequested.Add(AsteroidEventHandler.OnGameSceneLoadRequested);
 
-            SetupRoutine(new RoutineDefinition(RoutineExecution.Update, Initialize));
-            SetupRoutine(new RoutineDefinition(60000, RoutineExecution.Update, CheckAsteroidsToSpawn));
+            SetupRoutine(new RoutineDefinition(RoutineExecution.Update, ResetAsteroidsSeed));
+            SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, CheckAsteroidsToSpawn));
             SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroidsStatus));
         }
 
@@ -73,7 +71,7 @@ namespace LunaClient.Systems.Asteroid
         /// We set the last feed to a low number as otherwise KSP throws an ugly error when it tries to convert
         /// lastSeed from a string to a int (it cannot handle numbers that have an exponential number)
         /// </summary>
-        private static void Initialize()
+        public void ResetAsteroidsSeed()
         {
             foreach (var psm in HighLogic.CurrentGame.scenarios
                 .Where(psm => psm?.moduleName == "ScenarioDiscoverableObjects" && psm.moduleRef != null))
@@ -82,6 +80,8 @@ namespace LunaClient.Systems.Asteroid
                 scenario.spawnInterval = float.MaxValue;
                 scenario.lastSeed = Random.Range(0, 1000000);
             }
+
+            ScenarioController = null;
         }
 
         /// <summary>
@@ -91,6 +91,8 @@ namespace LunaClient.Systems.Asteroid
         private void CheckAsteroidsToSpawn()
         {
             if (!Enabled) return;
+
+            ResetAsteroidsSeed();
 
             //Try to acquire the asteroid-spawning lock if nobody else has it.
             if (!SystemsContainer.Get<LockSystem>().LockExists("asteroid"))
@@ -106,7 +108,10 @@ namespace LunaClient.Systems.Asteroid
                 if (asteroidsToSpawn > 0)
                 {
                     LunaLog.Log($"[LMP]: Spawning {asteroidsToSpawn} asteroids");
-                    Client.Singleton.StartCoroutine(SpawnAsteroids(asteroidsToSpawn / 2));
+                    for (var i = 0; i < asteroidsToSpawn; i++)
+                    {
+                        ScenarioController.SpawnAsteroid();
+                    }
                 }
             }
 
@@ -135,25 +140,6 @@ namespace LunaClient.Systems.Asteroid
                         SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid);
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Coroutine that spawns the specified number of asteroids at a 0.5 seconds interval
-        /// </summary>
-        private static IEnumerator SpawnAsteroids(int quantity)
-        {
-            var random = new System.Random();
-            for (var i = 0; i < quantity; i++)
-            {
-                var baseDays = 21 + random.NextDouble() * 360;
-                var orbit = Orbit.CreateRandomOrbitFlyBy(Planetarium.fetch.Home, baseDays);
-
-                DiscoverableObjectsUtil.SpawnAsteroid(DiscoverableObjectsUtil.GenerateAsteroidName(),
-                    orbit, (uint)SentinelUtilities.RandomRange(random), SentinelUtilities.WeightedAsteroidClass(random),
-                    double.PositiveInfinity, double.PositiveInfinity);
-
-                yield return new WaitForSeconds(0.5f);
             }
         }
 
