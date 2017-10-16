@@ -87,7 +87,7 @@ namespace LunaCommon.Locks
             if (LockStore.SpectatorLocks.TryGetValue(playerName, out var spectatorLock))
                 locks.Add(spectatorLock);
 
-            if (LockStore.AsteroidLock.PlayerName == playerName)
+            if (AsteroidLockBelongsToPlayer(playerName))
                 locks.Add(LockStore.AsteroidLock);
 
             return locks;
