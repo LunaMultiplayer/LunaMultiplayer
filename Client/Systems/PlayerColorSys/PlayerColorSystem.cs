@@ -88,6 +88,9 @@ namespace LunaClient.Systems.PlayerColorSys
 
         public Color GetPlayerColor(string playerName)
         {
+            if (string.IsNullOrEmpty(playerName))
+                return DefaultColor;
+
             if (playerName == SettingsSystem.CurrentSettings.PlayerName)
                 return SettingsSystem.CurrentSettings.PlayerColor;
 

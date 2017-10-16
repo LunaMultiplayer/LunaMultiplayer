@@ -34,26 +34,23 @@ namespace LunaCommon.Locks
         /// </summary>
         public void AddOrUpdateLock(LockDefinition lockDefinition)
         {
-            new Task(() =>
+            switch (lockDefinition.Type)
             {
-                switch (lockDefinition.Type)
-                {
-                    case LockType.Asteroid:
-                        AsteroidLock = lockDefinition;
-                        break;
-                    case LockType.Update:
-                        UpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
-                        break;
-                    case LockType.Control:
-                        ControlLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
-                        break;
-                    case LockType.Spectator:
-                        SpectatorLocks.AddOrUpdate(lockDefinition.PlayerName, lockDefinition, (key, existingVal) => lockDefinition);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }).Start(TaskScheduler.Current);
+                case LockType.Asteroid:
+                    AsteroidLock = lockDefinition;
+                    break;
+                case LockType.Update:
+                    UpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
+                    break;
+                case LockType.Control:
+                    ControlLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
+                    break;
+                case LockType.Spectator:
+                    SpectatorLocks.AddOrUpdate(lockDefinition.PlayerName, lockDefinition, (key, existingVal) => lockDefinition);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -61,26 +58,23 @@ namespace LunaCommon.Locks
         /// </summary>
         public void RemoveLock(LockDefinition lockDefinition)
         {
-            new Task(() =>
+            switch (lockDefinition.Type)
             {
-                switch (lockDefinition.Type)
-                {
-                    case LockType.Asteroid:
-                        AsteroidLock = null;
-                        break;
-                    case LockType.Update:
-                        UpdateLocks.TryRemove(lockDefinition.VesselId, out _);
-                        break;
-                    case LockType.Control:
-                        ControlLocks.TryRemove(lockDefinition.VesselId, out _);
-                        break;
-                    case LockType.Spectator:
-                        SpectatorLocks.TryRemove(lockDefinition.PlayerName, out _);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }).Start(TaskScheduler.Current);
+                case LockType.Asteroid:
+                    AsteroidLock = null;
+                    break;
+                case LockType.Update:
+                    UpdateLocks.TryRemove(lockDefinition.VesselId, out _);
+                    break;
+                case LockType.Control:
+                    ControlLocks.TryRemove(lockDefinition.VesselId, out _);
+                    break;
+                case LockType.Spectator:
+                    SpectatorLocks.TryRemove(lockDefinition.PlayerName, out _);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
