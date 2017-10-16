@@ -3,8 +3,6 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.VesselPositionSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Types;
-using System;
-using UniLinq;
 
 namespace LunaClient.Systems.VesselChangeSys
 {
@@ -39,32 +37,9 @@ namespace LunaClient.Systems.VesselChangeSys
             if (!VesselCommon.IsSpectating)
             {
                 var debrisVessel = FlightGlobals.FindVessel(data.origin.vessel.id);
-                var missionId = data.origin.missionID;
 
-                if (!SystemsContainer.Get<LockSystem>().LockWithPrefixExists($"debris-{missionId}"))
-                {
-                    SystemsContainer.Get<LockSystem>().AcquireLock($"debris-{missionId}_{debrisVessel.id}");
-                    SystemsContainer.Get<VesselPositionSystem>().MessageSender.SendVesselPositionUpdate(new VesselPositionUpdate(debrisVessel));
-                }
-                else
-                {
-                    var debrisLocks = SystemsContainer.Get<LockSystem>().ServerLocks.Where(l => l.Key.StartsWith($"debris-{missionId}"))
-                            .Select(l => l.Key.Substring(l.Key.IndexOf('_') + 1)).ToArray();
-
-                    var otherVesselsWIthSameMissionId = FlightGlobals.Vessels
-                            .Where(v => v.Parts.Any() && v.Parts.First().missionID == missionId && v.id != debrisVessel.id)
-                            .Select(v => v.id.ToString()).ToArray();
-
-                    if (debrisLocks.Length == otherVesselsWIthSameMissionId.Length)
-                    {
-                        debrisVessel.id = new Guid(debrisLocks.Except(otherVesselsWIthSameMissionId).First());
-                    }
-                    else
-                    {
-                        SystemsContainer.Get<LockSystem>().AcquireLock($"debris-{missionId}_{debrisVessel.id}");
-                        SystemsContainer.Get<VesselPositionSystem>().MessageSender.SendVesselPositionUpdate(new VesselPositionUpdate(debrisVessel));
-                    }
-                }
+                SystemsContainer.Get<LockSystem>().AcquireUpdateLock(debrisVessel.id, true);
+                SystemsContainer.Get<VesselPositionSystem>().MessageSender.SendVesselPositionUpdate(new VesselPositionUpdate(debrisVessel));
             }
         }
     }

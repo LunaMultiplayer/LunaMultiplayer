@@ -45,10 +45,21 @@
       <HintPath>..\External\Dependencies\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Threading">
+      <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Locks\LockDefinition.cs" />
+    <Compile Include="Locks\LockQuery.cs" />
+    <Compile Include="Locks\LockQueryAsteroid.cs" />
+    <Compile Include="Locks\LockQuerySpectator.cs" />
+    <Compile Include="Locks\LockQueryUpdate.cs" />
+    <Compile Include="Locks\LockQueryControl.cs" />
+    <Compile Include="Locks\LockStore.cs" />
+    <Compile Include="Locks\LockType.cs" />
     <Compile Include="MasterServerRetriever.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalBaseMsgData.cs" />
     <Compile Include="Message\Data\MasterServer\MsBaseMsgData.cs" />

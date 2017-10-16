@@ -95,11 +95,12 @@ namespace LunaClient.Systems.Asteroid
             ResetAsteroidsSeed();
 
             //Try to acquire the asteroid-spawning lock if nobody else has it.
-            if (!SystemsContainer.Get<LockSystem>().LockExists("asteroid"))
-                SystemsContainer.Get<LockSystem>().AcquireLock("asteroid");
+            if (!LockSystem.LockQuery.AsteroidLockExists())
+                SystemsContainer.Get<LockSystem>().AcquireAsteroidLock();
 
             //We have the spawn lock, lets do stuff.
-            if (SystemsContainer.Get<LockSystem>().LockIsOurs("asteroid") && SystemsContainer.Get<WarpSystem>().CurrentSubspace == 0 &&
+            if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName) &&
+                SystemsContainer.Get<WarpSystem>().CurrentSubspace == 0 &&
                 Time.timeSinceLevelLoad > 1f && SystemsContainer.Get<MainSystem>().GameRunning)
             {
                 var beforeSpawn = GetAsteroidCount();

@@ -7,7 +7,6 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Data.Color;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
-using System;
 using System.Collections.Concurrent;
 using UniLinq;
 
@@ -60,13 +59,12 @@ namespace LunaClient.Systems.PlayerColorSys
         /// </summary>
         public void UpdateVesselColors(string playerName)
         {
-            var controlledVesselIds = SystemsContainer.Get<LockSystem>().GetPlayerLocks(playerName)
-                .Where(l => l.StartsWith("control-"))
-                .Select(l => l.Substring(8)).ToArray();
+            var controlledVesselIds = LockSystem.LockQuery.GetAllControlLocks(playerName)
+                .Select(l => l.VesselId).ToArray();
 
             foreach (var vesselId in controlledVesselIds)
             {
-                var vesselToUpdate = FlightGlobals.FindVessel(new Guid(vesselId));
+                var vesselToUpdate = FlightGlobals.FindVessel(vesselId);
                 if (vesselToUpdate != null)
                 {
                     System.PlayerColorEvents.SetVesselOrbitColor(vesselToUpdate);

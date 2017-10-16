@@ -1,6 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using System.Linq;
+using LunaClient.Systems.SettingsSys;
+using LunaCommon.Locks;
+using System;
 
 namespace LunaClient.Systems.PlayerColorSys
 {
@@ -18,9 +20,10 @@ namespace LunaClient.Systems.PlayerColorSys
         {
             if (System.Enabled)
             {
-                if (SystemsContainer.Get<LockSystem>().LockExists($"control-{colorVessel.id}") && !SystemsContainer.Get<LockSystem>().LockIsOurs($"control-{colorVessel.id}"))
+                if (LockSystem.LockQuery.ControlLockExists(colorVessel.id) &&
+                    !LockSystem.LockQuery.ControlLockBelongsToPlayer(colorVessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 {
-                    var vesselOwner = SystemsContainer.Get<LockSystem>().LockOwner($"control-{colorVessel.id}");
+                    var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
                     LunaLog.Log($"[LMP]: Vessel {colorVessel.id} owner is {vesselOwner}");
                     colorVessel.orbitDriver.orbitColor = System.GetPlayerColor(vesselOwner);
                 }
@@ -34,30 +37,30 @@ namespace LunaClient.Systems.PlayerColorSys
         /// <summary>
         /// If we acquire the control of a ship set it's orbit color
         /// </summary>
-        public void OnLockAcquire(string playerName, string lockName, bool result)
+        public void OnLockAcquire(LockDefinition lockDefinition, bool result)
         {
-            if (System.Enabled && lockName.StartsWith("control-") && result)
-                UpdateVesselColorsFromLockName(lockName);
+            if (System.Enabled && lockDefinition.Type == LockType.Control && result)
+                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
         }
 
         /// <summary>
         /// If we release the control of a ship et it's orbit color back to normal 
         /// </summary>
-        public void OnLockRelease(string playerName, string lockName)
+        public void OnLockRelease(LockDefinition lockDefinition)
         {
-            if (System.Enabled && lockName.StartsWith("control-"))
-                UpdateVesselColorsFromLockName(lockName);
+            if (System.Enabled && lockDefinition.Type == LockType.Control)
+                UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
         }
 
         /// <summary>
         /// Find the vessel using the lock name
         /// </summary>
-        private void UpdateVesselColorsFromLockName(string lockName)
+        private void UpdateVesselColorsFromLockVesselId(Guid vesselId)
         {
-            var vesselId = lockName.Substring(8);
-            foreach (var findVessel in FlightGlobals.Vessels.Where(findVessel => findVessel.id.ToString() == vesselId))
+            var vessel = FlightGlobals.FindVessel(vesselId);
+            if (vessel != null)
             {
-                SetVesselOrbitColor(findVessel);
+                SetVesselOrbitColor(vessel);
             }
         }
     }

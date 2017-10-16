@@ -1,6 +1,8 @@
-﻿namespace LunaClient.Systems.Lock
-{
-    public delegate void AcquireEvent(string playerName, string lockName, bool lockResult);
+﻿using LunaCommon.Locks;
 
-    public delegate void ReleaseEvent(string playerName, string lockName);
+namespace LunaClient.Systems.Lock
+{
+    public delegate void AcquireEvent(LockDefinition lockDefinition, bool lockResult);
+
+    public delegate void ReleaseEvent(LockDefinition lockDefinition);
 }

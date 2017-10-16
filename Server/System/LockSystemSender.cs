@@ -1,4 +1,5 @@
-﻿using LunaCommon.Message.Data.Lock;
+﻿using LunaCommon.Locks;
+using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Log;
@@ -11,45 +12,43 @@ namespace LunaServer.System
     {
         public static void SendAllLocks(ClientStructure client)
         {
-            MessageQueuer.SendToClient<LockSrvMsg>(client, new LockListReplyMsgData { Locks = LockSystem.GetLockList().ToArray() });
+            MessageQueuer.SendToClient<LockSrvMsg>(client, new LockListReplyMsgData { Locks = LockSystem.LockQuery.GetAllLocks().ToArray() });
         }
 
-        public static void SendLockReleaseMessage(string lockName, string playerName)
+        public static void ReleaseAndSendLockReleaseMessage(LockDefinition lockDefinition)
         {
-            var lockResult = LockSystem.ReleaseLock(lockName, playerName);
+            var lockResult = LockSystem.ReleaseLock(lockDefinition);
             if (lockResult)
             {
                 var newMessageData = new LockReleaseMsgData
                 {
-                    PlayerName = playerName,
-                    LockName = lockName,
+                    Lock = lockDefinition,
                     LockResult = true
                 };
                 MessageQueuer.SendToAllClients<LockSrvMsg>(newMessageData);
-                LunaLog.Debug($"{playerName} released lock {lockName}");
+                LunaLog.Debug($"{lockDefinition.PlayerName} released lock {lockDefinition}");
             }
             else
             {
-                LunaLog.Debug($"{playerName} failed to release lock {lockName}");
+                LunaLog.Debug($"{lockDefinition.PlayerName} failed to release lock {lockDefinition}");
             }
         }
 
-        public static void SendLockAquireMessage(string lockName, string playerName, bool force)
+        public static void SendLockAquireMessage(LockDefinition lockDefinition, bool force)
         {
-            var lockResult = LockSystem.AcquireLock(lockName, playerName, force);
+            var lockResult = LockSystem.AcquireLock(lockDefinition, force);
 
             var newMessageData = new LockAcquireMsgData
             {
-                PlayerName = playerName,
-                LockName = lockName,
+                Lock = lockDefinition,
                 LockResult = lockResult,
                 Force = force
             };
             MessageQueuer.SendToAllClients<LockSrvMsg>(newMessageData);
 
             LunaLog.Debug(lockResult
-                ? $"{playerName} acquired lock {lockName}"
-                : $"{playerName} failed to acquire lock {lockName}");
+                ? $"{lockDefinition.PlayerName} acquired lock {lockDefinition}"
+                : $"{lockDefinition.PlayerName} failed to acquire lock {lockDefinition}");
         }
     }
 }

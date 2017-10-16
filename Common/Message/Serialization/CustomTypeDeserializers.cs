@@ -1,4 +1,5 @@
-﻿using LunaCommon.Message.Data.CraftLibrary;
+﻿using LunaCommon.Locks;
+using LunaCommon.Message.Data.CraftLibrary;
 using System.Collections.Generic;
 using System.IO;
 
@@ -31,6 +32,23 @@ namespace LunaCommon.Message.Serialization
             var outputData = new KeyValuePair<string, CraftListInfo>[numberOfElements];
             for (var element = 0; element < numberOfElements; element++)
                 outputData[element] = GetKeyValuePairStrCraftListInfo_FromBytes(messageData);
+            return outputData;
+        }
+
+        private static LockDefinition GetLockDefinitionFromBytes(Stream messageData)
+        {
+            var lockDefinition = new LockDefinition();
+            PrivDeserialize(messageData, lockDefinition);
+
+            return lockDefinition;
+        }
+
+        private static LockDefinition[] GetLockDefinitionArrayFromBytes(Stream messageData)
+        {
+            var numberOfElements = GetIntFromBytes(messageData);
+            var outputData = new LockDefinition[numberOfElements];
+            for (var element = 0; element < numberOfElements; element++)
+                outputData[element] = GetLockDefinitionFromBytes(messageData);
             return outputData;
         }
     }

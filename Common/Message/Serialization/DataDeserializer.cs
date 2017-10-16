@@ -1,4 +1,5 @@
-﻿using LunaCommon.Message.Data.CraftLibrary;
+﻿using LunaCommon.Locks;
+using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
@@ -31,7 +32,9 @@ namespace LunaCommon.Message.Serialization
             [typeof(byte)] = messageData => GetByteFromBytes(messageData),
             [typeof(string)] = messageData => GetStringFromBytes(messageData),
             [typeof(Guid)] = messageData => GetGuidFromBytes(messageData),
-            [typeof(KeyValuePair<int, string>)] = messageData => GetKeyValuePairIntStr_FromBytes(messageData),
+            [typeof(Guid)] = messageData => GetGuidFromBytes(messageData),
+            [typeof(CraftListInfo)] = messageData => GetCraftListInfoFromBytes(messageData),
+            [typeof(LockDefinition)] = messageData => GetLockDefinitionFromBytes(messageData),
             [typeof(KeyValuePair<string, string>)] = messageData => GetKeyValuePairStrStr_FromBytes(messageData),
             [typeof(KeyValuePair<string, string[]>)] = messageData => GetKeyValuePairStrStrArray_FromBytes(messageData),
             [typeof(KeyValuePair<string, byte[]>)] = messageData => GetKeyValuePairStrByteArray_FromBytes(messageData),
@@ -47,13 +50,14 @@ namespace LunaCommon.Message.Serialization
             [typeof(byte[])] = messageData => GetByteArrayFromBytes(messageData),
             [typeof(string[])] = messageData => GetStringArrayFromBytes(messageData),
             [typeof(Guid[])] = messageData => GetGuidArrayFromBytes(messageData),
+            [typeof(LockDefinition[])] = messageData => GetLockDefinitionArrayFromBytes(messageData),
             [typeof(KeyValuePair<int, string>[])] = messageData => GetKeyValuePairIntStr_ArrayFromBytes(messageData),
             [typeof(KeyValuePair<string, string>[])] = messageData => GetKeyValuePairStrStr_ArrayFromBytes(messageData),
             [typeof(KeyValuePair<string, string[]>[])] = messageData => GetKeyValuePairStrStrArray_ArrayFromBytes(messageData),
             [typeof(KeyValuePair<string, byte[]>[])] = messageData => GetKeyValuePairStrByteArray_ArrayFromBytes(messageData),
             [typeof(KeyValuePair<Guid, byte[]>[])] = messageData => GetKeyValuePairGuidByteArray_ArrayFromBytes(messageData),
             [typeof(byte[][])] = messageData => GetJaggedByteArrayFromBytes(messageData),
-            [typeof(KeyValuePair<string, CraftListInfo>[])] = messageData => GetKeyValuePairStrCraftListInfo_ArrayFromBytes(messageData)
+            [typeof(KeyValuePair<string, CraftListInfo>[])] = messageData => GetKeyValuePairStrCraftListInfo_ArrayFromBytes(messageData),
         };
 
         /// <summary>

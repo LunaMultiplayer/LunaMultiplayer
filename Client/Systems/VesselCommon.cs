@@ -57,7 +57,8 @@ namespace LunaClient.Systems
         /// Check if someone is spectating current vessel
         /// </summary>
         /// <returns></returns>
-        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null && SystemsContainer.Get<LockSystem>().SpectatorLockExists(FlightGlobals.ActiveVessel.id);
+        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null &&
+                                                    LockSystem.LockQuery.SpectatorLockExists(FlightGlobals.ActiveVessel.id);
 
 
         /// <summary>
@@ -65,7 +66,9 @@ namespace LunaClient.Systems
         /// </summary>
         public static Guid[] GetControlledVesselIds()
         {
-            return SystemsContainer.Get<LockSystem>().GetLocksWithPrefix("control-").Select(v => new Guid(LockSystem.TrimLock(v))).ToArray();
+            return LockSystem.LockQuery.GetAllControlLocks()
+                .Select(v => v.VesselId)
+                .ToArray();
         }
 
         /// <summary>
@@ -83,26 +86,24 @@ namespace LunaClient.Systems
                 }
 
                 var controlledVesselsIds = GetControlledVesselIds();
-                var loadedVesselIds = FlightGlobals.VesselsLoaded.Where(v => v.id != FlightGlobals.ActiveVessel.id)
-                    .Select(v => v.id);
+                var loadedVesselIds = FlightGlobals.VesselsLoaded.Select(v => v.id);
 
-                return controlledVesselsIds.Intersect(loadedVesselIds).Any();
+                return controlledVesselsIds.Intersect(loadedVesselIds).Any(v => v != FlightGlobals.ActiveVessel.id);
             }
 
             return false;
         }
 
         /// <summary>
-        /// Return all the vessels except the active one that we have the update lock
+        /// Return all the vessels except the active one that we have the update lock and that are loaded
         /// </summary>
         public static IEnumerable<Vessel> GetSecondaryVessels()
         {
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
 
-            return SystemsContainer.Get<LockSystem>().GetPlayerLocksPrefix(SettingsSystem.CurrentSettings.PlayerName, "update-")
-                .Select(l => new Guid(LockSystem.TrimLock(l)))
-                .Where(vi => vi != FlightGlobals.ActiveVessel.id)
-                .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == vi))
+            return LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
+                .Where(l => l.VesselId != FlightGlobals.ActiveVessel.id)
+                .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == vi.VesselId))
                 .Where(v => v != null)
                 .ToArray();
         }
@@ -112,7 +113,7 @@ namespace LunaClient.Systems
         /// </summary>
         public static IEnumerable<Vessel> GetAbandonedVessels()
         {
-            return FlightGlobals.VesselsUnloaded.Where(v => !SystemsContainer.Get<LockSystem>().LockExists($"update-{v.id}"));
+            return FlightGlobals.VesselsUnloaded.Where(v => !LockSystem.LockQuery.ControlLockExists(v.id));
         }
 
         /// <summary>
@@ -121,13 +122,13 @@ namespace LunaClient.Systems
         public static bool VesselIsControlledAndInPastSubspace(Guid vesselId)
         {
             var owner = "";
-            if (SystemsContainer.Get<LockSystem>().LockExists($"control-{vesselId}"))
+            if (LockSystem.LockQuery.ControlLockExists(vesselId))
             {
-                owner = SystemsContainer.Get<LockSystem>().LockOwner($"control-{vesselId}");
+                owner = LockSystem.LockQuery.GetControlLockOwner(vesselId);
             }
-            else if (SystemsContainer.Get<LockSystem>().LockExists($"update-{vesselId}"))
+            else if (LockSystem.LockQuery.UpdateLockExists(vesselId))
             {
-                owner = SystemsContainer.Get<LockSystem>().LockOwner($"update-{vesselId}");
+                owner = LockSystem.LockQuery.GetUpdateLockOwner(vesselId);
             }
 
             return !string.IsNullOrEmpty(owner) && SystemsContainer.Get<WarpSystem>().PlayerIsInPastSubspace(owner);

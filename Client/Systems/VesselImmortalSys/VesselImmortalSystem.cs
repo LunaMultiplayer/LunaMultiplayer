@@ -1,6 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using System;
+using LunaClient.Systems.SettingsSys;
 using UniLinq;
 using UnityEngine;
 
@@ -49,16 +49,19 @@ namespace LunaClient.Systems.VesselImmortalSys
         {
             if (Enabled && VesselImmortalSystemReady)
             {
-                var ownedVessels = SystemsContainer.Get<LockSystem>().GetOwnedLocksPrefix("control-").Select(LockSystem.TrimLock)
-                                        .Union(SystemsContainer.Get<LockSystem>().GetLocksWithPrefix("update-").Select(LockSystem.TrimLock))
-                                        .Select(i => FlightGlobals.FindVessel(new Guid(i)))
-                                        .Where(v => v != null)
-                                        .ToArray();
+                var ownedVessels = LockSystem.LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName)
+                                        .Select(l => l.VesselId)
+                                    .Union(LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
+                                        .Select(l => l.VesselId))
+                                    .Select(FlightGlobals.FindVessel)
+                                    .Where(v => v != null)
+                                    .ToArray();
 
-                var othersPeopleVessels = SystemsContainer.Get<LockSystem>().GetLocksWithPrefix("control-").Select(LockSystem.TrimLock)
-                    .Union(SystemsContainer.Get<LockSystem>().GetLocksWithPrefix("update-").Select(LockSystem.TrimLock))
-                    .Except(ownedVessels.Select(v => v.id.ToString()))
-                    .Select(i => FlightGlobals.FindVessel(new Guid(i)))
+                var othersPeopleVessels = LockSystem.LockQuery.GetAllControlLocks()
+                    .Union(LockSystem.LockQuery.GetAllUpdateLocks())
+                    .Select(l => l.VesselId)
+                    .Except(ownedVessels.Select(v => v.id))
+                    .Select(FlightGlobals.FindVessel)
                     //Select the vessels and filter out the nulls
                     .Where(v => v != null).ToArray();
 

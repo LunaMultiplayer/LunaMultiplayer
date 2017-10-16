@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,9 @@ namespace LunaClient.Systems.VesselLockSys
         public const string SpectateLock = "LMP_Spectating";
         private ScreenMessage _spectateMessage;
 
-        private string GetVesselOwner => VesselCommon.IsSpectating ? SystemsContainer.Get<LockSystem>().LockOwner($"control-{FlightGlobals.ActiveVessel.id}") : "";
+        private string GetVesselOwner => VesselCommon.IsSpectating ?
+            LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id) :
+            "";
 
         private VesselLockEvents VesselMainEvents { get; } = new VesselLockEvents();
 
@@ -59,7 +62,7 @@ namespace LunaClient.Systems.VesselLockSys
         {
             if (Enabled && VesselLockSystemReady && VesselCommon.IsSpectating)
             {
-                if (!SystemsContainer.Get<LockSystem>().LockExists($"control-{FlightGlobals.ActiveVessel.id}"))
+                if (!LockSystem.LockQuery.ControlLockExists(FlightGlobals.ActiveVessel.id))
                 {
                     //Don't force as maybe other players are spectating too so the fastests is the winner :)
                     StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
@@ -78,13 +81,13 @@ namespace LunaClient.Systems.VesselLockSys
                 foreach (var checkVessel in validSecondaryVessels)
                 {
                     //Don't force it as maybe another player sent this request aswell
-                    SystemsContainer.Get<LockSystem>().AcquireLock($"update-{checkVessel}");
+                    SystemsContainer.Get<LockSystem>().AcquireUpdateLock(checkVessel);
                 }
 
                 var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased().ToArray();
                 foreach (var releaseVessel in vesselsToRelease)
                 {
-                    SystemsContainer.Get<LockSystem>().ReleaseLock($"update-{releaseVessel}");
+                    SystemsContainer.Get<LockSystem>().ReleaseUpdateLock(releaseVessel);
                 }
             }
         }
@@ -124,7 +127,7 @@ namespace LunaClient.Systems.VesselLockSys
         {
             var activeVesselId = FlightGlobals.ActiveVessel?.id;
             if (activeVesselId.HasValue)
-                SystemsContainer.Get<LockSystem>().ReleaseControlLocksExcept($"control-{activeVesselId}");
+                SystemsContainer.Get<LockSystem>().ReleaseControlLocksExcept(activeVesselId.Value);
         }
 
         /// <summary>
@@ -150,10 +153,10 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         public void StopSpectatingAndGetControl(Vessel vessel, bool force)
         {
-            SystemsContainer.Get<LockSystem>().AcquireLock($"update-{vessel.id}", force);
-            if (!SystemsContainer.Get<LockSystem>().LockIsOurs($"control-{vessel.id}"))
+            SystemsContainer.Get<LockSystem>().AcquireUpdateLock(vessel.id, force);
+            if (!LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
-                SystemsContainer.Get<LockSystem>().AcquireLock($"control-{vessel.id}", force);
+                SystemsContainer.Get<LockSystem>().AcquireControlLock(vessel.id, force);
             }
 
             if (VesselCommon.IsSpectating)
@@ -176,7 +179,7 @@ namespace LunaClient.Systems.VesselLockSys
                 .Where(v => v.loaded && v.state != Vessel.State.DEAD &&
                             v.id != FlightGlobals.ActiveVessel.id &&
                             !VesselCommon.IsInSafetyBubble(v) &&
-                            !SystemsContainer.Get<LockSystem>().LockExists($"update-{v.id}"))
+                            !LockSystem.LockQuery.UpdateLockExists(v.id))
                 .Select(v => v.id);
         }
 
@@ -189,7 +192,7 @@ namespace LunaClient.Systems.VesselLockSys
         {
             return FlightGlobals.Vessels
                 .Where(v => v.id != FlightGlobals.ActiveVessel.id &&
-                            SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{v.id}") &&
+                            LockSystem.LockQuery.UpdateLockBelongsToPlayer(v.id, SettingsSystem.CurrentSettings.PlayerName) &&
                             (!v.loaded || v.state == Vessel.State.DEAD ||
                             VesselCommon.IsInSafetyBubble(v)))
                 .Select(v => v.id);

@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 
 namespace LunaClient.Systems.VesselRemoveSys
 {
@@ -17,7 +18,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
 
             //Only remove the vessel if we own the update lock
-            if (SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{dyingVessel.id}"))
+            if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
                 SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(dyingVessel);
@@ -25,8 +26,8 @@ namespace LunaClient.Systems.VesselRemoveSys
                 System.MessageSender.SendVesselRemove(dyingVessel.id);
 
                 //Vessel is dead so remove the locks
-                SystemsContainer.Get<LockSystem>().ReleaseLock($"control-{dyingVessel.id}");
-                SystemsContainer.Get<LockSystem>().ReleaseLock($"update-{dyingVessel.id}");
+                SystemsContainer.Get<LockSystem>().ReleaseControlLock(dyingVessel.id);
+                SystemsContainer.Get<LockSystem>().ReleaseUpdateLock(dyingVessel.id);
             }
         }
 
@@ -49,8 +50,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
 
             //Vessel is recovered so remove the locks
-            SystemsContainer.Get<LockSystem>().ReleaseLock($"control-{recoveredVessel.vesselID}");
-            SystemsContainer.Get<LockSystem>().ReleaseLock($"update-{recoveredVessel.vesselID}");
+            SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(recoveredVessel.vesselID);
         }
 
         /// <summary>
@@ -69,9 +69,8 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
 
-            //Vessel is terminated so remove locks
-            SystemsContainer.Get<LockSystem>().ReleaseLock($"control-{terminatedVessel.vesselID}");
-            SystemsContainer.Get<LockSystem>().ReleaseLock($"update-{terminatedVessel.vesselID}");
+            //Vessel is terminated so remove locks            
+            SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(terminatedVessel.vesselID);
         }
 
         /// <summary>
@@ -80,7 +79,8 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// <returns></returns>
         private static bool VesselControlLockIsOurs(ProtoVessel vessel)
         {
-            return !SystemsContainer.Get<LockSystem>().LockExists($"control-{vessel.vesselID}") || SystemsContainer.Get<LockSystem>().LockIsOurs($"control-{vessel.vesselID}");
+            return !LockSystem.LockQuery.ControlLockExists(vessel.vesselID) ||
+                   LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.vesselID, SettingsSystem.CurrentSettings.PlayerName);
         }
     }
 }

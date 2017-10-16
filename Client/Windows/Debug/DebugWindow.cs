@@ -2,6 +2,7 @@
 using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
@@ -66,9 +67,9 @@ namespace LunaClient.Windows.Debug
                 VesselUpdateText = $"Queued messages: {SystemsContainer.Get<VesselUpdateSystem>().MessageHandler.IncomingMessages.Count}.\n";
                 VesselUpdateText += $"Spectating: {VesselCommon.IsSpectating}.\n";
                 VesselUpdateText += "Active vessel control lock: " +
-                    $"{FlightGlobals.ActiveVessel != null && SystemsContainer.Get<LockSystem>().LockIsOurs($"control-{FlightGlobals.ActiveVessel.id}")}.\n";
+                    $"{FlightGlobals.ActiveVessel != null && LockSystem.LockQuery.ControlLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName)}.\n";
                 VesselUpdateText += "Active vessel update lock: " +
-                    $"{FlightGlobals.ActiveVessel != null && SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{FlightGlobals.ActiveVessel.id}")}.\n";
+                    $"{FlightGlobals.ActiveVessel != null && LockSystem.LockQuery.UpdateLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName)}.\n";
             }
         }
 

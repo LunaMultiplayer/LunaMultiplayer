@@ -89,7 +89,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
                 foreach (var dock in docks)
                 {
-                    dock.Decouple();
+                    dock?.Decouple();
                 }
 
                 foreach (var shieldedDock in shieldedDocksToToggle)

@@ -15,7 +15,7 @@ namespace LunaClient.Systems.Asteroid
 
         public void OnAsteroidSpawned(Vessel asteroid)
         {
-            if (SystemsContainer.Get<LockSystem>().LockIsOurs("asteroid"))
+            if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
             {
                 if (System.GetAsteroidCount() <= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
                 {

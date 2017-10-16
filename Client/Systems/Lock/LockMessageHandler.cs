@@ -22,11 +22,11 @@ namespace LunaClient.Systems.Lock
                 case LockMessageType.ListReply:
                     {
                         var data = (LockListReplyMsgData)messageData;
-                        System.ServerLocks.Clear();
+                        LockSystem.LockStore.ClearAllLocks();
 
                         foreach (var lockKey in data.Locks)
                         {
-                            System.ServerLocks.Add(lockKey.Key, lockKey.Value);
+                            LockSystem.LockStore.AddOrUpdateLock(lockKey);
                         }
 
                         SystemsContainer.Get<MainSystem>().NetworkState = ClientState.LocksSynced;
@@ -37,18 +37,17 @@ namespace LunaClient.Systems.Lock
                         var data = (LockAcquireMsgData)messageData;
 
                         if (data.LockResult)
-                            System.ServerLocks[data.LockName] = data.PlayerName;
+                            LockSystem.LockStore.AddOrUpdateLock(data.Lock);
 
-                        System.FireAcquireEvent(data.PlayerName, data.LockName, data.LockResult);
+                        System.FireAcquireEvent(data.Lock, data.LockResult);
                     }
                     break;
                 case LockMessageType.Release:
                     {
                         var data = (LockReleaseMsgData)messageData;
-                        if (System.ServerLocks.ContainsKey(data.LockName))
-                            System.ServerLocks.Remove(data.LockName);
+                        LockSystem.LockStore.RemoveLock(data.Lock);
 
-                        System.FireReleaseEvent(data.PlayerName, data.LockName);
+                        System.FireReleaseEvent(data.Lock);
                     }
                     break;
             }

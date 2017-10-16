@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 
 namespace LunaClient.Systems.VesselDockSys
@@ -13,10 +14,12 @@ namespace LunaClient.Systems.VesselDockSys
             {
                 if (partAction.from.vessel != null && partAction.to.vessel != null)
                 {
-                    var fromVesselUpdateLockExists = SystemsContainer.Get<LockSystem>().LockExists($"update-{partAction.from.vessel.id}");
-                    var toVesselUpdateLockExists = SystemsContainer.Get<LockSystem>().LockExists($"update-{partAction.to.vessel.id}");
-                    var fromVesselUpdateLockIsOurs = SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{partAction.from.vessel.id}");
-                    var toVesselUpdateLockIsOurs = SystemsContainer.Get<LockSystem>().LockIsOurs($"update-{partAction.to.vessel.id}");
+                    var fromVesselUpdateLockExists = LockSystem.LockQuery.UpdateLockExists(partAction.from.vessel.id);
+                    var toVesselUpdateLockExists = LockSystem.LockQuery.UpdateLockExists(partAction.to.vessel.id);
+                    var fromVesselUpdateLockIsOurs = LockSystem.LockQuery.UpdateLockBelongsToPlayer(partAction.from.vessel.id,
+                        SettingsSystem.CurrentSettings.PlayerName);
+                    var toVesselUpdateLockIsOurs = LockSystem.LockQuery.UpdateLockBelongsToPlayer(partAction.to.vessel.id,
+                        SettingsSystem.CurrentSettings.PlayerName);
 
                     if (fromVesselUpdateLockIsOurs || toVesselUpdateLockIsOurs || !fromVesselUpdateLockExists || !toVesselUpdateLockExists)
                     {

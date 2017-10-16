@@ -1,9 +1,8 @@
-using System.Collections.Concurrent;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Status
 {
@@ -137,10 +136,11 @@ namespace LunaClient.Systems.Status
 
         private static string GetExpectatingShipStatus()
         {
-            if (SystemsContainer.Get<LockSystem>().LockExists($"control-{FlightGlobals.ActiveVessel.id}"))
+            if (LockSystem.LockQuery.ControlLockExists(FlightGlobals.ActiveVessel.id))
             {
-                return SystemsContainer.Get<LockSystem>().LockIsOurs($"control-{FlightGlobals.ActiveVessel.id}") ?
-                    "Waiting for vessel control" : $"Spectating {SystemsContainer.Get<LockSystem>().LockOwner($"control-{FlightGlobals.ActiveVessel.id}")}";
+                return LockSystem.LockQuery.ControlLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName) ?
+                    "Waiting for vessel control" :
+                    $"Spectating {LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id)}";
             }
 
             return "Spectating future updates";

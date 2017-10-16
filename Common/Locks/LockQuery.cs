@@ -1,0 +1,151 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace LunaCommon.Locks
+{
+    /// <summary>
+    /// Class that retrieve locks
+    /// </summary>
+    public partial class LockQuery
+    {
+        private LockStore LockStore { get; }
+
+        public LockQuery(LockStore lockStore)
+        {
+            LockStore = lockStore;
+        }
+
+        /// <summary>
+        /// Checks if the vessel based lock belongs to player
+        /// </summary>
+        public bool LockBelongsToPlayer(LockType type, Guid vesselId, string playerName)
+        {
+            switch (type)
+            {
+                case LockType.Control:
+                    return LockStore.ControlLocks[vesselId].PlayerName == playerName;
+                case LockType.Update:
+                    return LockStore.UpdateLocks[vesselId].PlayerName == playerName;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the vessel based lock exists
+        /// </summary>
+        public bool LockExists(LockType type, Guid vesselId)
+        {
+            switch (type)
+            {
+                case LockType.Control:
+                    return LockStore.ControlLocks.ContainsKey(vesselId);
+                case LockType.Update:
+                    return LockStore.UpdateLocks.ContainsKey(vesselId);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+        }
+
+        /// <summary>
+        /// Get the vessel based lock owner
+        /// </summary>
+        private string GetLockOwner(LockType type, Guid vesselId)
+        {
+            switch (type)
+            {
+                case LockType.Control:
+                    if (LockStore.ControlLocks.ContainsKey(vesselId))
+                        return LockStore.ControlLocks[vesselId].PlayerName;
+                    break;
+                case LockType.Update:
+                    if (LockStore.UpdateLocks.ContainsKey(vesselId))
+                        return LockStore.ControlLocks[vesselId].PlayerName;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(type), type, null);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Get all the locks of a player
+        /// </summary>
+        public IEnumerable<LockDefinition> GetAllPlayerLocks(string playerName)
+        {
+            var locks = new List<LockDefinition>();
+            locks.AddRange(GetAllControlLocks(playerName));
+            locks.AddRange(GetAllUpdateLocks(playerName));
+
+            if (LockStore.SpectatorLocks.ContainsKey(playerName))
+                locks.Add(LockStore.SpectatorLocks[playerName]);
+
+            if (LockStore.AsteroidLock.PlayerName == playerName)
+                locks.Add(LockStore.AsteroidLock);
+
+            return locks;
+        }
+
+        /// <summary>
+        /// Get all the locks in the dictionaries
+        /// </summary>
+        public IEnumerable<LockDefinition> GetAllLocks()
+        {
+            var locks = new List<LockDefinition>();
+            locks.AddRange(GetAllControlLocks());
+            locks.AddRange(GetAllUpdateLocks());
+            locks.AddRange(LockStore.SpectatorLocks.Values);
+
+            if (LockStore.AsteroidLock != null)
+                locks.Add(LockStore.AsteroidLock);
+
+            return locks;
+        }
+
+        /// <summary>
+        /// Checks if the given lock exists
+        /// </summary>
+        public bool LockExists(LockDefinition lockDefinition)
+        {
+            switch (lockDefinition.Type)
+            {
+                case LockType.Asteroid:
+                    return LockStore.AsteroidLock != null;
+                case LockType.Update:
+                    return LockStore.UpdateLocks.ContainsKey(lockDefinition.VesselId);
+                case LockType.Control:
+                    return LockStore.ControlLocks.ContainsKey(lockDefinition.VesselId);
+                case LockType.Spectator:
+                    return LockStore.SpectatorLocks.ContainsKey(lockDefinition.PlayerName);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
+        /// Retrieves a lock from the dictioanry based on the given lock
+        /// </summary>
+        public LockDefinition GetLock(LockType lockType, string playerName, Guid vesselId)
+        {
+            LockDefinition existingLock;
+            switch (lockType)
+            {
+                case LockType.Asteroid:
+                    return LockStore.AsteroidLock;
+                case LockType.Update:
+                    LockStore.UpdateLocks.TryGetValue(vesselId, out existingLock);
+                    break;
+                case LockType.Control:
+                    LockStore.ControlLocks.TryGetValue(vesselId, out existingLock);
+                    break;
+                case LockType.Spectator:
+                    LockStore.SpectatorLocks.TryGetValue(playerName, out existingLock);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+            return existingLock;
+        }
+    }
+}
