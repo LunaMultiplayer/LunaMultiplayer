@@ -15,13 +15,58 @@ namespace LunaClient.Systems
     /// </summary>
     public class VesselCommon
     {
-        public static Guid CurrentVesselId => FlightGlobals.ActiveVessel == null ? Guid.Empty : FlightGlobals.ActiveVessel.id;
+        #region Fields and Properties for positions
 
         private const double LandingPadLatitude = -0.0971978130377757;
         private const double LandingPadLongitude = 285.44237039111;
         private const double RunwayLatitude = -0.0486001121594686;
         private const double RunwayLongitude = 285.275552559723;
         private const double KscAltitude = 60;
+
+        private static CelestialBody _kerbin;
+
+        private static CelestialBody Kerbin
+        {
+            get { return _kerbin ?? (_kerbin = FlightGlobals.Bodies.Find(b => b.bodyName == "Kerbin")); }
+        }
+
+        private static Vector3d _landingPadPosition = Vector3d.zero;
+        private static Vector3d LandingPadPosition
+        {
+            get
+            {
+                if (_landingPadPosition == Vector3d.zero)
+                {
+                    if (Kerbin != null)
+                        _landingPadPosition = Kerbin.GetWorldSurfacePosition(LandingPadLatitude, LandingPadLongitude, KscAltitude);
+
+                    return _landingPadPosition;
+                }
+
+                return _landingPadPosition;
+            }
+        }
+
+        private static Vector3d _runwayPosition = Vector3d.zero;
+        private static Vector3d RunwayPosition
+        {
+            get
+            {
+                if (_runwayPosition == Vector3d.zero)
+                {
+                    if (Kerbin != null)
+                        _runwayPosition = Kerbin.GetWorldSurfacePosition(RunwayLatitude, RunwayLongitude, KscAltitude);
+
+                    return _runwayPosition;
+                }
+
+                return _runwayPosition;
+            }
+        }
+
+        #endregion
+
+        public static Guid CurrentVesselId => FlightGlobals.ActiveVessel == null ? Guid.Empty : FlightGlobals.ActiveVessel.id;
 
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
@@ -155,14 +200,12 @@ namespace LunaClient.Systems
             if (vessel == null || vessel.mainBody.name != "Kerbin")
                 return false;
 
-            var landingPadPosition = vessel.mainBody.GetWorldSurfacePosition(LandingPadLatitude, LandingPadLongitude, KscAltitude);
-            var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), landingPadPosition);
+            var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), LandingPadPosition);
 
             if (landingPadDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance) return true;
 
             //We are far from the pad, let's see if happens the same in the runway...
-            var runwayPosition = vessel.mainBody.GetWorldSurfacePosition(RunwayLatitude, RunwayLongitude, KscAltitude);
-            var runwayDistance = Vector3d.Distance(vessel.GetWorldPos3D(), runwayPosition);
+            var runwayDistance = Vector3d.Distance(vessel.GetWorldPos3D(), RunwayPosition);
 
             return runwayDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance;
         }

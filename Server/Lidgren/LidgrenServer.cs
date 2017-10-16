@@ -63,7 +63,7 @@ namespace LunaServer.Lidgren
                                 ClientMessageReceiver.ReceiveCallback(client, msg);
                                 break;
                             case NetIncomingMessageType.WarningMessage:
-                                LunaLog.Error($"Lidgren WARNING: {msg.ReadString()}");
+                                LunaLog.Debug($"Lidgren WARNING: {msg.ReadString()}");
                                 break;
                             case NetIncomingMessageType.DebugMessage:
                             case NetIncomingMessageType.VerboseDebugMessage:

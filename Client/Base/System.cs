@@ -1,8 +1,9 @@
 ﻿using LunaClient.Base.Interface;
 using LunaClient.Utilities;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace LunaClient.Base
 {
@@ -18,37 +19,43 @@ namespace LunaClient.Base
         /// This dictionary hold all the routines that will be executed during the FixedUpdate()
         /// The key is the method name that will be executed
         /// </summary>
-        private Dictionary<string, RoutineDefinition> FixedUpdateRoutines { get; } = new Dictionary<string, RoutineDefinition>();
+        private ConcurrentDictionary<string, RoutineDefinition> FixedUpdateRoutines { get; } =
+            new ConcurrentDictionary<string, RoutineDefinition>();
 
         /// <summary>
         /// This dictionary hold all the routines that will be executed during the FixedUpdate() only once
         /// The key is the method name that will be executed
         /// </summary>
-        private Dictionary<string, RoutineDefinition> FixedUpdateRunOnceRoutines { get; } = new Dictionary<string, RoutineDefinition>();
+        private ConcurrentDictionary<string, RoutineDefinition> FixedUpdateRunOnceRoutines { get; } =
+            new ConcurrentDictionary<string, RoutineDefinition>();
 
         /// <summary>
         /// This dictionary hold all the routines that will be executed during the Update()
         /// The key is the method name that will be executed
         /// </summary>
-        private Dictionary<string, RoutineDefinition> UpdateRoutines { get; } = new Dictionary<string, RoutineDefinition>();
+        private ConcurrentDictionary<string, RoutineDefinition> UpdateRoutines { get; } =
+            new ConcurrentDictionary<string, RoutineDefinition>();
 
         /// <summary>
         /// This dictionary hold all the routines that will be executed during the Update() only once
         /// The key is the method name that will be executed
         /// </summary>
-        private Dictionary<string, RoutineDefinition> UpdateRunOnceRoutines { get; } = new Dictionary<string, RoutineDefinition>();
+        private ConcurrentDictionary<string, RoutineDefinition> UpdateRunOnceRoutines { get; } =
+            new ConcurrentDictionary<string, RoutineDefinition>();
 
         /// <summary>
         /// This dictionary hold all the routines that will be executed during the LateUpdate()
         /// The key is the method name that will be executed
         /// </summary>
-        private Dictionary<string, RoutineDefinition> LateUpdateRoutines { get; } = new Dictionary<string, RoutineDefinition>();
+        private ConcurrentDictionary<string, RoutineDefinition> LateUpdateRoutines { get; } =
+            new ConcurrentDictionary<string, RoutineDefinition>();
 
         /// <summary>
         /// This dictionary hold all the routines that will be executed during the LateUpdate() only once
         /// The key is the method name that will be executed
         /// </summary>
-        private Dictionary<string, RoutineDefinition> LateUpdateRunOnceRoutines { get; } = new Dictionary<string, RoutineDefinition>();
+        private ConcurrentDictionary<string, RoutineDefinition> LateUpdateRunOnceRoutines { get; } =
+            new ConcurrentDictionary<string, RoutineDefinition>();
 
         #endregion
 
@@ -57,31 +64,34 @@ namespace LunaClient.Base
         /// </summary>
         protected void SetupRoutine(RoutineDefinition routine)
         {
-            if (routine.Execution == RoutineExecution.FixedUpdate && !FixedUpdateRoutines.ContainsKey(routine.Name))
+            new Task(() =>
             {
-                if (routine.RunOnce)
-                    FixedUpdateRunOnceRoutines.Add(routine.Name, routine);
+                if (routine.Execution == RoutineExecution.FixedUpdate && !FixedUpdateRoutines.ContainsKey(routine.Name))
+                {
+                    if (routine.RunOnce)
+                        FixedUpdateRunOnceRoutines.TryAdd(routine.Name, routine);
+                    else
+                        FixedUpdateRoutines.TryAdd(routine.Name, routine);
+                }
+                else if (routine.Execution == RoutineExecution.Update && !UpdateRoutines.ContainsKey(routine.Name))
+                {
+                    if (routine.RunOnce)
+                        UpdateRunOnceRoutines.TryAdd(routine.Name, routine);
+                    else
+                        UpdateRoutines.TryAdd(routine.Name, routine);
+                }
+                else if (routine.Execution == RoutineExecution.LateUpdate && !LateUpdateRoutines.ContainsKey(routine.Name))
+                {
+                    if (routine.RunOnce)
+                        LateUpdateRunOnceRoutines.TryAdd(routine.Name, routine);
+                    else
+                        LateUpdateRoutines.TryAdd(routine.Name, routine);
+                }
                 else
-                    FixedUpdateRoutines.Add(routine.Name, routine);
-            }
-            else if (routine.Execution == RoutineExecution.Update && !UpdateRoutines.ContainsKey(routine.Name))
-            {
-                if (routine.RunOnce)
-                    UpdateRunOnceRoutines.Add(routine.Name, routine);
-                else
-                    UpdateRoutines.Add(routine.Name, routine);
-            }
-            else if (routine.Execution == RoutineExecution.LateUpdate && !LateUpdateRoutines.ContainsKey(routine.Name))
-            {
-                if (routine.RunOnce)
-                    LateUpdateRunOnceRoutines.Add(routine.Name, routine);
-                else
-                    LateUpdateRoutines.Add(routine.Name, routine);
-            }
-            else
-            {
-                LunaLog.LogError($"[LMP]: Routine {routine.Name} already defined");
-            }
+                {
+                    LunaLog.LogError($"[LMP]: Routine {routine.Name} already defined");
+                }
+            }).Start(TaskScheduler.Default);
         }
 
         /// <summary>
@@ -89,22 +99,25 @@ namespace LunaClient.Base
         /// </summary>
         protected void ChangeRoutineExecutionInterval(string routineName, int newIntervalInMs)
         {
-            if (FixedUpdateRoutines.ContainsKey(routineName))
+            new Task(() =>
             {
-                FixedUpdateRoutines[routineName].IntervalInMs = newIntervalInMs;
-            }
-            else if (UpdateRoutines.ContainsKey(routineName))
-            {
-                UpdateRoutines[routineName].IntervalInMs = newIntervalInMs;
-            }
-            else if (LateUpdateRoutines.ContainsKey(routineName))
-            {
-                LateUpdateRoutines[routineName].IntervalInMs = newIntervalInMs;
-            }
-            else
-            {
-                LunaLog.LogError($"[LMP]: Routine {routineName} not defined");
-            }
+                if (FixedUpdateRoutines.ContainsKey(routineName))
+                {
+                    FixedUpdateRoutines[routineName].IntervalInMs = newIntervalInMs;
+                }
+                else if (UpdateRoutines.ContainsKey(routineName))
+                {
+                    UpdateRoutines[routineName].IntervalInMs = newIntervalInMs;
+                }
+                else if (LateUpdateRoutines.ContainsKey(routineName))
+                {
+                    LateUpdateRoutines[routineName].IntervalInMs = newIntervalInMs;
+                }
+                else
+                {
+                    LunaLog.LogError($"[LMP]: Routine {routineName} not defined");
+                }
+            }).Start(TaskScheduler.Default);
         }
 
         private bool _enabled;

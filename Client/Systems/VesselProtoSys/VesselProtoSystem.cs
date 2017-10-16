@@ -111,10 +111,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (!VesselCommon.ActiveVesselIsInSafetyBubble())
                         MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
 
-                    foreach (var vessel in VesselCommon.GetSecondaryVessels())
-                    {
-                        MessageSender.SendVesselMessage(vessel);
-                    }
+                    MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
 
                     ChangeRoutineExecutionInterval("SendVesselDefinition",
                         VesselCommon.PlayerVesselsNearby()
@@ -164,10 +161,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemBasicReady)
                 {
-                    foreach (var vessel in VesselCommon.GetAbandonedVessels())
-                    {
-                        MessageSender.SendVesselMessage(vessel);
-                    }
+                    MessageSender.SendVesselMessage(VesselCommon.GetAbandonedVessels());
                 }
             }
             catch (Exception e)

@@ -7,6 +7,7 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using UniLinq;
 
@@ -24,6 +25,17 @@ namespace LunaClient.Systems.VesselProtoSys
             if (vessel == null) return;
 
             new Task(() => PrepareAndSendProtoVessel(vessel.protoVessel)).Start(TaskScheduler.Default);
+        }
+
+        public void SendVesselMessage(IEnumerable<Vessel> vessels)
+        {
+            new Task(() =>
+            {
+                foreach (var vessel in vessels)
+                {
+                    SendVesselMessage(vessel);
+                }
+            }).Start(TaskScheduler.Default);
         }
 
         /// <summary>

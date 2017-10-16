@@ -50,27 +50,23 @@ namespace LunaClient.Systems.VesselImmortalSys
             if (Enabled && VesselImmortalSystemReady)
             {
                 var ownedVessels = LockSystem.LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName)
-                                        .Select(l => l.VesselId)
-                                    .Union(LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                                        .Select(l => l.VesselId))
-                                    .Select(FlightGlobals.FindVessel)
-                                    .Where(v => v != null)
-                                    .ToArray();
+                    .Select(l => l.VesselId)
+                    .Union(LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
+                    .Select(l => l.VesselId))
+                    .ToArray();
+
 
                 var othersPeopleVessels = LockSystem.LockQuery.GetAllControlLocks()
                     .Union(LockSystem.LockQuery.GetAllUpdateLocks())
                     .Select(l => l.VesselId)
-                    .Except(ownedVessels.Select(v => v.id))
-                    .Select(FlightGlobals.FindVessel)
-                    //Select the vessels and filter out the nulls
-                    .Where(v => v != null).ToArray();
+                    .Except(ownedVessels);
 
-                foreach (var vessel in ownedVessels)
+                foreach (var vessel in ownedVessels.Select(FlightGlobals.FindVessel).Where(v => v != null))
                 {
                     SetVesselImmortalState(vessel, false);
                 }
 
-                foreach (var vessel in othersPeopleVessels)
+                foreach (var vessel in othersPeopleVessels.Select(FlightGlobals.FindVessel).Where(v => v != null))
                 {
                     SetVesselImmortalState(vessel, true);
                 }
