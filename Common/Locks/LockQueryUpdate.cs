@@ -22,7 +22,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public bool UpdateLockBelongsToPlayer(Guid vesselId, string playerName)
         {
-            return UpdateLockExists(vesselId) && LockBelongsToPlayer(LockType.Update, vesselId, playerName);
+            return LockBelongsToPlayer(LockType.Update, vesselId, playerName);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public string GetUpdateLockOwner(Guid vesselId)
         {
-            return UpdateLockExists(vesselId) ? GetLockOwner(LockType.Update, vesselId) : null;
+            return GetLockOwner(LockType.Update, vesselId);
         }
 
         /// <summary>

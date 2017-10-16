@@ -138,8 +138,8 @@ namespace LunaClient.Base
                 else if (_enabled && !value)
                 {
                     _enabled = false;
-                    RemoveRoutines();
                     OnDisabled();
+                    RemoveRoutines();
                 }
             }
         }

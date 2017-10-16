@@ -22,7 +22,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public bool ControlLockBelongsToPlayer(Guid vesselId, string playerName)
         {
-            return ControlLockExists(vesselId) && LockBelongsToPlayer(LockType.Control, vesselId, playerName);
+            return LockBelongsToPlayer(LockType.Control, vesselId, playerName);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public string GetControlLockOwner(Guid vesselId)
         {
-            return ControlLockExists(vesselId) ? GetLockOwner(LockType.Control, vesselId) : null;
+            return GetLockOwner(LockType.Control, vesselId);
         }
 
         /// <summary>
@@ -38,9 +38,8 @@ namespace LunaCommon.Locks
         /// </summary>
         public IEnumerable<LockDefinition> GetAllControlLocks(string playerName)
         {
-            return LockStore.ControlLocks
-                .Where(v => v.Value.PlayerName == playerName)
-                .Select(v => v.Value);
+            return LockStore.ControlLocks.Select(v => v.Value)
+                .Where(v => v.PlayerName == playerName);
         }
 
         /// <summary>

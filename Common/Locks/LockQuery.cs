@@ -23,12 +23,18 @@ namespace LunaCommon.Locks
             switch (type)
             {
                 case LockType.Control:
-                    return LockStore.ControlLocks[vesselId].PlayerName == playerName;
+                    if (LockStore.ControlLocks.TryGetValue(vesselId, out var controlLock))
+                        return controlLock.PlayerName == playerName;
+                    break;
                 case LockType.Update:
-                    return LockStore.UpdateLocks[vesselId].PlayerName == playerName;
+                    if (LockStore.UpdateLocks.TryGetValue(vesselId, out var updateLock))
+                        return updateLock.PlayerName == playerName;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
+
+            return false;
         }
 
         /// <summary>
@@ -55,12 +61,12 @@ namespace LunaCommon.Locks
             switch (type)
             {
                 case LockType.Control:
-                    if (LockStore.ControlLocks.ContainsKey(vesselId))
-                        return LockStore.ControlLocks[vesselId].PlayerName;
+                    if (LockStore.ControlLocks.TryGetValue(vesselId, out var controlLock))
+                        return controlLock.PlayerName;
                     break;
                 case LockType.Update:
-                    if (LockStore.UpdateLocks.ContainsKey(vesselId))
-                        return LockStore.ControlLocks[vesselId].PlayerName;
+                    if (LockStore.UpdateLocks.TryGetValue(vesselId, out var updateLock))
+                        return updateLock.PlayerName;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -78,8 +84,8 @@ namespace LunaCommon.Locks
             locks.AddRange(GetAllControlLocks(playerName));
             locks.AddRange(GetAllUpdateLocks(playerName));
 
-            if (LockStore.SpectatorLocks.ContainsKey(playerName))
-                locks.Add(LockStore.SpectatorLocks[playerName]);
+            if (LockStore.SpectatorLocks.TryGetValue(playerName, out var spectatorLock))
+                locks.Add(spectatorLock);
 
             if (LockStore.AsteroidLock.PlayerName == playerName)
                 locks.Add(LockStore.AsteroidLock);

@@ -29,7 +29,6 @@ namespace LunaClient.Systems.VesselImmortalSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            RemoveRoutines();
 
             //In case we disable this system, set all the vessels back as mortal...
             foreach (var vessel in FlightGlobals.Vessels)

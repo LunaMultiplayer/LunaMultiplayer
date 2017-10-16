@@ -67,7 +67,6 @@ namespace LunaClient.Systems.VesselRangeSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            RemoveRoutines();
 
             //In case we disable this system, set all the vessels to the normal pack range...
             foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
