@@ -62,8 +62,7 @@ namespace LunaClient.Systems.TimeSyncer
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SyncSenderThread = new Task(SyncTimeWithServer);
-            SyncSenderThread.Start(TaskScheduler.Default);
+            SyncSenderThread = LongRunTaskFactory.StartNew(SyncTimeWithServer);
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.ClockSetMsInterval, RoutineExecution.Update, SyncTime));
         }
 
@@ -90,6 +89,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// <returns></returns>
         private void SyncTime()
         {
+            //TODO: Improve performance 5ms max
             if (Enabled && Synced && !CurrentlyWarping && CanSyncTime() && !SystemsContainer.Get<WarpSystem>().WaitingSubspaceIdFromServer)
             {
                 var targetTime = SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();

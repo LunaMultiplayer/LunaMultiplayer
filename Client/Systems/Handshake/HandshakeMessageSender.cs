@@ -5,6 +5,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
+using System.Threading.Tasks;
 
 namespace LunaClient.Systems.Handshake
 {
@@ -12,7 +13,7 @@ namespace LunaClient.Systems.Handshake
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<HandshakeCliMsg>(msg));
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<HandshakeCliMsg>(msg)));
         }
 
         public void SendHandshakeResponse(byte[] signature)

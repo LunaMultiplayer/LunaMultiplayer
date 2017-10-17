@@ -69,9 +69,12 @@ namespace LunaClient.Systems.VesselRangeSys
             base.OnDisabled();
 
             //In case we disable this system, set all the vessels to the normal pack range...
-            foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
+            if (FlightGlobals.Vessels != null)
             {
-                UnPackVessel(vessel);
+                foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
+                {
+                    UnPackVessel(vessel);
+                }
             }
         }
 

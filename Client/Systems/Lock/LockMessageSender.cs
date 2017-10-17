@@ -3,6 +3,7 @@ using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Interface;
+using System.Threading.Tasks;
 
 namespace LunaClient.Systems.Lock
 {
@@ -10,7 +11,7 @@ namespace LunaClient.Systems.Lock
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<LockCliMsg>(msg));
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<LockCliMsg>(msg)));
         }
     }
 }

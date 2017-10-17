@@ -1,16 +1,15 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.Network;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
-using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using UniLinq;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -94,8 +93,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             //Request the vessel data that we don't have.
-            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>
-                (new VesselsRequestMsgData { RequestList = requestedObjects.ToArray() }));
+            System.MessageSender.SendMessage(new VesselsRequestMsgData { RequestList = requestedObjects.ToArray() });
         }
 
         /// <summary>
@@ -118,9 +116,10 @@ namespace LunaClient.Systems.VesselProtoSys
                     System.AllPlayerVessels.TryAdd(vesselId, vesselProtoUpdate);
 
                 }
-                else if (NewProtoVesselHasChanges(vesselProtoUpdate.ProtoVessel))
+                else if (NewProtoVesselHasChanges(vesselProtoUpdate.ProtoVessel) ||
+                    !FlightGlobals.Vessels.Any(v => v.id == vesselId))
                 {
-                    //Vessel exists and contain changes so replace it
+                    //Vessel exists and contain changes or vessel is not loaded so replace it
                     System.AllPlayerVessels[vesselId] = vesselProtoUpdate;
                 }
             }

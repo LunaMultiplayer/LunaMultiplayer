@@ -6,6 +6,7 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
@@ -15,11 +16,12 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public void SendMessage(IMessageData msg)
         {
-            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg)));
         }
 
         public void SendVesselUpdate()
         {
+            //TODO: This does not have much performance 0.8ms max... maybe we can use the protovessel for this and do it in another thread?
             var engines = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleEngines>();
             var shieldedDocks = FlightGlobals.ActiveVessel.FindPartModulesImplementing<ModuleDockingNode>()
                 .Where(e => !e.IsDisabled && e.deployAnimator != null).ToArray();

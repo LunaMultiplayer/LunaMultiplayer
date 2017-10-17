@@ -84,6 +84,13 @@ namespace LunaClient.Systems.Chat
         {
             if (System.Queuer.NewPrivateMessages.TryDequeue(out var pe))
             {
+                if (!Screen.Display)
+                {
+                    System.ChatButtonHighlighted = true;
+                    if (pe.FromPlayer != SettingsSystem.CurrentSettings.PlayerName)
+                        ScreenMessages.PostScreenMessage($"{pe.FromPlayer} -> @{pe.ToPlayer}: {pe.Message}", 5f,
+                            ScreenMessageStyle.UPPER_LEFT);
+                }
                 if (pe.FromPlayer != SettingsSystem.CurrentSettings.PlayerName)
                 {
                     if (!System.PrivateMessages.ContainsKey(pe.FromPlayer))
@@ -117,6 +124,17 @@ namespace LunaClient.Systems.Chat
         {
             if (System.Queuer.NewChannelMessages.TryDequeue(out var ce))
             {
+                if (!Screen.Display)
+                {
+                    if (ce.FromPlayer != SettingsSystem.ServerSettings.ConsoleIdentifier)
+                        System.ChatButtonHighlighted = true;
+                    ScreenMessages.PostScreenMessage(
+                        ce.Channel != "" ?
+                        $"{ce.FromPlayer} -> #{ce.Channel}: {ce.Message}" :
+                        $"{ce.FromPlayer} -> #Global : {ce.Message}",
+                        5f, ScreenMessageStyle.UPPER_LEFT);
+                }
+
                 if (!System.ChannelMessages.ContainsKey(ce.Channel))
                     System.ChannelMessages.Add(ce.Channel, new List<string>());
                 //Highlight if the Channel isn't Selected.

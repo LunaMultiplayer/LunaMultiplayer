@@ -1,3 +1,4 @@
+using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
 using System;
@@ -5,7 +6,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace LunaClient.Utilities
 {
@@ -13,7 +13,7 @@ namespace LunaClient.Utilities
     {
         static UniverseSyncCache()
         {
-            MainThread.Start(TaskScheduler.Default);
+            SystemBase.LongRunTaskFactory.StartNew(ProcessingThreadMain);
         }
 
         #region Fields
@@ -23,7 +23,6 @@ namespace LunaClient.Utilities
 
         private static string CacheDirectory => CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Cache");
 
-        private static Task MainThread { get; } = new Task(ProcessingThreadMain);
         private static AutoResetEvent IncomingEvent { get; } = new AutoResetEvent(false);
         private static ConcurrentQueue<byte[]> IncomingQueue { get; } = new ConcurrentQueue<byte[]>();
         private static Dictionary<string, long> FileLengths { get; } = new Dictionary<string, long>();

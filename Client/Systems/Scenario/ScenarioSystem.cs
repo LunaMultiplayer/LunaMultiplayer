@@ -69,7 +69,7 @@ namespace LunaClient.Systems.Scenario
 
             var modules = (ScenarioModule[])ScenarioRunner.GetLoadedModules().ToArray().Clone();
 
-            new Task(() => ParseAndSendModules(modules)).Start(TaskScheduler.Default);
+            TaskFactory.StartNew(() => ParseAndSendModules(modules));
         }
 
         private void ParseAndSendModules(IEnumerable<ScenarioModule> modules)

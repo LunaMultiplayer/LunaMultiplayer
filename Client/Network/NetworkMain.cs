@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message;
 using LunaCommon.Message.Interface;
@@ -55,11 +56,8 @@ namespace LunaClient.Network
             SendThread?.Wait(1000);
             ReceiveThread?.Wait(1000);
 
-            ReceiveThread = new Task(NetworkReceiver.ReceiveMain);
-            SendThread = new Task(NetworkSender.SendMain);
-
-            SendThread.Start(TaskScheduler.Default);
-            ReceiveThread.Start(TaskScheduler.Default);
+            ReceiveThread = SystemBase.LongRunTaskFactory.StartNew(NetworkReceiver.ReceiveMain);
+            SendThread = SystemBase.LongRunTaskFactory.StartNew(NetworkSender.SendMain);
 
             NetworkServerList.RequestServers();
         }

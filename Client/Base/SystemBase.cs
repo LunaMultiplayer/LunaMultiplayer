@@ -1,5 +1,6 @@
 ﻿using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message;
+using System.Threading.Tasks;
 
 namespace LunaClient.Base
 {
@@ -12,5 +13,15 @@ namespace LunaClient.Base
         /// Use this property to generate messages
         /// </summary>
         public static ClientMessageFactory MessageFactory { get; } = new ClientMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
+
+        /// <summary>
+        /// Main task factory, use it to instance new small tasks
+        /// </summary>
+        public static TaskFactory TaskFactory { get; } = new TaskFactory();
+
+        /// <summary>
+        /// Task factory to instance long running tasks
+        /// </summary>
+        public static TaskFactory LongRunTaskFactory { get; } = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);
     }
 }

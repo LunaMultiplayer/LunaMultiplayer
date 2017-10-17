@@ -4,6 +4,7 @@ using LunaClient.Network;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -12,7 +13,7 @@ namespace LunaClient.Systems.VesselPositionSys
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg)));
         }
 
         public void SendVesselPositionUpdate(Vessel vessel)

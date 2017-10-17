@@ -1,8 +1,7 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems.SettingsSys;
+using LunaClient.Windows;
 using LunaClient.Windows.Chat;
 using System.Collections.Concurrent;
-using LunaClient.Windows;
 
 namespace LunaClient.Systems.Chat
 {
@@ -46,17 +45,6 @@ namespace LunaClient.Systems.Chat
                 Message = channelMessage
             };
             NewChannelMessages.Enqueue(ce);
-            if (!Screen.Display)
-            {
-                if (ce.FromPlayer != SettingsSystem.ServerSettings.ConsoleIdentifier)
-                    System.ChatButtonHighlighted = true;
-                if (ce.Channel != "")
-                    ScreenMessages.PostScreenMessage($"{ce.FromPlayer} -> #{ce.Channel}: {ce.Message}", 5f,
-                        ScreenMessageStyle.UPPER_LEFT);
-                else
-                    ScreenMessages.PostScreenMessage($"{ce.FromPlayer} -> #Global : {ce.Message}", 5f,
-                        ScreenMessageStyle.UPPER_LEFT);
-            }
         }
 
         public void QueuePrivateMessage(string fromPlayer, string toPlayer, string privateMessage)
@@ -68,13 +56,6 @@ namespace LunaClient.Systems.Chat
                 Message = privateMessage
             };
             NewPrivateMessages.Enqueue(pe);
-            if (!Screen.Display)
-            {
-                System.ChatButtonHighlighted = true;
-                if (pe.FromPlayer != SettingsSystem.CurrentSettings.PlayerName)
-                    ScreenMessages.PostScreenMessage($"{pe.FromPlayer} -> @{pe.ToPlayer}: {pe.Message}", 5f,
-                        ScreenMessageStyle.UPPER_LEFT);
-            }
         }
 
         public void QueueRemovePlayer(string playerName)

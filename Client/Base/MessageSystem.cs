@@ -32,7 +32,7 @@ namespace LunaClient.Base
             }
             else
             {
-                new Task(() => HandleMessage(msg)).Start(TaskScheduler.Default);
+                TaskFactory.StartNew(() => HandleMessage(msg));
             }
         }
 

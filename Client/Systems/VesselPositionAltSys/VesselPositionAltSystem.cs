@@ -144,5 +144,13 @@ namespace LunaClient.Systems.VesselPositionAltSys
         }
 
         #endregion
+
+        /// <summary>
+        /// Gets the latest received position of a vessel
+        /// </summary>
+        public double[] GetLatestVesselPosition(Guid vesselId)
+        {
+            return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ? vesselPosition.LatLonAlt : new double[0];
+        }
     }
 }

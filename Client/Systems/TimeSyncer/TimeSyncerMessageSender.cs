@@ -4,6 +4,7 @@ using LunaClient.Network;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.SyncTime;
 using LunaCommon.Message.Interface;
+using System.Threading.Tasks;
 
 namespace LunaClient.Systems.TimeSyncer
 {
@@ -11,7 +12,7 @@ namespace LunaClient.Systems.TimeSyncer
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<SyncTimeCliMsg>(msg));
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<SyncTimeCliMsg>(msg)));
         }
 
         public void SendTimeSyncRequest()

@@ -46,6 +46,7 @@ namespace LunaClient.Systems.VesselImmortalSys
         /// </summary>
         private void MakeOtherPlayerVesselsImmortal()
         {
+            //TODO: improve performance... 8ms max
             if (Enabled && VesselImmortalSystemReady)
             {
                 var ownedVessels = LockSystem.LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName)

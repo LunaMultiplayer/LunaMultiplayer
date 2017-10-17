@@ -64,7 +64,7 @@ namespace LunaClient.Base
         /// </summary>
         protected void SetupRoutine(RoutineDefinition routine)
         {
-            new Task(() =>
+            TaskFactory.StartNew(() =>
             {
                 if (routine.Execution == RoutineExecution.FixedUpdate && !FixedUpdateRoutines.ContainsKey(routine.Name))
                 {
@@ -80,7 +80,8 @@ namespace LunaClient.Base
                     else
                         UpdateRoutines.TryAdd(routine.Name, routine);
                 }
-                else if (routine.Execution == RoutineExecution.LateUpdate && !LateUpdateRoutines.ContainsKey(routine.Name))
+                else if (routine.Execution == RoutineExecution.LateUpdate &&
+                         !LateUpdateRoutines.ContainsKey(routine.Name))
                 {
                     if (routine.RunOnce)
                         LateUpdateRunOnceRoutines.TryAdd(routine.Name, routine);
@@ -91,7 +92,7 @@ namespace LunaClient.Base
                 {
                     LunaLog.LogError($"[LMP]: Routine {routine.Name} already defined");
                 }
-            }).Start(TaskScheduler.Default);
+            });
         }
 
         /// <summary>
@@ -99,7 +100,7 @@ namespace LunaClient.Base
         /// </summary>
         protected void ChangeRoutineExecutionInterval(string routineName, int newIntervalInMs)
         {
-            new Task(() =>
+            TaskFactory.StartNew(() =>
             {
                 if (FixedUpdateRoutines.ContainsKey(routineName))
                 {
@@ -117,7 +118,7 @@ namespace LunaClient.Base
                 {
                     LunaLog.LogError($"[LMP]: Routine {routineName} not defined");
                 }
-            }).Start(TaskScheduler.Default);
+            });
         }
 
         private bool _enabled;

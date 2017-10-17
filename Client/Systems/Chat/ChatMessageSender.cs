@@ -3,6 +3,7 @@ using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Interface;
+using System.Threading.Tasks;
 
 namespace LunaClient.Systems.Chat
 {
@@ -10,7 +11,7 @@ namespace LunaClient.Systems.Chat
     {
         public void SendMessage(IMessageData messageData)
         {
-            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<ChatCliMsg>(messageData));
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<ChatCliMsg>(messageData)));
         }
     }
 }

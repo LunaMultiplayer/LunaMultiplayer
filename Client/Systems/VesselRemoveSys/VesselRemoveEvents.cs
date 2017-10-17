@@ -26,8 +26,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 System.MessageSender.SendVesselRemove(dyingVessel.id);
 
                 //Vessel is dead so remove the locks
-                SystemsContainer.Get<LockSystem>().ReleaseControlLock(dyingVessel.id);
-                SystemsContainer.Get<LockSystem>().ReleaseUpdateLock(dyingVessel.id);
+                SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(dyingVessel.id);
             }
         }
 

@@ -6,6 +6,7 @@ using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Interface;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LunaClient.Systems.Scenario
 {
@@ -13,7 +14,7 @@ namespace LunaClient.Systems.Scenario
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<ScenarioCliMsg>(msg));
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<ScenarioCliMsg>(msg)));
         }
 
         public void SendScenarioModuleData(string[] scenarioNames, byte[][] scenarioData)

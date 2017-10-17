@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using LunaClient.Base;
 using LunaClient.Systems;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
@@ -56,8 +57,7 @@ namespace LunaClient.Network
 
                 Disconnect("Started a new connection");
 
-                ConnectThread = new Task(() => ConnectToServer($"{address}:{port}"));
-                ConnectThread.Start(TaskScheduler.Default);
+                ConnectThread = SystemBase.TaskFactory.StartNew(() => ConnectToServer($"{address}:{port}"));
             }
             catch (Exception e)
             {

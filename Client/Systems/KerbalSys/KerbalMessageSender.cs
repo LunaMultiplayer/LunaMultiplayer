@@ -6,6 +6,7 @@ using LunaCommon;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Interface;
+using System.Threading.Tasks;
 using UniLinq;
 
 namespace LunaClient.Systems.KerbalSys
@@ -14,7 +15,7 @@ namespace LunaClient.Systems.KerbalSys
     {
         public void SendMessage(IMessageData msg)
         {
-            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<KerbalCliMsg>(msg));
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<KerbalCliMsg>(msg)));
         }
 
         public void SendKerbalIfDifferent(ProtoCrewMember pcm)
