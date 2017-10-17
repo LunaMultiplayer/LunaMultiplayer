@@ -6,7 +6,6 @@ using LunaCommon;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.PlayerStatus;
 using LunaCommon.Message.Interface;
-using System.Threading.Tasks;
 
 namespace LunaClient.Systems.Status
 {

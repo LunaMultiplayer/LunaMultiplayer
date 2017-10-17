@@ -5,7 +5,6 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
-using System.Threading.Tasks;
 
 namespace LunaClient.Systems.VesselRemoveSys
 {

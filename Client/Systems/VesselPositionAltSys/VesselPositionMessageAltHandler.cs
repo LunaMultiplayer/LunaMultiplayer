@@ -26,7 +26,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
             }
             else
             {
-                if (existingPositionUpdate.SentTime < update.SentTime &&
+                if (existingPositionUpdate.SentTime < update.SentTime && !existingPositionUpdate.Paused &&
                     (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted))
                 {
                     update.Vessel = VesselPositionAltSystem.CurrentVesselUpdate[vesselId].Vessel;

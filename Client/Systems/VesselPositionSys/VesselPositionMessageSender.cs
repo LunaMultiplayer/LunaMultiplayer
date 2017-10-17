@@ -4,7 +4,6 @@ using LunaClient.Network;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys

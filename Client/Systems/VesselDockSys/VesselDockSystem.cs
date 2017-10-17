@@ -34,8 +34,9 @@ namespace LunaClient.Systems.VesselDockSys
                 ? Vessel.GetDominantVessel(fromVessel, toVessel)
                 : fromVessel ?? toVessel;
 
-            if (finalVessel != null)
+            if (finalVessel != null && toVessel != null)
             {
+                var vesselToRemove = finalVessel.id == from ? toVessel : fromVessel;
                 var vesselIdToRemove = finalVessel.id == from ? to : from;
 
                 if (finalVessel == FlightGlobals.ActiveVessel)
@@ -49,8 +50,8 @@ namespace LunaClient.Systems.VesselDockSys
                     Client.Singleton.StartCoroutine(SwitchToVessel(finalVessel.id));
                 }
 
-                SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(vesselIdToRemove);
                 SystemsContainer.Get<VesselRemoveSystem>().MessageSender.SendVesselRemove(vesselIdToRemove, true);
+                SystemsContainer.Get<VesselRemoveSystem>().KillVessel(vesselToRemove, true);
 
                 LunaLog.Log("[LMP]: Docking event over!");
             }

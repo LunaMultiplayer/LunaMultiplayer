@@ -6,7 +6,6 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {

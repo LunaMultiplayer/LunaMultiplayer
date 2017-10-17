@@ -50,7 +50,7 @@ namespace LunaServer.Settings
         public ModControlMode ModControl = ModControlMode.EnabledStopInvalidPartSync;
 
         [Description("How many untracked asteroids to spawn into the universe. 0 = Disabled")]
-        public int NumberOfAsteroids = 30;
+        public int NumberOfAsteroids = 0;
 
         [Description("The UDP port the server listens on. You don't need to open it in your router if RegisterWithMasterServer = true")]
         public int Port = 6702;

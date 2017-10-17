@@ -3,6 +3,7 @@ using LunaClient.Systems.SettingsSys;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 
@@ -33,6 +34,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
         public static ConcurrentDictionary<Guid, VesselPositionAltUpdate> TargetVesselUpdate { get; } =
             new ConcurrentDictionary<Guid, VesselPositionAltUpdate>();
 
+        private static Queue<Guid> PausedVessels { get; } = new Queue<Guid>();
+
         #endregion
 
         #region Base overrides
@@ -52,6 +55,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
             SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval,
                 RoutineExecution.LateUpdate, SendVesselPositionUpdates));
+
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemovePausedVessels));
 
             //SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
             //    RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
@@ -129,6 +134,19 @@ namespace LunaClient.Systems.VesselPositionAltSys
         }
 
         /// <summary>
+        /// Remove all the paused vessels from the dictionaries
+        /// </summary>
+        private void RemovePausedVessels()
+        {
+            while (PausedVessels.Count > 0)
+            {
+                var vesselId = PausedVessels.Dequeue();
+                CurrentVesselUpdate.TryRemove(vesselId, out _);
+                TargetVesselUpdate.TryRemove(vesselId, out _);
+            }
+        }
+
+        /// <summary>
         /// Send updates for vessels that we own the update lock.
         /// </summary>
         private void SendSecondaryVesselPositionUpdates()
@@ -151,6 +169,20 @@ namespace LunaClient.Systems.VesselPositionAltSys
         public double[] GetLatestVesselPosition(Guid vesselId)
         {
             return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ? vesselPosition.LatLonAlt : new double[0];
+        }
+
+        /// <summary>
+        /// Pauses receiveing updates and interpolations for the given vessel. Later on it will be removed from the system.
+        /// </summary>
+        public void RemoveVessel(Vessel vessel)
+        {
+            if (vessel == null) return;
+
+            if (CurrentVesselUpdate.ContainsKey(vessel.id))
+                CurrentVesselUpdate[vessel.id].Paused = true;
+            if (TargetVesselUpdate.ContainsKey(vessel.id))
+                TargetVesselUpdate[vessel.id].Paused = true;
+            PausedVessels.Enqueue(vessel.id);
         }
     }
 }

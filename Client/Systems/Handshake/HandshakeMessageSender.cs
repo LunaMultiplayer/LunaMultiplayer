@@ -5,7 +5,6 @@ using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
-using System.Threading.Tasks;
 
 namespace LunaClient.Systems.Handshake
 {

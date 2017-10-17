@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselPositionAltSys;
 using LunaClient.Systems.VesselProtoSys;
 using System;
 using UniLinq;
@@ -65,6 +66,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}");
 
+            SystemsContainer.Get<VesselPositionAltSystem>().RemoveVessel(killVessel);
             if (SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels.ContainsKey(killVessel.id))
             {
                 if (!fullKill)

@@ -47,6 +47,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         public VesselPositionAltUpdate Target => VesselPositionAltSystem.TargetVesselUpdate[VesselId];
 
+        public bool Paused { get; set; }
+
 
         #region Vessel position information fields
 
@@ -164,7 +166,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         public void ApplyVesselUpdate()
         {
-            if (Body == null || Vessel == null || Vessel.precalc == null) return;
+            if (Paused || Body == null || Vessel == null || Vessel.precalc == null) return;
 
             if (!InterpolationStarted)
             {

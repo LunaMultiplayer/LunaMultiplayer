@@ -6,7 +6,6 @@ using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Interface;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace LunaClient.Systems.Scenario
 {
