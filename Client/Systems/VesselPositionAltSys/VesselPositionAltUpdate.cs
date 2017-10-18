@@ -14,21 +14,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
     public class VesselPositionAltUpdate : VesselPositionMsgData
     {
         #region Fields
-
-        private Vessel _vessel;
-        public Vessel Vessel
-        {
-            get
-            {
-                if (_vessel == null)
-                {
-                    _vessel = FlightGlobals.Vessels.Find(v => v.id == VesselId);
-                }
-
-                return _vessel;
-            }
-            set { _vessel = value; }
-        }
+        public Vessel Vessel => FlightGlobals.Vessels.Find(v => v.id == VesselId);
 
         private CelestialBody _body;
         public CelestialBody Body
@@ -45,10 +31,17 @@ namespace LunaClient.Systems.VesselPositionAltSys
             set { _body = value; }
         }
 
-        public VesselPositionAltUpdate Target => VesselPositionAltSystem.TargetVesselUpdate[VesselId];
+        private VesselPositionAltUpdate _target;
 
-        public bool Paused { get; set; }
-
+        public VesselPositionAltUpdate Target
+        {
+            get
+            {
+                if (_target == null)
+                    VesselPositionAltSystem.TargetVesselUpdate.TryGetValue(VesselId, out _target);
+                return _target;
+            }
+        }
 
         #region Vessel position information fields
 
@@ -166,7 +159,11 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         public void ApplyVesselUpdate()
         {
-            if (Paused || Body == null || Vessel == null || Vessel.precalc == null) return;
+            if (Body == null || Vessel == null || Vessel.precalc == null || Target == null)
+            {
+                VesselPositionAltSystem.VesselsToRemove.Enqueue(VesselId);
+                return;
+            }
 
             if (!InterpolationStarted)
             {
