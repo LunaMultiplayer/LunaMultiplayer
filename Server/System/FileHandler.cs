@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LunaServer.Utilities;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 
@@ -257,7 +258,7 @@ namespace LunaServer.System
                 }
                 return semaphore;
             }
-            throw new Exception("Bad folder/file path");
+            throw new HandledException($"Bad folder/file path ({path})");
         }
     }
 }

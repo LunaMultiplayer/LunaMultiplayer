@@ -53,7 +53,7 @@ namespace LunaServer.Command
                         input = Console.ReadLine();
                         if (input == null)
                         {
-                            LunaLog.Debug("Terminal may be not attached or broken, Exiting out of command handler");
+                            //LunaLog.Debug("Terminal may be not attached or broken, Exiting out of command handler");
                             return;
                         }
                     }

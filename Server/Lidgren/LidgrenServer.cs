@@ -10,9 +10,11 @@ using LunaServer.Log;
 using LunaServer.Server;
 using LunaServer.Settings;
 using LunaServer.System;
+using LunaServer.Utilities;
 using System;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Threading;
 
 namespace LunaServer.Lidgren
@@ -28,20 +30,25 @@ namespace LunaServer.Lidgren
 
         public void SetupLidgrenServer()
         {
-            try
+            if (PortIsInUse(ServerContext.Config.Port))
             {
-                ServerContext.Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
-                ServerContext.Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+                throw new HandledException($"Port {ServerContext.Config.Port} is already in use");
+            }
 
-                Server = new NetServer(ServerContext.Config);
-                Server.Start();
-            }
-            catch (Exception e)
-            {
-                LunaLog.Normal($"Error setting up server, Exception: {e}");
-                ServerContext.ServerRunning = false;
-            }
+            ServerContext.Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            ServerContext.Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+
+            Server = new NetServer(ServerContext.Config);
+            Server.Start();
             ServerContext.ServerStarting = false;
+        }
+
+        private bool PortIsInUse(int port)
+        {
+            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            var udpConnInfoArray = ipGlobalProperties.GetActiveUdpListeners();
+
+            return udpConnInfoArray.Any(tcpi => tcpi.Port == port);
         }
 
         public void StartReceiveingMessages()

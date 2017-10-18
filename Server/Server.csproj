@@ -138,6 +138,7 @@
     <Compile Include="Command\Command\KickCommand.cs" />
     <Compile Include="Settings\SettingsStore.cs" />
     <Compile Include="Lidgren\LidgrenServer.cs" />
+    <Compile Include="Utilities\HandledException.cs" />
     <Compile Include="Utilities\SettingsParser.cs" />
   </ItemGroup>
   <ItemGroup>

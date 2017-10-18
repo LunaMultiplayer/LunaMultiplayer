@@ -16,25 +16,27 @@ namespace LunaClient.Systems.VesselProtoSys
     {
         public void SendMessage(IMessageData msg)
         {
-            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg))); ;
+            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
         public void SendVesselMessage(Vessel vessel)
         {
             if (vessel == null) return;
+            SendVesselMessage(vessel.protoVessel);
+        }
 
-            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(vessel.protoVessel));
+        public void SendVesselMessage(ProtoVessel protoVessel)
+        {
+            if (protoVessel == null) return;
+            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
         }
 
         public void SendVesselMessage(IEnumerable<Vessel> vessels)
         {
-            TaskFactory.StartNew(() =>
+            foreach (var vessel in vessels)
             {
-                foreach (var vessel in vessels)
-                {
-                    SendVesselMessage(vessel);
-                }
-            });
+                SendVesselMessage(vessel);
+            }
         }
 
         /// <summary>

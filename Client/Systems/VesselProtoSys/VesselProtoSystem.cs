@@ -106,11 +106,9 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             try
             {
-                if (ProtoSystemReady)
+                if (ProtoSystemReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
                 {
-                    if (!VesselCommon.ActiveVesselIsInSafetyBubble())
-                        MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
-
+                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
                     MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
 
                     ChangeRoutineExecutionInterval("SendVesselDefinition",
@@ -177,7 +175,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             try
             {
-                if (ProtoSystemBasicReady)
+                if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
                 {
                     //Try to remove proto messages to own vessel
                     if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)

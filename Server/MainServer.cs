@@ -8,6 +8,7 @@ using LunaServer.Log;
 using LunaServer.Plugin;
 using LunaServer.Settings;
 using LunaServer.System;
+using LunaServer.Utilities;
 using System;
 using System.IO;
 using System.Threading;
@@ -17,7 +18,6 @@ namespace LunaServer
 {
     public class MainServer
     {
-        private static long _ctrlCTime;
         private static long _lastLogExpiredCheck;
         private static long _lastDayCheck;
 
@@ -85,10 +85,11 @@ namespace LunaServer
 
                     ServerContext.ServerRunning = true;
 
+                    ServerContext.LidgrenServer.SetupLidgrenServer();
+
                     var commandThread = Task.Run(() => new CommandHandler().ThreadMain());
                     var clientThread = Task.Run(() => new ClientMainThread().ThreadMain());
 
-                    ServerContext.LidgrenServer.SetupLidgrenServer();
                     Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
                     Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
 
@@ -136,30 +137,24 @@ namespace LunaServer
                     vesselRelayMediumThread.Wait();
                     vesselRelayCloseThread.Wait();
                 }
+
                 LunaLog.Normal("Goodbye and thanks for all the fish!");
-                Environment.Exit(0);
             }
             catch (Exception e)
             {
-                LunaLog.Fatal($"Error in main server thread, Exception: {e}");
-                throw;
+                if (e is HandledException)
+                    LunaLog.Fatal(e.Message);
+                else
+                    LunaLog.Fatal($"Error in main server thread, Exception: {e}");
+                Console.ReadLine(); //Avoid closing automatically
             }
         }
 
         //Gracefully shut down
         private static void CatchExit(object sender, ConsoleCancelEventArgs args)
         {
-            //If control+c not pressed within 5 seconds, catch it and shutdown gracefully.
-            if (DateTime.UtcNow.Ticks - _ctrlCTime > 50000000)
-            {
-                _ctrlCTime = DateTime.UtcNow.Ticks;
-                args.Cancel = true;
-                new ShutDownCommand().Execute("Caught Ctrl+C");
-            }
-            else
-            {
-                LunaLog.Debug("Terminating!");
-            }
+            new ShutDownCommand().Execute("Caught Ctrl+C");
+            Thread.Sleep(5000);
         }
     }
 }
