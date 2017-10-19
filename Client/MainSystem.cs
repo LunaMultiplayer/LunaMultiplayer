@@ -84,18 +84,10 @@ namespace LunaClient
 
             try
             {
-                if (HighLogic.LoadedScene == GameScenes.MAINMENU)
+                if (HighLogic.LoadedScene == GameScenes.MAINMENU && !LmpSaveChecked)
                 {
-                    if (!SystemsContainer.Get<ModSystem>().DllListBuilt)
-                    {
-                        SystemsContainer.Get<ModSystem>().DllListBuilt = true;
-                        SystemsContainer.Get<ModSystem>().BuildDllFileList();
-                    }
-                    if (!LmpSaveChecked)
-                    {
-                        LmpSaveChecked = true;
-                        SetupBlankGameIfNeeded();
-                    }
+                    LmpSaveChecked = true;
+                    SetupBlankGameIfNeeded();
                 }
 
                 HandleWindowEvents();
@@ -230,6 +222,8 @@ namespace LunaClient
             GameEvents.onShowUI.Add(() => { ShowGui = true; });
 
             NetworkMain.AwakeNetworkSystem();
+
+            SystemsContainer.Get<ModSystem>().BuildDllFileList();
 
             LunaLog.Log($"[LMP]: LunaMultiPlayer {VersionInfo.FullVersionNumber} Initialized!");
 

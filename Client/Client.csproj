@@ -72,6 +72,7 @@
     <Compile Include="Base\Interface\IWindow.cs" />
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
+    <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionMessageAltHandler.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionMessageAltSender.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionAltSystem.cs" />

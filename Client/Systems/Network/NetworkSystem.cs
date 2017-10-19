@@ -38,7 +38,7 @@ namespace LunaClient.Systems.Network
     {
         #region Disconnect message
 
-        public static bool DisplayDisconnectMessage;
+        public static bool DisplayDisconnectMessage { get; set; }
 
         #endregion
 
@@ -225,7 +225,6 @@ namespace LunaClient.Systems.Network
 
                         SystemsContainer.Get<MotdSystem>().Enabled = true;
 
-                        DisplayDisconnectMessage = false;
                         MainSystem.NetworkState = ClientState.Running;
 
                         SystemsContainer.Get<AsteroidSystem>().Enabled = true;
@@ -252,16 +251,12 @@ namespace LunaClient.Systems.Network
 
         private static void ShowDisconnectMessage()
         {
-            if (HighLogic.LoadedScene != GameScenes.MAINMENU)
+            if (HighLogic.LoadedScene < GameScenes.SPACECENTER)
                 DisplayDisconnectMessage = false;
 
             if (DisplayDisconnectMessage)
             {
                 ScreenMessages.PostScreenMessage("You have been disconnected!", 2f, ScreenMessageStyle.UPPER_CENTER);
-            }
-            else
-            {
-                DisplayDisconnectMessage = false;
             }
         }
     }

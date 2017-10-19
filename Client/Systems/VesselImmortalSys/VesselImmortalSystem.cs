@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselRemoveSys;
 using UniLinq;
 using UnityEngine;
 
@@ -82,8 +83,11 @@ namespace LunaClient.Systems.VesselImmortalSys
         /// </summary>
         private static void SetVesselImmortalState(Vessel vessel, bool immortal)
         {
+            if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vessel.id))
+                return;
+
             vessel.Parts.Where(p => p.attachJoint != null).ToList()
-                .ForEach(p => p.attachJoint.SetUnbreakable(immortal, immortal));
+            .ForEach(p => p.attachJoint.SetUnbreakable(immortal, immortal));
         }
 
         #endregion

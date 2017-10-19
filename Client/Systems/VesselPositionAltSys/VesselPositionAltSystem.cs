@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UniLinq;
@@ -60,12 +59,24 @@ namespace LunaClient.Systems.VesselPositionAltSys
             //    RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
         }
 
+        protected override void OnDisabled()
+        {
+            if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem) return;
+
+            base.OnDisabled();
+            CurrentVesselUpdate.Clear();
+
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
+        }
+
         private static void ActivatePrecalc()
         {
+            if (FlightGlobals.Vessels == null) return;
+
             for (var i = FlightGlobals.Vessels.Count - 1; i >= 0; --i)
             {
                 var vessel = FlightGlobals.Vessels[i];
-                if (vessel.precalc == null || vessel.id == FlightGlobals.ActiveVessel?.id)
+                if (vessel?.precalc == null || vessel.id == FlightGlobals.ActiveVessel?.id)
                 {
                     continue;
                 }
@@ -93,18 +104,18 @@ namespace LunaClient.Systems.VesselPositionAltSys
             }
         }
 
-        private static IEnumerator ApplyVesselUpdate(VesselPositionAltUpdate vesselPosition)
-        {
-            yield return new WaitForFixedUpdate();
-            try
-            {
-                vesselPosition.ApplyVesselUpdate();
-            }
-            catch (Exception e)
-            {
-                // ignored
-            }
-        }
+        //private static IEnumerator ApplyVesselUpdate(VesselPositionAltUpdate vesselPosition)
+        //{
+        //    yield return new WaitForFixedUpdate();
+        //    try
+        //    {
+        //        vesselPosition.ApplyVesselUpdate();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        // ignored
+        //    }
+        //}
 
         private static void DisableVesselPrecalculate()
         {
@@ -116,21 +127,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
             }
         }
 
-        protected override void OnDisabled()
-        {
-            if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem) return;
-
-            base.OnDisabled();
-            CurrentVesselUpdate.Clear();
-
-            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
-            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.Precalc, HandleVesselUpdates);
-        }
-
         #endregion
 
         #region FixedUpdate methods
-
 
         /// <summary>
         /// Send the updates of our own vessel. We only send them after an interval specified.

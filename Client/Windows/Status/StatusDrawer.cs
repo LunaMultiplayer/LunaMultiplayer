@@ -11,6 +11,7 @@ using LunaClient.Windows.Debug;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.Systems;
 using LunaCommon;
+using System.Linq;
 using UnityEngine;
 
 namespace LunaClient.Windows.Status
@@ -109,12 +110,32 @@ namespace LunaClient.Windows.Status
             var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, "D1", ButtonStyle);
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
             {
+                if (FlightGlobals.Vessels != null)
+                {
+                    var vess = FlightGlobals.ActiveVessel != null ?
+                        FlightGlobals.Vessels.FirstOrDefault(v => v.id != FlightGlobals.ActiveVessel.id) :
+                        FlightGlobals.Vessels.FirstOrDefault();
+
+                    if (vess != null)
+                        FlightGlobals.ForceSetActiveVessel(FlightGlobals.Vessels.First());
+                }
+
                 SettingsSystem.CurrentSettings.Debug1 = d1;
                 SettingsSystem.SaveSettings();
             }
             var d2 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug2, "D2", ButtonStyle);
             if (d2 != SettingsSystem.CurrentSettings.Debug2)
             {
+                if (FlightGlobals.Vessels != null)
+                {
+                    var vess = FlightGlobals.ActiveVessel != null ?
+                        FlightGlobals.Vessels.FirstOrDefault(v => v.id != FlightGlobals.ActiveVessel.id) :
+                        FlightGlobals.Vessels.FirstOrDefault();
+
+                    if (vess != null)
+                        FlightGlobals.SetActiveVessel(FlightGlobals.Vessels.First());
+                }
+
                 SettingsSystem.CurrentSettings.Debug2 = d2;
                 SettingsSystem.SaveSettings();
             }

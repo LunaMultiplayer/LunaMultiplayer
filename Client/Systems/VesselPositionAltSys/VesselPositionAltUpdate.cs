@@ -159,33 +159,40 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         public void ApplyVesselUpdate()
         {
-            if (Body == null || Vessel == null || Vessel.precalc == null || Target == null)
+            try
             {
-                VesselPositionAltSystem.VesselsToRemove.Enqueue(VesselId);
-                return;
-            }
-
-            if (!InterpolationStarted)
-            {
-                var interval = (float)TimeSpan.FromTicks(Target.SentTime - SentTime).TotalSeconds;
-                InterpolationDuration = Mathf.Clamp(interval, 0, 0.5f);
-                InterpolationStarted = true;
-            }
-
-            if (InterpolationDuration > 0)
-            {
-                if (SettingsSystem.CurrentSettings.InterpolationEnabled && LerpPercentage < 1)
+                if (Body == null || Vessel == null || Vessel.precalc == null || Target == null)
                 {
-                    ApplyInterpolations(LerpPercentage);
-                    LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
+                    VesselPositionAltSystem.VesselsToRemove.Enqueue(VesselId);
                     return;
                 }
 
-                if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
-                    ApplyInterpolations(1);
-            }
+                if (!InterpolationStarted)
+                {
+                    var interval = (float)TimeSpan.FromTicks(Target.SentTime - SentTime).TotalSeconds;
+                    InterpolationDuration = Mathf.Clamp(interval, 0, 0.5f);
+                    InterpolationStarted = true;
+                }
 
-            InterpolationFinished = true;
+                if (InterpolationDuration > 0)
+                {
+                    if (SettingsSystem.CurrentSettings.InterpolationEnabled && LerpPercentage < 1)
+                    {
+                        ApplyInterpolations(LerpPercentage);
+                        LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
+                        return;
+                    }
+
+                    if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
+                        ApplyInterpolations(1);
+                }
+
+                InterpolationFinished = true;
+            }
+            catch
+            {
+                
+            }
         }
 
         private void ApplyInterpolations(float lerpPercentage)

@@ -13,7 +13,6 @@ namespace LunaClient.Systems.Mod
         #region Fields & properties
 
         public ModControlMode ModControl { get; set; } = ModControlMode.EnabledStopInvalidPartSync;
-        public bool DllListBuilt { get; set; }
         public string FailText { get; set; }
 
         public Dictionary<string, string> DllList { get; } = new Dictionary<string, string>();
@@ -28,7 +27,6 @@ namespace LunaClient.Systems.Mod
         {
             base.OnDisabled();
             ModControl = ModControlMode.EnabledStopInvalidPartSync;
-            DllListBuilt = false;
             FailText = "";
             DllList.Clear();
             AllowedParts.Clear();

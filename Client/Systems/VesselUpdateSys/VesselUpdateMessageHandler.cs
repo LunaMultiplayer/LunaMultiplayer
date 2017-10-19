@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -27,7 +28,8 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             var vessel = FlightGlobals.FindVessel(msg.VesselId);
 
-            if (vessel == null || !vessel.loaded) return;
+            if (vessel == null || !vessel.loaded || SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vessel.id))
+                return;
 
             vessel.ActionGroups.SetGroup(KSPActionGroup.Gear, msg.ActiongroupControls[0]);
             vessel.ActionGroups.SetGroup(KSPActionGroup.Light, msg.ActiongroupControls[1]);
@@ -87,10 +89,10 @@ namespace LunaClient.Systems.VesselUpdateSys
                     clamp.Release();
                 }
 
-                //foreach (var dock in docks)
-                //{
-                //    dock?.Decouple();
-                //}
+                foreach (var dock in docks)
+                {
+                    dock.Decouple();
+                }
 
                 foreach (var shieldedDock in shieldedDocksToToggle)
                 {

@@ -24,6 +24,8 @@ namespace LunaClient.Systems.KerbalSys
                     HandleKerbalReply(msgData as KerbalReplyMsgData);
                     break;
                 case KerbalMessageType.Proto:
+                    //TODO: If a player connects and sends this type of message while still starting the game, the game crashes.
+                    //There should be a buffer for this messages so they are processed once the system is enabled
                     HandleKerbalProto(msgData as KerbalProtoMsgData);
                     break;
                 default:
@@ -40,7 +42,12 @@ namespace LunaClient.Systems.KerbalSys
         {
             var kerbalNode = ConfigNodeSerializer.Deserialize(messageData.KerbalData);
             if (kerbalNode != null)
-                System.LoadKerbal(kerbalNode);
+            {
+                if (MainSystem.NetworkState < ClientState.TimeLocked)
+                    System.KerbalQueue.Enqueue(kerbalNode);
+                else
+                    System.LoadKerbal(kerbalNode);
+            }
             else
                 LunaLog.LogError("[LMP]: Failed to load kerbal!");
         }

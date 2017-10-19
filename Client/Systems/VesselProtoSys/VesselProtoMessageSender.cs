@@ -22,6 +22,9 @@ namespace LunaClient.Systems.VesselProtoSys
         public void SendVesselMessage(Vessel vessel)
         {
             if (vessel == null) return;
+
+            //Doing a backup takes a lot of time...
+            //TaskFactory.StartNew(() => vessel.BackupVessel()).ContinueWith(prev => SendVesselMessage(prev.Result));
             SendVesselMessage(vessel.protoVessel);
         }
 

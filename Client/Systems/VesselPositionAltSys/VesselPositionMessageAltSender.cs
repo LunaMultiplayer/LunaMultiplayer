@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Interface;
 
@@ -21,6 +22,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         public void SendVesselPositionUpdate(VesselPositionAltUpdate update)
         {
+            if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(update.VesselId))
+                return;
+
             SendMessage(update.AsSimpleMessage());
         }
     }

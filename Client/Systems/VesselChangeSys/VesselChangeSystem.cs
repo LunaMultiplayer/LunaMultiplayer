@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Types;
 using System;
@@ -64,7 +65,8 @@ namespace LunaClient.Systems.VesselChangeSys
         private static void HandleVesselChange(VesselChangeMsgData messageData)
         {
             var vessel = FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == messageData.VesselId);
-            if (vessel != null && !vessel.packed && (VesselCommon.IsSpectating || vessel.id != FlightGlobals.ActiveVessel.id))
+            if (vessel != null && !vessel.packed && (VesselCommon.IsSpectating || vessel.id != FlightGlobals.ActiveVessel.id) &&
+                !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vessel.id))
             {
                 switch ((VesselChangeType)messageData.ChangeType)
                 {

@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
+using LunaClient.Systems.VesselRemoveSys;
 using System.Linq;
 
 namespace LunaClient.Systems.VesselRangeSys
@@ -92,7 +93,8 @@ namespace LunaClient.Systems.VesselRangeSys
             {
                 var controlledVessels = VesselCommon.GetControlledVessels();
 
-                foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id))
+                foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id &&
+                    !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(v.id)))
                 {
                     if (controlledVessels.Contains(vessel))
                     {

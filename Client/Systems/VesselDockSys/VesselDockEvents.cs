@@ -2,11 +2,18 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
+using System;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.VesselDockSys
 {
     public class VesselDockEvents : SubSystem<VesselDockSystem>
     {
+        /// <summary>
+        /// This dictioanry stores the docking events
+        /// </summary>
+        private static Dictionary<Guid, VesselDockStructure> VesselDockings { get; } = new Dictionary<Guid, VesselDockStructure>();
+
         public void OnVesselDock(GameEvents.FromToAction<Part, Part> partAction)
         {
             LunaLog.Log("[LMP]: Vessel docking detected!");
@@ -29,15 +36,21 @@ namespace LunaClient.Systems.VesselDockSys
                         LunaLog.Log($"[LMP]: Vessel docking, from: {partAction.from.vessel.id}, Name: {partAction.from.vessel.vesselName}");
                         LunaLog.Log($"[LMP]: Vessel docking, to: {partAction.to.vessel.id}, Name: {partAction.to.vessel.vesselName}");
 
-                        System.HandleDocking(partAction.from.vessel.id, partAction.to.vessel.id);
+                        var dock = new VesselDockStructure(partAction.from.vessel.id, partAction.to.vessel.id);
+                        if (dock.StructureIsOk())
+                        {
+                            //We add it to the event so the event is handled AFTER all the docking event in ksp is over and we can
+                            //safely remove the Minorvessel from the game and save the new dominant vessel as a proto.
+                            VesselDockings.Add(dock.DominantVesselId, dock);
+                        }
                     }
                     else
                     {
                         LunaLog.Log("[LMP]: Inconsistent docking state detected, killing both vessels if possible.");
                         if (partAction.from.vessel != FlightGlobals.ActiveVessel)
-                            SystemsContainer.Get<VesselRemoveSystem>().KillVessel(partAction.from.vessel, true);
+                            SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(partAction.from.vessel, true);
                         if (partAction.to.vessel != FlightGlobals.ActiveVessel)
-                            SystemsContainer.Get<VesselRemoveSystem>().KillVessel(partAction.to.vessel, true);
+                            SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(partAction.to.vessel, true);
                     }
                 }
             }
@@ -55,7 +68,11 @@ namespace LunaClient.Systems.VesselDockSys
                 LunaLog.Log($"[LMP]: EVA Boarding, from: {partAction.from.vessel.id }, Name: {partAction.from.vessel.vesselName}");
                 LunaLog.Log($"[LMP]: EVA Boarding, to: {partAction.to.vessel.id}, Name: {partAction.to.vessel.vesselName}");
 
-                System.HandleDocking(partAction.from.vessel.id, partAction.to.vessel.id);
+                var dock = new VesselDockStructure(partAction.from.vessel.id, partAction.to.vessel.id);
+                if (dock.StructureIsOk())
+                {
+                    System.HandleDocking(dock);
+                }
             }
         }
 
@@ -65,6 +82,15 @@ namespace LunaClient.Systems.VesselDockSys
             {
                 FlightCamera.SetTarget(data.vessel);
                 data.vessel.MakeActive();
+            }
+        }
+
+        public void OnVesselWasModified(Vessel data)
+        {
+            if (VesselDockings.ContainsKey(data.id))
+            {
+                System.HandleDocking(VesselDockings[data.id]);
+                VesselDockings.Remove(data.id);
             }
         }
     }

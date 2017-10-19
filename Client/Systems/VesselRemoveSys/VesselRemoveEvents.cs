@@ -37,7 +37,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             //quick == true when you press "space center" from the inflight menu
 
-            if (!VesselControlLockIsOurs(recoveredVessel))
+            if (!CanRemoveTheVessel(recoveredVessel))
             {
                 ScreenMessages.PostScreenMessage("Cannot recover vessel, the vessel is not yours.", 5f, ScreenMessageStyle.UPPER_CENTER);
                 return;
@@ -57,7 +57,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void OnVesselTerminated(ProtoVessel terminatedVessel)
         {
-            if (!VesselControlLockIsOurs(terminatedVessel))
+            if (!CanRemoveTheVessel(terminatedVessel))
             {
                 ScreenMessages.PostScreenMessage("Cannot terminate vessel, the vessel is not yours.", 5f, ScreenMessageStyle.UPPER_CENTER);
                 return;
@@ -76,9 +76,10 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// Check if a vessel is yours or not
         /// </summary>
         /// <returns></returns>
-        private static bool VesselControlLockIsOurs(ProtoVessel vessel)
+        private static bool CanRemoveTheVessel(ProtoVessel vessel)
         {
-            return LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.vesselID, SettingsSystem.CurrentSettings.PlayerName);
+            return !LockSystem.LockQuery.ControlLockExists(vessel.vesselID) &&
+                LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.vesselID, SettingsSystem.CurrentSettings.PlayerName);
         }
     }
 }
