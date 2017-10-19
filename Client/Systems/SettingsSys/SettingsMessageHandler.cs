@@ -110,7 +110,7 @@ namespace LunaClient.Systems.SettingsSys
                 };
             }
 
-            SystemsContainer.Get<MainSystem>().NetworkState = ClientState.SettingsSynced;
+            MainSystem.NetworkState = ClientState.SettingsSynced;
         }
     }
 }

@@ -51,7 +51,7 @@ namespace LunaClient.Windows.Options
                 WindowsContainer.Get<StatusWindow>().ColorEventHandled = false;
                 SettingsSystem.CurrentSettings.PlayerColor = TempColor;
                 SettingsSystem.SaveSettings();
-                if (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Running)
+                if (MainSystem.NetworkState == ClientState.Running)
                     SystemsContainer.Get<PlayerColorSystem>().MessageSender.SendPlayerColorToServer();
             }
             GUILayout.EndHorizontal();

@@ -21,6 +21,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
+using LunaCommon.Enums;
 using UnityEngine;
 
 namespace LunaClient.Windows.Systems
@@ -183,13 +184,7 @@ namespace LunaClient.Windows.Systems
 
         private void CheckWindowLock()
         {
-            if (!SystemsContainer.Get<MainSystem>().GameRunning)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
-            if (HighLogic.LoadedSceneIsFlight)
+            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
             {
                 RemoveWindowLock();
                 return;

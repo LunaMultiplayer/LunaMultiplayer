@@ -1,8 +1,8 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
+using LunaCommon.Enums;
 using UnityEngine;
 
 namespace LunaClient.Windows.CraftLibrary
@@ -11,7 +11,7 @@ namespace LunaClient.Windows.CraftLibrary
     {
         public override void Update()
         {
-            Display &= SystemsContainer.Get<MainSystem>().GameRunning;
+            Display &= MainSystem.NetworkState >= ClientState.Running;
             SafeDisplay = Display;
         }
 
@@ -79,13 +79,7 @@ namespace LunaClient.Windows.CraftLibrary
 
         public void CheckWindowLock()
         {
-            if (!SystemsContainer.Get<MainSystem>().GameRunning)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
-            if (HighLogic.LoadedSceneIsFlight)
+            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
             {
                 RemoveWindowLock();
                 return;

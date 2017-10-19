@@ -61,7 +61,7 @@ namespace LunaClient.Systems.KerbalSys
             }
 
             LunaLog.Log("[LMP]: Kerbals Synced!");
-            SystemsContainer.Get<MainSystem>().NetworkState = ClientState.KerbalsSynced;
+            MainSystem.NetworkState = ClientState.KerbalsSynced;
         }
     }
 }

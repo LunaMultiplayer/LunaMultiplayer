@@ -33,7 +33,20 @@ namespace LunaClient
     {
         #region Fields
 
-        public ClientState NetworkState { get; set; } = ClientState.Disconnected;
+        private static ClientState _networkState;
+        public static ClientState NetworkState
+        {
+            get => _networkState;
+            set
+            {
+                if (value == ClientState.Disconnected)
+                {
+                    NetworkMain.ResetNetworkSystem();
+                    SystemsHandler.KillAllSystems();
+                }
+                _networkState = value;
+            }
+        }
 
         public string Status { get; set; }
 
@@ -45,14 +58,8 @@ namespace LunaClient
         public static ServerEntry CommandLineServer { get; set; }
         public bool LmpSaveChecked { get; set; }
         public bool ForceQuit { get; set; }
-        public bool FireReset { get; set; }
         public bool StartGame { get; set; }
-        public bool GameRunning { get; set; }
-        private float LastDisconnectMessageCheck { get; set; }
-        public bool DisplayDisconnectMessage { get; set; }
-        private ScreenMessage DisconnectMessage { get; set; }
         public override bool Enabled { get; set; } = true;
-        public bool Quit { get; set; }
 
         private static int _mainThreadId;
         /// <summary>
@@ -99,23 +106,21 @@ namespace LunaClient
                 if (ForceQuit)
                 {
                     ForceQuit = false;
-                    GameRunning = false;
-                    FireReset = true;
+                    NetworkState = ClientState.Disconnected;
                     StopGame();
                 }
 
-                if (DisplayDisconnectMessage)
-                    ShowDisconnectMessage();
+                //In case ANOTHER thread requested us to disconnect
+                if (NetworkState == ClientState.DisconnectRequested)
+                    NetworkState = ClientState.Disconnected;
 
                 //Normal quit
-                if (GameRunning)
+                if (NetworkState >= ClientState.Running)
                 {
                     if (HighLogic.LoadedScene == GameScenes.MAINMENU)
                     {
-                        GameRunning = false;
-                        FireReset = true;
-                        SystemsContainer.Get<ToolbarSystem>().Enabled = false; //Always disable toolbar in main menu
                         NetworkConnection.Disconnect("Quit to main menu");
+                        SystemsContainer.Get<ToolbarSystem>().Enabled = false; //Always disable toolbar in main menu
                     }
 
                     if (HighLogic.CurrentGame.flagURL != SettingsSystem.CurrentSettings.SelectedFlag)
@@ -146,13 +151,6 @@ namespace LunaClient
                     else
                         HighLogic.CurrentGame.Parameters.Flight.CanLeaveToSpaceCenter = true;
                 }
-
-                if (FireReset)
-                {
-                    FireReset = false;
-                    SystemsHandler.KillAllSystems();
-                }
-
                 if (StartGame)
                 {
                     StartGame = false;
@@ -209,9 +207,9 @@ namespace LunaClient
             }
         }
 
-        public void Reset()
+        public void Awake()
         {
-            //We are sure that we are in the unity thread as Reset() should only be called in a unity thread.
+            //We are sure that we are in the unity thread as Awake() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
             LunaLog.Log($"[LMP]: KSP installed at {Client.KspPath}");
@@ -224,18 +222,19 @@ namespace LunaClient
             }
 
             SetupDirectoriesIfNeeded();
+            HandleCommandLineArgs();
             UniverseSyncCache.ExpireCache();
-            NetworkMain.StartNetworkSystem();
 
             //Register events needed to bootstrap the workers.
             GameEvents.onHideUI.Add(() => { ShowGui = false; });
             GameEvents.onShowUI.Add(() => { ShowGui = true; });
 
-            SystemsHandler.KillAllSystems();
+            NetworkMain.AwakeNetworkSystem();
 
-            HandleCommandLineArgs();
             LunaLog.Log($"[LMP]: LunaMultiPlayer {VersionInfo.FullVersionNumber} Initialized!");
-            LunaLog.ProcessLogMessages();
+
+            //Trigger a reset!
+            NetworkState = ClientState.Disconnected;
         }
 
         public void OnGui()
@@ -265,10 +264,9 @@ namespace LunaClient
 
         public void OnExit()
         {
-            Quit = true;
             NetworkConnection.Disconnect("Quit game");
+            NetworkState = ClientState.Disconnected;
             UniverseSyncCache.Stop();
-            SystemsHandler.KillAllSystems();
             LunaLog.ProcessLogMessages();
         }
 
@@ -290,30 +288,12 @@ namespace LunaClient
         {
             LunaLog.LogError($"[LMP]: Threw in {eventName} event, exception: {e}");
             NetworkConnection.Disconnect($"Unhandled error in main system! Detail: {eventName}");
-            Reset();
+            NetworkState = ClientState.Disconnected;
         }
 
         #endregion
 
         #region Private methods
-
-        private void ShowDisconnectMessage()
-        {
-            if (HighLogic.LoadedScene != GameScenes.MAINMENU)
-            {
-                if (Time.realtimeSinceStartup - LastDisconnectMessageCheck > 1f)
-                {
-                    LastDisconnectMessageCheck = Time.realtimeSinceStartup;
-                    if (DisconnectMessage != null)
-                        DisconnectMessage.duration = 0;
-                    DisconnectMessage = ScreenMessages.PostScreenMessage("You have been disconnected!", 2f, ScreenMessageStyle.UPPER_CENTER);
-                }
-            }
-            else
-            {
-                DisplayDisconnectMessage = false;
-            }
-        }
 
         private void StopGame()
         {
@@ -381,8 +361,6 @@ namespace LunaClient
             if (!ConnectionWindow.DisconnectEventHandled)
             {
                 ConnectionWindow.DisconnectEventHandled = true;
-                GameRunning = false;
-                FireReset = true;
                 NetworkConnection.Disconnect(NetworkState <= ClientState.Starting
                     ? "Cancelled connection to server"
                     : "Quit");

@@ -1,8 +1,8 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
+using LunaCommon.Enums;
 using UnityEngine;
 
 namespace LunaClient.Windows.Chat
@@ -50,7 +50,7 @@ namespace LunaClient.Windows.Chat
 
         public override void Update()
         {
-            Display &= SystemsContainer.Get<MainSystem>().GameRunning;
+            Display &= MainSystem.NetworkState >= ClientState.Running;
             SafeDisplay = Display;
             IgnoreChatInput = false;
             if (System.ChatButtonHighlighted && Display)
@@ -90,13 +90,7 @@ namespace LunaClient.Windows.Chat
 
         private void CheckWindowLock()
         {
-            if (!SystemsContainer.Get<MainSystem>().GameRunning)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
-            if (HighLogic.LoadedSceneIsFlight)
+            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
             {
                 RemoveWindowLock();
                 return;

@@ -39,7 +39,7 @@ namespace LunaClient.Systems.Handshake
                     rsa.FromXmlString(SettingsSystem.CurrentSettings.PrivateKey);
                     var signature = rsa.SignData(challange, CryptoConfig.CreateFromName("SHA256"));
                     System.MessageSender.SendHandshakeResponse(signature);
-                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Handshaking;
+                    MainSystem.NetworkState = ClientState.Handshaking;
                 }
             }
             catch (Exception e)
@@ -79,7 +79,7 @@ namespace LunaClient.Systems.Handshake
                         if (ModFileParser.ParseModFile(modFileData))
                         {
                             LunaLog.Log("[LMP]: Handshake successful");
-                            SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Authenticated;
+                            MainSystem.NetworkState = ClientState.Authenticated;
                         }
                         else
                         {

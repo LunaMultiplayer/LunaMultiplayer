@@ -1,8 +1,9 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
+using LunaCommon.Enums;
 using System.Collections.Generic;
-using LunaClient.Systems;
 using UnityEngine;
 
 namespace LunaClient.Windows.Status
@@ -13,7 +14,7 @@ namespace LunaClient.Windows.Status
 
         #region Public
 
-        public override bool Display => SystemsContainer.Get<MainSystem>().GameRunning;
+        public override bool Display => MainSystem.NetworkState >= ClientState.Running;
         public SubspaceDisplayEntry[] SubspaceDisplay { get; set; }
         public bool DisconnectEventHandled { get; set; } = true;
         public bool ColorEventHandled { get; set; } = true;
@@ -142,13 +143,7 @@ namespace LunaClient.Windows.Status
 
         private void CheckWindowLock()
         {
-            if (!SystemsContainer.Get<MainSystem>().GameRunning)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
-            if (HighLogic.LoadedSceneIsFlight)
+            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
             {
                 RemoveWindowLock();
                 return;

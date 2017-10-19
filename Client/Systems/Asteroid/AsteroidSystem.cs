@@ -101,7 +101,7 @@ namespace LunaClient.Systems.Asteroid
             //We have the spawn lock, lets do stuff.
             if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName) &&
                 SystemsContainer.Get<WarpSystem>().CurrentSubspace == 0 &&
-                Time.timeSinceLevelLoad > 1f && SystemsContainer.Get<MainSystem>().GameRunning)
+                Time.timeSinceLevelLoad > 1f)
             {
                 var beforeSpawn = GetAsteroidCount();
                 var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;

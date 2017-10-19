@@ -92,7 +92,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             if (SettingsSystem.ServerSettings.ShowVesselsInThePast) return;
 
-            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
+            if (Enabled)
             {
                 var vesselsToUnload = SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels
                                        .Where(v => v.Value.Loaded && VesselCommon.VesselIsControlledAndInPastSubspace(v.Key))

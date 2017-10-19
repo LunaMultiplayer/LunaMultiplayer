@@ -85,7 +85,7 @@ namespace LunaClient.Systems.CraftLibrary
 
         private void HandleCraftLibraryEvents()
         {
-            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
+            if (Enabled)
             {
                 CraftLibraryEventHandler.HandleCraftLibraryEvents();
             }

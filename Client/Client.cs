@@ -24,7 +24,7 @@ namespace LunaClient
             DontDestroyOnLoad(this);
             try
             {
-                SystemsContainer.Get<MainSystem>().Reset();
+                SystemsContainer.Get<MainSystem>().Awake();
             }
             catch (Exception e)
             {

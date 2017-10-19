@@ -35,7 +35,7 @@ namespace LunaClient.Systems.PlayerColorSys
 
                             WindowsContainer.Get<StatusWindow>().ColorEventHandled = false; //Refresh colors in status window
                         }
-                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.ColorsSynced;
+                        MainSystem.NetworkState = ClientState.ColorsSynced;
                     }
                     break;
                 case PlayerColorMessageType.Set:

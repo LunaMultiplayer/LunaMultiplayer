@@ -96,7 +96,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private void FollowWarpMaster()
         {
-            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
+            if (Enabled)
             {
                 if (ClientSubspaceList.ContainsKey(SettingsSystem.ServerSettings.WarpMaster) &&
                     ClientSubspaceList[SettingsSystem.ServerSettings.WarpMaster] != CurrentSubspace)
@@ -112,7 +112,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private void UpdateScreenMessage()
         {
-            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
+            if (Enabled)
             {
                 DisplayMessage(SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName
                         ? $"{SettingsSystem.ServerSettings.WarpMaster} has warp control"

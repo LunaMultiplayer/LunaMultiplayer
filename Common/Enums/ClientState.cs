@@ -2,6 +2,7 @@
 {
     public enum ClientState
     {
+        DisconnectRequested = -1,
         Disconnected = 0,
         Connecting = 1,
         Connected = 2,

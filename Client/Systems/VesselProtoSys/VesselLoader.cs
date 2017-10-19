@@ -231,6 +231,9 @@ namespace LunaClient.Systems.VesselProtoSys
                 LunaLog.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
                 return false;
             }
+
+            currentProto.vesselRef.Unload();
+            currentProto.vesselRef.Load();
             return true;
         }
 

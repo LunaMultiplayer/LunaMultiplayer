@@ -22,7 +22,7 @@ namespace LunaClient.Network
         {
             try
             {
-                while (!SystemsContainer.Get<MainSystem>().Quit)
+                while (!NetworkConnection.ResetRequested)
                 {
                     if (OutgoingMessages.TryDequeue(out var sendMessage))
                     {
@@ -86,7 +86,7 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        if (SystemsContainer.Get<MainSystem>().NetworkState >= ClientState.Connected)
+                        if (MainSystem.NetworkState >= ClientState.Connected)
                         {
                             var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
                             lidgrenMsg.Write(message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled));

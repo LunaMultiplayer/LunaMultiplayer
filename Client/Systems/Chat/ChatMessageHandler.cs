@@ -27,7 +27,7 @@ namespace LunaClient.Systems.Chat
                             foreach (var channelName in keyVal.Value)
                                 System.Queuer.QueueChatJoin(keyVal.Key, channelName);
 
-                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.ChatSynced;
+                        MainSystem.NetworkState = ClientState.ChatSynced;
                     }
                     break;
                 case ChatMessageType.Join:

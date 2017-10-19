@@ -24,7 +24,7 @@ namespace LunaClient.Systems.Admin
                         var data = (AdminListReplyMsgData)messageData;
                         foreach (var adminName in data.Admins)
                             System.RegisterServerAdmin(adminName);
-                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.AdminsSynced;
+                        MainSystem.NetworkState = ClientState.AdminsSynced;
                     }
                     break;
                 case AdminMessageType.Add:

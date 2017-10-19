@@ -1,6 +1,7 @@
 ﻿using Lidgren.Network;
 using LunaClient.Base;
 using LunaClient.Systems;
+using LunaClient.Systems.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -15,6 +16,7 @@ namespace LunaClient.Network
 {
     public class NetworkConnection
     {
+        public static bool ResetRequested { get; set; }
         private static Task ConnectThread { get; set; }
         private static object DisconnectLock { get; } = new object();
 
@@ -26,7 +28,7 @@ namespace LunaClient.Network
         {
             lock (DisconnectLock)
             {
-                if (SystemsContainer.Get<MainSystem>().NetworkState != ClientState.Disconnected)
+                if (MainSystem.NetworkState > ClientState.Disconnected)
                 {
                     LunaLog.Log($"[LMP]: Disconnected, reason: {reason}");
                     if (!HighLogic.LoadedSceneIsEditor && !HighLogic.LoadedSceneIsFlight)
@@ -36,12 +38,14 @@ namespace LunaClient.Network
                     else
                     {
                         //User is in flight so just display a message but don't force him to main menu...
-                        SystemsContainer.Get<MainSystem>().DisplayDisconnectMessage = true;
+                        NetworkSystem.DisplayDisconnectMessage = true;
                     }
 
-                    SystemsContainer.Get<MainSystem>().GameRunning = false;
                     SystemsContainer.Get<MainSystem>().Status = $"Disconnected: {reason}";
-                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Disconnected;
+
+                    //DO NOT set networkstate as disconnected as we are in another thread!
+                    MainSystem.NetworkState = ClientState.DisconnectRequested;
+
                     NetworkMain.ClientConnection.Disconnect(reason);
                     NetworkMain.ClientConnection.Shutdown(reason);
                     NetworkMain.ResetConnectionStaticsAndQueues();
@@ -71,13 +75,13 @@ namespace LunaClient.Network
         {
             try
             {
-                if (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Disconnected)
+                if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
                     var endpoint = Common.CreateEndpointFromString(endpointString);
                     SystemsContainer.Get<MainSystem>().Status = $"Connecting to {endpoint.Address} port {endpoint.Port}";
                     LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
 
-                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Connecting;
+                    MainSystem.NetworkState = ClientState.Connecting;
                     ConnectToServerAddress(endpoint);
                 }
                 else
@@ -103,7 +107,7 @@ namespace LunaClient.Network
                 NetworkMain.ClientConnection.FlushSendQueue();
 
                 var connectionTrials = 0;
-                while (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Connecting &&
+                while (MainSystem.NetworkState == ClientState.Connecting &&
                     NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected &&
                     connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries)
                 {
@@ -115,10 +119,10 @@ namespace LunaClient.Network
                 {
                     LunaLog.Log($"[LMP]: Connected to {destination.Address} port {destination.Port}");
                     SystemsContainer.Get<MainSystem>().Status = "Connected";
-                    SystemsContainer.Get<MainSystem>().NetworkState = ClientState.Connected;
+                    MainSystem.NetworkState = ClientState.Connected;
                     NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg>(new HandshakeRequestMsgData()));
                 }
-                else if (SystemsContainer.Get<MainSystem>().NetworkState == ClientState.Connecting)
+                else if (MainSystem.NetworkState == ClientState.Connecting)
                 {
                     LunaLog.LogError("[LMP]: Failed to connect within the timeout!");
                     Disconnect("Initial connection timeout");

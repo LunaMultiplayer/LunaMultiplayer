@@ -50,7 +50,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 HandleVesselProtoData(vesselDataKv.Value, new Guid(vesselDataKv.Key));
             }
 
-            SystemsContainer.Get<MainSystem>().NetworkState = ClientState.VesselsSynced;
+            MainSystem.NetworkState = ClientState.VesselsSynced;
         }
 
         /// <summary>

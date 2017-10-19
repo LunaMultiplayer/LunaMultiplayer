@@ -78,8 +78,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// <returns></returns>
         private static bool VesselControlLockIsOurs(ProtoVessel vessel)
         {
-            return !LockSystem.LockQuery.ControlLockExists(vessel.vesselID) ||
-                   LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.vesselID, SettingsSystem.CurrentSettings.PlayerName);
+            return LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.vesselID, SettingsSystem.CurrentSettings.PlayerName);
         }
     }
 }

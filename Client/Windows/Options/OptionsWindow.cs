@@ -1,8 +1,8 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Utilities;
+using LunaCommon.Enums;
 using UnityEngine;
 
 namespace LunaClient.Windows.Options
@@ -59,13 +59,7 @@ namespace LunaClient.Windows.Options
 
         private void CheckWindowLock()
         {
-            if (!SystemsContainer.Get<MainSystem>().GameRunning)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
-            if (HighLogic.LoadedSceneIsFlight)
+            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
             {
                 RemoveWindowLock();
                 return;

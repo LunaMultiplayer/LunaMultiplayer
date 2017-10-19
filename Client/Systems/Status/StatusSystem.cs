@@ -77,7 +77,7 @@ namespace LunaClient.Systems.Status
 
         private void CheckPlayerStatus()
         {
-            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
+            if (Enabled)
             {
                 MyPlayerStatus.VesselText = GetVesselText();
                 MyPlayerStatus.StatusText = GetStatusText();

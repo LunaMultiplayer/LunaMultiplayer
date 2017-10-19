@@ -48,7 +48,7 @@ namespace LunaClient.Systems.VesselChangeSys
         /// </summary>
         private void ProcessVesselChanges()
         {
-            if (Enabled && SystemsContainer.Get<MainSystem>().GameRunning)
+            if (Enabled)
             {
                 while (IncomingChanges.TryDequeue(out var value))
                 {

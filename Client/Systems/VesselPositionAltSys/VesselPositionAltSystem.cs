@@ -81,7 +81,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
             foreach (var keyVal in CurrentVesselUpdate)
             {
-                FlightGlobals.ActiveVessel.StartCoroutine(ApplyVesselUpdate(keyVal.Value));
+                keyVal.Value.ApplyVesselUpdate();
+                //FlightGlobals.ActiveVessel.StartCoroutine(ApplyVesselUpdate(keyVal.Value));
             }
 
             while (VesselsToRemove.Count > 0)
@@ -95,7 +96,14 @@ namespace LunaClient.Systems.VesselPositionAltSys
         private static IEnumerator ApplyVesselUpdate(VesselPositionAltUpdate vesselPosition)
         {
             yield return new WaitForFixedUpdate();
-            vesselPosition.ApplyVesselUpdate();
+            try
+            {
+                vesselPosition.ApplyVesselUpdate();
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
         }
 
         private static void DisableVesselPrecalculate()

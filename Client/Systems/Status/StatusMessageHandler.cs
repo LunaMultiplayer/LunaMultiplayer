@@ -45,7 +45,7 @@ namespace LunaClient.Systems.Status
                     VesselText = msg.VesselText[i]
                 });
             }
-            SystemsContainer.Get<MainSystem>().NetworkState = ClientState.PlayersSynced;
+            MainSystem.NetworkState = ClientState.PlayersSynced;
         }
 
         private static void AddNewPlayerStatus(IMessageData messageData)

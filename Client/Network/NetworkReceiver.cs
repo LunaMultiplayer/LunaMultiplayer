@@ -41,7 +41,7 @@ namespace LunaClient.Network
         {
             try
             {
-                while (!SystemsContainer.Get<MainSystem>().Quit)
+                while (!NetworkConnection.ResetRequested)
                 {
                     if (NetworkMain.ClientConnection.ReadMessage(out var msg))
                     {

@@ -24,7 +24,7 @@ namespace LunaClient.Network
             SuppressUnreliableUnorderedAcks = true, //We don't need ack for unreliable unordered!
             MaximumTransmissionUnit = SettingsSystem.CurrentSettings.MtuSize,
             PingInterval = (float)SettingsSystem.CurrentSettings.HearbeatMsInterval / 1000,
-            ConnectionTimeout = (float)SettingsSystem.CurrentSettings.ConnectionMsTimeout / 1000
+            ConnectionTimeout = (float)SettingsSystem.CurrentSettings.ConnectionMsTimeout / 1000,
         };
 
         public static NetClient ClientConnection { get; private set; }
@@ -42,19 +42,28 @@ namespace LunaClient.Network
             NetworkStatistics.LastSendTime = 0;
         }
 
-        public static void StartNetworkSystem()
+        public static void AwakeNetworkSystem()
         {
             Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
             Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
             Config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
+        }
+
+        public static void ResetNetworkSystem()
+        {
+            NetworkConnection.ResetRequested = true;
 
             ClientConnection = new NetClient(Config);
             ClientConnection.Start();
 
             NetworkServerList.RefreshMasterServers();
 
-            SendThread?.Wait(1000);
-            ReceiveThread?.Wait(1000);
+            if (SendThread != null && !SendThread.IsCompleted)
+                SendThread?.Wait(1000);
+            if (ReceiveThread != null && !ReceiveThread.IsCompleted)
+                ReceiveThread?.Wait(1000);
+
+            NetworkConnection.ResetRequested = false;
 
             ReceiveThread = SystemBase.LongRunTaskFactory.StartNew(NetworkReceiver.ReceiveMain);
             SendThread = SystemBase.LongRunTaskFactory.StartNew(NetworkSender.SendMain);

@@ -74,7 +74,7 @@ namespace LunaClient.Systems.CraftLibrary
                                 }
                             }
                         }
-                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.CraftlibrarySynced;
+                        MainSystem.NetworkState = ClientState.CraftlibrarySynced;
                     }
                     break;
                 case CraftMessageType.AddFile:

@@ -64,11 +64,11 @@ namespace LunaClient.Systems.Scenario
         /// </summary>
         public void SendScenarioModules()
         {
-            if (!Enabled || !SystemsContainer.Get<MainSystem>().GameRunning) return;
-
-            var modules = (ScenarioModule[])ScenarioRunner.GetLoadedModules().ToArray().Clone();
-
-            TaskFactory.StartNew(() => ParseAndSendModules(modules));
+            if (Enabled)
+            {
+                var modules = (ScenarioModule[])ScenarioRunner.GetLoadedModules().ToArray().Clone();
+                TaskFactory.StartNew(() => ParseAndSendModules(modules));
+            }
         }
 
         private void ParseAndSendModules(IEnumerable<ScenarioModule> modules)

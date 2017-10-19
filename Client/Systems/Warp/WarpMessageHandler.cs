@@ -41,7 +41,7 @@ namespace LunaClient.Systems.Warp
 
                         AddSubspace(-1, 0);//Add warping subspace
 
-                        SystemsContainer.Get<MainSystem>().NetworkState = ClientState.WarpsubspacesSynced;
+                        MainSystem.NetworkState = ClientState.WarpsubspacesSynced;
                     }
                     break;
                 case WarpMessageType.NewSubspace:
