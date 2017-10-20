@@ -50,7 +50,7 @@ namespace LunaClient.Systems.VesselSwitcherSys
         /// <summary>
         /// Checks if we must switch to a vessel and do so
         /// </summary>
-        private void CheckVesselToSwitch()
+        private static void CheckVesselToSwitch()
         {
             try
             {
@@ -83,7 +83,7 @@ namespace LunaClient.Systems.VesselSwitcherSys
                 {
                     FlightGlobals.ForceSetActiveVessel(FlightGlobals.FindVessel(VesselToSwitchTo.Value));
                     if (FlightGlobals.ActiveVessel?.loaded ?? false)
-                        VesselToSwitchTo = Guid.Empty;
+                        VesselToSwitchTo = null;
                 }
             }
         }
