@@ -79,10 +79,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
             }
 
-            if (SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels.ContainsKey(killVessel.id))
-            {
-                SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels[killVessel.id].Loaded = false;
-            }
+            SystemsContainer.Get<VesselProtoSystem>().UnloadVesselFromLoadingSystem(killVessel.id);
 
             //TODO: Should we put the vessel on rails so that we don't run into bugs destroying the vessel?
             //killVessel.GoOnRails();
@@ -91,14 +88,6 @@ namespace LunaClient.Systems.VesselRemoveSys
             UnloadVesselFromGame(killVessel);
             KillGivenVessel(killVessel);
             UnloadVesselFromScenario(killVessel);
-
-            //TODO: Do we need to do this?  DMP has this code
-            //Add it to the delay kill list to make sure it dies.
-            //With KSP, If it doesn't work first time, keeping doing it until it does.
-            //if (!delayKillVessels.Contains(killVessel))
-            //{
-            //   delayKillVessels.Add(killVessel);
-            //}
         }
 
         #endregion
@@ -166,15 +155,10 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}");
 
-            if (SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels.ContainsKey(killVessel.id))
-            {
-                if (!fullKill)
-                    SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels[killVessel.id].Loaded = false;
-                else
-                {
-                    SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels.TryRemove(killVessel.id, out var _);
-                }
-            }
+            if (!fullKill)
+                SystemsContainer.Get<VesselProtoSystem>().UnloadVesselFromLoadingSystem(killVessel.id);
+            else
+                SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(killVessel.id);
 
             SwitchVesselIfSpectating(killVessel);
             UnloadVesselFromGame(killVessel);
@@ -184,7 +168,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         private static void SwitchVesselIfSpectating(Vessel killVessel)
         {
-            if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == killVessel.id)
+            if (FlightGlobals.ActiveVessel.id == killVessel.id)
             {
                 var otherVessels = FlightGlobals.Vessels.Where(v => v.id != killVessel.id).ToArray();
 
@@ -193,10 +177,13 @@ namespace LunaClient.Systems.VesselRemoveSys
                 else
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
 
-                ScreenMessages.PostScreenMessage("The player you were spectating removed his vessel");
+                ScreenMessages.PostScreenMessage("The vessel you were spectating was removed", 3f);
             }
         }
 
+        /// <summary>
+        /// Removes the vessel from the scenario
+        /// </summary>
         private static void UnloadVesselFromScenario(Vessel killVessel)
         {
             try

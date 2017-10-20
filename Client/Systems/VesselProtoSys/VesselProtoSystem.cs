@@ -65,12 +65,20 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Removes a vessel from the loading system. If we receive a protovessel msg after this method is called it will be reloaded
         /// </summary>
-        /// <param name="vesselId"></param>
         public void RemoveVesselFromLoadingSystem(Guid vesselId)
         {
-            if (AllPlayerVessels.ContainsKey(vesselId))
+            AllPlayerVessels.TryRemove(vesselId, out var _);
+        }
+
+        /// <summary>
+        /// Sets a vessel as unloaded so it can be recreated later. 
+        /// For example if you leave a subspace the vessel must still be in the system but it should be unloaded
+        /// </summary>
+        public void UnloadVesselFromLoadingSystem(Guid vesselId)
+        {
+            if (AllPlayerVessels.TryGetValue(vesselId, out var existingProtoUpdate))
             {
-                AllPlayerVessels.TryRemove(vesselId, out var _);
+                AllPlayerVessels.TryUpdate(vesselId, new VesselProtoUpdate(existingProtoUpdate), existingProtoUpdate);
             }
         }
 
@@ -189,14 +197,18 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToReLoad)
                     {
                         var vesselLoaded = VesselLoader.ReloadVessel(vesselProto.Value);
-                        if (vesselLoaded && !SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
+                        if (vesselLoaded)
                         {
-                            /*TODO:
-                            This call will not put the vessel in the right position if a long time has elapsed 
-                            between when the update was generated and when it's being applied, if in atmo.
-                            This is because positions are set via ballistic orbits, 
-                            which don't extrapolate properly in atmo. (this is a wild guess and not checked in code)*/
-                            SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPositionOnNextFixedUpdate(vesselProto.Value.VesselId);
+                            UpdateVesselProtoInDictionary(vesselProto.Value);
+                            if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
+                            {
+                                /*TODO:
+                                This call will not put the vessel in the right position if a long time has elapsed 
+                                between when the update was generated and when it's being applied, if in atmo.
+                                This is because positions are set via ballistic orbits, 
+                                which don't extrapolate properly in atmo. (this is a wild guess and not checked in code)*/
+                                SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPositionOnNextFixedUpdate(vesselProto.Value.VesselId);
+                            }
                         }
                     }
 
@@ -227,6 +239,18 @@ namespace LunaClient.Systems.VesselProtoSys
         #endregion
 
         #region Private
+
+        /// <summary>
+        /// Updates the vesselProto from the dictionary in a thread safe manner
+        /// </summary>
+        private void UpdateVesselProtoInDictionary(VesselProtoUpdate vesselProto)
+        {
+            AllPlayerVessels.TryGetValue(vesselProto.VesselId, out var existingVesselProto);
+            if (existingVesselProto != null)
+            {
+                AllPlayerVessels.TryUpdate(vesselProto.VesselId, vesselProto, existingVesselProto);
+            }
+        }
 
         private static string GetInvalidVesselParts(Vessel checkVessel)
         {

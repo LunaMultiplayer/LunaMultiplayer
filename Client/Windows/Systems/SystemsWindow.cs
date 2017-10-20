@@ -18,6 +18,7 @@ using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
@@ -47,6 +48,9 @@ namespace LunaClient.Windows.Systems
 
         private bool VesselDock { get; set; }
         private string VesselDockProfilerText { get; set; }
+
+        private bool VesselSwitcher { get; set; }
+        private string VesselSwitcherProfilerText { get; set; }
 
         private bool VesselFlightState { get; set; }
         private string VesselFlightStateProfilerText { get; set; }
@@ -129,6 +133,7 @@ namespace LunaClient.Windows.Systems
                 KerbalProfilerText = SystemsContainer.Get<KerbalSystem>().GetProfilersData();
                 VesselChangeProfilerText = SystemsContainer.Get<VesselChangeSystem>().GetProfilersData();
                 VesselDockProfilerText = SystemsContainer.Get<VesselDockSystem>().GetProfilersData();
+                VesselSwitcherProfilerText = SystemsContainer.Get<VesselSwitcherSystem>().GetProfilersData();
                 VesselFlightStateProfilerText = SystemsContainer.Get<VesselFlightStateSystem>().GetProfilersData();
                 VesselImmortalProfilerText = SystemsContainer.Get<VesselImmortalSystem>().GetProfilersData();
                 VesselLockProfilerText = SystemsContainer.Get<VesselLockSystem>().GetProfilersData();

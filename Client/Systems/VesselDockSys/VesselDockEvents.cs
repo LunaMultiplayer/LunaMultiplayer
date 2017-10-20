@@ -1,7 +1,9 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselSwitcherSys;
 using System;
 using System.Collections.Generic;
 
@@ -14,7 +16,11 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         private static Dictionary<Guid, VesselDockStructure> VesselDockings { get; } = new Dictionary<Guid, VesselDockStructure>();
 
-        public void OnVesselDock(GameEvents.FromToAction<Part, Part> partAction)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="partAction"></param>
+        public void OnPartCouple(GameEvents.FromToAction<Part, Part> partAction)
         {
             LunaLog.Log("[LMP]: Vessel docking detected!");
             if (!VesselCommon.IsSpectating)
@@ -71,12 +77,12 @@ namespace LunaClient.Systems.VesselDockSys
                 var dock = new VesselDockStructure(partAction.from.vessel.id, partAction.to.vessel.id);
                 if (dock.StructureIsOk())
                 {
-                    System.HandleDocking(dock);
+                    HandleDocking(dock);
                 }
             }
         }
 
-        public void OnVesselUndock(Part data)
+        public void OnPartUndock(Part data)
         {
             if (VesselCommon.IsSpectating)
             {
@@ -85,13 +91,41 @@ namespace LunaClient.Systems.VesselDockSys
             }
         }
 
+        /// <summary>
+        /// This event is called AFTER all the docking event is over, so the final 
+        /// vessel is merged and we can safely remove the minor vessel
+        /// </summary>
         public void OnVesselWasModified(Vessel data)
         {
             if (VesselDockings.ContainsKey(data.id))
             {
-                System.HandleDocking(VesselDockings[data.id]);
+                HandleDocking(VesselDockings[data.id]);
                 VesselDockings.Remove(data.id);
             }
+        }
+
+        /// <summary>
+        /// This method is called after the docking is over and there 
+        /// should be only 1 vessel in the screen (the final one)
+        /// </summary>
+        private static void HandleDocking(VesselDockStructure dock)
+        {
+            if (dock.DominantVessel == FlightGlobals.ActiveVessel)
+            {
+                LunaLog.Log($"[LMP]: Docking: We own the dominant vessel {dock.DominantVesselId}");
+
+                FlightGlobals.ActiveVessel.BackupVessel();
+                SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel.protoVessel);
+            }
+            else
+            {
+                LunaLog.Log($"[LMP]: Docking: We DON'T own the dominant vessel {dock.DominantVesselId}. Switching");
+                SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(dock.DominantVesselId);
+            }
+
+            SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.MinorVessel, true);
+            SystemsContainer.Get<VesselRemoveSystem>().MessageSender.SendVesselRemove(dock.MinorVesselId, true);
+            LunaLog.Log("[LMP]: Docking event over!");
         }
     }
 }

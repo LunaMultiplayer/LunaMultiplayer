@@ -1,5 +1,4 @@
 ﻿using System;
-using UniLinq;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -10,33 +9,20 @@ namespace LunaClient.Systems.VesselProtoSys
         public bool Loaded { get; set; }
 
         private Vessel _vessel;
-        public Vessel Vessel
-        {
-            get
-            {
-                if (_vessel == null && VesselExist)
-                    _vessel = FlightGlobals.Vessels.First(v => v.id == VesselId);
+        public Vessel Vessel => _vessel ?? (_vessel = FlightGlobals.FindVessel(VesselId));
 
-                return _vessel;
-            }
-        }
-
-        private bool? _vesselExist;
-        public bool VesselExist
-        {
-            get
-            {
-                if (!_vesselExist.HasValue)
-                    _vesselExist = FlightGlobals.Vessels.Any(v => v.id == VesselId);
-
-                return _vesselExist.Value;
-            }
-        }
+        public bool VesselExist => Vessel != null;
 
         public VesselProtoUpdate(ConfigNode vessel, Guid vesselId)
         {
             VesselId = vesselId;
             ProtoVessel = VesselCommon.CreateSafeProtoVesselFromConfigNode(vessel, vesselId);
+        }
+
+        public VesselProtoUpdate(VesselProtoUpdate protoUpdate)
+        {
+            VesselId = protoUpdate.VesselId;
+            ProtoVessel = protoUpdate.ProtoVessel;
         }
     }
 }

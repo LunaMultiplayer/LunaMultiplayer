@@ -232,8 +232,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 return false;
             }
 
-            currentProto.vesselRef.Unload();
-            currentProto.vesselRef.Load();
             return true;
         }
 

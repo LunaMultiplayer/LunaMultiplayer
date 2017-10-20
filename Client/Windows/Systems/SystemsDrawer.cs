@@ -17,6 +17,7 @@ using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
@@ -50,6 +51,7 @@ namespace LunaClient.Windows.Systems
                 SystemsContainer.Get<KerbalSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselChangeSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselDockSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselSwitcherSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselFlightStateSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselImmortalSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselLockSystem>().ResetProfilers();
@@ -168,6 +170,15 @@ namespace LunaClient.Windows.Systems
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselDockProfilerText))
                     GUILayout.Label(VesselDockProfilerText, LabelStyle);
+            }
+
+            VesselSwitcher = GUILayout.Toggle(VesselDock, "Vessel switcher", ButtonStyle);
+            if (VesselSwitcher)
+            {
+                SystemsContainer.Get<VesselSwitcherSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselSwitcherSystem>().Enabled, "ON/OFF",
+                    ButtonStyle);
+                if (!string.IsNullOrEmpty(VesselSwitcherProfilerText))
+                    GUILayout.Label(VesselSwitcherProfilerText, LabelStyle);
             }
 
             VesselFlightState = GUILayout.Toggle(VesselFlightState, "Vessel flightstate", ButtonStyle);
