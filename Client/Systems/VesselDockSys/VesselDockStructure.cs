@@ -5,10 +5,10 @@ namespace LunaClient.Systems.VesselDockSys
     public class VesselDockStructure
     {
         public Guid DominantVesselId { get; set; }
-        public Guid MinorVesselId { get; set; }
+        public Guid WeakVesselId { get; set; }
 
         public Vessel DominantVessel { get; set; }
-        public Vessel MinorVessel { get; set; }
+        public Vessel WeakVessel { get; set; }
 
         public VesselDockStructure(Guid vessel1Id, Guid vessel2Id)
         {
@@ -20,14 +20,14 @@ namespace LunaClient.Systems.VesselDockSys
                 DominantVessel = Vessel.GetDominantVessel(vessel1, vessel2);
                 DominantVesselId = DominantVessel.id;
 
-                MinorVesselId = DominantVesselId == vessel1Id ? vessel2Id : vessel1Id;
-                MinorVessel = DominantVesselId == vessel1Id ? vessel2 : vessel1;
+                WeakVesselId = DominantVesselId == vessel1Id ? vessel2Id : vessel1Id;
+                WeakVessel = DominantVesselId == vessel1Id ? vessel2 : vessel1;
             }
         }
 
         public bool StructureIsOk()
         {
-            return DominantVessel != null && MinorVessel != null;
+            return DominantVessel != null && WeakVessel != null;
         }
     }
 }

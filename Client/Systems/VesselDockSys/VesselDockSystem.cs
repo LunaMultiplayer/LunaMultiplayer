@@ -1,6 +1,8 @@
-﻿namespace LunaClient.Systems.VesselDockSys
+﻿using LunaClient.Base;
+
+namespace LunaClient.Systems.VesselDockSys
 {
-    public class VesselDockSystem : Base.System
+    public class VesselDockSystem : MessageSystem<VesselDockSystem, VesselDockMessageSender, VesselDockMessageHandler>
     {
         private VesselDockEvents VesselDockEvents { get; } = new VesselDockEvents();
 

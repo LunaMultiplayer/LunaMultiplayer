@@ -172,7 +172,7 @@ namespace LunaClient.Windows.Systems
                     GUILayout.Label(VesselDockProfilerText, LabelStyle);
             }
 
-            VesselSwitcher = GUILayout.Toggle(VesselDock, "Vessel switcher", ButtonStyle);
+            VesselSwitcher = GUILayout.Toggle(VesselSwitcher, "Vessel switcher", ButtonStyle);
             if (VesselSwitcher)
             {
                 SystemsContainer.Get<VesselSwitcherSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselSwitcherSystem>().Enabled, "ON/OFF",

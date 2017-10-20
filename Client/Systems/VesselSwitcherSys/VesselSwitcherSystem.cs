@@ -40,6 +40,7 @@ namespace LunaClient.Systems.VesselSwitcherSys
         /// </summary>
         public void SwitchToVessel(Guid vesselId)
         {
+            LunaLog.Log($"[LMP]: Switching to vessel {vesselId}");
             VesselToSwitchTo = vesselId;
         }
 
@@ -57,6 +58,10 @@ namespace LunaClient.Systems.VesselSwitcherSys
                 if (VesselToSwitchTo.HasValue)
                 {
                     Client.Singleton.StartCoroutine(SwitchToVessel());
+                }
+                if (!FlightGlobals.ActiveVessel?.loaded ?? false)
+                {
+                    VesselToSwitchTo = FlightGlobals.ActiveVessel?.id;
                 }
             }
             catch (Exception e)

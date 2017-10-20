@@ -3,6 +3,8 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselPositionSys;
+using LunaClient.Utilities;
+using LunaCommon;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Concurrent;
@@ -61,6 +63,43 @@ namespace LunaClient.Systems.VesselProtoSys
         #endregion
 
         #region Public
+
+        /// <summary>
+        /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
+        /// We set it as UNLOADED as perhaps vessel data has changed.
+        /// </summary>
+        public void HandleVesselProtoData(byte[] vesselData, Guid vesselId)
+        {
+            TaskFactory.StartNew(() =>
+            {
+                UniverseSyncCache.QueueToCache(vesselData);
+                var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
+                var configGuid = vesselNode?.GetValue("pid");
+                if (!string.IsNullOrEmpty(configGuid) && vesselId == Common.ConvertConfigStringToGuid(configGuid))
+                {
+                    var vesselProtoUpdate = new VesselProtoUpdate(vesselNode, vesselId);
+                    if (vesselProtoUpdate.ProtoVessel == null)
+                        return;
+
+                    if (!AllPlayerVessels.ContainsKey(vesselId))
+                    {
+                        AllPlayerVessels.TryAdd(vesselId, vesselProtoUpdate);
+
+                    }
+                    else if (NewProtoVesselHasChanges(vesselProtoUpdate.ProtoVessel))
+                    {
+                        //Vessel exists and contain changes or vessel is not loaded so replace it
+                        AllPlayerVessels[vesselId] = vesselProtoUpdate;
+                    }
+                }
+
+                bool NewProtoVesselHasChanges(ProtoVessel protoVessel)
+                {
+                    return AllPlayerVessels[protoVessel.vesselID].ProtoVessel.protoPartSnapshots.Count !=
+                           protoVessel.protoPartSnapshots.Count;
+                }
+            });
+        }
 
         /// <summary>
         /// Removes a vessel from the loading system. If we receive a protovessel msg after this method is called it will be reloaded

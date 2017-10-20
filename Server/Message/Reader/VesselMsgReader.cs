@@ -32,6 +32,9 @@ namespace LunaServer.Message.Reader
                 case VesselMessageType.Proto:
                     HandleVesselProto(client, message);
                     break;
+                case VesselMessageType.Dock:
+                    HandleVesselDock(client, message);
+                    break;
                 case VesselMessageType.Remove:
                     HandleVesselRemove(client, message);
                     break;
@@ -83,6 +86,25 @@ namespace LunaServer.Message.Reader
             FileHandler.WriteToFile(path, msgData.VesselData);
 
             VesselRelaySystem.HandleVesselMessage(client, message);
+        }
+
+        private static void HandleVesselDock(ClientStructure client, VesselBaseMsgData message)
+        {
+            var msgData = (VesselDockMsgData)message;
+
+            if (VesselContext.RemovedVessels.Contains(msgData.WeakVesselId)) return;
+
+            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.DominantVesselId}.txt");
+            if (!File.Exists(path))
+                LunaLog.Debug($"Saving vessel {msgData.DominantVesselId} from {client.PlayerName}");
+            FileHandler.WriteToFile(path, msgData.FinalVesselData);
+
+            //Now remove the weak vessel
+            LunaLog.Debug($"Removing weak docked vessel {msgData.WeakVesselId}");
+            Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.WeakVesselId}.txt"));
+            VesselContext.RemovedVessels.Add(msgData.WeakVesselId);
+
+            MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
         }
 
         private static void HandleVesselsRequest(ClientStructure client, IMessageData messageData)

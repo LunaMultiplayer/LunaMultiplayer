@@ -73,10 +73,13 @@
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
+    <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
+    <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionMessageAltHandler.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionMessageAltSender.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionAltSystem.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionAltUpdate.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselSerializer.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\WindowContainer.cs" />
     <Compile Include="Systems\SystemsContainer.cs" />

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Generic;
 
 namespace LunaCommon.Message.Client
 {
@@ -15,6 +15,7 @@ namespace LunaCommon.Message.Client
             [(ushort)VesselMessageType.ListRequest] = new VesselListRequestMsgData(),
             [(ushort)VesselMessageType.VesselsRequest] = new VesselsRequestMsgData(),
             [(ushort)VesselMessageType.Proto] = new VesselProtoMsgData(),
+            [(ushort)VesselMessageType.Dock] = new VesselDockMsgData(),
             [(ushort)VesselMessageType.Update] = new VesselUpdateMsgData(),
             [(ushort)VesselMessageType.Remove] = new VesselRemoveMsgData(),
             [(ushort)VesselMessageType.Change] = new VesselChangeMsgData(),
