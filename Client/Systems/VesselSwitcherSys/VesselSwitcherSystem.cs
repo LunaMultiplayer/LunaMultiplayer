@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using System;
 using System.Collections;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselSwitcherSys
 {
@@ -80,9 +79,9 @@ namespace LunaClient.Systems.VesselSwitcherSys
         /// </summary>
         private static IEnumerator SwitchToVessel()
         {
-            yield return new WaitForSeconds(0.25f);
             if (VesselToSwitchTo.HasValue)
             {
+                yield return 0;
                 var vesselToSwitchTo = FlightGlobals.FindVessel(VesselToSwitchTo.Value);
                 if (vesselToSwitchTo != null)
                 {
@@ -90,6 +89,7 @@ namespace LunaClient.Systems.VesselSwitcherSys
                     if (FlightGlobals.ActiveVessel?.loaded ?? false)
                         VesselToSwitchTo = null;
                 }
+                yield return 0;
             }
         }
 

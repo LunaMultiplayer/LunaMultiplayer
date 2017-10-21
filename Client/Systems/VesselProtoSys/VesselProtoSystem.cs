@@ -2,7 +2,6 @@
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -45,7 +44,8 @@ namespace LunaClient.Systems.VesselProtoSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckVesselsToLoad));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToLoad));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToReLoad));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval,
                 RoutineExecution.Update, SendAbandonedVesselsToServer));
@@ -81,22 +81,15 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (vesselProtoUpdate.ProtoVessel == null)
                         return;
 
-                    if (!AllPlayerVessels.ContainsKey(vesselId))
+                    if (!AllPlayerVessels.TryGetValue(vesselId, out var existingProtoData))
                     {
                         AllPlayerVessels.TryAdd(vesselId, vesselProtoUpdate);
-
                     }
-                    else if (NewProtoVesselHasChanges(vesselProtoUpdate.ProtoVessel))
+                    else if (VesselCommon.ProtoVesselHasChanges(existingProtoData.ProtoVessel, vesselProtoUpdate.ProtoVessel))
                     {
-                        //Vessel exists and contain changes or vessel is not loaded so replace it
-                        AllPlayerVessels[vesselId] = vesselProtoUpdate;
+                        //Vessel exists and contain changes so replace it
+                        AllPlayerVessels.TryUpdate(vesselId, vesselProtoUpdate, existingProtoData);
                     }
-                }
-
-                bool NewProtoVesselHasChanges(ProtoVessel protoVessel)
-                {
-                    return AllPlayerVessels[protoVessel.vesselID].ProtoVessel.protoPartSnapshots.Count !=
-                           protoVessel.protoPartSnapshots.Count;
                 }
             });
         }
@@ -224,33 +217,6 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
                 {
-                    //Try to remove proto messages to own vessel
-                    if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
-                        AllPlayerVessels.TryRemove(FlightGlobals.ActiveVessel.id, out _);
-
-                    //Reload vessels that exist
-                    var vesselsToReLoad = AllPlayerVessels
-                       .Where(pv => !pv.Value.Loaded && pv.Value.VesselExist)
-                       .ToArray();
-
-                    foreach (var vesselProto in vesselsToReLoad)
-                    {
-                        var vesselLoaded = VesselLoader.ReloadVessel(vesselProto.Value);
-                        if (vesselLoaded)
-                        {
-                            UpdateVesselProtoInDictionary(vesselProto.Value);
-                            if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
-                            {
-                                /*TODO:
-                                This call will not put the vessel in the right position if a long time has elapsed 
-                                between when the update was generated and when it's being applied, if in atmo.
-                                This is because positions are set via ballistic orbits, 
-                                which don't extrapolate properly in atmo. (this is a wild guess and not checked in code)*/
-                                SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPositionOnNextFixedUpdate(vesselProto.Value.VesselId);
-                            }
-                        }
-                    }
-
                     //Load vessels that don't exist and are in our subspace
                     var vesselsToLoad = AllPlayerVessels
                         .Where(v => !v.Value.Loaded && !v.Value.VesselExist &&
@@ -259,12 +225,38 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     foreach (var vesselProto in vesselsToLoad)
                     {
-                        VesselLoader.LoadVessel(vesselProto.Value);
-
-                        if (!SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
+                        if (VesselLoader.LoadVessel(vesselProto.Value.ProtoVessel))
                         {
-                            //Same as long comment from before
-                            SystemsContainer.Get<VesselPositionSystem>().UpdateVesselPositionOnNextFixedUpdate(vesselProto.Value.VesselId);
+                            UpdateVesselProtoInDictionary(vesselProto.Value);
+                        }
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
+            }
+        }
+
+        /// <summary>
+        /// Check vessels that must be reloaded
+        /// </summary>
+        private void CheckVesselsToReLoad()
+        {
+            try
+            {
+                if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
+                {
+                    //Reload vessels that exist
+                    var vesselsToReLoad = AllPlayerVessels
+                        .Where(pv => !pv.Value.Loaded && pv.Value.VesselExist)
+                        .ToArray();
+
+                    foreach (var vesselProto in vesselsToReLoad)
+                    {
+                        if (VesselLoader.ReloadVessel(vesselProto.Value.ProtoVessel))
+                        {
+                            UpdateVesselProtoInDictionary(vesselProto.Value);
                         }
                     }
                 }

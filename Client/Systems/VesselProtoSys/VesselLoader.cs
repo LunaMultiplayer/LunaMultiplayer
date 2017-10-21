@@ -4,6 +4,7 @@ using LunaClient.Systems.Chat;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselPositionAltSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselSwitcherSys;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -45,47 +46,50 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Load a vessel into the game
         /// </summary>
         /// 
-        public void LoadVessel(VesselProtoUpdate vesselProto)
+        public bool LoadVessel(ProtoVessel vesselProto)
         {
             try
             {
-                LoadVesselImpl(vesselProto);
+                return LoadVesselImpl(vesselProto);
             }
             catch (Exception e)
             {
                 LunaLog.LogError($"[LMP]: Error loading vessel: {e}");
             }
+
+            return false;
         }
 
         /// <summary>
         /// Performs the operation of actually loading the vessel into the game.  Does not handle errors.
         /// </summary>
         /// <param name="vesselProto"></param>
-        private static void LoadVesselImpl(VesselProtoUpdate vesselProto)
+        private static bool LoadVesselImpl(ProtoVessel vesselProto)
         {
-            if (ProtoVesselValidationsPassed(vesselProto.ProtoVessel))
+            if (ProtoVesselValidationsPassed(vesselProto))
             {
-                RegisterServerAsteriodIfVesselIsAsteroid(vesselProto.ProtoVessel);
+                RegisterServerAsteriodIfVesselIsAsteroid(vesselProto);
 
-                if (FlightGlobals.FindVessel(vesselProto.VesselId) == null)
+                if (FlightGlobals.FindVessel(vesselProto.vesselID) == null)
                 {
-                    FixProtoVesselFlags(vesselProto.ProtoVessel);
+                    FixProtoVesselFlags(vesselProto);
                     GetLatestProtoVesselPosition(vesselProto);
-                    vesselProto.Loaded = LoadVesselIntoGame(vesselProto.ProtoVessel);
+                    return LoadVesselIntoGame(vesselProto);
                 }
             }
+            return false;
         }
 
-        private static void GetLatestProtoVesselPosition(VesselProtoUpdate vesselProto)
+        private static void GetLatestProtoVesselPosition(ProtoVessel vesselProto)
         {
             if (SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
             {
-                var latLonAlt = SystemsContainer.Get<VesselPositionAltSystem>().GetLatestVesselPosition(vesselProto.VesselId);
+                var latLonAlt = SystemsContainer.Get<VesselPositionAltSystem>().GetLatestVesselPosition(vesselProto.vesselID);
                 if (latLonAlt.Length == 3)
                 {
-                    vesselProto.ProtoVessel.latitude = latLonAlt[0];
-                    vesselProto.ProtoVessel.longitude = latLonAlt[1];
-                    vesselProto.ProtoVessel.altitude = latLonAlt[2];
+                    vesselProto.latitude = latLonAlt[0];
+                    vesselProto.longitude = latLonAlt[1];
+                    vesselProto.altitude = latLonAlt[2];
                 }
             }
         }
@@ -94,25 +98,26 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Reloads an existing vessel into the game. We assume that the vessel exists!
         /// We are sure that the vessel has changed as we handle that on the msg receive which runs in another thread
         /// </summary>
-        public bool ReloadVessel(VesselProtoUpdate vesselProto)
+        public bool ReloadVessel(ProtoVessel vesselProto)
         {
             try
             {
-                //TODO: Handle when it's the active vessel in case we are spectating. If you delete the active vessel, it ends badly.
+                //Are we realoading our current active vessel?
+                var reloadingCurrentVessel = FlightGlobals.ActiveVessel?.id == vesselProto.vesselID;
 
                 //Load the existing target, if any.  We will use this to reset the target to the newly loaded vessel, if the vessel we're reloading is the one that is targeted.
                 var currentTargetId = FlightGlobals.fetch.VesselTarget?.GetVessel()?.id;
 
                 //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
-                SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vesselProto.Vessel);
+                SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vesselProto.vesselID);
                 LoadVesselImpl(vesselProto);
 
                 //Case when the target is the vessel we are changing
-                if (currentTargetId == vesselProto.VesselId)
+                if (currentTargetId == vesselProto.vesselID)
                 {
                     //Fetch the new vessel information for the same vessel ID, as the unload/load creates a new game object, 
                     //and we need to refer to the new one for the target
-                    var newVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.VesselId);
+                    var newVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.vesselID);
 
                     //Record the time immediately before calling SetVesselTarget to remove it's message
                     var currentTime = Time.realtimeSinceStartup;
@@ -120,6 +125,12 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     RemoveSetTargetMessages(currentTime);
                 }
+
+                if (reloadingCurrentVessel)
+                {
+                    SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(vesselProto.vesselID);
+                }
+
                 return true;
             }
             catch (Exception e)

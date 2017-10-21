@@ -289,5 +289,11 @@ namespace LunaClient.Systems
 
             return landingPadDistance < distance;
         }
+
+
+        public static bool ProtoVesselHasChanges(ProtoVessel protoVessel1, ProtoVessel protoVessel2)
+        {
+            return protoVessel1.protoPartSnapshots.Count != protoVessel2.protoPartSnapshots.Count;
+        }
     }
 }

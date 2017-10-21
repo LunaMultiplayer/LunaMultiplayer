@@ -79,15 +79,15 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
             }
 
-            SystemsContainer.Get<VesselProtoSystem>().UnloadVesselFromLoadingSystem(killVessel.id);
-
-            //TODO: Should we put the vessel on rails so that we don't run into bugs destroying the vessel?
-            //killVessel.GoOnRails();
-
             FlightGlobals.fetch.SetVesselTarget(null, true);
             UnloadVesselFromGame(killVessel);
             KillGivenVessel(killVessel);
             UnloadVesselFromScenario(killVessel);
+        }
+
+        public void UnloadVessel(Guid vesselId)
+        {
+            UnloadVessel(FlightGlobals.FindVessel(vesselId));
         }
 
         #endregion

@@ -24,28 +24,21 @@ namespace LunaClient.Systems.VesselDockSys
                 SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(FlightGlobals.ActiveVessel, true);
                 SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(msgData.DominantVesselId);
             }
-            else if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId)
+            if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId)
             {
-                //In case someone docked into us and we dind't detected the event
-                SystemsContainer.Get<VesselProtoSystem>().HandleVesselProtoData(msgData.FinalVesselData, msgData.DominantVesselId);
-
+                //In case someone docked into us and we dind't detected the event set our protovessel as the new definition
+                //So if we send our own protovessel, we send the new definition
                 var newProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData);
-                if (FlightGlobals.ActiveVessel.protoVessel.protoPartSnapshots.Count != newProto.protoPartSnapshots.Count)
+
+                if (VesselCommon.ProtoVesselHasChanges(FlightGlobals.ActiveVessel.protoVessel, newProto))
                 {
-                    //Someone docked to us and we didn't detect the event so we need to update our own vessel
-                    FlightGlobals.ActiveVessel.Unload();
-                    newProto.Load(HighLogic.CurrentGame.flightState);
-                    FlightGlobals.ForceSetActiveVessel(newProto.vesselRef);
-                    //FlightGlobals.ActiveVessel.StartFromBackup(FlightGlobals.ActiveVessel.protoVessel);
-                    //FlightGlobals.ActiveVessel.Load();
+                    SystemsContainer.Get<VesselProtoSystem>().VesselLoader.ReloadVessel(newProto);
                 }
             }
-            else
-            {
-                //Some other 2 players docked so just remove the weak vessel.
-                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(FlightGlobals.FindVessel(msgData.WeakVesselId), true);
-                SystemsContainer.Get<VesselProtoSystem>().HandleVesselProtoData(msgData.FinalVesselData, msgData.DominantVesselId);
-            }
+
+            //Some other 2 players docked so just remove the weak vessel.
+            SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(FlightGlobals.FindVessel(msgData.WeakVesselId), true);
+            SystemsContainer.Get<VesselProtoSystem>().HandleVesselProtoData(msgData.FinalVesselData, msgData.DominantVesselId);
         }
     }
 }
