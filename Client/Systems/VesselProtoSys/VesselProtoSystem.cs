@@ -45,7 +45,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToLoad));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToReLoad));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToReload));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval,
                 RoutineExecution.Update, SendAbandonedVesselsToServer));
@@ -219,7 +219,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     //Load vessels that don't exist and are in our subspace
                     var vesselsToLoad = AllPlayerVessels
-                        .Where(v => !v.Value.Loaded && !v.Value.VesselExist &&
+                        .Where(v => (!v.Value.Loaded || !v.Value.VesselExist) &&
                         (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.Value.VesselId)))
                         .ToArray();
 
@@ -241,7 +241,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Check vessels that must be reloaded
         /// </summary>
-        private void CheckVesselsToReLoad()
+        private void CheckVesselsToReload()
         {
             try
             {
@@ -263,7 +263,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
             catch (Exception e)
             {
-                LunaLog.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
+                LunaLog.LogError($"[LMP]: Error in CheckVesselsToReload {e}");
             }
         }
 

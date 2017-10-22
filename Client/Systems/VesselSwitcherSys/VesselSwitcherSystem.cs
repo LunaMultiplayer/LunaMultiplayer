@@ -81,15 +81,15 @@ namespace LunaClient.Systems.VesselSwitcherSys
         {
             if (VesselToSwitchTo.HasValue)
             {
-                yield return 0;
                 var vesselToSwitchTo = FlightGlobals.FindVessel(VesselToSwitchTo.Value);
                 if (vesselToSwitchTo != null)
                 {
-                    FlightGlobals.ForceSetActiveVessel(FlightGlobals.FindVessel(VesselToSwitchTo.Value));
+                    yield return 0;
+                    FlightGlobals.ForceSetActiveVessel(vesselToSwitchTo);
+                    yield return 0;
                     if (FlightGlobals.ActiveVessel?.loaded ?? false)
                         VesselToSwitchTo = null;
                 }
-                yield return 0;
             }
         }
 

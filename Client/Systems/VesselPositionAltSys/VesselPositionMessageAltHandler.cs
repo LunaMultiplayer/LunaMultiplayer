@@ -23,7 +23,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
             if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselId))
                 return;
 
-            if (!VesselPositionAltSystem.CurrentVesselUpdate.TryGetValue(update.VesselId, out var existingPositionUpdate))
+            if (!VesselPositionAltSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var existingPositionUpdate))
             {
                 VesselPositionAltSystem.CurrentVesselUpdate.TryAdd(vesselId, update);
                 VesselPositionAltSystem.TargetVesselUpdate.TryAdd(vesselId, update);
@@ -35,10 +35,13 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 {
                     update.Body = existingPositionUpdate.Body;
 
-                    if (VesselPositionAltSystem.TargetVesselUpdate.TryGetValue(update.VesselId, out var existingTargetPositionUpdate))
+                    if (VesselPositionAltSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate))
                     {
-                        VesselPositionAltSystem.CurrentVesselUpdate.TryUpdate(vesselId, existingTargetPositionUpdate, existingPositionUpdate);
-                        VesselPositionAltSystem.TargetVesselUpdate.TryUpdate(vesselId, update, existingTargetPositionUpdate);
+                        VesselPositionAltSystem.CurrentVesselUpdate.AddOrUpdate(vesselId, existingTargetPositionUpdate,
+                            (key, existingVal) => existingTargetPositionUpdate);
+
+                        VesselPositionAltSystem.TargetVesselUpdate.AddOrUpdate(vesselId, update,
+                            (key, existingVal) => update);
                     }
                 }
             }
