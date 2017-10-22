@@ -39,6 +39,8 @@ namespace LunaClient.Systems.VesselRemoveSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            VesselsToRemove.Clear();
+            VesselsToUnload.Clear();
             GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselDestroy.Remove(VesselRemoveEvents.OnVesselDestroyed);

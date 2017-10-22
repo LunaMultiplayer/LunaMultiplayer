@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -40,14 +41,16 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private static void HandleVesselProto(VesselProtoMsgData messageData)
         {
-            System.HandleVesselProtoData(messageData.VesselData, messageData.VesselId);
+            if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.VesselId))
+                System.HandleVesselProtoData(messageData.VesselData, messageData.VesselId);
         }
 
         private static void HandleVesselResponse(VesselsReplyMsgData messageData)
         {
             foreach (var vesselDataKv in messageData.VesselsData)
             {
-                System.HandleVesselProtoData(vesselDataKv.Value, new Guid(vesselDataKv.Key));
+                if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselDataKv.Key))
+                    System.HandleVesselProtoData(vesselDataKv.Value, vesselDataKv.Key);
             }
 
             MainSystem.NetworkState = ClientState.VesselsSynced;

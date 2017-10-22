@@ -18,20 +18,24 @@ namespace LunaClient.Systems.VesselDockSys
             var msgData = messageData as VesselDockMsgData;
             if (msgData == null) return;
 
+            LunaLog.Log("[LMP]: Docking message received!");
+
             if (FlightGlobals.ActiveVessel?.id == msgData.WeakVesselId)
             {
-                //In case someone docked into us and we dind't detected the event
+                LunaLog.Log("[LMP]: Docking NOT detected. We DON'T OWN the dominant vessel");
+
                 SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(FlightGlobals.ActiveVessel, true);
                 SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(msgData.DominantVesselId);
             }
             if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId)
             {
-                //In case someone docked into us and we dind't detected the event set our protovessel as the new definition
-                //So if we send our own protovessel, we send the new definition
                 var newProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData);
 
                 if (VesselCommon.ProtoVesselHasChanges(FlightGlobals.ActiveVessel.protoVessel, newProto))
                 {
+                    LunaLog.Log("[LMP]: Docking NOT detected. We OWN the dominant vessel");
+                    //We own the dominant vessel and dind't detected the docking event so we need to reload our OWN vessel
+                    //so if we send our own protovessel later, we send the updated definition
                     SystemsContainer.Get<VesselProtoSystem>().VesselLoader.ReloadVessel(newProto);
                 }
             }

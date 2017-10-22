@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
+using System;
+using System.Collections.Generic;
 
 namespace LunaCommon.Message.Data.Vessel
 {
     public class VesselsReplyMsgData : VesselBaseMsgData
     {
         public override VesselMessageType VesselMessageType => VesselMessageType.VesselsReply;
-        public KeyValuePair<string, byte[]>[] VesselsData { get; set; }
+        public KeyValuePair<Guid, byte[]>[] VesselsData { get; set; }
     }
 }

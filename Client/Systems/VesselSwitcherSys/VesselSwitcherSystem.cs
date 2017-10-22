@@ -12,7 +12,7 @@ namespace LunaClient.Systems.VesselSwitcherSys
     {
         #region Fields & properties
 
-        private static Guid? VesselToSwitchTo { get; set; }
+        private static Vessel VesselToSwitchTo { get; set; }
 
         #endregion
 
@@ -39,8 +39,9 @@ namespace LunaClient.Systems.VesselSwitcherSys
         /// </summary>
         public void SwitchToVessel(Guid vesselId)
         {
-            LunaLog.Log($"[LMP]: Switching to vessel {vesselId}");
-            VesselToSwitchTo = vesselId;
+            VesselToSwitchTo = FlightGlobals.FindVessel(vesselId);
+            if (VesselToSwitchTo != null)
+                LunaLog.Log($"[LMP]: Switching to vessel {vesselId}");
         }
 
         #endregion
@@ -54,13 +55,9 @@ namespace LunaClient.Systems.VesselSwitcherSys
         {
             try
             {
-                if (VesselToSwitchTo.HasValue)
+                if (VesselToSwitchTo != null)
                 {
                     Client.Singleton.StartCoroutine(SwitchToVessel());
-                }
-                if (!FlightGlobals.ActiveVessel?.loaded ?? false)
-                {
-                    VesselToSwitchTo = FlightGlobals.ActiveVessel?.id;
                 }
             }
             catch (Exception e)
@@ -79,17 +76,11 @@ namespace LunaClient.Systems.VesselSwitcherSys
         /// </summary>
         private static IEnumerator SwitchToVessel()
         {
-            if (VesselToSwitchTo.HasValue)
+            if (VesselToSwitchTo != null)
             {
-                var vesselToSwitchTo = FlightGlobals.FindVessel(VesselToSwitchTo.Value);
-                if (vesselToSwitchTo != null)
-                {
-                    yield return 0;
-                    FlightGlobals.ForceSetActiveVessel(vesselToSwitchTo);
-                    yield return 0;
-                    if (FlightGlobals.ActiveVessel?.loaded ?? false)
-                        VesselToSwitchTo = null;
-                }
+                FlightGlobals.ForceSetActiveVessel(VesselToSwitchTo);
+                yield return 0;
+                VesselToSwitchTo = null;
             }
         }
 

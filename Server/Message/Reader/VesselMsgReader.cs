@@ -92,6 +92,8 @@ namespace LunaServer.Message.Reader
         {
             var msgData = (VesselDockMsgData)message;
 
+            LunaLog.Debug($"Docking message received! Dominant vessel: {msgData.DominantVesselId}");
+
             if (VesselContext.RemovedVessels.Contains(msgData.WeakVesselId)) return;
 
             var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.DominantVesselId}.txt");
@@ -113,7 +115,7 @@ namespace LunaServer.Message.Reader
             var cachedVesselCount = 0;
             var clientRequested = (messageData as VesselsRequestMsgData)?.RequestList ?? new string[0];
 
-            var vesselList = new List<KeyValuePair<string, byte[]>>();
+            var vesselList = new List<KeyValuePair<Guid, byte[]>>();
 
             foreach (var file in FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels")))
             {
@@ -123,7 +125,7 @@ namespace LunaServer.Message.Reader
                 if (clientRequested.Contains(vesselObject))
                 {
                     sendVesselCount++;
-                    vesselList.Add(new KeyValuePair<string, byte[]>(vesselId, vesselData));
+                    vesselList.Add(new KeyValuePair<Guid, byte[]>(new Guid(vesselId), vesselData));
                 }
                 else
                 {

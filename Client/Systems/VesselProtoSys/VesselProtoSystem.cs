@@ -2,6 +2,7 @@
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -32,7 +33,8 @@ namespace LunaClient.Systems.VesselProtoSys
             HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating
             && FlightGlobals.ActiveVessel.state != Vessel.State.DEAD;
 
-        public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null ||
+        public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
+            HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null ||
             HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
         #endregion
@@ -74,8 +76,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 UniverseSyncCache.QueueToCache(vesselData);
                 var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
-                var configGuid = vesselNode?.GetValue("pid");
-                if (!string.IsNullOrEmpty(configGuid) && vesselId == Common.ConvertConfigStringToGuid(configGuid))
+                if (vesselNode != null && vesselId == Common.ConvertConfigStringToGuid(vesselNode.GetValue("pid")))
                 {
                     var vesselProtoUpdate = new VesselProtoUpdate(vesselNode, vesselId);
                     if (vesselProtoUpdate.ProtoVessel == null)
@@ -219,14 +220,20 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     //Load vessels that don't exist and are in our subspace
                     var vesselsToLoad = AllPlayerVessels
-                        .Where(v => (!v.Value.Loaded || !v.Value.VesselExist) &&
+                        .Where(v => !v.Value.Loaded && !v.Value.VesselExist &&
                         (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.Value.VesselId)))
                         .ToArray();
 
                     foreach (var vesselProto in vesselsToLoad)
                     {
+                        if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselProto.Key))
+                            continue;
+
+                        LunaLog.Log($"[LMP]: Loading vessel {vesselProto.Key}");
                         if (VesselLoader.LoadVessel(vesselProto.Value.ProtoVessel))
                         {
+                            vesselProto.Value.Loaded = true;
+                            LunaLog.Log($"[LMP]: Vessel {vesselProto.Key} loaded");
                             UpdateVesselProtoInDictionary(vesselProto.Value);
                         }
                     }
@@ -254,8 +261,14 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     foreach (var vesselProto in vesselsToReLoad)
                     {
+                        if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselProto.Key))
+                            continue;
+
+                        LunaLog.Log($"[LMP]: Reloading vessel {vesselProto.Key}");
                         if (VesselLoader.ReloadVessel(vesselProto.Value.ProtoVessel))
                         {
+                            vesselProto.Value.Loaded = true;
+                            LunaLog.Log($"[LMP]: Vessel {vesselProto.Key} reloaded");
                             UpdateVesselProtoInDictionary(vesselProto.Value);
                         }
                     }
