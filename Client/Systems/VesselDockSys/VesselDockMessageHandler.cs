@@ -27,7 +27,7 @@ namespace LunaClient.Systems.VesselDockSys
                 SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(FlightGlobals.ActiveVessel, true);
                 SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(msgData.DominantVesselId);
             }
-            if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId)
+            if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId && !VesselCommon.IsSpectating)
             {
                 var newProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData);
 
