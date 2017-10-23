@@ -22,7 +22,7 @@ namespace MasterServer
         private static long LastServerExpireCheck { get; set; }
         public static ushort Port { get; set; }
         public static bool RunServer { get; set; }
-        private static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
+        public static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
         private static MasterServerForm Form { get; set; }
         private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory(true);
 

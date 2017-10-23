@@ -11,6 +11,7 @@ namespace MasterServer
         public MasterServerForm()
         {
             InitializeComponent();
+
         }
 
         public void WriteLine(string line)
@@ -76,11 +77,12 @@ namespace MasterServer
                 Invoke(new Action<IEnumerable<Server>>(UpdateServerList), servers);
                 return;
             }
-            serverList.Items.Clear();
+            serversGridView.Rows.Clear();
             foreach (var server in servers)
             {
                 var srv = $"{server.ExternalEndpoint}___{server.Info.ServerName}___{server.Info.Description}__{server.Info.Version}";
-                serverList.Items.Add(srv);
+                serversGridView.Rows.Add(server.ExternalEndpoint, server.Info.Version, server.Info.ServerName, server.Info.Description);
+                //serverList.Items.Add(srv);
             }
         }
     }

@@ -32,16 +32,23 @@ namespace MasterServer
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(MasterServerForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MasterServerForm));
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.tbStatus = new System.Windows.Forms.TextBox();
-            this.serverList = new System.Windows.Forms.ListBox();
             this.tbPort = new System.Windows.Forms.TextBox();
             this.lblPort = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
             this.lblServers = new System.Windows.Forms.Label();
             this.btnStart = new System.Windows.Forms.Button();
             this.lblInfo = new System.Windows.Forms.Label();
+            this.serversGridView = new System.Windows.Forms.DataGridView();
+            this.serverBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.Address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Version = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ServerName = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.serversGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.serverBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // notifyIcon
@@ -62,16 +69,6 @@ namespace MasterServer
             this.tbStatus.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.tbStatus.Size = new System.Drawing.Size(996, 435);
             this.tbStatus.TabIndex = 0;
-            // 
-            // serverList
-            // 
-            this.serverList.FormattingEnabled = true;
-            this.serverList.ItemHeight = 16;
-            this.serverList.Location = new System.Drawing.Point(12, 542);
-            this.serverList.Name = "serverList";
-            this.serverList.ScrollAlwaysVisible = true;
-            this.serverList.Size = new System.Drawing.Size(999, 132);
-            this.serverList.TabIndex = 1;
             // 
             // tbPort
             // 
@@ -128,18 +125,63 @@ namespace MasterServer
             this.lblInfo.TabIndex = 7;
             this.lblInfo.Text = resources.GetString("lblInfo.Text");
             // 
+            // serversGridView
+            // 
+            this.serversGridView.AllowUserToAddRows = false;
+            this.serversGridView.AllowUserToDeleteRows = false;
+            this.serversGridView.AllowUserToResizeRows = false;
+            this.serversGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.serversGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Address,
+            this.Version,
+            this.ServerName,
+            this.Description});
+            this.serversGridView.Location = new System.Drawing.Point(15, 543);
+            this.serversGridView.Name = "serversGridView";
+            this.serversGridView.RowTemplate.Height = 24;
+            this.serversGridView.Size = new System.Drawing.Size(996, 223);
+            this.serversGridView.TabIndex = 8;
+            // 
+            // Address
+            // 
+            this.Address.HeaderText = "Address";
+            this.Address.Name = "Address";
+            this.Address.ReadOnly = true;
+            this.Address.Width = 120;
+            // 
+            // Version
+            // 
+            this.Version.HeaderText = "Version";
+            this.Version.Name = "Version";
+            this.Version.ReadOnly = true;
+            this.Version.Width = 50;
+            // 
+            // ServerName
+            // 
+            this.ServerName.HeaderText = "Name";
+            this.ServerName.Name = "ServerName";
+            this.ServerName.ReadOnly = true;
+            this.ServerName.Width = 200;
+            // 
+            // Description
+            // 
+            this.Description.HeaderText = "Description";
+            this.Description.Name = "Description";
+            this.Description.ReadOnly = true;
+            this.Description.Width = 330;
+            // 
             // MasterServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1023, 686);
+            this.ClientSize = new System.Drawing.Size(1023, 792);
+            this.Controls.Add(this.serversGridView);
             this.Controls.Add(this.lblInfo);
             this.Controls.Add(this.btnStart);
             this.Controls.Add(this.lblServers);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.lblPort);
             this.Controls.Add(this.tbPort);
-            this.Controls.Add(this.serverList);
             this.Controls.Add(this.tbStatus);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -148,6 +190,8 @@ namespace MasterServer
             this.Text = "Master server";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MasterServerForm_FormClosed);
             this.Resize += new System.EventHandler(this.MasterServerForm_Resize);
+            ((System.ComponentModel.ISupportInitialize)(this.serversGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.serverBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -157,13 +201,18 @@ namespace MasterServer
 
         private NotifyIcon notifyIcon;
         private TextBox tbStatus;
-        private ListBox serverList;
         private TextBox tbPort;
         private Label lblPort;
         private Label lblStatus;
         private Label lblServers;
         private Button btnStart;
         private Label lblInfo;
+        private DataGridView serversGridView;
+        private BindingSource serverBindingSource;
+        private DataGridViewTextBoxColumn Address;
+        private DataGridViewTextBoxColumn Version;
+        private DataGridViewTextBoxColumn ServerName;
+        private DataGridViewTextBoxColumn Description;
     }
 }
 

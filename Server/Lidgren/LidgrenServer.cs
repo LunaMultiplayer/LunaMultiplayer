@@ -12,6 +12,7 @@ using LunaServer.Settings;
 using LunaServer.System;
 using LunaServer.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
@@ -21,7 +22,7 @@ namespace LunaServer.Lidgren
 {
     public class LidgrenServer
     {
-        private static IPEndPoint[] MasterServerEndpoints { get; set; }
+        private static List<IPEndPoint> MasterServerEndpoints { get; } = new List<IPEndPoint>();
         private static NetServer Server { get; set; }
         public static MessageReceiver ClientMessageReceiver { get; set; } = new MessageReceiver();
 
@@ -43,7 +44,7 @@ namespace LunaServer.Lidgren
             ServerContext.ServerStarting = false;
         }
 
-        private bool PortIsInUse(int port)
+        private static bool PortIsInUse(int port)
         {
             var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
             var udpConnInfoArray = ipGlobalProperties.GetActiveUdpListeners();
@@ -155,10 +156,13 @@ namespace LunaServer.Lidgren
             var adr = NetUtility.GetMyAddress(out var _);
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
 
-            if (MasterServerEndpoints == null || !MasterServerEndpoints.Any())
-                MasterServerEndpoints = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
-                    .Select(Common.CreateEndpointFromString)
-                    .ToArray();
+            if (!MasterServerEndpoints.Any())
+                MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
+                    .Select(Common.CreateEndpointFromString));
+
+#if DEBUG
+            MasterServerEndpoints.Add(new IPEndPoint(adr, 6005));
+#endif
 
             LunaLog.Normal("Registering with master servers...");
             while (ServerContext.ServerRunning)
