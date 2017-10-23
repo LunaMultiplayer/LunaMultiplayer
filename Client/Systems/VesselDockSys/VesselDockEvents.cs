@@ -104,11 +104,5 @@ namespace LunaClient.Systems.VesselDockSys
                 SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVessel, true);
             }
         }
-
-        //private static IEnumerator KillVesselsAfter1Sec(Vessel minorVessel)
-        //{
-        //    yield return new WaitForSeconds(1);
-        //    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(minorVessel, true);
-        //}
     }
 }

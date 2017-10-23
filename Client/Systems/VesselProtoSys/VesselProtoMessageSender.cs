@@ -7,6 +7,7 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Generic;
 
+
 namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselProtoMessageSender : SubSystem<VesselProtoSystem>, IMessageSender
@@ -20,10 +21,17 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (vessel == null) return;
 
-            //Doing a backup takes a lot of time...
-            //TaskFactory.StartNew(() => vessel.BackupVessel()).ContinueWith(prev => SendVesselMessage(prev.Result));
-            SendVesselMessage(vessel.protoVessel);
+            //Doing a Vessel.Backup takes a lot of time... So we use a handler that accepts multithreading
+
+            var creator = new VesselProtoBackup();
+            creator.PrepareBackup(vessel.parts);
+            TaskFactory.StartNew(() => creator.BackupVessel(vessel)).ContinueWith(prev => SendVesselMessage(prev.Result));
+
+            //Do not call it in this way as therefore we are sending a NOT UPDATED protovessel!
+            //SendVesselMessage(vessel.protoVessel);
         }
+
+
 
         public void SendVesselMessage(ProtoVessel protoVessel)
         {

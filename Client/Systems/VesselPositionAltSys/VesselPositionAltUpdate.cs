@@ -191,12 +191,17 @@ namespace LunaClient.Systems.VesselPositionAltSys
             }
             catch
             {
-                
+
             }
         }
 
         private void ApplyInterpolations(float lerpPercentage)
         {
+            var lerpedOrbit = Lerp(Orbit, Target.Orbit, Body, LerpPercentage);
+            CopyOrbit(lerpedOrbit, Vessel.orbitDriver.orbit);
+            Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
+            Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
+
             if (!Vessel.loaded)
             {
                 Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
@@ -239,15 +244,42 @@ namespace LunaClient.Systems.VesselPositionAltSys
             return from * (1 - t) + to * t;
         }
 
-        private void UpdateProtoVesselPosition()
+        private static Orbit Lerp(Orbit from, Orbit to, float t)
         {
-            //Update the protovessel, so if the vessel gets saved out, it's at the right spot
-            //Vessel.protoVessel.latitude = LatLonAlt[0];
-            //Vessel.protoVessel.longitude = LatLonAlt[1];
-            //Vessel.protoVessel.altitude = LatLonAlt[2];
-            //Vessel.protoVessel.position = Vessel.vesselTransform.position;
-            //Vessel.precalc.worldSurfacePos = Position;
+            return new Orbit()
+            {
+                inclination = from.inclination * (1 - t) + to.inclination * t,
+                eccentricity = from.eccentricity * (1 - t) + to.eccentricity * t,
+                semiMajorAxis = from.semiMajorAxis * (1 - t) + to.semiMajorAxis * t,
+                LAN = from.LAN * (1 - t) + to.LAN * t,
+                argumentOfPeriapsis = from.argumentOfPeriapsis * (1 - t) + to.argumentOfPeriapsis * t,
+                meanAnomalyAtEpoch = from.meanAnomalyAtEpoch * (1 - t) + to.meanAnomalyAtEpoch * t,
+                epoch = from.epoch * (1 - t) + to.epoch * t,
+            };
         }
+
+        private static Orbit Lerp(double[] from, double[] to, CelestialBody body, float t)
+        {
+            var fromObt = new Orbit(from[0], from[1], from[2], from[3], from[4], from[5], from[6], body);
+            var toObt = new Orbit(to[0], to[1], to[2], to[3], to[4], to[5], to[6], body);
+
+            return Lerp(fromObt, toObt, t);
+        }
+
+        private static void CopyOrbit(Orbit sourceOrbit, Orbit destinationOrbit)
+        {
+            destinationOrbit.inclination = sourceOrbit.inclination;
+            destinationOrbit.eccentricity = sourceOrbit.eccentricity;
+            destinationOrbit.semiMajorAxis = sourceOrbit.semiMajorAxis;
+            destinationOrbit.LAN = sourceOrbit.LAN;
+            destinationOrbit.argumentOfPeriapsis = sourceOrbit.argumentOfPeriapsis;
+            destinationOrbit.meanAnomalyAtEpoch = sourceOrbit.meanAnomalyAtEpoch;
+            destinationOrbit.epoch = sourceOrbit.epoch;
+            destinationOrbit.referenceBody = sourceOrbit.referenceBody;
+            destinationOrbit.Init();
+            destinationOrbit.UpdateFromUT(Planetarium.GetUniversalTime());
+        }
+
 
         #endregion
 
