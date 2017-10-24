@@ -35,6 +35,7 @@ namespace LunaCommon.Message
             MessageDictionary.Add((uint)ServerMessageType.Admin, new AdminSrvMsg());
             MessageDictionary.Add((uint)ServerMessageType.Lock, new LockSrvMsg());
             MessageDictionary.Add((uint)ServerMessageType.Mod, new ModSrvMsg());
+            MessageDictionary.Add((uint)ServerMessageType.Groups, new GroupSrvMsg());
         }
     }
 }

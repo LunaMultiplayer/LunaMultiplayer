@@ -12,8 +12,8 @@ namespace LunaCommon.Message.Server
     {
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [(ushort)GroupMessageType.ListRequest] = new GroupListRequestMsgData(),
-            [(ushort)GroupMessageType.UpdateRequest] = new GroupUpdateRequestMsgData(),
+            [(ushort)GroupMessageType.ListResponse] = new GroupListResponseMsgData(),
+            [(ushort)GroupMessageType.UpdateResponse] = new GroupUpdateResponseMsgData(),
             [(ushort)GroupMessageType.Accept] = new GroupAcceptMsgData(),
             [(ushort)GroupMessageType.Add] = new GroupAddMsgData(),
             [(ushort)GroupMessageType.Invite] = new GroupInviteMsgData(),

@@ -74,8 +74,6 @@ namespace LunaServer.Server
                 return;
             }
 
-            LunaLog.Debug(message.MessageType.ToString());
-
             //Handle the message
             HandlerDictionary[message.MessageType].HandleMessage(client, message.Data);
         }
