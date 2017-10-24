@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace LunaCommon.Groups
 {
     public class Group
     {
-        HashSet<string> Members { get; } = new HashSet<string>();
-        public string Owner { get; set; } = null;
-        public string Name { get; set; } = null;
+        private HashSet<string> Members { get; } = new HashSet<string>();
+        public string Owner { get; set; }
+        public string Name { get; set; }
 
         public Group(string name, string owner)
         {
             Members.Add(owner);
-            this.Owner = owner;
-            this.Name = name;
+            Owner = owner;
+            Name = name;
         }
 
         public void AddMember(string name)

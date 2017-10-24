@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
+using LunaCommon.Message.Client;
 using LunaCommon.Message.Interface;
-using LunaClient.Base;
 
 namespace LunaClient.Systems.Groups
 {
-    class GroupMessageSender : SubSystem<GroupSystem>, IMessageSender
+    public class GroupMessageSender : SubSystem<GroupSystem>, IMessageSender
     {
         public void SendMessage(IMessageData msg)
         {
-            throw new NotImplementedException();
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<GroupCliMsg>(msg)));
         }
     }
 }

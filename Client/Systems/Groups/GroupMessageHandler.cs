@@ -1,17 +1,15 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaCommon.Message.Interface;
-using System.Collections.Concurrent;
-using LunaCommon.Message.Types;
-using LunaCommon.Message.Data.Groups;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Network;
-using LunaCommon.Message.Client;
 using LunaCommon.Enums;
+using LunaCommon.Message.Data.Groups;
+using LunaCommon.Message.Interface;
+using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Groups
 {
-    class GroupMessageHandler : SubSystem<GroupSystem>, IMessageHandler
+    public class GroupMessageHandler : SubSystem<GroupSystem>, IMessageHandler
     {
         public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
 
@@ -65,7 +63,7 @@ namespace LunaClient.Systems.Groups
                         }
                         else
                         {
-                            for(int i = 0; i < data.Groups.Length; i++)
+                            for(var i = 0; i < data.Groups.Length; i++)
                             {
                                 if (!System.GroupExists(data.Groups[i]))
                                 {
@@ -82,9 +80,9 @@ namespace LunaClient.Systems.Groups
                             }
                             System.NumGroups = data.Groups.Length;
                             System.NumGroupsSynced = 0;
-                            foreach(string groupName in data.Groups)
+                            foreach(var groupName in data.Groups)
                             {
-                                NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<GroupCliMsg>(new GroupUpdateRequestMsgData { GroupName = groupName }));
+                                System.MessageSender.SendMessage(new GroupUpdateRequestMsgData { GroupName = groupName });
                             }
                         }
                     }

@@ -76,7 +76,7 @@ namespace LunaServer.Message.Reader
                     break;
                 case GroupMessageType.ListRequest:
                     {
-                        KeyValuePair<string[], string[]> groupsAndOwners = GroupSystem.GroupsAndOwners();
+                        var groupsAndOwners = GroupSystem.GroupsAndOwners();
                         var newMessage = new GroupListResponseMsgData
                         {
                             Groups = groupsAndOwners.Key,
@@ -88,9 +88,7 @@ namespace LunaServer.Message.Reader
                 case GroupMessageType.UpdateRequest:
                     {
                         var info = (GroupUpdateRequestMsgData)data;
-
-                        Group g = GroupSystem.GetGroup(info.GroupName);
-
+                        var g = GroupSystem.GetGroup(info.GroupName);
                         var newMessage = new GroupUpdateResponseMsgData
                         {
                             Owner = g.Owner,
