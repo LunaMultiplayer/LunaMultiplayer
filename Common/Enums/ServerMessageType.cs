@@ -18,6 +18,7 @@
         Lock = 14,
         Mod = 15,
         Admin = 16,
-        PlayerConnection = 17
+        PlayerConnection = 17,
+        Groups = 18
     }
 }

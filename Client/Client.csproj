@@ -73,6 +73,9 @@
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
     <Compile Include="Network\Icmp.cs" />
+    <Compile Include="Systems\Groups\GroupMessageHandler.cs" />
+    <Compile Include="Systems\Groups\GroupMessageSender.cs" />
+    <Compile Include="Systems\Groups\GroupSystem.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />

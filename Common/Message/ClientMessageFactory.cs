@@ -34,6 +34,7 @@ namespace LunaCommon.Message
             MessageDictionary.Add((uint)ClientMessageType.Lock, new LockCliMsg());
             MessageDictionary.Add((uint)ClientMessageType.Mod, new ModCliMsg());
             MessageDictionary.Add((uint)ClientMessageType.Admin, new AdminCliMsg());
+            MessageDictionary.Add((uint)ClientMessageType.Groups, new GroupCliMsg());
         }
     }
 }

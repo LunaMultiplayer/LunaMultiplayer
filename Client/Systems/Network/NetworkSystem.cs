@@ -192,6 +192,13 @@ namespace LunaClient.Systems.Network
                     SystemsContainer.Get<VesselDockSystem>().Enabled = true;
                     SystemsContainer.Get<VesselSwitcherSystem>().Enabled = true;
                     SystemsContainer.Get<VesselRangeSystem>().Enabled = true;
+                    NetworkSimpleMessageSender.SendGroupListRequest();
+                    MainSystem.NetworkState = ClientState.SyncingGroups;
+                    break;
+                case ClientState.SyncingGroups:
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing groups";
+                    break;
+                case ClientState.GroupsSynced:
                     NetworkSimpleMessageSender.SendVesselListRequest();
                     MainSystem.NetworkState = ClientState.SyncingVessels;
                     break;

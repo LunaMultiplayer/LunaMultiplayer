@@ -20,6 +20,7 @@ namespace LunaServer.Server
         private static readonly Dictionary<ClientMessageType, ReaderBase> HandlerDictionary = new Dictionary
             <ClientMessageType, ReaderBase>
         {
+            [ClientMessageType.Groups] = new GroupMsgReader(),
             [ClientMessageType.Admin] = new AdminMsgReader(),
             [ClientMessageType.Handshake] = new HandshakeMsgReader(),
             [ClientMessageType.Chat] = new ChatMsgReader(),
@@ -72,6 +73,8 @@ namespace LunaServer.Server
                 MessageQueuer.SendConnectionEnd(client, $"You must authenticate before sending a {message.MessageType} message");
                 return;
             }
+
+            LunaLog.Debug(message.MessageType.ToString());
 
             //Handle the message
             HandlerDictionary[message.MessageType].HandleMessage(client, message.Data);
