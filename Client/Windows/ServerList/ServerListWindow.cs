@@ -1,16 +1,22 @@
 ﻿using LunaClient.Base;
+using LunaClient.Network;
 using LunaClient.Utilities;
+using LunaCommon;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow : Window<ServerListWindow>
     {
+        public override bool Display { get; set; } = true;
+        public List<ServerInfo> DisplayedServers { get; set; } = NetworkServerList.Servers;
         protected GUIStyle BigLabelStyle { get; set; }
-        protected Vector2 ScrollPosition { get; set; }
+        protected Vector2 VerticalScrollPosition { get; set; }
+        protected Vector2 HorizontalScrollPosition { get; set; }
 
-        protected const float WindowHeight = 700;
-        protected const float WindowWidth = 700;
+        protected float WindowHeight = Screen.height * 0.95f;
+        protected float WindowWidth = Screen.width * 0.95f;
 
         public override void SetStyles()
         {
@@ -20,8 +26,7 @@ namespace LunaClient.Windows.ServerList
                 normal = {textColor = Color.red}
             };
 
-            WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth,
-                WindowHeight);
+            WindowRect = new Rect(Screen.width * 0.025f, Screen.height* 0.025f, WindowWidth,WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
             WindowStyle = new GUIStyle(GUI.skin.window);

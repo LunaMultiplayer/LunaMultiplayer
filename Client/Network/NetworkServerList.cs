@@ -146,10 +146,11 @@ namespace LunaClient.Network
             {
                 var icmp = new Icmp.Icmp(ip);
                 var response = icmp.Ping();
-                return response.Equals(TimeSpan.MaxValue) ? int.MaxValue : (int)response.TotalMilliseconds;
+                return response.Equals(TimeSpan.MaxValue) ? 9999 :
+                    (int)Math.Truncate(response.TotalMilliseconds);
             }
 
-            return int.MaxValue;
+            return 9999;
         }
     }
 }
