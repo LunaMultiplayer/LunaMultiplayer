@@ -67,7 +67,10 @@ namespace LunaClient.Systems.Groups
                         {
                             for(int i = 0; i < data.Groups.Length; i++)
                             {
-                                System.RegisterGroup(data.Groups[i], data.Owners[i]);
+                                if (!System.GroupExists(data.Groups[i]))
+                                {
+                                    System.RegisterGroup(data.Groups[i], data.Owners[i]);
+                                }
                             }
                         }
 
