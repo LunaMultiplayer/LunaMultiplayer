@@ -144,7 +144,7 @@ namespace LunaClient.Network
         {
             if (IPAddress.TryParse(host, out var ip))
             {
-                var icmp = new Icmp(ip);
+                var icmp = new Icmp.Icmp(ip);
                 var response = icmp.Ping();
                 return response.Equals(TimeSpan.MaxValue) ? int.MaxValue : (int)response.TotalMilliseconds;
             }
