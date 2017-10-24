@@ -121,11 +121,15 @@ namespace MasterServer
                     break;
                 case MasterServerMessageSubType.RequestServers:
                     var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
+#if DEBUG
                     Form.WriteLine($"Received LIST REQUEST from: {netMsg.SenderEndPoint} version: {version}");
+#endif
                     SendServerLists(netMsg, peer, version);
                     break;
                 case MasterServerMessageSubType.Introduction:
+#if DEBUG
                     Form.WriteLine($"Received INTRODUCTION request from: {netMsg.SenderEndPoint}");
+#endif
                     var msgData = (MsIntroductionMsgData)message.Data;
                     Server server;
                     if (ServerDictionary.TryGetValue(msgData.Id, out server))
