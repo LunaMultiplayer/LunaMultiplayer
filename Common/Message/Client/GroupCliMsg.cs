@@ -23,7 +23,7 @@ namespace LunaCommon.Message.Client
 
         public override ClientMessageType MessageType => ClientMessageType.Groups;
 
-        protected override int DefaultChannel => 18;
+        protected override int DefaultChannel => 17;
 
         public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }
