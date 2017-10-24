@@ -31,12 +31,14 @@
         LocksSynced = 24,
         SyncingAdmins = 25,
         AdminsSynced = 26,
-        SyncingVessels = 27,
-        VesselsSynced = 28,
-        TimeLocking = 29,
-        TimeLocked = 30,
+        SyncingGroups = 27,
+        GroupsSynced = 28,
+        SyncingVessels = 29,
+        VesselsSynced = 30,
+        TimeLocking = 31,
+        TimeLocked = 32,
 
-        Starting = 31,
-        Running = 32
+        Starting = 33,
+        Running = 34
     }
 }

@@ -5,6 +5,7 @@ using LunaCommon.Message.Data.Admin;
 using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Data.Color;
 using LunaCommon.Message.Data.CraftLibrary;
+using LunaCommon.Message.Data.Groups;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Data.Motd;
@@ -76,6 +77,11 @@ namespace LunaClient.Network
         public static void SendAdminsRequest()
         {
             SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<AdminCliMsg>(new AdminListRequestMsgData())));
+        }
+
+        public static void SendGroupListRequest()
+        {
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<GroupCliMsg>(new GroupListRequestMsgData())));
         }
     }
 }
