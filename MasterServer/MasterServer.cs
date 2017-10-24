@@ -154,6 +154,7 @@ namespace MasterServer
             var msgData = new MsReplyServersMsgData
             {
                 Id = values.Select(s => s.Info.Id).ToArray(),
+                Ip = values.Select(s => s.Info.Ip).ToArray(),
                 Cheats = values.Select(s => s.Info.Cheats).ToArray(),
                 Description = values.Select(s => s.Info.Description).ToArray(),
                 DropControlOnExit = values.Select(s => s.Info.DropControlOnExit).ToArray(),

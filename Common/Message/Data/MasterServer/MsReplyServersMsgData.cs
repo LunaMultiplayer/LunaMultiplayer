@@ -7,6 +7,7 @@ namespace LunaCommon.Message.Data.MasterServer
         public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.ReplyServers;
 
         public long[] Id { get; set; }
+        public string[] Ip { get; set; }
         public string[] InternalEndpoint { get; set; }
         public string[] ExternalEndpoint { get; set; }
         public bool[] Cheats { get; set; }

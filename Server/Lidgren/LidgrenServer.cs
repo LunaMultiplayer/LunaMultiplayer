@@ -160,10 +160,6 @@ namespace LunaServer.Lidgren
                 MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
                     .Select(Common.CreateEndpointFromString));
 
-#if DEBUG
-            MasterServerEndpoints.Add(new IPEndPoint(adr, 6005));
-#endif
-
             LunaLog.Normal("Registering with master servers...");
             while (ServerContext.ServerRunning)
             {

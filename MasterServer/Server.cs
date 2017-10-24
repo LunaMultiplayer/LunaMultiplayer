@@ -1,7 +1,7 @@
-﻿using System;
-using System.Net;
-using LunaCommon;
+﻿using LunaCommon;
 using LunaCommon.Message.Data.MasterServer;
+using System;
+using System.Net;
 
 namespace MasterServer
 {
@@ -20,6 +20,7 @@ namespace MasterServer
             Info = new ServerInfo
             {
                 Id = msg.Id,
+                Ip = ExternalEndpoint.Address.ToString(),
                 Cheats = msg.Cheats,
                 ShowVesselsInThePast = msg.ShowVesselsInThePast,
                 Description = msg.Description,

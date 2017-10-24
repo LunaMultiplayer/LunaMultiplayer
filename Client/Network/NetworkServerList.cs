@@ -62,6 +62,8 @@ namespace LunaClient.Network
                             Servers.Add(new ServerInfo
                             {
                                 Id = data.Id[i],
+                                Ip = data.Ip[i],
+                                Ping = Ping(data.Ip[i]),
                                 Description = data.Description[i],
                                 Cheats = data.Cheats[i],
                                 ServerName = data.ServerName[i],
@@ -136,6 +138,18 @@ namespace LunaClient.Network
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[Random.Next(s.Length)]).ToArray());
+        }
+
+        private static int Ping(string host)
+        {
+            if (IPAddress.TryParse(host, out var ip))
+            {
+                var icmp = new Icmp(ip);
+                var response = icmp.Ping();
+                return response.Equals(TimeSpan.MaxValue) ? int.MaxValue : (int)response.TotalMilliseconds;
+            }
+
+            return int.MaxValue;
         }
     }
 }

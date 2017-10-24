@@ -3,6 +3,8 @@
     public class ServerInfo
     {
         public long Id { get; set; }
+        public string Ip { get; set; }
+        public int Ping { get; set; }
         public bool Cheats { get; set; }
         public int GameMode { get; set; }
         public int MaxPlayers { get; set; }
