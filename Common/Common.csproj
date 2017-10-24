@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Groups\Group.cs" />
     <Compile Include="Locks\LockDefinition.cs" />
     <Compile Include="Locks\LockQuery.cs" />
     <Compile Include="Locks\LockQueryAsteroid.cs" />
@@ -61,6 +62,17 @@
     <Compile Include="Locks\LockStore.cs" />
     <Compile Include="Locks\LockType.cs" />
     <Compile Include="MasterServerRetriever.cs" />
+    <Compile Include="Message\Client\GroupCliMsg.cs" />
+    <Compile Include="Message\Data\Groups\GroupAcceptMsgData.cs" />
+    <Compile Include="Message\Data\Groups\GroupAddMsgData.cs" />
+    <Compile Include="Message\Data\Groups\GroupBaseMsgData.cs" />
+    <Compile Include="Message\Data\Groups\GroupInviteMsgData.cs" />
+    <Compile Include="Message\Data\Groups\GroupKickMsgData.cs" />
+    <Compile Include="Message\Data\Groups\GroupListRequestMsgData.cs" />
+    <Compile Include="Message\Data\Groups\GroupListResponseMsgData.cs" />
+    <Compile Include="Message\Data\Groups\GroupRemoveMsgData.cs" />
+    <Compile Include="Message\Data\Groups\GroupUpdateRequestMsgData.cs" />
+    <Compile Include="Message\Data\Groups\GroupUpdateResponseMsgData.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalBaseMsgData.cs" />
     <Compile Include="Message\Data\MasterServer\MsBaseMsgData.cs" />
     <Compile Include="Message\Data\MasterServer\MsIntroductionMsgData.cs" />
@@ -79,12 +91,14 @@
     <Compile Include="Message\MasterServerMessageFactory.cs" />
     <Compile Include="Message\MasterServer\Base\MstSrvMsgBase.cs" />
     <Compile Include="Message\MasterServer\MainMstSrvMsg.cs" />
+    <Compile Include="Message\Server\GroupSrvMsg.cs" />
     <Compile Include="Message\Types\AdminMessageType.cs" />
     <Compile Include="Message\Types\ChatMessageType.cs" />
     <Compile Include="Enums\ClientState.cs" />
     <Compile Include="Enums\ClientMessageType.cs" />
     <Compile Include="Enums\ConnectionStatus.cs" />
     <Compile Include="Enums\MasterServerMessageType.cs" />
+    <Compile Include="Message\Types\GroupMessageType.cs" />
     <Compile Include="Message\Types\MasterServerMessageSubType.cs" />
     <Compile Include="Message\Types\MotdMessageType.cs" />
     <Compile Include="Message\Types\PlayerConnectionMessageType.cs" />

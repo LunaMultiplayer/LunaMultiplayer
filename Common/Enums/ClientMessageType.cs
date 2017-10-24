@@ -17,6 +17,7 @@
         Warp = 13,
         Lock = 14,
         Mod = 15,
-        Admin = 16
+        Admin = 16,
+        Groups = 18
     }
 }

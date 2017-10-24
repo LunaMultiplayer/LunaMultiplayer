@@ -4,6 +4,7 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
+using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
 using LunaClient.Systems.KerbalReassigner;
 using LunaClient.Systems.KerbalSys;
@@ -72,7 +73,8 @@ namespace LunaClient.Systems
             SystemsContainer.Get<FlagSystem>(),
             SystemsContainer.Get<KerbalReassignerSystem>(),
             SystemsContainer.Get<ScenarioSystem>(),
-            SystemsContainer.Get<ToolbarSystem>()
+            SystemsContainer.Get<ToolbarSystem>(),
+            SystemsContainer.Get<GroupSystem>()
         };
 
         /// <summary>
