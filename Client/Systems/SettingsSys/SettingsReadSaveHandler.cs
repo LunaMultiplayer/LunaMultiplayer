@@ -1,10 +1,9 @@
 using LunaClient.Utilities;
+using LunaCommon.Xml;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace LunaClient.Systems.SettingsSys
 {
@@ -40,25 +39,13 @@ namespace LunaClient.Systems.SettingsSys
                 File.Copy(SettingsFilePath, BackupSettingsFilePath);
             }
 
-            try
-            {
-                using (TextReader r = new StreamReader(SettingsFilePath))
-                {
-                    var deserializer = new XmlSerializer(typeof(SettingStructure));
-                    var structure = (SettingStructure)deserializer.Deserialize(r);
-                    return structure;
-                }
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Could not open and read settings file. Details: {e}");
-            }
+            return LunaXmlSerializer.ReadXml<SettingStructure>(SettingsFilePath);
         }
 
         public static void SaveSettings(SettingStructure currentSettings)
         {
             CheckDataDirectory();
-            SaveSettingsToFile(currentSettings);
+            LunaXmlSerializer.WriteXml(currentSettings, SettingsFilePath);
             File.Copy(SettingsFilePath, BackupSettingsFilePath, true);
         }
 
@@ -80,7 +67,7 @@ namespace LunaClient.Systems.SettingsSys
             defaultSettings.PrivateKey = newKey.Key;
             defaultSettings.PublicKey = newKey.Value;
 
-            SaveSettingsToFile(defaultSettings);
+            LunaXmlSerializer.WriteXml(defaultSettings, SettingsFilePath);
         }
 
         private static KeyValuePair<string, string> GenerateNewKeypair()
@@ -114,24 +101,7 @@ namespace LunaClient.Systems.SettingsSys
                 File.Copy(BackupSettingsFilePath, SettingsFilePath);
             }
         }
-
-        private static void SaveSettingsToFile(SettingStructure settings)
-        {
-            try
-            {
-                using (var w = new XmlTextWriter(SettingsFilePath, null))
-                {
-                    w.Formatting = Formatting.Indented;
-                    var serializer = new XmlSerializer(typeof(SettingStructure));
-                    serializer.Serialize(w, settings);
-                }
-            }
-            catch (Exception)
-            {
-                throw new Exception("Could not save settings file.");
-            }
-        }
-
+        
         #endregion
     }
 }

@@ -1,37 +1,21 @@
 using LunaServer.Context;
-using LunaServer.System;
-using LunaServer.Utilities;
 using System.IO;
+using LunaServer.Settings.Definition;
 
 namespace LunaServer.Settings
 {
-    public class GeneralSettings
+    public class GeneralSettings: SettingsBase
     {
-        private static ConfigParser<SettingsStore> _serverSettings;
-        public static SettingsStore SettingsStore => _serverSettings.Settings;
+        protected override string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, "Settings.txt");
 
-        static GeneralSettings()
+        protected override object SettingsHolder
         {
-            if (!FileHandler.FolderExists(ServerContext.ConfigDirectory))
-                FileHandler.FolderCreate(ServerContext.ConfigDirectory);
-
-            Reset();
-            Load();
+            get => SettingsStore;
+            set => SettingsStore = value as SettingsDefinition;
         }
 
-        public static void Reset()
-        {
-            _serverSettings = new ConfigParser<SettingsStore>(new SettingsStore(), Path.Combine(ServerContext.ConfigDirectory, "Settings.txt"));
-        }
+        public static SettingsDefinition SettingsStore { get; private set; }
 
-        public static void Load()
-        {
-            _serverSettings.LoadSettings();
-        }
-
-        public static void Save()
-        {
-            _serverSettings.SaveSettings();
-        }
+        public static GeneralSettings Singleton { get; } = new GeneralSettings();
     }
 }

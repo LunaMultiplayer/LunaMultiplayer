@@ -40,8 +40,7 @@ namespace LunaServer
                 LunaLog.Debug("Loading settings...");
                 if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
                 {
-                    GameplaySettings.Reset();
-                    GameplaySettings.Load();
+                    GameplaySettings.Singleton.Load();
                 }
 
                 //Set day for log change
@@ -57,13 +56,11 @@ namespace LunaServer
                     if (ServerContext.ServerRestarting)
                     {
                         LunaLog.Debug("Reloading settings...");
-                        GeneralSettings.Reset();
-                        GeneralSettings.Load();
+                        GeneralSettings.Singleton.Load();
                         if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
                         {
                             LunaLog.Debug("Reloading gameplay settings...");
-                            GameplaySettings.Reset();
-                            GameplaySettings.Load();
+                            GameplaySettings.Singleton.Load();
                         }
                     }
 
@@ -74,7 +71,7 @@ namespace LunaServer
                     {
                         //Generate the config file by accessing the object.
                         LunaLog.Debug("Loading gameplay settings...");
-                        GameplaySettings.Load();
+                        GameplaySettings.Singleton.Load();
                     }
 
                     //Load universe

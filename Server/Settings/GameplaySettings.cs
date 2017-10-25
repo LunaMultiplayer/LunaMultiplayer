@@ -1,29 +1,21 @@
 ﻿using LunaServer.Context;
-using LunaServer.Utilities;
+using LunaServer.Settings.Definition;
 using System.IO;
 
 namespace LunaServer.Settings
 {
-    public class GameplaySettings
+    public class GameplaySettings : SettingsBase
     {
-        private static ConfigParser<GameplaySettingsStore> _gameplaySettings;
+        protected override string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, "GameplaySettings.txt");
 
-        public static GameplaySettingsStore SettingsStore => _gameplaySettings?.Settings;
-
-        public static void Reset()
+        protected override object SettingsHolder
         {
-            _gameplaySettings = new ConfigParser<GameplaySettingsStore>(new GameplaySettingsStore(),
-                Path.Combine(ServerContext.ConfigDirectory, "GameplaySettings.txt"));
+            get => SettingsStore;
+            set => SettingsStore = value as GameplaySettingsDefinition;
         }
 
-        public static void Load()
-        {
-            _gameplaySettings.LoadSettings();
-        }
+        public static GameplaySettingsDefinition SettingsStore { get; private set; }
 
-        public static void Save()
-        {
-            _gameplaySettings.SaveSettings();
-        }
+        public static GameplaySettings Singleton { get; } = new GameplaySettings();
     }
 }
