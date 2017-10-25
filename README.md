@@ -5,16 +5,16 @@
 ---
 
 Main features:
-- Better and optimized code, easier to read and modify
+- Clean and optimized code, based on systems and windows which makes it easier to read and modify
 - Multi threaded (as much as Unity allows)
 - Better usage of coroutines
-- UDP based
+- Settings saved as XML
+- UDP based using the Lidgren library for reliable UDP message handling
 - Uses interpolation so the vessels shouldn't jump from one place to another
-- Uses the Lidgren library for reliable UDP message handling
 - Nat-punchtrough feature so a server doesn't need to open ports on it's router
 - Servers are displayed within the application
 - Better creation of UDP messages so they are easier to modify as you don't need to take care of serialization
-- Based on Tasks instead of Threads (Server side only)
+- Based on Tasks instead of Threads
 - Improved message compression algorithm (QuickLZ)
 
 ---
