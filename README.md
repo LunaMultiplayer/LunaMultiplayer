@@ -18,9 +18,9 @@ Main features:
 - Improved message compression algorithm (QuickLZ)
 
 ---
-## [Main wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki)
+## [Wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki)
 
-### Interesting  links:
+#### Interesting  links:
 
 [How to build LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP)  
 [How to run LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP)  
