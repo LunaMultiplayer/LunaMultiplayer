@@ -22,9 +22,9 @@ Main features:
 
 ### Interesting  links:
 
-#### [How to build LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP)
-#### [How to run LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP)
-#### [How to debug LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio)
+[How to build LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP)  
+[How to run LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP)  
+[How to debug LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio)  
 
 ---
 
