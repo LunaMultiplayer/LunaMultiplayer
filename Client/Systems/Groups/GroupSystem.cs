@@ -13,9 +13,7 @@ namespace LunaClient.Systems.Groups
 
         //when we are syncing, we'll receive a list of group names. 
         //we want to keep retrieving them until we reach a certain total number of groups.
-        public int NumGroups { get; set; } = 0; 
-        public int NumGroupsSynced { get; set; } = 0;
-        public bool IsSynced { get; set; } = false;
+        private static int NumGroups => Groups.Count; 
 
         protected override void OnDisabled()
         {

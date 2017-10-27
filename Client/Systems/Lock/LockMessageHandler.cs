@@ -14,8 +14,7 @@ namespace LunaClient.Systems.Lock
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as LockBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is LockBaseMsgData msgData)) return;
 
             switch (msgData.LockMessageType)
             {

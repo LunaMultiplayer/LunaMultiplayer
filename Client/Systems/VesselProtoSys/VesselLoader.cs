@@ -85,7 +85,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
             {
                 var latLonAlt = SystemsContainer.Get<VesselPositionAltSystem>().GetLatestVesselPosition(vesselProto.vesselID);
-                if (latLonAlt.Length == 3)
+                if (latLonAlt!= null)
                 {
                     vesselProto.latitude = latLonAlt[0];
                     vesselProto.longitude = latLonAlt[1];
@@ -179,10 +179,10 @@ namespace LunaClient.Systems.VesselProtoSys
                     LunaLog.Log("[LMP]: Skipping flying vessel load - Protovessel does not have an orbit snapshot");
                     return false;
                 }
-                var updateBody = FlightGlobals.Bodies[vesselProto.orbitSnapShot.ReferenceBodyIndex];
-                if (updateBody == null)
+                if (FlightGlobals.Bodies == null || FlightGlobals.Bodies.Count < vesselProto.orbitSnapShot.ReferenceBodyIndex)
                 {
-                    LunaLog.Log("[LMP]: Skipping flying vessel load - Could not find celestial body index {currentProto.orbitSnapShot.ReferenceBodyIndex}");
+                    LunaLog.Log("[LMP]: Skipping flying vessel load - Could not find celestial body index " +
+                                $"{vesselProto.orbitSnapShot.ReferenceBodyIndex}");
                     return false;
                 }
             }

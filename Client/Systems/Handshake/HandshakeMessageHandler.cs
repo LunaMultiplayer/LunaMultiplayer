@@ -7,6 +7,7 @@ using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
+using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
 using System.Security.Cryptography;
@@ -20,10 +21,19 @@ namespace LunaClient.Systems.Handshake
 
         public void HandleMessage(IMessageData messageData)
         {
-            if (messageData.GetType() == typeof(HandshakeChallengeMsgData))
-                HandleChallengeReceivedMessage((HandshakeChallengeMsgData)messageData);
-            else if (messageData.GetType() == typeof(HandshakeReplyMsgData))
-                HandleHandshakeReplyReceivedMessage((HandshakeReplyMsgData)messageData);
+            if (!(messageData is HandshakeBaseMsgData msgData)) return;
+
+            switch (msgData.HandshakeMessageType)
+            {
+                case HandshakeMessageType.Challenge:
+                    HandleChallengeReceivedMessage((HandshakeChallengeMsgData)messageData);
+                    break;
+                case HandshakeMessageType.Reply:
+                    HandleHandshakeReplyReceivedMessage((HandshakeReplyMsgData)messageData);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         #region Private

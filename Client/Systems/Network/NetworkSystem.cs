@@ -5,6 +5,7 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
+using LunaClient.Systems.GameScene;
 using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
 using LunaClient.Systems.KerbalReassigner;
@@ -238,6 +239,7 @@ namespace LunaClient.Systems.Network
 
                         MainSystem.NetworkState = ClientState.Running;
 
+                        SystemsContainer.Get<GameSceneSystem>().Enabled = true;
                         SystemsContainer.Get<AsteroidSystem>().Enabled = true;
                         SystemsContainer.Get<ToolbarSystem>().Enabled = true;
                         NetworkSimpleMessageSender.SendMotdRequest();

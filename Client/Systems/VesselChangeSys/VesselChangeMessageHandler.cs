@@ -1,8 +1,8 @@
-﻿using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.VesselChangeSys
 {
@@ -12,8 +12,7 @@ namespace LunaClient.Systems.VesselChangeSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as VesselChangeMsgData;
-            if (msgData == null) return;
+            if (!(messageData is VesselChangeMsgData msgData)) return;
 
             System.IncomingChanges.Enqueue(msgData);
         }

@@ -14,9 +14,9 @@ namespace LunaClient.Systems.Motd
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as MotdReplyMsgData;
+            if (!(messageData is MotdReplyMsgData msgData)) return;
 
-            if (!string.IsNullOrEmpty(msgData?.MessageOfTheDay))
+            if (!string.IsNullOrEmpty(msgData.MessageOfTheDay))
             {
                 System.DisplayMotd = true;
                 System.ServerMotd = msgData.MessageOfTheDay;

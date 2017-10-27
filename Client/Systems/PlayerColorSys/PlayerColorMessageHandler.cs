@@ -18,8 +18,7 @@ namespace LunaClient.Systems.PlayerColorSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as PlayerColorBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is PlayerColorBaseMsgData msgData)) return;
 
             switch (msgData.PlayerColorMessageType)
             {

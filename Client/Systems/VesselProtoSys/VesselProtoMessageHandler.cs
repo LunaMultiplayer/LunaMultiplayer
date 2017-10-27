@@ -19,8 +19,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as VesselBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is VesselBaseMsgData msgData)) return;
 
             switch (msgData.VesselMessageType)
             {

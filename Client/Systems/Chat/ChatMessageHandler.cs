@@ -15,8 +15,7 @@ namespace LunaClient.Systems.Chat
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as ChatBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is ChatBaseMsgData msgData)) return;
 
             switch (msgData.ChatMessageType)
             {

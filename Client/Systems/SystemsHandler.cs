@@ -4,6 +4,7 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
+using LunaClient.Systems.GameScene;
 using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
 using LunaClient.Systems.KerbalReassigner;
@@ -48,6 +49,7 @@ namespace LunaClient.Systems
             SystemsContainer.Get<TimeSyncerSystem>(),
             SystemsContainer.Get<KerbalSystem>(),
             SystemsContainer.Get<VesselLockSystem>(),
+            SystemsContainer.Get<GameSceneSystem>(),
             SystemsContainer.Get<VesselPositionSystem>(),
             SystemsContainer.Get<VesselPositionAltSystem>(),
             SystemsContainer.Get<VesselFlightStateSystem>(),

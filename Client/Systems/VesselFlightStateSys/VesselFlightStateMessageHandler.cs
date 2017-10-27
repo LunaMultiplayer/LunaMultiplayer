@@ -12,8 +12,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as VesselFlightStateMsgData;
-            if (msgData == null) return;
+            if (!(messageData is VesselFlightStateMsgData msgData)) return;
 
             if (System.FlightStatesDictionary.ContainsKey(msgData.VesselId))
             {

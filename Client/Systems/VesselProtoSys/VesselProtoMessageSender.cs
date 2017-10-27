@@ -21,14 +21,16 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (vessel == null) return;
 
-            //Doing a Vessel.Backup takes a lot of time... So we use a handler that accepts multithreading
+            /* Doing a Vessel.Backup takes a lot of time... 
+             * I tried to make a handler that redo the constructor of ProtoVessel but 
+             * it's very unstable as lingoona acces invalid addresses...
+             * Looks like we won't be able to backup the proto in another thread, at least
+             * in the near future :(
+             * Do not call it in this way as we will send a NOT UPDATED protovessel!
+             * SendVesselMessage(vessel.protoVessel);
+             */
 
-            var creator = new VesselProtoBackup();
-            creator.PrepareBackup(vessel.parts);
-            TaskFactory.StartNew(() => creator.BackupVessel(vessel)).ContinueWith(prev => SendVesselMessage(prev.Result));
-
-            //Do not call it in this way as therefore we are sending a NOT UPDATED protovessel!
-            //SendVesselMessage(vessel.protoVessel);
+            SendVesselMessage(vessel.BackupVessel());
         }
 
 

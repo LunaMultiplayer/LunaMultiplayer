@@ -15,8 +15,7 @@ namespace LunaClient.Systems.Warp
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as WarpBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is WarpBaseMsgData msgData)) return;
 
             switch (msgData.WarpMessageType)
             {

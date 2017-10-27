@@ -58,13 +58,21 @@ namespace LunaClient.Systems.VesselProtoSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            AllPlayerVessels.Clear();
+            ClearSystem();
             BannedPartsStr = string.Empty;
         }
 
         #endregion
 
         #region Public
+
+        /// <summary>
+        /// Clears the dictionary, you should call this method when switching scene
+        /// </summary>
+        public void ClearSystem()
+        {
+            AllPlayerVessels.Clear();
+        }
 
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.

@@ -197,7 +197,7 @@ namespace LunaClient.Systems
         public static bool IsInSafetyBubble(Vessel vessel)
         {
             //If not at Kerbin or past ceiling we're definitely clear
-            if (vessel == null || vessel.mainBody.name != "Kerbin")
+            if (vessel == null || vessel.mainBody?.name != "Kerbin")
                 return false;
 
             var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), LandingPadPosition);

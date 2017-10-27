@@ -14,8 +14,7 @@ namespace LunaClient.Systems.SettingsSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as SettingsReplyMsgData;
-            if (msgData == null) return;
+            if (!(messageData is SettingsReplyMsgData msgData)) return;
 
             SettingsSystem.ServerSettings.WarpMode = msgData.WarpMode;
             SettingsSystem.ServerSettings.GameMode = msgData.GameMode;

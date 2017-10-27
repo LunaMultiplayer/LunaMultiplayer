@@ -76,6 +76,8 @@
     <Compile Include="Network\Icmp\Icmp.cs" />
     <Compile Include="Network\Icmp\IcmpMessage.cs" />
     <Compile Include="Network\Icmp\InformationMessage.cs" />
+    <Compile Include="Systems\GameScene\GameSceneSystem.cs" />
+    <Compile Include="Systems\GameScene\GameSceneEvents.cs" />
     <Compile Include="Systems\Groups\GroupMessageHandler.cs" />
     <Compile Include="Systems\Groups\GroupMessageSender.cs" />
     <Compile Include="Systems\Groups\GroupSystem.cs" />
@@ -86,7 +88,6 @@
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionMessageAltSender.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionAltSystem.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionAltUpdate.cs" />
-    <Compile Include="Systems\VesselProtoSys\VesselProtoBackup.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselSerializer.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\WindowContainer.cs" />

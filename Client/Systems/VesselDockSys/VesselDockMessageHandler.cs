@@ -15,8 +15,7 @@ namespace LunaClient.Systems.VesselDockSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as VesselDockMsgData;
-            if (msgData == null) return;
+            if (!(messageData is VesselDockMsgData msgData)) return;
 
             LunaLog.Log("[LMP]: Docking message received!");
 

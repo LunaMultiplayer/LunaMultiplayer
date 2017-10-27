@@ -1,8 +1,8 @@
-﻿using System.Collections.Concurrent;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Message.Data;
 using LunaCommon.Message.Interface;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.ModApi
 {
@@ -12,8 +12,7 @@ namespace LunaClient.Systems.ModApi
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as ModMsgData;
-            if (msgData == null) return;
+            if (!(messageData is ModMsgData msgData)) return;
 
             var modName = msgData.ModName;
             var modData = msgData.Data;

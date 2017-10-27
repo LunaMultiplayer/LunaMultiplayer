@@ -14,8 +14,7 @@ namespace LunaClient.Systems.Admin
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as AdminBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is AdminBaseMsgData msgData)) return;
 
             switch (msgData.AdminMessageType)
             {

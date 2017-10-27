@@ -1,14 +1,12 @@
-﻿using System;
-using LunaCommon.Message.Data.Groups;
+﻿using LunaCommon.Message.Data.Groups;
 using LunaCommon.Message.Interface;
+using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
 using LunaServer.Client;
 using LunaServer.Message.Reader.Base;
-using LunaServer.System;
-using LunaCommon.Message.Server;
 using LunaServer.Server;
-using System.Collections.Generic;
-using LunaCommon.Groups;
+using LunaServer.System;
+using System;
 
 namespace LunaServer.Message.Reader
 {
@@ -82,7 +80,7 @@ namespace LunaServer.Message.Reader
                             Groups = groupsAndOwners.Key,
                             Owners = groupsAndOwners.Value
                         };
-                        MessageQueuer.SendToAllClients<GroupSrvMsg>(newMessage);
+                        MessageQueuer.SendToClient<GroupSrvMsg>(client, newMessage);
                     }
                     break;
                 case GroupMessageType.UpdateRequest:

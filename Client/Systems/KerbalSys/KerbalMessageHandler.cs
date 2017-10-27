@@ -15,8 +15,7 @@ namespace LunaClient.Systems.KerbalSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as KerbalBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is KerbalBaseMsgData msgData)) return;
 
             switch (msgData.KerbalMessageType)
             {

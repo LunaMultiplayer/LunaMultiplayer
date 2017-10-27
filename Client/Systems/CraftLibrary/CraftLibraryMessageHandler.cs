@@ -16,8 +16,7 @@ namespace LunaClient.Systems.CraftLibrary
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as CraftLibraryBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is CraftLibraryBaseMsgData msgData)) return;
 
             switch (msgData.CraftMessageType)
             {

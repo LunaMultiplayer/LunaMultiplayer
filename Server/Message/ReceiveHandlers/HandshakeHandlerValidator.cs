@@ -105,7 +105,7 @@ namespace LunaServer.Message.ReceiveHandlers
                 var storedPlayerPublicKey = FileHandler.ReadFileText(storedPlayerFile);
                 if (playerPublicKey != storedPlayerPublicKey)
                 {
-                    Reason = "Invalid key. Username already taken";
+                    Reason = "Invalid key. Username was already taken and used in the past";
                     HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidKey, Reason);
                     return false;
                 }

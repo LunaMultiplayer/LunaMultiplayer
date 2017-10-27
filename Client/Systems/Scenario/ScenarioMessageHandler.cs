@@ -15,8 +15,9 @@ namespace LunaClient.Systems.Scenario
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as ScenarioBaseMsgData;
-            if (msgData?.ScenarioMessageType == ScenarioMessageType.Data)
+            if (!(messageData is ScenarioBaseMsgData msgData)) return;
+
+            if (msgData.ScenarioMessageType == ScenarioMessageType.Data)
             {
                 var data = ((ScenarioDataMsgData)messageData).ScenarioNameData;
                 foreach (var scenario in data)

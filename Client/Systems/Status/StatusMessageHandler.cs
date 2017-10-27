@@ -16,8 +16,7 @@ namespace LunaClient.Systems.Status
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as PlayerStatusBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is PlayerStatusBaseMsgData msgData)) return;
 
             switch (msgData.PlayerStatusMessageType)
             {

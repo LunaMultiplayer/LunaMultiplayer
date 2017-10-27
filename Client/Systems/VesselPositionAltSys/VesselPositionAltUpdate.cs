@@ -197,43 +197,47 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         private void ApplyInterpolations(float lerpPercentage)
         {
-            var lerpedOrbit = Lerp(Orbit, Target.Orbit, Body, LerpPercentage);
-            CopyOrbit(lerpedOrbit, Vessel.orbitDriver.orbit);
-            Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
-            Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
-
-            if (!Vessel.loaded)
+            if (SettingsSystem.CurrentSettings.Debug1)
             {
-                Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                Vessel.longitude = Lerp(LatLonAlt[0], Target.LatLonAlt[1], lerpPercentage);
-                Vessel.altitude = Lerp(LatLonAlt[0], Target.LatLonAlt[2], lerpPercentage);
+                var lerpedOrbit = Lerp(Orbit, Target.Orbit, Body, LerpPercentage);
+                CopyOrbit(lerpedOrbit, Vessel.orbitDriver.orbit);
+                Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos.xzy;
+                Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel.xzy;
             }
-            else
+
+            if (SettingsSystem.CurrentSettings.Debug2)
+                Vessel.orbitDriver.orbit.Init();
+            if (SettingsSystem.CurrentSettings.Debug3)
+                Vessel.orbitDriver.orbit.UpdateFromUT(Planetarium.GetUniversalTime());
+            if (SettingsSystem.CurrentSettings.Debug4)
+                Vessel.orbitDriver.UpdateOrbit();
+            if (SettingsSystem.CurrentSettings.Debug5)
+                Vessel.orbitDriver.UpdateOrbit(false);
+
+            if (SettingsSystem.CurrentSettings.Debug6)
             {
-                var curRotation = Quaternion.Lerp(Rotation, Target.Rotation, lerpPercentage);
-                var curPosition = Vector3.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
-                var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
+                if (!Vessel.loaded)
+                {
+                    Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                    Vessel.longitude = Lerp(LatLonAlt[0], Target.LatLonAlt[1], lerpPercentage);
+                    Vessel.altitude = Lerp(LatLonAlt[0], Target.LatLonAlt[2], lerpPercentage);
+                }
+                else
+                {
+                    var curRotation = Quaternion.Lerp(Rotation, Target.Rotation, lerpPercentage);
+                    var curPosition = Vector3.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
+                    var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
-                Vessel.SetWorldVelocity(curVelocity);
-                Vessel.ReferenceTransform.position = curPosition;
-                Vessel.ReferenceTransform.rotation = curRotation;
-                Vessel.SetRotation(curRotation, true);
+                    Vessel.SetWorldVelocity(curVelocity);
+                    Vessel.ReferenceTransform.position = curPosition;
+                    Vessel.ReferenceTransform.rotation = curRotation;
+                    Vessel.SetRotation(curRotation, true);
 
-                Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * curRotation;
-                Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+                    Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * curRotation;
+                    Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude,
+                        out Vessel.altitude);
+                }
             }
-        }
-
-        private void ApplyOrbitData()
-        {
-            Vessel.orbit.inclination = Orbit[0];
-            Vessel.orbit.eccentricity = Orbit[1];
-            Vessel.orbit.semiMajorAxis = Orbit[2];
-            Vessel.orbit.LAN = Orbit[3];
-            Vessel.orbit.argumentOfPeriapsis = Orbit[4];
-            Vessel.orbit.meanAnomalyAtEpoch = Orbit[5];
-            Vessel.orbit.epoch = Orbit[6];
-            Vessel.orbit.referenceBody = Body;
         }
 
         /// <summary>
@@ -276,8 +280,6 @@ namespace LunaClient.Systems.VesselPositionAltSys
             destinationOrbit.meanAnomalyAtEpoch = sourceOrbit.meanAnomalyAtEpoch;
             destinationOrbit.epoch = sourceOrbit.epoch;
             destinationOrbit.referenceBody = sourceOrbit.referenceBody;
-            destinationOrbit.Init();
-            destinationOrbit.UpdateFromUT(Planetarium.GetUniversalTime());
         }
 
 

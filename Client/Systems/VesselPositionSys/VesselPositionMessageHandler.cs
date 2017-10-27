@@ -12,11 +12,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as VesselPositionMsgData;
-            if (msgData == null)
-            {
-                return;
-            }
+            if (!(messageData is VesselPositionMsgData msgData)) return;
 
             var update = new VesselPositionUpdate(msgData);
             var vesselId = update.VesselId;

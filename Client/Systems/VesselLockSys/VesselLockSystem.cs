@@ -37,7 +37,6 @@ namespace LunaClient.Systems.VesselLockSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onLevelWasLoadedGUIReady.Add(VesselMainEvents.OnSceneChanged);
             GameEvents.onVesselChange.Add(VesselMainEvents.OnVesselChange);
             SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, TryGetControlLock));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateSecondaryVesselsLocks));
@@ -47,7 +46,6 @@ namespace LunaClient.Systems.VesselLockSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onLevelWasLoadedGUIReady.Remove(VesselMainEvents.OnSceneChanged);
             GameEvents.onVesselChange.Remove(VesselMainEvents.OnVesselChange);
         }
 
@@ -175,9 +173,9 @@ namespace LunaClient.Systems.VesselLockSys
         /// <returns></returns>
         private static IEnumerable<Guid> GetValidSecondaryVesselIds()
         {
-            return FlightGlobals.Vessels
-                .Where(v => v.loaded && v.state != Vessel.State.DEAD &&
-                            v.id != FlightGlobals.ActiveVessel.id &&
+            return FlightGlobals.VesselsLoaded
+                .Where(v => v != null && v.state != Vessel.State.DEAD &&
+                            v.id != FlightGlobals.ActiveVessel?.id &&
                             !VesselCommon.IsInSafetyBubble(v) &&
                             !LockSystem.LockQuery.UpdateLockExists(v.id))
                 .Select(v => v.id);

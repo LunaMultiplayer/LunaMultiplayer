@@ -17,8 +17,7 @@ namespace LunaClient.Systems.PlayerConnection
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as PlayerConnectionBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is PlayerConnectionBaseMsgData msgData)) return;
 
             var playerName = msgData.PlayerName;
             switch (msgData.PlayerConnectionMessageType)

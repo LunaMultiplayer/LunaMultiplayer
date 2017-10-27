@@ -15,8 +15,7 @@ namespace LunaClient.Systems.Groups
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as GroupBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is GroupBaseMsgData msgData)) return;
 
             switch (msgData.GroupMessageType)
             {
@@ -65,47 +64,25 @@ namespace LunaClient.Systems.Groups
                         {
                             for(var i = 0; i < data.Groups.Length; i++)
                             {
-                                if (!System.GroupExists(data.Groups[i]))
-                                {
-                                    System.RegisterGroup(data.Groups[i], data.Owners[i]);
-                                }
+                                System.RegisterGroup(data.Groups[i], data.Owners[i]);
                             }
                         }
 
-                        if (!System.IsSynced)
+                        MainSystem.NetworkState = ClientState.GroupsSynced;
+                        foreach (var groupName in data.Groups)
                         {
-                            if (data.Groups.Length == 0) {
-                                System.IsSynced = true;
-                                MainSystem.NetworkState = ClientState.GroupsSynced;
-                            }
-                            System.NumGroups = data.Groups.Length;
-                            System.NumGroupsSynced = 0;
-                            foreach(var groupName in data.Groups)
-                            {
-                                System.MessageSender.SendMessage(new GroupUpdateRequestMsgData { GroupName = groupName });
-                            }
+                            System.MessageSender.SendMessage(new GroupUpdateRequestMsgData { GroupName = groupName });
                         }
                     }
                     break;
                 case GroupMessageType.UpdateResponse:
                     {
                         var data = (GroupUpdateResponseMsgData)messageData;
-                        if (System.NumGroupsSynced < System.NumGroups)
-                        {
-                            System.NumGroupsSynced += 1;
-                        }
-
-                        if (System.NumGroupsSynced == System.NumGroups)
-                        {
-                            MainSystem.NetworkState = ClientState.GroupsSynced;
-                            System.IsSynced = true;
-                        }
-
                         if (!System.GroupExists(data.Name))
                         {
                             System.RegisterGroup(data.Name, data.Owner);
                         }
-                        foreach(string member in data.Members)
+                        foreach(var member in data.Members)
                         {
                             System.AddPlayerToGroup(data.Name, member);
                         }

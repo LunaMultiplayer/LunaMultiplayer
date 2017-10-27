@@ -51,6 +51,15 @@ namespace LunaClient.Systems.VesselRemoveSys
         #region Public
 
         /// <summary>
+        /// Clears the dictionary, you should call this method when switching scene
+        /// </summary>
+        public void ClearSystem()
+        {
+            VesselsToRemove.Clear();
+            VesselsToUnload.Clear();
+        }
+
+        /// <summary>
         /// Add a vessel so it will be killed later
         /// </summary>
         public void AddToKillList(Vessel vessel, bool fullKill)

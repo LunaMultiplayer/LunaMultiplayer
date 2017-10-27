@@ -17,8 +17,7 @@ namespace LunaClient.Systems.Flag
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as FlagBaseMsgData;
-            if (msgData == null) return;
+            if (!(messageData is FlagBaseMsgData msgData)) return;
 
             switch (msgData.FlagMessageType)
             {

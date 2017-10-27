@@ -14,9 +14,9 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public void HandleMessage(IMessageData messageData)
         {
-            var msgData = messageData as VesselUpdateMsgData;
+            if (!(messageData is VesselUpdateMsgData msgData)) return;
 
-            if (msgData == null || !System.UpdateSystemReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
+            if(!System.UpdateSystemReady || VesselCommon.UpdateIsForOwnVessel(msgData.VesselId))
             {
                 return;
             }
