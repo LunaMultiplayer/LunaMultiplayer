@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselChangeSys
         /// <param name="data"></param>
         public void OnPartDie(Part data)
         {
-            if (!VesselCommon.IsSpectating && data.vessel.id == FlightGlobals.ActiveVessel.id)
+            if (!VesselCommon.IsSpectating && data.vessel.id == FlightGlobals.ActiveVessel?.id)
             {
                 var msgData = new VesselChangeMsgData
                 {

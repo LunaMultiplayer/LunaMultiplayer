@@ -189,7 +189,7 @@ namespace LunaClient.Systems.VesselLockSys
         private static IEnumerable<Guid> GetSecondaryVesselIdsThatShouldBeReleased()
         {
             return FlightGlobals.Vessels
-                .Where(v => v.id != FlightGlobals.ActiveVessel.id &&
+                .Where(v => v.id != FlightGlobals.ActiveVessel?.id &&
                             LockSystem.LockQuery.UpdateLockBelongsToPlayer(v.id, SettingsSystem.CurrentSettings.PlayerName) &&
                             (!v.loaded || v.state == Vessel.State.DEAD ||
                             VesselCommon.IsInSafetyBubble(v)))

@@ -48,12 +48,11 @@ namespace LunaClient.Systems.VesselPositionAltSys
             base.OnEnabled();
 
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, ActivatePrecalc);
-
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, HandleVesselUpdates));
-
-            SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval,
-                RoutineExecution.LateUpdate, SendVesselPositionUpdates));
+            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
+            //SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval,
+            //    RoutineExecution.LateUpdate, SendVesselPositionUpdates));
 
             //SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
             //    RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
@@ -67,6 +66,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
             CurrentVesselUpdate.Clear();
 
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.Precalc, ActivatePrecalc);
+            TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
         }
 
         private static void ActivatePrecalc()
@@ -121,7 +123,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
         {
             if (FlightGlobals.ActiveVessel == null) return;
 
-            foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel.id && v.precalc != null))
+            foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel?.id && v.precalc != null))
             {
                 vessel.precalc.enabled = false;
             }
@@ -140,8 +142,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
             if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
             {
                 MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
-                ChangeRoutineExecutionInterval("SendVesselPositionUpdates",
-                    MustSendFastUpdates ? FastVesselUpdatesSendMsInterval : SlowVesselUpdatesSendMsInterval);
+                //ChangeRoutineExecutionInterval("SendVesselPositionUpdates",
+                //    MustSendFastUpdates ? FastVesselUpdatesSendMsInterval : SlowVesselUpdatesSendMsInterval);
             }
         }
 

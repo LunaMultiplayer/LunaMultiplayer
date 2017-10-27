@@ -14,7 +14,9 @@ namespace LunaClient.Windows.Status
 
         #region Public
 
-        public override bool Display => MainSystem.NetworkState >= ClientState.Running;
+        public override bool Display => MainSystem.NetworkState >= ClientState.Running &&
+                                        HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+
         public SubspaceDisplayEntry[] SubspaceDisplay { get; set; }
         public bool DisconnectEventHandled { get; set; } = true;
         public bool ColorEventHandled { get; set; } = true;

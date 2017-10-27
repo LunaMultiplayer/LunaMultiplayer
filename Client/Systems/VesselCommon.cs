@@ -29,51 +29,19 @@ namespace LunaClient.Systems
         {
             get { return _kerbin ?? (_kerbin = FlightGlobals.Bodies.Find(b => b.bodyName == "Kerbin")); }
         }
+        
+        private static Vector3d LandingPadPosition =>
+            Kerbin.GetWorldSurfacePosition(LandingPadLatitude, LandingPadLongitude, KscAltitude);
 
-        private static Vector3d _landingPadPosition = Vector3d.zero;
-        private static Vector3d LandingPadPosition
-        {
-            get
-            {
-                if (_landingPadPosition == Vector3d.zero)
-                {
-                    if (Kerbin != null)
-                        _landingPadPosition = Kerbin.GetWorldSurfacePosition(LandingPadLatitude, LandingPadLongitude, KscAltitude);
-
-                    return _landingPadPosition;
-                }
-
-                return _landingPadPosition;
-            }
-        }
-
-        private static Vector3d _runwayPosition = Vector3d.zero;
-        private static Vector3d RunwayPosition
-        {
-            get
-            {
-                if (_runwayPosition == Vector3d.zero)
-                {
-                    if (Kerbin != null)
-                        _runwayPosition = Kerbin.GetWorldSurfacePosition(RunwayLatitude, RunwayLongitude, KscAltitude);
-
-                    return _runwayPosition;
-                }
-
-                return _runwayPosition;
-            }
-        }
+        private static Vector3d RunwayPosition => 
+            Kerbin.GetWorldSurfacePosition(RunwayLatitude, RunwayLongitude, KscAltitude);
 
         #endregion
-
-        public static Guid CurrentVesselId => FlightGlobals.ActiveVessel == null ? Guid.Empty : FlightGlobals.ActiveVessel.id;
-
+        
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
             //Ignore updates to our own vessel if we aren't spectating
-            return !IsSpectating &&
-                   FlightGlobals.ActiveVessel != null &&
-                   FlightGlobals.ActiveVessel.id == vesselId;
+            return !IsSpectating && FlightGlobals.ActiveVessel?.id == vesselId;
         }
 
         public static bool ActiveVesselIsInSafetyBubble()
@@ -102,10 +70,9 @@ namespace LunaClient.Systems
         /// Check if someone is spectating current vessel
         /// </summary>
         /// <returns></returns>
-        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null &&
-                                                    LockSystem.LockQuery.SpectatorLockExists(FlightGlobals.ActiveVessel.id);
-
-
+        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null && 
+            LockSystem.LockQuery.SpectatorLockExists(FlightGlobals.ActiveVessel.id);
+        
         /// <summary>
         /// Return the controlled vessel ids
         /// </summary>
@@ -133,7 +100,7 @@ namespace LunaClient.Systems
                 var controlledVesselsIds = GetControlledVesselIds();
                 var loadedVesselIds = FlightGlobals.VesselsLoaded.Select(v => v.id);
 
-                return controlledVesselsIds.Intersect(loadedVesselIds).Any(v => v != FlightGlobals.ActiveVessel.id);
+                return controlledVesselsIds.Intersect(loadedVesselIds).Any(v => v != FlightGlobals.ActiveVessel?.id);
             }
 
             return false;
@@ -147,7 +114,7 @@ namespace LunaClient.Systems
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
 
             return LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                .Where(l => l.VesselId != FlightGlobals.ActiveVessel.id)
+                .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id)
                 .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == vi.VesselId))
                 .Where(v => v != null)
                 .ToArray();

@@ -148,7 +148,7 @@ namespace LunaClient.Systems.VesselProtoSys
         // ReSharper disable once UnusedMember.Local
         private static bool SpectatingProtoVessel(ProtoVessel currentProto)
         {
-            return FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == currentProto.vesselID;
+            return FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel?.id == currentProto.vesselID;
         }
 
         /// <summary>
