@@ -73,7 +73,7 @@ namespace LunaClient.Windows.Connection
             if (Display)
                 WindowRect =
                     LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, $"LunaMultiPlayer {VersionInfo.VersionNumber}", WindowStyle, LayoutOptions));
+                        DrawContent, $"LunaMultiPlayer {VersionInfo.FullVersionNumber}", WindowStyle, LayoutOptions));
         }
 
         public override void Update()

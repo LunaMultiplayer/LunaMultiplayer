@@ -49,7 +49,7 @@ namespace LunaServer
                 //Load plugins
                 LmpPluginHandler.LoadPlugins();
 
-                Console.Title = $"LMPServer v{VersionInfo.VersionNumber}";
+                Console.Title = $"LMPServer v{VersionInfo.FullVersionNumber}";
 
                 while (ServerContext.ServerStarting || ServerContext.ServerRestarting)
                 {

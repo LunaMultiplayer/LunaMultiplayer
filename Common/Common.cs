@@ -407,7 +407,7 @@ namespace LunaCommon
             //This is the same format as KMPModControl.txt. It's a fairly sane format, and it makes sense to remain compatible.
             var sb = new StringBuilder();
             //Header stuff
-            sb.AppendLine($"#MODCONTROLVERSION={VersionInfo.VersionNumber}");
+            sb.AppendLine($"#MODCONTROLVERSION={VersionInfo.FullVersionNumber}");
             sb.AppendLine("#You can comment by starting a line with a #, these are ignored by the server.");
             sb.AppendLine("#Commenting will NOT work unless the line STARTS with a '#'.");
             sb.AppendLine("#You can also indent the file with tabs or spaces.");
