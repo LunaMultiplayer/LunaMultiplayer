@@ -5,6 +5,7 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
+using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
 using LunaClient.Systems.KerbalReassigner;
 using LunaClient.Systems.KerbalSys;
@@ -196,6 +197,7 @@ namespace LunaClient.Systems.Network
                     MainSystem.NetworkState = ClientState.SyncingGroups;
                     break;
                 case ClientState.SyncingGroups:
+                    SystemsContainer.Get<GroupSystem>().Enabled = true;
                     SystemsContainer.Get<MainSystem>().Status = "Syncing groups";
                     break;
                 case ClientState.GroupsSynced:

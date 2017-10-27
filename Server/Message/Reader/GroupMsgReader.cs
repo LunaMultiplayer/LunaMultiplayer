@@ -25,7 +25,7 @@ namespace LunaServer.Message.Reader
                         if (GroupSystem.IsOwner(info.GroupName, client.PlayerName))
                         {
                             GroupSystem.Invite(info.GroupName, info.AddressedTo);
-                            MessageQueuer.SendToClient<GroupSrvMsg>(client, info);
+                            MessageQueuer.SendToAllClients<GroupSrvMsg>(info);
                         }
                     }
                     break;
@@ -35,7 +35,7 @@ namespace LunaServer.Message.Reader
                         if (GroupSystem.IsPendingInvitation(info.GroupName, client.PlayerName))
                         {
                             GroupSystem.AddPlayerToGroup(info.GroupName, client.PlayerName);
-                            MessageQueuer.SendToClient<GroupSrvMsg>(client, info);
+                            MessageQueuer.SendToAllClients<GroupSrvMsg>(info);
                         }
                     }
                     break;
@@ -45,7 +45,7 @@ namespace LunaServer.Message.Reader
                         if (GroupSystem.IsOwner(info.GroupName, client.PlayerName))
                         {
                             GroupSystem.DeregisterGroup(info.GroupName);
-                            MessageQueuer.SendToClient<GroupSrvMsg>(client, info);
+                            MessageQueuer.SendToAllClients<GroupSrvMsg>(info);
                         }
                     }
                     break;
@@ -60,7 +60,7 @@ namespace LunaServer.Message.Reader
                                 Owner = client.PlayerName
                             };
                             GroupSystem.RegisterGroup(info.GroupName, client.PlayerName);
-                            MessageQueuer.SendToClient<GroupSrvMsg>(client, newMessage);
+                            MessageQueuer.SendToAllClients<GroupSrvMsg>(newMessage);
                         }
                     }
                     break;
@@ -70,7 +70,7 @@ namespace LunaServer.Message.Reader
                         if (GroupSystem.IsOwner(info.GroupName, client.PlayerName))
                         {
                             GroupSystem.KickPlayerFromGroup(info.GroupName, info.Player);
-                            MessageQueuer.SendToClient<GroupSrvMsg>(client, info);
+                            MessageQueuer.SendToAllClients<GroupSrvMsg>(info);
                         }
                     }
                     break;
@@ -82,7 +82,7 @@ namespace LunaServer.Message.Reader
                             Groups = groupsAndOwners.Key,
                             Owners = groupsAndOwners.Value
                         };
-                        MessageQueuer.SendToClient<GroupSrvMsg>(client, newMessage);
+                        MessageQueuer.SendToAllClients<GroupSrvMsg>(newMessage);
                     }
                     break;
                 case GroupMessageType.UpdateRequest:
@@ -95,7 +95,7 @@ namespace LunaServer.Message.Reader
                             Members = g.GetMembers(),
                             Name = g.Name
                         };
-                        MessageQueuer.SendToClient<GroupSrvMsg>(client, newMessage);
+                        MessageQueuer.SendToAllClients<GroupSrvMsg>(newMessage);
                     }
                     break;
                 default:
