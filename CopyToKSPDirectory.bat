@@ -11,7 +11,7 @@ SET KSPPATH2=
 SET SOLUTIONCONFIGURATION=%1
 
 mkdir "%KSPPATH%\GameData\LunaMultiPlayer\"
-IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiPlayer2\")
+IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiPlayer\")
 
 mkdir "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
 IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiPlayer\Plugins")
