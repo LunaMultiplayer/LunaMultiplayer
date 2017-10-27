@@ -9,7 +9,6 @@ namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow : Window<ServerListWindow>
     {
-        public override bool Display { get; set; } = true;
         public List<ServerInfo> DisplayedServers { get; set; } = NetworkServerList.Servers;
         protected GUIStyle BigLabelStyle { get; set; }
         protected Vector2 VerticalScrollPosition { get; set; }
