@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using LunaCommon.Message.Data.Warp;
+﻿using LunaCommon.Message.Data.Warp;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Server;
+using System.Linq;
 
 namespace LunaServer.System
 {
@@ -12,6 +12,8 @@ namespace LunaServer.System
     {
         public void HandleNewSubspace(ClientStructure client, WarpNewSubspaceMsgData message)
         {
+            if (message.PlayerCreator != client.PlayerName) return;
+
             LunaLog.Debug($"{client.PlayerName} created a new subspace. Id {WarpContext.NextSubspaceId}");
 
             //Create Subspace
@@ -33,6 +35,8 @@ namespace LunaServer.System
 
         public void HandleChangeSubspace(ClientStructure client, WarpChangeSubspaceMsgData message)
         {
+            if (message.PlayerName != client.PlayerName) return;
+
             var oldSubspace = client.Subspace;
             var newSubspace = message.Subspace;
 

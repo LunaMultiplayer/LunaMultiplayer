@@ -59,6 +59,10 @@ namespace LunaServer.Message.Reader
         {
             var data = (VesselRemoveMsgData)message;
 
+            if (!LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(data.VesselId, client.PlayerName) &&
+                !LockSystem.LockQuery.UpdateLockBelongsToPlayer(data.VesselId, client.PlayerName))
+                return;
+
             //Don't care about the Subspace on the server.
             LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
 

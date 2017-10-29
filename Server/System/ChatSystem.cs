@@ -44,7 +44,7 @@ namespace LunaServer.System
 
         public static void SendConsoleMessageToAdmins(string text)
         {
-            var admins = AdminCommands.Retrieve();
+            var admins = AdminCommands.Admins;
             foreach (var client in ClientRetriever.GetAuthenticatedClients().Where(c => admins.Contains(c.PlayerName)))
             {
                 var messageData = new ChatConsoleMsgData

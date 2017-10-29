@@ -21,11 +21,10 @@ namespace LunaServer.Message.Reader
                     break;
                 case PlayerStatusMessageType.Set:
                     var data = (PlayerStatusSetMsgData)message;
-                    if (data.PlayerName == client.PlayerName)
-                    {
-                        client.PlayerStatus.VesselText = data.VesselText;
-                        client.PlayerStatus.StatusText = data.StatusText;
-                    }
+                    if (data.PlayerName != client.PlayerName) return;
+
+                    client.PlayerStatus.VesselText = data.VesselText;
+                    client.PlayerStatus.StatusText = data.StatusText;
                     MessageQueuer.RelayMessage<PlayerStatusSrvMsg>(client, data);
                     break;
             }

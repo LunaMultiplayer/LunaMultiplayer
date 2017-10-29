@@ -153,5 +153,13 @@ namespace LunaCommon.Locks
             }
             return existingLock;
         }
+
+        /// <summary>
+        /// Check if player can remove the vessel from a terminated/recovered state
+        /// </summary>
+        public bool CanRecoverOrTerminateTheVessel(Guid vesselId, string playerName)
+        {
+            return !ControlLockExists(vesselId) || ControlLockBelongsToPlayer(vesselId, playerName);
+        }
     }
 }

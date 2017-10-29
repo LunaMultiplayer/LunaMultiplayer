@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using LunaCommon.Message.Data.Admin;
+﻿using LunaCommon.Message.Data.Admin;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Command.CombinedCommand;
 using LunaServer.Server;
+using System.Linq;
 
 namespace LunaServer.System
 {
@@ -13,7 +13,7 @@ namespace LunaServer.System
         {
             var newMessage = new AdminListReplyMsgData
             {
-                Admins = AdminCommands.Retrieve().ToArray()
+                Admins = AdminCommands.Admins.ToArray()
             };
 
             MessageQueuer.SendToClient<AdminSrvMsg>(client, newMessage);

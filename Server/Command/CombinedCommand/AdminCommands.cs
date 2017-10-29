@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using LunaServer.Command.CombinedCommand.Base;
+﻿using LunaServer.Command.CombinedCommand.Base;
 using LunaServer.Command.Command;
 using LunaServer.Command.Common;
 using LunaServer.Log;
+using System.Collections.Generic;
 
 namespace LunaServer.Command.CombinedCommand
 {
@@ -33,9 +33,6 @@ namespace LunaServer.Command.CombinedCommand
             }
         }
 
-        public static IEnumerable<string> Retrieve()
-        {
-            return AdminAddCommand.Retrieve();
-        }
+        public static IEnumerable<string> Admins => AdminAddCommand.Retrieve();
     }
 }

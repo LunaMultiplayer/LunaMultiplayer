@@ -14,7 +14,7 @@ namespace LunaServer.System
     {
         public void HandleConsoleMessage(ClientStructure client, ChatConsoleMsgData message)
         {
-            if (client.Authenticated && AdminCommands.Retrieve().Contains(client.PlayerName))
+            if (client.Authenticated && AdminCommands.Admins.Contains(client.PlayerName))
                 CommandHandler.HandleServerInput(message.Message);
         }
 

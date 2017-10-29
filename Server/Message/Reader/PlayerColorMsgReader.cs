@@ -21,14 +21,11 @@ namespace LunaServer.Message.Reader
                     SendAllPlayerColors(client);
                     break;
                 case PlayerColorMessageType.Set:
-                    var data = message as PlayerColorSetMsgData;
-                    {
-                        if (data != null && data.PlayerName == client.PlayerName)
-                        {
-                            client.PlayerColor = data.Color;
-                            MessageQueuer.RelayMessage<PlayerColorSrvMsg>(client, data);
-                        }
-                    }
+                    var data = (PlayerColorSetMsgData)message;
+                    if (data.PlayerName != client.PlayerName) return;
+
+                    client.PlayerColor = data.Color;
+                    MessageQueuer.RelayMessage<PlayerColorSrvMsg>(client, data);
                     break;
             }
         }
