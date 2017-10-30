@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using LunaServer.Command.Command.Base;
@@ -9,6 +6,9 @@ using LunaServer.Log;
 using LunaServer.Server;
 using LunaServer.Settings;
 using LunaServer.System;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace LunaServer.Command.Command
 {
@@ -41,7 +41,7 @@ namespace LunaServer.Command.Command
             {
                 var vesselId = Path.GetFileNameWithoutExtension(vesselFilePath);
                 var landed = FileHandler.ReadFileLines(vesselFilePath).Select(l => l.ToLower())
-                    .Any(l => l.Contains("landed at = ") && (l.Contains("ksc") || l.Contains("runway")));
+                    .Any(l => l.Contains("landedat = ") && (l.Contains("ksc") || l.Contains("runway")));
 
                 if (vesselId != null && landed)
                 {
