@@ -3,6 +3,7 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
 using System;
+using UnityEngine;
 
 namespace LunaClient.Systems.PlayerColorSys
 {
@@ -24,12 +25,11 @@ namespace LunaClient.Systems.PlayerColorSys
                     !LockSystem.LockQuery.ControlLockBelongsToPlayer(colorVessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 {
                     var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
-                    LunaLog.Log($"[LMP]: Vessel {colorVessel.id} owner is {vesselOwner}");
-                    colorVessel.orbitDriver.orbitColor = System.GetPlayerColor(vesselOwner);
+                    SetOrbitColor(colorVessel, System.GetPlayerColor(vesselOwner));
                 }
                 else
                 {
-                    colorVessel.orbitDriver.orbitColor = System.DefaultColor;
+                    SetOrbitColor(colorVessel, System.DefaultColor);
                 }
             }
         }
@@ -62,6 +62,15 @@ namespace LunaClient.Systems.PlayerColorSys
             {
                 SetVesselOrbitColor(vessel);
             }
+        }
+        
+        /// <summary>
+        /// Sets the orbit color in a vessel
+        /// </summary>
+        private static void SetOrbitColor(Vessel vessel, Color colour)
+        {
+            vessel.orbitDriver.orbitColor = colour;
+            vessel.orbitDriver.Renderer.orbitColor = vessel.orbitDriver.orbitColor;
         }
     }
 }
