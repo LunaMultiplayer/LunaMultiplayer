@@ -74,11 +74,12 @@ namespace LunaServer.Message.Reader
                     break;
                 case GroupMessageType.ListRequest:
                     {
-                        var groupsAndOwners = GroupSystem.GroupsAndOwners();
+                        //TODO this is working  bad as it's not thread safe at all
+                        //var groupsAndOwners = GroupSystem.GroupsAndOwners();
                         var newMessage = new GroupListResponseMsgData
                         {
-                            Groups = groupsAndOwners.Key,
-                            Owners = groupsAndOwners.Value
+                            //Groups = groupsAndOwners.Key,
+                            //Owners = groupsAndOwners.Value
                         };
                         MessageQueuer.SendToClient<GroupSrvMsg>(client, newMessage);
                     }
