@@ -27,7 +27,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, SendVesselUpdates));
+            //SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, SendVesselUpdates));
         }
 
         #endregion

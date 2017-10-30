@@ -47,6 +47,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         public Quaternion Rotation => new Quaternion(TransformRotation[0], TransformRotation[1], TransformRotation[2], TransformRotation[3]);
         public Vector3 TransformPos => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
+        public Vector3 CoM => new Vector3d(Com[0], Com[1], Com[2]);
+        public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
 
         private Vector3d _position = Vector3d.zero;
@@ -87,6 +89,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
             GameSentTime = parent.GameSentTime;
             Landed = parent.Landed;
             LatLonAlt = parent.LatLonAlt;
+            Height = parent.Height;
+            NormalVector = NormalVector;
+            Com = Com;
             Orbit = parent.Orbit;
             OrbitPosition = parent.OrbitPosition;
             OrbitVelocity = parent.OrbitVelocity;
@@ -121,15 +126,28 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 };
                 Velocity = new[]
                 {
-                    (double) vessel.rb_velocity.x,
-                    (double) vessel.rb_velocity.y,
-                    (double) vessel.rb_velocity.z,
+                    (double)vessel.rb_velocity.x,
+                    (double)vessel.rb_velocity.y,
+                    (double)vessel.rb_velocity.z,
                 };
                 LatLonAlt = new[]
                 {
                     vessel.latitude,
                     vessel.longitude,
-                    vessel.altitude
+                    vessel.altitude,
+                };
+                Height = vessel.heightFromTerrain;
+                Com = new[]
+                {
+                    (double)vessel.CoM.x,
+                    (double)vessel.CoM.x,
+                    (double)vessel.CoM.z,
+                };
+                NormalVector = new[]
+                {
+                    (double)vessel.terrainNormal.x,
+                    (double)vessel.terrainNormal.y,
+                    (double)vessel.terrainNormal.z,
                 };
                 Orbit = new[]
                 {
@@ -139,7 +157,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
                     vessel.orbit.LAN,
                     vessel.orbit.argumentOfPeriapsis,
                     vessel.orbit.meanAnomalyAtEpoch,
-                    vessel.orbit.epoch
+                    vessel.orbit.epoch,
+                    vessel.orbit.referenceBody.flightGlobalsIndex
                 };
             }
             catch (Exception e)
@@ -203,6 +222,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
             CopyOrbit(tgtOrbit, Vessel.orbitDriver.orbit);
             Vessel.orbitDriver.orbit.Init();
 
+            Vessel.CoM = Vector3.Lerp(CoM, Target.CoM, lerpPercentage);
+            Vessel.terrainNormal = Vector3.Lerp(Normal, Target.Normal, lerpPercentage);
             if (!Vessel.loaded)
             {
                 //DO NOT lerp the latlonalt as otherwise if you are in 
@@ -210,6 +231,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 Vessel.latitude = Target.LatLonAlt[0];
                 Vessel.longitude = Target.LatLonAlt[1];
                 Vessel.altitude = Target.LatLonAlt[2];
+                Vessel.heightFromTerrain = Target.Height;
             }
             else
             {
@@ -264,7 +286,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 epoch = from.epoch * (1 - t) + to.epoch * t,
             };
         }
-        
+
         private static void CopyOrbit(Orbit sourceOrbit, Orbit destinationOrbit)
         {
             destinationOrbit.inclination = sourceOrbit.inclination;
@@ -291,6 +313,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 GameSentTime = GameSentTime,
                 Landed = Landed,
                 LatLonAlt = LatLonAlt,
+                Height = Height,
+                Com = Com,
+                NormalVector = NormalVector,
                 Orbit = Orbit,
                 OrbitPosition = OrbitPosition,
                 OrbitVelocity = OrbitVelocity,

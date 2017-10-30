@@ -137,10 +137,10 @@ namespace LunaServer.Settings.Definition
         public int StrandedVesselsCheckMsInterval { get; set; } = 100;
 
         [XmlComment(Value = "Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions to the server")]
-        public int VesselDefinitionSendMsInterval { get; set; } = 1000;
+        public int VesselDefinitionSendMsInterval { get; set; } = 500;
 
         [XmlComment(Value = "Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions to the server")]
-        public int VesselDefinitionSendFarMsInterval { get; set; } = 5000;
+        public int VesselDefinitionSendFarMsInterval { get; set; } = 1000;
 
         [XmlComment(Value = "Interval in ms at wich users will send the abandoned vessel definition to the server")]
         public int AbandonedVesselsUpdateMsInterval { get; set; } = 15000;
