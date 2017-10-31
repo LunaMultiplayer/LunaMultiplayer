@@ -58,6 +58,7 @@ namespace LunaServer.Log
         {
             Console.ForegroundColor = ConsoleColor.Gray;
             WriteLog(LogLevels.Info, message, true);
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
 
         public static void Error(string message)

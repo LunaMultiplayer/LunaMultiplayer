@@ -1,4 +1,5 @@
-﻿using LunaServer.Utilities;
+﻿using LunaServer.Log;
+using LunaServer.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -31,9 +32,7 @@ namespace LunaServer.System
                 }
                 catch (Exception e)
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkRed;
-                    Console.WriteLine($"Error writing to file: {path}, Exception: {e}");
-                    Console.ForegroundColor = ConsoleColor.Gray;
+                    LunaLog.Error($"Error writing to file: {path}, Exception: {e}");
                 }
             }
         }

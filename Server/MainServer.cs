@@ -1,4 +1,4 @@
-using LunaCommon;
+﻿using LunaCommon;
 using LunaCommon.Enums;
 using LunaServer.Client;
 using LunaServer.Command;
@@ -10,6 +10,7 @@ using LunaServer.Settings;
 using LunaServer.System;
 using LunaServer.Utilities;
 using System;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +22,8 @@ namespace LunaServer
         {
             try
             {
+                Console.Title = $"LMPServer {VersionInfo.FullVersionNumber}";
+                Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = DateTime.UtcNow.Ticks;
 
                 //Start the server clock
@@ -44,8 +47,6 @@ namespace LunaServer
 
                 //Load plugins
                 LmpPluginHandler.LoadPlugins();
-
-                Console.Title = $"LMPServer {VersionInfo.FullVersionNumber}";
 
                 while (ServerContext.ServerStarting || ServerContext.ServerRestarting)
                 {
@@ -95,7 +96,7 @@ namespace LunaServer
                     while (ServerContext.ServerStarting)
                         Thread.Sleep(500);
 
-                    LunaLog.Normal("All systems up and running!");
+                    LunaLog.Normal("All systems up and running. Поехали!");
                     LmpPluginHandler.FireOnServerStart();
 
                     receiveThread.Wait();
