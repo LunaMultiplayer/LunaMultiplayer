@@ -16,6 +16,7 @@ namespace LunaClient.Systems.VesselProtoSys
     /// <summary>
     /// This system handles the vessel loading into the game and sending our vessel structure to other players.
     /// We only load vesels that are in our subspace
+    /// This system also handles changes that a vessel could have. Antenas that extend, shields that open, etc
     /// </summary>
     public class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
@@ -161,6 +162,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Here we run trough all the changes of the dictionary and applies them to the vessel.
         /// We extend/retract antennas, open/close shields, etc...
+        /// Once done we just clear the dictionary
         /// </summary>
         private void ProcessVesselChanges()
         {

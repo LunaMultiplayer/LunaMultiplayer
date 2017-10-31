@@ -2,6 +2,10 @@
 
 namespace LunaClient.Systems.VesselProtoSys
 {
+    /// <summary>
+    /// Here we handle the changes that a vessel has received. A "change" is a antenna that is deployed, a shield that is opened, etc.
+    /// We use this since reloading the whole vessel causes flickering.
+    /// </summary>
     public class VesselChanges
     {
         /// <summary>
@@ -64,6 +68,9 @@ namespace LunaClient.Systems.VesselProtoSys
             return change;
         }
         
+        /// <summary>
+        /// This method applies the changes we collected to a given vessel
+        /// </summary>
         public static void ProcessVesselChanges(Vessel vessel, VesselChange vesselChange)
         {
             if (vessel != null)
