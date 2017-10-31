@@ -61,11 +61,6 @@ namespace LunaClient.Systems.VesselProtoSys
 
             //var shieldsToOpen = newOpenShields.Except(currentOpenShields);
 
-            // var shieldedDocks = vessel.FindPartModulesImplementing<ModuleDockingNode>().Where(d => !d.IsDisabled && d.deployAnimator != null);
-            //var closedShieldDocks = shieldedDocks.Where(d => d.deployAnimator.animSwitch).ToArray();
-            //var openedShieldDocks = shieldedDocks.Where(d => !d.deployAnimator.animSwitch).ToArray();
-            //Toggle....
-            //shieldedDock.deployAnimator?.Toggle();
 
             return change;
         }
@@ -94,6 +89,36 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (part != null)
                     {
                         part.FindModuleImplementing<ModuleDeployablePart>().Retract();
+                    }
+                }
+
+                foreach (var shieldToClose in vesselChange.ShieldsToClose)
+                {
+                    var part = vessel.parts.FirstOrDefault(p => p.craftID == shieldToClose);
+                    if (part != null)
+                    {
+                        var module = part.FindModuleImplementing<ModuleDockingNode>();
+                        if (!module.IsDisabled && module.deployAnimator != null)
+                        {
+                            var isClosed = module.deployAnimator.animSwitch;
+                            if (!isClosed)
+                                module.deployAnimator.Toggle();
+                        }
+                    }
+                }
+
+                foreach (var shieldToClose in vesselChange.ShieldsToOpen)
+                {
+                    var part = vessel.parts.FirstOrDefault(p => p.craftID == shieldToClose);
+                    if (part != null)
+                    {
+                        var module = part.FindModuleImplementing<ModuleDockingNode>();
+                        if (!module.IsDisabled && module.deployAnimator != null)
+                        {
+                            var isClosed = module.deployAnimator.animSwitch;
+                            if (isClosed)
+                                module.deployAnimator.Toggle();
+                        }
                     }
                 }
             }
