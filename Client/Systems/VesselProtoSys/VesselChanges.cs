@@ -60,8 +60,7 @@ namespace LunaClient.Systems.VesselProtoSys
             //    .Select(p => uint.Parse(p.GetValue("cid"))).ToArray();
 
             //var shieldsToOpen = newOpenShields.Except(currentOpenShields);
-
-
+            
             return change;
         }
         
@@ -71,7 +70,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (vesselChange.Stage > int.MinValue)
                 {
-                    vessel.ActionGroups.ToggleGroup(KSPActionGroup.Stage);
+                    vessel.ActionGroups?.ToggleGroup(KSPActionGroup.Stage);
                 }
 
                 foreach (var partToExtend in vesselChange.PartsToExtend)
@@ -79,7 +78,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     var part = vessel.parts.FirstOrDefault(p => p.craftID == partToExtend);
                     if (part != null)
                     {
-                        part.FindModuleImplementing<ModuleDeployablePart>().Extend();
+                        part.FindModuleImplementing<ModuleDeployablePart>()?.Extend();
                     }
                 }
 
@@ -88,7 +87,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     var part = vessel.parts.FirstOrDefault(p => p.craftID == partToExtend);
                     if (part != null)
                     {
-                        part.FindModuleImplementing<ModuleDeployablePart>().Retract();
+                        part.FindModuleImplementing<ModuleDeployablePart>()?.Retract();
                     }
                 }
 
@@ -98,7 +97,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (part != null)
                     {
                         var module = part.FindModuleImplementing<ModuleDockingNode>();
-                        if (!module.IsDisabled && module.deployAnimator != null)
+                        if (module != null && !module.IsDisabled && module.deployAnimator != null)
                         {
                             var isClosed = module.deployAnimator.animSwitch;
                             if (!isClosed)
@@ -113,7 +112,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (part != null)
                     {
                         var module = part.FindModuleImplementing<ModuleDockingNode>();
-                        if (!module.IsDisabled && module.deployAnimator != null)
+                        if (module != null && !module.IsDisabled && module.deployAnimator != null)
                         {
                             var isClosed = module.deployAnimator.animSwitch;
                             if (isClosed)
