@@ -266,7 +266,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     //Load vessels that don't exist and are in our subspace
                     var vesselsToLoad = AllPlayerVessels
-                        .Where(v => v.Value.NeedsToBeReloaded && !v.Value.VesselExist &&
+                        .Where(v => !v.Value.VesselExist &&
                         (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.Value.VesselId)))
                         .ToArray();
 

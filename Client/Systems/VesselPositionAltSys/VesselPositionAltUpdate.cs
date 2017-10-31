@@ -218,7 +218,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
         {
             var tgtOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
                 Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Body);
-
+            
             CopyOrbit(tgtOrbit, Vessel.orbitDriver.orbit);
             Vessel.orbitDriver.orbit.Init();
 
@@ -248,19 +248,19 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude,
                     out Vessel.altitude);
             }
-            
-            //if (SettingsSystem.CurrentSettings.Debug2)
+
+            //if (SettingsSystem.CurrentSettings.Debug4)
             //{
             //    Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos;
             //    Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel;
             //}
-            //if (SettingsSystem.CurrentSettings.Debug3)
-            //    Vessel.orbitDriver.orbit.UpdateFromUT(Planetarium.GetUniversalTime());
-            //if (SettingsSystem.CurrentSettings.Debug4)
-            //    Vessel.orbitDriver.UpdateOrbit();
             //if (SettingsSystem.CurrentSettings.Debug5)
-            //    Vessel.orbitDriver.UpdateOrbit(false);
+            //    Vessel.orbitDriver.orbit.UpdateFromUT(Planetarium.GetUniversalTime());
             //if (SettingsSystem.CurrentSettings.Debug6)
+            //    Vessel.orbitDriver.UpdateOrbit();
+            //if (SettingsSystem.CurrentSettings.Debug7)
+            //    Vessel.orbitDriver.UpdateOrbit(false);
+            //if (SettingsSystem.CurrentSettings.Debug8)
             //    Vessel.orbitDriver.updateFromParameters();
         }
 

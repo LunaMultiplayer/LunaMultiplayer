@@ -35,7 +35,11 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public bool HasChanges()
         {
-            return Stage > int.MinValue || ShieldsToClose.Any() || ShieldsToOpen.Any() || PartsToExtend.Any() || PartsToRetract.Any();
+            return Stage > int.MinValue || 
+                (ShieldsToClose != null && ShieldsToClose.Any()) || 
+                (ShieldsToOpen != null && ShieldsToOpen.Any()) || 
+                (PartsToExtend != null && PartsToExtend.Any()) || 
+                (PartsToRetract != null && PartsToRetract.Any());
         }
     }
 }

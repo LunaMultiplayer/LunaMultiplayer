@@ -38,7 +38,7 @@ namespace LunaServer.Plugin
             var pluginDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Plugins");
             if (!FileHandler.FolderExists(pluginDirectory))
                 FileHandler.FolderCreate(pluginDirectory);
-            LunaLog.Debug("Loading plugins!");
+            LunaLog.Debug("Loading plugins...");
 
             //Load all the assemblies just in case they depend on each other during instantation
             var loadedAssemblies = new List<Assembly>();
