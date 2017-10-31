@@ -102,7 +102,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         newProtoUpd.NeedsToBeReloaded = VesselCommon.ProtoVesselNeedsToBeReloaded(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
                         if (!newProtoUpd.NeedsToBeReloaded)
                         {
-                            var changes = VesselCommon.GetProtoVesselChanges(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
+                            var changes = VesselChanges.GetProtoVesselChanges(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
                             if (changes.HasChanges())
                             {
                                 AllPlayerVesselChanges.AddOrUpdate(vesselId, changes, (key, existingVal) => changes);
@@ -158,6 +158,10 @@ namespace LunaClient.Systems.VesselProtoSys
 
         #region Update methods
 
+        /// <summary>
+        /// Here we run trough all the changes of the dictionary and applies them to the vessel.
+        /// We extend/retract antennas, open/close shields, etc...
+        /// </summary>
         private void ProcessVesselChanges()
         {
             try
@@ -167,27 +171,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselChange in AllPlayerVesselChanges)
                     {
                         var vessel = FlightGlobals.FindVessel(vesselChange.Key);
-                        if (vessel != null)
-                        {
-                            var change = vesselChange.Value;
-                            foreach (var partToExtend in change.PartsToExtend)
-                            {
-                                var part = vessel.parts.FirstOrDefault(p => p.craftID == partToExtend);
-                                if (part != null)
-                                {
-                                    part.FindModuleImplementing<ModuleDeployablePart>().Extend();
-                                }
-                            }
-
-                            foreach (var partToExtend in change.PartsToRetract)
-                            {
-                                var part = vessel.parts.FirstOrDefault(p => p.craftID == partToExtend);
-                                if (part != null)
-                                {
-                                    part.FindModuleImplementing<ModuleDeployablePart>().Retract();
-                                }
-                            }
-                        }
+                       VesselChanges.ProcessVesselChanges(vessel, vesselChange.Value);
                     }
 
                     AllPlayerVesselChanges.Clear();
