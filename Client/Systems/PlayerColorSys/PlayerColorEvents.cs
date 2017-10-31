@@ -1,9 +1,7 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems.Lock;
-using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
 using System;
-using UnityEngine;
+using UniLinq;
 
 namespace LunaClient.Systems.PlayerColorSys
 {
@@ -17,21 +15,9 @@ namespace LunaClient.Systems.PlayerColorSys
         /// <summary>
         /// When we create a vessel set it's orbit color to the player color
         /// </summary>
-        public void SetVesselOrbitColor(Vessel colorVessel)
+        public void OnVesselCreated(Vessel colorVessel)
         {
-            if (System.Enabled)
-            {
-                if (LockSystem.LockQuery.ControlLockExists(colorVessel.id) &&
-                    !LockSystem.LockQuery.ControlLockBelongsToPlayer(colorVessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                {
-                    var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
-                    SetOrbitColor(colorVessel, System.GetPlayerColor(vesselOwner));
-                }
-                else
-                {
-                    SetOrbitColor(colorVessel, System.DefaultColor);
-                }
-            }
+            System.SetVesselOrbitColor(colorVessel);
         }
 
         /// <summary>
@@ -60,17 +46,19 @@ namespace LunaClient.Systems.PlayerColorSys
             var vessel = FlightGlobals.FindVessel(vesselId);
             if (vessel != null)
             {
-                SetVesselOrbitColor(vessel);
+                System.SetVesselOrbitColor(vessel);
             }
         }
         
         /// <summary>
-        /// Sets the orbit color in a vessel
+        /// Called when you enter the map view.
         /// </summary>
-        private static void SetOrbitColor(Vessel vessel, Color colour)
+        public void MapEntered()
         {
-            vessel.orbitDriver.orbitColor = colour;
-            vessel.orbitDriver.Renderer.orbitColor = vessel.orbitDriver.orbitColor;
+            foreach (var vessel in FlightGlobals.Vessels.Where(v=> v.orbitDriver?.Renderer != null))
+            {
+                vessel.orbitDriver.Renderer.orbitColor = vessel.orbitDriver.orbitColor;
+            }
         }
     }
 }

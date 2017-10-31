@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
+using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselPositionAltSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -68,15 +69,17 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (ProtoVesselValidationsPassed(vesselProto))
             {
-                RegisterServerAsteriodIfVesselIsAsteroid(vesselProto);
-
                 if (FlightGlobals.FindVessel(vesselProto.vesselID) == null)
                 {
+                    RegisterServerAsteriodIfVesselIsAsteroid(vesselProto);
                     FixProtoVesselFlags(vesselProto);
                     GetLatestProtoVesselPosition(vesselProto);
                     return LoadVesselIntoGame(vesselProto);
                 }
+
+                LunaLog.LogError($"A vessel with id '{vesselProto.vesselID}' already exists. Cannot load the same vessel again");
             }
+
             return false;
         }
 
@@ -128,6 +131,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
                 if (reloadingCurrentVessel)
                 {
+                    OrbitPhysicsManager.HoldVesselUnpack();
+                    FlightGlobals.fetch.activeVessel.GoOnRails();
                     SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(vesselProto.vesselID);
                 }
 
@@ -243,6 +248,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 return false;
             }
 
+            SystemsContainer.Get<PlayerColorSystem>().SetVesselOrbitColor(currentProto.vesselRef);
             return true;
         }
 

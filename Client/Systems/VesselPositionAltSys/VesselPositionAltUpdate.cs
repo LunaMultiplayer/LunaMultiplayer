@@ -90,8 +90,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
             Landed = parent.Landed;
             LatLonAlt = parent.LatLonAlt;
             Height = parent.Height;
-            NormalVector = NormalVector;
-            Com = Com;
+            NormalVector = parent.NormalVector;
+            Com = parent.Com;
             Orbit = parent.Orbit;
             OrbitPosition = parent.OrbitPosition;
             OrbitVelocity = parent.OrbitVelocity;
@@ -248,8 +248,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude,
                     out Vessel.altitude);
             }
-
-            //TODO: Fix this comment mess and see what is usefull and what is not...
+            
             //if (SettingsSystem.CurrentSettings.Debug2)
             //{
             //    Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos;

@@ -1,6 +1,6 @@
-﻿using LunaClient.Base;
-using System;
+﻿using System;
 using System.Collections;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselSwitcherSys
 {
@@ -17,13 +17,7 @@ namespace LunaClient.Systems.VesselSwitcherSys
         #endregion
 
         #region Base overrides
-
-        protected override void OnEnabled()
-        {
-            base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckVesselToSwitch));
-        }
-
+        
         protected override void OnDisabled()
         {
             base.OnDisabled();
@@ -41,30 +35,10 @@ namespace LunaClient.Systems.VesselSwitcherSys
         {
             VesselToSwitchTo = FlightGlobals.FindVessel(vesselId);
             if (VesselToSwitchTo != null)
+            {
                 LunaLog.Log($"[LMP]: Switching to vessel {vesselId}");
-        }
-
-        #endregion
-
-        #region Update methods
-
-        /// <summary>
-        /// Checks if we must switch to a vessel and do so
-        /// </summary>
-        private static void CheckVesselToSwitch()
-        {
-            try
-            {
-                if (VesselToSwitchTo != null)
-                {
-                    Client.Singleton.StartCoroutine(SwitchToVessel());
-                }
+                Client.Singleton.StartCoroutine(SwitchToVessel());
             }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error in SendVesselDefinition {e}");
-            }
-
         }
 
         #endregion
@@ -78,8 +52,19 @@ namespace LunaClient.Systems.VesselSwitcherSys
         {
             if (VesselToSwitchTo != null)
             {
+                var tries = 0;
+                var zoom = FlightCamera.fetch.Distance;
+
+                OrbitPhysicsManager.HoldVesselUnpack();
+                while (!VesselToSwitchTo.loaded && tries < 100)
+                {
+                    tries++;
+                    yield return new WaitForFixedUpdate();
+                }
+
+                LunaLog.Log($"Tries: {tries} Loaded: {VesselToSwitchTo.loaded}");
                 FlightGlobals.ForceSetActiveVessel(VesselToSwitchTo);
-                yield return 0;
+                FlightCamera.fetch.SetDistance(zoom);
                 VesselToSwitchTo = null;
             }
         }

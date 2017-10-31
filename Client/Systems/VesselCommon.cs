@@ -256,11 +256,61 @@ namespace LunaClient.Systems
 
             return landingPadDistance < distance;
         }
-
-
-        public static bool ProtoVesselHasChanges(ProtoVessel protoVessel1, ProtoVessel protoVessel2)
+        
+        public static bool ProtoVesselHasChanges(ProtoVessel existing, ProtoVessel newProtoVessel)
         {
-            return protoVessel1.protoPartSnapshots.Count != protoVessel2.protoPartSnapshots.Count;
+            if (existing.protoPartSnapshots.Count != newProtoVessel.protoPartSnapshots.Count)
+                return true;
+
+            if (existing.stage != newProtoVessel.stage)
+                return true;
+
+            //Ditch the protovessel as they are not thread safe!
+            var protoVesselNode1 = new ConfigNode();
+            var protoVesselNode2 = new ConfigNode();
+            existing.Save(protoVesselNode1);
+            newProtoVessel.Save(protoVesselNode2);
+
+            var parts1 = protoVesselNode1.GetNodes("PART");
+            var parts2 = protoVesselNode2.GetNodes("PART");
+
+            //for (var i = 0; i < parts1.Length; i++)
+            //{
+            //    var part1 = parts1[i];
+            //    var part2 = parts2[i];
+
+            //    //cid = craftID
+            //    if (part1.GetValue("cid") != part2.GetValue("cid"))
+            //        return true;
+
+            //    if (part1.GetValue("state") != part2.GetValue("state"))
+            //        return true;
+
+            //    var part1Modules = part1.GetNodes("MODULE");
+            //    var part2Modules = part2.GetNodes("MODULE");
+
+            //    for (var j = 0; j < part1Modules.Length; j++)
+            //    {
+            //        var module1 = part1Modules[j];
+            //        var module2 = part2Modules[j];
+
+            //        if (module1.GetValue("name") == "ModuleTripLogger") continue;
+
+            //        for (var k = 0; k < module1.values.Count; k++)
+            //        {
+            //            var module1Val = module1.values[k];
+            //            if (module1Val.name.Contains("UT") || module1Val.name == "animState") continue;
+
+            //            var module2Val = module2.values[k];
+
+            //            if (module1Val.value != module2Val.value)
+            //                return true;
+            //        }
+            //    }
+
+            //}
+
+            return false;
         }
     }
 }

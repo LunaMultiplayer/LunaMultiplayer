@@ -16,7 +16,6 @@ namespace LunaCommon.Message.Client
             [(ushort)VesselMessageType.VesselsRequest] = new VesselsRequestMsgData(),
             [(ushort)VesselMessageType.Proto] = new VesselProtoMsgData(),
             [(ushort)VesselMessageType.Dock] = new VesselDockMsgData(),
-            [(ushort)VesselMessageType.Update] = new VesselUpdateMsgData(),
             [(ushort)VesselMessageType.Remove] = new VesselRemoveMsgData(),
             [(ushort)VesselMessageType.Change] = new VesselChangeMsgData(),
             [(ushort)VesselMessageType.Position] = new VesselPositionMsgData(),

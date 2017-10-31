@@ -272,6 +272,13 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselProto.Key))
                             continue;
 
+                        if(!VesselCommon.ProtoVesselHasChanges(vesselProto.Value.Vessel.BackupVessel(), vesselProto.Value.ProtoVessel))
+                        {
+                            vesselProto.Value.Loaded = true;
+                            UpdateVesselProtoInDictionary(vesselProto.Value);
+                            continue;
+                        }
+
                         LunaLog.Log($"[LMP]: Reloading vessel {vesselProto.Key}");
                         if (VesselLoader.ReloadVessel(vesselProto.Value.ProtoVessel))
                         {

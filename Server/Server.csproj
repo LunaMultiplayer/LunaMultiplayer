@@ -53,6 +53,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
     <Compile Include="System\GroupSystem.cs" />
+    <Compile Include="Log\LogThread.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselRelaySystem.cs" />
     <Compile Include="System\VesselUpdateRelaySystem.cs" />

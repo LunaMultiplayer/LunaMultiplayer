@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using LunaServer.Log;
 using LunaServer.System;
 
 namespace LunaServer.Context
@@ -26,6 +27,7 @@ namespace LunaServer.Context
         //Create universe directories
         public static void CheckUniverse()
         {
+            LunaLog.Debug("Loading universe... ");
             if (!FileHandler.FileExists(ServerContext.ModFilePath))
                 ModFileSystem.GenerateNewModFile();
             if (!FileHandler.FolderExists(ServerContext.UniverseDirectory))

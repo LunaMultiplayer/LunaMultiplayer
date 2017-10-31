@@ -9,9 +9,8 @@
         Proto = 4,
         Dock = 5,
         Remove = 6,
-        Update = 7,
-        Change = 8,
-        Position = 9,
-        Flightstate = 10
+        Change = 7,
+        Position = 8,
+        Flightstate = 9
     }
 }

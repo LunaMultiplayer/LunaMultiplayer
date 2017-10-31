@@ -54,8 +54,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
             //SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval,
             //    RoutineExecution.LateUpdate, SendVesselPositionUpdates));
 
-            //SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
-            //    RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
+                RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
         }
 
         protected override void OnDisabled()

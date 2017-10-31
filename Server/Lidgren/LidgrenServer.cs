@@ -153,6 +153,8 @@ namespace LunaServer.Lidgren
         {
             if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
 
+            LunaLog.Normal("Registering with master servers...");
+
             var adr = NetUtility.GetMyAddress(out var _);
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
 
@@ -160,7 +162,6 @@ namespace LunaServer.Lidgren
                 MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
                     .Select(Common.CreateEndpointFromString));
 
-            LunaLog.Normal("Registering with master servers...");
             while (ServerContext.ServerRunning)
             {
                 var msgData = new MsRegisterServerMsgData

@@ -44,27 +44,16 @@ namespace LunaServer.Command
         {
             try
             {
-                //Main loop
                 while (ServerContext.ServerRunning)
                 {
-                    var input = "";
-                    try
+                    var input = Console.ReadLine();
+                    if (input == null)
                     {
-                        input = Console.ReadLine();
-                        if (input == null)
-                        {
-                            //LunaLog.Debug("Terminal may be not attached or broken, Exiting out of command handler");
-                            return;
-                        }
-                    }
-                    catch
-                    {
-                        if (ServerContext.ServerRunning)
-                            LunaLog.Debug("Ignored mono Console.ReadLine() bug");
-                        Thread.Sleep(500);
+                        continue;
                     }
                     LunaLog.Normal($"Command input: {input}");
                     if (!string.IsNullOrEmpty(input))
+                    {
                         if (input.StartsWith("/"))
                         {
                             HandleServerInput(input.Substring(1));
@@ -74,6 +63,7 @@ namespace LunaServer.Command
                             if (input != "")
                                 Commands["say"].Func(input);
                         }
+                    }
                     Thread.Sleep(GeneralSettings.SettingsStore.MainTimeTick);
                 }
             }

@@ -26,7 +26,8 @@ namespace LunaClient.Systems.PlayerColorSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onVesselCreate.Add(PlayerColorEvents.SetVesselOrbitColor);
+            GameEvents.onVesselCreate.Add(PlayerColorEvents.OnVesselCreated);
+            GameEvents.OnMapEntered.Add(PlayerColorEvents.MapEntered);
             SystemsContainer.Get<LockSystem>().RegisterAcquireHook(PlayerColorEvents.OnLockAcquire);
             SystemsContainer.Get<LockSystem>().RegisterReleaseHook(PlayerColorEvents.OnLockRelease);
         }
@@ -34,16 +35,36 @@ namespace LunaClient.Systems.PlayerColorSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onVesselCreate.Remove(PlayerColorEvents.SetVesselOrbitColor);
+            GameEvents.onVesselCreate.Remove(PlayerColorEvents.OnVesselCreated);
+            GameEvents.OnMapEntered.Remove(PlayerColorEvents.MapEntered);
             SystemsContainer.Get<LockSystem>().UnregisterAcquireHook(PlayerColorEvents.OnLockAcquire);
             SystemsContainer.Get<LockSystem>().UnregisterReleaseHook(PlayerColorEvents.OnLockRelease);
             PlayerColors.Clear();
-
         }
 
         #endregion
 
         #region Public methods
+
+        /// <summary>
+        /// When we create a vessel set it's orbit color to the player color
+        /// </summary>
+        public void SetVesselOrbitColor(Vessel colorVessel)
+        {
+            if (Enabled)
+            {
+                if (LockSystem.LockQuery.ControlLockExists(colorVessel.id) &&
+                    !LockSystem.LockQuery.ControlLockBelongsToPlayer(colorVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                {
+                    var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
+                    SetOrbitColor(colorVessel, GetPlayerColor(vesselOwner));
+                }
+                else
+                {
+                    SetOrbitColor(colorVessel, DefaultColor);
+                }
+            }
+        }
 
         public static Color GenerateRandomColor()
         {
@@ -100,6 +121,19 @@ namespace LunaClient.Systems.PlayerColorSys
         #endregion
 
         #region Private methods
+
+        /// <summary>
+        /// Sets the orbit color in a vessel
+        /// </summary>
+        private static void SetOrbitColor(Vessel vessel, Color colour)
+        {
+            if (vessel != null && vessel.orbitDriver != null)
+            {
+                vessel.orbitDriver.orbitColor = colour;
+                if (vessel.orbitDriver.Renderer != null)
+                    vessel.orbitDriver.Renderer.orbitColor = vessel.orbitDriver.orbitColor;
+            }
+        }
 
         public string ConvertColorToString(Color convertColour)
         {

@@ -10,7 +10,6 @@ using LunaServer.Settings;
 using LunaServer.System;
 using LunaServer.Utilities;
 using System;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,9 +17,6 @@ namespace LunaServer
 {
     public class MainServer
     {
-        private static long _lastLogExpiredCheck;
-        private static long _lastDayCheck;
-
         public static void Main()
         {
             try
@@ -49,7 +45,7 @@ namespace LunaServer
                 //Load plugins
                 LmpPluginHandler.LoadPlugins();
 
-                Console.Title = $"LMPServer v{VersionInfo.FullVersionNumber}";
+                Console.Title = $"LMPServer {VersionInfo.FullVersionNumber}";
 
                 while (ServerContext.ServerStarting || ServerContext.ServerRestarting)
                 {
@@ -65,7 +61,7 @@ namespace LunaServer
                     }
 
                     ServerContext.ServerRestarting = false;
-                    LunaLog.Normal($"Starting Luna Server v{VersionInfo.FullVersionNumber}");
+                    LunaLog.Normal($"Starting Luna Server version: {VersionInfo.FullVersionNumber}");
 
                     if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
                     {
@@ -73,9 +69,7 @@ namespace LunaServer
                         LunaLog.Debug("Loading gameplay settings...");
                         GameplaySettings.Singleton.Load();
                     }
-
-                    //Load universe
-                    LunaLog.Normal("Loading universe... ");
+                    
                     Universe.CheckUniverse();
 
                     LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
@@ -87,52 +81,35 @@ namespace LunaServer
                     var commandThread = Task.Run(() => new CommandHandler().ThreadMain());
                     var clientThread = Task.Run(() => new ClientMainThread().ThreadMain());
 
-                    Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
-                    Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
+                    var receiveThread = Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
+                    var registerThread = Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
+                    var logThread = Task.Run(() => LogThread.RunLogThread());
 
                     var vesselRelayThread = Task.Run(() => VesselRelaySystem.RelayOldVesselMessages());
-
                     var vesselRelayFarThread = Task.Run(() => VesselUpdateRelaySystem.RelayToFarPlayers());
                     var vesselRelayMediumThread = Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
                     var vesselRelayCloseThread = Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
 
+                    Thread.Sleep(1000);
+
                     while (ServerContext.ServerStarting)
                         Thread.Sleep(500);
 
-                    LunaLog.Normal("Ready!");
+                    LunaLog.Normal("All systems up and running!");
                     LmpPluginHandler.FireOnServerStart();
-                    while (ServerContext.ServerRunning)
-                    {
-                        //Run the log expire function every 10 minutes
-                        if (ServerContext.ServerClock.ElapsedMilliseconds - _lastLogExpiredCheck > 600000)
-                        {
-                            _lastLogExpiredCheck = ServerContext.ServerClock.ElapsedMilliseconds;
-                            LogExpire.ExpireLogs();
-                        }
 
-                        // Check if the day has changed, every minute
-                        if (ServerContext.ServerClock.ElapsedMilliseconds - _lastDayCheck > 60000)
-                        {
-                            _lastDayCheck = ServerContext.ServerClock.ElapsedMilliseconds;
-                            if (ServerContext.Day != DateTime.Now.Day)
-                            {
-                                LunaLog.LogFilename = Path.Combine(LunaLog.LogFolder, $"lmpserver {DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
-                                LunaLog.WriteToLog($"Continued from logfile {DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
-                                ServerContext.Day = DateTime.Now.Day;
-                            }
-                        }
-
-                        Thread.Sleep(500);
-                    }
-
-                    LmpPluginHandler.FireOnServerStop();
+                    receiveThread.Wait();
+                    registerThread.Wait();
                     commandThread.Wait();
                     clientThread.Wait();
-                    vesselRelayThread.Wait();
+                    logThread.Wait();
 
+                    vesselRelayThread.Wait();
                     vesselRelayFarThread.Wait();
                     vesselRelayMediumThread.Wait();
                     vesselRelayCloseThread.Wait();
+
+                    LmpPluginHandler.FireOnServerStop();
                 }
 
                 LunaLog.Normal("Goodbye and thanks for all the fish!");

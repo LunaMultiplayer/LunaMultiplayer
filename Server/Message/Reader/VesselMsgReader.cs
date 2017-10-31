@@ -41,9 +41,6 @@ namespace LunaServer.Message.Reader
                 case VesselMessageType.Change:
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
                     break;
-                case VesselMessageType.Update:
-                    VesselRelaySystem.HandleVesselMessage(client, message);
-                    break;
                 case VesselMessageType.Position:
                     VesselRelaySystem.HandleVesselMessage(client, message);
                     break;

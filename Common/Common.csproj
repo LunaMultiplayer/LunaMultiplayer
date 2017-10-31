@@ -191,7 +191,6 @@
     <Compile Include="Message\Data\Motd\MotdReplyMsgData.cs" />
     <Compile Include="Message\Data\SyncTime\SyncTimeReplyMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryBaseMsgData.cs" />
-    <Compile Include="Message\Data\Vessel\VesselUpdateMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselProtoMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselListReplyMsgData.cs" />
     <Compile Include="Message\Data\PlayerConnection\PlayerConnectionLeaveMsgData.cs" />

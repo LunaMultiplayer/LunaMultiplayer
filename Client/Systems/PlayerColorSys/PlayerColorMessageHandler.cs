@@ -59,15 +59,13 @@ namespace LunaClient.Systems.PlayerColorSys
         public void UpdateVesselColors(string playerName)
         {
             var controlledVesselIds = LockSystem.LockQuery.GetAllControlLocks(playerName)
-                .Select(l => l.VesselId).ToArray();
+                .Select(l => FlightGlobals.FindVessel(l.VesselId))
+                .Where(v => v != null)
+                .ToArray();
 
-            foreach (var vesselId in controlledVesselIds)
+            foreach (var vessel in controlledVesselIds)
             {
-                var vesselToUpdate = FlightGlobals.FindVessel(vesselId);
-                if (vesselToUpdate != null)
-                {
-                    System.PlayerColorEvents.SetVesselOrbitColor(vesselToUpdate);
-                }
+                System.SetVesselOrbitColor(vessel);
             }
         }
     }

@@ -4,7 +4,6 @@ using LunaClient.Systems;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -63,14 +62,6 @@ namespace LunaClient.Windows.Debug
                 ConnectionText += $"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.\n";
                 ConnectionText += $"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n";
                 ConnectionText += $"Queued out msgs: {NetworkStatistics.GetStatistics("QueuedOutgoingMessages")}.\n";
-
-                //Vessel update system
-                VesselUpdateText = $"Queued messages: {SystemsContainer.Get<VesselUpdateSystem>().MessageHandler.IncomingMessages.Count}.\n";
-                VesselUpdateText += $"Spectating: {VesselCommon.IsSpectating}.\n";
-                VesselUpdateText += "Active vessel control lock: " +
-                    $"{FlightGlobals.ActiveVessel != null && LockSystem.LockQuery.ControlLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName)}.\n";
-                VesselUpdateText += "Active vessel update lock: " +
-                    $"{FlightGlobals.ActiveVessel != null && LockSystem.LockQuery.UpdateLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName)}.\n";
             }
         }
 
@@ -149,7 +140,6 @@ namespace LunaClient.Windows.Debug
         //private parts
         public bool DisplayFast { get; set; }
         public string VectorText { get; set; } = "";
-        public string VesselUpdateText { get; set; } = "";
         public string NtpText { get; set; } = "";
         public string ConnectionText { get; set; } = "";
         public float LastUpdateTime { get; set; }
@@ -163,7 +153,6 @@ namespace LunaClient.Windows.Debug
         protected bool DisplayVectors { get; set; }
         protected bool DisplayNtp { get; set; }
         protected bool DisplayConnectionQueue { get; set; }
-        protected bool DisplayVesselUpdatesData { get; set; }
 
         #endregion
     }

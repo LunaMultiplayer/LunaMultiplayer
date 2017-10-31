@@ -169,9 +169,6 @@
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageHandler.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageSender.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveSystem.cs" />
-    <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
-    <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
-    <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\Scenario\ScenarioMessageSender.cs" />
     <Compile Include="Systems\SettingsSys\SettingsServerStructure.cs" />
     <Compile Include="Systems\SettingsSys\SettingsMessageHandler.cs" />

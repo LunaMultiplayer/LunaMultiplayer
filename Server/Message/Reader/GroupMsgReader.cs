@@ -78,6 +78,8 @@ namespace LunaServer.Message.Reader
                         //var groupsAndOwners = GroupSystem.GroupsAndOwners();
                         var newMessage = new GroupListResponseMsgData
                         {
+                            Groups = new string[0],
+                            Owners = new string[0]
                             //Groups = groupsAndOwners.Key,
                             //Owners = groupsAndOwners.Value
                         };

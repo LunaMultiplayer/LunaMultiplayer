@@ -82,6 +82,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         /// <summary>
         /// Unloads a vessel from the game in 1 frame. Caution with this method as it can generate issues!
+        /// Specially if you receive a message for a vessel and that vessel is not found as you called this method
         /// </summary>
         public void UnloadVessel(Vessel killVessel)
         {
@@ -89,13 +90,16 @@ namespace LunaClient.Systems.VesselRemoveSys
             {
                 return;
             }
-
-            FlightGlobals.fetch.SetVesselTarget(null, true);
+            
             UnloadVesselFromGame(killVessel);
             KillGivenVessel(killVessel);
             UnloadVesselFromScenario(killVessel);
         }
 
+        /// <summary>
+        /// Unloads a vessel from the game in 1 frame. Caution with this method as it can generate issues!
+        /// Specially if you receive a message for a vessel and that vessel is not found as you called this method
+        /// </summary>
         public void UnloadVessel(Guid vesselId)
         {
             UnloadVessel(FlightGlobals.FindVessel(vesselId));
@@ -193,7 +197,8 @@ namespace LunaClient.Systems.VesselRemoveSys
         }
 
         /// <summary>
-        /// Removes the vessel from the scenario
+        /// Removes the vessel from the scenario. 
+        /// If you don't call this, the vessel will still be found in FlightGlobals.Vessels
         /// </summary>
         private static void UnloadVesselFromScenario(Vessel killVessel)
         {

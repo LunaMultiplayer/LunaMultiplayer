@@ -31,7 +31,6 @@ using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
-using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using System;
 
@@ -52,7 +51,6 @@ namespace LunaClient.Systems
             SystemsContainer.Get<VesselPositionSystem>(),
             SystemsContainer.Get<VesselPositionAltSystem>(),
             SystemsContainer.Get<VesselFlightStateSystem>(),
-            SystemsContainer.Get<VesselUpdateSystem>(),
             SystemsContainer.Get<VesselChangeSystem>(),
             SystemsContainer.Get<VesselProtoSystem>(),
             SystemsContainer.Get<VesselRemoveSystem>(),

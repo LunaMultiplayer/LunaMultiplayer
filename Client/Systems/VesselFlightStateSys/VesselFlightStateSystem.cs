@@ -9,16 +9,22 @@ using UnityEngine;
 namespace LunaClient.Systems.VesselFlightStateSys
 {
     /// <summary>
-    /// System that controls the flight state (user control inputs) for all the vessesl that are in flight
+    /// System that controls the flight state (user control inputs) for all the vessesl that are in flight and controlled
     /// </summary>
     [SuppressMessage("ReSharper", "DelegateSubtraction")]
     public class VesselFlightStateSystem : MessageSystem<VesselFlightStateSystem, VesselFlightStateMessageSender, VesselFlightStateMessageHandler>
     {
         #region Fields & properties
 
+        /// <summary>
+        /// This dictionary links a vessel with a callback that will apply the latest flight state we received
+        /// </summary>
         private static Dictionary<Guid, FlightInputCallback> FlyByWireDictionary { get; } =
             new Dictionary<Guid, FlightInputCallback>();
 
+        /// <summary>
+        /// This dictioanry contains the latest flight state of a vessel that we received
+        /// </summary>
         public ConcurrentDictionary<Guid, FlightCtrlState> FlightStatesDictionary { get; } =
             new ConcurrentDictionary<Guid, FlightCtrlState>();
 
@@ -32,20 +38,52 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         #region Base overrides
 
+        /// <inheritdoc />
+        /// <summary>
+        /// This system is multithreaded as we can receive the messages in one thread and store them in a concurrent dictionary
+        /// </summary>
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            //SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
-            //SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, RemoveUnloadedVesselsFromDictionary));
-            //SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddRemoveActiveVesselFromDictionary));
-            //SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddLoadedVesselsToDictionary));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, RemoveUnloadedAndPackedVessels));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddLoadedUnpackedVesselsToDictionary));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ReasignCallbacks));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            ClearSystem();
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Clear the delegates and the dictionaries
+        /// </summary>
+        public void ClearSystem()
+        {
+            foreach (var keyVal in FlyByWireDictionary)
+            {
+                var vessel = FlightGlobals.FindVessel(keyVal.Key);
+                if (vessel != null)
+                {
+                    try
+                    {
+                        vessel.OnFlyByWire -= FlyByWireDictionary[keyVal.Key];
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+                }
+            }
+
             FlyByWireDictionary.Clear();
             FlightStatesDictionary.Clear();
         }
@@ -54,27 +92,38 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         #region Update methods
 
+        /// <summary>
+        /// Sends our current flight state
+        /// </summary>
         private void SendFlightState()
         {
-            if (Enabled && FlightStateSystemReady && VesselCommon.PlayerVesselsNearby())
+            if (Enabled && FlightStateSystemReady)
             {
-                //TODO: Don't we want to send the current flight state even if nobody is nearby--on some infrequent interval?
                 MessageSender.SendCurrentFlightState();
             }
 
             if (Enabled)
             {
-                ChangeRoutineExecutionInterval("SendFlightState", VesselCommon.IsSomeoneSpectatingUs ? 100 : 1000);
+                ChangeRoutineExecutionInterval("SendFlightState", VesselCommon.IsSomeoneSpectatingUs ? 30 : 500);
             }
         }
 
-        private void RemoveUnloadedVesselsFromDictionary()
+        /// <summary>
+        /// Removes the unloaded/packed vessels from the system so we don't apply flightstates to them
+        /// </summary>
+        private void RemoveUnloadedAndPackedVessels()
         {
             if (Enabled && FlightStateSystemReady)
             {
-                var vesselsToRemove = FlightGlobals.VesselsUnloaded
-                    .Where(v => FlyByWireDictionary.Keys.Contains(v.id))
+                var vesselsToRemove = FlightGlobals.Vessels
+                    .Where(v => (!v.loaded || v.packed) && FlyByWireDictionary.Keys.Contains(v.id))
                     .ToList();
+
+                //We must never have our own active and controlled vessel in the dictionary
+                if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
+                {
+                    vesselsToRemove.Add(FlightGlobals.ActiveVessel);
+                }
 
                 foreach (var vesselToRemove in vesselsToRemove)
                 {
@@ -93,53 +142,48 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
         }
 
-        private void AddRemoveActiveVesselFromDictionary()
-        {
-            if (Enabled && FlightStateSystemReady)
-            {
-                if (VesselCommon.IsSpectating)
-                {
-                    if (!FlyByWireDictionary.ContainsKey(FlightGlobals.ActiveVessel.id) &&
-                        !FlightStatesDictionary.ContainsKey(FlightGlobals.ActiveVessel.id))
-                    {
-                        FlightStatesDictionary.TryAdd(FlightGlobals.ActiveVessel.id, FlightGlobals.ActiveVessel.ctrlState);
-                        FlyByWireDictionary.Add(FlightGlobals.ActiveVessel.id, st => OnVesselFlyByWire(FlightGlobals.ActiveVessel.id, st));
-                        FlightGlobals.ActiveVessel.OnFlyByWire += FlyByWireDictionary[FlightGlobals.ActiveVessel.id];
-                    }
-                }
-                else
-                {
-                    if (FlyByWireDictionary.ContainsKey(FlightGlobals.ActiveVessel.id) &&
-                        FlightStatesDictionary.ContainsKey(FlightGlobals.ActiveVessel.id))
-                    {
-                        try
-                        {
-                            FlightGlobals.ActiveVessel.OnFlyByWire -= FlyByWireDictionary[FlightGlobals.ActiveVessel.id];
-                        }
-                        catch (Exception)
-                        {
-                            // ignored
-                        }
-                        FlyByWireDictionary.Remove(FlightGlobals.ActiveVessel.id);
-                        FlightStatesDictionary.TryRemove(FlightGlobals.ActiveVessel.id, out _);
-                    }
-                }
-            }
-        }
-
-        private void AddLoadedVesselsToDictionary()
+        /// <summary>
+        /// Adds the loaded and unpacked vessels to the dictionary
+        /// </summary>
+        private void AddLoadedUnpackedVesselsToDictionary()
         {
             if (Enabled && FlightStateSystemReady)
             {
                 var vesselsToAdd = FlightGlobals.VesselsLoaded
-                    .Where(v => v.id != FlightGlobals.ActiveVessel.id && !FlyByWireDictionary.Keys.Contains(v.id))
-                    .ToArray();
+                    .Where(v => !v.packed && !FlyByWireDictionary.Keys.Contains(v.id))
+                    .ToList();
+
+                //We must never have our own active and controlled vessel in the dictionary
+                if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
+                {
+                    vesselsToAdd.Remove(FlightGlobals.ActiveVessel);
+                }
 
                 foreach (var vesselToAdd in vesselsToAdd)
                 {
                     FlightStatesDictionary.TryAdd(vesselToAdd.id, vesselToAdd.ctrlState);
-                    FlyByWireDictionary.Add(vesselToAdd.id, st => OnVesselFlyByWire(vesselToAdd.id, st));
+                    FlyByWireDictionary.Add(vesselToAdd.id, st => LunaOnVesselFlyByWire(vesselToAdd.id, st));
+
                     vesselToAdd.OnFlyByWire += FlyByWireDictionary[vesselToAdd.id];
+                }
+            }
+        }
+
+        /// <summary>
+        /// When vessels are reloaded we must assign the callback back to them
+        /// </summary>
+        private void ReasignCallbacks()
+        {
+            if (Enabled && FlightStateSystemReady)
+            {
+                var vesselsToReasign = FlyByWireDictionary.Keys
+                    .Select(FlightGlobals.FindVessel)
+                    .Where(v => v != null && !v.OnFlyByWire.GetInvocationList().Any(d=> d.Method.Name == nameof(LunaOnVesselFlyByWire)))
+                    .ToArray();
+
+                foreach (var vessel in vesselsToReasign)
+                {
+                    vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
                 }
             }
         }
@@ -148,11 +192,15 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         #region Private methods
 
-        private void OnVesselFlyByWire(Guid id, FlightCtrlState st)
+        /// <summary>
+        /// Here we copy the flight state we received and apply to the specific vessel.
+        /// This method is called by ksp as it's a delegate
+        /// </summary>
+        private void LunaOnVesselFlyByWire(Guid id, FlightCtrlState st)
         {
-            if (FlightStatesDictionary.ContainsKey(id))
+            if (FlightStatesDictionary.TryGetValue(id, out var value))
             {
-                st.CopyFrom(FlightStatesDictionary[id]);
+                st.CopyFrom(value);
             }
         }
 

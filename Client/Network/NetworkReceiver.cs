@@ -23,7 +23,6 @@ using LunaClient.Systems.VesselPositionAltSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
@@ -139,9 +138,6 @@ namespace LunaClient.Network
                 case ServerMessageType.Vessel:
                     switch (((VesselBaseMsgData)msg.Data).VesselMessageType)
                     {
-                        case VesselMessageType.Update:
-                            SystemsContainer.Get<VesselUpdateSystem>().EnqueueMessage(msg.Data);
-                            break;
                         case VesselMessageType.Position:
                             SystemsContainer.Get<VesselPositionAltSystem>().EnqueueMessage(msg.Data);
                             SystemsContainer.Get<VesselPositionSystem>().EnqueueMessage(msg.Data);

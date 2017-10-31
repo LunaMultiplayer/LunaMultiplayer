@@ -11,38 +11,40 @@ namespace LunaClient.Systems.VesselFlightStateSys
     {
         public void SendMessage(IMessageData msg)
         {
-            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg)));
+            NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
         public void SendCurrentFlightState()
         {
             var flightState = new FlightCtrlState();
             flightState.CopyFrom(FlightGlobals.ActiveVessel.ctrlState);
+            var id = FlightGlobals.ActiveVessel.id;
 
-            var msg = new VesselFlightStateMsgData
+            TaskFactory.StartNew(() =>
             {
-                VesselId = FlightGlobals.ActiveVessel.id,
-                GearDown = flightState.gearDown,
-                GearUp = flightState.gearUp,
-                Headlight = flightState.headlight,
-                KillRot = flightState.killRot,
-                MainThrottle = flightState.mainThrottle,
-                Pitch = flightState.pitch,
-                PitchTrim = flightState.pitchTrim,
-                Roll = flightState.roll,
-                RollTrim = flightState.rollTrim,
-                WheelSteer = flightState.wheelSteer,
-                WheelSteerTrim = flightState.wheelSteerTrim,
-                WheelThrottle = flightState.wheelThrottle,
-                WheelThrottleTrim = flightState.wheelThrottleTrim,
-                X = flightState.X,
-                Y = flightState.Y,
-                Yaw = flightState.yaw,
-                YawTrim = flightState.yawTrim,
-                Z = flightState.Z
-            };
-
-            SendMessage(msg);
+                SendMessage(new VesselFlightStateMsgData
+                {
+                    VesselId = id,
+                    GearDown = flightState.gearDown,
+                    GearUp = flightState.gearUp,
+                    Headlight = flightState.headlight,
+                    KillRot = flightState.killRot,
+                    MainThrottle = flightState.mainThrottle,
+                    Pitch = flightState.pitch,
+                    PitchTrim = flightState.pitchTrim,
+                    Roll = flightState.roll,
+                    RollTrim = flightState.rollTrim,
+                    WheelSteer = flightState.wheelSteer,
+                    WheelSteerTrim = flightState.wheelSteerTrim,
+                    WheelThrottle = flightState.wheelThrottle,
+                    WheelThrottleTrim = flightState.wheelThrottleTrim,
+                    X = flightState.X,
+                    Y = flightState.Y,
+                    Yaw = flightState.yaw,
+                    YawTrim = flightState.yawTrim,
+                    Z = flightState.Z
+                });
+            });
         }
     }
 }

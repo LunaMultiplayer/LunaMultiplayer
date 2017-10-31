@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -25,6 +26,7 @@ namespace LunaClient.Systems.GameScene
             //We are going to another screen so clear up the systems
             SystemsContainer.Get<VesselProtoSystem>().ClearSystem();
             SystemsContainer.Get<VesselRemoveSystem>().ClearSystem();
+            SystemsContainer.Get<VesselFlightStateSystem>().ClearSystem();
 
             switch (data)
             {
@@ -50,7 +52,6 @@ namespace LunaClient.Systems.GameScene
         private static void ReleaseAllControlLocks()
         {
             SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Control);
-            SystemsContainer.Get<LockSystem>().ReleaseSpectatorLock();
             VesselCommon.IsSpectating = false;
         }
 

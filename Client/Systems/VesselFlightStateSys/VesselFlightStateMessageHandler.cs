@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (!(messageData is VesselFlightStateMsgData msgData)) return;
 
-            if (System.FlightStatesDictionary.ContainsKey(msgData.VesselId))
+            if (System.FlightStatesDictionary.TryGetValue(msgData.VesselId, out var existingFlightState))
             {
                 var flightState = new FlightCtrlState
                 {
@@ -38,7 +38,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     wheelSteerTrim = msgData.WheelSteerTrim
                 };
 
-                System.FlightStatesDictionary[msgData.VesselId] = flightState;
+                System.FlightStatesDictionary.TryUpdate(msgData.VesselId, flightState, existingFlightState);
             }
         }
     }

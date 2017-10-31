@@ -19,9 +19,6 @@ namespace LunaClient.Windows.Debug
             DisplayConnectionQueue = GUILayout.Toggle(DisplayConnectionQueue, "Display connection statistics", ButtonStyle);
             if (DisplayConnectionQueue)
                 GUILayout.Label(ConnectionText, LabelStyle);
-            DisplayVesselUpdatesData = GUILayout.Toggle(DisplayVesselUpdatesData, "Display vessel updates statistics", ButtonStyle);
-            if (DisplayVesselUpdatesData)
-                GUILayout.Label(VesselUpdateText, LabelStyle);
             GUILayout.EndVertical();
         }
     }
