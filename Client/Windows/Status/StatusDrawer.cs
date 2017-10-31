@@ -103,8 +103,6 @@ namespace LunaClient.Windows.Status
             GUILayout.EndVertical();
         }
 
-        private static ProtoVessel proto = null;
-
         private void DrawDebugSwitches()
         {
 #if DEBUG

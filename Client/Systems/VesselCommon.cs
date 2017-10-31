@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
 using LunaCommon.Enums;
 using System;
@@ -29,15 +30,15 @@ namespace LunaClient.Systems
         {
             get { return _kerbin ?? (_kerbin = FlightGlobals.Bodies.Find(b => b.bodyName == "Kerbin")); }
         }
-        
+
         private static Vector3d LandingPadPosition =>
             Kerbin.GetWorldSurfacePosition(LandingPadLatitude, LandingPadLongitude, KscAltitude);
 
-        private static Vector3d RunwayPosition => 
+        private static Vector3d RunwayPosition =>
             Kerbin.GetWorldSurfacePosition(RunwayLatitude, RunwayLongitude, KscAltitude);
 
         #endregion
-        
+
         public static bool UpdateIsForOwnVessel(Guid vesselId)
         {
             //Ignore updates to our own vessel if we aren't spectating
@@ -70,9 +71,9 @@ namespace LunaClient.Systems
         /// Check if someone is spectating current vessel
         /// </summary>
         /// <returns></returns>
-        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null && 
+        public static bool IsSomeoneSpectatingUs => !IsSpectating && FlightGlobals.ActiveVessel != null &&
             LockSystem.LockQuery.SpectatorLockExists(FlightGlobals.ActiveVessel.id);
-        
+
         /// <summary>
         /// Return the controlled vessel ids
         /// </summary>
@@ -256,16 +257,19 @@ namespace LunaClient.Systems
 
             return landingPadDistance < distance;
         }
-        
-        public static bool ProtoVesselHasChanges(ProtoVessel existing, ProtoVessel newProtoVessel)
+
+        public static bool ProtoVesselNeedsToBeReloaded(ProtoVessel existing, ProtoVessel newProtoVessel)
         {
             if (existing.protoPartSnapshots.Count != newProtoVessel.protoPartSnapshots.Count)
                 return true;
 
-            if (existing.stage != newProtoVessel.stage)
-                return true;
+            return false;
+        }
 
-            //Ditch the protovessel as they are not thread safe!
+        public static VesselChange GetProtoVesselChanges(ProtoVessel existing, ProtoVessel newProtoVessel)
+        {
+            var change = new VesselChange();
+
             var protoVesselNode1 = new ConfigNode();
             var protoVesselNode2 = new ConfigNode();
             existing.Save(protoVesselNode1);
@@ -274,43 +278,49 @@ namespace LunaClient.Systems
             var parts1 = protoVesselNode1.GetNodes("PART");
             var parts2 = protoVesselNode2.GetNodes("PART");
 
-            //for (var i = 0; i < parts1.Length; i++)
-            //{
-            //    var part1 = parts1[i];
-            //    var part2 = parts2[i];
+            var currentExtendedParts = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+                m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
+                && m.HasValue("deployState") && m.GetValue("deployState") == "EXTENDED"))
+            .Select(p => uint.Parse(p.GetValue("cid")));
 
-            //    //cid = craftID
-            //    if (part1.GetValue("cid") != part2.GetValue("cid"))
-            //        return true;
+            var newExtendedParts = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+                m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
+                && m.HasValue("deployState") && m.GetValue("deployState") == "EXTENDED"))
+            .Select(p => uint.Parse(p.GetValue("cid")));
 
-            //    if (part1.GetValue("state") != part2.GetValue("state"))
-            //        return true;
+            change.PartsToExtend = newExtendedParts.Except(currentExtendedParts).ToArray();
 
-            //    var part1Modules = part1.GetNodes("MODULE");
-            //    var part2Modules = part2.GetNodes("MODULE");
+            var currentRetractedParts = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+                    m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
+                    && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
+                .Select(p => uint.Parse(p.GetValue("cid")));
 
-            //    for (var j = 0; j < part1Modules.Length; j++)
-            //    {
-            //        var module1 = part1Modules[j];
-            //        var module2 = part2Modules[j];
+            var newRetractedParts = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+                    m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
+                    && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
+                .Select(p => uint.Parse(p.GetValue("cid")));
 
-            //        if (module1.GetValue("name") == "ModuleTripLogger") continue;
+            change.PartsToRetract = newRetractedParts.Except(currentRetractedParts).ToArray();
 
-            //        for (var k = 0; k < module1.values.Count; k++)
-            //        {
-            //            var module1Val = module1.values[k];
-            //            if (module1Val.name.Contains("UT") || module1Val.name == "animState") continue;
+            //var currentOpenShields = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+            //        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
+            //        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
+            //    .Select(p => uint.Parse(p.GetValue("cid"))).ToArray();
 
-            //            var module2Val = module2.values[k];
+            //var newOpenShields = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+            //        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
+            //        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
+            //    .Select(p => uint.Parse(p.GetValue("cid"))).ToArray();
 
-            //            if (module1Val.value != module2Val.value)
-            //                return true;
-            //        }
-            //    }
+            //var shieldsToOpen = newOpenShields.Except(currentOpenShields);
 
-            //}
+            // var shieldedDocks = vessel.FindPartModulesImplementing<ModuleDockingNode>().Where(d => !d.IsDisabled && d.deployAnimator != null);
+            //var closedShieldDocks = shieldedDocks.Where(d => d.deployAnimator.animSwitch).ToArray();
+            //var openedShieldDocks = shieldedDocks.Where(d => !d.deployAnimator.animSwitch).ToArray();
+            //Toggle....
+            //shieldedDock.deployAnimator?.Toggle();
 
-            return false;
+            return change;
         }
     }
 }

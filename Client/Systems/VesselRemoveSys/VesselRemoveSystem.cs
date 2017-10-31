@@ -139,7 +139,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (Enabled)
             {
                 var vesselsToUnload = SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels
-                                       .Where(v => v.Value.Loaded && VesselCommon.VesselIsControlledAndInPastSubspace(v.Key))
+                                       .Where(v => !v.Value.NeedsToBeReloaded && VesselCommon.VesselIsControlledAndInPastSubspace(v.Key))
                                        .Select(v => FlightGlobals.FindVessel(v.Key))
                                        .ToArray();
 

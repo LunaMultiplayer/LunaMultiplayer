@@ -30,7 +30,7 @@ namespace LunaClient.Systems.VesselDockSys
             {
                 var newProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData);
 
-                if (VesselCommon.ProtoVesselHasChanges(FlightGlobals.ActiveVessel.protoVessel, newProto))
+                if (VesselCommon.ProtoVesselNeedsToBeReloaded(FlightGlobals.ActiveVessel.protoVessel, newProto))
                 {
                     LunaLog.Log("[LMP]: Docking NOT detected. We OWN the dominant vessel");
                     //We own the dominant vessel and dind't detected the docking event so we need to reload our OWN vessel

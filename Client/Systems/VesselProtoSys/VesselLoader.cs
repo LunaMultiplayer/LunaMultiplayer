@@ -37,7 +37,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     LunaLog.LogWarning($"[LMP]: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
                     SystemsContainer.Get<ChatSystem>().PmMessageServer($"WARNING: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
                 }
-                vessel.Value.Loaded = true;
+                vessel.Value.NeedsToBeReloaded = false;
             }
 
             LunaLog.Log($"[LMP]: {numberOfLoads} Vessels loaded into game");
