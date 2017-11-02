@@ -144,10 +144,6 @@
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageHandler.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageSender.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionSystem.cs" />
-    <Compile Include="Systems\VesselChangeSys\VesselChangeSystem.cs" />
-    <Compile Include="Systems\VesselChangeSys\VesselChangeEvents.cs" />
-    <Compile Include="Systems\VesselChangeSys\VesselChangeMessageHandler.cs" />
-    <Compile Include="Systems\VesselChangeSys\VesselChangeMessageSender.cs" />
     <Compile Include="Systems\VesselCommon.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockEvents.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockSystem.cs" />

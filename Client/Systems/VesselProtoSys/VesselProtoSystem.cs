@@ -103,11 +103,14 @@ namespace LunaClient.Systems.VesselProtoSys
                         newProtoUpd.NeedsToBeReloaded = VesselCommon.ProtoVesselNeedsToBeReloaded(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
                         if (!newProtoUpd.NeedsToBeReloaded)
                         {
-                            var changes = VesselChanges.GetProtoVesselChanges(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
-                            if (changes.HasChanges())
+                            TaskFactory.StartNew(() =>
                             {
-                                AllPlayerVesselChanges.AddOrUpdate(vesselId, changes, (key, existingVal) => changes);
-                            }
+                                var changes = VesselChanges.GetProtoVesselChanges(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
+                                if (changes.HasChanges())
+                                {
+                                    AllPlayerVesselChanges.AddOrUpdate(vesselId, changes, (key, existingVal) => changes);
+                                }
+                            });
                         }
                         AllPlayerVessels.TryUpdate(vesselId, newProtoUpd, existingProtoUpd);
                     }
@@ -173,7 +176,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselChange in AllPlayerVesselChanges)
                     {
                         var vessel = FlightGlobals.FindVessel(vesselChange.Key);
-                       VesselChanges.ProcessVesselChanges(vessel, vesselChange.Value);
+                        VesselChanges.ProcessVesselChanges(vessel, vesselChange.Value);
                     }
 
                     AllPlayerVesselChanges.Clear();
@@ -310,7 +313,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselProto.Key))
                             continue;
 
-                        if(!VesselCommon.ProtoVesselNeedsToBeReloaded(vesselProto.Value.Vessel.BackupVessel(), vesselProto.Value.ProtoVessel))
+                        if (!VesselCommon.ProtoVesselNeedsToBeReloaded(vesselProto.Value.Vessel.BackupVessel(), vesselProto.Value.ProtoVessel))
                         {
                             vesselProto.Value.NeedsToBeReloaded = false;
                             UpdateVesselProtoInDictionary(vesselProto.Value);

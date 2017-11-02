@@ -38,9 +38,6 @@ namespace LunaServer.Message.Reader
                 case VesselMessageType.Remove:
                     HandleVesselRemove(client, message);
                     break;
-                case VesselMessageType.Change:
-                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
-                    break;
                 case VesselMessageType.Position:
                     VesselRelaySystem.HandleVesselMessage(client, message);
                     break;

@@ -84,7 +84,6 @@
     <Compile Include="Message\Data\PlayerConnection\PlayerConnectionBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\SyncTime\SyncTimeBaseMsgData.cs" />
-    <Compile Include="Message\Data\Vessel\VesselChangeMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselPositionMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselFlightStateMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />

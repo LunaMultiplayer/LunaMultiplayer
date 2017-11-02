@@ -17,17 +17,17 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (dyingVessel.state != Vessel.State.DEAD)
                 return;
 
-            ////Only remove the vessel if we own the update lock
-            //if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
-            //{
-            //    LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
-            //    SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(dyingVessel);
+            //Only remove the vessel if we own the update lock
+            if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            {
+                LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
+                SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(dyingVessel);
 
-            //    System.MessageSender.SendVesselRemove(dyingVessel.id);
+                System.MessageSender.SendVesselRemove(dyingVessel.id);
 
-            //    //Vessel is dead so remove the locks
-            //    SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(dyingVessel.id);
-            //}
+                //Vessel is dead so remove the locks
+                SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(dyingVessel.id);
+            }
         }
 
         /// <summary>
