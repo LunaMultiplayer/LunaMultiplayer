@@ -25,7 +25,6 @@ namespace LunaServer.Command
             RegisterCommand("exit", new ShutDownCommand().Execute, "Shuts down the server");
             RegisterCommand("quit", new ShutDownCommand().Execute, "Shuts down the server");
             RegisterCommand("shutdown", new ShutDownCommand().Execute, "Shuts down the server");
-            RegisterCommand("restart", new RestartCommand().Execute, "Restarts the server");
             RegisterCommand("kick", new KickCommand().Execute, "Kicks a player from the server");
             RegisterCommand("pm", new PmCommand().Execute, "Sends a message to a player");
             RegisterCommand("ban", new BanCommands().HandleCommand, "Bans someone from the server");

@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Groups;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
+using System.Collections.Generic;
 
 namespace LunaCommon.Message.Server
 {
@@ -12,13 +12,11 @@ namespace LunaCommon.Message.Server
     {
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
+            [(ushort)GroupMessageType.ListRequest] = new GroupListRequestMsgData(),
             [(ushort)GroupMessageType.ListResponse] = new GroupListResponseMsgData(),
-            [(ushort)GroupMessageType.UpdateResponse] = new GroupUpdateResponseMsgData(),
-            [(ushort)GroupMessageType.Accept] = new GroupAcceptMsgData(),
-            [(ushort)GroupMessageType.Add] = new GroupAddMsgData(),
-            [(ushort)GroupMessageType.Invite] = new GroupInviteMsgData(),
-            [(ushort)GroupMessageType.Kick] = new GroupKickMsgData(),
-            [(ushort)GroupMessageType.Remove] = new GroupRemoveMsgData()
+            [(ushort)GroupMessageType.CreateGroup] = new GroupCreateMsgData(),
+            [(ushort)GroupMessageType.RemoveGroup] = new GroupRemoveMsgData(),
+            [(ushort)GroupMessageType.GroupUpdate] = new GroupUpdateMsgData()
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Groups;

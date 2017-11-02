@@ -86,7 +86,6 @@
     <Compile Include="Command\Command\DisplayHelpCommand.cs" />
     <Compile Include="Command\Command\ConnectionStatsCommand.cs" />
     <Compile Include="Command\Command\SayCommand.cs" />
-    <Compile Include="Command\Command\RestartCommand.cs" />
     <Compile Include="Command\Command\ShutDownCommand.cs" />
     <Compile Include="Command\Command\AdminRemoveCommand.cs" />
     <Compile Include="Command\CombinedCommand\Base\CombinedCommandBase.cs" />

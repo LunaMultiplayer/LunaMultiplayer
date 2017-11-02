@@ -4,6 +4,7 @@ using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using LunaCommon.Groups;
 
 namespace LunaCommon.Message.Serialization
 {
@@ -32,8 +33,8 @@ namespace LunaCommon.Message.Serialization
             [typeof(byte)] = messageData => GetByteFromBytes(messageData),
             [typeof(string)] = messageData => GetStringFromBytes(messageData),
             [typeof(Guid)] = messageData => GetGuidFromBytes(messageData),
-            [typeof(Guid)] = messageData => GetGuidFromBytes(messageData),
             [typeof(CraftListInfo)] = messageData => GetCraftListInfoFromBytes(messageData),
+            [typeof(Group)] = messageData => GetGroupFromBytes(messageData),
             [typeof(LockDefinition)] = messageData => GetLockDefinitionFromBytes(messageData),
             [typeof(KeyValuePair<string, string>)] = messageData => GetKeyValuePairStrStr_FromBytes(messageData),
             [typeof(KeyValuePair<string, string[]>)] = messageData => GetKeyValuePairStrStrArray_FromBytes(messageData),
@@ -49,8 +50,10 @@ namespace LunaCommon.Message.Serialization
             [typeof(bool[])] = messageData => GetBoolArrayFromBytes(messageData),
             [typeof(byte[])] = messageData => GetByteArrayFromBytes(messageData),
             [typeof(string[])] = messageData => GetStringArrayFromBytes(messageData),
+            [typeof(HashSet<string>)] = messageData => GetStringHashSetFromBytes(messageData),
             [typeof(Guid[])] = messageData => GetGuidArrayFromBytes(messageData),
             [typeof(LockDefinition[])] = messageData => GetLockDefinitionArrayFromBytes(messageData),
+            [typeof(Group[])] = messageData => GetGroupArrayFromBytes(messageData),
             [typeof(KeyValuePair<int, string>[])] = messageData => GetKeyValuePairIntStr_ArrayFromBytes(messageData),
             [typeof(KeyValuePair<string, string>[])] = messageData => GetKeyValuePairStrStr_ArrayFromBytes(messageData),
             [typeof(KeyValuePair<string, string[]>[])] = messageData => GetKeyValuePairStrStrArray_ArrayFromBytes(messageData),

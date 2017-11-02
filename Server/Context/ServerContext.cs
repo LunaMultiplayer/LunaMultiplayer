@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon.Message;
 using LunaServer.Client;
 using LunaServer.Lidgren;
 using LunaServer.Settings;
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
 
 namespace LunaServer.Context
 {
@@ -18,7 +18,6 @@ namespace LunaServer.Context
 
         public static bool ServerRunning { get; set; }
         public static bool ServerStarting { get; set; }
-        public static bool ServerRestarting { get; set; }
         public static Stopwatch ServerClock { get; } = new Stopwatch();
         public static long StartTime { get; set; }
         public static string ModFilePath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LMPModControl.txt");

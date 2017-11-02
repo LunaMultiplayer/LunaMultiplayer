@@ -4,7 +4,7 @@ namespace LunaCommon.Message.Data.Groups
 {
     public class GroupRemoveMsgData : GroupBaseMsgData
     {
-        public override GroupMessageType GroupMessageType => GroupMessageType.Remove;
+        public override GroupMessageType GroupMessageType => GroupMessageType.RemoveGroup;
         public string GroupName { get; set; }
     }
 }

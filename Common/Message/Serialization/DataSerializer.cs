@@ -4,6 +4,7 @@ using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using LunaCommon.Groups;
 
 namespace LunaCommon.Message.Serialization
 {
@@ -33,6 +34,7 @@ namespace LunaCommon.Message.Serialization
             [typeof(string)] = (messageData, inputData) => WriteBytesFromString(messageData, (string)inputData),
             [typeof(Guid)] = (messageData, inputData) => WriteBytesFromGuid(messageData, (Guid)inputData),
             [typeof(LockDefinition)] = (messageData, inputData) => WriteBytesFromLockDefinition(messageData, (LockDefinition)inputData),
+            [typeof(Group)] = (messageData, inputData) => WriteBytesFromGroup(messageData, (Group)inputData),
             [typeof(KeyValuePair<int, string>)] = (messageData, inputData) =>
                     WriteBytesFromKeyValuePairIntStr(messageData, (KeyValuePair<int, string>)inputData),
             [typeof(KeyValuePair<string, string>)] = (messageData, inputData) =>
@@ -57,10 +59,11 @@ namespace LunaCommon.Message.Serialization
                 (messageData, inputData) => WriteBytesFromDoubleArray(messageData, (double[])inputData),
             [typeof(bool[])] = (messageData, inputData) => WriteBytesFromBoolArray(messageData, (bool[])inputData),
             [typeof(byte[])] = (messageData, inputData) => WriteBytesFromByteArray(messageData, (byte[])inputData),
-            [typeof(string[])] =
-                (messageData, inputData) => WriteBytesFromStringArray(messageData, (string[])inputData),
+            [typeof(string[])] = (messageData, inputData) => WriteBytesFromStringArray(messageData, (string[])inputData),
+            [typeof(HashSet<string>)] = (messageData, inputData) => WriteBytesFromStringHashSet(messageData, (HashSet<string>)inputData),
             [typeof(Guid[])] = (messageData, inputData) => WriteBytesFromGuidArray(messageData, (Guid[])inputData),
             [typeof(LockDefinition[])] = (messageData, inputData) => WriteBytesFromLockDefinitionArray(messageData, (LockDefinition[])inputData),
+            [typeof(Group[])] = (messageData, inputData) => WriteBytesFromGroupArray(messageData, (Group[])inputData),
             [typeof(KeyValuePair<int, string>[])] = (messageData, inputData) =>
                     WriteBytesFromKeyValuePairIntStr_Array(messageData, (KeyValuePair<int, string>[])inputData),
             [typeof(KeyValuePair<string, string>[])] = (messageData, inputData) =>

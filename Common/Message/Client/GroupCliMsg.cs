@@ -13,12 +13,10 @@ namespace LunaCommon.Message.Client
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
             [(ushort)GroupMessageType.ListRequest] = new GroupListRequestMsgData(),
-            [(ushort)GroupMessageType.UpdateRequest] = new GroupUpdateRequestMsgData(),
-            [(ushort)GroupMessageType.Accept] = new GroupAcceptMsgData(),
-            [(ushort)GroupMessageType.Add] = new GroupAddMsgData(),
-            [(ushort)GroupMessageType.Invite] = new GroupInviteMsgData(),
-            [(ushort)GroupMessageType.Kick] = new GroupKickMsgData(),
-            [(ushort)GroupMessageType.Remove] = new GroupRemoveMsgData()
+            [(ushort)GroupMessageType.ListResponse] = new GroupListResponseMsgData(),
+            [(ushort)GroupMessageType.CreateGroup] = new GroupCreateMsgData(),
+            [(ushort)GroupMessageType.RemoveGroup] = new GroupRemoveMsgData(),
+            [(ushort)GroupMessageType.GroupUpdate] = new GroupUpdateMsgData()
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Groups;

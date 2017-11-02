@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,6 +10,44 @@ namespace LunaCommon
 {
     public class Common
     {
+        /// <summary>
+        /// Compare two ienumerables and return if they are the same or not IGNORING the order
+        /// </summary>
+        public static bool ScrambledEquals<T>(IEnumerable<T> list1, IEnumerable<T> list2)
+        {
+            var list1Enu = list1 as T[] ?? list1.ToArray();
+            var list2Enu = list2 as T[] ?? list2.ToArray();
+            if (list1Enu.Length != list2Enu.Length)
+            {
+                return false;
+            }
+
+            var cnt = new Dictionary<T, int>();
+            foreach (var s in list1Enu)
+            {
+                if (cnt.ContainsKey(s))
+                {
+                    cnt[s]++;
+                }
+                else
+                {
+                    cnt.Add(s, 1);
+                }
+            }
+            foreach (var s in list2Enu)
+            {
+                if (cnt.ContainsKey(s))
+                {
+                    cnt[s]--;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            return cnt.Values.All(c => c == 0);
+        }
+
         public static IPEndPoint CreateEndpointFromString(string endpoint)
         {
             return new IPEndPoint(Dns.GetHostAddresses(endpoint.Split(':')[0])[0], int.Parse(endpoint.Split(':')[1]));

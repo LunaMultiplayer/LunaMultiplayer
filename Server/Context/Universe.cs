@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System.Linq;
-using LunaServer.Log;
+﻿using LunaServer.Log;
 using LunaServer.System;
+using System.IO;
+using System.Linq;
 
 namespace LunaServer.Context
 {
@@ -36,6 +36,8 @@ namespace LunaServer.Context
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Crafts"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Flags")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Flags"));
+            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Groups")))
+                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Groups"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Players")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Players"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Kerbals")))

@@ -1,39 +1,25 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace LunaCommon.Groups
 {
+    [Serializable]
     public class Group
     {
-        private HashSet<string> Members { get; } = new HashSet<string>();
+        public HashSet<string> Members { get; set; }
+        public HashSet<string> Invited { get; set; }
         public string Owner { get; set; }
         public string Name { get; set; }
 
-        public Group(string name, string owner)
+        public Group()
         {
-            Members.Add(owner);
-            Owner = owner;
-            Name = name;
+            Members = new HashSet<string>();
+            Invited = new HashSet<string>();
         }
 
-        public void AddMember(string name)
+        public Group Clone()
         {
-            Members.Add(name);
-        }
-
-        public void RemoveMember(string name)
-        {
-            Members.Remove(name);
-        }
-
-        public bool HasMember(string name)
-        {
-            return Members.Contains(name);
-        }
-
-        public string[] GetMembers()
-        {
-            return Members.ToArray();
+            return MemberwiseClone() as Group;
         }
     }
 }

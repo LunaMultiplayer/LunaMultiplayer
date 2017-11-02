@@ -1,4 +1,5 @@
-﻿using LunaCommon.Locks;
+﻿using LunaCommon.Groups;
+using LunaCommon.Locks;
 using LunaCommon.Message.Data.CraftLibrary;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +12,7 @@ namespace LunaCommon.Message.Serialization
             KeyValuePair<string, CraftListInfo> inputData)
         {
             WriteBytesFromString(messageData, inputData.Key);
-            WriteBytesCraftListInfo(messageData, inputData.Value);
+            WriteBytesFromCraftListInfo(messageData, inputData.Value);
         }
 
         private static void WriteBytesFromKeyValuePairStrCraftListInfo_Array(Stream messageData,
@@ -22,9 +23,21 @@ namespace LunaCommon.Message.Serialization
                 WriteBytesFromKeyValuePairStrCraftListInfo(messageData, element);
         }
 
-        private static void WriteBytesCraftListInfo(Stream messageData, CraftListInfo value)
+        private static void WriteBytesFromGroupArray(Stream messageData, Group[] inputData)
         {
-            PrivSerialize(value, messageData, true);
+            WriteFirstLengthByte(messageData, inputData.Length);
+            foreach (var element in inputData)
+                WriteBytesFromGroup(messageData, element);
+        }
+
+        private static void WriteBytesFromGroup(Stream messageData, Group inputData)
+        {
+            PrivSerialize(inputData, messageData, true);
+        }
+
+        private static void WriteBytesFromCraftListInfo(Stream messageData, CraftListInfo inputData)
+        {
+            PrivSerialize(inputData, messageData, true);
         }
 
         private static void WriteBytesFromLockDefinitionArray(Stream messageData, LockDefinition[] inputData)

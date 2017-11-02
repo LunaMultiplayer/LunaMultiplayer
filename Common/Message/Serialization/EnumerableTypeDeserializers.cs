@@ -78,6 +78,15 @@ namespace LunaCommon.Message.Serialization
             return outputData;
         }
 
+        private static HashSet<string> GetStringHashSetFromBytes(Stream messageData)
+        {
+            var numberOfElements = GetIntFromBytes(messageData);
+            var outputData = new HashSet<string>();
+            for (var element = 0; element < numberOfElements; element++)
+                outputData.Add(GetStringFromBytes(messageData));
+            return outputData;
+        }
+
         private static Guid[] GetGuidArrayFromBytes(Stream messageData)
         {
             var numberOfElements = GetIntFromBytes(messageData);

@@ -1,91 +1,107 @@
-﻿using LunaCommon.Groups;
+﻿using LunaCommon;
+using LunaCommon.Groups;
+using LunaCommon.Message.Data.Groups;
+using LunaCommon.Message.Server;
+using LunaCommon.Xml;
+using LunaServer.Context;
+using LunaServer.Server;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace LunaServer.System
 {
-    public class GroupSystem
+    public static class GroupSystem
     {
-        private static ConcurrentDictionary<string, Group> Groups { get; } = new ConcurrentDictionary<string, Group>();
-        private static ConcurrentDictionary<string, List<string>> PendingInvitations { get; } =
-            new ConcurrentDictionary<string, List<string>>();
+        /// <summary>
+        /// The serializer is not thread safe so we need a lock
+        /// </summary>
+        private static readonly object FileLock = new object();
 
-        public static string[] GetPlayersInGroup(string groupName)
-        {
-            return Groups[groupName].GetMembers();
-        }
+        private static readonly string GroupsDirectory = Path.Combine(ServerContext.UniverseDirectory, "Groups");
+        private static readonly string GroupsFilePath = Path.Combine(GroupsDirectory, "Groups.xml");
 
-        public static void RegisterGroup(string groupName, string ownerName)
-        {
-            Groups[groupName] = new Group(groupName, ownerName);
-        }
+        public static ConcurrentDictionary<string, Group> Groups { get; } = new ConcurrentDictionary<string, Group>();
 
-        public static void DeregisterGroup(string groupName)
+        public static void CreateGroup(string clientPlayerName, string groupName)
         {
-            Groups[groupName] = null;
-        }
-
-        public static Group GetGroup(string groupName)
-        {
-            return Groups[groupName];
-        }
-
-        public static void Invite(string groupName, string playerName)
-        {
-            if (PendingInvitations[groupName] == null)
-                PendingInvitations[groupName] = new List<string>();
-            
-            PendingInvitations[groupName].Add(playerName);
-        }
-
-        public static void AddPlayerToGroup(string groupName, string player)
-        {
-            if (Groups[groupName] != null)
+            if (!Groups.ContainsKey(groupName))
             {
-                Groups[groupName].AddMember(player);
+                var newGroup = new Group();
+                newGroup.Members.Add(clientPlayerName);
+                newGroup.Owner = clientPlayerName;
+                newGroup.Name = groupName;
+                if (Groups.TryAdd(groupName, newGroup))
+                {
+                    MessageQueuer.SendToAllClients<GroupSrvMsg>(new GroupUpdateMsgData { Group = newGroup });
+                    Task.Run(() => SaveGroups());
+                }
             }
         }
 
-        public static void KickPlayerFromGroup(string groupName, string player)
+        public static void RemoveGroup(string clientPlayerName, string groupName)
         {
-            if (Groups[groupName] != null)
+            if (Groups.TryGetValue(groupName, out var existingGroup) && existingGroup.Owner == clientPlayerName
+                && Groups.TryRemove(groupName, out _))
             {
-                Groups[groupName].RemoveMember(player);
+                MessageQueuer.SendToAllClients<GroupSrvMsg>(new GroupRemoveMsgData { GroupName = groupName });
+                Task.Run(() => SaveGroups());
             }
         }
 
-        public static bool GroupExists(string groupName)
+        public static void UpdateGroup(string clientPlayerName, Group group)
         {
-            return Groups[groupName] != null;
-        }
-        
-        public static bool IsOwner(string groupName, string playerName)
-        {
-            return Groups[groupName].Owner == playerName;
-        }
-
-        public static bool IsPendingInvitation(string groupName, string playerName)
-        {
-            return PendingInvitations[groupName] != null && PendingInvitations[groupName].Contains(playerName);
-        }
-
-        public static int NumGroups(string playerName)
-        {
-            return Groups.Values.Sum(g => g.Owner == playerName ? 1 : 0);
-        }
-
-        public static KeyValuePair<string[], string[]> GroupsAndOwners()
-        {
-            var groupNames = Groups.Keys.ToArray();
-            var admins = new string[groupNames.Length];
-
-            for (var i = 0; i < groupNames.Length; i++)
+            if (Groups.TryGetValue(group.Name, out var existingGroup))
             {
-                admins[i] = Groups[groupNames[i]].Owner;
+                if (existingGroup.Owner == clientPlayerName)
+                {
+                    //We are the owner of the group so we can do whatever we want
+                    if (Groups.TryUpdate(group.Name, group, existingGroup))
+                    {
+                        MessageQueuer.SendToAllClients<GroupSrvMsg>(new GroupUpdateMsgData {Group = group});
+                        Task.Run(() => SaveGroups());
+                    }
+                }
+                else
+                {
+                    //We are not the owner of the group so the only thing we can do is to add ourself to the "invited" hashset
+                    if (group.Owner == existingGroup.Owner && Common.ScrambledEquals(group.Members, existingGroup.Members))
+                    {
+                        var invited = group.Invited.Except(existingGroup.Invited).ToArray();
+                        if (invited.Length == 1 && invited[0] == clientPlayerName && Groups.TryUpdate(group.Name, group, existingGroup))
+                        {
+                            MessageQueuer.SendToAllClients<GroupSrvMsg>(new GroupUpdateMsgData { Group = group });
+                            Task.Run(()=> SaveGroups());
+                        }
+                    }
+                }
             }
+        }
 
-            return new KeyValuePair<string[], string[]>(groupNames, admins);
+        public static void SaveGroups()
+        {
+            lock (FileLock)
+            {
+                if (FileHandler.FolderExists(GroupsDirectory))
+                    LunaXmlSerializer.WriteXml(Groups.Values.ToList(), GroupsFilePath);
+            }
+        }
+
+        public static void LoadGroups()
+        {
+            lock (FileLock)
+            {
+                if (File.Exists(GroupsFilePath))
+                {
+                    var values = LunaXmlSerializer.ReadXml<List<Group>>(GroupsFilePath);
+                    foreach (var value in values)
+                    {
+                        Groups.TryAdd(value.Name, value);
+                    }
+                }
+            }
         }
     }
 }

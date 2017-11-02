@@ -36,82 +36,52 @@ namespace LunaServer
                 Console.CancelKeyPress += CatchExit;
                 ServerContext.ServerStarting = true;
 
-                LunaLog.Debug("Loading settings...");
-                if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
-                {
-                    GameplaySettings.Singleton.Load();
-                }
-
                 //Set day for log change
                 ServerContext.Day = DateTime.Now.Day;
+                
+                LunaLog.Normal($"Starting Luna Server version: {VersionInfo.FullVersionNumber}");
 
-                //Load plugins
+                Universe.CheckUniverse();
                 LmpPluginHandler.LoadPlugins();
+                LoadSettingsAndGroups();
 
-                while (ServerContext.ServerStarting || ServerContext.ServerRestarting)
-                {
-                    if (ServerContext.ServerRestarting)
-                    {
-                        LunaLog.Debug("Reloading settings...");
-                        GeneralSettings.Singleton.Load();
-                        if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
-                        {
-                            LunaLog.Debug("Reloading gameplay settings...");
-                            GameplaySettings.Singleton.Load();
-                        }
-                    }
+                LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
 
-                    ServerContext.ServerRestarting = false;
-                    LunaLog.Normal($"Starting Luna Server version: {VersionInfo.FullVersionNumber}");
+                ServerContext.ServerRunning = true;
+                ServerContext.LidgrenServer.SetupLidgrenServer();
 
-                    if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
-                    {
-                        //Generate the config file by accessing the object.
-                        LunaLog.Debug("Loading gameplay settings...");
-                        GameplaySettings.Singleton.Load();
-                    }
-                    
-                    Universe.CheckUniverse();
+                var commandThread = Task.Run(() => new CommandHandler().ThreadMain());
+                var clientThread = Task.Run(() => new ClientMainThread().ThreadMain());
 
-                    LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
+                var receiveThread = Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
+                var registerThread = Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
+                var logThread = Task.Run(() => LogThread.RunLogThread());
 
-                    ServerContext.ServerRunning = true;
+                var vesselRelayThread = Task.Run(() => VesselRelaySystem.RelayOldVesselMessages());
+                var vesselRelayFarThread = Task.Run(() => VesselUpdateRelaySystem.RelayToFarPlayers());
+                var vesselRelayMediumThread = Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
+                var vesselRelayCloseThread = Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
 
-                    ServerContext.LidgrenServer.SetupLidgrenServer();
+                Thread.Sleep(1000);
 
-                    var commandThread = Task.Run(() => new CommandHandler().ThreadMain());
-                    var clientThread = Task.Run(() => new ClientMainThread().ThreadMain());
+                while (ServerContext.ServerStarting)
+                    Thread.Sleep(500);
 
-                    var receiveThread = Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
-                    var registerThread = Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
-                    var logThread = Task.Run(() => LogThread.RunLogThread());
+                LunaLog.Normal("All systems up and running. Поехали!");
+                LmpPluginHandler.FireOnServerStart();
 
-                    var vesselRelayThread = Task.Run(() => VesselRelaySystem.RelayOldVesselMessages());
-                    var vesselRelayFarThread = Task.Run(() => VesselUpdateRelaySystem.RelayToFarPlayers());
-                    var vesselRelayMediumThread = Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
-                    var vesselRelayCloseThread = Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
+                receiveThread.Wait();
+                registerThread.Wait();
+                commandThread.Wait();
+                clientThread.Wait();
+                logThread.Wait();
 
-                    Thread.Sleep(1000);
+                vesselRelayThread.Wait();
+                vesselRelayFarThread.Wait();
+                vesselRelayMediumThread.Wait();
+                vesselRelayCloseThread.Wait();
 
-                    while (ServerContext.ServerStarting)
-                        Thread.Sleep(500);
-
-                    LunaLog.Normal("All systems up and running. Поехали!");
-                    LmpPluginHandler.FireOnServerStart();
-
-                    receiveThread.Wait();
-                    registerThread.Wait();
-                    commandThread.Wait();
-                    clientThread.Wait();
-                    logThread.Wait();
-
-                    vesselRelayThread.Wait();
-                    vesselRelayFarThread.Wait();
-                    vesselRelayMediumThread.Wait();
-                    vesselRelayCloseThread.Wait();
-
-                    LmpPluginHandler.FireOnServerStop();
-                }
+                LmpPluginHandler.FireOnServerStop();
 
                 LunaLog.Normal("Goodbye and thanks for all the fish!");
             }
@@ -122,6 +92,19 @@ namespace LunaServer
                 else
                     LunaLog.Fatal($"Error in main server thread, Exception: {e}");
                 Console.ReadLine(); //Avoid closing automatically
+            }
+        }
+
+        private static void LoadSettingsAndGroups()
+        {
+            LunaLog.Debug("Loading groups...");
+            GroupSystem.LoadGroups();
+            LunaLog.Debug("Loading settings...");
+            GeneralSettings.Singleton.Load();
+            if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
+            {
+                LunaLog.Debug("Loading gameplay settings...");
+                GameplaySettings.Singleton.Load();
             }
         }
 

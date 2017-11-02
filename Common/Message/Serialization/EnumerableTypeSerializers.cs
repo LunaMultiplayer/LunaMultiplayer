@@ -62,6 +62,13 @@ namespace LunaCommon.Message.Serialization
                 WriteBytesFromString(messageData, element);
         }
 
+        private static void WriteBytesFromStringHashSet(Stream messageData, HashSet<string> inputData)
+        {
+            WriteFirstLengthByte(messageData, inputData.Count);
+            foreach (var element in inputData)
+                WriteBytesFromString(messageData, element);
+        }
+
         private static void WriteBytesFromGuidArray(Stream messageData, Guid[] inputData)
         {
             WriteFirstLengthByte(messageData, inputData.Length);
