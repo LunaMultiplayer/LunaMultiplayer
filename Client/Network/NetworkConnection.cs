@@ -29,7 +29,10 @@ namespace LunaClient.Network
             lock (DisconnectLock)
             {
                 if (MainSystem.NetworkState > ClientState.Disconnected)
-                {
+                {                    
+                    //DO NOT set networkstate as disconnected as we are in another thread!
+                    MainSystem.NetworkState = ClientState.DisconnectRequested;
+
                     LunaLog.Log($"[LMP]: Disconnected, reason: {reason}");
                     if (!HighLogic.LoadedSceneIsEditor && !HighLogic.LoadedSceneIsFlight)
                     {
@@ -42,10 +45,7 @@ namespace LunaClient.Network
                     }
 
                     SystemsContainer.Get<MainSystem>().Status = $"Disconnected: {reason}";
-
-                    //DO NOT set networkstate as disconnected as we are in another thread!
-                    MainSystem.NetworkState = ClientState.DisconnectRequested;
-
+                    
                     NetworkMain.ClientConnection.Disconnect(reason);
                     NetworkMain.ClientConnection.Shutdown(reason);
                     NetworkMain.ResetConnectionStaticsAndQueues();

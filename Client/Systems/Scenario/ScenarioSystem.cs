@@ -220,6 +220,8 @@ namespace LunaClient.Systems.Scenario
 
             var protoVesselNode = ProtoVessel.CreateVesselNode(kerbalName, VesselType.EVA, strandedOrbit, 0,
                 kerbalPartNode);
+
+            //It's not supposed to be infinite, but you're crazy if you think I'm going to decipher the values field of the rescue node.
             var discoveryNode = ProtoVessel.CreateDiscoveryNode(DiscoveryLevels.Unowned, UntrackedObjectClass.A,
                 double.PositiveInfinity,
                 double.PositiveInfinity);
@@ -229,7 +231,6 @@ namespace LunaClient.Systems.Scenario
                 discoveryInfo = discoveryNode
             };
 
-            //It's not supposed to be infinite, but you're crazy if you think I'm going to decipher the values field of the rescue node.
             HighLogic.CurrentGame.flightState.protoVessels.Add(protoVessel);
         }
 

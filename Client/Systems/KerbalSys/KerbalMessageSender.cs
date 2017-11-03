@@ -28,29 +28,20 @@ namespace LunaClient.Systems.KerbalSys
 
             var kerbalNode = new ConfigNode();
             pcm.Save(kerbalNode);
+
             var kerbalBytes = ConfigNodeSerializer.Serialize(kerbalNode);
             if (kerbalBytes == null || kerbalBytes.Length == 0)
             {
-                LunaLog.Log("[LMP]: VesselWorker: Error sending kerbal - bytes are null or 0");
+                LunaLog.LogError("[LMP]: Error sending kerbal - bytes are null or 0");
                 return;
             }
 
-            var kerbalHash = Common.CalculateSha256Hash(kerbalBytes);
-            var kerbalDifferent = false;
-            if (!System.ServerKerbals.ContainsKey(pcm.name))
+            var kerbalHash = Common.CalculateSha256Hash(kerbalBytes);;
+            if (!System.Kerbals.TryGetValue(pcm.name, out var existingValue) || existingValue.Hash != kerbalHash)
             {
-                //New kerbal
-                LunaLog.Log("[LMP]: Found new kerbal, sending...");
-                kerbalDifferent = true;
-            }
-            else if (System.ServerKerbals[pcm.name] != kerbalHash)
-            {
-                LunaLog.Log($"[LMP]: Found changed kerbal ({pcm.name}), sending...");
-                kerbalDifferent = true;
-            }
-            if (kerbalDifferent)
-            {
-                System.ServerKerbals[pcm.name] = kerbalHash;
+                LunaLog.Log($"[LMP]: Found new/changed kerbal ({pcm.name}), sending...");
+                var structure = new KerbalStructure(kerbalNode);
+                System.Kerbals.AddOrUpdate(pcm.name, new KerbalStructure(kerbalNode), (key, existingVal) => structure);
                 SendKerbalProtoMessage(pcm.name, kerbalBytes);
             }
         }

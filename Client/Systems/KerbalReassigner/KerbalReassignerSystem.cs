@@ -16,19 +16,19 @@ namespace LunaClient.Systems.KerbalReassigner
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onVesselCreate.Add(KerbalReassignerEvents.OnVesselCreate);
-            GameEvents.onVesselWasModified.Add(KerbalReassignerEvents.OnVesselWasModified);
-            GameEvents.onVesselDestroy.Add(KerbalReassignerEvents.OnVesselDestroyed);
-            GameEvents.onFlightReady.Add(KerbalReassignerEvents.OnFlightReady);
+            //GameEvents.onVesselCreate.Add(KerbalReassignerEvents.OnVesselCreate);
+            //GameEvents.onVesselWasModified.Add(KerbalReassignerEvents.OnVesselWasModified);
+            //GameEvents.onVesselDestroy.Add(KerbalReassignerEvents.OnVesselDestroyed);
+            //GameEvents.onFlightReady.Add(KerbalReassignerEvents.OnFlightReady);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onVesselCreate.Remove(KerbalReassignerEvents.OnVesselCreate);
-            GameEvents.onVesselWasModified.Remove(KerbalReassignerEvents.OnVesselWasModified);
-            GameEvents.onVesselDestroy.Remove(KerbalReassignerEvents.OnVesselDestroyed);
-            GameEvents.onFlightReady.Remove(KerbalReassignerEvents.OnFlightReady);
+            //GameEvents.onVesselCreate.Remove(KerbalReassignerEvents.OnVesselCreate);
+            //GameEvents.onVesselWasModified.Remove(KerbalReassignerEvents.OnVesselWasModified);
+            //GameEvents.onVesselDestroy.Remove(KerbalReassignerEvents.OnVesselDestroyed);
+            //GameEvents.onFlightReady.Remove(KerbalReassignerEvents.OnFlightReady);
             VesselToKerbal.Clear();
             KerbalToVessel.Clear();
         }
@@ -39,6 +39,8 @@ namespace LunaClient.Systems.KerbalReassigner
 
         public void DodgeKerbals(ConfigNode inputNode, Guid protovesselId)
         {
+            return;
+
             var takenKerbals = new List<string>();
             foreach (var partNode in inputNode.GetNodes("PART"))
             {
@@ -95,6 +97,7 @@ namespace LunaClient.Systems.KerbalReassigner
                     {
                         takenKerbals.Add(currentKerbalName);
                         CreateKerbalIfMissing(currentKerbalName, protovesselId);
+
                         HighLogic.CurrentGame.CrewRoster[currentKerbalName].rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
                         HighLogic.CurrentGame.CrewRoster[currentKerbalName].seatIdx = crewIndex;
                     }
@@ -107,7 +110,11 @@ namespace LunaClient.Systems.KerbalReassigner
                 KerbalToVessel[name] = protovesselId;
         }
 
-        public void CreateKerbalIfMissing(string kerbalName, Guid vesselId)
+        #endregion
+
+        #region Private methods
+        
+        private static void CreateKerbalIfMissing(string kerbalName, Guid vesselId)
         {
             if (!HighLogic.CurrentGame.CrewRoster.Exists(kerbalName))
             {
@@ -118,10 +125,6 @@ namespace LunaClient.Systems.KerbalReassigner
                 LunaLog.Log($"[LMP]: Created kerbal {pcm.name} for vessel {vesselId}, Kerbal was missing");
             }
         }
-
-        #endregion
-
-        #region Private methods
 
         //Better not use a bool for this and enforce the gender binary on xir!
         private static ProtoCrewMember.Gender GetKerbalGender(string kerbalName)

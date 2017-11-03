@@ -39,13 +39,13 @@ namespace LunaClient.Windows.Connection
             }
 
             //Draw connect button
-            if (MainSystem.NetworkState <= ClientState.Disconnected)
+            if (MainSystem.NetworkState == ClientState.Disconnected)
             {
                 GUI.enabled = SelectedSafe != -1;
                 if (GUILayout.Button("Connect", ButtonStyle))
                     ConnectEventHandled = false;
             }
-            else
+            else if (MainSystem.NetworkState > ClientState.Disconnected)
             {
                 if (GUILayout.Button("Disconnect", ButtonStyle))
                     DisconnectEventHandled = false;

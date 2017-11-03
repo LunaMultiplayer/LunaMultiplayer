@@ -1,77 +1,113 @@
 ﻿using LunaClient.Base;
-using LunaClient.Utilities;
-using LunaCommon;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
+using UniLinq;
+using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
 {
     /// <summary>
     /// System that handles the kerbals between client and the server.
-    /// TODO: we should add messages that "take" a kerbal and remove that kerbal from other clients roster and messages that "return" the kerbal once we recover a vessel
     /// </summary>
     public class KerbalSystem : MessageSystem<KerbalSystem, KerbalMessageSender, KerbalMessageHandler>
     {
         #region Fields
 
-        public Queue<ConfigNode> KerbalQueue { get; } = new Queue<ConfigNode>();
-        public Dictionary<string, string> ServerKerbals { get; } = new Dictionary<string, string>();
+        public ConcurrentDictionary<string, KerbalStructure> Kerbals { get; } = new ConcurrentDictionary<string, KerbalStructure>();
+
+        public bool KerbalSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready && 
+            HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
         #endregion
 
         #region Base overrides
 
+        protected override void OnEnabled()
+        {
+            base.OnEnabled();
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, LoadKerbals));
+            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckKerbalNumber));
+        }
+
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            KerbalQueue.Clear();
-            ServerKerbals.Clear();
+            Kerbals.Clear();
         }
 
         #endregion
 
-        #region Public
+        #region Routines
 
         /// <summary>
-        /// This method is called from the Main system to load all the kerbals we received 
-        /// when connecting to a server into the game
+        /// Loads the unloaded (either because they are new or they are updated) kerbals into the game
         /// </summary>
-        public void LoadKerbalsIntoGame()
+        private void LoadKerbals()
         {
-            LunaLog.Log("[LMP]: Loading kerbals into game");
-            while (KerbalQueue.Count > 0)
+            if (KerbalSystemReady)
             {
-                LoadKerbal(KerbalQueue.Dequeue());
-            }
-
-            //Server is new and don't have kerbals at all
-            if (ServerKerbals.Count == 0)
-            {
-                var newRoster = KerbalRoster.GenerateInitialCrewRoster(HighLogic.CurrentGame.Mode);
-                foreach (var pcm in newRoster.Crew)
+                foreach (var kerbal in Kerbals.Values.Where(v => !v.Loaded))
                 {
-                    HighLogic.CurrentGame.CrewRoster.AddCrewMember(pcm);
-                    MessageSender.SendKerbalIfDifferent(pcm);
+                    LoadKerbal(kerbal.KerbalData);
+                    kerbal.Loaded = true;
+
+                    UpdateKerbalInDictionary(kerbal);
                 }
             }
-            else
-            {
-                //Server has less than 20 kerbals so generate some
-                var generateKerbals = ServerKerbals.Count < 20 ? 20 - ServerKerbals.Count : 0;
-                if (generateKerbals > 0)
-                {
-                    LunaLog.Log($"[LMP]: Generating {generateKerbals} new kerbals");
-                    for (var i = 0; i < generateKerbals; i++)
-                    {
-                        var protoKerbal = HighLogic.CurrentGame.CrewRoster.GetNewKerbal();
-                        MessageSender.SendKerbalIfDifferent(protoKerbal);
-                    }
-                }
-            }
-
-            LunaLog.Log("[LMP]: Kerbals loaded");
         }
 
-        public void LoadKerbal(ConfigNode crewNode)
+        /// <summary>
+        /// Checks the kerbals that are in the server in order to spawn some more if needed
+        /// </summary>
+        private void CheckKerbalNumber()
+        {
+            if (KerbalSystemReady)
+            {
+                switch (HighLogic.CurrentGame.CrewRoster.GetAvailableCrewCount())
+                {
+                    case 0:
+                        //Server is new and don't have kerbals at all
+                        var newRoster = KerbalRoster.GenerateInitialCrewRoster(HighLogic.CurrentGame.Mode);
+                        foreach (var pcm in newRoster.Crew)
+                        {
+                            HighLogic.CurrentGame.CrewRoster.AddCrewMember(pcm);
+                            MessageSender.SendKerbalIfDifferent(pcm);
+                        }
+                        break;
+                    case int n when n < 20:
+                        //Server has less than 20 kerbals so generate some
+                        var generateKerbals = 20 - Kerbals.Count;
+                        LunaLog.Log($"[LMP]: Generating {generateKerbals} new kerbals");
+                        for (var i = 0; i < generateKerbals; i++)
+                        {
+                            var protoKerbal = HighLogic.CurrentGame.CrewRoster.GetNewKerbal();
+                            MessageSender.SendKerbalIfDifferent(protoKerbal);
+                        }
+                        break;
+                }
+            }
+        }
+
+        #endregion
+
+        #region Private
+
+        /// <summary>
+        /// Updates a value in the dictionary
+        /// </summary>
+        private void UpdateKerbalInDictionary(KerbalStructure kerbal)
+        {
+            Kerbals.TryGetValue(kerbal.Name, out var existingKerbal);
+            if (existingKerbal != null)
+            {
+                Kerbals.TryUpdate(kerbal.Name, kerbal, existingKerbal);
+            }
+        }
+
+        /// <summary>
+        /// Creates or updates a kerbal
+        /// </summary>
+        /// <param name="crewNode"></param>
+        private static void LoadKerbal(ConfigNode crewNode)
         {
             var protoCrew = new ProtoCrewMember(HighLogic.CurrentGame.Mode, crewNode);
             if (string.IsNullOrEmpty(protoCrew.name))
@@ -83,29 +119,12 @@ namespace LunaClient.Systems.KerbalSys
             protoCrew.type = ProtoCrewMember.KerbalType.Crew;
             if (!HighLogic.CurrentGame.CrewRoster.Exists(protoCrew.name))
             {
-                CreateKerbal(protoCrew);
+                HighLogic.CurrentGame.CrewRoster.AddCrewMember(protoCrew);
             }
             else
             {
                 UpdateKerbalData(crewNode, protoCrew);
             }
-        }
-
-        #endregion
-
-        #region Private
-
-        /// <summary>
-        /// Creates a new Kerbal
-        /// </summary>
-        private void CreateKerbal(ProtoCrewMember protoCrew)
-        {
-            HighLogic.CurrentGame.CrewRoster.AddCrewMember(protoCrew);
-            var kerbalNode = new ConfigNode();
-            protoCrew.Save(kerbalNode);
-            var kerbalBytes = ConfigNodeSerializer.Serialize(kerbalNode);
-            if (kerbalBytes != null && kerbalBytes.Length != 0)
-                ServerKerbals[protoCrew.name] = Common.CalculateSha256Hash(kerbalBytes);
         }
 
         /// <summary>

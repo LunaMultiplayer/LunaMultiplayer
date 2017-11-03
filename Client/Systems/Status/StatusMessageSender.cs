@@ -25,5 +25,15 @@ namespace LunaClient.Systems.Status
                 VesselText = playerStatus.VesselText
             });
         }
+
+        public void SendOwnStatus()
+        {
+            SendMessage(new PlayerStatusSetMsgData
+            {
+                PlayerName = SettingsSystem.CurrentSettings.PlayerName,
+                StatusText = System.MyPlayerStatus.StatusText,
+                VesselText = System.MyPlayerStatus.VesselText
+            });
+        }
     }
 }

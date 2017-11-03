@@ -377,7 +377,6 @@ namespace LunaClient
             HighLogic.CurrentGame.flightState.universalTime = SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
 
             //Load LMP stuff
-            SystemsContainer.Get<KerbalSystem>().LoadKerbalsIntoGame();
             SystemsContainer.Get<VesselProtoSystem>().VesselLoader.LoadVesselsIntoGame();
 
             //Load the scenarios from the server

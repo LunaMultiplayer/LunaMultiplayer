@@ -23,8 +23,6 @@ namespace LunaClient.Systems.KerbalSys
                     HandleKerbalReply(msgData as KerbalReplyMsgData);
                     break;
                 case KerbalMessageType.Proto:
-                    //TODO: If a player connects and sends this type of message while still starting the game, the game crashes.
-                    //There should be a buffer for this messages so they are processed once the system is enabled
                     HandleKerbalProto(msgData as KerbalProtoMsgData);
                     break;
                 default:
@@ -36,16 +34,21 @@ namespace LunaClient.Systems.KerbalSys
         /// <summary>
         /// Just load the received kerbal into game
         /// </summary>
-        /// <param name="messageData"></param>
         private static void HandleKerbalProto(KerbalProtoMsgData messageData)
         {
-            var kerbalNode = ConfigNodeSerializer.Deserialize(messageData.KerbalData);
+            ProcessKerbal(messageData.KerbalData);
+        }
+
+        /// <summary>
+        /// Appends the received kerbal to the dictionary
+        /// </summary>
+        private static void ProcessKerbal(byte[] kerbalData)
+        {
+            var kerbalNode = ConfigNodeSerializer.Deserialize(kerbalData);
             if (kerbalNode != null)
             {
-                if (MainSystem.NetworkState < ClientState.TimeLocked)
-                    System.KerbalQueue.Enqueue(kerbalNode);
-                else
-                    System.LoadKerbal(kerbalNode);
+                var kerbalStructure = new KerbalStructure(kerbalNode);
+                System.Kerbals.AddOrUpdate(kerbalStructure.Name, kerbalStructure, (key, existingVal) => kerbalStructure);
             }
             else
                 LunaLog.LogError("[LMP]: Failed to load kerbal!");
@@ -59,11 +62,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             foreach (var kerbal in messageData.KerbalsData)
             {
-                var kerbalNode = ConfigNodeSerializer.Deserialize(kerbal.Value);
-                if (kerbalNode != null)
-                    System.KerbalQueue.Enqueue(kerbalNode);
-                else
-                    LunaLog.LogError("[LMP]: Failed to load kerbal!");
+                ProcessKerbal(kerbal.Value);
             }
 
             LunaLog.Log("[LMP]: Kerbals Synced!");
