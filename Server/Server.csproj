@@ -37,6 +37,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\Dependencies\Lidgren.Network.dll</HintPath>
     </Reference>
+    <Reference Include="LiteDB">
+      <HintPath>..\External\Dependencies\LiteDB.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization" />
@@ -44,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Command\CommandDefinition.cs" />
+    <Compile Include="Enums\RelaySystemMode.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Message\Reader\AdminMsgReader.cs" />
     <Compile Include="Message\Reader\GroupMsgReader.cs" />
@@ -56,6 +60,8 @@
     <Compile Include="Log\LogThread.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselRelaySystem.cs" />
+    <Compile Include="System\VesselRelaySystemDataBase.cs" />
+    <Compile Include="System\VesselRelaySystemDictionary.cs" />
     <Compile Include="System\VesselUpdateRelaySystem.cs" />
     <Compile Include="Server\MessageQueuer.cs" />
     <Compile Include="System\FileHandler.cs" />
@@ -141,6 +147,7 @@
     <Compile Include="Command\Command\KickCommand.cs" />
     <Compile Include="Settings\Definition\SettingsDefinition.cs" />
     <Compile Include="Lidgren\LidgrenServer.cs" />
+    <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\HandledException.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -29,7 +29,8 @@ namespace LunaServer.System
             };
             MessageQueuer.SendToAllClients<WarpSrvMsg>(newMessageData);
 
-            WarpSystem.SaveSubspace(WarpContext.NextSubspaceId, message.ServerTimeDifference); //Save to disk
+            //Save new subspace info to disk
+            WarpSystem.SaveSubspace(WarpContext.NextSubspaceId, message.ServerTimeDifference);
             WarpContext.NextSubspaceId++;
         }
 
@@ -52,6 +53,7 @@ namespace LunaServer.System
                 {
                     client.Subspace = newSubspace;
 
+                    //If client stopped warping and there's nobody in that subspace, remove it
                     if (client.Subspace != -1 && !ServerContext.Clients.Any(c => c.Value.Subspace == oldSubspace))
                     {
                         WarpSystem.RemoveSubspace(oldSubspace);

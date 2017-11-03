@@ -1,89 +1,52 @@
 ﻿using LunaCommon.Message.Data.Vessel;
-using LunaCommon.Message.Server;
 using LunaServer.Client;
-using LunaServer.Context;
-using LunaServer.Server;
+using LunaServer.Enums;
 using LunaServer.Settings;
-using System.Collections.Concurrent;
-using System.Linq;
-using System.Threading;
+using System;
 
 namespace LunaServer.System
 {
     /// <summary>
     /// This class relay the vessel messages to the correct subspaces
+    /// Based on a setting we either call the DatabaseRelaySystem or the DictionaryRelaySystem
     /// </summary>
-    public class VesselRelaySystem
-    {
-        private static readonly ConcurrentDictionary<int, ConcurrentQueue<VesselBaseMsgData>> OldVesselMessages =
-            new ConcurrentDictionary<int, ConcurrentQueue<VesselBaseMsgData>>();
-
+    public static class VesselRelaySystem
+    {        
         /// <summary>
-        /// This method relays a message to the other clients in the same subspace and in case there are other players 
-        /// in older subspaces it stores it for further processing
+        /// This method relays a message to the other clients in the same subspace.
+        /// In case there are other players in OLDER subspaces it stores it in their queue for further processing
         /// </summary>
         public static void HandleVesselMessage(ClientStructure client, VesselBaseMsgData msg)
         {
-            if (client.Subspace == -1) return;
-
-            MessageQueuer.RelayMessageToSubspace<VesselSrvMsg>(client, msg);
-
-            if (GeneralSettings.SettingsStore.ShowVesselsInThePast)
+            switch (GeneralSettings.SettingsStore.RelaySystemMode)
             {
-                foreach (var subspace in WarpSystem.GetFutureSubspaces(client.Subspace))
-                    MessageQueuer.RelayMessageToSubspace<VesselSrvMsg>(client, msg, subspace);
-            }
-
-            //The client is running in the future so here we adjust the real sent time of the message
-            msg.SentTime += WarpSystem.GetSubspaceTimeDifference(client.Subspace);
-            foreach (var subspace in WarpSystem.GetPastSubspaces(client.Subspace))
-            {
-                if (!OldVesselMessages.ContainsKey(client.Subspace))
-                {
-                    OldVesselMessages.TryAdd(subspace, new ConcurrentQueue<VesselBaseMsgData>());
-                }
-
-                OldVesselMessages[subspace].Enqueue(msg);
+                case RelaySystemMode.Dictionary:
+                    VesselRelaySystemDictionary.HandleVesselMessage(client, msg);
+                    break;
+                case RelaySystemMode.Database:
+                    VesselRelaySystemDataBase.HandleVesselMessage(client, msg);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
         /// <summary>
-        /// Creates a new subspace and sets its message queue from a past subspace. 
+        /// Creates a new subspace and sets its message queue from a past subspace.
         /// Must be called AFTER the subspace is created in the warp context.
         /// </summary>
         public static void CreateNewSubspace(int subspaceId)
         {
-            //If the new subspace is the most advanced in time skip all this method
-            if (!WarpSystem.GetFutureSubspaces(subspaceId).Any()) return;
-
-            var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspaceId);
-
-            //Here we get the PAST subspace that is closest in time to the one we got as parameter
-            var pastSubspaces = WarpSystem.GetPastSubspaces(subspaceId);
-
-            if (pastSubspaces.Any())
+            switch (GeneralSettings.SettingsStore.RelaySystemMode)
             {
-                var closestPastSubspace = WarpContext.Subspaces
-                    .Where(s => pastSubspaces.Contains(s.Key))
-                    .OrderByDescending(s => s.Value)
-                    .Select(s => s.Key)
-                    .First();
-
-                var originalqueue = OldVesselMessages[closestPastSubspace];
-
-                var messages = new VesselBaseMsgData[originalqueue.Count];
-                originalqueue.CopyTo(messages, 0);
-
-                var messageQueue = new ConcurrentQueue<VesselBaseMsgData>(messages);
-
-                //Now we remove the messages that are too old for this subspace
-                while (messageQueue.TryDequeue(out var msg))
-                {
-                    if (msg.SentTime >= subspaceTime)
-                        break;
-                }
-
-                OldVesselMessages.TryAdd(subspaceId, messageQueue);
+                case RelaySystemMode.Dictionary:
+                    VesselRelaySystemDictionary.CreateNewSubspace(subspaceId);
+                    break;
+                case RelaySystemMode.Database:
+                    VesselRelaySystemDataBase.CreateNewSubspace(subspaceId);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
@@ -92,7 +55,17 @@ namespace LunaServer.System
         /// </summary>
         public static void RemoveSubspace(int subspaceId)
         {
-            OldVesselMessages.TryRemove(subspaceId, out var _);
+            switch (GeneralSettings.SettingsStore.RelaySystemMode)
+            {
+                case RelaySystemMode.Dictionary:
+                    VesselRelaySystemDictionary.RemoveSubspace(subspaceId);
+                    break;
+                case RelaySystemMode.Database:
+                    VesselRelaySystemDataBase.RemoveSubspace(subspaceId);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         /// <summary>
@@ -101,20 +74,16 @@ namespace LunaServer.System
         /// </summary>
         public static void RelayOldVesselMessages()
         {
-            while (ServerContext.ServerRunning)
+            switch (GeneralSettings.SettingsStore.RelaySystemMode)
             {
-                foreach (var keyVal in OldVesselMessages.Where(m => !m.Value.IsEmpty))
-                {
-                    var subspaceTime = WarpSystem.GetCurrentSubspaceTime(keyVal.Key);
-
-                    while (keyVal.Value.TryPeek(out var msg) && subspaceTime >= msg.SentTime)
-                    {
-                        keyVal.Value.TryDequeue(out msg);
-                        MessageQueuer.SendMessageToSubspace<VesselSrvMsg>(msg, keyVal.Key);
-                    }
-                }
-
-                Thread.Sleep(GeneralSettings.SettingsStore.SendReceiveThreadTickMs);
+                case RelaySystemMode.Dictionary:
+                    VesselRelaySystemDictionary.RelayOldVesselMessages();
+                    break;
+                case RelaySystemMode.Database:
+                    VesselRelaySystemDataBase.RelayOldVesselMessages();
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

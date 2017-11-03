@@ -1,5 +1,6 @@
 ﻿using LunaCommon.Enums;
 using LunaCommon.Xml;
+using LunaServer.Enums;
 using LunaServer.Log;
 using System;
 
@@ -102,8 +103,8 @@ namespace LunaServer.Settings.Definition
         public int ConnectionMsTimeout { get; set; }= 20000;
 #endif
 
-        [XmlComment(Value = "Interval in Ms at wich the client will send updates for his vessel when other players are nearby.\n" +
-                     "#Decrease it if your clients have good network connection and you plan to do dogfights")]
+        [XmlComment(Value = "Interval in Ms at wich the client will send updates for his vessel when other players are nearby. " +
+                     "Decrease it if your clients have good network connection and you plan to do dogfights")]
         public int VesselUpdatesSendMsInterval { get; set; } = 30;
 
         [XmlComment(Value = "Interval in Ms at wich the client will send updates for vessels that are uncontrolled but nearby him.")]
@@ -144,6 +145,10 @@ namespace LunaServer.Settings.Definition
 
         [XmlComment(Value = "Interval in ms at wich users will send the abandoned vessel definition to the server")]
         public int AbandonedVesselsUpdateMsInterval { get; set; } = 15000;
+
+        [XmlComment(Value = "Relay system mode. Dictionary uses more RAM but it's faster. DataBase use disk space instead but it's slower" +
+                            "Values: Dictionary, DataBase")]
+        public RelaySystemMode RelaySystemMode { get; set; } = RelaySystemMode.Dictionary;
 
         public int FarDistanceUpdateIntervalMs { get; set; } = 500; // 2FPS
         public int MediumDistanceUpdateIntervalMs { get; set; } = 250; //4 FPS

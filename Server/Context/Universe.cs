@@ -38,16 +38,18 @@ namespace LunaServer.Context
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Flags"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Groups")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Groups"));
-            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Players")))
-                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Players"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Kerbals")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Kerbals"));
-            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Vessels")))
-                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Vessels"));
+            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Players")))
+                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Players"));
+            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Relay")))
+                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Relay"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Scenarios")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Scenarios"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", "Initial")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", "Initial"));
+            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Vessels")))
+                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Vessels"));
         }
     }
 }
