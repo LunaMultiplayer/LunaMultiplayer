@@ -29,6 +29,11 @@ namespace LunaClient.Systems.VesselProtoSys
             if (currentStage != newStage)
                 change.Stage = int.Parse(newStage);
 
+            var currentParts = parts1.Select(p => uint.Parse(p.GetValue("cid")));
+            var newParts = parts2.Select(p => uint.Parse(p.GetValue("cid")));
+
+            change.PartsToRemove = currentParts.Except(newParts).ToArray();
+
             var currentExtendedParts = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
                     m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
                     && m.HasValue("deployState") && m.GetValue("deployState") == "EXTENDED"))
@@ -81,6 +86,15 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (vesselChange.Stage > int.MinValue)
                 {
                     vessel.ActionGroups?.ToggleGroup(KSPActionGroup.Stage);
+                }
+
+                foreach (var partToRemove in vesselChange.PartsToRemove)
+                {
+                    var part = vessel.parts.FirstOrDefault(p => p.craftID == partToRemove);
+                    if (part != null)
+                    {
+                        part.Die();
+                    }
                 }
 
                 foreach (var partToExtend in vesselChange.PartsToExtend)

@@ -263,7 +263,7 @@ namespace LunaClient.Systems
         /// </summary>
         public static bool ProtoVesselNeedsToBeReloaded(ProtoVessel existing, ProtoVessel newProtoVessel)
         {
-            if (existing.protoPartSnapshots.Count != newProtoVessel.protoPartSnapshots.Count)
+            if (existing.protoPartSnapshots.Count < newProtoVessel.protoPartSnapshots.Count)
                 return true;
 
             return false;
