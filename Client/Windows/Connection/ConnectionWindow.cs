@@ -37,6 +37,12 @@ namespace LunaClient.Windows.Connection
         protected const float WindowHeight = 400;
         protected const float WindowWidth = 400;
 
+#if DEBUG
+        private readonly string _title = $"LunaMultiPlayer {VersionInfo.FullVersionNumber} {CommonUtil.DebugPort}";
+#else
+        private readonly string _title = $"LunaMultiPlayer {VersionInfo.FullVersionNumber}";
+#endif
+
         #endregion
 
         #region Base overrides
@@ -69,11 +75,11 @@ namespace LunaClient.Windows.Connection
         public override void OnGui()
         {
             base.OnGui();
-
+            
             if (Display)
                 WindowRect =
                     LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, $"LunaMultiPlayer {VersionInfo.FullVersionNumber}", WindowStyle, LayoutOptions));
+                        DrawContent, _title, WindowStyle, LayoutOptions));
         }
 
         public override void Update()

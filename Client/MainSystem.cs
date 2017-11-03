@@ -2,7 +2,6 @@
 using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Flag;
-using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;

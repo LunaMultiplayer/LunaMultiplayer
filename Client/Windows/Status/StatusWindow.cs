@@ -38,6 +38,12 @@ namespace LunaClient.Windows.Status
         private double LastStatusUpdate { get; set; }
         private bool CalculatedMinSize { get; set; }
 
+#if DEBUG
+        private readonly string _title = $"LMP  {CommonUtil.DebugPort}";
+#else
+        private readonly string _title = $"LMP";
+#endif
+
         #endregion
 
         public override void OnGui()
@@ -48,21 +54,22 @@ namespace LunaClient.Windows.Status
                 ColorEventHandled = true;
             }
             base.OnGui();
+            
             if (Display)
             {
                 //Calculate the minimum size of the minimize window by drawing it off the screen
                 if (!CalculatedMinSize)
                     MinWindowRect = GUILayout.Window(6701 + MainSystem.WindowOffset, MinWindowRect, DrawMaximize,
-                        "LMP", WindowStyle, MinLayoutOptions);
+                        _title, WindowStyle, MinLayoutOptions);
                 if (!SafeMinimized)
                     WindowRect =
                         LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6703 + MainSystem.WindowOffset, WindowRect,
                             DrawContent,
-                            "LunaMultiPlayer - Status", WindowStyle, LayoutOptions));
+                            _title, WindowStyle, LayoutOptions));
                 else
                     MinWindowRect =
                         LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6703 + MainSystem.WindowOffset, MinWindowRect,
-                            DrawMaximize, "LMP", WindowStyle, MinLayoutOptions));
+                            DrawMaximize, _title, WindowStyle, MinLayoutOptions));
             }
             CheckWindowLock();
         }
