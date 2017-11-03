@@ -50,7 +50,7 @@ namespace LunaClient.Systems.VesselProtoSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToLoad));
+            SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToReload));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ProcessVesselChanges));
@@ -100,18 +100,14 @@ namespace LunaClient.Systems.VesselProtoSys
                     }
                     else
                     {
-                        newProtoUpd.NeedsToBeReloaded = VesselCommon.ProtoVesselNeedsToBeReloaded(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
-                        if (!newProtoUpd.NeedsToBeReloaded)
+                        TaskFactory.StartNew(() =>
                         {
-                            TaskFactory.StartNew(() =>
+                            var changes = VesselChanges.GetProtoVesselChanges(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
+                            if (changes.HasChanges())
                             {
-                                var changes = VesselChanges.GetProtoVesselChanges(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
-                                if (changes.HasChanges())
-                                {
-                                    AllPlayerVesselChanges.AddOrUpdate(vesselId, changes, (key, existingVal) => changes);
-                                }
-                            });
-                        }
+                                AllPlayerVesselChanges.AddOrUpdate(vesselId, changes, (key, existingVal) => changes);
+                            }
+                        });
                         AllPlayerVessels.TryUpdate(vesselId, newProtoUpd, existingProtoUpd);
                     }
                 }
@@ -269,8 +265,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     //Load vessels that don't exist and are in our subspace
                     var vesselsToLoad = AllPlayerVessels
-                        .Where(v => v.Value.NeedsToBeReloaded && !v.Value.VesselExist &&
-                        (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(v.Value.VesselId)))
+                        .Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded)
                         .ToArray();
 
                     foreach (var vesselProto in vesselsToLoad)

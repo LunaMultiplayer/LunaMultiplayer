@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LunaClient.Systems.SettingsSys;
+using System;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -9,8 +10,9 @@ namespace LunaClient.Systems.VesselProtoSys
         public ProtoVessel ProtoVessel { get; set; }
         public bool NeedsToBeReloaded { get; set; } = true;
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
-
         public bool VesselExist => Vessel != null;
+        public bool ShouldBeLoaded => SettingsSystem.ServerSettings.ShowVesselsInThePast ||
+                                      !VesselCommon.VesselIsControlledAndInPastSubspace(VesselId);
 
         public VesselProtoUpdate(ConfigNode vessel, Guid vesselId)
         {

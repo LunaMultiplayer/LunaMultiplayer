@@ -127,10 +127,7 @@ namespace LunaServer.Settings.Definition
 
         [XmlComment(Value = "Username of the player who control the warp if WarpMode is set to MASTER")]
         public string WarpMaster { get; set; } = "";
-
-        [XmlComment(Value = "Interval at wich users will check the vessels that are in other subspaces so they have to be removed")]
-        public int VesselKillCheckMsInterval { get; set; } = 1000;
-
+        
         [XmlComment(Value = "Interval in ms at wich users will sync time with the server")]
         public int ClockSetMsInterval { get; set; } = 100;
 

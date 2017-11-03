@@ -8,11 +8,10 @@ namespace LunaClient.Systems.KerbalSys
         public string Name => KerbalData.GetValue("name");
         public ConfigNode KerbalData { get; set; }
         public string Hash => Common.CalculateSha256Hash(ConfigNodeSerializer.Serialize(KerbalData));
-        public bool Loaded { get; set; }
+        public bool Loaded => HighLogic.CurrentGame.CrewRoster.Exists(Name);
 
         public KerbalStructure(ConfigNode kerbalData)
         {
-            Loaded = false;
             KerbalData = kerbalData;
         }
     }

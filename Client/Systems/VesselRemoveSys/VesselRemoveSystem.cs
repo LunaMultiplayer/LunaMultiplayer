@@ -31,9 +31,8 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselDestroy.Add(VesselRemoveEvents.OnVesselDestroyed);
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselKillCheckMsInterval,
-                RoutineExecution.Update, KillPastSubspaceVessels));
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.LateUpdate, RemoveQueuedVessels));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, KillPastSubspaceVessels));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveQueuedVessels));
         }
 
         protected override void OnDisabled()
@@ -107,8 +106,11 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         #endregion
 
-        #region Late update methods
+        #region Update methods
 
+        /// <summary>
+        /// Unload or kills the vessels in the queue
+        /// </summary>
         private void RemoveQueuedVessels()
         {
             foreach (var vessel in VesselsToRemove.Values)
@@ -124,10 +126,6 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             VesselsToUnload.Clear();
         }
-
-        #endregion
-
-        #region Update methods
 
         /// <summary>
         /// Get the vessels that are in a past subspace and kill them

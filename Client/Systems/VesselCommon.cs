@@ -265,6 +265,8 @@ namespace LunaClient.Systems
         {
             if (existing.protoPartSnapshots.Count < newProtoVessel.protoPartSnapshots.Count)
                 return true;
+            if (existing.situation != newProtoVessel.situation)
+                return true;
 
             return false;
         }

@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using System.Collections.Concurrent;
 using UniLinq;
-using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -14,8 +13,7 @@ namespace LunaClient.Systems.KerbalSys
 
         public ConcurrentDictionary<string, KerbalStructure> Kerbals { get; } = new ConcurrentDictionary<string, KerbalStructure>();
 
-        public bool KerbalSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready && 
-            HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+        public bool KerbalSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
         #endregion
 
@@ -48,9 +46,6 @@ namespace LunaClient.Systems.KerbalSys
                 foreach (var kerbal in Kerbals.Values.Where(v => !v.Loaded))
                 {
                     LoadKerbal(kerbal.KerbalData);
-                    kerbal.Loaded = true;
-
-                    UpdateKerbalInDictionary(kerbal);
                 }
             }
         }
@@ -62,7 +57,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (KerbalSystemReady)
             {
-                switch (HighLogic.CurrentGame.CrewRoster.GetAvailableCrewCount())
+                switch (Kerbals.Count)
                 {
                     case 0:
                         //Server is new and don't have kerbals at all
@@ -90,18 +85,6 @@ namespace LunaClient.Systems.KerbalSys
         #endregion
 
         #region Private
-
-        /// <summary>
-        /// Updates a value in the dictionary
-        /// </summary>
-        private void UpdateKerbalInDictionary(KerbalStructure kerbal)
-        {
-            Kerbals.TryGetValue(kerbal.Name, out var existingKerbal);
-            if (existingKerbal != null)
-            {
-                Kerbals.TryUpdate(kerbal.Name, kerbal, existingKerbal);
-            }
-        }
 
         /// <summary>
         /// Creates or updates a kerbal
