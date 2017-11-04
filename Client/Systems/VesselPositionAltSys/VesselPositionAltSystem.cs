@@ -50,10 +50,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, ActivatePrecalc);
-            TimingManager.UpdateAdd(TimingManager.TimingStage.FashionablyLate, SendVesselPositionUpdates);
-            //SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval,
-            //    RoutineExecution.LateUpdate, SendVesselPositionUpdates));
 
+            SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval, RoutineExecution.LateUpdate, SendVesselPositionUpdates));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
                 RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
         }
@@ -142,8 +140,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
             if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
             {
                 MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
-                //ChangeRoutineExecutionInterval("SendVesselPositionUpdates",
-                //    MustSendFastUpdates ? FastVesselUpdatesSendMsInterval : SlowVesselUpdatesSendMsInterval);
+                ChangeRoutineExecutionInterval("SendVesselPositionUpdates",
+                    MustSendFastUpdates ? FastVesselUpdatesSendMsInterval : SlowVesselUpdatesSendMsInterval);
             }
         }
 

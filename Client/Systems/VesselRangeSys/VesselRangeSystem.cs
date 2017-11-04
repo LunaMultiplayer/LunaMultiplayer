@@ -8,7 +8,9 @@
     {
         #region Fields & properties
 
-        private static VesselRanges LmpRanges { get; } = new VesselRanges
+        private VesselRangeEvents VesselRangeEvents { get; } = new VesselRangeEvents();
+
+        public VesselRanges LmpRanges { get; } = new VesselRanges
         {
             //Based on Physics.cfg file
             escaping = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.escaping),
@@ -31,22 +33,33 @@
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onVesselPrecalcAssign.Add(OnVesselAwake);
+            GameEvents.onVesselPrecalcAssign.Add(VesselRangeEvents.OnVesselAwakeSetDefaultRange);
+            SetLmpRanges();
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onVesselPrecalcAssign.Remove(OnVesselAwake);
+            GameEvents.onVesselPrecalcAssign.Remove(VesselRangeEvents.OnVesselAwakeSetDefaultRange);
+            ResetRanges();
+        }
+
+        #endregion
+
+        #region Private
+
+        private void SetLmpRanges()
+        {
+            foreach (var vessel in FlightGlobals.Vessels)
+                vessel.vesselRanges = LmpRanges;
+        }
+
+        private static void ResetRanges()
+        {
             foreach (var vessel in FlightGlobals.Vessels)
                 vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
         }
 
         #endregion
-        
-        private static void OnVesselAwake(Vessel data)
-        {
-            data.vesselRanges = LmpRanges;
-        }
     }
 }

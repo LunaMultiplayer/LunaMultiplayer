@@ -243,6 +243,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 Vessel.ReferenceTransform.rotation = curRotation;
                 Vessel.SetRotation(curRotation, true);
 
+                //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
+                Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * curRotation;
+
                 //If you do Vessel.ReferenceTransform.position = curPosition 
                 //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
 
@@ -254,7 +257,6 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 }
                 else
                 {
-                    Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * curRotation;
                     Vessel.heightFromTerrain = Target.Height;
                     Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
                     Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
