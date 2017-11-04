@@ -91,7 +91,7 @@ namespace LunaClient.Systems.VesselDockSys
                 dock.DominantVessel = FlightGlobals.ActiveVessel;
 
                 System.MessageSender.SendDockInformation(dock);
-                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVessel, true);
+                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVessel);
             }
             else if (dock.WeakVesselId == FlightGlobals.ActiveVessel?.id)
             {
@@ -101,7 +101,7 @@ namespace LunaClient.Systems.VesselDockSys
                 SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(dock.DominantVesselId);
 
                 System.MessageSender.SendDockInformation(dock);
-                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVessel, true);
+                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVessel);
             }
         }
     }

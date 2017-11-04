@@ -1,5 +1,5 @@
-﻿using System;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -8,7 +8,5 @@ namespace LunaCommon.Message.Data.Vessel
         public override VesselMessageType VesselMessageType => VesselMessageType.Remove;
 
         public Guid VesselId { get; set; }
-
-        public bool Broadcast { get; set; }
     }
 }

@@ -64,10 +64,7 @@ namespace LunaServer.Message.Reader
             VesselContext.RemovedVessels.Add(data.VesselId);
 
             //Relay the message.
-            if (data.Broadcast)
-                MessageQueuer.SendToAllClients<VesselSrvMsg>(data);
-            else
-                MessageQueuer.RelayMessage<VesselSrvMsg>(client, data);
+            MessageQueuer.SendToAllClients<VesselSrvMsg>(data);
         }
 
         private static void HandleVesselProto(ClientStructure client, VesselBaseMsgData message)
@@ -105,6 +102,9 @@ namespace LunaServer.Message.Reader
             VesselContext.RemovedVessels.Add(msgData.WeakVesselId);
 
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
+
+            //Tell all clients to remove the weak vessel
+            MessageQueuer.SendToAllClients<VesselSrvMsg>(new VesselRemoveMsgData{VesselId = msgData.WeakVesselId });
         }
 
         private static void HandleVesselsRequest(ClientStructure client, IMessageData messageData)

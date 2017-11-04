@@ -90,6 +90,7 @@
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionAltSystem.cs" />
     <Compile Include="Systems\VesselPositionAltSys\VesselPositionAltUpdate.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselChanges.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselSerializer.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeEvents.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeSystem.cs" />

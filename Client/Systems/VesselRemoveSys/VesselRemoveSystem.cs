@@ -18,8 +18,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
 
         public ConcurrentDictionary<Guid, Vessel> VesselsToRemove { get; } = new ConcurrentDictionary<Guid, Vessel>();
-
-        public ConcurrentDictionary<Guid, Vessel> VesselsToUnload { get; } = new ConcurrentDictionary<Guid, Vessel>();
+        public ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
 
         #endregion
 
@@ -33,13 +32,14 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselDestroy.Add(VesselRemoveEvents.OnVesselDestroyed);
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, KillPastSubspaceVessels));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveQueuedVessels));
+            SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, FlushRemovedVessels));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             VesselsToRemove.Clear();
-            VesselsToUnload.Clear();
+            RemovedVessels.Clear();
             GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselDestroy.Remove(VesselRemoveEvents.OnVesselDestroyed);
@@ -55,20 +55,18 @@ namespace LunaClient.Systems.VesselRemoveSys
         public void ClearSystem()
         {
             VesselsToRemove.Clear();
-            VesselsToUnload.Clear();
+            RemovedVessels.Clear();
         }
 
         /// <summary>
         /// Add a vessel so it will be killed later
         /// </summary>
-        public void AddToKillList(Vessel vessel, bool fullKill)
+        public void AddToKillList(Vessel vessel)
         {
             if (vessel == null) return;
 
-            if (fullKill)
-                VesselsToRemove.TryAdd(vessel.id, vessel);
-            else
-                VesselsToUnload.TryAdd(vessel.id, vessel);
+            VesselsToRemove.TryAdd(vessel.id, vessel);
+            SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(vessel.id);
         }
 
         /// <summary>
@@ -76,7 +74,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public bool VesselWillBeKilled(Guid vesselId)
         {
-            return VesselsToRemove.ContainsKey(vesselId) || VesselsToUnload.ContainsKey(vesselId);
+            return VesselsToRemove.ContainsKey(vesselId) || RemovedVessels.ContainsKey(vesselId);
         }
 
         /// <summary>
@@ -109,22 +107,32 @@ namespace LunaClient.Systems.VesselRemoveSys
         #region Update methods
 
         /// <summary>
+        /// Flush vessels older than 20 seconds
+        /// </summary>
+        private void FlushRemovedVessels()
+        {
+            var vesselsToFlush = RemovedVessels
+                .Where(v => (DateTime.Now - v.Value) > TimeSpan.FromSeconds(20))
+                .Select(v => v.Key);
+
+            foreach (var vesselId in vesselsToFlush)
+            {
+                RemovedVessels.TryRemove(vesselId, out _);
+            }
+        }
+
+        /// <summary>
         /// Unload or kills the vessels in the queue
         /// </summary>
         private void RemoveQueuedVessels()
         {
             foreach (var vessel in VesselsToRemove.Values)
             {
-                KillVessel(vessel, true);
+                KillVessel(vessel);
+                RemovedVessels.TryAdd(vessel.id, DateTime.Now);
+                SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(vessel.id);
             }
             VesselsToRemove.Clear();
-
-            foreach (var vessel in VesselsToUnload.Values)
-            {
-                KillVessel(vessel, false);
-            }
-
-            VesselsToUnload.Clear();
         }
 
         /// <summary>
@@ -146,7 +154,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                     LunaLog.Log($"[LMP]: Unloading {vesselsToUnload.Length} vessels that are in a past subspace");
                     foreach (var vessel in vesselsToUnload)
                     {
-                        AddToKillList(vessel, false);
+                        AddToKillList(vessel);
                     }
                 }
             }
@@ -161,17 +169,12 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// If you set fullKill to true the vessel will be totally removed from the game, 
         /// otherwise is is killed but can be re-created at a later time (once you are in the same subspace for example)
         /// </summary>
-        private static void KillVessel(Vessel killVessel, bool fullKill)
+        private static void KillVessel(Vessel killVessel)
         {
             if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
                 return;
 
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}");
-
-            if (!fullKill)
-                SystemsContainer.Get<VesselProtoSystem>().UnloadVesselFromLoadingSystem(killVessel.id);
-            else
-                SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(killVessel.id);
 
             SwitchVesselIfSpectating(killVessel);
             UnloadVesselFromGame(killVessel);

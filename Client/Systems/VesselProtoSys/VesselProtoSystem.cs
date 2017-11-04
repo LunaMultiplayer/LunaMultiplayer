@@ -41,6 +41,8 @@ namespace LunaClient.Systems.VesselProtoSys
             HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null ||
             HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
+        public VesselProtoEvents VesselProtoEvents { get; } = new VesselProtoEvents();
+
         #endregion
 
         #region Base overrides
@@ -50,6 +52,7 @@ namespace LunaClient.Systems.VesselProtoSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            GameEvents.onVesselWasModified.Add(VesselProtoEvents.VesselModified);
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToReload));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
@@ -63,6 +66,7 @@ namespace LunaClient.Systems.VesselProtoSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            GameEvents.onVesselWasModified.Remove(VesselProtoEvents.VesselModified);
             ClearSystem();
             BannedPartsStr = string.Empty;
         }
@@ -270,7 +274,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     foreach (var vesselProto in vesselsToLoad)
                     {
-                        if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselProto.Key))
+                        var vesselWillBeKilled = SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselProto.Key);
+                        if (vesselWillBeKilled)
                             continue;
 
                         LunaLog.Log($"[LMP]: Loading vessel {vesselProto.Key}");
