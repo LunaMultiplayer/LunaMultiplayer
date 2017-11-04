@@ -29,8 +29,8 @@ namespace LunaClient.Systems.VesselProtoSys
              * Do not call it in this way as we will send a NOT UPDATED protovessel!
              * SendVesselMessage(vessel.protoVessel);
              */
-
-            SendVesselMessage(vessel.BackupVessel());
+            var backup = vessel.BackupVessel();
+            SendVesselMessage(backup);
         }
 
 

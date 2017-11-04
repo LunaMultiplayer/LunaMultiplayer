@@ -157,12 +157,6 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.UseAlternativePositionSystem = altPositionSystem;
                 SettingsSystem.SaveSettings();
             }
-            var packOtherVessels = GUILayout.Toggle(SettingsSystem.CurrentSettings.PackOtherControlledVessels, "Pack other vessels", ButtonStyle);
-            if (packOtherVessels != SettingsSystem.CurrentSettings.PackOtherControlledVessels)
-            {
-                SettingsSystem.CurrentSettings.PackOtherControlledVessels = packOtherVessels;
-                SettingsSystem.SaveSettings();
-            }
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Toolbar:", SmallOption);

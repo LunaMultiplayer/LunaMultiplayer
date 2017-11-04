@@ -218,7 +218,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
         {
             var tgtOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
                 Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Body);
-            
+
             CopyOrbit(tgtOrbit, Vessel.orbitDriver.orbit);
             Vessel.orbitDriver.orbit.Init();
 
@@ -231,7 +231,6 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 Vessel.latitude = Target.LatLonAlt[0];
                 Vessel.longitude = Target.LatLonAlt[1];
                 Vessel.altitude = Target.LatLonAlt[2];
-                Vessel.heightFromTerrain = Target.Height;
             }
             else
             {
@@ -239,14 +238,27 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 var curPosition = Vector3.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
                 var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
-                Vessel.SetWorldVelocity(curVelocity);
-                Vessel.ReferenceTransform.position = curPosition;
+                if(SettingsSystem.CurrentSettings.Debug1)
+                    Vessel.SetWorldVelocity(curVelocity);
                 Vessel.ReferenceTransform.rotation = curRotation;
                 Vessel.SetRotation(curRotation, true);
 
-                Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * curRotation;
-                Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude,
-                    out Vessel.altitude);
+                //If you do Vessel.ReferenceTransform.position = curPosition 
+                //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
+
+                if (Vessel.situation <= Vessel.Situations.SPLASHED)
+                {
+                    //Ignore the altitude and let the client calculate it when vessel is landed/splashed
+                    Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out _);
+                    Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+                }
+                else
+                {
+                    Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * curRotation;
+                    Vessel.heightFromTerrain = Target.Height;
+                    Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+                    Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+                }
             }
 
             //if (SettingsSystem.CurrentSettings.Debug4)

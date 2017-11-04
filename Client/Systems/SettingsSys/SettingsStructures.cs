@@ -41,7 +41,6 @@ namespace LunaClient.Systems.SettingsSys
         public bool InterpolationEnabled { get; set; } = false;
         public bool PositionFudgeEnable { get; set; } = false;
         public bool UseAlternativePositionSystem { get; set; } = true;
-        public bool PackOtherControlledVessels { get; set; } = false;
         public int MaxGroupsPerPlayer { get; set; } = 1;
 
 #if DEBUG
