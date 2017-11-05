@@ -106,6 +106,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     }
                     else
                     {
+                        newProtoUpd.NeedsToBeReloaded = VesselCommon.ProtoVesselNeedsToBeReloaded(existingProtoUpd.Vessel, newProtoUpd.ProtoVessel);
                         TaskFactory.StartNew(() =>
                         {
                             var changes = VesselChanges.GetProtoVesselChanges(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
@@ -314,14 +315,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     {
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
                             continue;
-
-                        if (!VesselCommon.ProtoVesselNeedsToBeReloaded(vesselProto.Value.Vessel.BackupVessel(), vesselProto.Value.ProtoVessel))
-                        {
-                            vesselProto.Value.NeedsToBeReloaded = false;
-                            UpdateVesselProtoInDictionary(vesselProto.Value);
-                            continue;
-                        }
-
+                        
                         LunaLog.Log($"[LMP]: Reloading vessel {vesselProto.Key}");
                         if (VesselLoader.ReloadVessel(vesselProto.Value.ProtoVessel))
                         {

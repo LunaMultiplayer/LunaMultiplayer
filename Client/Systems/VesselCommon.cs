@@ -256,14 +256,16 @@ namespace LunaClient.Systems
 
             return landingPadDistance < distance;
         }
-
+        
         /// <summary>
         /// This method determines if the vessel must be reloaded. 
         /// Bear in mind that when you reload a vessel there's a small flickering
         /// </summary>
-        public static bool ProtoVesselNeedsToBeReloaded(ProtoVessel existing, ProtoVessel newProtoVessel)
+        public static bool ProtoVesselNeedsToBeReloaded(Vessel existing, ProtoVessel newProtoVessel)
         {
-            if (existing.protoPartSnapshots.Count < newProtoVessel.protoPartSnapshots.Count)
+            if (existing == null || newProtoVessel == null) return true;
+
+            if (existing.Parts.Count != newProtoVessel.protoPartSnapshots.Count)
                 return true;
             if (existing.situation != newProtoVessel.situation)
                 return true;

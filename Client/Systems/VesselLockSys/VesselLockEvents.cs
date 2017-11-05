@@ -12,18 +12,25 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         public void OnVesselChange(Vessel vessel)
         {
-            //Release all update locks as we are switching to a new vessel. 
-            //Anyway, we would still have the control lock of our old vessel
-            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Update);
+            //Safety check
+            if (vessel == null) return;
 
+            //In case we are reloading our current own vessel (after a docking that was not detected for example) we DON'T want to release our locks
+            //As that would mean that an spectator could get the control of our vessel while we are reloading it.
+            //Therefore we just ignore this whole thing to avoid releasing our locks.
+            if (LockSystem.LockQuery.GetControlLockOwner(vessel.id) == SettingsSystem.CurrentSettings.PlayerName)
+                return;
+
+            //Release all update locks as we are switching to a NEW vessel.
+            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Update);
             if (SettingsSystem.ServerSettings.DropControlOnVesselSwitching)
             {
                 //Drop all the control locks if we are switching and the above setting is on
                 SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Control);
             }
 
-            if (vessel != null && (!LockSystem.LockQuery.ControlLockExists(vessel.id) ||
-                LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName)))
+            if (!LockSystem.LockQuery.ControlLockExists(vessel.id) || 
+                LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 //We managed to get the ship so set the update lock and in case we don't have the control lock aquire it.
                 System.StopSpectatingAndGetControl(vessel, true);

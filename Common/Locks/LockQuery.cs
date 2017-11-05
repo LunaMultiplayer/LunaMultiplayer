@@ -128,7 +128,7 @@ namespace LunaCommon.Locks
                     throw new ArgumentOutOfRangeException();
             }
         }
-
+        
         /// <summary>
         /// Retrieves a lock from the dictioanry based on the given lock
         /// </summary>
