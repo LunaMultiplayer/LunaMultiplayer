@@ -85,9 +85,6 @@ namespace LunaClient.Systems.VesselDockSys
             if (dock.DominantVesselId == FlightGlobals.ActiveVessel?.id)
             {
                 LunaLog.Log($"[LMP]: Docking detected! We own the dominant vessel {dock.DominantVesselId}");
-
-                //Backup the vesselproto with the docked vessel data
-                FlightGlobals.ActiveVessel.BackupVessel();
                 dock.DominantVessel = FlightGlobals.ActiveVessel;
 
                 System.MessageSender.SendDockInformation(dock);
@@ -96,6 +93,8 @@ namespace LunaClient.Systems.VesselDockSys
             else if (dock.WeakVesselId == FlightGlobals.ActiveVessel?.id)
             {
                 LunaLog.Log($"[LMP]: Docking detected! We DON'T own the dominant vessel {dock.DominantVesselId}");
+                if (dock.DominantVessel == null)
+                    dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
 
                 //Switch to the dominant vessel
                 SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(dock.DominantVesselId);

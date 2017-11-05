@@ -18,7 +18,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == msgData.VesselId);
             if (vessel == null) return;
 
-            LunaLog.Log($"[LMP]: Removing vessel: {msgData.VesselId}");
+            LunaLog.Log($"[LMP]: Received a vessel remove message. Removing vessel: {msgData.VesselId}");
             System.AddToKillList(vessel);
         }
     }

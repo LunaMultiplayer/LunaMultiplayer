@@ -17,7 +17,7 @@ namespace LunaClient.Systems.VesselDockSys
 
         public void SendDockInformation(VesselDockStructure dock)
         {
-            var vesselBytes = VesselSerializer.SerializeVessel(dock.DominantVessel.protoVessel);
+            var vesselBytes = VesselSerializer.SerializeVessel(dock.DominantVessel.BackupVessel());
             if (vesselBytes.Length > 0)
             {
                 SendMessage(new VesselDockMsgData
