@@ -238,8 +238,8 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 var curPosition = Vector3.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
                 var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
-                if(SettingsSystem.CurrentSettings.Debug1)
-                    Vessel.SetWorldVelocity(curVelocity);
+                //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
+                Vessel.SetWorldVelocity(curVelocity);
                 Vessel.ReferenceTransform.rotation = curRotation;
                 Vessel.SetRotation(curRotation, true);
 

@@ -85,14 +85,16 @@ namespace LunaClient.Systems.VesselDockSys
             if (dock.DominantVesselId == FlightGlobals.ActiveVessel?.id)
             {
                 LunaLog.Log($"[LMP]: Docking detected! We own the dominant vessel {dock.DominantVesselId}");
+                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVesselId);
                 dock.DominantVessel = FlightGlobals.ActiveVessel;
 
                 System.MessageSender.SendDockInformation(dock);
-                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVessel);
             }
             else if (dock.WeakVesselId == FlightGlobals.ActiveVessel?.id)
             {
                 LunaLog.Log($"[LMP]: Docking detected! We DON'T own the dominant vessel {dock.DominantVesselId}");
+                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVesselId);
+
                 if (dock.DominantVessel == null)
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
 
@@ -100,7 +102,6 @@ namespace LunaClient.Systems.VesselDockSys
                 SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(dock.DominantVesselId);
 
                 System.MessageSender.SendDockInformation(dock);
-                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVessel);
             }
         }
     }

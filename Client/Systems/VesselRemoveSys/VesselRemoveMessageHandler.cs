@@ -3,7 +3,6 @@ using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
-using UniLinq;
 
 namespace LunaClient.Systems.VesselRemoveSys
 {
@@ -15,11 +14,8 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             if (!(messageData is VesselRemoveMsgData msgData)) return;
 
-            var vessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == msgData.VesselId);
-            if (vessel == null) return;
-
             LunaLog.Log($"[LMP]: Received a vessel remove message. Removing vessel: {msgData.VesselId}");
-            System.AddToKillList(vessel);
+            System.AddToKillList(msgData.VesselId);
         }
     }
 }

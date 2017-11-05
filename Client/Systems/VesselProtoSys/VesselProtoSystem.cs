@@ -43,6 +43,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public VesselProtoEvents VesselProtoEvents { get; } = new VesselProtoEvents();
 
+        public VesselRemoveSystem VesselRemoveSystem => SystemsContainer.Get<VesselRemoveSystem>();
+
         #endregion
 
         #region Base overrides
@@ -274,7 +276,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     foreach (var vesselProto in vesselsToLoad)
                     {
-                        var vesselWillBeKilled = SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselProto.Key);
+                        var vesselWillBeKilled = VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key);
                         if (vesselWillBeKilled)
                             continue;
 
@@ -310,7 +312,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     foreach (var vesselProto in vesselsToReLoad)
                     {
-                        if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselProto.Key))
+                        if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
                             continue;
 
                         if (!VesselCommon.ProtoVesselNeedsToBeReloaded(vesselProto.Value.Vessel.BackupVessel(), vesselProto.Value.ProtoVessel))
