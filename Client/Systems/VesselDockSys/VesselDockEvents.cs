@@ -101,7 +101,11 @@ namespace LunaClient.Systems.VesselDockSys
                 //Switch to the dominant vessel
                 SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(dock.DominantVesselId);
 
-                System.MessageSender.SendDockInformation(dock);
+                /* We are NOT the dominant vessel so wait 5 seconds so the dominant vessel detects the docking.
+                 * If we send the vessel definition BEFORE the dominant detects it, then the dominant won't be able
+                 * to undock properly as he will think that he is the weak vessel.
+                 */
+                System.MessageSender.SendDockInformation(dock, 5);
             }
         }
     }

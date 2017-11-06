@@ -7,21 +7,7 @@ namespace LunaClient.Systems.VesselProtoSys
     public class VesselProtoUpdate
     {
         public Guid VesselId { get; set; }
-
-        //private ProtoVessel _protoVessel;
-        //public ProtoVessel ProtoVessel
-        //{
-        //    get
-        //    {
-        //        if (Vessel != null && VesselCommon.ProtoVesselNeedsToBeReloaded(Vessel.protoVessel, _protoVessel))
-        //            _protoVessel = Vessel.BackupVessel();
-        //        return _protoVessel;
-        //    }
-        //    set => _protoVessel = value;
-        //}
-
         public ProtoVessel ProtoVessel { get; set; }
-
         public bool NeedsToBeReloaded { get; set; } = true;
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
         public bool VesselExist => Vessel != null;

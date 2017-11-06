@@ -29,14 +29,21 @@ namespace LunaClient.Systems.VesselDockSys
             if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId && !VesselCommon.IsSpectating)
             {
                 var newProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData);
-
                 if (VesselCommon.ProtoVesselNeedsToBeReloaded(FlightGlobals.ActiveVessel, newProto))
                 {
+                    /* This is bad as we didn't detect the docking on time and the weak vessel send the new definition...
+                     * The reason why is bad is because the ModuleDockingNode sent by the WEAK vessel will tell us that we are 
+                     * NOT the dominant (because we received the vesselproto from the WEAK vessel) so we won't be able to undock properly...
+                     * Hopefully this shouldn't happen very often as we gave the dominant vessel 5 seconds to detect it.
+                     */
                     LunaLog.Log("[LMP]: Docking NOT detected. We OWN the dominant vessel");
-                    //We own the dominant vessel and dind't detected the docking event so we need to reload our OWN vessel
-                    //so if we send our own protovessel later, we send the updated definition
+
+                    /* We own the dominant vessel and dind't detected the docking event so we need to reload our OWN vessel
+                     * so if we send our own protovessel later, we send the updated definition
+                     */
                     SystemsContainer.Get<VesselProtoSystem>().VesselLoader.ReloadVessel(newProto);
                 }
+                return;
             }
 
             //Some other 2 players docked so just remove the weak vessel.
