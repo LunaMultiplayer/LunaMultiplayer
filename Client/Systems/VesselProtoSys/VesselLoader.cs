@@ -1,4 +1,5 @@
-﻿using LunaClient.Base;
+﻿using KSP.UI.Screens;
+using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.PlayerColorSys;
@@ -9,13 +10,20 @@ using LunaClient.Systems.VesselSwitcherSys;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Reflection;
 using UniLinq;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselLoader : SubSystem<VesselProtoSystem>
     {
+        /// <summary>
+        /// Invoke this private method to rebuild the vessel lists that appear on the tracking station
+        /// </summary>
+        private static MethodInfo BuildSpaceTrackingVesselList { get; } = typeof(SpaceTracking).GetMethod("buildVesselsList", BindingFlags.NonPublic | BindingFlags.Instance);
+        
         /// <summary>
         /// Load all the received vessels from the server into the game
         /// </summary>
@@ -249,6 +257,11 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             SystemsContainer.Get<PlayerColorSystem>().SetVesselOrbitColor(currentProto.vesselRef);
+            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
+            {
+                var spaceTracking = Object.FindObjectOfType<SpaceTracking>();
+                BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
+            }
             return true;
         }
 

@@ -250,33 +250,32 @@ namespace LunaClient.Systems.VesselPositionAltSys
                 //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
                 //that is the reason why we pack vessels at close distance when landed...
 
-                if (Vessel.situation <= Vessel.Situations.SPLASHED)
+                switch (Vessel.situation)
                 {
-                    //Ignore the altitude and let the client calculate it when vessel is landed/splashed
-                    Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out _);
-                    Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
-                }
-                else
-                {
-                    Vessel.heightFromTerrain = Target.Height;
-                    Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
-                    Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+                    case Vessel.Situations.LANDED:
+                    case Vessel.Situations.SPLASHED:
+                        //Ignore the altitude and let the client calculate it when vessel is landed/splashed
+                        //Hopefully this will limit the chances where the vessel crashing into terrain
+                        Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out _);
+                        Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+                        break;
+                    case Vessel.Situations.FLYING:
+                    case Vessel.Situations.SUB_ORBITAL:
+                        Vessel.heightFromTerrain = Target.Height;
+                        Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+                        Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+                        break;
+                    case Vessel.Situations.ORBITING:
+                    case Vessel.Situations.ESCAPING:
+                    case Vessel.Situations.DOCKED:
+                        //DO NOT call updateFromParameters when landed as vessel jitters up/down
+                        Vessel.orbitDriver.updateFromParameters();
+                        //This does not seems to affect when the vessel is landed but I moved it to orbiting to increase performance
+                        foreach (var part in Vessel.Parts)
+                            part.ResumeVelocity();
+                        break;
                 }
             }
-
-            //if (SettingsSystem.CurrentSettings.Debug4)
-            //{
-            //    Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos;
-            //    Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel;
-            //}
-            //if (SettingsSystem.CurrentSettings.Debug5)
-            //    Vessel.orbitDriver.orbit.UpdateFromUT(Planetarium.GetUniversalTime());
-            //if (SettingsSystem.CurrentSettings.Debug6)
-            //    Vessel.orbitDriver.UpdateOrbit();
-            //if (SettingsSystem.CurrentSettings.Debug7)
-            //    Vessel.orbitDriver.UpdateOrbit(false);
-            //if (SettingsSystem.CurrentSettings.Debug8)
-            //    Vessel.orbitDriver.updateFromParameters();
         }
 
         /// <summary>

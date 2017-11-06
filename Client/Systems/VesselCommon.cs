@@ -265,8 +265,17 @@ namespace LunaClient.Systems
         {
             if (existing == null || newProtoVessel == null) return true;
 
-            if (existing.Parts.Count != newProtoVessel.protoPartSnapshots.Count)
-                return true;
+            if (!existing.loaded)
+            {
+                if (existing.protoVessel.protoPartSnapshots.Count != newProtoVessel.protoPartSnapshots.Count)
+                    return true;
+            }
+            else
+            {
+                if (existing.Parts.Count != newProtoVessel.protoPartSnapshots.Count)
+                    return true;
+            }
+
             if (existing.situation != newProtoVessel.situation)
                 return true;
 
