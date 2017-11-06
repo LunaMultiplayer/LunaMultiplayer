@@ -248,6 +248,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
                 //If you do Vessel.ReferenceTransform.position = curPosition 
                 //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
+                //that is the reason why we pack vessels at close distance when landed...
 
                 if (Vessel.situation <= Vessel.Situations.SPLASHED)
                 {

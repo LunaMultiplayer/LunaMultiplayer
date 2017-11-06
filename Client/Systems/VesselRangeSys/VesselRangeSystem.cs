@@ -17,8 +17,9 @@
             flying = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.flying),
             landed = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.landed)
             {
-                pack = 50,//default is 350
-                unpack = 30,//default is 200
+                //We use such small distances as otherwise vessel goes inside the terrain (and explodes) when unpacked and speed is high
+                pack = 15,//default is 350
+                unpack = 10,//default is 200
             },
             orbit = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit),
             prelaunch = new VesselRanges.Situation(PhysicsGlobals.Instance.VesselRangesDefault.orbit),
