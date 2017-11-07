@@ -176,10 +176,10 @@ namespace LunaClient.Systems.Mod
             {
                 var autoAllowed = new List<string>
                 {
-                    "lunamultiplayer/plugins/lunaclient.dll",
-                    "lunamultiplayer/plugins/lunacommon.dll",
                     "lunamultiplayer/plugins/fastmember.dll",
                     "lunamultiplayer/plugins/lidgren.network.dll",
+                    "lunamultiplayer/plugins/lunaclient.dll",
+                    "lunamultiplayer/plugins/lunacommon.dll",
                     "lunamultiplayer/plugins/mono.data.tds.dll",
                     "lunamultiplayer/plugins/system.data.dll",
                     "lunamultiplayer/plugins/system.threading.dll",

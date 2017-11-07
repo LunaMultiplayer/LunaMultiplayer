@@ -56,7 +56,7 @@ namespace LunaClient.Systems.Mod
                 var fileHash = Common.CalculateSha256Hash(checkFile);
                 DllList.Add(relativeFilePath, fileHash);
 
-                LunaLog.Log($"[LMP]: Hashed file: {relativeFilePath}, hash: {fileHash}");
+                //LunaLog.Log($"[LMP]: Hashed file: {relativeFilePath}, hash: {fileHash}");
             }
         }
 
