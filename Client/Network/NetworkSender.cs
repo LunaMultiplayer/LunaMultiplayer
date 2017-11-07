@@ -70,7 +70,7 @@ namespace LunaClient.Network
             {
                 try
                 {
-                    NetworkStatistics.LastSendTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                    NetworkStatistics.LastSendTime = DateTime.Now;
 
                     if (masterSrvMessage != null && clientMessage == null)
                     {

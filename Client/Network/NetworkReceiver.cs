@@ -45,15 +45,14 @@ namespace LunaClient.Network
                 {
                     if (NetworkMain.ClientConnection.ReadMessage(out var msg))
                     {
-                        NetworkStatistics.LastReceiveTime = DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond;
+                        NetworkStatistics.LastReceiveTime = DateTime.Now;
                         switch (msg.MessageType)
                         {
                             case NetIncomingMessageType.NatIntroductionSuccess:
                                 NetworkServerList.HandleNatIntroduction(msg);
                                 break;
                             case NetIncomingMessageType.ConnectionLatencyUpdated:
-                                NetworkStatistics.PingMs =
-                                    (float)TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
+                                NetworkStatistics.PingMs = (float)TimeSpan.FromSeconds(msg.ReadFloat()).TotalMilliseconds;
                                 break;
                             case NetIncomingMessageType.UnconnectedData:
                                 NetworkServerList.HandleServersList(msg);

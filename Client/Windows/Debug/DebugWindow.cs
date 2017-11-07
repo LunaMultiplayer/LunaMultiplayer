@@ -1,8 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems;
-using LunaClient.Systems.Lock;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
@@ -22,46 +20,53 @@ namespace LunaClient.Windows.Debug
             {
                 LastUpdateTime = Time.realtimeSinceStartup;
                 //Vector text
-                if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready &&
-                    FlightGlobals.ActiveVessel != null)
+
+                if (DisplayVectors)
                 {
-                    var ourVessel = FlightGlobals.ActiveVessel;
-                    VectorText = $"Forward vector: {ourVessel.GetFwdVector()}\n";
-                    VectorText += $"Up vector: {(Vector3)ourVessel.upAxis}\n";
-                    VectorText += $"Srf Rotation: {ourVessel.srfRelRotation}\n";
-                    VectorText += $"Vessel Rotation: {ourVessel.transform.rotation}\n";
-                    VectorText += $"Vessel Local Rotation: {ourVessel.transform.localRotation}\n";
-                    VectorText += $"mainBody Rotation: {(Quaternion)ourVessel.mainBody.rotation}\n";
-                    VectorText += $"mainBody Transform Rotation: {ourVessel.mainBody.bodyTransform.rotation}\n";
-                    VectorText += $"Surface Velocity: {ourVessel.GetSrfVelocity()}, |v|: {ourVessel.GetSrfVelocity().magnitude}\n";
-                    VectorText += $"Orbital Velocity: {ourVessel.GetObtVelocity()}, |v|: {ourVessel.GetObtVelocity().magnitude}\n";
-                    if (ourVessel.orbitDriver != null && ourVessel.orbitDriver.orbit != null)
-                        VectorText += $"Frame Velocity: {(Vector3)ourVessel.orbitDriver.orbit.GetFrameVel()}, |v|: {ourVessel.orbitDriver.orbit.GetFrameVel().magnitude}\n";
-                    VectorText += $"CoM offset vector: {ourVessel.CoM}\n";
-                    VectorText += $"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}\n";
-                    VectorText += $"World Pos: {(Vector3)ourVessel.GetWorldPos3D()}, |pos|: {ourVessel.GetWorldPos3D().magnitude}\n";
-                }
-                else
-                {
-                    VectorText = "You have to be in flight";
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
+                    {
+                        var ourVessel = FlightGlobals.ActiveVessel;
+                        VectorText = $"Id: {ourVessel.id}\n";
+                        VectorText += $"Forward vector: {ourVessel.GetFwdVector()}\n";
+                        VectorText += $"Up vector: {(Vector3) ourVessel.upAxis}\n";
+                        VectorText += $"Srf Rotation: {ourVessel.srfRelRotation}\n";
+                        VectorText += $"Vessel Rotation: {ourVessel.transform.rotation}\n";
+                        VectorText += $"Vessel Local Rotation: {ourVessel.transform.localRotation}\n";
+                        VectorText += $"mainBody Rotation: {(Quaternion) ourVessel.mainBody.rotation}\n";
+                        VectorText += $"mainBody Transform Rotation: {ourVessel.mainBody.bodyTransform.rotation}\n";
+                        VectorText += $"Surface Velocity: {ourVessel.GetSrfVelocity()}, |v|: {ourVessel.GetSrfVelocity().magnitude}\n";
+                        VectorText += $"Orbital Velocity: {ourVessel.GetObtVelocity()}, |v|: {ourVessel.GetObtVelocity().magnitude}\n";
+                        if (ourVessel.orbitDriver != null && ourVessel.orbitDriver.orbit != null)
+                            VectorText += $"Frame Velocity: {(Vector3) ourVessel.orbitDriver.orbit.GetFrameVel()}, |v|: {ourVessel.orbitDriver.orbit.GetFrameVel().magnitude}\n";
+                        VectorText += $"CoM offset vector: {ourVessel.CoM}\n";
+                        VectorText += $"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}\n";
+                        VectorText += $"World Pos: {(Vector3) ourVessel.GetWorldPos3D()}, |pos|: {ourVessel.GetWorldPos3D().magnitude}\n";
+                    }
+                    else
+                    {
+                        VectorText = "You have to be in flight";
+                    }
                 }
 
-                //NTP text
-                NtpText = $"Warp rate: {Math.Round(Time.timeScale, 3)}x.\n";
-                NtpText += $"Current subspace: {SystemsContainer.Get<WarpSystem>().CurrentSubspace}.\n";
-                NtpText += $"Current Error: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().GetCurrentError() * 1000, 0)}ms.\n";
-                NtpText += $"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT\n";
-                NtpText += $"Network latency: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().NetworkLatencyAverage / 10000f, 3)}ms\n";
-                NtpText += $"Server clock difference: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ClockOffsetAverage / 10000f, 3)}ms\n";
-                NtpText += $"Server lag: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ServerLag / 10000f, 3)}ms\n";
+                if (DisplayNtp)
+                {
+                    NtpText = $"Warp rate: {Math.Round(Time.timeScale, 3)}x.\n";
+                    NtpText += $"Current subspace: {SystemsContainer.Get<WarpSystem>().CurrentSubspace}.\n";
+                    NtpText += $"Current Error: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().GetCurrentError() * 1000, 0)}ms.\n";
+                    NtpText += $"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT\n";
+                    NtpText += $"Network latency: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().NetworkLatencyAverage / 10000f, 3)}ms\n";
+                    NtpText += $"Server clock difference: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ClockOffsetAverage / 10000f, 3)}ms\n";
+                    NtpText += $"Server lag: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ServerLag / 10000f, 3)}ms\n";
+                }
 
-                //Connection queue text
-                ConnectionText = $"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.\n";
-                ConnectionText += $"Last send time: {NetworkStatistics.GetStatistics("LastSendTime")}ms ago.\n";
-                ConnectionText += $"Last receive time: {NetworkStatistics.GetStatistics("LastReceiveTime")}ms ago.\n";
-                ConnectionText += $"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.\n";
-                ConnectionText += $"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n";
-                ConnectionText += $"Queued out msgs: {NetworkStatistics.GetStatistics("QueuedOutgoingMessages")}.\n";
+                if (DisplayConnectionQueue)
+                {
+                    ConnectionText = $"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.\n";
+                    ConnectionText += $"Last send time: {NetworkStatistics.GetStatistics("LastSendTime")}ms ago.\n";
+                    ConnectionText += $"Last receive time: {NetworkStatistics.GetStatistics("LastReceiveTime")}ms ago.\n";
+                    ConnectionText += $"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.\n";
+                    ConnectionText += $"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n";
+                }
             }
         }
 

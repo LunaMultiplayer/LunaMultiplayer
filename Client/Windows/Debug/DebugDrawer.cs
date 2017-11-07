@@ -8,7 +8,6 @@ namespace LunaClient.Windows.Debug
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            GameEventsBase.debugEvents = GUILayout.Toggle(GameEventsBase.debugEvents, "Debug GameEvents", ButtonStyle);
             DisplayFast = GUILayout.Toggle(DisplayFast, "Fast debug update", ButtonStyle);
             DisplayVectors = GUILayout.Toggle(DisplayVectors, "Display vessel vectors", ButtonStyle);
             if (DisplayVectors)

@@ -206,7 +206,7 @@ namespace LunaClient.Systems.Network
 
                     SystemsContainer.Get<MainSystem>().Status = "Running";
 
-                    LunaLog.Log("[LMP]: All systems up and running! Poyekhali!!");
+                    LunaLog.Log("[LMP]: All systems up and running. Поехали!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
                         SystemsContainer.Get<MotdSystem>().Enabled = true;

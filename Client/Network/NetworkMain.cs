@@ -38,8 +38,8 @@ namespace LunaClient.Network
         public static void ResetConnectionStaticsAndQueues()
         {
             NetworkSender.OutgoingMessages = new ConcurrentQueue<IMessageBase>();
-            NetworkStatistics.LastReceiveTime = 0;
-            NetworkStatistics.LastSendTime = 0;
+            NetworkStatistics.LastReceiveTime = DateTime.MinValue;
+            NetworkStatistics.LastSendTime = DateTime.MinValue;
         }
 
         public static void AwakeNetworkSystem()
