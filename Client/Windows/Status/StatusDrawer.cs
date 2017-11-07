@@ -169,33 +169,7 @@ namespace LunaClient.Windows.Status
                    WarpSystem.Subspaces.ContainsKey(WarpSystem.CurrentSubspace) && WarpSystem.Subspaces.ContainsKey(subspaceId) &&
                    WarpSystem.Subspaces[WarpSystem.CurrentSubspace] < WarpSystem.Subspaces[subspaceId];
         }
-
-        public void DrawMaximize(int windowId)
-        {
-            GUI.DragWindow(MoveRect);
-            GUILayout.BeginVertical();
-            GUILayout.BeginHorizontal();
-            var chatButtonStyle = ButtonStyle;
-            if (SystemsContainer.Get<ChatSystem>().ChatButtonHighlighted)
-                chatButtonStyle = HighlightStyle;
-            WindowsContainer.Get<ChatWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<ChatWindow>().Display, "C", chatButtonStyle);
-            WindowsContainer.Get<DebugWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<DebugWindow>().Display, "D", ButtonStyle);
-            WindowsContainer.Get<OptionsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<OptionsWindow>().Display, "O", ButtonStyle);
-#if DEBUG
-            WindowsContainer.Get<SystemsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<SystemsWindow>().Display, "S", ButtonStyle);
-#endif
-            if (GUILayout.Button("+", ButtonStyle))
-            {
-                WindowRect.xMax = MinWindowRect.xMax;
-                WindowRect.yMin = MinWindowRect.yMin;
-                WindowRect.xMin = MinWindowRect.xMax - WindowWidth;
-                WindowRect.yMax = MinWindowRect.yMin + WindowHeight;
-                Minmized = false;
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.EndVertical();
-        }
-
+        
         private void DrawPlayerEntry(PlayerStatus playerStatus)
         {
             if (playerStatus == null)
