@@ -2,6 +2,8 @@
 using LunaClient.Systems.SettingsSys;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using UniLinq;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -25,9 +27,13 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
-        public ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } = new ConcurrentDictionary<Guid, VesselPositionUpdate>();
-        private ConcurrentDictionary<Guid, byte> UpdatedVesselIds { get; } = new ConcurrentDictionary<Guid, byte>();
-        public FlightCtrlState FlightState { get; set; }
+        public static ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } =
+            new ConcurrentDictionary<Guid, VesselPositionUpdate>();
+
+        public static ConcurrentDictionary<Guid, VesselPositionUpdate> TargetVesselUpdate { get; } =
+            new ConcurrentDictionary<Guid, VesselPositionUpdate>();
+
+        public static Queue<Guid> VesselsToRemove { get; } = new Queue<Guid>();
 
         #endregion
 
@@ -37,49 +43,89 @@ namespace LunaClient.Systems.VesselPositionSys
 
         protected override void OnEnabled()
         {
-            if (SettingsSystem.CurrentSettings.UseAlternativePositionSystem) return;
-
             base.OnEnabled();
 
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, HandleVesselUpdates));
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, ActivatePrecalc);
 
-            SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval,
-                RoutineExecution.FixedUpdate, SendVesselPositionUpdates));
-
+            SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval, RoutineExecution.LateUpdate, SendVesselPositionUpdates));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
-                RoutineExecution.FixedUpdate, SendSecondaryVesselPositionUpdates));
+                RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
         }
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.CurrentSettings.UseAlternativePositionSystem) return;
-
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
+
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, DisableVesselPrecalculate);
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.Precalc, ActivatePrecalc);
+            TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
+        }
+
+        private static void ActivatePrecalc()
+        {
+            if (FlightGlobals.Vessels == null) return;
+
+            for (var i = FlightGlobals.Vessels.Count - 1; i >= 0; --i)
+            {
+                var vessel = FlightGlobals.Vessels[i];
+                if (vessel?.precalc == null || vessel.id == FlightGlobals.ActiveVessel?.id)
+                {
+                    continue;
+                }
+
+                vessel.precalc.enabled = true;
+                vessel.precalc.MainPhysics(true);
+            }
+        }
+
+        private static void HandleVesselUpdates()
+        {
+            if (FlightGlobals.ActiveVessel == null) return;
+
+            foreach (var keyVal in CurrentVesselUpdate)
+            {
+                keyVal.Value.ApplyVesselUpdate();
+                //FlightGlobals.ActiveVessel.StartCoroutine(ApplyVesselUpdate(keyVal.Value));
+            }
+
+            while (VesselsToRemove.Count > 0)
+            {
+                var vesselToRemove = VesselsToRemove.Dequeue();
+                TargetVesselUpdate.TryRemove(vesselToRemove, out _);
+                CurrentVesselUpdate.TryRemove(vesselToRemove, out _);
+            }
+        }
+
+        //private static IEnumerator ApplyVesselUpdate(VesselPositionAltUpdate vesselPosition)
+        //{
+        //    yield return new WaitForFixedUpdate();
+        //    try
+        //    {
+        //        vesselPosition.ApplyVesselUpdate();
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        // ignored
+        //    }
+        //}
+
+        private static void DisableVesselPrecalculate()
+        {
+            if (FlightGlobals.ActiveVessel == null) return;
+
+            foreach (var vessel in FlightGlobals.Vessels.Where(v => v.id != FlightGlobals.ActiveVessel?.id && v.precalc != null))
+            {
+                vessel.precalc.enabled = false;
+            }
         }
 
         #endregion
 
         #region FixedUpdate methods
-
-        /// <summary>
-        /// Read and apply position updates from other vessels
-        /// </summary>
-        private void HandleVesselUpdates()
-        {
-            if (PositionUpdateSystemReady)
-            {
-                foreach (var vesselId in UpdatedVesselIds.Keys)
-                {
-                    if (CurrentVesselUpdate.TryGetValue(vesselId, out VesselPositionUpdate currentUpdate))
-                    {
-                        //NOTE: ApplyVesselUpdate must run in FixedUpdate as it's updating the physics of the vessels
-                        currentUpdate.ApplyVesselUpdate();
-                    }
-                    UpdatedVesselIds.TryRemove(vesselId, out var _);
-                }
-            }
-        }
 
         /// <summary>
         /// Send the updates of our own vessel. We only send them after an interval specified.
@@ -112,34 +158,16 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #endregion
 
-        #region Public methods
-
         /// <summary>
-        /// Performance Improvement: If the body for this position update is the same as the old one, copy the body so that we don't have to look up the
-        /// body in the ApplyVesselUpdate() call below (which must run during FixedUpdate)
+        /// Gets the latest received position of a vessel
         /// </summary>
-        /// <param name="existingPositionUpdate">The position update currently in the map.  Cannot be null.</param>
-        /// <param name="newPositionUpdate">The new position update for the vessel.  Cannot be null.</param>
-        public void SetBodyAndVesselOnNewUpdate(VesselPositionUpdate existingPositionUpdate, VesselPositionUpdate newPositionUpdate)
+        public double[] GetLatestVesselPosition(Guid vesselId)
         {
-            if (existingPositionUpdate.BodyName == newPositionUpdate.BodyName)
-            {
-                newPositionUpdate.Body = existingPositionUpdate.Body;
-            }
-            if (existingPositionUpdate.VesselId == newPositionUpdate.VesselId)
-            {
-                newPositionUpdate.Vessel = existingPositionUpdate.Vessel;
-            }
+            return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ? 
+                vesselPosition.LatLonAlt :
+                CurrentVesselUpdate.TryGetValue(vesselId, out vesselPosition) ?
+                    vesselPosition.LatLonAlt :
+                    null;
         }
-
-        /// <summary>
-        /// Applies the latest position update (if any) for the given vessel and moves it to that position on the next FixedUpdate
-        /// </summary>
-        public void UpdateVesselPositionOnNextFixedUpdate(Guid vesselId)
-        {
-            UpdatedVesselIds[vesselId] = 0;
-        }
-
-        #endregion
     }
 }

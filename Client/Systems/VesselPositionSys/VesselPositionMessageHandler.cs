@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -15,24 +16,32 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!(messageData is VesselPositionMsgData msgData)) return;
 
             var update = new VesselPositionUpdate(msgData);
+
             var vesselId = update.VesselId;
 
-            if (!System.CurrentVesselUpdate.TryGetValue(update.VesselId, out var existingPositionUpdate))
+            if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselId))
+                return;
+
+            if (!VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var existingPositionUpdate))
             {
-                System.CurrentVesselUpdate[vesselId] = update;
-                //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                System.UpdateVesselPositionOnNextFixedUpdate(vesselId);
+                VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, update);
+                VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, update);
             }
             else
             {
-                if (existingPositionUpdate.SentTime < update.SentTime)
+                if (existingPositionUpdate.SentTime < update.SentTime &&
+                    (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted))
                 {
-                    //If there's an existing update, copy the body and vessel objects so they don't have to be looked up later.
-                    System.SetBodyAndVesselOnNewUpdate(existingPositionUpdate, update);
-                    System.CurrentVesselUpdate[vesselId] = update;
+                    update.Body = existingPositionUpdate.Body;
 
-                    //If we got a position update, add it to the vessel IDs updated and the current vessel dictionary, after we've added it to the CurrentVesselUpdate dictionary
-                    System.UpdateVesselPositionOnNextFixedUpdate(vesselId);
+                    if (VesselPositionSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate))
+                    {
+                        VesselPositionSystem.CurrentVesselUpdate.AddOrUpdate(vesselId, existingTargetPositionUpdate,
+                            (key, existingVal) => existingTargetPositionUpdate);
+
+                        VesselPositionSystem.TargetVesselUpdate.AddOrUpdate(vesselId, update,
+                            (key, existingVal) => update);
+                    }
                 }
             }
         }

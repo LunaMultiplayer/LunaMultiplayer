@@ -3,8 +3,7 @@ using LunaClient.Base;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.PlayerColorSys;
-using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselPositionAltSys;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Utilities;
@@ -142,15 +141,12 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static void GetLatestProtoVesselPosition(ProtoVessel vesselProto)
         {
-            if (SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
+            var latLonAlt = SystemsContainer.Get<VesselPositionSystem>().GetLatestVesselPosition(vesselProto.vesselID);
+            if (latLonAlt != null)
             {
-                var latLonAlt = SystemsContainer.Get<VesselPositionAltSystem>().GetLatestVesselPosition(vesselProto.vesselID);
-                if (latLonAlt != null)
-                {
-                    vesselProto.latitude = latLonAlt[0];
-                    vesselProto.longitude = latLonAlt[1];
-                    vesselProto.altitude = latLonAlt[2];
-                }
+                vesselProto.latitude = latLonAlt[0];
+                vesselProto.longitude = latLonAlt[1];
+                vesselProto.altitude = latLonAlt[2];
             }
         }
 

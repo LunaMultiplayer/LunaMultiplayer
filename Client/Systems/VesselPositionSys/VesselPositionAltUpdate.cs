@@ -5,13 +5,13 @@ using UnityEngine;
 
 // ReSharper disable All
 
-namespace LunaClient.Systems.VesselPositionAltSys
+namespace LunaClient.Systems.VesselPositionSys
 {
     /// <summary>
     /// This class handle the vessel position updates that we received and applies it to the correct vessel. 
     /// It also handle it's interpolations
     /// </summary>
-    public class VesselPositionAltUpdate : VesselPositionMsgData
+    public class VesselPositionUpdate : VesselPositionMsgData
     {
         #region Fields
         public Vessel Vessel => FlightGlobals.Vessels.Find(v => v.id == VesselId);
@@ -31,14 +31,14 @@ namespace LunaClient.Systems.VesselPositionAltSys
             set { _body = value; }
         }
 
-        private VesselPositionAltUpdate _target;
+        private VesselPositionUpdate _target;
 
-        public VesselPositionAltUpdate Target
+        public VesselPositionUpdate Target
         {
             get
             {
                 if (_target == null)
-                    VesselPositionAltSystem.TargetVesselUpdate.TryGetValue(VesselId, out _target);
+                    VesselPositionSystem.TargetVesselUpdate.TryGetValue(VesselId, out _target);
                 return _target;
             }
         }
@@ -80,7 +80,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
 
         #region Constructors/Creation
 
-        public VesselPositionAltUpdate(VesselPositionMsgData parent)
+        public VesselPositionUpdate(VesselPositionMsgData parent)
         {
             Velocity = parent.Velocity;
             VesselId = parent.VesselId;
@@ -104,7 +104,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
             TransformRotation = parent.TransformRotation;
         }
 
-        public VesselPositionAltUpdate(Vessel vessel)
+        public VesselPositionUpdate(Vessel vessel)
         {
             try
             {
@@ -167,9 +167,9 @@ namespace LunaClient.Systems.VesselPositionAltSys
             }
         }
 
-        public new virtual VesselPositionAltUpdate Clone()
+        public new virtual VesselPositionUpdate Clone()
         {
-            return MemberwiseClone() as VesselPositionAltUpdate;
+            return MemberwiseClone() as VesselPositionUpdate;
         }
 
         #endregion
@@ -182,7 +182,7 @@ namespace LunaClient.Systems.VesselPositionAltSys
             {
                 if (Body == null || Vessel == null || Vessel.precalc == null || Target == null)
                 {
-                    VesselPositionAltSystem.VesselsToRemove.Enqueue(VesselId);
+                    VesselPositionSystem.VesselsToRemove.Enqueue(VesselId);
                     return;
                 }
 

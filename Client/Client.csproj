@@ -86,10 +86,10 @@
     <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
-    <Compile Include="Systems\VesselPositionAltSys\VesselPositionMessageAltHandler.cs" />
-    <Compile Include="Systems\VesselPositionAltSys\VesselPositionMessageAltSender.cs" />
-    <Compile Include="Systems\VesselPositionAltSys\VesselPositionAltSystem.cs" />
-    <Compile Include="Systems\VesselPositionAltSys\VesselPositionAltUpdate.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionAltUpdate.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselChanges.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselSerializer.cs" />
@@ -158,10 +158,6 @@
     <Compile Include="Systems\VesselImmortalSys\VesselImmortalSystem.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockEvents.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockSystem.cs" />
-    <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
-    <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
-    <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
-    <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselLoader.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageHandler.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageSender.cs" />

@@ -23,7 +23,6 @@ using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselPositionAltSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRangeSys;
@@ -221,7 +220,6 @@ namespace LunaClient.Systems.Network
                         SystemsContainer.Get<MotdSystem>().Enabled = true;
                         SystemsContainer.Get<VesselLockSystem>().Enabled = true;
                         SystemsContainer.Get<VesselPositionSystem>().Enabled = true;
-                        SystemsContainer.Get<VesselPositionAltSystem>().Enabled = true;
                         SystemsContainer.Get<VesselFlightStateSystem>().Enabled = true;
                         SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
                         SystemsContainer.Get<VesselRemoveSystem>().Enabled = true;

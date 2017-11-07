@@ -516,7 +516,7 @@ namespace LunaClient
 
             returnGame.startScene = GameScenes.SPACECENTER;
 
-            if (!string.IsNullOrEmpty(SettingsSystem.CurrentSettings.SelectedFlag))
+            if (FlagSystem.FlagFileExists())
             {
                 returnGame.flagURL = SettingsSystem.CurrentSettings.SelectedFlag;
                 SystemsContainer.Get<FlagSystem>().SendCurrentFlag();

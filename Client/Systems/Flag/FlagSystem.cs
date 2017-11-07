@@ -3,6 +3,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Flag;
 using LunaCommon.Message.Data.Flag;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
@@ -84,6 +85,19 @@ namespace LunaClient.Systems.Flag
                     FlagName = flagName
                 }
             });
+        }
+
+        public static bool FlagFileExists()
+        {
+            if (string.IsNullOrEmpty(SettingsSystem.CurrentSettings.SelectedFlag) || !SettingsSystem.CurrentSettings.SelectedFlag.Contains("/"))
+                return false;
+
+            var flagName = SettingsSystem.CurrentSettings.SelectedFlag
+                .Substring(SettingsSystem.CurrentSettings.SelectedFlag.LastIndexOf("/", StringComparison.Ordinal) + 1) + ".png";
+
+            var fullFlagPath = CommonUtil.CombinePaths(FlagPath, flagName);
+
+            return File.Exists(fullFlagPath);
         }
 
         #endregion

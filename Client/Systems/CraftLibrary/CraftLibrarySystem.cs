@@ -58,7 +58,7 @@ namespace LunaClient.Systems.CraftLibrary
         {
             base.OnEnabled();
             BuildUploadList();
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, HandleCraftLibraryEvents));
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, HandleCraftLibraryEvents));
         }
 
         protected override void OnDisabled()

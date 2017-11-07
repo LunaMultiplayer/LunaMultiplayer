@@ -55,7 +55,6 @@ namespace LunaClient.Windows.Options
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
             //Key bindings
-            GUILayout.Space(10);
             var chatDescription = $"Set chat key (current: {SettingsSystem.CurrentSettings.ChatKey})";
             if (SettingChat)
             {
@@ -74,13 +73,6 @@ namespace LunaClient.Windows.Options
             }
             if (GUILayout.Button(chatDescription))
                 SettingChat = !SettingChat;
-            GUILayout.Space(10);
-            GUILayout.Label("Generate a server LMPModControl:");
-            if (GUILayout.Button("Generate blacklist LMPModControl.txt"))
-                SystemsContainer.Get<ModSystem>().GenerateModControlFile(false);
-            if (GUILayout.Button("Generate whitelist LMPModControl.txt"))
-                SystemsContainer.Get<ModSystem>().GenerateModControlFile(true);
-            WindowsContainer.Get<UniverseConverterWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<UniverseConverterWindow>().Display, "Generate Universe from saved game", ButtonStyle);
             if (GUILayout.Button("Reset disclaimer"))
             {
                 SettingsSystem.CurrentSettings.DisclaimerAccepted = false;
@@ -98,19 +90,14 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
                 SettingsSystem.SaveSettings();
             }
-            var positionFudge = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionFudgeEnable, "Enable position fudge", ButtonStyle);
-            if (positionFudge != SettingsSystem.CurrentSettings.PositionFudgeEnable)
-            {
-                SettingsSystem.CurrentSettings.PositionFudgeEnable = positionFudge;
-                SettingsSystem.SaveSettings();
-            }
-            var altPositionSystem = GUILayout.Toggle(SettingsSystem.CurrentSettings.UseAlternativePositionSystem, "Use alterative position system", ButtonStyle);
-            if (altPositionSystem != SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
-            {
-                SettingsSystem.CurrentSettings.UseAlternativePositionSystem = altPositionSystem;
-                SettingsSystem.SaveSettings();
-            }
-
+            GUILayout.Space(10);
+            GUILayout.Label("Generate a server LMPModControl:");
+            if (GUILayout.Button("Generate blacklist LMPModControl.txt"))
+                SystemsContainer.Get<ModSystem>().GenerateModControlFile(false);
+            if (GUILayout.Button("Generate whitelist LMPModControl.txt"))
+                SystemsContainer.Get<ModSystem>().GenerateModControlFile(true);
+            WindowsContainer.Get<UniverseConverterWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<UniverseConverterWindow>().Display, "Generate Universe from saved game", ButtonStyle);
+            GUILayout.Space(10);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Toolbar:", SmallOption);
             if (GUILayout.Button(ToolbarMode, ButtonStyle))

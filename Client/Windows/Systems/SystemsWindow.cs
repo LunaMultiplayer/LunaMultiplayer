@@ -30,7 +30,6 @@ namespace LunaClient.Windows.Systems
         private float WindowHeight { get; } = 400;
         private float WindowWidth { get; } = 400;
 
-        private bool VesselSystems { get; set; }
         private bool DisplayFast { get; set; }
         private float LastUpdateTime { get; set; }
         private float DisplayUpdateSInterval { get; } = 1f;
