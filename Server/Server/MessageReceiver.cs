@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
@@ -10,6 +8,8 @@ using LunaServer.Log;
 using LunaServer.Message.Reader;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Plugin;
+using System;
+using System.Collections.Generic;
 
 namespace LunaServer.Server
 {
@@ -49,9 +49,8 @@ namespace LunaServer.Server
                 client.LastReceiveTime = ServerContext.ServerClock.ElapsedMilliseconds;
 
             var messageBytes = msg.ReadBytes(msg.LengthBytes);
-            var message = ServerContext.ClientMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IClientMessageBase;
 
-            if (message == null)
+            if (!(ServerContext.ClientMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) is IClientMessageBase message))
             {
                 LunaLog.Error("Error deserializing message!");
                 return;
@@ -63,9 +62,7 @@ namespace LunaServer.Server
 
             if (message.VersionMismatch)
             {
-                MessageQueuer.SendConnectionEnd(client, $"Version mismatch. Your version doesn't match" +
-                                                        $" the server's version: {VersionInfo.FullVersionNumber}.  " +
-                                                        $"Update your plugin.");
+                MessageQueuer.SendConnectionEnd(client, $"Version mismatch. Your version does not match the server's version: {VersionInfo.Version}.");
                 return;
             }
 

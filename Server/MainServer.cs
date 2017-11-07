@@ -22,7 +22,7 @@ namespace LunaServer
         {
             try
             {
-                Console.Title = $"LMPServer {VersionInfo.FullVersionNumber}";
+                Console.Title = $"LMPServer {VersionInfo.Version}";
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = DateTime.UtcNow.Ticks;
 
@@ -39,7 +39,7 @@ namespace LunaServer
                 //Set day for log change
                 ServerContext.Day = DateTime.Now.Day;
                 
-                LunaLog.Normal($"Starting Luna Server version: {VersionInfo.FullVersionNumber}");
+                LunaLog.Normal($"Starting Luna Server version: {VersionInfo.Version}");
 
                 Universe.CheckUniverse();
                 LmpPluginHandler.LoadPlugins();

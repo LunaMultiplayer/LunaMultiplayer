@@ -1,4 +1,6 @@
-﻿// ############################################################################
+﻿<#@ template language="C#" #>
+<#@ output extension=".cs" #>
+// ############################################################################
 // #                                                                          #
 // #        ---==>  T H I S  F I L E  I S   G E N E R A T E D  <==---         #
 // #                                                                          #
@@ -14,9 +16,12 @@ namespace LunaCommon
 		private const string MainVersion = "1";
 		private const string MajorVersion = "0";
 		private const string MinorVersion = "0";
-		private const string RevisionNumber = "11045";
+		private const string RevisionNumber = "<#= this.RevisionNumber #>";
 
         public const string Version = MainVersion + "." + MajorVersion + "." + MinorVersion;
 		public const string FullVersion = MainVersion + "." + MajorVersion + "." + MinorVersion + "." + RevisionNumber;
     }
 }
+<#+
+    int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(1987,8,12)).TotalDays;
+#>

@@ -103,7 +103,7 @@ namespace LunaClient.Systems.Handshake
                     //If it's a protocol mismatch, append the client/server version.
                     if (reply == HandshakeReply.ProtocolMismatch)
                     {
-                        disconnectReason += $"\nClient: {VersionInfo.FullVersionNumber}, Server: {data.Version}";
+                        disconnectReason += $"\nClient: {VersionInfo.Version}, Server: {data.Version}";
                     }
                     LunaLog.Log(disconnectReason);
                     NetworkConnection.Disconnect(disconnectReason);

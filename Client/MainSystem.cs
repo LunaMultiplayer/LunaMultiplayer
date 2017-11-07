@@ -215,7 +215,7 @@ namespace LunaClient
 
             SystemsContainer.Get<ModSystem>().BuildDllFileList();
 
-            LunaLog.Log($"[LMP]: LunaMultiPlayer {VersionInfo.FullVersionNumber} Initialized!");
+            LunaLog.Log($"[LMP]: LunaMultiPlayer {VersionInfo.Version} Initialized!");
 
             //Trigger a reset!
             NetworkState = ClientState.Disconnected;
