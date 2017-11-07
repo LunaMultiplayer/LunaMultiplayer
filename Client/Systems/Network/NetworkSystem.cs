@@ -52,7 +52,7 @@ namespace LunaClient.Systems.Network
         public NetworkSystem()
         {
             //We setup the routine in the constructor as this system is always enabled
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, NetworkUpdate));
+            SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, NetworkUpdate));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ShowDisconnectMessage));
         }
 
