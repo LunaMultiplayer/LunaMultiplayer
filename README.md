@@ -29,3 +29,4 @@ Main features:
 ---
 
 Build Server: https://ci.appveyor.com/project/gavazquez/lunamultiplayer
+IRC: #LMP on EsperNet http://webchat.esper.net/?channels=LMP
