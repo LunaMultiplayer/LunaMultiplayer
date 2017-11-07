@@ -2,9 +2,9 @@
 {
     public enum FlagMessageType
     {
-        List = 0,
-        FlagData = 1,
-        UploadFile = 2,
-        DeleteFile = 3
+        ListRequest = 0,
+        ListResponse = 1,
+        FlagData = 2,
+        FlagDelete = 3
     }
 }

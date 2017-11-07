@@ -125,6 +125,15 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.ColorsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Player colors synced";
+                    SystemsContainer.Get<FlagSystem>().Enabled = true;
+                    MainSystem.NetworkState = ClientState.SyncingFlags;
+                    NetworkSimpleMessageSender.SendFlagsRequest();
+                    break;
+                case ClientState.SyncingFlags:
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing flags";
+                    break;
+                case ClientState.FlagsSynced:
+                    SystemsContainer.Get<MainSystem>().Status = "Flags synced";
                     SystemsContainer.Get<StatusSystem>().Enabled = true;
                     SystemsContainer.Get<PlayerConnectionSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingPlayers;
@@ -223,10 +232,7 @@ namespace LunaClient.Systems.Network
                         SystemsContainer.Get<GameSceneSystem>().Enabled = true;
                         SystemsContainer.Get<AsteroidSystem>().Enabled = true;
                         SystemsContainer.Get<ToolbarSystem>().Enabled = true;
-                        SystemsContainer.Get<FlagSystem>().Enabled = true;
                         SystemsContainer.Get<KerbalReassignerSystem>().Enabled = true;
-
-                        SystemsContainer.Get<FlagSystem>().SendFlagList();
                         SystemsContainer.Get<PlayerColorSystem>().MessageSender.SendPlayerColorToServer();
                         SystemsContainer.Get<StatusSystem>().MessageSender.SendOwnStatus();
                         NetworkSimpleMessageSender.SendMotdRequest();

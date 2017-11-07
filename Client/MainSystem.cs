@@ -114,14 +114,6 @@ namespace LunaClient
                         SystemsContainer.Get<ToolbarSystem>().Enabled = false; //Always disable toolbar in main menu
                     }
 
-                    if (HighLogic.CurrentGame.flagURL != SettingsSystem.CurrentSettings.SelectedFlag)
-                    {
-                        LunaLog.Log("[LMP]: Saving Selected flag");
-                        SettingsSystem.CurrentSettings.SelectedFlag = HighLogic.CurrentGame.flagURL;
-                        SettingsSystem.SaveSettings();
-                        SystemsContainer.Get<FlagSystem>().FlagChangeEvent = true;
-                    }
-
                     // save every GeeASL from each body in FlightGlobals
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && BodiesGees.Count == 0)
                         foreach (var body in FlightGlobals.Bodies)
@@ -523,7 +515,17 @@ namespace LunaClient
                 returnGame.flightState.mapViewFilterState = -1026;
 
             returnGame.startScene = GameScenes.SPACECENTER;
-            returnGame.flagURL = SettingsSystem.CurrentSettings.SelectedFlag;
+
+            if (!string.IsNullOrEmpty(SettingsSystem.CurrentSettings.SelectedFlag))
+            {
+                returnGame.flagURL = SettingsSystem.CurrentSettings.SelectedFlag;
+                SystemsContainer.Get<FlagSystem>().SendCurrentFlag();
+            }
+            else
+            {
+                returnGame.flagURL = "Squad/Flags/default";
+            }
+
             returnGame.Title = "LunaMultiPlayer";
             if (SettingsSystem.ServerSettings.WarpMode == WarpMode.Subspace)
             {

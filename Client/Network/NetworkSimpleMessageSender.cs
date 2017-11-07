@@ -5,6 +5,7 @@ using LunaCommon.Message.Data.Admin;
 using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Data.Color;
 using LunaCommon.Message.Data.CraftLibrary;
+using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Data.Groups;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Data.Lock;
@@ -47,6 +48,11 @@ namespace LunaClient.Network
         public static void SendColorsRequest()
         {
             SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<PlayerColorCliMsg>(new PlayerColorRequestMsgData())));
+        }
+
+        public static void SendFlagsRequest()
+        {
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<FlagCliMsg>(new FlagListRequestMsgData())));
         }
 
         public static void SendPlayersRequest()

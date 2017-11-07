@@ -64,6 +64,8 @@
     <Compile Include="Locks\LockType.cs" />
     <Compile Include="MasterServerRetriever.cs" />
     <Compile Include="Message\Client\GroupCliMsg.cs" />
+    <Compile Include="Flag\FlagInfo.cs" />
+    <Compile Include="Message\Data\Flag\FlagListRequestMsgData.cs" />
     <Compile Include="Message\Data\Groups\GroupCreateMsgData.cs" />
     <Compile Include="Message\Data\Groups\GroupBaseMsgData.cs" />
     <Compile Include="Message\Data\Groups\GroupListRequestMsgData.cs" />
@@ -175,9 +177,8 @@
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryListReplyMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftListInfo.cs" />
     <Compile Include="Message\Data\Flag\FlagDeleteMsgData.cs" />
-    <Compile Include="Message\Data\Flag\FlagUploadMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagDataMsgData.cs" />
-    <Compile Include="Message\Data\Flag\FlagListMsgData.cs" />
+    <Compile Include="Message\Data\Flag\FlagListResponseMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagBaseMsgData.cs" />
     <Compile Include="Message\Data\Lock\LockAcquireMsgData.cs" />
     <Compile Include="Message\Data\Lock\LockBaseMsgData.cs" />

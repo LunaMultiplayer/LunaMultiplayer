@@ -12,18 +12,17 @@ namespace LunaServer.Message.Reader
         public override void HandleMessage(ClientStructure client, IMessageData message)
         {
             var data = (FlagBaseMsgData) message;
-            if (data.PlayerName != client.PlayerName) return;
 
             switch (data.FlagMessageType)
             {
-                case FlagMessageType.List:
-                    FlagSyncMsgSender.HandleListFlagMessage(client, (FlagListMsgData) message);
+                case FlagMessageType.ListRequest:
+                    FlagSyncMsgSender.HandleFlagListRequestMessage(client);
                     break;
-                case FlagMessageType.DeleteFile:
-                    FlagSyncMsgSender.HandleDeleteFlagMessage(client, (FlagDeleteMsgData) message);
+                case FlagMessageType.FlagDelete:
+                    FlagSyncMsgSender.HandleFlagDeleteMessage(client, (FlagDeleteMsgData) message);
                     break;
-                case FlagMessageType.UploadFile:
-                    FlagSyncMsgSender.HandleUploadFlagMessage(client, (FlagUploadMsgData) message);
+                case FlagMessageType.FlagData:
+                    FlagSyncMsgSender.HandleFlagDataMessage(client, (FlagDataMsgData) message);
                     break;
             }
         }

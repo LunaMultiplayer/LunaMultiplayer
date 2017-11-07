@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Generic;
 
 namespace LunaCommon.Message.Client
 {
@@ -12,10 +12,10 @@ namespace LunaCommon.Message.Client
     {
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [(ushort)FlagMessageType.List] = new FlagListMsgData(),
+            [(ushort)FlagMessageType.ListRequest] = new FlagListRequestMsgData(),
+            [(ushort)FlagMessageType.ListResponse] = new FlagListResponseMsgData(),
             [(ushort)FlagMessageType.FlagData] = new FlagDataMsgData(),
-            [(ushort)FlagMessageType.UploadFile] = new FlagUploadMsgData(),
-            [(ushort)FlagMessageType.DeleteFile] = new FlagDeleteMsgData()
+            [(ushort)FlagMessageType.FlagDelete] = new FlagDeleteMsgData()
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Flag;

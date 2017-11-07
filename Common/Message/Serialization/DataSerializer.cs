@@ -1,10 +1,11 @@
-﻿using LunaCommon.Locks;
+﻿using LunaCommon.Flag;
+using LunaCommon.Groups;
+using LunaCommon.Locks;
 using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using LunaCommon.Groups;
 
 namespace LunaCommon.Message.Serialization
 {
@@ -35,6 +36,7 @@ namespace LunaCommon.Message.Serialization
             [typeof(Guid)] = (messageData, inputData) => WriteBytesFromGuid(messageData, (Guid)inputData),
             [typeof(LockDefinition)] = (messageData, inputData) => WriteBytesFromLockDefinition(messageData, (LockDefinition)inputData),
             [typeof(Group)] = (messageData, inputData) => WriteBytesFromGroup(messageData, (Group)inputData),
+            [typeof(FlagInfo)] = (messageData, inputData) => WriteBytesFromFlagInfo(messageData, (FlagInfo)inputData),
             [typeof(KeyValuePair<int, string>)] = (messageData, inputData) =>
                     WriteBytesFromKeyValuePairIntStr(messageData, (KeyValuePair<int, string>)inputData),
             [typeof(KeyValuePair<string, string>)] = (messageData, inputData) =>
@@ -64,6 +66,7 @@ namespace LunaCommon.Message.Serialization
             [typeof(Guid[])] = (messageData, inputData) => WriteBytesFromGuidArray(messageData, (Guid[])inputData),
             [typeof(LockDefinition[])] = (messageData, inputData) => WriteBytesFromLockDefinitionArray(messageData, (LockDefinition[])inputData),
             [typeof(Group[])] = (messageData, inputData) => WriteBytesFromGroupArray(messageData, (Group[])inputData),
+            [typeof(FlagInfo[])] = (messageData, inputData) => WriteBytesFromFlagInfoArray(messageData, (FlagInfo[])inputData),
             [typeof(KeyValuePair<int, string>[])] = (messageData, inputData) =>
                     WriteBytesFromKeyValuePairIntStr_Array(messageData, (KeyValuePair<int, string>[])inputData),
             [typeof(KeyValuePair<string, string>[])] = (messageData, inputData) =>

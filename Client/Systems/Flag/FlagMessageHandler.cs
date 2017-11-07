@@ -1,7 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Utilities;
-using LunaCommon;
+using LunaCommon.Enums;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
@@ -21,61 +21,40 @@ namespace LunaClient.Systems.Flag
 
             switch (msgData.FlagMessageType)
             {
-                case FlagMessageType.List:
+                case FlagMessageType.ListResponse:
                     {
-                        var data = (FlagListMsgData)messageData;
-                        var serverFlagFiles = data.FlagFileNames;
-                        var serverFlagOwners = data.FlagOwners;
-                        var serverFlagShaSums = data.FlagShaSums;
-                        for (var i = 0; i < serverFlagFiles.Length; i++)
+                        var data = (FlagListResponseMsgData)messageData;
+                        foreach (var flag in data.FlagFiles)
                         {
-                            if (serverFlagFiles[i] == null || serverFlagOwners[i] == null || serverFlagShaSums[i] == null)
-                                continue;
-
-                            var fi = new FlagInfo
-                            {
-                                Owner = serverFlagOwners[i],
-                                ShaSum = serverFlagShaSums[i]
-                            };
-
-                            System.ServerFlags[Path.GetFileNameWithoutExtension(serverFlagFiles[i])] = fi;
+                            var extendedFlagInfo = new ExtendedFlagInfo(flag);
+                            System.ServerFlags.TryAdd(extendedFlagInfo.FlagName, extendedFlagInfo);
                         }
-                        System.SyncComplete = true;
-                        //Check if we need to upload the flag
-                        System.FlagChangeEvent = true;
+                        MainSystem.NetworkState = ClientState.FlagsSynced;
                     }
                     break;
                 case FlagMessageType.FlagData:
                     {
                         var data = (FlagDataMsgData)messageData;
-                        var frm = new FlagRespondMessage
-                        {
-                            FlagInfo = { Owner = data.OwnerPlayerName },
-                            FlagName = data.FlagName,
-                            FlagData = data.FlagData
-                        };
-                        frm.FlagInfo.ShaSum = Common.CalculateSha256Hash(frm.FlagData);
-                        System.NewFlags.Enqueue(frm);
+                        var extendedFlagInfo = new ExtendedFlagInfo(data.Flag);
+                        System.ServerFlags.AddOrUpdate(extendedFlagInfo.FlagName, extendedFlagInfo, (key, existingVal) => extendedFlagInfo);
                     }
                     break;
-                case FlagMessageType.DeleteFile:
+                case FlagMessageType.FlagDelete:
                     {
                         var data = (FlagDeleteMsgData)messageData;
-                        var flagName = data.FlagName;
-                        var flagFile = CommonUtil.CombinePaths(System.FlagPath, flagName);
-                        DeleteFlag(flagFile);
+                        System.ServerFlags.TryRemove(data.FlagName, out _);
+                        DeleteFlagFile(CommonUtil.CombinePaths(FlagSystem.FlagPath, data.FlagName));
                     }
                     break;
             }
         }
 
-        private static void DeleteFlag(string flagFile)
+        private static void DeleteFlagFile(string flagFile)
         {
             try
             {
                 if (File.Exists(flagFile))
                 {
-                    LunaLog.Log($"[LMP]: Deleting flag {flagFile}");
                     File.Delete(flagFile);
                 }
             }

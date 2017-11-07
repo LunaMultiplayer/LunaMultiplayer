@@ -1,4 +1,5 @@
-﻿using LunaCommon.Groups;
+﻿using LunaCommon.Flag;
+using LunaCommon.Groups;
 using LunaCommon.Locks;
 using LunaCommon.Message.Data.CraftLibrary;
 using System.Collections.Generic;
@@ -31,6 +32,18 @@ namespace LunaCommon.Message.Serialization
         }
 
         private static void WriteBytesFromGroup(Stream messageData, Group inputData)
+        {
+            PrivSerialize(inputData, messageData, true);
+        }
+
+        private static void WriteBytesFromFlagInfoArray(Stream messageData, FlagInfo[] inputData)
+        {
+            WriteFirstLengthByte(messageData, inputData.Length);
+            foreach (var element in inputData)
+                WriteBytesFromFlagInfo(messageData, element);
+        }
+
+        private static void WriteBytesFromFlagInfo(Stream messageData, FlagInfo inputData)
         {
             PrivSerialize(inputData, messageData, true);
         }

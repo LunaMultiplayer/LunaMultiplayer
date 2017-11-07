@@ -76,6 +76,7 @@
     <Compile Include="Network\Icmp\Icmp.cs" />
     <Compile Include="Network\Icmp\IcmpMessage.cs" />
     <Compile Include="Network\Icmp\InformationMessage.cs" />
+    <Compile Include="Systems\Flag\FlagEvents.cs" />
     <Compile Include="Systems\GameScene\GameSceneSystem.cs" />
     <Compile Include="Systems\GameScene\GameSceneEvents.cs" />
     <Compile Include="Systems\Groups\GroupMessageHandler.cs" />

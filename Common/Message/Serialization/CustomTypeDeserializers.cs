@@ -1,4 +1,5 @@
-﻿using LunaCommon.Groups;
+﻿using LunaCommon.Flag;
+using LunaCommon.Groups;
 using LunaCommon.Locks;
 using LunaCommon.Message.Data.CraftLibrary;
 using System.Collections.Generic;
@@ -8,6 +9,24 @@ namespace LunaCommon.Message.Serialization
 {
     public static partial class DataDeserializer
     {
+        private static FlagInfo GetFlagInfoFromBytes(Stream messageData)
+        {
+            var flagInfo = new FlagInfo();
+            PrivDeserialize(messageData, flagInfo);
+
+            return flagInfo;
+        }
+
+        private static FlagInfo[] GetFlagInfoArrayFromBytes(Stream messageData)
+        {
+            var numberOfElements = GetIntFromBytes(messageData);
+            var outputData = new FlagInfo[numberOfElements];
+            for (var element = 0; element < numberOfElements; element++)
+                outputData[element] = GetFlagInfoFromBytes(messageData);
+
+            return outputData;
+        }
+
         private static Group GetGroupFromBytes(Stream messageData)
         {
             var group = new Group();
