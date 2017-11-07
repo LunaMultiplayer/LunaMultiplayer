@@ -28,4 +28,4 @@ Main features:
 
 ---
 
-Build Server: https://ci.appveyor.com/project/DaggerES/lunamultiplayer
+Build Server: https://ci.appveyor.com/project/gavazquez/lunamultiplayer
