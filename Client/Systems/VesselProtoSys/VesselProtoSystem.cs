@@ -92,7 +92,6 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             TaskFactory.StartNew(() =>
             {
-                UniverseSyncCache.QueueToCache(vesselData);
                 var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
                 if (vesselNode != null && vesselId == Common.ConvertConfigStringToGuid(vesselNode.GetValue("pid")))
                 {

@@ -214,7 +214,6 @@ namespace LunaClient
 
             SetupDirectoriesIfNeeded();
             HandleCommandLineArgs();
-            UniverseSyncCache.ExpireCache();
 
             //Register events needed to bootstrap the workers.
             GameEvents.onHideUI.Add(() => { ShowGui = false; });
@@ -259,7 +258,6 @@ namespace LunaClient
         {
             NetworkConnection.Disconnect("Quit game");
             NetworkState = ClientState.Disconnected;
-            UniverseSyncCache.Stop();
             LunaLog.ProcessLogMessages();
         }
 

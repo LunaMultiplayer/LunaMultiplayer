@@ -117,7 +117,6 @@ namespace LunaClient.Windows.Options
         protected Color TempColor = new Color(1f, 1f, 1f, 1f);
 
         protected string ToolbarMode { get; set; }
-        protected string NewCacheSize { get; set; } = "";
         protected bool SettingChat { get; set; }
         protected GUIStyle TempColorLabelStyle { get; set; }
 

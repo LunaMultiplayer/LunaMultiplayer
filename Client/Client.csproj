@@ -243,7 +243,6 @@
     <Compile Include="Windows\Systems\SystemsWindow.cs" />
     <Compile Include="Windows\UniverseConverter\UniverseConverterDrawer.cs" />
     <Compile Include="Windows\UniverseConverter\UniverseConverterWindow.cs" />
-    <Compile Include="Utilities\UniverseSyncCache.cs" />
     <Compile Include="Utilities\InstallChecker.cs" />
     <Compile Include="Systems\Warp\WarpSystem.cs" />
     <Compile Include="Windows\Debug\DebugDrawer.cs" />

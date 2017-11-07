@@ -59,8 +59,6 @@ namespace LunaClient.Systems.VesselProtoSys
             var vesselBytes = VesselSerializer.SerializeVessel(protoVessel);
             if (vesselBytes.Length > 0)
             {
-                UniverseSyncCache.QueueToCache(vesselBytes);
-
                 SendMessage(new VesselProtoMsgData
                 {
                     VesselId = protoVessel.vesselID,
