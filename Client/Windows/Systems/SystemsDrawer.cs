@@ -119,13 +119,6 @@ namespace LunaClient.Windows.Systems
                 if (!string.IsNullOrEmpty(ModApiProfilerText))
                     GUILayout.Label(ModApiProfilerText, LabelStyle);
             }
-            Lock = GUILayout.Toggle(Lock, "Lock system", ButtonStyle);
-            if (Lock)
-            {
-                SystemsContainer.Get<LockSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<LockSystem>().Enabled, "ON/OFF", ButtonStyle);
-                if (!string.IsNullOrEmpty(LockProfilerText))
-                    GUILayout.Label(LockProfilerText, LabelStyle);
-            }
             Kerbal = GUILayout.Toggle(Kerbal, "Kerbal system", ButtonStyle);
             if (Kerbal)
             {
@@ -150,24 +143,6 @@ namespace LunaClient.Windows.Systems
 
         private void PrintVesselSystems()
         {
-            VesselDock = GUILayout.Toggle(VesselDock, "Vessel dock", ButtonStyle);
-            if (VesselDock)
-            {
-                SystemsContainer.Get<VesselDockSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselDockSystem>().Enabled, "ON/OFF",
-                    ButtonStyle);
-                if (!string.IsNullOrEmpty(VesselDockProfilerText))
-                    GUILayout.Label(VesselDockProfilerText, LabelStyle);
-            }
-
-            VesselSwitcher = GUILayout.Toggle(VesselSwitcher, "Vessel switcher", ButtonStyle);
-            if (VesselSwitcher)
-            {
-                SystemsContainer.Get<VesselSwitcherSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselSwitcherSystem>().Enabled, "ON/OFF",
-                    ButtonStyle);
-                if (!string.IsNullOrEmpty(VesselSwitcherProfilerText))
-                    GUILayout.Label(VesselSwitcherProfilerText, LabelStyle);
-            }
-
             VesselFlightState = GUILayout.Toggle(VesselFlightState, "Vessel flightstate", ButtonStyle);
             if (VesselFlightState)
             {
@@ -186,15 +161,6 @@ namespace LunaClient.Windows.Systems
                     GUILayout.Label(VesselImmortalProfilerText, LabelStyle);
             }
 
-            VesselRanges = GUILayout.Toggle(VesselRanges, "Vessel ranges", ButtonStyle);
-            if (VesselRanges)
-            {
-                SystemsContainer.Get<VesselRangeSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselRangeSystem>().Enabled, "ON/OFF",
-                    ButtonStyle);
-                if (!string.IsNullOrEmpty(VesselRangesProfilerText))
-                    GUILayout.Label(VesselRangesProfilerText, LabelStyle);
-            }
-
             VesselLock = GUILayout.Toggle(VesselLock, "Vessel lock", ButtonStyle);
             if (VesselLock)
             {
@@ -211,15 +177,6 @@ namespace LunaClient.Windows.Systems
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselPositionProfilerText))
                     GUILayout.Label(VesselPositionProfilerText, LabelStyle);
-            }
-
-            VesselPositionAlt = GUILayout.Toggle(VesselPositionAlt, "Vessel position alternative", ButtonStyle);
-            if (VesselPositionAlt)
-            {
-                SystemsContainer.Get<VesselPositionAltSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselPositionAltSystem>().Enabled, "ON/OFF",
-                    ButtonStyle);
-                if (!string.IsNullOrEmpty(VesselPositionAltProfilerText))
-                    GUILayout.Label(VesselPositionAltProfilerText, LabelStyle);
             }
 
             VesselProto = GUILayout.Toggle(VesselProto, "Vessel proto", ButtonStyle);

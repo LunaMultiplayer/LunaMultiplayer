@@ -4,20 +4,15 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.KerbalSys;
-using LunaClient.Systems.Lock;
 using LunaClient.Systems.ModApi;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselPositionAltSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
-using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -25,6 +20,9 @@ using UnityEngine;
 
 namespace LunaClient.Windows.Systems
 {
+    /// <summary>
+    /// Here we should only display the statistics for systems that contain ROUTINES or code that executes on every fixedupdate/update/lateupdate
+    /// </summary>
     public partial class SystemsWindow : Window<SystemsWindow>
     {
         #region Fields & properties
@@ -40,30 +38,18 @@ namespace LunaClient.Windows.Systems
         private string LmpProfilerText { get; set; }
 
         #region Vessel systems
-
-        private bool VesselDock { get; set; }
-        private string VesselDockProfilerText { get; set; }
-
-        private bool VesselSwitcher { get; set; }
-        private string VesselSwitcherProfilerText { get; set; }
-
+        
         private bool VesselFlightState { get; set; }
         private string VesselFlightStateProfilerText { get; set; }
 
         private bool VesselImmortal { get; set; }
         private string VesselImmortalProfilerText { get; set; }
-
-        private bool VesselRanges { get; set; }
-        private string VesselRangesProfilerText { get; set; }
         
         private bool VesselLock { get; set; }
         private string VesselLockProfilerText { get; set; }
 
         private bool VesselPosition { get; set; }
         private string VesselPositionProfilerText { get; set; }
-
-        private bool VesselPositionAlt { get; set; }
-        private string VesselPositionAltProfilerText { get; set; }
 
         private bool VesselProto { get; set; }
         private string VesselProtoProfilerText { get; set; }
@@ -92,10 +78,7 @@ namespace LunaClient.Windows.Systems
 
         private bool ModApi { get; set; }
         private string ModApiProfilerText { get; set; }
-
-        private bool Lock { get; set; }
-        private string LockProfilerText { get; set; }
-
+        
         private bool Kerbal { get; set; }
         private string KerbalProfilerText { get; set; }
 
@@ -121,16 +104,11 @@ namespace LunaClient.Windows.Systems
                 ScenarioProfilerText = SystemsContainer.Get<ScenarioSystem>().GetProfilersData();
                 TimeSyncerProfilerText = SystemsContainer.Get<TimeSyncerSystem>().GetProfilersData();
                 ModApiProfilerText = SystemsContainer.Get<ModApiSystem>().GetProfilersData();
-                LockProfilerText = SystemsContainer.Get<LockSystem>().GetProfilersData();
                 KerbalProfilerText = SystemsContainer.Get<KerbalSystem>().GetProfilersData();
-                VesselDockProfilerText = SystemsContainer.Get<VesselDockSystem>().GetProfilersData();
-                VesselSwitcherProfilerText = SystemsContainer.Get<VesselSwitcherSystem>().GetProfilersData();
                 VesselFlightStateProfilerText = SystemsContainer.Get<VesselFlightStateSystem>().GetProfilersData();
                 VesselImmortalProfilerText = SystemsContainer.Get<VesselImmortalSystem>().GetProfilersData();
-                VesselRangesProfilerText = SystemsContainer.Get<VesselRangeSystem>().GetProfilersData();
                 VesselLockProfilerText = SystemsContainer.Get<VesselLockSystem>().GetProfilersData();
                 VesselPositionProfilerText = SystemsContainer.Get<VesselPositionSystem>().GetProfilersData();
-                VesselPositionAltProfilerText = SystemsContainer.Get<VesselPositionAltSystem>().GetProfilersData();
                 VesselProtoProfilerText = SystemsContainer.Get<VesselProtoSystem>().GetProfilersData();
                 VesselRemoveProfilerText = SystemsContainer.Get<VesselRemoveSystem>().GetProfilersData();
                 WarpProfilerText = SystemsContainer.Get<WarpSystem>().GetProfilersData();
