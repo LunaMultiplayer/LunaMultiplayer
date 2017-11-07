@@ -434,7 +434,9 @@ namespace LunaCommon
                 "RelayAntenna100",
                 "RelayAntenna5",
                 "RelayAntenna50",
-                "HeatShield0"
+                "HeatShield0",
+                // 1.3 part
+                "InfraredTelescope"
             };
             return stockPartList;
             //MAKE SURE TO CHANGE VERSION NUMBER!
