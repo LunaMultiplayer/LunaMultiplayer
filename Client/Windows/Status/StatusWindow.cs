@@ -22,10 +22,8 @@ namespace LunaClient.Windows.Status
         public bool ColorEventHandled { get; set; } = true;
 
         #endregion
-
-        protected bool Minmized { get; set; }
+        
         protected Vector2 ScrollPosition { get; set; }
-        protected bool SafeMinimized { get; set; }
         protected GUIStyle SubspaceStyle { get; set; }
         protected Dictionary<string, GUIStyle> PlayerNameStyle { get; set; }
         protected GUIStyle VesselNameStyle { get; set; }
@@ -36,12 +34,11 @@ namespace LunaClient.Windows.Status
         private const float UpdateStatusInterval = .2f;
 
         private double LastStatusUpdate { get; set; }
-        private bool CalculatedMinSize { get; set; }
 
 #if DEBUG
-        private readonly string _title = $"LMP  {CommonUtil.DebugPort}";
+        private readonly string _title = $"LMP - Debug port: {CommonUtil.DebugPort}";
 #else
-        private readonly string _title = $"LMP";
+        private readonly string _title = $"LMP - Luna Multiplayer";
 #endif
 
         #endregion
@@ -58,27 +55,15 @@ namespace LunaClient.Windows.Status
             if (Display)
             {
                 //Calculate the minimum size of the minimize window by drawing it off the screen
-                if (!CalculatedMinSize)
-                    MinWindowRect = GUILayout.Window(6701 + MainSystem.WindowOffset, MinWindowRect, DrawMaximize,
-                        _title, WindowStyle, MinLayoutOptions);
-                if (!SafeMinimized)
-                    WindowRect =
-                        LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6703 + MainSystem.WindowOffset, WindowRect,
-                            DrawContent,
-                            _title, WindowStyle, LayoutOptions));
-                else
-                    MinWindowRect =
-                        LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6703 + MainSystem.WindowOffset, MinWindowRect,
-                            DrawMaximize, _title, WindowStyle, MinLayoutOptions));
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6703 + MainSystem.WindowOffset, 
+                    WindowRect, DrawContent, _title, WindowStyle, LayoutOptions));
             }
             CheckWindowLock();
         }
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth,
-                WindowHeight);
-            MinWindowRect = new Rect(float.NegativeInfinity, float.NegativeInfinity, 0, 0);
+            WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
@@ -99,14 +84,7 @@ namespace LunaClient.Windows.Status
             LayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
             LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
-
-            MinLayoutOptions = new GUILayoutOption[4];
-            MinLayoutOptions[0] = GUILayout.MinWidth(0);
-            MinLayoutOptions[1] = GUILayout.MinHeight(0);
-            MinLayoutOptions[2] = GUILayout.ExpandHeight(true);
-            MinLayoutOptions[3] = GUILayout.ExpandWidth(true);
-
-            //Adapted from KMP.
+            
             PlayerNameStyle = new Dictionary<string, GUIStyle>();
 
             VesselNameStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.white } };
@@ -128,16 +106,10 @@ namespace LunaClient.Windows.Status
 
         public override void Update()
         {
-            if (Display)
+            if (Display && Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
             {
-                SafeMinimized = Minmized;
-                if (!CalculatedMinSize && MinWindowRect.width != 0 && MinWindowRect.height != 0)
-                    CalculatedMinSize = true;
-                if (Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
-                {
-                    LastStatusUpdate = Time.realtimeSinceStartup;
-                    SubspaceDisplay = SystemsContainer.Get<WarpSystem>().WarpEntryDisplay.GetSubspaceDisplayEntries();
-                }
+                LastStatusUpdate = Time.realtimeSinceStartup;
+                SubspaceDisplay = SystemsContainer.Get<WarpSystem>().WarpEntryDisplay.GetSubspaceDisplayEntries();
             }
         }
 
@@ -163,8 +135,7 @@ namespace LunaClient.Windows.Status
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 
-                var shouldLock = Minmized ? MinWindowRect.Contains(mousePos) : WindowRect.Contains(mousePos);
-
+                var shouldLock = WindowRect.Contains(mousePos);
                 if (shouldLock && !IsWindowLocked)
                 {
                     InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, "LMP_PlayerStatusLock");

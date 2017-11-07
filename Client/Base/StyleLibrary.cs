@@ -4,7 +4,6 @@ namespace LunaClient.Base
 {
     public abstract class StyleLibrary
     {
-        protected Rect MinWindowRect;
         protected Rect WindowRect;
         protected Rect MoveRect;
 
@@ -17,7 +16,6 @@ namespace LunaClient.Base
         protected GUIStyle HighlightStyle;
 
         protected GUILayoutOption[] LayoutOptions;
-        protected GUILayoutOption[] MinLayoutOptions;
         protected GUILayoutOption[] SmallOption;
         protected GUILayoutOption[] TextAreaOptions;
         protected GUILayoutOption[] LabelOptions;
