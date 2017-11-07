@@ -14,7 +14,7 @@ namespace LunaCommon
 		private const string MainVersion = "1";
 		private const string MajorVersion = "0";
 		private const string MinorVersion = "0";
-		private const string RevisionNumber = "11045";
+		private const string RevisionNumber = "11056";
 
         public const string Version = MainVersion + "." + MajorVersion + "." + MinorVersion;
 		public const string FullVersion = MainVersion + "." + MajorVersion + "." + MinorVersion + "." + RevisionNumber;

@@ -40,7 +40,7 @@ namespace LunaClient.Windows.Connection
 #if DEBUG
         private readonly string _title = $"Luna Multiplayer {VersionInfo.Version} Debug port: {CommonUtil.DebugPort}";
 #else
-        private readonly string _title = $"Luna Multiplayer {VersionInfo.FullVersionNumber}";
+        private readonly string _title = $"Luna Multiplayer {VersionInfo.Version}";
 #endif
 
         #endregion

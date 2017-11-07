@@ -23,5 +23,5 @@ namespace LunaCommon
     }
 }
 <#+
-    int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(1987,8,12)).TotalDays;
+    int RevisionNumber = (int)(DateTime.UtcNow - new DateTime(1987,8,1)).TotalDays;
 #>
