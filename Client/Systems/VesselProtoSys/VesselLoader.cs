@@ -7,8 +7,8 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselPositionAltSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
+using LunaClient.Utilities;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UniLinq;
@@ -26,6 +26,7 @@ namespace LunaClient.Systems.VesselProtoSys
         
         /// <summary>
         /// Load all the received vessels from the server into the game
+        /// This should be called before the game starts as it only loads them in the scenario
         /// </summary>
         public void LoadVesselsIntoGame()
         {
@@ -45,7 +46,6 @@ namespace LunaClient.Systems.VesselProtoSys
                     LunaLog.LogWarning($"[LMP]: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
                     SystemsContainer.Get<ChatSystem>().PmMessageServer($"WARNING: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
                 }
-                vessel.Value.NeedsToBeReloaded = false;
             }
 
             LunaLog.Log($"[LMP]: {numberOfLoads} Vessels loaded into game");
@@ -54,7 +54,6 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Load a vessel into the game
         /// </summary>
-        /// 
         public bool LoadVessel(ProtoVessel vesselProto)
         {
             try
@@ -69,6 +68,53 @@ namespace LunaClient.Systems.VesselProtoSys
             return false;
         }
 
+        /// <summary>
+        /// Reloads an existing vessel into the game.
+        /// </summary>
+        public bool ReloadVessel(ProtoVessel vesselProto)
+        {
+            try
+            {
+                //Are we realoading our current active vessel?
+                var reloadingCurrentVessel = FlightGlobals.ActiveVessel?.id == vesselProto.vesselID;
+
+                //Load the existing target, if any.  We will use this to reset the target to the newly loaded vessel, if the vessel we're reloading is the one that is targeted.
+                var currentTargetId = FlightGlobals.fetch.VesselTarget?.GetVessel()?.id;
+
+                //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
+                SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vesselProto.vesselID);
+                if (LoadVesselImpl(vesselProto))
+                {
+                    //Case when the target is the vessel we are changing
+                    if (currentTargetId == vesselProto.vesselID)
+                    {
+                        //Record the time immediately before calling SetVesselTarget to remove it's message
+                        var currentTime = Time.realtimeSinceStartup;
+                        FlightGlobals.fetch.SetVesselTarget(vesselProto.vesselRef, true);
+
+                        RemoveSetTargetMessages(currentTime);
+                    }
+
+                    if (reloadingCurrentVessel)
+                    {
+                        OrbitPhysicsManager.HoldVesselUnpack();
+                        FlightGlobals.fetch.activeVessel.GoOnRails();
+                        SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(vesselProto.vesselID);
+                    }
+
+                    return true;
+                }
+                return false;
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Error reloading vessel: {e}");
+                return false;
+            }
+        }
+
+        #region Private methods
+        
         /// <summary>
         /// Performs the operation of actually loading the vessel into the game.  Does not handle errors.
         /// </summary>
@@ -91,87 +137,21 @@ namespace LunaClient.Systems.VesselProtoSys
             return false;
         }
 
+        /// <summary>
+        /// Asks the vessel position system for the last known position of a vessel
+        /// </summary>
         private static void GetLatestProtoVesselPosition(ProtoVessel vesselProto)
         {
             if (SettingsSystem.CurrentSettings.UseAlternativePositionSystem)
             {
                 var latLonAlt = SystemsContainer.Get<VesselPositionAltSystem>().GetLatestVesselPosition(vesselProto.vesselID);
-                if (latLonAlt!= null)
+                if (latLonAlt != null)
                 {
                     vesselProto.latitude = latLonAlt[0];
                     vesselProto.longitude = latLonAlt[1];
                     vesselProto.altitude = latLonAlt[2];
                 }
             }
-        }
-
-        /// <summary>
-        /// Reloads an existing vessel into the game. We assume that the vessel exists!
-        /// We are sure that the vessel has changed as we handle that on the msg receive which runs in another thread
-        /// </summary>
-        public bool ReloadVessel(ProtoVessel vesselProto)
-        {
-            try
-            {
-                //Are we realoading our current active vessel?
-                var reloadingCurrentVessel = FlightGlobals.ActiveVessel?.id == vesselProto.vesselID;
-
-                //Load the existing target, if any.  We will use this to reset the target to the newly loaded vessel, if the vessel we're reloading is the one that is targeted.
-                var currentTargetId = FlightGlobals.fetch.VesselTarget?.GetVessel()?.id;
-
-                //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
-                SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vesselProto.vesselID);
-                LoadVesselImpl(vesselProto);
-
-                //Case when the target is the vessel we are changing
-                if (currentTargetId == vesselProto.vesselID)
-                {
-                    //Fetch the new vessel information for the same vessel ID, as the unload/load creates a new game object, 
-                    //and we need to refer to the new one for the target
-                    var newVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id == vesselProto.vesselID);
-
-                    //Record the time immediately before calling SetVesselTarget to remove it's message
-                    var currentTime = Time.realtimeSinceStartup;
-                    FlightGlobals.fetch.SetVesselTarget(newVessel, true);
-
-                    RemoveSetTargetMessages(currentTime);
-                }
-
-                if (reloadingCurrentVessel)
-                {
-                    OrbitPhysicsManager.HoldVesselUnpack();
-                    FlightGlobals.fetch.activeVessel.GoOnRails();
-                    SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(vesselProto.vesselID);
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error reloading vessel: {e}");
-                return false;
-            }
-        }
-
-        #region Private methods
-
-        /// <summary>
-        /// Check if we were spectating the vessel
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private static bool SpectatingProtoVessel(ProtoVessel currentProto)
-        {
-            return FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel?.id == currentProto.vesselID;
-        }
-
-        /// <summary>
-        /// Checks if the protovessel is a target we have locked
-        /// </summary>
-        // ReSharper disable once UnusedMember.Local
-        private static bool ProtoVesselIsTarget(ProtoVessel currentProto)
-        {
-            return FlightGlobals.fetch.VesselTarget != null && FlightGlobals.fetch.VesselTarget.GetVessel() != null &&
-                   FlightGlobals.fetch.VesselTarget.GetVessel().id == currentProto.vesselID;
         }
 
         /// <summary>
@@ -207,17 +187,12 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static void FixProtoVesselFlags(ProtoVessel vesselProto)
         {
-            foreach (var part in vesselProto.protoPartSnapshots)
+            foreach (var part in vesselProto.protoPartSnapshots.Where(p=> !string.IsNullOrEmpty(p.flagURL)))
             {
-                //Fix up flag URLS.
-                if (!string.IsNullOrEmpty(part.flagURL))
+                if (!File.Exists(CommonUtil.CombinePaths(Client.KspPath, "GameData", $"{part.flagURL}.png")))
                 {
-                    var flagFile = Path.Combine(Path.Combine(Client.KspPath, "GameData"), $"{part.flagURL}.png");
-                    if (!File.Exists(flagFile))
-                    {
-                        LunaLog.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
-                        part.flagURL = "Squad/Flags/default";
-                    }
+                    LunaLog.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
+                    part.flagURL = "Squad/Flags/default";
                 }
             }
         }
@@ -259,6 +234,7 @@ namespace LunaClient.Systems.VesselProtoSys
             SystemsContainer.Get<PlayerColorSystem>().SetVesselOrbitColor(currentProto.vesselRef);
             if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
             {
+                //When in trackstation rebuild the vessels left panel as otherwise the new vessel won't be listed
                 var spaceTracking = Object.FindObjectOfType<SpaceTracking>();
                 BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
             }
@@ -268,17 +244,10 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// This method removes the "Target: xxx" message created by SetVesselTarget
         /// </summary>
-        /// <param name="currentTime"></param>
         private static void RemoveSetTargetMessages(float currentTime)
-        {
-            var messagesToRemove = new List<ScreenMessage>();
-
-            foreach (var message in ScreenMessages.Instance.ActiveMessages.Where(m => m.startTime >= currentTime))
-            {
-                //If the message started on or after the SetVesselTarget call time, remove it
-                messagesToRemove.Add(message);
-            }
-
+        {                
+            //If the message started on or after the SetVesselTarget call time, remove it
+            var messagesToRemove = ScreenMessages.Instance.ActiveMessages.Where(m => m.startTime >= currentTime);
             foreach (var message in messagesToRemove)
             {
                 ScreenMessages.RemoveMessage(message);

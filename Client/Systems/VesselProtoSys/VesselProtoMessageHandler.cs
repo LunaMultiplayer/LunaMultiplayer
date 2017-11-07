@@ -77,6 +77,9 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (vesselBytes.Length != 0 && vesselId != Guid.Empty)
                         {
                             var update = new VesselProtoUpdate(vesselNode, vesselId);
+                            //We set this to false as the game still has not started and we will call LoadVesselsIntoGame that runs trough all vessels
+                            //and does not care about if they must be reloaded or not.
+                            update.NeedsToBeReloaded = false;
                             if (update.ProtoVessel != null)
                                 System.AllPlayerVessels.TryAdd(vesselId, update);
                         }

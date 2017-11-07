@@ -339,7 +339,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Updates the vesselProto from the dictionary in a thread safe manner
         /// </summary>
-        private void UpdateVesselProtoInDictionary(VesselProtoUpdate vesselProto)
+        public void UpdateVesselProtoInDictionary(VesselProtoUpdate vesselProto)
         {
             AllPlayerVessels.TryGetValue(vesselProto.VesselId, out var existingVesselProto);
             if (existingVesselProto != null)
