@@ -6,8 +6,8 @@ namespace LunaClient.Windows.UniverseConverter
     {
         public void DrawContent(int windowId)
         {
-            GUI.DragWindow(MoveRect);
             GUILayout.BeginVertical();
+            GUI.DragWindow(MoveRect);
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
             foreach (var saveFolder in SaveDirectories)
                 if (GUILayout.Button(saveFolder))

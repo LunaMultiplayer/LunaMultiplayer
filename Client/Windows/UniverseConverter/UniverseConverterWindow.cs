@@ -8,15 +8,15 @@ namespace LunaClient.Windows.UniverseConverter
     {
         private const float WindowHeight = 300;
         private const float WindowWidth = 200;
+
         public bool LoadEventHandled { get; } = true;
         protected string[] SaveDirectories { get; } = Utilities.UniverseConverter.GetSavedNames();
-
-
+        
         public override void OnGui()
         {
+            base.OnGui();
             if (SafeDisplay)
-                WindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6712 + MainSystem.WindowOffset, WindowRect,
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6712 + MainSystem.WindowOffset, WindowRect,
                         DrawContent, "Universe Converter", WindowStyle, LayoutOptions));
         }
 
