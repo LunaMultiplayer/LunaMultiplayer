@@ -151,11 +151,6 @@ namespace LunaClient.Systems.VesselPositionSys
             }
         }
 
-        public new virtual VesselPositionUpdate Clone()
-        {
-            return MemberwiseClone() as VesselPositionUpdate;
-        }
-
         #endregion
 
         #region Main method

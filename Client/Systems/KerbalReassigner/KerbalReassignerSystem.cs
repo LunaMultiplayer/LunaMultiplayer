@@ -40,74 +40,74 @@ namespace LunaClient.Systems.KerbalReassigner
         public void DodgeKerbals(ConfigNode inputNode, Guid protovesselId)
         {
             return;
+            //TODO:Fix this. Is this system really needed?
+            //var takenKerbals = new List<string>();
+            //foreach (var partNode in inputNode.GetNodes("PART"))
+            //{
+            //    var crewIndex = 0;
+            //    foreach (var currentKerbalName in partNode.GetValues("crew"))
+            //    {
+            //        if (KerbalToVessel.ContainsKey(currentKerbalName) && KerbalToVessel[currentKerbalName] != protovesselId)
+            //        {
+            //            ProtoCrewMember newKerbal = null;
+            //            var newKerbalGender = GetKerbalGender(currentKerbalName);
+            //            string newExperienceTrait = null;
+            //            if (HighLogic.CurrentGame.CrewRoster.Exists(currentKerbalName))
+            //            {
+            //                var oldKerbal = HighLogic.CurrentGame.CrewRoster[currentKerbalName];
+            //                newKerbalGender = oldKerbal.gender;
+            //                newExperienceTrait = oldKerbal.experienceTrait.TypeName;
+            //            }
+            //            foreach (var possibleKerbal in HighLogic.CurrentGame.CrewRoster.Crew)
+            //            {
+            //                var kerbalOk =
+            //                    !(KerbalToVessel.ContainsKey(possibleKerbal.name) &&
+            //                      (takenKerbals.Contains(possibleKerbal.name) ||
+            //                       KerbalToVessel[possibleKerbal.name] != protovesselId));
 
-            var takenKerbals = new List<string>();
-            foreach (var partNode in inputNode.GetNodes("PART"))
-            {
-                var crewIndex = 0;
-                foreach (var currentKerbalName in partNode.GetValues("crew"))
-                {
-                    if (KerbalToVessel.ContainsKey(currentKerbalName) && KerbalToVessel[currentKerbalName] != protovesselId)
-                    {
-                        ProtoCrewMember newKerbal = null;
-                        var newKerbalGender = GetKerbalGender(currentKerbalName);
-                        string newExperienceTrait = null;
-                        if (HighLogic.CurrentGame.CrewRoster.Exists(currentKerbalName))
-                        {
-                            var oldKerbal = HighLogic.CurrentGame.CrewRoster[currentKerbalName];
-                            newKerbalGender = oldKerbal.gender;
-                            newExperienceTrait = oldKerbal.experienceTrait.TypeName;
-                        }
-                        foreach (var possibleKerbal in HighLogic.CurrentGame.CrewRoster.Crew)
-                        {
-                            var kerbalOk =
-                                !(KerbalToVessel.ContainsKey(possibleKerbal.name) &&
-                                  (takenKerbals.Contains(possibleKerbal.name) ||
-                                   KerbalToVessel[possibleKerbal.name] != protovesselId));
+            //                kerbalOk &= possibleKerbal.gender == newKerbalGender;
+            //                kerbalOk &=
+            //                    !(newExperienceTrait != null &&
+            //                      newExperienceTrait != possibleKerbal.experienceTrait.TypeName);
 
-                            kerbalOk &= possibleKerbal.gender == newKerbalGender;
-                            kerbalOk &=
-                                !(newExperienceTrait != null &&
-                                  newExperienceTrait != possibleKerbal.experienceTrait.TypeName);
+            //                if (kerbalOk)
+            //                {
+            //                    newKerbal = possibleKerbal;
+            //                    break;
+            //                }
+            //            }
+            //            while (newKerbal == null)
+            //            {
+            //                var possibleKerbal = HighLogic.CurrentGame.CrewRoster.GetNewKerbal();
 
-                            if (kerbalOk)
-                            {
-                                newKerbal = possibleKerbal;
-                                break;
-                            }
-                        }
-                        while (newKerbal == null)
-                        {
-                            var possibleKerbal = HighLogic.CurrentGame.CrewRoster.GetNewKerbal();
+            //                var kerbalOk = possibleKerbal.gender == newKerbalGender;
+            //                kerbalOk &=
+            //                    !(newExperienceTrait != null &&
+            //                      newExperienceTrait != possibleKerbal.experienceTrait.TypeName);
 
-                            var kerbalOk = possibleKerbal.gender == newKerbalGender;
-                            kerbalOk &=
-                                !(newExperienceTrait != null &&
-                                  newExperienceTrait != possibleKerbal.experienceTrait.TypeName);
+            //                if (kerbalOk)
+            //                    newKerbal = possibleKerbal;
+            //            }
+            //            partNode.SetValue("crew", newKerbal.name, crewIndex);
+            //            newKerbal.seatIdx = crewIndex;
+            //            newKerbal.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
+            //            takenKerbals.Add(newKerbal.name);
+            //        }
+            //        else
+            //        {
+            //            takenKerbals.Add(currentKerbalName);
+            //            CreateKerbalIfMissing(currentKerbalName, protovesselId);
 
-                            if (kerbalOk)
-                                newKerbal = possibleKerbal;
-                        }
-                        partNode.SetValue("crew", newKerbal.name, crewIndex);
-                        newKerbal.seatIdx = crewIndex;
-                        newKerbal.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
-                        takenKerbals.Add(newKerbal.name);
-                    }
-                    else
-                    {
-                        takenKerbals.Add(currentKerbalName);
-                        CreateKerbalIfMissing(currentKerbalName, protovesselId);
+            //            HighLogic.CurrentGame.CrewRoster[currentKerbalName].rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
+            //            HighLogic.CurrentGame.CrewRoster[currentKerbalName].seatIdx = crewIndex;
+            //        }
+            //        crewIndex++;
+            //    }
+            //}
 
-                        HighLogic.CurrentGame.CrewRoster[currentKerbalName].rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
-                        HighLogic.CurrentGame.CrewRoster[currentKerbalName].seatIdx = crewIndex;
-                    }
-                    crewIndex++;
-                }
-            }
-
-            VesselToKerbal[protovesselId] = takenKerbals;
-            foreach (var name in takenKerbals)
-                KerbalToVessel[name] = protovesselId;
+            //VesselToKerbal[protovesselId] = takenKerbals;
+            //foreach (var name in takenKerbals)
+            //    KerbalToVessel[name] = protovesselId;
         }
 
         #endregion
