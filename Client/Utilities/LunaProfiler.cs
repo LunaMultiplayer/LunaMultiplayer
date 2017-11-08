@@ -13,23 +13,27 @@ namespace LunaClient.Utilities
         public static ProfilerData LateUpdateData { get; } = new ProfilerData();
         public static ProfilerData GuiData { get; } = new ProfilerData();
 
+        private static readonly StringBuilder StringBuilder = new StringBuilder();
+
         public static string GetProfilersData()
         {
-            var builder = new StringBuilder();
+            StringBuilder.Length = 0;
 
-            builder.AppendLine("LMP profiler. Times in ms (average/max/min/now) ");
-            builder.Append("Fixed update: ").Append(FixedUpdateData).AppendLine();
-            builder.Append("Update: ").Append(UpdateData).AppendLine();
-            builder.Append("Late Update: ").Append(LateUpdateData).AppendLine();
-            builder.Append("GUI: ").Append(GuiData).AppendLine();
+            StringBuilder.AppendLine("LMP profiler. Times in ms (average/max/min/now) ");
+            StringBuilder.Append("Fixed update: ").Append(FixedUpdateData).AppendLine();
+            StringBuilder.Append("Update: ").Append(UpdateData).AppendLine();
+            StringBuilder.Append("Late Update: ").Append(LateUpdateData).AppendLine();
+            StringBuilder.Append("GUI: ").Append(GuiData).AppendLine();
 
-            return builder.ToString();
+            return StringBuilder.ToString();
         }
     }
 
     public class ProfilerData
     {
         public static Stopwatch LmpReferenceTime { get; } = Stopwatch.StartNew();
+
+        private static readonly StringBuilder StringBuilder = new StringBuilder();
 
         private long MinTime { get; set; } = long.MaxValue;
         private long MaxTime { get; set; } = long.MinValue;
@@ -95,16 +99,16 @@ namespace LunaClient.Utilities
 
         public override string ToString()
         {
-            var builder = new StringBuilder();
+            StringBuilder.Length = 0;
 
-            builder.Append(Math.Round(TimeSpan.FromTicks(Average).TotalMilliseconds, 2)).Append("/");
-            builder.Append(Math.Round(TimeSpan.FromTicks(MaxTime).TotalMilliseconds, 2)).Append("/");
-            builder.Append(Math.Round(TimeSpan.FromTicks(MinTime).TotalMilliseconds, 2)).Append("/");
-            builder.Append(Math.Round(TimeSpan.FromTicks(CurrentTime).TotalMilliseconds, 2));
+            StringBuilder.Append(Math.Round(TimeSpan.FromTicks(Average).TotalMilliseconds, 2)).Append("/");
+            StringBuilder.Append(Math.Round(TimeSpan.FromTicks(MaxTime).TotalMilliseconds, 2)).Append("/");
+            StringBuilder.Append(Math.Round(TimeSpan.FromTicks(MinTime).TotalMilliseconds, 2)).Append("/");
+            StringBuilder.Append(Math.Round(TimeSpan.FromTicks(CurrentTime).TotalMilliseconds, 2));
 
             //returnString += $"D: {CurrentDeltaTime}ms (min/max/avg) {DeltaMinTime}/{DeltaMaxTime}/{DeltaAverage}\n";
 
-            return builder.ToString();
+            return StringBuilder.ToString();
         }
     }
 }

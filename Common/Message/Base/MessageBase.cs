@@ -12,16 +12,23 @@ namespace LunaCommon.Message.Base
     /// </summary>
     /// <typeparam name="T">POCO message data class with the message properties</typeparam>
     public abstract class MessageBase<T> : IMessageBase
-        where T : IMessageData, new()
+        where T : class, IMessageData
     {
         private IMessageData _data;
 
         /// <summary>
+        /// Make constructor internal so they have to use the factory.
+        /// This is made this way as the factory use a cache system to avoid the generation of garbage
+        /// </summary>
+        internal MessageBase() { }
+
+        /// <summary>
         /// Override this dictionary if your message has several subtypes (Check chat for example). The key in this case is the SUBTYPE id
+        /// You should set the messages as already recycled to avoid unnecesary creation of data messages
         /// </summary>
         protected virtual Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [0] = new T()
+            [0] = MessageStore.GetMessageData<T>(true)
         };
 
         /// <summary>
@@ -42,25 +49,13 @@ namespace LunaCommon.Message.Base
         /// </summary>
         protected abstract int DefaultChannel { get; }
 
-        /// <summary>
-        ///     Sets the data of this message
-        /// </summary>
-        /// <param name="data"></param>
+        /// <inheritdoc />
         public void SetData(IMessageData data)
         {
             Data = data;
         }
 
-        public IMessageBase Clone()
-        {
-            return MemberwiseClone() as IMessageBase;
-        }
-
-        /// <summary>
-        ///     POCO class with the data that it handles
-        ///     The setter is private to keep the factory pattern
-        ///     Use "SetData" method to set it's data value
-        /// </summary>
+        /// <inheritdoc />
         public IMessageData Data
         {
             get => _data;
@@ -72,10 +67,7 @@ namespace LunaCommon.Message.Base
             }
         }
 
-        /// <summary>
-        ///     Public accessor to retrieve the Channel correctly
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc />
         public int Channel
         {
             get
@@ -89,27 +81,10 @@ namespace LunaCommon.Message.Base
             }
         }
 
-        /// <summary>
-        ///     Specify how the message should be delivered based on lidgren library.
-        ///     This is important to avoid lag!
-        ///     Unreliable: No guarantees. (Use for unimportant messages like heartbeats)
-        ///     UnreliableSequenced: Late messages will be dropped if newer ones were already received.
-        ///     ReliableUnordered: All packages will arrive, but not necessarily in the same order.
-        ///     ReliableSequenced: All packages will arrive, but late ones will be dropped.
-        ///     This means that we will always receive the latest message eventually, but may miss older ones.
-        ///     ReliableOrdered: All packages will arrive, and they will do so in the same order.
-        ///     Unlike all the other methods, here the library will hold back messages until all previous ones are received,
-        ///     before handing them to us.
-        /// </summary>
+        /// <inheritdoc />
         public abstract NetDeliveryMethod NetDeliveryMethod { get; }
 
-        /// <summary>
-        ///     This method creates a POCO object based on the array without the header
-        /// </summary>
-        /// <param name="subType">The subtype of the message data to deserialize</param>
-        /// <param name="data">The compressed data to read from. Without the header</param>
-        /// <param name="decompress">Decompress the data or not</param>
-        /// <returns>The POCO data structure with it's properties filled</returns>
+        /// <inheritdoc />
         public virtual IMessageData Deserialize(ushort subType, byte[] data, bool decompress)
         {
             if (!SubTypeDictionary.ContainsKey(subType))
@@ -117,7 +92,7 @@ namespace LunaCommon.Message.Base
                 throw new Exception("Subtype not defined in dictionary!");
             }
 
-            var dataClass = SubTypeDictionary[subType].Clone();
+            var dataClass = SubTypeDictionary[subType];
             if (decompress)
             {
                 var decompressed = CompressionHelper.DecompressBytes(data);
@@ -127,17 +102,10 @@ namespace LunaCommon.Message.Base
             return DataDeserializer.Deserialize(this, dataClass, data);
         }
 
-        /// <summary>
-        ///     True if the data version property mismatches
-        /// </summary>
+        /// <inheritdoc />
         public bool VersionMismatch { get; set; }
 
-        /// <summary>
-        ///     This method retrieves the message as a byte array with it's 9 byte header at the beginning and it's data compressed
-        ///     if the size is reduced
-        /// </summary>
-        /// <param name="compress">Compress the message or not</param>
-        /// <returns>Mesage as a byte array with it's header</returns>
+        /// <inheritdoc />
         public byte[] Serialize(bool compress)
         {
             try

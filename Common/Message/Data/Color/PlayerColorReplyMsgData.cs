@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
+using System.Collections.Generic;
 
 namespace LunaCommon.Message.Data.Color
 {
     public class PlayerColorReplyMsgData : PlayerColorBaseMsgData
     {
+        /// <inheritdoc />
+        internal PlayerColorReplyMsgData() { }
         public override PlayerColorMessageType PlayerColorMessageType => PlayerColorMessageType.Reply;
-        public int Count { get; set; }
 
         /// <summary>
         ///     Color in HTML format

@@ -1,4 +1,5 @@
 using LunaClient.Base;
+using LunaClient.Network;
 using LunaCommon.Message.Data;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -194,7 +195,13 @@ namespace LunaClient.Systems.ModApi
                 LunaLog.LogError($"[LMP]: {modName} attemped to send a null Message");
                 return;
             }
-            MessageSender.SendMessage(new ModMsgData { Data = messageData, Relay = relay, ModName = modName });
+
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ModMsgData>();
+            msgData.Data = messageData;
+            msgData.Relay = relay;
+            msgData.ModName = modName;
+
+            MessageSender.SendMessage(msgData);
         }
 
         #endregion

@@ -5,6 +5,8 @@ namespace LunaCommon.Message.Data.CraftLibrary
 {
     public class CraftLibraryUploadMsgData : CraftLibraryBaseMsgData
     {
+        /// <inheritdoc />
+        internal CraftLibraryUploadMsgData() { }
         public override CraftMessageType CraftMessageType => CraftMessageType.UploadFile;
         public CraftType UploadType { get; set; }
         public string UploadName { get; set; }

@@ -2,8 +2,6 @@ using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon;
-using LunaCommon.Flag;
-using LunaCommon.Message.Data.Flag;
 using System.IO;
 
 namespace LunaClient.Systems.Flag
@@ -45,15 +43,8 @@ namespace LunaClient.Systems.Flag
                 if (existingFlag != null && existingFlag.ShaSum == Common.CalculateSha256Hash(fullFlagPath)) return;
 
                 LunaLog.Log($"[LMP]: Uploading {Path.GetFileName(fullFlagPath)}");
-                System.MessageSender.SendMessage(new FlagDataMsgData
-                {
-                    Flag = new FlagInfo
-                    {
-                        Owner = SettingsSystem.CurrentSettings.PlayerName,
-                        FlagName = flagName,
-                        FlagData = File.ReadAllBytes(fullFlagPath)
-                    }
-                });
+                
+                System.MessageSender.SendMessage(System.MessageSender.GetFlagMessageData(flagName, fullFlagPath));
             }
         }
     }

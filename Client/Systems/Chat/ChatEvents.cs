@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows;
 using LunaClient.Windows.Chat;
@@ -190,11 +191,12 @@ namespace LunaClient.Systems.Chat
         {
             if (System.SelectedChannel != null && System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier)
             {
-                System.MessageSender.SendMessage(new ChatLeaveMsgData
-                {
-                    From = SettingsSystem.CurrentSettings.PlayerName,
-                    Channel = System.SelectedChannel
-                });
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatLeaveMsgData>();
+                msgData.From = SettingsSystem.CurrentSettings.PlayerName;
+                msgData.Channel = System.SelectedChannel;
+
+                System.MessageSender.SendMessage(msgData);
+
                 if (System.JoinedChannels.Contains(System.SelectedChannel))
                     System.JoinedChannels.Remove(System.SelectedChannel);
                 System.SelectedChannel = null;

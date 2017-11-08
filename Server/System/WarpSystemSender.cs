@@ -15,13 +15,13 @@ namespace LunaServer.System
         {
             LunaLog.Debug($"Sending {client.PlayerName} {WarpContext.Subspaces.Count} possible subspaces");
 
-            MessageQueuer.SendToClient<WarpSrvMsg>(client, new WarpSubspacesReplyMsgData
-            {
-                SubspaceTime = WarpContext.Subspaces.Values.ToArray(),
-                SubspaceKey = WarpContext.Subspaces.Keys.ToArray(),
-                Players = ClientRetriever.GetAuthenticatedClients().Where(c => !Equals(c, client))
-                    .Select(p => new KeyValuePair<int, string>(p.Subspace, p.PlayerName)).ToArray()
-            });
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<WarpSubspacesReplyMsgData>();
+            msgData.SubspaceTime = WarpContext.Subspaces.Values.ToArray();
+            msgData.SubspaceKey = WarpContext.Subspaces.Keys.ToArray();
+            msgData.Players = ClientRetriever.GetAuthenticatedClients().Where(c => !Equals(c, client))
+                .Select(p => new KeyValuePair<int, string>(p.Subspace, p.PlayerName)).ToArray();
+
+            MessageQueuer.SendToClient<WarpSrvMsg>(client, msgData);
         }
     }
 }

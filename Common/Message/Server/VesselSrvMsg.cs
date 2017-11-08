@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
+using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
@@ -10,15 +11,19 @@ namespace LunaCommon.Message.Server
 {
     public class VesselSrvMsg : SrvMsgBase<VesselBaseMsgData>
     {
+        /// <inheritdoc />
+        internal VesselSrvMsg() { }
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [(ushort)VesselMessageType.ListReply] = new VesselListReplyMsgData(),
-            [(ushort)VesselMessageType.VesselsReply] = new VesselsReplyMsgData(),
-            [(ushort)VesselMessageType.Proto] = new VesselProtoMsgData(),
-            [(ushort)VesselMessageType.Dock] = new VesselDockMsgData(),
-            [(ushort)VesselMessageType.Remove] = new VesselRemoveMsgData(),
-            [(ushort)VesselMessageType.Position] = new VesselPositionMsgData(),
-            [(ushort)VesselMessageType.Flightstate] = new VesselFlightStateMsgData()
+            [(ushort)VesselMessageType.ListReply] = MessageStore.GetMessageData<VesselListReplyMsgData>(true),
+            [(ushort)VesselMessageType.VesselsReply] = MessageStore.GetMessageData<VesselsReplyMsgData>(true),
+            [(ushort)VesselMessageType.Proto] = MessageStore.GetMessageData<VesselProtoMsgData>(true),
+            [(ushort)VesselMessageType.Dock] = MessageStore.GetMessageData<VesselDockMsgData>(true),
+            [(ushort)VesselMessageType.Remove] = MessageStore.GetMessageData<VesselRemoveMsgData>(true),
+            [(ushort)VesselMessageType.Position] = MessageStore.GetMessageData<VesselPositionMsgData>(true),
+            [(ushort)VesselMessageType.Flightstate] = MessageStore.GetMessageData<VesselFlightStateMsgData>(true)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Vessel;

@@ -14,33 +14,28 @@ namespace LunaClient.Systems.VesselPositionSys
         public void HandleMessage(IMessageData messageData)
         {
             if (!(messageData is VesselPositionMsgData msgData)) return;
-
-            var update = new VesselPositionUpdate(msgData);
-
-            var vesselId = update.VesselId;
+            
+            var vesselId = msgData.VesselId;
 
             if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselId))
                 return;
 
             if (!VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var existingPositionUpdate))
             {
-                VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, update);
-                VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, update);
+                VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, new VesselPositionUpdate(msgData));
+                VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, new VesselPositionUpdate(msgData));
             }
             else
             {
-                if (existingPositionUpdate.SentTime < update.SentTime &&
+                if (existingPositionUpdate.MsgData.SentTime < msgData.SentTime &&
                     (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted))
                 {
-                    update.Body = existingPositionUpdate.Body;
-
                     if (VesselPositionSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate))
                     {
-                        VesselPositionSystem.CurrentVesselUpdate.AddOrUpdate(vesselId, existingTargetPositionUpdate,
-                            (key, existingVal) => existingTargetPositionUpdate);
+                        existingPositionUpdate.MsgData = existingTargetPositionUpdate.MsgData;
 
-                        VesselPositionSystem.TargetVesselUpdate.AddOrUpdate(vesselId, update,
-                            (key, existingVal) => update);
+                        var newUpdate = new VesselPositionUpdate(msgData);
+                        VesselPositionSystem.TargetVesselUpdate.AddOrUpdate(vesselId, newUpdate, (key, existingVal) => newUpdate);
                     }
                 }
             }

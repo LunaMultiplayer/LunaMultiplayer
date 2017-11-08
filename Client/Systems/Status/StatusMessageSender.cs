@@ -18,22 +18,22 @@ namespace LunaClient.Systems.Status
 
         public void SendPlayerStatus(PlayerStatus playerStatus)
         {
-            SendMessage(new PlayerStatusSetMsgData
-            {
-                PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-                StatusText = playerStatus.StatusText,
-                VesselText = playerStatus.VesselText
-            });
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<PlayerStatusSetMsgData>();
+            msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.StatusText = playerStatus.StatusText;
+            msgData.VesselText = playerStatus.VesselText;
+
+            SendMessage(msgData);
         }
 
         public void SendOwnStatus()
         {
-            SendMessage(new PlayerStatusSetMsgData
-            {
-                PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-                StatusText = System.MyPlayerStatus.StatusText,
-                VesselText = System.MyPlayerStatus.VesselText
-            });
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<PlayerStatusSetMsgData>();
+            msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.StatusText = System.MyPlayerStatus.StatusText;
+            msgData.VesselText = System.MyPlayerStatus.VesselText;
+
+            SendMessage(msgData);
         }
     }
 }

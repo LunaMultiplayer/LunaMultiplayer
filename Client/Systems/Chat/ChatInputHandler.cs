@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Chat;
 using System;
@@ -17,37 +18,44 @@ namespace LunaClient.Systems.Chat
                     input = input.Substring(1);
 
                 if (System.SelectedChannel == null && System.SelectedPmChannel == null)
-                    System.MessageSender.SendMessage(new ChatChannelMsgData
-                    {
-                        From = SettingsSystem.CurrentSettings.PlayerName,
-                        Channel = "",
-                        SendToAll = true,
-                        Text = input
-                    });
+                {
+                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatChannelMsgData>();
+                    msgData.From = SettingsSystem.CurrentSettings.PlayerName;
+                    msgData.Channel = string.Empty;
+                    msgData.SendToAll = true;
+                    msgData.Text = input;
+
+                    System.MessageSender.SendMessage(msgData);
+                }
                 if (System.SelectedChannel != null && System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier)
-                    System.MessageSender.SendMessage(new ChatChannelMsgData
-                    {
-                        From = SettingsSystem.CurrentSettings.PlayerName,
-                        Channel = System.SelectedChannel,
-                        SendToAll = false,
-                        Text = input
-                    });
+                {
+                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatChannelMsgData>();
+                    msgData.From = SettingsSystem.CurrentSettings.PlayerName;
+                    msgData.Channel = System.SelectedChannel;
+                    msgData.SendToAll = false;
+                    msgData.Text = input;
+
+                    System.MessageSender.SendMessage(msgData);
+                }
                 if (System.SelectedChannel == SettingsSystem.ServerSettings.ConsoleIdentifier)
                 {
-                    System.MessageSender.SendMessage(new ChatConsoleMsgData
-                    {
-                        From = SettingsSystem.CurrentSettings.PlayerName,
-                        Message = input
-                    });
+                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatConsoleMsgData>();
+                    msgData.From = SettingsSystem.CurrentSettings.PlayerName;
+                    msgData.Message = input;
+
+                    System.MessageSender.SendMessage(msgData);
+
                     LunaLog.Log($"[LMP]: Server Command: {input}");
                 }
                 if (System.SelectedPmChannel != null)
-                    System.MessageSender.SendMessage(new ChatPrivateMsgData
-                    {
-                        From = SettingsSystem.CurrentSettings.PlayerName,
-                        Text = input,
-                        To = System.SelectedPmChannel
-                    });
+                {
+                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatPrivateMsgData>();
+                    msgData.From = SettingsSystem.CurrentSettings.PlayerName;
+                    msgData.Text = input;
+                    msgData.To = System.SelectedPmChannel;
+
+                    System.MessageSender.SendMessage(msgData);
+                }
             }
             else
             {

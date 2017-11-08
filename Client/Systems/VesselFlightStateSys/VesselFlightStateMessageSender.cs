@@ -22,28 +22,26 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
             TaskFactory.StartNew(() =>
             {
-                SendMessage(new VesselFlightStateMsgData
-                {
-                    VesselId = id,
-                    GearDown = flightState.gearDown,
-                    GearUp = flightState.gearUp,
-                    Headlight = flightState.headlight,
-                    KillRot = flightState.killRot,
-                    MainThrottle = flightState.mainThrottle,
-                    Pitch = flightState.pitch,
-                    PitchTrim = flightState.pitchTrim,
-                    Roll = flightState.roll,
-                    RollTrim = flightState.rollTrim,
-                    WheelSteer = flightState.wheelSteer,
-                    WheelSteerTrim = flightState.wheelSteerTrim,
-                    WheelThrottle = flightState.wheelThrottle,
-                    WheelThrottleTrim = flightState.wheelThrottleTrim,
-                    X = flightState.X,
-                    Y = flightState.Y,
-                    Yaw = flightState.yaw,
-                    YawTrim = flightState.yawTrim,
-                    Z = flightState.Z
-                });
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselFlightStateMsgData>();
+                msgData.VesselId = id;
+                msgData.GearDown = flightState.gearDown;
+                msgData.GearUp = flightState.gearUp;
+                msgData.Headlight = flightState.headlight;
+                msgData.KillRot = flightState.killRot;
+                msgData.MainThrottle = flightState.mainThrottle;
+                msgData.Pitch = flightState.pitch;
+                msgData.PitchTrim = flightState.pitchTrim;
+                msgData.Roll = flightState.roll;
+                msgData.RollTrim = flightState.rollTrim;
+                msgData.WheelSteer = flightState.wheelSteer;
+                msgData.WheelSteerTrim = flightState.wheelSteerTrim;
+                msgData.WheelThrottle = flightState.wheelThrottle;
+                msgData.WheelThrottleTrim = flightState.wheelThrottleTrim;
+                msgData.X = flightState.X;
+                msgData.Y = flightState.Y;
+                msgData.Yaw = flightState.yaw;
+                msgData.YawTrim = flightState.yawTrim;
+                msgData.Z = flightState.Z;
             });
         }
     }

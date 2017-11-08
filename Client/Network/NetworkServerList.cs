@@ -36,10 +36,10 @@ namespace LunaClient.Network
         /// </summary>
         public static void RequestServers()
         {
-            var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(new MsRequestServersMsgData
-            {
-                CurrentVersion = VersionInfo.Version
-            });
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsRequestServersMsgData>();
+            msgData.CurrentVersion = VersionInfo.Version;
+
+            var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
             NetworkSender.QueueOutgoingMessage(requestMsg);
         }
 
@@ -105,12 +105,12 @@ namespace LunaClient.Network
             var token = RandomString(10);
             var ownEndpoint = new IPEndPoint(NetUtility.GetMyAddress(out var _), NetworkMain.Config.Port);
 
-            var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(new MsIntroductionMsgData
-            {
-                Id = currentEntryId,
-                Token = token,
-                InternalEndpoint = Common.StringFromEndpoint(ownEndpoint)
-            });
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
+            msgData.Id = currentEntryId;
+            msgData.Token = token;
+            msgData.InternalEndpoint = Common.StringFromEndpoint(ownEndpoint);
+
+            var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 
             LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {token}");
             NetworkSender.QueueOutgoingMessage(introduceMsg);

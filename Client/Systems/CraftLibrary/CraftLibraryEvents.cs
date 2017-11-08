@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -48,14 +49,14 @@ namespace LunaClient.Systems.CraftLibrary
 
             if (!string.IsNullOrEmpty(System.DeleteCraftName))
             {
-                DeleteCraftEntry(SettingsSystem.CurrentSettings.PlayerName, System.DeleteCraftType,
-                    System.DeleteCraftName);
-                System.MessageSender.SendMessage(new CraftLibraryDeleteMsgData
-                {
-                    PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-                    CraftType = System.DeleteCraftType,
-                    CraftName = System.DeleteCraftName
-                });
+                DeleteCraftEntry(SettingsSystem.CurrentSettings.PlayerName, System.DeleteCraftType, System.DeleteCraftName);
+
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryDeleteMsgData>();
+                msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+                msgData.CraftType = System.DeleteCraftType;
+                msgData.CraftName = System.DeleteCraftName;
+
+                System.MessageSender.SendMessage(msgData);
                 System.DeleteCraftName = null;
                 System.DeleteCraftType = CraftType.Vab;
             }
@@ -87,13 +88,13 @@ namespace LunaClient.Systems.CraftLibrary
             {
                 var fileData = File.ReadAllBytes(filePath);
 
-                System.MessageSender.SendMessage(new CraftLibraryUploadMsgData
-                {
-                    PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-                    UploadType = type,
-                    UploadName = name,
-                    CraftData = fileData
-                });
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryUploadMsgData>();
+                msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+                msgData.UploadType = type;
+                msgData.UploadName = name;
+                msgData.CraftData = fileData;
+
+                System.MessageSender.SendMessage(msgData);
                 AddCraftEntry(SettingsSystem.CurrentSettings.PlayerName, System.UploadCraftType, System.UploadCraftName);
                 DisplayCraftUploadingMessage = true;
             }
@@ -105,13 +106,13 @@ namespace LunaClient.Systems.CraftLibrary
 
         private static void DownloadCraftFile(string playerName, CraftType craftType, string craftName)
         {
-            System.MessageSender.SendMessage(new CraftLibraryRequestMsgData
-            {
-                PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-                RequestedType = craftType,
-                CraftOwner = playerName,
-                RequestedName = craftName
-            });
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryRequestMsgData>();
+            msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.RequestedType = craftType;
+            msgData.CraftOwner = playerName;
+            msgData.RequestedName = craftName;
+
+            System.MessageSender.SendMessage(msgData);
         }
 
         private static void AddCraftEntry(string playerName, CraftType craftType, string craftName)

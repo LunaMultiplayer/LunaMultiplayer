@@ -2,6 +2,7 @@
 using LunaCommon.Message.Server;
 using LunaServer.Client;
 using LunaServer.Command.CombinedCommand;
+using LunaServer.Context;
 using LunaServer.Server;
 using LunaServer.Settings;
 using System.Collections.Concurrent;
@@ -26,7 +27,11 @@ namespace LunaServer.System
         public static void SendPlayerChatChannels(ClientStructure client)
         {
             var channels = PlayerChatChannels.Select(v => new KeyValuePair<string, string[]>(v.Key, v.Value.ToArray())).ToArray();
-            MessageQueuer.SendToClient<ChatSrvMsg>(client, new ChatListReplyMsgData { PlayerChannels = channels });
+
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ChatListReplyMsgData>();
+            msgData.PlayerChannels = channels;
+
+            MessageQueuer.SendToClient<ChatSrvMsg>(client, msgData);
         }
 
         public static void RemovePlayer(string playerName)
@@ -47,11 +52,9 @@ namespace LunaServer.System
             var admins = AdminCommands.Admins;
             foreach (var client in ClientRetriever.GetAuthenticatedClients().Where(c => admins.Contains(c.PlayerName)))
             {
-                var messageData = new ChatConsoleMsgData
-                {
-                    From = GeneralSettings.SettingsStore.ConsoleIdentifier,
-                    Message = text
-                };
+                var messageData = ServerContext.ServerMessageFactory.CreateNewMessageData<ChatConsoleMsgData>();
+                messageData.From = GeneralSettings.SettingsStore.ConsoleIdentifier;
+                messageData.Message = text;
 
                 MessageQueuer.SendToClient<ChatSrvMsg>(client, messageData);
             }

@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
-using LunaClient.Utilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -59,11 +58,11 @@ namespace LunaClient.Systems.VesselProtoSys
             var vesselBytes = VesselSerializer.SerializeVessel(protoVessel);
             if (vesselBytes.Length > 0)
             {
-                SendMessage(new VesselProtoMsgData
-                {
-                    VesselId = protoVessel.vesselID,
-                    VesselData = vesselBytes
-                });
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
+                msgData.VesselId = protoVessel.vesselID;
+                msgData.VesselData = vesselBytes;
+
+                SendMessage(msgData);
             }
             else
             {

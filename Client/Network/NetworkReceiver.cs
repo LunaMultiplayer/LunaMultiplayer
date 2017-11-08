@@ -86,6 +86,7 @@ namespace LunaClient.Network
                                 LunaLog.Log($"[LMP]: LIDGREN: {msg.MessageType} -- {msg.PeekString()}");
                                 break;
                         }
+                        NetworkMain.ClientConnection.Recycle(msg);
                     }
                     else
                     {

@@ -6,6 +6,8 @@ namespace LunaCommon.Message.Data.PlayerConnection
 {
     public class PlayerConnectionBaseMsgData : MessageData
     {
+        /// <inheritdoc />
+        internal PlayerConnectionBaseMsgData() { }
         public override ushort SubType => (ushort)(int)PlayerConnectionMessageType;
         public string PlayerName { get; set; }
 

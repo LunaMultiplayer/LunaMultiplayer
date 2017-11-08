@@ -22,10 +22,10 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public void SendVesselPositionUpdate(VesselPositionUpdate update)
         {
-            if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(update.VesselId))
+            if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(update.MsgData.VesselId))
                 return;
 
-            SendMessage(update.AsSimpleMessage());
+            SendMessage(update.MsgData);
         }
     }
 }

@@ -17,12 +17,11 @@ namespace LunaClient.Systems.PlayerColorSys
 
         public void SendPlayerColorToServer()
         {
-            var data = new PlayerColorSetMsgData
-            {
-                PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-                Color = System.ConvertColorToString(SettingsSystem.CurrentSettings.PlayerColor)
-            };
-            SendMessage(data);
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<PlayerColorSetMsgData>();
+            msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.Color = System.ConvertColorToString(SettingsSystem.CurrentSettings.PlayerColor);
+            
+            SendMessage(msgData);
         }
     }
 }

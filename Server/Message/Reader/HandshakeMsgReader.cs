@@ -1,15 +1,16 @@
-﻿using System;
-using LunaCommon.Enums;
+﻿using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
 using LunaServer.Client;
+using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Message.ReceiveHandlers;
 using LunaServer.Server;
 using LunaServer.System;
+using System;
 
 namespace LunaServer.Message.Reader
 {
@@ -47,7 +48,10 @@ namespace LunaServer.Message.Reader
             client.Challange = new byte[1024];
             new Random().NextBytes(client.Challange);
 
-            MessageQueuer.SendToClient<HandshakeSrvMsg>(client, new HandshakeChallengeMsgData { Challenge = client.Challange });
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<HandshakeChallengeMsgData>();
+            msgData.Challenge = client.Challange;
+
+            MessageQueuer.SendToClient<HandshakeSrvMsg>(client, msgData);
         }
     }
 }

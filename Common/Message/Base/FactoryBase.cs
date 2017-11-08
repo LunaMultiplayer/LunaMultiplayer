@@ -1,7 +1,7 @@
-﻿using System;
+﻿using LunaCommon.Message.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using LunaCommon.Message.Interface;
 
 namespace LunaCommon.Message.Base
 {
@@ -64,26 +64,22 @@ namespace LunaCommon.Message.Base
         /// <summary>
         ///     Include here all the client/server messages so they can be handled
         /// </summary>
-        protected Dictionary<uint, IMessageBase> MessageDictionary { get; } = new Dictionary<uint, IMessageBase>();
-
-        /// <summary>
-        ///     Call this method to serialize a message to an array of bytes
-        /// </summary>
-        /// <param name="message">Message to serialize</param>
-        /// <returns>The message as an array of bytes ready to be sent</returns>
-        public byte[] Serialize<T>(T message) where T : IMessageBase, new()
-        {
-            return message.Serialize(_compress);
-        }
-
+        protected Dictionary<uint, Type> MessageDictionary { get; } = new Dictionary<uint, Type>();
+        
         /// <summary>
         /// Method to retrieve a new message
         /// </summary>
         /// <typeparam name="T">Message type</typeparam>
+        /// <typeparam name="TD">Message data type</typeparam>
         /// <returns>New empty message</returns>
-        public T CreateNew<T>() where T : IMessageBase, new()
+        public T CreateNew<T,TD>() where T : class, IMessageBase
+            where TD : class, IMessageData
         {
-            return new T();
+            var msg = MessageStore.GetMessage<T>();
+            var data = MessageStore.GetMessageData<TD>();
+            msg.SetData(data);
+
+            return msg;
         }
 
         /// <summary>
@@ -92,11 +88,21 @@ namespace LunaCommon.Message.Base
         /// <typeparam name="T">Message type</typeparam>
         /// <param name="data">Message data implementation</param>
         /// <returns>New message with the specified data</returns>
-        public T CreateNew<T>(IMessageData data) where T : IMessageBase, new()
+        public T CreateNew<T>(IMessageData data) where T : class, IMessageBase
         {
-            var msg = new T();
+            var msg = MessageStore.GetMessage<T>();
             msg.SetData(data);
             return msg;
+        }
+
+        /// <summary>
+        /// Method to retrieve a new message data
+        /// </summary>
+        /// <typeparam name="T">Message data type</typeparam>
+        /// <returns>New empty message data</returns>
+        public T CreateNewMessageData<T>() where T : class, IMessageData
+        {
+            return MessageStore.GetMessageData<T>(); ;
         }
 
         /// <summary>
@@ -170,7 +176,7 @@ namespace LunaCommon.Message.Base
         {
             if (Enum.IsDefined(HandledMessageTypes, (int)messageType) && MessageDictionary.ContainsKey(messageType))
             {
-                var msg = MessageDictionary[messageType].Clone();
+                var msg = MessageStore.GetMessage(MessageDictionary[messageType]);
                 msg.SetData(msg.Deserialize(messageSubType, content, dataCompressed));
 
                 return msg;

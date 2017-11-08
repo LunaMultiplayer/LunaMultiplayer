@@ -26,7 +26,7 @@ namespace LunaClient.Systems.PlayerColorSys
                     {
                         var data = (PlayerColorReplyMsgData)messageData;
                         System.PlayerColors.Clear();
-                        for (var i = 0; i < data.Count; i++)
+                        for (var i = 0; i < data.PlayersColors.Length; i++)
                         {
                             var playerName = data.PlayersColors[i].Key;
                             var playerColor = System.ConvertStringToColor(data.PlayersColors[i].Value);

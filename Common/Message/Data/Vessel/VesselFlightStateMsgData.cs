@@ -1,10 +1,12 @@
-﻿using System;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
+using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
     public class VesselFlightStateMsgData : VesselBaseMsgData
     {
+        /// <inheritdoc />
+        internal VesselFlightStateMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Flightstate;
         public Guid VesselId { get; set; }
         public float MainThrottle { get; set; }

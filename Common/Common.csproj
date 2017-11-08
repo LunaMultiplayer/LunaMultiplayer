@@ -63,6 +63,7 @@
     <Compile Include="Locks\LockStore.cs" />
     <Compile Include="Locks\LockType.cs" />
     <Compile Include="MasterServerRetriever.cs" />
+    <Compile Include="Message\Base\MessageStore.cs" />
     <Compile Include="Message\Client\GroupCliMsg.cs" />
     <Compile Include="Flag\FlagInfo.cs" />
     <Compile Include="Message\Data\Flag\FlagListRequestMsgData.cs" />

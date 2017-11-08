@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using LunaCommon.Message.Interface;
+﻿using LunaCommon.Message.Interface;
 using LunaServer.Client;
 using LunaServer.Context;
+using System.Linq;
 
 namespace LunaServer.Server
 {
@@ -10,7 +10,7 @@ namespace LunaServer.Server
         /// <summary>
         /// Sends a message to all the clients except the one given as parameter that are in the same subspace
         /// </summary>
-        public static void RelayMessageToSubspace<T>(ClientStructure exceptClient, IMessageData data) where T : IServerMessageBase, new()
+        public static void RelayMessageToSubspace<T>(ClientStructure exceptClient, IMessageData data) where T : class, IServerMessageBase
         {
             RelayMessageToSubspace<T>(exceptClient, data, exceptClient.Subspace);
         }
@@ -18,7 +18,7 @@ namespace LunaServer.Server
         /// <summary>
         /// Sends a message to all the clients in the given subspace
         /// </summary>
-        public static void SendMessageToSubspace<T>(IMessageData data, int subspace) where T : IServerMessageBase, new()
+        public static void SendMessageToSubspace<T>(IMessageData data, int subspace) where T : class, IServerMessageBase
         {
             var newMessage = GenerateMessage<T>(data);
 
@@ -29,7 +29,7 @@ namespace LunaServer.Server
         /// <summary>
         /// Sends a message to all the clients except the one given as parameter that are in the subspace given as parameter
         /// </summary>
-        public static void RelayMessageToSubspace<T>(ClientStructure exceptClient, IMessageData data, int subspace) where T : IServerMessageBase, new()
+        public static void RelayMessageToSubspace<T>(ClientStructure exceptClient, IMessageData data, int subspace) where T : class, IServerMessageBase
         {
             var newMessage = GenerateMessage<T>(data);
 
@@ -41,7 +41,7 @@ namespace LunaServer.Server
         /// Sends a message to all the clients except the one given as parameter
         /// </summary>
         public static void RelayMessage<T>(ClientStructure exceptClient, IMessageData data)
-            where T : IServerMessageBase, new()
+            where T : class, IServerMessageBase
         {
             var newMessage = GenerateMessage<T>(data);
 
@@ -53,7 +53,7 @@ namespace LunaServer.Server
         /// Sends a message to all the clients
         /// </summary>
         public static void SendToAllClients<T>(IMessageData data)
-            where T : IServerMessageBase, new()
+            where T : class, IServerMessageBase
         {
             var newMessage = GenerateMessage<T>(data);
 
@@ -65,12 +65,11 @@ namespace LunaServer.Server
         /// Sends a message to the given client
         /// </summary>
         public static void SendToClient<T>(ClientStructure client, IMessageData data)
-            where T : IServerMessageBase, new()
+            where T : class, IServerMessageBase
         {
+            if (data == null) return;
+
             var newMessage = GenerateMessage<T>(data);
-
-            if (newMessage.Data == null) return;
-
             client.SendMessageQueue.Enqueue(newMessage);
         }
 
@@ -99,11 +98,9 @@ namespace LunaServer.Server
             client.SendMessageQueue.Enqueue(msg);
         }
 
-        private static T GenerateMessage<T>(IMessageData data) where T : IServerMessageBase, new()
+        private static T GenerateMessage<T>(IMessageData data) where T : class, IServerMessageBase
         {
-            var newMessage = ServerContext.ServerMessageFactory.CreateNew<T>();
-            newMessage.SetData(data);
-
+            var newMessage = ServerContext.ServerMessageFactory.CreateNew<T>(data);
             return newMessage;
         }
 

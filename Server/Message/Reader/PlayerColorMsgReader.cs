@@ -3,6 +3,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
 using LunaServer.Client;
+using LunaServer.Context;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Server;
 using System.Collections.Generic;
@@ -37,12 +38,10 @@ namespace LunaServer.Message.Reader
             foreach (var otherClient in ClientRetriever.GetAuthenticatedClients().Where(c => !Equals(c, client) && c.PlayerColor != null))
                 sendColors[otherClient.PlayerName] = otherClient.PlayerColor;
 
-            var newMessageData = new PlayerColorReplyMsgData
-            {
-                Count = sendColors.Count,
-                PlayersColors = sendColors.ToArray()
-            };
-            MessageQueuer.SendToClient<PlayerColorSrvMsg>(client, newMessageData);
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<PlayerColorReplyMsgData>();
+            msgData.PlayersColors = sendColors.ToArray();
+
+            MessageQueuer.SendToClient<PlayerColorSrvMsg>(client, msgData);
         }
     }
 }

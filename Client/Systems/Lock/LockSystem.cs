@@ -1,4 +1,5 @@
 using LunaClient.Base;
+using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
 using LunaCommon.Message.Data.Lock;
@@ -118,11 +119,11 @@ namespace LunaClient.Systems.Lock
         /// <param name="force">Force the aquire. Usually false unless in dockings.</param>
         public void AcquireLock(LockDefinition lockDefinition, bool force = false)
         {
-            MessageSender.SendMessage(new LockAcquireMsgData
-            {
-                Lock = lockDefinition,
-                Force = force
-            });
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockAcquireMsgData>();
+            msgData.Lock = lockDefinition;
+            msgData.Force = force;
+
+            MessageSender.SendMessage(msgData);
         }
 
         /// <summary>
@@ -168,7 +169,10 @@ namespace LunaClient.Systems.Lock
         /// <param name="force">Force the aquire. Usually false unless in dockings.</param>
         public void ReleaseLock(LockDefinition lockDefinition, bool force = false)
         {
-            MessageSender.SendMessage(new LockReleaseMsgData { Lock = lockDefinition });
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockReleaseMsgData>();
+            msgData.Lock = lockDefinition;
+
+            MessageSender.SendMessage(msgData);
         }
 
         /// <summary>

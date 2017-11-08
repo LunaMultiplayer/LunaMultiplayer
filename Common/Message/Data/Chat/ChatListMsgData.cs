@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
-using LunaCommon.Message.Types;
+﻿using LunaCommon.Message.Types;
+using System.Collections.Generic;
 
 namespace LunaCommon.Message.Data.Chat
 {
     public class ChatListReplyMsgData : ChatBaseMsgData
     {
+        /// <inheritdoc />
+        internal ChatListReplyMsgData() { }
         public override ChatMessageType ChatMessageType => ChatMessageType.ListReply;
 
         /// <summary>

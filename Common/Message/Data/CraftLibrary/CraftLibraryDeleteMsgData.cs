@@ -5,6 +5,8 @@ namespace LunaCommon.Message.Data.CraftLibrary
 {
     public class CraftLibraryDeleteMsgData : CraftLibraryBaseMsgData
     {
+        /// <inheritdoc />
+        internal CraftLibraryDeleteMsgData() { }
         public override CraftMessageType CraftMessageType => CraftMessageType.DeleteFile;
         public CraftType CraftType { get; set; }
         public string CraftName { get; set; }

@@ -6,12 +6,15 @@ using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
+using System.Text;
 using UnityEngine;
 
 namespace LunaClient.Windows.Debug
 {
     public partial class DebugWindow : Window<DebugWindow>
     {
+        private static StringBuilder StringBuilder = new StringBuilder();
+
         public override void Update()
         {
             SafeDisplay = Display;
@@ -26,21 +29,25 @@ namespace LunaClient.Windows.Debug
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
                     {
                         var ourVessel = FlightGlobals.ActiveVessel;
-                        VectorText = $"Id: {ourVessel.id}\n";
-                        VectorText += $"Forward vector: {ourVessel.GetFwdVector()}\n";
-                        VectorText += $"Up vector: {(Vector3) ourVessel.upAxis}\n";
-                        VectorText += $"Srf Rotation: {ourVessel.srfRelRotation}\n";
-                        VectorText += $"Vessel Rotation: {ourVessel.transform.rotation}\n";
-                        VectorText += $"Vessel Local Rotation: {ourVessel.transform.localRotation}\n";
-                        VectorText += $"mainBody Rotation: {(Quaternion) ourVessel.mainBody.rotation}\n";
-                        VectorText += $"mainBody Transform Rotation: {ourVessel.mainBody.bodyTransform.rotation}\n";
-                        VectorText += $"Surface Velocity: {ourVessel.GetSrfVelocity()}, |v|: {ourVessel.GetSrfVelocity().magnitude}\n";
-                        VectorText += $"Orbital Velocity: {ourVessel.GetObtVelocity()}, |v|: {ourVessel.GetObtVelocity().magnitude}\n";
+
+                        StringBuilder.AppendLine($"Id: {ourVessel.id}");
+                        StringBuilder.AppendLine($"Forward vector: {ourVessel.GetFwdVector()}");
+                        StringBuilder.AppendLine($"Up vector: {(Vector3)ourVessel.upAxis}");
+                        StringBuilder.AppendLine($"Srf Rotation: {ourVessel.srfRelRotation}");
+                        StringBuilder.AppendLine($"Vessel Rotation: {ourVessel.transform.rotation}");
+                        StringBuilder.AppendLine($"Vessel Local Rotation: {ourVessel.transform.localRotation}");
+                        StringBuilder.AppendLine($"mainBody Rotation: {(Quaternion)ourVessel.mainBody.rotation}");
+                        StringBuilder.AppendLine($"mainBody Transform Rotation: {ourVessel.mainBody.bodyTransform.rotation}");
+                        StringBuilder.AppendLine($"Surface Velocity: {ourVessel.GetSrfVelocity()}, |v|: {ourVessel.GetSrfVelocity().magnitude}");
+                        StringBuilder.AppendLine($"Orbital Velocity: {ourVessel.GetObtVelocity()}, |v|: {ourVessel.GetObtVelocity().magnitude}");
                         if (ourVessel.orbitDriver != null && ourVessel.orbitDriver.orbit != null)
-                            VectorText += $"Frame Velocity: {(Vector3) ourVessel.orbitDriver.orbit.GetFrameVel()}, |v|: {ourVessel.orbitDriver.orbit.GetFrameVel().magnitude}\n";
-                        VectorText += $"CoM offset vector: {ourVessel.CoM}\n";
-                        VectorText += $"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}\n";
-                        VectorText += $"World Pos: {(Vector3) ourVessel.GetWorldPos3D()}, |pos|: {ourVessel.GetWorldPos3D().magnitude}\n";
+                            StringBuilder.AppendLine($"Frame Velocity: {(Vector3)ourVessel.orbitDriver.orbit.GetFrameVel()}, |v|: {ourVessel.orbitDriver.orbit.GetFrameVel().magnitude}");
+                        StringBuilder.AppendLine($"CoM offset vector: {ourVessel.CoM}\n");
+                        StringBuilder.AppendLine($"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}");
+                        StringBuilder.AppendLine($"World Pos: {(Vector3)ourVessel.GetWorldPos3D()}, |pos|: {ourVessel.GetWorldPos3D().magnitude}");
+
+                        VectorText = StringBuilder.ToString();
+                        StringBuilder.Length = 0;
                     }
                     else
                     {
@@ -50,22 +57,30 @@ namespace LunaClient.Windows.Debug
 
                 if (DisplayNtp)
                 {
-                    NtpText = $"Warp rate: {Math.Round(Time.timeScale, 3)}x.\n";
-                    NtpText += $"Current subspace: {SystemsContainer.Get<WarpSystem>().CurrentSubspace}.\n";
-                    NtpText += $"Current Error: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().GetCurrentError() * 1000, 0)}ms.\n";
-                    NtpText += $"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT\n";
-                    NtpText += $"Network latency: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().NetworkLatencyAverage / 10000f, 3)}ms\n";
-                    NtpText += $"Server clock difference: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ClockOffsetAverage / 10000f, 3)}ms\n";
-                    NtpText += $"Server lag: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ServerLag / 10000f, 3)}ms\n";
+                    StringBuilder.AppendLine($"Warp rate: {Math.Round(Time.timeScale, 3)}x.");
+                    StringBuilder.AppendLine($"Current subspace: {SystemsContainer.Get<WarpSystem>().CurrentSubspace}.");
+                    StringBuilder.AppendLine($"Current Error: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().GetCurrentError() * 1000, 0)}ms.");
+                    StringBuilder.AppendLine($"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT");
+                    StringBuilder.AppendLine($"Network latency: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().NetworkLatencyAverage / 10000f, 3)}ms");
+                    StringBuilder.AppendLine($"Server clock difference: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ClockOffsetAverage / 10000f, 3)}ms");
+                    StringBuilder.AppendLine($"Server lag: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ServerLag / 10000f, 3)}ms");
+
+                    NtpText = StringBuilder.ToString();
+                    StringBuilder.Length = 0;
                 }
 
                 if (DisplayConnectionQueue)
                 {
-                    ConnectionText = $"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.\n";
-                    ConnectionText += $"Last send time: {NetworkStatistics.GetStatistics("LastSendTime")}ms ago.\n";
-                    ConnectionText += $"Last receive time: {NetworkStatistics.GetStatistics("LastReceiveTime")}ms ago.\n";
-                    ConnectionText += $"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.\n";
-                    ConnectionText += $"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n";
+                    StringBuilder.AppendLine($"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.");
+                    StringBuilder.AppendLine($"Last send time: {NetworkStatistics.GetStatistics("LastSendTime")}ms ago.");
+                    StringBuilder.AppendLine($"Last receive time: {NetworkStatistics.GetStatistics("LastReceiveTime")}ms ago.");
+                    StringBuilder.AppendLine($"Messages in cache: {NetworkStatistics.GetStatistics("MessagesInCache")}.");
+                    StringBuilder.AppendLine($"Message data in cache: {NetworkStatistics.GetStatistics("MessageDataInCache")}.");
+                    StringBuilder.AppendLine($"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.");
+                    StringBuilder.AppendLine($"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n");
+
+                    ConnectionText = StringBuilder.ToString();
+                    StringBuilder.Length = 0;
                 }
             }
         }

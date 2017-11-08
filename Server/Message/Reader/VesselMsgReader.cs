@@ -104,7 +104,10 @@ namespace LunaServer.Message.Reader
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
 
             //Tell all clients to remove the weak vessel
-            MessageQueuer.SendToAllClients<VesselSrvMsg>(new VesselRemoveMsgData{VesselId = msgData.WeakVesselId });
+            var removeMsgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
+            removeMsgData.VesselId = msgData.WeakVesselId;
+
+            MessageQueuer.SendToAllClients<VesselSrvMsg>(removeMsgData);
         }
 
         private static void HandleVesselsRequest(ClientStructure client, IMessageData messageData)
@@ -131,18 +134,21 @@ namespace LunaServer.Message.Reader
                 }
             }
 
-            MessageQueuer.SendToClient<VesselSrvMsg>(client, new VesselsReplyMsgData { VesselsData = vesselList.ToArray() });
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselsReplyMsgData>();
+            msgData.VesselsData = vesselList.ToArray();
+
+            MessageQueuer.SendToClient<VesselSrvMsg>(client, msgData);
             LunaLog.Debug($"Sending {client.PlayerName} {sendVesselCount} vessels, cached: {cachedVesselCount}...");
         }
 
         private static void HandleVesselListRequest(ClientStructure client)
         {
-            MessageQueuer.SendToClient<VesselSrvMsg>(client, new VesselListReplyMsgData
-            {
-                Vessels = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels"))
-                        .Select(Common.CalculateSha256Hash)
-                        .ToArray()
-            });
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselListReplyMsgData>();
+            msgData.Vessels = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels"))
+                .Select(Common.CalculateSha256Hash)
+                .ToArray();
+
+            MessageQueuer.SendToClient<VesselSrvMsg>(client, msgData);
         }
     }
 }

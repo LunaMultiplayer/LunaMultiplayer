@@ -4,6 +4,9 @@ namespace LunaCommon.Message.Data
 {
     public class ModMsgData : MessageData
     {
+        /// <inheritdoc />
+        internal ModMsgData() { }
+
         /// <summary>
         /// Name of the mod that creates this msg
         /// </summary>

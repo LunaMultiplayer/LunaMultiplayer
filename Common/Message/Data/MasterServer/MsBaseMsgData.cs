@@ -6,6 +6,10 @@ namespace LunaCommon.Message.Data.MasterServer
 {
     public class MsBaseMsgData : MessageData
     {
+        /// <inheritdoc />
+        internal MsBaseMsgData() { }
+
+        /// <inheritdoc />
         /// <summary>
         /// Master server messages does not have versions!
         /// </summary>

@@ -1,6 +1,7 @@
 ﻿using LunaCommon.Message.Data;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
+using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Server;
 
@@ -15,11 +16,12 @@ namespace LunaServer.System
                 LunaLog.Debug("Attemped to send a null mod message");
                 return;
             }
-            MessageQueuer.RelayMessage<ModSrvMsg>(excludeClient, new ModMsgData
-            {
-                Data = messageData,
-                ModName = modName
-            });
+
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ModMsgData>();
+            msgData.Data = messageData;
+            msgData.ModName = modName;
+
+            MessageQueuer.RelayMessage<ModSrvMsg>(excludeClient, msgData);
         }
 
         public static void SendLmpModMessageToClient(ClientStructure client, string modName, byte[] messageData)
@@ -30,12 +32,11 @@ namespace LunaServer.System
                 return;
             }
 
-            var newMessageData = new ModMsgData
-            {
-                Data = messageData,
-                ModName = modName
-            };
-            MessageQueuer.SendToClient<ModSrvMsg>(client, newMessageData);
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ModMsgData>();
+            msgData.Data = messageData;
+            msgData.ModName = modName;
+            
+            MessageQueuer.SendToClient<ModSrvMsg>(client, msgData);
         }
     }
 }

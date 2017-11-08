@@ -75,12 +75,12 @@ namespace LunaClient.Systems.KerbalSys
             if (kerbalBytes != null && kerbalBytes.Length > 0)
             {
                 LunaLog.Log("[LMP]: Sending kerbal {kerbalName}");
-                var msgData = new KerbalProtoMsgData
-                {
-                    KerbalName = kerbalName,
-                    KerbalData = kerbalBytes,
-                    SendTime = Planetarium.GetUniversalTime()
-                };
+
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<KerbalProtoMsgData>();
+                msgData.KerbalName = kerbalName;
+                msgData.KerbalData = kerbalBytes;
+                msgData.SendTime = Planetarium.GetUniversalTime();
+
                 SendMessage(msgData);
             }
             else

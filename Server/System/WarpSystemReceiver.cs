@@ -21,13 +21,12 @@ namespace LunaServer.System
             VesselRelaySystem.CreateNewSubspace(WarpContext.NextSubspaceId);
 
             //Tell all Clients about the new Subspace
-            var newMessageData = new WarpNewSubspaceMsgData
-            {
-                ServerTimeDifference = message.ServerTimeDifference,
-                PlayerCreator = message.PlayerCreator,
-                SubspaceKey = WarpContext.NextSubspaceId
-            };
-            MessageQueuer.SendToAllClients<WarpSrvMsg>(newMessageData);
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<WarpNewSubspaceMsgData>();
+            msgData.ServerTimeDifference = message.ServerTimeDifference;
+            msgData.PlayerCreator = message.PlayerCreator;
+            msgData.SubspaceKey = WarpContext.NextSubspaceId;
+            
+            MessageQueuer.SendToAllClients<WarpSrvMsg>(msgData);
 
             //Save new subspace info to disk
             WarpSystem.SaveSubspace(WarpContext.NextSubspaceId, message.ServerTimeDifference);
@@ -43,11 +42,11 @@ namespace LunaServer.System
 
             if (oldSubspace != newSubspace)
             {
-                MessageQueuer.RelayMessage<WarpSrvMsg>(client, new WarpChangeSubspaceMsgData
-                {
-                    PlayerName = client.PlayerName,
-                    Subspace = message.Subspace
-                });
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<WarpChangeSubspaceMsgData>();
+                msgData.PlayerName = client.PlayerName;
+                msgData.Subspace = message.Subspace;
+
+                MessageQueuer.RelayMessage<WarpSrvMsg>(client, msgData);
 
                 if (newSubspace != -1)
                 {

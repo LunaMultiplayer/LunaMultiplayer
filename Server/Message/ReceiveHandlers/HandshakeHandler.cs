@@ -1,5 +1,4 @@
-﻿using System.IO;
-using LunaCommon.Enums;
+﻿using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Data.PlayerConnection;
 using LunaCommon.Message.Server;
@@ -9,6 +8,7 @@ using LunaServer.Log;
 using LunaServer.Plugin;
 using LunaServer.Server;
 using LunaServer.System;
+using System.IO;
 
 namespace LunaServer.Message.ReceiveHandlers
 {
@@ -46,7 +46,11 @@ namespace LunaServer.Message.ReceiveHandlers
                 CreatePlayerScenarioFiles(client, data.PlayerName);
 
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.HandshookSuccessfully, "success");
-                MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, new PlayerConnectionJoinMsgData { PlayerName = client.PlayerName });
+
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<PlayerConnectionJoinMsgData>();
+                msgData.PlayerName = client.PlayerName;
+
+                MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
 
                 LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ClientRetriever.GetClients().Length}");
             }

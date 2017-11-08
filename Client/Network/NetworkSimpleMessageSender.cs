@@ -23,77 +23,83 @@ namespace LunaClient.Network
     {
         public static void SendHandshakeRequest()
         {
-            NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg>(new HandshakeRequestMsgData()));
+            NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg, HandshakeRequestMsgData>());
         }
 
         public static void SendMotdRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<MotdCliMsg>(new MotdRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<MotdCliMsg, MotdRequestMsgData>()));
         }
 
         public static void SendKerbalsRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<KerbalCliMsg>(new KerbalsRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<KerbalCliMsg, KerbalsRequestMsgData>()));
         }
 
         public static void SendVesselListRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<VesselCliMsg>(new VesselListRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<VesselCliMsg, VesselListRequestMsgData>()));
         }
 
         public static void SendSettingsRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<SettingsCliMsg>(new SettingsRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<SettingsCliMsg, SettingsRequestMsgData>()));
         }
 
         public static void SendWarpSubspacesRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<WarpCliMsg>(new WarpSubspacesRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<WarpCliMsg, WarpSubspacesRequestMsgData>()));
         }
 
         public static void SendColorsRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<PlayerColorCliMsg>(new PlayerColorRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<PlayerColorCliMsg, PlayerColorRequestMsgData>()));
         }
 
         public static void SendFlagsRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<FlagCliMsg>(new FlagListRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<FlagCliMsg, FlagListRequestMsgData>()));
         }
 
         public static void SendPlayersRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<PlayerStatusCliMsg>(new PlayerStatusRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<PlayerStatusCliMsg, PlayerStatusRequestMsgData>()));
         }
 
         public static void SendScenariosRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<ScenarioCliMsg>(new ScenarioRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<ScenarioCliMsg, ScenarioRequestMsgData>()));
         }
 
         public static void SendCraftLibraryRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<CraftLibraryCliMsg>(new CraftLibraryListRequestMsgData { PlayerName = SettingsSystem.CurrentSettings.PlayerName })));
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryListRequestMsgData>();
+            msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<CraftLibraryCliMsg>(msgData)));
         }
 
         public static void SendChatRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<ChatCliMsg>(new ChatListRequestMsgData { From = SettingsSystem.CurrentSettings.PlayerName })));
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatListRequestMsgData>();
+            msgData.From = SettingsSystem.CurrentSettings.PlayerName;
+
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<ChatCliMsg>(msgData)));
         }
 
         public static void SendLocksRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<LockCliMsg>(new LockListRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<LockCliMsg, LockListRequestMsgData>()));
         }
 
         public static void SendAdminsRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<AdminCliMsg>(new AdminListRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<AdminCliMsg, AdminListRequestMsgData>()));
         }
 
         public static void SendGroupListRequest()
         {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<GroupCliMsg>(new GroupListRequestMsgData())));
+            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<GroupCliMsg, GroupListRequestMsgData>()));
         }
     }
 }

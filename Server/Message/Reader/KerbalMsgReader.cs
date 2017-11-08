@@ -29,12 +29,10 @@ namespace LunaServer.Message.Reader
 
                     LunaLog.Debug($"Sending {client.PlayerName} {kerbalFiles.Length} kerbals...");
 
-                    var newMessageData = new KerbalReplyMsgData
-                    {
-                        KerbalsData = kerbalsData.ToArray()
-                    };
+                    var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<KerbalReplyMsgData>();
+                    msgData.KerbalsData = kerbalsData.ToArray();
 
-                    MessageQueuer.SendToClient<KerbalSrvMsg>(client, newMessageData);
+                    MessageQueuer.SendToClient<KerbalSrvMsg>(client, msgData);
                     break;
                 case KerbalMessageType.Proto:
                     var data = (KerbalProtoMsgData)message;

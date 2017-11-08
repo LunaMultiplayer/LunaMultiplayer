@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using LunaServer.Command.Command.Base;
@@ -9,6 +6,9 @@ using LunaServer.Log;
 using LunaServer.Server;
 using LunaServer.Settings;
 using LunaServer.System;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace LunaServer.Command.Command
 {
@@ -51,11 +51,10 @@ namespace LunaServer.Command.Command
                     Universe.RemoveFromUniverse(vesselFilePath);
 
                     //Send a vessel remove message
-                    //Send it with a delete time of 0 so it shows up for all Players.
-                    MessageQueuer.SendToAllClients<VesselSrvMsg>(new VesselRemoveMsgData
-                    {
-                        VesselId = Guid.Parse(vesselId)
-                    });
+                    var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
+                    msgData.VesselId = Guid.Parse(vesselId);
+
+                    MessageQueuer.SendToAllClients<VesselSrvMsg>(msgData);
 
                     removalCount++;
                 }

@@ -4,14 +4,16 @@ namespace LunaCommon.Message.Data.Chat
 {
     public class ChatChannelMsgData : ChatBaseMsgData
     {
+        /// <inheritdoc />
+        internal ChatChannelMsgData() { }
         public override ChatMessageType ChatMessageType => ChatMessageType.ChannelMessage;
 
         private string ChannelPriv { get; set; }
 
         public string Channel
         {
-            get => SendToAll ? "" : ChannelPriv;
-            set => ChannelPriv = SendToAll ? "" : value;
+            get => SendToAll ? string.Empty : ChannelPriv;
+            set => ChannelPriv = SendToAll ? string.Empty : value;
         }
 
         public string Text { get; set; }

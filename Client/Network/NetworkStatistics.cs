@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LunaCommon.Message.Base;
+using System;
 
 namespace LunaClient.Network
 {
@@ -24,6 +25,10 @@ namespace LunaClient.Network
                     return (long)(DateTime.Now - LastSendTime).TotalMilliseconds;
                 case "LastReceiveTime":
                     return (long)(DateTime.Now - LastReceiveTime).TotalMilliseconds;
+                case "MessagesInCache":
+                    return MessageStore.GetMessageCount(null);
+                case "MessageDataInCache":
+                    return MessageStore.GetMessageDataCount(null);
             }
             return 0;
         }

@@ -4,29 +4,25 @@ namespace LunaCommon.Message.Base
 {
     public class MessageData : IMessageData
     {
-        public IMessageData Clone()
-        {
-            return MemberwiseClone() as IMessageData;
-        }
-
         /// <summary>
-        ///     Returns the current version number
+        /// Make constructor internal so they have to use the factory.
+        /// This is made this way as the factory use a cache system to avoid the generation of garbage
         /// </summary>
+        internal MessageData() { }
+        
+        /// <inheritdoc />
         public virtual string Version => VersionInfo.Version;
 
-        /// <summary>
-        /// Receive time timestamp.
-        /// </summary>
+        /// <inheritdoc />
         public long ReceiveTime { get; set; }
 
-        /// <summary>
-        /// Sent time timestamp.
-        /// </summary>
+        /// <inheritdoc />
         public long SentTime { get; set; }
 
-        /// <summary>
-        /// Returns the message subtype, override in cases that you need, chat for example
-        /// </summary>
+        /// <inheritdoc />
         public virtual ushort SubType => 0;
+
+        /// <inheritdoc />
+        public bool ReadyToRecycle { get; set; }
     }
 }

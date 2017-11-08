@@ -51,11 +51,10 @@ namespace LunaServer.Command.Command
                     Universe.RemoveFromUniverse(vesselFilePath);
 
                     //Send a vessel remove message
-                    //Send it with a delete time of 0 so it shows up for all Players.
-                    MessageQueuer.SendToAllClients<VesselSrvMsg>(new VesselRemoveMsgData
-                    {
-                        VesselId = Guid.Parse(vesselId)
-                    });
+                    var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
+                    msgData.VesselId = Guid.Parse(vesselId);
+
+                    MessageQueuer.SendToAllClients<VesselSrvMsg>(msgData);
 
                     removalCount++;
                 }

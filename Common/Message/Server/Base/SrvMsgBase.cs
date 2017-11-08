@@ -8,8 +8,11 @@ namespace LunaCommon.Message.Server.Base
     ///     Basic server message
     /// </summary>
     public abstract class SrvMsgBase<T> : MessageBase<T>, IServerMessageBase
-        where T : IMessageData, new()
+        where T : class, IMessageData
     {
+        /// <inheritdoc />
+        internal SrvMsgBase() { }
+
         protected override ushort MessageTypeId => (ushort)(int)MessageType;
 
         /// <summary>

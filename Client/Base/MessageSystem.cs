@@ -68,6 +68,8 @@ namespace LunaClient.Base
             try
             {
                 MessageHandler.HandleMessage(msgData);
+                //After the message has been handled set it ready to be recycled
+                msgData.ReadyToRecycle = true;
             }
             catch (Exception e)
             {

@@ -29,12 +29,12 @@ namespace LunaClient.Systems.VesselDockSys
             var vesselBytes = VesselSerializer.SerializeVessel(dock.DominantVessel.BackupVessel());
             if (vesselBytes.Length > 0)
             {
-                SendMessage(new VesselDockMsgData
-                {
-                    WeakVesselId = dock.WeakVesselId,
-                    DominantVesselId = dock.DominantVesselId,
-                    FinalVesselData = vesselBytes
-                });
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselDockMsgData>();
+                msgData.WeakVesselId = dock.WeakVesselId;
+                msgData.DominantVesselId = dock.DominantVesselId;
+                msgData.FinalVesselData = vesselBytes;
+
+                SendMessage(msgData);
             }
         }
     }

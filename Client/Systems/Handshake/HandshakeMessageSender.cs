@@ -17,12 +17,11 @@ namespace LunaClient.Systems.Handshake
 
         public void SendHandshakeResponse(byte[] signature)
         {
-            var msgData = new HandshakeResponseMsgData
-            {
-                PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-                ChallengeSignature = signature,
-                PublicKey = SettingsSystem.CurrentSettings.PublicKey
-            };
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<HandshakeResponseMsgData>();
+            msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.ChallengeSignature = signature;
+            msgData.PublicKey = SettingsSystem.CurrentSettings.PublicKey;
+
             SendMessage(msgData);
         }
     }

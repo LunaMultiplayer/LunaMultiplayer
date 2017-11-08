@@ -1,5 +1,6 @@
 using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.Chat.Command;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Chat;
@@ -147,12 +148,12 @@ namespace LunaClient.Systems.Chat
 
         public void PmMessageServer(string message)
         {
-            MessageSender.SendMessage(new ChatPrivateMsgData
-            {
-                From = SettingsSystem.CurrentSettings.PlayerName,
-                Text = message,
-                To = SettingsSystem.ServerSettings.ConsoleIdentifier
-            });
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatPrivateMsgData>();
+            msgData.From = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.Text = message;
+            msgData.To = SettingsSystem.ServerSettings.ConsoleIdentifier;
+
+            MessageSender.SendMessage(msgData);
         }
 
         #endregion

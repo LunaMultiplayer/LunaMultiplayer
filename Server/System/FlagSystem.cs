@@ -59,8 +59,11 @@ namespace LunaServer.System
                     FlagName = flagName
                 });
             }
-            
-            MessageQueuer.SendToClient<FlagSrvMsg>(client, new FlagListResponseMsgData { FlagFiles = flagList.Values.ToArray()});
+
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<FlagListResponseMsgData>();
+            msgData.FlagFiles = flagList.Values.ToArray();
+
+            MessageQueuer.SendToClient<FlagSrvMsg>(client, msgData);
         }
     }
 }

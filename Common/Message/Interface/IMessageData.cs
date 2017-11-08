@@ -3,11 +3,6 @@
     public interface IMessageData
     {
         /// <summary>
-        /// This method is made to clone the message and use a memberwise copy
-        /// </summary>
-        IMessageData Clone();
-
-        /// <summary>
         /// Retrieves the version of the multiplayer
         /// </summary>
         string Version { get; }
@@ -26,5 +21,10 @@
         /// Sent time timestamp.
         /// </summary>
         long SentTime { get; set; }
+
+        /// <summary>
+        /// This field is set to true after the message has been used so it can be recycled
+        /// </summary>
+        bool ReadyToRecycle { get; set; }
     }
 }

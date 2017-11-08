@@ -5,6 +5,8 @@ namespace LunaCommon.Message.Data.Vessel
 {
     public class VesselPositionMsgData : VesselBaseMsgData
     {
+        /// <inheritdoc />
+        internal VesselPositionMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Position;
         public Guid VesselId { get; set; }
         public string BodyName { get; set; }

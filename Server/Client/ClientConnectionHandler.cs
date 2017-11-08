@@ -58,7 +58,11 @@ namespace LunaServer.Client
                 if (client.Authenticated)
                 {
                     ChatSystem.RemovePlayer(client.PlayerName);
-                    MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, new PlayerConnectionLeaveMsgData { PlayerName = client.PlayerName });
+
+                    var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<PlayerConnectionLeaveMsgData>();
+                    msgData.PlayerName = client.PlayerName;
+
+                    MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
                     LockSystem.ReleasePlayerLocks(client.PlayerName);
 
                     if (!ServerContext.Clients.Any(c => c.Value.Subspace == client.Subspace))

@@ -5,6 +5,8 @@ namespace LunaCommon.Message.Data.Vessel
 {
     public class VesselDockMsgData : VesselBaseMsgData
     {
+        /// <inheritdoc />
+        internal VesselDockMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Dock;
         public int Subspace { get; set; }
         public Guid DominantVesselId { get; set; }

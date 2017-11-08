@@ -4,6 +4,8 @@ namespace LunaCommon.Message.Data.Flag
 {
     public class FlagListRequestMsgData : FlagBaseMsgData
     {
+        /// <inheritdoc />
+        internal FlagListRequestMsgData() { }
         public override FlagMessageType FlagMessageType => FlagMessageType.ListRequest;
     }
 }

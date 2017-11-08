@@ -154,29 +154,29 @@ namespace MasterServer
         /// </summary>
         private static void SendServerLists(NetIncomingMessage netMsg, NetPeer peer, string version)
         {
-            var values = ServerDictionary.Values.Where(s => s.Info.Version == version).OrderBy(v => v.Info.Id);
-            var msgData = new MsReplyServersMsgData
-            {
-                Id = values.Select(s => s.Info.Id).ToArray(),
-                Ip = values.Select(s => s.Info.Ip).ToArray(),
-                Cheats = values.Select(s => s.Info.Cheats).ToArray(),
-                Description = values.Select(s => s.Info.Description).ToArray(),
-                DropControlOnExit = values.Select(s => s.Info.DropControlOnExit).ToArray(),
-                DropControlOnExitFlight = values.Select(s => s.Info.DropControlOnExit).ToArray(),
-                DropControlOnVesselSwitching = values.Select(s => s.Info.DropControlOnExit).ToArray(),
-                ExternalEndpoint = values.Select(s => $"{s.ExternalEndpoint.Address}:{s.ExternalEndpoint.Port}").ToArray(),
-                GameMode = values.Select(s => s.Info.GameMode).ToArray(),
-                InternalEndpoint = values.Select(s => $"{s.InternalEndpoint.Address}:{s.InternalEndpoint.Port}").ToArray(),
-                MaxPlayers = values.Select(s => s.Info.MaxPlayers).ToArray(),
-                ModControl = values.Select(s => s.Info.ModControl).ToArray(),
-                PlayerCount = values.Select(s => s.Info.PlayerCount).ToArray(),
-                ServerName = values.Select(s => s.Info.ServerName).ToArray(),
-                VesselUpdatesSendMsInterval = values.Select(s => s.Info.VesselUpdatesSendMsInterval).ToArray(),
-                WarpMode = values.Select(s => s.Info.WarpMode).ToArray()
-            };
+            var values = ServerDictionary.Values.Where(s => s.Info.Version == version).OrderBy(v => v.Info.Id).ToArray();
+
+            var msgData = MasterServerMessageFactory.CreateNewMessageData<MsReplyServersMsgData>();
+
+            msgData.Id = values.Select(s => s.Info.Id).ToArray();
+            msgData.Ip = values.Select(s => s.Info.Ip).ToArray();
+            msgData.Cheats = values.Select(s => s.Info.Cheats).ToArray();
+            msgData.Description = values.Select(s => s.Info.Description).ToArray();
+            msgData.DropControlOnExit = values.Select(s => s.Info.DropControlOnExit).ToArray();
+            msgData.DropControlOnExitFlight = values.Select(s => s.Info.DropControlOnExit).ToArray();
+            msgData.DropControlOnVesselSwitching = values.Select(s => s.Info.DropControlOnExit).ToArray();
+            msgData.ExternalEndpoint = values.Select(s => $"{s.ExternalEndpoint.Address}:{s.ExternalEndpoint.Port}").ToArray();
+            msgData.GameMode = values.Select(s => s.Info.GameMode).ToArray();
+            msgData.InternalEndpoint = values.Select(s => $"{s.InternalEndpoint.Address}:{s.InternalEndpoint.Port}").ToArray();
+            msgData.MaxPlayers = values.Select(s => s.Info.MaxPlayers).ToArray();
+            msgData.ModControl = values.Select(s => s.Info.ModControl).ToArray();
+            msgData.PlayerCount = values.Select(s => s.Info.PlayerCount).ToArray();
+            msgData.ServerName = values.Select(s => s.Info.ServerName).ToArray();
+            msgData.VesselUpdatesSendMsInterval = values.Select(s => s.Info.VesselUpdatesSendMsInterval).ToArray();
+            msgData.WarpMode = values.Select(s => s.Info.WarpMode).ToArray();
 
             var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-            var data = MasterServerMessageFactory.Serialize(msg);
+            var data = msg.Serialize(true);
 
             var outMsg = peer.CreateMessage(data.Length);
             outMsg.Write(data);

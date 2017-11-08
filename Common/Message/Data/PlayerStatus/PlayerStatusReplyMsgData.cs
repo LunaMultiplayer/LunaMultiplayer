@@ -4,6 +4,8 @@ namespace LunaCommon.Message.Data.PlayerStatus
 {
     public class PlayerStatusReplyMsgData: PlayerStatusBaseMsgData
     {
+        /// <inheritdoc />
+        internal PlayerStatusReplyMsgData() { }
         public override PlayerStatusMessageType PlayerStatusMessageType => PlayerStatusMessageType.Reply;
 
         public string[] PlayerName { get; set; }

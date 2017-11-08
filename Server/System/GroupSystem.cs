@@ -35,7 +35,10 @@ namespace LunaServer.System
                 newGroup.Name = groupName;
                 if (Groups.TryAdd(groupName, newGroup))
                 {
-                    MessageQueuer.SendToAllClients<GroupSrvMsg>(new GroupUpdateMsgData { Group = newGroup });
+                    var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<GroupUpdateMsgData>();
+                    msgData.Group = newGroup;
+
+                    MessageQueuer.SendToAllClients<GroupSrvMsg>(msgData);
                     Task.Run(() => SaveGroups());
                 }
             }
@@ -46,7 +49,10 @@ namespace LunaServer.System
             if (Groups.TryGetValue(groupName, out var existingGroup) && existingGroup.Owner == clientPlayerName
                 && Groups.TryRemove(groupName, out _))
             {
-                MessageQueuer.SendToAllClients<GroupSrvMsg>(new GroupRemoveMsgData { GroupName = groupName });
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<GroupRemoveMsgData>();
+                msgData.GroupName = groupName;
+
+                MessageQueuer.SendToAllClients<GroupSrvMsg>(msgData);
                 Task.Run(() => SaveGroups());
             }
         }
@@ -60,7 +66,10 @@ namespace LunaServer.System
                     //We are the owner of the group so we can do whatever we want
                     if (Groups.TryUpdate(group.Name, group, existingGroup))
                     {
-                        MessageQueuer.SendToAllClients<GroupSrvMsg>(new GroupUpdateMsgData {Group = group});
+                        var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<GroupUpdateMsgData>();
+                        msgData.Group = group;
+
+                        MessageQueuer.SendToAllClients<GroupSrvMsg>(msgData);
                         Task.Run(() => SaveGroups());
                     }
                 }
@@ -72,7 +81,10 @@ namespace LunaServer.System
                         var invited = group.Invited.Except(existingGroup.Invited).ToArray();
                         if (invited.Length == 1 && invited[0] == clientPlayerName && Groups.TryUpdate(group.Name, group, existingGroup))
                         {
-                            MessageQueuer.SendToAllClients<GroupSrvMsg>(new GroupUpdateMsgData { Group = group });
+                            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<GroupUpdateMsgData>();
+                            msgData.Group = group;
+
+                            MessageQueuer.SendToAllClients<GroupSrvMsg>(msgData);
                             Task.Run(()=> SaveGroups());
                         }
                     }

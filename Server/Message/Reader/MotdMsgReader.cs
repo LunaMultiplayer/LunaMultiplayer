@@ -1,11 +1,12 @@
-﻿using System;
-using LunaCommon.Message.Data.Motd;
+﻿using LunaCommon.Message.Data.Motd;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaServer.Client;
+using LunaServer.Context;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Server;
 using LunaServer.Settings;
+using System;
 
 namespace LunaServer.Message.Reader
 {
@@ -20,7 +21,10 @@ namespace LunaServer.Message.Reader
 
             newMotd = newMotd.Replace("%Name%", client.PlayerName).Replace(@"\n", Environment.NewLine);
 
-            MessageQueuer.SendToClient<MotdSrvMsg>(client, new MotdReplyMsgData { MessageOfTheDay = newMotd });
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<MotdReplyMsgData>();
+            msgData.MessageOfTheDay = newMotd;
+
+            MessageQueuer.SendToClient<MotdSrvMsg>(client, msgData);
         }
     }
 }

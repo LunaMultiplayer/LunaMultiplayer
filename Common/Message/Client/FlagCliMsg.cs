@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
+using LunaCommon.Message.Base;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Interface;
@@ -10,12 +11,16 @@ namespace LunaCommon.Message.Client
 {
     public class FlagCliMsg : CliMsgBase<FlagBaseMsgData>
     {
+        /// <inheritdoc />
+        internal FlagCliMsg() { }
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
         {
-            [(ushort)FlagMessageType.ListRequest] = new FlagListRequestMsgData(),
-            [(ushort)FlagMessageType.ListResponse] = new FlagListResponseMsgData(),
-            [(ushort)FlagMessageType.FlagData] = new FlagDataMsgData(),
-            [(ushort)FlagMessageType.FlagDelete] = new FlagDeleteMsgData()
+            [(ushort)FlagMessageType.ListRequest] = MessageStore.GetMessageData<FlagListRequestMsgData>(true),
+            [(ushort)FlagMessageType.ListResponse] = MessageStore.GetMessageData<FlagListResponseMsgData>(true),
+            [(ushort)FlagMessageType.FlagData] = MessageStore.GetMessageData<FlagDataMsgData>(true),
+            [(ushort)FlagMessageType.FlagDelete] = MessageStore.GetMessageData<FlagDeleteMsgData>(true)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Flag;

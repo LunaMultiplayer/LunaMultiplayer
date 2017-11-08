@@ -18,7 +18,7 @@ namespace LunaClient.Systems.Scenario
 
         public void SendScenarioModuleData(string[] scenarioNames, byte[][] scenarioData)
         {
-            var data = new ScenarioDataMsgData();
+            var data = NetworkMain.CliMsgFactory.CreateNewMessageData<ScenarioDataMsgData>();
             var list = scenarioNames.Select((t, i) => new KeyValuePair<string, byte[]>(t, scenarioData[i])).ToList();
             data.ScenarioNameData = list.ToArray();
 

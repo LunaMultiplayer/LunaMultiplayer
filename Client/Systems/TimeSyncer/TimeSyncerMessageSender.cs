@@ -17,7 +17,7 @@ namespace LunaClient.Systems.TimeSyncer
         public void SendTimeSyncRequest()
         {
             //This message will be rewrited JUST before serialization so the time is more precise
-            SendMessage(new SyncTimeRequestMsgData());
+            SendMessage(NetworkMain.CliMsgFactory.CreateNewMessageData<SyncTimeRequestMsgData>());
         }
     }
 }

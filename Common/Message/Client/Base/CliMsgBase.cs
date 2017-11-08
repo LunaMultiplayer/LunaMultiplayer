@@ -8,8 +8,11 @@ namespace LunaCommon.Message.Client.Base
     ///     Basic client message
     /// </summary>
     public abstract class CliMsgBase<T> : MessageBase<T>, IClientMessageBase
-        where T : IMessageData, new()
+        where T : class, IMessageData
     {
+        /// <inheritdoc />
+        internal CliMsgBase() { }
+
         protected override ushort MessageTypeId => (ushort)(int) MessageType;
 
         /// <summary>

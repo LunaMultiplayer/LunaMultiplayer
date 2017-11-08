@@ -41,12 +41,10 @@ namespace LunaServer.Message.Reader
             var scenarioDataArray = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName))
                 .Select(f => new KeyValuePair<string, byte[]>(Path.GetFileNameWithoutExtension(f), FileHandler.ReadFile(f)));
 
-            var newMessageData = new ScenarioDataMsgData
-            {
-                ScenarioNameData = scenarioDataArray.ToArray()
-            };
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScenarioDataMsgData>();
+            msgData.ScenarioNameData = scenarioDataArray.ToArray();
 
-            MessageQueuer.SendToClient<ScenarioSrvMsg>(client, newMessageData);
+            MessageQueuer.SendToClient<ScenarioSrvMsg>(client, msgData);
         }
     }
 }

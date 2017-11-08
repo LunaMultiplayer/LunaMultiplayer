@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Groups;
 using LunaCommon.Message.Data.Groups;
@@ -27,7 +28,11 @@ namespace LunaClient.Systems.Groups
                 {
                     var expectedGroup = existingVal.Clone();
                     expectedGroup.Invited.Add(SettingsSystem.CurrentSettings.PlayerName);
-                    MessageSender.SendMessage(new GroupUpdateMsgData{ Group = expectedGroup });
+
+                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
+                    msgData.Group = expectedGroup;
+
+                    MessageSender.SendMessage(msgData);
                 }
             }
         }
@@ -36,7 +41,10 @@ namespace LunaClient.Systems.Groups
         {
             if (!Groups.ContainsKey(groupName))
             {
-                MessageSender.SendMessage(new GroupCreateMsgData{ GroupName = SettingsSystem.CurrentSettings.PlayerName });
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupCreateMsgData>();
+                msgData.GroupName = groupName;
+
+                MessageSender.SendMessage(msgData);
             }
         }
 
@@ -44,7 +52,10 @@ namespace LunaClient.Systems.Groups
         {
             if (Groups.TryGetValue(groupName, out var existingVal) && existingVal.Owner == SettingsSystem.CurrentSettings.PlayerName)
             {
-                MessageSender.SendMessage(new GroupRemoveMsgData{ GroupName = SettingsSystem.CurrentSettings.PlayerName });
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupRemoveMsgData>();
+                msgData.GroupName = groupName;
+
+                MessageSender.SendMessage(msgData);
             }
         }
 
@@ -53,10 +64,15 @@ namespace LunaClient.Systems.Groups
             if (Groups.TryGetValue(groupName, out var existingVal) 
                 && existingVal.Owner == SettingsSystem.CurrentSettings.PlayerName)
             {
+                //TODO: remove this clone and do as with flags to avoid garbage
                 var expectedGroup = existingVal.Clone();
                 expectedGroup.Members.Add(username);
                 expectedGroup.Invited.Remove(username);
-                MessageSender.SendMessage(new GroupUpdateMsgData { Group = expectedGroup });
+
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
+                msgData.Group = expectedGroup;
+
+                MessageSender.SendMessage(msgData);
             }
         }
 
@@ -65,10 +81,15 @@ namespace LunaClient.Systems.Groups
             if (Groups.TryGetValue(groupName, out var existingVal)
                 && existingVal.Owner == SettingsSystem.CurrentSettings.PlayerName)
             {
+                //TODO: remove this clone and do as with flags to avoid garbage
                 var expectedGroup = existingVal.Clone();
                 expectedGroup.Members.Remove(username);
                 expectedGroup.Invited.Remove(username);
-                MessageSender.SendMessage(new GroupUpdateMsgData { Group = expectedGroup });
+
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
+                msgData.Group = expectedGroup;
+
+                MessageSender.SendMessage(msgData);
             }
         }
     }

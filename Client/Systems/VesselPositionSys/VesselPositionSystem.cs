@@ -164,9 +164,9 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] GetLatestVesselPosition(Guid vesselId)
         {
             return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ? 
-                vesselPosition.LatLonAlt :
+                vesselPosition.MsgData.LatLonAlt :
                 CurrentVesselUpdate.TryGetValue(vesselId, out vesselPosition) ?
-                    vesselPosition.LatLonAlt :
+                    vesselPosition.MsgData.LatLonAlt :
                     null;
         }
     }

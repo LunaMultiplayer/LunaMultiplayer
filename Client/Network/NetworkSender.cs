@@ -66,6 +66,8 @@ namespace LunaClient.Network
 
             message.Data.SentTime = DateTime.UtcNow.Ticks;
             var bytes = message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled);
+            //We have the bytes so send the message to recycle.
+            message.Data.ReadyToRecycle = true;
             if (bytes != null)
             {
                 try

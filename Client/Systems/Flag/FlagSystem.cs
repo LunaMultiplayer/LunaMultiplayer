@@ -1,8 +1,6 @@
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
-using LunaCommon.Flag;
-using LunaCommon.Message.Data.Flag;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -75,16 +73,8 @@ namespace LunaClient.Systems.Flag
             var fullFlagPath = CommonUtil.CombinePaths(FlagPath, flagName);
 
             if (!File.Exists(fullFlagPath)) return;
-
-            MessageSender.SendMessage(new FlagDataMsgData
-            {
-                Flag = new FlagInfo
-                {
-                    Owner = SettingsSystem.CurrentSettings.PlayerName,
-                    FlagData = File.ReadAllBytes(fullFlagPath),
-                    FlagName = flagName
-                }
-            });
+            
+            MessageSender.SendMessage(MessageSender.GetFlagMessageData(flagName, fullFlagPath));
         }
 
         public static bool FlagFileExists()

@@ -24,7 +24,8 @@ namespace LunaClient.Systems.Status
                     HandlePlayerStatusReply(messageData);
                     break;
                 case PlayerStatusMessageType.Set:
-                    AddNewPlayerStatus(messageData);
+                    var msg = (PlayerStatusSetMsgData)messageData;
+                    AddNewPlayerStatus(msg.PlayerName, msg.VesselText, msg.StatusText);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -37,24 +38,18 @@ namespace LunaClient.Systems.Status
 
             for (var i = 0; i < msg.PlayerName.Length; i++)
             {
-                AddNewPlayerStatus(new PlayerStatusSetMsgData
-                {
-                    PlayerName = msg.PlayerName[i],
-                    StatusText = msg.StatusText[i],
-                    VesselText = msg.VesselText[i]
-                });
+                AddNewPlayerStatus(msg.PlayerName[i], msg.VesselText[i], msg.StatusText[i]);
             }
             MainSystem.NetworkState = ClientState.PlayersSynced;
         }
 
-        private static void AddNewPlayerStatus(IMessageData messageData)
+        private static void AddNewPlayerStatus(string playerName, string vesselText, string statusText)
         {
-            var msg = (PlayerStatusSetMsgData)messageData;
             var newStatus = new PlayerStatus
             {
-                PlayerName = msg.PlayerName,
-                VesselText = msg.VesselText,
-                StatusText = msg.StatusText
+                PlayerName = playerName,
+                VesselText = vesselText,
+                StatusText = statusText
             };
 
             if (System.PlayerStatusList.ContainsKey(newStatus.PlayerName))

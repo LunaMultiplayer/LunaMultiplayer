@@ -12,24 +12,22 @@ namespace LunaServer.System
     {
         public static void SendHandshakeReply(ClientStructure client, HandshakeReply enumResponse, string reason)
         {
-            var messageData = new HandshakeReplyMsgData
-            {
-                Response = enumResponse,
-                Reason = reason
-            };
-
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<HandshakeReplyMsgData>();
+            msgData.Response = enumResponse;
+            msgData.Reason = reason;
+            
             if (enumResponse == HandshakeReply.HandshookSuccessfully)
             {
-                messageData.ModControlMode = GeneralSettings.SettingsStore.ModControl;
+                msgData.ModControlMode = GeneralSettings.SettingsStore.ModControl;
                 if (GeneralSettings.SettingsStore.ModControl != ModControlMode.Disabled)
                 {
                     if (!FileHandler.FileExists(ServerContext.ModFilePath))
                         ModFileSystem.GenerateNewModFile();
-                    messageData.ModFileData = FileHandler.ReadFile(ServerContext.ModFilePath);
+                    msgData.ModFileData = FileHandler.ReadFile(ServerContext.ModFilePath);
                 }
             }
 
-            MessageQueuer.SendToClient<HandshakeSrvMsg>(client, messageData);
+            MessageQueuer.SendToClient<HandshakeSrvMsg>(client, msgData);
         }
     }
 }

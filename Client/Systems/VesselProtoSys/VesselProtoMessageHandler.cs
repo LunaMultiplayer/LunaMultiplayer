@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Network;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
@@ -58,7 +59,10 @@ namespace LunaClient.Systems.VesselProtoSys
         private static void HandleVesselList(VesselListReplyMsgData messageData)
         {
             //Request the vessel data that we don't have.
-            System.MessageSender.SendMessage(new VesselsRequestMsgData { RequestList = messageData.Vessels });
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselsRequestMsgData>();
+            msgData.RequestList = messageData.Vessels;
+
+            System.MessageSender.SendMessage(msgData);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Network;
+using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Chat;
 
 namespace LunaClient.Systems.Chat.Command
@@ -22,11 +23,11 @@ namespace LunaClient.Systems.Chat.Command
                     SystemsContainer.Get<ChatSystem>().SelectedChannel = commandArgs;
                     SystemsContainer.Get<ChatSystem>().SelectedPmChannel = null;
 
-                    System.MessageSender.SendMessage(new ChatJoinMsgData
-                    {
-                        Channel = commandArgs,
-                        From = SettingsSystem.CurrentSettings.PlayerName
-                    });
+                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatJoinMsgData>();
+                    msgData.From = SettingsSystem.CurrentSettings.PlayerName;
+                    msgData.Channel = commandArgs;
+
+                    System.MessageSender.SendMessage(msgData);
                 }
             }
             else

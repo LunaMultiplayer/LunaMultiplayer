@@ -8,7 +8,7 @@ namespace LunaCommon.Message.MasterServer.Base
     ///     Basic master server message
     /// </summary>
     public abstract class MstSrvMsgBase<T> : MessageBase<T>, IMasterServerMessageBase
-        where T : IMessageData, new()
+        where T : class, IMessageData
     {
         protected override ushort MessageTypeId => (ushort)(int)MessageType;
 

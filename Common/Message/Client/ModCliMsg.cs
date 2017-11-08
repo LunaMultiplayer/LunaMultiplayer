@@ -7,6 +7,9 @@ namespace LunaCommon.Message.Client
 {
     public class ModCliMsg : CliMsgBase<ModMsgData>
     {
+        /// <inheritdoc />
+        internal ModCliMsg() { }
+
         public override ClientMessageType MessageType => ClientMessageType.Mod;
         protected override int DefaultChannel => SendReliably() ? 15 : 0;
         public override NetDeliveryMethod NetDeliveryMethod => SendReliably() ?

@@ -100,7 +100,7 @@ namespace LunaClient.Systems.Status
         {
             return !VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null
                 ? FlightGlobals.ActiveVessel.vesselName
-                : "";
+                : string.Empty;
         }
 
         private static string GetCurrentShipStatus()

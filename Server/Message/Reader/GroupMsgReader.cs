@@ -3,6 +3,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
 using LunaServer.Client;
+using LunaServer.Context;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Server;
 using LunaServer.System;
@@ -18,10 +19,9 @@ namespace LunaServer.Message.Reader
             switch (data.GroupMessageType)
             {
                 case GroupMessageType.ListRequest:
-                    MessageQueuer.SendToClient<GroupSrvMsg>(client, new GroupListResponseMsgData
-                    {
-                        Groups = GroupSystem.Groups.Values.ToArray()
-                    });
+                    var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<GroupListResponseMsgData>();
+                    msgData.Groups = GroupSystem.Groups.Values.ToArray();
+                    MessageQueuer.SendToClient<GroupSrvMsg>(client, msgData);
                     break;
                 case GroupMessageType.CreateGroup:
                     GroupSystem.CreateGroup(client.PlayerName, ((GroupCreateMsgData) data).GroupName);

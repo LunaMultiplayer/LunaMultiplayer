@@ -97,6 +97,7 @@ namespace LunaServer.Lidgren
                                 LunaLog.Debug($"Lidgren: {msg.MessageType.ToString().ToUpper()} -- {details}");
                                 break;
                         }
+                        Server.Recycle(msg);
                     }
                     else
                     {
@@ -127,6 +128,7 @@ namespace LunaServer.Lidgren
 
             message.Data.SentTime = DateTime.UtcNow.Ticks;
             var messageBytes = message.Serialize(GeneralSettings.SettingsStore.CompressionEnabled);
+            message.Data.ReadyToRecycle = true;
 
             if (messageBytes == null)
             {
@@ -137,6 +139,7 @@ namespace LunaServer.Lidgren
             client.LastSendTime = ServerContext.ServerClock.ElapsedMilliseconds;
             client.BytesSent += messageBytes.Length;
 
+            //Lidgren already recycle messages by itself
             var outmsg = Server.CreateMessage(messageBytes.Length);
             outmsg.Write(messageBytes);
 
@@ -164,26 +167,24 @@ namespace LunaServer.Lidgren
 
             while (ServerContext.ServerRunning)
             {
-                var msgData = new MsRegisterServerMsgData
-                {
-                    Id = Server.UniqueIdentifier,
-                    Cheats = GeneralSettings.SettingsStore.Cheats,
-                    ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast,
-                    Description = GeneralSettings.SettingsStore.Description,
-                    DropControlOnExit = GeneralSettings.SettingsStore.Cheats,
-                    DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats,
-                    DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats,
-                    GameMode = (int)GeneralSettings.SettingsStore.GameMode,
-                    InternalEndpoint = $"{endpoint.Address}:{endpoint.Port}",
-                    MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers,
-                    ModControl = (int)GeneralSettings.SettingsStore.ModControl,
-                    PlayerCount = ServerContext.Clients.Count,
-                    ServerName = GeneralSettings.SettingsStore.ServerName,
-                    ServerVersion = VersionInfo.Version,
-                    VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval,
-                    SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval,
-                    WarpMode = (int)GeneralSettings.SettingsStore.WarpMode
-                };
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<MsRegisterServerMsgData>();
+                msgData.Id = Server.UniqueIdentifier;
+                msgData.Cheats = GeneralSettings.SettingsStore.Cheats;
+                msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
+                msgData.Description = GeneralSettings.SettingsStore.Description;
+                msgData.DropControlOnExit = GeneralSettings.SettingsStore.Cheats;
+                msgData.DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats;
+                msgData.DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats;
+                msgData.GameMode = (int)GeneralSettings.SettingsStore.GameMode;
+                msgData.InternalEndpoint = $"{endpoint.Address}:{endpoint.Port}";
+                msgData.MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers;
+                msgData.ModControl = (int)GeneralSettings.SettingsStore.ModControl;
+                msgData.PlayerCount = ServerContext.Clients.Count;
+                msgData.ServerName = GeneralSettings.SettingsStore.ServerName;
+                msgData.ServerVersion = VersionInfo.Version;
+                msgData.VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval;
+                msgData.SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
+                msgData.WarpMode = (int)GeneralSettings.SettingsStore.WarpMode;
 
                 msgData.Description = msgData.Description.Length > 200
                             ? msgData.Description.Substring(0, 200)
@@ -194,7 +195,7 @@ namespace LunaServer.Lidgren
                     : msgData.ServerName;
 
                 var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-                var msgBytes = ServerContext.MasterServerMessageFactory.Serialize(msg);
+                var msgBytes = msg.Serialize(true);
 
                 foreach (var masterServer in MasterServerEndpoints)
                 {

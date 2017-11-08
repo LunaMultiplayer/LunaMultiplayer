@@ -47,6 +47,9 @@ namespace LunaClient.Network
             Config.EnableMessageType(NetIncomingMessageType.ConnectionLatencyUpdated);
             Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
             Config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
+
+            NetworkServerList.RefreshMasterServers();
+            NetworkServerList.RequestServers();
         }
 
         public static void ResetNetworkSystem()
@@ -55,8 +58,6 @@ namespace LunaClient.Network
 
             ClientConnection = new NetClient(Config);
             ClientConnection.Start();
-
-            NetworkServerList.RefreshMasterServers();
 
             if (SendThread != null && !SendThread.IsCompleted)
                 SendThread?.Wait(1000);
@@ -67,8 +68,6 @@ namespace LunaClient.Network
 
             ReceiveThread = SystemBase.LongRunTaskFactory.StartNew(NetworkReceiver.ReceiveMain);
             SendThread = SystemBase.LongRunTaskFactory.StartNew(NetworkSender.SendMain);
-
-            NetworkServerList.RequestServers();
         }
 
         public static void HandleDisconnectException(Exception e)

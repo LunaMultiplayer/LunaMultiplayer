@@ -22,8 +22,9 @@ namespace LunaServer.Message.ReceiveHandlers
             for (var i = 0; i < players.Length; i++)
                 players[i] = players[i].Substring(players[i].LastIndexOf(Path.DirectorySeparatorChar) + 1);
 
-            var newMessageData = new CraftLibraryListReplyMsgData { Players = players };
-
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryListReplyMsgData>();
+            msgData.Players = players;
+            
             var playerCrafts = new List<KeyValuePair<string, CraftListInfo>>();
 
             foreach (var player in players)
@@ -60,8 +61,8 @@ namespace LunaServer.Message.ReceiveHandlers
                 playerCrafts.Add(new KeyValuePair<string, CraftListInfo>(player, newPlayerCraft));
             }
 
-            newMessageData.PlayerCrafts = playerCrafts.ToArray();
-            MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, newMessageData);
+            msgData.PlayerCrafts = playerCrafts.ToArray();
+            MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
         }
 
         public void HandleDeleteFileMessage(ClientStructure client, CraftLibraryDeleteMsgData message)
@@ -91,17 +92,15 @@ namespace LunaServer.Message.ReceiveHandlers
             var hasCraft = FileHandler.FolderExists(playerPath) && FileHandler.FolderExists(typePath) &&
                            FileHandler.FileExists(craftFile);
 
-            var respondMessageData = new CraftLibraryRespondMsgData
-            {
-                CraftOwner = message.CraftOwner,
-                RequestedType = message.RequestedType,
-                RequestedName = message.RequestedName,
-                HasCraft = hasCraft
-            };
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryRespondMsgData>();
+            msgData.CraftOwner = message.CraftOwner;
+            msgData.RequestedType = message.RequestedType;
+            msgData.HasCraft = hasCraft;
+            
             if (hasCraft)
-                respondMessageData.CraftData = FileHandler.ReadFile(craftFile);
+                msgData.CraftData = FileHandler.ReadFile(craftFile);
 
-            MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, respondMessageData);
+            MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
         }
 
         public void HandleUploadFileMessage(ClientStructure client, CraftLibraryUploadMsgData message)
@@ -117,13 +116,12 @@ namespace LunaServer.Message.ReceiveHandlers
             FileHandler.WriteToFile(craftFile, message.CraftData);
             LunaLog.Debug($"Saving {message.UploadName}, Type: {message.UploadType} from {message.PlayerName}");
 
-            var newMessageData = new CraftLibraryAddMsgData
-            {
-                PlayerName = message.PlayerName,
-                UploadName = message.UploadName,
-                UploadType = message.UploadType
-            };
-            MessageQueuer.RelayMessage<CraftLibrarySrvMsg>(client, newMessageData);
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryAddMsgData>();
+            msgData.PlayerName = message.PlayerName;
+            msgData.UploadName = message.UploadName;
+            msgData.UploadType = message.UploadType;
+            
+            MessageQueuer.RelayMessage<CraftLibrarySrvMsg>(client, msgData);
         }
     }
 }
