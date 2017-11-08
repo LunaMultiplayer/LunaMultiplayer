@@ -91,7 +91,7 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
-    <Compile Include="Systems\VesselPositionSys\VesselPositionAltUpdate.cs" />
+    <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselChanges.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselSerializer.cs" />
@@ -195,9 +195,6 @@
     <Compile Include="Base\Interface\ISystem.cs" />
     <Compile Include="Base\System.cs" />
     <Compile Include="Systems\PlayerColorSys\PlayerColorEvents.cs" />
-    <Compile Include="Utilities\DebugTools\LineRendererDebug.cs" />
-    <Compile Include="Utilities\DebugTools\PointRendererDebug.cs" />
-    <Compile Include="Utilities\DebugTools\QuaternionRendererDebug.cs" />
     <Compile Include="Utilities\DisclaimerDialog.cs" />
     <Compile Include="Windows\Chat\ChatWindow.cs" />
     <Compile Include="Windows\Chat\ChatDrawer.cs" />

@@ -13,8 +13,6 @@ namespace LunaClient.Utilities
         public static bool IsCorrectlyInstalled()
         {
             var assembly = Assembly.GetExecutingAssembly();
-            if (assembly.Location == null)
-                return false;
 
             var assemblyInstalledAt = new DirectoryInfo(assembly.Location).FullName;
             var kspPath = new DirectoryInfo(Client.KspPath).FullName;

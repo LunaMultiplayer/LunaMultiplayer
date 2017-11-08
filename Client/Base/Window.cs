@@ -69,6 +69,8 @@ namespace LunaClient.Base
         {
             if (!Initialized)
             {
+                //TODO: IMPORTANT! Check if this can be improved as it probably creates a lot of garbage in memory
+                //Set stiles is called all the time and it generate new elements all the time...
                 SetStyles();
                 Initialized = true;
             }

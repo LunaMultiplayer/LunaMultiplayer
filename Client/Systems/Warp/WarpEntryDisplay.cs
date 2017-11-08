@@ -28,6 +28,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private static SubspaceDisplayEntry[] GetSubspaceDisplayEntriesNoneSubspace()
         {
+            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
             var allPlayers = new List<string> { SettingsSystem.CurrentSettings.PlayerName };
             allPlayers.AddRange(System.ClientSubspaceList.Keys);
             allPlayers.Sort(PlayerSorter);

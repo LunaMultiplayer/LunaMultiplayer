@@ -179,14 +179,12 @@ namespace LunaClient.Systems.Asteroid
 
         public int GetAsteroidCount()
         {
-            var seenAsteroids = new List<string>();
+            var seenAsteroids = GetCurrentAsteroids().Select(a => a.id.ToString()).Count();
+            seenAsteroids += HighLogic.CurrentGame.flightState.protoVessels
+                .Where(a => ProtoVesselIsAsteroid(a) && !GetCurrentAsteroids().Select(ast => ast.id.ToString()).Contains(a.vesselID.ToString()))
+                .Select(pv => pv.vesselID.ToString()).Count();
 
-            seenAsteroids.AddRange(GetCurrentAsteroids().Select(a => a.id.ToString()));
-            seenAsteroids.AddRange(HighLogic.CurrentGame.flightState.protoVessels
-                .Where(a => ProtoVesselIsAsteroid(a) && !seenAsteroids.Contains(a.vesselID.ToString()))
-                .Select(pv => pv.vesselID.ToString()));
-
-            return seenAsteroids.Count;
+            return seenAsteroids;
         }
 
         public IEnumerable<Vessel> GetCurrentAsteroids()

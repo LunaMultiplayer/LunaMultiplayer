@@ -184,6 +184,7 @@ namespace LunaClient.Systems
         {
             try
             {
+                //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
                 var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
                 var cn = new ConfigNode();
                 pv.Save(cn);

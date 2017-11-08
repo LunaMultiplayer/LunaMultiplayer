@@ -26,6 +26,7 @@ namespace LunaClient.Systems.KerbalSys
                 return;
             }
 
+            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory. TIP: VesselNodes can be cleared!
             var kerbalNode = new ConfigNode();
             pcm.Save(kerbalNode);
 

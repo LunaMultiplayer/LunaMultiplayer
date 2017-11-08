@@ -12,9 +12,11 @@ namespace LunaClient.Systems.VesselProtoSys
         /// This method return the vessel parts that had changed and also if the stage has changed
         /// </summary>
         public static VesselChange GetProtoVesselChanges(ProtoVessel existing, ProtoVessel newProtoVessel)
-        {
+        {                
+            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
             var change = new VesselChange();
 
+            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory. TIP: VesselNodes can be cleared!
             var protoVesselNode1 = new ConfigNode();
             var protoVesselNode2 = new ConfigNode();
             existing.Save(protoVesselNode1);

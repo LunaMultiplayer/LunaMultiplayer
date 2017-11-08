@@ -15,7 +15,8 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         public void SendVesselPositionUpdate(Vessel vessel)
-        {
+        {                
+            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
             var update = new VesselPositionUpdate(vessel);
             TaskFactory.StartNew(() => SendVesselPositionUpdate(update));
         }

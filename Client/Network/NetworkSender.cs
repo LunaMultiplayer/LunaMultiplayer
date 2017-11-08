@@ -57,11 +57,8 @@ namespace LunaClient.Network
         {
             if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
                 NetworkMain.ClientConnection.Start();
-
-            var clientMessage = message as IClientMessageBase;
-            var masterSrvMessage = message as IMasterServerMessageBase;
-
-            if (clientMessage?.MessageType == ClientMessageType.SyncTime)
+            
+            if ((message as IClientMessageBase)?.MessageType == ClientMessageType.SyncTime)
                 SystemsContainer.Get<TimeSyncerSystem>().RewriteMessage(message.Data);
 
             message.Data.SentTime = DateTime.UtcNow.Ticks;
@@ -72,13 +69,12 @@ namespace LunaClient.Network
                 {
                     NetworkStatistics.LastSendTime = DateTime.Now;
 
-                    if (masterSrvMessage != null && clientMessage == null)
+                    if (message is IMasterServerMessageBase)
                     {
                         foreach (var masterServer in NetworkServerList.MasterServers)
                         {
                             //Create a new message for every main server otherwise lidgren complains when you reuse the msg
-                            var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
-                            lidgrenMsg.Write(bytes);
+                            var lidgrenMsg = GetLidgrenMessage(bytes);
 
                             NetworkMain.ClientConnection.SendUnconnectedMessage(lidgrenMsg, masterServer);
                             NetworkMain.ClientConnection.FlushSendQueue();
@@ -88,8 +84,8 @@ namespace LunaClient.Network
                     {
                         if (MainSystem.NetworkState >= ClientState.Connected)
                         {
-                            var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
-                            lidgrenMsg.Write(bytes);
+                            var lidgrenMsg = GetLidgrenMessage(bytes);
+
                             NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
                         }
                     }
@@ -104,6 +100,13 @@ namespace LunaClient.Network
 
             //We have sent the message so recycle.
             message.Data.ReadyToRecycle = true;
+        }
+
+        private static NetOutgoingMessage GetLidgrenMessage(byte[] bytes)
+        {
+            var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
+            lidgrenMsg.Write(bytes);
+            return lidgrenMsg;
         }
     }
 }

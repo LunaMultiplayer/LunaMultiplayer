@@ -95,6 +95,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
                 if (vesselNode != null && vesselId == Common.ConvertConfigStringToGuid(vesselNode.GetValue("pid")))
                 {
+                    //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
                     var newProtoUpd = new VesselProtoUpdate(vesselNode, vesselId);
                     if (newProtoUpd.ProtoVessel == null)
                         return;

@@ -66,6 +66,7 @@ namespace LunaClient.Systems.Scenario
         {
             if (Enabled)
             {
+                //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
                 var modules = (ScenarioModule[])ScenarioRunner.GetLoadedModules().ToArray().Clone();
                 TaskFactory.StartNew(() => ParseAndSendModules(modules));
             }
@@ -83,6 +84,7 @@ namespace LunaClient.Systems.Scenario
                 if (!IsScenarioModuleAllowed(scenarioType))
                     continue;
 
+                //TODO: Check if this can be improved as it probably creates a lot of garbage in memory. TIP: VesselNodes can be cleared!
                 var scenarioNode = new ConfigNode();
                 scenarioModule.Save(scenarioNode);
 

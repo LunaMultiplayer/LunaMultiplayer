@@ -45,21 +45,19 @@ namespace LunaClient.Systems.Status
 
         private static void AddNewPlayerStatus(string playerName, string vesselText, string statusText)
         {
-            var newStatus = new PlayerStatus
+            if (System.PlayerStatusList.ContainsKey(playerName))
             {
-                PlayerName = playerName,
-                VesselText = vesselText,
-                StatusText = statusText
-            };
-
-            if (System.PlayerStatusList.ContainsKey(newStatus.PlayerName))
-            {
-                System.PlayerStatusList[newStatus.PlayerName].VesselText = newStatus.VesselText;
-                System.PlayerStatusList[newStatus.PlayerName].StatusText = newStatus.StatusText;
+                System.PlayerStatusList[playerName].VesselText = vesselText;
+                System.PlayerStatusList[playerName].StatusText = statusText;
             }
             else
             {
-                System.PlayerStatusList.TryAdd(newStatus.PlayerName, newStatus);
+                System.PlayerStatusList.TryAdd(playerName, new PlayerStatus
+                {
+                    PlayerName = playerName,
+                    VesselText = vesselText,
+                    StatusText = statusText
+                });
             }
         }
     }

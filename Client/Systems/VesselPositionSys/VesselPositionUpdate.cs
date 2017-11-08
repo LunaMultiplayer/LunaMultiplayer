@@ -199,7 +199,8 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         private void ApplyInterpolations(float lerpPercentage)
-        {
+        {                
+            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory. Perhaps we can reuse the Orbit class?
             var tgtOrbit = new Orbit(Target.MsgData.Orbit[0], Target.MsgData.Orbit[1], Target.MsgData.Orbit[2], Target.MsgData.Orbit[3],
                 Target.MsgData.Orbit[4], Target.MsgData.Orbit[5], Target.MsgData.Orbit[6], Body);
 
