@@ -7,8 +7,8 @@
     <ProjectGuid>{979102B7-37AA-4B7F-943F-6CB2B9A50CC4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>LMPTests</RootNamespace>
-    <AssemblyName>LMPTests</AssemblyName>
+    <RootNamespace>LMP.Tests</RootNamespace>
+    <AssemblyName>LMP.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>

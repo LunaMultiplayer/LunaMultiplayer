@@ -4,7 +4,7 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace LMPTests
+namespace LMP.Tests
 {
     [TestClass]
     public class MessageStoreTest

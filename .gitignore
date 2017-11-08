@@ -14,6 +14,6 @@ MasterServer/obj/*
 Server/*.csproj.user
 Server/bin/*
 Server/obj/*
-LMPTests/*.csproj.user
-LMPTests/bin/*
-LMPTests/obj/*
+LMP.Tests/*.csproj.user
+LMP.Tests/bin/*
+LMP.Tests/obj/*

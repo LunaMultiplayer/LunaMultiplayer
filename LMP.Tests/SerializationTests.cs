@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 
-namespace LMPTests
+namespace LMP.Tests
 {
     [TestClass]
     public class SerializationTests
