@@ -6,6 +6,7 @@
 
 Main features:
 - Clean and optimized code, based on systems and windows which makes it easier to read and modify.
+- Every message is cached in order to reduce the garbage collector spikes
 - Multi threaded (as much as Unity allows)
 - Better usage of coroutines.
 - Settings saved as XML.
