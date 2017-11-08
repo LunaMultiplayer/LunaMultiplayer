@@ -69,8 +69,7 @@ namespace LunaClient.Base
         {
             if (!Initialized)
             {
-                //TODO: IMPORTANT! Check if this can be improved as it probably creates a lot of garbage in memory
-                //Set stiles is called all the time and it generate new elements all the time...
+                //We only set the styles once so we shouldn't worry so much about the memory footprint...
                 SetStyles();
                 Initialized = true;
             }
@@ -82,7 +81,11 @@ namespace LunaClient.Base
             //Implement your own code
         }
 
+        /// <summary>
+        /// Define here the style and components of your window
+        /// </summary>
         public abstract void SetStyles();
+
         #endregion
     }
 }
