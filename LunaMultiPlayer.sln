@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		CopyToKSPDirectory.bat = CopyToKSPDirectory.bat
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMPTests", "Test\LMPTests.csproj", "{979102B7-37AA-4B7F-943F-6CB2B9A50CC4}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMPTests", "LMPTests\LMPTests.csproj", "{979102B7-37AA-4B7F-943F-6CB2B9A50CC4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,6 +46,7 @@ Global
 		{979102B7-37AA-4B7F-943F-6CB2B9A50CC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{979102B7-37AA-4B7F-943F-6CB2B9A50CC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{979102B7-37AA-4B7F-943F-6CB2B9A50CC4}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{979102B7-37AA-4B7F-943F-6CB2B9A50CC4}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
