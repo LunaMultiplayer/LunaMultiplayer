@@ -56,6 +56,8 @@ namespace LunaClient.Base
         private ConcurrentDictionary<string, RoutineDefinition> LateUpdateRunOnceRoutines { get; } =
             new ConcurrentDictionary<string, RoutineDefinition>();
 
+        private static readonly StringBuilder StringBuilder = new StringBuilder();
+
         #endregion
 
         /// <summary>
@@ -273,39 +275,39 @@ namespace LunaClient.Base
         /// </summary>
         public string GetProfilersData()
         {
-            var builder = new StringBuilder();
+            StringBuilder.Length = 0;
 
             if (FixedUpdateRoutines.Any() || UpdateRoutines.Any() || LateUpdateRoutines.Any())
-                builder.AppendLine("Times in ms (average/max/min/now) ");
+                StringBuilder.AppendLine("Times in ms (average/max/min/now) ");
 
             if (FixedUpdateRoutines.Any())
             {
-                builder.Append("Total Fix upd: ").Append(FixedUpdateProfiler).AppendLine();
+                StringBuilder.Append("Total Fix upd: ").Append(FixedUpdateProfiler).AppendLine();
                 foreach (var routine in FixedUpdateRoutines)
                 {
-                    builder.Append(routine.Key).Append(": ").Append(routine.Value.Profiler).AppendLine();
+                    StringBuilder.Append(routine.Key).Append(": ").Append(routine.Value.Profiler).AppendLine();
                 }
             }
 
             if (UpdateRoutines.Any())
             {
-                builder.Append("Total upd: ").Append(UpdateProfiler).AppendLine();
+                StringBuilder.Append("Total upd: ").Append(UpdateProfiler).AppendLine();
                 foreach (var routine in UpdateRoutines)
                 {
-                    builder.Append(routine.Key).Append(": ").Append(routine.Value.Profiler).AppendLine();
+                    StringBuilder.Append(routine.Key).Append(": ").Append(routine.Value.Profiler).AppendLine();
                 }
             }
 
             if (LateUpdateRoutines.Any())
             {
-                builder.Append("Total Late upd: ").Append(LateUpdateProfiler).AppendLine();
+                StringBuilder.Append("Total Late upd: ").Append(LateUpdateProfiler).AppendLine();
                 foreach (var routine in LateUpdateRoutines)
                 {
-                    builder.Append(routine.Key).Append(": ").Append(routine.Value.Profiler).AppendLine();
+                    StringBuilder.Append(routine.Key).Append(": ").Append(routine.Value.Profiler).AppendLine();
                 }
             }
 
-            return builder.ToString();
+            return StringBuilder.ToString();
         }
 
         /// <summary>

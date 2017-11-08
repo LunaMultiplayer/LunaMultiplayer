@@ -128,8 +128,6 @@ namespace LunaServer.Lidgren
 
             message.Data.SentTime = DateTime.UtcNow.Ticks;
             var messageBytes = message.Serialize(GeneralSettings.SettingsStore.CompressionEnabled);
-            message.Data.ReadyToRecycle = true;
-
             if (messageBytes == null)
             {
                 LunaLog.Error("Error serializing message!");
@@ -145,6 +143,9 @@ namespace LunaServer.Lidgren
 
             Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
             Server.FlushSendQueue(); //Manually force to send the msg
+
+            //Recycle the message
+            message.Data.ReadyToRecycle = true;
         }
 
         public void ShutdownLidgrenServer()

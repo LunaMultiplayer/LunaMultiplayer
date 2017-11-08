@@ -66,8 +66,6 @@ namespace LunaClient.Network
 
             message.Data.SentTime = DateTime.UtcNow.Ticks;
             var bytes = message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled);
-            //We have the bytes so send the message to recycle.
-            message.Data.ReadyToRecycle = true;
             if (bytes != null)
             {
                 try
@@ -80,7 +78,7 @@ namespace LunaClient.Network
                         {
                             //Create a new message for every main server otherwise lidgren complains when you reuse the msg
                             var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
-                            lidgrenMsg.Write(message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled));
+                            lidgrenMsg.Write(bytes);
 
                             NetworkMain.ClientConnection.SendUnconnectedMessage(lidgrenMsg, masterServer);
                             NetworkMain.ClientConnection.FlushSendQueue();
@@ -91,7 +89,7 @@ namespace LunaClient.Network
                         if (MainSystem.NetworkState >= ClientState.Connected)
                         {
                             var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
-                            lidgrenMsg.Write(message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled));
+                            lidgrenMsg.Write(bytes);
                             NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
                         }
                     }
@@ -103,6 +101,9 @@ namespace LunaClient.Network
                     NetworkMain.HandleDisconnectException(e);
                 }
             }
+
+            //We have sent the message so recycle.
+            message.Data.ReadyToRecycle = true;
         }
     }
 }

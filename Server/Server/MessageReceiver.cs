@@ -75,6 +75,9 @@ namespace LunaServer.Server
 
             //Handle the message
             HandlerDictionary[message.MessageType].HandleMessage(client, message.Data);
+
+            //Once message is handled, recicle it
+            message.Data.ReadyToRecycle = true;
         }
     }
 }
