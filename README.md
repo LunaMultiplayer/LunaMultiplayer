@@ -6,7 +6,6 @@
 
 Main features:
 - Clean and optimized code, based on systems and windows which makes it easier to read and modify.
-- Every message is cached in order to reduce the garbage collector spikes
 - Multi threaded (as much as Unity allows)
 - Better usage of coroutines.
 - Settings saved as XML.
@@ -15,6 +14,7 @@ Main features:
 - Nat-punchtrough feature so a server doesn't need to open ports on it's router.
 - Servers are displayed within the application.
 - Better creation of network messages so they are easier to modify as you don't need to take care of serialization.
+- Every network message is cached in order to reduce the garbage collector spikes
 - Based on tasks instead of threads.
 - Improved message compression algorithm ([QuickLZ](http://www.quicklz.com))
 
