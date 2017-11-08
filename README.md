@@ -1,7 +1,6 @@
-# Luna Multiplayer Mod (LMP)
+# Luna Multiplayer Mod (LMP)  <a href="https://ci.appveyor.com/project/gavazquez/lunamultiplayer"><img src="https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f?svg=true" alt="build status"></a>
 
 *Multiplayer mod for [KSP](https://kerbalspaceprogram.com) based on [DMP](https://github.com/godarklight/DarkMultiPlayer)*  
-*Current status:* <a href="https://ci.appveyor.com/project/gavazquez/lunamultiplayer"><img src="https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f?svg=true" alt="build status"></a>
 
 ---
 
