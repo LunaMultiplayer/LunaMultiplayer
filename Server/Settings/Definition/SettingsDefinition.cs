@@ -121,10 +121,7 @@ namespace LunaServer.Settings.Definition
 
         [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player disconnects.")]
         public bool DropControlOnExit { get; set; } = true;
-
-        [XmlComment(Value = "Interval in mili seconds at wich players will check and send scenario changes to the server.")]
-        public int SendScenarioDataMsInterval { get; set; } = 15000;
-
+        
         [XmlComment(Value = "Username of the player who control the warp if WarpMode is set to MASTER")]
         public string WarpMaster { get; set; } = "";
         

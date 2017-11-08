@@ -19,6 +19,8 @@ namespace LunaClient.Systems.Scenario
         public ConcurrentQueue<ScenarioEntry> ScenarioQueue { get; private set; } = new ConcurrentQueue<ScenarioEntry>();
         private ConcurrentDictionary<string, Type> AllScenarioTypesInAssemblies { get; } = new ConcurrentDictionary<string, Type>();
 
+        private static ConfigNode ConfigNode { get; } = new ConfigNode();
+
         #endregion
 
         #region Base overrides
@@ -28,8 +30,8 @@ namespace LunaClient.Systems.Scenario
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SendScenarioDataMsInterval,
-                RoutineExecution.Update, SendScenarioModules));
+            //Run it every 20 seconds
+            SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, SendScenarioModules));
         }
 
         protected override void OnDisabled()
@@ -83,12 +85,11 @@ namespace LunaClient.Systems.Scenario
 
                 if (!IsScenarioModuleAllowed(scenarioType))
                     continue;
+                
+                ConfigNode.ClearData();
+                scenarioModule.Save(ConfigNode);
 
-                //TODO: Check if this can be improved as it probably creates a lot of garbage in memory. TIP: VesselNodes can be cleared!
-                var scenarioNode = new ConfigNode();
-                scenarioModule.Save(scenarioNode);
-
-                var scenarioBytes = ConfigNodeSerializer.Serialize(scenarioNode);
+                var scenarioBytes = ConfigNodeSerializer.Serialize(ConfigNode);
                 var scenarioHash = Common.CalculateSha256Hash(scenarioBytes);
 
                 if (scenarioBytes.Length == 0)

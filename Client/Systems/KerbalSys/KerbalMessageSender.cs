@@ -12,6 +12,8 @@ namespace LunaClient.Systems.KerbalSys
 {
     public class KerbalMessageSender : SubSystem<KerbalSystem>, IMessageSender
     {
+        private static ConfigNode ConfigNode { get; } = new ConfigNode();
+
         public void SendMessage(IMessageData msg)
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<KerbalCliMsg>(msg)));
@@ -26,11 +28,10 @@ namespace LunaClient.Systems.KerbalSys
                 return;
             }
 
-            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory. TIP: VesselNodes can be cleared!
-            var kerbalNode = new ConfigNode();
-            pcm.Save(kerbalNode);
+            ConfigNode.ClearData();
+            pcm.Save(ConfigNode);
 
-            var kerbalBytes = ConfigNodeSerializer.Serialize(kerbalNode);
+            var kerbalBytes = ConfigNodeSerializer.Serialize(ConfigNode);
             if (kerbalBytes == null || kerbalBytes.Length == 0)
             {
                 LunaLog.LogError("[LMP]: Error sending kerbal - bytes are null or 0");
@@ -41,8 +42,8 @@ namespace LunaClient.Systems.KerbalSys
             if (!System.Kerbals.TryGetValue(pcm.name, out var existingValue) || existingValue.Hash != kerbalHash)
             {
                 LunaLog.Log($"[LMP]: Found new/changed kerbal ({pcm.name}), sending...");
-                var structure = new KerbalStructure(kerbalNode);
-                System.Kerbals.AddOrUpdate(pcm.name, new KerbalStructure(kerbalNode), (key, existingVal) => structure);
+                var structure = new KerbalStructure(ConfigNode);
+                System.Kerbals.AddOrUpdate(pcm.name, new KerbalStructure(ConfigNode), (key, existingVal) => structure);
                 SendKerbalProtoMessage(pcm.name, kerbalBytes);
             }
         }

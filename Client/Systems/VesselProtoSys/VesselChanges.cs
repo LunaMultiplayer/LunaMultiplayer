@@ -8,74 +8,82 @@ namespace LunaClient.Systems.VesselProtoSys
     /// </summary>
     public class VesselChanges
     {
+        private static readonly object LockObj = new object();
+
+        private static readonly ConfigNode Node1 = new ConfigNode();
+        private static readonly ConfigNode Node2 = new ConfigNode();
+
         /// <summary>
         /// This method return the vessel parts that had changed and also if the stage has changed
         /// </summary>
         public static VesselChange GetProtoVesselChanges(ProtoVessel existing, ProtoVessel newProtoVessel)
-        {                
-            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
-            var change = new VesselChange();
+        {            
+            //Lock this as we are using a shared ConfigNode
+            lock (LockObj)
+            {
+                //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
+                var change = new VesselChange();
 
-            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory. TIP: VesselNodes can be cleared!
-            var protoVesselNode1 = new ConfigNode();
-            var protoVesselNode2 = new ConfigNode();
-            existing.Save(protoVesselNode1);
-            newProtoVessel.Save(protoVesselNode2);
+                Node1.ClearData();
+                Node2.ClearData();
+                existing.Save(Node1);
+                newProtoVessel.Save(Node2);
 
-            var parts1 = protoVesselNode1.GetNodes("PART");
-            var parts2 = protoVesselNode2.GetNodes("PART");
+                var parts1 = Node1.GetNodes("PART");
+                var parts2 = Node2.GetNodes("PART");
 
-            var currentStage = protoVesselNode1.GetValue("stg");
-            var newStage = protoVesselNode2.GetValue("stg");
+                var currentStage = Node1.GetValue("stg");
+                var newStage = Node2.GetValue("stg");
 
-            if (currentStage != newStage)
-                change.Stage = int.Parse(newStage);
+                if (currentStage != newStage)
+                    change.Stage = int.Parse(newStage);
 
-            var currentParts = parts1.Select(p => uint.Parse(p.GetValue("cid")));
-            var newParts = parts2.Select(p => uint.Parse(p.GetValue("cid")));
+                var currentParts = parts1.Select(p => uint.Parse(p.GetValue("cid")));
+                var newParts = parts2.Select(p => uint.Parse(p.GetValue("cid")));
 
-            change.PartsToRemove = currentParts.Except(newParts).ToArray();
+                change.PartsToRemove = currentParts.Except(newParts).ToArray();
 
-            var currentExtendedParts = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
-                    m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
-                    && m.HasValue("deployState") && m.GetValue("deployState") == "EXTENDED"))
-                .Select(p => uint.Parse(p.GetValue("cid")));
+                var currentExtendedParts = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
+                        && m.HasValue("deployState") && m.GetValue("deployState") == "EXTENDED"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
 
-            var newExtendedParts = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
-                    m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
-                    && m.HasValue("deployState") && m.GetValue("deployState") == "EXTENDED"))
-                .Select(p => uint.Parse(p.GetValue("cid")));
+                var newExtendedParts = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
+                        && m.HasValue("deployState") && m.GetValue("deployState") == "EXTENDED"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
 
-            change.PartsToExtend = newExtendedParts.Except(currentExtendedParts).ToArray();
+                change.PartsToExtend = newExtendedParts.Except(currentExtendedParts).ToArray();
 
-            var currentRetractedParts = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
-                    m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
-                    && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
-                .Select(p => uint.Parse(p.GetValue("cid")));
+                var currentRetractedParts = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
+                        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
 
-            var newRetractedParts = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
-                    m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
-                    && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
-                .Select(p => uint.Parse(p.GetValue("cid")));
+                var newRetractedParts = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDeployable")
+                        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
 
-            change.PartsToRetract = newRetractedParts.Except(currentRetractedParts).ToArray();
+                change.PartsToRetract = newRetractedParts.Except(currentRetractedParts).ToArray();
 
-            //TODO: Fix this
-            change.ShieldsToClose = new uint[0];
-            change.ShieldsToOpen = new uint[0];
-            //var currentOpenShields = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
-            //        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
-            //        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
-            //    .Select(p => uint.Parse(p.GetValue("cid"))).ToArray();
+                //TODO: Fix this
+                change.ShieldsToClose = new uint[0];
+                change.ShieldsToOpen = new uint[0];
+                //var currentOpenShields = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+                //        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
+                //        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
+                //    .Select(p => uint.Parse(p.GetValue("cid"))).ToArray();
 
-            //var newOpenShields = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
-            //        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
-            //        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
-            //    .Select(p => uint.Parse(p.GetValue("cid"))).ToArray();
+                //var newOpenShields = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+                //        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
+                //        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
+                //    .Select(p => uint.Parse(p.GetValue("cid"))).ToArray();
 
-            //var shieldsToOpen = newOpenShields.Except(currentOpenShields);
+                //var shieldsToOpen = newOpenShields.Except(currentOpenShields);
 
-            return change;
+                return change;
+            }
         }
         
         /// <summary>
