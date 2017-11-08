@@ -19,7 +19,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Threading;
 using UnityEngine;
 
@@ -50,8 +49,7 @@ namespace LunaClient
         public string Status { get; set; }
 
         public const int WindowOffset = 1664147604;
-
-        private string AssemblyPath { get; } = new DirectoryInfo(Assembly.GetExecutingAssembly().Location ?? "").FullName;
+        
         public bool ShowGui { get; set; } = true;
         public bool ToolbarShowGui { get; set; } = true;
         public static ServerEntry CommandLineServer { get; set; }
@@ -104,8 +102,7 @@ namespace LunaClient
                 //In case ANOTHER thread requested us to disconnect
                 if (NetworkState == ClientState.DisconnectRequested)
                     NetworkState = ClientState.Disconnected;
-
-                //Normal quit
+                
                 if (NetworkState >= ClientState.Running)
                 {
                     if (HighLogic.LoadedScene == GameScenes.MAINMENU)
@@ -196,7 +193,7 @@ namespace LunaClient
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
             LunaLog.Log($"[LMP]: KSP installed at {Client.KspPath}");
-            LunaLog.Log($"[LMP]: LMP installed at {AssemblyPath}");
+            LunaLog.Log($"[LMP]: LMP installed at {Environment.CurrentDirectory}");
 
             if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
             {
@@ -207,7 +204,7 @@ namespace LunaClient
             SetupDirectoriesIfNeeded();
             HandleCommandLineArgs();
 
-            //Register events needed to bootstrap the workers.
+            //Register events needed to bootstrap the windows.
             GameEvents.onHideUI.Add(() => { ShowGui = false; });
             GameEvents.onShowUI.Add(() => { ShowGui = true; });
 
@@ -215,7 +212,7 @@ namespace LunaClient
 
             SystemsContainer.Get<ModSystem>().BuildDllFileList();
 
-            LunaLog.Log($"[LMP]: LunaMultiPlayer {VersionInfo.Version} Initialized!");
+            LunaLog.Log($"[LMP]: Luna MultiPlayer {VersionInfo.Version} initialized!");
 
             //Trigger a reset!
             NetworkState = ClientState.Disconnected;
@@ -271,6 +268,7 @@ namespace LunaClient
         {
             LunaLog.LogError($"[LMP]: Threw in {eventName} event, exception: {e}");
             NetworkConnection.Disconnect($"Unhandled error in main system! Detail: {eventName}");
+            StopGame();
             NetworkState = ClientState.Disconnected;
         }
 

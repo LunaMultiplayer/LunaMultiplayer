@@ -5,8 +5,6 @@ using LunaClient.Systems.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
 using LunaCommon.Enums;
-using LunaCommon.Message.Client;
-using LunaCommon.Message.Data.Handshake;
 using System;
 using System.Net;
 using System.Threading;
@@ -73,67 +71,67 @@ namespace LunaClient.Network
 
         public static void ConnectToServer(string endpointString)
         {
+            if (MainSystem.NetworkState <= ClientState.Disconnected)
+            {
+                var endpoint = CreateEndpoint(endpointString);
+                if (endpoint == null) return;
+
+                SystemsContainer.Get<MainSystem>().Status = $"Connecting to {endpoint.Address}:{endpoint.Port}";
+                LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
+
+                MainSystem.NetworkState = ClientState.Connecting;
+                try
+                {
+                    var outmsg = NetworkMain.ClientConnection.CreateMessage(1);
+                    outmsg.Write((byte)NetIncomingMessageType.ConnectionApproval);
+
+                    NetworkMain.ClientConnection.Start();
+                    NetworkMain.ClientConnection.Connect(endpoint);
+                    NetworkMain.ClientConnection.FlushSendQueue();
+
+                    var connectionTrials = 0;
+                    while (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Connected &&
+                           connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries)
+                    {
+                        connectionTrials++;
+                        Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
+                    }
+
+                    if (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Connected)
+                    {
+                        LunaLog.Log($"[LMP]: Connected to {endpoint.Address}:{endpoint.Port}");
+                        MainSystem.NetworkState = ClientState.Connected;
+                    }
+                    else
+                    {
+                        LunaLog.LogError("[LMP]: Failed to connect within the timeout!");
+                        Disconnect("Initial connection timeout");
+                    }
+                }
+                catch (Exception e)
+                {
+                    NetworkMain.HandleDisconnectException(e);
+                }
+            }
+            else
+            {
+                LunaLog.LogError("[LMP]: Cannot connect when we are already trying to connect");
+            }
+        }
+
+        private static IPEndPoint CreateEndpoint(string endpointString)
+        {
             try
             {
-                if (MainSystem.NetworkState <= ClientState.Disconnected)
-                {
-                    var endpoint = Common.CreateEndpointFromString(endpointString);
-                    SystemsContainer.Get<MainSystem>().Status = $"Connecting to {endpoint.Address} port {endpoint.Port}";
-                    LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
-
-                    MainSystem.NetworkState = ClientState.Connecting;
-                    ConnectToServerAddress(endpoint);
-                }
-                else
-                {
-                    LunaLog.LogError("[LMP]: Cannot connect when we are already connected!");
-                }
+                return Common.CreateEndpointFromString(endpointString);
             }
             catch (Exception)
             {
                 SystemsContainer.Get<MainSystem>().Status = $"Invalid IP address: {endpointString}";
+                return null;
             }
         }
-
-        private static void ConnectToServerAddress(IPEndPoint destination)
-        {
-            try
-            {
-                var outmsg = NetworkMain.ClientConnection.CreateMessage(1);
-                outmsg.Write((byte)NetIncomingMessageType.ConnectionApproval);
-
-                NetworkMain.ClientConnection.Start();
-                NetworkMain.ClientConnection.Connect(destination);
-                NetworkMain.ClientConnection.FlushSendQueue();
-
-                var connectionTrials = 0;
-                while (MainSystem.NetworkState == ClientState.Connecting &&
-                    NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Disconnected &&
-                    connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries)
-                {
-                    connectionTrials++;
-                    Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
-                }
-
-                if (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Disconnected)
-                {
-                    LunaLog.Log($"[LMP]: Connected to {destination.Address} port {destination.Port}");
-                    SystemsContainer.Get<MainSystem>().Status = "Connected";
-                    MainSystem.NetworkState = ClientState.Connected;
-                    NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg>(new HandshakeRequestMsgData()));
-                }
-                else if (MainSystem.NetworkState == ClientState.Connecting)
-                {
-                    LunaLog.LogError("[LMP]: Failed to connect within the timeout!");
-                    Disconnect("Initial connection timeout");
-                }
-            }
-            catch (Exception e)
-            {
-                NetworkMain.HandleDisconnectException(e);
-            }
-        }
-
+        
         #endregion
     }
 }

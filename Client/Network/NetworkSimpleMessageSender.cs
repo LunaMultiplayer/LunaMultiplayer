@@ -7,6 +7,7 @@ using LunaCommon.Message.Data.Color;
 using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Data.Groups;
+using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Data.Motd;
@@ -20,6 +21,11 @@ namespace LunaClient.Network
 {
     public class NetworkSimpleMessageSender
     {
+        public static void SendHandshakeRequest()
+        {
+            NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg>(new HandshakeRequestMsgData()));
+        }
+
         public static void SendMotdRequest()
         {
             SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<MotdCliMsg>(new MotdRequestMsgData())));

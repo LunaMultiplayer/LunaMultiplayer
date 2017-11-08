@@ -70,6 +70,8 @@ namespace LunaClient.Systems.Network
                     return;
                 case ClientState.Connected:
                     SystemsContainer.Get<HandshakeSystem>().Enabled = true;
+                    SystemsContainer.Get<MainSystem>().Status = "Connected";
+                    NetworkSimpleMessageSender.SendHandshakeRequest();
                     break;
                 case ClientState.Handshaking:
                     SystemsContainer.Get<MainSystem>().Status = "Connection successful, handshaking";

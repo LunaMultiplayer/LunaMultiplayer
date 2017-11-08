@@ -27,6 +27,7 @@ namespace LunaClient.Systems.Handshake
             {
                 case HandshakeMessageType.Challenge:
                     HandleChallengeReceivedMessage((HandshakeChallengeMsgData)messageData);
+                    MainSystem.NetworkState = ClientState.Handshaking;
                     break;
                 case HandshakeMessageType.Reply:
                     HandleHandshakeReplyReceivedMessage((HandshakeReplyMsgData)messageData);
@@ -49,7 +50,6 @@ namespace LunaClient.Systems.Handshake
                     rsa.FromXmlString(SettingsSystem.CurrentSettings.PrivateKey);
                     var signature = rsa.SignData(challange, CryptoConfig.CreateFromName("SHA256"));
                     System.MessageSender.SendHandshakeResponse(signature);
-                    MainSystem.NetworkState = ClientState.Handshaking;
                 }
             }
             catch (Exception e)
