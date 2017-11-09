@@ -1,10 +1,11 @@
 # Luna Multiplayer Mod (LMP)  <a href="https://ci.appveyor.com/project/gavazquez/lunamultiplayer"><img src="https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f?svg=true" alt="build status"></a>
 
-*Multiplayer mod for [KSP](https://kerbalspaceprogram.com) based on [DMP](https://github.com/godarklight/DarkMultiPlayer)*  
+*Multiplayer mod for [Kerbal Space Program (KSP)](https://kerbalspaceprogram.com)*
 
 ---
 
 Main features:
+
 - Clean and optimized code, based on systems and windows which makes it easier to read and modify.
 - Multi threaded (as much as Unity allows)
 - Better usage of coroutines.
@@ -31,3 +32,9 @@ Main features:
 
 Build Server: https://ci.appveyor.com/project/gavazquez/lunamultiplayer  
 IRC: #LMP on EsperNet http://webchat.esper.net/?channels=LMP
+
+---
+
+#### Acknowledgements:
+
+LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod
