@@ -1,7 +1,6 @@
-# Luna Multiplayer Mod (LMP)
+# Luna Multiplayer Mod (LMP)  <a href="https://ci.appveyor.com/project/gavazquez/lunamultiplayer"><img src="https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f?svg=true" alt="build status"></a>
 
 *Multiplayer mod for [KSP](https://kerbalspaceprogram.com) based on [DMP](https://github.com/godarklight/DarkMultiPlayer)*  
-*Current status:* <a href="https://ci.appveyor.com/project/gavazquez/lunamultiplayer"><img src="https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f?svg=true" alt="build status"></a>
 
 ---
 
@@ -15,6 +14,7 @@ Main features:
 - Nat-punchtrough feature so a server doesn't need to open ports on it's router.
 - Servers are displayed within the application.
 - Better creation of network messages so they are easier to modify as you don't need to take care of serialization.
+- Every network message is cached in order to reduce the garbage collector spikes
 - Based on tasks instead of threads.
 - Improved message compression algorithm ([QuickLZ](http://www.quicklz.com))
 
