@@ -11,9 +11,9 @@ namespace LunaClient.Network
 {
     public class NetworkMain
     {
-        public static ClientMessageFactory CliMsgFactory { get; } = new ClientMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
-        public static ServerMessageFactory SrvMsgFactory { get; } = new ServerMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
-        public static MasterServerMessageFactory MstSrvMsgFactory { get; } = new MasterServerMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
+        public static ClientMessageFactory CliMsgFactory { get; } = new ClientMessageFactory();
+        public static ServerMessageFactory SrvMsgFactory { get; } = new ServerMessageFactory();
+        public static MasterServerMessageFactory MstSrvMsgFactory { get; } = new MasterServerMessageFactory();
 
         public static Task ReceiveThread { get; set; }
         public static Task SendThread { get; set; }

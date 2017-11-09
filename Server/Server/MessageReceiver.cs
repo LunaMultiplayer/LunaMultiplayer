@@ -50,11 +50,8 @@ namespace LunaServer.Server
 
             var messageBytes = msg.ReadBytes(msg.LengthBytes);
 
-            if (!(ServerContext.ClientMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) is IClientMessageBase message))
-            {
-                LunaLog.Error("Error deserializing message!");
-                return;
-            }
+            var message = DeserializeMessage(messageBytes);
+            if (message == null) return;
 
             LmpPluginHandler.FireOnMessageReceived(client, message);
             //A plugin has handled this message and requested suppression of the default behavior
@@ -78,6 +75,19 @@ namespace LunaServer.Server
 
             //Once message is handled, recicle it
             message.Data.ReadyToRecycle = true;
+        }
+
+        private static IClientMessageBase DeserializeMessage(byte[] messageBytes)
+        {
+            try
+            {
+                return ServerContext.ClientMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IClientMessageBase;
+            }
+            catch (Exception e)
+            {
+                LunaLog.Error($"Error deserializing message! {e}");
+                return null;
+            }
         }
     }
 }

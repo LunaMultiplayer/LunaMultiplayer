@@ -11,12 +11,8 @@ namespace LunaCommon.Message
     public class ServerMessageFactory : FactoryBase
     {
         protected override Type HandledMessageTypes { get; } = typeof(ServerMessageType);
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="compress">Compress the messages or not</param>
-        public ServerMessageFactory(bool compress) : base(compress)
+        
+        public ServerMessageFactory()
         {
             MessageDictionary.Add((uint)ServerMessageType.Handshake, typeof(HandshakeSrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.Settings, typeof(SetingsSrvMsg));

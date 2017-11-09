@@ -13,7 +13,7 @@ namespace LunaCommon.Message
         protected override Type HandledMessageTypes { get; } = typeof(ServerMessageType);
 
         /// <inheritdoc />
-        public MasterServerMessageFactory(bool compress) : base(compress)
+        public MasterServerMessageFactory()
         {
             MessageDictionary.Add((uint)MasterServerMessageType.Main, typeof(MainMstSrvMsg));
         }

@@ -9,7 +9,7 @@ namespace LMP.Tests
     [TestClass]
     public class MessageStoreTest
     {
-        private static readonly ServerMessageFactory Factory = new ServerMessageFactory(true);
+        private static readonly ServerMessageFactory Factory = new ServerMessageFactory();
         
         [TestMethod]
         public void TestMsgMessageStore()

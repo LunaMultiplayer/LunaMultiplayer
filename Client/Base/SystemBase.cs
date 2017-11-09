@@ -12,7 +12,7 @@ namespace LunaClient.Base
         /// <summary>
         /// Use this property to generate messages
         /// </summary>
-        public static ClientMessageFactory MessageFactory { get; } = new ClientMessageFactory(SettingsSystem.CurrentSettings.CompressionEnabled);
+        public static ClientMessageFactory MessageFactory { get; } = new ClientMessageFactory();
 
         /// <summary>
         /// Main task factory, use it to instance new small tasks

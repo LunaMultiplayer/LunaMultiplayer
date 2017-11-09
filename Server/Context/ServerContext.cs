@@ -41,10 +41,9 @@ namespace LunaServer.Context
         };
 
         public static LidgrenServer LidgrenServer { get; } = new LidgrenServer();
-        public static MasterServerMessageFactory MasterServerMessageFactory { get; } 
-            = new MasterServerMessageFactory(GeneralSettings.SettingsStore.CompressionEnabled);
+        public static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
 
-        public static ServerMessageFactory ServerMessageFactory { get; } = new ServerMessageFactory(GeneralSettings.SettingsStore.CompressionEnabled);
-        public static ClientMessageFactory ClientMessageFactory { get; } = new ClientMessageFactory(GeneralSettings.SettingsStore.CompressionEnabled);
+        public static ServerMessageFactory ServerMessageFactory { get; } = new ServerMessageFactory();
+        public static ClientMessageFactory ClientMessageFactory { get; } = new ClientMessageFactory();
     }
 }

@@ -10,7 +10,7 @@ namespace LMP.Tests
     [TestClass]
     public class SerializationTests
     {
-        private static readonly ServerMessageFactory Factory = new ServerMessageFactory(true);
+        private static readonly ServerMessageFactory Factory = new ServerMessageFactory();
 
         [TestMethod]
         public void TestSerializeDeserialize()

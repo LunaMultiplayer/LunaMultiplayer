@@ -24,7 +24,7 @@ namespace MasterServer
         public static bool RunServer { get; set; }
         public static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
         private static MasterServerForm Form { get; set; }
-        private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory(true);
+        private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
 
         public static void Start(MasterServerForm form)
         {
@@ -58,13 +58,28 @@ namespace MasterServer
                             break;
                         case NetIncomingMessageType.UnconnectedData:
                             var messageBytes = msg.ReadBytes(msg.LengthBytes);
-                            var message = MasterServerMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IMasterServerMessageBase;
-                            HandleMessage(message, msg, peer);
+                            var message = GetMessage(messageBytes);
+                            if (message!= null)
+                                HandleMessage(message, msg, peer);
                             break;
                     }
                 }
             }
             peer.Shutdown("shutting down");
+        }
+
+        private static IMasterServerMessageBase GetMessage(byte[] messageBytes)
+        {
+            try
+            {
+                var message = MasterServerMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IMasterServerMessageBase;
+                return message;
+            }
+            catch (Exception e)
+            {
+                Form.WriteLine($"ERROR deserializing message! :{e}");
+                return null;
+            }
         }
 
         private static void CheckMasterServerListed()

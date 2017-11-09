@@ -51,44 +51,37 @@ namespace LunaClient.Network
             try
             {
                 var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
-                if (msgDeserialized != null)
+                
+                //Sometimes we receive other type of unconnected messages. 
+                //Therefore we assert that the received message data is of MsReplyServersMsgData
+                if (msgDeserialized.Data is MsReplyServersMsgData data)
                 {
+                    Servers.Clear();
 
-                    //Sometimes we receive other type of unconnected messages. 
-                    //Therefore we assert that the received message data is of MsReplyServersMsgData
-                    if (msgDeserialized.Data is MsReplyServersMsgData data)
+                    for (var i = 0; i < data.Id.Length; i++)
                     {
-                        Servers.Clear();
-
-                        for (var i = 0; i < data.Id.Length; i++)
+                        Servers.Add(new ServerInfo
                         {
-                            Servers.Add(new ServerInfo
-                            {
-                                Id = data.Id[i],
-                                Ip = data.Ip[i],
-                                Ping = Ping(data.Ip[i]),
-                                Description = data.Description[i],
-                                Cheats = data.Cheats[i],
-                                ServerName = data.ServerName[i],
-                                DropControlOnExit = data.DropControlOnExit[i],
-                                MaxPlayers = data.MaxPlayers[i],
-                                WarpMode = data.WarpMode[i],
-                                PlayerCount = data.PlayerCount[i],
-                                GameMode = data.GameMode[i],
-                                ModControl = data.ModControl[i],
-                                DropControlOnExitFlight = data.DropControlOnExitFlight[i],
-                                VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
-                                DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
-                                Version = data.Version
-                            });
-                        }
-
-                        Servers = Servers.OrderBy(s => s.ServerName).ToList();
+                            Id = data.Id[i],
+                            Ip = data.Ip[i],
+                            Ping = Ping(data.Ip[i]),
+                            Description = data.Description[i],
+                            Cheats = data.Cheats[i],
+                            ServerName = data.ServerName[i],
+                            DropControlOnExit = data.DropControlOnExit[i],
+                            MaxPlayers = data.MaxPlayers[i],
+                            WarpMode = data.WarpMode[i],
+                            PlayerCount = data.PlayerCount[i],
+                            GameMode = data.GameMode[i],
+                            ModControl = data.ModControl[i],
+                            DropControlOnExitFlight = data.DropControlOnExitFlight[i],
+                            VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
+                            DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
+                            Version = data.Version
+                        });
                     }
-                }
-                else
-                {
-                    LunaLog.LogError($"[LMP]: Unable to deserialize message: {msg}");
+
+                    Servers = Servers.OrderBy(s => s.ServerName).ToList();
                 }
             }
             catch (Exception e)

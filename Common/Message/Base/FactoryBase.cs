@@ -7,17 +7,6 @@ namespace LunaCommon.Message.Base
 {
     public abstract class FactoryBase
     {
-        private readonly bool _compress;
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="compress">Compress the messages or not</param>
-        protected FactoryBase(bool compress)
-        {
-            _compress = compress;
-        }
-
         /// <summary>
         /// Call this method to deserialize a message
         /// </summary>
@@ -26,36 +15,26 @@ namespace LunaCommon.Message.Base
         /// <returns>Full message with it's data filled</returns>
         public IMessageBase Deserialize(byte[] data, long receiveTime)
         {
-            try
+            if (data.Length >= MessageConstants.HeaderLength)
             {
-                if (data.Length >= MessageConstants.HeaderLength)
+                var messageType = DeserializeMessageType(data);
+                var subtype = DeserializeMessageSubType(data);
+                var length = DeserializeMessageLength(data);
+                var dataCompressed = DeserializeMessageCompressed(data);
+
+                var contentWithoutHeader = data.Skip(MessageConstants.HeaderLength).ToArray();
+
+                if (contentWithoutHeader.Length == length)
                 {
-                    var messageType = DeserializeMessageType(data);
-                    var subtype = DeserializeMessageSubType(data);
-                    var length = DeserializeMessageLength(data);
-                    var dataCompressed = DeserializeMessageCompressed(data);
-
-                    var contentWithoutHeader = data.Skip(MessageConstants.HeaderLength).ToArray();
-
-                    if (contentWithoutHeader.Length == length)
-                    {
-                        var msg = GetMessageByType(messageType, subtype, contentWithoutHeader, dataCompressed);
-                        msg.Data.ReceiveTime = receiveTime;
-                        return msg;
-                    }
-                    throw new Exception("Message data size mismatch");
+                    var msg = GetMessageByType(messageType, subtype, contentWithoutHeader, dataCompressed);
+                    msg.Data.ReceiveTime = receiveTime;
+                    return msg;
                 }
-                throw new Exception("Message length below header size");
+                throw new Exception("Message data size mismatch");
             }
-            catch (Exception)
-            {
-                //Bad message, we couldn't deserialize
-                //TODO: Properly log this error
-                //LunaLog.Error($"Error deserializing message: {e}");
-                return null;
-            }
+            throw new Exception("Message length below header size");
         }
-        
+
         /// <summary>
         /// Specify if this factory handle client or server messages
         /// </summary>
@@ -65,14 +44,14 @@ namespace LunaCommon.Message.Base
         ///     Include here all the client/server messages so they can be handled
         /// </summary>
         protected Dictionary<uint, Type> MessageDictionary { get; } = new Dictionary<uint, Type>();
-        
+
         /// <summary>
         /// Method to retrieve a new message
         /// </summary>
         /// <typeparam name="T">Message type</typeparam>
         /// <typeparam name="TD">Message data type</typeparam>
         /// <returns>New empty message</returns>
-        public T CreateNew<T,TD>() where T : class, IMessageBase
+        public T CreateNew<T, TD>() where T : class, IMessageBase
             where TD : class, IMessageData
         {
             var msg = MessageStore.GetMessage<T>();
