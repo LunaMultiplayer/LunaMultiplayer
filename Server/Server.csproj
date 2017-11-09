@@ -161,4 +161,9 @@
       <Name>Common</Name>
     </ProjectReference>
   </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>mkdir "$(SolutionDir)Artifacts\$(ConfigurationName)\Server"
+xcopy /s/y "$(TargetDir)*.*" "$(SolutionDir)Artifacts\$(ConfigurationName)\Server"
+</PostBuildEvent>
+  </PropertyGroup>
 </Project>

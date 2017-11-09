@@ -2,6 +2,7 @@
 CopyToKSPDirectory.bat
 .vs/
 TestResults/*
+Artifacts/*
 Client/*.csproj.user
 Client/bin/*
 Client/obj/*
