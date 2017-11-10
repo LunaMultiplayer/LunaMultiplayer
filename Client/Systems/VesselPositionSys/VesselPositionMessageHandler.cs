@@ -9,7 +9,7 @@ namespace LunaClient.Systems.VesselPositionSys
 {
     public class VesselPositionMessageHandler : SubSystem<VesselPositionSystem>, IMessageHandler
     {
-        public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
+        public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
         public void HandleMessage(IMessageData messageData)
         {

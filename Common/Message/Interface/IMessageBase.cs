@@ -54,5 +54,7 @@ namespace LunaCommon.Message.Interface
         /// <param name="compress">Compress the message or not</param>
         /// <returns>Mesage as a byte array with it's header</returns>
         byte[] Serialize(bool compress);
+
+        void Recycle();
     }
 }

@@ -21,7 +21,7 @@ namespace LunaClient.Base
         public TH MessageHandler { get; } = new TH();
         public virtual IInputHandler InputHandler { get; } = null;
 
-        public virtual void EnqueueMessage(IMessageData msg)
+        public virtual void EnqueueMessage(IServerMessageBase msg)
         {
             if (!Enabled) return;
 
@@ -31,7 +31,11 @@ namespace LunaClient.Base
             }
             else
             {
-                TaskFactory.StartNew(() => HandleMessage(msg));
+                TaskFactory.StartNew(() =>
+                {
+                    HandleMessage(msg.Data);
+                    msg.Recycle();
+                });
             }
         }
 
@@ -39,7 +43,7 @@ namespace LunaClient.Base
         {
             base.OnDisabled();
             //Clear the message queue on disabling
-            MessageHandler.IncomingMessages = new ConcurrentQueue<IMessageData>();
+            MessageHandler.IncomingMessages = new ConcurrentQueue<IServerMessageBase>();
         }
 
         protected override void OnEnabled()
@@ -57,9 +61,10 @@ namespace LunaClient.Base
             if (!ProcessMessagesInUnityThread)
                 return;
 
-            while (MessageHandler.IncomingMessages.TryDequeue(out var msgData))
+            while (MessageHandler.IncomingMessages.TryDequeue(out var msg))
             {
-                HandleMessage(msgData);
+                HandleMessage(msg.Data);
+                msg.Recycle();
             }
         }
 
@@ -69,7 +74,6 @@ namespace LunaClient.Base
             {
                 MessageHandler.HandleMessage(msgData);
                 //After the message has been handled set it ready to be recycled
-                msgData.ReadyToRecycle = true;
             }
             catch (Exception e)
             {

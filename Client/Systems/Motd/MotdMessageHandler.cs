@@ -10,7 +10,7 @@ namespace LunaClient.Systems.Motd
 {
     public class MotdMessageHandler : SubSystem<MotdSystem>, IMessageHandler
     {
-        public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
+        public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
         public void HandleMessage(IMessageData messageData)
         {

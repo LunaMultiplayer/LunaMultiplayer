@@ -8,7 +8,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 {
     public class VesselRemoveMessageHandler : SubSystem<VesselRemoveSystem>, IMessageHandler
     {
-        public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
+        public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
         public void HandleMessage(IMessageData messageData)
         {

@@ -18,84 +18,60 @@ namespace LunaCommon.Message.Base
         private static readonly ConcurrentDictionary<Type, ConstructorInfo> MessageDataConstructorDictionary = new ConcurrentDictionary<Type, ConstructorInfo>();
         private static readonly ConcurrentDictionary<Type, ConstructorInfo> MessageConstructorDictionary = new ConcurrentDictionary<Type, ConstructorInfo>();
 
-        internal static T GetMessageData<T>(bool setAsRecycled = false) where T : class, IMessageData
+        internal static void RecycleMessage(IMessageBase message)
+        {
+            var msgQueue = MessageDictionary.GetOrAdd(message.GetType(), new ConcurrentQueue<IMessageBase>());
+            msgQueue.Enqueue(message);
+
+            var msgDataQueue = MessageDataDictionary.GetOrAdd(message.Data.GetType(), new ConcurrentQueue<IMessageData>());
+            msgDataQueue.Enqueue(message.Data);
+        }
+
+        internal static T GetMessageData<T>() where T : class, IMessageData
         {
             var msgDataQueue = MessageDataDictionary.GetOrAdd(typeof(T), new ConcurrentQueue<IMessageData>());
-            if (msgDataQueue.TryPeek(out var messageData) && messageData.ReadyToRecycle)
+            if (msgDataQueue.TryDequeue(out var messageData))
             {
-                msgDataQueue.TryDequeue(out messageData);
-                //We found a messageData that is already used so set it as in use and return it
-                messageData.ReadyToRecycle = false;
-                msgDataQueue.Enqueue(messageData);
-
+                //We found a messageData that is already used so return it
                 return messageData as T;
             }
-
-            var newMsgData = CreateNewInstance<T>();
-            if (setAsRecycled)
-                newMsgData.ReadyToRecycle = true;
-
-            msgDataQueue.Enqueue(newMsgData);
-
-            return newMsgData;
+            
+            return CreateNewInstance<T>();
         }
 
         internal static IMessageData GetMessageData(Type messageDataType)
         {
             var msgDataQueue = MessageDataDictionary.GetOrAdd(messageDataType, new ConcurrentQueue<IMessageData>());
-            if (msgDataQueue.TryPeek(out var messageData) && messageData.ReadyToRecycle)
+            if (msgDataQueue.TryDequeue(out var messageData))
             {
-                msgDataQueue.TryDequeue(out messageData);
-                //We found a messageData that is already used so set it as in use and return it
-                messageData.ReadyToRecycle = false;
-                msgDataQueue.Enqueue(messageData);
-
                 return messageData;
             }
-
-            var newMsgData = CreateNewMessageDataInstance(messageDataType);
-
-            msgDataQueue.Enqueue(newMsgData);
-
-            return newMsgData;
+            
+            return CreateNewMessageDataInstance(messageDataType);
         }
 
         internal static T GetMessage<T>() where T : class, IMessageBase
         {
             var msgQueue = MessageDictionary.GetOrAdd(typeof(T), new ConcurrentQueue<IMessageBase>());
-            if (msgQueue.TryPeek(out var message) && message.Data != null && message.Data.ReadyToRecycle)
+            if (msgQueue.TryDequeue(out var message))
             {
-                //found a message that has been used so dequeue it and put it in the back
-                msgQueue.TryDequeue(out message);
-                msgQueue.Enqueue(message);
-                //We don't set the data.ReadyToRecycle = false as this should be handled by the GetMessageData
-
+                //We found a messageData that is already used so return it
                 return message as T;
             }
-
-            var newMsgData = CreateNewInstance<T>();
-            msgQueue.Enqueue(newMsgData);
-
-            return newMsgData;
+            
+            return CreateNewInstance<T>();
         }
 
         internal static IMessageBase GetMessage(Type type)
         {
             var msgQueue = MessageDictionary.GetOrAdd(type, new ConcurrentQueue<IMessageBase>());
-            if (msgQueue.TryPeek(out var message) && message.Data != null && message.Data.ReadyToRecycle)
+            if (msgQueue.TryDequeue(out var message))
             {
-                //found a message that has been used so dequeue it and put it in the back
-                msgQueue.TryDequeue(out message);
-                msgQueue.Enqueue(message);
-                //We don't set the data.ReadyToRecycle = false as this should be handled by the GetMessageData
-
+                //We found a messageData that is already used so return it
                 return message;
             }
-
-            var newMsg = CreateNewMessageInstance(type);
-            msgQueue.Enqueue(newMsg);
-
-            return newMsg;
+            
+            return CreateNewMessageInstance(type);
         }
 
         /// <summary>

@@ -143,9 +143,6 @@ namespace LunaServer.Lidgren
 
             Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
             Server.FlushSendQueue(); //Manually force to send the msg
-
-            //Recycle the message
-            message.Data.ReadyToRecycle = true;
         }
 
         public void ShutdownLidgrenServer()

@@ -129,6 +129,8 @@ namespace LunaCommon.Message.Base
                 var fullData = new byte[header.Length + data.Length];
                 header.CopyTo(fullData, 0);
                 data.CopyTo(fullData, header.Length);
+                
+                MessageStore.RecycleMessage(this);
 
                 return fullData;
             }
@@ -136,6 +138,11 @@ namespace LunaCommon.Message.Base
             {
                 throw new Exception($"Error serializing message! MsgDataType: {Data.GetType()} Exception: {e}");
             }
+        }
+
+        public void Recycle()
+        {
+            MessageStore.RecycleMessage(this);
         }
 
         /// <summary>

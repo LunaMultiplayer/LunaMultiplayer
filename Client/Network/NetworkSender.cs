@@ -97,9 +97,6 @@ namespace LunaClient.Network
                     NetworkMain.HandleDisconnectException(e);
                 }
             }
-
-            //We have sent the message so recycle.
-            message.Data.ReadyToRecycle = true;
         }
 
         private static NetOutgoingMessage GetLidgrenMessage(byte[] bytes)

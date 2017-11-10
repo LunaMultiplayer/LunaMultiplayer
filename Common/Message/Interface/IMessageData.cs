@@ -21,10 +21,5 @@
         /// Sent time timestamp.
         /// </summary>
         long SentTime { get; set; }
-
-        /// <summary>
-        /// This field is set to true after the message has been used so it can be recycled
-        /// </summary>
-        bool ReadyToRecycle { get; set; }
     }
 }

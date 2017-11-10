@@ -12,7 +12,7 @@ namespace LunaClient.Systems.CraftLibrary
 {
     public class CraftLibraryMessageHandler : SubSystem<CraftLibrarySystem>, IMessageHandler
     {
-        public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
+        public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
         public void HandleMessage(IMessageData messageData)
         {

@@ -13,7 +13,7 @@ namespace LunaClient.Systems.Flag
 {
     public class FlagMessageHandler : SubSystem<FlagSystem>, IMessageHandler
     {
-        public ConcurrentQueue<IMessageData> IncomingMessages { get; set; } = new ConcurrentQueue<IMessageData>();
+        public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
         public void HandleMessage(IMessageData messageData)
         {
