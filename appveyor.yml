@@ -15,16 +15,16 @@ build:
   verbosity: minimal
 after_build:
 #Client post build commands
-- cmd: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
-- cmd: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
-- cmd: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\Resources\*.png" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
-- cmd: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\bin\$env:configuration\*.dll" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
+- ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
+- ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\Resources\*.png" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\bin\$env:configuration\*.dll" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
 #Master server post build commands
-- cmd: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
-- cmd: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\MasterServer\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
+- ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\MasterServer\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
 #Server server post build commands
-- cmd: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer"
-- cmd: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Server\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer"
+- ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Server\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer"
 #7zip everything
 - ps: 7z a "$env:APPVEYOR_BUILD_FOLDER\LunaMultiPlayer-$env:configuration.zip" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
 artifacts:
