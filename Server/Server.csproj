@@ -162,8 +162,7 @@
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>mkdir "$(SolutionDir)Artifacts\$(ConfigurationName)\Server"
-xcopy /s/y "$(TargetDir)*.*" "$(SolutionDir)Artifacts\$(ConfigurationName)\Server"
-</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -7,7 +7,19 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
-- ps: 7z a "LunaMultiPlayer-$env:configuration.zip" "$env:APPVEYOR_BUILD_FOLDER\Artifacts\$env:configuration\Client" "$env:APPVEYOR_BUILD_FOLDER\Artifacts\$env:configuration\Server" "$env:APPVEYOR_BUILD_FOLDER\Artifacts\$env:configuration\MasterServer"
+#Client post build commands
+- ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
+- ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\Resources\*.png" ""$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\bin\$env:configuration\*.dll" ""$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
+#Master server post build commands
+- ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\MasterServer\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$(ConfigurationName)\LMPMasterServer"
+#Server server post build commands
+- ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Server\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$(ConfigurationName)\LMPServer"
+#7zip everything
+- ps: 7z a "LunaMultiPlayer-$env:configuration.zip" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
 artifacts:
 - path: .\LunaMultiPlayer-$(configuration).zip
   name: LunaMultiPlayer.zip

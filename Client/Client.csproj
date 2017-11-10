@@ -264,13 +264,7 @@
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
-    <PostBuildEvent>if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)CopyToKSPDirectory.bat" $(ConfigurationName)
-
-mkdir "$(SolutionDir)Artifacts\$(ConfigurationName)\Client\GameData\LunaMultiPlayer\Button"
-mkdir "$(SolutionDir)Artifacts\$(ConfigurationName)\Client\GameData\LunaMultiPlayer\Plugins"
-xcopy /s/y "$(ProjectDir)\Resources\*.png" "$(SolutionDir)Artifacts\$(ConfigurationName)\Client\GameData\LunaMultiPlayer\Button"
-xcopy /s/y "$(TargetDir)*.dll" "$(SolutionDir)Artifacts\$(ConfigurationName)\Client\GameData\LunaMultiPlayer\Plugins"
-</PostBuildEvent>
+    <PostBuildEvent>if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
