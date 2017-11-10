@@ -1,8 +1,7 @@
-﻿using Lidgren.Network;
+﻿using System;
+using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Admin;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
 using System.Collections.Generic;
@@ -15,11 +14,11 @@ namespace LunaCommon.Message.Server
         internal AdminSrvMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)AdminMessageType.ListReply] = MessageStore.GetMessageData<AdminListReplyMsgData>(true),
-            [(ushort)AdminMessageType.Add] = MessageStore.GetMessageData<AdminAddMsgData>(true),
-            [(ushort)AdminMessageType.Remove] = MessageStore.GetMessageData<AdminRemoveMsgData>(true)
+            [(ushort)AdminMessageType.ListReply] = typeof(AdminListReplyMsgData),
+            [(ushort)AdminMessageType.Add] = typeof(AdminAddMsgData),
+            [(ushort)AdminMessageType.Remove] = typeof(AdminRemoveMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Admin;

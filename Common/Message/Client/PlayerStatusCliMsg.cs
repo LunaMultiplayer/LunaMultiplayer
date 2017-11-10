@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.PlayerStatus;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Client
@@ -15,10 +14,10 @@ namespace LunaCommon.Message.Client
         internal PlayerStatusCliMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)PlayerStatusMessageType.Request] = MessageStore.GetMessageData<PlayerStatusRequestMsgData>(true),
-            [(ushort)PlayerStatusMessageType.Set] = MessageStore.GetMessageData<PlayerStatusSetMsgData>(true)
+            [(ushort)PlayerStatusMessageType.Request] = typeof(PlayerStatusRequestMsgData),
+            [(ushort)PlayerStatusMessageType.Set] = typeof(PlayerStatusSetMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.PlayerStatus;

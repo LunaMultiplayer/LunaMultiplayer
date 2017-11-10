@@ -1,7 +1,6 @@
 ﻿using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -13,64 +12,90 @@ namespace LunaCommon.Message.Base
     /// </summary>
     public static class MessageStore
     {
-        internal static ConcurrentDictionary<Type, List<IMessageData>> MessageDataDictionary = new ConcurrentDictionary<Type, List<IMessageData>>();
-        internal static ConcurrentDictionary<Type, List<IMessageBase>> MessageDictionary = new ConcurrentDictionary<Type, List<IMessageBase>>();
+        internal static ConcurrentDictionary<Type, ConcurrentQueue<IMessageData>> MessageDataDictionary = new ConcurrentDictionary<Type, ConcurrentQueue<IMessageData>>();
+        internal static ConcurrentDictionary<Type, ConcurrentQueue<IMessageBase>> MessageDictionary = new ConcurrentDictionary<Type, ConcurrentQueue<IMessageBase>>();
 
         private static readonly ConcurrentDictionary<Type, ConstructorInfo> MessageDataConstructorDictionary = new ConcurrentDictionary<Type, ConstructorInfo>();
         private static readonly ConcurrentDictionary<Type, ConstructorInfo> MessageConstructorDictionary = new ConcurrentDictionary<Type, ConstructorInfo>();
 
         internal static T GetMessageData<T>(bool setAsRecycled = false) where T : class, IMessageData
         {
-            var msgDataDictionary = MessageDataDictionary.GetOrAdd(typeof(T), new List<IMessageData>());
-            var msgData = msgDataDictionary.FirstOrDefault(m => m.ReadyToRecycle);
-            if (msgData != null)
+            var msgDataQueue = MessageDataDictionary.GetOrAdd(typeof(T), new ConcurrentQueue<IMessageData>());
+            if (msgDataQueue.TryPeek(out var messageData) && messageData.ReadyToRecycle)
             {
+                msgDataQueue.TryDequeue(out messageData);
                 //We found a messageData that is already used so set it as in use and return it
-                msgData.ReadyToRecycle = false;
-                return msgData as T;
+                messageData.ReadyToRecycle = false;
+                msgDataQueue.Enqueue(messageData);
+
+                return messageData as T;
             }
 
             var newMsgData = CreateNewInstance<T>();
             if (setAsRecycled)
                 newMsgData.ReadyToRecycle = true;
 
-            msgDataDictionary.Add(newMsgData);
+            msgDataQueue.Enqueue(newMsgData);
+
+            return newMsgData;
+        }
+
+        internal static IMessageData GetMessageData(Type messageDataType)
+        {
+            var msgDataQueue = MessageDataDictionary.GetOrAdd(messageDataType, new ConcurrentQueue<IMessageData>());
+            if (msgDataQueue.TryPeek(out var messageData) && messageData.ReadyToRecycle)
+            {
+                msgDataQueue.TryDequeue(out messageData);
+                //We found a messageData that is already used so set it as in use and return it
+                messageData.ReadyToRecycle = false;
+                msgDataQueue.Enqueue(messageData);
+
+                return messageData;
+            }
+
+            var newMsgData = CreateNewMessageDataInstance(messageDataType);
+
+            msgDataQueue.Enqueue(newMsgData);
 
             return newMsgData;
         }
 
         internal static T GetMessage<T>() where T : class, IMessageBase
         {
-            var msgDictionary = MessageDictionary.GetOrAdd(typeof(T), new List<IMessageBase>());
-            var msg = msgDictionary.FirstOrDefault(m => m.Data != null && m.Data.ReadyToRecycle);
-            if (msg != null)
+            var msgQueue = MessageDictionary.GetOrAdd(typeof(T), new ConcurrentQueue<IMessageBase>());
+            if (msgQueue.TryPeek(out var message) && message.Data != null && message.Data.ReadyToRecycle)
             {
-                //We found a messageData that is already used so return it.
+                //found a message that has been used so dequeue it and put it in the back
+                msgQueue.TryDequeue(out message);
+                msgQueue.Enqueue(message);
                 //We don't set the data.ReadyToRecycle = false as this should be handled by the GetMessageData
-                return msg as T;
+
+                return message as T;
             }
 
             var newMsgData = CreateNewInstance<T>();
-            msgDictionary.Add(newMsgData);
+            msgQueue.Enqueue(newMsgData);
 
             return newMsgData;
         }
 
         internal static IMessageBase GetMessage(Type type)
         {
-            var msgDictionary = MessageDictionary.GetOrAdd(type, new List<IMessageBase>());
-            var msg = msgDictionary.FirstOrDefault(m => m.Data != null && m.Data.ReadyToRecycle);
-            if (msg != null)
+            var msgQueue = MessageDictionary.GetOrAdd(type, new ConcurrentQueue<IMessageBase>());
+            if (msgQueue.TryPeek(out var message) && message.Data != null && message.Data.ReadyToRecycle)
             {
-                //We found a messageData that is already used so return it.
+                //found a message that has been used so dequeue it and put it in the back
+                msgQueue.TryDequeue(out message);
+                msgQueue.Enqueue(message);
                 //We don't set the data.ReadyToRecycle = false as this should be handled by the GetMessageData
-                return msg;
+
+                return message;
             }
 
-            var newMsgData = CreateNewInstance(type);
-            msgDictionary.Add(newMsgData);
+            var newMsg = CreateNewMessageInstance(type);
+            msgQueue.Enqueue(newMsg);
 
-            return newMsgData;
+            return newMsg;
         }
 
         /// <summary>
@@ -107,9 +132,6 @@ namespace LunaCommon.Message.Base
             }
             if (typeof(IMessageBase).IsAssignableFrom(typeof(T)))
             {
-                var type = typeof(T);
-                var ctorI = type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance);
-
                 var ctor = MessageConstructorDictionary.GetOrAdd(typeof(T), typeof(T)
                     .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First());
 
@@ -122,7 +144,7 @@ namespace LunaCommon.Message.Base
         /// <summary>
         /// This method is much faster than Activator.CreateInstance and also that woudn't work as constructors are internal
         /// </summary>
-        private static IMessageBase CreateNewInstance(Type type)
+        private static IMessageBase CreateNewMessageInstance(Type type)
         {
             if (typeof(IMessageBase).IsAssignableFrom(type))
             {
@@ -130,6 +152,22 @@ namespace LunaCommon.Message.Base
                     .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First());
 
                 return ctor.Invoke(null) as IMessageBase;
+            }
+
+            throw new Exception("Cannot implement this object!");
+        }
+
+        /// <summary>
+        /// This method is much faster than Activator.CreateInstance and also that woudn't work as constructors are internal
+        /// </summary>
+        private static IMessageData CreateNewMessageDataInstance(Type type)
+        {
+            if (typeof(IMessageData).IsAssignableFrom(type))
+            {
+                var ctor = MessageDataConstructorDictionary.GetOrAdd(type, type
+                    .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First());
+
+                return ctor.Invoke(null) as IMessageData;
             }
 
             throw new Exception("Cannot implement this object!");

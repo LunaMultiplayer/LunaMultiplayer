@@ -1,8 +1,7 @@
-﻿using Lidgren.Network;
+﻿using System;
+using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Handshake;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
 using System.Collections.Generic;
@@ -15,10 +14,10 @@ namespace LunaCommon.Message.Server
         internal HandshakeSrvMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)HandshakeMessageType.Challenge] = MessageStore.GetMessageData<HandshakeChallengeMsgData>(true),
-            [(ushort)HandshakeMessageType.Reply] = MessageStore.GetMessageData<HandshakeReplyMsgData>(true)
+            [(ushort)HandshakeMessageType.Challenge] = typeof(HandshakeChallengeMsgData),
+            [(ushort)HandshakeMessageType.Reply] = typeof(HandshakeReplyMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Handshake;

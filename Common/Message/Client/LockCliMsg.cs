@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Lock;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Client
@@ -15,11 +14,11 @@ namespace LunaCommon.Message.Client
         internal LockCliMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)LockMessageType.ListRequest] = MessageStore.GetMessageData<LockListRequestMsgData>(true),
-            [(ushort)LockMessageType.Acquire] = MessageStore.GetMessageData<LockAcquireMsgData>(true),
-            [(ushort)LockMessageType.Release] = MessageStore.GetMessageData<LockReleaseMsgData>(true)
+            [(ushort)LockMessageType.ListRequest] = typeof(LockListRequestMsgData),
+            [(ushort)LockMessageType.Acquire] = typeof(LockAcquireMsgData),
+            [(ushort)LockMessageType.Release] = typeof(LockReleaseMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Lock;

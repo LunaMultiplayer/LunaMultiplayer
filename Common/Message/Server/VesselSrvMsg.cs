@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Vessel;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Server
@@ -15,15 +14,15 @@ namespace LunaCommon.Message.Server
         internal VesselSrvMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)VesselMessageType.ListReply] = MessageStore.GetMessageData<VesselListReplyMsgData>(true),
-            [(ushort)VesselMessageType.VesselsReply] = MessageStore.GetMessageData<VesselsReplyMsgData>(true),
-            [(ushort)VesselMessageType.Proto] = MessageStore.GetMessageData<VesselProtoMsgData>(true),
-            [(ushort)VesselMessageType.Dock] = MessageStore.GetMessageData<VesselDockMsgData>(true),
-            [(ushort)VesselMessageType.Remove] = MessageStore.GetMessageData<VesselRemoveMsgData>(true),
-            [(ushort)VesselMessageType.Position] = MessageStore.GetMessageData<VesselPositionMsgData>(true),
-            [(ushort)VesselMessageType.Flightstate] = MessageStore.GetMessageData<VesselFlightStateMsgData>(true)
+            [(ushort)VesselMessageType.ListReply] = typeof(VesselListReplyMsgData),
+            [(ushort)VesselMessageType.VesselsReply] = typeof(VesselsReplyMsgData),
+            [(ushort)VesselMessageType.Proto] = typeof(VesselProtoMsgData),
+            [(ushort)VesselMessageType.Dock] = typeof(VesselDockMsgData),
+            [(ushort)VesselMessageType.Remove] = typeof(VesselRemoveMsgData),
+            [(ushort)VesselMessageType.Position] = typeof(VesselPositionMsgData),
+            [(ushort)VesselMessageType.Flightstate] = typeof(VesselFlightStateMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Vessel;

@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Flag;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Server
@@ -15,12 +14,12 @@ namespace LunaCommon.Message.Server
         internal FlagSrvMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)FlagMessageType.ListRequest] = MessageStore.GetMessageData<FlagListRequestMsgData>(true),
-            [(ushort)FlagMessageType.ListResponse] = MessageStore.GetMessageData<FlagListResponseMsgData>(true),
-            [(ushort)FlagMessageType.FlagData] = MessageStore.GetMessageData<FlagDataMsgData>(true),
-            [(ushort)FlagMessageType.FlagDelete] = MessageStore.GetMessageData<FlagDeleteMsgData>(true)
+            [(ushort)FlagMessageType.ListRequest] = typeof(FlagListRequestMsgData),
+            [(ushort)FlagMessageType.ListResponse] = typeof(FlagListResponseMsgData),
+            [(ushort)FlagMessageType.FlagData] = typeof(FlagDataMsgData),
+            [(ushort)FlagMessageType.FlagDelete] = typeof(FlagDeleteMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Flag;

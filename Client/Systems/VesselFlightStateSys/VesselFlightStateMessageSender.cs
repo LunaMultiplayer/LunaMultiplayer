@@ -42,6 +42,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 msgData.Yaw = flightState.yaw;
                 msgData.YawTrim = flightState.yawTrim;
                 msgData.Z = flightState.Z;
+
+                SendMessage(msgData);
             });
         }
     }

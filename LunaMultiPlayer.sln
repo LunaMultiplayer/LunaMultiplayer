@@ -19,7 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Scripts\CopyToKSPDirectory.bat = Scripts\CopyToKSPDirectory.bat
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMP.Tests", "LMP.Tests\LMP.Tests.csproj", "{BA9CFDD5-3712-431F-BC33-09C38711FC3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LMP.Tests", "LMP.Tests\LMP.Tests.csproj", "{51F95D0B-C12D-44A2-B390-F29E9491FF8F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,9 +43,9 @@ Global
 		{776706B0-F5A1-43A5-B13A-1ADA5E77D0A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{776706B0-F5A1-43A5-B13A-1ADA5E77D0A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{776706B0-F5A1-43A5-B13A-1ADA5E77D0A5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BA9CFDD5-3712-431F-BC33-09C38711FC3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BA9CFDD5-3712-431F-BC33-09C38711FC3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BA9CFDD5-3712-431F-BC33-09C38711FC3F}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{51F95D0B-C12D-44A2-B390-F29E9491FF8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51F95D0B-C12D-44A2-B390-F29E9491FF8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51F95D0B-C12D-44A2-B390-F29E9491FF8F}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.MasterServer;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.MasterServer.Base;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.MasterServer
@@ -15,12 +14,12 @@ namespace LunaCommon.Message.MasterServer
         internal MainMstSrvMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)MasterServerMessageSubType.RegisterServer] = MessageStore.GetMessageData<MsRegisterServerMsgData>(true),
-            [(ushort)MasterServerMessageSubType.RequestServers] = MessageStore.GetMessageData<MsRequestServersMsgData>(true),
-            [(ushort)MasterServerMessageSubType.ReplyServers] = MessageStore.GetMessageData<MsReplyServersMsgData>(true),
-            [(ushort)MasterServerMessageSubType.Introduction] = MessageStore.GetMessageData<MsIntroductionMsgData>(true)
+            [(ushort)MasterServerMessageSubType.RegisterServer] = typeof(MsRegisterServerMsgData),
+            [(ushort)MasterServerMessageSubType.RequestServers] = typeof(MsRequestServersMsgData),
+            [(ushort)MasterServerMessageSubType.ReplyServers] = typeof(MsReplyServersMsgData),
+            [(ushort)MasterServerMessageSubType.Introduction] = typeof(MsIntroductionMsgData)
         };
 
         public override MasterServerMessageType MessageType => MasterServerMessageType.Main;

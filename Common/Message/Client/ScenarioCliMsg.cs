@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Scenario;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Client
@@ -15,10 +14,10 @@ namespace LunaCommon.Message.Client
         internal ScenarioCliMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)ScenarioMessageType.Request] = MessageStore.GetMessageData<ScenarioRequestMsgData>(true),
-            [(ushort)ScenarioMessageType.Data] = MessageStore.GetMessageData<ScenarioDataMsgData>(true)
+            [(ushort)ScenarioMessageType.Request] = typeof(ScenarioRequestMsgData),
+            [(ushort)ScenarioMessageType.Data] = typeof(ScenarioDataMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Scenario;

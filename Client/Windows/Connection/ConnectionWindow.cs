@@ -51,8 +51,7 @@ namespace LunaClient.Windows.Connection
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth,
-                WindowHeight);
+            WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
@@ -71,15 +70,16 @@ namespace LunaClient.Windows.Connection
             LabelOptions = new GUILayoutOption[1];
             LabelOptions[0] = GUILayout.Width(100);
         }
-
+        
         public override void OnGui()
         {
             base.OnGui();
             
             if (Display)
-                WindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, _title, WindowStyle, LayoutOptions));
+            {
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6702 + MainSystem.WindowOffset, 
+                    WindowRect, DrawContent, _title, WindowStyle, LayoutOptions));
+            }
         }
 
         public override void Update()

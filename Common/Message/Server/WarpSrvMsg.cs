@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Warp;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Server
@@ -15,11 +14,11 @@ namespace LunaCommon.Message.Server
         internal WarpSrvMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)WarpMessageType.SubspacesReply] = MessageStore.GetMessageData<WarpSubspacesReplyMsgData>(true),
-            [(ushort)WarpMessageType.NewSubspace] = MessageStore.GetMessageData<WarpNewSubspaceMsgData>(true),
-            [(ushort)WarpMessageType.ChangeSubspace] = MessageStore.GetMessageData<WarpChangeSubspaceMsgData>(true)
+            [(ushort)WarpMessageType.SubspacesReply] = typeof(WarpSubspacesReplyMsgData),
+            [(ushort)WarpMessageType.NewSubspace] = typeof(WarpNewSubspaceMsgData),
+            [(ushort)WarpMessageType.ChangeSubspace] = typeof(WarpChangeSubspaceMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Warp;

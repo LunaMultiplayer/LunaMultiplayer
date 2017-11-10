@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Motd;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Server
@@ -15,9 +14,9 @@ namespace LunaCommon.Message.Server
         internal MotdSrvMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)MotdMessageType.Reply] = MessageStore.GetMessageData<MotdReplyMsgData>(true)
+            [(ushort)MotdMessageType.Reply] = typeof(MotdReplyMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Motd;

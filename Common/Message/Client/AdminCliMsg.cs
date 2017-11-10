@@ -1,9 +1,8 @@
-﻿using Lidgren.Network;
+﻿using System;
+using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Admin;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System.Collections.Generic;
 
@@ -15,9 +14,9 @@ namespace LunaCommon.Message.Client
         internal AdminCliMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {        
-            [(ushort)AdminMessageType.ListRequest] = MessageStore.GetMessageData<AdminListRequestMsgData>(true)
+            [(ushort)AdminMessageType.ListRequest] = typeof(AdminListRequestMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Admin;

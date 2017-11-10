@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Settings;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Client
@@ -15,9 +14,9 @@ namespace LunaCommon.Message.Client
         internal SettingsCliMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)SettingsMessageType.Request] = MessageStore.GetMessageData<SettingsRequestMsgData>(true)
+            [(ushort)SettingsMessageType.Request] = typeof(SettingsRequestMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Settings;

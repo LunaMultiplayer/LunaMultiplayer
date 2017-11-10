@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Groups;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Client
@@ -15,13 +14,13 @@ namespace LunaCommon.Message.Client
         internal GroupCliMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)GroupMessageType.ListRequest] = MessageStore.GetMessageData<GroupListRequestMsgData>(true),
-            [(ushort)GroupMessageType.ListResponse] = MessageStore.GetMessageData<GroupListResponseMsgData>(true),
-            [(ushort)GroupMessageType.CreateGroup] = MessageStore.GetMessageData<GroupCreateMsgData>(true),
-            [(ushort)GroupMessageType.RemoveGroup] = MessageStore.GetMessageData<GroupRemoveMsgData>(true),
-            [(ushort)GroupMessageType.GroupUpdate] = MessageStore.GetMessageData<GroupUpdateMsgData>(true)
+            [(ushort)GroupMessageType.ListRequest] = typeof(GroupListRequestMsgData),
+            [(ushort)GroupMessageType.ListResponse] = typeof(GroupListResponseMsgData),
+            [(ushort)GroupMessageType.CreateGroup] = typeof(GroupCreateMsgData),
+            [(ushort)GroupMessageType.RemoveGroup] = typeof(GroupRemoveMsgData),
+            [(ushort)GroupMessageType.GroupUpdate] = typeof(GroupUpdateMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Groups;

@@ -1,10 +1,9 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Kerbal;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Server
@@ -15,10 +14,10 @@ namespace LunaCommon.Message.Server
         internal KerbalSrvMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)KerbalMessageType.Reply] = MessageStore.GetMessageData<KerbalReplyMsgData>(true),
-            [(ushort)KerbalMessageType.Proto] = MessageStore.GetMessageData<KerbalProtoMsgData>(true)
+            [(ushort)KerbalMessageType.Reply] = typeof(KerbalReplyMsgData),
+            [(ushort)KerbalMessageType.Proto] = typeof(KerbalProtoMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Kerbal;

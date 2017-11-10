@@ -1,8 +1,7 @@
-﻿using Lidgren.Network;
+﻿using System;
+using Lidgren.Network;
 using LunaCommon.Enums;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Chat;
-using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
 using System.Collections.Generic;
@@ -15,14 +14,14 @@ namespace LunaCommon.Message.Server
         internal ChatSrvMsg() { }
 
         /// <inheritdoc />
-        protected override Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)ChatMessageType.ListReply] = MessageStore.GetMessageData<ChatListReplyMsgData>(true),
-            [(ushort)ChatMessageType.Join] = MessageStore.GetMessageData<ChatJoinMsgData>(true),
-            [(ushort)ChatMessageType.Leave] = MessageStore.GetMessageData<ChatLeaveMsgData>(true),
-            [(ushort)ChatMessageType.ChannelMessage] = MessageStore.GetMessageData<ChatChannelMsgData>(true),
-            [(ushort)ChatMessageType.PrivateMessage] = MessageStore.GetMessageData<ChatPrivateMsgData>(true),
-            [(ushort)ChatMessageType.ConsoleMessage] = MessageStore.GetMessageData<ChatConsoleMsgData>(true)
+            [(ushort)ChatMessageType.ListReply] = typeof(ChatListReplyMsgData),
+            [(ushort)ChatMessageType.Join] = typeof(ChatJoinMsgData),
+            [(ushort)ChatMessageType.Leave] = typeof(ChatLeaveMsgData),
+            [(ushort)ChatMessageType.ChannelMessage] = typeof(ChatChannelMsgData),
+            [(ushort)ChatMessageType.PrivateMessage] = typeof(ChatPrivateMsgData),
+            [(ushort)ChatMessageType.ConsoleMessage] = typeof(ChatConsoleMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Chat;

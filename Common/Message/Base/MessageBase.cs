@@ -24,11 +24,10 @@ namespace LunaCommon.Message.Base
 
         /// <summary>
         /// Override this dictionary if your message has several subtypes (Check chat for example). The key in this case is the SUBTYPE id
-        /// You should set the messages as already recycled to avoid unnecesary creation of data messages
         /// </summary>
-        protected virtual Dictionary<ushort, IMessageData> SubTypeDictionary { get; } = new Dictionary<ushort, IMessageData>
+        protected virtual Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [0] = MessageStore.GetMessageData<T>(true)
+            [0] = typeof(T)
         };
 
         /// <summary>
@@ -92,14 +91,16 @@ namespace LunaCommon.Message.Base
                 throw new Exception("Subtype not defined in dictionary!");
             }
 
-            var dataClass = SubTypeDictionary[subType];
+            var msgDataType = SubTypeDictionary[subType];
+            var msgData = MessageStore.GetMessageData(msgDataType);
+
             if (decompress)
             {
                 var decompressed = CompressionHelper.DecompressBytes(data);
-                return DataDeserializer.Deserialize(this, dataClass, decompressed);
+                return DataDeserializer.Deserialize(this, msgData, decompressed);
             }
 
-            return DataDeserializer.Deserialize(this, dataClass, data);
+            return DataDeserializer.Deserialize(this, msgData, data);
         }
 
         /// <inheritdoc />
