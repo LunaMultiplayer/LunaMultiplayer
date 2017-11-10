@@ -14,10 +14,10 @@ after_build:
 - ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\bin\$env:configuration\*.dll" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
 #Master server post build commands
 - ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
-- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\MasterServer\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$(ConfigurationName)\LMPMasterServer"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\MasterServer\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
 #Server server post build commands
 - ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer"
-- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Server\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$(ConfigurationName)\LMPServer"
+- ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Server\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer"
 #7zip everything
 - ps: 7z a "LunaMultiPlayer-$env:configuration.zip" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
 artifacts:
