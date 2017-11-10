@@ -1,6 +1,8 @@
-# Luna Multiplayer Mod (LMP)  <a href="https://ci.appveyor.com/project/gavazquez/lunamultiplayer"><img src="https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f?svg=true" alt="build status"></a>
+# Luna Multiplayer Mod (LMP)
 
 *Multiplayer mod for [Kerbal Space Program (KSP)](https://kerbalspaceprogram.com)*
+
+<a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="chat on Discord"></a>
 
 ---
 
@@ -20,6 +22,7 @@ Main features:
 - Improved message compression algorithm ([QuickLZ](http://www.quicklz.com))
 
 ---
+
 ## [Wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki)
 
 #### Interesting  links:
@@ -30,8 +33,11 @@ Main features:
 
 ---
 
-Build Server: https://ci.appveyor.com/project/gavazquez/lunamultiplayer  
-IRC: #LMP on EsperNet http://webchat.esper.net/?channels=LMP
+## Status:
+
+|            |   Travis Build    |    AppVeyor Build    | 
+| ---------- | ----------------- | -------------------- |
+| **master** branch |[![Build Status](https://api.travis-ci.org/HerbertBodner/webapp-core.svg?branch=master)](https://travis-ci.org/HerbertBodner/webapp-core) |[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f/branch/master?svg=true)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master)
 
 ---
 
