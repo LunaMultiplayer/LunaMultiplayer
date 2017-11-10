@@ -35,9 +35,9 @@ Main features:
 
 ## Status:
 
-|            |   Travis Build    |    AppVeyor Build    | 
-| ---------- | ----------------- | -------------------- |
-| **master** branch |[![Build Status](https://travis-ci.org/gavazquez/LunaMultiPlayer.svg?branch=master)](https://travis-ci.org/gavazquez/LunaMultiPlayer) |[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f/branch/master?svg=true)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master)
+|            |   AppVeyor Build  |
+| ---------- | ----------------- |
+| **master** branch |[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f/branch/master?svg=true)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master)
 
 ---
 
