@@ -10,12 +10,12 @@ namespace LunaCommon
 {
     /// <summary>
     /// This class retrieves the ips of master servers that are stored in:
-    /// http://raw.githubusercontent.com/DaggerES/LunaMultiPlayer/master/MasterServersList/MasterServersList.txt
+    /// http://raw.githubusercontent.com/gavazquez/LunaMultiPlayer/master/MasterServersList/MasterServersList.txt
     /// </summary>
     public static class MasterServerRetriever
     {
         public static string MasterServersListShortUrl => "https://goo.gl/NJqZbc";
-        public static string MasterServersListUrl => "https://raw.githubusercontent.com/DaggerES/LunaMultiPlayer/master/MasterServersList/MasterServersList.txt";
+        public static string MasterServersListUrl => "http://raw.githubusercontent.com/gavazquez/LunaMultiPlayer/master/MasterServersList/MasterServersList.txt";
 
         /// <summary>
         /// Download the master server list from the MasterServersListUrl and return the ones that are correctly written
