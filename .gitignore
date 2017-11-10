@@ -1,5 +1,4 @@
 *.user
-CopyToKSPDirectory.bat
 .vs/
 TestResults/*
 Artifacts/*
@@ -9,12 +8,13 @@ Client/obj/*
 Common/*.csproj.user
 Common/bin/*
 Common/obj/*
-MasterServer/*.csproj.user
-MasterServer/bin/*
-MasterServer/obj/*
-Server/*.csproj.user
-Server/bin/*
-Server/obj/*
 LMP.Tests/*.csproj.user
 LMP.Tests/bin/*
 LMP.Tests/obj/*
+MasterServer/*.csproj.user
+MasterServer/bin/*
+MasterServer/obj/*
+Scripts/CopyToKSPDirectory.bat
+Server/*.csproj.user
+Server/bin/*
+Server/obj/*
