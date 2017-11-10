@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -10,6 +11,8 @@ namespace LunaCommon
 {
     public class Common
     {
+        public static string CurrentVersion { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+
         /// <summary>
         /// Compare two ienumerables and return if they are the same or not IGNORING the order
         /// </summary>
@@ -448,7 +451,8 @@ namespace LunaCommon
             //This is the same format as KMPModControl.txt. It's a fairly sane format, and it makes sense to remain compatible.
             var sb = new StringBuilder();
             //Header stuff
-            sb.AppendLine($"#MODCONTROLVERSION={VersionInfo.Version}");
+
+            sb.AppendLine($"#MODCONTROLVERSION={CurrentVersion}");
             sb.AppendLine("#You can comment by starting a line with a #, these are ignored by the server.");
             sb.AppendLine("#Commenting will NOT work unless the line STARTS with a '#'.");
             sb.AppendLine("#You can also indent the file with tabs or spaces.");

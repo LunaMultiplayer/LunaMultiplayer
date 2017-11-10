@@ -38,9 +38,9 @@ namespace LunaClient.Windows.Connection
         protected const float WindowWidth = 400;
 
 #if DEBUG
-        private readonly string _title = $"Luna Multiplayer {VersionInfo.Version} Debug port: {CommonUtil.DebugPort}";
+        private readonly string _title = $"Luna Multiplayer {Common.CurrentVersion} Debug port: {CommonUtil.DebugPort}";
 #else
-        private readonly string _title = $"Luna Multiplayer {VersionInfo.Version}";
+        private readonly string _title = $"Luna Multiplayer {Common.CurrentVersion}";
 #endif
 
         #endregion

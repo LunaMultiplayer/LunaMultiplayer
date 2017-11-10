@@ -1,17 +1,16 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
-using LunaCommon;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Luna Multiplayer Server")]
-[assembly: AssemblyDescription("Luna multiplayer mod server")]
+[assembly: AssemblyTitle("Luna Multiplayer Mod")]
+[assembly: AssemblyDescription("Luna Multiplayer Mod (server)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Luna")]
+[assembly: AssemblyProduct("LMP")]
 [assembly: AssemblyCopyright("Copyright ©  2016")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("Gabriel Vazquez")]
 [assembly: AssemblyCulture("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
@@ -29,4 +28,6 @@ using LunaCommon;
 //      Build Number
 //      Revision
 //
-[assembly: AssemblyVersion(VersionInfo.Version)]
+[assembly: AssemblyVersion("0.0.0")]
+[assembly: AssemblyFileVersion("0.0.0")]
+[assembly: AssemblyInformationalVersion("0.0.0-compiled")]
