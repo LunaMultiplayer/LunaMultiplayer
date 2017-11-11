@@ -156,7 +156,8 @@ namespace LunaCommon.Message.Base
             if (Enum.IsDefined(HandledMessageTypes, (int)messageType) && MessageDictionary.ContainsKey(messageType))
             {
                 var msg = MessageStore.GetMessage(MessageDictionary[messageType]);
-                msg.SetData(msg.Deserialize(messageSubType, content, dataCompressed));
+                var data = msg.Deserialize(messageSubType, content, dataCompressed);
+                msg.SetData(data);
 
                 return msg;
             }

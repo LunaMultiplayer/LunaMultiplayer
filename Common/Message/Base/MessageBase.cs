@@ -60,8 +60,9 @@ namespace LunaCommon.Message.Base
             get => _data;
             private set
             {
-                if (!(value is T) && typeof(T) != value.GetType())
+                if (value != null && !(value is T) && typeof(T) != value.GetType())
                     throw new InvalidOperationException("Cannot cast this mesage data to this type of message");
+
                 _data = value;
             }
         }

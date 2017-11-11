@@ -56,6 +56,7 @@ namespace LunaCommon.Message.Base
             if (msgQueue.TryDequeue(out var message))
             {
                 //We found a messageData that is already used so return it
+                message.SetData(null);
                 return message as T;
             }
             

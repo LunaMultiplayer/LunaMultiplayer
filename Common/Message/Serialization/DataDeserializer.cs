@@ -113,8 +113,9 @@ namespace LunaCommon.Message.Serialization
                     {
                         if (!prop.CanWrite && !Equals(value, accessor[dataClass, prop.Name]))
                             throw new Exception("Property without a setter where it's value mismatch. " +
-                                                $"Type: {dataClass.GetType().FullName} " +
-                                                $"Property: {prop.Name}");
+                                                $"Type: {dataClass.GetType().Name} " +
+                                                $"Property: {prop.Name}. " +
+                                                $"Value: {value} Expected: {accessor[dataClass, prop.Name]}");
                     }
                 }
             }
