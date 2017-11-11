@@ -14,20 +14,20 @@ namespace LunaClient.Systems.VesselProtoSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is VesselBaseMsgData msgData)) return;
+            if (!(msg.Data is VesselBaseMsgData msgData)) return;
 
             switch (msgData.VesselMessageType)
             {
                 case VesselMessageType.ListReply:
-                    HandleVesselList((VesselListReplyMsgData)messageData);
+                    HandleVesselList((VesselListReplyMsgData)msgData);
                     break;
                 case VesselMessageType.VesselsReply:
-                    HandleVesselResponse((VesselsReplyMsgData)messageData);
+                    HandleVesselResponse((VesselsReplyMsgData)msgData);
                     break;
                 case VesselMessageType.Proto:
-                    HandleVesselProto((VesselProtoMsgData)messageData);
+                    HandleVesselProto((VesselProtoMsgData)msgData);
                     break;
                 default:
                     LunaLog.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");

@@ -16,15 +16,15 @@ namespace LunaClient.Systems.PlayerColorSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is PlayerColorBaseMsgData msgData)) return;
+            if (!(msg.Data is PlayerColorBaseMsgData msgData)) return;
 
             switch (msgData.PlayerColorMessageType)
             {
                 case PlayerColorMessageType.Reply:
                     {
-                        var data = (PlayerColorReplyMsgData)messageData;
+                        var data = (PlayerColorReplyMsgData)msgData;
                         System.PlayerColors.Clear();
                         for (var i = 0; i < data.PlayersColors.Length; i++)
                         {
@@ -40,7 +40,7 @@ namespace LunaClient.Systems.PlayerColorSys
                 case PlayerColorMessageType.Set:
                     {
                         //Player joined or changed it's color so update his controlled vessel orbit colors
-                        var data = (PlayerColorSetMsgData)messageData;
+                        var data = (PlayerColorSetMsgData)msgData;
                         var playerName = data.PlayerName;
                         var playerColor = System.ConvertStringToColor(data.Color);
                         LunaLog.Log($"[LMP]: Color Message, Name: {playerName} , color: {playerColor}");

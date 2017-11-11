@@ -1,5 +1,4 @@
 ﻿using LunaClient.Systems.SettingsSys;
-using LunaCommon.Message.Data.Vessel;
 using System;
 using UnityEngine;
 
@@ -15,9 +14,7 @@ namespace LunaClient.Systems.VesselPositionSys
     {
         #region Fields
 
-        public VesselPositionMsgData MsgData { get; set; }
-
-        public Vessel Vessel => FlightGlobals.Vessels.Find(v => v.id == MsgData.VesselId);
+        public Vessel Vessel => FlightGlobals.Vessels.Find(v => v.id == VesselId);
 
         private CelestialBody _body;
         public CelestialBody Body
@@ -26,7 +23,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 if (_body == null)
                 {
-                    _body = FlightGlobals.Bodies.Find(b => b.bodyName == MsgData.BodyName);
+                    _body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
                 }
 
                 return _body;
@@ -41,18 +38,35 @@ namespace LunaClient.Systems.VesselPositionSys
             get
             {
                 if (_target == null)
-                    VesselPositionSystem.TargetVesselUpdate.TryGetValue(MsgData.VesselId, out _target);
+                    VesselPositionSystem.TargetVesselUpdate.TryGetValue(VesselId, out _target);
                 return _target;
             }
         }
 
+
+        #region Message Fields
+        
+        public Guid VesselId { get; set; }
+        public string BodyName { get; set; }
+        public double[] LatLonAlt { get; set; }
+        public double[] NormalVector { get; set; }
+        public double[] Com { get; set; }
+        public double[] TransformPosition { get; set; }
+        public double[] Velocity { get; set; }
+        public double[] Orbit { get; set; }
+        public float Height { get; set; }
+        public float[] TransformRotation { get; set; }
+        public long SentTime { get; set; }
+
+        #endregion
+
         #region Vessel position information fields
 
-        public Quaternion Rotation => new Quaternion(MsgData.TransformRotation[0], MsgData.TransformRotation[1], MsgData.TransformRotation[2], MsgData.TransformRotation[3]);
-        public Vector3 TransformPos => new Vector3d(MsgData.TransformPosition[0], MsgData.TransformPosition[1], MsgData.TransformPosition[2]);
-        public Vector3 CoM => new Vector3d(MsgData.Com[0], MsgData.Com[1], MsgData.Com[2]);
-        public Vector3 Normal => new Vector3d(MsgData.NormalVector[0], MsgData.NormalVector[1], MsgData.NormalVector[2]);
-        public Vector3d VelocityVector => new Vector3d(MsgData.Velocity[0], MsgData.Velocity[1], MsgData.Velocity[2]);
+        public Quaternion Rotation => new Quaternion(TransformRotation[0], TransformRotation[1], TransformRotation[2], TransformRotation[3]);
+        public Vector3 TransformPos => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
+        public Vector3 CoM => new Vector3d(Com[0], Com[1], Com[2]);
+        public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
+        public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
 
         private Vector3d _position = Vector3d.zero;
         public Vector3d Position
@@ -61,7 +75,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 if (_position == Vector3d.zero && Body != null)
                 {
-                    _position = Body.GetWorldSurfacePosition(MsgData.LatLonAlt[0], MsgData.LatLonAlt[1], MsgData.LatLonAlt[2]);
+                    _position = Body.GetWorldSurfacePosition(LatLonAlt[0], LatLonAlt[1], LatLonAlt[2]);
                 }
                 return _position;
             }
@@ -81,79 +95,18 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #endregion
 
-        #region Constructors/Creation
-
-        public VesselPositionUpdate(VesselPositionMsgData msgData)
-        {
-            MsgData = msgData;
-        }
-
-        public VesselPositionUpdate(Vessel vessel)
-        {
-            try
-            {
-                MsgData.VesselId = vessel.id;
-                MsgData.BodyName = vessel.mainBody.bodyName;
-
-                MsgData.TransformRotation = new[]
-                {
-                    vessel.ReferenceTransform.rotation.x,
-                    vessel.ReferenceTransform.rotation.y,
-                    vessel.ReferenceTransform.rotation.z,
-                    vessel.ReferenceTransform.rotation.w
-                };
-                MsgData.TransformPosition = new[]
-                {
-                    (double)vessel.ReferenceTransform.position.x,
-                    (double)vessel.ReferenceTransform.position.y,
-                    (double)vessel.ReferenceTransform.position.z
-                };
-                MsgData.Velocity = new[]
-                {
-                    (double)vessel.rb_velocity.x,
-                    (double)vessel.rb_velocity.y,
-                    (double)vessel.rb_velocity.z,
-                };
-                MsgData.LatLonAlt = new[]
-                {
-                    vessel.latitude,
-                    vessel.longitude,
-                    vessel.altitude,
-                };
-                MsgData.Height = vessel.heightFromTerrain;
-                MsgData.Com = new[]
-                {
-                    (double)vessel.CoM.x,
-                    (double)vessel.CoM.x,
-                    (double)vessel.CoM.z,
-                };
-                MsgData.NormalVector = new[]
-                {
-                    (double)vessel.terrainNormal.x,
-                    (double)vessel.terrainNormal.y,
-                    (double)vessel.terrainNormal.z,
-                };
-                MsgData.Orbit = new[]
-                {
-                    vessel.orbit.inclination,
-                    vessel.orbit.eccentricity,
-                    vessel.orbit.semiMajorAxis,
-                    vessel.orbit.LAN,
-                    vessel.orbit.argumentOfPeriapsis,
-                    vessel.orbit.meanAnomalyAtEpoch,
-                    vessel.orbit.epoch,
-                    vessel.orbit.referenceBody.flightGlobalsIndex
-                };
-            }
-            catch (Exception e)
-            {
-                LunaLog.Log($"[LMP]: Failed to get vessel position update, exception: {e}");
-            }
-        }
-
-        #endregion
-
         #region Main method
+
+        public void ResetFields()
+        {
+            InterpolationStarted = false;
+            InterpolationFinished = false;
+            InterpolationDuration = 0;
+            LerpPercentage = 0;
+            _position = Vector3d.zero;
+            _body = null;
+            _target = null;
+        }
 
         public void ApplyVesselUpdate()
         {
@@ -161,13 +114,13 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 if (Body == null || Vessel == null || Vessel.precalc == null || Target == null)
                 {
-                    VesselPositionSystem.VesselsToRemove.Enqueue(MsgData.VesselId);
+                    VesselPositionSystem.VesselsToRemove.Enqueue(VesselId);
                     return;
                 }
 
                 if (!InterpolationStarted)
                 {
-                    var interval = (float)TimeSpan.FromTicks(Target.MsgData.SentTime - MsgData.SentTime).TotalSeconds;
+                    var interval = (float)TimeSpan.FromTicks(Target.SentTime - SentTime).TotalSeconds;
                     InterpolationDuration = Mathf.Clamp(interval, 0, 0.5f);
                     InterpolationStarted = true;
                 }
@@ -196,8 +149,8 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ApplyInterpolations(float lerpPercentage)
         {                
             //TODO: Check if this can be improved as it probably creates a lot of garbage in memory. Perhaps we can reuse the Orbit class?
-            var tgtOrbit = new Orbit(Target.MsgData.Orbit[0], Target.MsgData.Orbit[1], Target.MsgData.Orbit[2], Target.MsgData.Orbit[3],
-                Target.MsgData.Orbit[4], Target.MsgData.Orbit[5], Target.MsgData.Orbit[6], Body);
+            var tgtOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
+                Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Body);
 
             CopyOrbit(tgtOrbit, Vessel.orbitDriver.orbit);
             Vessel.orbitDriver.orbit.Init();
@@ -208,9 +161,9 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 //DO NOT lerp the latlonalt as otherwise if you are in 
                 //orbit you will see landed vessels in the map view with weird jittering
-                Vessel.latitude = Target.MsgData.LatLonAlt[0];
-                Vessel.longitude = Target.MsgData.LatLonAlt[1];
-                Vessel.altitude = Target.MsgData.LatLonAlt[2];
+                Vessel.latitude = Target.LatLonAlt[0];
+                Vessel.longitude = Target.LatLonAlt[1];
+                Vessel.altitude = Target.LatLonAlt[2];
             }
             else
             {
@@ -241,7 +194,7 @@ namespace LunaClient.Systems.VesselPositionSys
                         break;
                     case Vessel.Situations.FLYING:
                     case Vessel.Situations.SUB_ORBITAL:
-                        Vessel.heightFromTerrain = Target.MsgData.Height;
+                        Vessel.heightFromTerrain = Target.Height;
                         Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
                         Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
                         break;
@@ -257,6 +210,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
             }
         }
+
+        #endregion
+
+        #region Helper methods
 
         /// <summary>
         /// Custom lerp as Unity does not have a lerp for double values
@@ -291,8 +248,7 @@ namespace LunaClient.Systems.VesselPositionSys
             destinationOrbit.epoch = sourceOrbit.epoch;
             destinationOrbit.referenceBody = sourceOrbit.referenceBody;
         }
-
-
+        
         #endregion
     }
 }

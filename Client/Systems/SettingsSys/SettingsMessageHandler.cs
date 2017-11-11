@@ -12,9 +12,9 @@ namespace LunaClient.Systems.SettingsSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is SettingsReplyMsgData msgData)) return;
+            if (!(msg.Data is SettingsReplyMsgData msgData)) return;
 
             SettingsSystem.ServerSettings.WarpMode = msgData.WarpMode;
             SettingsSystem.ServerSettings.GameMode = msgData.GameMode;

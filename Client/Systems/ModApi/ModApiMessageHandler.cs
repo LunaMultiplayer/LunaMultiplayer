@@ -10,12 +10,15 @@ namespace LunaClient.Systems.ModApi
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is ModMsgData msgData)) return;
+            if (!(msg.Data is ModMsgData msgData)) return;
 
             var modName = msgData.ModName;
-            var modData = msgData.Data;
+
+            //Clone it as after that the mesage will be recycled
+            //TODO: can this be improved to avoid garbage?
+            var modData = msgData.Data.Clone() as byte[];
             lock (System.EventLock)
             {
                 if (System.UpdateQueue.ContainsKey(modName))

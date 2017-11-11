@@ -88,6 +88,7 @@
     <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
+    <Compile Include="Systems\VesselPositionSys\MessageToPositionTransfer.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />

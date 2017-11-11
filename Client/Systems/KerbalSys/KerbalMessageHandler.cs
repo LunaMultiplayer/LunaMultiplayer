@@ -13,9 +13,9 @@ namespace LunaClient.Systems.KerbalSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is KerbalBaseMsgData msgData)) return;
+            if (!(msg.Data is KerbalBaseMsgData msgData)) return;
 
             switch (msgData.KerbalMessageType)
             {

@@ -10,9 +10,9 @@ namespace LunaClient.Systems.VesselRemoveSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is VesselRemoveMsgData msgData)) return;
+            if (!(msg.Data is VesselRemoveMsgData msgData)) return;
 
             LunaLog.Log($"[LMP]: Received a vessel remove message. Removing vessel: {msgData.VesselId}");
             System.AddToKillList(msgData.VesselId);

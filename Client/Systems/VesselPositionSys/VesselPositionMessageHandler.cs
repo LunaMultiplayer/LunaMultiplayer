@@ -11,9 +11,9 @@ namespace LunaClient.Systems.VesselPositionSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is VesselPositionMsgData msgData)) return;
+            if (!(msg.Data is VesselPositionMsgData msgData)) return;
             
             var vesselId = msgData.VesselId;
 
@@ -22,20 +22,20 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (!VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var existingPositionUpdate))
             {
-                VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, new VesselPositionUpdate(msgData));
-                VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, new VesselPositionUpdate(msgData));
+                VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
+                VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
             }
             else
             {
-                if (existingPositionUpdate.MsgData.SentTime < msgData.SentTime &&
+                if (existingPositionUpdate.SentTime < msgData.SentTime &&
                     (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted))
                 {
                     if (VesselPositionSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate))
                     {
-                        existingPositionUpdate.MsgData = existingTargetPositionUpdate.MsgData;
-
-                        var newUpdate = new VesselPositionUpdate(msgData);
-                        VesselPositionSystem.TargetVesselUpdate.AddOrUpdate(vesselId, newUpdate, (key, existingVal) => newUpdate);
+                        existingPositionUpdate.ResetFields();
+                        existingTargetPositionUpdate.ResetFields();
+                        MessageToPositionTransfer.UpdateFromUpdate(existingTargetPositionUpdate, existingPositionUpdate);
+                        MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
                     }
                 }
             }

@@ -33,7 +33,7 @@ namespace LunaClient.Base
             {
                 TaskFactory.StartNew(() =>
                 {
-                    HandleMessage(msg.Data);
+                    HandleMessage(msg);
                     msg.Recycle();
                 });
             }
@@ -63,22 +63,21 @@ namespace LunaClient.Base
 
             while (MessageHandler.IncomingMessages.TryDequeue(out var msg))
             {
-                HandleMessage(msg.Data);
+                HandleMessage(msg);
                 msg.Recycle();
             }
         }
 
-        private void HandleMessage(IMessageData msgData)
+        private void HandleMessage(IServerMessageBase msg)
         {
             try
             {
-                MessageHandler.HandleMessage(msgData);
-                //After the message has been handled set it ready to be recycled
+                MessageHandler.HandleMessage(msg);
             }
             catch (Exception e)
             {
-                LunaLog.LogError($"[LMP]: Error handling Message type {msgData.GetType()}, exception: {e}");
-                NetworkConnection.Disconnect($"Error handling {msgData.GetType()} Message");
+                LunaLog.LogError($"[LMP]: Error handling Message type {msg.Data.GetType()}, exception: {e}");
+                NetworkConnection.Disconnect($"Error handling {msg.Data.GetType()} Message");
             }
         }
     }

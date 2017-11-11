@@ -129,8 +129,9 @@ namespace LunaCommon.Message.Base
                 var fullData = new byte[header.Length + data.Length];
                 header.CopyTo(fullData, 0);
                 data.CopyTo(fullData, header.Length);
-                
-                MessageStore.RecycleMessage(this);
+
+                //After serializing we can probably recycle it
+                Recycle();
 
                 return fullData;
             }

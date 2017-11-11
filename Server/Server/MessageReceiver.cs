@@ -73,8 +73,9 @@ namespace LunaServer.Server
             //Handle the message
             HandlerDictionary[message.MessageType].HandleMessage(client, message.Data);
 
-            //Once message is handled, recicle it
-            message.Recycle();
+            //The server does not recycle RECEIVED messages as memory spikes are not so important here
+            //Also this would mess with the relay system
+            //message.Recycle();
         }
 
         private static IClientMessageBase DeserializeMessage(byte[] messageBytes)

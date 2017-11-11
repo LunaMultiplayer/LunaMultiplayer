@@ -12,15 +12,15 @@ namespace LunaClient.Systems.Lock
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is LockBaseMsgData msgData)) return;
+            if (!(msg.Data is LockBaseMsgData msgData)) return;
 
             switch (msgData.LockMessageType)
             {
                 case LockMessageType.ListReply:
                     {
-                        var data = (LockListReplyMsgData)messageData;
+                        var data = (LockListReplyMsgData)msgData;
                         LockSystem.LockStore.ClearAllLocks();
 
                         foreach (var lockKey in data.Locks)
@@ -33,7 +33,7 @@ namespace LunaClient.Systems.Lock
                     break;
                 case LockMessageType.Acquire:
                     {
-                        var data = (LockAcquireMsgData)messageData;
+                        var data = (LockAcquireMsgData)msgData;
 
                         if (data.LockResult)
                             LockSystem.LockStore.AddOrUpdateLock(data.Lock);
@@ -43,7 +43,7 @@ namespace LunaClient.Systems.Lock
                     break;
                 case LockMessageType.Release:
                     {
-                        var data = (LockReleaseMsgData)messageData;
+                        var data = (LockReleaseMsgData)msgData;
                         LockSystem.LockStore.RemoveLock(data.Lock);
 
                         System.FireReleaseEvent(data.Lock);

@@ -14,15 +14,15 @@ namespace LunaClient.Systems.CraftLibrary
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is CraftLibraryBaseMsgData msgData)) return;
+            if (!(msg.Data is CraftLibraryBaseMsgData msgData)) return;
 
             switch (msgData.CraftMessageType)
             {
                 case CraftMessageType.ListReply:
                     {
-                        var data = (CraftLibraryListReplyMsgData)messageData;
+                        var data = (CraftLibraryListReplyMsgData)msgData;
                         var playerList = data.PlayerCrafts;
                         foreach (var playerCraft in playerList)
                         {
@@ -78,7 +78,7 @@ namespace LunaClient.Systems.CraftLibrary
                     break;
                 case CraftMessageType.AddFile:
                     {
-                        var data = (CraftLibraryAddMsgData)messageData;
+                        var data = (CraftLibraryAddMsgData)msgData;
                         var cce = new CraftChangeEntry
                         {
                             PlayerName = data.PlayerName,
@@ -92,7 +92,7 @@ namespace LunaClient.Systems.CraftLibrary
                     break;
                 case CraftMessageType.DeleteFile:
                     {
-                        var data = (CraftLibraryDeleteMsgData)messageData;
+                        var data = (CraftLibraryDeleteMsgData)msgData;
                         var cce = new CraftChangeEntry
                         {
                             PlayerName = data.PlayerName,
@@ -104,7 +104,7 @@ namespace LunaClient.Systems.CraftLibrary
                     break;
                 case CraftMessageType.RespondFile:
                     {
-                        var data = (CraftLibraryRespondMsgData)messageData;
+                        var data = (CraftLibraryRespondMsgData)msgData;
                         var cre = new CraftResponseEntry
                         {
                             PlayerName = data.PlayerName,

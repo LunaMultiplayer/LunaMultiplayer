@@ -13,13 +13,13 @@ namespace LunaClient.Systems.Scenario
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is ScenarioBaseMsgData msgData)) return;
+            if (!(msg.Data is ScenarioBaseMsgData msgData)) return;
 
             if (msgData.ScenarioMessageType == ScenarioMessageType.Data)
             {
-                var data = ((ScenarioDataMsgData)messageData).ScenarioNameData;
+                var data = ((ScenarioDataMsgData)msgData).ScenarioNameData;
                 foreach (var scenario in data)
                 {
                     var scenarioNode = ConfigNodeSerializer.Deserialize(scenario.Value);

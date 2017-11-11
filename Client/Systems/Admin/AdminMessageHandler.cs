@@ -12,15 +12,15 @@ namespace LunaClient.Systems.Admin
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is AdminBaseMsgData msgData)) return;
+            if (!(msg.Data is AdminBaseMsgData msgData)) return;
 
             switch (msgData.AdminMessageType)
             {
                 case AdminMessageType.ListReply:
                     {
-                        var data = (AdminListReplyMsgData)messageData;
+                        var data = (AdminListReplyMsgData)msgData;
                         foreach (var adminName in data.Admins)
                             System.RegisterServerAdmin(adminName);
                         MainSystem.NetworkState = ClientState.AdminsSynced;
@@ -28,13 +28,13 @@ namespace LunaClient.Systems.Admin
                     break;
                 case AdminMessageType.Add:
                     {
-                        var data = (AdminAddMsgData)messageData;
+                        var data = (AdminAddMsgData)msgData;
                         System.RegisterServerAdmin(data.PlayerName);
                     }
                     break;
                 case AdminMessageType.Remove:
                     {
-                        var data = (AdminRemoveMsgData)messageData;
+                        var data = (AdminRemoveMsgData)msgData;
                         System.UnregisterServerAdmin(data.PlayerName);
                     }
                     break;

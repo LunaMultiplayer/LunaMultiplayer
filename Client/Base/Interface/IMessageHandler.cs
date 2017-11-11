@@ -6,6 +6,6 @@ namespace LunaClient.Base.Interface
     public interface IMessageHandler
     {
         ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; }
-        void HandleMessage(IMessageData messageData);
+        void HandleMessage(IServerMessageBase msg);
     }
 }

@@ -13,15 +13,15 @@ namespace LunaClient.Systems.Chat
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is ChatBaseMsgData msgData)) return;
+            if (!(msg.Data is ChatBaseMsgData msgData)) return;
 
             switch (msgData.ChatMessageType)
             {
                 case ChatMessageType.ListReply:
                     {
-                        var data = (ChatListReplyMsgData)messageData;
+                        var data = (ChatListReplyMsgData)msgData;
                         foreach (var keyVal in data.PlayerChannels)
                             foreach (var channelName in keyVal.Value)
                                 System.Queuer.QueueChatJoin(keyVal.Key, channelName);
@@ -31,25 +31,25 @@ namespace LunaClient.Systems.Chat
                     break;
                 case ChatMessageType.Join:
                     {
-                        var data = (ChatJoinMsgData)messageData;
+                        var data = (ChatJoinMsgData)msgData;
                         System.Queuer.QueueChatJoin(data.From, data.Channel);
                     }
                     break;
                 case ChatMessageType.Leave:
                     {
-                        var data = (ChatLeaveMsgData)messageData;
+                        var data = (ChatLeaveMsgData)msgData;
                         System.Queuer.QueueChatLeave(data.From, data.Channel);
                     }
                     break;
                 case ChatMessageType.ChannelMessage:
                     {
-                        var data = (ChatChannelMsgData)messageData;
+                        var data = (ChatChannelMsgData)msgData;
                         System.Queuer.QueueChannelMessage(data.From, data.Channel, data.Text);
                     }
                     break;
                 case ChatMessageType.PrivateMessage:
                     {
-                        var data = (ChatPrivateMsgData)messageData;
+                        var data = (ChatPrivateMsgData)msgData;
                         if (data.To == SettingsSystem.CurrentSettings.PlayerName ||
                             data.From == SettingsSystem.CurrentSettings.PlayerName)
                             System.Queuer.QueuePrivateMessage(data.From, data.To, data.Text);
@@ -57,7 +57,7 @@ namespace LunaClient.Systems.Chat
                     break;
                 case ChatMessageType.ConsoleMessage:
                     {
-                        var data = (ChatConsoleMsgData)messageData;
+                        var data = (ChatConsoleMsgData)msgData;
                         System.Queuer.QueueSystemMessage(data.Message);
                     }
                     break;

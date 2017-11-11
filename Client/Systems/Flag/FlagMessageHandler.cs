@@ -15,15 +15,15 @@ namespace LunaClient.Systems.Flag
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is FlagBaseMsgData msgData)) return;
+            if (!(msg.Data is FlagBaseMsgData msgData)) return;
 
             switch (msgData.FlagMessageType)
             {
                 case FlagMessageType.ListResponse:
                     {
-                        var data = (FlagListResponseMsgData)messageData;
+                        var data = (FlagListResponseMsgData)msgData;
                         foreach (var flag in data.FlagFiles)
                         {
                             var extendedFlagInfo = new ExtendedFlagInfo(flag);
@@ -34,14 +34,14 @@ namespace LunaClient.Systems.Flag
                     break;
                 case FlagMessageType.FlagData:
                     {
-                        var data = (FlagDataMsgData)messageData;
+                        var data = (FlagDataMsgData)msgData;
                         var extendedFlagInfo = new ExtendedFlagInfo(data.Flag);
                         System.ServerFlags.AddOrUpdate(extendedFlagInfo.FlagName, extendedFlagInfo, (key, existingVal) => extendedFlagInfo);
                     }
                     break;
                 case FlagMessageType.FlagDelete:
                     {
-                        var data = (FlagDeleteMsgData)messageData;
+                        var data = (FlagDeleteMsgData)msgData;
                         System.ServerFlags.TryRemove(data.FlagName, out _);
                         DeleteFlagFile(CommonUtil.CombinePaths(FlagSystem.FlagPath, data.FlagName));
                     }

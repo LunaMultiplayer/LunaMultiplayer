@@ -10,12 +10,12 @@ namespace LunaClient.Systems.TimeSyncer
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is SyncTimeReplyMsgData msgData)) return;
+            if (!(msg.Data is SyncTimeReplyMsgData msgData)) return;
 
             System.ServerStartTime = msgData.ServerStartTime;
-            System.HandleSyncTime(messageData.ReceiveTime, msgData.ClientSendTime, msgData.ServerReceiveTime, msgData.ServerSendTime);
+            System.HandleSyncTime(msgData.ReceiveTime, msgData.ClientSendTime, msgData.ServerReceiveTime, msgData.ServerSendTime);
         }
     }
 }

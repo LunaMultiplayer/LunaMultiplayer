@@ -12,9 +12,9 @@ namespace LunaClient.Systems.Motd
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is MotdReplyMsgData msgData)) return;
+            if (!(msg.Data is MotdReplyMsgData msgData)) return;
 
             if (!string.IsNullOrEmpty(msgData.MessageOfTheDay))
             {

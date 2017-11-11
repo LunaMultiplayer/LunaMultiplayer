@@ -10,9 +10,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is VesselFlightStateMsgData msgData)) return;
+            if (!(msg.Data is VesselFlightStateMsgData msgData)) return;
 
             if (System.FlightStatesDictionary.TryGetValue(msgData.VesselId, out var existingFlightState))
             {

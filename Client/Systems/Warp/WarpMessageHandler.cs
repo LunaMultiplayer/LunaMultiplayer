@@ -13,15 +13,15 @@ namespace LunaClient.Systems.Warp
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is WarpBaseMsgData msgData)) return;
+            if (!(msg.Data is WarpBaseMsgData msgData)) return;
 
             switch (msgData.WarpMessageType)
             {
                 case WarpMessageType.SubspacesReply:
                     {
-                        var data = (WarpSubspacesReplyMsgData)messageData;
+                        var data = (WarpSubspacesReplyMsgData)msgData;
                         for (var i = 0; i < data.SubspaceKey.Length; i++)
                         {
                             AddSubspace(data.SubspaceKey[i], data.SubspaceTime[i]);
@@ -45,7 +45,7 @@ namespace LunaClient.Systems.Warp
                     break;
                 case WarpMessageType.NewSubspace:
                     {
-                        var data = (WarpNewSubspaceMsgData)messageData;
+                        var data = (WarpNewSubspaceMsgData)msgData;
                         AddSubspace(data.SubspaceKey, data.ServerTimeDifference);
                         if (data.PlayerCreator == SettingsSystem.CurrentSettings.PlayerName)
                         {
@@ -58,13 +58,13 @@ namespace LunaClient.Systems.Warp
                     break;
                 case WarpMessageType.ChangeSubspace:
                     {
-                        var data = (WarpChangeSubspaceMsgData)messageData;
+                        var data = (WarpChangeSubspaceMsgData)msgData;
                         System.ClientSubspaceList[data.PlayerName] = data.Subspace;
                     }
                     break;
                 default:
                     {
-                        LunaLog.LogError($"[LMP]: Unhandled WARP_MESSAGE type: {((WarpBaseMsgData)messageData).WarpMessageType}");
+                        LunaLog.LogError($"[LMP]: Unhandled WARP_MESSAGE type: {msgData.WarpMessageType}");
                         break;
                     }
             }

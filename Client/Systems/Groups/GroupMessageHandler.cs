@@ -13,15 +13,15 @@ namespace LunaClient.Systems.Groups
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is GroupBaseMsgData msgData)) return;
+            if (!(msg.Data is GroupBaseMsgData msgData)) return;
 
             switch (msgData.GroupMessageType)
             {
                 case GroupMessageType.ListResponse:
                     {
-                        var data = (GroupListResponseMsgData)messageData;
+                        var data = (GroupListResponseMsgData)msgData;
                         foreach (var group in data.Groups)
                         {
                             System.Groups.TryAdd(group.Name, group);
@@ -31,13 +31,13 @@ namespace LunaClient.Systems.Groups
                     }
                 case GroupMessageType.RemoveGroup:
                     {
-                        var data = (GroupRemoveMsgData)messageData;
+                        var data = (GroupRemoveMsgData)msgData;
                         System.Groups.TryRemove(data.GroupName, out _);
                         break;
                     }
                 case GroupMessageType.GroupUpdate:
                     {
-                        var data = (GroupUpdateMsgData)messageData;
+                        var data = (GroupUpdateMsgData)msgData;
                         System.Groups.AddOrUpdate(data.Group.Name, data.Group, (key, existingVal) => data.Group);
                         break;
                     }

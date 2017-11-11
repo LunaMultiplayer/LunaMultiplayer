@@ -13,9 +13,9 @@ namespace LunaClient.Systems.VesselDockSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is VesselDockMsgData msgData)) return;
+            if (!(msg.Data is VesselDockMsgData msgData)) return;
 
             LunaLog.Log("[LMP]: Docking message received!");
 

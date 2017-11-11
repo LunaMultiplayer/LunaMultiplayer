@@ -15,9 +15,9 @@ namespace LunaClient.Systems.PlayerConnection
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is PlayerConnectionBaseMsgData msgData)) return;
+            if (!(msg.Data is PlayerConnectionBaseMsgData msgData)) return;
 
             var playerName = msgData.PlayerName;
             switch (msgData.PlayerConnectionMessageType)

@@ -38,7 +38,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Base overrides
-
+        
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
@@ -164,9 +164,9 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] GetLatestVesselPosition(Guid vesselId)
         {
             return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ? 
-                vesselPosition.MsgData.LatLonAlt :
+                vesselPosition.LatLonAlt :
                 CurrentVesselUpdate.TryGetValue(vesselId, out vesselPosition) ?
-                    vesselPosition.MsgData.LatLonAlt :
+                    vesselPosition.LatLonAlt :
                     null;
         }
     }

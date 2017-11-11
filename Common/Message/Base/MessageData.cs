@@ -21,8 +21,5 @@ namespace LunaCommon.Message.Base
 
         /// <inheritdoc />
         public virtual ushort SubType => 0;
-
-        /// <inheritdoc />
-        public bool ReadyToRecycle { get; set; }
     }
 }

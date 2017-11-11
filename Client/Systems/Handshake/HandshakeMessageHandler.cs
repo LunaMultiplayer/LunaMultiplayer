@@ -19,18 +19,18 @@ namespace LunaClient.Systems.Handshake
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is HandshakeBaseMsgData msgData)) return;
+            if (!(msg.Data is HandshakeBaseMsgData msgData)) return;
 
             switch (msgData.HandshakeMessageType)
             {
                 case HandshakeMessageType.Challenge:
-                    HandleChallengeReceivedMessage((HandshakeChallengeMsgData)messageData);
-                    MainSystem.NetworkState = ClientState.Handshaking;
+                    HandleChallengeReceivedMessage((HandshakeChallengeMsgData)msgData);
+                    MainSystem.NetworkState = ClientState.Authenticating;
                     break;
                 case HandshakeMessageType.Reply:
-                    HandleHandshakeReplyReceivedMessage((HandshakeReplyMsgData)messageData);
+                    HandleHandshakeReplyReceivedMessage((HandshakeReplyMsgData)msgData);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -14,18 +14,18 @@ namespace LunaClient.Systems.Status
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public void HandleMessage(IMessageData messageData)
+        public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(messageData is PlayerStatusBaseMsgData msgData)) return;
+            if (!(msg.Data is PlayerStatusBaseMsgData msgData)) return;
 
             switch (msgData.PlayerStatusMessageType)
             {
                 case PlayerStatusMessageType.Reply:
-                    HandlePlayerStatusReply(messageData);
+                    HandlePlayerStatusReply(msgData);
                     break;
                 case PlayerStatusMessageType.Set:
-                    var msg = (PlayerStatusSetMsgData)messageData;
-                    AddNewPlayerStatus(msg.PlayerName, msg.VesselText, msg.StatusText);
+                    var msgStatusData = (PlayerStatusSetMsgData)msgData;
+                    AddNewPlayerStatus(msgStatusData.PlayerName, msgStatusData.VesselText, msgStatusData.StatusText);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
