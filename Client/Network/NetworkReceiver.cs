@@ -68,7 +68,6 @@ namespace LunaClient.Network
                                 catch (Exception e)
                                 {
                                     LunaLog.LogError($"[LMP]: Error deserializing message! {e}");
-                                    NetworkMain.HandleDisconnectException(e);
                                 }
                                 break;
                             case NetIncomingMessageType.StatusChanged:
