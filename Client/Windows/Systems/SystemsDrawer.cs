@@ -7,6 +7,7 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.ModApi;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
@@ -148,6 +149,15 @@ namespace LunaClient.Windows.Systems
                     ButtonStyle);
                 if (!string.IsNullOrEmpty(VesselImmortalProfilerText))
                     GUILayout.Label(VesselImmortalProfilerText, LabelStyle);
+            }
+
+            VesselChange = GUILayout.Toggle(VesselChange, "Vessel change", ButtonStyle);
+            if (VesselChange)
+            {
+                SystemsContainer.Get<VesselChangeSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselChangeSystem>().Enabled, "ON/OFF",
+                    ButtonStyle);
+                if (!string.IsNullOrEmpty(VesselChangeProfilerText))
+                    GUILayout.Label(VesselChangeProfilerText, LabelStyle);
             }
 
             VesselLock = GUILayout.Toggle(VesselLock, "Vessel lock", ButtonStyle);

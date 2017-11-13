@@ -128,17 +128,11 @@ namespace LunaServer.Settings.Definition
         [XmlComment(Value = "Interval in ms at wich users will sync time with the server")]
         public int ClockSetMsInterval { get; set; } = 100;
 
-        [XmlComment(Value = "Interval in ms at wich users will check for vessels in empty subspaces and move them to the server subspace")]
-        public int StrandedVesselsCheckMsInterval { get; set; } = 100;
-
         [XmlComment(Value = "Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions to the server")]
         public int VesselDefinitionSendMsInterval { get; set; } = 500;
 
         [XmlComment(Value = "Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions to the server")]
         public int VesselDefinitionSendFarMsInterval { get; set; } = 1000;
-
-        [XmlComment(Value = "Interval in ms at wich users will send the abandoned vessel definition to the server")]
-        public int AbandonedVesselsUpdateMsInterval { get; set; } = 15000;
 
         [XmlComment(Value = "Relay system mode. Dictionary uses more RAM but it's faster. DataBase use disk space instead but it's slower" +
                             "Values: Dictionary, DataBase")]

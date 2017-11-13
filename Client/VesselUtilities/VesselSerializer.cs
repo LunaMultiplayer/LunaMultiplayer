@@ -1,9 +1,10 @@
-﻿using LunaClient.Systems.KerbalReassigner;
+﻿using LunaClient.Systems;
+using LunaClient.Systems.KerbalReassigner;
 using LunaClient.Utilities;
 using System;
 using System.Linq;
 
-namespace LunaClient.Systems.VesselProtoSys
+namespace LunaClient.VesselUtilities
 {
     public class VesselSerializer
     {

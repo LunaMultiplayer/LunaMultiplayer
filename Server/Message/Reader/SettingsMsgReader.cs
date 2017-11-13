@@ -27,10 +27,8 @@ namespace LunaServer.Message.Reader
             msgData.DropControlOnVesselSwitching = GeneralSettings.SettingsStore.DropControlOnVesselSwitching;
             msgData.DropControlOnExitFlight = GeneralSettings.SettingsStore.DropControlOnExitFlight;
             msgData.DropControlOnExit = GeneralSettings.SettingsStore.DropControlOnExit;
-            msgData.StrandedVesselsCheckMsInterval = GeneralSettings.SettingsStore.StrandedVesselsCheckMsInterval;
             msgData.VesselDefinitionSendMsInterval = GeneralSettings.SettingsStore.VesselDefinitionSendMsInterval;
             msgData.VesselDefinitionSendFarMsInterval = GeneralSettings.SettingsStore.VesselDefinitionSendFarMsInterval;
-            msgData.AbandonedVesselsUpdateMsInterval = GeneralSettings.SettingsStore.AbandonedVesselsUpdateMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.ClockSetMsInterval = GeneralSettings.SettingsStore.ClockSetMsInterval;
             msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;

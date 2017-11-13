@@ -72,8 +72,7 @@ namespace LunaClient.Systems.Mod
                 .Select(d => d.Substring(d.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).ToLower())
                 .Where(d => !d.StartsWith("squad", StringComparison.OrdinalIgnoreCase)
                             && !d.StartsWith("nasamission", StringComparison.OrdinalIgnoreCase)
-                            && !d.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase))
-                .ToArray();
+                            && !d.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase));
 
             //Add top level dll's to required (It's usually things like modulemanager)
             requiredFiles.AddRange(
@@ -151,19 +150,21 @@ namespace LunaClient.Systems.Mod
 
         public void CheckCommonStockParts()
         {
+            var missingPartsCount = 0;
             LunaLog.Log("[LMP]: Missing parts start");
-            var missingParts = PartLoader.LoadedPartsList.Where(p => !Common.GetStockParts().Contains(p.name)).ToList();
+            var missingParts = PartLoader.LoadedPartsList.Where(p => !Common.GetStockParts().Contains(p.name));
 
             foreach (var part in missingParts)
             {
+                missingPartsCount++;
                 LunaLog.Log($"[LMP]: Missing '{part.name}'");
             }
 
             LunaLog.Log("[LMP]: Missing parts end");
 
             ScreenMessages.PostScreenMessage(
-                missingParts.Any()
-                    ? $"{missingParts.Count} missing part(s) from Common.dll printed to debug log ({PartLoader.LoadedPartsList.Count} total)"
+                missingPartsCount > 0
+                    ? $"{missingPartsCount} missing part(s) from Common.dll printed to debug log ({PartLoader.LoadedPartsList.Count} total)"
                     : $"No missing parts out of from Common.dll ({PartLoader.LoadedPartsList.Count} total)",
                 5f, ScreenMessageStyle.UPPER_CENTER);
         }

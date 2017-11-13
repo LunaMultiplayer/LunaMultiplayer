@@ -1,5 +1,6 @@
 using LunaClient.Base;
 using LunaClient.Utilities;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Windows.UniverseConverter
@@ -10,7 +11,7 @@ namespace LunaClient.Windows.UniverseConverter
         private const float WindowWidth = 200;
 
         public bool LoadEventHandled { get; } = true;
-        protected string[] SaveDirectories { get; } = Utilities.UniverseConverter.GetSavedNames();
+        protected IEnumerable<string> SaveDirectories { get; } = Utilities.UniverseConverter.GetSavedNames();
         
         public override void OnGui()
         {

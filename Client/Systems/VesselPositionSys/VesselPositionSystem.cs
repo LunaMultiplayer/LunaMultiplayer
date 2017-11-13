@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -142,7 +143,7 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         /// <summary>
-        /// Send updates for vessels that we own the update lock.
+        /// Send updates for vessels that we own the update lock. And also send it for the abandoned ones
         /// </summary>
         private void SendSecondaryVesselPositionUpdates()
         {
@@ -150,6 +151,12 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
                 foreach (var secondaryVessel in secondaryVesselsToUpdate)
+                {
+                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
+                }
+
+                var abandonedVesselsToUpdate = VesselCommon.GetAbandonedVessels();
+                foreach (var secondaryVessel in abandonedVesselsToUpdate)
                 {
                     MessageSender.SendVesselPositionUpdate(secondaryVessel);
                 }

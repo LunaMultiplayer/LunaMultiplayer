@@ -10,6 +10,7 @@
         Dock = 5,
         Remove = 6,
         Position = 7,
-        Flightstate = 8
+        Flightstate = 8,
+        Change = 9
     }
 }

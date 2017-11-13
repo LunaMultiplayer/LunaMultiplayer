@@ -27,7 +27,7 @@ namespace LunaClient.Systems.CraftLibrary
             new Dictionary<string, Dictionary<CraftType, List<string>>>();
 
         //Craft type -> Craft Name
-        public Dictionary<CraftType, List<string>> UploadList { get; } = new Dictionary<CraftType, List<string>>();
+        public Dictionary<CraftType, IEnumerable<string>> UploadList { get; } = new Dictionary<CraftType, IEnumerable<string>>();
 
         #region Paths
 
@@ -100,13 +100,13 @@ namespace LunaClient.Systems.CraftLibrary
             UploadList.Clear();
             if (Directory.Exists(VabPath))
                 UploadList.Add(CraftType.Vab,
-                    Directory.GetFiles(VabPath).Select(Path.GetFileNameWithoutExtension).ToList());
+                    Directory.GetFiles(VabPath).Select(Path.GetFileNameWithoutExtension));
             if (Directory.Exists(SphPath))
                 UploadList.Add(CraftType.Sph,
-                    Directory.GetFiles(SphPath).Select(Path.GetFileNameWithoutExtension).ToList());
+                    Directory.GetFiles(SphPath).Select(Path.GetFileNameWithoutExtension));
             if (Directory.Exists(VabPath))
                 UploadList.Add(CraftType.Subassembly,
-                    Directory.GetFiles(SubassemblyPath).Select(Path.GetFileNameWithoutExtension).ToList());
+                    Directory.GetFiles(SubassemblyPath).Select(Path.GetFileNameWithoutExtension));
         }
 
         public void QueueCraftAdd(CraftChangeEntry entry)

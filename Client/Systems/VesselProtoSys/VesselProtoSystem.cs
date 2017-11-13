@@ -3,11 +3,9 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Utilities;
-using LunaCommon;
+using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
 using System;
-using System.Collections.Concurrent;
 using System.Linq;
 using UnityEngine;
 
@@ -18,15 +16,9 @@ namespace LunaClient.Systems.VesselProtoSys
     /// We only load vesels that are in our subspace
     /// This system also handles changes that a vessel could have. Antenas that extend, shields that open, etc
     /// </summary>
-    public class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
+    public partial class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
         #region Fields & properties
-
-        public ConcurrentDictionary<Guid, VesselProtoUpdate> AllPlayerVessels { get; } =
-            new ConcurrentDictionary<Guid, VesselProtoUpdate>();
-
-        public ConcurrentDictionary<Guid, VesselChange> AllPlayerVesselChanges { get; } =
-            new ConcurrentDictionary<Guid, VesselChange>();
 
         public ScreenMessage BannedPartsMessage { get; set; }
         public string BannedPartsStr { get; set; }
@@ -58,9 +50,6 @@ namespace LunaClient.Systems.VesselProtoSys
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToReload));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ProcessVesselChanges));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.AbandonedVesselsUpdateMsInterval,
-                RoutineExecution.Update, SendAbandonedVesselsToServer));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval,
                 RoutineExecution.Update, SendVesselDefinition));
         }
@@ -69,77 +58,15 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             base.OnDisabled();
             GameEvents.onVesselWasModified.Remove(VesselProtoEvents.VesselModified);
-            ClearSystem();
+
+            //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
+            VesselsProtoStore.ClearSystem();
             BannedPartsStr = string.Empty;
         }
 
         #endregion
 
         #region Public
-
-        /// <summary>
-        /// Clears the dictionary, you should call this method when switching scene
-        /// </summary>
-        public void ClearSystem()
-        {
-            AllPlayerVessels.Clear();
-        }
-
-        /// <summary>
-        /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
-        /// </summary>
-        public void HandleVesselProtoData(byte[] vesselData, Guid vesselId)
-        {
-            TaskFactory.StartNew(() =>
-            {
-                var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
-                if (vesselNode != null && vesselId == Common.ConvertConfigStringToGuid(vesselNode.GetValue("pid")))
-                {
-                    //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
-                    var newProtoUpd = new VesselProtoUpdate(vesselNode, vesselId);
-                    if (newProtoUpd.ProtoVessel == null)
-                        return;
-
-                    if (!AllPlayerVessels.TryGetValue(vesselId, out var existingProtoUpd))
-                    {
-                        AllPlayerVessels.TryAdd(vesselId, newProtoUpd);
-                    }
-                    else
-                    {
-                        newProtoUpd.NeedsToBeReloaded = VesselCommon.ProtoVesselNeedsToBeReloaded(existingProtoUpd.Vessel, newProtoUpd.ProtoVessel);
-                        TaskFactory.StartNew(() =>
-                        {
-                            var changes = VesselChanges.GetProtoVesselChanges(existingProtoUpd.ProtoVessel, newProtoUpd.ProtoVessel);
-                            if (changes.HasChanges())
-                            {
-                                AllPlayerVesselChanges.AddOrUpdate(vesselId, changes, (key, existingVal) => changes);
-                            }
-                        });
-                        AllPlayerVessels.TryUpdate(vesselId, newProtoUpd, existingProtoUpd);
-                    }
-                }
-            });
-        }
-
-        /// <summary>
-        /// Removes a vessel from the loading system. If we receive a protovessel msg after this method is called it will be reloaded
-        /// </summary>
-        public void RemoveVesselFromLoadingSystem(Guid vesselId)
-        {
-            AllPlayerVessels.TryRemove(vesselId, out var _);
-        }
-
-        /// <summary>
-        /// Sets a vessel as unloaded so it can be recreated later. 
-        /// For example if you leave a subspace the vessel must still be in the system but it should be unloaded
-        /// </summary>
-        public void UnloadVesselFromLoadingSystem(Guid vesselId)
-        {
-            if (AllPlayerVessels.TryGetValue(vesselId, out var existingProtoUpdate))
-            {
-                AllPlayerVessels.TryUpdate(vesselId, new VesselProtoUpdate(existingProtoUpdate), existingProtoUpdate);
-            }
-        }
 
         /// <summary>
         /// Checks the vessel for invalid parts
@@ -163,33 +90,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
         #endregion
 
-        #region Update methods
-
-        /// <summary>
-        /// Here we run trough all the changes of the dictionary and applies them to the vessel.
-        /// We extend/retract antennas, open/close shields, etc...
-        /// Once done we just clear the dictionary
-        /// </summary>
-        private void ProcessVesselChanges()
-        {
-            try
-            {
-                if (ProtoSystemBasicReady)
-                {
-                    foreach (var vesselChange in AllPlayerVesselChanges)
-                    {
-                        var vessel = FlightGlobals.FindVessel(vesselChange.Key);
-                        VesselChanges.ProcessVesselChanges(vessel, vesselChange.Value);
-                    }
-
-                    AllPlayerVesselChanges.Clear();
-                }
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error in ProcessVesselChanges {e}");
-            }
-        }
+        #region Update routines
 
         /// <summary>
         /// Send the definition of our own vessel and the secondary vessels. We only send them after an interval specified.
@@ -242,26 +143,6 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         /// <summary>
-        /// Here we send the vessel that do not have update locks to the server at a given interval. This will update the orbit information etc in the server.
-        /// Bear in mind that the server cannot apply "VesselUpdateMessages" over vessel definitions therefore, to update the information of a vessel in the server
-        /// we must send all the vessel data.
-        /// </summary>
-        private void SendAbandonedVesselsToServer()
-        {
-            try
-            {
-                if (ProtoSystemBasicReady)
-                {
-                    MessageSender.SendVesselMessage(VesselCommon.GetAbandonedVessels());
-                }
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error in SendAbandonedVesselsToServer {e}");
-            }
-        }
-
-        /// <summary>
         /// Check vessels that must be loaded
         /// </summary>
         private void CheckVesselsToLoad()
@@ -271,22 +152,18 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
                 {
                     //Load vessels that don't exist and are in our subspace
-                    var vesselsToLoad = AllPlayerVessels
-                        .Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded)
-                        .ToArray();
+                    var vesselsToLoad = VesselsProtoStore.AllPlayerVessels
+                        .Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded);
 
                     foreach (var vesselProto in vesselsToLoad)
                     {
-                        var vesselWillBeKilled = VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key);
-                        if (vesselWillBeKilled)
+                        if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
                             continue;
 
                         LunaLog.Log($"[LMP]: Loading vessel {vesselProto.Key}");
                         if (VesselLoader.LoadVessel(vesselProto.Value.ProtoVessel))
                         {
-                            vesselProto.Value.NeedsToBeReloaded = false;
                             LunaLog.Log($"[LMP]: Vessel {vesselProto.Key} loaded");
-                            UpdateVesselProtoInDictionary(vesselProto.Value);
                         }
                     }
                 }
@@ -306,22 +183,21 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
                 {
-                    //Reload vessels that exist
-                    var vesselsToReLoad = AllPlayerVessels
-                        .Where(pv => pv.Value.NeedsToBeReloaded && pv.Value.VesselExist)
-                        .ToArray();
+                    //We run trough the vessels that already exist
+                    var vesselsToReLoad = VesselsProtoStore.AllPlayerVessels.Where(pv => pv.Value.VesselExist);
 
                     foreach (var vesselProto in vesselsToReLoad)
                     {
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
                             continue;
-                        
+
+                        if (!VesselCommon.ProtoVesselNeedsToBeReloaded(vesselProto.Value.Vessel, vesselProto.Value.ProtoVessel))
+                            continue;
+
                         LunaLog.Log($"[LMP]: Reloading vessel {vesselProto.Key}");
                         if (VesselLoader.ReloadVessel(vesselProto.Value.ProtoVessel))
                         {
-                            vesselProto.Value.NeedsToBeReloaded = false;
                             LunaLog.Log($"[LMP]: Vessel {vesselProto.Key} reloaded");
-                            UpdateVesselProtoInDictionary(vesselProto.Value);
                         }
                     }
                 }
@@ -336,26 +212,12 @@ namespace LunaClient.Systems.VesselProtoSys
 
         #region Private
 
-        /// <summary>
-        /// Updates the vesselProto from the dictionary in a thread safe manner
-        /// </summary>
-        public void UpdateVesselProtoInDictionary(VesselProtoUpdate vesselProto)
-        {
-            AllPlayerVessels.TryGetValue(vesselProto.VesselId, out var existingVesselProto);
-            if (existingVesselProto != null)
-            {
-                AllPlayerVessels.TryUpdate(vesselProto.VesselId, vesselProto, existingVesselProto);
-            }
-        }
-
         private static string GetInvalidVesselParts(Vessel checkVessel)
         {
             var bannedParts = checkVessel.BackupVessel().protoPartSnapshots
-                .Where(p => !SystemsContainer.Get<ModSystem>().AllowedParts.Contains(p.partName.ToLower())).Distinct().ToArray();
+                .Where(p => !SystemsContainer.Get<ModSystem>().AllowedParts.Contains(p.partName.ToLower())).Distinct();
 
             var bannedPartsStr = bannedParts.Aggregate("", (current, bannedPart) => current + $"{bannedPart}\n");
-
-            LunaLog.Log($"[LMP]: Checked vessel {checkVessel.id } for banned parts, is ok: {bannedParts.Length == 0}");
 
             return bannedPartsStr;
         }

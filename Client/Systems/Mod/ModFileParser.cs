@@ -152,7 +152,7 @@ namespace LunaClient.Systems.Mod
                 gameFilePaths.Select(
                     filePath =>
                         filePath.Substring(filePath.ToLowerInvariant().IndexOf("gamedata", StringComparison.Ordinal) + 9)
-                            .Replace('\\', '/')).ToList();
+                            .Replace('\\', '/'));
 
             //Check Required
             foreach (var requiredEntry in ParseRequired)
@@ -235,7 +235,7 @@ namespace LunaClient.Systems.Mod
             }
         }
 
-        private static void CheckNonDllFile(List<string> gameFileRelativePaths,
+        private static void CheckNonDllFile(IEnumerable<string> gameFileRelativePaths,
             KeyValuePair<string, string> requiredEntry, bool required)
         {
             var filePath = gameFileRelativePaths.FirstOrDefault(

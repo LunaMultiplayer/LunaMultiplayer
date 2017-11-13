@@ -189,7 +189,7 @@ namespace LunaClient.Systems.Asteroid
 
         public IEnumerable<Vessel> GetCurrentAsteroids()
         {
-            return FlightGlobals.Vessels.Where(VesselIsAsteroid).ToList();
+            return FlightGlobals.Vessels.Where(VesselIsAsteroid);
         }
 
         #endregion

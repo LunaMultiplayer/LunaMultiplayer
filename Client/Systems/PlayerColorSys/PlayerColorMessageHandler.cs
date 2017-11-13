@@ -60,8 +60,7 @@ namespace LunaClient.Systems.PlayerColorSys
         {
             var controlledVesselIds = LockSystem.LockQuery.GetAllControlLocks(playerName)
                 .Select(l => FlightGlobals.FindVessel(l.VesselId))
-                .Where(v => v != null)
-                .ToArray();
+                .Where(v => v != null);
 
             foreach (var vessel in controlledVesselIds)
             {

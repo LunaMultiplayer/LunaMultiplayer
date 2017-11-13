@@ -1,8 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
+using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -41,14 +41,14 @@ namespace LunaClient.Systems.VesselDockSys
                     /* We own the dominant vessel and dind't detected the docking event so we need to reload our OWN vessel
                      * so if we send our own protovessel later, we send the updated definition
                      */
-                    SystemsContainer.Get<VesselProtoSystem>().VesselLoader.ReloadVessel(newProto);
+                    VesselLoader.ReloadVessel(newProto);
                 }
                 return;
             }
 
             //Some other 2 players docked so just remove the weak vessel.
             SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(msgData.WeakVesselId);
-            SystemsContainer.Get<VesselProtoSystem>().HandleVesselProtoData(msgData.FinalVesselData, msgData.DominantVesselId);
+            VesselsProtoStore.HandleVesselProtoData(msgData.FinalVesselData, msgData.DominantVesselId);
         }
     }
 }

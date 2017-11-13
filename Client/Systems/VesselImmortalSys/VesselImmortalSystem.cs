@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
+using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
@@ -18,8 +19,10 @@ namespace LunaClient.Systems.VesselImmortalSys
 
         private bool VesselImmortalSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
 
-        private static List<Vessel> OwnedVessels { get; set; } = new List<Vessel>();
-        private static List<Vessel> OtherPeopleVessels { get; set; } = new List<Vessel>();
+        private static IEnumerable<Vessel> OwnedVessels { get; set; } = new List<Vessel>();
+        private static IEnumerable<Vessel> OtherPeopleVessels { get; set; } = new List<Vessel>();
+
+        private static List<Guid> OwnedVesselIds { get; set; } = new List<Guid>();
 
         #endregion
 
@@ -36,8 +39,8 @@ namespace LunaClient.Systems.VesselImmortalSys
         {
             base.OnDisabled();
 
-            OwnedVessels.Clear();
-            OtherPeopleVessels.Clear();
+            OwnedVessels = new Vessel[0];
+            OtherPeopleVessels = new Vessel[0];
 
             //In case we disable this system, set all the vessels back as mortal...
             foreach (var vessel in FlightGlobals.Vessels)
@@ -58,26 +61,24 @@ namespace LunaClient.Systems.VesselImmortalSys
         {
             if (Enabled && VesselImmortalSystemReady)
             {
-                var ownedVesselIds = LockSystem.LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName)
+                OwnedVesselIds.Clear();
+                OwnedVesselIds.AddRange(LockSystem.LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName)
                     .Select(l => l.VesselId)
                     .Union(LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                     .Select(l => l.VesselId))
-                    .Where(v=> !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(v))
-                    .ToList();
+                    .Where(v=> !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(v)));
 
-                OwnedVessels = ownedVesselIds
+                OwnedVessels = OwnedVesselIds
                     .Select(FlightGlobals.FindVessel)
-                    .Where(v => v != null)
-                    .ToList();
+                    .Where(v => v != null);
 
                 OtherPeopleVessels = LockSystem.LockQuery.GetAllControlLocks()
                     .Union(LockSystem.LockQuery.GetAllUpdateLocks())
                     .Select(l => l.VesselId)
-                    .Except(ownedVesselIds)
+                    .Except(OwnedVesselIds)
                     .Where(v => !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(v))
                     .Select(FlightGlobals.FindVessel)
-                    .Where(v => v != null)
-                    .ToList();
+                    .Where(v => v != null);
             }
         }
 
@@ -109,8 +110,8 @@ namespace LunaClient.Systems.VesselImmortalSys
         /// </summary>
         private static void SetVesselImmortalState(Vessel vessel, bool immortal)
         {
-            vessel.Parts.Where(p => p.attachJoint != null).ToList()
-            .ForEach(p => p.attachJoint.SetUnbreakable(immortal, p.rigidAttachment));
+            foreach (var part in vessel.Parts.Where(p => p.attachJoint != null))
+                part.attachJoint.SetUnbreakable(immortal, part.rigidAttachment);
         }
 
         #endregion

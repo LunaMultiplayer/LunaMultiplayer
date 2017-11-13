@@ -11,22 +11,24 @@ namespace LunaClient.Utilities
         {
             //Create the delegates
             var configNodeType = typeof(ConfigNode);
-            var writeNodeMethodInfo = configNodeType.GetMethod("WriteNode",
-                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            var writeNodeMethodInfo = configNodeType.GetMethod("WriteNode", BindingFlags.NonPublic | BindingFlags.Instance);
+            if (writeNodeMethodInfo == null) return;
 
             //pass null for instance so we only do the slower reflection part once ever, then provide the instance at runtime
             WriteNodeThunk = (WriteNodeDelegate)Delegate.CreateDelegate(typeof(WriteNodeDelegate), null, writeNodeMethodInfo);
 
             //these ones really are static and won't have a instance first parameter 
-            var preFormatConfigMethodInfo = configNodeType.GetMethod("PreFormatConfig",
-                BindingFlags.NonPublic | BindingFlags.Static);
-            PreFormatConfigThunk = (PreFormatConfigDelegate)
-                Delegate.CreateDelegate(typeof(PreFormatConfigDelegate), null, preFormatConfigMethodInfo);
+            var preFormatConfigMethodInfo = configNodeType.GetMethod("PreFormatConfig", BindingFlags.NonPublic | BindingFlags.Static);
+            if (preFormatConfigMethodInfo == null) return;
 
-            var recurseFormatMethodInfo = configNodeType.GetMethod("RecurseFormat",
+            PreFormatConfigThunk = (PreFormatConfigDelegate)Delegate.CreateDelegate(typeof(PreFormatConfigDelegate), null, preFormatConfigMethodInfo);
+
+            var recurseFormatMethodInfo = configNodeType.GetMethod("RecurseFormat", 
                 BindingFlags.NonPublic | BindingFlags.Static, null, new[] { typeof(List<string[]>) }, null);
-            RecurseFormatThunk = (RecurseFormatDelegate)
-                Delegate.CreateDelegate(typeof(RecurseFormatDelegate), null, recurseFormatMethodInfo);
+            if (recurseFormatMethodInfo == null) return;
+
+            RecurseFormatThunk = (RecurseFormatDelegate)Delegate.CreateDelegate(typeof(RecurseFormatDelegate), null, recurseFormatMethodInfo);
         }
 
         private static WriteNodeDelegate WriteNodeThunk { get; }
@@ -43,6 +45,8 @@ namespace LunaClient.Utilities
             {
                 //we late bind to the instance by passing the instance as the first argument
                 WriteNodeThunk(node, writer);
+                //TODO: Can we remove the to array and save memory ? 
+                //See: https://stackoverflow.com/questions/2630359/convert-stream-to-ienumerable-if-possible-when-keeping-laziness
                 var data = stream.ToArray();
                 return data;
             }

@@ -38,7 +38,7 @@ namespace LunaClient.Systems.VesselProtoSys
         private static void HandleVesselProto(VesselProtoMsgData messageData)
         {
             if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.VesselId))
-                System.HandleVesselProtoData(messageData.VesselData, messageData.VesselId);
+                VesselsProtoStore.HandleVesselProtoData(messageData.VesselData, messageData.VesselId);
         }
 
         private static void HandleVesselResponse(VesselsReplyMsgData messageData)
@@ -46,7 +46,7 @@ namespace LunaClient.Systems.VesselProtoSys
             foreach (var vesselDataKv in messageData.VesselsData)
             {
                 if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselDataKv.Key))
-                    System.HandleVesselProtoData(vesselDataKv.Value, vesselDataKv.Key);
+                    VesselsProtoStore.HandleVesselProtoData(vesselDataKv.Value, vesselDataKv.Key);
             }
 
             MainSystem.NetworkState = ClientState.VesselsSynced;

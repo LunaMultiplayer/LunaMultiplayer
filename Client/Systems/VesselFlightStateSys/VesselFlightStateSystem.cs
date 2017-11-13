@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -116,30 +117,37 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (Enabled && FlightStateSystemReady)
             {
                 var vesselsToRemove = FlightGlobals.Vessels
-                    .Where(v => (!v.loaded || v.packed) && FlyByWireDictionary.Keys.Contains(v.id))
-                    .ToList();
+                    .Where(v => (!v.loaded || v.packed) && FlyByWireDictionary.Keys.Contains(v.id));
+
+                foreach (var vesselToRemove in vesselsToRemove)
+                {
+                    RemoveVesselFromSystem(vesselToRemove);
+                }
 
                 //We must never have our own active and controlled vessel in the dictionary
                 if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
                 {
-                    vesselsToRemove.Add(FlightGlobals.ActiveVessel);
-                }
-
-                foreach (var vesselToRemove in vesselsToRemove)
-                {
-                    try
-                    {
-                        vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-
-                    FlyByWireDictionary.Remove(vesselToRemove.id);
-                    FlightStatesDictionary.TryRemove(vesselToRemove.id, out _);
+                    RemoveVesselFromSystem(FlightGlobals.ActiveVessel);
                 }
             }
+        }
+
+        /// <summary>
+        /// Removes the vessel from the dictionaries
+        /// </summary>
+        private void RemoveVesselFromSystem(Vessel vesselToRemove)
+        {
+            try
+            {
+                vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+
+            FlyByWireDictionary.Remove(vesselToRemove.id);
+            FlightStatesDictionary.TryRemove(vesselToRemove.id, out _);
         }
 
         /// <summary>
@@ -150,17 +158,14 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (Enabled && FlightStateSystemReady)
             {
                 var vesselsToAdd = FlightGlobals.VesselsLoaded
-                    .Where(v => !v.packed && !FlyByWireDictionary.Keys.Contains(v.id))
-                    .ToList();
-
-                //We must never have our own active and controlled vessel in the dictionary
-                if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
-                {
-                    vesselsToAdd.Remove(FlightGlobals.ActiveVessel);
-                }
-
+                    .Where(v => !v.packed && !FlyByWireDictionary.Keys.Contains(v.id));
+                
                 foreach (var vesselToAdd in vesselsToAdd)
                 {
+                    //We must never have our own active and controlled vessel in the dictionary
+                    if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vesselToAdd.id)
+                        continue;
+
                     FlightStatesDictionary.TryAdd(vesselToAdd.id, vesselToAdd.ctrlState);
                     FlyByWireDictionary.Add(vesselToAdd.id, st => LunaOnVesselFlyByWire(vesselToAdd.id, st));
 
@@ -178,8 +183,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             {
                 var vesselsToReasign = FlyByWireDictionary.Keys
                     .Select(FlightGlobals.FindVessel)
-                    .Where(v => v != null && !v.OnFlyByWire.GetInvocationList().Any(d=> d.Method.Name == nameof(LunaOnVesselFlyByWire)))
-                    .ToArray();
+                    .Where(v => v != null && !v.OnFlyByWire.GetInvocationList().Any(d=> d.Method.Name == nameof(LunaOnVesselFlyByWire)));
 
                 foreach (var vessel in vesselsToReasign)
                 {

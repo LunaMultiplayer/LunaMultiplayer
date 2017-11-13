@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -49,6 +50,16 @@ namespace LunaClient.Utilities
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Compare two ienumerables and return if they are the same or not IGNORING the order
+        /// </summary>
+        public static bool ScrambledEquals<T>(IEnumerable<T> list1, IEnumerable<T> list2)
+        {
+            var deletedItems = list1.Except(list2).Any();
+            var newItems = list2.Except(list1).Any();
+            return !newItems && !deletedItems;
         }
     }
 }

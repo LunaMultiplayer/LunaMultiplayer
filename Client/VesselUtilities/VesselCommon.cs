@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.Chat;
+﻿using LunaClient.Systems;
+using LunaClient.Systems.Chat;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
@@ -8,7 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LunaClient.Systems
+namespace LunaClient.VesselUtilities
 {
     /// <summary>
     /// Class to hold common logic regarding the Vessel systems
@@ -59,11 +60,10 @@ namespace LunaClient.Systems
         /// <summary>
         /// Return the controlled vessels
         /// </summary>
-        public static Vessel[] GetControlledVessels()
+        public static IEnumerable<Vessel> GetControlledVessels()
         {
             return GetControlledVesselIds()
-                .Select(FlightGlobals.FindVessel)
-                .ToArray();
+                .Select(FlightGlobals.FindVessel);
         }
 
         /// <summary>
@@ -76,11 +76,10 @@ namespace LunaClient.Systems
         /// <summary>
         /// Return the controlled vessel ids
         /// </summary>
-        public static Guid[] GetControlledVesselIds()
+        public static IEnumerable<Guid> GetControlledVesselIds()
         {
             return LockSystem.LockQuery.GetAllControlLocks()
-                .Select(v => v.VesselId)
-                .ToArray();
+                .Select(v => v.VesselId);
         }
 
         /// <summary>
@@ -116,8 +115,7 @@ namespace LunaClient.Systems
             return LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                 .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id)
                 .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == vi.VesselId))
-                .Where(v => v != null)
-                .ToArray();
+                .Where(v => v != null);
         }
 
         /// <summary>
@@ -268,14 +266,14 @@ namespace LunaClient.Systems
 
             if (!existing.loaded)
             {
-                if (existing.protoVessel.protoPartSnapshots.Count != newProtoVessel.protoPartSnapshots.Count)
+                //Wenever we receive a proto of a unloaded vessel just reload 
+                //it at will as we cannot compare it against anything as it's not even in range
+                //and we don't know what panels can be extended, etc
                     return true;
             }
-            else
-            {
-                if (existing.Parts.Count != newProtoVessel.protoPartSnapshots.Count)
-                    return true;
-            }
+
+            if (existing.Parts.Count != newProtoVessel.protoPartSnapshots.Count)
+                return true;
 
             if (existing.situation != newProtoVessel.situation)
                 return true;

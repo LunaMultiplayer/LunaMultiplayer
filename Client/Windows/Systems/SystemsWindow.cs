@@ -7,6 +7,7 @@ using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.ModApi;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
@@ -43,7 +44,10 @@ namespace LunaClient.Windows.Systems
 
         private bool VesselImmortal { get; set; }
         private string VesselImmortalProfilerText { get; set; }
-        
+
+        private bool VesselChange { get; set; }
+        private string VesselChangeProfilerText { get; set; }
+
         private bool VesselLock { get; set; }
         private string VesselLockProfilerText { get; set; }
 
@@ -106,6 +110,7 @@ namespace LunaClient.Windows.Systems
                 KerbalProfilerText = SystemsContainer.Get<KerbalSystem>().GetProfilersData();
                 VesselFlightStateProfilerText = SystemsContainer.Get<VesselFlightStateSystem>().GetProfilersData();
                 VesselImmortalProfilerText = SystemsContainer.Get<VesselImmortalSystem>().GetProfilersData();
+                VesselChangeProfilerText = SystemsContainer.Get < VesselChangeSystem>().GetProfilersData();
                 VesselLockProfilerText = SystemsContainer.Get<VesselLockSystem>().GetProfilersData();
                 VesselPositionProfilerText = SystemsContainer.Get<VesselPositionSystem>().GetProfilersData();
                 VesselProtoProfilerText = SystemsContainer.Get<VesselProtoSystem>().GetProfilersData();

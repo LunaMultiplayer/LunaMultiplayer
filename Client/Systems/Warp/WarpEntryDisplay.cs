@@ -15,7 +15,7 @@ namespace LunaClient.Systems.Warp
         /// Get the list of player and subspaces depending on the warp mode
         /// </summary>
         /// <returns></returns>
-        public SubspaceDisplayEntry[] GetSubspaceDisplayEntries()
+        public IEnumerable<SubspaceDisplayEntry> GetSubspaceDisplayEntries()
         {
             return SettingsSystem.ServerSettings.WarpMode == WarpMode.Subspace ?
                 GetSubspaceDisplayEntriesSubspace() : GetSubspaceDisplayEntriesNoneSubspace();
@@ -40,13 +40,16 @@ namespace LunaClient.Systems.Warp
         /// <summary>
         /// Retrieve the list of subspaces and players when the warp mode is SUBSPACE
         /// </summary>
-        private static SubspaceDisplayEntry[] GetSubspaceDisplayEntriesSubspace()
+        private static IEnumerable<SubspaceDisplayEntry> GetSubspaceDisplayEntriesSubspace()
         {
-            var groupedPlayers = System.ClientSubspaceList.GroupBy(s => s.Value).ToArray();
+            var groupedPlayers = System.ClientSubspaceList.GroupBy(s => s.Value);
             var subspaceDisplay = new List<SubspaceDisplayEntry>();
 
             foreach (var subspace in groupedPlayers)
             {
+                //TODO: This is really bad in terms of garbage collection.
+                //Players is being set as "ToList" wich causes garbase also
+                //SubspaceDisplayEntry is created on every ongui.
                 var newSubspaceDisplay = new SubspaceDisplayEntry
                 {
                     SubspaceTime = System.GetSubspaceTime(subspace.Key),
@@ -72,7 +75,7 @@ namespace LunaClient.Systems.Warp
                 }
             }
 
-            return subspaceDisplay.ToArray();
+            return subspaceDisplay;
         }
 
         /// <summary>

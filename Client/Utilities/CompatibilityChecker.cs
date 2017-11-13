@@ -79,13 +79,11 @@ namespace LunaClient.Utilities
         public void Start()
         {
             // Checkers are identified by the type Name and version field Name.
-            var fields =
-                GetAllTypes()
+            var fields = GetAllTypes()
                     .Where(t => t.Name == "CompatibilityChecker")
                     .Select(t => t.GetField("_version", BindingFlags.Static | BindingFlags.NonPublic))
                     .Where(f => f != null)
-                    .Where(f => f.FieldType == typeof(int))
-                    .ToArray();
+                    .Where(f => f.FieldType == typeof(int));
 
             // Let the latest version of the checker execute.
             if (_version != fields.Max(f => (int)f.GetValue(null))) return;

@@ -3,8 +3,8 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.VesselUtilities;
 using LunaCommon.Locks;
 
 namespace LunaClient.Systems.GameScene
@@ -24,7 +24,7 @@ namespace LunaClient.Systems.GameScene
             InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
 
             //We are going to another screen so clear up the systems
-            SystemsContainer.Get<VesselProtoSystem>().ClearSystem();
+            VesselsProtoStore.ClearSystem();
             SystemsContainer.Get<VesselRemoveSystem>().ClearSystem();
             SystemsContainer.Get<VesselFlightStateSystem>().ClearSystem();
 

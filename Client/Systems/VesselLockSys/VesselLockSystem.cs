@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
+using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Generic;
 using UniLinq;
@@ -75,14 +76,14 @@ namespace LunaClient.Systems.VesselLockSys
         {
             if (Enabled && VesselLockSystemReady)
             {
-                var validSecondaryVessels = GetValidSecondaryVesselIds().ToArray();
+                var validSecondaryVessels = GetValidSecondaryVesselIds();
                 foreach (var checkVessel in validSecondaryVessels)
                 {
                     //Don't force it as maybe another player sent this request aswell
                     SystemsContainer.Get<LockSystem>().AcquireUpdateLock(checkVessel);
                 }
 
-                var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased().ToArray();
+                var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased();
                 foreach (var releaseVessel in vesselsToRelease)
                 {
                     SystemsContainer.Get<LockSystem>().ReleaseUpdateLock(releaseVessel);

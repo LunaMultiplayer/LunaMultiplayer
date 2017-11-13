@@ -20,7 +20,8 @@ namespace LunaClient.Systems.Scenario
         private ConcurrentDictionary<string, Type> AllScenarioTypesInAssemblies { get; } = new ConcurrentDictionary<string, Type>();
 
         private static ConfigNode ConfigNode { get; } = new ConfigNode();
-
+        private static List<string> ScenarioName { get; } = new List<string>();
+        private static List<byte[]> ScenarioData { get; } = new List<byte[]>();
         #endregion
 
         #region Base overrides
@@ -74,8 +75,8 @@ namespace LunaClient.Systems.Scenario
 
         private void ParseAndSendModules(IEnumerable<ScenarioModule> modules)
         {
-            var scenarioName = new List<string>();
-            var scenarioData = new List<byte[]>();
+            ScenarioData.Clear();
+            ScenarioName.Clear();
 
             foreach (var scenarioModule in modules)
             {
@@ -101,12 +102,12 @@ namespace LunaClient.Systems.Scenario
 
                 CheckData[scenarioType] = scenarioHash;
 
-                scenarioName.Add(scenarioType);
-                scenarioData.Add(scenarioBytes);
+                ScenarioName.Add(scenarioType);
+                ScenarioData.Add(scenarioBytes);
             }
 
-            if (scenarioName.Any())
-                MessageSender.SendScenarioModuleData(scenarioName.ToArray(), scenarioData.ToArray());
+            if (ScenarioName.Any())
+                MessageSender.SendScenarioModuleData(ScenarioName, ScenarioData);
         }
 
         public void LoadScenarioDataIntoGame()

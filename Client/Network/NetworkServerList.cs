@@ -80,8 +80,6 @@ namespace LunaClient.Network
                             Version = data.Version
                         });
                     }
-
-                    Servers = Servers.OrderBy(s => s.ServerName).ToList();
                 }
             }
             catch (Exception e)

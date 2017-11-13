@@ -105,7 +105,7 @@ namespace LunaClient.Utilities
                 ScreenMessageStyle.UPPER_CENTER);
         }
 
-        public static string[] GetSavedNames()
+        public static IEnumerable<string> GetSavedNames()
         {
             var returnList = new List<string>();
             var possibleSaves = Directory.GetDirectories(SavesFolder);
@@ -120,7 +120,7 @@ namespace LunaClient.Utilities
                     File.Exists(CommonUtil.CombinePaths(saveDirectory, "persistent.sfs")))
                     returnList.Add(saveName);
             }
-            return returnList.ToArray();
+            return returnList;
         }
     }
 }

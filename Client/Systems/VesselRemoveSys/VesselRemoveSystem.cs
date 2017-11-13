@@ -1,9 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselProtoSys;
+using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
-using Smooth.Collections;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselRemoveSys
@@ -65,7 +64,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         public void AddToKillList(Guid vesselId)
         {
             VesselsToRemove.Enqueue(vesselId);
-            SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(vesselId);
+            VesselsProtoStore.RemoveVessel(vesselId);
         }
 
         /// <summary>
@@ -130,7 +129,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 KillVessel(vesselId);
 
                 RemovedVessels.TryAdd(vesselId, DateTime.Now);
-                SystemsContainer.Get<VesselProtoSystem>().RemoveVesselFromLoadingSystem(vesselId);
+                VesselsProtoStore.RemoveVessel(vesselId);
             }
 
             VesselsToRemove = new ConcurrentQueue<Guid>();
@@ -145,18 +144,12 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             if (Enabled)
             {
-                var vesselsToUnloadIds = SystemsContainer.Get<VesselProtoSystem>().AllPlayerVessels
-                                       .Where(v => !v.Value.NeedsToBeReloaded && VesselCommon.VesselIsControlledAndInPastSubspace(v.Key))
-                                       .Select(v => v.Key)
-                                       .ToArray();
+                var vesselsToUnloadIds = VesselsProtoStore.AllPlayerVessels
+                    .Where(v => v.Value.VesselExist && VesselCommon.VesselIsControlledAndInPastSubspace(v.Key));
 
-                if (vesselsToUnloadIds.Any())
+                foreach (var vesselId in vesselsToUnloadIds)
                 {
-                    LunaLog.Log($"[LMP]: Unloading {vesselsToUnloadIds.Length} vessels that are in a past subspace");
-                    foreach (var vesselId in vesselsToUnloadIds)
-                    {
-                        AddToKillList(vesselId);
-                    }
+                    AddToKillList(vesselId.Key);
                 }
             }
         }
@@ -188,10 +181,11 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             if (FlightGlobals.ActiveVessel?.id == killVessel.id)
             {
-                var otherVessels = FlightGlobals.Vessels.Where(v => v.id != killVessel.id).ToArray();
-
-                if (otherVessels.Any())
-                    FlightGlobals.ForceSetActiveVessel(otherVessels.First());
+                //Get a random vessel and switch to it if exists, otherwise go to spacecenter
+                var otherVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id != killVessel.id);
+                
+                if (otherVessel != null)
+                    FlightGlobals.ForceSetActiveVessel(otherVessel);
                 else
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
 

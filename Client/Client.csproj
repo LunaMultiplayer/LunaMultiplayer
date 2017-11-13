@@ -85,6 +85,10 @@
     <Compile Include="Systems\Groups\GroupMessageSender.cs" />
     <Compile Include="Systems\Groups\GroupSystem.cs" />
     <Compile Include="Systems\KerbalSys\KerbalStructure.cs" />
+    <Compile Include="Systems\VesselChangeSys\VesselChangeDetector.cs" />
+    <Compile Include="Systems\VesselChangeSys\VesselChangeSystem.cs" />
+    <Compile Include="Systems\VesselChangeSys\VesselChangeChecker.cs" />
+    <Compile Include="Systems\VesselChangeSys\VesselChangeStructures.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
@@ -93,11 +97,12 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
-    <Compile Include="Systems\VesselProtoSys\VesselChanges.cs" />
+    <Compile Include="Systems\VesselChangeSys\VesselChangeApplier.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
-    <Compile Include="Systems\VesselProtoSys\VesselSerializer.cs" />
+    <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeEvents.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeSystem.cs" />
+    <Compile Include="Systems\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\WindowContainer.cs" />
     <Compile Include="Systems\SystemsContainer.cs" />
@@ -152,7 +157,7 @@
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageHandler.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionMessageSender.cs" />
     <Compile Include="Systems\PlayerConnection\PlayerConnectionSystem.cs" />
-    <Compile Include="Systems\VesselCommon.cs" />
+    <Compile Include="VesselUtilities\VesselCommon.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockEvents.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockSystem.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateMessageHandler.cs" />
@@ -161,11 +166,10 @@
     <Compile Include="Systems\VesselImmortalSys\VesselImmortalSystem.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockEvents.cs" />
     <Compile Include="Systems\VesselLockSys\VesselLockSystem.cs" />
-    <Compile Include="Systems\VesselProtoSys\VesselLoader.cs" />
+    <Compile Include="VesselUtilities\VesselLoader.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageHandler.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoMessageSender.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoSystem.cs" />
-    <Compile Include="Systems\VesselProtoSys\VesselProtoStructures.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveEvents.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageHandler.cs" />
     <Compile Include="Systems\VesselRemoveSys\VesselRemoveMessageSender.cs" />

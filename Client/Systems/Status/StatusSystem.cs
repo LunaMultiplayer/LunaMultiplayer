@@ -1,6 +1,7 @@
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselUtilities;
 using LunaCommon;
 using System.Collections.Concurrent;
 

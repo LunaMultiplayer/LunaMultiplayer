@@ -7,9 +7,9 @@ using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.Toolbar;
-using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
+using LunaClient.VesselUtilities;
 using LunaClient.Windows;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.Status;
@@ -364,7 +364,7 @@ namespace LunaClient
             HighLogic.CurrentGame.flightState.universalTime = SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
 
             //Load LMP stuff
-            SystemsContainer.Get<VesselProtoSystem>().VesselLoader.LoadVesselsIntoGame();
+            VesselLoader.LoadVesselsIntoGame();
 
             //Load the scenarios from the server
             SystemsContainer.Get<ScenarioSystem>().LoadScenarioDataIntoGame();

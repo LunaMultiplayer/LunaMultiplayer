@@ -16,13 +16,14 @@ namespace LunaClient.Systems.Scenario
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<ScenarioCliMsg>(msg)));
         }
 
-        public void SendScenarioModuleData(string[] scenarioNames, byte[][] scenarioData)
+        public void SendScenarioModuleData(List<string> scenarioNames, List<byte[]> scenarioData)
         {
             var data = NetworkMain.CliMsgFactory.CreateNewMessageData<ScenarioDataMsgData>();
-            var list = scenarioNames.Select((t, i) => new KeyValuePair<string, byte[]>(t, scenarioData[i])).ToList();
+
+            var list = scenarioNames.Select((t, i) => new KeyValuePair<string, byte[]>(t, scenarioData[i]));
             data.ScenarioNameData = list.ToArray();
 
-            LunaLog.Log($"[LMP]: Sending {scenarioNames.Length} scenario modules");
+            LunaLog.Log($"[LMP]: Sending {scenarioNames.Count} scenario modules");
             SendMessage(data);
         }
     }

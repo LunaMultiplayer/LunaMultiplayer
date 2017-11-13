@@ -19,6 +19,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
+using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
@@ -230,6 +231,7 @@ namespace LunaClient.Systems.Network
                         SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
                         SystemsContainer.Get<VesselRemoveSystem>().Enabled = true;
                         SystemsContainer.Get<VesselImmortalSystem>().Enabled = true;
+                        SystemsContainer.Get<VesselChangeSystem>().Enabled = true;
                         SystemsContainer.Get<VesselDockSystem>().Enabled = true;
                         SystemsContainer.Get<VesselSwitcherSystem>().Enabled = true;
                         SystemsContainer.Get<VesselRangeSystem>().Enabled = true;

@@ -10,8 +10,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public void VesselModified(Vessel data)
         {
-            if (System.AllPlayerVessels.ContainsKey(data.id))
-                System.AllPlayerVessels[data.id].ProtoVessel = data.BackupVessel();
+            if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.id))
+                VesselsProtoStore.AllPlayerVessels[data.id].ProtoVessel = data.BackupVessel();
         }
     }
 }

@@ -40,6 +40,8 @@ namespace LunaServer.Message.Reader
                     break;
                 case VesselMessageType.Position:
                     VesselRelaySystem.HandleVesselMessage(client, message);
+                    if (client.Subspace == WarpContext.LatestSubspace)
+                        RewriteVesselProtoPositionInfo(message);
                     break;
                 case VesselMessageType.Flightstate:
                     VesselRelaySystem.HandleVesselMessage(client, message);
@@ -81,6 +83,57 @@ namespace LunaServer.Message.Reader
             FileHandler.WriteToFile(path, msgData.VesselData);
 
             VesselRelaySystem.HandleVesselMessage(client, message);
+        }
+
+        /// <summary>
+        /// We received a position information from a player in the latest subspace.
+        /// Then we rewrite the vesselproto with that last position so players that connect later receive an update vesselproto
+        /// </summary>
+        private void RewriteVesselProtoPositionInfo(VesselBaseMsgData message)
+        {
+            var msgData = (VesselPositionMsgData)message;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
+            //If someone is updating this vessel, ignore this as the player with the update lock will send the whole
+            //protovessel at a interval
+            if (LockSystem.LockQuery.UpdateLockExists(msgData.VesselId)) return;
+
+            //Now we are sure that the message we received is for a vessel that is stranded somewhere and nobody is either
+            //controlling it or near it...
+            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
+            if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
+
+            var protoVesselLines = FileHandler.ReadFileLines(path);
+
+            UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
+
+            FileHandler.WriteToFile(path, string.Join(Environment.NewLine, protoVesselLines));
+        }
+
+        private static void UpdateProtoVesselFileWithNewPositionData(string[] protoVesselLines, VesselPositionMsgData msgData)
+        {
+            //TODO: Here in the vessel file we should update all this fields according to the msgData:
+
+            /*
+                lat = -0.047961032043514852
+                lon = -74.722209730407329
+                alt = 69.873375568306074
+                hgt = 0.797961473
+                nrm = -0.00204212964,-0.0692077577,-0.997600377
+                rot = 0.120999679,-0.116582111,-0.731465757,0.660852194
+                CoM = 3.93167138E-05,-0.654579401,0.28330332
+                ORBIT
+                {
+	                SMA = 300817.15359923861
+	                ECC = 0.99479860226031658
+	                INC = 0.047954560954079489
+	                LPE = 90.023932404825203
+	                LAN = 141.35674401115426
+	                MNA = 3.141592620319944
+	                EPH = 2161.1050583995857
+	                REF = 1
+                }
+            */
         }
 
         private static void HandleVesselDock(ClientStructure client, VesselBaseMsgData message)

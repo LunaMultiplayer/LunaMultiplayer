@@ -1,5 +1,5 @@
 ﻿using KSP.UI.Screens;
-using LunaClient.Base;
+using LunaClient.Systems;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.PlayerColorSys;
@@ -14,9 +14,9 @@ using UniLinq;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace LunaClient.Systems.VesselProtoSys
+namespace LunaClient.VesselUtilities
 {
-    public class VesselLoader : SubSystem<VesselProtoSystem>
+    public class VesselLoader
     {
         /// <summary>
         /// Invoke this private method to rebuild the vessel lists that appear on the tracking station
@@ -27,12 +27,12 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Load all the received vessels from the server into the game
         /// This should be called before the game starts as it only loads them in the scenario
         /// </summary>
-        public void LoadVesselsIntoGame()
+        public static void LoadVesselsIntoGame()
         {
             LunaLog.Log("[LMP]: Loading vessels in subspace 0 into game");
             var numberOfLoads = 0;
 
-            foreach (var vessel in System.AllPlayerVessels)
+            foreach (var vessel in VesselsProtoStore.AllPlayerVessels)
             {
                 if (vessel.Value.ProtoVessel != null && vessel.Value.ProtoVessel.vesselID == vessel.Key)
                 {
@@ -53,7 +53,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Load a vessel into the game
         /// </summary>
-        public bool LoadVessel(ProtoVessel vesselProto)
+        public static bool LoadVessel(ProtoVessel vesselProto)
         {
             try
             {
@@ -70,7 +70,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Reloads an existing vessel into the game.
         /// </summary>
-        public bool ReloadVessel(ProtoVessel vesselProto)
+        public static bool ReloadVessel(ProtoVessel vesselProto)
         {
             try
             {

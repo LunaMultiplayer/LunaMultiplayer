@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -31,9 +32,7 @@ namespace LunaClient.Systems.VesselProtoSys
             var backup = vessel.BackupVessel();
             SendVesselMessage(backup);
         }
-
-
-
+        
         public void SendVesselMessage(ProtoVessel protoVessel)
         {
             if (protoVessel == null) return;
