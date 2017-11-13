@@ -131,9 +131,6 @@ namespace LunaCommon.Message.Base
                 header.CopyTo(fullData, 0);
                 data.CopyTo(fullData, header.Length);
 
-                //After serializing we can probably recycle it
-                Recycle();
-
                 return fullData;
             }
             catch (Exception e)

@@ -38,7 +38,7 @@ namespace LunaClient.Windows.Systems
         private string LmpProfilerText { get; set; }
 
         #region Vessel systems
-        
+
         private bool VesselFlightState { get; set; }
         private string VesselFlightStateProfilerText { get; set; }
 
@@ -56,7 +56,7 @@ namespace LunaClient.Windows.Systems
 
         private bool VesselProto { get; set; }
         private string VesselProtoProfilerText { get; set; }
-        
+
         private bool VesselRemove { get; set; }
         private string VesselRemoveProfilerText { get; set; }
 
@@ -81,7 +81,7 @@ namespace LunaClient.Windows.Systems
 
         private bool ModApi { get; set; }
         private string ModApiProfilerText { get; set; }
-        
+
         private bool Kerbal { get; set; }
         private string KerbalProfilerText { get; set; }
 
@@ -110,7 +110,7 @@ namespace LunaClient.Windows.Systems
                 KerbalProfilerText = SystemsContainer.Get<KerbalSystem>().GetProfilersData();
                 VesselFlightStateProfilerText = SystemsContainer.Get<VesselFlightStateSystem>().GetProfilersData();
                 VesselImmortalProfilerText = SystemsContainer.Get<VesselImmortalSystem>().GetProfilersData();
-                VesselChangeProfilerText = SystemsContainer.Get < VesselChangeSystem>().GetProfilersData();
+                VesselChangeProfilerText = SystemsContainer.Get<VesselChangeSystem>().GetProfilersData();
                 VesselLockProfilerText = SystemsContainer.Get<VesselLockSystem>().GetProfilersData();
                 VesselPositionProfilerText = SystemsContainer.Get<VesselPositionSystem>().GetProfilersData();
                 VesselProtoProfilerText = SystemsContainer.Get<VesselProtoSystem>().GetProfilersData();

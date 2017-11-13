@@ -20,11 +20,12 @@ namespace LunaCommon.Message.Base
 
         internal static void RecycleMessage(IMessageBase message)
         {
-            var msgQueue = MessageDictionary.GetOrAdd(message.GetType(), new ConcurrentQueue<IMessageBase>());
-            msgQueue.Enqueue(message);
-
             var msgDataQueue = MessageDataDictionary.GetOrAdd(message.Data.GetType(), new ConcurrentQueue<IMessageData>());
             msgDataQueue.Enqueue(message.Data);
+            message.SetData(null);
+
+            var msgQueue = MessageDictionary.GetOrAdd(message.GetType(), new ConcurrentQueue<IMessageBase>());
+            msgQueue.Enqueue(message);
         }
 
         internal static T GetMessageData<T>() where T : class, IMessageData

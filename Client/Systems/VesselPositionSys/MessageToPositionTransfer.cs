@@ -9,7 +9,7 @@ namespace LunaClient.Systems.VesselPositionSys
     public class MessageToPositionTransfer
     {
         public static VesselPositionUpdate CreateFromMessage(IServerMessageBase msg)
-        {            
+        {
             if (!(msg.Data is VesselPositionMsgData msgData)) return null;
 
             return new VesselPositionUpdate
@@ -66,10 +66,10 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public static VesselCliMsg CreateMessageFromVessel(Vessel vessel)
         {
-            var msg = SystemBase.MessageFactory.CreateNew<VesselCliMsg, VesselPositionMsgData>();
+            var msgData = SystemBase.MessageFactory.CreateNewMessageData<VesselPositionMsgData>();
+            var msg = SystemBase.MessageFactory.CreateNew<VesselCliMsg>(msgData);
             try
             {
-                var msgData = (VesselPositionMsgData)msg.Data;
                 msgData.VesselId = vessel.id;
                 msgData.BodyName = vessel.mainBody.bodyName;
 
@@ -123,7 +123,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     vessel.orbit.referenceBody.flightGlobalsIndex
                 };
 
-                return msg;
+                return SystemBase.MessageFactory.CreateNew<VesselCliMsg>(msgData);
             }
             catch (Exception e)
             {

@@ -97,6 +97,7 @@ namespace LunaClient.Network
                     NetworkMain.HandleDisconnectException(e);
                 }
             }
+            message.Recycle();
         }
 
         private static NetOutgoingMessage GetLidgrenMessage(byte[] bytes)

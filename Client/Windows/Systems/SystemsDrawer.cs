@@ -52,6 +52,7 @@ namespace LunaClient.Windows.Systems
                 SystemsContainer.Get<VesselFlightStateSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselRangeSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselImmortalSystem>().ResetProfilers();
+                SystemsContainer.Get<VesselChangeSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselLockSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselPositionSystem>().ResetProfilers();
                 SystemsContainer.Get<VesselProtoSystem>().ResetProfilers();
