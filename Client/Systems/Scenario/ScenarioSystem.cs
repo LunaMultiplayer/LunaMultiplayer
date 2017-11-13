@@ -30,8 +30,8 @@ namespace LunaClient.Systems.Scenario
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            //Run it every 20 seconds
-            SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, SendScenarioModules));
+            //Run it every 30 seconds
+            SetupRoutine(new RoutineDefinition(30000, RoutineExecution.Update, SendScenarioModules));
         }
 
         protected override void OnDisabled()
@@ -68,9 +68,7 @@ namespace LunaClient.Systems.Scenario
         {
             if (Enabled)
             {
-                //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
-                var modules = (ScenarioModule[])ScenarioRunner.GetLoadedModules().ToArray().Clone();
-                TaskFactory.StartNew(() => ParseAndSendModules(modules));
+                TaskFactory.StartNew(() => ParseAndSendModules(ScenarioRunner.GetLoadedModules()));
             }
         }
 
