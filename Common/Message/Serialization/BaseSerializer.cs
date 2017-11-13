@@ -1,5 +1,6 @@
 ﻿using FastMember;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -26,20 +27,17 @@ namespace LunaCommon.Message.Serialization
 
     internal static class BaseSerializer
     {
-        private static readonly object SyncRootPropertyDict = new object();
-        private static readonly object SyncRootAccessorDict = new object();
-
         /// <summary>
         ///     Dictionary of properties based on a MessageData type
         /// </summary>
-        private static readonly Dictionary<Type, IEnumerable<ReducedPropertyInfo>> PropertyDictionary =
-            new Dictionary<Type, IEnumerable<ReducedPropertyInfo>>();
+        private static readonly ConcurrentDictionary<Type, IEnumerable<ReducedPropertyInfo>> PropertyDictionary =
+            new ConcurrentDictionary<Type, IEnumerable<ReducedPropertyInfo>>();
 
         /// <summary>
         ///     Dictionary of accessors based on a MessageData type
         /// </summary>
-        private static readonly Dictionary<Type, TypeAccessor> AccessorDictionary =
-            new Dictionary<Type, TypeAccessor>();
+        private static readonly ConcurrentDictionary<Type, TypeAccessor> AccessorDictionary =
+            new ConcurrentDictionary<Type, TypeAccessor>();
 
         /// <summary>
         ///     Encoder for serialization/deserialization of strings
@@ -53,21 +51,19 @@ namespace LunaCommon.Message.Serialization
         [SuppressMessage("ReSharper", "PossibleMultipleEnumeration")]
         internal static List<ReducedPropertyInfo> GetCachedProperties(Type type)
         {
-            lock (SyncRootPropertyDict)
+            if (!PropertyDictionary.TryGetValue(type, out var properties))
             {
-                if (!PropertyDictionary.TryGetValue(type, out var properties))
-                {
-                    //We never store the Version or the receive time property of the MessageData class
-                    //Order them with the get only properties on top to increase speed
-                    properties = type.GetProperties().Where(p => p.Name != "Version" && p.Name != "ReceiveTime")
-                        .Select(p => new ReducedPropertyInfo(p.Name, p.PropertyType, p.CanWrite));
+                //We never store the Version or the receive time property of the MessageData class
+                //Order them with the get only properties on top to increase speed and then by alphabetical order
+                properties = type.GetProperties().Where(p => p.Name != "Version" && p.Name != "ReceiveTime")
+                    .Select(p => new ReducedPropertyInfo(p.Name, p.PropertyType, p.CanWrite))
+                    .OrderBy(v => v.CanWrite)
+                    .ThenBy(p => p.Name);
 
-                    PropertyDictionary.Add(type, properties.OrderBy(v => v.CanWrite));
-                }
-
-                //Store them always in alphabetical order
-                return properties.OrderBy(p => p.Name).ToList();
+                PropertyDictionary.TryAdd(type, properties);
             }
+            
+            return properties.ToList();
         }
 
         /// <summary>
@@ -76,16 +72,7 @@ namespace LunaCommon.Message.Serialization
         /// <returns>Accessor</returns>
         internal static TypeAccessor GetCachedTypeAccessor(Type type)
         {
-            lock (SyncRootAccessorDict)
-            {
-                if (!AccessorDictionary.TryGetValue(type, out var accessor))
-                {
-                    accessor = TypeAccessor.Create(type);
-                    AccessorDictionary.Add(type, accessor);
-                }
-
-                return accessor;
-            }
+            return AccessorDictionary.GetOrAdd(type, TypeAccessor.Create(type)); ;
         }
     }
 }

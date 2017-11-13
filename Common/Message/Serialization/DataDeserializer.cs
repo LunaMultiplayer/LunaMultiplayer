@@ -1,4 +1,5 @@
-﻿using LunaCommon.Flag;
+﻿using FastMember;
+using LunaCommon.Flag;
 using LunaCommon.Groups;
 using LunaCommon.Locks;
 using LunaCommon.Message.Data.CraftLibrary;
@@ -99,32 +100,40 @@ namespace LunaCommon.Message.Serialization
         private static object PrivDeserialize(Stream messageData, object dataClass)
         {
             var properties = BaseSerializer.GetCachedProperties(dataClass.GetType());
+            
             //We use the FastMember as it's faster than reflection
             var accessor = BaseSerializer.GetCachedTypeAccessor(dataClass.GetType());
+            foreach (var prop in properties)
+            {
+                DeserializeProperty(messageData, dataClass, prop, accessor);
+            }
+
+            return dataClass;
+        }
+
+        private static void DeserializeProperty(Stream messageData, object dataClass, ReducedPropertyInfo prop, TypeAccessor accessor)
+        {
             try
             {
-                foreach (var prop in properties)
-                {
-                    var value = GetValue(messageData, prop.PropertyType);
+                var value = GetValue(messageData, prop.PropertyType);
 
-                    if (prop.CanWrite) //Property with a setter 
-                        accessor[dataClass, prop.Name] = value;
-                    else
-                    {
-                        if (!prop.CanWrite && !Equals(value, accessor[dataClass, prop.Name]))
-                            throw new Exception("Property without a setter where it's value mismatch. " +
-                                                $"Type: {dataClass.GetType().Name} " +
-                                                $"Property: {prop.Name}. " +
-                                                $"Value: {value} Expected: {accessor[dataClass, prop.Name]}");
-                    }
+                if (prop.CanWrite) //Property with a setter 
+                    accessor[dataClass, prop.Name] = value;
+                else
+                {
+                    if (!prop.CanWrite && !Equals(value, accessor[dataClass, prop.Name]))
+                        throw new Exception("Property without a setter where it's value mismatch. " +
+                                            $"Type: {dataClass.GetType().Name} " +
+                                            $"Property: {prop.Name}. " +
+                                            $"Value: {value} Expected: {accessor[dataClass, prop.Name]}");
                 }
             }
             catch (Exception e)
             {
-                throw new Exception($"Cannot deserialize this message with the bytes provided: {e}");
+                throw new Exception($"Cannot deserialize this message with the bytes provided: {e}" +
+                                    $"Type: {dataClass.GetType().Name} " +
+                                    $"Property: {prop.Name}.");
             }
-
-            return dataClass;
         }
 
         /// <summary>
