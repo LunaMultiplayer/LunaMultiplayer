@@ -1,12 +1,10 @@
-
-
 <p align="center">
     <img src="https://github.com/gavazquez/LunaMultiPlayer/blob/master/External/logo.png" alt="Luna multiplayer logo" height="250" width="250"/>
 </p>
 
 <p align="center">
-  <a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="chat on Discord"></a>
-  <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button"/></a>
+  <a href="https://discord.gg/5szq2r"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
+  <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal"/></a>
   <a href="../../wiki"><img src="https://img.shields.io/badge/documentation-Wiki-4BC51D.svg?style=flat" alt="Documentation" /></a>
 </p>
 
@@ -37,10 +35,9 @@ Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to se
 
 ## Status:
 
-|            |   AppVeyor Build  |
-| ---------- | ----------------- |
-| **master** branch |[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f/branch/master?svg=true)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master)
-
+|            |   Build  |   Tests  |  Last commit  |
+| ---------- | -------- | -------- | ------------- |
+| **master** branch |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer.svg)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/build/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/gavazquez/lunamultiplayer/master.svg)]()
 ---
 
 ##### Acknowledgements:
@@ -48,12 +45,11 @@ Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to se
 *LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod*
 
 ---
-
 <p align="center">
   <a href="mailto:gavazquez@gmail.com">
     <img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" />
   </a>
   <a href="https://raw.githubusercontent.com/gavazquez/LunaMultiPlayer/master/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-lightgray.svg?style=flat" alt="MIT License" />
+    <img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" />
   </a>
 </p> 
