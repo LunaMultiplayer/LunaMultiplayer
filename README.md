@@ -31,6 +31,8 @@ Main features:
 - Based on tasks instead of threads.
 - Improved message compression algorithm ([QuickLZ](http://www.quicklz.com))
 
+Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to see how to [build](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP), [run](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP) or [debug](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio) LMP
+
 ---
 
 ## Status:
@@ -41,14 +43,17 @@ Main features:
 
 ---
 
-#### Interesting wiki links:
+##### Acknowledgements:
 
-[How to build LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP)  
-[How to run LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP)  
-[How to debug LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio)  
+*LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod*
 
 ---
 
-#### Acknowledgements:
-
-LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod
+<p align="center">
+  <a href="mailto:gavazquez@gmail.com">
+    <img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" />
+  </a>
+  <a href="https://raw.githubusercontent.com/pardeike/Harmony/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-lightgray.svg?style=flat" alt="MIT License" />
+  </a>
+</p> 
