@@ -37,7 +37,7 @@ Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to se
 
 |            |   Build  |   Tests  |  Last commit  |  Release  |
 | ---------- | -------- | -------- | ------------- | ------------- |
-| **master** branch |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/build/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/gavazquez/lunamultiplayer/master.svg)]() | [![GitHub release](https://img.shields.io/github/release/gavazquez/lunamultiplayer.svg)]()
+| **master** branch |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/gavazquez/lunamultiplayer/master.svg)]() | [![GitHub release](https://img.shields.io/github/release/gavazquez/lunamultiplayer.svg)]()
 ---
 
 ##### Acknowledgements:
