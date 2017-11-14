@@ -1,7 +1,7 @@
 
 
 <p align="center">
-    <img src="https://i.imgur.com/YvA4C68.png" alt="Luna multiplayer logo" height="200" width="200"/>
+    <img src="https://github.com/gavazquez/LunaMultiPlayer/blob/master/External/logo.png" alt="Luna multiplayer logo" height="250" width="250"/>
 </p>
 
 <p align="center">
