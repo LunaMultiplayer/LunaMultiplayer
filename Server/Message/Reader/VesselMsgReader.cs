@@ -12,8 +12,10 @@ using LunaServer.Settings;
 using LunaServer.System;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace LunaServer.Message.Reader
 {
@@ -91,7 +93,7 @@ namespace LunaServer.Message.Reader
         /// We received a position information from a player in the latest subspace.
         /// Then we rewrite the vesselproto with that last position so players that connect later receive an update vesselproto
         /// </summary>
-        private void RewriteVesselProtoPositionInfo(VesselBaseMsgData message)
+        private static void RewriteVesselProtoPositionInfo(VesselBaseMsgData message)
         {
             var msgData = (VesselPositionMsgData)message;
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
@@ -107,35 +109,64 @@ namespace LunaServer.Message.Reader
 
             var protoVesselLines = FileHandler.ReadFileLines(path);
 
-            UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
+            var updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
 
-            FileHandler.WriteToFile(path, string.Join(Environment.NewLine, protoVesselLines));
+            FileHandler.WriteToFile(path, updatedText);
         }
 
-        private static void UpdateProtoVesselFileWithNewPositionData(string[] protoVesselLines, VesselPositionMsgData msgData)
+        /// <summary>
+        /// Updates the proto vessel file with the values we received about a position of a vessel
+        /// </summary>
+        private static string UpdateProtoVesselFileWithNewPositionData(string[] protoVesselLines, VesselPositionMsgData msgData)
         {
-            //TODO: Here in the vessel file we should update all this fields according to the msgData:
+            var fullText = string.Join(Environment.NewLine, protoVesselLines);
 
-            /*
-                lat = -0.047961032043514852
-                lon = -74.722209730407329
-                alt = 69.873375568306074
-                hgt = 0.797961473
-                nrm = -0.00204212964,-0.0692077577,-0.997600377
-                rot = 0.120999679,-0.116582111,-0.731465757,0.660852194
-                CoM = 3.93167138E-05,-0.654579401,0.28330332
-                ORBIT
-                {
-	                SMA = 300817.15359923861
-	                ECC = 0.99479860226031658
-	                INC = 0.047954560954079489
-	                LPE = 90.023932404825203
-	                LAN = 141.35674401115426
-	                MNA = 3.141592620319944
-	                EPH = 2161.1050583995857
-	                REF = 1
-                }
-            */
+            var regex = new Regex("lat = (.*)");
+            regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
+
+            regex = new Regex("lon = (.*)");
+            regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
+
+            regex = new Regex("alt = (.*)");
+            regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
+
+            regex = new Regex("hgt = (.*)");
+            regex.Replace(fullText, msgData.Height.ToString(CultureInfo.InvariantCulture));
+
+            regex = new Regex("nrm = (.*)");
+            regex.Replace(fullText, msgData.NormalVector[0].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.NormalVector[1].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.NormalVector[2].ToString(CultureInfo.InvariantCulture));
+
+            regex = new Regex("rot = (.*)");
+            regex.Replace(fullText, msgData.TransformRotation[0].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.TransformRotation[1].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.TransformRotation[2].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.TransformRotation[3].ToString(CultureInfo.InvariantCulture));
+
+            regex = new Regex("CoM = (.*)");
+            regex.Replace(fullText, msgData.Com[0].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.Com[1].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.Com[2].ToString(CultureInfo.InvariantCulture));
+
+            regex = new Regex("INC = (.*)"); //inclination
+            regex.Replace(fullText, msgData.Orbit[0].ToString(CultureInfo.InvariantCulture));
+            regex = new Regex("ECC = (.*)"); //eccentricity
+            regex.Replace(fullText, msgData.Orbit[1].ToString(CultureInfo.InvariantCulture));
+            regex = new Regex("SMA = (.*)"); //semiMajorAxis
+            regex.Replace(fullText, msgData.Orbit[2].ToString(CultureInfo.InvariantCulture));
+            regex = new Regex("LAN = (.*)"); //LAN
+            regex.Replace(fullText, msgData.Orbit[3].ToString(CultureInfo.InvariantCulture));
+            regex = new Regex("LPE = (.*)"); //argumentOfPeriapsis
+            regex.Replace(fullText, msgData.Orbit[4].ToString(CultureInfo.InvariantCulture));
+            regex = new Regex("MNA = (.*)"); //meanAnomalyAtEpoch
+            regex.Replace(fullText, msgData.Orbit[5].ToString(CultureInfo.InvariantCulture));
+            regex = new Regex("EPH = (.*)"); //epoch
+            regex.Replace(fullText, msgData.Orbit[6].ToString(CultureInfo.InvariantCulture));
+            regex = new Regex("REF = (.*)"); //referenceBody.flightGlobalsIndex
+            regex.Replace(fullText, msgData.Orbit[7].ToString(CultureInfo.InvariantCulture));
+
+            return fullText;
         }
 
         private static void HandleVesselDock(ClientStructure client, VesselBaseMsgData message)
