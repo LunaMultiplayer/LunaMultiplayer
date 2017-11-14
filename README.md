@@ -1,10 +1,20 @@
+
+
+<p align="center">
+    <img src="https://i.imgur.com/cCktiWh.png" alt="Luna multiplayer logo" height="200" width="200"/>
+</p>
+
+<p align="center">
+  <a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="chat on Discord"></a>
+  <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button"/></a>
+  <a href="../../wiki"><img src="https://img.shields.io/badge/documentation-Wiki-4BC51D.svg?style=flat" alt="Documentation" /></a>
+</p>
+
+---
+
 # Luna Multiplayer Mod (LMP)
 
 *Multiplayer mod for [Kerbal Space Program (KSP)](https://kerbalspaceprogram.com)*
-
-<a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="chat on Discord"></a>
-<a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button"/></a>
----
 
 Main features:
 
@@ -21,15 +31,7 @@ Main features:
 - Based on tasks instead of threads.
 - Improved message compression algorithm ([QuickLZ](http://www.quicklz.com))
 
----
-
-## [Wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki)
-
-#### Interesting  links:
-
-[How to build LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP)  
-[How to run LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP)  
-[How to debug LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio)  
+Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to see how to [build](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP), [run](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP) or [debug](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio) LMP
 
 ---
 
@@ -41,6 +43,17 @@ Main features:
 
 ---
 
-#### Acknowledgements:
+##### Acknowledgements:
 
-LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod
+*LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod*
+
+---
+
+<p align="center">
+  <a href="mailto:gavazquez@gmail.com">
+    <img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" />
+  </a>
+  <a href="https://raw.githubusercontent.com/gavazquez/LunaMultiPlayer/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-lightgray.svg?style=flat" alt="MIT License" />
+  </a>
+</p> 
