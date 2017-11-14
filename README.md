@@ -3,9 +3,14 @@
 </p>
 
 <p align="center">
-  <a href="https://discord.gg/5szq2r"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
   <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal"/></a>
-  <a href="../../wiki"><img src="https://img.shields.io/badge/documentation-Wiki-4BC51D.svg?style=flat" alt="Documentation" /></a>
+  <a href="https://discord.gg/5szq2r"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
+  <a href="../../wiki"><img src="https://img.shields.io/badge/documentation-Wiki-4BC51D.svg" alt="Documentation" /></a>
+</p>
+
+<p align="center">
+  <a href="../../releases"><img src="https://img.shields.io/github/release/gavazquez/lunamultiplayer.svg" alt="Latest release" /></a>
+  <img src="https://img.shields.io/github/downloads/gavazquez/lunamultiplayer/total.svg" alt="Total downloads" />
 </p>
 
 ---
@@ -29,15 +34,15 @@ Main features:
 - Based on tasks instead of threads.
 - Improved message compression algorithm ([QuickLZ](http://www.quicklz.com))
 
-Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to see how to [build](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP), [run](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP) or [debug](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio) LMP
+Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-compile-LMP), [run](../../wiki/How-to-run-LMP) or [debug](../../wiki/Debugging-in-Visual-studio) LMP
 
 ---
 
 ## Status:
 
-|            |   Build  |   Tests  |  Last commit  |  Release  |
+|   Branch   |   Build  |   Tests  |  Last commit  |   Activity    |
 | ---------- | -------- | -------- | ------------- | ------------- |
-| **master** branch |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/gavazquez/lunamultiplayer/master.svg)]() | [![GitHub release](https://img.shields.io/github/release/gavazquez/lunamultiplayer.svg)]()
+| **master** |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/gavazquez/lunamultiplayer/master.svg)](../../commits/master) | [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/gavazquez/lunamultiplayer.svg)](../../commits/master)
 ---
 
 ##### Acknowledgements:
@@ -49,7 +54,6 @@ Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to se
   <a href="mailto:gavazquez@gmail.com">
     <img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" />
   </a>
-  <a href="https://raw.githubusercontent.com/gavazquez/LunaMultiPlayer/master/LICENSE">
-    <img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" />
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" />
   </a>
 </p> 
