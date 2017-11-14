@@ -47,27 +47,5 @@ namespace LMP.Tests
             Assert.AreEqual(1, MessageStore.GetMessageCount(typeof(VesselSrvMsg)));
             Assert.AreEqual(1, MessageStore.GetMessageDataCount(typeof(VesselPositionMsgData)));
         }
-
-        [TestMethod]
-        public void TestMsgSerializeReuseDeserialize()
-        {
-            var msg1 = Factory.CreateNew<VesselSrvMsg, VesselProtoMsgData>();
-            var msgData1 = (VesselProtoMsgData)msg1.Data;
-
-            msgData1.VesselData = new byte[100];
-            Rnd.NextBytes(msgData1.VesselData);
-
-            var serializedMsg1 = msg1.Serialize(true);
-
-            var msg2 = Factory.CreateNew<VesselSrvMsg, VesselRemoveMsgData>();
-            var msgData2 = (VesselRemoveMsgData)msg1.Data;
-
-            msgData2.VesselId = Guid.NewGuid();
-
-            var serializedMsg2 = msg2.Serialize(true);
-
-            msg1 = Factory.Deserialize(serializedMsg1, DateTime.Now.Ticks) as VesselSrvMsg;
-            msg2 = Factory.Deserialize(serializedMsg2, DateTime.Now.Ticks) as VesselSrvMsg;
-        }
     }
 }
