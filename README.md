@@ -53,7 +53,7 @@ Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to se
   <a href="mailto:gavazquez@gmail.com">
     <img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" />
   </a>
-  <a href="https://raw.githubusercontent.com/pardeike/Harmony/master/LICENSE">
+  <a href="https://raw.githubusercontent.com/gavazquez/LunaMultiPlayer/master/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-lightgray.svg?style=flat" alt="MIT License" />
   </a>
 </p> 
