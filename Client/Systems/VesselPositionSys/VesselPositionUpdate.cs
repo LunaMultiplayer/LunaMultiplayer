@@ -45,7 +45,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
 
         #region Message Fields
-        
+
         public Guid VesselId { get; set; }
         public string BodyName { get; set; }
         public double[] LatLonAlt { get; set; }
@@ -120,6 +120,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 if (!InterpolationStarted)
                 {
+                    Vessel.orbit.referenceBody = Body;
                     var interval = (float)TimeSpan.FromTicks(Target.SentTime - SentTime).TotalSeconds;
                     InterpolationDuration = Mathf.Clamp(interval, 0, 0.5f);
                     InterpolationStarted = true;
@@ -147,8 +148,8 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         private void ApplyInterpolations(float lerpPercentage)
-        {                
-            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory. Perhaps we can reuse the Orbit class?
+        {
+            //TODO: Check if this can be improved as it probably creates garbage in memory. Perhaps we can reuse the Orbit class?
             var tgtOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
                 Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Body);
 
@@ -187,17 +188,15 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     case Vessel.Situations.LANDED:
                     case Vessel.Situations.SPLASHED:
-                        //Ignore the altitude and let the client calculate it when vessel is landed/splashed
-                        //Hopefully this will limit the chances where the vessel crashing into terrain
-                        Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out _);
-                        Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+                        Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+                        //No need to do the line below...
+                        //Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
                         break;
                     case Vessel.Situations.FLYING:
                     case Vessel.Situations.SUB_ORBITAL:
-                        Vessel.heightFromTerrain = Target.Height;
-                        Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
-                        Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
-                        break;
+                        //Vessel.heightFromTerrain = Target.Height;
+                        //Vessel.orbitDriver.updateFromParameters();
+                        //break;
                     case Vessel.Situations.ORBITING:
                     case Vessel.Situations.ESCAPING:
                     case Vessel.Situations.DOCKED:
@@ -248,7 +247,7 @@ namespace LunaClient.Systems.VesselPositionSys
             destinationOrbit.epoch = sourceOrbit.epoch;
             destinationOrbit.referenceBody = sourceOrbit.referenceBody;
         }
-        
+
         #endregion
     }
 }

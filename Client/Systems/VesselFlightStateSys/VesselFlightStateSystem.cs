@@ -10,7 +10,8 @@ using UnityEngine;
 namespace LunaClient.Systems.VesselFlightStateSys
 {
     /// <summary>
-    /// System that controls the flight state (user control inputs) for all the vessesl that are in flight and controlled
+    /// System that controls the flight state (user control inputs) for all the vessels that are in flight, loaded+unpacked and controlled
+    /// Basically here we put the other player input (pitch,roll,yaw,...) into their vessels and send our own inputs
     /// </summary>
     [SuppressMessage("ReSharper", "DelegateSubtraction")]
     public class VesselFlightStateSystem : MessageSystem<VesselFlightStateSystem, VesselFlightStateMessageSender, VesselFlightStateMessageHandler>

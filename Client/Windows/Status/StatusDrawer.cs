@@ -190,8 +190,7 @@ namespace LunaClient.Windows.Status
             GUILayout.Label(playerStatus.PlayerName, PlayerNameStyle[playerStatus.PlayerName]);
             GUILayout.FlexibleSpace();
             GUILayout.Label(playerStatus.StatusText, StateTextStyle);
-            if (playerStatus.VesselText != "")
-                GUILayout.Label($"Pilot: {playerStatus.VesselText}", VesselNameStyle);
+            GUILayout.Label(playerStatus.VesselText != "" ? $"Pilot: {playerStatus.VesselText}" : "", VesselNameStyle);
             GUILayout.EndHorizontal();
         }
     }

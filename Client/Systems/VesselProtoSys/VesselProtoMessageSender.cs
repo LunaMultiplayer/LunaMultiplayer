@@ -19,7 +19,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public void SendVesselMessage(Vessel vessel)
         {
-            if (vessel == null) return;
+            if (vessel == null || vessel.situation == Vessel.Situations.PRELAUNCH || VesselCommon.IsInSafetyBubble(vessel))
+                return;
 
             /* Doing a Vessel.Backup takes a lot of time... 
              * I tried to make a handler that redo the constructor of ProtoVessel but 

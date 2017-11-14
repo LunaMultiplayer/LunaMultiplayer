@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Generic;
 using UniLinq;
@@ -98,6 +99,9 @@ namespace LunaClient.Systems.VesselImmortalSys
                 {
                     SetVesselImmortalState(vessel, true);
                 }
+
+                if(FlightGlobals.ActiveVessel != null) //If we are spectating set our own vessel as immortal
+                    SetVesselImmortalState(FlightGlobals.ActiveVessel, VesselCommon.IsSpectating);
             }
         }
 

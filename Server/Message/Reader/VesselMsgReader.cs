@@ -8,6 +8,7 @@ using LunaServer.Context;
 using LunaServer.Log;
 using LunaServer.Message.Reader.Base;
 using LunaServer.Server;
+using LunaServer.Settings;
 using LunaServer.System;
 using System;
 using System.Collections.Generic;
@@ -40,7 +41,8 @@ namespace LunaServer.Message.Reader
                     break;
                 case VesselMessageType.Position:
                     VesselRelaySystem.HandleVesselMessage(client, message);
-                    if (client.Subspace == WarpContext.LatestSubspace)
+                    if (!GeneralSettings.SettingsStore.ShowVesselsInThePast || 
+                        client.Subspace == WarpContext.LatestSubspace && GeneralSettings.SettingsStore.ShowVesselsInThePast)
                         RewriteVesselProtoPositionInfo(message);
                     break;
                 case VesselMessageType.Flightstate:

@@ -100,7 +100,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             try
             {
-                if (ProtoSystemReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
+                if (ProtoSystemReady)
                 {
                     MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
                     MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());

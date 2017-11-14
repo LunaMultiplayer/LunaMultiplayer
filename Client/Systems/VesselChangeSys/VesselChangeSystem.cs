@@ -85,6 +85,7 @@ namespace LunaClient.Systems.VesselChangeSys
                     foreach (var vesselChange in AllPlayerVesselChanges)
                     {
                         var vessel = FlightGlobals.FindVessel(vesselChange.Key);
+                        if (vessel == null) continue;
 
                         //The changes in a vessel (solar pannel that extends for example) involve touching the parts of a vessel.
                         //If a vessel is NOT loaded it's part list will be empty so there's no point in aplying changes to it

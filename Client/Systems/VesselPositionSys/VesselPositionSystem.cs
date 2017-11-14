@@ -73,7 +73,7 @@ namespace LunaClient.Systems.VesselPositionSys
             for (var i = FlightGlobals.Vessels.Count - 1; i >= 0; --i)
             {
                 var vessel = FlightGlobals.Vessels[i];
-                if (vessel?.precalc == null || vessel.id == FlightGlobals.ActiveVessel?.id)
+                if (vessel?.precalc == null || vessel.id == FlightGlobals.ActiveVessel?.id || !vessel.loaded)
                 {
                     continue;
                 }

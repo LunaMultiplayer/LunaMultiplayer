@@ -81,7 +81,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void UnloadVessel(Vessel killVessel)
         {
-            if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel) || killVessel.state == Vessel.State.DEAD)
+            if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel))
             {
                 return;
             }

@@ -75,6 +75,29 @@ namespace LunaClient.Systems.VesselChangeSys
                         }
                     }
                 }
+
+                foreach (var engineToStart in vesselChange.EnginesToStart)
+                {
+                    var part = vessel.parts.FirstOrDefault(p => p.craftID == engineToStart);
+                    if (part != null)
+                    {
+                        part.FindModuleImplementing<ModuleEngines>()?.Activate();
+                    }
+                }
+
+                foreach (var engineToStop in vesselChange.EnginesToStop)
+                {
+                    var part = vessel.parts.FirstOrDefault(p => p.craftID == engineToStop);
+                    if (part != null)
+                    {
+                        part.FindModuleImplementing<ModuleEngines>()?.Shutdown();
+                    }
+                }
+
+                foreach (var actionGroup in vesselChange.ActionGroupsToToggle)
+                {
+                    vessel.ActionGroups?.ToggleGroup(actionGroup);
+                }
             }
         }
     }
