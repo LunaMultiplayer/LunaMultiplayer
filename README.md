@@ -1,10 +1,20 @@
+
+
+<p align="center">
+    <img src="https://i.imgur.com/oE6qB3K.png" alt="Luna multiplayer logo" height="200" width="200"/>
+</p>
+
+<p align="center">
+  <a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="chat on Discord"></a>
+  <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button"/></a>
+  <a href="../../wiki"><img src="https://img.shields.io/badge/documentation-Wiki-4BC51D.svg?style=flat" alt="Documentation" /></a>
+</p>
+
+---
+
 # Luna Multiplayer Mod (LMP)
 
 *Multiplayer mod for [Kerbal Space Program (KSP)](https://kerbalspaceprogram.com)*
-
-<a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="chat on Discord"></a>
-<a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button"/></a>
----
 
 Main features:
 
@@ -23,21 +33,19 @@ Main features:
 
 ---
 
-## [Wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki)
-
-#### Interesting  links:
-
-[How to build LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP)  
-[How to run LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP)  
-[How to debug LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio)  
-
----
-
 ## Status:
 
 |            |   AppVeyor Build  |
 | ---------- | ----------------- |
 | **master** branch |[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f/branch/master?svg=true)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master)
+
+---
+
+#### Interesting wiki links:
+
+[How to build LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP)  
+[How to run LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP)  
+[How to debug LMP](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio)  
 
 ---
 
