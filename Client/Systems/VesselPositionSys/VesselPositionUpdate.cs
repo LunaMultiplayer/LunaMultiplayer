@@ -188,18 +188,18 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     case Vessel.Situations.LANDED:
                     case Vessel.Situations.SPLASHED:
-                        Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
-                        //No need to do the line below...
-                        //Vessel.ReferenceTransform.position = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+                        Vessel.latitude = Target.LatLonAlt[0];
+                        Vessel.longitude = Target.LatLonAlt[1];
+                        Vessel.altitude = Target.LatLonAlt[2];
+                        //Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
                         break;
                     case Vessel.Situations.FLYING:
                     case Vessel.Situations.SUB_ORBITAL:
-                        //Vessel.heightFromTerrain = Target.Height;
-                        //Vessel.orbitDriver.updateFromParameters();
-                        //break;
                     case Vessel.Situations.ORBITING:
                     case Vessel.Situations.ESCAPING:
                     case Vessel.Situations.DOCKED:
+                        //NO need to set the height from terrain, not even in flying
+                        //Vessel.heightFromTerrain = Target.Height;
                         //DO NOT call updateFromParameters when landed as vessel jitters up/down
                         Vessel.orbitDriver.updateFromParameters();
                         //This does not seems to affect when the vessel is landed but I moved it to orbiting to increase performance

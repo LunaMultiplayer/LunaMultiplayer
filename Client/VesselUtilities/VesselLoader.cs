@@ -8,6 +8,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Utilities;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using UniLinq;
@@ -18,6 +19,12 @@ namespace LunaClient.VesselUtilities
 {
     public class VesselLoader
     {
+        /// <summary>
+        /// Here we hold all the messages of "Target: xxx" message created by SetVesselTarget to remove them when we reload a vessel and set
+        /// back the target to it
+        /// </summary>
+        private static List<ScreenMessage> MessagesToRemove { get; } = new List<ScreenMessage>();
+
         /// <summary>
         /// Invoke this private method to rebuild the vessel lists that appear on the tracking station
         /// </summary>
@@ -241,10 +248,13 @@ namespace LunaClient.VesselUtilities
         /// This method removes the "Target: xxx" message created by SetVesselTarget
         /// </summary>
         private static void RemoveSetTargetMessages(float currentTime)
-        {                
+        {
+            MessagesToRemove.Clear();
+
             //If the message started on or after the SetVesselTarget call time, remove it
-            var messagesToRemove = ScreenMessages.Instance.ActiveMessages.Where(m => m.startTime >= currentTime);
-            foreach (var message in messagesToRemove)
+            MessagesToRemove.AddRange(ScreenMessages.Instance.ActiveMessages.Where(m => m.startTime >= currentTime));
+
+            foreach (var message in MessagesToRemove)
             {
                 ScreenMessages.RemoveMessage(message);
             }
