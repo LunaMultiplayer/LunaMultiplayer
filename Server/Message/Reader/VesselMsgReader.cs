@@ -109,9 +109,9 @@ namespace LunaServer.Message.Reader
 
             var protoVesselLines = FileHandler.ReadFileLines(path);
 
-            var updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
+            //var updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
 
-            FileHandler.WriteToFile(path, updatedText);
+            //FileHandler.WriteToFile(path, updatedText);
         }
 
         /// <summary>

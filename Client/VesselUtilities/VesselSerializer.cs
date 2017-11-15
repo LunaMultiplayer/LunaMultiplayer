@@ -48,7 +48,7 @@ namespace LunaClient.VesselUtilities
                 //Defend against NaN orbits
                 if (VesselHasNaNPosition(ConfigNode))
                 {
-                    LunaLog.Log($"[LMP]: Vessel {vesselId} has NaN position");
+                    LunaLog.LogError($"[LMP]: Vessel {vesselId} has NaN position");
                     return new byte[0];
                 }
 

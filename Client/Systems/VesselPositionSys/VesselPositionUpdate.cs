@@ -54,8 +54,12 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] TransformPosition { get; set; }
         public double[] Velocity { get; set; }
         public double[] Orbit { get; set; }
+        public double[] OrbitVelocity { get; set; }
+        public double[] OrbitPosition { get; set; }
         public float Height { get; set; }
         public float[] TransformRotation { get; set; }
+        public bool Landed { get; set; }
+        public bool Splashed { get; set; }
         public long SentTime { get; set; }
 
         #endregion
@@ -63,10 +67,12 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Vessel position information fields
 
         public Quaternion Rotation => new Quaternion(TransformRotation[0], TransformRotation[1], TransformRotation[2], TransformRotation[3]);
-        public Vector3 TransformPos => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
+        public Vector3d TransformPos => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
         public Vector3 CoM => new Vector3d(Com[0], Com[1], Com[2]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
+        public Vector3d OrbitVelocityVector => new Vector3d(OrbitVelocity[0], OrbitVelocity[1], OrbitVelocity[2]);
+        public Vector3d OrbitPositionVector => new Vector3d(OrbitPosition[0], OrbitPosition[1], OrbitPosition[2]);
 
         private Vector3d _position = Vector3d.zero;
         public Vector3d Position
@@ -154,10 +160,21 @@ namespace LunaClient.Systems.VesselPositionSys
                 Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Body);
 
             CopyOrbit(tgtOrbit, Vessel.orbitDriver.orbit);
-            Vessel.orbitDriver.orbit.Init();
 
+            //This orbit.Init is necessary as otherwise the LINE of the orbit is not updated
+            //if (!SettingsSystem.CurrentSettings.Debug1)
+                Vessel.orbitDriver.orbit.Init();
+
+            //TODO: Is CoM and terrainNormal really needed?
             Vessel.CoM = Vector3.Lerp(CoM, Target.CoM, lerpPercentage);
             Vessel.terrainNormal = Vector3.Lerp(Normal, Target.Normal, lerpPercentage);
+
+            //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
+            //Vessel.updateSituation() is called in the Vessel.LateUpdate(). Same applies for landed and splashed
+            Vessel.staticPressurekPa = FlightGlobals.getStaticPressure(Target.LatLonAlt[2], Vessel.mainBody);
+            Vessel.Landed = Landed;
+            Vessel.Splashed = Splashed;
+
             if (!Vessel.loaded)
             {
                 //DO NOT lerp the latlonalt as otherwise if you are in 
@@ -165,6 +182,20 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.latitude = Target.LatLonAlt[0];
                 Vessel.longitude = Target.LatLonAlt[1];
                 Vessel.altitude = Target.LatLonAlt[2];
+
+                //if (SettingsSystem.CurrentSettings.Debug1)
+                //{
+                //    var pos = Vessel.orbitDriver.orbit.getRelativePositionAtUT(Planetarium.GetUniversalTime());
+
+                //    if (SettingsSystem.CurrentSettings.Debug2)
+                //        pos = (Vessel.CoMD - Body.position).xzy;
+
+                //    var vel = Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime());
+                //    Vessel.orbitDriver.orbit.UpdateFromStateVectors(pos, vel, Body, Planetarium.GetUniversalTime());
+                //    Vessel.orbitDriver.orbit.Init();
+                //    Vessel.orbitDriver.orbit.UpdateFromUT(Planetarium.GetUniversalTime());
+                //    Vessel.orbitDriver.updateFromParameters();
+                //}
             }
             else
             {
@@ -183,7 +214,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 //If you do Vessel.ReferenceTransform.position = curPosition 
                 //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
                 //that is the reason why we pack vessels at close distance when landed...
-
                 switch (Vessel.situation)
                 {
                     case Vessel.Situations.LANDED:
@@ -191,7 +221,7 @@ namespace LunaClient.Systems.VesselPositionSys
                         Vessel.latitude = Target.LatLonAlt[0];
                         Vessel.longitude = Target.LatLonAlt[1];
                         Vessel.altitude = Target.LatLonAlt[2];
-                        //Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+                        //DO NOT call Vessel.orbitDriver.updateFromParameters when landed as vessel jitters up/down
                         break;
                     case Vessel.Situations.FLYING:
                     case Vessel.Situations.SUB_ORBITAL:
@@ -200,12 +230,18 @@ namespace LunaClient.Systems.VesselPositionSys
                     case Vessel.Situations.DOCKED:
                         //NO need to set the height from terrain, not even in flying
                         //Vessel.heightFromTerrain = Target.Height;
-                        //DO NOT call updateFromParameters when landed as vessel jitters up/down
                         Vessel.orbitDriver.updateFromParameters();
                         //This does not seems to affect when the vessel is landed but I moved it to orbiting to increase performance
                         foreach (var part in Vessel.Parts)
                             part.ResumeVelocity();
                         break;
+                }
+
+                if (FlightGlobals.ActiveVessel?.id == VesselId)
+                {
+                    //We are spectating. TODO: Test this
+                    Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+                    Vessel.SetPosition(curPosition);
                 }
             }
         }

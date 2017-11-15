@@ -1,5 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -16,6 +18,10 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!(msg.Data is VesselPositionMsgData msgData)) return;
             
             var vesselId = msgData.VesselId;
+
+            //Ignore vessel updates for our own controlled vessel
+            if (LockSystem.LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                return;
 
             if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselId))
                 return;

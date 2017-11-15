@@ -79,7 +79,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
 
                 vessel.precalc.enabled = true;
-                vessel.precalc.MainPhysics(true);
+                vessel.precalc.MainPhysics(false);
             }
         }
 
