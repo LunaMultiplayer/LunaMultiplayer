@@ -1,13 +1,16 @@
-
-
 <p align="center">
-    <img src="https://i.imgur.com/YvA4C68.png" alt="Luna multiplayer logo" height="200" width="200"/>
+    <img src="../master/External/logo.png" alt="Luna multiplayer logo" height="250" width="250"/>
 </p>
 
 <p align="center">
-  <a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/badge/chat-on%20discord-7289da.svg" alt="chat on Discord"></a>
-  <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal donate button"/></a>
-  <a href="../../wiki"><img src="https://img.shields.io/badge/documentation-Wiki-4BC51D.svg?style=flat" alt="Documentation" /></a>
+  <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal"/></a>
+  <a href="https://discord.gg/5szq2r"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
+  <a href="../../wiki"><img src="https://img.shields.io/badge/documentation-Wiki-4BC51D.svg" alt="Documentation" /></a>
+</p>
+
+<p align="center">
+  <a href="../../releases"><img src="https://img.shields.io/github/release/gavazquez/lunamultiplayer.svg" alt="Latest release" /></a>
+  <img src="https://img.shields.io/github/downloads/gavazquez/lunamultiplayer/total.svg" alt="Total downloads" />
 </p>
 
 ---
@@ -16,7 +19,7 @@
 
 *Multiplayer mod for [Kerbal Space Program (KSP)](https://kerbalspaceprogram.com)*
 
-Main features:
+### Main features:
 
 - Clean and optimized code, based on systems and windows which makes it easier to read and modify.
 - Multi threaded (as much as Unity allows)
@@ -31,21 +34,28 @@ Main features:
 - Based on tasks instead of threads.
 - Improved message compression algorithm ([QuickLZ](http://www.quicklz.com))
 
-Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to see how to [build](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-compile-LMP), [run](https://github.com/gavazquez/LunaMultiPlayer/wiki/How-to-run-LMP) or [debug](https://github.com/gavazquez/LunaMultiPlayer/wiki/Debugging-in-Visual-studio) LMP
+Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-compile-LMP), [run](../../wiki/How-to-run-LMP) or [debug](../../wiki/Debugging-in-Visual-studio) LMP
 
 ---
 
-## Status:
+### Status:
 
-|            |   AppVeyor Build  |
-| ---------- | ----------------- |
-| **master** branch |[![AppVeyor Build](https://ci.appveyor.com/api/projects/status/mf00yf1j560lfm8f/branch/master?svg=true)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master)
+|   Branch   |   Build  |   Tests  |  Last commit  |   Activity    |
+| ---------- | -------- | -------- | ------------- | ------------- |
+| **master** |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/gavazquez/lunamultiplayer/master.svg)](../../commits/master) | [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/gavazquez/lunamultiplayer.svg)](../../commits/master)
 
 ---
 
-##### Acknowledgements:
+### Contributing:
 
-*LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod*
+Please write the code as you were going to leave it, return after 1 year and you'd have to understand what you wrote.  
+It's **very** important that the code is clean and documented so in case someone leaves, another programmer could take and maintain it. Bear in mind that **nobody** likes to take a project where it's code looks like a dumpster.
+
+There's also a test project in case you want to add tests to your code.
+
+---
+
+###### Acknowledgement: LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod
 
 ---
 
@@ -53,7 +63,6 @@ Please check the [wiki](https://github.com/gavazquez/LunaMultiPlayer/wiki) to se
   <a href="mailto:gavazquez@gmail.com">
     <img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" />
   </a>
-  <a href="https://raw.githubusercontent.com/gavazquez/LunaMultiPlayer/master/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-lightgray.svg?style=flat" alt="MIT License" />
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" />
   </a>
-</p> 
+</p>
