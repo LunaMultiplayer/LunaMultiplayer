@@ -19,7 +19,7 @@
 
 *Multiplayer mod for [Kerbal Space Program (KSP)](https://kerbalspaceprogram.com)*
 
-Main features:
+### Main features:
 
 - Clean and optimized code, based on systems and windows which makes it easier to read and modify.
 - Multi threaded (as much as Unity allows)
@@ -38,22 +38,31 @@ Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-comp
 
 ---
 
-## Status:
+### Status:
 
 |   Branch   |   Build  |   Tests  |  Last commit  |   Activity    |
 | ---------- | -------- | -------- | ------------- | ------------- |
 | **master** |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/gavazquez/lunamultiplayer/master.svg)](../../commits/master) | [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/gavazquez/lunamultiplayer.svg)](../../commits/master)
----
-
-##### Acknowledgements:
-
-*LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod*
 
 ---
+
+### Contributing:
+
+Please write the code as you were going to leave it, return after 1 year and you'd have to understand what you wrote.  
+It's **very** important that the code is clean and documented so in case someone leaves, another programmer could take and maintain it. Bear in mind that **nobody** likes to take a project where it's code looks like a dumpster.
+
+There's also a test project in case you want to add tests to your code.
+
+---
+
+###### Acknowledgement: LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod
+
+---
+
 <p align="center">
   <a href="mailto:gavazquez@gmail.com">
     <img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" />
   </a>
   <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" />
   </a>
-</p> 
+</p>
