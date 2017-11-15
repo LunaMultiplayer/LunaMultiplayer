@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -25,6 +26,7 @@ namespace LunaClient.Systems.GameScene
 
             //We are going to another screen so clear up the systems
             VesselsProtoStore.ClearSystem();
+            SystemsContainer.Get<VesselChangeSystem>().ClearSystem();
             SystemsContainer.Get<VesselRemoveSystem>().ClearSystem();
             SystemsContainer.Get<VesselFlightStateSystem>().ClearSystem();
 

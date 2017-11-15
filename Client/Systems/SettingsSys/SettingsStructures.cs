@@ -40,6 +40,13 @@ namespace LunaClient.Systems.SettingsSys
         public int MaxGroupsPerPlayer { get; set; } = 1;
 
 #if DEBUG
+
+        /*
+         * You can use this debug switches for testing purposes. 
+         * For example do one part or the code or another in case the debugX is on/off
+         * NEVER upload the code with those switches in use as some other developer might need them!!!!!
+         */
+
         public bool Debug1 { get; set; } = false;
         public bool Debug2 { get; set; } = false;
         public bool Debug3 { get; set; } = false;
@@ -49,6 +56,7 @@ namespace LunaClient.Systems.SettingsSys
         public bool Debug7 { get; set; } = false;
         public bool Debug8 { get; set; } = false;
         public bool Debug9 { get; set; } = false;
+
 #endif
 
     }

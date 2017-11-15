@@ -264,13 +264,8 @@ namespace LunaClient.VesselUtilities
         {
             if (existing == null || newProtoVessel == null) return true;
 
-            if (!existing.loaded)
-            {
-                //Wenever we receive a proto of a unloaded vessel just reload 
-                //it at will as we cannot compare it against anything as it's not even in range
-                //and we don't know what panels can be extended, etc
-                    return true;
-            }
+            if (!existing.loaded && existing.protoVessel.protoPartSnapshots.Count != newProtoVessel.protoPartSnapshots.Count)
+                return true;
 
             if (existing.Parts.Count != newProtoVessel.protoPartSnapshots.Count)
                 return true;

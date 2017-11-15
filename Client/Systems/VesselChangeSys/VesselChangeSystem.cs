@@ -4,6 +4,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselChangeSys
@@ -33,6 +34,8 @@ namespace LunaClient.Systems.VesselChangeSys
 
         public VesselRemoveSystem VesselRemoveSystem => SystemsContainer.Get<VesselRemoveSystem>();
         public VesselChangeChecker VesselChangeChecker { get; } = new VesselChangeChecker();
+        private static List<Guid> ChangesProcessed { get; } = new List<Guid>();
+
         #endregion
 
         #region Base overrides
@@ -50,9 +53,19 @@ namespace LunaClient.Systems.VesselChangeSys
             base.OnDisabled();
             GameEvents.onVesselWasModified.Remove(VesselProtoEvents.VesselModified);
             AllPlayerVesselChanges.Clear();
+            ChangesProcessed.Clear();
         }
 
         #endregion
+
+        /// <summary>
+        /// Clear the system stores. Call this when switching screens
+        /// </summary>
+        public void ClearSystem()
+        {
+            AllPlayerVesselChanges.Clear();
+            ChangesProcessed.Clear();
+        }
 
         /// <summary>
         /// When you receive a protovessel, call this method, then it will generate a change structure in the dictionary if there
@@ -82,6 +95,7 @@ namespace LunaClient.Systems.VesselChangeSys
             {
                 if (ChangeSystemBasicReady)
                 {
+                    ChangesProcessed.Clear();
                     foreach (var vesselChange in AllPlayerVesselChanges)
                     {
                         var vessel = FlightGlobals.FindVessel(vesselChange.Key);
@@ -89,13 +103,18 @@ namespace LunaClient.Systems.VesselChangeSys
 
                         //The changes in a vessel (solar pannel that extends for example) involve touching the parts of a vessel.
                         //If a vessel is NOT loaded it's part list will be empty so there's no point in aplying changes to it
+                        //we will apply them when the vessel is loaded later on...
                         if (!vessel.loaded)
                             continue;
 
                         VesselChangeApplier.ProcessVesselChanges(vessel, vesselChange.Value);
+                        ChangesProcessed.Add(vesselChange.Key);
                     }
 
-                    AllPlayerVesselChanges.Clear();
+                    foreach (var key in ChangesProcessed)
+                    {
+                        AllPlayerVesselChanges.TryRemove(key, out _);
+                    }
                 }
             }
             catch (Exception e)
