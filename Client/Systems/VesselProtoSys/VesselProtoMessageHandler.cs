@@ -43,10 +43,11 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private static void HandleVesselResponse(VesselsReplyMsgData messageData)
         {
+            //We read the vessels syncronously so when we start the game we have the dictionary of all the vessels already loaded
             foreach (var vesselDataKv in messageData.VesselsData)
             {
                 if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselDataKv.Key))
-                    VesselsProtoStore.HandleVesselProtoData(vesselDataKv.Value, vesselDataKv.Key);
+                    VesselsProtoStore.HandleVesselProtoData(vesselDataKv.Value, vesselDataKv.Key, true);
             }
 
             MainSystem.NetworkState = ClientState.VesselsSynced;

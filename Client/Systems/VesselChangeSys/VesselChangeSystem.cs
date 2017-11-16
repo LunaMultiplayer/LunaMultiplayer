@@ -73,6 +73,8 @@ namespace LunaClient.Systems.VesselChangeSys
         /// </summary>
         public void ProcessVesselChange(ProtoVessel newProtoVessel)
         {
+            if (newProtoVessel == null) return;
+
             if (VesselsProtoStore.AllPlayerVessels.TryGetValue(newProtoVessel.vesselID, out var oldProtoUpdate))
             {
                 var changes = VesselChangeDetector.GetProtoVesselChanges(oldProtoUpdate.ProtoVessel, newProtoVessel);
