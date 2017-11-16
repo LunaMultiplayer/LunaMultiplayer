@@ -129,10 +129,7 @@ namespace LunaServer.Message.Reader
 
             regex = new Regex("alt = (.*)");
             regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
-
-            regex = new Regex("hgt = (.*)");
-            regex.Replace(fullText, msgData.Height.ToString(CultureInfo.InvariantCulture));
-
+            
             regex = new Regex("nrm = (.*)");
             regex.Replace(fullText, msgData.NormalVector[0].ToString(CultureInfo.InvariantCulture) + "," + 
                 msgData.NormalVector[1].ToString(CultureInfo.InvariantCulture) + "," + 

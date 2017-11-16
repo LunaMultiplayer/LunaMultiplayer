@@ -54,9 +54,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] TransformPosition { get; set; }
         public double[] Velocity { get; set; }
         public double[] Orbit { get; set; }
-        public double[] OrbitVelocity { get; set; }
-        public double[] OrbitPosition { get; set; }
-        public float Height { get; set; }
         public float[] TransformRotation { get; set; }
         public bool Landed { get; set; }
         public bool Splashed { get; set; }
@@ -71,8 +68,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public Vector3 CoM => new Vector3d(Com[0], Com[1], Com[2]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
-        public Vector3d OrbitVelocityVector => new Vector3d(OrbitVelocity[0], OrbitVelocity[1], OrbitVelocity[2]);
-        public Vector3d OrbitPositionVector => new Vector3d(OrbitPosition[0], OrbitPosition[1], OrbitPosition[2]);
 
         private Vector3d _position = Vector3d.zero;
         public Vector3d Position
@@ -200,8 +195,7 @@ namespace LunaClient.Systems.VesselPositionSys
                         Vessel.latitude = Target.LatLonAlt[0];
                         Vessel.longitude = Target.LatLonAlt[1];
                         Vessel.altitude = Target.LatLonAlt[2];
-                        //DO NOT call Vessel.orbitDriver.updateFromParameters when landed as vessel jitters up/down
-                        //TODO: Check if that jittering dissapears when setting epoch = Planetarium.GetUniversalTime()
+                        //DO NOT call Vessel.orbitDriver.updateFromParameters when landed as vessel jitters up/down when unpacked
                         break;
                     case Vessel.Situations.FLYING:
                     case Vessel.Situations.SUB_ORBITAL:
@@ -219,8 +213,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 if (FlightGlobals.ActiveVessel?.id == VesselId)
                 {
-                    //We are spectating. TODO: Test this
-                    Vessel.mainBody.GetLatLonAlt(curPosition, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
                     Vessel.SetPosition(curPosition);
                 }
             }
@@ -236,32 +228,6 @@ namespace LunaClient.Systems.VesselPositionSys
         private static double Lerp(double from, double to, float t)
         {
             return from * (1 - t) + to * t;
-        }
-
-        private static Orbit Lerp(Orbit from, Orbit to, float t)
-        {
-            return new Orbit()
-            {
-                inclination = from.inclination * (1 - t) + to.inclination * t,
-                eccentricity = from.eccentricity * (1 - t) + to.eccentricity * t,
-                semiMajorAxis = from.semiMajorAxis * (1 - t) + to.semiMajorAxis * t,
-                LAN = from.LAN * (1 - t) + to.LAN * t,
-                argumentOfPeriapsis = from.argumentOfPeriapsis * (1 - t) + to.argumentOfPeriapsis * t,
-                meanAnomalyAtEpoch = from.meanAnomalyAtEpoch * (1 - t) + to.meanAnomalyAtEpoch * t,
-                epoch = from.epoch * (1 - t) + to.epoch * t,
-            };
-        }
-
-        private static void CopyOrbit(Orbit sourceOrbit, Orbit destinationOrbit)
-        {
-            destinationOrbit.inclination = sourceOrbit.inclination;
-            destinationOrbit.eccentricity = sourceOrbit.eccentricity;
-            destinationOrbit.semiMajorAxis = sourceOrbit.semiMajorAxis;
-            destinationOrbit.LAN = sourceOrbit.LAN;
-            destinationOrbit.argumentOfPeriapsis = sourceOrbit.argumentOfPeriapsis;
-            destinationOrbit.meanAnomalyAtEpoch = sourceOrbit.meanAnomalyAtEpoch;
-            destinationOrbit.epoch = sourceOrbit.epoch;
-            destinationOrbit.referenceBody = sourceOrbit.referenceBody;
         }
 
         #endregion

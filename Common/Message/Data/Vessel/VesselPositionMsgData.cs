@@ -15,11 +15,7 @@ namespace LunaCommon.Message.Data.Vessel
         public double[] Com { get; set; }
         public double[] TransformPosition { get; set; }
         public double[] Velocity { get; set; }
-        public double[] OrbitVelocity { get; set; }
-        public double[] OrbitPosition { get; set; }
         public double[] Orbit { get; set; }
-        public double[] Acceleration { get; set; }
-        public float Height { get; set; }
         public bool Landed { get; set; }
         public bool Splashed { get; set; }
         public float[] TransformRotation { get; set; }

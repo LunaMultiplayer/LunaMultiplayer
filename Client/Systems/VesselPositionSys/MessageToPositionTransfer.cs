@@ -20,11 +20,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 TransformPosition = msgData.TransformPosition,
                 Velocity = msgData.Velocity,
                 LatLonAlt = msgData.LatLonAlt,
-                Height = msgData.Height,
                 Landed = msgData.Landed,
                 Splashed = msgData.Splashed,
-                OrbitPosition = msgData.OrbitPosition,
-                OrbitVelocity = msgData.OrbitVelocity,
                 Com = msgData.Com,
                 NormalVector = msgData.NormalVector,
                 Orbit = msgData.Orbit,
@@ -42,11 +39,8 @@ namespace LunaClient.Systems.VesselPositionSys
             update.TransformPosition = msgData.TransformPosition;
             update.Velocity = msgData.Velocity;
             update.LatLonAlt = msgData.LatLonAlt;
-            update.Height = msgData.Height;
             update.Landed = msgData.Landed;
             update.Splashed = msgData.Splashed;
-            update.OrbitPosition = msgData.OrbitPosition;
-            update.OrbitVelocity = msgData.OrbitVelocity;
             update.Com = msgData.Com;
             update.NormalVector = msgData.NormalVector;
             update.Orbit = msgData.Orbit;
@@ -63,11 +57,8 @@ namespace LunaClient.Systems.VesselPositionSys
             updateToUpdate.TransformPosition = update.TransformPosition;
             updateToUpdate.Velocity = update.Velocity;
             updateToUpdate.LatLonAlt = update.LatLonAlt;
-            updateToUpdate.Height = update.Height;
             updateToUpdate.Landed = update.Landed;
             updateToUpdate.Splashed = update.Splashed;
-            updateToUpdate.OrbitPosition = update.OrbitPosition;
-            updateToUpdate.OrbitVelocity = update.OrbitVelocity;
             updateToUpdate.Com = update.Com;
             updateToUpdate.NormalVector = update.NormalVector;
             updateToUpdate.Orbit = update.Orbit;
@@ -110,7 +101,6 @@ namespace LunaClient.Systems.VesselPositionSys
                     vessel.longitude,
                     vessel.altitude,
                 };
-                msgData.Height = vessel.heightFromTerrain;
                 msgData.Com = new[]
                 {
                     (double)vessel.CoM.x,
@@ -133,18 +123,6 @@ namespace LunaClient.Systems.VesselPositionSys
                     vessel.orbit.meanAnomalyAtEpoch,
                     vessel.orbit.epoch,
                     vessel.orbit.referenceBody.flightGlobalsIndex
-                };
-                msgData.OrbitPosition = new[]
-                {
-                    vessel.orbit.pos.x,
-                    vessel.orbit.pos.y,
-                    vessel.orbit.pos.z,
-                };
-                msgData.OrbitVelocity = new[]
-                {
-                    vessel.orbit.vel.x,
-                    vessel.orbit.vel.y,
-                    vessel.orbit.vel.z,
                 };
                 msgData.Landed = vessel.Landed;
                 msgData.Splashed = vessel.Splashed;
