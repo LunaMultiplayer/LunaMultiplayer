@@ -10,7 +10,7 @@ namespace LunaClient.Systems.ModApi
     {
         #region Fields & properties
 
-        private static readonly object EventLock = new object();
+        internal readonly object EventLock = new object();
 
         public Dictionary<string, MessageCallback> RegisteredRawMods { get; } =
             new Dictionary<string, MessageCallback>();
