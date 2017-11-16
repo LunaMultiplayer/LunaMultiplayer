@@ -55,14 +55,13 @@ There's also a test project in case you want to add tests to your code.
 
 ---
 
-###### Acknowledgement: LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod
-
----
-
 <p align="center">
   <a href="mailto:gavazquez@gmail.com">
     <img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" />
   </a>
   <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" />
   </a>
-</p>
+    
+---
+
+###### Acknowledgement: LMP started as a refactor of the [DMP](https://github.com/godarklight/DarkMultiPlayer) mod by [godarklight](https://github.com/godarklight) and it still uses some of it's concepts and snippets. If it wasn't for his job, LMP wouldn't exist.
