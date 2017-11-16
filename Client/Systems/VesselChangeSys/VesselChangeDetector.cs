@@ -16,6 +16,9 @@ namespace LunaClient.Systems.VesselChangeSys
         /// </summary>
         public static VesselChange GetProtoVesselChanges(ProtoVessel existingProtoVessel, ProtoVessel newProtoVessel)
         {
+            if (existingProtoVessel == null || newProtoVessel == null)
+                return null;
+
             //Lock this as we are using a shared ConfigNode
             lock (LockObj)
             {

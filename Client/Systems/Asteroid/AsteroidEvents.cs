@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
+using System;
 
 namespace LunaClient.Systems.Asteroid
 {
@@ -25,13 +26,25 @@ namespace LunaClient.Systems.Asteroid
                 else
                 {
                     LunaLog.Log($"[LMP]: Killing non-server asteroid {asteroid.id}");
-                    asteroid.Die();
+                    TryKillAsteroid(asteroid);
                 }
             }
             else
             {
                 LunaLog.Log($"[LMP]: Killing non-server asteroid {asteroid.id}, we don't own the asteroid lock");
+                TryKillAsteroid(asteroid);
+            }
+        }
+
+        private static void TryKillAsteroid(Vessel asteroid)
+        {
+            try
+            {
                 asteroid.Die();
+            }
+            catch (Exception)
+            {
+                // ignored
             }
         }
     }

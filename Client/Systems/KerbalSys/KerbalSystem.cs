@@ -13,11 +13,13 @@ namespace LunaClient.Systems.KerbalSys
 
         public ConcurrentDictionary<string, KerbalStructure> Kerbals { get; } = new ConcurrentDictionary<string, KerbalStructure>();
 
-        public bool KerbalSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+        public bool KerbalSystemReady => Enabled && HighLogic.CurrentGame?.CrewRoster != null;
 
         #endregion
 
         #region Base overrides
+
+        protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
         {
@@ -80,6 +82,19 @@ namespace LunaClient.Systems.KerbalSys
                         break;
                 }
             }
+        }
+
+        #endregion
+
+        #region Public
+
+        /// <summary>
+        /// Load all the received kerbals from the server into the game
+        /// This should be called before the game starts as otherwise loading vessels with crew will fail
+        /// </summary>
+        public void LoadKerbalsIntoGame()
+        {
+            LoadKerbals();
         }
 
         #endregion

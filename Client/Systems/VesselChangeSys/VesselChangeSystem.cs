@@ -76,7 +76,7 @@ namespace LunaClient.Systems.VesselChangeSys
             if (VesselsProtoStore.AllPlayerVessels.TryGetValue(newProtoVessel.vesselID, out var oldProtoUpdate))
             {
                 var changes = VesselChangeDetector.GetProtoVesselChanges(oldProtoUpdate.ProtoVessel, newProtoVessel);
-                if (changes.HasChanges())
+                if (changes != null && changes.HasChanges())
                 {
                     AllPlayerVesselChanges.AddOrUpdate(newProtoVessel.vesselID, changes, (key, existingVal) => changes);
                 }

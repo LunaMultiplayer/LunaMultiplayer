@@ -182,11 +182,13 @@ namespace LunaClient.VesselUtilities
         {
             try
             {
-                //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
-                var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
-                var cn = new ConfigNode();
-                pv.Save(cn);
+                //Cannot create a protovessel if HighLogic.CurrentGame is null as we don't have a CrewRoster
+                //and the protopartsnapshot constructor needs it
+                if (HighLogic.CurrentGame == null)
+                    return null;
 
+                //TODO: Can we reuse the protovessel to avoid memory garbage?
+                var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
                 foreach (var pps in pv.protoPartSnapshots)
                 {
                     if (SystemsContainer.Get<ModSystem>().ModControl != ModControlMode.Disabled &&

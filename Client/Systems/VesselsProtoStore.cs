@@ -44,9 +44,7 @@ namespace LunaClient.Systems
             if (vesselNode != null && vesselId == Common.ConvertConfigStringToGuid(vesselNode.GetValue("pid")))
             {
                 //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
-                var vesselProtoUpd = new VesselProtoUpdate(vesselNode, vesselId);
-                if (vesselProtoUpd.ProtoVessel != null)
-                    return vesselProtoUpd;
+                return new VesselProtoUpdate(vesselNode, vesselId);
             }
 
             return null;
@@ -84,7 +82,15 @@ namespace LunaClient.Systems
     public class VesselProtoUpdate
     {
         public Guid VesselId { get; set; }
-        public ProtoVessel ProtoVessel { get; set; }
+
+        private ProtoVessel _protoVessel;
+        public ProtoVessel ProtoVessel
+        {
+            get => _protoVessel ?? (_protoVessel = VesselCommon.CreateSafeProtoVesselFromConfigNode(VesselNode, VesselId));
+            set => _protoVessel = value;
+        }
+
+        public ConfigNode VesselNode { get; set; }
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
         public bool VesselExist => Vessel != null;
         public bool ShouldBeLoaded => SettingsSystem.ServerSettings.ShowVesselsInThePast ||
@@ -93,7 +99,7 @@ namespace LunaClient.Systems
         public VesselProtoUpdate(ConfigNode vessel, Guid vesselId)
         {
             VesselId = vesselId;
-            ProtoVessel = VesselCommon.CreateSafeProtoVesselFromConfigNode(vessel, vesselId);
+            VesselNode = vessel;
         }
 
         public VesselProtoUpdate(VesselProtoUpdate protoUpdate)

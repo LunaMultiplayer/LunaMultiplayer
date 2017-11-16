@@ -2,6 +2,7 @@
 using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Flag;
+using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
@@ -363,7 +364,10 @@ namespace LunaClient
             //Set universe time
             HighLogic.CurrentGame.flightState.universalTime = SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
 
-            //Load LMP stuff
+            //Load kerbals BEFORE loading the vessels or the loading of vessels will fail!
+            SystemsContainer.Get<KerbalSystem>().LoadKerbalsIntoGame();
+
+            //Load the vessels we've received during connect into the game
             VesselLoader.LoadVesselsIntoGame();
 
             //Load the scenarios from the server
