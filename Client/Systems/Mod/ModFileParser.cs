@@ -78,7 +78,7 @@ namespace LunaClient.Systems.Mod
                 string trimmedLine;
                 while ((trimmedLine = sr.ReadLine()?.Trim().ToLowerInvariant().Replace('\\', '/')) != null)
                 {
-                    if (trimmedLine.StartsWith("#") || string.IsNullOrEmpty(trimmedLine))
+                    if (string.IsNullOrEmpty(trimmedLine) || trimmedLine.StartsWith("#"))
                         continue; //Skip comments or empty lines.
 
                     if (trimmedLine.StartsWith("!"))

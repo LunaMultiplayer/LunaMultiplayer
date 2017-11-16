@@ -44,7 +44,7 @@ namespace LunaServer.Command.CombinedCommand
 
         public static IEnumerable<string> RetrieveBannedKeys()
         {
-            return BanPlayerCommand.Retrieve();
+            return BanKeyCommand.Retrieve();
         }
 
         private static void SplitCommand(string command, out string param1, out string param2, out string param3)

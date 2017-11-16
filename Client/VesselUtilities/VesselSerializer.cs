@@ -99,7 +99,7 @@ namespace LunaClient.VesselUtilities
             }
             else
             {
-                var orbitNode = vesselNode?.GetNode("ORBIT");
+                var orbitNode = vesselNode.GetNode("ORBIT");
                 if (orbitNode != null)
                 {
                     return orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v))

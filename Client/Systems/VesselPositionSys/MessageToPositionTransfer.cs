@@ -104,7 +104,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 msgData.Com = new[]
                 {
                     (double)vessel.CoM.x,
-                    (double)vessel.CoM.x,
+                    (double)vessel.CoM.y,
                     (double)vessel.CoM.z,
                 };
                 msgData.NormalVector = new[]

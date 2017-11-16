@@ -74,7 +74,7 @@ namespace LunaServer.System
         private static IEnumerable<KeyValuePair<int, double>> GetSubspaceLinesFromFile()
         {
             var subspaceLines = FileHandler.ReadFileLines(SubspaceFile)
-                .Select(l => l.Trim()).Where(l => !l.StartsWith("#") && !string.IsNullOrEmpty(l))
+                .Select(l => l.Trim()).Where(l => !string.IsNullOrEmpty(l) && !l.StartsWith("#"))
                 .Select(s => new KeyValuePair<int, double>(int.Parse(s.Split(':')[0]), double.Parse(s.Split(':')[1])));
 
             return subspaceLines;

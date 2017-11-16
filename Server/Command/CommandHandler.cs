@@ -59,8 +59,7 @@ namespace LunaServer.Command
                         }
                         else
                         {
-                            if (input != "")
-                                Commands["say"].Func(input);
+                            Commands["say"].Func(input);
                         }
                     }
                     Thread.Sleep(GeneralSettings.SettingsStore.MainTimeTick);

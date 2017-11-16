@@ -118,7 +118,7 @@ namespace LunaCommon.Message.Base
                 {
                     var dataCompressed = CompressionHelper.CompressBytes(data);
 
-                    compress = dataCompressed != null && dataCompressed.Length < data.Length;
+                    compress = dataCompressed.Length < data.Length;
                     if (compress)
                     {
                         data = dataCompressed;
