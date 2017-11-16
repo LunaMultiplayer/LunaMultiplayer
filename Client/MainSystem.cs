@@ -415,18 +415,21 @@ namespace LunaClient
                 currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().ResourceTransferObeyCrossfeed =
                     SettingsSystem.ServerSettings.ServerAdvancedParameters.ResourceTransferObeyCrossfeed;
 
-                currentGame.Parameters.CustomParams<CommNetParams>().enableGroundStations =
-                    SettingsSystem.ServerSettings.ServerCommNetParameters.enableGroundStations;
-                currentGame.Parameters.CustomParams<CommNetParams>().requireSignalForControl =
-                    SettingsSystem.ServerSettings.ServerCommNetParameters.requireSignalForControl;
-                currentGame.Parameters.CustomParams<CommNetParams>().rangeModifier =
-                    SettingsSystem.ServerSettings.ServerCommNetParameters.rangeModifier;
-                currentGame.Parameters.CustomParams<CommNetParams>().DSNModifier =
-                    SettingsSystem.ServerSettings.ServerCommNetParameters.DSNModifier;
-                currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierVac =
-                    SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierVac;
-                currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierAtm =
-                    SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierAtm;
+                if (SettingsSystem.ServerSettings.ServerCommNetParameters != null)
+                {
+                    currentGame.Parameters.CustomParams<CommNetParams>().enableGroundStations =
+                        SettingsSystem.ServerSettings.ServerCommNetParameters.enableGroundStations;
+                    currentGame.Parameters.CustomParams<CommNetParams>().requireSignalForControl =
+                        SettingsSystem.ServerSettings.ServerCommNetParameters.requireSignalForControl;
+                    currentGame.Parameters.CustomParams<CommNetParams>().rangeModifier =
+                        SettingsSystem.ServerSettings.ServerCommNetParameters.rangeModifier;
+                    currentGame.Parameters.CustomParams<CommNetParams>().DSNModifier =
+                        SettingsSystem.ServerSettings.ServerCommNetParameters.DSNModifier;
+                    currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierVac =
+                        SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierVac;
+                    currentGame.Parameters.CustomParams<CommNetParams>().occlusionMultiplierAtm =
+                        SettingsSystem.ServerSettings.ServerCommNetParameters.occlusionMultiplierAtm;
+                }
             }
         }
 

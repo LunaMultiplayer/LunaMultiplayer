@@ -10,6 +10,8 @@ namespace LunaClient.Systems.ModApi
     {
         #region Fields & properties
 
+        private static readonly object EventLock = new object();
+
         public Dictionary<string, MessageCallback> RegisteredRawMods { get; } =
             new Dictionary<string, MessageCallback>();
 
@@ -18,8 +20,6 @@ namespace LunaClient.Systems.ModApi
 
         public Dictionary<string, ConcurrentQueue<byte[]>> FixedUpdateQueue { get; } =
             new Dictionary<string, ConcurrentQueue<byte[]>>();
-
-        internal object EventLock { get; } = new object();
 
         private Dictionary<string, MessageCallback> RegisteredUpdateMods { get; } =
             new Dictionary<string, MessageCallback>();
