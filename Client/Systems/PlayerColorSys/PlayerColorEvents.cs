@@ -57,7 +57,7 @@ namespace LunaClient.Systems.PlayerColorSys
         {
             foreach (var vessel in FlightGlobals.Vessels.Where(v=> v.orbitDriver?.Renderer != null))
             {
-                vessel.orbitDriver.Renderer.orbitColor = vessel.orbitDriver.orbitColor;
+                System.SetVesselOrbitColor(vessel);
             }
         }
     }

@@ -53,16 +53,8 @@ namespace LunaClient.Systems.PlayerColorSys
         {
             if (Enabled)
             {
-                if (LockSystem.LockQuery.ControlLockExists(colorVessel.id) &&
-                    !LockSystem.LockQuery.ControlLockBelongsToPlayer(colorVessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                {
-                    var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
-                    SetOrbitColor(colorVessel, GetPlayerColor(vesselOwner));
-                }
-                else
-                {
-                    SetOrbitColor(colorVessel, DefaultColor);
-                }
+                var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
+                SetOrbitColor(colorVessel, vesselOwner == null ? DefaultColor : GetPlayerColor(vesselOwner));
             }
         }
 
@@ -130,8 +122,7 @@ namespace LunaClient.Systems.PlayerColorSys
             if (vessel != null && vessel.orbitDriver != null)
             {
                 vessel.orbitDriver.orbitColor = colour;
-                if (vessel.orbitDriver.Renderer != null)
-                    vessel.orbitDriver.Renderer.orbitColor = vessel.orbitDriver.orbitColor;
+                vessel.orbitDriver.Renderer?.SetColor(colour);
             }
         }
 
