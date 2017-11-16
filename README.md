@@ -60,4 +60,4 @@ There's also a test project in case you want to add tests to your code.
   <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" /></a>
 </p>
 
-###### Acknowledgement: LMP started as a refactor of the [DMP](https://github.com/godarklight/DarkMultiPlayer) mod by [godarklight](https://github.com/godarklight) and it still uses some of it's concepts and snippets. If it wasn't for his job, LMP wouldn't exist.
+##### LMP uses some concepts and snippets from [DMP](https://github.com/godarklight/DarkMultiPlayer) mod by [godarklight](https://github.com/godarklight)
