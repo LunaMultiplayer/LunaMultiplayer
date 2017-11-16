@@ -23,16 +23,15 @@
 
 - Clean and optimized code, based on systems and windows which makes it easier to read and modify.
 - Multi threaded (as much as Unity allows)
-- Better usage of coroutines.
 - Settings saved as XML.
-- UDP based using the [Lidgren](https://github.com/lidgren/lidgren-network-gen3) library for reliable UDP message handling.
+- [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) based using the [Lidgren](https://github.com/lidgren/lidgren-network-gen3) library for reliable UDP message handling.
 - Uses interpolation so the vessels shouldn't jump from one place to another.
-- Nat-punchtrough feature so a server doesn't need to open ports on it's router.
-- Servers are displayed within the application.
+- [Nat-punchtrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
+- Servers are displayed within the mod.
 - Better creation of network messages so they are easier to modify as you don't need to take care of serialization.
 - Every network message is cached in order to reduce the garbage collector spikes
 - Based on tasks instead of threads.
-- Improved message compression algorithm ([QuickLZ](http://www.quicklz.com))
+- [QuickLZ](http://www.quicklz.com) for fast compression
 
 Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-compile-LMP), [run](../../wiki/How-to-run-LMP) or [debug](../../wiki/Debugging-in-Visual-studio) LMP
 
@@ -55,14 +54,7 @@ There's also a test project in case you want to add tests to your code.
 
 ---
 
-###### Acknowledgement: LMP in it's origin was based on the [DMP](https://github.com/godarklight/DarkMultiPlayer) and the latter is based on the inactive [KMP](https://github.com/TehGimp/KerbalMultiPlayer) mod
-
----
-
 <p align="center">
-  <a href="mailto:gavazquez@gmail.com">
-    <img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" />
-  </a>
-  <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" />
-  </a>
+  <a href="mailto:gavazquez@gmail.com"><img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" /></a>
 </p>
