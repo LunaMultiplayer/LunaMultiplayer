@@ -126,7 +126,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 if (!InterpolationStarted)
                 {
-                    Vessel.orbit.referenceBody = Body;
                     var interval = (float)TimeSpan.FromTicks(Target.SentTime - SentTime).TotalSeconds;
                     InterpolationDuration = Mathf.Clamp(interval, 0, 0.5f);
                     InterpolationStarted = true;
@@ -155,15 +154,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyInterpolations(float lerpPercentage)
         {
-            //TODO: Check if this can be improved as it probably creates garbage in memory. Perhaps we can reuse the Orbit class?
-            var tgtOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
+            Vessel.orbitDriver.orbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
                 Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Body);
-
-            CopyOrbit(tgtOrbit, Vessel.orbitDriver.orbit);
-
-            //This orbit.Init is necessary as otherwise the LINE of the orbit is not updated
-            //if (!SettingsSystem.CurrentSettings.Debug1)
-                Vessel.orbitDriver.orbit.Init();
 
             //TODO: Is CoM and terrainNormal really needed?
             Vessel.CoM = Vector3.Lerp(CoM, Target.CoM, lerpPercentage);
@@ -182,20 +174,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.latitude = Target.LatLonAlt[0];
                 Vessel.longitude = Target.LatLonAlt[1];
                 Vessel.altitude = Target.LatLonAlt[2];
-
-                //if (SettingsSystem.CurrentSettings.Debug1)
-                //{
-                //    var pos = Vessel.orbitDriver.orbit.getRelativePositionAtUT(Planetarium.GetUniversalTime());
-
-                //    if (SettingsSystem.CurrentSettings.Debug2)
-                //        pos = (Vessel.CoMD - Body.position).xzy;
-
-                //    var vel = Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime());
-                //    Vessel.orbitDriver.orbit.UpdateFromStateVectors(pos, vel, Body, Planetarium.GetUniversalTime());
-                //    Vessel.orbitDriver.orbit.Init();
-                //    Vessel.orbitDriver.orbit.UpdateFromUT(Planetarium.GetUniversalTime());
-                //    Vessel.orbitDriver.updateFromParameters();
-                //}
+                Vessel.orbitDriver.updateFromParameters();
             }
             else
             {
@@ -222,6 +201,7 @@ namespace LunaClient.Systems.VesselPositionSys
                         Vessel.longitude = Target.LatLonAlt[1];
                         Vessel.altitude = Target.LatLonAlt[2];
                         //DO NOT call Vessel.orbitDriver.updateFromParameters when landed as vessel jitters up/down
+                        //TODO: Check if that jittering dissapears when setting epoch = Planetarium.GetUniversalTime()
                         break;
                     case Vessel.Situations.FLYING:
                     case Vessel.Situations.SUB_ORBITAL:
