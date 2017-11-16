@@ -414,9 +414,7 @@ namespace LunaClient
                     SettingsSystem.ServerSettings.ServerAdvancedParameters.PartUpgradesInSandbox;
                 currentGame.Parameters.CustomParams<GameParameters.AdvancedParams>().ResourceTransferObeyCrossfeed =
                     SettingsSystem.ServerSettings.ServerAdvancedParameters.ResourceTransferObeyCrossfeed;
-            }
-            if (SettingsSystem.ServerSettings.ServerCommNetParameters != null)
-            {
+
                 currentGame.Parameters.CustomParams<CommNetParams>().enableGroundStations =
                     SettingsSystem.ServerSettings.ServerCommNetParameters.enableGroundStations;
                 currentGame.Parameters.CustomParams<CommNetParams>().requireSignalForControl =

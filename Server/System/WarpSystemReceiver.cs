@@ -53,7 +53,7 @@ namespace LunaServer.System
                     client.Subspace = newSubspace;
 
                     //If client stopped warping and there's nobody in that subspace, remove it
-                    if (client.Subspace != -1 && !ServerContext.Clients.Any(c => c.Value.Subspace == oldSubspace))
+                    if (!ServerContext.Clients.Any(c => c.Value.Subspace == oldSubspace))
                     {
                         WarpSystem.RemoveSubspace(oldSubspace);
                         VesselRelaySystem.RemoveSubspace(oldSubspace);

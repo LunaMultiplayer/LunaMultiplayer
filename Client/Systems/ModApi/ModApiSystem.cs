@@ -19,7 +19,7 @@ namespace LunaClient.Systems.ModApi
         public Dictionary<string, ConcurrentQueue<byte[]>> FixedUpdateQueue { get; } =
             new Dictionary<string, ConcurrentQueue<byte[]>>();
 
-        public object EventLock { get; } = new object();
+        internal object EventLock { get; } = new object();
 
         private Dictionary<string, MessageCallback> RegisteredUpdateMods { get; } =
             new Dictionary<string, MessageCallback>();

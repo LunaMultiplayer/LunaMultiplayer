@@ -95,10 +95,8 @@ namespace MasterServer
 
         private static string GetOwnIpAddress()
         {
-            var currentIpAddress = "";
+            var currentIpAddress = TryGetIpAddress("http://ip.42.pl/raw");
 
-            if (string.IsNullOrEmpty(currentIpAddress))
-                currentIpAddress = TryGetIpAddress("http://ip.42.pl/raw");
             if (string.IsNullOrEmpty(currentIpAddress))
                 currentIpAddress = TryGetIpAddress("https://api.ipify.org/");
             if (string.IsNullOrEmpty(currentIpAddress))

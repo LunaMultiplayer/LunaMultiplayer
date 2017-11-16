@@ -638,17 +638,17 @@ namespace LunaClient.Systems.Toolbar
 
         private void clicked(object realEvent)
         {
-            if (OnClick != null) OnClick(new ClickEvent(realEvent, this));
+            OnClick?.Invoke(new ClickEvent(realEvent, this));
         }
 
         private void mouseEntered(object realEvent)
         {
-            if (OnMouseEnter != null) OnMouseEnter(new MouseEnterEvent(this));
+            OnMouseEnter?.Invoke(new MouseEnterEvent(this));
         }
 
         private void mouseLeft(object realEvent)
         {
-            if (OnMouseLeave != null) OnMouseLeave(new MouseLeaveEvent(this));
+            OnMouseLeave?.Invoke(new MouseLeaveEvent(this));
         }
 
         private void detachEventHandler(EventInfo @event, Delegate d, object realButton)

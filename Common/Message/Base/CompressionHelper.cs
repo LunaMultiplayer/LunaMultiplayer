@@ -473,7 +473,6 @@ namespace LunaCommon.Message.Base
             dst[0] = (byte)(2 | (compressible ? 1 : 0));
             dst[0] |= (byte)(level << 2);
             dst[0] |= (1 << 6);
-            dst[0] |= (0 << 4);
             fast_write(dst, 1, size_decompressed, 4);
             fast_write(dst, 5, size_compressed, 4);
         }

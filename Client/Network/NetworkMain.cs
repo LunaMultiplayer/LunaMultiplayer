@@ -60,9 +60,9 @@ namespace LunaClient.Network
             ClientConnection.Start();
 
             if (SendThread != null && !SendThread.IsCompleted)
-                SendThread?.Wait(1000);
+                SendThread.Wait(1000);
             if (ReceiveThread != null && !ReceiveThread.IsCompleted)
-                ReceiveThread?.Wait(1000);
+                ReceiveThread.Wait(1000);
 
             NetworkConnection.ResetRequested = false;
 

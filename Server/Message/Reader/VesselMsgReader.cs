@@ -43,8 +43,7 @@ namespace LunaServer.Message.Reader
                     break;
                 case VesselMessageType.Position:
                     VesselRelaySystem.HandleVesselMessage(client, message);
-                    if (!GeneralSettings.SettingsStore.ShowVesselsInThePast || 
-                        client.Subspace == WarpContext.LatestSubspace && GeneralSettings.SettingsStore.ShowVesselsInThePast)
+                    if (!GeneralSettings.SettingsStore.ShowVesselsInThePast || client.Subspace == WarpContext.LatestSubspace)
                         RewriteVesselProtoPositionInfo(message);
                     break;
                 case VesselMessageType.Flightstate:
@@ -122,46 +121,46 @@ namespace LunaServer.Message.Reader
             var fullText = string.Join(Environment.NewLine, protoVesselLines);
 
             var regex = new Regex("lat = (.*)");
-            regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
 
             regex = new Regex("lon = (.*)");
-            regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
 
             regex = new Regex("alt = (.*)");
-            regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture));
             
             regex = new Regex("nrm = (.*)");
-            regex.Replace(fullText, msgData.NormalVector[0].ToString(CultureInfo.InvariantCulture) + "," + 
+            fullText = regex.Replace(fullText, msgData.NormalVector[0].ToString(CultureInfo.InvariantCulture) + "," + 
                 msgData.NormalVector[1].ToString(CultureInfo.InvariantCulture) + "," + 
                 msgData.NormalVector[2].ToString(CultureInfo.InvariantCulture));
 
             regex = new Regex("rot = (.*)");
-            regex.Replace(fullText, msgData.TransformRotation[0].ToString(CultureInfo.InvariantCulture) + "," + 
+            fullText = regex.Replace(fullText, msgData.TransformRotation[0].ToString(CultureInfo.InvariantCulture) + "," + 
                 msgData.TransformRotation[1].ToString(CultureInfo.InvariantCulture) + "," + 
                 msgData.TransformRotation[2].ToString(CultureInfo.InvariantCulture) + "," + 
                 msgData.TransformRotation[3].ToString(CultureInfo.InvariantCulture));
 
             regex = new Regex("CoM = (.*)");
-            regex.Replace(fullText, msgData.Com[0].ToString(CultureInfo.InvariantCulture) + "," + 
+            fullText = regex.Replace(fullText, msgData.Com[0].ToString(CultureInfo.InvariantCulture) + "," + 
                 msgData.Com[1].ToString(CultureInfo.InvariantCulture) + "," + 
                 msgData.Com[2].ToString(CultureInfo.InvariantCulture));
 
             regex = new Regex("INC = (.*)"); //inclination
-            regex.Replace(fullText, msgData.Orbit[0].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.Orbit[0].ToString(CultureInfo.InvariantCulture));
             regex = new Regex("ECC = (.*)"); //eccentricity
-            regex.Replace(fullText, msgData.Orbit[1].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.Orbit[1].ToString(CultureInfo.InvariantCulture));
             regex = new Regex("SMA = (.*)"); //semiMajorAxis
-            regex.Replace(fullText, msgData.Orbit[2].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.Orbit[2].ToString(CultureInfo.InvariantCulture));
             regex = new Regex("LAN = (.*)"); //LAN
-            regex.Replace(fullText, msgData.Orbit[3].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.Orbit[3].ToString(CultureInfo.InvariantCulture));
             regex = new Regex("LPE = (.*)"); //argumentOfPeriapsis
-            regex.Replace(fullText, msgData.Orbit[4].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.Orbit[4].ToString(CultureInfo.InvariantCulture));
             regex = new Regex("MNA = (.*)"); //meanAnomalyAtEpoch
-            regex.Replace(fullText, msgData.Orbit[5].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.Orbit[5].ToString(CultureInfo.InvariantCulture));
             regex = new Regex("EPH = (.*)"); //epoch
-            regex.Replace(fullText, msgData.Orbit[6].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.Orbit[6].ToString(CultureInfo.InvariantCulture));
             regex = new Regex("REF = (.*)"); //referenceBody.flightGlobalsIndex
-            regex.Replace(fullText, msgData.Orbit[7].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.Orbit[7].ToString(CultureInfo.InvariantCulture));
 
             return fullText;
         }

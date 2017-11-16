@@ -70,7 +70,7 @@ namespace LunaClient.Systems.TimeSyncer
         {
             base.OnDisabled();
             if (!SyncSenderThread.IsCompleted)
-                SyncSenderThread?.Wait(500);
+                SyncSenderThread.Wait(500);
             ServerStartTime = 0;
             ClockOffset.Clear();
             NetworkLatency.Clear();
@@ -93,7 +93,7 @@ namespace LunaClient.Systems.TimeSyncer
             //TODO: Improve performance 5ms max
             if (Enabled && Synced && !CurrentlyWarping && CanSyncTime() && !SystemsContainer.Get<WarpSystem>().WaitingSubspaceIdFromServer)
             {
-                var targetTime = SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
+                var targetTime = (int)SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
                 var currentError = TimeSpan.FromSeconds(GetCurrentError()).TotalMilliseconds;
                 if (targetTime != 0 && Math.Abs(currentError) > MaxClockMsError)
                 {
