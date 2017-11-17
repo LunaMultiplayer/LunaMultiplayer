@@ -274,7 +274,6 @@
     <PostBuildEvent>if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>
-    </PreBuildEvent>
+    <PreBuildEvent>xcopy /Y "$(SolutionDir)External\Dependencies\*.dll" "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
 </Project>
