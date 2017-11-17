@@ -8,7 +8,6 @@ using LunaClient.Systems.Flag;
 using LunaClient.Systems.GameScene;
 using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
-using LunaClient.Systems.KerbalReassigner;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Motd;
@@ -238,7 +237,6 @@ namespace LunaClient.Systems.Network
                         SystemsContainer.Get<GameSceneSystem>().Enabled = true;
                         SystemsContainer.Get<AsteroidSystem>().Enabled = true;
                         SystemsContainer.Get<ToolbarSystem>().Enabled = true;
-                        SystemsContainer.Get<KerbalReassignerSystem>().Enabled = true;
                         SystemsContainer.Get<PlayerColorSystem>().MessageSender.SendPlayerColorToServer();
                         SystemsContainer.Get<StatusSystem>().MessageSender.SendOwnStatus();
                         NetworkSimpleMessageSender.SendMotdRequest();

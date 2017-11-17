@@ -7,7 +7,6 @@ using LunaClient.Systems.Flag;
 using LunaClient.Systems.GameScene;
 using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
-using LunaClient.Systems.KerbalReassigner;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
@@ -69,7 +68,6 @@ namespace LunaClient.Systems
             SystemsContainer.Get<MotdSystem>(),
             SystemsContainer.Get<CraftLibrarySystem>(),
             SystemsContainer.Get<FlagSystem>(),
-            SystemsContainer.Get<KerbalReassignerSystem>(),
             SystemsContainer.Get<ScenarioSystem>(),
             SystemsContainer.Get<ToolbarSystem>(),
             SystemsContainer.Get<GroupSystem>()

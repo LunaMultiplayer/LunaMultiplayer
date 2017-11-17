@@ -1,6 +1,4 @@
-﻿using LunaClient.Systems;
-using LunaClient.Systems.KerbalReassigner;
-using LunaClient.Utilities;
+﻿using LunaClient.Utilities;
 using System;
 using System.Linq;
 
@@ -76,7 +74,6 @@ namespace LunaClient.VesselUtilities
         {
             RemoveManeuverNodesFromProtoVessel(vesselNode);
             FixVesselActionGroupsNodes(vesselNode);
-            SystemsContainer.Get<KerbalReassignerSystem>().DodgeKerbals(vesselNode, vesselId);
         }
 
         #region Config node fixing

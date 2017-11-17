@@ -32,7 +32,7 @@ namespace LunaClient.Systems.KerbalSys
         }
 
         /// <summary>
-        /// Just load the received kerbal into game
+        /// Just load the received kerbal into game and refresh dialogs
         /// </summary>
         private static void HandleKerbalProto(KerbalProtoMsgData messageData)
         {

@@ -21,7 +21,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
-                SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(dyingVessel);
+                SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(dyingVessel);
 
                 System.MessageSender.SendVesselRemove(dyingVessel.id);
 
@@ -44,7 +44,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             }
 
             LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
-            SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(recoveredVessel);
+            SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(recoveredVessel);
 
             System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
 
@@ -64,7 +64,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             }
 
             LunaLog.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
-            SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbalsInVessel(terminatedVessel);
+            SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(terminatedVessel);
 
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
 

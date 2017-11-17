@@ -84,6 +84,7 @@
     <Compile Include="Systems\Groups\GroupMessageHandler.cs" />
     <Compile Include="Systems\Groups\GroupMessageSender.cs" />
     <Compile Include="Systems\Groups\GroupSystem.cs" />
+    <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
     <Compile Include="Systems\KerbalSys\KerbalStructure.cs" />
     <Compile Include="Systems\VesselChangeSys\VesselChangeDetector.cs" />
     <Compile Include="Systems\VesselChangeSys\VesselChangeSystem.cs" />
@@ -209,7 +210,6 @@
     <Compile Include="Windows\CraftLibrary\CraftLibraryWindow.cs" />
     <Compile Include="Systems\Flag\FlagMessageHandler.cs" />
     <Compile Include="Systems\Flag\FlagStructures.cs" />
-    <Compile Include="Systems\KerbalReassigner\KerbalReassignerEvents.cs" />
     <Compile Include="Systems\Lock\LockMessageHandler.cs" />
     <Compile Include="Systems\Lock\LockStructures.cs" />
     <Compile Include="Systems\ModApi\ModApiMessageHandler.cs" />
@@ -221,7 +221,6 @@
     <Compile Include="Utilities\LmpGuiUtil.cs" />
     <Compile Include="Systems\ModApi\ModApiSystem.cs" />
     <Compile Include="Systems\Flag\FlagSystem.cs" />
-    <Compile Include="Systems\KerbalReassigner\KerbalReassignerSystem.cs" />
     <Compile Include="Systems\Lock\LockSystem.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Systems\Mod\ModSystem.cs" />

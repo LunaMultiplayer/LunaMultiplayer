@@ -48,30 +48,6 @@ namespace LunaClient.Systems.KerbalSys
             }
         }
 
-        public void SendKerbalsInVessel(ProtoVessel vessel)
-        {
-            if (vessel?.protoPartSnapshots == null)
-                return;
-
-            foreach (var pcm in vessel.protoPartSnapshots.Where(p => p != null).SelectMany(p => p.protoModuleCrew))
-                SendKerbalIfDifferent(pcm);
-        }
-
-        public void SendKerbalsInVessel(Vessel vessel)
-        {
-            if (vessel == null)
-                return;
-            if (vessel.parts == null)
-                return;
-            foreach (var part in vessel.parts)
-            {
-                if (part == null)
-                    continue;
-                foreach (var pcm in part.protoModuleCrew)
-                    SendKerbalIfDifferent(pcm);
-            }
-        }
-
         private void SendKerbalProtoMessage(string kerbalName, byte[] kerbalBytes)
         {
             if (kerbalBytes != null && kerbalBytes.Length > 0)

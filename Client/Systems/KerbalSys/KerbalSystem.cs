@@ -1,6 +1,10 @@
-﻿using LunaClient.Base;
+﻿using KSP.UI;
+using KSP.UI.Screens;
+using LunaClient.Base;
 using System.Collections.Concurrent;
+using System.Reflection;
 using UniLinq;
+using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -15,6 +19,17 @@ namespace LunaClient.Systems.KerbalSys
 
         public bool KerbalSystemReady => Enabled && HighLogic.CurrentGame?.CrewRoster != null;
 
+        /// <summary>
+        /// Invoke this private method to rebuild the crew lists that appear on the astronaut complex
+        /// </summary>
+        private static MethodInfo RebuildCrewLists { get; } = typeof(AstronautComplex).GetMethod("InitiateGUI", 
+            BindingFlags.NonPublic | BindingFlags.Instance);
+
+        public KerbalEvents KerbalEvents { get; } = new KerbalEvents();
+
+        private static AstronautComplex _astronautComplex;
+        private static AstronautComplex AstronautComplex => _astronautComplex ?? (_astronautComplex = Object.FindObjectOfType<AstronautComplex>());
+
         #endregion
 
         #region Base overrides
@@ -26,17 +41,51 @@ namespace LunaClient.Systems.KerbalSys
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, LoadKerbals));
             SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckKerbalNumber));
+            GameEvents.OnCrewmemberHired.Add(KerbalEvents.CrewChange);
+            GameEvents.OnCrewmemberLeftForDead.Add(KerbalEvents.CrewChange);
+            GameEvents.OnCrewmemberSacked.Add(KerbalEvents.CrewChange);
+            GameEvents.onVesselLoaded.Add(KerbalEvents.VesselLoad);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             Kerbals.Clear();
+            GameEvents.OnCrewmemberHired.Remove(KerbalEvents.CrewChange);
+            GameEvents.OnCrewmemberLeftForDead.Remove(KerbalEvents.CrewChange);
+            GameEvents.OnCrewmemberSacked.Remove(KerbalEvents.CrewChange);
+            GameEvents.onVesselLoaded.Remove(KerbalEvents.VesselLoad);
         }
 
         #endregion
 
         #region Routines
+
+        /// <summary>
+        /// Checks if the crew on a protoVessel has changed and sends the message accordingly
+        /// </summary>
+        public void ProcessKerbalsInVessel(ProtoVessel protoVessel)
+        {
+            if (protoVessel == null) return;
+
+            foreach (var protoCrew in protoVessel.GetVesselCrew())
+            {
+                MessageSender.SendKerbalIfDifferent(protoCrew);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the crew on a vessel has changed and sends the message accordingly
+        /// </summary>
+        public void ProcessKerbalsInVessel(Vessel vessel)
+        {
+            if (vessel == null) return;
+
+            foreach (var protoCrew in vessel.GetVesselCrew())
+            {
+                MessageSender.SendKerbalIfDifferent(protoCrew);
+            }
+        }
 
         /// <summary>
         /// Loads the unloaded (either because they are new or they are updated) kerbals into the game
@@ -45,10 +94,15 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (KerbalSystemReady)
             {
+                var refreshDialog = Kerbals.Values.Any(v => !v.Loaded);
                 foreach (var kerbal in Kerbals.Values.Where(v => !v.Loaded))
                 {
                     LoadKerbal(kerbal.KerbalData);
+                    kerbal.Loaded = true;
                 }
+
+                if (refreshDialog)
+                    RefreshCrewDialog();
             }
         }
 
@@ -95,6 +149,17 @@ namespace LunaClient.Systems.KerbalSys
         public void LoadKerbalsIntoGame()
         {
             LoadKerbals();
+        }
+
+        /// <summary>
+        /// Call this method to refresh the crews in the vessel spawn, vessel editor and astronaut complex
+        /// </summary>
+        public void RefreshCrewDialog()
+        {
+            CrewAssignmentDialog.Instance?.RefreshCrewLists(CrewAssignmentDialog.Instance.GetManifest(true), false, true, null);
+
+            if (AstronautComplex != null)
+                RebuildCrewLists?.Invoke(AstronautComplex, null);
         }
 
         #endregion
