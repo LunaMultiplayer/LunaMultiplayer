@@ -5,18 +5,23 @@ namespace LunaClient.Systems.KerbalSys
 {
     public class KerbalEvents: SubSystem<KerbalSystem>
     {
-        public void CrewChange(ProtoCrewMember protoCrew, int data1)
+        public void CrewRemove(ProtoCrewMember protoCrew, int crewCount)
+        {
+            protoCrew.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
+            System.MessageSender.SendKerbalIfDifferent(protoCrew);
+        }
+
+        public void CrewAdd(ProtoCrewMember protoCrew, int crewCount)
         {
             System.MessageSender.SendKerbalIfDifferent(protoCrew);
         }
 
-        public void VesselLoad(Vessel data)
+        public void FlightReady()
         {
-            //We only send crew data if we are NOT spectating and the ship that we are loading is OUR ship
-            if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel?.id != data.id)
+            if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null)
                 return;
 
-            System.ProcessKerbalsInVessel(data);
+            System.ProcessKerbalsInVessel(FlightGlobals.ActiveVessel);
         }
     }
 }

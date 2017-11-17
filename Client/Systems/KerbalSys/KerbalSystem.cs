@@ -41,20 +41,20 @@ namespace LunaClient.Systems.KerbalSys
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, LoadKerbals));
             SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckKerbalNumber));
-            GameEvents.OnCrewmemberHired.Add(KerbalEvents.CrewChange);
-            GameEvents.OnCrewmemberLeftForDead.Add(KerbalEvents.CrewChange);
-            GameEvents.OnCrewmemberSacked.Add(KerbalEvents.CrewChange);
-            GameEvents.onVesselLoaded.Add(KerbalEvents.VesselLoad);
+            GameEvents.OnCrewmemberHired.Add(KerbalEvents.CrewAdd);
+            GameEvents.OnCrewmemberLeftForDead.Add(KerbalEvents.CrewRemove);
+            GameEvents.OnCrewmemberSacked.Add(KerbalEvents.CrewRemove);
+            GameEvents.onFlightReady.Add(KerbalEvents.FlightReady);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             Kerbals.Clear();
-            GameEvents.OnCrewmemberHired.Remove(KerbalEvents.CrewChange);
-            GameEvents.OnCrewmemberLeftForDead.Remove(KerbalEvents.CrewChange);
-            GameEvents.OnCrewmemberSacked.Remove(KerbalEvents.CrewChange);
-            GameEvents.onVesselLoaded.Remove(KerbalEvents.VesselLoad);
+            GameEvents.OnCrewmemberHired.Remove(KerbalEvents.CrewAdd);
+            GameEvents.OnCrewmemberLeftForDead.Remove(KerbalEvents.CrewRemove);
+            GameEvents.OnCrewmemberSacked.Remove(KerbalEvents.CrewRemove);
+            GameEvents.onFlightReady.Remove(KerbalEvents.FlightReady);
         }
 
         #endregion
