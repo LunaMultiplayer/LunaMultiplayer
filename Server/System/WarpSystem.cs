@@ -25,16 +25,19 @@ namespace LunaServer.System
         public static void RemoveSubspace(int oldSubspace)
         {
             //We never remove the latest subspace or the only subspace from the server!
-            if (oldSubspace == WarpContext.LatestSubspace || WarpContext.Subspaces.Count == 1) return;
+            if (WarpContext.Subspaces.Count == 1 || oldSubspace == WarpContext.LatestSubspace)
+                return;
 
-            WarpContext.Subspaces.TryRemove(oldSubspace, out var _);
+            if (WarpContext.Subspaces.TryRemove(oldSubspace, out var _))
+            {
+                var allLinesExceptTheDeleted = string.Join(Environment.NewLine, GetSubspaceLinesFromFile()
+                    .Where(s => s.Key != oldSubspace)
+                    .Select(s => $"{s.Key}:{s.Value}"));
 
-            var allLinesExceptTheDeleted = string.Join(Environment.NewLine, GetSubspaceLinesFromFile()
-                .Where(s => s.Key != oldSubspace)
-                .Select(s => $"{s.Key}:{s.Value}"));
-
-            WriteHeaderToSubspaceFile();
-            FileHandler.AppendToFile(SubspaceFile, allLinesExceptTheDeleted);
+                //Calling WriteHeaderToSubspaceFile will remove what's already in the file...
+                WriteHeaderToSubspaceFile();
+                FileHandler.AppendToFile(SubspaceFile, allLinesExceptTheDeleted);
+            }
         }
 
         #region Private methods
