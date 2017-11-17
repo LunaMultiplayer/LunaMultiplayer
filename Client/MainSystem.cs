@@ -377,6 +377,7 @@ namespace LunaClient
             SystemsContainer.Get<ScenarioSystem>().LoadMissingScenarioDataIntoGame();
 
             //This only makes KSP complain
+
             HighLogic.CurrentGame.CrewRoster.ValidateAssignments(HighLogic.CurrentGame);
             LunaLog.Log($"[LMP]: Starting {SettingsSystem.ServerSettings.GameMode} game...");
 
