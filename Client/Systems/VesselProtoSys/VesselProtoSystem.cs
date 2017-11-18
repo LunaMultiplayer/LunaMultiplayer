@@ -47,6 +47,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             base.OnEnabled();
             GameEvents.onVesselWasModified.Add(VesselProtoEvents.VesselModified);
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckVesselsToLoadReloadWhileNotInFlight));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToReload));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
@@ -143,10 +144,24 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         /// <summary>
+        /// Check vessels that must be loaded or reloaded while we are in a different scene than in flight
+        /// </summary>
+        private void CheckVesselsToLoadReloadWhileNotInFlight()
+        {
+            if (Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene == GameScenes.SPACECENTER)
+            {
+                HighLogic.CurrentGame.flightState.protoVessels.Clear();
+                var protoVessels = VesselsProtoStore.AllPlayerVessels.Values.Where(v => v.ShouldBeLoaded).Select(v => v.ProtoVessel);
+                HighLogic.CurrentGame.flightState.protoVessels.AddRange(protoVessels);
+            }
+        }
+
+        /// <summary>
         /// Check vessels that must be loaded
         /// </summary>
         private void CheckVesselsToLoad()
         {
+
             try
             {
                 if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
