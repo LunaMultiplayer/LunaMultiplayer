@@ -37,6 +37,7 @@ namespace LunaClient.Systems.SettingsSys
         public int InitialConnectionSyncTimeRequests { get; set; } = 10;
         public bool RevertEnabled { get; set; }
         public bool InterpolationEnabled { get; set; } = false;
+        public bool CloseBtnInConnectionWindow { get; set; } = true;
         public int MaxGroupsPerPlayer { get; set; } = 1;
 
 #if DEBUG

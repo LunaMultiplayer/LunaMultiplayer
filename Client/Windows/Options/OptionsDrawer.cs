@@ -90,6 +90,12 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
                 SettingsSystem.SaveSettings();
             }
+            var closeBtnInConnectionWindow = GUILayout.Toggle(SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow, "Show \"Close\" button in connection window", ButtonStyle);
+            if (closeBtnInConnectionWindow != SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow)
+            {
+                SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow = closeBtnInConnectionWindow;
+                SettingsSystem.SaveSettings();
+            }
             GUILayout.Space(10);
             GUILayout.Label("Generate a server LMPModControl:");
             if (GUILayout.Button("Generate blacklist LMPModControl.txt"))
