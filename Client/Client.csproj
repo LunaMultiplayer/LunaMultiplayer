@@ -88,7 +88,6 @@
     <Compile Include="Systems\Groups\GroupMessageSender.cs" />
     <Compile Include="Systems\Groups\GroupSystem.cs" />
     <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
-    <Compile Include="Systems\KerbalSys\KerbalStructure.cs" />
     <Compile Include="Systems\VesselChangeSys\VesselChangeDetector.cs" />
     <Compile Include="Systems\VesselChangeSys\VesselChangeSystem.cs" />
     <Compile Include="Systems\VesselChangeSys\VesselChangeChecker.cs" />

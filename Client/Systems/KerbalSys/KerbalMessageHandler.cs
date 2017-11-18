@@ -19,6 +19,9 @@ namespace LunaClient.Systems.KerbalSys
 
             switch (msgData.KerbalMessageType)
             {
+                case KerbalMessageType.Remove:
+                    System.KerbalsToRemove.Enqueue(((KerbalRemoveMsgData)msgData).KerbalName);
+                    break;
                 case KerbalMessageType.Reply:
                     HandleKerbalReply(msgData as KerbalReplyMsgData);
                     break;
@@ -47,8 +50,7 @@ namespace LunaClient.Systems.KerbalSys
             var kerbalNode = ConfigNodeSerializer.Deserialize(kerbalData);
             if (kerbalNode != null)
             {
-                var kerbalStructure = new KerbalStructure(kerbalNode);
-                System.Kerbals.AddOrUpdate(kerbalStructure.Name, kerbalStructure, (key, existingVal) => kerbalStructure);
+                System.KerbalsToProcess.Enqueue(kerbalNode);
             }
             else
                 LunaLog.LogError("[LMP]: Failed to load kerbal!");

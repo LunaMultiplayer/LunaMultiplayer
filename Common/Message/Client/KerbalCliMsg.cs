@@ -17,7 +17,8 @@ namespace LunaCommon.Message.Client
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)KerbalMessageType.Request] = typeof(KerbalsRequestMsgData),
-            [(ushort)KerbalMessageType.Proto] = typeof(KerbalProtoMsgData)
+            [(ushort)KerbalMessageType.Proto] = typeof(KerbalProtoMsgData),
+            [(ushort)KerbalMessageType.Remove] = typeof(KerbalRemoveMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Kerbal;

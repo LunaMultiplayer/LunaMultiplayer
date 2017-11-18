@@ -3,6 +3,7 @@ using LunaServer.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using System.Linq;
 
 namespace LunaServer.System
 {
@@ -209,7 +210,7 @@ namespace LunaServer.System
         {
             lock (GetLockSemaphore(path))
             {
-                return Directory.GetFiles(path, "*", searchOption);
+                return Directory.GetFiles(path, "*", searchOption).OrderBy(f => new FileInfo(f).CreationTime).ToArray();
             }
         }
 

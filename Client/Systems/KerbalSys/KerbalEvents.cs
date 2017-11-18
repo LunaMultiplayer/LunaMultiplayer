@@ -7,13 +7,18 @@ namespace LunaClient.Systems.KerbalSys
     {
         public void CrewRemove(ProtoCrewMember protoCrew, int crewCount)
         {
-            protoCrew.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
-            System.MessageSender.SendKerbalIfDifferent(protoCrew);
+            System.MessageSender.SendKerbalRemove(protoCrew.name);
         }
 
         public void CrewAdd(ProtoCrewMember protoCrew, int crewCount)
         {
-            System.MessageSender.SendKerbalIfDifferent(protoCrew);
+            System.MessageSender.SendKerbal(protoCrew);
+        }
+
+        public void CrewSetAsDead(ProtoCrewMember protoCrew, int crewCount)
+        {
+            protoCrew.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
+            System.MessageSender.SendKerbal(protoCrew);
         }
 
         public void FlightReady()

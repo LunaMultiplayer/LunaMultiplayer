@@ -2,11 +2,9 @@
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Utilities;
-using LunaCommon;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Interface;
-using UniLinq;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -19,7 +17,15 @@ namespace LunaClient.Systems.KerbalSys
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<KerbalCliMsg>(msg)));
         }
 
-        public void SendKerbalIfDifferent(ProtoCrewMember pcm)
+        public void SendKerbalRemove(string kerbalName)
+        {
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<KerbalRemoveMsgData>();
+            msgData.KerbalName = kerbalName;
+
+            SendMessage(msgData);
+        }
+
+        public void SendKerbal(ProtoCrewMember pcm)
         {
             if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
             {
@@ -37,27 +43,17 @@ namespace LunaClient.Systems.KerbalSys
                 LunaLog.LogError("[LMP]: Error sending kerbal - bytes are null or 0");
                 return;
             }
-
-            var kerbalHash = Common.CalculateSha256Hash(kerbalBytes);;
-            if (!System.Kerbals.TryGetValue(pcm.name, out var existingValue) || existingValue.Hash != kerbalHash)
-            {
-                LunaLog.Log($"[LMP]: Found new/changed kerbal ({pcm.name}), sending...");
-                var structure = new KerbalStructure(ConfigNode);
-                System.Kerbals.AddOrUpdate(pcm.name, new KerbalStructure(ConfigNode), (key, existingVal) => structure);
-                SendKerbalProtoMessage(pcm.name, kerbalBytes);
-            }
+            
+            SendKerbalProtoMessage(pcm.name, kerbalBytes);
         }
 
         private void SendKerbalProtoMessage(string kerbalName, byte[] kerbalBytes)
         {
             if (kerbalBytes != null && kerbalBytes.Length > 0)
             {
-                LunaLog.Log("[LMP]: Sending kerbal {kerbalName}");
-
                 var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<KerbalProtoMsgData>();
                 msgData.KerbalName = kerbalName;
                 msgData.KerbalData = kerbalBytes;
-                msgData.SendTime = Planetarium.GetUniversalTime();
 
                 SendMessage(msgData);
             }

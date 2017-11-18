@@ -38,8 +38,11 @@ namespace LunaServer.Context
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Flags"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Groups")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Groups"));
-            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Kerbals")))
-                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Kerbals"));
+            if (!FileHandler.FolderExists(KerbalSystem.KerbalsPath))
+            {
+                FileHandler.FolderCreate(KerbalSystem.KerbalsPath);
+                KerbalSystem.GenerateDefaultKerbals();
+            }
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Players")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Players"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Relay")))

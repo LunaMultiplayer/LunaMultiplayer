@@ -3,7 +3,6 @@ using KSP.UI.Screens;
 using LunaClient.Base;
 using System.Collections.Concurrent;
 using System.Reflection;
-using UniLinq;
 using UnityEngine;
 
 namespace LunaClient.Systems.KerbalSys
@@ -15,7 +14,8 @@ namespace LunaClient.Systems.KerbalSys
     {
         #region Fields
 
-        public ConcurrentDictionary<string, KerbalStructure> Kerbals { get; } = new ConcurrentDictionary<string, KerbalStructure>();
+        public ConcurrentQueue<string> KerbalsToRemove { get; private set; } = new ConcurrentQueue<string>();
+        public ConcurrentQueue<ConfigNode> KerbalsToProcess { get; private set; } = new ConcurrentQueue<ConfigNode>();
 
         public bool KerbalSystemReady => Enabled && HighLogic.CurrentGame?.CrewRoster != null;
 
@@ -39,10 +39,10 @@ namespace LunaClient.Systems.KerbalSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveQueuedKerbals));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, LoadKerbals));
-            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckKerbalNumber));
             GameEvents.OnCrewmemberHired.Add(KerbalEvents.CrewAdd);
-            GameEvents.OnCrewmemberLeftForDead.Add(KerbalEvents.CrewRemove);
+            GameEvents.OnCrewmemberLeftForDead.Add(KerbalEvents.CrewSetAsDead);
             GameEvents.OnCrewmemberSacked.Add(KerbalEvents.CrewRemove);
             GameEvents.onFlightReady.Add(KerbalEvents.FlightReady);
         }
@@ -50,92 +50,12 @@ namespace LunaClient.Systems.KerbalSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            Kerbals.Clear();
+            KerbalsToRemove = new ConcurrentQueue<string>();
+            KerbalsToProcess = new ConcurrentQueue<ConfigNode>();
             GameEvents.OnCrewmemberHired.Remove(KerbalEvents.CrewAdd);
-            GameEvents.OnCrewmemberLeftForDead.Remove(KerbalEvents.CrewRemove);
+            GameEvents.OnCrewmemberLeftForDead.Remove(KerbalEvents.CrewSetAsDead);
             GameEvents.OnCrewmemberSacked.Remove(KerbalEvents.CrewRemove);
             GameEvents.onFlightReady.Remove(KerbalEvents.FlightReady);
-        }
-
-        #endregion
-
-        #region Routines
-
-        /// <summary>
-        /// Checks if the crew on a protoVessel has changed and sends the message accordingly
-        /// </summary>
-        public void ProcessKerbalsInVessel(ProtoVessel protoVessel)
-        {
-            if (protoVessel == null) return;
-
-            foreach (var protoCrew in protoVessel.GetVesselCrew())
-            {
-                MessageSender.SendKerbalIfDifferent(protoCrew);
-            }
-        }
-
-        /// <summary>
-        /// Checks if the crew on a vessel has changed and sends the message accordingly
-        /// </summary>
-        public void ProcessKerbalsInVessel(Vessel vessel)
-        {
-            if (vessel == null) return;
-
-            foreach (var protoCrew in vessel.GetVesselCrew())
-            {
-                MessageSender.SendKerbalIfDifferent(protoCrew);
-            }
-        }
-
-        /// <summary>
-        /// Loads the unloaded (either because they are new or they are updated) kerbals into the game
-        /// </summary>
-        private void LoadKerbals()
-        {
-            if (KerbalSystemReady)
-            {
-                var refreshDialog = Kerbals.Values.Any(v => !v.Loaded);
-                foreach (var kerbal in Kerbals.Values.Where(v => !v.Loaded))
-                {
-                    LoadKerbal(kerbal.KerbalData);
-                    kerbal.Loaded = true;
-                }
-
-                if (refreshDialog)
-                    RefreshCrewDialog();
-            }
-        }
-
-        /// <summary>
-        /// Checks the kerbals that are in the server in order to spawn some more if needed
-        /// </summary>
-        private void CheckKerbalNumber()
-        {
-            if (KerbalSystemReady)
-            {
-                switch (Kerbals.Count)
-                {
-                    case 0:
-                        //Server is new and don't have kerbals at all
-                        var newRoster = KerbalRoster.GenerateInitialCrewRoster(HighLogic.CurrentGame.Mode);
-                        foreach (var pcm in newRoster.Crew)
-                        {
-                            HighLogic.CurrentGame.CrewRoster.AddCrewMember(pcm);
-                            MessageSender.SendKerbalIfDifferent(pcm);
-                        }
-                        break;
-                    case int n when n < 20:
-                        //Server has less than 20 kerbals so generate some
-                        var generateKerbals = 20 - Kerbals.Count;
-                        LunaLog.Log($"[LMP]: Generating {generateKerbals} new kerbals");
-                        for (var i = 0; i < generateKerbals; i++)
-                        {
-                            var protoKerbal = HighLogic.CurrentGame.CrewRoster.GetNewKerbal();
-                            MessageSender.SendKerbalIfDifferent(protoKerbal);
-                        }
-                        break;
-                }
-            }
         }
 
         #endregion
@@ -152,19 +72,85 @@ namespace LunaClient.Systems.KerbalSys
         }
 
         /// <summary>
+        /// Checks if the crew on a protoVessel has changed and sends the message accordingly
+        /// </summary>
+        public void ProcessKerbalsInVessel(ProtoVessel protoVessel)
+        {
+            if (protoVessel == null) return;
+
+            foreach (var protoCrew in protoVessel.GetVesselCrew())
+            {
+                MessageSender.SendKerbal(protoCrew);
+            }
+        }
+
+        /// <summary>
+        /// Checks if the crew on a vessel has changed and sends the message accordingly
+        /// </summary>
+        public void ProcessKerbalsInVessel(Vessel vessel)
+        {
+            if (vessel == null) return;
+
+            foreach (var protoCrew in vessel.GetVesselCrew())
+            {
+                MessageSender.SendKerbal(protoCrew);
+            }
+        }
+
+        #endregion
+
+        #region Routines
+
+        /// <summary>
+        /// Removes the kerbals that we received
+        /// </summary>
+        private void RemoveQueuedKerbals()
+        {
+            if (KerbalSystemReady)
+            {
+                var refreshDialog = false;
+                while (KerbalsToRemove.TryDequeue(out var kerbalNameToRemove))
+                {
+                    refreshDialog |= HighLogic.CurrentGame.CrewRoster.Remove(kerbalNameToRemove);
+                }
+
+                if (refreshDialog)
+                    RefreshCrewDialog();
+            }
+        }
+
+        /// <summary>
+        /// Loads the unloaded (either because they are new or they are updated) kerbals into the game
+        /// </summary>
+        private void LoadKerbals()
+        {
+            if (KerbalSystemReady)
+            {
+                var refreshDialog = KerbalsToProcess.Count > 0;
+                while (KerbalsToProcess.TryDequeue(out var kerbalNode))
+                {
+                    LoadKerbal(kerbalNode);
+                }
+
+                if (refreshDialog)
+                    RefreshCrewDialog();
+            }
+        }
+
+        #endregion
+
+        #region Private
+
+        /// <summary>
         /// Call this method to refresh the crews in the vessel spawn, vessel editor and astronaut complex
         /// </summary>
-        public void RefreshCrewDialog()
+        private static void RefreshCrewDialog()
         {
             CrewAssignmentDialog.Instance?.RefreshCrewLists(CrewAssignmentDialog.Instance.GetManifest(true), false, true, null);
 
             if (AstronautComplex != null)
                 RebuildCrewLists?.Invoke(AstronautComplex, null);
         }
-
-        #endregion
-
-        #region Private
 
         /// <summary>
         /// Creates or updates a kerbal
