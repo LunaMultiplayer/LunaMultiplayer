@@ -29,7 +29,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             base.OnEnabled();
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
-            GameEvents.onVesselDestroy.Add(VesselRemoveEvents.OnVesselDestroyed);
+            GameEvents.onVesselWillDestroy.Add(VesselRemoveEvents.OnVesselWillDestroy);
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, KillPastSubspaceVessels));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveQueuedVessels));
             SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, FlushRemovedVessels));
@@ -42,7 +42,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             RemovedVessels.Clear();
             GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
-            GameEvents.onVesselDestroy.Remove(VesselRemoveEvents.OnVesselDestroyed);
+            GameEvents.onVesselWillDestroy.Remove(VesselRemoveEvents.OnVesselWillDestroy);
         }
 
         #endregion
@@ -189,7 +189,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 else
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
 
-                ScreenMessages.PostScreenMessage("The vessel you were spectating was removed", 3f);
+                ScreenMessages.PostScreenMessage("The vessel you were spectating was removed", 10f);
             }
         }
 

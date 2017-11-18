@@ -8,15 +8,12 @@ namespace LunaClient.Systems.VesselRemoveSys
     public class VesselRemoveEvents : SubSystem<VesselRemoveSystem>
     {
         /// <summary>
-        /// This event is called when the vessel gone BOOM
+        /// This event is called when the vessel gone BOOM (the Vessel.Die() is called)
         /// If we have the update lock of it we kill it
         /// It doesn't matter if we own the control lock or not as perhaps we are killing a vessel of a player who disconnected.
         /// </summary>
-        public void OnVesselDestroyed(Vessel dyingVessel)
+        public void OnVesselWillDestroy(Vessel dyingVessel)
         {
-            if (dyingVessel.state != Vessel.State.DEAD)
-                return;
-
             //Only remove the vessel if we own the update lock
             if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
