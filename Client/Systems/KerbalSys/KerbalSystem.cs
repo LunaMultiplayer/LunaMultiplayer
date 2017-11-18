@@ -41,6 +41,7 @@ namespace LunaClient.Systems.KerbalSys
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveQueuedKerbals));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, LoadKerbals));
+            GameEvents.onCrewKilled.Add(KerbalEvents.OnCrewKilled);
             GameEvents.OnCrewmemberHired.Add(KerbalEvents.CrewAdd);
             GameEvents.OnCrewmemberLeftForDead.Add(KerbalEvents.CrewSetAsDead);
             GameEvents.OnCrewmemberSacked.Add(KerbalEvents.CrewRemove);
@@ -52,6 +53,7 @@ namespace LunaClient.Systems.KerbalSys
             base.OnDisabled();
             KerbalsToRemove = new ConcurrentQueue<string>();
             KerbalsToProcess = new ConcurrentQueue<ConfigNode>();
+            GameEvents.onCrewKilled.Remove(KerbalEvents.OnCrewKilled);
             GameEvents.OnCrewmemberHired.Remove(KerbalEvents.CrewAdd);
             GameEvents.OnCrewmemberLeftForDead.Remove(KerbalEvents.CrewSetAsDead);
             GameEvents.OnCrewmemberSacked.Remove(KerbalEvents.CrewRemove);
@@ -147,6 +149,8 @@ namespace LunaClient.Systems.KerbalSys
         private static void RefreshCrewDialog()
         {
             CrewAssignmentDialog.Instance?.RefreshCrewLists(CrewAssignmentDialog.Instance.GetManifest(true), false, true, null);
+            CrewAssignmentDialog.Instance?.ButtonClear();
+            CrewAssignmentDialog.Instance?.ButtonFill();
 
             if (AstronautComplex != null)
                 RebuildCrewLists?.Invoke(AstronautComplex, null);

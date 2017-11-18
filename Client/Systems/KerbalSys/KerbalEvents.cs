@@ -28,5 +28,14 @@ namespace LunaClient.Systems.KerbalSys
 
             System.ProcessKerbalsInVessel(FlightGlobals.ActiveVessel);
         }
+
+        public void OnCrewKilled(EventReport data)
+        {
+            var deadKerbalName = data.sender;
+            if (HighLogic.CurrentGame.CrewRoster.Exists(deadKerbalName))
+            {
+                System.MessageSender.SendKerbal(HighLogic.CurrentGame.CrewRoster[deadKerbalName]);
+            }
+        }
     }
 }

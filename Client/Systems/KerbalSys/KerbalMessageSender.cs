@@ -27,6 +27,8 @@ namespace LunaClient.Systems.KerbalSys
 
         public void SendKerbal(ProtoCrewMember pcm)
         {
+            if (pcm == null) return;
+
             if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
             {
                 //Don't send tourists
