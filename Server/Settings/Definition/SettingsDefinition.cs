@@ -100,7 +100,7 @@ namespace LunaServer.Settings.Definition
         public int ConnectionMsTimeout { get; set; } = int.MaxValue;
 #else
         [XmlComment(Value = "Connection timeout in Ms")]
-        public int ConnectionMsTimeout { get; set; }= 20000;
+        public int ConnectionMsTimeout { get; set; } = 5000;
 #endif
 
         [XmlComment(Value = "Interval in Ms at wich the client will send updates for his vessel when other players are nearby. " +
