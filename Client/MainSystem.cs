@@ -376,9 +376,6 @@ namespace LunaClient
             //Load the missing scenarios as well (Eg, Contracts and stuff for career mode
             SystemsContainer.Get<ScenarioSystem>().LoadMissingScenarioDataIntoGame();
 
-            //This only makes KSP complain
-
-            HighLogic.CurrentGame.CrewRoster.ValidateAssignments(HighLogic.CurrentGame);
             LunaLog.Log($"[LMP]: Starting {SettingsSystem.ServerSettings.GameMode} game...");
 
             //.Start() seems to stupidly .Load() somewhere - Let's overwrite it so it loads correctly.
