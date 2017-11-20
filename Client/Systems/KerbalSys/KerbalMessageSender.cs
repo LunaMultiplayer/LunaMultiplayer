@@ -2,6 +2,7 @@
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Utilities;
+using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Interface;
@@ -27,6 +28,8 @@ namespace LunaClient.Systems.KerbalSys
 
         public void SendKerbal(ProtoCrewMember pcm)
         {
+            if (VesselCommon.IsSpectating) return;
+
             if (pcm == null) return;
 
             if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
