@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace LunaClient.Utilities
 {
@@ -7,6 +8,8 @@ namespace LunaClient.Utilities
     /// </summary>
     public class ClockHandler
     {
+        private static List<Vessel> VesselsToPack = new List<Vessel>();
+
         /// <summary>
         /// Call this method to set a new time using the planetarium
         /// </summary>
@@ -42,21 +45,28 @@ namespace LunaClient.Utilities
         
         private static void PutVesselsInPhysicsRangeOnRails(double targetTick)
         {
-            foreach (var vessel in FlightGlobals.VesselsLoaded.Where(v => !v.packed && SafeToStepClock(v, targetTick)))
+            if (FlightGlobals.Vessels != null)
             {
-                try
+                VesselsToPack.Clear();
+                VesselsToPack.AddRange(FlightGlobals.Vessels.Where(v => !v.packed && SafeToStepClock(v, targetTick)));
+                foreach (var vessel in VesselsToPack)
                 {
-                    vessel.GoOnRails();
-                }
-                catch
-                {
-                    LunaLog.LogError($"[LMP] Error packing vessel {vessel.id}");
+                    try
+                    {
+                        vessel?.GoOnRails();
+                    }
+                    catch
+                    {
+                        LunaLog.LogError($"[LMP] Error packing vessel {vessel?.id}");
+                    }
                 }
             }
         }
 
         private static bool SafeToStepClock(Vessel checkVessel, double targetTick)
         {
+            if (checkVessel == null) return false;
+
             switch (checkVessel.situation)
             {
                 case Vessel.Situations.LANDED:

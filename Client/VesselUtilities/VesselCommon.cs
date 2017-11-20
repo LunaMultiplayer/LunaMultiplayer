@@ -97,9 +97,10 @@ namespace LunaClient.VesselUtilities
                 }
 
                 var controlledVesselsIds = GetControlledVesselIds();
-                var loadedVesselIds = FlightGlobals.VesselsLoaded.Select(v => v.id);
+                var loadedVesselIds = FlightGlobals.VesselsLoaded?.Select(v => v.id);
 
-                return controlledVesselsIds.Intersect(loadedVesselIds).Any(v => v != FlightGlobals.ActiveVessel?.id);
+                if (loadedVesselIds != null)
+                    return controlledVesselsIds.Intersect(loadedVesselIds).Any(v => v != FlightGlobals.ActiveVessel?.id);
             }
 
             return false;
