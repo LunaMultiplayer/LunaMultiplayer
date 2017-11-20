@@ -172,7 +172,8 @@ namespace LunaClient.Systems.VesselLockSys
         public void StartSpectating()
         {
             InputLockManager.SetControlLock(LmpGuiUtil.BlockAllControls, SpectateLock);
-            if (FlightGlobals.ActiveVessel != null)
+            var currentSpectatorLock = LockSystem.LockQuery.GetSpectatorLock(SettingsSystem.CurrentSettings.PlayerName);
+            if (FlightGlobals.ActiveVessel != null && currentSpectatorLock == null)
                 SystemsContainer.Get<LockSystem>().AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
             VesselCommon.IsSpectating = true;
         }
