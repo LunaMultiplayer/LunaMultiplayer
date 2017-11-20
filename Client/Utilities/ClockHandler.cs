@@ -8,7 +8,7 @@ namespace LunaClient.Utilities
     public class ClockHandler
     {
         /// <summary>
-        /// Call this method to set a new time
+        /// Call this method to set a new time using the planetarium
         /// </summary>
         public static void StepClock(double targetTick)
         {
@@ -24,6 +24,7 @@ namespace LunaClient.Utilities
                     LunaLog.Log("[LMP] Skipping StepClock (active vessel is null or not ready)");
                     return;
                 }
+
                 try
                 {
                     OrbitPhysicsManager.HoldVesselUnpack(5);
@@ -34,26 +35,24 @@ namespace LunaClient.Utilities
                     return;
                 }
 
-                foreach (var vessel in FlightGlobals.VesselsLoaded.Where(v => !v.packed))
-                {
-                    if (vessel.isActiveVessel && SafeToStepClock(vessel, targetTick) ||
-                        !vessel.isActiveVessel && vessel.situation != Vessel.Situations.PRELAUNCH)
-                    {
-                        try
-                        {
-                            //For prelaunch vessels, we should not go on rails as this will reset the throttles and such 
-                            vessel.GoOnRails();
-                        }
-                        catch
-                        {
-                            LunaLog.LogError(vessel.isActiveVessel
-                                ? $"[LMP] Error packing active vessel {vessel.id}"
-                                : $"[LMP] Error packing vessel {vessel.id}");
-                        }
-                    }
-                }
+                PutVesselsInPhysicsRangeOnRails(targetTick);
             }
             Planetarium.SetUniversalTime(targetTick);
+        }
+        
+        private static void PutVesselsInPhysicsRangeOnRails(double targetTick)
+        {
+            foreach (var vessel in FlightGlobals.VesselsLoaded.Where(v => !v.packed && SafeToStepClock(v, targetTick)))
+            {
+                try
+                {
+                    vessel.GoOnRails();
+                }
+                catch
+                {
+                    LunaLog.LogError($"[LMP] Error packing vessel {vessel.id}");
+                }
+            }
         }
 
         private static bool SafeToStepClock(Vessel checkVessel, double targetTick)
@@ -63,6 +62,7 @@ namespace LunaClient.Utilities
                 case Vessel.Situations.LANDED:
                 case Vessel.Situations.PRELAUNCH:
                 case Vessel.Situations.SPLASHED:
+                    return false; //If we Change the clock while landed/splashed the throttle goes back to 0
                 case Vessel.Situations.ORBITING:
                 case Vessel.Situations.ESCAPING:
                     return true;

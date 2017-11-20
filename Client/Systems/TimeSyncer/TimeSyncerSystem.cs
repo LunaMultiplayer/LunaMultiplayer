@@ -37,7 +37,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// If the time between UTC and game is greater than this, the game time 
         /// </summary>
-        private const int MaxPhisicsClockMsError = 100;
+        private const int MaxPhisicsClockMsError = 250;
         /// <summary>
         /// Minimum speed that the game can go
         /// </summary>
@@ -115,7 +115,7 @@ namespace LunaClient.Systems.TimeSyncer
                 if (targetTime != 0 && Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < PhisicsClockLimitMs)
                 {
                     //Time error is not so big so we can fix it adjusting the phisics time
-                    SkewClock(currentError);
+                    SkewClock();
                 }
             }
         }
@@ -146,9 +146,9 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Here we adjust the GAME timescale and make the game goes faster or slower
         /// </summary>
-        private static void SkewClock(double currentErrorInMs)
+        private static void SkewClock()
         {
-            var timeWarpRate = (float)Math.Pow(2, TimeSpan.FromMilliseconds(currentErrorInMs).TotalSeconds);
+            var timeWarpRate = (float)Math.Pow(2, -CurrentErrorSec);
 
             //Set the physwarp rate between the max and min allowed
             Time.timeScale = Mathf.Clamp(timeWarpRate, MinPhisicsClockRate, MaxPhisicsClockRate);
