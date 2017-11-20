@@ -20,6 +20,11 @@ namespace LunaCommon.Locks
         internal ConcurrentDictionary<Guid, LockDefinition> UpdateLocks { get; set; } = new ConcurrentDictionary<Guid, LockDefinition>();
 
         /// <summary>
+        /// Several users can have several unloaded update locks but a vessel can only have 1 update lock
+        /// </summary>
+        internal ConcurrentDictionary<Guid, LockDefinition> UnloadedUpdateLocks { get; set; } = new ConcurrentDictionary<Guid, LockDefinition>();
+
+        /// <summary>
         /// Several users can have several control locks but a vessel can only have 1 control lock
         /// </summary>
         internal ConcurrentDictionary<Guid, LockDefinition> ControlLocks { get; set; } = new ConcurrentDictionary<Guid, LockDefinition>();
@@ -42,6 +47,9 @@ namespace LunaCommon.Locks
                 case LockType.Update:
                     UpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
                     break;
+                case LockType.UnloadedUpdate:
+                    UnloadedUpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
+                    break;
                 case LockType.Control:
                     ControlLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
                     break;
@@ -62,6 +70,9 @@ namespace LunaCommon.Locks
             {
                 case LockType.Asteroid:
                     AsteroidLock = null;
+                    break;
+                case LockType.UnloadedUpdate:
+                    UnloadedUpdateLocks.TryRemove(lockDefinition.VesselId, out _);
                     break;
                 case LockType.Update:
                     UpdateLocks.TryRemove(lockDefinition.VesselId, out _);
@@ -88,6 +99,7 @@ namespace LunaCommon.Locks
                 UpdateLocks.Clear();
                 ControlLocks.Clear();
                 SpectatorLocks.Clear();
+                UnloadedUpdateLocks.Clear();
             }).Start(TaskScheduler.Current);
         }
 

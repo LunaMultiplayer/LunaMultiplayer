@@ -34,11 +34,9 @@ namespace LunaClient.Systems.Lock
                 case LockMessageType.Acquire:
                     {
                         var data = (LockAcquireMsgData)msgData;
+                        LockSystem.LockStore.AddOrUpdateLock(data.Lock);
 
-                        if (data.LockResult)
-                            LockSystem.LockStore.AddOrUpdateLock(data.Lock);
-
-                        System.FireAcquireEvent(data.Lock, data.LockResult);
+                        System.FireAcquireEvent(data.Lock);
                     }
                     break;
                 case LockMessageType.Release:

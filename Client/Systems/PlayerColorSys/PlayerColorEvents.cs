@@ -23,9 +23,9 @@ namespace LunaClient.Systems.PlayerColorSys
         /// <summary>
         /// If we acquire the control of a ship set it's orbit color
         /// </summary>
-        public void OnLockAcquire(LockDefinition lockDefinition, bool result)
+        public void OnLockAcquire(LockDefinition lockDefinition)
         {
-            if (System.Enabled && lockDefinition.Type == LockType.Control && result)
+            if (System.Enabled && lockDefinition.Type == LockType.Control)
                 UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
         }
 

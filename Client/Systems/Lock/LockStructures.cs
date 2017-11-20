@@ -2,7 +2,7 @@
 
 namespace LunaClient.Systems.Lock
 {
-    public delegate void AcquireEvent(LockDefinition lockDefinition, bool lockResult);
+    public delegate void AcquireEvent(LockDefinition lockDefinition);
 
     public delegate void ReleaseEvent(LockDefinition lockDefinition);
 }

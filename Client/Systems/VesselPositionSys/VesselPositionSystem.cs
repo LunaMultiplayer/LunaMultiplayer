@@ -50,6 +50,8 @@ namespace LunaClient.Systems.VesselPositionSys
             SetupRoutine(new RoutineDefinition(FastVesselUpdatesSendMsInterval, RoutineExecution.LateUpdate, SendVesselPositionUpdates));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
                 RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval * 2,
+                RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
         }
 
         protected override void OnDisabled()
@@ -107,8 +109,17 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     MessageSender.SendVesselPositionUpdate(secondaryVessel);
                 }
+            }
+        }
 
-                var abandonedVesselsToUpdate = VesselCommon.GetAbandonedVessels();
+        /// <summary>
+        /// Send updates for vessels that we own the update lock. And also send it for the abandoned ones
+        /// </summary>
+        private void SendUnloadedSecondaryVesselPositionUpdates()
+        {
+            if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
+            {
+                var abandonedVesselsToUpdate = VesselCommon.GetUnloadedSecondaryVessels();
                 foreach (var secondaryVessel in abandonedVesselsToUpdate)
                 {
                     MessageSender.SendVesselPositionUpdate(secondaryVessel);

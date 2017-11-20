@@ -9,7 +9,6 @@ namespace LunaCommon.Message.Data.Lock
         internal LockAcquireMsgData() { }
         public override LockMessageType LockMessageType => LockMessageType.Acquire;
         public LockDefinition Lock { get; set; }
-        public bool LockResult { get; set; }
         public bool Force { get; set; }
     }
 }

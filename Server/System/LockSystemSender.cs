@@ -39,18 +39,19 @@ namespace LunaServer.System
 
         public static void SendLockAquireMessage(LockDefinition lockDefinition, bool force)
         {
-            var lockResult = LockSystem.AcquireLock(lockDefinition, force);
+            if (LockSystem.AcquireLock(lockDefinition, force))
+            {
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockAcquireMsgData>();
+                msgData.Lock = lockDefinition;
+                msgData.Force = force;
 
-            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockAcquireMsgData>();
-            msgData.Lock = lockDefinition;
-            msgData.LockResult = lockResult;
-            msgData.Force = force;
-            
-            MessageQueuer.SendToAllClients<LockSrvMsg>(msgData);
-
-            LunaLog.Debug(lockResult
-                ? $"{lockDefinition.PlayerName} acquired lock {lockDefinition}"
-                : $"{lockDefinition.PlayerName} failed to acquire lock {lockDefinition}");
+                MessageQueuer.SendToAllClients<LockSrvMsg>(msgData);
+                LunaLog.Debug($"{lockDefinition.PlayerName} acquired lock {lockDefinition}");
+            }
+            else
+            {
+                LunaLog.Debug($"{lockDefinition.PlayerName} failed to acquire lock {lockDefinition}");
+            }
         }
     }
 }

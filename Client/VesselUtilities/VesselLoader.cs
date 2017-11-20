@@ -36,6 +36,7 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         public static void LoadVesselsIntoGame()
         {
+            //TODO: Do we really need this now that vessels are loaded in a routine while in space center???
             LunaLog.Log("[LMP]: Loading vessels in subspace 0 into game");
             var numberOfLoads = 0;
 

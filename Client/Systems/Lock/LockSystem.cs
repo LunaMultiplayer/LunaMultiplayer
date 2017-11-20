@@ -74,13 +74,13 @@ namespace LunaClient.Systems.Lock
         /// This event is triggered when some player acquired a lock
         /// It then calls all the methods specified in the delegate
         /// </summary>
-        public void FireAcquireEvent(LockDefinition lockDefinition, bool lockResult)
+        public void FireAcquireEvent(LockDefinition lockDefinition)
         {
             foreach (var methodObject in LockAcquireEvents)
             {
                 try
                 {
-                    methodObject(lockDefinition, lockResult);
+                    methodObject(lockDefinition);
                 }
                 catch (Exception e)
                 {
@@ -143,6 +143,14 @@ namespace LunaClient.Systems.Lock
         }
 
         /// <summary>
+        /// Aquire the unloaded update lock on the given vessel
+        /// </summary>
+        public void AcquireUnloadedUpdateLock(Guid vesselId, bool force = false)
+        {
+            AcquireLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+        }
+
+        /// <summary>
         /// Aquire the spectator lock on the given vessel
         /// </summary>
         public void AcquireSpectatorLock(Guid vesselId)
@@ -174,15 +182,7 @@ namespace LunaClient.Systems.Lock
 
             MessageSender.SendMessage(msgData);
         }
-
-        /// <summary>
-        /// Release the control lock on the given vessel
-        /// </summary>
-        public void ReleaseControlLock(Guid vesselId)
-        {
-            ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId));
-        }
-
+        
         /// <summary>
         /// Release the update lock on the given vessel
         /// </summary>
@@ -205,6 +205,8 @@ namespace LunaClient.Systems.Lock
         /// </summary>
         public void ReleaseAllVesselLocks(Guid vesselId)
         {
+            if (LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId));
             if (LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                 ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
             if (LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
@@ -243,6 +245,9 @@ namespace LunaClient.Systems.Lock
                     break;
                 case LockType.Update:
                     locksToRelease = LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName);
+                    break;
+                case LockType.UnloadedUpdate:
+                    locksToRelease = LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName);
                     break;
                 case LockType.Spectator:
                     locksToRelease = LockQuery.SpectatorLockExists(SettingsSystem.CurrentSettings.PlayerName) ?

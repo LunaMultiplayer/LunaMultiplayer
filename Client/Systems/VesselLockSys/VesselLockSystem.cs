@@ -41,6 +41,7 @@ namespace LunaClient.Systems.VesselLockSys
             GameEvents.onVesselChange.Add(VesselMainEvents.OnVesselChange);
             SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, TryGetControlLock));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateSecondaryVesselsLocks));
+            SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, UpdateUnloadedVesselsLocks));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
         }
 
@@ -83,10 +84,36 @@ namespace LunaClient.Systems.VesselLockSys
                     SystemsContainer.Get<LockSystem>().AcquireUpdateLock(checkVessel);
                 }
 
+                var vesselIdsWithUpdateLocks = GetVesselIdsWeCurrentlyUpdate();
+                foreach (var vesselId in vesselIdsWithUpdateLocks)
+                {
+                    if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                        continue;
+
+                    //For all the vessels we are updating we FORCE the unloaded update lock if we don't have it.
+                    SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vesselId, true);
+                }
+
                 var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased();
                 foreach (var releaseVessel in vesselsToRelease)
                 {
                     SystemsContainer.Get<LockSystem>().ReleaseUpdateLock(releaseVessel);
+                }
+            }
+        }
+
+        /// <summary>
+        /// After some ms get the unloaded update lock for vessels that are far to us (not loaded) not dead and that nobody has the update lock
+        /// </summary>
+        private void UpdateUnloadedVesselsLocks()
+        {
+            if (Enabled && VesselLockSystemReady)
+            {
+                var validSecondaryUnloadedVessels = GetValidUnloadedVesselIds();
+                foreach (var checkVessel in validSecondaryUnloadedVessels)
+                {
+                    //Don't force it as maybe another player sent this request aswell
+                    SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(checkVessel);
                 }
             }
         }
@@ -153,6 +180,7 @@ namespace LunaClient.Systems.VesselLockSys
         public void StopSpectatingAndGetControl(Vessel vessel, bool force)
         {
             SystemsContainer.Get<LockSystem>().AcquireUpdateLock(vessel.id, force);
+            SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vessel.id, force);
             if (!LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 SystemsContainer.Get<LockSystem>().AcquireControlLock(vessel.id, force);
@@ -167,6 +195,32 @@ namespace LunaClient.Systems.VesselLockSys
         #endregion
 
         #region Private methods
+
+        /// <summary>
+        /// Return the vessel ids of the vessels where we have an update lock
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<Guid> GetVesselIdsWeCurrentlyUpdate()
+        {
+            return LockSystem.LockQuery
+                .GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
+                .Select(l => l.VesselId);
+        }
+
+        /// <summary>
+        /// Return the OTHER vessel ids of the vessels that are unloadedloaded not dead and not in safety bubble.
+        /// </summary>
+        /// <returns></returns>
+        private static IEnumerable<Guid> GetValidUnloadedVesselIds()
+        {
+            return FlightGlobals.VesselsLoaded
+                .Where(v => v != null && v.state != Vessel.State.DEAD &&
+                            v.id != FlightGlobals.ActiveVessel?.id &&
+                            !VesselCommon.IsInSafetyBubble(v) &&
+                            !LockSystem.LockQuery.UnloadedUpdateLockExists(v.id) &&
+                            !LockSystem.LockQuery.UpdateLockExists(v.id))
+                .Select(v => v.id);
+        }
 
         /// <summary>
         /// Return the OTHER vessel ids of the vessels that are loaded (close to us) not dead and not in safety bubble.

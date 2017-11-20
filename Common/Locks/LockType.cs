@@ -19,9 +19,21 @@ namespace LunaCommon.Locks
 
         /// <summary>
         /// The update lock specifies who updates the position and definition of a given vessel. 
-        /// A user can have several update locks.
+        /// A user can have several update locks. 
+        /// If you are controlling a vessel you also get the update lock.
+        /// If you are in LOADING distance of a vessel that nobody controls and nobody already has the update lock you get it
+        /// If you own the update lock you also own the "UnloadedUpdate" lock
         /// </summary>
         Update,
+
+        /// <summary>
+        /// The update lock specifies who updates the position and definition of a given vessel. 
+        /// A user can have several update/UnloadedUpdate locks.
+        /// You get the UnloadedUpdate lock when there are vessels far away from other players and nobody is close enought
+        /// to get the "Update" lock. If a player get close to the vessel and gets the "Update" lock, he will steal the 
+        /// "UnloadedUpdate" lock from you
+        /// </summary>
+        UnloadedUpdate,
 
         /// <summary>
         /// The spectator lock specifies if a user is spectating a vessel or not.

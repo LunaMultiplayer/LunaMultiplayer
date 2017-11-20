@@ -30,6 +30,10 @@ namespace LunaCommon.Locks
                     if (LockStore.UpdateLocks.TryGetValue(vesselId, out var updateLock))
                         return updateLock.PlayerName == playerName;
                     break;
+                case LockType.UnloadedUpdate:
+                    if (LockStore.UpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
+                        return unloadedUpdateLock.PlayerName == playerName;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -48,6 +52,8 @@ namespace LunaCommon.Locks
                     return LockStore.ControlLocks.ContainsKey(vesselId);
                 case LockType.Update:
                     return LockStore.UpdateLocks.ContainsKey(vesselId);
+                case LockType.UnloadedUpdate:
+                    return LockStore.UnloadedUpdateLocks.ContainsKey(vesselId);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -68,6 +74,10 @@ namespace LunaCommon.Locks
                     if (LockStore.UpdateLocks.TryGetValue(vesselId, out var updateLock))
                         return updateLock.PlayerName;
                     break;
+                case LockType.UnloadedUpdate:
+                    if (LockStore.UpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
+                        return unloadedUpdateLock.PlayerName;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -83,6 +93,7 @@ namespace LunaCommon.Locks
             var locks = new List<LockDefinition>();
             locks.AddRange(GetAllControlLocks(playerName));
             locks.AddRange(GetAllUpdateLocks(playerName));
+            locks.AddRange(GetAllUnloadedUpdateLocks(playerName));
 
             if (LockStore.SpectatorLocks.TryGetValue(playerName, out var spectatorLock))
                 locks.Add(spectatorLock);
@@ -101,6 +112,7 @@ namespace LunaCommon.Locks
             var locks = new List<LockDefinition>();
             locks.AddRange(GetAllControlLocks());
             locks.AddRange(GetAllUpdateLocks());
+            locks.AddRange(GetAllUnloadedUpdateLocks());
             locks.AddRange(LockStore.SpectatorLocks.Values);
 
             if (LockStore.AsteroidLock != null)
@@ -120,6 +132,8 @@ namespace LunaCommon.Locks
                     return LockStore.AsteroidLock != null;
                 case LockType.Update:
                     return LockStore.UpdateLocks.ContainsKey(lockDefinition.VesselId);
+                case LockType.UnloadedUpdate:
+                    return LockStore.UnloadedUpdateLocks.ContainsKey(lockDefinition.VesselId);
                 case LockType.Control:
                     return LockStore.ControlLocks.ContainsKey(lockDefinition.VesselId);
                 case LockType.Spectator:
@@ -141,6 +155,9 @@ namespace LunaCommon.Locks
                     return LockStore.AsteroidLock;
                 case LockType.Update:
                     LockStore.UpdateLocks.TryGetValue(vesselId, out existingLock);
+                    break;
+                case LockType.UnloadedUpdate:
+                    LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out existingLock);
                     break;
                 case LockType.Control:
                     LockStore.ControlLocks.TryGetValue(vesselId, out existingLock);

@@ -119,11 +119,16 @@ namespace LunaClient.VesselUtilities
         }
 
         /// <summary>
-        /// Return all the abandoned vessels (vessels that are not loaded and don't have update lock)
+        /// Return all the vessels except the active one that we have the update lock and that are loaded
         /// </summary>
-        public static IEnumerable<Vessel> GetAbandonedVessels()
+        public static IEnumerable<Vessel> GetUnloadedSecondaryVessels()
         {
-            return FlightGlobals.VesselsUnloaded.Where(v => !LockSystem.LockQuery.ControlLockExists(v.id));
+            //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
+
+            return LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
+                .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id)
+                .Select(vi => FlightGlobals.FindVessel(vi.VesselId))
+                .Where(v => v != null);
         }
 
         /// <summary>
@@ -272,7 +277,7 @@ namespace LunaClient.VesselUtilities
             if (existing.loaded && existing.Parts.Count != newProtoVessel.protoPartSnapshots.Count)
                 return true;
 
-            if (existing.situation != newProtoVessel.situation)
+            if (existing.loaded && existing.situation != newProtoVessel.situation)
                 return true;
 
             return false;

@@ -10,7 +10,7 @@ namespace LunaCommon.Locks
     public partial class LockQuery
     {
         /// <summary>
-        /// Checks if a control lock exists for given vessel
+        /// Checks if a update lock exists for given vessel
         /// </summary>
         public bool UpdateLockExists(Guid vesselId)
         {
@@ -18,7 +18,7 @@ namespace LunaCommon.Locks
         }
 
         /// <summary>
-        /// Checks if a control lock exists for given vessel and if so if it belongs to given player
+        /// Checks if a update lock exists for given vessel and if so if it belongs to given player
         /// </summary>
         public bool UpdateLockBelongsToPlayer(Guid vesselId, string playerName)
         {
