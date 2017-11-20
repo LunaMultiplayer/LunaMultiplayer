@@ -94,9 +94,14 @@ namespace LunaClient.Systems.VesselChangeSys
                     }
                 }
 
-                foreach (var actionGroup in vesselChange.ActionGroupsToToggle)
+                foreach (var actionGroup in vesselChange.ActionGroupsToEnable)
                 {
-                    vessel.ActionGroups?.ToggleGroup(actionGroup);
+                    vessel.ActionGroups?.SetGroup(actionGroup, true);
+                }
+
+                foreach (var actionGroup in vesselChange.ActionGroupsToDisable)
+                {
+                    vessel.ActionGroups?.SetGroup(actionGroup, false);
                 }
             }
         }
