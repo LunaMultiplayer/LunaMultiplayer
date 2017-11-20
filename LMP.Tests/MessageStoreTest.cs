@@ -1,10 +1,9 @@
-﻿using System;
-using LunaClient.Systems.VesselProtoSys;
-using LunaCommon.Message;
+﻿using LunaCommon.Message;
 using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 
 namespace LMP.Tests
 {

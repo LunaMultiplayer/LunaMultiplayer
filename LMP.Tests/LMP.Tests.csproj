@@ -46,6 +46,7 @@
     <Compile Include="MessageStoreTest.cs" />
     <Compile Include="SerializationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeRetrieverTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
