@@ -29,8 +29,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public LockDefinition GetSpectatorLock(string playerName)
         {
-            LockStore.SpectatorLocks.TryGetValue(playerName, out var spectatorLock);
-            return spectatorLock;
+            return LockStore.SpectatorLocks.TryGetValue(playerName, out var spectatorLock) ? spectatorLock : null;
         }
     }
 }
