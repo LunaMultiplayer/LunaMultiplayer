@@ -64,8 +64,6 @@ namespace LunaClient.Systems.VesselPositionSys
         
         private static void HandleVesselUpdates()
         {
-            if (FlightGlobals.ActiveVessel == null) return;
-
             foreach (var keyVal in CurrentVesselUpdate)
             {
                 keyVal.Value.ApplyVesselUpdate();
