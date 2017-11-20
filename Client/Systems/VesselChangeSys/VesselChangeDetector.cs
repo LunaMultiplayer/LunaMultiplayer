@@ -1,5 +1,4 @@
-﻿using Smooth.Algebraics;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
 
 namespace LunaClient.Systems.VesselChangeSys
@@ -68,45 +67,26 @@ namespace LunaClient.Systems.VesselChangeSys
 
                 change.PartsToRetract = newRetractedParts.Except(currentRetractedParts).ToArray();
 
-                var existingEnabledActionGrps = new List<Tuple<KSPActionGroup, bool>>
-                {
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Gear,Existing.GetNode("ACTIONGROUPS").GetValue("Gear").Contains("True")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Light,Existing.GetNode("ACTIONGROUPS").GetValue("Light").Contains("True")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.RCS,Existing.GetNode("ACTIONGROUPS").GetValue("RCS").Contains("True")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.SAS,Existing.GetNode("ACTIONGROUPS").GetValue("SAS").Contains("True")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Brakes,Existing.GetNode("ACTIONGROUPS").GetValue("Brakes").Contains("True"))
-                };
 
-                var newEnabledActionGrps = new List<Tuple<KSPActionGroup, bool>>
-                {
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Gear,New.GetNode("ACTIONGROUPS").GetValue("Gear").Contains("True")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Light,New.GetNode("ACTIONGROUPS").GetValue("Light").Contains("True")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.RCS,New.GetNode("ACTIONGROUPS").GetValue("RCS").Contains("True")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.SAS,New.GetNode("ACTIONGROUPS").GetValue("SAS").Contains("True")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Brakes,New.GetNode("ACTIONGROUPS").GetValue("Brakes").Contains("True"))
-                };
+                var existingEnabledActionGrps = Existing.GetNode("ACTIONGROUPS").values.Cast<ConfigNode.Value>()
+                    .Where(v => v.value.Contains("True"))
+                    .Select(n => (KSPActionGroup)Enum.Parse(typeof(KSPActionGroup), n.name)).ToList();
 
-                change.ActionGroupsToEnable = newEnabledActionGrps.Except(existingEnabledActionGrps).Select(v=> v.Item1).ToArray();
+                var newEnabledActionGrps = New.GetNode("ACTIONGROUPS").values.Cast<ConfigNode.Value>()
+                    .Where(v => v.value.Contains("True"))
+                    .Select(n => (KSPActionGroup)Enum.Parse(typeof(KSPActionGroup), n.name)).ToList();
 
-                var existingDisabledActionGrps = new List<Tuple<KSPActionGroup, bool>>
-                {
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Gear,Existing.GetNode("ACTIONGROUPS").GetValue("Gear").Contains("False")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Light,Existing.GetNode("ACTIONGROUPS").GetValue("Light").Contains("False")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.RCS,Existing.GetNode("ACTIONGROUPS").GetValue("RCS").Contains("False")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.SAS,Existing.GetNode("ACTIONGROUPS").GetValue("SAS").Contains("False")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Brakes,Existing.GetNode("ACTIONGROUPS").GetValue("Brakes").Contains("False"))
-                };
+                change.ActionGroupsToEnable = newEnabledActionGrps.Except(existingEnabledActionGrps).ToArray();
 
-                var newDisabledActionGrps = new List<Tuple<KSPActionGroup, bool>>
-                {
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Gear,New.GetNode("ACTIONGROUPS").GetValue("Gear").Contains("False")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Light,New.GetNode("ACTIONGROUPS").GetValue("Light").Contains("False")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.RCS,New.GetNode("ACTIONGROUPS").GetValue("RCS").Contains("False")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.SAS,New.GetNode("ACTIONGROUPS").GetValue("SAS").Contains("False")),
-                    new Tuple<KSPActionGroup, bool>(KSPActionGroup.Brakes,New.GetNode("ACTIONGROUPS").GetValue("Brakes").Contains("False"))
-                };
+                var existingDisabledActionGrps = Existing.GetNode("ACTIONGROUPS").values.Cast<ConfigNode.Value>()
+                    .Where(v => v.value.Contains("False"))
+                    .Select(n => (KSPActionGroup)Enum.Parse(typeof(KSPActionGroup), n.name)).ToList();
 
-                change.ActionGroupsToDisable = newDisabledActionGrps.Except(existingDisabledActionGrps).Select(v => v.Item1).ToArray();
+                var newDisabledActionGrps = New.GetNode("ACTIONGROUPS").values.Cast<ConfigNode.Value>()
+                    .Where(v => v.value.Contains("False"))
+                    .Select(n => (KSPActionGroup)Enum.Parse(typeof(KSPActionGroup), n.name)).ToList();
+
+                change.ActionGroupsToDisable = newDisabledActionGrps.Except(existingDisabledActionGrps).ToArray();
 
                 var currentStartedEngines = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
                         m.HasValue("name") && m.GetValue("name").StartsWith("ModuleEnginesFX")
