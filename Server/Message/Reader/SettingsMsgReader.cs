@@ -30,7 +30,6 @@ namespace LunaServer.Message.Reader
             msgData.VesselDefinitionSendMsInterval = GeneralSettings.SettingsStore.VesselDefinitionSendMsInterval;
             msgData.VesselDefinitionSendFarMsInterval = GeneralSettings.SettingsStore.VesselDefinitionSendFarMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
-            msgData.ClockSetMsInterval = GeneralSettings.SettingsStore.ClockSetMsInterval;
             msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;
 
             if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)

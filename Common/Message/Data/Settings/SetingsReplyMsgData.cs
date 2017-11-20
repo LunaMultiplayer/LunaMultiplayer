@@ -59,7 +59,6 @@ namespace LunaCommon.Message.Data.Settings
         public bool DropControlOnExit { get; set; }
         public bool DropControlOnExitFlight { get; set; }
         public string WarpMaster { get; set; }
-        public int ClockSetMsInterval { get; set; }
         public int VesselDefinitionSendMsInterval { get; set; }
         public int VesselDefinitionSendFarMsInterval { get; set; }
         public bool ShowVesselsInThePast { get; set; }

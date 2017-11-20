@@ -73,6 +73,9 @@ namespace LunaServer.Settings.Definition
         [XmlComment(Value = "Specify the warp Type. Values: None, Subspace, Master")]
         public WarpMode WarpMode { get; set; } = WarpMode.Subspace;
 
+        [XmlComment(Value = "Username of the player who control the warp if WarpMode is set to MASTER")]
+        public string WarpMaster { get; set; } = "";
+
         [XmlComment(Value = "Enable white-listing.")]
         public bool Whitelisted { get; set; } = false;
 
@@ -90,13 +93,6 @@ namespace LunaServer.Settings.Definition
         public int ConnectionMsTimeout { get; set; } = 5000;
 #endif
 
-        [XmlComment(Value = "Interval in Ms at wich the client will send updates for his vessel when other players are nearby. " +
-                     "Decrease it if your clients have good network connection and you plan to do dogfights")]
-        public int VesselUpdatesSendMsInterval { get; set; } = 30;
-
-        [XmlComment(Value = "Interval in Ms at wich the client will send updates for vessels that are uncontrolled but nearby him.")]
-        public int SecondaryVesselUpdatesSendMsInterval { get; set; } = 500;
-
         [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player switch to another vessel.")]
         public bool DropControlOnVesselSwitching { get; set; } = true;
 
@@ -105,12 +101,13 @@ namespace LunaServer.Settings.Definition
 
         [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player disconnects.")]
         public bool DropControlOnExit { get; set; } = true;
-        
-        [XmlComment(Value = "Username of the player who control the warp if WarpMode is set to MASTER")]
-        public string WarpMaster { get; set; } = "";
-        
-        [XmlComment(Value = "Interval in ms at wich users will sync time with the server")]
-        public int ClockSetMsInterval { get; set; } = 100;
+
+        [XmlComment(Value = "Interval in Ms at wich the client will send updates for his vessel when other players are nearby. " +
+                     "Decrease it if your clients have good network connection and you plan to do dogfights")]
+        public int VesselUpdatesSendMsInterval { get; set; } = 30;
+
+        [XmlComment(Value = "Interval in Ms at wich the client will send updates for vessels that are uncontrolled but nearby him.")]
+        public int SecondaryVesselUpdatesSendMsInterval { get; set; } = 500;
 
         [XmlComment(Value = "Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions to the server " +
                             "when they are close to other players." +
@@ -143,8 +140,7 @@ namespace LunaServer.Settings.Definition
 
         [XmlComment(Value = "Main thread polling in ms")]
         public int MainTimeTick { get; set; } = 5;
-
-
+        
         [XmlComment(Value = "Minimum log level. Values: Debug, Info, Chat, Error, Fatal")]
         public LogLevels LogLevel { get; set; } = LogLevels.Debug;
 
