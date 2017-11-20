@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselLockSys
                 LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 //We managed to get the ship so set the update lock and in case we don't have the control lock aquire it.
-                System.StopSpectatingAndGetControl(vessel, true);
+                System.StopSpectatingAndGetControl(vessel, false);
             }
             else
             {

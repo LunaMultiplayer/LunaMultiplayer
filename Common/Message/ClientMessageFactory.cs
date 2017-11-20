@@ -24,7 +24,6 @@ namespace LunaCommon.Message
             MessageDictionary.Add((uint)ClientMessageType.Vessel, typeof(VesselCliMsg));
             MessageDictionary.Add((uint)ClientMessageType.CraftLibrary, typeof(CraftLibraryCliMsg));
             MessageDictionary.Add((uint)ClientMessageType.Flag, typeof(FlagCliMsg));
-            MessageDictionary.Add((uint)ClientMessageType.SyncTime, typeof(SyncTimeCliMsg));
             MessageDictionary.Add((uint)ClientMessageType.Motd, typeof(MotdCliMsg));
             MessageDictionary.Add((uint)ClientMessageType.Warp, typeof(WarpCliMsg));
             MessageDictionary.Add((uint)ClientMessageType.Lock, typeof(LockCliMsg));

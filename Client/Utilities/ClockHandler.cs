@@ -63,9 +63,6 @@ namespace LunaClient.Utilities
                 case Vessel.Situations.LANDED:
                 case Vessel.Situations.PRELAUNCH:
                 case Vessel.Situations.SPLASHED:
-                    //TODO: Fix.  We need to be able to adjust the clock on the ground, but then it resets the throttle position and does physics easing.
-                    //TODO: For now, disable stepping the clock while landed.
-                    return checkVessel.srf_velocity.magnitude < 2;
                 case Vessel.Situations.ORBITING:
                 case Vessel.Situations.ESCAPING:
                     return true;

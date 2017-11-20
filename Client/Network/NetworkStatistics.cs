@@ -9,6 +9,8 @@ namespace LunaClient.Network
         public static DateTime LastReceiveTime { get; set; }
         public static DateTime LastSendTime { get; set; }
 
+        public static long TimeOffset => TimeSpan.FromSeconds(NetworkMain.ClientConnection?.ServerConnection?.RemoteTimeOffset ?? 0).Ticks;
+
         public static long GetStatistics(string statType)
         {
             switch (statType)
@@ -21,6 +23,8 @@ namespace LunaClient.Network
                 case "ReceivedBytes":
                     //Build lidgren in DEBUG mode or: https://github.com/lidgren/lidgren-network-gen3/wiki/Statistics
                     return NetworkMain.ClientConnection.Statistics.ReceivedBytes;
+                case "Latency":
+                    return (long)NetworkMain.ClientConnection.ServerConnection.AverageRoundtripTime;
                 case "LastSendTime":
                     return (long)(DateTime.Now - LastSendTime).TotalMilliseconds;
                 case "LastReceiveTime":

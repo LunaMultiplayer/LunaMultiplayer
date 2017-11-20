@@ -138,13 +138,18 @@ namespace LunaClient.Systems.Warp
             return false;
         }
 
+        /// <summary>
+        /// Gets the current time on the subspace that we are located
+        /// </summary>
+        /// <returns></returns>
         public double GetCurrentSubspaceTime() => GetSubspaceTime(CurrentSubspace);
 
+        /// <summary>
+        /// Returns the subspace time sent as parameter.
+        /// </summary>
         public double GetSubspaceTime(int subspace)
         {
-            return SystemsContainer.Get<TimeSyncerSystem>().Synced && Subspaces.ContainsKey(subspace)
-                ? SystemsContainer.Get<TimeSyncerSystem>().GetServerClock() + Subspaces[subspace]
-                : 0;
+            return Subspaces.ContainsKey(subspace) ? SystemsContainer.Get<TimeSyncerSystem>().GetServerClock() + Subspaces[subspace] : 0;
         }
 
         public void SendChangeSubspaceMsg(int subspaceId)

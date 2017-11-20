@@ -12,13 +12,12 @@
         Vessel = 8,
         CraftLibrary = 9,
         Flag = 10,
-        SyncTime = 11,
-        Motd = 12,
-        Warp = 13,
-        Lock = 14,
-        Mod = 15,
-        Admin = 16,
-        PlayerConnection = 17,
-        Groups = 18
+        Motd = 11,
+        Warp = 12,
+        Lock = 13,
+        Mod = 14,
+        Admin = 15,
+        PlayerConnection = 16,
+        Groups = 17
     }
 }

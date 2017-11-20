@@ -123,9 +123,6 @@ namespace LunaServer.Lidgren
 
         public void SendMessageToClient(ClientStructure client, IServerMessageBase message)
         {
-            if (message.MessageType == ServerMessageType.SyncTime)
-                SyncTimeSystem.RewriteMessage(client, message);
-
             message.Data.SentTime = DateTime.UtcNow.Ticks;
             var messageBytes = message.Serialize(GeneralSettings.SettingsStore.CompressionEnabled);
             if (messageBytes == null)

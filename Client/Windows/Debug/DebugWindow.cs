@@ -61,9 +61,6 @@ namespace LunaClient.Windows.Debug
                     StringBuilder.AppendLine($"Current subspace: {SystemsContainer.Get<WarpSystem>().CurrentSubspace}.");
                     StringBuilder.AppendLine($"Current Error: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().GetCurrentError() * 1000, 0)}ms.");
                     StringBuilder.AppendLine($"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT");
-                    StringBuilder.AppendLine($"Network latency: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().NetworkLatencyAverage / 10000f, 3)}ms");
-                    StringBuilder.AppendLine($"Server clock difference: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ClockOffsetAverage / 10000f, 3)}ms");
-                    StringBuilder.AppendLine($"Server lag: {Math.Round(SystemsContainer.Get<TimeSyncerSystem>().ServerLag / 10000f, 3)}ms");
 
                     NtpText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
@@ -72,6 +69,7 @@ namespace LunaClient.Windows.Debug
                 if (DisplayConnectionQueue)
                 {
                     StringBuilder.AppendLine($"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.");
+                    StringBuilder.AppendLine($"Latency: {NetworkStatistics.GetStatistics("Latency")}ms.");
                     StringBuilder.AppendLine($"Last send time: {NetworkStatistics.GetStatistics("LastSendTime")}ms ago.");
                     StringBuilder.AppendLine($"Last receive time: {NetworkStatistics.GetStatistics("LastReceiveTime")}ms ago.");
                     StringBuilder.AppendLine($"Messages in cache: {NetworkStatistics.GetStatistics("MessagesInCache")}.");

@@ -25,7 +25,6 @@ namespace LunaCommon.Message
             MessageDictionary.Add((uint)ServerMessageType.Vessel, typeof(VesselSrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.CraftLibrary, typeof(CraftLibrarySrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.Flag, typeof(FlagSrvMsg));
-            MessageDictionary.Add((uint)ServerMessageType.SyncTime, typeof(SyncTimeSrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.Motd, typeof(MotdSrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.Warp, typeof(WarpSrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.Admin, typeof(AdminSrvMsg));

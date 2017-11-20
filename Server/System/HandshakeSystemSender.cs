@@ -19,6 +19,7 @@ namespace LunaServer.System
             if (enumResponse == HandshakeReply.HandshookSuccessfully)
             {
                 msgData.ModControlMode = GeneralSettings.SettingsStore.ModControl;
+                msgData.ServerStartTime = ServerContext.StartTime;
                 if (GeneralSettings.SettingsStore.ModControl != ModControlMode.Disabled)
                 {
                     if (!FileHandler.FileExists(ServerContext.ModFilePath))

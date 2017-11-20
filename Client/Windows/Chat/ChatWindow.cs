@@ -9,6 +9,26 @@ namespace LunaClient.Windows.Chat
 {
     public partial class ChatWindow : SystemWindow<ChatWindow, ChatSystem>
     {
+        #region Fields
+
+        public string ChatWindowLock { get; set; } = "LMP_Chat_Window_Lock";
+        public bool IgnoreChatInput { get; set; }
+        public float WindowHeight { get; set; } = 300;
+        public float WindowWidth { get; set; } = 400;
+        protected int PreviousTextId { get; set; } = 0;
+
+        #region Layout
+
+        protected static GUILayoutOption[] WindowLayoutOptions { get; set; }
+        protected static GUILayoutOption[] SmallSizeOption { get; set; }
+
+        protected static Vector2 PlayerScrollPos { get; set; }
+        public Vector2 ChatScrollPos;
+
+        #endregion
+
+        #endregion
+
         public override void SetStyles()
         {
             // ReSharper disable once PossibleLossOfFraction
@@ -115,25 +135,5 @@ namespace LunaClient.Windows.Chat
             if (!SafeDisplay && IsWindowLocked)
                 RemoveWindowLock();
         }
-
-        #region Fields
-
-        public string ChatWindowLock { get; set; } = "LMP_Chat_Window_Lock";
-        public bool IgnoreChatInput { get; set; }
-        public float WindowHeight { get; set; } = 300;
-        public float WindowWidth { get; set; } = 400;
-        protected int PreviousTextId { get; set; } = 0;
-
-        #region Layout
-
-        protected static GUILayoutOption[] WindowLayoutOptions { get; set; }
-        protected static GUILayoutOption[] SmallSizeOption { get; set; }
-
-        protected static Vector2 PlayerScrollPos { get; set; }
-        public Vector2 ChatScrollPos;
-
-        #endregion
-
-        #endregion
     }
 }

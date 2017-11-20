@@ -84,7 +84,6 @@
     <Compile Include="Message\Data\Motd\MotdBaseMsgData.cs" />
     <Compile Include="Message\Data\PlayerConnection\PlayerConnectionBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
-    <Compile Include="Message\Data\SyncTime\SyncTimeBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselPositionMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselFlightStateMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />
@@ -141,7 +140,6 @@
     <Compile Include="Message\Data\ModMsgData.cs" />
     <Compile Include="Message\Data\Motd\MotdRequestMsgData.cs" />
     <Compile Include="Message\Client\MotdCliMsg.cs" />
-    <Compile Include="Message\Client\SyncTimeCliMsg.cs" />
     <Compile Include="Message\Client\VesselCliMsg.cs" />
     <Compile Include="Message\Client\PlayerColorCliMsg.cs" />
     <Compile Include="Message\Client\PlayerStatusCliMsg.cs" />
@@ -154,7 +152,6 @@
     <Compile Include="Message\Data\Kerbal\KerbalProtoMsgData.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalsRequestMsgData.cs" />
     <Compile Include="Message\Data\Handshake\HandshakeResponseMsgData.cs" />
-    <Compile Include="Message\Data\SyncTime\SyncTimeRequestMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselListRequestMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorRequestMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryListRequestMsgData.cs" />
@@ -188,7 +185,6 @@
     <Compile Include="Message\Data\Lock\LockListReplyMsgData.cs" />
     <Compile Include="Message\Data\Lock\LockReleaseMsgData.cs" />
     <Compile Include="Message\Data\Motd\MotdReplyMsgData.cs" />
-    <Compile Include="Message\Data\SyncTime\SyncTimeReplyMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselProtoMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselListReplyMsgData.cs" />
@@ -225,7 +221,6 @@
     <Compile Include="Message\Server\ModSrvMsg.cs" />
     <Compile Include="Message\Server\WarpSrvMsg.cs" />
     <Compile Include="Message\Server\MotdSrvMsg.cs" />
-    <Compile Include="Message\Server\SyncTimeSrvMsg.cs" />
     <Compile Include="Message\Server\FlagSrvMsg.cs" />
     <Compile Include="Message\Server\CraftLibrarySrvMsg.cs" />
     <Compile Include="Message\Server\VesselSrvMsg.cs" />
@@ -252,7 +247,6 @@
     <Compile Include="PlayerStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerInfo.cs" />
-    <Compile Include="TimeRetriever.cs" />
     <Compile Include="Xml\LunaXmlSerializer.cs" />
     <Compile Include="Xml\XmlCommentAttribute.cs" />
   </ItemGroup>

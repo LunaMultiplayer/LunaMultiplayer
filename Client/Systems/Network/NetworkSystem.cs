@@ -81,19 +81,7 @@ namespace LunaClient.Systems.Network
                     SystemsContainer.Get<MainSystem>().Status = "Connection successful, authenticating";
                     break;
                 case ClientState.Authenticated:
-                    MainSystem.NetworkState = ClientState.TimeSyncing;
                     SystemsContainer.Get<MainSystem>().Status = "Handshaking successful";
-                    break;
-                case ClientState.TimeSyncing:
-                    SystemsContainer.Get<MainSystem>().Status = "Syncing server clock";
-                    SystemsContainer.Get<TimeSyncerSystem>().Enabled = true;
-                    if (SystemsContainer.Get<TimeSyncerSystem>().Synced)
-                        MainSystem.NetworkState = ClientState.TimeSynced;
-                    else
-                        SystemsContainer.Get<TimeSyncerSystem>().MessageSender.SendTimeSyncRequest();
-                    break;
-                case ClientState.TimeSynced:
-                    SystemsContainer.Get<MainSystem>().Status = "Time synced";
                     SystemsContainer.Get<KerbalSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingKerbals;
                     NetworkSimpleMessageSender.SendKerbalsRequest();
@@ -223,6 +211,7 @@ namespace LunaClient.Systems.Network
                     LunaLog.Log("[LMP]: All systems up and running. Поехали!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
+                        SystemsContainer.Get<TimeSyncerSystem>().Enabled = true;
                         SystemsContainer.Get<MotdSystem>().Enabled = true;
                         SystemsContainer.Get<VesselLockSystem>().Enabled = true;
                         SystemsContainer.Get<VesselPositionSystem>().Enabled = true;

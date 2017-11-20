@@ -3,6 +3,7 @@ using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.TimeSyncer;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
@@ -60,6 +61,8 @@ namespace LunaClient.Systems.Handshake
 
         public void HandleHandshakeReplyReceivedMessage(HandshakeReplyMsgData data)
         {
+            TimeSyncerSystem.ServerStartTime = data.ServerStartTime;
+
             HandshakeReply reply;
             string reason;
             var modFileData = "";
@@ -85,17 +88,16 @@ namespace LunaClient.Systems.Handshake
             switch (reply)
             {
                 case HandshakeReply.HandshookSuccessfully:
+
+                    if (ModFileParser.ParseModFile(modFileData))
                     {
-                        if (ModFileParser.ParseModFile(modFileData))
-                        {
-                            LunaLog.Log("[LMP]: Handshake successful");
-                            MainSystem.NetworkState = ClientState.Authenticated;
-                        }
-                        else
-                        {
-                            LunaLog.LogError("[LMP]: Failed to pass mod validation");
-                            NetworkConnection.Disconnect("[LMP]: Failed mod validation");
-                        }
+                        LunaLog.Log("[LMP]: Handshake successful");
+                        MainSystem.NetworkState = ClientState.Authenticated;
+                    }
+                    else
+                    {
+                        LunaLog.LogError("[LMP]: Failed to pass mod validation");
+                        NetworkConnection.Disconnect("[LMP]: Failed mod validation");
                     }
                     break;
                 default:

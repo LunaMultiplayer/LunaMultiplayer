@@ -25,7 +25,7 @@ namespace LunaServer
                 Console.Title = $"LMPServer {Common.CurrentVersion}";
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = DateTime.UtcNow.Ticks;
-
+                
                 //Start the server clock
                 ServerContext.ServerClock.Start();
 

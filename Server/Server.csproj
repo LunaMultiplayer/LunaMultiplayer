@@ -121,7 +121,6 @@
     <Compile Include="System\FlagSystem.cs" />
     <Compile Include="System\HandshakeSystemSender.cs" />
     <Compile Include="System\ModDataSystemSender.cs" />
-    <Compile Include="System\SyncTimeSystem.cs" />
     <Compile Include="System\ModFileSystem.cs" />
     <Compile Include="Plugin\ILmpPlugin.cs" />
     <Compile Include="Settings\GameplaySettings.cs" />
@@ -142,7 +141,6 @@
     <Compile Include="Message\Reader\ChatMsgReader.cs" />
     <Compile Include="Message\Reader\PlayerStatusMsgReader.cs" />
     <Compile Include="Message\Reader\PlayerColorMsgReader.cs" />
-    <Compile Include="Message\Reader\SyncTimeRequestMsgReader.cs" />
     <Compile Include="Message\Reader\FlagSyncMsgReader.cs" />
     <Compile Include="Message\Reader\MotdMsgReader.cs" />
     <Compile Include="System\WarpSystemSender.cs" />

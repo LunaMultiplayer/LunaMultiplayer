@@ -57,9 +57,6 @@ namespace LunaClient.Network
         {
             if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
                 NetworkMain.ClientConnection.Start();
-            
-            if ((message as IClientMessageBase)?.MessageType == ClientMessageType.SyncTime)
-                SystemsContainer.Get<TimeSyncerSystem>().RewriteMessage(message.Data);
 
             message.Data.SentTime = DateTime.UtcNow.Ticks;
             var bytes = message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled);

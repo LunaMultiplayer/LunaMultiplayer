@@ -60,12 +60,22 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         private void TryGetControlLock()
         {
-            if (Enabled && VesselLockSystemReady && VesselCommon.IsSpectating)
+            if (Enabled && VesselLockSystemReady)
             {
-                if (!LockSystem.LockQuery.ControlLockExists(FlightGlobals.ActiveVessel.id))
+                if (VesselCommon.IsSpectating)
                 {
-                    //Don't force as maybe other players are spectating too so the fastests is the winner :)
-                    StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
+                    if (!LockSystem.LockQuery.ControlLockExists(FlightGlobals.ActiveVessel.id))
+                    {
+                        //Don't force as maybe other players are spectating too so the fastests is the winner :)
+                        StopSpectatingAndGetControl(FlightGlobals.ActiveVessel, false);
+                    }
+                }
+                else
+                {
+                    if (!LockSystem.LockQuery.ControlLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                    {
+                        GetAllLocksForVessel(FlightGlobals.ActiveVessel, true);
+                    }
                 }
             }
         }
@@ -179,17 +189,25 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         public void StopSpectatingAndGetControl(Vessel vessel, bool force)
         {
-            SystemsContainer.Get<LockSystem>().AcquireUpdateLock(vessel.id, force);
-            SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vessel.id, force);
-            if (!LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-            {
-                SystemsContainer.Get<LockSystem>().AcquireControlLock(vessel.id, force);
-            }
+            GetAllLocksForVessel(vessel, force);
 
             if (VesselCommon.IsSpectating)
             {
                 StopSpectating();
             }
+        }
+
+        /// <summary>
+        /// Get all the locks of a vessel
+        /// </summary>
+        private static void GetAllLocksForVessel(Vessel vessel, bool force)
+        {
+            if (!LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                SystemsContainer.Get<LockSystem>().AcquireControlLock(vessel.id, force);
+            if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                SystemsContainer.Get<LockSystem>().AcquireUpdateLock(vessel.id, force);
+            if (!LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vessel.id, force);
         }
 
         #endregion

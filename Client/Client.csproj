@@ -185,8 +185,6 @@
     <Compile Include="Systems\SystemsHandler.cs" />
     <Compile Include="Systems\Scenario\ScenarioMessageHandler.cs" />
     <Compile Include="Systems\Status\StatusMessageHandler.cs" />
-    <Compile Include="Systems\TimeSyncer\TimeSyncerMessageHandler.cs" />
-    <Compile Include="Systems\TimeSyncer\TimeSyncerMessageSender.cs" />
     <Compile Include="Systems\Toolbar\ToolbarStructures.cs" />
     <Compile Include="Systems\Warp\WarpEntryDisplay.cs" />
     <Compile Include="Systems\Warp\WarpEvents.cs" />

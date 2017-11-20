@@ -27,7 +27,6 @@ namespace LunaServer.Server
             [ClientMessageType.PlayerStatus] = new PlayerStatusMsgReader(),
             [ClientMessageType.PlayerColor] = new PlayerColorMsgReader(),
             [ClientMessageType.Scenario] = new ScenarioDataMsgReader(),
-            [ClientMessageType.SyncTime] = new SyncTimeRequestMsgReader(),
             [ClientMessageType.Kerbal] = new KerbalMsgReader(),
             [ClientMessageType.Settings] = new SettingsMsgReader(),
             [ClientMessageType.Vessel] = new VesselMsgReader(),

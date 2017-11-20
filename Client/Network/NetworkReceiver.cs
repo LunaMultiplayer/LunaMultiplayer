@@ -158,9 +158,6 @@ namespace LunaClient.Network
                 case ServerMessageType.Flag:
                     SystemsContainer.Get<FlagSystem>().EnqueueMessage(msg);
                     break;
-                case ServerMessageType.SyncTime:
-                    SystemsContainer.Get<TimeSyncerSystem>().EnqueueMessage(msg);
-                    break;
                 case ServerMessageType.Motd:
                     SystemsContainer.Get<MotdSystem>().EnqueueMessage(msg);
                     break;
