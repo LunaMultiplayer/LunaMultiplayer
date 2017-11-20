@@ -91,9 +91,9 @@ namespace LunaClient.Systems.VesselPositionSys
                 };
                 msgData.Velocity = new[]
                 {
-                    (double)vessel.rb_velocity.x,
-                    (double)vessel.rb_velocity.y,
-                    (double)vessel.rb_velocity.z,
+                    (double)vessel.velocityD.x,
+                    (double)vessel.velocityD.y,
+                    (double)vessel.velocityD.z,
                 };
                 msgData.LatLonAlt = new[]
                 {

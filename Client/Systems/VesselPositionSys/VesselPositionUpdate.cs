@@ -179,6 +179,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
                 Vessel.SetWorldVelocity(curVelocity);
+                Vessel.velocityD = curVelocity;
                 Vessel.ReferenceTransform.rotation = curRotation;
                 Vessel.SetRotation(curRotation, true);
 
