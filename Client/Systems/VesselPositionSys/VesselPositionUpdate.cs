@@ -149,6 +149,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyInterpolations(float lerpPercentage)
         {
+            var beforePos = Vessel.orbitDriver.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
+            var beforeSpeed = Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy;
+
             Vessel.orbitDriver.orbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
                 Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Body);
 
@@ -174,7 +177,7 @@ namespace LunaClient.Systems.VesselPositionSys
             else
             {
                 var curRotation = Quaternion.Lerp(Rotation, Target.Rotation, lerpPercentage);
-                var curPosition = Vector3.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
+                //var curPosition = Vector3.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
                 var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
                 //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
@@ -212,9 +215,13 @@ namespace LunaClient.Systems.VesselPositionSys
                         break;
                 }
 
-                if (FlightGlobals.ActiveVessel?.id == VesselId)
+                if (FlightGlobals.ActiveVessel?.id == VesselId && !Vessel.Landed && !Vessel.Splashed)
                 {
-                    Vessel.SetPosition(curPosition);
+                    var posDelta = Vessel.orbitDriver.orbit.getPositionAtUT(Planetarium.GetUniversalTime()) - beforePos;
+                    var velDelta = Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy - beforeSpeed;
+
+                    Vessel.Translate(posDelta);
+                    Vessel.ChangeWorldVelocity(velDelta);
                 }
             }
         }

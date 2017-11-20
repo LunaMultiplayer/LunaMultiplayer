@@ -278,9 +278,6 @@ namespace LunaClient.VesselUtilities
             if (existing.loaded && existing.Parts.Count != newProtoVessel.protoPartSnapshots.Count)
                 return true;
 
-            if (existing.loaded && existing.situation != newProtoVessel.situation)
-                return true;
-
             return false;
         }
     }
