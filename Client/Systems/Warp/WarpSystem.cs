@@ -149,7 +149,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public double GetSubspaceTime(int subspace)
         {
-            return Subspaces.ContainsKey(subspace) ? SystemsContainer.Get<TimeSyncerSystem>().GetServerClock() + Subspaces[subspace] : 0;
+            return Subspaces.ContainsKey(subspace) ? TimeSyncerSystem.ServerClockSec + Subspaces[subspace] : 0;
         }
 
         public void SendChangeSubspaceMsg(int subspaceId)
@@ -174,9 +174,9 @@ namespace LunaClient.Systems.Warp
         public void SendNewSubspace()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<WarpNewSubspaceMsgData>();
-            msgData.ServerTimeDifference = Planetarium.GetUniversalTime() - SystemsContainer.Get<TimeSyncerSystem>().GetServerClock();
+            msgData.ServerTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.ServerClockSec;
             msgData.PlayerCreator = SettingsSystem.CurrentSettings.PlayerName;
-            //we don't send the SubspaceKey as that one will be given by the server except when warping that we set it to -1
+            //we don't send the SubspaceKey as it will be given by the server except when warping that we set it to -1
 
             MessageSender.SendMessage(msgData);
         }
