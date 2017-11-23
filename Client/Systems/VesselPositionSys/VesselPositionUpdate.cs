@@ -89,7 +89,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public bool InterpolationStarted { get; set; }
         public bool InterpolationFinished { get; set; }
-        public float InterpolationDuration { get; set; }
+        public float InterpolationDuration => SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval / 1000;
         public float LerpPercentage { get; set; } = 0;
 
         #endregion
@@ -102,7 +102,6 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             InterpolationStarted = false;
             InterpolationFinished = false;
-            InterpolationDuration = 0;
             LerpPercentage = 0;
             _position = Vector3d.zero;
             _body = null;
@@ -121,23 +120,18 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 if (!InterpolationStarted)
                 {
-                    var interval = (float)TimeSpan.FromTicks(Target.SentTime - SentTime).TotalSeconds;
-                    InterpolationDuration = Mathf.Clamp(interval, 0, 0.5f);
                     InterpolationStarted = true;
                 }
 
-                if (InterpolationDuration > 0)
+                if (SettingsSystem.CurrentSettings.InterpolationEnabled && LerpPercentage < 1)
                 {
-                    if (SettingsSystem.CurrentSettings.InterpolationEnabled && LerpPercentage < 1)
-                    {
-                        ApplyInterpolations(LerpPercentage);
-                        LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
-                        return;
-                    }
-
-                    if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
-                        ApplyInterpolations(1);
+                    ApplyInterpolations(LerpPercentage);
+                    LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
+                    return;
                 }
+
+                if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
+                    ApplyInterpolations(1);
 
                 InterpolationFinished = true;
             }
@@ -152,8 +146,15 @@ namespace LunaClient.Systems.VesselPositionSys
             var beforePos = Vessel.orbitDriver.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
             var beforeSpeed = Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy;
 
-            Vessel.orbitDriver.orbit.SetOrbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
-                Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Body);
+            Vessel.orbitDriver.orbit.SetOrbit
+                (Lerp(Orbit[0], Target.Orbit[0], lerpPercentage),
+                Lerp(Orbit[1], Target.Orbit[1], lerpPercentage),
+                Lerp(Orbit[2], Target.Orbit[2], lerpPercentage),
+                Lerp(Orbit[3], Target.Orbit[3], lerpPercentage),
+                Lerp(Orbit[4], Target.Orbit[4], lerpPercentage),
+                Lerp(Orbit[5], Target.Orbit[5], lerpPercentage),
+                Lerp(Orbit[6], Target.Orbit[6], lerpPercentage),
+                Body);
 
             //TODO: Is CoM and terrainNormal really needed?
             Vessel.CoM = Vector3.Lerp(CoM, Target.CoM, lerpPercentage);
@@ -183,9 +184,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
                 Vessel.SetWorldVelocity(curVelocity);
                 Vessel.velocityD = curVelocity;
+
+                //Apply rotation
                 Vessel.ReferenceTransform.rotation = curRotation;
                 Vessel.SetRotation(curRotation, true);
-
                 //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
                 Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * curRotation;
 
@@ -196,9 +198,9 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     case Vessel.Situations.LANDED:
                     case Vessel.Situations.SPLASHED:
-                        Vessel.latitude = Target.LatLonAlt[0];
-                        Vessel.longitude = Target.LatLonAlt[1];
-                        Vessel.altitude = Target.LatLonAlt[2];
+                        Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                        Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                        Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
                         //DO NOT call Vessel.orbitDriver.updateFromParameters when landed as vessel jitters up/down when unpacked
                         break;
                     case Vessel.Situations.FLYING:
@@ -206,8 +208,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     case Vessel.Situations.ORBITING:
                     case Vessel.Situations.ESCAPING:
                     case Vessel.Situations.DOCKED:
-                        //NO need to set the height from terrain, not even in flying
-                        //Vessel.heightFromTerrain = Target.Height;
+                        //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
                         Vessel.orbitDriver.updateFromParameters();
                         //This does not seems to affect when the vessel is landed but I moved it to orbiting to increase performance
                         foreach (var part in Vessel.Parts)
@@ -217,6 +218,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 if (FlightGlobals.ActiveVessel?.id == VesselId && !Vessel.Landed && !Vessel.Splashed)
                 {
+                    //This is the case when spectating a vessel. 
+                    //Vessel.SetPosition is not a good idea as reference frame doesn't change accordingly
                     var posDelta = Vessel.orbitDriver.orbit.getPositionAtUT(Planetarium.GetUniversalTime()) - beforePos;
                     var velDelta = Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy - beforeSpeed;
 

@@ -151,16 +151,6 @@ namespace LunaClient.VesselUtilities
         }
 
         /// <summary>
-        /// Returns whether the active vessel is near KSC or not.  Measures distance from the landing pad, so very small values may not cover all of KSC.
-        /// </summary>
-        /// <param name="distance">The distance to compare</param>
-        /// <returns></returns>
-        public static bool IsNearKsc(int distance)
-        {
-            return IsNearKsc(FlightGlobals.ActiveVessel, distance);
-        }
-
-        /// <summary>
         /// Returns whether the given vessel is in a starting safety bubble or not.
         /// </summary>
         /// <param name="vessel">The vessel used to determine the distance.  If null, the vessel is not in the safety bubble.</param>
