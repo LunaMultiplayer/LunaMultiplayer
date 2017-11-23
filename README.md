@@ -4,7 +4,7 @@
 
 <p align="center">
   <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal"/></a>
-  <a href="https://discord.gg/nKWJUb"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
+  <a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
   <a href="../../wiki"><img src="https://img.shields.io/badge/documentation-Wiki-4BC51D.svg" alt="Documentation" /></a>
 </p>
 
