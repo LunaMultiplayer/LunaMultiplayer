@@ -8,7 +8,7 @@ namespace LunaCommon.Message.Data.Vessel
         /// <inheritdoc />
         internal VesselDockMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Dock;
-        public int Subspace { get; set; }
+        public int SubspaceId { get; set; }
         public Guid DominantVesselId { get; set; }
         public Guid WeakVesselId { get; set; }
         public byte[] FinalVesselData { get; set; }

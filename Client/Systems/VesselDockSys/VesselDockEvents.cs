@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
+using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Generic;
@@ -83,13 +84,15 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         private static void HandleDocking(VesselDockStructure dock)
         {
+            var currentSubspaceId = SystemsContainer.Get<WarpSystem>().CurrentSubspace;
+
             if (dock.DominantVesselId == FlightGlobals.ActiveVessel?.id)
             {
                 LunaLog.Log($"[LMP]: Docking detected! We own the dominant vessel {dock.DominantVesselId}");
                 SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVesselId);
                 dock.DominantVessel = FlightGlobals.ActiveVessel;
-
-                System.MessageSender.SendDockInformation(dock);
+                
+                System.MessageSender.SendDockInformation(dock, currentSubspaceId);
             }
             else if (dock.WeakVesselId == FlightGlobals.ActiveVessel?.id)
             {
@@ -106,7 +109,7 @@ namespace LunaClient.Systems.VesselDockSys
                  * If we send the vessel definition BEFORE the dominant detects it, then the dominant won't be able
                  * to undock properly as he will think that he is the weak vessel.
                  */
-                System.MessageSender.SendDockInformation(dock, 5);
+                System.MessageSender.SendDockInformation(dock, currentSubspaceId, 5);
             }
         }
     }

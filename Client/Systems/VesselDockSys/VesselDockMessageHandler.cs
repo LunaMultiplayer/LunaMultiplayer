@@ -2,6 +2,7 @@
 using LunaClient.Base.Interface;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
+using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -11,6 +12,7 @@ namespace LunaClient.Systems.VesselDockSys
 {
     public class VesselDockMessageHandler : SubSystem<VesselDockSystem>, IMessageHandler
     {
+        private static WarpSystem WarpSystem => SystemsContainer.Get<WarpSystem>();
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
         public void HandleMessage(IServerMessageBase msg)
@@ -25,6 +27,8 @@ namespace LunaClient.Systems.VesselDockSys
 
                 SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(FlightGlobals.ActiveVessel.id);
                 SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(msgData.DominantVesselId);
+
+                WarpSystem.CurrentSubspace = WarpSystem.GetMostAdvancedSubspace(WarpSystem.CurrentSubspace, msgData.SubspaceId);
             }
             if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId && !VesselCommon.IsSpectating)
             {
@@ -42,6 +46,7 @@ namespace LunaClient.Systems.VesselDockSys
                      * so if we send our own protovessel later, we send the updated definition
                      */
                     VesselLoader.ReloadVessel(newProto);
+                    WarpSystem.CurrentSubspace = WarpSystem.GetMostAdvancedSubspace(WarpSystem.CurrentSubspace, msgData.SubspaceId);
                 }
                 return;
             }

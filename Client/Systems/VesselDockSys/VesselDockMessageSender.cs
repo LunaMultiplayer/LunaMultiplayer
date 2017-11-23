@@ -23,7 +23,7 @@ namespace LunaClient.Systems.VesselDockSys
             });
         }
 
-        public void SendDockInformation(VesselDockStructure dock, int delaySeconds = 0)
+        public void SendDockInformation(VesselDockStructure dock, int subspaceId, int delaySeconds = 0)
         {
             _delaySeconds = delaySeconds;
             var vesselBytes = VesselSerializer.SerializeVessel(dock.DominantVessel.BackupVessel());
@@ -33,6 +33,7 @@ namespace LunaClient.Systems.VesselDockSys
                 msgData.WeakVesselId = dock.WeakVesselId;
                 msgData.DominantVesselId = dock.DominantVesselId;
                 msgData.FinalVesselData = vesselBytes;
+                msgData.SubspaceId = subspaceId;
 
                 SendMessage(msgData);
             }
