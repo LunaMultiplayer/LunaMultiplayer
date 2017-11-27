@@ -31,7 +31,7 @@ namespace LunaServer.Lidgren
 
         public void SetupLidgrenServer()
         {
-            if (PortIsInUse(ServerContext.Config.Port))
+            if (Common.PortIsInUse(ServerContext.Config.Port))
             {
                 throw new HandledException($"Port {ServerContext.Config.Port} is already in use");
             }
@@ -42,14 +42,6 @@ namespace LunaServer.Lidgren
             Server = new NetServer(ServerContext.Config);
             Server.Start();
             ServerContext.ServerStarting = false;
-        }
-
-        private static bool PortIsInUse(int port)
-        {
-            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
-            var udpConnInfoArray = ipGlobalProperties.GetActiveUdpListeners();
-
-            return udpConnInfoArray.Any(tcpi => tcpi.Port == port);
         }
 
         public void StartReceiveingMessages()

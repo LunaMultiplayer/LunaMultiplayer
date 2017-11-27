@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
@@ -102,6 +103,14 @@ namespace LunaCommon
             {
                 return Guid.Empty;
             }
+        }
+
+        public static bool PortIsInUse(int port)
+        {
+            var ipGlobalProperties = IPGlobalProperties.GetIPGlobalProperties();
+            var udpConnInfoArray = ipGlobalProperties.GetActiveUdpListeners();
+
+            return udpConnInfoArray.Any(tcpi => tcpi.Port == port);
         }
 
         public static List<string> GetStockParts()
