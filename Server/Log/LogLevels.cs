@@ -5,6 +5,7 @@
         Debug,
         Info,
         Chat,
+        Warning,
         Error,
         Fatal
     }

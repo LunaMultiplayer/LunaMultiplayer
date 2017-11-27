@@ -54,6 +54,13 @@ namespace LunaServer.Log
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
+        public static void Warning(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            WriteLog(LogLevels.Warning, message, true);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
         public static void Normal(string message)
         {
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -77,7 +84,7 @@ namespace LunaServer.Log
 
         public static void ChatMessage(string message)
         {
-            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.ForegroundColor = ConsoleColor.Cyan;
             WriteLog(LogLevels.Chat, message, true);
             Console.ForegroundColor = ConsoleColor.Gray;
         }
