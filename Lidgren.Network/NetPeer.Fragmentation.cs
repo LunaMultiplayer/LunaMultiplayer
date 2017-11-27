@@ -22,7 +22,7 @@ namespace Lidgren.Network
 		{
 			// Note: this group id is PER SENDING/NetPeer; ie. same id is sent to all recipients;
 			// this should be ok however; as long as recipients differentiate between same id but different sender
-			int group = Interlocked.Increment(ref m_lastUsedFragmentGroup);
+			var group = Interlocked.Increment(ref m_lastUsedFragmentGroup);
 			if (group >= NetConstants.MaxFragmentationGroups)
 			{
 				// @TODO: not thread safe; but in practice probably not an issue
@@ -34,23 +34,23 @@ namespace Lidgren.Network
 			// do not send msg; but set fragmentgroup in case user tries to recycle it immediately
 
 			// create fragmentation specifics
-			int totalBytes = msg.LengthBytes;
+			var totalBytes = msg.LengthBytes;
 
 			// determine minimum mtu for all recipients
-			int mtu = GetMTU(recipients);
-			int bytesPerChunk = NetFragmentationHelper.GetBestChunkSize(group, totalBytes, mtu);
+			var mtu = GetMTU(recipients);
+			var bytesPerChunk = NetFragmentationHelper.GetBestChunkSize(group, totalBytes, mtu);
 
-			int numChunks = totalBytes / bytesPerChunk;
+			var numChunks = totalBytes / bytesPerChunk;
 			if (numChunks * bytesPerChunk < totalBytes)
 				numChunks++;
 
-			NetSendResult retval = NetSendResult.Sent;
+			var retval = NetSendResult.Sent;
 
-			int bitsPerChunk = bytesPerChunk * 8;
-			int bitsLeft = msg.LengthBits;
-			for (int i = 0; i < numChunks; i++)
+			var bitsPerChunk = bytesPerChunk * 8;
+			var bitsLeft = msg.LengthBits;
+			for (var i = 0; i < numChunks; i++)
 			{
-				NetOutgoingMessage chunk = CreateMessage(0);
+				var chunk = CreateMessage(0);
 
 				chunk.m_bitLength = (bitsLeft > bitsPerChunk ? bitsPerChunk : bitsLeft);
 				chunk.m_data = msg.m_data;
@@ -64,7 +64,7 @@ namespace Lidgren.Network
 
 				Interlocked.Add(ref chunk.m_recyclingCount, recipients.Count);
 
-				foreach (NetConnection recipient in recipients)
+				foreach (var recipient in recipients)
 				{
 					var res = recipient.EnqueueMessage(chunk, method, sequenceChannel);
 					if (res == NetSendResult.Dropped)
@@ -90,7 +90,7 @@ namespace Lidgren.Network
 			int totalBits;
 			int chunkByteSize;
 			int chunkNumber;
-			int ptr = NetFragmentationHelper.ReadHeader(
+			var ptr = NetFragmentationHelper.ReadHeader(
 				im.m_data, 0,
 				out group,
 				out totalBits,
@@ -104,8 +104,8 @@ namespace Lidgren.Network
 			NetException.Assert(totalBits > 0);
 			NetException.Assert(chunkByteSize > 0);
 			
-			int totalBytes = NetUtility.BytesToHoldBits((int)totalBits);
-			int totalNumChunks = totalBytes / chunkByteSize;
+			var totalBytes = NetUtility.BytesToHoldBits((int)totalBits);
+			var totalNumChunks = totalBytes / chunkByteSize;
 			if (totalNumChunks * chunkByteSize < totalBytes)
 				totalNumChunks++;
 
@@ -137,10 +137,10 @@ namespace Lidgren.Network
 			//info.LastReceived = (float)NetTime.Now;
 
 			// copy to data
-			int offset = (chunkNumber * chunkByteSize);
+			var offset = (chunkNumber * chunkByteSize);
 			Buffer.BlockCopy(im.m_data, ptr, info.Data, offset, im.LengthBytes - ptr);
 
-			int cnt = info.ReceivedChunks.Count();
+			var cnt = info.ReceivedChunks.Count();
 			//LogVerbose("Found fragment #" + chunkNumber + " in group " + group + " offset " + offset + " of total bits " + totalBits + " (total chunks done " + cnt + ")");
 
 			LogVerbose("Received fragment " + chunkNumber + " of " + totalNumChunks + " (" + cnt + " chunks received)");

@@ -113,7 +113,7 @@ namespace Lidgren.Network
 		/// <param name="byeMessage">reason for disconnect</param>
 		public void Disconnect(string byeMessage)
 		{
-			NetConnection serverConnection = ServerConnection;
+			var serverConnection = ServerConnection;
 			if (serverConnection == null)
 			{
 				lock (m_handshakes)
@@ -138,7 +138,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public NetSendResult SendMessage(NetOutgoingMessage msg, NetDeliveryMethod method)
 		{
-			NetConnection serverConnection = ServerConnection;
+			var serverConnection = ServerConnection;
 			if (serverConnection == null)
 			{
 				LogWarning("Cannot send message, no server connection!");
@@ -153,7 +153,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public NetSendResult SendMessage(NetOutgoingMessage msg, NetDeliveryMethod method, int sequenceChannel)
 		{
-			NetConnection serverConnection = ServerConnection;
+			var serverConnection = ServerConnection;
 			if (serverConnection == null)
 			{
 				LogWarning("Cannot send message, no server connection!");

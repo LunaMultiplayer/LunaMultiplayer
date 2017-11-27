@@ -54,7 +54,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void EnsureBufferSize(int numberOfBits)
 		{
-			int byteLen = ((numberOfBits + 7) >> 3);
+			var byteLen = ((numberOfBits + 7) >> 3);
 			if (m_data == null)
 			{
 				m_data = new byte[byteLen + c_overAllocateAmount];
@@ -70,7 +70,7 @@ namespace Lidgren.Network
 		/// </summary>
 		internal void InternalEnsureBufferSize(int numberOfBits)
 		{
-			int byteLen = ((numberOfBits + 7) >> 3);
+			var byteLen = ((numberOfBits + 7) >> 3);
 			if (m_data == null)
 			{
 				m_data = new byte[byteLen];
@@ -105,7 +105,7 @@ namespace Lidgren.Network
 		/// Writes a byte at a given offset in the buffer
 		/// </summary>
 		public void WriteAt(Int32 offset, byte source) {
-			int newBitLength = Math.Max(m_bitLength, offset + 8);
+			var newBitLength = Math.Max(m_bitLength, offset + 8);
 			EnsureBufferSize(newBitLength);
 			NetBitWriter.WriteByte((byte) source, 8, m_data, offset);
 			m_bitLength = newBitLength;
@@ -140,7 +140,7 @@ namespace Lidgren.Network
 		{
 			if (source == null)
 				throw new ArgumentNullException("source");
-			int bits = source.Length * 8;
+			var bits = source.Length * 8;
 			EnsureBufferSize(m_bitLength + bits);
 			NetBitWriter.WriteBytes(source, 0, source.Length, m_data, m_bitLength);
 			m_bitLength += bits;
@@ -153,7 +153,7 @@ namespace Lidgren.Network
 		{
 			if (source == null)
 				throw new ArgumentNullException("source");
-			int bits = numberOfBytes * 8;
+			var bits = numberOfBytes * 8;
 			EnsureBufferSize(m_bitLength + bits);
 			NetBitWriter.WriteBytes(source, offsetInBytes, numberOfBytes, m_data, m_bitLength);
 			m_bitLength += bits;
@@ -177,7 +177,7 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public void WriteAt(Int32 offset, UInt16 source)
 		{
-			int newBitLength = Math.Max(m_bitLength, offset + 16);
+			var newBitLength = Math.Max(m_bitLength, offset + 16);
 			EnsureBufferSize(newBitLength);
 			NetBitWriter.WriteUInt16(source, 16, m_data, offset);
 			m_bitLength = newBitLength;
@@ -210,7 +210,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void WriteAt(Int32 offset, Int16 source)
 		{
-			int newBitLength = Math.Max(m_bitLength, offset + 16);
+			var newBitLength = Math.Max(m_bitLength, offset + 16);
 			EnsureBufferSize(newBitLength);
 			NetBitWriter.WriteUInt16((ushort)source, 16, m_data, offset);
 			m_bitLength = newBitLength;
@@ -255,7 +255,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void WriteAt(Int32 offset, Int32 source)
 		{
-			int newBitLength = Math.Max(m_bitLength, offset + 32);
+			var newBitLength = Math.Max(m_bitLength, offset + 32);
 			EnsureBufferSize(newBitLength);
 			NetBitWriter.WriteUInt32((UInt32)source, 32, m_data, offset);
 			m_bitLength = newBitLength;
@@ -303,7 +303,7 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public void WriteAt(Int32 offset, UInt32 source)
 		{
-			int newBitLength = Math.Max(m_bitLength, offset + 32);
+			var newBitLength = Math.Max(m_bitLength, offset + 32);
 			EnsureBufferSize(newBitLength);
 			NetBitWriter.WriteUInt32(source, 32, m_data, offset);
 			m_bitLength = newBitLength;
@@ -332,7 +332,7 @@ namespace Lidgren.Network
 			if (numberOfBits != 32)
 			{
 				// make first bit sign
-				int signBit = 1 << (numberOfBits - 1);
+				var signBit = 1 << (numberOfBits - 1);
 				if (source < 0)
 					source = (-source - 1) | signBit;
 				else
@@ -361,7 +361,7 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public void WriteAt(Int32 offset, UInt64 source)
 		{
-			int newBitLength = Math.Max(m_bitLength, offset + 64);
+			var newBitLength = Math.Max(m_bitLength, offset + 64);
 			EnsureBufferSize(newBitLength);
 			NetBitWriter.WriteUInt64(source, 64, m_data, offset);
 			m_bitLength = newBitLength;
@@ -384,7 +384,7 @@ namespace Lidgren.Network
 		public void Write(Int64 source)
 		{
 			EnsureBufferSize(m_bitLength + 64);
-			ulong usource = (ulong)source;
+			var usource = (ulong)source;
 			NetBitWriter.WriteUInt64(usource, 64, m_data, m_bitLength);
 			m_bitLength += 64;
 		}
@@ -395,7 +395,7 @@ namespace Lidgren.Network
 		public void Write(Int64 source, int numberOfBits)
 		{
 			EnsureBufferSize(m_bitLength + numberOfBits);
-			ulong usource = (ulong)source;
+			var usource = (ulong)source;
 			NetBitWriter.WriteUInt64(usource, numberOfBits, m_data, m_bitLength);
 			m_bitLength += numberOfBits;
 		}
@@ -452,7 +452,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void Write(double source)
 		{
-			byte[] val = BitConverter.GetBytes(source);
+			var val = BitConverter.GetBytes(source);
 #if BIGENDIAN
 			// 0 1 2 3   4 5 6 7
 
@@ -488,8 +488,8 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public int WriteVariableUInt32(uint value)
 		{
-			int retval = 1;
-			uint num1 = (uint)value;
+			var retval = 1;
+			var num1 = (uint)value;
 			while (num1 >= 0x80)
 			{
 				this.Write((byte)(num1 | 0x80));
@@ -506,7 +506,7 @@ namespace Lidgren.Network
 		/// <returns>number of bytes written</returns>
 		public int WriteVariableInt32(int value)
 		{
-			uint zigzag = (uint)(value << 1) ^ (uint)(value >> 31);
+			var zigzag = (uint)(value << 1) ^ (uint)(value >> 31);
 			return WriteVariableUInt32(zigzag);
 		}
 
@@ -516,7 +516,7 @@ namespace Lidgren.Network
 		/// <returns>number of bytes written</returns>
 		public int WriteVariableInt64(Int64 value)
 		{
-			ulong zigzag = (ulong)(value << 1) ^ (ulong)(value >> 63);
+			var zigzag = (ulong)(value << 1) ^ (ulong)(value >> 63);
 			return WriteVariableUInt64(zigzag);
 		}
 
@@ -527,8 +527,8 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public int WriteVariableUInt64(UInt64 value)
 		{
-			int retval = 1;
-			UInt64 num1 = (UInt64)value;
+			var retval = 1;
+			var num1 = (UInt64)value;
 			while (num1 >= 0x80)
 			{
 				this.Write((byte)(num1 | 0x80));
@@ -546,9 +546,9 @@ namespace Lidgren.Network
 		{
 			NetException.Assert(((value >= -1.0) && (value <= 1.0)), " WriteSignedSingle() must be passed a float in the range -1 to 1; val is " + value);
 
-			float unit = (value + 1.0f) * 0.5f;
-			int maxVal = (1 << numberOfBits) - 1;
-			uint writeVal = (uint)(unit * (float)maxVal);
+			var unit = (value + 1.0f) * 0.5f;
+			var maxVal = (1 << numberOfBits) - 1;
+			var writeVal = (uint)(unit * (float)maxVal);
 
 			Write(writeVal, numberOfBits);
 		}
@@ -560,8 +560,8 @@ namespace Lidgren.Network
 		{
 			NetException.Assert(((value >= 0.0) && (value <= 1.0)), " WriteUnitSingle() must be passed a float in the range 0 to 1; val is " + value);
 
-			int maxValue = (1 << numberOfBits) - 1;
-			uint writeVal = (uint)(value * (float)maxValue);
+			var maxValue = (1 << numberOfBits) - 1;
+			var writeVal = (uint)(value * (float)maxValue);
 
 			Write(writeVal, numberOfBits);
 		}
@@ -573,9 +573,9 @@ namespace Lidgren.Network
 		{
 			NetException.Assert(((value >= min) && (value <= max)), " WriteRangedSingle() must be passed a float in the range MIN to MAX; val is " + value);
 
-			float range = max - min;
-			float unit = ((value - min) / range);
-			int maxVal = (1 << numberOfBits) - 1;
+			var range = max - min;
+			var unit = ((value - min) / range);
+			var maxVal = (1 << numberOfBits) - 1;
 			Write((UInt32)((float)maxVal * unit), numberOfBits);
 		}
 
@@ -587,10 +587,10 @@ namespace Lidgren.Network
 		{
 			NetException.Assert(value >= min && value <= max, "Value not within min/max range!");
 
-			uint range = (uint)(max - min);
-			int numBits = NetUtility.BitsToHoldUInt(range);
+			var range = (uint)(max - min);
+			var numBits = NetUtility.BitsToHoldUInt(range);
 
-			uint rvalue = (uint)(value - min);
+			var rvalue = (uint)(value - min);
 			Write(rvalue, numBits);
 
 			return numBits;
@@ -604,10 +604,10 @@ namespace Lidgren.Network
 	        {
 	            NetException.Assert(value >= min && value <= max, "Value not within min/max range!");
 	
-	            ulong range = (ulong)(max - min);
-	            int numBits = NetUtility.BitsToHoldUInt64(range);
+	            var range = (ulong)(max - min);
+	            var numBits = NetUtility.BitsToHoldUInt64(range);
 	
-	            ulong rvalue = (ulong)(value - min);
+	            var rvalue = (ulong)(value - min);
 	            Write(rvalue, numBits);
 	
 	            return numBits;
@@ -624,7 +624,7 @@ namespace Lidgren.Network
 				return;
 			}
 
-			byte[] bytes = Encoding.UTF8.GetBytes(source);
+			var bytes = Encoding.UTF8.GetBytes(source);
 			EnsureBufferSize(m_bitLength + 8 + (bytes.Length * 8));
 			WriteVariableUInt32((uint)bytes.Length);
 			Write(bytes);
@@ -635,7 +635,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void Write(IPEndPoint endPoint)
 		{
-			byte[] bytes = endPoint.Address.GetAddressBytes();
+			var bytes = endPoint.Address.GetAddressBytes();
 			Write((byte)bytes.Length);
 			Write(bytes);
 			Write((ushort)endPoint.Port);
@@ -646,7 +646,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void WriteTime(bool highPrecision)
 		{
-			double localTime = NetTime.Now;
+			var localTime = NetTime.Now;
 			if (highPrecision)
 				Write(localTime);
 			else
@@ -692,10 +692,10 @@ namespace Lidgren.Network
 			Write(buffer.m_data, 0, buffer.LengthBytes);
 
 			// did we write excessive bits?
-			int bitsInLastByte = (buffer.m_bitLength % 8);
+			var bitsInLastByte = (buffer.m_bitLength % 8);
 			if (bitsInLastByte != 0)
 			{
-				int excessBits = 8 - bitsInLastByte;
+				var excessBits = 8 - bitsInLastByte;
 				m_bitLength -= excessBits;
 			}
 		}

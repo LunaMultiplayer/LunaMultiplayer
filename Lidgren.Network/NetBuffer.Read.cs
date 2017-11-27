@@ -23,7 +23,7 @@ namespace Lidgren.Network
 		public bool ReadBoolean()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 1, c_readOverflowError);
-			byte retval = NetBitWriter.ReadByte(m_data, 1, m_readPosition);
+			var retval = NetBitWriter.ReadByte(m_data, 1, m_readPosition);
 			m_readPosition += 1;
 			return (retval > 0 ? true : false);
 		}
@@ -34,7 +34,7 @@ namespace Lidgren.Network
 		public byte ReadByte()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 8, c_readOverflowError);
-			byte retval = NetBitWriter.ReadByte(m_data, 8, m_readPosition);
+			var retval = NetBitWriter.ReadByte(m_data, 8, m_readPosition);
 			m_readPosition += 8;
 			return retval;
 		}
@@ -61,7 +61,7 @@ namespace Lidgren.Network
 		public sbyte ReadSByte()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 8, c_readOverflowError);
-			byte retval = NetBitWriter.ReadByte(m_data, 8, m_readPosition);
+			var retval = NetBitWriter.ReadByte(m_data, 8, m_readPosition);
 			m_readPosition += 8;
 			return (sbyte)retval;
 		}
@@ -72,7 +72,7 @@ namespace Lidgren.Network
 		public byte ReadByte(int numberOfBits)
 		{
 			NetException.Assert(numberOfBits > 0 && numberOfBits <= 8, "ReadByte(bits) can only read between 1 and 8 bits");
-			byte retval = NetBitWriter.ReadByte(m_data, numberOfBits, m_readPosition);
+			var retval = NetBitWriter.ReadByte(m_data, numberOfBits, m_readPosition);
 			m_readPosition += numberOfBits;
 			return retval;
 		}
@@ -84,7 +84,7 @@ namespace Lidgren.Network
 		{
 			NetException.Assert(m_bitLength - m_readPosition + 7 >= (numberOfBytes * 8), c_readOverflowError);
 
-			byte[] retval = new byte[numberOfBytes];
+			var retval = new byte[numberOfBytes];
 			NetBitWriter.ReadBytes(m_data, numberOfBytes, m_readPosition, retval, 0);
 			m_readPosition += (8 * numberOfBytes);
 			return retval;
@@ -134,8 +134,8 @@ namespace Lidgren.Network
 			NetException.Assert(m_bitLength - m_readPosition >= numberOfBits, c_readOverflowError);
 			NetException.Assert(offset + NetUtility.BytesToHoldBits(numberOfBits) <= into.Length);
 
-			int numberOfWholeBytes = numberOfBits / 8;
-			int extraBits = numberOfBits - (numberOfWholeBytes * 8);
+			var numberOfWholeBytes = numberOfBits / 8;
+			var extraBits = numberOfBits - (numberOfWholeBytes * 8);
 
 			NetBitWriter.ReadBytes(m_data, numberOfWholeBytes, m_readPosition, into, offset);
 			m_readPosition += (8 * numberOfWholeBytes);
@@ -175,7 +175,7 @@ namespace Lidgren.Network
 		public Int32 ReadInt32()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 32, c_readOverflowError);
-			uint retval = NetBitWriter.ReadUInt32(m_data, 32, m_readPosition);
+			var retval = NetBitWriter.ReadUInt32(m_data, 32, m_readPosition);
 			m_readPosition += 32;
 			return (Int32)retval;
 		}
@@ -205,21 +205,21 @@ namespace Lidgren.Network
 			NetException.Assert(numberOfBits > 0 && numberOfBits <= 32, "ReadInt32(bits) can only read between 1 and 32 bits");
 			NetException.Assert(m_bitLength - m_readPosition >= numberOfBits, c_readOverflowError);
 
-			uint retval = NetBitWriter.ReadUInt32(m_data, numberOfBits, m_readPosition);
+			var retval = NetBitWriter.ReadUInt32(m_data, numberOfBits, m_readPosition);
 			m_readPosition += numberOfBits;
 
 			if (numberOfBits == 32)
 				return (int)retval;
 
-			int signBit = 1 << (numberOfBits - 1);
+			var signBit = 1 << (numberOfBits - 1);
 			if ((retval & signBit) == 0)
 				return (int)retval; // positive
 
 			// negative
 			unchecked
 			{
-				uint mask = ((uint)-1) >> (33 - numberOfBits);
-				uint tmp = (retval & mask) + 1;
+				var mask = ((uint)-1) >> (33 - numberOfBits);
+				var tmp = (retval & mask) + 1;
 				return -((int)tmp);
 			}
 		}
@@ -231,7 +231,7 @@ namespace Lidgren.Network
 		public UInt32 ReadUInt32()
 		{
 			NetException.Assert(m_bitLength - m_readPosition >= 32, c_readOverflowError);
-			uint retval = NetBitWriter.ReadUInt32(m_data, 32, m_readPosition);
+			var retval = NetBitWriter.ReadUInt32(m_data, 32, m_readPosition);
 			m_readPosition += 32;
 			return retval;
 		}
@@ -261,7 +261,7 @@ namespace Lidgren.Network
 			NetException.Assert(numberOfBits > 0 && numberOfBits <= 32, "ReadUInt32(bits) can only read between 1 and 32 bits");
 			//NetException.Assert(m_bitLength - m_readBitPtr >= numberOfBits, "tried to read past buffer size");
 
-			UInt32 retval = NetBitWriter.ReadUInt32(m_data, numberOfBits, m_readPosition);
+			var retval = NetBitWriter.ReadUInt32(m_data, numberOfBits, m_readPosition);
 			m_readPosition += numberOfBits;
 			return retval;
 		}
@@ -278,7 +278,7 @@ namespace Lidgren.Network
 			m_readPosition += 32;
 			ulong high = NetBitWriter.ReadUInt32(m_data, 32, m_readPosition);
 
-			ulong retval = low + (high << 32);
+			var retval = low + (high << 32);
 
 			m_readPosition += 32;
 			return retval;
@@ -292,8 +292,8 @@ namespace Lidgren.Network
 			NetException.Assert(m_bitLength - m_readPosition >= 64, c_readOverflowError);
 			unchecked
 			{
-				ulong retval = ReadUInt64();
-				long longRetval = (long)retval;
+				var retval = ReadUInt64();
+				var longRetval = (long)retval;
 				return longRetval;
 			}
 		}
@@ -347,12 +347,12 @@ namespace Lidgren.Network
 
 			if ((m_readPosition & 7) == 0) // read directly
 			{
-				float retval = BitConverter.ToSingle(m_data, m_readPosition >> 3);
+				var retval = BitConverter.ToSingle(m_data, m_readPosition >> 3);
 				m_readPosition += 32;
 				return retval;
 			}
 
-			byte[] bytes = ReadBytes(4);
+			var bytes = ReadBytes(4);
 			return BitConverter.ToSingle(bytes, 0);
 		}
 
@@ -374,7 +374,7 @@ namespace Lidgren.Network
 				return true;
 			}
 
-			byte[] bytes = ReadBytes(4);
+			var bytes = ReadBytes(4);
 			result = BitConverter.ToSingle(bytes, 0);
 			return true;
 		}
@@ -389,12 +389,12 @@ namespace Lidgren.Network
 			if ((m_readPosition & 7) == 0) // read directly
 			{
 				// read directly
-				double retval = BitConverter.ToDouble(m_data, m_readPosition >> 3);
+				var retval = BitConverter.ToDouble(m_data, m_readPosition >> 3);
 				m_readPosition += 64;
 				return retval;
 			}
 
-			byte[] bytes = ReadBytes(8);
+			var bytes = ReadBytes(8);
 			return BitConverter.ToDouble(bytes, 0);
 		}
 
@@ -408,11 +408,11 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public uint ReadVariableUInt32()
 		{
-			int num1 = 0;
-			int num2 = 0;
+			var num1 = 0;
+			var num2 = 0;
 			while (m_bitLength - m_readPosition >= 8)
 			{
-				byte num3 = this.ReadByte();
+				var num3 = this.ReadByte();
 				num1 |= (num3 & 0x7f) << num2;
 				num2 += 7;
 				if ((num3 & 0x80) == 0)
@@ -429,8 +429,8 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public bool ReadVariableUInt32(out uint result)
 		{
-			int num1 = 0;
-			int num2 = 0;
+			var num1 = 0;
+			var num2 = 0;
 			while (m_bitLength - m_readPosition >= 8)
 			{
 				byte num3;
@@ -456,7 +456,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public int ReadVariableInt32()
 		{
-			uint n = ReadVariableUInt32();
+			var n = ReadVariableUInt32();
 			return (int)(n >> 1) ^ -(int)(n & 1); // decode zigzag
 		}
 
@@ -465,7 +465,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public Int64 ReadVariableInt64()
 		{
-			UInt64 n = ReadVariableUInt64();
+			var n = ReadVariableUInt64();
 			return (Int64)(n >> 1) ^ -(long)(n & 1); // decode zigzag
 		}
 
@@ -476,13 +476,13 @@ namespace Lidgren.Network
 		public UInt64 ReadVariableUInt64()
 		{
 			UInt64 num1 = 0;
-			int num2 = 0;
+			var num2 = 0;
 			while (m_bitLength - m_readPosition >= 8)
 			{
 				//if (num2 == 0x23)
 				//	throw new FormatException("Bad 7-bit encoded integer");
 
-				byte num3 = this.ReadByte();
+				var num3 = this.ReadByte();
 				num1 |= ((UInt64)num3 & 0x7f) << num2;
 				num2 += 7;
 				if ((num3 & 0x80) == 0)
@@ -500,8 +500,8 @@ namespace Lidgren.Network
 		/// <returns>A floating point value larger or equal to -1 and smaller or equal to 1</returns>
 		public float ReadSignedSingle(int numberOfBits)
 		{
-			uint encodedVal = ReadUInt32(numberOfBits);
-			int maxVal = (1 << numberOfBits) - 1;
+			var encodedVal = ReadUInt32(numberOfBits);
+			var maxVal = (1 << numberOfBits) - 1;
 			return ((float)(encodedVal + 1) / (float)(maxVal + 1) - 0.5f) * 2.0f;
 		}
 
@@ -512,8 +512,8 @@ namespace Lidgren.Network
 		/// <returns>A floating point value larger or equal to 0 and smaller or equal to 1</returns>
 		public float ReadUnitSingle(int numberOfBits)
 		{
-			uint encodedVal = ReadUInt32(numberOfBits);
-			int maxVal = (1 << numberOfBits) - 1;
+			var encodedVal = ReadUInt32(numberOfBits);
+			var maxVal = (1 << numberOfBits) - 1;
 			return (float)(encodedVal + 1) / (float)(maxVal + 1);
 		}
 
@@ -526,10 +526,10 @@ namespace Lidgren.Network
 		/// <returns>A floating point value larger or equal to MIN and smaller or equal to MAX</returns>
 		public float ReadRangedSingle(float min, float max, int numberOfBits)
 		{
-			float range = max - min;
-			int maxVal = (1 << numberOfBits) - 1;
-			float encodedVal = (float)ReadUInt32(numberOfBits);
-			float unit = encodedVal / (float)maxVal;
+			var range = max - min;
+			var maxVal = (1 << numberOfBits) - 1;
+			var encodedVal = (float)ReadUInt32(numberOfBits);
+			var unit = encodedVal / (float)maxVal;
 			return min + (unit * range);
 		}
 
@@ -541,10 +541,10 @@ namespace Lidgren.Network
 		/// <returns>A signed integer value larger or equal to MIN and smaller or equal to MAX</returns>
 		public int ReadRangedInteger(int min, int max)
 		{
-			uint range = (uint)(max - min);
-			int numBits = NetUtility.BitsToHoldUInt(range);
+			var range = (uint)(max - min);
+			var numBits = NetUtility.BitsToHoldUInt(range);
 
-			uint rvalue = ReadUInt32(numBits);
+			var rvalue = ReadUInt32(numBits);
 			return (int)(min + rvalue);
 		}
 
@@ -556,10 +556,10 @@ namespace Lidgren.Network
 	        /// <returns>A signed integer value larger or equal to MIN and smaller or equal to MAX</returns>
 	        public long ReadRangedInteger(long min, long max)
 	        {
-	            ulong range = (ulong)(max - min);
-	            int numBits = NetUtility.BitsToHoldUInt64(range);
+	            var range = (ulong)(max - min);
+	            var numBits = NetUtility.BitsToHoldUInt64(range);
 	
-	            ulong rvalue = ReadUInt64(numBits);
+	            var rvalue = ReadUInt64(numBits);
 	            return min + (long)rvalue;
 	        }
 
@@ -568,7 +568,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public string ReadString()
 		{
-			int byteLen = (int)ReadVariableUInt32();
+			var byteLen = (int)ReadVariableUInt32();
 
 			if (byteLen <= 0)
 				return String.Empty;
@@ -588,12 +588,12 @@ namespace Lidgren.Network
 			if ((m_readPosition & 7) == 0)
 			{
 				// read directly
-				string retval = System.Text.Encoding.UTF8.GetString(m_data, m_readPosition >> 3, byteLen);
+				var retval = System.Text.Encoding.UTF8.GetString(m_data, m_readPosition >> 3, byteLen);
 				m_readPosition += (8 * byteLen);
 				return retval;
 			}
 
-			byte[] bytes = ReadBytes(byteLen);
+			var bytes = ReadBytes(byteLen);
 			return System.Text.Encoding.UTF8.GetString(bytes, 0, bytes.Length);
 		}
 
@@ -645,7 +645,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public double ReadTime(NetConnection connection, bool highPrecision)
 		{
-			double remoteTime = (highPrecision ? ReadDouble() : (double)ReadSingle());
+			var remoteTime = (highPrecision ? ReadDouble() : (double)ReadSingle());
 
 			if (connection == null)
 				throw new NetException("Cannot call ReadTime() on message without a connected sender (ie. unconnected messages)");
@@ -659,9 +659,9 @@ namespace Lidgren.Network
 		/// </summary>
 		public NetEndPoint ReadIPEndPoint()
 		{
-			byte len = ReadByte();
-			byte[] addressBytes = ReadBytes(len);
-			int port = (int)ReadUInt16();
+			var len = ReadByte();
+			var addressBytes = ReadBytes(len);
+			var port = (int)ReadUInt16();
 
 			var address = NetUtility.CreateAddressFromBytes(addressBytes);
 			return new NetEndPoint(address, port);

@@ -39,12 +39,12 @@ namespace Lidgren.Network
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			Type tp = target.GetType();
+			var tp = target.GetType();
 
-			FieldInfo[] fields = tp.GetFields(flags);
+			var fields = tp.GetFields(flags);
 			NetUtility.SortMembersList(fields);
 
-			foreach (FieldInfo fi in fields)
+			foreach (var fi in fields)
 			{
 				object value;
 
@@ -77,11 +77,11 @@ namespace Lidgren.Network
 			if (target == null)
 				throw new ArgumentNullException("target");
 
-			Type tp = target.GetType();
+			var tp = target.GetType();
 
-			PropertyInfo[] fields = tp.GetProperties(flags);
+			var fields = tp.GetProperties(flags);
 			NetUtility.SortMembersList(fields);
-			foreach (PropertyInfo fi in fields)
+			foreach (var fi in fields)
 			{
 				object value;
 

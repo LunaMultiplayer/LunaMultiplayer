@@ -38,16 +38,16 @@ namespace Lidgren.Network
 		{
 			NetException.Assert(((numberOfBits > 0) && (numberOfBits < 9)), "Read() can only read between 1 and 8 bits");
 
-			int bytePtr = readBitOffset >> 3;
-			int startReadAtIndex = readBitOffset - (bytePtr * 8); // (readBitOffset % 8);
+			var bytePtr = readBitOffset >> 3;
+			var startReadAtIndex = readBitOffset - (bytePtr * 8); // (readBitOffset % 8);
 
 			if (startReadAtIndex == 0 && numberOfBits == 8)
 				return fromBuffer[bytePtr];
 
 			// mask away unused bits lower than (right of) relevant bits in first byte
-			byte returnValue = (byte)(fromBuffer[bytePtr] >> startReadAtIndex);
+			var returnValue = (byte)(fromBuffer[bytePtr] >> startReadAtIndex);
 
-			int numberOfBitsInSecondByte = numberOfBits - (8 - startReadAtIndex);
+			var numberOfBitsInSecondByte = numberOfBits - (8 - startReadAtIndex);
 
 			if (numberOfBitsInSecondByte < 1)
 			{
@@ -56,7 +56,7 @@ namespace Lidgren.Network
 				return (byte)(returnValue & (255 >> (8 - numberOfBits)));
 			}
 
-			byte second = fromBuffer[bytePtr + 1];
+			var second = fromBuffer[bytePtr + 1];
 
 			// mask away unused bits higher than (left of) relevant bits in second byte
 			second &= (byte)(255 >> (8 - numberOfBitsInSecondByte));
@@ -69,8 +69,8 @@ namespace Lidgren.Network
 		/// </summary>
 		public static void ReadBytes(byte[] fromBuffer, int numberOfBytes, int readBitOffset, byte[] destination, int destinationByteOffset)
 		{
-			int readPtr = readBitOffset >> 3;
-			int startReadAtIndex = readBitOffset - (readPtr * 8); // (readBitOffset % 8);
+			var readPtr = readBitOffset >> 3;
+			var startReadAtIndex = readBitOffset - (readPtr * 8); // (readBitOffset % 8);
 
 			if (startReadAtIndex == 0)
 			{
@@ -78,18 +78,18 @@ namespace Lidgren.Network
 				return;
 			}
 
-			int secondPartLen = 8 - startReadAtIndex;
-			int secondMask = 255 >> secondPartLen;
+			var secondPartLen = 8 - startReadAtIndex;
+			var secondMask = 255 >> secondPartLen;
 
-			for (int i = 0; i < numberOfBytes; i++)
+			for (var i = 0; i < numberOfBytes; i++)
 			{
 				// mask away unused bits lower than (right of) relevant bits in byte
-				int b = fromBuffer[readPtr] >> startReadAtIndex;
+				var b = fromBuffer[readPtr] >> startReadAtIndex;
 
 				readPtr++;
 
 				// mask away unused bits higher than (left of) relevant bits in second byte
-				int second = fromBuffer[readPtr] & secondMask;
+				var second = fromBuffer[readPtr] & secondMask;
 
 				destination[destinationByteOffset++] = (byte)(b | (second << secondPartLen));
 			}
@@ -110,15 +110,15 @@ namespace Lidgren.Network
 			// Mask out all the bits we dont want
 			source = (byte)(source & (0xFF >> (8 - numberOfBits)));
 
-			int p = destBitOffset >> 3;
-			int bitsUsed = destBitOffset & 0x7; // mod 8
-			int bitsFree = 8 - bitsUsed;
-			int bitsLeft = bitsFree - numberOfBits;
+			var p = destBitOffset >> 3;
+			var bitsUsed = destBitOffset & 0x7; // mod 8
+			var bitsFree = 8 - bitsUsed;
+			var bitsLeft = bitsFree - numberOfBits;
 
 			// Fast path, everything fits in the first byte
 			if (bitsLeft >= 0)
 			{
-				int mask = (0xFF >> bitsFree) | (0xFF << (8 - bitsLeft));
+				var mask = (0xFF >> bitsFree) | (0xFF << (8 - bitsLeft));
 
 				destination[p] = (byte)(
 					// Mask out lower and upper bits
@@ -155,8 +155,8 @@ namespace Lidgren.Network
 		/// </summary>
 		public static void WriteBytes(byte[] source, int sourceByteOffset, int numberOfBytes, byte[] destination, int destBitOffset)
 		{
-			int dstBytePtr = destBitOffset >> 3;
-			int firstPartLen = (destBitOffset % 8);
+			var dstBytePtr = destBitOffset >> 3;
+			var firstPartLen = (destBitOffset % 8);
 
 			if (firstPartLen == 0)
 			{
@@ -164,11 +164,11 @@ namespace Lidgren.Network
 				return;
 			}
 
-			int lastPartLen = 8 - firstPartLen;
+			var lastPartLen = 8 - firstPartLen;
 
-			for (int i = 0; i < numberOfBytes; i++)
+			for (var i = 0; i < numberOfBytes; i++)
 			{
-				byte src = source[sourceByteOffset + i];
+				var src = source[sourceByteOffset + i];
 
 				// write last part of this byte
 				destination[dstBytePtr] &= (byte)(255 >> lastPartLen); // clear before writing
@@ -342,7 +342,7 @@ namespace Lidgren.Network
 				((source & 0x000000ff) << 24);
 #endif
 
-			int returnValue = destinationBitOffset + numberOfBits;
+			var returnValue = destinationBitOffset + numberOfBits;
 			if (numberOfBits <= 8)
 			{
 				NetBitWriter.WriteByte((byte)source, numberOfBits, destination, destinationBitOffset);
@@ -391,7 +391,7 @@ namespace Lidgren.Network
 				((source & 0x00000000000000ffL) << 56);
 #endif
 
-			int returnValue = destinationBitOffset + numberOfBits;
+			var returnValue = destinationBitOffset + numberOfBits;
 			if (numberOfBits <= 8)
 			{
 				NetBitWriter.WriteByte((byte)source, numberOfBits, destination, destinationBitOffset);
@@ -478,8 +478,8 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public static int WriteVariableUInt32(byte[] intoBuffer, int offset, uint value)
 		{
-			int retval = 0;
-			uint num1 = (uint)value;
+			var retval = 0;
+			var num1 = (uint)value;
 			while (num1 >= 0x80)
 			{
 				intoBuffer[offset + retval] = (byte)(num1 | 0x80);
@@ -496,13 +496,13 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public static uint ReadVariableUInt32(byte[] buffer, ref int offset)
 		{
-			int num1 = 0;
-			int num2 = 0;
+			var num1 = 0;
+			var num2 = 0;
 			while (true)
 			{
 				NetException.Assert(num2 != 0x23, "Bad 7-bit encoded integer");
 
-				byte num3 = buffer[offset++];
+				var num3 = buffer[offset++];
 				num1 |= (num3 & 0x7f) << (num2 & 0x1f);
 				num2 += 7;
 				if ((num3 & 0x80) == 0)

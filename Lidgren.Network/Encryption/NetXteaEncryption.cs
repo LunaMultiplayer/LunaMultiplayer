@@ -53,10 +53,10 @@ namespace Lidgren.Network
 			m_numRounds = rounds;
 			m_sum0 = new uint[m_numRounds];
 			m_sum1 = new uint[m_numRounds];
-			uint[] tmp = new uint[8];
+			var tmp = new uint[8];
 
 			int num2;
-			int index = num2 = 0;
+			var index = num2 = 0;
 			while (index < 4)
 			{
 				tmp[index] = BitConverter.ToUInt32(key, num2);
@@ -99,10 +99,10 @@ namespace Lidgren.Network
 		/// </summary>
 		protected override void EncryptBlock(byte[] source, int sourceOffset, byte[] destination)
 		{
-			uint v0 = BytesToUInt(source, sourceOffset);
-			uint v1 = BytesToUInt(source, sourceOffset + 4);
+			var v0 = BytesToUInt(source, sourceOffset);
+			var v1 = BytesToUInt(source, sourceOffset + 4);
 
-			for (int i = 0; i != m_numRounds; i++)
+			for (var i = 0; i != m_numRounds; i++)
 			{
 				v0 += (((v1 << 4) ^ (v1 >> 5)) + v1) ^ m_sum0[i];
 				v1 += (((v0 << 4) ^ (v0 >> 5)) + v0) ^ m_sum1[i];
@@ -120,10 +120,10 @@ namespace Lidgren.Network
 		protected override void DecryptBlock(byte[] source, int sourceOffset, byte[] destination)
 		{
 			// Pack bytes into integers
-			uint v0 = BytesToUInt(source, sourceOffset);
-			uint v1 = BytesToUInt(source, sourceOffset + 4);
+			var v0 = BytesToUInt(source, sourceOffset);
+			var v1 = BytesToUInt(source, sourceOffset + 4);
 
-			for (int i = m_numRounds - 1; i >= 0; i--)
+			for (var i = m_numRounds - 1; i >= 0; i--)
 			{
 				v1 -= (((v0 << 4) ^ (v0 >> 5)) + v0) ^ m_sum1[i];
 				v0 -= (((v1 << 4) ^ (v1 >> 5)) + v1) ^ m_sum0[i];
@@ -137,7 +137,7 @@ namespace Lidgren.Network
 
 		private static uint BytesToUInt(byte[] bytes, int offset)
 		{
-			uint retval = (uint)(bytes[offset] << 24);
+			var retval = (uint)(bytes[offset] << 24);
 			retval |= (uint)(bytes[++offset] << 16);
 			retval |= (uint)(bytes[++offset] << 8);
 			return (retval | bytes[++offset]);

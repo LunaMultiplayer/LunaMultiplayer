@@ -512,7 +512,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public NetPeerConfiguration Clone()
 		{
-			NetPeerConfiguration retval = this.MemberwiseClone() as NetPeerConfiguration;
+			var retval = this.MemberwiseClone() as NetPeerConfiguration;
 			retval.m_isLocked = false;
 			return retval;
 		}

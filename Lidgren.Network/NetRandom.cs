@@ -150,19 +150,19 @@ namespace Lidgren.Network
 		/// </summary>
 		public virtual void NextBytes(byte[] buffer, int offset, int length)
 		{
-			int full = length / 4;
-			int ptr = offset;
-			for (int i = 0; i < full; i++)
+			var full = length / 4;
+			var ptr = offset;
+			for (var i = 0; i < full; i++)
 			{
-				uint r = NextUInt32();
+				var r = NextUInt32();
 				buffer[ptr++] = (byte)r;
 				buffer[ptr++] = (byte)(r >> 8);
 				buffer[ptr++] = (byte)(r >> 16);
 				buffer[ptr++] = (byte)(r >> 24);
 			}
 
-			int rest = length - (full * 4);
-			for (int i = 0; i < rest; i++)
+			var rest = length - (full * 4);
+			for (var i = 0; i < rest; i++)
 				buffer[ptr++] = (byte)NextUInt32();
 		}
 

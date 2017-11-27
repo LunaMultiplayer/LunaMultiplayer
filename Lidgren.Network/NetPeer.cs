@@ -143,7 +143,7 @@ namespace Lidgren.Network
 			// fix network thread name
 			if (m_configuration.NetworkThreadName == "Lidgren network thread")
 			{
-				int pc = Interlocked.Increment(ref s_initializedPeersCount);
+				var pc = Interlocked.Increment(ref s_initializedPeersCount);
 				m_configuration.NetworkThreadName = "Lidgren network thread " + pc.ToString();
 			}
 
@@ -182,7 +182,7 @@ namespace Lidgren.Network
 		/// </summary>
 	        public NetIncomingMessage WaitMessage(int maxMillis)
 	        {
-	            NetIncomingMessage msg = ReadMessage();
+	            var msg = ReadMessage();
 	
 	            while (msg == null)
 	            {
@@ -209,7 +209,7 @@ namespace Lidgren.Network
 			{
 				if (retval.MessageType == NetIncomingMessageType.StatusChanged)
 				{
-					NetConnectionStatus status = (NetConnectionStatus)retval.PeekByte();
+					var status = (NetConnectionStatus)retval.PeekByte();
 					retval.SenderConnection.m_visibleStatus = status;
 				}
 			}
@@ -232,16 +232,16 @@ namespace Lidgren.Network
 		/// </summary>
 		public int ReadMessages(IList<NetIncomingMessage> addTo)
 		{
-			int added = m_releasedIncomingMessages.TryDrain(addTo);
+			var added = m_releasedIncomingMessages.TryDrain(addTo);
 			if (added > 0)
 			{
-				for (int i = 0; i < added; i++)
+				for (var i = 0; i < added; i++)
 				{
 					var index = addTo.Count - added + i;
 					var nim = addTo[index];
 					if (nim.MessageType == NetIncomingMessageType.StatusChanged)
 					{
-						NetConnectionStatus status = (NetConnectionStatus)nim.PeekByte();
+						var status = (NetConnectionStatus)nim.PeekByte();
 						nim.SenderConnection.m_visibleStatus = status;
 					}
 				}
@@ -256,7 +256,7 @@ namespace Lidgren.Network
 			NetException.Assert(msg.m_isSent == false);
 
 			bool connReset;
-			int len = msg.Encode(m_sendBuffer, 0, 0);
+			var len = msg.Encode(m_sendBuffer, 0, 0);
 			SendPacket(len, recipient, 1, out connReset);
 
 			// no reliability, no multiple recipients - we can just recycle this message immediately
@@ -266,7 +266,7 @@ namespace Lidgren.Network
 
 		static NetEndPoint GetNetEndPoint(string host, int port)
 		{
-			IPAddress address = NetUtility.Resolve(host);
+			var address = NetUtility.Resolve(host);
 			if (address == null)
 				throw new NetException("Could not resolve host");
 			return new NetEndPoint(address, port);
@@ -334,7 +334,7 @@ namespace Lidgren.Network
 					return hs;
 				}
 
-				NetConnection conn = new NetConnection(this, remoteEndPoint);
+				var conn = new NetConnection(this, remoteEndPoint);
 				conn.m_status = NetConnectionStatus.InitiatedConnect;
 				conn.m_localHailMessage = hailMessage;
 

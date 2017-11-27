@@ -24,7 +24,7 @@ namespace Lidgren.Network
 			string token)
 		{
 			// send message to client
-			NetOutgoingMessage um = CreateMessage(10 + token.Length + 1);
+			var um = CreateMessage(10 + token.Length + 1);
 			um.m_messageType = NetMessageType.NatIntroduction;
 			um.Write((byte)0);
 			um.Write(hostInternal);
@@ -52,13 +52,13 @@ namespace Lidgren.Network
 			VerifyNetworkThread();
 
 			// read intro
-			NetIncomingMessage tmp = SetupReadHelperMessage(ptr, 1000); // never mind length
+			var tmp = SetupReadHelperMessage(ptr, 1000); // never mind length
 
-			byte hostByte = tmp.ReadByte();
-			NetEndPoint remoteInternal = tmp.ReadIPEndPoint();
-			NetEndPoint remoteExternal = tmp.ReadIPEndPoint();
-			string token = tmp.ReadString();
-			bool isHost = (hostByte != 0);
+			var hostByte = tmp.ReadByte();
+			var remoteInternal = tmp.ReadIPEndPoint();
+			var remoteExternal = tmp.ReadIPEndPoint();
+			var token = tmp.ReadString();
+			var isHost = (hostByte != 0);
 
 			LogDebug("NAT introduction received; we are designated " + (isHost ? "host" : "client"));
 
@@ -92,10 +92,10 @@ namespace Lidgren.Network
 		/// </summary>
 		private void HandleNatPunch(int ptr, NetEndPoint senderEndPoint)
 		{
-			NetIncomingMessage tmp = SetupReadHelperMessage(ptr, 1000); // never mind length
+			var tmp = SetupReadHelperMessage(ptr, 1000); // never mind length
 
 			var isFromClient = tmp.ReadByte() == ClientByte;
-			string token = tmp.ReadString();
+			var token = tmp.ReadString();
 			if (isFromClient)
 			{
 				LogDebug("NAT punch received from " + senderEndPoint + " we're host, so we send a NatIntroductionConfirmed message - token is " + token);
@@ -122,9 +122,9 @@ namespace Lidgren.Network
 
 		private void HandleNatPunchConfirmRequest(int ptr, NetEndPoint senderEndPoint)
 		{
-			NetIncomingMessage tmp = SetupReadHelperMessage(ptr, 1000); // never mind length
+			var tmp = SetupReadHelperMessage(ptr, 1000); // never mind length
 			var isFromClient = tmp.ReadByte() == ClientByte;
-			string token = tmp.ReadString();
+			var token = tmp.ReadString();
 
 			LogDebug("Received NAT punch confirmation from " + senderEndPoint + " sending NatIntroductionConfirmed - token is " + token);
 
@@ -138,7 +138,7 @@ namespace Lidgren.Network
 
 		private void HandleNatPunchConfirmed(int ptr, NetEndPoint senderEndPoint)
 		{
-			NetIncomingMessage tmp = SetupReadHelperMessage(ptr, 1000); // never mind length
+			var tmp = SetupReadHelperMessage(ptr, 1000); // never mind length
 			var isFromClient = tmp.ReadByte() == ClientByte;
 			if (isFromClient)
 			{
@@ -146,14 +146,14 @@ namespace Lidgren.Network
 				return;
 			}
 
-			string token = tmp.ReadString();
+			var token = tmp.ReadString();
 
 			LogDebug("NAT punch confirmation received from " + senderEndPoint + " we're client so we go ahead and succeed the introduction");
 
 			//
 			// Release punch success to client; enabling him to Connect() to msg.Sender if token is ok
 			//
-			NetIncomingMessage punchSuccess = CreateIncomingMessage(NetIncomingMessageType.NatIntroductionSuccess, 10);
+			var punchSuccess = CreateIncomingMessage(NetIncomingMessageType.NatIntroductionSuccess, 10);
 			punchSuccess.m_senderEndPoint = senderEndPoint;
 			punchSuccess.Write(token);
 			ReleaseMessage(punchSuccess);

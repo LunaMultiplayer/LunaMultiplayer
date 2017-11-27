@@ -36,7 +36,7 @@ namespace Lidgren.Network
 		{
 			if (!m_doFlowControl)
 				return 2; // always allowed to send without flow control!
-			int retval = m_windowSize - ((m_sendStart + NetConstants.NumSequenceNumbers) - m_windowStart) % m_windowSize;
+			var retval = m_windowSize - ((m_sendStart + NetConstants.NumSequenceNumbers) - m_windowStart) % m_windowSize;
 			NetException.Assert(retval >= 0 && retval <= m_windowSize);
 			return retval;
 		}
@@ -51,8 +51,8 @@ namespace Lidgren.Network
 
 		internal override NetSendResult Enqueue(NetOutgoingMessage message)
 		{
-			int queueLen = m_queuedSends.Count + 1;
-			int left = GetAllowedSends();
+			var queueLen = m_queuedSends.Count + 1;
+			var left = GetAllowedSends();
 			if (queueLen > left || (message.LengthBytes > m_connection.m_currentMTU && m_connection.m_peerConfiguration.UnreliableSizeBehaviour == NetUnreliableSizeBehaviour.DropAboveMTU))
 			{
 				// drop message
@@ -67,7 +67,7 @@ namespace Lidgren.Network
 		// call this regularely
 		internal override void SendQueuedMessages(double now)
 		{
-			int num = GetAllowedSends();
+			var num = GetAllowedSends();
 			if (num < 1)
 				return;
 
@@ -85,7 +85,7 @@ namespace Lidgren.Network
 		{
 			m_connection.m_peer.VerifyNetworkThread();
 
-			int seqNr = m_sendStart;
+			var seqNr = m_sendStart;
 			m_sendStart = (m_sendStart + 1) % NetConstants.NumSequenceNumbers;
 
 			m_connection.QueueSendMessage(message, seqNr);
@@ -108,7 +108,7 @@ namespace Lidgren.Network
 			}
 
 			// late (dupe), on time or early ack?
-			int relate = NetUtility.RelativeSequenceNumber(seqNr, m_windowStart);
+			var relate = NetUtility.RelativeSequenceNumber(seqNr, m_windowStart);
 
 			if (relate < 0)
 			{

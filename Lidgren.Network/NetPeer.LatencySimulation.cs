@@ -225,7 +225,7 @@ namespace Lidgren.Network
 			try
 			{
 				m_socket.DontFragment = true;
-				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
+				var bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 			}
@@ -263,7 +263,7 @@ namespace Lidgren.Network
 			m_statistics.PacketSent(numBytes, numMessages);
 #endif
 			connectionReset = false;
-			IPAddress ba = default(IPAddress);
+			var ba = default(IPAddress);
 			try
 			{
 				// TODO: refactor this check outta here
@@ -271,7 +271,7 @@ namespace Lidgren.Network
 				if (target.Address == ba)
 					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
 
-				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
+				var bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 			}

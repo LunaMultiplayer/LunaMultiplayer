@@ -20,9 +20,9 @@ namespace Lidgren.Network
 
 		internal override void ReceiveMessage(NetIncomingMessage message)
 		{
-			int nr = message.m_sequenceNumber;
+			var nr = message.m_sequenceNumber;
 
-			int relate = NetUtility.RelativeSequenceNumber(nr, m_windowStart);
+			var relate = NetUtility.RelativeSequenceNumber(nr, m_windowStart);
 
 			// ack no matter what
 			m_connection.QueueAck(message.m_receivedMessageType, nr);

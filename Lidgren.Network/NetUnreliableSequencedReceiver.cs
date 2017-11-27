@@ -13,12 +13,12 @@ namespace Lidgren.Network
 
 		internal override void ReceiveMessage(NetIncomingMessage msg)
 		{
-			int nr = msg.m_sequenceNumber;
+			var nr = msg.m_sequenceNumber;
 
 			// ack no matter what
 			m_connection.QueueAck(msg.m_receivedMessageType, nr);
 
-			int relate = NetUtility.RelativeSequenceNumber(nr, m_lastReceivedSequenceNumber + 1);
+			var relate = NetUtility.RelativeSequenceNumber(nr, m_lastReceivedSequenceNumber + 1);
 			if (relate < 0)
 			{
 				m_connection.m_statistics.MessageDropped();

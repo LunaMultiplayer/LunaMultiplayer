@@ -140,7 +140,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public override string ToString()
 		{
-			StringBuilder bdr = new StringBuilder();
+			var bdr = new StringBuilder();
 			bdr.AppendLine(m_peer.ConnectionsCount.ToString() + " connections");
 #if DEBUG || USE_RELEASE_STATISTICS
 			bdr.AppendLine("Sent " + m_sentBytes + " bytes in " + m_sentMessages + " messages in " + m_sentPackets + " packets");

@@ -57,11 +57,11 @@ namespace Lidgren.Network
 			m_sentPingNumber++;
 
 			m_sentPingTime = NetTime.Now;
-			NetOutgoingMessage om = m_peer.CreateMessage(1);
+			var om = m_peer.CreateMessage(1);
 			om.Write((byte)m_sentPingNumber); // truncating to 0-255
 			om.m_messageType = NetMessageType.Ping;
 
-			int len = om.Encode(m_peer.m_sendBuffer, 0, 0);
+			var len = om.Encode(m_peer.m_sendBuffer, 0, 0);
 			bool connectionReset;
 			m_peer.SendPacket(len, m_remoteEndPoint, 1, out connectionReset);
 
@@ -73,12 +73,12 @@ namespace Lidgren.Network
 		{
 			m_peer.VerifyNetworkThread();
 
-			NetOutgoingMessage om = m_peer.CreateMessage(5);
+			var om = m_peer.CreateMessage(5);
 			om.Write((byte)pingNumber);
 			om.Write((float)NetTime.Now); // we should update this value to reflect the exact point in time the packet is SENT
 			om.m_messageType = NetMessageType.Pong;
 
-			int len = om.Encode(m_peer.m_sendBuffer, 0, 0);
+			var len = om.Encode(m_peer.m_sendBuffer, 0, 0);
 			bool connectionReset;
 
 			m_peer.SendPacket(len, m_remoteEndPoint, 1, out connectionReset);
@@ -97,10 +97,10 @@ namespace Lidgren.Network
 
 			m_timeoutDeadline = now + m_peerConfiguration.m_connectionTimeout;
 
-			double rtt = now - m_sentPingTime;
+			var rtt = now - m_sentPingTime;
 			NetException.Assert(rtt >= 0);
 
-			double diff = (remoteSendTime + (rtt / 2.0)) - now;
+			var diff = (remoteSendTime + (rtt / 2.0)) - now;
 
 			if (m_averageRoundtripTime < 0)
 			{
@@ -117,7 +117,7 @@ namespace Lidgren.Network
 			}
 
 			// update resend delay for all channels
-			double resendDelay = GetResendDelay();
+			var resendDelay = GetResendDelay();
 			foreach (var chan in m_sendChannels)
 			{
 				var rchan = chan as NetReliableSenderChannel;
@@ -130,7 +130,7 @@ namespace Lidgren.Network
 			// notify the application that average rtt changed
 			if (m_peer.m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.ConnectionLatencyUpdated))
 			{
-				NetIncomingMessage update = m_peer.CreateIncomingMessage(NetIncomingMessageType.ConnectionLatencyUpdated, 4);
+				var update = m_peer.CreateIncomingMessage(NetIncomingMessageType.ConnectionLatencyUpdated, 4);
 				update.m_senderConnection = this;
 				update.m_senderEndPoint = this.m_remoteEndPoint;
 				update.Write((float)rtt);

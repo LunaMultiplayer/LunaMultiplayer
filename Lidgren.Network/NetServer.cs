@@ -56,7 +56,7 @@ namespace Lidgren.Network
 				return;
 			}
 
-			List<NetConnection> recipients = new List<NetConnection>(all.Count - 1);
+			var recipients = new List<NetConnection>(all.Count - 1);
 			foreach (var conn in all)
 				if (conn != except)
 					recipients.Add(conn);

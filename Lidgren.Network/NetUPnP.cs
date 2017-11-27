@@ -64,7 +64,7 @@ namespace Lidgren.Network
 
 		internal void Discover(NetPeer peer)
 		{
-			string str =
+			var str =
 "M-SEARCH * HTTP/1.1\r\n" +
 "HOST: 239.255.255.250:1900\r\n" +
 "ST:upnp:rootdevice\r\n" +
@@ -74,7 +74,7 @@ namespace Lidgren.Network
 			m_discoveryResponseDeadline = NetTime.Now + 6.0; // arbitrarily chosen number, router gets 6 seconds to respond
 			m_status = UPnPStatus.Discovering;
 
-			byte[] arr = System.Text.Encoding.UTF8.GetBytes(str);
+			var arr = System.Text.Encoding.UTF8.GetBytes(str);
 
 			m_peer.LogDebug("Attempting UPnP discovery");
 			peer.Socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
@@ -96,18 +96,18 @@ namespace Lidgren.Network
 			try
 			{
 #endif
-			XmlDocument desc = new XmlDocument();
+			var desc = new XmlDocument();
 			using (var response = WebRequest.Create(resp).GetResponse())
 				desc.Load(response.GetResponseStream());
 
-			XmlNamespaceManager nsMgr = new XmlNamespaceManager(desc.NameTable);
+			var nsMgr = new XmlNamespaceManager(desc.NameTable);
 			nsMgr.AddNamespace("tns", "urn:schemas-upnp-org:device-1-0");
-			XmlNode typen = desc.SelectSingleNode("//tns:device/tns:deviceType/text()", nsMgr);
+			var typen = desc.SelectSingleNode("//tns:device/tns:deviceType/text()", nsMgr);
 			if (!typen.Value.Contains("InternetGatewayDevice"))
 				return;
 
 			m_serviceName = "WANIPConnection";
-			XmlNode node = desc.SelectSingleNode("//tns:service[tns:serviceType=\"urn:schemas-upnp-org:service:" + m_serviceName + ":1\"]/tns:controlURL/text()", nsMgr);
+			var node = desc.SelectSingleNode("//tns:service[tns:serviceType=\"urn:schemas-upnp-org:service:" + m_serviceName + ":1\"]/tns:controlURL/text()", nsMgr);
 			if (node == null)
 			{
 				//try another service name
@@ -138,7 +138,7 @@ namespace Lidgren.Network
 				return subURL;
 
 			gatewayURL = gatewayURL.Replace("http://", "");  // strip any protocol
-			int n = gatewayURL.IndexOf("/");
+			var n = gatewayURL.IndexOf("/");
 			if (n != -1)
 				gatewayURL = gatewayURL.Substring(0, n);  // Use first portion of URL
 			return "http://" + gatewayURL + subURL;
@@ -236,11 +236,11 @@ namespace Lidgren.Network
 				return null;
 			try
 			{
-				XmlDocument xdoc = SOAPRequest(m_serviceUrl, "<u:GetExternalIPAddress xmlns:u=\"urn:schemas-upnp-org:service:" + m_serviceName + ":1\">" +
+				var xdoc = SOAPRequest(m_serviceUrl, "<u:GetExternalIPAddress xmlns:u=\"urn:schemas-upnp-org:service:" + m_serviceName + ":1\">" +
 				"</u:GetExternalIPAddress>", "GetExternalIPAddress");
-				XmlNamespaceManager nsMgr = new XmlNamespaceManager(xdoc.NameTable);
+				var nsMgr = new XmlNamespaceManager(xdoc.NameTable);
 				nsMgr.AddNamespace("tns", "urn:schemas-upnp-org:device-1-0");
-				string IP = xdoc.SelectSingleNode("//NewExternalIPAddress/text()", nsMgr).Value;
+				var IP = xdoc.SelectSingleNode("//NewExternalIPAddress/text()", nsMgr).Value;
 				return IPAddress.Parse(IP);
 			}
 			catch (Exception ex)
@@ -252,22 +252,22 @@ namespace Lidgren.Network
 
 		private XmlDocument SOAPRequest(string url, string soap, string function)
 		{
-			string req = "<?xml version=\"1.0\"?>" +
+			var req = "<?xml version=\"1.0\"?>" +
 			"<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" s:encodingStyle=\"http://schemas.xmlsoap.org/soap/encoding/\">" +
 			"<s:Body>" +
 			soap +
 			"</s:Body>" +
 			"</s:Envelope>";
-			WebRequest r = HttpWebRequest.Create(url);
+			var r = HttpWebRequest.Create(url);
 			r.Method = "POST";
-			byte[] b = System.Text.Encoding.UTF8.GetBytes(req);
+			var b = System.Text.Encoding.UTF8.GetBytes(req);
 			r.Headers.Add("SOAPACTION", "\"urn:schemas-upnp-org:service:" + m_serviceName + ":1#" + function + "\""); 
 			r.ContentType = "text/xml; charset=\"utf-8\"";
 			r.ContentLength = b.Length;
 			r.GetRequestStream().Write(b, 0, b.Length);
-			using (WebResponse wres = r.GetResponse()) {
-				XmlDocument resp = new XmlDocument();
-				Stream ress = wres.GetResponseStream();
+			using (var wres = r.GetResponse()) {
+				var resp = new XmlDocument();
+				var ress = wres.GetResponseStream();
 				resp.Load(ress);
 				return resp;
 			}

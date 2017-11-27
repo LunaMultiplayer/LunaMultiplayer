@@ -30,16 +30,16 @@ namespace Lidgren.Network
 		/// </summary>
 		public override bool Encrypt(NetOutgoingMessage msg)
 		{
-			int payloadBitLength = msg.LengthBits;
-			int numBytes = msg.LengthBytes;
-			int blockSize = BlockSize;
-			int numBlocks = (int)Math.Ceiling((double)numBytes / (double)blockSize);
-			int dstSize = numBlocks * blockSize;
+			var payloadBitLength = msg.LengthBits;
+			var numBytes = msg.LengthBytes;
+			var blockSize = BlockSize;
+			var numBlocks = (int)Math.Ceiling((double)numBytes / (double)blockSize);
+			var dstSize = numBlocks * blockSize;
 
 			msg.EnsureBufferSize(dstSize * 8 + (4 * 8)); // add 4 bytes for payload length at end
 			msg.LengthBits = dstSize * 8; // length will automatically adjust +4 bytes when payload length is written
 
-			for(int i=0;i<numBlocks;i++)
+			for(var i=0;i<numBlocks;i++)
 			{
 				EncryptBlock(msg.m_data, (i * blockSize), m_tmp);
 				Buffer.BlockCopy(m_tmp, 0, msg.m_data, (i * blockSize), m_tmp.Length);
@@ -58,20 +58,20 @@ namespace Lidgren.Network
 		/// <returns>true if successful; false if failed</returns>
 		public override bool Decrypt(NetIncomingMessage msg)
 		{
-			int numEncryptedBytes = msg.LengthBytes - 4; // last 4 bytes is true bit length
-			int blockSize = BlockSize;
-			int numBlocks = numEncryptedBytes / blockSize;
+			var numEncryptedBytes = msg.LengthBytes - 4; // last 4 bytes is true bit length
+			var blockSize = BlockSize;
+			var numBlocks = numEncryptedBytes / blockSize;
 			if (numBlocks * blockSize != numEncryptedBytes)
 				return false;
 
-			for (int i = 0; i < numBlocks; i++)
+			for (var i = 0; i < numBlocks; i++)
 			{
 				DecryptBlock(msg.m_data, (i * blockSize), m_tmp);
 				Buffer.BlockCopy(m_tmp, 0, msg.m_data, (i * blockSize), m_tmp.Length);
 			}
 
 			// read 32 bits of true payload length
-			uint realSize = NetBitWriter.ReadUInt32(msg.m_data, 32, (numEncryptedBytes * 8));
+			var realSize = NetBitWriter.ReadUInt32(msg.m_data, 32, (numEncryptedBytes * 8));
 			msg.m_bitLength = (int)realSize;
 			return true;
 		}
