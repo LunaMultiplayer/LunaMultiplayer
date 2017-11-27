@@ -23,13 +23,11 @@ namespace MasterServer
         public static ushort Port { get; set; }
         public static bool RunServer { get; set; }
         public static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
-        private static MasterServerForm Form { get; set; }
         private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
 
-        public static void Start(MasterServerForm form)
+        public static void Start()
         {
             RunServer = true;
-            Form = form;
 
             var config = new NetPeerConfiguration("masterserver");
             config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
@@ -37,11 +35,11 @@ namespace MasterServer
 
             var peer = new NetPeer(config);
             peer.Start();
-
-            Form.WriteLine("Master server started!");
-            Task.Run(() => RemoveExpiredServers());
-
+            
             CheckMasterServerListed();
+
+            Logger.Log(LogLevels.Normal, "Master server started! Поехали!");
+            Task.Run(() => RemoveExpiredServers());
 
             while (RunServer)
             {
@@ -52,9 +50,13 @@ namespace MasterServer
                     {
                         case NetIncomingMessageType.DebugMessage:
                         case NetIncomingMessageType.VerboseDebugMessage:
+                            Logger.Log(LogLevels.Debug, msg.ReadString());
+                            break;
                         case NetIncomingMessageType.WarningMessage:
+                            Logger.Log(LogLevels.Warning, msg.ReadString());
+                            break;
                         case NetIncomingMessageType.ErrorMessage:
-                            Form.WriteLine($"ERROR! :{msg.ReadString()}");
+                            Logger.Log(LogLevels.Error, msg.ReadString());
                             break;
                         case NetIncomingMessageType.UnconnectedData:
                             var messageBytes = msg.ReadBytes(msg.LengthBytes);
@@ -65,7 +67,8 @@ namespace MasterServer
                     }
                 }
             }
-            peer.Shutdown("shutting down");
+            peer.Shutdown("Goodbye and thanks for all the fish!");
+            Logger.Log(LogLevels.Normal, "Goodbye and thanks for all the fish!");
         }
 
         private static IMasterServerMessageBase GetMessage(byte[] messageBytes)
@@ -77,7 +80,7 @@ namespace MasterServer
             }
             catch (Exception e)
             {
-                Form.WriteLine($"ERROR deserializing message! :{e}");
+                Logger.Log(LogLevels.Error, $"Error deserializing message! :{e}");
                 return null;
             }
         }
@@ -87,10 +90,15 @@ namespace MasterServer
             var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
             var ownEndpoint = $"{GetOwnIpAddress()}:{Port}";
 
-            Form.WriteLine(!servers.Contains(ownEndpoint)
-                ? "CAUTION! This server is not listed in the master-servers URL " +
-                  $"({MasterServerRetriever.MasterServersListShortUrl}) Clients/Servers will not see you"
-                : $"Own ip correctly listed in master-servers URL ({MasterServerRetriever.MasterServersListShortUrl})");
+            if(!servers.Contains(ownEndpoint))
+            {
+                Logger.Log(LogLevels.Error, $"You're not in the master-servers URL ({MasterServerRetriever.MasterServersListShortUrl}) " +
+                    "Clients/Servers won't see you");
+            }
+            else
+            {
+                Logger.Log(LogLevels.Normal, $"Own ip correctly listed in master - servers URL");
+            }
         }
 
         private static string GetOwnIpAddress()
@@ -134,15 +142,11 @@ namespace MasterServer
                     break;
                 case MasterServerMessageSubType.RequestServers:
                     var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
-#if DEBUG
-                    Form.WriteLine($"Received LIST REQUEST from: {netMsg.SenderEndPoint} version: {version}");
-#endif
+                    Logger.Log(LogLevels.Normal, $"Received LIST REQUEST from: {netMsg.SenderEndPoint} version: {version}");
                     SendServerLists(netMsg, peer, version);
                     break;
                 case MasterServerMessageSubType.Introduction:
-#if DEBUG
-                    Form.WriteLine($"Received INTRODUCTION request from: {netMsg.SenderEndPoint}");
-#endif
+                    Logger.Log(LogLevels.Normal, $"Received INTRODUCTION request from: {netMsg.SenderEndPoint}");
                     var msgData = (MsIntroductionMsgData)message.Data;
                     Server server;
                     if (ServerDictionary.TryGetValue(msgData.Id, out server))
@@ -156,7 +160,7 @@ namespace MasterServer
                     }
                     else
                     {
-                        Form.WriteLine("Client requested introduction to nonlisted host!");
+                        Logger.Log(LogLevels.Error, "Client requested introduction to nonlisted host!");
                     }
                     break;
             }
@@ -204,7 +208,7 @@ namespace MasterServer
             if (!ServerDictionary.ContainsKey(msgData.Id))
             {
                 ServerDictionary.TryAdd(msgData.Id, new Server(msgData, netMsg.SenderEndPoint));
-                Form.UpdateServerList(ServerDictionary.Values);
+                Logger.Log(LogLevels.Normal, $"NEW SERVER: {netMsg.SenderEndPoint}");
             }
             else
             {
@@ -224,16 +228,13 @@ namespace MasterServer
                     var serversIdsToRemove = ServerDictionary
                         .Where(s => DateTime.UtcNow.Ticks - s.Value.LastRegisterTime >
                                 TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks)
-                        .Select(s => s.Key)
                         .ToArray();
 
                     foreach (var serverId in serversIdsToRemove)
                     {
-                        ServerDictionary.TryRemove(serverId, out var _);
+                        Logger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
+                        ServerDictionary.TryRemove(serverId.Key, out var _);
                     }
-
-                    if (serversIdsToRemove.Any())
-                        Form.UpdateServerList(ServerDictionary.Values);
                 }
             }
         }

@@ -1,4 +1,9 @@
-﻿using System;
+﻿using LunaCommon;
+using System;
+using System.Linq;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MasterServer
@@ -10,15 +15,43 @@ namespace MasterServer
     /// </summary>
     static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
-        [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MasterServerForm());
+            Console.Title = $"LMPMasterServer {Common.CurrentVersion}";
+            Console.OutputEncoding = Encoding.Unicode;
+
+            var commandLineArguments = new Arguments(args);
+            if (commandLineArguments["h"] != null)
+            {
+                ShowCommandLineHelp();
+                Thread.Sleep(5000);
+                return;
+            }
+            if (commandLineArguments["p"] != null)
+            {
+                MasterServer.Port = ushort.Parse(commandLineArguments["p"].Trim());
+                Logger.Log(LogLevels.Normal, $"Starting MasterServer with port: {MasterServer.Port}");
+            }
+            else
+            {
+                MasterServer.Port = 6005;
+                Logger.Log(LogLevels.Normal, "Starting MasterServer with default port: 6005");
+            }
+
+            MasterServer.Start();
+        }
+        
+        private static void ShowCommandLineHelp()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("LMP Master server");
+            Console.WriteLine("");
+            Console.WriteLine("");
+            Console.WriteLine("Usage:");
+            Console.WriteLine("/h                       ... Show this help");
+            Console.WriteLine("/p:<port>                ... Start with the specified port");
+            Console.WriteLine("");
         }
     }
 }
