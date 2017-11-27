@@ -107,7 +107,7 @@ namespace LunaServer.System
             if (!WarpContext.Subspaces.ContainsKey(subspace))
                 return new int[0];
 
-            return WarpContext.Subspaces.Where(s => s.Key != subspace && s.Value < WarpContext.Subspaces[subspace]).Select(s => s.Key).ToArray();
+            return WarpContext.Subspaces.Where(s => s.Key != subspace && WarpContext.Subspaces.TryGetValue(subspace, out var time) && s.Value < time).Select(s => s.Key).ToArray();
         }
 
         /// <summary>
