@@ -68,7 +68,7 @@ namespace LunaServer.Lidgren
                             case NetIncomingMessageType.ConnectionLatencyUpdated:
                             case NetIncomingMessageType.DebugMessage:
                             case NetIncomingMessageType.VerboseDebugMessage:
-                                LunaLog.Debug(msg.ReadString());
+                                LunaLog.NetworkDebug(msg.ReadString());
                                 break;
                             case NetIncomingMessageType.Error:
                                 LunaLog.Error(msg.ReadString());

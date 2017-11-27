@@ -47,6 +47,13 @@ namespace LunaServer.Log
             WriteLog(LogLevels.Info, message, false);
         }
 
+        public static void NetworkDebug(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            WriteLog(LogLevels.Debug, message, true);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
         public static void Debug(string message)
         {
             Console.ForegroundColor = ConsoleColor.DarkGreen;
