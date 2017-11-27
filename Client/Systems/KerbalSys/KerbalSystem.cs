@@ -70,7 +70,7 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void LoadKerbalsIntoGame()
         {
-            LoadKerbals();
+            ProcessKerbalQueue();
         }
 
         /// <summary>
@@ -122,26 +122,36 @@ namespace LunaClient.Systems.KerbalSys
         }
 
         /// <summary>
-        /// Loads the unloaded (either because they are new or they are updated) kerbals into the game
+        /// Loads the unloaded (either because they are new or they are updated) kerbals into the game.
+        /// We load them only when we are actually ready to play
         /// </summary>
         private void LoadKerbals()
         {
-            if (KerbalSystemReady)
+            if (KerbalSystemReady && HighLogic.LoadedScene >= GameScenes.SPACECENTER)
             {
-                var refreshDialog = KerbalsToProcess.Count > 0;
-                while (KerbalsToProcess.TryDequeue(out var kerbalNode))
-                {
-                    LoadKerbal(kerbalNode);
-                }
-
-                if (refreshDialog)
-                    RefreshCrewDialog();
+                ProcessKerbalQueue();
             }
         }
 
         #endregion
 
         #region Private
+
+
+        /// <summary>
+        /// Runs trough the concurrentKerbalQueue and process them
+        /// </summary>
+        private void ProcessKerbalQueue()
+        {
+            var refreshDialog = KerbalsToProcess.Count > 0;
+            while (KerbalsToProcess.TryDequeue(out var kerbalNode))
+            {
+                LoadKerbal(kerbalNode);
+            }
+
+            if (refreshDialog)
+                RefreshCrewDialog();
+        }
 
         /// <summary>
         /// Call this method to refresh the crews in the vessel spawn, vessel editor and astronaut complex
