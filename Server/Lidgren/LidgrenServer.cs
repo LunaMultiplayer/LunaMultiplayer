@@ -146,6 +146,8 @@ namespace LunaServer.Lidgren
             LunaLog.Normal("Registering with master servers...");
 
             var adr = NetUtility.GetMyAddress(out var _);
+            if (adr == null) return;
+
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
 
             if (!MasterServerEndpoints.Any())
