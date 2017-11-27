@@ -7,6 +7,9 @@ Client/obj/*
 Common/*.csproj.user
 Common/bin/*
 Common/obj/*
+Lidgren.Network/*.csproj.user
+Lidgren.Network/bin/*
+Lidgren.Network/obj/*
 LMP.Tests/*.csproj.user
 LMP.Tests/bin/*
 LMP.Tests/obj/*
