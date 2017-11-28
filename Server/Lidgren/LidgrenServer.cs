@@ -16,6 +16,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using System.Threading;
 
 namespace LunaServer.Lidgren
@@ -149,7 +150,7 @@ namespace LunaServer.Lidgren
 
             LunaLog.Normal("Registering with master servers...");
 
-            var adr = NetUtility.GetMyAddress(out var _);
+            var adr = LunaNetUtils.GetMyAddress(out var _);
             if (adr == null) return;
 
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);

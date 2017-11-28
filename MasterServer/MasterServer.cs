@@ -97,7 +97,7 @@ namespace MasterServer
             }
             else
             {
-                Logger.Log(LogLevels.Normal, $"Own ip correctly listed in master - servers URL");
+                Logger.Log(LogLevels.Normal, "Own ip correctly listed in master - servers URL");
             }
         }
 
@@ -142,14 +142,13 @@ namespace MasterServer
                     break;
                 case MasterServerMessageSubType.RequestServers:
                     var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
-                    Logger.Log(LogLevels.Normal, $"Received LIST REQUEST from: {netMsg.SenderEndPoint} version: {version}");
+                    Logger.Log(LogLevels.Normal, $"LIST REQUEST from: {netMsg.SenderEndPoint} v: {version}");
                     SendServerLists(netMsg, peer, version);
                     break;
                 case MasterServerMessageSubType.Introduction:
-                    Logger.Log(LogLevels.Normal, $"Received INTRODUCTION request from: {netMsg.SenderEndPoint}");
                     var msgData = (MsIntroductionMsgData)message.Data;
-                    Server server;
-                    if (ServerDictionary.TryGetValue(msgData.Id, out server))
+                    Logger.Log(LogLevels.Normal, $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server ID: {msgData.Id}");
+                    if (ServerDictionary.TryGetValue(msgData.Id, out var server))
                     {
                         peer.Introduce(
                             server.InternalEndpoint,
@@ -208,7 +207,7 @@ namespace MasterServer
             if (!ServerDictionary.ContainsKey(msgData.Id))
             {
                 ServerDictionary.TryAdd(msgData.Id, new Server(msgData, netMsg.SenderEndPoint));
-                Logger.Log(LogLevels.Normal, $"NEW SERVER: {netMsg.SenderEndPoint}");
+                Logger.Log(LogLevels.Normal, $"NEW SERVER: {netMsg.SenderEndPoint} ID: {msgData.Id}");
             }
             else
             {
@@ -232,7 +231,7 @@ namespace MasterServer
 
                     foreach (var serverId in serversIdsToRemove)
                     {
-                        Logger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
+                        Logger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint} ID: {serverId.Key}");
                         ServerDictionary.TryRemove(serverId.Key, out var _);
                     }
                 }
