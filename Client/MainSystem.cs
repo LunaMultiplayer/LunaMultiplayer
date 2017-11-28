@@ -362,7 +362,7 @@ namespace LunaClient
             SetAdvancedAndCommNetParams(HighLogic.CurrentGame);
 
             //Set universe time
-            HighLogic.CurrentGame.flightState.universalTime = SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
+            HighLogic.CurrentGame.flightState.universalTime = SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
 
             //Load kerbals BEFORE loading the vessels or the loading of vessels will fail!
             SystemsContainer.Get<KerbalSystem>().LoadKerbalsIntoGame();

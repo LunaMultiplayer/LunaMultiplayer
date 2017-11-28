@@ -42,7 +42,7 @@ namespace LunaClient.Systems.Warp
 
                     SkipSubspaceProcess = false;
 
-                    LunaLog.Log($"[LMP]: Locked to subspace {value}, time: {GetCurrentSubspaceTime()}");
+                    LunaLog.Log($"[LMP]: Locked to subspace {value}, time: {CurrentSubspaceTime}");
                 }
             }
         }
@@ -156,7 +156,13 @@ namespace LunaClient.Systems.Warp
         /// Gets the current time on the subspace that we are located
         /// </summary>
         /// <returns></returns>
-        public double GetCurrentSubspaceTime() => GetSubspaceTime(CurrentSubspace);
+        public double CurrentSubspaceTime => GetSubspaceTime(CurrentSubspace);
+
+        /// <summary>
+        /// Gets the current time difference against the server time on the subspace that we are located
+        /// </summary>
+        /// <returns></returns>
+        public double CurrentSubspaceTimeDifference => Subspaces.ContainsKey(CurrentSubspace) ? Subspaces[CurrentSubspace] : 0;
 
         /// <summary>
         /// Returns the subspace time sent as parameter.
@@ -217,8 +223,8 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private void ProcessNewSubspace()
         {
-            TimeWarp.fetch.WarpTo(GetCurrentSubspaceTime());
-            ClockHandler.StepClock(GetCurrentSubspaceTime());
+            TimeWarp.fetch.WarpTo(CurrentSubspaceTime);
+            ClockHandler.StepClock(CurrentSubspaceTime);
         }
 
         #endregion

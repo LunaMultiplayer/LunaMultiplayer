@@ -13,7 +13,7 @@ namespace LunaClient.Windows.Debug
 {
     public partial class DebugWindow : Window<DebugWindow>
     {
-        private static StringBuilder StringBuilder = new StringBuilder();
+        private static readonly StringBuilder StringBuilder = new StringBuilder();
 
         public override void Update()
         {
@@ -57,8 +57,11 @@ namespace LunaClient.Windows.Debug
 
                 if (DisplayNtp)
                 {
+                    StringBuilder.AppendLine($"Server start time: {new DateTime(TimeSyncerSystem.ServerStartTime):yyyy-MM-dd HH-mm-ss.ffff}");
                     StringBuilder.AppendLine($"Warp rate: {Math.Round(Time.timeScale, 3)}x.");
                     StringBuilder.AppendLine($"Current subspace: {SystemsContainer.Get<WarpSystem>().CurrentSubspace}.");
+                    StringBuilder.AppendLine($"Current subspace time: {SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime}s.");
+                    StringBuilder.AppendLine($"Current subspace time difference: {SystemsContainer.Get<WarpSystem>().CurrentSubspaceTimeDifference}s.");
                     StringBuilder.AppendLine($"Current Error: {Math.Round(TimeSyncerSystem.CurrentErrorSec * 1000, 0)}ms.");
                     StringBuilder.AppendLine($"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT");
 

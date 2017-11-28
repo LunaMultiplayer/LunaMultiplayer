@@ -22,14 +22,14 @@ namespace LunaClient.Systems.TimeSyncer
         public static long ServerStartTime { get; set; }
 
         /// <summary>
-        /// Gets the server clock as total secconds and applying the network latency to the result.
+        /// Gets the server clock in seconds.
         /// </summary>
-        public static double ServerClockSec => TimeSpan.FromTicks(LunaTime.UtcNow.Ticks - ServerStartTime + NetworkStatistics.TimeOffset).TotalSeconds;
+        public static double ServerClockSec => TimeSpan.FromTicks(LunaTime.UtcNow.Ticks - ServerStartTime).TotalSeconds;
 
         /// <summary>
         /// Gets the current time error between the server time and the game time
         /// </summary>
-        public static double CurrentErrorSec => Planetarium.GetUniversalTime() - SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
+        public static double CurrentErrorSec => Planetarium.GetUniversalTime() - SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
 
         #endregion
 
@@ -111,7 +111,7 @@ namespace LunaClient.Systems.TimeSyncer
         {
             if (Enabled && !CurrentlyWarping && CanSyncTime && !SystemsContainer.Get<WarpSystem>().WaitingSubspaceIdFromServer)
             {
-                var targetTime = (int)SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
+                var targetTime = (int)SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
                 var currentError = TimeSpan.FromSeconds(CurrentErrorSec).TotalMilliseconds;
                 if (targetTime != 0 && Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < PhisicsClockLimitMs)
                 {
@@ -130,7 +130,7 @@ namespace LunaClient.Systems.TimeSyncer
         {
             if (Enabled && !CurrentlyWarping && CanSyncTime && !SystemsContainer.Get<WarpSystem>().WaitingSubspaceIdFromServer)
             {
-                var targetTime = (int)SystemsContainer.Get<WarpSystem>().GetCurrentSubspaceTime();
+                var targetTime = (int)SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
                 var currentError = TimeSpan.FromSeconds(CurrentErrorSec).TotalMilliseconds;
                 if (targetTime != 0 && Math.Abs(currentError) > MaxClockErrorMs)
                 {

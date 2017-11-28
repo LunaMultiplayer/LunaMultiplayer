@@ -6,6 +6,7 @@ using System.Net.Cache;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace LunaCommon
 {
@@ -21,11 +22,28 @@ namespace LunaCommon
         {
             get
             {
-                if (_timeDifference == null)
+                TimeMutex.WaitOne();
+
+                if (_timeDifference == TimeSpan.Zero && TimeRetriever.CanRequestTime)
                 {
-                    _timeDifference = DateTime.UtcNow - TimeRetriever.GetNtpTime();
+                    GetTimeDifference();
                 }
-                return DateTime.UtcNow - _timeDifference.Value;
+
+                TimeMutex.ReleaseMutex();
+
+                return DateTime.UtcNow - _timeDifference;
+            }
+        }
+
+        private static void GetTimeDifference()
+        {
+            try
+            {
+                _timeDifference = DateTime.UtcNow - TimeRetriever.GetNtpTime();
+            }
+            catch (Exception)
+            {
+                // ignored
             }
         }
 
@@ -34,7 +52,9 @@ namespace LunaCommon
         /// </summary>
         public static DateTime Now => UtcNow.ToLocalTime();
 
-        private static TimeSpan? _timeDifference;
+        private static TimeSpan _timeDifference = TimeSpan.Zero;
+
+        private static readonly Mutex TimeMutex = new Mutex(false, "LunaTimeMutex");
     }
 
     /// <summary>
@@ -45,16 +65,21 @@ namespace LunaCommon
         private const string Server = "pool.ntp.org";
         private static DateTime _lastRequest = DateTime.MinValue;
 
+        internal static bool CanRequestTime => (DateTime.UtcNow - _lastRequest).TotalSeconds > 4;
+
         internal static DateTime GetNtpTime()
         {
             //Max requests are every 4 seconds
-            if ((DateTime.UtcNow - _lastRequest).TotalSeconds < 4)
+            if (!CanRequestTime)
                 throw new Exception("Too many time requests!");
 
-            var dateTime = GetNtpTimeFromSocket() ?? GetNistTimeFromWeb();
+            var dateTime = GetNtpTimeFromSocket();
+            if (dateTime == null)
+                throw new Exception("Error getting time from NTP Server!");
+
             _lastRequest = DateTime.UtcNow;
 
-            return dateTime;
+            return dateTime.Value;
         }
 
         private static DateTime? GetNtpTimeFromSocket(bool getAsLocalTime = false)
@@ -102,29 +127,6 @@ namespace LunaCommon
             {
                 return null;
             }
-        }
-
-        private static DateTime GetNistTimeFromWeb()
-        {
-            var dateTime = DateTime.MinValue;
-
-            var request = (HttpWebRequest)WebRequest.Create("http://nist.time.gov/actualtime.cgi?lzbc=siqm9b");
-            request.Method = "GET";
-            request.CachePolicy = new RequestCachePolicy(RequestCacheLevel.NoCacheNoStore); //No caching
-
-            var response = (HttpWebResponse)request.GetResponse();
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                using (var stream = new StreamReader(response.GetResponseStream()))
-                {
-                    var html = stream.ReadToEnd(); //<timestamp time=\"1395772696469995\" delay=\"1395772696469995\"/>
-                    var time = Regex.Match(html, @"(?<=\btime="")[^""]*").Value;
-                    var milliseconds = Convert.ToInt64(time) / 1000.0;
-                    dateTime = new DateTime(1970, 1, 1).AddMilliseconds(milliseconds);
-                }
-            }
-
-            return dateTime;
         }
     }
 }
