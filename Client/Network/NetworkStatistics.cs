@@ -25,6 +25,8 @@ namespace LunaClient.Network
                     return NetworkMain.ClientConnection.Statistics.ReceivedBytes;
                 case "Latency":
                     return (long)NetworkMain.ClientConnection.ServerConnection.AverageRoundtripTime;
+                case "TimeOffset":
+                    return TimeOffset;
                 case "LastSendTime":
                     return (long)(DateTime.Now - LastSendTime).TotalMilliseconds;
                 case "LastReceiveTime":
