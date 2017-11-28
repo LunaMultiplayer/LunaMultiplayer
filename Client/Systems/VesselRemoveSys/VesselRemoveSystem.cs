@@ -3,6 +3,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
+using LunaCommon;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselRemoveSys
@@ -110,7 +111,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         private void FlushRemovedVessels()
         {
             var vesselsToFlush = RemovedVessels
-                .Where(v => (DateTime.Now - v.Value) > TimeSpan.FromSeconds(20))
+                .Where(v => (LunaTime.Now - v.Value) > TimeSpan.FromSeconds(20))
                 .Select(v => v.Key);
 
             foreach (var vesselId in vesselsToFlush)
@@ -128,7 +129,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             {
                 KillVessel(vesselId);
 
-                RemovedVessels.TryAdd(vesselId, DateTime.Now);
+                RemovedVessels.TryAdd(vesselId, LunaTime.Now);
                 VesselsProtoStore.RemoveVessel(vesselId);
             }
 

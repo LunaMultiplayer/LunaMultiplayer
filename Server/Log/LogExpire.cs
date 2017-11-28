@@ -3,6 +3,7 @@ using LunaServer.Settings;
 using LunaServer.System;
 using System;
 using System.IO;
+using LunaCommon;
 
 namespace LunaServer.Log
 {
@@ -22,7 +23,7 @@ namespace LunaServer.Log
         private static void RemoveExpiredLog(string logFile)
         {
             //If the file is older than a day, delete it
-            if (File.GetCreationTime(logFile).AddDays(GeneralSettings.SettingsStore.ExpireLogs) < DateTime.Now)
+            if (File.GetCreationTime(logFile).AddDays(GeneralSettings.SettingsStore.ExpireLogs) < LunaTime.Now)
             {
                 LunaLog.Debug($"Deleting saved log '{logFile}', reason: Expired!");
                 try

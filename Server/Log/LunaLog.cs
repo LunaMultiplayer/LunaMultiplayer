@@ -2,6 +2,7 @@ using LunaServer.Settings;
 using LunaServer.System;
 using System;
 using System.IO;
+using LunaCommon;
 
 namespace LunaServer.Log
 {
@@ -16,7 +17,7 @@ namespace LunaServer.Log
         public static string LogFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
 
         public static string LogFilename = Path.Combine(LogFolder,
-            $"lmpserver {DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
+            $"lmpserver {LunaTime.Now:yyyy-MM-dd HH-mm-ss}.log");
 
         #region Private methods
 
@@ -25,8 +26,8 @@ namespace LunaServer.Log
             if (level >= GeneralSettings.SettingsStore.LogLevel)
             {
                 var output = GeneralSettings.SettingsStore.UseUtcTimeInLog
-                    ? $"[{DateTime.UtcNow:HH:mm:ss}][{level}] : {message}"
-                    : $"[{DateTime.Now:HH:mm:ss}][{level}] : {message}";
+                    ? $"[{LunaTime.UtcNow:HH:mm:ss}][{level}] : {message}"
+                    : $"[{LunaTime.Now:HH:mm:ss}][{level}] : {message}";
 
                 if (sendToConsole)
                 {

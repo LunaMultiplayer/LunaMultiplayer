@@ -81,7 +81,7 @@ namespace LunaServer.Server
         {
             try
             {
-                return ServerContext.ClientMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IClientMessageBase;
+                return ServerContext.ClientMessageFactory.Deserialize(messageBytes, LunaTime.UtcNow.Ticks) as IClientMessageBase;
             }
             catch (Exception e)
             {

@@ -8,8 +8,6 @@ namespace LunaClient.Utilities
 {
     public class CommonUtil
     {
-        public static double Now => (double)DateTime.UtcNow.Ticks / TimeSpan.TicksPerMillisecond;
-
         private static string _debugPort;
         public static string DebugPort => _debugPort ?? (_debugPort = GetDebugPort());
 

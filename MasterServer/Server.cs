@@ -16,7 +16,7 @@ namespace MasterServer
         {
             InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);
             ExternalEndpoint = externalEndpoint;
-            LastRegisterTime = DateTime.UtcNow.Ticks;
+            LastRegisterTime = LunaTime.UtcNow.Ticks;
             Info = new ServerInfo
             {
                 Id = msg.Id,

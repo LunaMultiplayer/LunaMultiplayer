@@ -28,6 +28,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Threading;
+using LunaCommon;
 
 namespace LunaClient.Network
 {
@@ -44,7 +45,7 @@ namespace LunaClient.Network
                 {
                     if (NetworkMain.ClientConnection.ReadMessage(out var msg))
                     {
-                        NetworkStatistics.LastReceiveTime = DateTime.Now;
+                        NetworkStatistics.LastReceiveTime = LunaTime.UtcNow;
                         switch (msg.MessageType)
                         {
                             case NetIncomingMessageType.NatIntroductionSuccess:
@@ -59,7 +60,7 @@ namespace LunaClient.Network
                             case NetIncomingMessageType.Data:
                                 try
                                 {
-                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), DateTime.UtcNow.Ticks);
+                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), LunaTime.UtcNow.Ticks);
                                     if (deserializedMsg != null)
                                     {
                                         EnqueueMessageToSystem(deserializedMsg as IServerMessageBase);

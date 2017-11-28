@@ -11,7 +11,7 @@ namespace LunaCommon.Message.Base
         /// Call this method to deserialize a message
         /// </summary>
         /// <param name="data">Array of bytes with data</param>
-        /// <param name="receiveTime">Lidgren msg receive time property or Datetime.Now</param>
+        /// <param name="receiveTime">Lidgren msg receive time property or LunaTime.Now</param>
         /// <returns>Full message with it's data filled</returns>
         public IMessageBase Deserialize(byte[] data, long receiveTime)
         {

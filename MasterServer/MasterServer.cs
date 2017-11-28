@@ -75,7 +75,7 @@ namespace MasterServer
         {
             try
             {
-                var message = MasterServerMessageFactory.Deserialize(messageBytes, DateTime.UtcNow.Ticks) as IMasterServerMessageBase;
+                var message = MasterServerMessageFactory.Deserialize(messageBytes, LunaTime.UtcNow.Ticks) as IMasterServerMessageBase;
                 return message;
             }
             catch (Exception e)
@@ -221,12 +221,12 @@ namespace MasterServer
         {
             while (RunServer)
             {
-                if (DateTime.UtcNow.Ticks - LastServerExpireCheck > TimeSpan.FromMilliseconds(ServerRemoveMsCheckInterval).Ticks)
+                if (LunaTime.UtcNow.Ticks - LastServerExpireCheck > TimeSpan.FromMilliseconds(ServerRemoveMsCheckInterval).Ticks)
                 {
-                    LastServerExpireCheck = DateTime.UtcNow.Ticks;
+                    LastServerExpireCheck = LunaTime.UtcNow.Ticks;
 
                     var serversIdsToRemove = ServerDictionary
-                        .Where(s => DateTime.UtcNow.Ticks - s.Value.LastRegisterTime >
+                        .Where(s => LunaTime.UtcNow.Ticks - s.Value.LastRegisterTime >
                                 TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks)
                         .ToArray();
 

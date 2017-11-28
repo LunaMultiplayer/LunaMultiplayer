@@ -3,6 +3,7 @@ using LunaClient.Network;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using System;
+using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Systems.TimeSyncer
@@ -23,7 +24,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Gets the server clock as total secconds and applying the network latency to the result.
         /// </summary>
-        public static double ServerClockSec => TimeSpan.FromTicks(DateTime.UtcNow.Ticks - ServerStartTime + NetworkStatistics.TimeOffset).TotalSeconds;
+        public static double ServerClockSec => TimeSpan.FromTicks(LunaTime.UtcNow.Ticks - ServerStartTime + NetworkStatistics.TimeOffset).TotalSeconds;
 
         /// <summary>
         /// Gets the current time error between the server time and the game time

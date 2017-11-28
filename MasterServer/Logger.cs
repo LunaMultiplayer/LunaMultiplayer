@@ -1,4 +1,5 @@
 ﻿using System;
+using LunaCommon;
 
 namespace MasterServer
 {
@@ -29,7 +30,7 @@ namespace MasterServer
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
             }
-            Console.WriteLine($"{DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - {msg}");
+            Console.WriteLine($"{LunaTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - {msg}");
             Console.ForegroundColor = ConsoleColor.Gray;
         }
     }

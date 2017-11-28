@@ -4,6 +4,7 @@ using LunaCommon.Message.Server;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using LunaCommon;
 
 namespace LMP.Tests
 {
@@ -21,7 +22,7 @@ namespace LMP.Tests
             var msgData = Factory.CreateNewMessageData<VesselProtoMsgData>();
             msgData.VesselId = Guid.NewGuid();
             msgData.VesselData = bytes;
-            msgData.SentTime = DateTime.UtcNow.Ticks;
+            msgData.SentTime = LunaTime.UtcNow.Ticks;
 
             var msg = Factory.CreateNew<VesselSrvMsg>(msgData);
 

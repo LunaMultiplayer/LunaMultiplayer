@@ -24,7 +24,7 @@ namespace LunaServer
             {
                 Console.Title = $"LMPServer {Common.CurrentVersion}";
                 Console.OutputEncoding = Encoding.Unicode;
-                ServerContext.StartTime = DateTime.UtcNow.Ticks;
+                ServerContext.StartTime = LunaTime.UtcNow.Ticks;
                 
                 //Start the server clock
                 ServerContext.ServerClock.Start();
@@ -37,7 +37,7 @@ namespace LunaServer
                 ServerContext.ServerStarting = true;
 
                 //Set day for log change
-                ServerContext.Day = DateTime.Now.Day;
+                ServerContext.Day = LunaTime.Now.Day;
                 
                 LunaLog.Normal($"Starting Luna Server version: {Common.CurrentVersion}");
 

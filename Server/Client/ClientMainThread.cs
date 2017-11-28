@@ -7,6 +7,7 @@ using LunaServer.System;
 using System;
 using System.Linq;
 using System.Threading;
+using LunaCommon;
 
 namespace LunaServer.Client
 {
@@ -38,11 +39,11 @@ namespace LunaServer.Client
 
             try
             {
-                var disconnectTime = DateTime.UtcNow.Ticks;
+                var disconnectTime = LunaTime.UtcNow.Ticks;
                 var sendingMessages = true;
                 while (sendingMessages)
                 {
-                    if (DateTime.UtcNow.Ticks - disconnectTime > TimeSpan.FromSeconds(5).Ticks)
+                    if (LunaTime.UtcNow.Ticks - disconnectTime > TimeSpan.FromSeconds(5).Ticks)
                     {
                         LunaLog.Debug($"Shutting down with {ServerContext.PlayerCount} Players, " +
                                       $"{ServerContext.Clients.Count} connected Clients");

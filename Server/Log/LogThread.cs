@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Threading;
+using LunaCommon;
 
 namespace LunaServer.Log
 {
@@ -25,11 +26,11 @@ namespace LunaServer.Log
                 if (ServerContext.ServerClock.ElapsedMilliseconds - _lastDayCheck > 60000)
                 {
                     _lastDayCheck = ServerContext.ServerClock.ElapsedMilliseconds;
-                    if (ServerContext.Day != DateTime.Now.Day)
+                    if (ServerContext.Day != LunaTime.Now.Day)
                     {
-                        LunaLog.LogFilename = Path.Combine(LunaLog.LogFolder, $"lmpserver {DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
-                        LunaLog.WriteToLog($"Continued from logfile {DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
-                        ServerContext.Day = DateTime.Now.Day;
+                        LunaLog.LogFilename = Path.Combine(LunaLog.LogFolder, $"lmpserver {LunaTime.Now:yyyy-MM-dd HH-mm-ss}.log");
+                        LunaLog.WriteToLog($"Continued from logfile {LunaTime.Now:yyyy-MM-dd HH-mm-ss}.log");
+                        ServerContext.Day = LunaTime.Now.Day;
                     }
                 }
 

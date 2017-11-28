@@ -1,5 +1,6 @@
 ﻿using LunaCommon.Message.Base;
 using System;
+using LunaCommon;
 
 namespace LunaClient.Network
 {
@@ -18,19 +19,17 @@ namespace LunaClient.Network
                 case "Ping":
                     return (long)PingMs;
                 case "SentBytes":
-                    //Build lidgren in DEBUG mode or: https://github.com/lidgren/lidgren-network-gen3/wiki/Statistics
                     return NetworkMain.ClientConnection.Statistics.SentBytes;
                 case "ReceivedBytes":
-                    //Build lidgren in DEBUG mode or: https://github.com/lidgren/lidgren-network-gen3/wiki/Statistics
                     return NetworkMain.ClientConnection.Statistics.ReceivedBytes;
                 case "Latency":
                     return (long)NetworkMain.ClientConnection.ServerConnection.AverageRoundtripTime;
                 case "TimeOffset":
                     return TimeOffset;
                 case "LastSendTime":
-                    return (long)(DateTime.Now - LastSendTime).TotalMilliseconds;
+                    return (long)(LunaTime.Now - LastSendTime).TotalMilliseconds;
                 case "LastReceiveTime":
-                    return (long)(DateTime.Now - LastReceiveTime).TotalMilliseconds;
+                    return (long)(LunaTime.Now - LastReceiveTime).TotalMilliseconds;
                 case "MessagesInCache":
                     return MessageStore.GetMessageCount(null);
                 case "MessageDataInCache":

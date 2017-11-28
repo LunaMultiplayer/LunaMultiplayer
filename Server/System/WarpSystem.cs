@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using LunaCommon;
 
 namespace LunaServer.System
 {
@@ -96,7 +97,7 @@ namespace LunaServer.System
         /// </summary>
         public static long GetCurrentSubspaceTime(int subspace)
         {
-            return DateTime.UtcNow.Ticks + GetSubspaceTimeDifference(subspace);
+            return LunaTime.UtcNow.Ticks + GetSubspaceTimeDifference(subspace);
         }
 
         /// <summary>

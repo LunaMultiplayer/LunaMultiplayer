@@ -7,6 +7,7 @@ using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using LunaCommon;
 
 namespace LunaClient.Network
 {
@@ -58,13 +59,13 @@ namespace LunaClient.Network
             if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
                 NetworkMain.ClientConnection.Start();
 
-            message.Data.SentTime = DateTime.UtcNow.Ticks;
+            message.Data.SentTime = LunaTime.UtcNow.Ticks;
             var bytes = message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled);
             if (bytes != null)
             {
                 try
                 {
-                    NetworkStatistics.LastSendTime = DateTime.Now;
+                    NetworkStatistics.LastSendTime = LunaTime.Now;
 
                     if (message is IMasterServerMessageBase)
                     {
