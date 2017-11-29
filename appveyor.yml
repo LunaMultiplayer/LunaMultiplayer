@@ -14,7 +14,7 @@ before_build:
   - nuget restore
 build:
   parallel: true
-  verbosity: minimal
+  verbosity: detailed
 after_build:
 #Client post build commands
  - ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
@@ -36,7 +36,6 @@ deploy: off
 notifications:
  - provider: Webhook
    url: https://discordapp.com/api/webhooks/385378686481727498/O8urCLjjAVW1zDi6MOhsI_TUe8iohTJJoLVtLfkVUuOQdT-b-Q9Ebyk7Xpxyw4RuVu5r
-   method: POST
    on_build_success: true
    on_build_failure: true
    on_build_status_changed: true
