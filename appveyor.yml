@@ -36,8 +36,6 @@ deploy: off
 notifications:
  - provider: Webhook
    url: http://lunamultiplayer.com/webhook/build
-   method: POST
-   content_type: application/json
    on_build_success: true
    on_build_failure: true
    on_build_status_changed: true
