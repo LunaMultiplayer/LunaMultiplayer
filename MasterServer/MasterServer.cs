@@ -11,15 +11,16 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MasterServer
 {
     public class MasterServer
     {
+        public static int ServerMsTick { get; set; } = 100;
         public static int ServerMsTimeout { get; set; } = 15000;
         public static int ServerRemoveMsCheckInterval { get; set; } = 5000;
-        private static long LastServerExpireCheck { get; set; }
         public static ushort Port { get; set; }
         public static bool RunServer { get; set; }
         public static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
@@ -66,6 +67,7 @@ namespace MasterServer
                             break;
                     }
                 }
+                Thread.Sleep(ServerMsTick);
             }
             peer.Shutdown("Goodbye and thanks for all the fish!");
             Logger.Log(LogLevels.Normal, "Goodbye and thanks for all the fish!");
@@ -220,21 +222,18 @@ namespace MasterServer
         {
             while (RunServer)
             {
-                if (LunaTime.UtcNow.Ticks - LastServerExpireCheck > TimeSpan.FromMilliseconds(ServerRemoveMsCheckInterval).Ticks)
-                {
-                    LastServerExpireCheck = LunaTime.UtcNow.Ticks;
-
-                    var serversIdsToRemove = ServerDictionary
-                        .Where(s => LunaTime.UtcNow.Ticks - s.Value.LastRegisterTime >
+                var serversIdsToRemove = ServerDictionary
+                    .Where(s => LunaTime.UtcNow.Ticks - s.Value.LastRegisterTime >
                                 TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks)
-                        .ToArray();
+                    .ToArray();
 
-                    foreach (var serverId in serversIdsToRemove)
-                    {
-                        Logger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint} ID: {serverId.Key}");
-                        ServerDictionary.TryRemove(serverId.Key, out var _);
-                    }
+                foreach (var serverId in serversIdsToRemove)
+                {
+                    Logger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint} ID: {serverId.Key}");
+                    ServerDictionary.TryRemove(serverId.Key, out var _);
                 }
+
+                Thread.Sleep(ServerRemoveMsCheckInterval);
             }
         }
     }
