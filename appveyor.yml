@@ -32,4 +32,11 @@ after_build:
 artifacts:
  - path: .\LunaMultiPlayer-$(configuration).zip
    name: LunaMultiPlayer.zip
+notifications:
+ - provider: Webhook
+   url: https://discordapp.com/api/webhooks/385378686481727498/O8urCLjjAVW1zDi6MOhsI_TUe8iohTJJoLVtLfkVUuOQdT-b-Q9Ebyk7Xpxyw4RuVu5r
+   method: POST
+   on_build_success: true
+   on_build_failure: true
+   on_build_status_changed: true
 deploy: off
