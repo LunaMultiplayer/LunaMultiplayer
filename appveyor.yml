@@ -33,3 +33,21 @@ artifacts:
  - path: .\LunaMultiPlayer-$(configuration).zip
    name: LunaMultiPlayer.zip
 deploy: off
+notifications:
+ - provider: Webhook
+   url: http://lunamultiplayer.com/webhook/build
+   content_type: application/json
+   headers:
+    User-Agent: Appveyor-webhook
+   on_build_success: true
+   on_build_failure: true
+   on_build_status_changed: true
+   
+ - provider: Webhook 
+   url: https://skyhook.glitch.me/api/webhooks/385378686481727498/O8urCLjjAVW1zDi6MOhsI_TUe8iohTJJoLVtLfkVUuOQdT-b-Q9Ebyk7Xpxyw4RuVu5r/appveyor
+   content_type: application/json
+   headers:
+    User-Agent: Appveyor-webhook
+   on_build_success: true
+   on_build_failure: true
+   on_build_status_changed: true
