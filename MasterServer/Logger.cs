@@ -11,7 +11,7 @@ namespace MasterServer
         Error
     }
 
-    class Logger
+    internal class Logger
     {
         public static void Log(LogLevels level, string msg)
         {
