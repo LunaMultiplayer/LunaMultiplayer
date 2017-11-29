@@ -94,7 +94,7 @@ namespace LunaClient.Network
         public static void IntroduceToServer(long currentEntryId)
         {
             var token = RandomString(10);
-            var ownEndpoint = new IPEndPoint(NetUtility.GetMyAddress(out var _), NetworkMain.Config.Port);
+            var ownEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(out var _), NetworkMain.Config.Port);
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
             msgData.Id = currentEntryId;

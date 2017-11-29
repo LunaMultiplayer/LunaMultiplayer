@@ -1,24 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace LunaServer.Utilities
+namespace LunaCommon
 {
-    internal class LunaNetUtils
+    public class LunaNetUtils
     {
         private static NetworkInterface GetNetworkInterface()
         {
-            var computerProperties = IPGlobalProperties.GetIPGlobalProperties();
-            if (computerProperties == null)
-                return null;
-
             var nics = NetworkInterface.GetAllNetworkInterfaces();
-            if (nics == null || nics.Length < 1)
+            if (nics.Length < 1)
                 return null;
 
             NetworkInterface best = null;
@@ -37,7 +28,7 @@ namespace LunaServer.Utilities
                 var properties = adapter.GetIPProperties();
                 foreach (var unicastAddress in properties.UnicastAddresses)
                 {
-                    if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+                    if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
                     {
                         // Yes it does, return this network interface.
                         return adapter;
@@ -59,7 +50,7 @@ namespace LunaServer.Utilities
             var properties = ni.GetIPProperties();
             foreach (var unicastAddress in properties.UnicastAddresses)
             {
-                if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
+                if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
                 {
                     mask = unicastAddress.IPv4Mask;
                     return unicastAddress.Address;
