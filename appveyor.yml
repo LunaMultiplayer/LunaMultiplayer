@@ -35,7 +35,9 @@ artifacts:
 deploy: off
 notifications:
  - provider: Webhook
-   url: https://skyhook.glitch.me/api/webhooks/385378686481727498/O8urCLjjAVW1zDi6MOhsI_TUe8iohTJJoLVtLfkVUuOQdT-b-Q9Ebyk7Xpxyw4RuVu5r/appveyor
+   url: http://lunamultiplayer.com/webhook/build
+   #Alternative url just in case
+   #url: https://skyhook.glitch.me/api/webhooks/385378686481727498/O8urCLjjAVW1zDi6MOhsI_TUe8iohTJJoLVtLfkVUuOQdT-b-Q9Ebyk7Xpxyw4RuVu5r/appveyor
    content_type: application/json
    headers:
     User-Agent: Appveyor-webhook
