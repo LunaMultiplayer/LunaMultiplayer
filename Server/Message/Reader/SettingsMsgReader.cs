@@ -17,6 +17,7 @@ namespace LunaServer.Message.Reader
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<SettingsReplyMsgData>();
             msgData.WarpMode = GeneralSettings.SettingsStore.WarpMode;
             msgData.GameMode = GeneralSettings.SettingsStore.GameMode;
+            msgData.TerrainQuality = GeneralSettings.SettingsStore.TerrainQuality;
             msgData.AllowCheats = GeneralSettings.SettingsStore.Cheats;
             msgData.MaxNumberOfAsteroids = GeneralSettings.SettingsStore.NumberOfAsteroids;
             msgData.ConsoleIdentifier = GeneralSettings.SettingsStore.ConsoleIdentifier;

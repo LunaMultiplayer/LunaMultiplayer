@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
+    <Compile Include="Enums\TerrainQuality.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Groups\Group.cs" />
     <Compile Include="Locks\LockDefinition.cs" />

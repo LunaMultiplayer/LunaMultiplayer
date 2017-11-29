@@ -183,7 +183,7 @@ namespace LunaClient.VesselUtilities
                 if (HighLogic.CurrentGame == null)
                     return null;
 
-                //TODO: Can we reuse the protovessel to avoid memory garbage?
+                //Cannot reuse the Protovessel to save memory garbage as it does not have any clear method :(
                 var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
                 foreach (var pps in pv.protoPartSnapshots)
                 {

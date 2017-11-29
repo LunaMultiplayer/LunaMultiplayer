@@ -19,6 +19,7 @@ namespace LunaCommon.Message.Data.MasterServer
         public string ServerName { get; set; }
         public string Description { get; set; }
         public int WarpMode { get; set; }
+        public int TerrainQuality { get; set; }
         public int VesselUpdatesSendMsInterval { get; set; }
         public int SecondaryVesselUpdatesSendMsInterval { get; set; }
         public bool DropControlOnVesselSwitching { get; set; }

@@ -100,9 +100,12 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.SettingsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Settings synced";
-                    SystemsContainer.Get<WarpSystem>().Enabled = true;
-                    MainSystem.NetworkState = ClientState.SyncingWarpsubspaces;
-                    NetworkSimpleMessageSender.SendWarpSubspacesRequest();
+                    if (SettingsSystem.ValidateSettings())
+                    {
+                        SystemsContainer.Get<WarpSystem>().Enabled = true;
+                        MainSystem.NetworkState = ClientState.SyncingWarpsubspaces;
+                        NetworkSimpleMessageSender.SendWarpSubspacesRequest();
+                    }
                     break;
                 case ClientState.SyncingWarpsubspaces:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing warp subspaces";

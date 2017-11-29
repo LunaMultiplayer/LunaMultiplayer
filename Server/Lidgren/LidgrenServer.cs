@@ -179,6 +179,7 @@ namespace LunaServer.Lidgren
                 msgData.VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval;
                 msgData.SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
                 msgData.WarpMode = (int)GeneralSettings.SettingsStore.WarpMode;
+                msgData.TerrainQuality = (int)GeneralSettings.SettingsStore.TerrainQuality;
 
                 msgData.Description = msgData.Description.Length > 200
                             ? msgData.Description.Substring(0, 200)

@@ -10,6 +10,7 @@ namespace LunaClient.Systems.SettingsSys
         public GameParameters.AdvancedParams ServerAdvancedParameters { get; set; } = new GameParameters.AdvancedParams();
         public CommNetParams ServerCommNetParameters { get; set; } = new CommNetParams();
         public GameMode GameMode { get; set; }
+        public TerrainQuality TerrainQuality { get; set; }
         public bool AllowCheats { get; set; }
         public int MaxNumberOfAsteroids { get; set; }
         public string ConsoleIdentifier { get; set; } = "";

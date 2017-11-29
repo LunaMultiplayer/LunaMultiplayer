@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 
 namespace LunaClient.Utilities
@@ -45,16 +46,13 @@ namespace LunaClient.Utilities
             {
                 //we late bind to the instance by passing the instance as the first argument
                 WriteNodeThunk(node, writer);
-                //TODO: Can we remove the to array and save memory ? 
-                //See: https://stackoverflow.com/questions/2630359/convert-stream-to-ienumerable-if-possible-when-keeping-laziness
-                var data = stream.ToArray();
-                return data;
+                return stream.ToArray();
             }
         }
 
         public static ConfigNode Deserialize(byte[] data)
         {
-            if (data == null || data.Length == 0) return null;
+            if (data == null || data.Length == 0 || data.All(b => b == 0)) return null;
 
             using (var stream = new MemoryStream(data))
             using (var reader = new StreamReader(stream))

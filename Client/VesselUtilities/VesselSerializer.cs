@@ -131,7 +131,6 @@ namespace LunaClient.VesselUtilities
                     var valueDodge = DodgeValueIfNeeded(valueCurrent);
                     if (valueCurrent != valueDodge)
                     {
-                        LunaLog.Log($"[LMP]: Dodged actiongroup {keyName}");
                         actiongroupNode.SetValue(keyName, valueDodge);
                     }
                 }

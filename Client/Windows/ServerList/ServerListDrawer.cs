@@ -108,6 +108,12 @@ namespace LunaClient.Windows.ServerList
                     GUILayout.FlexibleSpace();
                     GUILayout.EndHorizontal();
 
+                    GUILayout.BeginHorizontal(GUILayout.Width(50));
+                    GUILayout.FlexibleSpace();
+                    GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"));
+                    GUILayout.FlexibleSpace();
+                    GUILayout.EndHorizontal();
+
                     GUILayout.BeginHorizontal(GUILayout.Width(35));
                     GUILayout.FlexibleSpace();
                     GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"));
@@ -181,6 +187,14 @@ namespace LunaClient.Windows.ServerList
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.WarpMode) :
                     DisplayedServers.OrderByDescending(s => s.WarpMode);
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.Width(50));
+            if (GUILayout.Button("Terrain", ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.TerrainQuality) :
+                    DisplayedServers.OrderByDescending(s => s.TerrainQuality);
             }
             GUILayout.EndHorizontal();
 

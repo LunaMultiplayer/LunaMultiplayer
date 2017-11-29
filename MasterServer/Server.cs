@@ -33,7 +33,8 @@ namespace MasterServer
                 PlayerCount = msg.PlayerCount,
                 ServerName = msg.ServerName,
                 Version = msg.ServerVersion,
-                WarpMode = msg.WarpMode
+                WarpMode = msg.WarpMode,
+                TerrainQuality = msg.TerrainQuality
             };
 
             Info.ServerName = Info.ServerName.Length > 30 ? Info.ServerName.Substring(0, 30) : Info.ServerName;

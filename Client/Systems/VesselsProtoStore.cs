@@ -70,18 +70,6 @@ namespace LunaClient.Systems
         {
             AllPlayerVessels.TryRemove(vesselId, out var _);
         }
-
-        /// <summary>
-        /// Sets a vessel as unloaded so it can be recreated later. 
-        /// For example if you leave a subspace the vessel must still be in the system but it should be unloaded
-        /// </summary>
-        public static void UnloadVessel(Guid vesselId)
-        {
-            if (AllPlayerVessels.TryGetValue(vesselId, out var existingProtoUpdate))
-            {
-                AllPlayerVessels.TryUpdate(vesselId, new VesselProtoUpdate(existingProtoUpdate), existingProtoUpdate);
-            }
-        }
     }
 
     public class VesselProtoUpdate

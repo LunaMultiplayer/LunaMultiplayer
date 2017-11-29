@@ -18,6 +18,7 @@ namespace LunaClient.Systems.SettingsSys
 
             SettingsSystem.ServerSettings.WarpMode = msgData.WarpMode;
             SettingsSystem.ServerSettings.GameMode = msgData.GameMode;
+            SettingsSystem.ServerSettings.TerrainQuality = msgData.TerrainQuality;
             SettingsSystem.ServerSettings.AllowCheats = msgData.AllowCheats;
             SettingsSystem.ServerSettings.MaxNumberOfAsteroids = msgData.MaxNumberOfAsteroids;
             SettingsSystem.ServerSettings.ConsoleIdentifier = msgData.ConsoleIdentifier;

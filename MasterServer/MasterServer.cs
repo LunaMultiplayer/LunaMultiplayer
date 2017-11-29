@@ -198,6 +198,7 @@ namespace MasterServer
             msgData.ServerName = values.Select(s => s.Info.ServerName).ToArray();
             msgData.VesselUpdatesSendMsInterval = values.Select(s => s.Info.VesselUpdatesSendMsInterval).ToArray();
             msgData.WarpMode = values.Select(s => s.Info.WarpMode).ToArray();
+            msgData.TerrainQuality = values.Select(s => s.Info.TerrainQuality).ToArray();
 
             var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
             var data = msg.Serialize(true);

@@ -71,6 +71,7 @@ namespace LunaClient.Network
                             DropControlOnExit = data.DropControlOnExit[i],
                             MaxPlayers = data.MaxPlayers[i],
                             WarpMode = data.WarpMode[i],
+                            TerrainQuality = data.TerrainQuality[i],
                             PlayerCount = data.PlayerCount[i],
                             GameMode = data.GameMode[i],
                             ModControl = data.ModControl[i],
@@ -145,6 +146,9 @@ namespace LunaClient.Network
         {
             if (IPAddress.TryParse(host, out var ip))
             {
+                if (ip.Equals(IPAddress.Loopback))
+                    return 0;
+
                 var icmp = new Icmp.Icmp(ip);
                 var response = icmp.Ping();
                 return response.Equals(TimeSpan.MaxValue) ? 9999 :

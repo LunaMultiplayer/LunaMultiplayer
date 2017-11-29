@@ -11,6 +11,7 @@ namespace LunaCommon.Message.Data.Settings
 
         public WarpMode WarpMode { get; set; }
         public GameMode GameMode { get; set; }
+        public TerrainQuality TerrainQuality { get; set; }
         public bool AllowCheats { get; set; }
         public int MaxNumberOfAsteroids { get; set; }
         public string ConsoleIdentifier { get; set; }
