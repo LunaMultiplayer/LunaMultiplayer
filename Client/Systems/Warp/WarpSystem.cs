@@ -80,6 +80,9 @@ namespace LunaClient.Systems.Warp
             base.OnEnabled();
             GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);
             GameEvents.onLevelWasLoadedGUIReady.Add(WarpEvents.OnSceneChanged);
+            if (!CommonUtil.PlatformIsWindows() && SettingsSystem.ServerSettings.WarpMode != WarpMode.None)
+                SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, CheckWarpStopped));
+
             if (SettingsSystem.ServerSettings.WarpMode == WarpMode.Master &&
                 !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) &&
                 SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
@@ -92,6 +95,19 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Update methods
+
+        /// <summary>
+        /// This routine checks if we stopped warping. The warp event doesn't work very well under linux...
+        /// </summary>
+        private void CheckWarpStopped()
+        {
+            if (TimeWarp.CurrentRateIndex == 0 && CurrentSubspace == -1)
+            {
+                //We stopped warping so send our new subspace
+                WaitingSubspaceIdFromServer = true;
+                SendNewSubspace();
+            }
+        }
 
         /// <summary>
         /// Follows the warp master if the warp mode is set to MASTER and warp master is in another subspace

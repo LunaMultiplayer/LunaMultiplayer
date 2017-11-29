@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace LunaClient.Utilities
 {
@@ -60,6 +61,12 @@ namespace LunaClient.Utilities
             var deletedItems = list1.Except(list2).Any();
             var newItems = list2.Except(list1).Any();
             return !newItems && !deletedItems;
+        }
+
+        public static bool PlatformIsWindows()
+        {
+            return Application.platform == RuntimePlatform.WindowsPlayer ||
+                   Application.platform == RuntimePlatform.WindowsEditor;
         }
     }
 }
