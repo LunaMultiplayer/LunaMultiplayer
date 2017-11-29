@@ -7,6 +7,7 @@ using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 using System.Text;
+using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Windows.Debug
@@ -71,6 +72,7 @@ namespace LunaClient.Windows.Debug
 
                 if (DisplayConnectionQueue)
                 {
+                    StringBuilder.AppendLine($"NIST time diference: {LunaTime.TimeDifference.TotalMilliseconds}ms.");
                     StringBuilder.AppendLine($"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.");
                     StringBuilder.AppendLine($"Latency: {NetworkStatistics.GetStatistics("Latency")}s.");
                     StringBuilder.AppendLine($"TimeOffset: {TimeSpan.FromTicks(NetworkStatistics.GetStatistics("TimeOffset")).TotalMilliseconds}ms.");

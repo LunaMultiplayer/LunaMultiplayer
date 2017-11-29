@@ -24,14 +24,14 @@ namespace LunaCommon
             {
                 TimeMutex.WaitOne();
 
-                if (_timeDifference == TimeSpan.Zero && TimeRetriever.CanRequestTime)
+                if (TimeDifference == TimeSpan.Zero && TimeRetriever.CanRequestTime)
                 {
                     GetTimeDifference();
                 }
 
                 TimeMutex.ReleaseMutex();
 
-                return DateTime.UtcNow - _timeDifference;
+                return DateTime.UtcNow - TimeDifference;
             }
         }
 
@@ -39,7 +39,7 @@ namespace LunaCommon
         {
             try
             {
-                _timeDifference = DateTime.UtcNow - TimeRetriever.GetNtpTime();
+                TimeDifference = DateTime.UtcNow - TimeRetriever.GetNtpTime();
             }
             catch (Exception)
             {
@@ -51,8 +51,7 @@ namespace LunaCommon
         /// Get correctly sync local time from internet
         /// </summary>
         public static DateTime Now => UtcNow.ToLocalTime();
-
-        private static TimeSpan _timeDifference = TimeSpan.Zero;
+        public static TimeSpan TimeDifference { get; private set; } = TimeSpan.Zero;
 
         private static readonly Mutex TimeMutex = new Mutex(false, "LunaTimeMutex");
     }

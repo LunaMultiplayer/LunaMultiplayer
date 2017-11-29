@@ -215,17 +215,6 @@ namespace LunaClient.Systems.VesselPositionSys
                             part.ResumeVelocity();
                         break;
                 }
-
-                if (FlightGlobals.ActiveVessel?.id == VesselId && !Vessel.Landed && !Vessel.Splashed)
-                {
-                    //This is the case when spectating a vessel. 
-                    //Vessel.SetPosition is not a good idea as reference frame doesn't change accordingly
-                    var posDelta = Vessel.orbitDriver.orbit.getPositionAtUT(Planetarium.GetUniversalTime()) - beforePos;
-                    var velDelta = Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy - beforeSpeed;
-
-                    Vessel.Translate(posDelta);
-                    Vessel.ChangeWorldVelocity(velDelta);
-                }
             }
         }
 
