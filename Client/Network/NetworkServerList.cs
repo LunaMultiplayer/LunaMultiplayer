@@ -96,15 +96,20 @@ namespace LunaClient.Network
             var token = RandomString(10);
             var ownEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(out var _), NetworkMain.Config.Port);
 
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
-            msgData.Id = currentEntryId;
-            msgData.Token = token;
-            msgData.InternalEndpoint = Common.StringFromEndpoint(ownEndpoint);
+                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
+                msgData.Id = currentEntryId;
+                msgData.Token = token;
+                msgData.InternalEndpoint = Common.StringFromEndpoint(ownEndpoint);
 
-            var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
+                var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 
-            LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {token}");
-            NetworkSender.QueueOutgoingMessage(introduceMsg);
+                LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {token}");
+                NetworkSender.QueueOutgoingMessage(introduceMsg);
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Error connecting to server: {e}");
+            }
         }
 
         /// <summary>

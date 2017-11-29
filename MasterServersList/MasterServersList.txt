@@ -1,4 +1,5 @@
 #Here you specify the ips or hostnames of all the master servers followed by ":" and the port. 
 #Then each client will query them for the servers and each server will register against them
 37.59.50.110:6005
-lmp.robo-web.nl:6701
+lunamultiplayer.com:6701
+185.5.251.218:6005

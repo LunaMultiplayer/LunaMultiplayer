@@ -29,7 +29,7 @@ IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\LunaCo
 
 "%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\\Common\bin\%SOLUTIONCONFIGURATION%\Lidgren.Network.dll"
 xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\Lidgren.Network.*" "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\LunaCommon.*" "%KSPPATH2%\GameData\LunaMultiPlayer\Plugins")
+IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\Lidgren.Network.*" "%KSPPATH2%\GameData\LunaMultiPlayer\Plugins")
 
 xcopy /Y "%~dp0..\External\Dependencies\*.dll" "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\External\Dependencies\*.dll" "%KSPPATH2%\GameData\LunaMultiPlayer\Plugins")
