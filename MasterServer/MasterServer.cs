@@ -30,10 +30,16 @@ namespace MasterServer
         {
             RunServer = true;
 
-            var config = new NetPeerConfiguration("masterserver");
-            config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
-            config.Port = Port;
+            var config = new NetPeerConfiguration("masterserver")
+            {
+                AutoFlushSendQueue = false, //Set it to false so lidgren doesn't wait until msg.size = MTU for sending
+                Port = Port,
+                SuppressUnreliableUnorderedAcks = true,
+                PingInterval = 500,
+                ConnectionTimeout = ServerMsTimeout
+            };
 
+            config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
             var peer = new NetPeer(config);
             peer.Start();
             
