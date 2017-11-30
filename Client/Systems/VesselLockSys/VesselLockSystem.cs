@@ -232,8 +232,8 @@ namespace LunaClient.Systems.VesselLockSys
         /// <returns></returns>
         private static IEnumerable<Guid> GetValidUnloadedVesselIds()
         {
-            return FlightGlobals.VesselsLoaded
-                .Where(v => v != null && v.state != Vessel.State.DEAD &&
+            return FlightGlobals.Vessels
+                .Where(v => v != null && v.state != Vessel.State.DEAD && !v.loaded && v.vesselType != VesselType.Flag &&
                             v.id != FlightGlobals.ActiveVessel?.id &&
                             !VesselCommon.IsInSafetyBubble(v) &&
                             !LockSystem.LockQuery.UnloadedUpdateLockExists(v.id) &&
@@ -248,7 +248,7 @@ namespace LunaClient.Systems.VesselLockSys
         private static IEnumerable<Guid> GetValidSecondaryVesselIds()
         {
             return FlightGlobals.VesselsLoaded
-                .Where(v => v != null && v.state != Vessel.State.DEAD &&
+                .Where(v => v != null && v.state != Vessel.State.DEAD && v.vesselType != VesselType.Flag &&
                             v.id != FlightGlobals.ActiveVessel?.id &&
                             !VesselCommon.IsInSafetyBubble(v) &&
                             !LockSystem.LockQuery.UpdateLockExists(v.id))

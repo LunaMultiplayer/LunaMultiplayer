@@ -160,9 +160,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         #region Private methods
 
         /// <summary>
-        /// Kills or unloads a vessel.
-        /// If you set fullKill to true the vessel will be totally removed from the game, 
-        /// otherwise is is killed but can be re-created at a later time (once you are in the same subspace for example)
+        /// Kills and unloads a vessel.
         /// </summary>
         private static void KillVessel(Guid vesselId)
         {
@@ -218,6 +216,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             try
             {
+                //This method will call our event "OnVesselWillDestroy" and remove the locks if needed...
                 killVessel?.Die();
             }
             catch (Exception killException)

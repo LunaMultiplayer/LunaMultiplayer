@@ -5,6 +5,7 @@ using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System;
 using System.Collections.Generic;
 
 
@@ -55,6 +56,9 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private void PrepareAndSendProtoVessel(ProtoVessel protoVessel)
         {
+            //Never send empty vessel id's (sometimes it happens with flags...
+            if (protoVessel.vesselID == Guid.Empty) return;
+
             var vesselBytes = VesselSerializer.SerializeVessel(protoVessel);
             if (vesselBytes.Length > 0)
             {
