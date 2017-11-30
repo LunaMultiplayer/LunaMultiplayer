@@ -11,7 +11,7 @@ using System.Net;
 
 namespace LunaServer.Context
 {
-    public class ServerContext
+    public static class ServerContext
     {
         public static ConcurrentDictionary<IPEndPoint, ClientStructure> Clients { get; set; } =
             new ConcurrentDictionary<IPEndPoint, ClientStructure>();

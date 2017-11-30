@@ -1,5 +1,6 @@
 using System.Text;
 using LunaClient.Base;
+using LunaClient.Network;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.SettingsSys
@@ -42,8 +43,7 @@ namespace LunaClient.Systems.SettingsSys
 
             if (!validationResult)
             {
-                MainSystem.NetworkState = ClientState.Disconnected;
-                SystemsContainer.Get<MainSystem>().Status = Builder.ToString();
+                NetworkConnection.Disconnect(Builder.ToString());
             }
 
             return validationResult;

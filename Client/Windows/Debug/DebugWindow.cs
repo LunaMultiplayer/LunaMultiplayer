@@ -5,9 +5,9 @@ using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 using System.Text;
-using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Windows.Debug

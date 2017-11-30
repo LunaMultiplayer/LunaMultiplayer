@@ -1,5 +1,6 @@
 ﻿using LunaCommon;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using LunaServer.Client;
 using LunaServer.Command;
 using LunaServer.Command.Command;
@@ -10,6 +11,9 @@ using LunaServer.Settings;
 using LunaServer.System;
 using LunaServer.Utilities;
 using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,6 +29,10 @@ namespace LunaServer
                 Console.Title = $"LMPServer {Common.CurrentVersion}";
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = LunaTime.UtcNow.Ticks;
+
+                //We cannot run more than 6 instances ofd servers + clients as otherwise the sync time will fail (30 seconds / 5 seconds = 6) but we use 3 for safety
+                if (GetRunningInstances() > 3)
+                    throw new HandledException("Cannot run more than 3 servers at a time!");
                 
                 //Start the server clock
                 ServerContext.ServerClock.Start();
@@ -114,5 +122,10 @@ namespace LunaServer
             new ShutDownCommand().Execute("Caught Ctrl+C");
             Thread.Sleep(5000);
         }
+
+        /// <summary>
+        /// Return the number of running instances.
+        /// </summary>
+        private static int GetRunningInstances() => Process.GetProcessesByName(Path.GetFileNameWithoutExtension(Assembly.GetEntryAssembly().Location)).Length;
     }
 }

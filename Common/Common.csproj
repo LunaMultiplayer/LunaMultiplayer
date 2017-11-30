@@ -245,7 +245,11 @@
     <Compile Include="PlayerStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerInfo.cs" />
-    <Compile Include="TimeRetriever.cs" />
+    <Compile Include="Time\LunaTime.cs" />
+    <Compile Include="Time\TimeRetrieverNtp.cs" />
+    <Compile Include="Time\TimeRetrieverNist.cs" />
+    <Compile Include="Time\TimeEnums.cs" />
+    <Compile Include="Time\TimeRetriever.cs" />
     <Compile Include="Xml\LunaXmlSerializer.cs" />
     <Compile Include="Xml\XmlCommentAttribute.cs" />
   </ItemGroup>

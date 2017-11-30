@@ -1,5 +1,5 @@
-﻿using System;
-using LunaCommon;
+﻿using LunaCommon.Time;
+using System;
 
 namespace MasterServer
 {

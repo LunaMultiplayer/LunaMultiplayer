@@ -15,7 +15,6 @@ using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
-using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPositionSys;
@@ -26,9 +25,9 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using LunaCommon.Time;
 using System;
 using System.Threading;
-using LunaCommon;
 
 namespace LunaClient.Network
 {

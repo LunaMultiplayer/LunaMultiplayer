@@ -156,6 +156,7 @@
     <Compile Include="Lidgren\LidgrenServer.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\HandledException.cs" />
+    <Compile Include="Utilities\InstancesChecker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

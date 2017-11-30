@@ -1,9 +1,9 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
+using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
-using LunaCommon;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselRemoveSys

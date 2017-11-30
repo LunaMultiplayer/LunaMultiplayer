@@ -1,6 +1,6 @@
 ﻿using LunaCommon.Message.Base;
+using LunaCommon.Time;
 using System;
-using LunaCommon;
 
 namespace LunaClient.Network
 {

@@ -1,6 +1,6 @@
 ﻿using LunaCommon;
 using LunaCommon.Message.Data.MasterServer;
-using System;
+using LunaCommon.Time;
 using System.Net;
 
 namespace MasterServer

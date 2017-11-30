@@ -1,10 +1,10 @@
 ﻿using LunaCommon.Message;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
+using LunaCommon.Time;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
-using LunaCommon;
 
 namespace LMP.Tests
 {
