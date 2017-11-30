@@ -1,9 +1,11 @@
 ﻿using Lidgren.Network;
+using LunaClient.Systems.Ping;
 using LunaCommon;
 using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Message.MasterServer;
 using LunaCommon.Time;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using UniLinq;
@@ -14,7 +16,7 @@ namespace LunaClient.Network
     public class NetworkServerList
     {
         public static List<IPEndPoint> MasterServers { get; } = new List<IPEndPoint>();
-        public static List<ServerInfo> Servers { get; private set; } = new List<ServerInfo>();
+        public static ConcurrentDictionary<string, ServerInfo> Servers { get; private set; } = new ConcurrentDictionary<string, ServerInfo>();
         private static readonly Random Random = new Random();
 
         /// <summary>
@@ -58,14 +60,13 @@ namespace LunaClient.Network
                 if (msgDeserialized.Data is MsReplyServersMsgData data)
                 {
                     Servers.Clear();
-
                     for (var i = 0; i < data.Id.Length; i++)
                     {
-                        Servers.Add(new ServerInfo
+                        PingSystem.QueuePing(data.Ip[i]);
+                        Servers.TryAdd(data.Ip[i], new ServerInfo
                         {
                             Id = data.Id[i],
                             Ip = data.Ip[i],
-                            Ping = Ping(data.Ip[i]),
                             Description = data.Description[i],
                             Cheats = data.Cheats[i],
                             ServerName = data.ServerName[i],
@@ -141,22 +142,6 @@ namespace LunaClient.Network
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
               .Select(s => s[Random.Next(s.Length)]).ToArray());
-        }
-
-        private static int Ping(string host)
-        {
-            if (IPAddress.TryParse(host, out var ip))
-            {
-                if (ip.Equals(IPAddress.Loopback))
-                    return 0;
-
-                var icmp = new Icmp.Icmp(ip);
-                var response = icmp.Ping();
-                return response.Equals(TimeSpan.MaxValue) ? 9999 :
-                    (int)Math.Truncate(response.TotalMilliseconds);
-            }
-
-            return 9999;
         }
     }
 }

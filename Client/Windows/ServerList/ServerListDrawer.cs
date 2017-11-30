@@ -23,7 +23,7 @@ namespace LunaClient.Windows.ServerList
             {
                 NetworkServerList.RequestServers();
                 Thread.Sleep(500);
-                DisplayedServers = NetworkServerList.Servers;
+                DisplayedServers = NetworkServerList.Servers.Values;
             }
             GUILayout.EndHorizontal();
 

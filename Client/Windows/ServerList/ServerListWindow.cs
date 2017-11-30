@@ -9,7 +9,7 @@ namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow : Window<ServerListWindow>
     {
-        public IEnumerable<ServerInfo> DisplayedServers { get; set; } = NetworkServerList.Servers;
+        public IEnumerable<ServerInfo> DisplayedServers { get; set; } = NetworkServerList.Servers.Values;
         protected GUIStyle BigLabelStyle { get; set; }
         protected Vector2 VerticalScrollPosition { get; set; }
         protected Vector2 HorizontalScrollPosition { get; set; }

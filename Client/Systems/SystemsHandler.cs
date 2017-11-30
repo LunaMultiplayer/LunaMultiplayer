@@ -32,6 +32,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
 using System;
+using LunaClient.Systems.Ping;
 
 namespace LunaClient.Systems
 {
@@ -44,6 +45,7 @@ namespace LunaClient.Systems
             SystemsContainer.Get<ModApiSystem>(),
             SystemsContainer.Get<HandshakeSystem>(),
             SystemsContainer.Get<TimeSyncerSystem>(),
+            SystemsContainer.Get<PingSystem>(),
             SystemsContainer.Get<KerbalSystem>(),
             SystemsContainer.Get<VesselLockSystem>(),
             SystemsContainer.Get<GameSceneSystem>(),

@@ -73,10 +73,6 @@
     <Compile Include="Base\Interface\IWindow.cs" />
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
-    <Compile Include="Network\Icmp\EchoMessage.cs" />
-    <Compile Include="Network\Icmp\Icmp.cs" />
-    <Compile Include="Network\Icmp\IcmpMessage.cs" />
-    <Compile Include="Network\Icmp\InformationMessage.cs" />
     <Compile Include="Systems\Flag\FlagEvents.cs" />
     <Compile Include="Systems\GameScene\GameSceneSystem.cs" />
     <Compile Include="Systems\GameScene\GameSceneEvents.cs" />
@@ -84,6 +80,7 @@
     <Compile Include="Systems\Groups\GroupMessageSender.cs" />
     <Compile Include="Systems\Groups\GroupSystem.cs" />
     <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
+    <Compile Include="Systems\Ping\PingSystem.cs" />
     <Compile Include="Systems\VesselChangeSys\VesselChangeDetector.cs" />
     <Compile Include="Systems\VesselChangeSys\VesselChangeSystem.cs" />
     <Compile Include="Systems\VesselChangeSys\VesselChangeChecker.cs" />
@@ -252,7 +249,6 @@
     <Compile Include="Windows\WindowsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Network\Icmp\Copyright.txt" />
     <Content Include="Resources\LMPButton.png" />
     <Content Include="Resources\LMPButtonLow.png" />
   </ItemGroup>
