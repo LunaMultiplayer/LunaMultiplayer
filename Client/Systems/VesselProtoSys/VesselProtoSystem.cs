@@ -6,6 +6,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -37,6 +38,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public VesselRemoveSystem VesselRemoveSystem => SystemsContainer.Get<VesselRemoveSystem>();
 
+        public Queue<Vessel> FlagsToSend = new Queue<Vessel>();
+
         #endregion
 
         #region Base overrides
@@ -47,6 +50,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             base.OnEnabled();
             GameEvents.onVesselWasModified.Add(VesselProtoEvents.VesselModified);
+            GameEvents.onVesselGoOnRails.Add(VesselProtoEvents.VesselGoOnRails);
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckVesselsToLoadReloadWhileNotInFlight));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToReload));
@@ -59,6 +63,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             base.OnDisabled();
             GameEvents.onVesselWasModified.Remove(VesselProtoEvents.VesselModified);
+            GameEvents.onVesselGoOnRails.Remove(VesselProtoEvents.VesselGoOnRails);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();
