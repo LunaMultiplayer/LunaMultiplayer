@@ -178,7 +178,7 @@ namespace LunaClient.Systems.VesselPositionSys
             else
             {
                 var curRotation = Quaternion.Lerp(Rotation, Target.Rotation, lerpPercentage);
-                //var curPosition = Vector3.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
+                var curPosition = Vector3.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
                 var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
                 //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
@@ -198,6 +198,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     case Vessel.Situations.LANDED:
                     case Vessel.Situations.SPLASHED:
+                        if (!Vessel.packed)
+                        {
+                            Vessel.SetPosition(curPosition);
+                        }
                         Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
                         Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
                         Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
