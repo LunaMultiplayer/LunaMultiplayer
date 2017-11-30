@@ -62,6 +62,10 @@ namespace LunaClient.Network
                     Servers.Clear();
                     for (var i = 0; i < data.Id.Length; i++)
                     {
+                        //Filter servers with diferent version
+                        if (data.ServerVersion[i] != Common.CurrentVersion)
+                            continue;
+
                         PingSystem.QueuePing(data.Ip[i]);
                         Servers.TryAdd(data.Ip[i], new ServerInfo
                         {
@@ -80,7 +84,7 @@ namespace LunaClient.Network
                             DropControlOnExitFlight = data.DropControlOnExitFlight[i],
                             VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
                             DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
-                            Version = data.Version
+                            ServerVersion = data.ServerVersion[i]
                         });
                     }
                 }

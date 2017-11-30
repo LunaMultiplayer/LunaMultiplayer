@@ -4,6 +4,7 @@
     {
         public long Id { get; set; }
         public string Ip { get; set; }
+        public string ServerVersion { get; set; }
         public int Ping { get; set; }
         public bool Cheats { get; set; }
         public int GameMode { get; set; }
@@ -12,7 +13,6 @@
         public int PlayerCount { get; set; }
         public string ServerName { get; set; }
         public string Description { get; set; }
-        public string Version { get; set; }
         public int WarpMode { get; set; }
         public int TerrainQuality { get; set; }
         public int VesselUpdatesSendMsInterval { get; set; }

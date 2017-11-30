@@ -152,7 +152,7 @@ namespace MasterServer
                 case MasterServerMessageSubType.RequestServers:
                     var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
                     Logger.Log(LogLevels.Normal, $"LIST REQUEST from: {netMsg.SenderEndPoint} v: {version}");
-                    SendServerLists(netMsg, peer, version);
+                    SendServerLists(netMsg, peer);
                     break;
                 case MasterServerMessageSubType.Introduction:
                     var msgData = (MsIntroductionMsgData)message.Data;
@@ -177,13 +177,14 @@ namespace MasterServer
         /// <summary>
         /// Return the list of servers that match the version specified
         /// </summary>
-        private static void SendServerLists(NetIncomingMessage netMsg, NetPeer peer, string version)
+        private static void SendServerLists(NetIncomingMessage netMsg, NetPeer peer)
         {
-            var values = ServerDictionary.Values.Where(s => s.Info.Version == version).OrderBy(v => v.Info.Id).ToArray();
+            var values = ServerDictionary.Values.OrderBy(v => v.Info.Id).ToArray();
 
             var msgData = MasterServerMessageFactory.CreateNewMessageData<MsReplyServersMsgData>();
 
             msgData.Id = values.Select(s => s.Info.Id).ToArray();
+            msgData.ServerVersion = values.Select(s => s.Info.ServerVersion).ToArray();
             msgData.Ip = values.Select(s => s.Info.Ip).ToArray();
             msgData.Cheats = values.Select(s => s.Info.Cheats).ToArray();
             msgData.Description = values.Select(s => s.Info.Description).ToArray();

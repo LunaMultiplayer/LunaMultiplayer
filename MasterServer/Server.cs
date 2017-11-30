@@ -22,6 +22,7 @@ namespace MasterServer
                 Id = msg.Id,
                 Ip = ExternalEndpoint.Address.ToString(),
                 Cheats = msg.Cheats,
+                ServerVersion = msg.ServerVersion,
                 ShowVesselsInThePast = msg.ShowVesselsInThePast,
                 Description = msg.Description,
                 DropControlOnExit = msg.DropControlOnExit,
@@ -32,7 +33,6 @@ namespace MasterServer
                 ModControl = msg.ModControl,
                 PlayerCount = msg.PlayerCount,
                 ServerName = msg.ServerName,
-                Version = msg.ServerVersion,
                 WarpMode = msg.WarpMode,
                 TerrainQuality = msg.TerrainQuality
             };
