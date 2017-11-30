@@ -73,6 +73,7 @@ namespace LunaClient.Systems.Asteroid
         /// </summary>
         public void ResetAsteroidsSeed()
         {
+            //TODO we found that this happens even without LMP, do we need all this stuff?
             foreach (var psm in HighLogic.CurrentGame.scenarios
                 .Where(psm => psm?.moduleName == "ScenarioDiscoverableObjects" && psm.moduleRef != null))
             {
@@ -111,7 +112,7 @@ namespace LunaClient.Systems.Asteroid
                     LunaLog.Log($"[LMP]: Spawning {asteroidsToSpawn} asteroids");
                     for (var i = 0; i < asteroidsToSpawn; i++)
                     {
-                        ScenarioController.SpawnAsteroid();
+                        ScenarioController?.SpawnAsteroid();
                     }
                 }
             }
