@@ -198,8 +198,9 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     case Vessel.Situations.LANDED:
                     case Vessel.Situations.SPLASHED:
-                        if (!Vessel.packed)
+                        if (!Vessel.packed && FlightGlobals.ActiveVessel.id != VesselId)
                         {
+                            //Only call this when the vessels are in the ground and VERY close
                             Vessel.SetPosition(curPosition);
                         }
                         Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
