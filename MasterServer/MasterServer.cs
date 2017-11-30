@@ -29,8 +29,6 @@ namespace MasterServer
 
         public static void Start()
         {
-            RunServer = true;
-
             var config = new NetPeerConfiguration("masterserver")
             {
                 AutoFlushSendQueue = false, //Set it to false so lidgren doesn't wait until msg.size = MTU for sending

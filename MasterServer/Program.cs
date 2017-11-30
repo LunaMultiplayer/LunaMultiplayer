@@ -1,6 +1,8 @@
 ﻿using LunaCommon;
+using MasterServer.Listener;
 using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace MasterServer
 {
@@ -41,7 +43,11 @@ namespace MasterServer
             Logger.Log(LogLevels.Normal, $"Starting MasterServer at port: {MasterServer.Port}");
 
             if (CheckPort())
+            {
+                MasterServer.RunServer = true;
+                Task.Run(() => new LunaHttpServer().Listen(8080));
                 MasterServer.Start();
+            }
         }
 
         private static bool CheckPort()
