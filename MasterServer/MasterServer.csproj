@@ -55,9 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
+    <Compile Include="FloodControl.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Listener\LunaHttpServer.cs" />
-    <Compile Include="Listener\HttpProcessor.cs" />
+    <Compile Include="Http\LunaHttpServer.cs" />
+    <Compile Include="Http\HttpProcessor.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MasterServer.cs" />
     <Compile Include="Program.cs" />

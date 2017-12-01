@@ -22,7 +22,7 @@ namespace MasterServer
         public static int ServerMsTick { get; set; } = 100;
         public static int ServerMsTimeout { get; set; } = 15000;
         public static int ServerRemoveMsCheckInterval { get; set; } = 5000;
-        public static ushort Port { get; set; }
+        public static ushort Port { get; set; } = 8700;
         public static bool RunServer { get; set; }
         public static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
         private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
@@ -65,10 +65,13 @@ namespace MasterServer
                             Logger.Log(LogLevels.Error, msg.ReadString());
                             break;
                         case NetIncomingMessageType.UnconnectedData:
-                            var messageBytes = msg.ReadBytes(msg.LengthBytes);
-                            var message = GetMessage(messageBytes);
-                            if (message!= null)
-                                HandleMessage(message, msg, peer);
+                            if (FloodControl.AllowRequest(msg.SenderEndPoint.Address))
+                            {
+                                var messageBytes = msg.ReadBytes(msg.LengthBytes);
+                                var message = GetMessage(messageBytes);
+                                if (message != null)
+                                    HandleMessage(message, msg, peer);
+                            }
                             break;
                     }
                 }
@@ -154,9 +157,9 @@ namespace MasterServer
                     break;
                 case MasterServerMessageSubType.Introduction:
                     var msgData = (MsIntroductionMsgData)message.Data;
-                    Logger.Log(LogLevels.Normal, $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server ID: {msgData.Id}");
                     if (ServerDictionary.TryGetValue(msgData.Id, out var server))
                     {
+                        Logger.Log(LogLevels.Normal, $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
                         peer.Introduce(
                             server.InternalEndpoint,
                             server.ExternalEndpoint,
@@ -216,7 +219,7 @@ namespace MasterServer
             if (!ServerDictionary.ContainsKey(msgData.Id))
             {
                 ServerDictionary.TryAdd(msgData.Id, new Server(msgData, netMsg.SenderEndPoint));
-                Logger.Log(LogLevels.Normal, $"NEW SERVER: {netMsg.SenderEndPoint} ID: {msgData.Id}");
+                Logger.Log(LogLevels.Normal, $"NEW SERVER: {netMsg.SenderEndPoint}");
             }
             else
             {
@@ -236,7 +239,7 @@ namespace MasterServer
 
                 foreach (var serverId in serversIdsToRemove)
                 {
-                    Logger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint} ID: {serverId.Key}");
+                    Logger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
                     ServerDictionary.TryRemove(serverId.Key, out var _);
                 }
 

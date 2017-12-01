@@ -4,7 +4,7 @@ using System.IO;
 using System.Net.Sockets;
 using System.Threading;
 
-namespace MasterServer.Listener
+namespace MasterServer.Http
 {
     public class HttpProcessor
     {
