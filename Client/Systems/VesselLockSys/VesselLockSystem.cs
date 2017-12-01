@@ -152,6 +152,7 @@ namespace LunaClient.Systems.VesselLockSys
             }
         }
 
+
         #endregion
 
         #region Public methods
@@ -176,6 +177,7 @@ namespace LunaClient.Systems.VesselLockSys
             if (FlightGlobals.ActiveVessel != null && currentSpectatorLock == null)
                 SystemsContainer.Get<LockSystem>().AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
             VesselCommon.IsSpectating = true;
+            HighLogic.CurrentGame.Parameters.Flight.CanEVA = false;
         }
 
         public void StopSpectating()
@@ -183,6 +185,7 @@ namespace LunaClient.Systems.VesselLockSys
             InputLockManager.RemoveControlLock(SpectateLock);
             SystemsContainer.Get<LockSystem>().ReleaseSpectatorLock();
             VesselCommon.IsSpectating = false;
+            HighLogic.CurrentGame.Parameters.Flight.CanEVA = true;
         }
 
         /// <summary>
@@ -198,6 +201,11 @@ namespace LunaClient.Systems.VesselLockSys
             }
         }
 
+
+        #endregion
+
+        #region Private methods
+
         /// <summary>
         /// Get all the locks of a vessel
         /// </summary>
@@ -210,10 +218,6 @@ namespace LunaClient.Systems.VesselLockSys
             if (!LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vessel.id, force);
         }
-
-        #endregion
-
-        #region Private methods
 
         /// <summary>
         /// Return the vessel ids of the vessels where we have an update lock
