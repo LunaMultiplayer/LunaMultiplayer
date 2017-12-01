@@ -35,7 +35,7 @@ artifacts:
 deploy: off
 notifications:
  - provider: Webhook
-   url: http://lunamultiplayer.com/webhook/build
+   url: http://lunamultiplayer.com/webhook/debug
    on_build_success: true
    on_build_failure: true
    on_build_status_changed: true
