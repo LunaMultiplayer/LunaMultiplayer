@@ -11,21 +11,13 @@ namespace LunaClient.Systems.VesselDockSys
 {
     public class VesselDockMessageSender : SubSystem<VesselDockSystem>, IMessageSender
     {
-        private int _delaySeconds;
-
         public void SendMessage(IMessageData msg)
         {
-            TaskFactory.StartNew(() =>
-            {
-                if (_delaySeconds > 0)
-                    Thread.Sleep(_delaySeconds);
-                NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
-            });
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg)));
         }
 
         public void SendDockInformation(VesselDockStructure dock, int subspaceId, int delaySeconds = 0)
         {
-            _delaySeconds = delaySeconds;
             var vesselBytes = VesselSerializer.SerializeVessel(dock.DominantVessel.BackupVessel());
             if (vesselBytes.Length > 0)
             {
@@ -35,7 +27,11 @@ namespace LunaClient.Systems.VesselDockSys
                 msgData.FinalVesselData = vesselBytes;
                 msgData.SubspaceId = subspaceId;
 
-                SendMessage(msgData);
+                TaskFactory.StartNew(() =>
+                {
+                    Thread.Sleep(delaySeconds);
+                    NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msgData));
+                });
             }
         }
     }
