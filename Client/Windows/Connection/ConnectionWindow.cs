@@ -32,7 +32,7 @@ namespace LunaClient.Windows.Connection
 
         protected string ServerName { get; set; } = "Local";
         protected string ServerAddress { get; set; } = "127.0.0.1";
-        protected string ServerPort { get; set; } = "6702";
+        protected string ServerPort { get; set; } = "8800";
 
         protected const float WindowHeight = 400;
         protected const float WindowWidth = 400;

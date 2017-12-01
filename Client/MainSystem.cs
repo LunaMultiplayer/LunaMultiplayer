@@ -434,7 +434,7 @@ namespace LunaClient
         private static void HandleCommandLineArgs()
         {
             var valid = false;
-            var port = 6702;
+            var port = 8800;
 
             var commands = Environment.GetCommandLineArgs();
             var addressIndex = commands.IndexOf("-lmp") + 1;

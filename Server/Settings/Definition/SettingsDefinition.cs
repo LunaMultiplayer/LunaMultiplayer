@@ -10,7 +10,7 @@ namespace LunaServer.Settings.Definition
     public class SettingsDefinition
     {
         [XmlComment(Value = "The UDP port the server listens on. You don't need to open it in your router if RegisterWithMasterServer = true")]
-        public int Port { get; set; } = 6702;
+        public int Port { get; set; } = 8800;
 
         [XmlComment(Value = "Name of the server. Max 30 char")]
         public string ServerName { get; set; } = "Luna Server";

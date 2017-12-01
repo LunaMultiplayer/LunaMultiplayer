@@ -83,7 +83,7 @@ namespace LunaClient.Windows.Connection
                             {
                                 Name = ServerName,
                                 Address = ServerAddress,
-                                Port = 6702
+                                Port = 8800
                             };
                             int.TryParse(ServerPort, out AddEntry.Port);
                             AddEventHandled = false;
@@ -94,7 +94,7 @@ namespace LunaClient.Windows.Connection
                             {
                                 Name = ServerName,
                                 Address = ServerAddress,
-                                Port = 6702
+                                Port = 8800
                             };
                             int.TryParse(ServerPort, out EditEntry.Port);
                             EditEventHandled = false;
