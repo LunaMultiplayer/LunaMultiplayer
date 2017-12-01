@@ -66,7 +66,30 @@ namespace LunaClient.Systems.VesselChangeSys
                     .Select(p => uint.Parse(p.GetValue("cid")));
 
                 change.PartsToRetract = newRetractedParts.Except(currentRetractedParts).ToArray();
+                
+                var currentExtendedLadders = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("RetractableLadder")
+                        && m.HasValue("StateName") && m.GetValue("StateName") == "Extended"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
 
+                var newExtendedLadders = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("RetractableLadder")
+                        && m.HasValue("StateName") && m.GetValue("StateName") == "Extended"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
+
+                change.LaddersToExtend = newExtendedLadders.Except(currentExtendedLadders).ToArray();
+
+                var currentRetractedLadders = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("RetractableLadder")
+                        && m.HasValue("StateName") && m.GetValue("StateName") == "Retracted"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
+
+                var newRetractedLadders = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("RetractableLadder")
+                        && m.HasValue("StateName") && m.GetValue("StateName") == "Retracted"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
+
+                change.LaddersToRetract = newRetractedLadders.Except(currentRetractedLadders).ToArray();
 
                 var existingEnabledActionGrps = Existing.GetNode("ACTIONGROUPS").values.Cast<ConfigNode.Value>()
                     .Where(v => v.value.Contains("True"))

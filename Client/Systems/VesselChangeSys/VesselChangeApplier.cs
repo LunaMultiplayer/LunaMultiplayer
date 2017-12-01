@@ -46,6 +46,24 @@ namespace LunaClient.Systems.VesselChangeSys
                     }
                 }
 
+                foreach (var ladderToExtend in vesselChange.LaddersToExtend)
+                {
+                    var part = vessel.parts.FirstOrDefault(p => p.craftID == ladderToExtend);
+                    if (part != null)
+                    {
+                        part.FindModuleImplementing<RetractableLadder>()?.Extend();
+                    }
+                }
+
+                foreach (var ladderToExtend in vesselChange.LaddersToRetract)
+                {
+                    var part = vessel.parts.FirstOrDefault(p => p.craftID == ladderToExtend);
+                    if (part != null)
+                    {
+                        part.FindModuleImplementing<RetractableLadder>()?.Retract();
+                    }
+                }
+
                 foreach (var shieldToClose in vesselChange.ShieldsToClose)
                 {
                     var part = vessel.parts.FirstOrDefault(p => p.craftID == shieldToClose);

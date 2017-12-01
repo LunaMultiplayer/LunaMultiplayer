@@ -15,6 +15,8 @@ namespace LunaClient.Systems.VesselChangeSys
         public uint[] ShieldsToOpen { get; set; }
         public uint[] PartsToExtend { get; set; }
         public uint[] PartsToRetract { get; set; }
+        public uint[] LaddersToExtend { get; set; }
+        public uint[] LaddersToRetract { get; set; }
         public uint[] EnginesToStart { get; set; }
         public uint[] EnginesToStop { get; set; }
         public KSPActionGroup[] ActionGroupsToEnable { get; set; }
@@ -28,6 +30,8 @@ namespace LunaClient.Systems.VesselChangeSys
                 (ShieldsToOpen != null && ShieldsToOpen.Any()) ||
                 (PartsToExtend != null && PartsToExtend.Any()) ||
                 (PartsToRetract != null && PartsToRetract.Any()) ||
+                (LaddersToExtend != null && LaddersToExtend.Any()) ||
+                (LaddersToRetract != null && LaddersToRetract.Any()) ||
                 (EnginesToStart != null && EnginesToStart.Any()) ||
                 (EnginesToStop != null && EnginesToStop.Any()) ||
                 (ActionGroupsToEnable != null && ActionGroupsToEnable.Any()) ||
