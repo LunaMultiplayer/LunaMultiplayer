@@ -66,10 +66,6 @@ namespace LunaClient.Systems.Status
                 PlayerStatusList.TryRemove(playerToRemove, out _);
                 LunaLog.Log($"[LMP]: Removed {playerToRemove} from Status list");
             }
-            else
-            {
-                LunaLog.LogError($"[LMP]: Cannot remove non-existant player {playerToRemove}");
-            }
         }
 
         #endregion
