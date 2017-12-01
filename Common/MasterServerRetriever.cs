@@ -61,7 +61,7 @@ namespace LunaCommon
                 }
 
 #if DEBUG
-                parsedServers.Add(new IPEndPoint(IPAddress.Loopback, 6005));
+                parsedServers.Add(new IPEndPoint(IPAddress.Loopback, 8700));
 #endif
 
                 return parsedServers.Select(s => $"{s.Address.ToString()}:{s.Port}").ToArray();
