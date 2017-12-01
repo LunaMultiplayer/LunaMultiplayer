@@ -18,7 +18,7 @@ namespace MasterServer.Http
             while (MasterServer.RunServer)
             {
                 var client = Listener.AcceptTcpClient();
-                var clientEndpoint = ((IPEndPoint)client.Client.RemoteEndPoint).Address;
+                var clientEndpoint = ((IPEndPoint) client.Client.RemoteEndPoint).Address;
 
                 //We only allow requests from the same client every 10 seconds
                 if (!FloodControl.AllowRequest(clientEndpoint))
@@ -36,13 +36,18 @@ namespace MasterServer.Http
                 Thread.Sleep(MasterServer.ServerMsTick);
             }
         }
-        
+
         public static void HandleGetRequest(HttpProcessor p)
         {
             p.WriteSuccess();
-
-            var serializedObjects = Newtonsoft.Json.JsonConvert.SerializeObject(MasterServer.ServerDictionary.Values.Select(s=> s.Info));
-            p.OutputStream.Write(serializedObjects);
+            if (!string.IsNullOrEmpty(p.JQueryCallBack))
+            {
+                p.OutputStream.Write($"{p.JQueryCallBack}({Newtonsoft.Json.JsonConvert.SerializeObject(MasterServer.ServerDictionary.Values.Select(s => s.Info))})");
+            }
+            else
+            {
+                p.OutputStream.Write(Newtonsoft.Json.JsonConvert.SerializeObject(MasterServer.ServerDictionary.Values.Select(s => s.Info)));
+            }
         }
     }
 }

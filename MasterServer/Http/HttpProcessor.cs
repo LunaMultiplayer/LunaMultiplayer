@@ -16,6 +16,7 @@ namespace MasterServer.Http
 
         public string HttpMethod;
         public string HttpUrl;
+        public string JQueryCallBack;
         public string HttpProtocolVersionstring;
         public Hashtable HttpHeaders = new Hashtable();
 
@@ -82,6 +83,7 @@ namespace MasterServer.Http
             }
             HttpMethod = tokens[0].ToUpper();
             HttpUrl = tokens[1];
+            JQueryCallBack = HttpUrl.Contains("jQuery") ? HttpUrl.Substring(0, HttpUrl.LastIndexOf("&")).Substring(HttpUrl.IndexOf("jQuery")) : string.Empty;
             HttpProtocolVersionstring = tokens[2];
         }
 
