@@ -40,12 +40,7 @@ namespace LunaServer.System
             msg.SentTime += WarpSystem.GetSubspaceTimeDifference(client.Subspace);
             foreach (var subspace in WarpSystem.GetPastSubspaces(client.Subspace))
             {
-                if (!OldVesselMessages.ContainsKey(subspace))
-                {
-                    OldVesselMessages.TryAdd(subspace, new ConcurrentQueue<VesselBaseMsgData>());
-                }
-
-                OldVesselMessages[subspace].Enqueue(msg);
+                OldVesselMessages.GetOrAdd(subspace, new ConcurrentQueue<VesselBaseMsgData>()).Enqueue(msg);
             }
         }
 
@@ -69,21 +64,24 @@ namespace LunaServer.System
                     .First();
                 
                 //Now we clone it's message queue
-                var messageQueue = OldVesselMessages[closestPastSubspace].CloneConcurrentQueue();
-
-                //As we cloned a queue from a PAST subspace, we may have many messages 
-                //that are TOO OLD as we are in a future subspace. Therefore, we remove the old
-                //messages for this subspace
-                var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspaceId);
-                while (messageQueue.TryDequeue(out var msg))
+                if (OldVesselMessages.TryGetValue(closestPastSubspace, out var concurrentQueue))
                 {
-                    if (msg.SentTime >= subspaceTime)
-                        break;
-                }
+                    var messageQueue = concurrentQueue.CloneConcurrentQueue();
 
-                //Once we've got the queue clean of old messages we add it do the dictionary 
-                //so the future subspaces fill up our queue.
-                OldVesselMessages.TryAdd(subspaceId, messageQueue);
+                    //As we cloned a queue from a PAST subspace, we may have many messages 
+                    //that are TOO OLD as we are in a future subspace. Therefore, we remove the old
+                    //messages for this subspace
+                    var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspaceId);
+                    while (messageQueue.TryDequeue(out var msg))
+                    {
+                        if (msg.SentTime >= subspaceTime)
+                            break;
+                    }
+
+                    //Once we've got the queue clean of old messages we add it do the dictionary 
+                    //so the future subspaces fill up our queue.
+                    OldVesselMessages.TryAdd(subspaceId, messageQueue);
+                }
             }
         }
 
