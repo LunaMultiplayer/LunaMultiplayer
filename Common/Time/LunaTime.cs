@@ -14,7 +14,10 @@ namespace LunaCommon.Time
         public static DateTime Now => UtcNow.ToLocalTime();
         public static TimeSpan TimeDifference { get; private set; } = TimeSpan.Zero;
 
+        private static readonly Mutex TimeMutex;
         private static readonly Timer Timer;
+
+        private static bool OwnsMutex;
 
         /// <summary>
         /// We sync time with time provider every 30 seconds. This limits the number of clients + servers to 6
@@ -26,6 +29,7 @@ namespace LunaCommon.Time
         /// </summary>
         static LunaTime()
         {
+            TimeMutex = new Mutex(false, "LunaTimeMutex");
             Timer = new Timer(_ => RefreshTimeDifference(), null, 0, TimeSyncIntervalMs);
         }
 
@@ -41,29 +45,37 @@ namespace LunaCommon.Time
         private static void RefreshTimeDifference()
         {
             //In case we run several servers/clients we use a OS level mutex to avoid being kicked from the servers if we make too many requests
-            using (var mutex = new Mutex(true, "LunaTimeMutex", out var ownsMutex))
+            if (TimeMutex.WaitOne(50))
             {
-                if (ownsMutex)
+                OwnsMutex = true;
+                try
                 {
-                    try
-                    {
-                        TimeDifference = DateTime.UtcNow - TimeRetriever.GetTime(TimeProvider.Nist);
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
+                    TimeDifference = DateTime.UtcNow - TimeRetriever.GetTime(TimeProvider.Nist);
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
 
-                    //Make it sleep for 5 seconds to force other instances to advance the timer in case they try to flood the server
-                    Thread.Sleep(5000);
-                    mutex.ReleaseMutex();
-                }
-                else
-                {
-                    //Advance the timer 5,5 seconds to avoid being kicked
-                    Timer.Change(5500, TimeSyncIntervalMs);
-                }
+                //Make it sleep for 5 seconds to force other instances to advance the timer in case they try to flood the server
+                Thread.Sleep(5000);
+                TimeMutex.ReleaseMutex();
             }
+            else
+            {
+                OwnsMutex = false;
+                //Advance the timer 5,5 seconds to avoid being kicked
+                Timer.Change(5500, TimeSyncIntervalMs);
+            }
+        }
+
+        /// <summary>
+        /// Call this when closing to release the mutexes
+        /// </summary>
+        public static void ReleaseMutex()
+        {
+            if (OwnsMutex)
+                TimeMutex.ReleaseMutex();
         }
     }
 }

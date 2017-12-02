@@ -16,6 +16,7 @@ using LunaClient.Windows.Connection;
 using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -248,6 +249,7 @@ namespace LunaClient
         {
             NetworkConnection.Disconnect("Quit game");
             NetworkState = ClientState.Disconnected;
+            LunaTime.ReleaseMutex();
             LunaLog.ProcessLogMessages();
         }
 
