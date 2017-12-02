@@ -30,11 +30,11 @@ namespace LunaClient.Utilities
         /// </summary>
         private static string GetDebugPort()
         {
+            if (!PlatformIsWindows()) return "0";
+
             var outputLogFile = File.Exists(CombinePaths(Client.KspPath, "KSP_x64_Data", "output_log.txt")) ?
                 CombinePaths(Client.KspPath, "KSP_x64_Data", "output_log.txt") : 
                 CombinePaths(Client.KspPath, "KSP_Data", "output_log.txt");
-
-            if (!PlatformIsWindows()) return "0";
 
             var regex = new Regex(@"0\.0\.0\.0:(\d+)");
 
