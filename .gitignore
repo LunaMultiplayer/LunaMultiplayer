@@ -1,4 +1,5 @@
 *.user
+*.userprefs
 .vs/
 TestResults/*
 Client/*.csproj.user

@@ -264,9 +264,9 @@
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
-    <PostBuildEvent>if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
+    <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>xcopy /Y "$(SolutionDir)External\Dependencies\*.dll" "$(TargetDir)"</PreBuildEvent>
+    <PreBuildEvent Condition="'$(OS)' != 'Unix'">xcopy /Y "$(SolutionDir)External\Dependencies\*.dll" "$(TargetDir)"</PreBuildEvent>
   </PropertyGroup>
 </Project>
