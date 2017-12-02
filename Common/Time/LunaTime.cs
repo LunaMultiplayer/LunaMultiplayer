@@ -63,10 +63,10 @@ namespace LunaCommon.Time
             }
             else
             {
-                OwnsMutex = false;
                 //Advance the timer 5,5 seconds to avoid being kicked
                 Timer.Change(5500, TimeSyncIntervalMs);
             }
+            OwnsMutex = false;
         }
 
         /// <summary>
