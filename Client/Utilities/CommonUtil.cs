@@ -34,8 +34,7 @@ namespace LunaClient.Utilities
                 CombinePaths(Client.KspPath, "KSP_x64_Data", "output_log.txt") : 
                 CombinePaths(Client.KspPath, "KSP_Data", "output_log.txt");
 
-            if (!File.Exists(outputLogFile))
-                return null;
+            if (!PlatformIsWindows()) return "000";
 
             var regex = new Regex(@"0\.0\.0\.0:(\d+)");
 
