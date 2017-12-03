@@ -112,6 +112,24 @@ namespace LunaClient.Systems.VesselChangeSys
                     }
                 }
 
+                foreach (var dockToDisable in vesselChange.DockingPortsToDisable)
+                {
+                    var part = vessel.parts.FirstOrDefault(p => p.craftID == dockToDisable);
+                    if (part != null)
+                    {
+                        part.FindModuleImplementing<ModuleDockingNode>()?.deployAnimator?.Toggle();
+                    }
+                }
+
+                foreach (var dockToEnable in vesselChange.DockingPortsToEnable)
+                {
+                    var part = vessel.parts.FirstOrDefault(p => p.craftID == dockToEnable);
+                    if (part != null)
+                    {
+                        part.FindModuleImplementing<ModuleDockingNode>()?.deployAnimator?.Toggle();
+                    }
+                }
+
                 foreach (var actionGroup in vesselChange.ActionGroupsToEnable)
                 {
                     vessel.ActionGroups?.SetGroup(actionGroup, true);

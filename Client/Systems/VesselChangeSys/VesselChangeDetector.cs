@@ -135,20 +135,29 @@ namespace LunaClient.Systems.VesselChangeSys
 
                 change.EnginesToStop = newStoppedEngines.Except(currentStoppedEngines).ToArray();
 
-                //TODO: Fix this
-                change.ShieldsToClose = new uint[0];
-                change.ShieldsToOpen = new uint[0];
-                //var currentOpenShields = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
-                //        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
-                //        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
-                //    .Select(p => uint.Parse(p.GetValue("cid"))).ToArray();
+                var disabledDockingNodes = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
+                        && m.HasValue("state") && m.GetValue("state") == "Disabled"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
 
-                //var newOpenShields = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
-                //        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
-                //        && m.HasValue("deployState") && m.GetValue("deployState") == "RETRACTED"))
-                //    .Select(p => uint.Parse(p.GetValue("cid"))).ToArray();
+                var newDisabledDockingNodes = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
+                        && m.HasValue("state") && m.GetValue("state") == "Disabled"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
 
-                //var shieldsToOpen = newOpenShields.Except(currentOpenShields);
+                change.DockingPortsToDisable = disabledDockingNodes.Except(newDisabledDockingNodes).ToArray();
+
+                var enabledDockingNodes = parts1.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
+                        && m.HasValue("state") && m.GetValue("state") == "Ready"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
+
+                var newEnabledDockingNodes = parts2.Where(p => p.GetNodes("MODULE").Any(m =>
+                        m.HasValue("name") && m.GetValue("name").StartsWith("ModuleDockingNode")
+                        && m.HasValue("state") && m.GetValue("state") == "Ready"))
+                    .Select(p => uint.Parse(p.GetValue("cid")));
+                
+                change.DockingPortsToEnable = enabledDockingNodes.Except(newEnabledDockingNodes).ToArray();
 
                 return change;
             }

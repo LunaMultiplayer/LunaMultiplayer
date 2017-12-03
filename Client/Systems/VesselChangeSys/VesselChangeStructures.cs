@@ -19,6 +19,9 @@ namespace LunaClient.Systems.VesselChangeSys
         public uint[] LaddersToRetract { get; set; }
         public uint[] EnginesToStart { get; set; }
         public uint[] EnginesToStop { get; set; }
+        public uint[] DockingPortsToDisable { get; set; }
+        public uint[] DockingPortsToEnable { get; set; }
+
         public KSPActionGroup[] ActionGroupsToEnable { get; set; }
         public KSPActionGroup[] ActionGroupsToDisable { get; set; }
 
@@ -34,6 +37,8 @@ namespace LunaClient.Systems.VesselChangeSys
                 (LaddersToRetract != null && LaddersToRetract.Any()) ||
                 (EnginesToStart != null && EnginesToStart.Any()) ||
                 (EnginesToStop != null && EnginesToStop.Any()) ||
+                (DockingPortsToDisable != null && DockingPortsToDisable.Any()) ||
+                (DockingPortsToEnable != null && DockingPortsToEnable.Any()) ||
                 (ActionGroupsToEnable != null && ActionGroupsToEnable.Any()) ||
                 (ActionGroupsToDisable != null && ActionGroupsToDisable.Any());
         }
