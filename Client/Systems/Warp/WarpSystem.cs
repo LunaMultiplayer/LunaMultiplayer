@@ -5,7 +5,6 @@ using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Warp;
-using System;
 using System.Collections.Concurrent;
 using UniLinq;
 
@@ -142,17 +141,16 @@ namespace LunaClient.Systems.Warp
 
         #region Public methods
 
-        public int GetMostAdvancedSubspace(int subspace1, int subspace2)
+        /// <summary>
+        /// Changes subspace if the given subspace is more advanced in time
+        /// </summary>
+        public void WarpIfSubspaceIsMoreAdvanced(int newSubspace)
         {
-            var time1Ok = Subspaces.TryGetValue(subspace1, out var time1);
-            var time2Ok = Subspaces.TryGetValue(subspace1, out var time2);
-
-            if (time1Ok && time2Ok)
+            if (Subspaces.TryGetValue(newSubspace, out var newSubspaceTime))
             {
-                return (int)Math.Max(time1, time2);
+                if (CurrentSubspaceTimeDifference < newSubspaceTime)
+                    CurrentSubspace = newSubspace;
             }
-
-            return time1Ok ? subspace1 : subspace2;
         }
 
         public bool PlayerIsInPastSubspace(string player)

@@ -5,7 +5,8 @@ using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using System.Threading;
+using System.Collections;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
 {
@@ -27,12 +28,20 @@ namespace LunaClient.Systems.VesselDockSys
                 msgData.FinalVesselData = vesselBytes;
                 msgData.SubspaceId = subspaceId;
 
-                TaskFactory.StartNew(() =>
-                {
-                    Thread.Sleep(delaySeconds);
-                    NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msgData));
-                });
+                if (delaySeconds > 0)
+                    Client.Singleton.StartCoroutine(DelayedSendMessage(delaySeconds, msgData));
+                else
+                    SendMessage(msgData);
             }
+        }
+
+        /// <summary>
+        /// We cannot use Thread.Sleep() inside a task so we use a coroutine to do a delay...
+        /// </summary>
+        private IEnumerator DelayedSendMessage(float delaySeconds, IMessageData msgData)
+        {
+            yield return new WaitForSeconds(delaySeconds);
+            SendMessage(msgData);
         }
     }
 }
