@@ -20,6 +20,8 @@ namespace LunaClient.Network
 
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
         {
+            ReceiveBufferSize = 500000, //500Kb
+            SendBufferSize = 500000, //500Kb
             AutoFlushSendQueue = false,
             SuppressUnreliableUnorderedAcks = true, //We don't need ack for unreliable unordered!
             MaximumTransmissionUnit = SettingsSystem.CurrentSettings.MtuSize,
