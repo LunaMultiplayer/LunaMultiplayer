@@ -21,8 +21,8 @@ namespace LunaServer.System
 
         public static void ReleaseAndSendLockReleaseMessage(LockDefinition lockDefinition)
         {
-            var lockResult = LockSystem.ReleaseLock(lockDefinition);
-            if (lockResult)
+            var lockReleaseResult = LockSystem.ReleaseLock(lockDefinition);
+            if (lockReleaseResult)
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockReleaseMsgData>();
                 msgData.Lock = lockDefinition;

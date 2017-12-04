@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using LunaCommon;
@@ -31,28 +30,16 @@ namespace LunaClient.Systems
 
             void HandleData()
             {
-                var newProtoUpd = GetVesselProtoUpdateFromBytes(vesselData, vesselId);
-                if (newProtoUpd == null) return;
+                if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
+                {
+                    vesselUpdate.Update(vesselData, vesselId);
+                }
+                else
+                {
+                    AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, vesselId));
+                }
 
-                SystemsContainer.Get<VesselChangeSystem>().ProcessVesselChange(newProtoUpd.ProtoVessel);
-                AllPlayerVessels.AddOrUpdate(vesselId, newProtoUpd, (key, existingVal) => newProtoUpd);
             }
-        }
-
-        /// <summary>
-        /// Returns a VesselProtoUpdate structure from a bytearray and a vesselid.
-        /// If there's an error it returns null.
-        /// </summary>
-        public static VesselProtoUpdate GetVesselProtoUpdateFromBytes(byte[] vesselData, Guid vesselId)
-        {
-            var vesselNode = ConfigNodeSerializer.Deserialize(vesselData);
-            if (vesselNode != null && vesselId == Common.ConvertConfigStringToGuid(vesselNode.GetValue("pid")))
-            {
-                //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
-                return new VesselProtoUpdate(vesselNode, vesselId);
-            }
-
-            return null;
         }
 
         /// <summary>
@@ -75,6 +62,9 @@ namespace LunaClient.Systems
     public class VesselProtoUpdate
     {
         public Guid VesselId { get; set; }
+        public ConfigNode VesselNode { get; set; }
+        public string VesselHash { get; set; }
+        public bool UpdatesChecked { get; set; }
 
         private ProtoVessel _protoVessel;
         public ProtoVessel ProtoVessel
@@ -83,22 +73,33 @@ namespace LunaClient.Systems
             set => _protoVessel = value;
         }
 
-        public ConfigNode VesselNode { get; set; }
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
         public bool VesselExist => Vessel != null;
         public bool ShouldBeLoaded => SettingsSystem.ServerSettings.ShowVesselsInThePast ||
                                       !VesselCommon.VesselIsControlledAndInPastSubspace(VesselId);
 
-        public VesselProtoUpdate(ConfigNode vessel, Guid vesselId)
+        public VesselProtoUpdate(byte[] vesselData, Guid vesselId)
         {
             VesselId = vesselId;
-            VesselNode = vessel;
+            VesselNode = ConfigNodeSerializer.Deserialize(vesselData);
+            VesselHash = Common.CalculateSha256Hash(vesselData);
         }
 
-        public VesselProtoUpdate(VesselProtoUpdate protoUpdate)
+        public void Update(byte[] vesselData, Guid vesselId)
         {
-            VesselId = protoUpdate.VesselId;
-            ProtoVessel = protoUpdate.ProtoVessel;
+            if (VesselId != vesselId)
+            {
+                LunaLog.LogError("Cannot update a VesselProtoUpdate with a differente vesselId");
+                return;
+            }
+
+            var newHash = Common.CalculateSha256Hash(vesselData);
+            if (VesselHash == newHash) return; //Skip Updating as the hash is the same
+
+            VesselNode = ConfigNodeSerializer.Deserialize(vesselData);
+            ProtoVessel = VesselCommon.CreateSafeProtoVesselFromConfigNode(VesselNode, VesselId);
+            VesselHash = newHash;
+            UpdatesChecked = false;
         }
     }
 }

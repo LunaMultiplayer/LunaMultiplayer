@@ -81,10 +81,6 @@
     <Compile Include="Systems\Groups\GroupSystem.cs" />
     <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
     <Compile Include="Systems\Ping\PingSystem.cs" />
-    <Compile Include="Systems\VesselChangeSys\VesselChangeDetector.cs" />
-    <Compile Include="Systems\VesselChangeSys\VesselChangeSystem.cs" />
-    <Compile Include="Systems\VesselChangeSys\VesselChangeChecker.cs" />
-    <Compile Include="Systems\VesselChangeSys\VesselChangeStructures.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
@@ -93,8 +89,8 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
-    <Compile Include="Systems\VesselChangeSys\VesselChangeApplier.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselUpdater.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeEvents.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeSystem.cs" />

@@ -8,12 +8,6 @@ namespace LunaClient.Systems.Asteroid
 {
     public class AsteroidEventHandler : SubSystem<AsteroidSystem>
     {
-        public void OnGameSceneLoadRequested(GameScenes scene)
-        {
-            //Force the worker to find the scenario module again.
-            System.ResetAsteroidsSeed();
-        }
-
         public void OnAsteroidSpawned(Vessel asteroid)
         {
             if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))

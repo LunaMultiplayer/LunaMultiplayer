@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselChangeSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -19,14 +18,13 @@ namespace LunaClient.Systems.GameScene
         {
             if (data == GameScenes.FLIGHT) return;
 
-            //Always release the update lock and the spectate lock
+            //Always release the Update/UnloadedUpdate lock and the spectate lock
             SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Update);
-            SystemsContainer.Get<LockSystem>().ReleaseSpectatorLock();
-            InputLockManager.RemoveControlLock(VesselLockSystem.SpectateLock);
+            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.UnloadedUpdate);
+            SystemsContainer.Get<VesselLockSystem>().StopSpectating();
 
             //We are going to another screen so clear up the systems
             VesselsProtoStore.ClearSystem();
-            SystemsContainer.Get<VesselChangeSystem>().ClearSystem();
             SystemsContainer.Get<VesselRemoveSystem>().ClearSystem();
             SystemsContainer.Get<VesselFlightStateSystem>().ClearSystem();
 

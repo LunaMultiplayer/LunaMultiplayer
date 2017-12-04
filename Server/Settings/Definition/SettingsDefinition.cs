@@ -113,15 +113,9 @@ namespace LunaServer.Settings.Definition
         [XmlComment(Value = "Interval in Ms at wich the client will send updates for vessels that are uncontrolled but nearby him.")]
         public int SecondaryVesselUpdatesSendMsInterval { get; set; } = 500;
 
-        [XmlComment(Value = "Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions to the server " +
-                            "when they are close to other players." +
+        [XmlComment(Value = "Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions (ProtoVessel) to the server." +
                             "Caution! Sending a vessel definition (ProtoVessel) very often could make clients with slow computers to lag a lot!")]
         public int VesselDefinitionSendMsInterval { get; set; } = 500;
-
-        [XmlComment(Value = "Interval in ms at wich users will send the controlled vessel definitions to the server " +
-                            "when they are far from other players" +
-                            "Caution! Sending a vessel definition (ProtoVessel) very often could make clients with slow computers to lag a lot!")]
-        public int VesselDefinitionSendFarMsInterval { get; set; } = 1000;
 
         [XmlComment(Value = "Relay system mode. Dictionary uses more RAM but it's faster. DataBase use disk space instead but it's slower" +
                             "Values: Dictionary, DataBase")]

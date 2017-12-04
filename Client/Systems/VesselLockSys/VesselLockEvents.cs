@@ -15,9 +15,10 @@ namespace LunaClient.Systems.VesselLockSys
             //Safety check
             if (vessel == null) return;
 
-            //In case we are reloading our current own vessel (after a docking that was not detected for example) we DON'T want to release our locks
+            //In case we are reloading our current own vessel we DON'T want to release our locks
             //As that would mean that an spectator could get the control of our vessel while we are reloading it.
             //Therefore we just ignore this whole thing to avoid releasing our locks.
+            //Reloading our own current vessel is a bad practice so this case should not happen anyway...
             if (LockSystem.LockQuery.GetControlLockOwner(vessel.id) == SettingsSystem.CurrentSettings.PlayerName)
                 return;
 
@@ -30,14 +31,9 @@ namespace LunaClient.Systems.VesselLockSys
                 SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Control);
             }
 
-            if (!LockSystem.LockQuery.ControlLockExists(vessel.id) || 
-                LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            if (LockSystem.LockQuery.ControlLockExists(vessel.id) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
-                //We managed to get the ship so set the update lock and in case we don't have the control lock aquire it.
-                System.StopSpectatingAndGetControl(vessel, false);
-            }
-            else
-            {
+                //We switched to a vessel that is controlled by another player so start spectating
                 System.StartSpectating();
             }
         }

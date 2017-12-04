@@ -127,6 +127,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #endregion
 
+        #region Public methods
+
         /// <summary>
         /// Gets the latest received position of a vessel
         /// </summary>
@@ -138,5 +140,18 @@ namespace LunaClient.Systems.VesselPositionSys
                     vesselPosition.LatLonAlt :
                     null;
         }
+
+        /// <summary>
+        /// Removes a vessel from the system
+        /// </summary>
+        public void RemoveVesselFromSystem(Vessel vessel)
+        {
+            if (vessel == null) return;
+
+            CurrentVesselUpdate.TryRemove(vessel.id, out _);
+            TargetVesselUpdate.TryRemove(vessel.id, out _);
+        }
+
+        #endregion
     }
 }

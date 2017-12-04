@@ -76,7 +76,8 @@ namespace LunaClient.VesselUtilities
         }
 
         /// <summary>
-        /// Reloads an existing vessel into the game.
+        /// Reloads an existing vessel into the game. Try to avoid this method as possible. It has really bad performance and
+        /// works really bad if you are reloading your own current vessel...
         /// </summary>
         public static bool ReloadVessel(ProtoVessel vesselProto)
         {
@@ -173,13 +174,12 @@ namespace LunaClient.VesselUtilities
             {
                 if (vesselProto.orbitSnapShot == null)
                 {
-                    LunaLog.Log("[LMP]: Skipping flying vessel load - Protovessel does not have an orbit snapshot");
+                    LunaLog.LogWarning("[LMP]: Skipping flying vessel load - Protovessel does not have an orbit snapshot");
                     return false;
                 }
                 if (FlightGlobals.Bodies == null || FlightGlobals.Bodies.Count < vesselProto.orbitSnapShot.ReferenceBodyIndex)
                 {
-                    LunaLog.Log("[LMP]: Skipping flying vessel load - Could not find celestial body index " +
-                                $"{vesselProto.orbitSnapShot.ReferenceBodyIndex}");
+                    LunaLog.LogWarning($"[LMP]: Skipping flying vessel load - Could not find celestial body index {vesselProto.orbitSnapShot.ReferenceBodyIndex}");
                     return false;
                 }
             }

@@ -45,9 +45,8 @@ namespace LunaClient.Systems.Asteroid
         {
             base.OnEnabled();
             GameEvents.onAsteroidSpawned.Add(AsteroidEventHandler.OnAsteroidSpawned);
-            GameEvents.onGameSceneLoadRequested.Add(AsteroidEventHandler.OnGameSceneLoadRequested);
-
-            SetupRoutine(new RoutineDefinition(RoutineExecution.Update, ResetAsteroidsSeed));
+            
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetAsteroidLock));
             SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, CheckAsteroidsToSpawn));
             SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroidsStatus));
         }
@@ -56,7 +55,6 @@ namespace LunaClient.Systems.Asteroid
         {
             base.OnDisabled();
             GameEvents.onAsteroidSpawned.Remove(AsteroidEventHandler.OnAsteroidSpawned);
-            GameEvents.onGameSceneLoadRequested.Remove(AsteroidEventHandler.OnGameSceneLoadRequested);
 
             ServerAsteroids.Clear();
             ServerAsteroidTrackStatus.Clear();
@@ -67,22 +65,12 @@ namespace LunaClient.Systems.Asteroid
         #region Update methods
 
         /// <summary>
-        /// Here we set up some initial values.
-        /// We set the last feed to a low number as otherwise KSP throws an ugly error when it tries to convert
-        /// lastSeed from a string to a int (it cannot handle numbers that have an exponential number)
+        /// Try to acquire the asteroid-spawning lock if nobody else has it.
         /// </summary>
-        public void ResetAsteroidsSeed()
+        public void TryGetAsteroidLock()
         {
-            //TODO we found that this happens even without LMP, do we need all this stuff?
-            foreach (var psm in HighLogic.CurrentGame.scenarios
-                .Where(psm => psm?.moduleName == "ScenarioDiscoverableObjects" && psm.moduleRef != null))
-            {
-                var scenario = (ScenarioDiscoverableObjects)psm.moduleRef;
-                scenario.spawnInterval = float.MaxValue;
-                scenario.lastSeed = Random.Range(0, 1000000);
-            }
-
-            ScenarioController = null;
+            if (!LockSystem.LockQuery.AsteroidLockExists() && SystemsContainer.Get<WarpSystem>().CurrentSubspace == 0)
+                SystemsContainer.Get<LockSystem>().AcquireAsteroidLock();
         }
 
         /// <summary>
@@ -93,17 +81,9 @@ namespace LunaClient.Systems.Asteroid
         {
             if (!Enabled) return;
 
-            ResetAsteroidsSeed();
-
-            //Try to acquire the asteroid-spawning lock if nobody else has it.
-            if (!LockSystem.LockQuery.AsteroidLockExists())
-                SystemsContainer.Get<LockSystem>().AcquireAsteroidLock();
-
-            //We have the spawn lock, lets do stuff.
-            if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName) &&
-                SystemsContainer.Get<WarpSystem>().CurrentSubspace == 0 &&
-                Time.timeSinceLevelLoad > 1f)
-            {
+            if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName) && Time.timeSinceLevelLoad > 1f)
+            {            
+                //We have the spawn lock so spawn some asteroids if there are less than expected
                 var beforeSpawn = GetAsteroidCount();
                 var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;
 
@@ -116,7 +96,6 @@ namespace LunaClient.Systems.Asteroid
                     }
                 }
             }
-
         }
 
         /// <summary>

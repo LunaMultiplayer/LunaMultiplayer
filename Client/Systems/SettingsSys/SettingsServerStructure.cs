@@ -23,7 +23,6 @@ namespace LunaClient.Systems.SettingsSys
         public bool DropControlOnExitFlight { get; set; }
         public string WarpMaster { get; set; }
         public int VesselDefinitionSendMsInterval { get; set; }
-        public int VesselDefinitionSendFarMsInterval { get; set; }
         public bool ShowVesselsInThePast { get; set; }
     }
 }

@@ -40,6 +40,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public Queue<Vessel> FlagsToSend = new Queue<Vessel>();
 
+        private static DateTime LastReloadCheck { get; set; } = DateTime.UtcNow;
+
         #endregion
 
         #region Base overrides
@@ -49,11 +51,12 @@ namespace LunaClient.Systems.VesselProtoSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, CheckVesselsToReload);
+
             GameEvents.onVesselWasModified.Add(VesselProtoEvents.VesselModified);
             GameEvents.onVesselGoOnRails.Add(VesselProtoEvents.VesselGoOnRails);
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckVesselsToLoadReloadWhileNotInFlight));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, CheckVesselsToReload));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval,
                 RoutineExecution.Update, SendVesselDefinition));
@@ -62,6 +65,8 @@ namespace LunaClient.Systems.VesselProtoSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, CheckVesselsToReload);
+
             GameEvents.onVesselWasModified.Remove(VesselProtoEvents.VesselModified);
             GameEvents.onVesselGoOnRails.Remove(VesselProtoEvents.VesselGoOnRails);
 
@@ -110,11 +115,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
                     MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
-
-                    ChangeRoutineExecutionInterval("SendVesselDefinition",
-                        VesselCommon.PlayerVesselsNearby()
-                            ? SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval
-                            : SettingsSystem.ServerSettings.VesselDefinitionSendFarMsInterval);
                 }
             }
             catch (Exception e)
@@ -166,7 +166,6 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private void CheckVesselsToLoad()
         {
-
             try
             {
                 if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
@@ -194,6 +193,8 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
+        private List<Guid> VesselsToReload { get; } = new List<Guid>();
+        
         /// <summary>
         /// Check vessels that must be reloaded
         /// </summary>
@@ -201,25 +202,30 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             try
             {
-                if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
+                if ((DateTime.UtcNow - LastReloadCheck).TotalMilliseconds > 1500 && ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
                 {
-                    //We run trough the vessels that already exist
-                    var vesselsToReLoad = VesselsProtoStore.AllPlayerVessels.Where(pv => pv.Value.VesselExist);
+                    VesselsToReload.Clear();
+                    //We get the vessels that already exist. 
+                    VesselsToReload.AddRange(VesselsProtoStore.AllPlayerVessels.Where(pv => pv.Value.VesselExist && !pv.Value.UpdatesChecked).Select(v => v.Key));
 
-                    foreach (var vesselProto in vesselsToReLoad)
+                    //Do not iterate directly trough the AllPlayerVessels dictionary as the collection can be modified in another threads!
+                    foreach (var vesselIdToReload in VesselsToReload)
                     {
-                        if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
+                        if (VesselRemoveSystem.VesselWillBeKilled(vesselIdToReload))
                             continue;
 
-                        if (!VesselCommon.ProtoVesselNeedsToBeReloaded(vesselProto.Value.Vessel, vesselProto.Value.ProtoVessel))
+                        //Do not handle vessel proto updates over our OWN active vessel if we are not spectating
+                        if (vesselIdToReload == FlightGlobals.ActiveVessel?.id && !VesselCommon.IsSpectating)
                             continue;
 
-                        LunaLog.Log($"[LMP]: Reloading vessel {vesselProto.Key}");
-                        if (VesselLoader.ReloadVessel(vesselProto.Value.ProtoVessel))
+                        if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpdate))
                         {
-                            LunaLog.Log($"[LMP]: Vessel {vesselProto.Key} reloaded");
+                            VesselUpdater.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel);
+                            vesselProtoUpdate.UpdatesChecked = true;
                         }
                     }
+
+                    LastReloadCheck = DateTime.UtcNow;
                 }
             }
             catch (Exception e)
@@ -229,7 +235,7 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         #endregion
-
+        
         #region Private
 
         private static string GetInvalidVesselParts(Vessel checkVessel)
