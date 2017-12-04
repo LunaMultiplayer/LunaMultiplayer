@@ -26,7 +26,7 @@
 - Settings saved as XML.
 - Time synced between clients and the server using the [NIST](https://www.nist.gov/) servers.
 - [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) based using the [Lidgren](https://github.com/lidgren/lidgren-network-gen3) library for reliable UDP message handling.
-[//] - Uses interpolation so the vessels shouldn't jump from one place to another.
+- Uses interpolation so the vessels shouldn't jump from one place to another.
 - [Nat-punchtrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
 - Servers are displayed within the mod.
 - Better creation of network messages so they are easier to modify as you don't need to take care of serialization.
@@ -48,10 +48,19 @@ Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-comp
 
 ### Contributing:
 
+Consider [donating trough paypal](https://paypal.me/gavazquez) if you like this project. 
+It will encourage us to do future releases and add new features :star:
+
 Please write the code as you were going to leave it, return after 1 year and you'd have to understand what you wrote.  
 It's **very** important that the code is clean and documented so in case someone leaves, another programmer could take and maintain it. Bear in mind that **nobody** likes to take a project where it's code looks like a dumpster.
 
 There's also a test project in case you want to add tests to your code.
+
+---
+
+### Troubleshooting:
+
+Please visit [this page](../../wiki/Troubleshooting) in the wiki to solve the most common issues with LMP
 
 ---
 
