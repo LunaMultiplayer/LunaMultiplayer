@@ -36,7 +36,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public static readonly Dictionary<string, List<string>> FieldsToIgnore = new Dictionary<string, List<string>>()
         {
-            ["ModuleEnginesFX"] = new List<string>{ "currentThrottle" }
+            ["ModuleEnginesFX"] = new List<string> { "currentThrottle" }
         };
 
         /// <summary>
@@ -60,9 +60,12 @@ namespace LunaClient.Systems.VesselProtoSys
 
             //Never do vessel.protoVessel = protoVessel; not even if the vessel is not loaded as when it gets loaded the parts are created in the active vessel and not on the target vessel
 
-            //Run trough all the vessel parts. vessel.parts will be empty if vessel is unloaded
-            foreach (var part in vessel.parts)
+            //Run trough all the vessel parts. vessel.parts will be empty if vessel is unloaded.
+            //Do not do a foreach as vessel parts can change and will result in a modified collection...
+            //ReSharper disable once ForCanBeConvertedToForeach
+            for (var i = 0; i < vessel.parts.Count; i++)
             {
+                var part = vessel.parts[i];
                 var partSnapshot = protoVessel.protoPartSnapshots.FirstOrDefault(ps => ps.missionID == part.missionID && ps.craftID == part.craftID);
                 if (partSnapshot == null) //Part does not exist in the protovessel definition so kill it
                 {
