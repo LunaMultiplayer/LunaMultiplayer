@@ -26,7 +26,7 @@
 - Settings saved as XML.
 - Time synced between clients and the server using the [NIST](https://www.nist.gov/) servers.
 - [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) based using the [Lidgren](https://github.com/lidgren/lidgren-network-gen3) library for reliable UDP message handling.
-[//] - Uses interpolation so the vessels shouldn't jump from one place to another.
+- Uses interpolation so the vessels shouldn't jump from one place to another.
 - [Nat-punchtrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
 - Servers are displayed within the mod.
 - Better creation of network messages so they are easier to modify as you don't need to take care of serialization.
