@@ -3,6 +3,6 @@
 #Dagger server
 37.59.50.110:8700
 #Robin server
-lunamultiplayer.com:6701
+lunamultiplayer.com:8700
 #The Hellbox server
 185.5.251.218:6005
