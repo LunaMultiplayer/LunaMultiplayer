@@ -24,8 +24,8 @@ namespace LunaServer.Lidgren
         private static NetServer Server { get; set; }
         public static MessageReceiver ClientMessageReceiver { get; set; } = new MessageReceiver();
 
-        private int MasterServerRegistrationMsInterval
-            => GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval;
+        private static int MasterServerRegistrationMsInterval => GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval < 5000 ? 
+            5000 : GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval;
 
         public void SetupLidgrenServer()
         {
