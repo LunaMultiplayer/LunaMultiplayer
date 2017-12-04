@@ -1,4 +1,5 @@
 ﻿using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselUtilities;
 using System;
 using UnityEngine;
 
@@ -112,7 +113,8 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             try
             {
-                if (Body == null || Vessel == null || Vessel.precalc == null || Target == null)
+                if (Body == null || Vessel == null || Vessel.precalc == null || Target == null || Vessel.state == Vessel.State.DEAD ||
+                    FlightGlobals.ActiveVessel?.id == VesselId && !VesselCommon.IsSpectating)
                 {
                     VesselPositionSystem.VesselsToRemove.Enqueue(VesselId);
                     return;

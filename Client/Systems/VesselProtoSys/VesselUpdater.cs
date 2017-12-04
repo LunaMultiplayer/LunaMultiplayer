@@ -20,7 +20,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public static readonly List<string> ModulesToDontInit = new List<string>
         {
-            "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension"
+            "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension", "ModuleScienceContainer", "KerbalEVA"
         };
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public static readonly List<string> ModulesToIgnore = new List<string>
         {
-            "CModuleLinkedMesh", "FXModuleAnimateThrottle"
+            "CModuleLinkedMesh", "FXModuleAnimateThrottle", "ModuleTripLogger"
         };
 
         /// <summary>
@@ -45,6 +45,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel)
         {
+            if (vessel == null || protoVessel == null|| vessel.state == Vessel.State.DEAD) return;
+
             if (vessel.id != protoVessel.vesselID)
             {
                 LunaLog.LogError($"Tried to update a vessel id {vessel.id} with a protovessel of vessel id {protoVessel.vesselID}");

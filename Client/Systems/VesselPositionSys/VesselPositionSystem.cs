@@ -148,8 +148,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (vessel == null) return;
 
-            CurrentVesselUpdate.TryRemove(vessel.id, out _);
-            TargetVesselUpdate.TryRemove(vessel.id, out _);
+            VesselsToRemove.Enqueue(vessel.id);
         }
 
         #endregion
