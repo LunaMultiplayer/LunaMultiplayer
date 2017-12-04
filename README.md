@@ -48,7 +48,7 @@ Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-comp
 
 ### Contributing:
 
-Consider [donating trough paypal](https://paypal.me/gavazquez) if you like this project
+Consider [donating trough paypal](https://paypal.me/gavazquez) if you like this project. That means a lot and will encourage us to do future releases and add new features
 
 Please write the code as you were going to leave it, return after 1 year and you'd have to understand what you wrote.  
 It's **very** important that the code is clean and documented so in case someone leaves, another programmer could take and maintain it. Bear in mind that **nobody** likes to take a project where it's code looks like a dumpster.
