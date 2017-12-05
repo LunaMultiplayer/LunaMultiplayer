@@ -28,4 +28,5 @@ Server/bin/*
 Server/obj/*
 LMP.Server/*.csproj.user
 LMP.Server/bin/*
+
 LMP.Server/obj/*

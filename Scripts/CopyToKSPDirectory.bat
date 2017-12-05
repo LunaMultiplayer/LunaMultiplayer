@@ -23,6 +23,10 @@ IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiPlayer\Button")
 xcopy /Y "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaClient.*" "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaClient.*" "%KSPPATH2%\GameData\LunaMultiPlayer\Plugins")
 
+"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\Updater\bin\%SOLUTIONCONFIGURATION%\LunaUpdater.dll"
+xcopy /Y "%~dp0..\Updater\bin\%SOLUTIONCONFIGURATION%\LunaUpdater.*" "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
+IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Updater\bin\%SOLUTIONCONFIGURATION%\LunaUpdater.*" "%KSPPATH2%\GameData\LunaMultiPlayer\Plugins")
+
 "%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\\Common\bin\%SOLUTIONCONFIGURATION%\LunaCommon.dll"
 xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\LunaCommon.*" "%KSPPATH%\GameData\LunaMultiPlayer\Plugins"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\LunaCommon.*" "%KSPPATH2%\GameData\LunaMultiPlayer\Plugins")
