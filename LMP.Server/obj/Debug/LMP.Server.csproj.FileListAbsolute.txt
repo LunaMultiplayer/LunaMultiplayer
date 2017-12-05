@@ -1,0 +1,17 @@
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\LMP.Server.dll
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\LMP.Server.pdb
+C:\GitHub\LunaMultiPlayer\LMP.Server\obj\Debug\LMP.Server.csproj.CoreCompileInputs.cache
+C:\GitHub\LunaMultiPlayer\LMP.Server\obj\Debug\LMP.Server.dll
+C:\GitHub\LunaMultiPlayer\LMP.Server\obj\Debug\LMP.Server.pdb
+C:\GitHub\LunaMultiPlayer\LMP.Server\obj\Debug\LMP.Server.csprojResolveAssemblyReference.cache
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\Lidgren.Network.dll
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\LiteDB.dll
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\LunaCommon.dll
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\UnityEngine.dll
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\System.Threading.dll
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\FastMember.dll
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\LunaCommon.pdb
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\Lidgren.Network.pdb
+C:\GitHub\LunaMultiPlayer\LMP.Server\bin\Debug\LiteDB.xml
+C:\GitHub\LunaMultiPlayer\LMP.Server\obj\Debug\LMP.Server.Properties.Resources.resources
+C:\GitHub\LunaMultiPlayer\LMP.Server\obj\Debug\LMP.Server.csproj.GenerateResource.Cache

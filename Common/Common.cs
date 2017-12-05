@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -12,8 +11,6 @@ namespace LunaCommon
 {
     public class Common
     {
-        public static string CurrentVersion { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
-
         /// <summary>
         /// Compare two ienumerables and return if they are the same or not IGNORING the order
         /// </summary>
@@ -461,7 +458,7 @@ namespace LunaCommon
             var sb = new StringBuilder();
             //Header stuff
 
-            sb.AppendLine($"#MODCONTROLVERSION={CurrentVersion}");
+            sb.AppendLine($"#MODCONTROLVERSION={LmpVersioning.CurrentVersion}");
             sb.AppendLine("#You can comment by starting a line with a #, these are ignored by the server.");
             sb.AppendLine("#Commenting will NOT work unless the line STARTS with a '#'.");
             sb.AppendLine("#You can also indent the file with tabs or spaces.");

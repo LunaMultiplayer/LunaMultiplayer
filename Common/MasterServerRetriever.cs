@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LmpGlobals;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -14,9 +15,6 @@ namespace LunaCommon
     /// </summary>
     public static class MasterServerRetriever
     {
-        public static string MasterServersListShortUrl => "https://goo.gl/NJqZbc";
-        public static string MasterServersListUrl => "http://raw.githubusercontent.com/gavazquez/LunaMultiPlayer/master/MasterServersList/MasterServersList.txt";
-
         /// <summary>
         /// Download the master server list from the MasterServersListUrl and return the ones that are correctly written
         /// We should add a ping check aswell...
@@ -29,7 +27,7 @@ namespace LunaCommon
                 ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
                 var parsedServers = new List<IPEndPoint>();
                 using (var client = new WebClient())
-                using (var stream = client.OpenRead(MasterServersListUrl))
+                using (var stream = client.OpenRead(RepoConstants.MasterServersListUrl))
                 {
                     using (var reader = new StreamReader(stream))
                     {

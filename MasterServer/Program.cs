@@ -1,8 +1,9 @@
-﻿using LunaCommon;
-using MasterServer.Http;
-using System;
-using System.Text;
+﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
+using Updater;
 
 namespace MasterServer
 {
@@ -11,112 +12,91 @@ namespace MasterServer
     /// You should only run if you agree in the forum to do so and your server ip is listed in:
     /// https://raw.githubusercontent.com/DaggerES/LunaMultiPlayer/master/MasterServersList
     /// </summary>
-    internal static class Program
+    /// 
+    internal class Program
     {
-        static void Main(string[] args)
-        {
-            Console.Title = $"LMP MasterServer {Common.CurrentVersion}";
-            Console.OutputEncoding = Encoding.Unicode;
 
-            var commandLineArguments = new Arguments(args);
-            if (commandLineArguments["h"] != null)
+
+        private static void Main(string[] args)
+        {
+            if (!File.Exists(Constants.DllPath))
             {
-                ShowCommandLineHelp();
+                ConsoleLogger.Log(LogLevels.Error, $"Cannot find needed file {Constants.DllFileName}");
                 return;
             }
 
-            if (!ParseMasterServerPortNumber(commandLineArguments)) return;
-            if (!ParseHttpServerPort(commandLineArguments)) return;
-            if (!ParseMaxRequestsPerSecond(commandLineArguments)) return;
+            Constants.CurrentVersion = new Version(FileVersionInfo.GetVersionInfo(Constants.DllPath).FileVersion);
 
-            Logger.Log(LogLevels.Normal, $"Starting MasterServer at port: {MasterServer.Port}");
-            Logger.Log(LogLevels.Normal, $"Listening for GET requests at port: {LunaHttpServer.Port}");
+            CheckNewVersion(args);
+            Start(args);
 
-            if (CheckPort())
+            while (true)
             {
-                MasterServer.RunServer = true;
-                Task.Run(() => new LunaHttpServer().Listen());
-                MasterServer.Start();
+                Thread.Sleep(100);
             }
         }
 
-        private static bool CheckPort()
+        private static void Start(string[] args)
         {
-            if (Common.PortIsInUse(MasterServer.Port))
+            Constants.LmpDomain = AppDomain.CreateDomain("LMP.MasterServer", null, Constants.DomainSetup);
+            Constants.LmpDomain.SetData("Args", args);
+            Constants.LmpDomain.SetData("Stop", false);
+
+            Constants.LmpDomain.DoCallBack(() =>
             {
-                Logger.Log(LogLevels.Error, $"Port {MasterServer.Port} is already in use!");
-                return false;
-            }
-            return true;
-        }
+                var assemblyBytes = File.ReadAllBytes(Constants.DllPath);
+                var assembly = AppDomain.CurrentDomain.Load(assemblyBytes);
+                var entryPoint = assembly.GetType("LMP.MasterServer.EntryPoint");
 
-        private static void ShowCommandLineHelp()
-        {
-            Console.WriteLine("");
-            Console.WriteLine("LMP Master server");
-            Console.WriteLine("This program is only used to introduce client and standard LMP servers.");
-            Console.WriteLine("Check the wiki for details about running a master server.");
-            Console.WriteLine("In order to run this program you need to open the port in your router.");
-            Console.WriteLine("");
-            Console.WriteLine("");
-            Console.WriteLine("Usage:");
-            Console.WriteLine("/h                       ... Show this help");
-            Console.WriteLine("/p:<port>                ... Start with the specified port (default port is 8700)");
-            Console.WriteLine("/g:<port>                ... Reply to get petitions on the specified port (default is 8701)");
-            Console.WriteLine("/f:<number>              ... Max requests per milisecond per host (default is 500, min is 0)");
-            Console.WriteLine("");
-        }
+                entryPoint.GetMethod("MainEntryPoint")?.Invoke(null, new[] { AppDomain.CurrentDomain.GetData("Args") });
 
-        #region Command line arguments parsing
-
-        private static bool ParseMaxRequestsPerSecond(Arguments commandLineArguments)
-        {
-            if (commandLineArguments["f"] != null)
-            {
-                if (int.TryParse(commandLineArguments["f"].Trim(), out var floodSeconds) && floodSeconds >= 0)
-                    FloodControl.MaxRequestsPerMs = floodSeconds;
-                else
+                while (!(bool)AppDomain.CurrentDomain.GetData("Stop"))
                 {
-                    Logger.Log(LogLevels.Error, $"Invalid max request per second specified: {commandLineArguments["f"].Trim()}");
-                    return false;
+                    Thread.Sleep(50);
                 }
-            }
-            return true;
+
+                var stopMethod = entryPoint.GetMethod("Stop");
+                stopMethod?.Invoke(null, new object[0]);
+            });
+        }
+        
+        private static void Stop()
+        {
+            Constants.LmpDomain.SetData("Stop", true);
+            Thread.Sleep(5000);
+            AppDomain.Unload(Constants.LmpDomain);
         }
 
-        private static bool ParseHttpServerPort(Arguments commandLineArguments)
+        private static void CheckNewVersion(string[] args)
         {
-            if (commandLineArguments["g"] != null)
+            Task.Run(() =>
             {
-                if (!ParsePortNumber(commandLineArguments, "g", out var port))
-                    return false;
+                while (true)
+                {
+                    var latestVersion = UpdateChecker.GetLatestVersion();
+                    if (latestVersion > Constants.CurrentVersion)
+                    {
+                        ConsoleLogger.Log(LogLevels.Normal, "Found a new updated version!. Downloading and restarting program....");
 
-                LunaHttpServer.Port = port;
-            }
-            return true;
+                        var url = UpdateDownloader.GetZipFileUrl(Constants.DebugVersion);
+                        if (!string.IsNullOrEmpty(url))
+                        {
+                            var zipFileName = url.Substring(url.LastIndexOf("/") + 1);
+                            UpdateDownloader.DownloadZipFile(url, Directory.GetCurrentDirectory() + "\\" + zipFileName);
+
+                            Stop();
+
+                            UpdateExtractor.ExtractZipFileToDirectory(Directory.GetCurrentDirectory() + "\\" + zipFileName, Directory.GetCurrentDirectory(),
+                                UpdateExtractor.ProductToExtract.MasterServer);
+
+                            Start(args);
+                        }
+                    }
+
+                    //Sleep for 3 minutes...
+                    Task.Delay(3 * 60 * 1000);
+                }
+            });
         }
-
-        private static bool ParseMasterServerPortNumber(Arguments commandLineArguments)
-        {
-            if (commandLineArguments["p"] != null)
-            {
-                if (!ParsePortNumber(commandLineArguments, "p", out var port))
-                    return false;
-
-                MasterServer.Port = port;
-            }
-            return true;
-        }
-
-        private static bool ParsePortNumber(Arguments commandLineArguments, string parameter, out ushort portNum)
-        {
-            if (ushort.TryParse(commandLineArguments[parameter].Trim(), out portNum))
-                return true;
-
-            Logger.Log(LogLevels.Error, $"Invalid port specified: {commandLineArguments[parameter].Trim()}");
-            return false;
-        }
-
-        #endregion
     }
 }

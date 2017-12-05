@@ -11,7 +11,7 @@ namespace LunaCommon.Message.Base
         internal MessageData() { }
         
         /// <inheritdoc />
-        public virtual string Version => Common.CurrentVersion;
+        public virtual string Version => LmpVersioning.CurrentVersion;
 
         /// <inheritdoc />
         public long ReceiveTime { get; set; }

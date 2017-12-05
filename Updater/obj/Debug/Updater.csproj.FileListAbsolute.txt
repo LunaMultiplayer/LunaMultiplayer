@@ -1,0 +1,10 @@
+C:\GitHub\LunaMultiPlayer\Updater\bin\Debug\Updater.dll
+C:\GitHub\LunaMultiPlayer\Updater\bin\Debug\Updater.pdb
+C:\GitHub\LunaMultiPlayer\Updater\bin\Debug\Newtonsoft.Json.dll
+C:\GitHub\LunaMultiPlayer\Updater\bin\Debug\Newtonsoft.Json.xml
+C:\GitHub\LunaMultiPlayer\Updater\obj\Debug\Updater.csproj.CoreCompileInputs.cache
+C:\GitHub\LunaMultiPlayer\Updater\obj\Debug\Updater.dll
+C:\GitHub\LunaMultiPlayer\Updater\obj\Debug\Updater.pdb
+C:\GitHub\LunaMultiPlayer\Updater\bin\Debug\DotNetZip.dll
+C:\GitHub\LunaMultiPlayer\Updater\bin\Debug\DotNetZip.xml
+C:\GitHub\LunaMultiPlayer\Updater\obj\Debug\Updater.csprojResolveAssemblyReference.cache

@@ -6,7 +6,7 @@ namespace LunaClient.Systems.Chat.Command
     {
         public void DisplayVersion(string commandArgs)
         {
-            SystemsContainer.Get<ChatSystem>().PrintToSelectedChannel($"LunaMultiPlayer {Common.CurrentVersion}");
+            SystemsContainer.Get<ChatSystem>().PrintToSelectedChannel($"LunaMultiPlayer {LmpVersioning.CurrentVersion}");
         }
     }
 }

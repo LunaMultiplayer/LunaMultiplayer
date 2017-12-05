@@ -40,7 +40,7 @@ namespace LunaClient.Network
         public static void RequestServers()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsRequestServersMsgData>();
-            msgData.CurrentVersion = Common.CurrentVersion;
+            msgData.CurrentVersion = LmpVersioning.CurrentVersion;
 
             var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
             NetworkSender.QueueOutgoingMessage(requestMsg);
@@ -63,7 +63,7 @@ namespace LunaClient.Network
                     for (var i = 0; i < data.Id.Length; i++)
                     {
                         //Filter servers with diferent version
-                        if (data.ServerVersion[i] != Common.CurrentVersion)
+                        if (data.ServerVersion[i] != LmpVersioning.CurrentVersion)
                             continue;
 
                         PingSystem.QueuePing(data.Ip[i]);

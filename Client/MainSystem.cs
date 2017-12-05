@@ -14,7 +14,6 @@ using LunaClient.VesselUtilities;
 using LunaClient.Windows;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.Status;
-using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
@@ -22,6 +21,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient
@@ -214,7 +214,7 @@ namespace LunaClient
 
             SystemsContainer.Get<ModSystem>().BuildDllFileList();
 
-            LunaLog.Log($"[LMP]: Luna MultiPlayer {Common.CurrentVersion} initialized!");
+            LunaLog.Log($"[LMP]: Luna MultiPlayer {LmpVersioning.CurrentVersion} initialized!");
 
             //Trigger a reset!
             NetworkState = ClientState.Disconnected;

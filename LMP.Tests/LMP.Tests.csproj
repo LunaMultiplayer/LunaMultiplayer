@@ -46,6 +46,7 @@
     <Compile Include="MessageStoreTest.cs" />
     <Compile Include="SerializationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UpdaterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -58,6 +59,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{423c5a4b-ea79-450d-bd86-5b46141d58d1}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Updater\Updater.csproj">
+      <Project>{35a57b77-236e-492c-b003-1f8fc2f544f3}</Project>
+      <Name>Updater</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
