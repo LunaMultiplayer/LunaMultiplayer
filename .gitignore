@@ -26,7 +26,3 @@ LMP.MasterServer/obj/*
 Server/*.csproj.user
 Server/bin/*
 Server/obj/*
-LMP.Server/*.csproj.user
-LMP.Server/bin/*
-
-LMP.Server/obj/*
