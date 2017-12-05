@@ -8,6 +8,9 @@ Client/obj/*
 Common/*.csproj.user
 Common/bin/*
 Common/obj/*
+LunaUpdater/*.csproj.user
+LunaUpdater/bin/*
+LunaUpdater/obj/*
 Lidgren.Network/*.csproj.user
 Lidgren.Network/bin/*
 Lidgren.Network/obj/*
