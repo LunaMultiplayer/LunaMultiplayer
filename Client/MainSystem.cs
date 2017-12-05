@@ -14,14 +14,15 @@ using LunaClient.VesselUtilities;
 using LunaClient.Windows;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.Status;
+using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Time;
+using LunaUpdater;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient
@@ -193,6 +194,13 @@ namespace LunaClient
         {
             //We are sure that we are in the unity thread as Awake() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
+
+            var latestVersion = UpdateChecker.GetLatestVersion();
+            if (new Version(LmpVersioning.CurrentVersion) < latestVersion)
+            {
+                LunaLog.LogWarning($"[LMP]: Outdated version detected!");
+                OutdatedVersionDialog.SpawnDialog(latestVersion.ToString(), LmpVersioning.CurrentVersion);
+            }
 
             LunaLog.Log($"[LMP]: KSP installed at {Client.KspPath}");
             LunaLog.Log($"[LMP]: LMP installed at {Environment.CurrentDirectory}");

@@ -48,6 +48,9 @@ namespace LMP.Server.Command
         {
             try
             {
+                while (AppDomain.CurrentDomain.GetData("LMPServerPipe") == null)
+                    Thread.Sleep(1000);
+
                 using (var clientPipe = new AnonymousPipeClientStream(PipeDirection.In, (string)AppDomain.CurrentDomain.GetData("LMPServerPipe")))
                 using (var reader = new StreamReader(clientPipe))
                 {

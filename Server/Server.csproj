@@ -59,12 +59,11 @@
       <Project>{fa6e9184-e243-49cc-94fa-ac557493b900}</Project>
       <Name>LMP.Server</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Updater\Updater.csproj">
+    <ProjectReference Include="..\LunaUpdater\LunaUpdater.csproj">
       <Project>{35a57b77-236e-492c-b003-1f8fc2f544f3}</Project>
-      <Name>Updater</Name>
+      <Name>LunaUpdater</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\SharedCommon\SharedCommon.projitems" Label="Shared" />
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>

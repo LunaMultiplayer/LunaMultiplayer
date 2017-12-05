@@ -264,7 +264,7 @@
       <Name>Lidgren.Network</Name>
     </ProjectReference>
   </ItemGroup>
-  <Import Project="..\SharedCommon\SharedCommon.projitems" Label="Shared" />
+  <Import Project="..\LMPGlobals\SharedCommon.projitems" Label="Shared" />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

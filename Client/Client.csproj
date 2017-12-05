@@ -91,6 +91,7 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselUpdater.cs" />
+    <Compile Include="Utilities\OutdatedVersionDialog.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeEvents.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeSystem.cs" />
@@ -257,9 +258,12 @@
       <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LunaUpdater\LunaUpdater.csproj">
+      <Project>{35a57b77-236e-492c-b003-1f8fc2f544f3}</Project>
+      <Name>LunaUpdater</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
-  <Import Project="..\SharedCommon\SharedCommon.projitems" Label="Shared" />
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>

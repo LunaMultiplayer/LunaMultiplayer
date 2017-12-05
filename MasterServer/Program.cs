@@ -1,9 +1,9 @@
-﻿using System;
+﻿using LunaUpdater;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Updater;
 
 namespace MasterServer
 {
@@ -71,6 +71,9 @@ namespace MasterServer
         {
             Task.Run(() =>
             {
+                //Wait 5 seconds before checking...
+                Task.Delay(5000);
+
                 while (true)
                 {
                     var latestVersion = UpdateChecker.GetLatestVersion();
@@ -93,8 +96,8 @@ namespace MasterServer
                         }
                     }
 
-                    //Sleep for 3 minutes...
-                    Task.Delay(3 * 60 * 1000);
+                    //Sleep for 30 minutes...
+                    Task.Delay(30 * 60 * 1000);
                 }
             });
         }

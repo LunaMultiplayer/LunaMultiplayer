@@ -1,11 +1,11 @@
-﻿using MasterServer;
+﻿using LunaUpdater;
+using MasterServer;
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.Threading;
 using System.Threading.Tasks;
-using Updater;
 
 namespace LunaServer
 {
@@ -43,6 +43,9 @@ namespace LunaServer
             using (var serverPipe = new AnonymousPipeServerStream(PipeDirection.Out))
             using (var writer = new StreamWriter(serverPipe))
             {
+                while (serverPipe.GetClientHandleAsString() == null)
+                    Task.Delay(1000);
+
                 ServerPipeHandle = serverPipe.GetClientHandleAsString();
                 writer.AutoFlush = true;
                 while (true)
@@ -93,17 +96,15 @@ namespace LunaServer
         private static void CheckNewVersion()
         {
             Task.Run(() =>
-            {
+            {                
+                //Wait 10 seconds before checking...
+                Task.Delay(10000);
                 while (true)
                 {   
-                    //Sleep for 3 minutes...
-                    Task.Delay(1000);
-
                     var latestVersion = UpdateChecker.GetLatestVersion();
                     if (latestVersion > Constants.CurrentVersion)
                     {
-                        ConsoleLogger.Log(LogLevels.Normal,
-                            "Found a new updated version!. Downloading and restarting program....");
+                        ConsoleLogger.Log(LogLevels.Normal, "Found a new updated version!. Downloading and restarting program....");
 
                         var url = UpdateDownloader.GetZipFileUrl(Constants.DebugVersion);
                         if (!string.IsNullOrEmpty(url))
@@ -119,6 +120,9 @@ namespace LunaServer
                             Start();
                         }
                     }
+
+                    //Sleep for 30 minutes...
+                    Task.Delay(30 * 60 * 1000);
                 }
             });
         }

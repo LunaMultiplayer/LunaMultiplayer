@@ -8,7 +8,6 @@ C:\GitHub\LunaMultiPlayer\LMP.MasterServer\bin\Debug\System.Threading.dll
 C:\GitHub\LunaMultiPlayer\LMP.MasterServer\bin\Debug\FastMember.dll
 C:\GitHub\LunaMultiPlayer\LMP.MasterServer\bin\Debug\LunaCommon.pdb
 C:\GitHub\LunaMultiPlayer\LMP.MasterServer\bin\Debug\Lidgren.Network.pdb
-C:\GitHub\LunaMultiPlayer\LMP.MasterServer\bin\Debug\Newtonsoft.Json.xml
 C:\GitHub\LunaMultiPlayer\LMP.MasterServer\obj\Debug\LMP.MasterServer.csprojResolveAssemblyReference.cache
 C:\GitHub\LunaMultiPlayer\LMP.MasterServer\obj\Debug\LMP.MasterServer.csproj.CoreCompileInputs.cache
 C:\GitHub\LunaMultiPlayer\LMP.MasterServer\obj\Debug\LMP.MasterServer.dll

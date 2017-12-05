@@ -14,7 +14,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using LmpGlobals;
+using LmpGlobal;
 using ConsoleLogger = LunaCommon.ConsoleLogger;
 using LogLevels = LunaCommon.LogLevels;
 
