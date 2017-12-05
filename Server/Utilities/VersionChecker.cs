@@ -1,6 +1,7 @@
 ﻿using LunaCommon;
 using LunaUpdater;
 using Server.Context;
+using Server.Log;
 using System;
 using System.Threading.Tasks;
 
@@ -8,22 +9,37 @@ namespace Server.Utilities
 {
     public class VersionChecker
     {
+        private static Version LatestVersion { get; set; }
+
         public static void CheckForNewVersions()
         {
-            Task.Run(() =>
-            {
-                while (ServerContext.ServerRunning)
-                {
-                    var latestVersion = UpdateChecker.GetLatestVersion();
-                    if (latestVersion > new Version(LmpVersioning.CurrentVersion))
-                    {
-                        ConsoleLogger.Log(LogLevels.Normal, "Found a new updated version! Please download it!");
-                    }
+            Task.Run(() => RefreshLatestVersion());
+            Task.Run(() => DisplayNewVersionMsg());
+        }
 
-                    //Sleep for 0.5 minute...
-                    Task.Delay(30 * 1000);
+        private static void RefreshLatestVersion()
+        {
+            while (ServerContext.ServerRunning)
+            {
+                LatestVersion = UpdateChecker.GetLatestVersion();
+
+                //Sleep for 30 minutes...
+                Task.Delay(30 * 60 * 1000);
+            }
+        }
+
+        private static void DisplayNewVersionMsg()
+        {
+            while (ServerContext.ServerRunning)
+            {
+                if (LatestVersion > new Version(LmpVersioning.CurrentVersion))
+                {
+                    LunaLog.Warning("Found a new updated version! Please download it!");
                 }
-            });
+
+                //Sleep for 30 seconds...
+                Task.Delay(30 * 1000);
+            }
         }
     }
 }
