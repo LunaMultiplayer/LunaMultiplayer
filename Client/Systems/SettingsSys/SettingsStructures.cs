@@ -13,13 +13,7 @@ namespace LunaClient.Systems.SettingsSys
         public int ConnectionTries { get; set; } = 3;
         public int InitialConnectionMsTimeout { get; set; } = 5000;
         public int SendReceiveMsInterval { get; set; } = 5;
-
-#if DEBUG
-        public int ConnectionMsTimeout { get; set; } = 120000;
-#else
         public int ConnectionMsTimeout { get; set; } = 20000;
-#endif
-
         public int MsBetweenConnectionTries { get; set; } = 3000;
         public int HearbeatMsInterval { get; set; } = 2000;
         public int MtuSize { get; set; } = 1408;

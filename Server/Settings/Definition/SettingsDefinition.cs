@@ -1,8 +1,8 @@
-﻿using System;
-using LunaCommon.Enums;
+﻿using LunaCommon.Enums;
 using LunaCommon.Xml;
 using Server.Enums;
 using Server.Log;
+using System;
 
 namespace Server.Settings.Definition
 {
@@ -66,13 +66,8 @@ namespace Server.Settings.Definition
                             "Values: Low, Default, High")]
         public TerrainQuality TerrainQuality { get; set; } = TerrainQuality.High;
 
-#if DEBUG
         [XmlComment(Value = "Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
-        public float SafetyBubbleDistance { get; set; } = 10.0f;
-#else
-        [XmlComment(Value = "Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
-        public float SafetyBubbleDistance { get; set; }= 100.0f;
-#endif
+        public float SafetyBubbleDistance { get; set; } = 100.0f;
         
         [XmlComment(Value = "Specify the warp Type. Values: None, Subspace, Master")]
         public WarpMode WarpMode { get; set; } = WarpMode.Subspace;
@@ -89,13 +84,8 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Heartbeat interval in Ms")]
         public int HearbeatMsInterval { get; set; } = 1000;
 
-#if DEBUG
-        [XmlComment(Value = "Connection timeout in Ms")]
-        public int ConnectionMsTimeout { get; set; } = int.MaxValue;
-#else
         [XmlComment(Value = "Connection timeout in Ms")]
         public int ConnectionMsTimeout { get; set; } = 5000;
-#endif
 
         [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player switch to another vessel.")]
         public bool DropControlOnVesselSwitching { get; set; } = true;
