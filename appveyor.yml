@@ -56,7 +56,7 @@ after_build:
 #      artifacts configuration    #
 #---------------------------------#
 
- artifacts:
+artifacts:
  - path: .\LunaMultiPlayer-$(configuration).zip
    name: LunaMultiPlayer.zip
    
