@@ -3,6 +3,7 @@ using LunaUpdater;
 using Server.Context;
 using Server.Log;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.Utilities
@@ -24,7 +25,7 @@ namespace Server.Utilities
                 LatestVersion = UpdateChecker.GetLatestVersion();
 
                 //Sleep for 30 minutes...
-                Task.Delay(30 * 60 * 1000);
+                Thread.Sleep(30 * 60 * 1000);
             }
         }
 
@@ -34,11 +35,11 @@ namespace Server.Utilities
             {
                 if (LatestVersion > new Version(LmpVersioning.CurrentVersion))
                 {
-                    LunaLog.Warning("Found a new updated version! Please download it!");
+                    LunaLog.Warning($"There is a new version of LMP! Please download it! Current: {LmpVersioning.CurrentVersion} Latest: {LatestVersion}");
                 }
 
                 //Sleep for 30 seconds...
-                Task.Delay(30 * 1000);
+                Thread.Sleep(30 * 1000);
             }
         }
     }

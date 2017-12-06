@@ -61,6 +61,10 @@
       <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
       <Name>Lidgren.Network</Name>
     </ProjectReference>
+    <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
+      <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
+      <Name>LmpGlobal</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

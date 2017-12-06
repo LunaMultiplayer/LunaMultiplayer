@@ -49,6 +49,8 @@ namespace LunaClient
             }
         }
 
+        public static Version LatestVersion { get; set; }
+
         public string Status { get; set; }
 
         public const int WindowOffset = 1664147604;
@@ -188,19 +190,19 @@ namespace LunaClient
                 Enabled = false;
                 DisclaimerDialog.SpawnDialog();
             }
+
+            LatestVersion = UpdateChecker.GetLatestVersion();
+            if (new Version(LmpVersioning.CurrentVersion) < LatestVersion)
+            {
+                LunaLog.LogWarning($"[LMP]: Outdated version detected! Current: {LmpVersioning.CurrentVersion} Latest: {LatestVersion}");
+                OutdatedVersionDialog.SpawnDialog(LatestVersion.ToString(), LmpVersioning.CurrentVersion);
+            }
         }
 
         public void Awake()
         {
             //We are sure that we are in the unity thread as Awake() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
-
-            var latestVersion = UpdateChecker.GetLatestVersion();
-            if (new Version(LmpVersioning.CurrentVersion) < latestVersion)
-            {
-                LunaLog.LogWarning($"[LMP]: Outdated version detected!");
-                OutdatedVersionDialog.SpawnDialog(latestVersion.ToString(), LmpVersioning.CurrentVersion);
-            }
 
             LunaLog.Log($"[LMP]: KSP installed at {Client.KspPath}");
             LunaLog.Log($"[LMP]: LMP installed at {Environment.CurrentDirectory}");

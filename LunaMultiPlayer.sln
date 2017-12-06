@@ -30,18 +30,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LMP Client", "LMP Client", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "External", "External", "{622BED4E-ABB5-4F18-802A-E76D36EF47BF}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "LmpGlobals", "LMPGlobals\LmpGlobals.shproj", "{29B19454-12B8-4697-84EF-9DC8271AD090}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LunaUpdater", "LunaUpdater\LunaUpdater.csproj", "{35A57B77-236E-492C-B003-1F8FC2F544F3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{FA6E9184-E243-49CC-94FA-AC557493B900}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LmpGlobal", "LmpGlobal\LmpGlobal.csproj", "{92B4486C-6B60-4757-B6F0-50B844D1B2BA}"
+EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		LMPGlobals\SharedCommon.projitems*{29b19454-12b8-4697-84ef-9dc8271ad090}*SharedItemsImports = 13
-		LMPGlobals\SharedCommon.projitems*{35a57b77-236e-492c-b003-1f8fc2f544f3}*SharedItemsImports = 4
-		LMPGlobals\SharedCommon.projitems*{423c5a4b-ea79-450d-bd86-5b46141d58d1}*SharedItemsImports = 4
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		BuildServer|Any CPU = BuildServer|Any CPU
 		Debug|Any CPU = Debug|Any CPU
@@ -113,6 +108,14 @@ Global
 		{FA6E9184-E243-49CC-94FA-AC557493B900}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FA6E9184-E243-49CC-94FA-AC557493B900}.ReleaseLite|Any CPU.ActiveCfg = Release|Any CPU
 		{FA6E9184-E243-49CC-94FA-AC557493B900}.ReleaseLite|Any CPU.Build.0 = Release|Any CPU
+		{92B4486C-6B60-4757-B6F0-50B844D1B2BA}.BuildServer|Any CPU.ActiveCfg = Release|Any CPU
+		{92B4486C-6B60-4757-B6F0-50B844D1B2BA}.BuildServer|Any CPU.Build.0 = Release|Any CPU
+		{92B4486C-6B60-4757-B6F0-50B844D1B2BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92B4486C-6B60-4757-B6F0-50B844D1B2BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92B4486C-6B60-4757-B6F0-50B844D1B2BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92B4486C-6B60-4757-B6F0-50B844D1B2BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92B4486C-6B60-4757-B6F0-50B844D1B2BA}.ReleaseLite|Any CPU.ActiveCfg = Release|Any CPU
+		{92B4486C-6B60-4757-B6F0-50B844D1B2BA}.ReleaseLite|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -124,9 +127,9 @@ Global
 		{49BA1C69-6104-41AC-A5D8-B54FA9F696E8} = {622BED4E-ABB5-4F18-802A-E76D36EF47BF}
 		{13549EDE-D540-47BA-86BC-731BB7DD7BFB} = {36350310-DD1E-4EA0-A4AE-95A959EAC386}
 		{51F95D0B-C12D-44A2-B390-F29E9491FF8F} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
-		{29B19454-12B8-4697-84EF-9DC8271AD090} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
 		{35A57B77-236E-492C-B003-1F8FC2F544F3} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
 		{FA6E9184-E243-49CC-94FA-AC557493B900} = {D438F6D8-A5FB-4C11-83F9-CBB34BDF123F}
+		{92B4486C-6B60-4757-B6F0-50B844D1B2BA} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {46CE1FFE-A52F-4C6D-8FF1-11B6E792761B}
