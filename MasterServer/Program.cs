@@ -15,8 +15,6 @@ namespace MasterServer
     /// 
     internal class Program
     {
-
-
         private static void Main(string[] args)
         {
             if (!File.Exists(Constants.DllPath))
@@ -27,7 +25,7 @@ namespace MasterServer
 
             Constants.CurrentVersion = new Version(FileVersionInfo.GetVersionInfo(Constants.DllPath).FileVersion);
 
-            CheckNewVersion(args);
+            //CheckNewVersion(args);
             Start(args);
 
             while (true)
@@ -72,7 +70,7 @@ namespace MasterServer
             Task.Run(() =>
             {
                 //Wait 5 seconds before checking...
-                Task.Delay(5000);
+                Thread.Sleep(5000);
 
                 while (true)
                 {
@@ -97,7 +95,7 @@ namespace MasterServer
                     }
 
                     //Sleep for 30 minutes...
-                    Task.Delay(30 * 60 * 1000);
+                    Thread.Sleep(30 * 60 * 1000);
                 }
             });
         }
