@@ -33,7 +33,7 @@ configuration:
 platform: Any CPU
 before_build:
   - nuget restore
-  - ps: 7z e "$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries\KSPLibraries.7z" -p$ZIPPASSWORD -o"$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries"
+  - ps: 7z e "$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries\KSPLibraries.7z" -p$($env:ZIPPASSWORD) -o"$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries"
 build:
   parallel: true
   verbosity: minimal
