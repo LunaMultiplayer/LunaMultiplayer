@@ -1,21 +1,39 @@
+# Reference: http://www.appveyor.com/docs/appveyor-yml
+# Notes:
+#   - Indent each level of configuration with 2 spaces. Do not use tabs!
+
+#---------------------------------#
+#      general configuration      #
+#---------------------------------#
+
 version: 0.0.5.{build}
 image: Visual Studio 2017
+
+#---------------------------------#
+#    environment configuration    #
+#---------------------------------#
+
 environment:
-  7zipPassword:
+  ZIPPASSWORD:
     secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=
-configuration:
- - Debug
- - Release
-platform: Any CPU
 assembly_info:
   patch: true
   file: '**\AssemblyInfo.*'
   assembly_version: '{version}'
   assembly_file_version: '{version}'
   assembly_informational_version: '{version}-$(configuration)'
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+
+configuration:
+ - Debug
+ - Release
+platform: Any CPU
 before_build:
   - nuget restore
-  - ps: 7z e "$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries\KSPLibraries.7z" -p$env:7zipPassword -o"$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries"
+  - ps: 7z e "$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries\KSPLibraries.7z" -p$ZIPPASSWORD -o"$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries"
 build:
   parallel: true
   verbosity: minimal
@@ -33,10 +51,25 @@ after_build:
  - ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Server\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer"
  #7zip everything
  - ps: 7z a "$env:APPVEYOR_BUILD_FOLDER\LunaMultiPlayer-$env:configuration.zip" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPServer" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
-artifacts:
+
+#---------------------------------#
+#      artifacts configuration    #
+#---------------------------------#
+
+ artifacts:
  - path: .\LunaMultiPlayer-$(configuration).zip
    name: LunaMultiPlayer.zip
+   
+#---------------------------------#
+#     deployment configuration    #
+#---------------------------------#
+
 deploy: off
+
+#---------------------------------#
+#         notifications           #
+#---------------------------------#
+
 notifications:
  - provider: Webhook
    url: http://lunamultiplayer.com/webhook/debug
