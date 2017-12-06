@@ -1,6 +1,7 @@
 *.user
 *.userprefs
 .vs/
+External/KSPLibraries/*.dll
 TestResults/*
 Client/*.csproj.user
 Client/bin/*
