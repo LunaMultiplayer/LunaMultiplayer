@@ -1,14 +1,18 @@
-﻿using LmpGlobal;
+﻿using JsonFx.Json;
+using JsonFx.Serialization;
+using JsonFx.Serialization.Resolvers;
+using LmpGlobal;
 using LunaUpdater.Contracts;
 using System;
 using System.Linq;
 using System.Net;
-using System.Web.Script.Serialization;
 
 namespace LunaUpdater
 {
     public class UpdateChecker
     {
+        private static readonly JsonReader Reader = new JsonReader(new DataReaderSettings(new DataContractResolverStrategy()));
+
         private static GitHubRelease _latestRelease;
         public static GitHubRelease LatestRelease
         {
@@ -21,8 +25,9 @@ namespace LunaUpdater
                         using (var wc = new WebClient())
                         {
                             wc.Headers.Add("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+                            
                             var json = wc.DownloadString(RepoConstants.LatestReleaseUrl);
-                            _latestRelease = new JavaScriptSerializer().Deserialize<GitHubRelease>(json);
+                            _latestRelease = Reader.Read<GitHubRelease>(json);
                         }
                     }
                     catch (Exception)

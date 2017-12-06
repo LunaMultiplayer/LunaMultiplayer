@@ -2,6 +2,7 @@
 
 namespace LunaUpdater.Contracts
 {
+    [DataContract]
     public class GitHubAuthor
     {
         [DataMember(Name = "login")]

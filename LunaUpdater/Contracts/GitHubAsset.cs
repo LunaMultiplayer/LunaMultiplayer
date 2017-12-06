@@ -3,6 +3,7 @@ using System.Runtime.Serialization;
 
 namespace LunaUpdater.Contracts
 {
+    [DataContract]
     public class GitHubAsset
     {
         [DataMember(Name = "url")]
