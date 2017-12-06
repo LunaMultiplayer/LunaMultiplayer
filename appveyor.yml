@@ -15,7 +15,7 @@ assembly_info:
   assembly_informational_version: '{version}-$(configuration)'
 before_build:
   - nuget restore
-  - ps: 7z e "$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries\KSPLibraries.7z" -p$(7zipPassword) -o"$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries"
+  - ps: 7z e "$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries\KSPLibraries.7z" -p$env:7zipPassword -o"$env:APPVEYOR_BUILD_FOLDER\External\KSPLibraries"
 build:
   parallel: true
   verbosity: minimal
