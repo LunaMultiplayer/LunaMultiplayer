@@ -38,7 +38,7 @@ namespace Server.Context
             Port = GeneralSettings.SettingsStore.Port,
             MaximumConnections = GeneralSettings.SettingsStore.MaxPlayers,
             SuppressUnreliableUnorderedAcks = true,
-            PingInterval = GeneralSettings.SettingsStore.HearbeatMsInterval,
+            PingInterval = (float)TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.HearbeatMsInterval).TotalSeconds,
             ConnectionTimeout = (float)TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds
         };
 
