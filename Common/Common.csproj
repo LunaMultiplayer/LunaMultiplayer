@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="Common.cs" />
     <Compile Include="ConsoleLogger.cs" />
+    <Compile Include="LunaDelay.cs" />
     <Compile Include="Enums\ClientMessageType.cs" />
     <Compile Include="Enums\ClientState.cs" />
     <Compile Include="Enums\ConnectionStatus.cs" />

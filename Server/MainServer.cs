@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using LunaCommon;
+﻿using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using Server.Client;
@@ -15,11 +10,18 @@ using Server.Plugin;
 using Server.Settings;
 using Server.System;
 using Server.Utilities;
+using System;
+using System.Diagnostics;
+using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Server
 {
     public class MainServer
     {
+        private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
+
         public static void Main()
         {
             try
@@ -56,38 +58,26 @@ namespace Server
                 ServerContext.ServerRunning = true;
                 ServerContext.LidgrenServer.SetupLidgrenServer();
 
-                var commandThread = Task.Run(() => new CommandHandler().ThreadMain());
-                var clientThread = Task.Run(() => new ClientMainThread().ThreadMain());
+                Task.Run(() => new CommandHandler().ThreadMain());
+                Task.Run(() => new ClientMainThread().ThreadMain());
 
-                var receiveThread = Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
-                var registerThread = Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
-                var logThread = Task.Run(() => LogThread.RunLogThread());
+                Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
+                Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
+                Task.Run(() => LogThread.RunLogThread());
 
-                var vesselRelayThread = Task.Run(() => VesselRelaySystem.RelayOldVesselMessages());
-                var vesselRelayFarThread = Task.Run(() => VesselUpdateRelaySystem.RelayToFarPlayers());
-                var vesselRelayMediumThread = Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
-                var vesselRelayCloseThread = Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
-                var vesselCheckerThread = Task.Run(() => VersionChecker.CheckForNewVersions());
+                Task.Run(() => VesselRelaySystem.RelayOldVesselMessages());
+                Task.Run(() => VesselUpdateRelaySystem.RelayToFarPlayers());
+                Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
+                Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
+                Task.Run(() => VersionChecker.CheckForNewVersions());
                 
-                Thread.Sleep(1000);
-
                 while (ServerContext.ServerStarting)
                     Thread.Sleep(500);
 
                 LunaLog.Normal("All systems up and running. Поехали!");
                 LmpPluginHandler.FireOnServerStart();
 
-                receiveThread.Wait();
-                registerThread.Wait();
-                commandThread.Wait();
-                clientThread.Wait();
-                logThread.Wait();
-                vesselCheckerThread.Wait();
-
-                vesselRelayThread.Wait();
-                vesselRelayFarThread.Wait();
-                vesselRelayMediumThread.Wait();
-                vesselRelayCloseThread.Wait();
+                QuitEvent.WaitOne();
 
                 LmpPluginHandler.FireOnServerStop();
 
@@ -117,10 +107,12 @@ namespace Server
         }
 
         //Gracefully shut down
-        private static void CatchExit(object sender, ConsoleCancelEventArgs args)
+        private static async void CatchExit(object sender, ConsoleCancelEventArgs args)
         {
             new ShutDownCommand().Execute("Caught Ctrl+C");
-            Thread.Sleep(5000);
+            QuitEvent.Set();
+            args.Cancel = true;
+            await Task.Delay(5000);
         }
 
         /// <summary>

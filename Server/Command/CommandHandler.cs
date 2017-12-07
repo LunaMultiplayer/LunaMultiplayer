@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using System.Threading.Tasks;
 using Server.Command.CombinedCommand;
 using Server.Command.Command;
 using Server.Context;
@@ -42,7 +43,7 @@ namespace Server.Command
         /// <summary>
         /// We receive the console inputs with a pipe
         /// </summary>
-        public void ThreadMain()
+        public async void ThreadMain()
         {
             try
             {
@@ -65,7 +66,7 @@ namespace Server.Command
                             Commands["say"].Func(input);
                         }
                     }
-                    Thread.Sleep(GeneralSettings.SettingsStore.MainTimeTick);
+                    await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
                 }
             }
             catch (Exception e)

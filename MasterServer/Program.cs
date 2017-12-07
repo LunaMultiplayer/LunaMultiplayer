@@ -15,87 +15,114 @@ namespace MasterServer
     /// 
     internal class Program
     {
+        #region Fields & properties
+
+#if DEBUG
+        private const bool DebugVersion = true;
+#else
+        private const bool DebugVersion = false;
+#endif
+        private const string DllFileName = "LMP.MasterServer.dll";
+
+        private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
+        private static readonly string DllPath = Directory.GetCurrentDirectory() + "\\" + DllFileName;
+        private static readonly AppDomainSetup DomainSetup = new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory };
+
+        private static Version CurrentVersion { get; set; }
+        private static AppDomain LmpDomain { get; set; }
+        private static string[] Arguments { get; set; }
+
+        #endregion
+
         private static void Main(string[] args)
         {
-            if (!File.Exists(Constants.DllPath))
+            if (!File.Exists(DllPath))
             {
-                ConsoleLogger.Log(LogLevels.Error, $"Cannot find needed file {Constants.DllFileName}");
+                ConsoleLogger.Log(LogLevels.Error, $"Cannot find needed file {DllFileName}");
                 return;
             }
 
-            Constants.CurrentVersion = new Version(FileVersionInfo.GetVersionInfo(Constants.DllPath).FileVersion);
+            Arguments = args;
+            CurrentVersion = new Version(FileVersionInfo.GetVersionInfo(DllPath).FileVersion);
 
-            //CheckNewVersion(args);
-            Start(args);
-
-            while (true)
+            Console.CancelKeyPress += (sender, eArgs) =>
             {
-                Thread.Sleep(100);
-            }
+                QuitEvent.Set();
+                eArgs.Cancel = true;
+            };
+
+            CheckNewVersion();
+            StartMasterServerDll();
+            QuitEvent.WaitOne();
         }
 
-        private static void Start(string[] args)
+        /// <summary>
+        /// Starts the master server dll
+        /// </summary>
+        private static void StartMasterServerDll()
         {
-            Constants.LmpDomain = AppDomain.CreateDomain("LMP.MasterServer", null, Constants.DomainSetup);
-            Constants.LmpDomain.SetData("Args", args);
-            Constants.LmpDomain.SetData("Stop", false);
+            LmpDomain = AppDomain.CreateDomain("LMP.MasterServer", null, DomainSetup);
+            LmpDomain.SetData("Arguments", Arguments);
+            LmpDomain.SetData("Stop", false);
 
-            Constants.LmpDomain.DoCallBack(() =>
+            LmpDomain.DoCallBack(async () =>
             {
-                var assemblyBytes = File.ReadAllBytes(Constants.DllPath);
-                var assembly = AppDomain.CurrentDomain.Load(assemblyBytes);
+                var assembly = AppDomain.CurrentDomain.Load(File.ReadAllBytes(DllPath));
                 var entryPoint = assembly.GetType("LMP.MasterServer.EntryPoint");
 
-                entryPoint.GetMethod("MainEntryPoint")?.Invoke(null, new[] { AppDomain.CurrentDomain.GetData("Args") });
+                entryPoint.GetMethod("MainEntryPoint")?.Invoke(null, new[] { AppDomain.CurrentDomain.GetData("Arguments") });
 
                 while (!(bool)AppDomain.CurrentDomain.GetData("Stop"))
                 {
-                    Thread.Sleep(50);
+                    await Task.Delay(100);
                 }
 
-                var stopMethod = entryPoint.GetMethod("Stop");
-                stopMethod?.Invoke(null, new object[0]);
+                entryPoint.GetMethod("Stop")?.Invoke(null, new object[0]);
             });
         }
-        
-        private static void Stop()
+
+        /// <summary>
+        /// Stops the master server dll concurrent task
+        /// </summary>
+        private static async void StopMasterServerDll()
         {
-            Constants.LmpDomain.SetData("Stop", true);
-            Thread.Sleep(5000);
-            AppDomain.Unload(Constants.LmpDomain);
+            LmpDomain.SetData("Stop", true);
+            await Task.Delay(5000);
+            AppDomain.Unload(LmpDomain);
+            Console.Clear();
         }
 
-        private static void CheckNewVersion(string[] args)
+        /// <summary>
+        /// Checks if a new version exists and if it does, it stops the master server, downloads it and restarts it again
+        /// </summary>
+        private static void CheckNewVersion()
         {
-            Task.Run(() =>
+            Task.Run(async () =>
             {
-                //Wait 5 seconds before checking...
-                Thread.Sleep(5000);
-
                 while (true)
                 {
                     var latestVersion = UpdateChecker.GetLatestVersion();
-                    if (latestVersion > Constants.CurrentVersion)
+                    if (latestVersion > CurrentVersion)
                     {
                         ConsoleLogger.Log(LogLevels.Normal, "Found a new updated version!. Downloading and restarting program....");
 
-                        var url = UpdateDownloader.GetZipFileUrl(Constants.DebugVersion);
+                        var url = UpdateDownloader.GetZipFileUrl(DebugVersion);
                         if (!string.IsNullOrEmpty(url))
                         {
                             var zipFileName = url.Substring(url.LastIndexOf("/") + 1);
                             UpdateDownloader.DownloadZipFile(url, Directory.GetCurrentDirectory() + "\\" + zipFileName);
 
-                            Stop();
+                            StopMasterServerDll();
 
                             UpdateExtractor.ExtractZipFileToDirectory(Directory.GetCurrentDirectory() + "\\" + zipFileName, Directory.GetCurrentDirectory(),
                                 UpdateExtractor.ProductToExtract.MasterServer);
 
-                            Start(args);
+                            StartMasterServerDll();
                         }
                     }
 
                     //Sleep for 30 minutes...
-                    Thread.Sleep(30 * 60 * 1000);
+                    await Task.Delay(30 * 60 * 1000);
                 }
             });
         }

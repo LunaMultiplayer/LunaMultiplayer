@@ -2,7 +2,7 @@
 using System.Collections;
 using System.IO;
 using System.Net.Sockets;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace LMP.MasterServer.Http
 {
@@ -23,7 +23,7 @@ namespace LMP.MasterServer.Http
             Socket = s;
         }
 
-        private static string StreamReadLine(Stream inputStream)
+        private static async Task<string> StreamReadLine(Stream inputStream)
         {
             var data = "";
             while (true)
@@ -35,7 +35,7 @@ namespace LMP.MasterServer.Http
                     case '\r':
                         continue;
                     case -1:
-                        Thread.Sleep(MasterServer.ServerMsTick); continue;
+                        await Task.Delay(MasterServer.ServerMsTick); continue;
                 }
                 ;
                 data += Convert.ToChar(nextChar);
@@ -67,9 +67,9 @@ namespace LMP.MasterServer.Http
             }
         }
 
-        public void ParseRequest(BufferedStream inputStream)
+        public async void ParseRequest(BufferedStream inputStream)
         {
-            var request = StreamReadLine(inputStream);
+            var request = await StreamReadLine(inputStream);
             var tokens = request.Split(' ');
             if (tokens.Length != 3)
             {
@@ -82,10 +82,10 @@ namespace LMP.MasterServer.Http
             HttpProtocolVersionstring = tokens[2];
         }
 
-        public void ReadHeaders(BufferedStream inputStream)
+        public async void ReadHeaders(BufferedStream inputStream)
         {
             string line;
-            while ((line = StreamReadLine(inputStream)) != null)
+            while ((line = await StreamReadLine(inputStream)) != null)
             {
                 if (line.Equals(""))
                 {

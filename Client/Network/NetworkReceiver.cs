@@ -21,13 +21,13 @@ using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.Warp;
+using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
-using System.Threading;
 
 namespace LunaClient.Network
 {
@@ -87,7 +87,7 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        Thread.Sleep(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
+                        LunaDelay.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval).Wait();
                     }
                 }
             }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Threading.Tasks;
 using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Message.Data.MasterServer;
@@ -42,7 +43,7 @@ namespace Server.Lidgren
             ServerContext.ServerStarting = false;
         }
 
-        public void StartReceiveingMessages()
+        public async void StartReceiveingMessages()
         {
             try
             {
@@ -95,7 +96,7 @@ namespace Server.Lidgren
                     }
                     else
                     {
-                        Thread.Sleep(GeneralSettings.SettingsStore.SendReceiveThreadTickMs);
+                        await Task.Delay(GeneralSettings.SettingsStore.SendReceiveThreadTickMs);
                     }
                 }
             }
@@ -141,7 +142,7 @@ namespace Server.Lidgren
             Server.Shutdown("Goodbye and thanks for all the fish");
         }
 
-        public void RegisterWithMasterServer()
+        public async void RegisterWithMasterServer()
         {
             if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
 
@@ -204,7 +205,7 @@ namespace Server.Lidgren
                     }
                 }
 
-                Thread.Sleep(MasterServerRegistrationMsInterval);
+                await Task.Delay(MasterServerRegistrationMsInterval);
             }
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
 using Server.Client;
@@ -12,7 +13,7 @@ namespace Server.Server
 {
     public class MessageSender
     {
-        public static void StartSendingOutgoingMessages(ClientStructure client)
+        public static async void StartSendingOutgoingMessages(ClientStructure client)
         {
             while (client.ConnectionStatus == ConnectionStatus.Connected)
             {
@@ -22,7 +23,7 @@ namespace Server.Server
                 }
                 else
                 {
-                    Thread.Sleep(GeneralSettings.SettingsStore.SendReceiveThreadTickMs);
+                    await Task.Delay(GeneralSettings.SettingsStore.SendReceiveThreadTickMs);
                 }
             }
         }

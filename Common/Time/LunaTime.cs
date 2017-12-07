@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace LunaCommon.Time
 {
@@ -58,7 +59,7 @@ namespace LunaCommon.Time
                 }
 
                 //Make it sleep for 5 seconds to force other instances to advance the timer in case they try to flood the server
-                Thread.Sleep(5000);
+                LunaDelay.Delay(5000).Wait();
                 TimeMutex.ReleaseMutex();
             }
             else

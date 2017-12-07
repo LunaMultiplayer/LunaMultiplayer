@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using LmpGlobal;
 using LunaCommon;
 using LunaCommon.Message;
 using LunaCommon.Message.Data.MasterServer;
@@ -12,9 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
-using LmpGlobal;
 using ConsoleLogger = LunaCommon.ConsoleLogger;
 using LogLevels = LunaCommon.LogLevels;
 
@@ -30,7 +29,7 @@ namespace LMP.MasterServer
         public static ConcurrentDictionary<long, Server> ServerDictionary { get; } = new ConcurrentDictionary<long, Server>();
         private static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
 
-        public static void Start()
+        public static async void Start()
         {
             var config = new NetPeerConfiguration("masterserver")
             {
@@ -48,7 +47,7 @@ namespace LMP.MasterServer
             CheckMasterServerListed();
 
             ConsoleLogger.Log(LogLevels.Normal, $"Master server {LmpVersioning.CurrentVersion} started! Поехали!");
-            Task.Run(() => RemoveExpiredServers());
+            RemoveExpiredServers();
 
             while (RunServer)
             {
@@ -78,7 +77,7 @@ namespace LMP.MasterServer
                             break;
                     }
                 }
-                Thread.Sleep(ServerMsTick);
+                await Task.Delay(ServerMsTick);
             }
             peer.Shutdown("Goodbye and thanks for all the fish!");
         }
@@ -232,21 +231,24 @@ namespace LMP.MasterServer
 
         private static void RemoveExpiredServers()
         {
-            while (RunServer)
+            Task.Run(async () =>
             {
-                var serversIdsToRemove = ServerDictionary
-                    .Where(s => LunaTime.UtcNow.Ticks - s.Value.LastRegisterTime >
-                                TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks)
-                    .ToArray();
-
-                foreach (var serverId in serversIdsToRemove)
+                while (RunServer)
                 {
-                    ConsoleLogger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
-                    ServerDictionary.TryRemove(serverId.Key, out var _);
-                }
+                    var serversIdsToRemove = ServerDictionary
+                        .Where(s => LunaTime.UtcNow.Ticks - s.Value.LastRegisterTime >
+                                    TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks)
+                        .ToArray();
 
-                Thread.Sleep(ServerRemoveMsCheckInterval);
-            }
+                    foreach (var serverId in serversIdsToRemove)
+                    {
+                        ConsoleLogger.Log(LogLevels.Normal, $"REMOVING SERVER: {serverId.Value.ExternalEndpoint}");
+                        ServerDictionary.TryRemove(serverId.Key, out var _);
+                    }
+
+                    await Task.Delay(ServerRemoveMsCheckInterval);
+                }
+            });
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using LunaCommon.Time;
 using Server.Context;
 
@@ -10,7 +11,7 @@ namespace Server.Log
         private static long _lastLogExpiredCheck;
         private static long _lastDayCheck;
 
-        public static void RunLogThread()
+        public static async void RunLogThread()
         {
             while (ServerContext.ServerRunning)
             {
@@ -33,7 +34,7 @@ namespace Server.Log
                     }
                 }
 
-                Thread.Sleep(250);
+                await Task.Delay(250);
             }
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using LunaCommon.Time;
 using Server.Command.Command;
 using Server.Context;
@@ -13,7 +14,7 @@ namespace Server.Client
 {
     public class ClientMainThread
     {
-        public void ThreadMain()
+        public async void ThreadMain()
         {
             try
             {
@@ -28,7 +29,7 @@ namespace Server.Client
 
                     LmpPluginHandler.FireOnUpdate(); //Run plugin update
 
-                    Thread.Sleep(GeneralSettings.SettingsStore.MainTimeTick);
+                    await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
                 }
             }
             catch (Exception e)
@@ -51,7 +52,7 @@ namespace Server.Client
                     }
                     sendingMessages = ClientRetriever.GetAuthenticatedClients().Any(c => c.SendMessageQueue.Count > 0);
 
-                    Thread.Sleep(GeneralSettings.SettingsStore.MainTimeTick);
+                    await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
                 }
                 ServerContext.LidgrenServer.ShutdownLidgrenServer();
             }

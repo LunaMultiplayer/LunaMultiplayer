@@ -1,11 +1,11 @@
 ﻿using Lidgren.Network;
 using LunaClient.Systems.SettingsSys;
+using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
-using System.Threading;
 
 namespace LunaClient.Network
 {
@@ -29,7 +29,7 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        Thread.Sleep(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
+                        LunaDelay.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval).Wait();
                     }
                 }
             }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using Server.Client;
@@ -49,7 +50,7 @@ namespace Server.System
         /// <summary>
         /// This method relay the vessel update to players in other planets
         /// </summary>
-        public static void RelayToFarPlayers()
+        public static async void RelayToFarPlayers()
         {
             while (ServerContext.ServerRunning)
             {
@@ -69,14 +70,14 @@ namespace Server.System
                 {
                     LunaLog.Error($"Error in RelayToFarPlayers method! Details: {e}");
                 }
-                Thread.Sleep(GeneralSettings.SettingsStore.FarDistanceUpdateIntervalMs);
+                await Task.Delay(GeneralSettings.SettingsStore.FarDistanceUpdateIntervalMs);
             }
         }
 
         /// <summary>
         /// This method relay the update to players in the same planet but farther than 25km
         /// </summary>
-        public static void RelayToMediumDistancePlayers()
+        public static async void RelayToMediumDistancePlayers()
         {
             while (ServerContext.ServerRunning)
             {
@@ -103,14 +104,14 @@ namespace Server.System
                 {
                     LunaLog.Error($"Error in RelayToMediumDistancePlayers method! Details: {e}");
                 }
-                Thread.Sleep(GeneralSettings.SettingsStore.MediumDistanceUpdateIntervalMs);
+                await Task.Delay(GeneralSettings.SettingsStore.MediumDistanceUpdateIntervalMs);
             }
         }
 
         /// <summary>
         /// This method relay the update to players closer than 25km
         /// </summary>
-        public static void RelayToClosePlayers()
+        public static async void RelayToClosePlayers()
         {
             while (ServerContext.ServerRunning)
             {
@@ -136,7 +137,7 @@ namespace Server.System
                 {
                     LunaLog.Error($"Error in RelayToClosePlayers method! Details: {e}");
                 }
-                Thread.Sleep(GeneralSettings.SettingsStore.CloseDistanceUpdateIntervalMs);
+                await Task.Delay(GeneralSettings.SettingsStore.CloseDistanceUpdateIntervalMs);
             }
         }
 

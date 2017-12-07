@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using LiteDB;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
@@ -127,7 +128,7 @@ namespace Server.System
         /// This method should be called in a thread. 
         /// It runs over the old messages and sends them once the subspace time matches the message send time.
         /// </summary>
-        public static void RelayOldVesselMessages()
+        public static async void RelayOldVesselMessages()
         {
             while (ServerContext.ServerRunning)
             {
@@ -144,7 +145,7 @@ namespace Server.System
                 }
 
                 DataBase.Shrink();
-                Thread.Sleep(GeneralSettings.SettingsStore.SendReceiveThreadTickMs);
+                await Task.Delay(GeneralSettings.SettingsStore.SendReceiveThreadTickMs);
             }
         }
     }

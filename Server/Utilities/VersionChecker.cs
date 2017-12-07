@@ -3,7 +3,6 @@ using LunaUpdater;
 using Server.Context;
 using Server.Log;
 using System;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.Utilities
@@ -18,18 +17,18 @@ namespace Server.Utilities
             Task.Run(() => DisplayNewVersionMsg());
         }
 
-        private static void RefreshLatestVersion()
+        private static async void RefreshLatestVersion()
         {
             while (ServerContext.ServerRunning)
             {
                 LatestVersion = UpdateChecker.GetLatestVersion();
 
                 //Sleep for 30 minutes...
-                Thread.Sleep(30 * 60 * 1000);
+                await Task.Delay(30 * 60 * 1000);
             }
         }
 
-        private static void DisplayNewVersionMsg()
+        private static async void DisplayNewVersionMsg()
         {
             while (ServerContext.ServerRunning)
             {
@@ -39,7 +38,7 @@ namespace Server.Utilities
                 }
 
                 //Sleep for 30 seconds...
-                Thread.Sleep(30 * 1000);
+                await Task.Delay(30 * 1000);
             }
         }
     }
