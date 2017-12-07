@@ -259,7 +259,6 @@ namespace LunaClient
         {
             NetworkConnection.Disconnect("Quit game");
             NetworkState = ClientState.Disconnected;
-            LunaTime.ReleaseMutex();
             LunaLog.ProcessLogMessages();
         }
 

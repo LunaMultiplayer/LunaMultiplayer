@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace LunaCommon.Time
 {
@@ -15,10 +14,7 @@ namespace LunaCommon.Time
         public static DateTime Now => UtcNow.ToLocalTime();
         public static TimeSpan TimeDifference { get; private set; } = TimeSpan.Zero;
 
-        private static readonly Mutex TimeMutex;
         private static readonly Timer Timer;
-
-        private static bool OwnsMutex;
 
         /// <summary>
         /// We sync time with time provider every 30 seconds. This limits the number of clients + servers to 6
@@ -30,7 +26,6 @@ namespace LunaCommon.Time
         /// </summary>
         static LunaTime()
         {
-            TimeMutex = new Mutex(false, "LunaTimeMutex");
             Timer = new Timer(_ => RefreshTimeDifference(), null, 0, TimeSyncIntervalMs);
         }
 
@@ -41,42 +36,49 @@ namespace LunaCommon.Time
 
         /// <summary>
         /// Here we refresh the time difference between our OS clock and the time providers clock.
-        /// We use a mutex at OS level to prevent flooding the server and geting kicked
+        /// We use a mutex at OS level to prevent flooding the NIST server and getting kicked
         /// </summary>
         private static void RefreshTimeDifference()
         {
             //In case we run several servers/clients we use a OS level mutex to avoid being kicked from the servers if we make too many requests
-            if (TimeMutex.WaitOne(50))
+            using (var timeMutex = GetLunaMutex())
             {
-                OwnsMutex = true;
-                try
+                if (timeMutex.WaitOne(10))
                 {
-                    TimeDifference = DateTime.UtcNow - TimeRetriever.GetTime(TimeProvider.Nist);
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
+                    try
+                    {
+                        TimeDifference = DateTime.UtcNow - TimeRetriever.GetTime(TimeProvider.Nist);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
 
-                //Make it sleep for 5 seconds to force other instances to advance the timer in case they try to flood the server
-                LunaDelay.Delay(5000).Wait();
-                TimeMutex.ReleaseMutex();
+                    //Make it sleep for 5 seconds to force other instances to advance the timer in case they try to flood the server
+                    LunaDelay.Delay(5000).Wait();
+                }
+                else
+                {
+                    //Advance the timer 5,5 seconds to avoid being kicked
+                    Timer.Change(5500, TimeSyncIntervalMs);
+                }
             }
-            else
-            {
-                //Advance the timer 5,5 seconds to avoid being kicked
-                Timer.Change(5500, TimeSyncIntervalMs);
-            }
-            OwnsMutex = false;
         }
 
         /// <summary>
-        /// Call this when closing to release the mutexes
+        /// Gets the OS wide mutex
         /// </summary>
-        public static void ReleaseMutex()
+        /// <returns></returns>
+        private static Mutex GetLunaMutex()
         {
-            if (OwnsMutex)
-                TimeMutex.ReleaseMutex();
+            try
+            {
+                return Mutex.OpenExisting("LunaTimeMutex");
+            }
+            catch
+            {
+                return new Mutex(false, "LunaTimeMutex");
+            }
         }
     }
 }
