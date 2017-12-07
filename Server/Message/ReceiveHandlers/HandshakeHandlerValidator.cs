@@ -1,14 +1,14 @@
-﻿using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text.RegularExpressions;
-using LunaCommon.Enums;
+﻿using LunaCommon.Enums;
 using Server.Client;
 using Server.Command.CombinedCommand;
 using Server.Context;
 using Server.Log;
 using Server.Settings;
 using Server.System;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text.RegularExpressions;
 
 namespace Server.Message.ReceiveHandlers
 {
@@ -16,9 +16,9 @@ namespace Server.Message.ReceiveHandlers
     {
         private bool CheckUsernameLength(ClientStructure client, string username)
         {
-            if (username.Length > 10)
+            if (username.Length > GeneralSettings.SettingsStore.MaxUsernameLength)
             {
-                Reason = "User too long. Max: 10";
+                Reason = $"Username too long. Max chars: {GeneralSettings.SettingsStore.MaxUsernameLength}";
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.ServerFull, Reason);
                 return false;
             }

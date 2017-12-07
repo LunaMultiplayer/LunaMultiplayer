@@ -21,8 +21,11 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Specify the server's MOTD (message of the day). 255 chars max")]
         public string ServerMotd { get; set; } = "Welcome, %Name%!";
 
-        [XmlComment(Value = "Maximum amount of Players that can join the server.")]
+        [XmlComment(Value = "Maximum amount of players that can join the server.")]
         public int MaxPlayers { get; set; } = 20;
+
+        [XmlComment(Value = "Maximum length of a username.")]
+        public int MaxUsernameLength { get; set; } = 15;
 
         [XmlComment(Value = "Set to false if you don't want to appear on the server list")]
         public bool RegisterWithMasterServer { get; set; } = true;
@@ -37,7 +40,7 @@ namespace Server.Settings.Definition
         public float AutoNuke { get; set; } = 0.0f;
 
         [XmlComment(Value = "Specify if the vessels that are being CONTROLLED and in a past subspace will be shown for players in future subspaces")]
-        public bool ShowVesselsInThePast { get; set; } = false;
+        public bool ShowVesselsInThePast { get; set; } = true;
 
         [XmlComment(Value = "Enable use of Cheats in-game.")]
         public bool Cheats { get; set; } = true;
