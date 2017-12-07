@@ -25,7 +25,7 @@ namespace MasterServer
         private const string DllFileName = "LMP.MasterServer.dll";
 
         private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
-        private static readonly string DllPath = Directory.GetCurrentDirectory() + "\\" + DllFileName;
+        private static readonly string DllPath = Path.Combine(Directory.GetCurrentDirectory(), DllFileName);
         private static readonly AppDomainSetup DomainSetup = new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory };
 
         private static Version CurrentVersion { get; set; }
@@ -110,11 +110,11 @@ namespace MasterServer
                         if (!string.IsNullOrEmpty(url))
                         {
                             var zipFileName = url.Substring(url.LastIndexOf("/") + 1);
-                            UpdateDownloader.DownloadZipFile(url, Directory.GetCurrentDirectory() + "\\" + zipFileName);
+                            UpdateDownloader.DownloadZipFile(url, Path.Combine(Directory.GetCurrentDirectory(), zipFileName));
 
                             StopMasterServerDll();
 
-                            UpdateExtractor.ExtractZipFileToDirectory(Directory.GetCurrentDirectory() + "\\" + zipFileName, Directory.GetCurrentDirectory(),
+                            UpdateExtractor.ExtractZipFileToDirectory(Path.Combine(Directory.GetCurrentDirectory(), zipFileName), Directory.GetCurrentDirectory(),
                                 UpdateExtractor.ProductToExtract.MasterServer);
 
                             StartMasterServerDll();

@@ -20,7 +20,7 @@ namespace LunaUpdater
 
             using (var zipFile = ZipFile.Read(zipFilePath))
             {
-                var tempFolder = destinationFolder + "\\TempUnzipFolder";
+                var tempFolder = Path.Combine(destinationFolder,"TempUnzipFolder");
                 Directory.CreateDirectory(tempFolder);
                 zipFile.ExtractAll(tempFolder, ExtractExistingFileAction.OverwriteSilently);
 
@@ -47,8 +47,7 @@ namespace LunaUpdater
 
         private static void ExtractMasterServer(string tempFolder)
         {
-            var destFolder = tempFolder + "\\..";
-            tempFolder += "\\LMPMasterServer";
+            var destFolder = Path.Combine(Path.Combine(tempFolder, ".."), "LMPMasterServer");
             foreach (var file in Directory.GetFiles(tempFolder))
             {
                 if (!Path.GetExtension(file).ToLower().Contains("exe"))
@@ -67,12 +66,40 @@ namespace LunaUpdater
 
         private static void ExtractServer(string tempFolder)
         {
-            throw new NotImplementedException();
+            var destFolder = Path.Combine(Path.Combine(tempFolder, ".."), "LMPServer");
+            foreach (var file in Directory.GetFiles(tempFolder))
+            {
+                if (!Path.GetExtension(file).ToLower().Contains("exe"))
+                {
+                    try
+                    {
+                        File.Copy(file, destFolder + "//" + Path.GetFileName(file), true);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+                }
+            }
         }
 
         private static void ExtractClient(string tempFolder)
         {
-            throw new NotImplementedException();
+            var destFolder = Path.Combine(Path.Combine(tempFolder, ".."), "LMPClient");
+            foreach (var file in Directory.GetFiles(tempFolder))
+            {
+                if (!Path.GetExtension(file).ToLower().Contains("exe"))
+                {
+                    try
+                    {
+                        File.Copy(file, destFolder + "//" + Path.GetFileName(file), true);
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+                }
+            }
         }
     }
 }
