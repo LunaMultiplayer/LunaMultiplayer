@@ -123,7 +123,6 @@ namespace LunaClient.Systems.VesselProtoSys
                                 module.OnLoad(moduleSnapshot.moduleValues);
                             if (!ModulesToDontStart.Contains(module.moduleName))
                                 module.OnStart(PartModule.StartState.Flying);
-
                         }
                     }
                 }
