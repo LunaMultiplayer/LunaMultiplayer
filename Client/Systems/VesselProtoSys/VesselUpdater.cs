@@ -59,7 +59,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel)
         {
-            if (vessel == null || protoVessel == null|| vessel.state == Vessel.State.DEAD) return;
+            if (vessel == null || protoVessel == null || vessel.state == Vessel.State.DEAD) return;
 
             if (vessel.id != protoVessel.vesselID)
             {
@@ -120,13 +120,7 @@ namespace LunaClient.Systems.VesselProtoSys
                             if (!ModulesToDontAwake.Contains(module.moduleName))
                                 module.OnAwake();
                             if (!ModulesToDontLoad.Contains(module.moduleName))
-                            {
-                                var a = new ConfigNode();
-                                var conf = moduleSnapshot.moduleValues;
-                                moduleSnapshot.Save(a);
-                                var dif = a.ToString() != conf.ToString();
-                                module.OnLoad(a);
-                            }
+                                module.OnLoad(moduleSnapshot.moduleValues);
                             if (!ModulesToDontStart.Contains(module.moduleName))
                                 module.OnStart(PartModule.StartState.Flying);
 
