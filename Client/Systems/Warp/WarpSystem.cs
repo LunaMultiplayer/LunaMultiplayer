@@ -79,7 +79,7 @@ namespace LunaClient.Systems.Warp
             base.OnEnabled();
             GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);
             GameEvents.onLevelWasLoadedGUIReady.Add(WarpEvents.OnSceneChanged);
-            if (!CommonUtil.PlatformIsWindows() && SettingsSystem.ServerSettings.WarpMode != WarpMode.None)
+            if (SettingsSystem.ServerSettings.WarpMode != WarpMode.None)
                 SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, CheckWarpStopped));
 
             if (SettingsSystem.ServerSettings.WarpMode == WarpMode.Master &&
@@ -96,7 +96,7 @@ namespace LunaClient.Systems.Warp
         #region Update methods
 
         /// <summary>
-        /// This routine checks if we stopped warping. The warp event doesn't work very well under linux...
+        /// This routine checks if we stopped warping.
         /// </summary>
         private void CheckWarpStopped()
         {

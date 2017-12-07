@@ -1,8 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
-using UnityEngine;
 
 namespace LunaClient.Systems.Warp
 {
@@ -34,12 +32,7 @@ namespace LunaClient.Systems.Warp
                     System.SendChangeSubspaceMsg(-1);
                 }
             }
-            else if (CommonUtil.PlatformIsWindows() && TimeWarp.CurrentRateIndex == 0 && System.CurrentSubspace == -1)
-            {
-                //We stopped warping so send our new subspace
-                System.WaitingSubspaceIdFromServer = true;
-                System.SendNewSubspace();
-            }
+            //Detecting here if warp has stopped (TimeWarp.CurrentRateIndex == 0 && System.CurrentSubspace == -1) is not reliable so we use a routine to check it
         }
 
         /// <summary>
