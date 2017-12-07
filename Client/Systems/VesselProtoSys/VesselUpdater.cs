@@ -1,4 +1,5 @@
-﻿using LunaClient.VesselUtilities;
+﻿using LunaClient.Utilities;
+using LunaClient.VesselUtilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -108,8 +109,8 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (FieldsToIgnore.TryGetValue(module.moduleName, out var fieldsToIgnoreList) && fieldsToIgnoreList.Contains(existingField.name))
                             continue;
 
-                        var value = existingField.GetValue(existingField.host).ToString();
-                        var newVal = definitionPartModuleFieldVals.First(mf => mf.name == existingField.name).value;
+                        var value = existingField.GetValue(existingField.host).ToString().FormatModuleValue();
+                        var newVal = definitionPartModuleFieldVals.First(mf => mf.name == existingField.name).value.FormatModuleValue();
 
                         //Field value between part module and part DEFINITION module are different!
                         if (value != newVal)
