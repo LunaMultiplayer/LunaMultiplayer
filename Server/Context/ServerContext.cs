@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.IO;
-using System.Net;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon.Message;
 using Server.Client;
 using Server.Lidgren;
 using Server.Settings;
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.IO;
+using System.Net;
 
 namespace Server.Context
 {
@@ -39,7 +39,7 @@ namespace Server.Context
             MaximumConnections = GeneralSettings.SettingsStore.MaxPlayers,
             SuppressUnreliableUnorderedAcks = true,
             PingInterval = GeneralSettings.SettingsStore.HearbeatMsInterval,
-            ConnectionTimeout = GeneralSettings.SettingsStore.ConnectionMsTimeout
+            ConnectionTimeout = (float)TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds
         };
 
         public static LidgrenServer LidgrenServer { get; } = new LidgrenServer();
