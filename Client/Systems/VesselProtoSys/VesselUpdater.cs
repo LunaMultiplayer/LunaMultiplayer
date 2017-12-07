@@ -109,6 +109,8 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (FieldsToIgnore.TryGetValue(module.moduleName, out var fieldsToIgnoreList) && fieldsToIgnoreList.Contains(existingField.name))
                             continue;
 
+                        //Sometimes we get a proto part module value of 17.0001 and the part value is 17.0 so it's useless to reload
+                        //a whole part module for such a small change! FormatModuleValue() strips the decimals if the value is a decimal
                         var value = existingField.GetValue(existingField.host).ToString().FormatModuleValue();
                         var newVal = definitionPartModuleFieldVals.First(mf => mf.name == existingField.name).value.FormatModuleValue();
 
