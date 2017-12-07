@@ -3,8 +3,6 @@ using LunaClient.VesselUtilities;
 using System;
 using UnityEngine;
 
-// ReSharper disable All
-
 namespace LunaClient.Systems.VesselPositionSys
 {
     /// <summary>
@@ -20,16 +18,8 @@ namespace LunaClient.Systems.VesselPositionSys
         private CelestialBody _body;
         public CelestialBody Body
         {
-            get
-            {
-                if (_body == null)
-                {
-                    _body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName);
-                }
-
-                return _body;
-            }
-            set { _body = value; }
+            get { return _body ?? (_body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName)); }
+            set => _body = value;
         }
 
         private VesselPositionUpdate _target;
@@ -139,7 +129,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             catch
             {
-
+                // ignored
             }
         }
 
