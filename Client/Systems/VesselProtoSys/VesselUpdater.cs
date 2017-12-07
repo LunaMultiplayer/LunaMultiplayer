@@ -13,12 +13,26 @@ namespace LunaClient.Systems.VesselProtoSys
         private static FieldInfo StateField { get; } = typeof(Part).GetField("state", BindingFlags.Instance | BindingFlags.NonPublic);
         private static FieldInfo PartModuleFields { get; } = typeof(PartModule).GetField("fields", BindingFlags.Instance | BindingFlags.NonPublic);
 
-        private static readonly List<ProtoPartSnapshot> PartsToInit = new List<ProtoPartSnapshot>();
+        /// <summary>
+        /// Add here modules that fail when calling "OnAwake" on it's partmodule or are useless and can be skipped
+        /// </summary>
+        public static readonly List<string> ModulesToDontAwake = new List<string>
+        {
+            "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension", "ModuleScienceContainer", "KerbalEVA"
+        };
 
         /// <summary>
-        /// Add here modules that fail when calling "OnStart" on it's partmodule
+        /// Add here modules that fail when calling "OnLoad" on it's partmodule or are useless and can be skipped
         /// </summary>
-        public static readonly List<string> ModulesToDontInit = new List<string>
+        public static readonly List<string> ModulesToDontLoad = new List<string>
+        {
+            "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension", "ModuleScienceContainer", "KerbalEVA"
+        };
+
+        /// <summary>
+        /// Add here modules that fail when calling "OnStart" on it's partmodule or are useless and can be skipped
+        /// </summary>
+        public static readonly List<string> ModulesToDontStart = new List<string>
         {
             "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension", "ModuleScienceContainer", "KerbalEVA"
         };
@@ -103,8 +117,19 @@ namespace LunaClient.Systems.VesselProtoSys
                             PartModuleFields.SetValue(module, new BaseFieldList(module));
                             module.Fields.Load(moduleSnapshot.moduleValues);
 
-                            if (!ModulesToDontInit.Contains(module.moduleName))
-                                module.OnStart(PartModule.StartState.None);
+                            if (!ModulesToDontAwake.Contains(module.moduleName))
+                                module.OnAwake();
+                            if (!ModulesToDontLoad.Contains(module.moduleName))
+                            {
+                                var a = new ConfigNode();
+                                var conf = moduleSnapshot.moduleValues;
+                                moduleSnapshot.Save(a);
+                                var dif = a.ToString() != conf.ToString();
+                                module.OnLoad(a);
+                            }
+                            if (!ModulesToDontStart.Contains(module.moduleName))
+                                module.OnStart(PartModule.StartState.Flying);
+
                         }
                     }
                 }
