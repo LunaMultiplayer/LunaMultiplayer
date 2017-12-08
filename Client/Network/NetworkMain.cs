@@ -25,8 +25,8 @@ namespace LunaClient.Network
             AutoFlushSendQueue = false,
             SuppressUnreliableUnorderedAcks = true, //We don't need ack for unreliable unordered!
             MaximumTransmissionUnit = SettingsSystem.CurrentSettings.MtuSize,
-            PingInterval = (float)SettingsSystem.CurrentSettings.HearbeatMsInterval / 1000,
-            ConnectionTimeout = (float)SettingsSystem.CurrentSettings.ConnectionMsTimeout / 1000,
+            PingInterval = (float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.HearbeatMsInterval).TotalSeconds,
+            ConnectionTimeout = (float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.ConnectionMsTimeout).TotalSeconds,
         };
 
         public static NetClient ClientConnection { get; private set; }
