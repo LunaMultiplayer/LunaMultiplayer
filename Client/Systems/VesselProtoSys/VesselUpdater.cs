@@ -1,4 +1,5 @@
-﻿using LunaClient.Utilities;
+﻿using KSP.UI.Screens.Flight;
+using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,6 +55,9 @@ namespace LunaClient.Systems.VesselProtoSys
             ["ModuleEnginesFX"] = new List<string> { "currentThrottle" }
         };
 
+        private static readonly List<ProtoCrewMember> MembersToAdd = new List<ProtoCrewMember>();
+        private static readonly List<string> MembersToRemove = new List<string>();
+
         /// <summary>
         /// This method will take a vessel and update all it's parts based on a protovessel
         /// This way we avoid having to unload and reload a vessel and it's terrible performance
@@ -68,12 +72,18 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
             }
 
-            if (vessel.situation != protoVessel.situation)
+            var hasMissingparts = vessel.loaded ? protoVessel.protoPartSnapshots.Any(pp => !vessel.parts.Any(p => p.missionID == pp.missionID && p.craftID == pp.craftID)) :
+                protoVessel.protoPartSnapshots.Any(pp => !vessel.protoVessel.protoPartSnapshots.Any(p => p.missionID == pp.missionID && p.craftID == pp.craftID));
+
+            if (vessel.situation != protoVessel.situation || hasMissingparts)
             {
                 //Better to reload the whole vesse if situation changes as it makes the transition more soft.
+                //Better to reload if has missing parts as creating them dinamically is a PIA
                 VesselLoader.ReloadVessel(protoVessel);
                 return;
             }
+
+            var hasCrewChanges = false;
 
             //Never do vessel.protoVessel = protoVessel; not even if the vessel is not loaded as when it gets loaded the parts are created in the active vessel and not on the target vessel
 
@@ -89,6 +99,9 @@ namespace LunaClient.Systems.VesselProtoSys
                     part.Die();
                     continue;
                 }
+
+                //Remove or add crew members in given part and detect if there have been any change
+                hasCrewChanges |= AdjustCrewMembersInPart(part, partSnapshot);
 
                 //Set part "state" field... I don't know if this is really needed...
                 StateField.SetValue(part, partSnapshot.state);
@@ -141,12 +154,19 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
             }
 
-            var hasMissingparts = vessel.loaded ? protoVessel.protoPartSnapshots.Any(pp => !vessel.parts.Any(p => p.missionID == pp.missionID && p.craftID == pp.craftID)) :
-                protoVessel.protoPartSnapshots.Any(pp => !vessel.protoVessel.protoPartSnapshots.Any(p => p.missionID == pp.missionID && p.craftID == pp.craftID));
-
-            if (hasMissingparts)
+            if (hasCrewChanges)
             {
-                VesselLoader.ReloadVessel(protoVessel);
+                //We must always refresh the crew in every part of the vessel, even if we don't spectate
+                vessel.RebuildCrewList();
+
+                //IF we are spectating we must fix the portraits of the kerbals
+                if (FlightGlobals.ActiveVessel?.id == vessel.id)
+                {
+                    //If you don't call spawn crew and you do a crew transfer the transfered crew won't appear in the portraits...
+                    Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
+                    //If you don't call this the kerbal portraits appear in black...
+                    Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
+                }
             }
 
             //TODO: This is old code where we created parts dinamically but it's quite buggy. It create parts in the CURRENT vessel instead of in the target vessel
@@ -167,6 +187,35 @@ namespace LunaClient.Systems.VesselProtoSys
             ////Init new parts. This must be done in another loop as otherwise new parts won't have their correct attachment parts.
             //foreach (var partSnapshot in PartsToInit)
             //    partSnapshot.Init(vessel);
+        }
+
+        /// <summary>
+        /// Add or remove crew from a part based on the part snapshot
+        /// </summary>
+        private static bool AdjustCrewMembersInPart(Part part, ProtoPartSnapshot partSnapshot)
+        {
+            if (part.protoModuleCrew.Count != partSnapshot.protoModuleCrew.Count)
+            {
+                MembersToAdd.Clear();
+                MembersToRemove.Clear();
+                MembersToAdd.AddRange(partSnapshot.protoModuleCrew.Where(mp => part.protoModuleCrew.All(m => m.name != mp.name)));
+                MembersToRemove.AddRange(part.protoModuleCrew.Select(c => c.name).Except(partSnapshot.protoModuleCrew.Select(c => c.name)));
+
+                foreach (var memberToAdd in MembersToAdd)
+                {
+                    part.AddCrewmember(memberToAdd);
+                }
+
+                foreach (var memberToRemove in MembersToRemove)
+                {
+                    var member = part.protoModuleCrew.First(c => c.name == memberToRemove);
+                    part.RemoveCrewmember(member);
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 }
