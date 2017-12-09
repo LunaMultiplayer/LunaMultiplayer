@@ -54,9 +54,10 @@ namespace LunaClient.Network
         {
             try
             {
-                ConnectThread?.Wait(1000);
-
-                Disconnect("Started a new connection");
+                while (!ConnectThread?.IsCompleted ?? false)
+                {
+                    LunaDelay.Delay(500);
+                }
 
                 ConnectThread = SystemBase.TaskFactory.StartNew(() => ConnectToServer($"{address}:{port}"));
             }
@@ -89,8 +90,9 @@ namespace LunaClient.Network
                     NetworkMain.ClientConnection.FlushSendQueue();
 
                     var connectionTrials = 0;
-                    while (NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Connected &&
-                           connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries)
+                    while (MainSystem.NetworkState >= ClientState.Connecting &&
+                            NetworkMain.ClientConnection.ConnectionStatus != NetConnectionStatus.Connected &&
+                           connectionTrials < SettingsSystem.CurrentSettings.ConnectionTries)
                     {
                         connectionTrials++;
                         LunaDelay.Delay(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
@@ -103,8 +105,10 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        LunaLog.LogError("[LMP]: Failed to connect within the timeout!");
-                        Disconnect("Initial connection timeout");
+                        if (MainSystem.NetworkState == ClientState.Connecting)
+                            Disconnect("Initial connection timeout");
+                        else
+                            Disconnect("Cancelled connection");
                     }
                 }
                 catch (Exception e)
