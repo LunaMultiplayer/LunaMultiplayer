@@ -19,6 +19,8 @@
 
 *Multiplayer mod for [Kerbal Space Program (KSP)](https://kerbalspaceprogram.com)*
 
+*[Official KSP forum post](https://forum.kerbalspaceprogram.com/index.php?/topic/168271-131-luna-multiplayer-lmp-alpha/)*
+
 ### Main features:
 
 - Clean and optimized code, based on systems and windows which makes it easier to read and modify.
