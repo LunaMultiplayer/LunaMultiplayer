@@ -143,6 +143,12 @@ namespace LunaClient.Systems.VesselPositionSys
                     return;
                 }
 
+                //If the interpolation is done, don't process this vessel until another message arrives
+                if(InterpolationFinished)
+                {
+                    return;
+                }
+
                 if (RestartRequested)
                 {
                     RestartRequested = false;
