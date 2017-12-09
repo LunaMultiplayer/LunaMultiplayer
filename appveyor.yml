@@ -42,7 +42,7 @@ after_build:
  - ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
  - ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
  - ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\Resources\*.png" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
- - ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\bin\$env:configuration\*.dll" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
+ - ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\Client\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
 #Master server post build commands
  - ps: mkdir "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"
  - ps: xcopy /s/y "$env:APPVEYOR_BUILD_FOLDER\MasterServer\bin\$env:configuration\*.*" "$env:APPVEYOR_BUILD_FOLDER\FinalFiles\$env:configuration\LMPMasterServer"

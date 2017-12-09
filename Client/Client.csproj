@@ -62,6 +62,7 @@
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\External\KSPLibraries\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
