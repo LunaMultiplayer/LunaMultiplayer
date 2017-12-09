@@ -18,7 +18,7 @@ namespace LunaClient.Utilities
                     new DialogGUIVerticalLayout(
                         new DialogGUIHorizontalLayout(
                             new DialogGUIFlexibleSpace(),
-                            new DialogGUIButton("Ok", delegate{}, false),
+                            new DialogGUIButton("Ok", delegate{}, true),
                             new DialogGUIFlexibleSpace()
                         )
                     )
