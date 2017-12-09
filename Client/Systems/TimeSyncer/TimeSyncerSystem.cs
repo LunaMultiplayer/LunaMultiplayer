@@ -37,23 +37,23 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// If the time between UTC and game is greater than this, the game time 
         /// </summary>
-        private const int MaxPhisicsClockMsError = 250;
+        private const int MaxPhisicsClockMsError = 25;
         /// <summary>
         /// Minimum speed that the game can go
         /// </summary>
-        private const float MinPhisicsClockRate = 0.5f;
+        private const float MinPhisicsClockRate = 0.95f;
         /// <summary>
         /// Max speed that the game can go. If you put this number too high the game will lag a lot.
         /// </summary>
-        private const float MaxPhisicsClockRate = 1.2f;
+        private const float MaxPhisicsClockRate = 1.05f;
         /// <summary>
         /// Limit at wich we won't fix the time with the GAME timescale
         /// </summary>
-        private const int PhisicsClockLimitMs = 10000;
+        private const int PhisicsClockLimitMs = 5000;
         /// <summary>
         /// If the time difference is greater than this, the game will set a new time as a global
         /// </summary>
-        private const int MaxClockErrorMs = 10000;
+        private const int MaxClockErrorMs = 5000;
 
         #endregion
 
@@ -114,7 +114,7 @@ namespace LunaClient.Systems.TimeSyncer
                 var currentError = TimeSpan.FromSeconds(CurrentErrorSec).TotalMilliseconds;
                 if (targetTime != 0 && Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < PhisicsClockLimitMs)
                 {
-                    //Time error is not so big so we can fix it adjusting the phisics time
+                    //Time error is not so big so we can fix it adjusting the physics time
                     SkewClock();
                 }
             }
