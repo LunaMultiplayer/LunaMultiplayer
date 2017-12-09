@@ -187,7 +187,6 @@ namespace LMP.MasterServer
 
             msgData.Id = values.Select(s => s.Info.Id).ToArray();
             msgData.ServerVersion = values.Select(s => s.Info.ServerVersion).ToArray();
-            msgData.Ip = values.Select(s => s.Info.Ip).ToArray();
             msgData.Cheats = values.Select(s => s.Info.Cheats).ToArray();
             msgData.Description = values.Select(s => s.Info.Description).ToArray();
             msgData.DropControlOnExit = values.Select(s => s.Info.DropControlOnExit).ToArray();

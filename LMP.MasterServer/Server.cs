@@ -20,7 +20,8 @@ namespace LMP.MasterServer
             Info = new ServerInfo
             {
                 Id = msg.Id,
-                Ip = ExternalEndpoint.Address.ToString(),
+                ExternalEndpoint = $"{ExternalEndpoint.Address}:{ExternalEndpoint.Port}",
+                InternalEndpoint = $"{InternalEndpoint.Address}:{InternalEndpoint.Port}",
                 Cheats = msg.Cheats,
                 ServerVersion = msg.ServerVersion,
                 ShowVesselsInThePast = msg.ShowVesselsInThePast,

@@ -27,9 +27,9 @@ namespace LunaClient.Systems.Ping
 
         #region Public methods
 
-        public static void QueuePing(string host)
+        public static void QueuePing(string endpoint)
         {
-            PingQueue.Enqueue(host);
+            PingQueue.Enqueue(endpoint);
         }
         
         #endregion
@@ -38,9 +38,9 @@ namespace LunaClient.Systems.Ping
 
         private static void PerformPings()
         {
-            while (PingQueue.TryDequeue(out var host))
+            while (PingQueue.TryDequeue(out var endpoint))
             {
-                Client.Singleton.StartCoroutine(PingUpdate(host));
+                Client.Singleton.StartCoroutine(PingUpdate(endpoint));
             }
         }
 
@@ -48,14 +48,15 @@ namespace LunaClient.Systems.Ping
 
         #region Private methods
         
-        private static IEnumerator PingUpdate(string host)
+        private static IEnumerator PingUpdate(string endpoint)
         {
+            var host = endpoint.Substring(0, endpoint.LastIndexOf(":"));
             var ping = new UnityEngine.Ping(host);
 
             yield return new WaitForSeconds(2f);
 
             var pingTime = ping.isDone ? ping.time : 9999;
-            if (NetworkServerList.Servers.TryGetValue(host, out var server))
+            if (NetworkServerList.Servers.TryGetValue(endpoint, out var server))
             {
                 server.Ping = pingTime;
             }

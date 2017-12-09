@@ -66,11 +66,12 @@ namespace LunaClient.Network
                         if (data.ServerVersion[i] != LmpVersioning.CurrentVersion)
                             continue;
 
-                        PingSystem.QueuePing(data.Ip[i]);
-                        Servers.TryAdd(data.Ip[i], new ServerInfo
+                        PingSystem.QueuePing(data.ExternalEndpoint[i]);
+                        Servers.TryAdd(data.ExternalEndpoint[i], new ServerInfo
                         {
                             Id = data.Id[i],
-                            Ip = data.Ip[i],
+                            InternalEndpoint = data.InternalEndpoint[i],
+                            ExternalEndpoint = data.ExternalEndpoint[i],
                             Description = data.Description[i],
                             Cheats = data.Cheats[i],
                             ServerName = data.ServerName[i],

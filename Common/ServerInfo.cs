@@ -3,7 +3,8 @@
     public class ServerInfo
     {
         public long Id { get; set; }
-        public string Ip { get; set; }
+        public string InternalEndpoint { get; set; }
+        public string ExternalEndpoint { get; set; }
         public string ServerVersion { get; set; }
         public int Ping { get; set; }
         public bool Cheats { get; set; }
