@@ -169,10 +169,12 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     ApplyInterpolations(LerpPercentage);
                     LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
-                    return;
                 }
 
-                InterpolationFinished = true;
+                if (LerpPercentage >= 1)
+                {
+                    InterpolationFinished = true;
+                }
             }
             catch
             {
