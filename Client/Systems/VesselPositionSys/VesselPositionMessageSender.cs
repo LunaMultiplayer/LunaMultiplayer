@@ -16,7 +16,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public void SendVesselPositionUpdate(Vessel vessel)
         {                
             var msg = MessageToPositionTransfer.CreateMessageFromVessel(vessel);
-            NetworkSender.QueueOutgoingMessage(msg); ;
+            NetworkSender.QueueOutgoingMessage(msg);
         }
     }
 }

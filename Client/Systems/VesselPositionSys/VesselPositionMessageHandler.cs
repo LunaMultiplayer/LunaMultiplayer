@@ -23,25 +23,39 @@ namespace LunaClient.Systems.VesselPositionSys
             if (LockSystem.LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                 return;
 
+            //Ignore updates if vessel is in kill list
             if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselId))
                 return;
 
             if (!VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var existingPositionUpdate))
             {
                 VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
-                VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
+
+                if (SettingsSystem.CurrentSettings.InterpolationEnabled)
+                    VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
             }
             else
             {
-                if (existingPositionUpdate.SentTime < msgData.SentTime &&
-                    (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted))
+                //Here we check that the message timestamp is lower than the message we received. UDP is not reliable and can deliver packets not in order!
+                if (existingPositionUpdate.TimeStamp < msgData.TimeStamp)
                 {
-                    if (VesselPositionSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate))
+                    if (SettingsSystem.CurrentSettings.InterpolationEnabled)
+                    {
+                        var existingTargetPositionUpdate = VesselPositionSystem.TargetVesselUpdate.GetOrAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
+                        if (existingTargetPositionUpdate.TimeStamp < msgData.TimeStamp)
+                        {
+                            if (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted)
+                            {
+                                existingPositionUpdate.Restart();
+                            }
+
+                            MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
+                        }
+                    }
+                    else
                     {
                         existingPositionUpdate.ResetFields();
-                        existingTargetPositionUpdate.ResetFields();
-                        MessageToPositionTransfer.UpdateFromUpdate(existingTargetPositionUpdate, existingPositionUpdate);
-                        MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
+                        MessageToPositionTransfer.UpdateFromMessage(msg, existingPositionUpdate);
                     }
                 }
             }

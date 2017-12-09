@@ -19,5 +19,6 @@ namespace LunaCommon.Message.Data.Vessel
         public bool Landed { get; set; }
         public bool Splashed { get; set; }
         public float[] TransformRotation { get; set; }
+        public long TimeStamp { get; set; }
     }
 }

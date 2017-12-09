@@ -2,6 +2,7 @@
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using LunaCommon.Time;
 using System;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -25,7 +26,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Com = msgData.Com,
                 NormalVector = msgData.NormalVector,
                 Orbit = msgData.Orbit,
-                SentTime = msgData.SentTime
+                TimeStamp = msgData.TimeStamp
             };
         }
 
@@ -44,7 +45,7 @@ namespace LunaClient.Systems.VesselPositionSys
             update.Com = msgData.Com;
             update.NormalVector = msgData.NormalVector;
             update.Orbit = msgData.Orbit;
-            update.SentTime = msgData.SentTime;
+            update.TimeStamp = msgData.TimeStamp;
 
             return update;
         }
@@ -62,7 +63,7 @@ namespace LunaClient.Systems.VesselPositionSys
             updateToUpdate.Com = update.Com;
             updateToUpdate.NormalVector = update.NormalVector;
             updateToUpdate.Orbit = update.Orbit;
-            updateToUpdate.SentTime = update.SentTime;
+            updateToUpdate.TimeStamp = update.TimeStamp;
 
             return update;
         }
@@ -126,6 +127,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 };
                 msgData.Landed = vessel.Landed;
                 msgData.Splashed = vessel.Splashed;
+                msgData.TimeStamp = LunaTime.UtcNow.Ticks;
 
                 return SystemBase.MessageFactory.CreateNew<VesselCliMsg>(msgData);
             }
