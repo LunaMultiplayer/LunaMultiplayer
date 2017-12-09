@@ -147,7 +147,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 foreach (var resourceSnapshot in partSnapshot.resources)
                 {
                     //Get the corresponding resource from the actual PART
-                    var resource = part.Resources.FirstOrDefault(pr => pr.info.name == resourceSnapshot.resourceName);
+                    var resource = part.Resources?.FirstOrDefault(pr => pr.info.name == resourceSnapshot.resourceName);
                     if (resource == null) continue;
 
                     resource.amount = resourceSnapshot.amount;
@@ -165,7 +165,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     //If you don't call spawn crew and you do a crew transfer the transfered crew won't appear in the portraits...
                     Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
                     //If you don't call this the kerbal portraits appear in black...
-                    Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
+                    Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
                 }
             }
 
