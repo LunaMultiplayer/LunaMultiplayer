@@ -1,10 +1,10 @@
-﻿using System;
+﻿using LunaCommon.Time;
+using Server.Context;
+using Server.Log;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using LunaCommon.Time;
-using Server.Context;
-using Server.Log;
 
 namespace Server.System
 {
@@ -18,9 +18,20 @@ namespace Server.System
             LoadSavedSubspace();
         }
 
-        public static void SaveSubspace(int subspaceId, double subspaceTime)
+        public static void SaveSubspacesToFile()
         {
-            FileHandler.AppendToFile(SubspaceFile, $"{subspaceId}:{subspaceTime}{Environment.NewLine}");
+            var subspaces = WarpContext.Subspaces.ToArray();
+
+            var content = $"#Incorrectly editing this file will cause weirdness. If there is any errors, the universe time will be reset.{Environment.NewLine}";
+            content += $"#This file can only be edited if the server is stopped.{Environment.NewLine}";
+            content += $"#Each variable is defined as: subspaceId:server_time_difference_in_seconds.{Environment.NewLine}";
+            content += $"#It must always contain at least 1 subspace wich will be the most advanced in the future{Environment.NewLine}";
+            FileHandler.WriteToFile(SubspaceFile, content);
+
+            foreach (var subspace in subspaces)
+            {
+                FileHandler.AppendToFile(SubspaceFile, $"{subspace.Key}:{subspace.Value}{Environment.NewLine}");
+            }
         }
 
         public static void RemoveSubspace(int oldSubspace)
@@ -29,30 +40,11 @@ namespace Server.System
             if (WarpContext.Subspaces.Count == 1 || oldSubspace == WarpContext.LatestSubspace)
                 return;
 
-            if (WarpContext.Subspaces.TryRemove(oldSubspace, out var _))
-            {
-                var allLinesExceptTheDeleted = string.Join(Environment.NewLine, GetSubspaceLinesFromFile()
-                    .Where(s => s.Key != oldSubspace)
-                    .Select(s => $"{s.Key}:{s.Value}"));
-
-                //Calling WriteHeaderToSubspaceFile will remove what's already in the file...
-                WriteHeaderToSubspaceFile();
-                FileHandler.AppendToFile(SubspaceFile, allLinesExceptTheDeleted);
-            }
+            WarpContext.Subspaces.TryRemove(oldSubspace, out var _);
         }
 
         #region Private methods
-
-        private static void WriteHeaderToSubspaceFile()
-        {
-            var content = $"#Incorrectly editing this file will cause weirdness. If there is any errors, the universe time will be reset.{Environment.NewLine}";
-            content += $"#This file can only be edited if the server is stopped.{Environment.NewLine}";
-            content += $"#Each variable is defined as: subspaceId:server_time_difference_in_seconds.{Environment.NewLine}";
-            content += $"#It must always contain at least 1 subspace wich will be the most advanced in the future{Environment.NewLine}";
-
-            FileHandler.WriteToFile(SubspaceFile, content);
-        }
-
+        
         private static void LoadSavedSubspace()
         {
             if (FileHandler.FileExists(SubspaceFile))
@@ -67,10 +59,8 @@ namespace Server.System
             }
             else
             {
-                LunaLog.Debug("Creating new Subspace lock file");
-                WriteHeaderToSubspaceFile();
+                LunaLog.Debug("Creating new subspace dictionary");
                 WarpContext.Subspaces.TryAdd(0, 0);
-                SaveSubspace(0, 0);
                 WarpContext.NextSubspaceId = 1;
             }
         }

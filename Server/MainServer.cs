@@ -3,7 +3,6 @@ using LunaCommon.Enums;
 using LunaCommon.Time;
 using Server.Client;
 using Server.Command;
-using Server.Command.Command;
 using Server.Context;
 using Server.Log;
 using Server.Plugin;
@@ -27,6 +26,9 @@ namespace Server
             try
             {
                 Console.Title = $"LMPServer {LmpVersioning.CurrentVersion}";
+#if DEBUG
+                Console.Title += " DEBUG";
+#endif
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = LunaTime.UtcNow.Ticks;
 
@@ -51,6 +53,8 @@ namespace Server
 
                 Universe.CheckUniverse();
                 LmpPluginHandler.LoadPlugins();
+                WarpSystem.Reset();
+                ChatSystem.Reset();
                 LoadSettingsAndGroups();
 
                 LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
@@ -79,6 +83,7 @@ namespace Server
 
                 QuitEvent.WaitOne();
 
+                WarpSystem.SaveSubspacesToFile();
                 LmpPluginHandler.FireOnServerStop();
 
                 LunaLog.Normal("Goodbye and thanks for all the fish!");
@@ -109,7 +114,7 @@ namespace Server
         //Gracefully shut down
         private static async void CatchExit(object sender, ConsoleCancelEventArgs args)
         {
-            new ShutDownCommand().Execute("Caught Ctrl+C");
+            ServerContext.Shutdown();
             QuitEvent.Set();
             args.Cancel = true;
             await Task.Delay(5000);

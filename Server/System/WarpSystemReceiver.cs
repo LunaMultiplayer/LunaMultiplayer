@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using LunaCommon.Message.Data.Warp;
+﻿using LunaCommon.Message.Data.Warp;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Context;
 using Server.Log;
 using Server.Server;
+using System.Linq;
 
 namespace Server.System
 {
@@ -27,9 +27,6 @@ namespace Server.System
             msgData.SubspaceKey = WarpContext.NextSubspaceId;
             
             MessageQueuer.SendToAllClients<WarpSrvMsg>(msgData);
-
-            //Save new subspace info to disk
-            WarpSystem.SaveSubspace(WarpContext.NextSubspaceId, message.ServerTimeDifference);
             WarpContext.NextSubspaceId++;
         }
 

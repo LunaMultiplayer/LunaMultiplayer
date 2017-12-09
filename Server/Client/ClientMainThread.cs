@@ -18,9 +18,6 @@ namespace Server.Client
         {
             try
             {
-                WarpSystem.Reset();
-                ChatSystem.Reset();
-
                 while (ServerContext.ServerRunning)
                 {
                     //Check timers
@@ -35,7 +32,7 @@ namespace Server.Client
             catch (Exception e)
             {
                 LunaLog.Error($"Fatal error thrown, exception: {e}");
-                new ShutDownCommand().Execute("Crashed!");
+                ServerContext.Shutdown();
             }
 
             try
