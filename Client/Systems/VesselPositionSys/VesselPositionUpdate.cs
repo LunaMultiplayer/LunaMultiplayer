@@ -126,32 +126,12 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
-            if (SettingsSystem.CurrentSettings.InterpolationEnabled)
-            {
-                ApplyInterpolatedVesselUpdate();
-            }
-            else
-            {
-                ApplyNonInterpolatedVesselUpdate();
-            }
+            ApplyInterpolatedVesselUpdate();
         }
 
         #endregion
 
         #region Private
-
-        private void ApplyNonInterpolatedVesselUpdate()
-        {
-            try
-            {
-                ApplyInterpolations(1);
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-
         private void ApplyInterpolatedVesselUpdate()
         {
             try
@@ -172,6 +152,11 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (!InterpolationStarted)
                 {
                     InterpolationStarted = true;
+                }
+
+                if (SettingsSystem.CurrentSettings.InterpolationEnabled)
+                {
+                    LerpPercentage = 1;
                 }
 
                 if (LerpPercentage <= 1)
@@ -196,19 +181,20 @@ namespace LunaClient.Systems.VesselPositionSys
 
             Vessel.orbitDriver.orbit.SetOrbit
             (
-                SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(Orbit[0], Target.Orbit[0], lerpPercentage) : Orbit[0],
-                SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(Orbit[1], Target.Orbit[1], lerpPercentage) : Orbit[1],
-                SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(Orbit[2], Target.Orbit[2], lerpPercentage) : Orbit[2],
-                SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(Orbit[3], Target.Orbit[3], lerpPercentage) : Orbit[3],
-                SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(Orbit[4], Target.Orbit[4], lerpPercentage) : Orbit[4],
-                SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(Orbit[5], Target.Orbit[5], lerpPercentage) : Orbit[5],
-                SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(Orbit[6], Target.Orbit[6], lerpPercentage) : Orbit[6],
+                //This probably won't work as orbital definitions aren't necessarily a linear function, and lerping applies a linear interpolation
+                Lerp(Orbit[0], Target.Orbit[0], lerpPercentage),
+                Lerp(Orbit[1], Target.Orbit[1], lerpPercentage),
+                Lerp(Orbit[2], Target.Orbit[2], lerpPercentage),
+                Lerp(Orbit[3], Target.Orbit[3], lerpPercentage),
+                Lerp(Orbit[4], Target.Orbit[4], lerpPercentage),
+                Lerp(Orbit[5], Target.Orbit[5], lerpPercentage),
+                Lerp(Orbit[6], Target.Orbit[6], lerpPercentage),
                 Body
             );
 
             //TODO: Is CoM and terrainNormal really needed?
-            Vessel.CoM = SettingsSystem.CurrentSettings.InterpolationEnabled ? Vector3.Lerp(CoM, Target.CoM, lerpPercentage) : CoM;
-            Vessel.terrainNormal = SettingsSystem.CurrentSettings.InterpolationEnabled ? Vector3.Lerp(Normal, Target.Normal, lerpPercentage) : Normal;
+            Vessel.CoM = Vector3.Lerp(CoM, Target.CoM, lerpPercentage);
+            Vessel.terrainNormal = Vector3.Lerp(Normal, Target.Normal, lerpPercentage);
 
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
             //Vessel.updateSituation() is called in the Vessel.LateUpdate(). Same applies for landed and splashed
@@ -227,23 +213,19 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
-                var curRotation = SettingsSystem.CurrentSettings.InterpolationEnabled ? Quaternion.Lerp(Rotation, Target.Rotation, lerpPercentage) : Rotation;
-
-                if (!Common.PlatformIsWindows())
-                    curRotation = Quaternion.Inverse(curRotation);
-
-                var curPosition = SettingsSystem.CurrentSettings.InterpolationEnabled ? Vector3d.Lerp(TransformPos, Target.TransformPos, lerpPercentage) : TransformPos;
-                var curVelocity = SettingsSystem.CurrentSettings.InterpolationEnabled ? Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage) : VelocityVector;
+                var curRotation = Quaternion.Lerp(Rotation, Target.Rotation, lerpPercentage);
+                var curPosition = Vector3d.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
+                var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
                 //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
                 Vessel.SetWorldVelocity(curVelocity);
                 Vessel.velocityD = curVelocity;
 
                 //Apply rotation
-                Vessel.ReferenceTransform.rotation = curRotation;
-                Vessel.SetRotation(curRotation, true);
+                Quaternion mainBodyRotation = Vessel.mainBody.rotation;
+                Vessel.SetRotation(mainBodyRotation * curRotation, true);
                 //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
-                Vessel.srfRelRotation = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * curRotation;
+                Vessel.srfRelRotation = curRotation;
 
                 //If you do Vessel.ReferenceTransform.position = curPosition 
                 //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
@@ -257,9 +239,9 @@ namespace LunaClient.Systems.VesselPositionSys
                             //Only call this when the kerbals are in the ground and VERY close
                             Vessel.SetPosition(curPosition);
                         }
-                        Vessel.latitude = SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage) : LatLonAlt[0];
-                        Vessel.longitude = SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage) : LatLonAlt[1];
-                        Vessel.altitude = SettingsSystem.CurrentSettings.InterpolationEnabled ? Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage) : LatLonAlt[2];
+                        Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                        Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                        Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
                         //DO NOT call Vessel.orbitDriver.updateFromParameters when landed as vessel jitters up/down when unpacked
                         break;
                     case Vessel.Situations.FLYING:
@@ -283,10 +265,10 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ProcessRestart()
         {
             TransformRotation = new[] {
-                Vessel.ReferenceTransform.rotation.x,
-                Vessel.ReferenceTransform.rotation.y,
-                Vessel.ReferenceTransform.rotation.z,
-                Vessel.ReferenceTransform.rotation.w
+                Vessel.srfRelRotation.x,
+                Vessel.srfRelRotation.y,
+                Vessel.srfRelRotation.z,
+                Vessel.srfRelRotation.w
             };
 
             TransformPosition = new[]

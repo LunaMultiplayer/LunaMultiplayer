@@ -79,10 +79,10 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 msgData.TransformRotation = new[]
                 {
-                    vessel.ReferenceTransform.rotation.x,
-                    vessel.ReferenceTransform.rotation.y,
-                    vessel.ReferenceTransform.rotation.z,
-                    vessel.ReferenceTransform.rotation.w
+                    vessel.srfRelRotation.x,
+                    vessel.srfRelRotation.y,
+                    vessel.srfRelRotation.z,
+                    vessel.srfRelRotation.w
                 };
                 msgData.TransformPosition = new[]
                 {
