@@ -44,3 +44,7 @@ IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\External\Dependencies\*.dll" "%KSPPATH2%\
 
 xcopy /Y "%~dp0..\Client\Resources\*.png" "%KSPPATH%\GameData\LunaMultiPlayer\Button"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\Resources\*.png" "%KSPPATH2%\GameData\LunaMultiPlayer\Button")
+
+::Newtonsoft's dll is only for the master server and should not be copied.
+del "%KSPPATH%\GameData\LunaMultiPlayer\Plugins\Newtonsoft.Json.dll"
+IF DEFINED KSPPATH2 del "%KSPPATH2%\GameData\LunaMultiPlayer\Plugins\Newtonsoft.Json.dll"
