@@ -1,5 +1,6 @@
 ﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
+using LunaCommon;
 using System;
 using UnityEngine;
 
@@ -227,6 +228,10 @@ namespace LunaClient.Systems.VesselPositionSys
             else
             {
                 var curRotation = SettingsSystem.CurrentSettings.InterpolationEnabled ? Quaternion.Lerp(Rotation, Target.Rotation, lerpPercentage) : Rotation;
+
+                if (!Common.PlatformIsWindows())
+                    curRotation = Quaternion.Inverse(curRotation);
+
                 var curPosition = SettingsSystem.CurrentSettings.InterpolationEnabled ? Vector3d.Lerp(TransformPos, Target.TransformPos, lerpPercentage) : TransformPos;
                 var curVelocity = SettingsSystem.CurrentSettings.InterpolationEnabled ? Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage) : VelocityVector;
 
