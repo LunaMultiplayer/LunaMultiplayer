@@ -30,32 +30,22 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var existingPositionUpdate))
             {
                 VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
-
-                if (SettingsSystem.CurrentSettings.InterpolationEnabled)
-                    VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
+                VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
             }
             else
             {
                 //Here we check that the message timestamp is lower than the message we received. UDP is not reliable and can deliver packets not in order!
                 if (existingPositionUpdate.TimeStamp < msgData.TimeStamp)
                 {
-                    if (SettingsSystem.CurrentSettings.InterpolationEnabled)
+                    var existingTargetPositionUpdate = VesselPositionSystem.TargetVesselUpdate.GetOrAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
+                    if (existingTargetPositionUpdate.TimeStamp < msgData.TimeStamp)
                     {
-                        var existingTargetPositionUpdate = VesselPositionSystem.TargetVesselUpdate.GetOrAdd(vesselId, MessageToPositionTransfer.CreateFromMessage(msg));
-                        if (existingTargetPositionUpdate.TimeStamp < msgData.TimeStamp)
+                        if (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted)
                         {
-                            if (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted)
-                            {
-                                existingPositionUpdate.Restart();
-                            }
-
-                            MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
+                            existingPositionUpdate.Restart();
                         }
-                    }
-                    else
-                    {
-                        existingPositionUpdate.ResetFields();
-                        MessageToPositionTransfer.UpdateFromMessage(msg, existingPositionUpdate);
+
+                        MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
                     }
                 }
             }
