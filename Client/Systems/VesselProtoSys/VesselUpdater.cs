@@ -104,7 +104,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 hasCrewChanges |= AdjustCrewMembersInPart(part, partSnapshot);
 
                 //Set part "state" field... I don't know if this is really needed...
-                StateField.SetValue(part, partSnapshot.state);
+                StateField?.SetValue(part, partSnapshot.state);
 
                 //Run trough all the part DEFINITION modules
                 foreach (var moduleSnapshot in partSnapshot.modules.Where(m => !ModulesToIgnore.Contains(m.moduleName)))
@@ -130,7 +130,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         //Field value between part module and part DEFINITION module are different!
                         if (value != newVal)
                         {
-                            PartModuleFields.SetValue(module, new BaseFieldList(module));
+                            PartModuleFields?.SetValue(module, new BaseFieldList(module));
                             module.Fields.Load(moduleSnapshot.moduleValues);
 
                             if (!ModulesToDontAwake.Contains(module.moduleName))
