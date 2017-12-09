@@ -28,6 +28,8 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
+using System.Threading;
+using LunaClient.Utilities;
 
 namespace LunaClient.Network
 {
@@ -87,7 +89,7 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        LunaDelay.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval).Wait();
+                        LunaDelay.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
                     }
                 }
             }

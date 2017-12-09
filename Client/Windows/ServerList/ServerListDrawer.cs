@@ -22,7 +22,7 @@ namespace LunaClient.Windows.ServerList
             if (GUILayout.Button("Refresh", ButtonStyle))
             {
                 NetworkServerList.RequestServers();
-                LunaDelay.Delay(500).Wait();
+                LunaDelay.Delay(500);
                 DisplayedServers = NetworkServerList.Servers.Values;
             }
             GUILayout.EndHorizontal();

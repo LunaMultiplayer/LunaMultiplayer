@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using UnityEngine;
+using LunaCommon;
 
 namespace LunaClient.Utilities
 {
@@ -30,7 +30,7 @@ namespace LunaClient.Utilities
         /// </summary>
         private static string GetDebugPort()
         {
-            if (!PlatformIsWindows()) return "0";
+            if (!Common.PlatformIsWindows()) return "0";
 
             var outputLogFile = File.Exists(CombinePaths(Client.KspPath, "KSP_x64_Data", "output_log.txt")) ?
                 CombinePaths(Client.KspPath, "KSP_x64_Data", "output_log.txt") : 
@@ -63,12 +63,6 @@ namespace LunaClient.Utilities
             var deletedItems = list1.Except(list2).Any();
             var newItems = list2.Except(list1).Any();
             return !newItems && !deletedItems;
-        }
-
-        public static bool PlatformIsWindows()
-        {
-            return Application.platform == RuntimePlatform.WindowsPlayer ||
-                   Application.platform == RuntimePlatform.WindowsEditor;
         }
     }
 }

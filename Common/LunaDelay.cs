@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 using Timer = System.Timers.Timer;
 namespace LunaCommon
@@ -40,8 +41,15 @@ namespace LunaCommon
 
         private static ConcurrentQueue<DelayStructure> CompletedDelays { get; } = new ConcurrentQueue<DelayStructure>();
 
-        public static Task Delay(int milliseconds)
+        public static void Delay(int milliseconds)
         {
+            //Don't use Wait() on linux as it calls extern kernel32.dll
+            if (!Common.PlatformIsWindows())
+            {
+                Thread.Sleep(milliseconds);
+                return;
+            }
+
             if (CompletedDelays.TryDequeue(out var delayStruct))
             {
                 delayStruct.Reuse(milliseconds);
@@ -51,7 +59,7 @@ namespace LunaCommon
                 delayStruct = new DelayStructure(milliseconds);
             }
 
-            return delayStruct.Tcs.Task;
+            delayStruct.Tcs.Task.Wait();
         }
     }
 }

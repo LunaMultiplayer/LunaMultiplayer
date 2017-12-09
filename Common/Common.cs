@@ -11,6 +11,11 @@ namespace LunaCommon
 {
     public class Common
     {
+        public static bool PlatformIsWindows()
+        {
+            return Environment.OSVersion.Platform == PlatformID.Win32NT;
+        }
+
         /// <summary>
         /// Compare two ienumerables and return if they are the same or not IGNORING the order
         /// </summary>

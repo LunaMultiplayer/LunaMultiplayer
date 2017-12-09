@@ -93,7 +93,7 @@ namespace LunaClient.Network
                            connectionTrials <= SettingsSystem.CurrentSettings.ConnectionTries)
                     {
                         connectionTrials++;
-                        LunaDelay.Delay(SettingsSystem.CurrentSettings.MsBetweenConnectionTries).Wait();
+                        LunaDelay.Delay(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
                     }
 
                     if (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Connected)

@@ -55,7 +55,7 @@ namespace LunaCommon.Time
                     }
 
                     //Make it sleep for 5 seconds to force other instances to advance the timer in case they try to flood the server
-                    LunaDelay.Delay(5000).Wait();
+                    LunaDelay.Delay(5000);
                 }
                 else
                 {

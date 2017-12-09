@@ -41,7 +41,7 @@ namespace LunaClient.Systems.VesselDockSys
         {
             TaskFactory.StartNew(() =>
             {
-                LunaDelay.Delay(delaySeconds).Wait();
+                LunaDelay.Delay(delaySeconds);
                 SendMessage(msgData);
             });
         }
