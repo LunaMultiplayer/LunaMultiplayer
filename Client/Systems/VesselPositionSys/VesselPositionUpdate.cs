@@ -1,6 +1,5 @@
 ﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
-using LunaCommon;
 using System;
 using UnityEngine;
 
@@ -46,7 +45,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] TransformPosition { get; set; }
         public double[] Velocity { get; set; }
         public double[] Orbit { get; set; }
-        public float[] TransformRotation { get; set; }
+        public float[] SrfRelRotation { get; set; }
         public bool Landed { get; set; }
         public bool Splashed { get; set; }
         public long TimeStamp;
@@ -55,7 +54,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Vessel position information fields
 
-        public Quaternion Rotation => new Quaternion(TransformRotation[0], TransformRotation[1], TransformRotation[2], TransformRotation[3]);
+        public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
         public Vector3d TransformPos => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
         public Vector3 CoM => new Vector3d(Com[0], Com[1], Com[2]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
@@ -83,7 +82,13 @@ namespace LunaClient.Systems.VesselPositionSys
         public bool RestartRequested { get; set; }
         public bool InterpolationFinished { get; set; }
         public float InterpolationDuration => (float)TimeSpan.FromTicks(Target.TimeStamp - TimeStamp).TotalSeconds;
-        public float LerpPercentage { get; set; }
+
+        private float _lerpPercentage;
+        public float LerpPercentage
+        {
+            get => !SettingsSystem.CurrentSettings.InterpolationEnabled ? 1 : _lerpPercentage;
+            set => _lerpPercentage = value;
+        }
 
         #endregion
 
@@ -96,6 +101,9 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void ResetFields()
         {
+            LerpPercentage = 0;
+            InterpolationStarted = false;
+            InterpolationFinished = false;
             _position = Vector3d.zero;
             _body = null;
             _target = null;
@@ -108,9 +116,6 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             RestartRequested = true;
             TimeStamp = Target.TimeStamp;
-            InterpolationStarted = false;
-            InterpolationFinished = false;
-            LerpPercentage = 0;
             ResetFields();
         }
 
@@ -119,69 +124,41 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void ApplyVesselUpdate()
         {
-            if (Body == null || Vessel == null || Vessel.precalc == null || Vessel.state == Vessel.State.DEAD ||
+            if (Body == null || Vessel == null || Vessel.precalc == null || Vessel.state == Vessel.State.DEAD || Target == null ||
                 FlightGlobals.ActiveVessel?.id == VesselId && !VesselCommon.IsSpectating)
             {
                 VesselPositionSystem.VesselsToRemove.Enqueue(VesselId);
                 return;
             }
 
-            ApplyInterpolatedVesselUpdate();
-        }
+            if (InterpolationFinished) return;
+            if (!InterpolationStarted) InterpolationStarted = true;
 
-        #endregion
+            if (RestartRequested)
+            {
+                ProcessRestart();
+            }
 
-        #region Private
-        private void ApplyInterpolatedVesselUpdate()
-        {
             try
             {
-                //We need a target to lerp into!
-                if (Target == null)
-                {
-                    VesselPositionSystem.VesselsToRemove.Enqueue(VesselId);
-                    return;
-                }
-
-                //If the interpolation is done, don't process this vessel until another message arrives
-                if(InterpolationFinished)
-                {
-                    return;
-                }
-
-                if (RestartRequested)
-                {
-                    RestartRequested = false;
-                    ProcessRestart();
-                }
-
-                if (!InterpolationStarted)
-                {
-                    InterpolationStarted = true;
-                }
-
-                if (SettingsSystem.CurrentSettings.InterpolationEnabled)
-                {
-                    LerpPercentage = 1;
-                }
-
                 if (LerpPercentage <= 1)
                 {
                     ApplyInterpolations(LerpPercentage);
                     LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
                 }
 
-                if (LerpPercentage >= 1)
-                {
-                    InterpolationFinished = true;
-                }
+                InterpolationFinished = LerpPercentage >= 1;
             }
             catch
             {
                 // ignored
             }
         }
-        
+
+        #endregion
+
+        #region Private
+
         private void ApplyInterpolations(float lerpPercentage)
         {
             var beforePos = Vessel.orbitDriver.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
@@ -221,7 +198,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
-                var curRotation = Quaternion.Lerp(Rotation, Target.Rotation, lerpPercentage);
+                var curRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
                 var curPosition = Vector3d.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
                 var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
@@ -272,7 +249,11 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void ProcessRestart()
         {
-            TransformRotation = new[] {
+            RestartRequested = false;
+            if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
+                return;
+
+            SrfRelRotation = new[] {
                 Vessel.srfRelRotation.x,
                 Vessel.srfRelRotation.y,
                 Vessel.srfRelRotation.z,
