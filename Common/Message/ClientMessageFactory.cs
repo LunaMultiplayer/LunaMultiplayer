@@ -6,7 +6,7 @@ using System;
 namespace LunaCommon.Message
 {
     /// <summary>
-    ///     Class for deserialization of the client messages that you've received
+    /// Class for deserialization of the client messages that you've received
     /// </summary>
     public class ClientMessageFactory : FactoryBase
     {
@@ -30,6 +30,7 @@ namespace LunaCommon.Message
             MessageDictionary.Add((uint)ClientMessageType.Mod, typeof(ModCliMsg));
             MessageDictionary.Add((uint)ClientMessageType.Admin, typeof(AdminCliMsg));
             MessageDictionary.Add((uint)ClientMessageType.Groups, typeof(GroupCliMsg));
+            MessageDictionary.Add((uint)ClientMessageType.Facility, typeof(FacilityCliMsg));
         }
     }
 }

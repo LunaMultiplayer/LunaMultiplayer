@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
@@ -11,6 +9,8 @@ using Server.Log;
 using Server.Message.Reader;
 using Server.Message.Reader.Base;
 using Server.Plugin;
+using System;
+using System.Collections.Generic;
 
 namespace Server.Server
 {
@@ -21,7 +21,6 @@ namespace Server.Server
         private static readonly Dictionary<ClientMessageType, ReaderBase> HandlerDictionary = new Dictionary
             <ClientMessageType, ReaderBase>
         {
-            [ClientMessageType.Groups] = new GroupMsgReader(),
             [ClientMessageType.Admin] = new AdminMsgReader(),
             [ClientMessageType.Handshake] = new HandshakeMsgReader(),
             [ClientMessageType.Chat] = new ChatMsgReader(),
@@ -36,7 +35,9 @@ namespace Server.Server
             [ClientMessageType.Motd] = new MotdMsgReader(),
             [ClientMessageType.Warp] = new WarpControlMsgReader(),
             [ClientMessageType.Lock] = new LockSystemMsgReader(),
-            [ClientMessageType.Mod] = new ModDataMsgReader()
+            [ClientMessageType.Mod] = new ModDataMsgReader(),
+            [ClientMessageType.Groups] = new GroupMsgReader(),
+            [ClientMessageType.Facility] = new FacilityMsgReader(),
         };
 
         #endregion

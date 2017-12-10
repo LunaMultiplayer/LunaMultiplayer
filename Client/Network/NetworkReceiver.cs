@@ -3,6 +3,7 @@ using LunaClient.Systems;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
+using LunaClient.Systems.Facility;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
@@ -28,8 +29,6 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
-using System.Threading;
-using LunaClient.Utilities;
 
 namespace LunaClient.Network
 {
@@ -177,6 +176,9 @@ namespace LunaClient.Network
                     break;
                 case ServerMessageType.Groups:
                     SystemsContainer.Get<GroupSystem>().EnqueueMessage(msg);
+                    break;
+                case ServerMessageType.Facility:
+                    SystemsContainer.Get<FacilitySystem>().EnqueueMessage(msg);
                     break;
                 default:
                     LunaLog.LogError($"[LMP]: Unhandled Message type {msg.MessageType}");

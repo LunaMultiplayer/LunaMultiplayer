@@ -4,6 +4,7 @@ using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
+using LunaClient.Systems.Facility;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.GameScene;
 using LunaClient.Systems.Groups;
@@ -41,10 +42,16 @@ namespace LunaClient.Systems.Network
 
         #endregion
 
+        private static bool _enabled = true;
+
         /// <summary>
         /// This system must be ALWAYS enabled!
         /// </summary>
-        public override bool Enabled => true;
+        public override bool Enabled
+        {
+            get => _enabled;
+            set => _enabled |= value;
+        }
 
         #region Constructor
 
@@ -56,7 +63,7 @@ namespace LunaClient.Systems.Network
         }
 
         #endregion
-
+        
         #region Update method
 
         private static void NetworkUpdate()
@@ -227,6 +234,7 @@ namespace LunaClient.Systems.Network
                         SystemsContainer.Get<GameSceneSystem>().Enabled = true;
                         SystemsContainer.Get<AsteroidSystem>().Enabled = true;
                         SystemsContainer.Get<ToolbarSystem>().Enabled = true;
+                        SystemsContainer.Get<FacilitySystem>().Enabled = true;
                         SystemsContainer.Get<PlayerColorSystem>().MessageSender.SendPlayerColorToServer();
                         SystemsContainer.Get<StatusSystem>().MessageSender.SendOwnStatus();
                         NetworkSimpleMessageSender.SendMotdRequest();
