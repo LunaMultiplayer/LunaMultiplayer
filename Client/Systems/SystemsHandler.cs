@@ -3,6 +3,7 @@ using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
+using LunaClient.Systems.Facility;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.GameScene;
 using LunaClient.Systems.Groups;
@@ -13,6 +14,7 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.ModApi;
 using LunaClient.Systems.Motd;
 using LunaClient.Systems.Network;
+using LunaClient.Systems.Ping;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
@@ -31,7 +33,6 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
 using System;
-using LunaClient.Systems.Ping;
 
 namespace LunaClient.Systems
 {
@@ -70,7 +71,8 @@ namespace LunaClient.Systems
             SystemsContainer.Get<FlagSystem>(),
             SystemsContainer.Get<ScenarioSystem>(),
             SystemsContainer.Get<ToolbarSystem>(),
-            SystemsContainer.Get<GroupSystem>()
+            SystemsContainer.Get<GroupSystem>(),
+            SystemsContainer.Get<FacilitySystem>()
         };
 
         /// <summary>

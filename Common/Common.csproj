@@ -88,6 +88,7 @@
     <Compile Include="Message\Client\Base\CliMsgBase.cs" />
     <Compile Include="Message\Client\ChatCliMsg.cs" />
     <Compile Include="Message\Client\CraftLibraryCliMsg.cs" />
+    <Compile Include="Message\Client\FacilitySrvMsg.cs" />
     <Compile Include="Message\Client\FlagCliMsg.cs" />
     <Compile Include="Message\Client\GroupCliMsg.cs" />
     <Compile Include="Message\Client\HandshakeCliMsg.cs" />
@@ -127,6 +128,10 @@
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryRespondMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryUploadMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftListInfo.cs" />
+    <Compile Include="Message\Data\Facility\FacilityBaseMsgData.cs" />
+    <Compile Include="Message\Data\Facility\FacilityCollapseMsgData.cs" />
+    <Compile Include="Message\Data\Facility\FacilityRepairMsgData.cs" />
+    <Compile Include="Message\Data\Facility\FacilityUpgradeMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagBaseMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagDataMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagDeleteMsgData.cs" />
@@ -212,6 +217,7 @@
     <Compile Include="Message\Server\Base\SrvMsgBase.cs" />
     <Compile Include="Message\Server\ChatSrvMsg.cs" />
     <Compile Include="Message\Server\CraftLibrarySrvMsg.cs" />
+    <Compile Include="Message\Server\FacilitySrvMsg.cs" />
     <Compile Include="Message\Server\FlagSrvMsg.cs" />
     <Compile Include="Message\Server\GroupSrvMsg.cs" />
     <Compile Include="Message\Server\HandshakeSrvMsg.cs" />
@@ -229,6 +235,7 @@
     <Compile Include="Message\Types\AdminMessageType.cs" />
     <Compile Include="Message\Types\ChatMessageType.cs" />
     <Compile Include="Message\Types\CraftMessageType.cs" />
+    <Compile Include="Message\Types\FacilityMessageType.cs" />
     <Compile Include="Message\Types\FlagMessageType.cs" />
     <Compile Include="Message\Types\GroupMessageType.cs" />
     <Compile Include="Message\Types\HandshakeMessageType.cs" />

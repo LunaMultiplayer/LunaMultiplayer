@@ -18,6 +18,7 @@
         Mod = 14,
         Admin = 15,
         PlayerConnection = 16,
-        Groups = 17
+        Groups = 17,
+        Facility = 18
     }
 }

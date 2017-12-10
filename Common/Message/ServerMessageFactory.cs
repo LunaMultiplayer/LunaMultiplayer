@@ -6,7 +6,7 @@ using System;
 namespace LunaCommon.Message
 {
     /// <summary>
-    ///     Class for deserialization of the server messages that you've received
+    /// Class for deserialization of the server messages that you've received
     /// </summary>
     public class ServerMessageFactory : FactoryBase
     {
@@ -31,6 +31,7 @@ namespace LunaCommon.Message
             MessageDictionary.Add((uint)ServerMessageType.Lock, typeof(LockSrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.Mod, typeof(ModSrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.Groups, typeof(GroupSrvMsg));
+            MessageDictionary.Add((uint)ServerMessageType.Facility, typeof(FacilitySrvMsg));
         }
     }
 }

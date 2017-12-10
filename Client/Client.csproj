@@ -72,6 +72,10 @@
     <Compile Include="Base\Interface\IWindow.cs" />
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
+    <Compile Include="Systems\Facility\FacilityEvents.cs" />
+    <Compile Include="Systems\Facility\FacilitySystem.cs" />
+    <Compile Include="Systems\Facility\FacilityMessageHandler.cs" />
+    <Compile Include="Systems\Facility\FacilityMessageSender.cs" />
     <Compile Include="Systems\Flag\FlagEvents.cs" />
     <Compile Include="Systems\GameScene\GameSceneSystem.cs" />
     <Compile Include="Systems\GameScene\GameSceneEvents.cs" />
