@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text.RegularExpressions;
-using LunaCommon;
+﻿using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
@@ -16,6 +10,12 @@ using Server.Message.Reader.Base;
 using Server.Server;
 using Server.Settings;
 using Server.System;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Server.Message.Reader
 {
@@ -135,10 +135,10 @@ namespace Server.Message.Reader
                 msgData.NormalVector[2].ToString(CultureInfo.InvariantCulture));
 
             regex = new Regex("rot = (.*)");
-            fullText = regex.Replace(fullText, msgData.TransformRotation[0].ToString(CultureInfo.InvariantCulture) + "," + 
-                msgData.TransformRotation[1].ToString(CultureInfo.InvariantCulture) + "," + 
-                msgData.TransformRotation[2].ToString(CultureInfo.InvariantCulture) + "," + 
-                msgData.TransformRotation[3].ToString(CultureInfo.InvariantCulture));
+            fullText = regex.Replace(fullText, msgData.SrfRelRotation[0].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.SrfRelRotation[1].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.SrfRelRotation[2].ToString(CultureInfo.InvariantCulture) + "," + 
+                msgData.SrfRelRotation[3].ToString(CultureInfo.InvariantCulture));
 
             regex = new Regex("CoM = (.*)");
             fullText = regex.Replace(fullText, msgData.Com[0].ToString(CultureInfo.InvariantCulture) + "," + 

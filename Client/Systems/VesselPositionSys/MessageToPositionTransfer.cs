@@ -17,7 +17,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 VesselId = msgData.VesselId,
                 BodyName = msgData.BodyName,
-                TransformRotation = msgData.TransformRotation,
+                SrfRelRotation = msgData.SrfRelRotation,
                 TransformPosition = msgData.TransformPosition,
                 Velocity = msgData.Velocity,
                 LatLonAlt = msgData.LatLonAlt,
@@ -36,7 +36,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             update.VesselId = msgData.VesselId;
             update.BodyName = msgData.BodyName;
-            update.TransformRotation = msgData.TransformRotation;
+            update.SrfRelRotation = msgData.SrfRelRotation;
             update.TransformPosition = msgData.TransformPosition;
             update.Velocity = msgData.Velocity;
             update.LatLonAlt = msgData.LatLonAlt;
@@ -54,7 +54,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             updateToUpdate.VesselId = update.VesselId;
             updateToUpdate.BodyName = update.BodyName;
-            updateToUpdate.TransformRotation = update.TransformRotation;
+            updateToUpdate.SrfRelRotation = update.SrfRelRotation;
             updateToUpdate.TransformPosition = update.TransformPosition;
             updateToUpdate.Velocity = update.Velocity;
             updateToUpdate.LatLonAlt = update.LatLonAlt;
@@ -77,7 +77,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 msgData.VesselId = vessel.id;
                 msgData.BodyName = vessel.mainBody.bodyName;
 
-                msgData.TransformRotation = new[]
+                msgData.SrfRelRotation = new[]
                 {
                     vessel.srfRelRotation.x,
                     vessel.srfRelRotation.y,
