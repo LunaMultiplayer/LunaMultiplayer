@@ -41,9 +41,6 @@
       <HintPath>..\External\Dependencies\FastMember.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Threading">
-      <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -274,6 +271,10 @@
     <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
       <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
       <Name>LmpGlobal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TPL\System.Threading.Tasks.Unity.csproj">
+      <Project>{dcb5d745-525c-46a1-bfc0-e12f87ab6165}</Project>
+      <Name>System.Threading.Tasks.Unity</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
