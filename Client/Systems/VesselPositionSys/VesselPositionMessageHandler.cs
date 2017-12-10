@@ -39,14 +39,19 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (existingPositionUpdate.TimeStamp < msgData.TimeStamp && (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted) &&
                     VesselPositionSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate) && existingTargetPositionUpdate.TimeStamp < msgData.TimeStamp)
                 {
-                    if (SettingsSystem.CurrentSettings.InterpolationEnabled)
-                    {
-                        //Here we set the current position to the current VESSEL position
-                        existingPositionUpdate.Restart();
-                    }
-
                     //Overwrite the TARGET data with the data we've received in the message
                     MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
+
+                    if (SettingsSystem.CurrentSettings.InterpolationEnabled)
+                    {
+                        //Here we set the start position to the current VESSEL position in order to LERP correctly
+                        existingPositionUpdate.Restart();
+                    }
+                    else
+                    {
+                        //Here we just set the interpolation as not started
+                        existingPositionUpdate.ResetFields();
+                    }
                 }
             }
         }
