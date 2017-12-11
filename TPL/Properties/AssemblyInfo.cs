@@ -24,9 +24,9 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes.
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("System.Threading.Tasks.Net35")]
+[assembly: AssemblyTitle("System.Threading")]
 [assembly: AssemblyDescription("The Task Parallel Library ported back to .NET 3.5")]
-[assembly: AssemblyCompany ("Couchbase")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("TPL .NET 3.5")]
 [assembly: AssemblyCopyright("2015")]
 
