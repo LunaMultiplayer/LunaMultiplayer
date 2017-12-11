@@ -161,9 +161,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyInterpolations(float lerpPercentage)
         {
-            var beforePos = Vessel.orbitDriver.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
-            var beforeSpeed = Vessel.orbitDriver.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()).xzy;
-
             Vessel.orbitDriver.orbit.SetOrbit
             (
                 //This probably won't work as orbital definitions aren't necessarily a linear function, and lerping applies a linear interpolation
@@ -198,8 +195,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
-                var curRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
-                var curPosition = Vector3d.Lerp(TransformPos, Target.TransformPos, lerpPercentage);
+                var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
                 var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
                 //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
@@ -207,10 +203,9 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.velocityD = curVelocity;
 
                 //Apply rotation
-                Quaternion mainBodyRotation = Vessel.mainBody.rotation;
-                Vessel.SetRotation(mainBodyRotation * curRotation, true);
+                Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
                 //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
-                Vessel.srfRelRotation = curRotation;
+                Vessel.srfRelRotation = currentSurfaceRelRotation;
 
                 //If you do Vessel.ReferenceTransform.position = curPosition 
                 //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
@@ -219,28 +214,16 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     case Vessel.Situations.LANDED:
                     case Vessel.Situations.SPLASHED:
-                        if (!Vessel.packed && FlightGlobals.ActiveVessel.id != VesselId && Vessel.isEVA)
-                        {
-                            //Only call this when the kerbals are in the ground and VERY close
-                            Vessel.SetPosition(curPosition);
-                        }
                         Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
                         Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
                         Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
-                        //DO NOT call Vessel.orbitDriver.updateFromParameters when landed as vessel jitters up/down when unpacked
-                        break;
-                    case Vessel.Situations.FLYING:
-                    case Vessel.Situations.SUB_ORBITAL:
-                    case Vessel.Situations.ORBITING:
-                    case Vessel.Situations.ESCAPING:
-                    case Vessel.Situations.DOCKED:
-                        //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
-                        Vessel.orbitDriver.updateFromParameters();
-                        //This does not seems to affect when the vessel is landed but I moved it to orbiting to increase performance
-                        foreach (var part in Vessel.Parts)
-                            part.ResumeVelocity();
                         break;
                 }
+
+                //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
+                Vessel.orbitDriver.updateFromParameters();
+                foreach (var part in Vessel.Parts)
+                    part.ResumeVelocity();
             }
         }
 
