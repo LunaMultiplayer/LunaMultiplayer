@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Message.Interface;
@@ -16,6 +10,11 @@ using Server.Log;
 using Server.Server;
 using Server.Settings;
 using Server.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Server.Lidgren
 {
@@ -192,21 +191,29 @@ namespace Server.Lidgren
 
                 foreach (var masterServer in MasterServerEndpoints)
                 {
-                    try
-                    {
-                        var outMsg = Server.CreateMessage(msgBytes.Length);
-                        outMsg.Write(msgBytes);
-                        Server.SendUnconnectedMessage(outMsg, masterServer);
-                        Server.FlushSendQueue();
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
+                    RegisterWithMasterServer(msgBytes, masterServer);
                 }
 
                 await Task.Delay(MasterServerRegistrationMsInterval);
             }
+        }
+
+        private static void RegisterWithMasterServer(byte[] msgBytes, IPEndPoint masterServer)
+        {
+            Task.Run(() =>
+            {
+                try
+                {
+                    var outMsg = Server.CreateMessage(msgBytes.Length);
+                    outMsg.Write(msgBytes);
+                    Server.SendUnconnectedMessage(outMsg, masterServer);
+                    Server.FlushSendQueue();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            });
         }
     }
 }
