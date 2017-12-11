@@ -13,7 +13,7 @@ namespace LMP.Tests
     {
         private static readonly ServerMessageFactory Factory = new ServerMessageFactory();
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void TestSerializeDeserialize()
         {
             var bytes = new byte[10000];
