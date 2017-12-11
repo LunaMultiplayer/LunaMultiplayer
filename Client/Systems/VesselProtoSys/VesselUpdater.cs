@@ -75,7 +75,7 @@ namespace LunaClient.Systems.VesselProtoSys
             var hasMissingparts = vessel.loaded ? protoVessel.protoPartSnapshots.Any(pp => !vessel.parts.Any(p => p.missionID == pp.missionID && p.craftID == pp.craftID)) :
                 protoVessel.protoPartSnapshots.Any(pp => !vessel.protoVessel.protoPartSnapshots.Any(p => p.missionID == pp.missionID && p.craftID == pp.craftID));
 
-            if (vessel.situation != protoVessel.situation || hasMissingparts)
+            if ((vessel.situation != protoVessel.situation && !VesselCommon.IsSpectating) || hasMissingparts)
             {
                 //Better to reload the whole vesse if situation changes as it makes the transition more soft.
                 //Better to reload if has missing parts as creating them dinamically is a PIA
