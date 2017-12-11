@@ -104,7 +104,8 @@ namespace MasterServer
                     var latestVersion = UpdateChecker.GetLatestVersion();
                     if (latestVersion > CurrentVersion)
                     {
-                        ConsoleLogger.Log(LogLevels.Normal, "Found a new updated version!. Downloading and restarting program....");
+                        ConsoleLogger.Log(LogLevels.Normal, $"Found a new updated version! Current: {CurrentVersion} Latest: {latestVersion}");
+                        ConsoleLogger.Log(LogLevels.Normal, "Downloading and restarting program....");
 
                         var url = UpdateDownloader.GetZipFileUrl(DebugVersion);
                         if (!string.IsNullOrEmpty(url))
