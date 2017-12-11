@@ -1,40 +1,60 @@
 ﻿using LunaClient.Base;
-using LunaClient.VesselUtilities;
+using LunaClient.Systems.SettingsSys;
 
 namespace LunaClient.Systems.KerbalSys
 {
-    public class KerbalEvents: SubSystem<KerbalSystem>
+    public class KerbalEvents : SubSystem<KerbalSystem>
     {
-        public void CrewRemove(ProtoCrewMember protoCrew, int crewCount)
-        {
-            System.MessageSender.SendKerbalRemove(protoCrew.name);
-        }
-
         public void CrewAdd(ProtoCrewMember protoCrew, int crewCount)
         {
             System.MessageSender.SendKerbal(protoCrew);
         }
-
-        public void CrewSetAsDead(ProtoCrewMember protoCrew, int crewCount)
+        
+        /// <summary>
+        /// Use this event to send the kerbals just when we start a flight.
+        /// We use this event instead of onFlightReady as the latter is triggered once UI and everythign is ready and this one is triggered
+        /// earlier in the chain
+        /// </summary>
+        public void SwitchSceneRequested(GameScenes data)
         {
-            protoCrew.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
-            System.MessageSender.SendKerbal(protoCrew);
-        }
-
-        public void FlightReady()
-        {
-            if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null)
-                return;
-
-            System.ProcessKerbalsInVessel(FlightGlobals.ActiveVessel);
-        }
-
-        public void OnCrewKilled(EventReport data)
-        {
-            var deadKerbalName = data.sender;
-            if (HighLogic.CurrentGame.CrewRoster.Exists(deadKerbalName))
+            if (data == GameScenes.FLIGHT)
             {
-                System.MessageSender.SendKerbal(HighLogic.CurrentGame.CrewRoster[deadKerbalName]);
+                var crew = FlightDriver.newShipManifest;
+                foreach (var protoCrew in crew.GetAllCrew(false))
+                {
+                    //Always set the kerbals in a vessel as assigned
+                    System.SetKerbalStatusWithoutTriggeringEvent(protoCrew, ProtoCrewMember.RosterStatus.Assigned);
+                    System.MessageSender.SendKerbal(protoCrew);
+                }
+            }
+        }
+
+        public void StatusChange(ProtoCrewMember kerbal, ProtoCrewMember.RosterStatus previousStatus, ProtoCrewMember.RosterStatus newStatus)
+        {
+            if (previousStatus != newStatus)
+            {
+                System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
+                System.MessageSender.SendKerbal(kerbal);
+            }
+        }
+
+        /// <summary>
+        /// This event is triggered when we hire a kerbal (previous type was applicant, new is crew)
+        /// Also triggered when we sack a kerbal (previous type was crew, new is applicant)
+        /// </summary>
+        public void TypeChange(ProtoCrewMember kerbal, ProtoCrewMember.KerbalType previousType, ProtoCrewMember.KerbalType newType)
+        {
+            if (previousType != newType)
+            {
+                if (previousType == ProtoCrewMember.KerbalType.Crew && newType == ProtoCrewMember.KerbalType.Applicant && !SettingsSystem.ServerSettings.AllowSackKerbals)
+                {
+                    //This means that we sacked the crew and we are not allowed to do it
+                    System.SetKerbalTypeWithoutTriggeringEvent(kerbal, ProtoCrewMember.KerbalType.Crew);
+                    return;
+                }
+
+                System.SetKerbalTypeWithoutTriggeringEvent(kerbal, newType);
+                System.MessageSender.SendKerbal(kerbal);
             }
         }
     }

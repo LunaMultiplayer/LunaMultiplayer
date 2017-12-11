@@ -13,6 +13,7 @@ namespace LunaCommon.Message.Data.Settings
         public GameMode GameMode { get; set; }
         public TerrainQuality TerrainQuality { get; set; }
         public bool AllowCheats { get; set; }
+        public bool AllowSackKerbals { get; set; }
         public int MaxNumberOfAsteroids { get; set; }
         public string ConsoleIdentifier { get; set; }
         public GameDifficulty GameDifficulty { get; set; }

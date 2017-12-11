@@ -19,6 +19,7 @@ namespace Server.Message.Reader
             msgData.GameMode = GeneralSettings.SettingsStore.GameMode;
             msgData.TerrainQuality = GeneralSettings.SettingsStore.TerrainQuality;
             msgData.AllowCheats = GeneralSettings.SettingsStore.Cheats;
+            msgData.AllowSackKerbals = GeneralSettings.SettingsStore.AllowSackKerbals;
             msgData.MaxNumberOfAsteroids = GeneralSettings.SettingsStore.NumberOfAsteroids;
             msgData.ConsoleIdentifier = GeneralSettings.SettingsStore.ConsoleIdentifier;
             msgData.GameDifficulty = GeneralSettings.SettingsStore.GameDifficulty;

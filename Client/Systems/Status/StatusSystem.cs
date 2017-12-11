@@ -167,7 +167,7 @@ namespace LunaClient.Systems.Status
                 case GameScenes.LOADING:
                     return "Loading";
                 default:
-                    return "Error";
+                    return "Other";
             }
         }
 
