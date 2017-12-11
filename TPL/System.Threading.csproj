@@ -6,8 +6,8 @@
     <ProjectGuid>{DCB5D745-525C-46A1-BFC0-E12F87AB6165}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>System.Threading.Tasks.Net35</RootNamespace>
-    <AssemblyName>System.Threading.Tasks.Net35</AssemblyName>
+    <RootNamespace>System.Threading</RootNamespace>
+    <AssemblyName>System.Threading</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
