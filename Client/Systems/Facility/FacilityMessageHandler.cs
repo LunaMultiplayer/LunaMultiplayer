@@ -26,7 +26,7 @@ namespace LunaClient.Systems.Facility
                     var upgrFacility = Object.FindObjectsOfType<UpgradeableFacility>().FirstOrDefault(o => o.id == upgradeMsg.ObjectId);
                     if (upgrFacility != null)
                     {
-                        upgrFacility.SetLevel(upgradeMsg.Level);
+                        System.UpgradeFacilityWithoutTriggeringEvent(upgrFacility, upgradeMsg.Level);
                     }
                     break;
                 case FacilityMessageType.Repair:
@@ -37,10 +37,10 @@ namespace LunaClient.Systems.Facility
                         switch (msgData.FacilityMessageType)
                         {
                             case FacilityMessageType.Repair:
-                                destructibleFacility.Repair();
+                                System.RepairFacilityWithoutTriggeringEvent(destructibleFacility);
                                 break;
                             case FacilityMessageType.Collapse:
-                                destructibleFacility.Demolish();
+                                System.CollapseFacilityWithoutTriggeringEvent(destructibleFacility);
                                 break;
                         }
                     }
