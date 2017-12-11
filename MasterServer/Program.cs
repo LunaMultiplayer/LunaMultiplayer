@@ -84,10 +84,10 @@ namespace MasterServer
         /// <summary>
         /// Stops the master server dll concurrent task
         /// </summary>
-        private static async void StopMasterServerDll()
+        private static void StopMasterServerDll()
         {
             LmpDomain.SetData("Stop", true);
-            await Task.Delay(5000);
+            Thread.Sleep(10000);
             AppDomain.Unload(LmpDomain);
             Console.Clear();
         }
