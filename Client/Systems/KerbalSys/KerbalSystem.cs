@@ -19,16 +19,32 @@ namespace LunaClient.Systems.KerbalSys
 
         public bool KerbalSystemReady => Enabled && HighLogic.CurrentGame?.CrewRoster != null;
 
-        /// <summary>
-        /// Invoke this private method to rebuild the crew lists that appear on the astronaut complex
-        /// </summary>
-        private static MethodInfo RebuildCrewLists { get; } = typeof(AstronautComplex).GetMethod("InitiateGUI", 
-            BindingFlags.NonPublic | BindingFlags.Instance);
-
         public KerbalEvents KerbalEvents { get; } = new KerbalEvents();
 
         private static AstronautComplex _astronautComplex;
-        private static AstronautComplex AstronautComplex => _astronautComplex ?? (_astronautComplex = Object.FindObjectOfType<AstronautComplex>());
+        private static AstronautComplex AstronautComplex
+        {
+            get
+            {
+                if (_astronautComplex == null)
+                {
+                    _astronautComplex = Object.FindObjectOfType<AstronautComplex>();
+                }
+                return _astronautComplex;
+            }
+        }
+
+        #region Reflection fields
+
+        private static readonly FieldInfo KerbalStatusField = typeof(ProtoCrewMember).GetField("_rosterStatus", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly FieldInfo KerbalTypeField = typeof(ProtoCrewMember).GetField("_type", BindingFlags.Instance | BindingFlags.NonPublic);
+
+        private static readonly MethodInfo CreateAvailableList = typeof(AstronautComplex).GetMethod("CreateAvailableList", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo CreateAssignedList = typeof(AstronautComplex).GetMethod("CreateAssignedList", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo CreateKiaList = typeof(AstronautComplex).GetMethod("CreateKiaList", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo InitiateGui = typeof(AstronautComplex).GetMethod("InitiateGUI",BindingFlags.NonPublic | BindingFlags.Instance);
+
+        #endregion
 
         #endregion
 
@@ -41,11 +57,10 @@ namespace LunaClient.Systems.KerbalSys
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveQueuedKerbals));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, LoadKerbals));
-            GameEvents.onCrewKilled.Add(KerbalEvents.OnCrewKilled);
             GameEvents.OnCrewmemberHired.Add(KerbalEvents.CrewAdd);
-            GameEvents.OnCrewmemberLeftForDead.Add(KerbalEvents.CrewSetAsDead);
-            GameEvents.OnCrewmemberSacked.Add(KerbalEvents.CrewRemove);
-            GameEvents.onFlightReady.Add(KerbalEvents.FlightReady);
+            GameEvents.onGameSceneLoadRequested.Add(KerbalEvents.SwitchSceneRequested);
+            GameEvents.onKerbalStatusChange.Add(KerbalEvents.StatusChange);
+            GameEvents.onKerbalTypeChange.Add(KerbalEvents.TypeChange);
         }
 
         protected override void OnDisabled()
@@ -53,11 +68,10 @@ namespace LunaClient.Systems.KerbalSys
             base.OnDisabled();
             KerbalsToRemove = new ConcurrentQueue<string>();
             KerbalsToProcess = new ConcurrentQueue<ConfigNode>();
-            GameEvents.onCrewKilled.Remove(KerbalEvents.OnCrewKilled);
             GameEvents.OnCrewmemberHired.Remove(KerbalEvents.CrewAdd);
-            GameEvents.OnCrewmemberLeftForDead.Remove(KerbalEvents.CrewSetAsDead);
-            GameEvents.OnCrewmemberSacked.Remove(KerbalEvents.CrewRemove);
-            GameEvents.onFlightReady.Remove(KerbalEvents.FlightReady);
+            GameEvents.onGameSceneLoadRequested.Remove(KerbalEvents.SwitchSceneRequested);
+            GameEvents.onKerbalStatusChange.Remove(KerbalEvents.StatusChange);
+            GameEvents.onKerbalTypeChange.Remove(KerbalEvents.TypeChange);
         }
 
         #endregion
@@ -97,6 +111,22 @@ namespace LunaClient.Systems.KerbalSys
             {
                 MessageSender.SendKerbal(protoCrew);
             }
+        }
+
+        /// <summary>
+        /// Sets the kerbal status without triggering the event (usefull when receiveing kerbals from other clients)
+        /// </summary>
+        public void SetKerbalStatusWithoutTriggeringEvent(ProtoCrewMember crew, ProtoCrewMember.RosterStatus newStatus)
+        {
+            KerbalStatusField.SetValue(crew, newStatus);
+        }
+
+        /// <summary>
+        /// Sets the kerbal type without triggering the event (usefull when receiveing kerbals from other clients)
+        /// </summary>
+        public void SetKerbalTypeWithoutTriggeringEvent(ProtoCrewMember crew, ProtoCrewMember.KerbalType newType)
+        {
+            KerbalTypeField.SetValue(crew, newType);
         }
 
         #endregion
@@ -163,14 +193,18 @@ namespace LunaClient.Systems.KerbalSys
             CrewAssignmentDialog.Instance?.ButtonFill();
 
             if (AstronautComplex != null)
-                RebuildCrewLists?.Invoke(AstronautComplex, null);
+            {
+                InitiateGui.Invoke(AstronautComplex, null);
+                CreateAvailableList.Invoke(AstronautComplex, null);
+                CreateAssignedList.Invoke(AstronautComplex, null);
+                CreateKiaList.Invoke(AstronautComplex, null);
+            }
         }
 
         /// <summary>
         /// Creates or updates a kerbal
         /// </summary>
-        /// <param name="crewNode"></param>
-        private static void LoadKerbal(ConfigNode crewNode)
+        private void LoadKerbal(ConfigNode crewNode)
         {
             var protoCrew = new ProtoCrewMember(HighLogic.CurrentGame.Mode, crewNode);
             if (string.IsNullOrEmpty(protoCrew.name))
@@ -193,7 +227,7 @@ namespace LunaClient.Systems.KerbalSys
         /// <summary>
         /// Updates an existing Kerbal
         /// </summary>
-        private static void UpdateKerbalData(ConfigNode crewNode, ProtoCrewMember protoCrew)
+        private void UpdateKerbalData(ConfigNode crewNode, ProtoCrewMember protoCrew)
         {
             var careerLogNode = crewNode.GetNode("CAREER_LOG");
             if (careerLogNode != null)
@@ -226,13 +260,15 @@ namespace LunaClient.Systems.KerbalSys
             HighLogic.CurrentGame.CrewRoster[protoCrew.name].isBadass = protoCrew.isBadass;
             HighLogic.CurrentGame.CrewRoster[protoCrew.name].inactiveTimeEnd = protoCrew.inactiveTimeEnd;
             HighLogic.CurrentGame.CrewRoster[protoCrew.name].outDueToG = protoCrew.outDueToG;
-            HighLogic.CurrentGame.CrewRoster[protoCrew.name].rosterStatus = protoCrew.rosterStatus;
             HighLogic.CurrentGame.CrewRoster[protoCrew.name].seat = protoCrew.seat;
             HighLogic.CurrentGame.CrewRoster[protoCrew.name].seatIdx = protoCrew.seatIdx;
             HighLogic.CurrentGame.CrewRoster[protoCrew.name].stupidity = protoCrew.stupidity;
             HighLogic.CurrentGame.CrewRoster[protoCrew.name].trait = protoCrew.trait;
             HighLogic.CurrentGame.CrewRoster[protoCrew.name].UTaR = protoCrew.UTaR;
             HighLogic.CurrentGame.CrewRoster[protoCrew.name].veteran = protoCrew.veteran;
+
+            SetKerbalTypeWithoutTriggeringEvent(HighLogic.CurrentGame.CrewRoster[protoCrew.name], protoCrew.type);
+            SetKerbalStatusWithoutTriggeringEvent(HighLogic.CurrentGame.CrewRoster[protoCrew.name], protoCrew.rosterStatus);
         }
 
         #endregion

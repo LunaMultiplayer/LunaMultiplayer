@@ -28,9 +28,9 @@ namespace LunaClient.Systems.KerbalSys
 
         public void SendKerbal(ProtoCrewMember pcm)
         {
-            if (VesselCommon.IsSpectating) return;
-
             if (pcm == null) return;
+
+            if (VesselCommon.IsSpectating) return;
 
             if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
             {

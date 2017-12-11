@@ -45,8 +45,8 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Enable use of Cheats in-game.")]
         public bool Cheats { get; set; } = true;
 
-        [XmlComment(Value = "If this is true when a user sacks a kerbal the other players will have that kerbal removed in their games aswell")]
-        public bool RelayKerbalRemove { get; set; } = false;
+        [XmlComment(Value = "Allow players to sack kerbals")]
+        public bool AllowSackKerbals { get; set; } = false;
 
         [XmlComment(Value = "Specify the Name that will appear when you send a message using the server's console.")]
         public string ConsoleIdentifier { get; set; } = "Server";

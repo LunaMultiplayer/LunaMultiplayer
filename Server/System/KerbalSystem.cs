@@ -5,7 +5,6 @@ using Server.Context;
 using Server.Log;
 using Server.Properties;
 using Server.Server;
-using Server.Settings;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -51,8 +50,6 @@ namespace Server.System
 
         public static void HandleKerbalRemove(ClientStructure client, KerbalRemoveMsgData message)
         {
-            if (!GeneralSettings.SettingsStore.RelayKerbalRemove) return;
-
             var kerbalToRemove = message.KerbalName;
 
             LunaLog.Debug($"Removing kerbal {kerbalToRemove} from {client.PlayerName}");
