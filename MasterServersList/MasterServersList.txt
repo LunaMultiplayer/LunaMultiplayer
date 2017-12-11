@@ -6,3 +6,5 @@
 lunamultiplayer.com:8700
 #The Hellbox server
 185.5.251.218:6005
+#PictoCube Server
+37.187.108.37:8700
