@@ -13,7 +13,7 @@ namespace LMP.Tests
         private static readonly ServerMessageFactory Factory = new ServerMessageFactory();
         private static readonly Random Rnd = new Random();
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestMsgMessageStore()
         {
             var msg1 = Factory.CreateNew<VesselSrvMsg, VesselPositionMsgData>();

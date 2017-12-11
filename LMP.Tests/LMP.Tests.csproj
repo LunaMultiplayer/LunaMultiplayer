@@ -38,9 +38,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Threading">
-      <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MessageStoreTest.cs" />
@@ -58,6 +55,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{423c5a4b-ea79-450d-bd86-5b46141d58d1}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TPL\System.Threading.csproj">
+      <Project>{dcb5d745-525c-46a1-bfc0-e12f87ab6165}</Project>
+      <Name>System.Threading</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
