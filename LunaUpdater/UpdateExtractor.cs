@@ -47,8 +47,8 @@ namespace LunaUpdater
 
         private static void ExtractMasterServer(string tempFolder)
         {
-            var destFolder = Path.Combine(Path.Combine(tempFolder, ".."), "LMPMasterServer");
-            foreach (var file in Directory.GetFiles(tempFolder))
+            var destFolder = Path.Combine(tempFolder, "..");
+            foreach (var file in Directory.GetFiles(Path.Combine(tempFolder, "LMPMasterServer")))
             {
                 if (!Path.GetExtension(file).ToLower().Contains("exe"))
                 {
