@@ -21,6 +21,8 @@
 
 *[Official KSP forum post](https://forum.kerbalspaceprogram.com/index.php?/topic/168271-131-luna-multiplayer-lmp-alpha/)*
 
+*[Official website](http://lunamultiplayer.com)*
+
 ### Main features:
 
 - Clean and optimized code, based on systems and windows which makes it easier to read and modify.
@@ -37,6 +39,11 @@
 - [QuickLZ](http://www.quicklz.com) for fast compression
 
 Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-compile-LMP), [run](../../wiki/How-to-play-with-LMP.) or [debug](../../wiki/Debugging-in-Visual-studio) LMP
+
+---
+### Servers:
+
+You can check the available servers in the official website [here](http://lunamultiplayer.com/servers) or trough the website inside the repo [here](http://cdn.rawgit.com/gavazquez/LunaMultiPlayer/master/WebDisplayServers/servers.html)
 
 ---
 
