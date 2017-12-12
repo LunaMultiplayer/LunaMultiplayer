@@ -27,5 +27,6 @@ namespace LunaCommon.Message.Data.Vessel
         public float YawTrim { get; set; }
         public float WheelSteer { get; set; }
         public float WheelSteerTrim { get; set; }
+        public long TimeStamp { get; set; }
     }
 }

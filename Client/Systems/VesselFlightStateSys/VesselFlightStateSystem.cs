@@ -27,8 +27,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// <summary>
         /// This dictioanry contains the latest flight state of a vessel that we received
         /// </summary>
-        public ConcurrentDictionary<Guid, FlightCtrlState> FlightStatesDictionary { get; } =
-            new ConcurrentDictionary<Guid, FlightCtrlState>();
+        public ConcurrentDictionary<Guid, VesselFlightStateUpdate> FlightStatesDictionary { get; } =
+            new ConcurrentDictionary<Guid, VesselFlightStateUpdate>();
 
         public bool FlightStateSystemReady
             => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
@@ -167,7 +167,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vesselToAdd.id)
                         continue;
 
-                    FlightStatesDictionary.TryAdd(vesselToAdd.id, vesselToAdd.ctrlState);
+                    FlightStatesDictionary.TryAdd(vesselToAdd.id, new VesselFlightStateUpdate());
                     FlyByWireDictionary.Add(vesselToAdd.id, st => LunaOnVesselFlyByWire(vesselToAdd.id, st));
 
                     vesselToAdd.OnFlyByWire += FlyByWireDictionary[vesselToAdd.id];
@@ -199,13 +199,14 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         /// <summary>
         /// Here we copy the flight state we received and apply to the specific vessel.
-        /// This method is called by ksp as it's a delegate
+        /// This method is called by ksp as it's a delegate. It's called on every FixedUpdate
         /// </summary>
         private void LunaOnVesselFlyByWire(Guid id, FlightCtrlState st)
         {
             if (FlightStatesDictionary.TryGetValue(id, out var value))
             {
-                st.CopyFrom(value);
+                if (value.CanInterpolate)
+                    st.CopyFrom(value.GetInterpolatedValue());
             }
         }
 

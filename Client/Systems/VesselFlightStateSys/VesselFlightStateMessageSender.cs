@@ -4,6 +4,7 @@ using LunaClient.Network;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using LunaCommon.Time;
 
 namespace LunaClient.Systems.VesselFlightStateSys
 {
@@ -42,6 +43,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 msgData.Yaw = flightState.yaw;
                 msgData.YawTrim = flightState.yawTrim;
                 msgData.Z = flightState.Z;
+                msgData.TimeStamp = LunaTime.UtcNow.Ticks;
 
                 SendMessage(msgData);
             });
