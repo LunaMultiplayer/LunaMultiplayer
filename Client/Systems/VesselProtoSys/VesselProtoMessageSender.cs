@@ -56,6 +56,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool reliable)
         {
+            //FIX THIS
+            reliable = true;
             //Never send empty vessel id's (it happens with flags...)
             if (protoVessel.vesselID == Guid.Empty) return;
 
