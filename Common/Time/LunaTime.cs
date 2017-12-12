@@ -75,12 +75,21 @@ namespace LunaCommon.Time
         {
             try
             {
-                return Mutex.OpenExisting("LunaTimeMutex");
+                return TryOpenMutex();
             }
-            catch
+            catch (Exception)
             {
                 return new Mutex(false, "LunaTimeMutex");
             }
+        }
+
+        /// <summary>
+        /// Tries to open a mutex. This function is refactored because in unity it crashes as mscorlib.dll does not contain "OpenExisting"
+        /// </summary>
+        /// <returns></returns>
+        private static Mutex TryOpenMutex()
+        {
+            return Mutex.OpenExisting("LunaTimeMutex");
         }
     }
 }
