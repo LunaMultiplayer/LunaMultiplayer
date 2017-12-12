@@ -27,7 +27,8 @@ namespace LunaClient.Systems.VesselProtoSys
                     HandleVesselResponse((VesselsReplyMsgData)msgData);
                     break;
                 case VesselMessageType.Proto:
-                    HandleVesselProto((VesselProtoMsgData)msgData);
+                case VesselMessageType.ProtoReliable:
+                    HandleVesselProto((VesselProtoBaseMsgData)msgData);
                     break;
                 default:
                     LunaLog.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");
@@ -35,7 +36,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
-        private static void HandleVesselProto(VesselProtoMsgData messageData)
+        private static void HandleVesselProto(VesselProtoBaseMsgData messageData)
         {
             if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.VesselId))
                 VesselsProtoStore.HandleVesselProtoData(messageData.VesselData, messageData.VesselId);

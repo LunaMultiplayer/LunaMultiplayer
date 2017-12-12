@@ -27,7 +27,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 data.id = Guid.NewGuid();
                 data.protoVessel.vesselID = data.id;
-                System.MessageSender.SendVesselMessage(data);
+                System.MessageSender.SendVesselMessage(data, true);
             }
         }
     }

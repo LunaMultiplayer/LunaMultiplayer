@@ -19,6 +19,7 @@ namespace LunaCommon.Message.Server
             [(ushort)VesselMessageType.ListReply] = typeof(VesselListReplyMsgData),
             [(ushort)VesselMessageType.VesselsReply] = typeof(VesselsReplyMsgData),
             [(ushort)VesselMessageType.Proto] = typeof(VesselProtoMsgData),
+            [(ushort)VesselMessageType.ProtoReliable] = typeof(VesselProtoReliableMsgData),
             [(ushort)VesselMessageType.Dock] = typeof(VesselDockMsgData),
             [(ushort)VesselMessageType.Remove] = typeof(VesselRemoveMsgData),
             [(ushort)VesselMessageType.Position] = typeof(VesselPositionMsgData),
@@ -26,13 +27,14 @@ namespace LunaCommon.Message.Server
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Vessel;
-        protected override int DefaultChannel => IsVesselPositionOrFlightState() ? 0 : 8;
-        public override NetDeliveryMethod NetDeliveryMethod => IsVesselPositionOrFlightState() ?
+        protected override int DefaultChannel => IsVesselProtoPositionOrFlightState() ? 0 : 8;
+        public override NetDeliveryMethod NetDeliveryMethod => IsVesselProtoPositionOrFlightState() ?
             NetDeliveryMethod.UnreliableSequenced : NetDeliveryMethod.ReliableOrdered;
 
-        private bool IsVesselPositionOrFlightState()
+        private bool IsVesselProtoPositionOrFlightState()
         {
-            return Data.SubType == (ushort)VesselMessageType.Position || Data.SubType == (ushort)VesselMessageType.Flightstate;
+            return Data.SubType == (ushort)VesselMessageType.Position || Data.SubType == (ushort)VesselMessageType.Flightstate || 
+                Data.SubType == (ushort)VesselMessageType.Proto;
         }
     }
 }

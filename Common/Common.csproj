@@ -184,6 +184,8 @@
     <Compile Include="Message\Data\Vessel\VesselListRequestMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselPositionMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselProtoMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselProtoBaseMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselProtoReliableMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselRemoveMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselsReplyMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselsRequestMsgData.cs" />

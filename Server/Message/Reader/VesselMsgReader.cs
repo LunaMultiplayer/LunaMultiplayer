@@ -33,6 +33,7 @@ namespace Server.Message.Reader
                     HandleVesselsRequest(client, messageData);
                     break;
                 case VesselMessageType.Proto:
+                case VesselMessageType.ProtoReliable:
                     HandleVesselProto(client, message);
                     break;
                 case VesselMessageType.Dock:
@@ -74,7 +75,7 @@ namespace Server.Message.Reader
 
         private static void HandleVesselProto(ClientStructure client, VesselBaseMsgData message)
         {
-            var msgData = (VesselProtoMsgData)message;
+            var msgData = (VesselProtoBaseMsgData)message;
 
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 

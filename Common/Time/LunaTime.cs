@@ -47,7 +47,9 @@ namespace LunaCommon.Time
                 {
                     try
                     {
-                        TimeDifference = DateTime.UtcNow - TimeRetriever.GetTime(TimeProvider.Nist);
+                        var nistTime = TimeRetriever.GetTime(TimeProvider.Nist);
+                        if (nistTime != null)
+                            TimeDifference = DateTime.UtcNow - nistTime.Value;
                     }
                     catch (Exception)
                     {

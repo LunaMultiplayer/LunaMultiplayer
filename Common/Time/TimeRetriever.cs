@@ -23,13 +23,13 @@ namespace LunaCommon.Time
         /// <summary>
         /// Retrieves the date time from specified provider and defend against flooding
         /// </summary>
-        internal static DateTime GetTime(TimeProvider provider, bool getAsLocalTime = false)
+        internal static DateTime? GetTime(TimeProvider provider, bool getAsLocalTime = false)
         {            
             //Max requests are every 4 seconds
             if (!CanRequestTime(provider))
                 throw new Exception("Too many time requests!");
 
-            DateTime dateTime;
+            DateTime? dateTime;
             switch (provider)
             {
                 case TimeProvider.Nist:

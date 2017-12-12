@@ -104,8 +104,7 @@ namespace LunaClient.Systems.VesselProtoSys
         #region Update routines
 
         /// <summary>
-        /// Send the definition of our own vessel and the secondary vessels. We only send them after an interval specified.
-        /// If the other player vessels are far we don't send them very often.
+        /// Send the definition of our own vessel and the secondary vessels.
         /// </summary>
         private void SendVesselDefinition()
         {
@@ -113,8 +112,8 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemReady)
                 {
-                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
-                    MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
+                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
+                    MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels(), false);
                 }
             }
             catch (Exception e)

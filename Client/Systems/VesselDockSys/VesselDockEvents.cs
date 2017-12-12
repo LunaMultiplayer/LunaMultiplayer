@@ -153,7 +153,7 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
         {
-            SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(data.from.vessel);
+            SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(data.from.vessel, true);
         }
 
         /// <summary>
@@ -161,7 +161,7 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
         {
-            SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(data.from.vessel);
+            SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(data.from.vessel, true);
         }
     }
 }

@@ -7,10 +7,11 @@
         VesselsRequest = 2,
         VesselsReply = 3,
         Proto = 4,
-        Dock = 5,
-        Remove = 6,
-        Position = 7,
-        Flightstate = 8,
-        Change = 9
+        ProtoReliable = 5,
+        Dock = 6,
+        Remove = 7,
+        Position = 8,
+        Flightstate = 9,
+        Change = 10
     }
 }

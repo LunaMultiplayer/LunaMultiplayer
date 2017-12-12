@@ -186,22 +186,23 @@ namespace Server.Lidgren
                     ? msgData.ServerName.Substring(0, 30)
                     : msgData.ServerName;
 
-                var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-                var msgBytes = msg.Serialize(true);
-
                 foreach (var masterServer in MasterServerEndpoints)
                 {
-                    RegisterWithMasterServer(msgBytes, masterServer);
+                    RegisterWithMasterServer(msgData, masterServer);
                 }
 
                 await Task.Delay(MasterServerRegistrationMsInterval);
             }
         }
 
-        private static void RegisterWithMasterServer(byte[] msgBytes, IPEndPoint masterServer)
+        private static void RegisterWithMasterServer(MsRegisterServerMsgData msgData, IPEndPoint masterServer)
         {
             Task.Run(() =>
             {
+
+                var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
+                var msgBytes = msg.Serialize(true);
+
                 try
                 {
                     var outMsg = Server.CreateMessage(msgBytes.Length);
