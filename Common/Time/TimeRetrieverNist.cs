@@ -13,7 +13,7 @@ namespace LunaCommon.Time
             using (var streamReader = new StreamReader(client.GetStream()))
             {
                 var response = streamReader.ReadToEnd();
-                if (string.IsNullOrEmpty(response) && response.Length > 24)
+                if (!string.IsNullOrEmpty(response) && response.Length > 24)
                 {
                     return DateTime.ParseExact(response.Substring(7, 17), "yy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                 }
