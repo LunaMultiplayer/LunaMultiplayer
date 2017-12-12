@@ -22,19 +22,27 @@ namespace LMP.MasterServer
 
         private static string TryGetIpAddress(string url)
         {
-            using (var client = new WebClient())
-            using (var stream = client.OpenRead(url))
+            try
             {
-                if (stream == null) return null;
-                using (var reader = new StreamReader(stream))
+                using (var client = new WebClient())
+                using (var stream = client.OpenRead(url))
                 {
-                    var ipRegEx = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
-                    var result = ipRegEx.Matches(reader.ReadToEnd());
+                    if (stream == null) return null;
+                    using (var reader = new StreamReader(stream))
+                    {
+                        var ipRegEx = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
+                        var result = ipRegEx.Matches(reader.ReadToEnd());
 
-                    if (IPAddress.TryParse(result[0].Value, out var ip))
-                        return ip.ToString();
+                        if (IPAddress.TryParse(result[0].Value, out var ip))
+                            return ip.ToString();
+                    }
                 }
             }
+            catch
+            {
+                // ignored
+            }
+
             return null;
         }
     }
