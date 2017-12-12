@@ -9,10 +9,7 @@ using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ConsoleLogger = LunaCommon.ConsoleLogger;
 using LogLevels = LunaCommon.LogLevels;
@@ -99,7 +96,7 @@ namespace LMP.MasterServer
         private static void CheckMasterServerListed()
         {
             var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-            var ownEndpoint = $"{GetOwnIpAddress()}:{Port}";
+            var ownEndpoint = $"{Helper.GetOwnIpAddress()}:{Port}";
 
             if(!servers.Contains(ownEndpoint))
             {
@@ -112,37 +109,6 @@ namespace LMP.MasterServer
             }
         }
 
-        private static string GetOwnIpAddress()
-        {
-            var currentIpAddress = TryGetIpAddress("http://ip.42.pl/raw");
-
-            if (string.IsNullOrEmpty(currentIpAddress))
-                currentIpAddress = TryGetIpAddress("https://api.ipify.org/");
-            if (string.IsNullOrEmpty(currentIpAddress))
-                currentIpAddress = TryGetIpAddress("http://httpbin.org/ip");
-            if (string.IsNullOrEmpty(currentIpAddress))
-                currentIpAddress = TryGetIpAddress("http://checkip.dyndns.org");
-
-            return currentIpAddress;
-        }
-
-        private static string TryGetIpAddress(string url)
-        {
-            using (var client = new WebClient())
-            using (var stream = client.OpenRead(url))
-            {
-                if (stream == null) return null;
-                using (var reader = new StreamReader(stream))
-                {
-                    var ipRegEx = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
-                    var result = ipRegEx.Matches(reader.ReadToEnd());
-
-                    if (IPAddress.TryParse(result[0].Value, out var ip))
-                        return ip.ToString();
-                }
-            }
-            return null;
-        }
 
         private static void HandleMessage(IMasterServerMessageBase message, NetIncomingMessage netMsg, NetPeer peer)
         {

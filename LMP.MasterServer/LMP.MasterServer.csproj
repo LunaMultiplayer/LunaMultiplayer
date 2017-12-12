@@ -45,6 +45,7 @@
     <Compile Include="Arguments.cs" />
     <Compile Include="FloodControl.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Helper.cs" />
     <Compile Include="Http\HttpProcessor.cs" />
     <Compile Include="Http\LunaHttpServer.cs" />
     <Compile Include="Http\TcpClientWorker.cs" />
