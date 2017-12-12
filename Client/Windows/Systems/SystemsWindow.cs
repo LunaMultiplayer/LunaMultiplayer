@@ -27,6 +27,14 @@ namespace LunaClient.Windows.Systems
     {
         #region Fields & properties
 
+        private static bool _display;
+        public override bool Display
+        {
+            get => _display && MainSystem.NetworkState >= ClientState.Running &&
+                   HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => _display = value;
+        }
+
         private float WindowHeight { get; } = 400;
         private float WindowWidth { get; } = 400;
 

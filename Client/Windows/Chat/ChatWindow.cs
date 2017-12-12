@@ -11,6 +11,14 @@ namespace LunaClient.Windows.Chat
     {
         #region Fields
 
+        private static bool _display;
+        public override bool Display
+        {
+            get => _display && MainSystem.NetworkState >= ClientState.Running &&
+                   HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => _display = value;
+        }
+
         public string ChatWindowLock { get; set; } = "LMP_Chat_Window_Lock";
         public bool IgnoreChatInput { get; set; }
         public float WindowHeight { get; set; } = 300;

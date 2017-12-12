@@ -9,6 +9,14 @@ namespace LunaClient.Windows.CraftLibrary
 {
     public partial class CraftLibraryWindow : SystemWindow<CraftLibraryWindow, CraftLibrarySystem>
     {
+        private static bool _display;
+        public override bool Display
+        {
+            get => _display && MainSystem.NetworkState >= ClientState.Running &&
+                   HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => _display = value;
+        }
+
         public override void Update()
         {
             Display &= MainSystem.NetworkState >= ClientState.Running;

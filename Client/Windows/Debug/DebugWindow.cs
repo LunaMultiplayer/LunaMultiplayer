@@ -16,6 +16,14 @@ namespace LunaClient.Windows.Debug
     {
         private static readonly StringBuilder StringBuilder = new StringBuilder();
 
+        private static bool _display;
+        public override bool Display
+        {
+            get => _display && MainSystem.NetworkState >= ClientState.Running &&
+                   HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => _display = value;
+        }
+
         public override void Update()
         {
             SafeDisplay = Display;
