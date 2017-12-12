@@ -20,7 +20,9 @@ namespace LunaClient.Systems.KerbalSys
             if (data == GameScenes.FLIGHT)
             {
                 var crew = FlightDriver.newShipManifest;
-                foreach (var protoCrew in crew.GetAllCrew(false))
+                if (crew == null) return;
+
+                foreach (var protoCrew in crew?.GetAllCrew(false))
                 {
                     //Always set the kerbals in a vessel as assigned
                     System.SetKerbalStatusWithoutTriggeringEvent(protoCrew, ProtoCrewMember.RosterStatus.Assigned);
