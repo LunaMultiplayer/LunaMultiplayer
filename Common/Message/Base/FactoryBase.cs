@@ -1,7 +1,8 @@
-﻿using LunaCommon.Message.Interface;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 
 namespace LunaCommon.Message.Base
 {
@@ -10,29 +11,37 @@ namespace LunaCommon.Message.Base
         /// <summary>
         /// Call this method to deserialize a message
         /// </summary>
-        /// <param name="data">Array of bytes with data</param>
+        /// <param name="lidgrenMsg">Lidgren message</param>
         /// <param name="receiveTime">Lidgren msg receive time property or LunaTime.Now</param>
         /// <returns>Full message with it's data filled</returns>
-        public IMessageBase Deserialize(byte[] data, long receiveTime)
+        public IMessageBase Deserialize(NetIncomingMessage lidgrenMsg, long receiveTime)
         {
-            if (data.Length >= MessageConstants.HeaderLength)
+            var data = ArrayPool<byte>.Claim(lidgrenMsg.LengthBytes);
+            lidgrenMsg.ReadBytes(data, 0, lidgrenMsg.LengthBytes);
+
+            using (var stream = StreamManager.MemoryStreamManager.GetStream("", data, 0, lidgrenMsg.LengthBytes))
             {
-                var messageType = DeserializeMessageType(data);
-                var subtype = DeserializeMessageSubType(data);
-                var length = DeserializeMessageLength(data);
-                var dataCompressed = DeserializeMessageCompressed(data);
-
-                var contentWithoutHeader = data.Skip(MessageConstants.HeaderLength).ToArray();
-
-                if (contentWithoutHeader.Length == length)
+                if (lidgrenMsg.LengthBytes >= MessageConstants.HeaderLength)
                 {
-                    var msg = GetMessageByType(messageType, subtype, contentWithoutHeader, dataCompressed);
-                    msg.Data.ReceiveTime = receiveTime;
-                    return msg;
+                    var messageType = DeserializeMessageType(stream);
+                    var subtype = DeserializeMessageSubType(stream);
+                    var length = DeserializeMessageLength(stream);
+                    var dataCompressed = DeserializeMessageCompressed(stream);
+
+                    if (stream.Length - MessageConstants.HeaderLength == length)
+                    {
+                        var msg = GetMessageByType(messageType, subtype, stream, dataCompressed);
+                        msg.Data.ReceiveTime = receiveTime;
+
+                        ArrayPool<byte>.Release(ref data);
+                        return msg;
+                    }
+                    ArrayPool<byte>.Release(ref data);
+                    throw new Exception("Message data size mismatch");
                 }
-                throw new Exception("Message data size mismatch");
+                ArrayPool<byte>.Release(ref data);
+                throw new Exception("Message length below header size");
             }
-            throw new Exception("Message length below header size");
         }
 
         /// <summary>
@@ -87,58 +96,72 @@ namespace LunaCommon.Message.Base
         /// <summary>
         /// Retrieves the message type
         /// </summary>
-        /// <param name="data">Full message data</param>
+        /// <param name="stream">Full message stream</param>
         /// <returns>Message type to be parsed as an enum</returns>
-        private static ushort DeserializeMessageType(IEnumerable<byte> data)
+        private static ushort DeserializeMessageType(Stream stream)
         {
-            var typeArray = data.Take(MessageConstants.MessageTypeLength).ToArray();
+            var typeArray = ArrayPool<byte>.Claim(MessageConstants.MessageTypeLength);
+
+            stream.Read(typeArray, 0, MessageConstants.MessageTypeLength);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(typeArray);
             var type = BitConverter.ToUInt16(typeArray, 0);
+
+            ArrayPool<byte>.Release(ref typeArray);
             return type;
         }
 
         /// <summary>
         /// Retrieves the message sub-type
         /// </summary>
-        /// <param name="data">Full message data</param>
+        /// <param name="stream">Full message stream</param>
         /// <returns>Message sub-type to be parsed as an enum</returns>
-        private static ushort DeserializeMessageSubType(IEnumerable<byte> data)
+        private static ushort DeserializeMessageSubType(Stream stream)
         {
-            var subTypeArray = data.Skip(MessageConstants.MessageTypeLength).Take(MessageConstants.MessageSubTypeLength).ToArray();
+            var subTypeArray = ArrayPool<byte>.Claim(MessageConstants.MessageSubTypeLength);
+
+            stream.Read(subTypeArray, 0, MessageConstants.MessageTypeLength);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(subTypeArray);
             var subType = BitConverter.ToUInt16(subTypeArray, 0);
+
+            ArrayPool<byte>.Release(ref subTypeArray);
             return subType;
         }
 
         /// <summary>
         /// Retrieves the message length
         /// </summary>
-        /// <param name="data">Full message data</param>
+        /// <param name="stream">Full message stream</param>
         /// <returns>Message length</returns>
-        private static uint DeserializeMessageLength(IEnumerable<byte> data)
+        private static uint DeserializeMessageLength(Stream stream)
         {
-            var lengthArray = data.Skip(MessageConstants.MessageTypeLength + MessageConstants.MessageSubTypeLength)
-                .Take(MessageConstants.MessageLengthLength).ToArray();
+            var lengthArray = ArrayPool<byte>.Claim(MessageConstants.MessageLengthLength);
+
+            stream.Read(lengthArray, 0, MessageConstants.MessageLengthLength);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(lengthArray);
             var length = BitConverter.ToUInt32(lengthArray, 0);
+
+            ArrayPool<byte>.Release(ref lengthArray);
             return length;
         }
 
         /// <summary>
         /// Retrieves the message length
         /// </summary>
-        /// <param name="data">Full message data</param>
+        /// <param name="stream">Full message stream</param>
         /// <returns>Message is compressed or not</returns>
-        private static bool DeserializeMessageCompressed(IEnumerable<byte> data)
+        private static bool DeserializeMessageCompressed(Stream stream)
         {
-            var compressedArray = data.Skip(MessageConstants.MessageTypeLength + MessageConstants.MessageSubTypeLength + MessageConstants.MessageLengthLength)
-                .Take(MessageConstants.MessageCompressionValueLength).ToArray();
+            var compressedArray = ArrayPool<byte>.Claim(MessageConstants.MessageCompressionValueLength);
+
+            stream.Read(compressedArray, 0, MessageConstants.MessageCompressionValueLength);
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(compressedArray);
             var isCompressed = BitConverter.ToBoolean(compressedArray, 0);
+
+            ArrayPool<byte>.Release(ref compressedArray);
             return isCompressed;
         }
 
@@ -151,7 +174,7 @@ namespace LunaCommon.Message.Base
         /// <param name="content">Message content</param>
         /// <param name="dataCompressed">Is data compresssed?</param>
         /// <returns></returns>
-        private IMessageBase GetMessageByType(ushort messageType, ushort messageSubType, byte[] content, bool dataCompressed)
+        private IMessageBase GetMessageByType(ushort messageType, ushort messageSubType, MemoryStream content, bool dataCompressed)
         {
             if (Enum.IsDefined(HandledMessageTypes, (int)messageType) && MessageDictionary.ContainsKey(messageType))
             {

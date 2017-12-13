@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("Lidgren.Network")]
@@ -18,3 +19,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersion("0.0.9-compiled")]
 
 [assembly: System.CLSCompliant(true)]
+[assembly: InternalsVisibleTo("LMP.Tests")]

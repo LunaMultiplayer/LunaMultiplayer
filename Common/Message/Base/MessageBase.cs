@@ -2,6 +2,7 @@
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using DataDeserializer = LunaCommon.Message.Serialization.DataDeserializer;
 using DataSerializer = LunaCommon.Message.Serialization.DataSerializer;
 
@@ -85,7 +86,7 @@ namespace LunaCommon.Message.Base
         public abstract NetDeliveryMethod NetDeliveryMethod { get; }
 
         /// <inheritdoc />
-        public virtual IMessageData Deserialize(ushort subType, byte[] data, bool decompress)
+        public virtual IMessageData Deserialize(ushort subType, MemoryStream data, bool decompress)
         {
             if (!SubTypeDictionary.ContainsKey(subType))
             {
@@ -97,8 +98,10 @@ namespace LunaCommon.Message.Base
 
             if (decompress)
             {
-                var decompressed = CompressionHelper.DecompressBytes(data);
-                return DataDeserializer.Deserialize(this, msgData, decompressed);
+                var decompressed = CompressionHelper.DecompressBytes(data.ToArray());
+
+                using (var decompressedStream = StreamManager.MemoryStreamManager.GetStream("", decompressed, 0, decompressed.Length))
+                    return DataDeserializer.Deserialize(this, msgData, decompressedStream);
             }
 
             return DataDeserializer.Deserialize(this, msgData, data);

@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using System.IO;
+using Lidgren.Network;
 
 namespace LunaCommon.Message.Interface
 {
@@ -46,7 +47,7 @@ namespace LunaCommon.Message.Interface
         /// <param name="data">The compressed data to read from. Without the header</param>
         /// <param name="decompress">Decompress the data or not</param>
         /// <returns>The POCO data structure with it's properties filled</returns>
-        IMessageData Deserialize(ushort messageSubType, byte[] data, bool decompress);
+        IMessageData Deserialize(ushort messageSubType, MemoryStream data, bool decompress);
 
         /// <summary>
         /// This method retrieves the message as a byte array with it's 8 byte header at the beginning

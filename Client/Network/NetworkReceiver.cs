@@ -60,7 +60,7 @@ namespace LunaClient.Network
                             case NetIncomingMessageType.Data:
                                 try
                                 {
-                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), LunaTime.UtcNow.Ticks);
+                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg, LunaTime.UtcNow.Ticks);
                                     if (deserializedMsg != null)
                                     {
                                         EnqueueMessageToSystem(deserializedMsg as IServerMessageBase);

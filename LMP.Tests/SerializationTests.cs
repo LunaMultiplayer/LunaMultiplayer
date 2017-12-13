@@ -5,6 +5,7 @@ using LunaCommon.Time;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
+using Lidgren.Network;
 
 namespace LMP.Tests
 {
@@ -16,6 +17,7 @@ namespace LMP.Tests
         [TestMethod]
         public void TestSerializeDeserialize()
         {
+            var client = new NetClient(new NetPeerConfiguration("TESTS"));
             var bytes = new byte[10000];
             new Random().NextBytes(bytes);
 
@@ -28,13 +30,24 @@ namespace LMP.Tests
 
             //Serialize and compress
             var serialized = msg.Serialize(true, out var totalLength);
+
+            //Simulate sending
+            serialized = serialized.Take(totalLength).ToArray();
+            var lidgrenMsg1 = client.CreateIncomingMessage(NetIncomingMessageType.Data, serialized);
+            lidgrenMsg1.LengthBytes = serialized.Length;
+
             //Serialize no compress
             var serializedNc = msg.Serialize(false, out totalLength);
 
+            //Simulate sending
+            serializedNc = serializedNc.Take(totalLength).ToArray();
+            var lidgrenMsg2 = client.CreateIncomingMessage(NetIncomingMessageType.Data, serializedNc);
+            lidgrenMsg2.LengthBytes = serializedNc.Length;
+
             //Deserialize compressedMsg
-            var msg2 = Factory.Deserialize(serialized, Environment.TickCount);
+            var msg2 = Factory.Deserialize(lidgrenMsg1, Environment.TickCount);
             //Deserialize no compressed message
-            var msg2Nc = Factory.Deserialize(serializedNc, Environment.TickCount);
+            var msg2Nc = Factory.Deserialize(lidgrenMsg2, Environment.TickCount);
 
            Assert.IsTrue(((VesselProtoMsgData)msg.Data).VesselData.SequenceEqual(((VesselProtoMsgData)msg2.Data).VesselData) &&
                      ((VesselProtoMsgData)msg2Nc.Data).VesselData.SequenceEqual(((VesselProtoMsgData)msg2.Data).VesselData));

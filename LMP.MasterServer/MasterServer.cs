@@ -66,8 +66,7 @@ namespace LMP.MasterServer
                         case NetIncomingMessageType.UnconnectedData:
                             if (FloodControl.AllowRequest(msg.SenderEndPoint.Address))
                             {
-                                var messageBytes = msg.ReadBytes(msg.LengthBytes);
-                                var message = GetMessage(messageBytes);
+                                var message = GetMessage(msg);
                                 if (message != null)
                                     HandleMessage(message, msg, peer);
                             }
@@ -79,11 +78,11 @@ namespace LMP.MasterServer
             peer.Shutdown("Goodbye and thanks for all the fish!");
         }
 
-        private static IMasterServerMessageBase GetMessage(byte[] messageBytes)
+        private static IMasterServerMessageBase GetMessage(NetIncomingMessage msg)
         {
             try
             {
-                var message = MasterServerMessageFactory.Deserialize(messageBytes, LunaTime.UtcNow.Ticks) as IMasterServerMessageBase;
+                var message = MasterServerMessageFactory.Deserialize(msg, LunaTime.UtcNow.Ticks) as IMasterServerMessageBase;
                 return message;
             }
             catch (Exception e)

@@ -74,12 +74,10 @@ namespace LunaCommon.Message.Serialization
         /// <param name="message">Message that contains the POCO data class</param>
         /// <param name="data">Array of bytes with the data</param>
         /// <returns>Implementation of a POCO data class with it's properties filled if there's not a version mismatch</returns>
-        public static IMessageData Deserialize(IMessageBase message, IMessageData dataClass, byte[] data)
+        public static IMessageData Deserialize(IMessageBase message, IMessageData dataClass, MemoryStream data)
         {
-            var messageData = new MemoryStream(data);
-
             //Always read Version first
-            var version = GetValue(messageData, typeof(string)) as string;
+            var version = GetValue(data, typeof(string)) as string;
 
             if (dataClass.Version != version)
             {
@@ -88,7 +86,7 @@ namespace LunaCommon.Message.Serialization
                 return dataClass;
             }
 
-            return PrivDeserialize(messageData, dataClass) as IMessageData;
+            return PrivDeserialize(data, dataClass) as IMessageData;
         }
 
         /// <summary>

@@ -49,9 +49,7 @@ namespace Server.Server
             if (client.ConnectionStatus == ConnectionStatus.Connected)
                 client.LastReceiveTime = ServerContext.ServerClock.ElapsedMilliseconds;
 
-            var messageBytes = msg.ReadBytes(msg.LengthBytes);
-
-            var message = DeserializeMessage(messageBytes);
+            var message = DeserializeMessage(msg);
             if (message == null) return;
 
             LmpPluginHandler.FireOnMessageReceived(client, message);
@@ -79,11 +77,11 @@ namespace Server.Server
             //message.Recycle();
         }
 
-        private static IClientMessageBase DeserializeMessage(byte[] messageBytes)
+        private static IClientMessageBase DeserializeMessage(NetIncomingMessage msg)
         {
             try
             {
-                return ServerContext.ClientMessageFactory.Deserialize(messageBytes, LunaTime.UtcNow.Ticks) as IClientMessageBase;
+                return ServerContext.ClientMessageFactory.Deserialize(msg, LunaTime.UtcNow.Ticks) as IClientMessageBase;
             }
             catch (Exception e)
             {
