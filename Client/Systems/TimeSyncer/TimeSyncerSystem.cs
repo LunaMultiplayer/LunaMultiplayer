@@ -41,11 +41,11 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Minimum speed that the game can go
         /// </summary>
-        private const float MinPhisicsClockRate = 0.95f;
+        private const float MinPhisicsClockRate = 0.85f;
         /// <summary>
         /// Max speed that the game can go. If you put this number too high the game will lag a lot.
         /// </summary>
-        private const float MaxPhisicsClockRate = 1.05f;
+        private const float MaxPhisicsClockRate = 1.15f;
         /// <summary>
         /// Limit at wich we won't fix the time with the GAME timescale
         /// </summary>
