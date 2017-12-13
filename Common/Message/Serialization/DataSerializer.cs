@@ -84,30 +84,25 @@ namespace LunaCommon.Message.Serialization
             [typeof(Enum)] = (messageData, inputData) => WriteBytesFromInt(messageData, (int)inputData)
         };
 
-
         /// <summary>
         ///     Serializes a POCO data class using a high efficient system.
         /// </summary>
         /// <typeparam name="T">Message data type</typeparam>
         /// <param name="data">Message data implementation</param>
-        /// <returns>Serialized array of bytes</returns>
-        public static byte[] Serialize<T>(T data) where T : IMessageData
+        /// <param name="stream">Stream to write the bytes to</param>
+        public static void Serialize<T>(T data, MemoryStream stream) where T : IMessageData
         {
-            return PrivSerialize(data, new MemoryStream());
+            PrivSerialize(data, stream);
         }
-
+        
         /// <summary>
         ///     Private accessor for recurrence
         /// </summary>
         /// <param name="data">Message data implementation</param>
         /// <param name="messageData">Stream to write the bytes to</param>
         /// <param name="recursive">True if you call this from recursively and want to keep the stream open</param>
-        /// <returns>Serialized array of bytes</returns>
-        private static byte[] PrivSerialize(object data, Stream messageData, bool recursive = false)
+        private static void PrivSerialize(object data, Stream messageData, bool recursive = false)
         {
-            if (!recursive)
-                messageData = new MemoryStream();
-
             var properties = BaseSerializer.GetCachedProperties(data.GetType());
 
             //We use the FastMember as it's faster than reflection
@@ -122,13 +117,6 @@ namespace LunaCommon.Message.Serialization
             {
                 WriteValue(messageData, prop.PropertyType, accessor[data, prop.Name]);
             }
-
-            var array = ((MemoryStream)messageData).ToArray();
-
-            if (!recursive)
-                messageData.Dispose();
-
-            return array;
         }
 
         /// <summary>

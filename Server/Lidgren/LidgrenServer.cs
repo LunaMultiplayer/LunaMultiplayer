@@ -118,7 +118,7 @@ namespace Server.Lidgren
         public void SendMessageToClient(ClientStructure client, IServerMessageBase message)
         {
             message.Data.SentTime = LunaTime.UtcNow.Ticks;
-            var messageBytes = message.Serialize(GeneralSettings.SettingsStore.CompressionEnabled);
+            var messageBytes = message.Serialize(GeneralSettings.SettingsStore.CompressionEnabled, out var totalLength);
             if (messageBytes == null)
             {
                 LunaLog.Error("Error serializing message!");
@@ -129,8 +129,8 @@ namespace Server.Lidgren
             client.BytesSent += messageBytes.Length;
 
             //Lidgren already recycle messages by itself
-            var outmsg = Server.CreateMessage(messageBytes.Length);
-            outmsg.Write(messageBytes);
+            var outmsg = Server.CreateMessage(totalLength);
+            outmsg.Write(messageBytes, 0, totalLength);
 
             Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
             Server.FlushSendQueue(); //Manually force to send the msg
@@ -201,12 +201,12 @@ namespace Server.Lidgren
             {
 
                 var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-                var msgBytes = msg.Serialize(true);
+                var msgBytes = msg.Serialize(true, out var totalLength);
 
                 try
                 {
-                    var outMsg = Server.CreateMessage(msgBytes.Length);
-                    outMsg.Write(msgBytes);
+                    var outMsg = Server.CreateMessage(totalLength);
+                    outMsg.Write(msgBytes, 0, totalLength);
                     Server.SendUnconnectedMessage(outMsg, masterServer);
                     Server.FlushSendQueue();
                 }

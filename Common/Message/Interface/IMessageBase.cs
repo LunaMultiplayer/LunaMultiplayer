@@ -52,8 +52,9 @@ namespace LunaCommon.Message.Interface
         /// This method retrieves the message as a byte array with it's 8 byte header at the beginning
         /// </summary>
         /// <param name="compress">Compress the message or not</param>
+        /// <param name="totalLength">Total message length</param>
         /// <returns>Mesage as a byte array with it's header</returns>
-        byte[] Serialize(bool compress);
+        byte[] Serialize(bool compress, out int totalLength);
 
         void Recycle();
     }

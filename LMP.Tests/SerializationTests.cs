@@ -27,9 +27,9 @@ namespace LMP.Tests
             var msg = Factory.CreateNew<VesselSrvMsg>(msgData);
 
             //Serialize and compress
-            var serialized = msg.Serialize(true);
+            var serialized = msg.Serialize(true, out var totalLength);
             //Serialize no compress
-            var serializedNc = msg.Serialize(false);
+            var serializedNc = msg.Serialize(false, out totalLength);
 
             //Deserialize compressedMsg
             var msg2 = Factory.Deserialize(serialized, Environment.TickCount);

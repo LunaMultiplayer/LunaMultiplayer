@@ -108,34 +108,47 @@ namespace LunaCommon.Message.Base
         public bool VersionMismatch { get; set; }
 
         /// <inheritdoc />
-        public byte[] Serialize(bool compress)
+        public byte[] Serialize(bool compress, out int totalLength)
         {
-            try
+            //This memory stream is taken from a pool so it's reused
+            using (var memoryStream = StreamManager.MemoryStreamManager.GetStream())
             {
-                var data = DataSerializer.Serialize(Data) ?? new byte[0];
-
-                if (compress)
+                try
                 {
-                    var dataCompressed = CompressionHelper.CompressBytes(data);
+                    //Write the class to the memory stream and serialize it to an array
+                    DataSerializer.Serialize(Data, memoryStream);
+                    var data = memoryStream.ToArray();
 
-                    compress = dataCompressed.Length < data.Length;
                     if (compress)
                     {
-                        data = dataCompressed;
+                        var dataCompressed = CompressionHelper.CompressBytes(data);
+
+                        compress = dataCompressed.Length < data.Length;
+                        if (compress)
+                        {
+                            data = dataCompressed;
+                        }
                     }
+
+                    var header = SerializeHeaderData(Convert.ToUInt32(data.Length), compress);
+
+                    totalLength = MessageConstants.HeaderLength + data.Length;
+
+                    //The array pool does NOT give you an array with an exact length!
+                    //It gives you an equal or usually a bigger one!
+                    var fullData = ArrayPool<byte>.Claim(totalLength);
+
+                    //Copy the header to the pooled array
+                    Array.Copy(header, 0, fullData, 0, MessageConstants.HeaderLength);
+                    //Copy the data to the pooled array
+                    data.CopyTo(fullData, MessageConstants.HeaderLength);
+                    
+                    return fullData;
                 }
-
-                var header = SerializeHeaderData(Convert.ToUInt32(data.Length), compress);
-
-                var fullData = new byte[header.Length + data.Length];
-                header.CopyTo(fullData, 0);
-                data.CopyTo(fullData, header.Length);
-
-                return fullData;
-            }
-            catch (Exception e)
-            {
-                throw new Exception($"Error serializing message! MsgDataType: {Data.GetType()} Exception: {e}");
+                catch (Exception e)
+                {
+                    throw new Exception($"Error serializing message! MsgDataType: {Data.GetType()} Exception: {e}");
+                }
             }
         }
 
@@ -152,7 +165,9 @@ namespace LunaCommon.Message.Base
         /// <returns>Byte with the header serialized</returns>
         private byte[] SerializeHeaderData(uint dataLength, bool dataCompressed)
         {
-            var headerData = new byte[MessageConstants.HeaderLength];
+            //The array pool does NOT give you an array with an exact length!
+            //It gives you an equal or usually a bigger one!
+            var headerData = ArrayPool<byte>.Claim(MessageConstants.HeaderLength);
 
             var typeBytes = BitConverter.GetBytes(MessageTypeId);
             if (BitConverter.IsLittleEndian)

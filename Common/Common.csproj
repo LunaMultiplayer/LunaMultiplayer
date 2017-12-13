@@ -74,12 +74,17 @@
     <Compile Include="Locks\LockType.cs" />
     <Compile Include="LunaNetUtils.cs" />
     <Compile Include="MasterServerRetriever.cs" />
+    <Compile Include="Message\Base\ArrayPool.cs" />
     <Compile Include="Message\Base\CompressionHelper.cs" />
     <Compile Include="Message\Base\FactoryBase.cs" />
     <Compile Include="Message\Base\MessageBase.cs" />
     <Compile Include="Message\Base\MessageConstants.cs" />
     <Compile Include="Message\Base\MessageData.cs" />
     <Compile Include="Message\Base\MessageStore.cs" />
+    <Compile Include="Message\Base\ObjectPool.cs" />
+    <Compile Include="Message\Base\RecyclableMemoryStream.cs" />
+    <Compile Include="Message\Base\RecyclableMemoryStreamManager.cs" />
+    <Compile Include="Message\Base\StreamManager.cs" />
     <Compile Include="Message\ClientMessageFactory.cs" />
     <Compile Include="Message\Client\AdminCliMsg.cs" />
     <Compile Include="Message\Client\Base\CliMsgBase.cs" />

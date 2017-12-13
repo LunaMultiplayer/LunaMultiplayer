@@ -2,6 +2,7 @@
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
 using LunaCommon.Enums;
+using LunaCommon.Message.Base;
 using LunaCommon.Message.Interface;
 using LunaCommon.Time;
 using System;
@@ -58,7 +59,7 @@ namespace LunaClient.Network
                 NetworkMain.ClientConnection.Start();
 
             message.Data.SentTime = LunaTime.UtcNow.Ticks;
-            var bytes = message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled);
+            var bytes = message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled, out var totalLength);
             if (bytes != null)
             {
                 try
@@ -70,7 +71,7 @@ namespace LunaClient.Network
                         foreach (var masterServer in NetworkServerList.MasterServers)
                         {
                             //Don't reuse lidgren messages, he does that on it's own
-                            var lidgrenMsg = GetLidgrenMessage(bytes);
+                            var lidgrenMsg = GetLidgrenMessage(bytes, totalLength);
 
                             NetworkMain.ClientConnection.SendUnconnectedMessage(lidgrenMsg, masterServer);
                             NetworkMain.ClientConnection.FlushSendQueue();
@@ -80,7 +81,7 @@ namespace LunaClient.Network
                     {
                         if (MainSystem.NetworkState >= ClientState.Connected)
                         {
-                            var lidgrenMsg = GetLidgrenMessage(bytes);
+                            var lidgrenMsg = GetLidgrenMessage(bytes, totalLength);
 
                             NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
                         }
@@ -93,13 +94,16 @@ namespace LunaClient.Network
                     NetworkMain.HandleDisconnectException(e);
                 }
             }
+
+            //Return the array and the msg to the pool!
+            ArrayPool<byte>.Release(ref bytes);
             message.Recycle();
         }
 
-        private static NetOutgoingMessage GetLidgrenMessage(byte[] bytes)
+        private static NetOutgoingMessage GetLidgrenMessage(byte[] bytes, int messageLength)
         {
-            var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
-            lidgrenMsg.Write(bytes);
+            var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(messageLength);
+            lidgrenMsg.Write(bytes, 0, messageLength);
             return lidgrenMsg;
         }
     }

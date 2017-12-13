@@ -170,10 +170,10 @@ namespace LMP.MasterServer
             msgData.TerrainQuality = values.Select(s => s.Info.TerrainQuality).ToArray();
 
             var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-            var data = msg.Serialize(true);
+            var data = msg.Serialize(true, out var totalLength);
 
-            var outMsg = peer.CreateMessage(data.Length);
-            outMsg.Write(data);
+            var outMsg = peer.CreateMessage(totalLength);
+            outMsg.Write(data, 0, totalLength);
             peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
             peer.FlushSendQueue();
         }
