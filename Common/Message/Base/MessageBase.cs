@@ -98,10 +98,18 @@ namespace LunaCommon.Message.Base
 
             if (decompress)
             {
-                var decompressed = CompressionHelper.DecompressBytes(data.ToArray());
+                var dataSize = (int) data.Length - (int) data.Position;
+                var dataWithoutHeader = ArrayPool<byte>.Claim(dataSize);
+                data.Read(dataWithoutHeader, 0, dataSize);
+
+                var decompressed = CompressionHelper.DecompressBytes(dataWithoutHeader);
 
                 using (var decompressedStream = StreamManager.MemoryStreamManager.GetStream("", decompressed, 0, decompressed.Length))
-                    return DataDeserializer.Deserialize(this, msgData, decompressedStream);
+                {
+                    var msg = DataDeserializer.Deserialize(this, msgData, decompressedStream);
+                    ArrayPool<byte>.Release(ref dataWithoutHeader);
+                    return msg;
+                }
             }
 
             return DataDeserializer.Deserialize(this, msgData, data);
