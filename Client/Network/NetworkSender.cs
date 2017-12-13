@@ -69,7 +69,7 @@ namespace LunaClient.Network
                     {
                         foreach (var masterServer in NetworkServerList.MasterServers)
                         {
-                            //Create a new message for every main server otherwise lidgren complains when you reuse the msg
+                            //Don't reuse lidgren messages, he does that on it's own
                             var lidgrenMsg = GetLidgrenMessage(bytes);
 
                             NetworkMain.ClientConnection.SendUnconnectedMessage(lidgrenMsg, masterServer);
