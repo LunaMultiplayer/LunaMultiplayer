@@ -56,6 +56,7 @@ namespace LunaClient.Systems.Facility
         /// </summary>
         public void RepairFacilityWithoutTriggeringEvent(DestructibleBuilding building)
         {
+            if (building == null) return;
             if ((bool) IntactField.GetValue(building) || !(bool)DestroyedField.GetValue(building))
                 return;
 
@@ -64,8 +65,8 @@ namespace LunaClient.Systems.Facility
                 objectCollapsible.Repair(building);
             }
 
-            IntactField.SetValue(building, true);
-            DestroyedField.SetValue(building, false);
+            IntactField?.SetValue(building, true);
+            DestroyedField?.SetValue(building, false);
         }
 
         /// <summary>
@@ -74,6 +75,7 @@ namespace LunaClient.Systems.Facility
         /// </summary>
         public void CollapseFacilityWithoutTriggeringEvent(DestructibleBuilding building)
         {
+            if (building == null) return;
             if (!(bool)IntactField.GetValue(building) || (bool)DestroyedField.GetValue(building))
                 return;
 
@@ -82,8 +84,8 @@ namespace LunaClient.Systems.Facility
                 objectCollapsible.Collapse(building);
             }
 
-            IntactField.SetValue(building, false);
-            DestroyedField.SetValue(building, true);
+            IntactField?.SetValue(building, false);
+            DestroyedField?.SetValue(building, true);
         }
 
         #endregion
