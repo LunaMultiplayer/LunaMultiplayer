@@ -187,20 +187,21 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static void SetVelocity(Vessel vessel, VesselPositionMsgData msgData)
         {
+            Vector3d srfVel = UnityEngine.Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
             if (msgData.Velocity == null)
             {
                 msgData.Velocity = new[]
                 {
-                    (double) vessel.velocityD.x,
-                    (double) vessel.velocityD.y,
-                    (double) vessel.velocityD.z,
+                    (double) srfVel.x,
+                    (double) srfVel.y,
+                    (double) srfVel.z,
                 };
             }
             else
             {
-                msgData.Velocity[0] = vessel.velocityD.x;
-                msgData.Velocity[1] = vessel.velocityD.y;
-                msgData.Velocity[2] = vessel.velocityD.z;
+                msgData.Velocity[0] = srfVel.x;
+                msgData.Velocity[1] = srfVel.y;
+                msgData.Velocity[2] = srfVel.z;
             }
         }
 

@@ -195,35 +195,63 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
+                //Get worldspace rotation quaternion and velocity vectors.
                 var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
-                var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
-
-                //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
-                Vessel.SetWorldVelocity(curVelocity);
-                Vessel.velocityD = curVelocity;
-
-                //Apply rotation
-                Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
                 //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
                 Vessel.srfRelRotation = currentSurfaceRelRotation;
+                var curVelocity = (Vessel.mainBody.bodyTransform.rotation * Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage)) - Krakensbane.GetFrameVelocity();
+                //Use lat/long/alt/vel under 1km
+                var useOrbitDriver = Target.LatLonAlt[2] > 1000;
 
+                //DO NOT lerp the latlonalt as otherwise if you are in 
+                //orbit you will see landed vessels in the map view with weird jittering
+                if (useOrbitDriver)
+                {
+                    Vessel.latitude = Target.LatLonAlt[0];
+                    Vessel.longitude = Target.LatLonAlt[1];
+                    Vessel.altitude = Target.LatLonAlt[2];
+                }
+                else
+                {
+                    Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                    Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                    Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                }
+
+                var surfacePos = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+                if (useOrbitDriver || Vessel.packed)
+                {
+                    Vessel.orbitDriver.updateFromParameters();
+                    if (!Vessel.packed)
+                    {
+                        Vessel.SetWorldVelocity(Vessel.orbitDriver.orbit.GetVel() - Body.getRFrmVelOrbit(Vessel.orbitDriver.orbit) - Krakensbane.GetFrameVelocity());
+                    }
+                }
+                else
+                {
+                    Vessel.SetPosition(surfacePos);
+                    Vessel.SetWorldVelocity(curVelocity);
+                    //This sets obt_vel so acceleration can be fixed in Vessel.UpdateAcceleration
+                    if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
+                    {
+                        Vessel.orbitDriver.UpdateOrbit();
+                    }
+                }
+
+
+                //Apply rotation (also resets posistion)
+                Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
+                //Not sure if we need to touch reference transform?
                 //If you do Vessel.ReferenceTransform.position = curPosition 
                 //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
                 //that is the reason why we pack vessels at close distance when landed...
-                switch (Vessel.situation)
-                {
-                    case Vessel.Situations.LANDED:
-                    case Vessel.Situations.SPLASHED:
-                        Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                        Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
-                        Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
-                        break;
-                }
 
                 //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
-                Vessel.orbitDriver.updateFromParameters();
-                foreach (var part in Vessel.Parts)
-                    part.ResumeVelocity();
+                Vessel.UpdatePosVel();
+                if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
+                {
+                    Vessel.UpdateAcceleration(1 / TimeWarp.fixedDeltaTime, false);
+                }
             }
         }
 
@@ -236,54 +264,41 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
                 return;
 
-            SrfRelRotation = new[] {
-                Vessel.srfRelRotation.x,
-                Vessel.srfRelRotation.y,
-                Vessel.srfRelRotation.z,
-                Vessel.srfRelRotation.w
-            };
+            SrfRelRotation[0] = Vessel.srfRelRotation.x;
+            SrfRelRotation[1] = Vessel.srfRelRotation.y;
+            SrfRelRotation[2] = Vessel.srfRelRotation.z;
+            SrfRelRotation[3] = Vessel.srfRelRotation.w;
 
-            TransformPosition = new[]
-            {
-                (double)Vessel.ReferenceTransform.position.x,
-                (double)Vessel.ReferenceTransform.position.y,
-                (double)Vessel.ReferenceTransform.position.z
-            };
-            Velocity = new[]
-            {
-                (double)Vessel.velocityD.x,
-                (double)Vessel.velocityD.y,
-                (double)Vessel.velocityD.z,
-            };
-            LatLonAlt = new[]
-            {
-                Vessel.latitude,
-                Vessel.longitude,
-                Vessel.altitude,
-            };
-            Com = new[]
-            {
-                (double)Vessel.CoM.x,
-                (double)Vessel.CoM.y,
-                (double)Vessel.CoM.z,
-            };
-            NormalVector = new[]
-            {
-                (double)Vessel.terrainNormal.x,
-                (double)Vessel.terrainNormal.y,
-                (double)Vessel.terrainNormal.z,
-            };
-            Orbit = new[]
-            {
-                Vessel.orbit.inclination,
-                Vessel.orbit.eccentricity,
-                Vessel.orbit.semiMajorAxis,
-                Vessel.orbit.LAN,
-                Vessel.orbit.argumentOfPeriapsis,
-                Vessel.orbit.meanAnomalyAtEpoch,
-                Vessel.orbit.epoch,
-                Vessel.orbit.referenceBody.flightGlobalsIndex
-            };
+            TransformPosition[0] = Vessel.ReferenceTransform.position.x;
+            TransformPosition[1] = Vessel.ReferenceTransform.position.y;
+            TransformPosition[2] = Vessel.ReferenceTransform.position.z;
+
+            Vector3d srfVel = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.srf_velocity;
+            Velocity[0] = srfVel.x;
+            Velocity[1] = srfVel.y;
+            Velocity[2] = srfVel.z;
+
+            LatLonAlt[0] = Vessel.latitude;
+            LatLonAlt[1] = Vessel.longitude;
+            LatLonAlt[2] = Vessel.altitude;
+
+            Com[0] = Vessel.CoM.x;
+            Com[1] = Vessel.CoM.y;
+            Com[2] = Vessel.CoM.z;
+
+            NormalVector[0] = Vessel.terrainNormal.x;
+            NormalVector[1] = Vessel.terrainNormal.y;
+            NormalVector[2] = Vessel.terrainNormal.z;
+
+            Orbit[0] = Vessel.orbit.inclination;
+            Orbit[1] = Vessel.orbit.eccentricity;
+            Orbit[2] = Vessel.orbit.semiMajorAxis;
+            Orbit[3] = Vessel.orbit.LAN;
+            Orbit[4] = Vessel.orbit.argumentOfPeriapsis;
+            Orbit[5] = Vessel.orbit.meanAnomalyAtEpoch;
+            Orbit[6] = Vessel.orbit.epoch;
+            Orbit[7] = Vessel.orbit.referenceBody.flightGlobalsIndex;
+
             Landed = Vessel.Landed;
             Splashed = Vessel.Splashed;
         }
