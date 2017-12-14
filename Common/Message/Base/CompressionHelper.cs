@@ -59,6 +59,10 @@ namespace LunaCommon.Message.Base
             if (level != 1 && level != 3)
                 throw new ArgumentException("C# version only supports level 1 and 3");
 
+            for (var i = 0; i < HASH_VALUES; i++)
+                for (var j = 0; j < QLZ_POINTERS_3; j++)
+                    compressHashtable[i, j] = 0;
+
             if (source.Length == 0)
             {
                 length = 0;
