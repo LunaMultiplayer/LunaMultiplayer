@@ -1,5 +1,5 @@
-﻿using System.IO;
-using Lidgren.Network;
+﻿using Lidgren.Network;
+using System.IO;
 
 namespace LunaCommon.Message.Interface
 {
@@ -41,6 +41,11 @@ namespace LunaCommon.Message.Interface
         void SetData(IMessageData data);
 
         /// <summary>
+        /// Set this to true to avoid compression of this message
+        /// </summary>
+        bool AvoidCompression { get; }
+
+        /// <summary>
         /// This method creates a POCO object based on the array without the header
         /// </summary>
         /// <param name="messageSubType">Message subtype (Chat-console is a subtype of chatbase for example)</param>
@@ -57,6 +62,9 @@ namespace LunaCommon.Message.Interface
         /// <returns>Mesage as a byte array with it's header</returns>
         byte[] Serialize(bool compress, out int totalLength);
 
+        /// <summary>
+        /// Call this method to send the message back to the pool
+        /// </summary>
         void Recycle();
     }
 }

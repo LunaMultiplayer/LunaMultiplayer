@@ -36,6 +36,10 @@ namespace LunaCommon.Message.Base
         /// </summary>
         protected abstract ushort MessageTypeId { get; }
 
+
+        /// <inheritdoc />
+        public virtual bool AvoidCompression { get; } = false;
+
         /// <summary>
         ///     This parameter can be used to specify a channel for the lidgren delivery methods that preserve order
         ///     (whether by holding back, or dropping messages received out of order).
@@ -107,7 +111,6 @@ namespace LunaCommon.Message.Base
                 {
                     var msg = DataDeserializer.Deserialize(this, msgData, decompressedStream);
                     ArrayPool<byte>.Release(ref dataWithoutHeader);
-                    ArrayPool<byte>.Release(ref decompressed);
                     return msg;
                 }
             }
@@ -121,6 +124,8 @@ namespace LunaCommon.Message.Base
         /// <inheritdoc />
         public byte[] Serialize(bool compress, out int totalLength)
         {
+            compress = compress && !AvoidCompression;
+
             //This memory stream is taken from a pool so it's reused
             using (var memoryStream = StreamManager.MemoryStreamManager.GetStream())
             {
@@ -130,11 +135,9 @@ namespace LunaCommon.Message.Base
                     DataSerializer.Serialize(Data, memoryStream);
                     var data = memoryStream.ToArray();
 
-                    byte[] dataCompressed = null;
                     if (compress)
                     {
-                        dataCompressed = CompressionHelper.CompressBytes(data);
-
+                        var dataCompressed = CompressionHelper.CompressBytes(data);
                         compress = dataCompressed.Length < data.Length;
                         if (compress)
                         {
@@ -146,7 +149,6 @@ namespace LunaCommon.Message.Base
                     }
 
                     var header = SerializeHeaderData(Convert.ToUInt32(data.Length), compress);
-
                     totalLength = MessageConstants.HeaderLength + data.Length;
 
                     //The array pool does NOT give you an array with an exact length!
@@ -158,11 +160,6 @@ namespace LunaCommon.Message.Base
                     //Copy the data to the pooled array
                     data.CopyTo(fullData, MessageConstants.HeaderLength);
 
-                    if (compress)
-                    {
-                        ArrayPool<byte>.Release(ref dataCompressed);
-                    }
-
                     return fullData;
                 }
                 catch (Exception e)
@@ -172,6 +169,7 @@ namespace LunaCommon.Message.Base
             }
         }
 
+        /// <inheritdoc />
         public void Recycle()
         {
             MessageStore.RecycleMessage(this);
