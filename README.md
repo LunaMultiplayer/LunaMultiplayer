@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="../master/External/logo.png" alt="Luna multiplayer logo" height="250" width="250"/>
+    <img src="../master/External/logo.png" alt="Luna multiplayer logo"/>
 </p>
 
 <p align="center">
