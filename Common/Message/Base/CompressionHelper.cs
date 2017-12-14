@@ -38,19 +38,16 @@ namespace LunaCommon.Message.Base
         private const int QLZ_POINTERS_1 = 1;
         private const int QLZ_POINTERS_3 = 16;
 
-        private static int[,] compressHashtable = new int[HASH_VALUES, QLZ_POINTERS_3];
-
-        public static byte[] CompressBytes(byte[] source, out int length)
+        public static byte[] CompressBytes(byte[] source, int level = 3)
         {
-            int level = 3;
-
             int src = 0;
             int dst = DEFAULT_HEADERLEN + CWORD_LEN;
             uint cword_val = 0x80000000;
             int cword_ptr = DEFAULT_HEADERLEN;
-            byte[] destination = ArrayPool<byte>.Claim(source.Length + 400);
-            int[] cachetable = ArrayPool<int>.Claim(HASH_VALUES);
-            byte[] hash_counter = ArrayPool<byte>.Claim(HASH_VALUES);
+            byte[] destination = new byte[source.Length + 400];
+            int[,] hashtable;
+            int[] cachetable = new int[HASH_VALUES];
+            byte[] hash_counter = new byte[HASH_VALUES];
             byte[] d2;
             int fetch = 0;
             int last_matchstart = (source.Length - UNCONDITIONAL_MATCHLEN - UNCOMPRESSED_END - 1);
@@ -59,15 +56,13 @@ namespace LunaCommon.Message.Base
             if (level != 1 && level != 3)
                 throw new ArgumentException("C# version only supports level 1 and 3");
 
-            for (var i = 0; i < HASH_VALUES; i++)
-                for (var j = 0; j < QLZ_POINTERS_3; j++)
-                    compressHashtable[i, j] = 0;
+            if (level == 1)
+                hashtable = new int[HASH_VALUES, QLZ_POINTERS_1];
+            else
+                hashtable = new int[HASH_VALUES, QLZ_POINTERS_3];
 
             if (source.Length == 0)
-            {
-                length = 0;
                 return new byte[0];
-            }
 
             if (src <= last_matchstart)
                 fetch = source[src] | (source[src + 1] << 8) | (source[src + 2] << 16);
@@ -78,13 +73,9 @@ namespace LunaCommon.Message.Base
                 {
                     if (src > source.Length >> 1 && dst > src - (src >> 5))
                     {
-                        d2 = ArrayPool<byte>.Claim(source.Length + DEFAULT_HEADERLEN);
+                        d2 = new byte[source.Length + DEFAULT_HEADERLEN];
                         write_header(d2, level, false, source.Length, source.Length + DEFAULT_HEADERLEN);
                         System.Array.Copy(source, 0, d2, DEFAULT_HEADERLEN, source.Length);
-                        ArrayPool<int>.Release(ref cachetable);
-                        ArrayPool<byte>.Release(ref destination);
-                        ArrayPool<byte>.Release(ref hash_counter);
-                        length = source.Length + DEFAULT_HEADERLEN;
                         return d2;
                     }
 
@@ -97,10 +88,10 @@ namespace LunaCommon.Message.Base
                 if (level == 1)
                 {
                     int hash = ((fetch >> 12) ^ fetch) & (HASH_VALUES - 1);
-                    int o = compressHashtable[hash, 0];
+                    int o = hashtable[hash, 0];
                     int cache = cachetable[hash] ^ fetch;
                     cachetable[hash] = fetch;
-                    compressHashtable[hash, 0] = src;
+                    hashtable[hash, 0] = src;
 
                     if (cache == 0 && hash_counter[hash] != 0 && (src - o > MINOFFSET || (src == o + 1 && lits >= 3 && src > 3 && source[src] == source[src - 3] && source[src] == source[src - 2] && source[src] == source[src - 1] && source[src] == source[src + 1] && source[src] == source[src + 2])))
                     {
@@ -176,7 +167,7 @@ namespace LunaCommon.Message.Base
                     offset2 = 0;
                     for (k = 0; k < QLZ_POINTERS_3 && c > k; k++)
                     {
-                        o = compressHashtable[hash, k];
+                        o = hashtable[hash, k];
                         if ((byte)fetch == source[o] && (byte)(fetch >> 8) == source[o + 1] && (byte)(fetch >> 16) == source[o + 2] && o < src - MINOFFSET)
                         {
                             m = 3;
@@ -191,7 +182,7 @@ namespace LunaCommon.Message.Base
                         }
                     }
                     o = offset2;
-                    compressHashtable[hash, c & (QLZ_POINTERS_3 - 1)] = src;
+                    hashtable[hash, c & (QLZ_POINTERS_3 - 1)] = src;
                     c++;
                     hash_counter[hash] = c;
 
@@ -204,7 +195,7 @@ namespace LunaCommon.Message.Base
                             fetch = source[src + u] | (source[src + u + 1] << 8) | (source[src + u + 2] << 16);
                             hash = ((fetch >> 12) ^ fetch) & (HASH_VALUES - 1);
                             c = hash_counter[hash]++;
-                            compressHashtable[hash, c & (QLZ_POINTERS_3 - 1)] = src + u;
+                            hashtable[hash, c & (QLZ_POINTERS_3 - 1)] = src + u;
                         }
 
                         src += matchlen;
@@ -267,26 +258,21 @@ namespace LunaCommon.Message.Base
             }
             fast_write(destination, cword_ptr, (int)((cword_val >> 1) | 0x80000000), CWORD_LEN);
             write_header(destination, level, true, source.Length, dst);
-            d2 = ArrayPool<byte>.Claim(dst);
+            d2 = new byte[dst];
             System.Array.Copy(destination, d2, dst);
-
-            ArrayPool<int>.Release(ref cachetable);
-            ArrayPool<byte>.Release(ref destination);
-            ArrayPool<byte>.Release(ref hash_counter);
-            length = dst;
             return d2;
         }
 
-        public static byte[] DecompressBytes(byte[] source, out int length)
+        public static byte[] DecompressBytes(byte[] source)
         {
             int level;
             int size = SizeDecompressed(source);
             int src = HeaderLen(source);
             int dst = 0;
             uint cword_val = 1;
-            byte[] destination = ArrayPool<byte>.Claim(size);
-            int[] hashtable = ArrayPool<int>.Claim(4096);
-            byte[] hash_counter = ArrayPool<byte>.Claim(4096);
+            byte[] destination = new byte[size];
+            int[] hashtable = new int[4096];
+            byte[] hash_counter = new byte[4096];
             int last_matchstart = size - UNCONDITIONAL_MATCHLEN - UNCOMPRESSED_END - 1;
             int last_hashed = -1;
             int hash;
@@ -299,14 +285,8 @@ namespace LunaCommon.Message.Base
 
             if ((source[0] & 1) != 1)
             {
-                byte[] d2 = ArrayPool<byte>.Claim(size);
+                byte[] d2 = new byte[size];
                 System.Array.Copy(source, HeaderLen(source), d2, 0, size);
-
-                ArrayPool<int>.Release(ref hashtable);
-                ArrayPool<byte>.Release(ref destination);
-                ArrayPool<byte>.Release(ref hash_counter);
-
-                length = size;
                 return d2;
             }
 
@@ -461,11 +441,6 @@ namespace LunaCommon.Message.Base
                             src++;
                             cword_val = cword_val >> 1;
                         }
-
-                        ArrayPool<int>.Release(ref hashtable);
-                        ArrayPool<byte>.Release(ref hash_counter);
-
-                        length = size;
                         return destination;
                     }
                 }

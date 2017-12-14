@@ -102,8 +102,8 @@ namespace LunaCommon.Message.Base
                 var dataWithoutHeader = ArrayPool<byte>.Claim(dataSize);
                 data.Read(dataWithoutHeader, 0, dataSize);
 
-                var decompressed = CompressionHelper.DecompressBytes(dataWithoutHeader, out var decompressedSize);
-                using (var decompressedStream = StreamManager.MemoryStreamManager.GetStream("", decompressed, 0, decompressedSize))
+                var decompressed = CompressionHelper.DecompressBytes(dataWithoutHeader);
+                using (var decompressedStream = StreamManager.MemoryStreamManager.GetStream("", decompressed, 0, decompressed.Length))
                 {
                     var msg = DataDeserializer.Deserialize(this, msgData, decompressedStream);
                     ArrayPool<byte>.Release(ref dataWithoutHeader);
@@ -133,12 +133,12 @@ namespace LunaCommon.Message.Base
                     byte[] dataCompressed = null;
                     if (compress)
                     {
-                        dataCompressed = CompressionHelper.CompressBytes(data, out var compressedLength);
+                        dataCompressed = CompressionHelper.CompressBytes(data);
 
-                        compress = compressedLength < data.Length;
+                        compress = dataCompressed.Length < data.Length;
                         if (compress)
                         {
-                            using (var compressedMemoryStream = StreamManager.MemoryStreamManager.GetStream("", dataCompressed, 0, compressedLength))
+                            using (var compressedMemoryStream = StreamManager.MemoryStreamManager.GetStream("", dataCompressed, 0, dataCompressed.Length))
                             {
                                 data = compressedMemoryStream.ToArray();
                             }
