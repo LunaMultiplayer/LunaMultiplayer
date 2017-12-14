@@ -18,7 +18,6 @@ namespace LunaCommon.Message.Base
         {
             var data = ArrayPool<byte>.Claim(lidgrenMsg.LengthBytes);
             lidgrenMsg.ReadBytes(data, 0, lidgrenMsg.LengthBytes);
-
             using (var stream = StreamManager.MemoryStreamManager.GetStream("", data, 0, lidgrenMsg.LengthBytes))
             {
                 if (lidgrenMsg.LengthBytes >= MessageConstants.HeaderLength)

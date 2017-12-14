@@ -102,12 +102,12 @@ namespace LunaCommon.Message.Base
                 var dataWithoutHeader = ArrayPool<byte>.Claim(dataSize);
                 data.Read(dataWithoutHeader, 0, dataSize);
 
-                var decompressed = CompressionHelper.DecompressBytes(dataWithoutHeader);
-
-                using (var decompressedStream = StreamManager.MemoryStreamManager.GetStream("", decompressed, 0, decompressed.Length))
+                var decompressed = CompressionHelper.DecompressBytes(dataWithoutHeader, out var decompressedSize);
+                using (var decompressedStream = StreamManager.MemoryStreamManager.GetStream("", decompressed, 0, decompressedSize))
                 {
                     var msg = DataDeserializer.Deserialize(this, msgData, decompressedStream);
                     ArrayPool<byte>.Release(ref dataWithoutHeader);
+                    ArrayPool<byte>.Release(ref decompressed);
                     return msg;
                 }
             }
@@ -130,14 +130,18 @@ namespace LunaCommon.Message.Base
                     DataSerializer.Serialize(Data, memoryStream);
                     var data = memoryStream.ToArray();
 
+                    byte[] dataCompressed = null;
                     if (compress)
                     {
-                        var dataCompressed = CompressionHelper.CompressBytes(data);
+                        dataCompressed = CompressionHelper.CompressBytes(data, out var compressedLength);
 
-                        compress = dataCompressed.Length < data.Length;
+                        compress = compressedLength < data.Length;
                         if (compress)
                         {
-                            data = dataCompressed;
+                            using (var compressedMemoryStream = StreamManager.MemoryStreamManager.GetStream("", dataCompressed, 0, compressedLength))
+                            {
+                                data = compressedMemoryStream.ToArray();
+                            }
                         }
                     }
 
@@ -153,7 +157,12 @@ namespace LunaCommon.Message.Base
                     Array.Copy(header, 0, fullData, 0, MessageConstants.HeaderLength);
                     //Copy the data to the pooled array
                     data.CopyTo(fullData, MessageConstants.HeaderLength);
-                    
+
+                    if (compress)
+                    {
+                        ArrayPool<byte>.Release(ref dataCompressed);
+                    }
+
                     return fullData;
                 }
                 catch (Exception e)

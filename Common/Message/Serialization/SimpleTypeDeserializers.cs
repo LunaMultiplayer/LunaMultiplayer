@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LunaCommon.Message.Base;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -10,90 +11,125 @@ namespace LunaCommon.Message.Serialization
         {
             CheckDataLeft(messageData.Length, sizeof(ushort));
 
-            var outputData = new byte[sizeof(ushort)];
-            messageData.Read(outputData, 0, sizeof(ushort));
+            var outputData = ArrayPool<byte>.ClaimWithExactLength(sizeof(ushort));
 
-            return BitConverter.ToUInt16(outputData, 0);
+            messageData.Read(outputData, 0, sizeof(ushort));
+            var value = BitConverter.ToUInt16(outputData, 0);
+
+            ArrayPool<byte>.Release(ref outputData, true);
+
+            return value;
         }
 
         private static short GetShortFromBytes(Stream messageData)
         {
             CheckDataLeft(messageData.Length, sizeof(short));
 
-            var outputData = new byte[sizeof(short)];
-            messageData.Read(outputData, 0, sizeof(short));
+            var outputData = ArrayPool<byte>.ClaimWithExactLength(sizeof(short));
 
-            return BitConverter.ToInt16(outputData, 0);
+            messageData.Read(outputData, 0, sizeof(short));
+            var value = BitConverter.ToInt16(outputData, 0);
+
+            ArrayPool<byte>.Release(ref outputData, true);
+
+            return value;
         }
 
         private static int GetIntFromBytes(Stream messageData)
         {
             CheckDataLeft(messageData.Length, sizeof(int));
 
-            var outputData = new byte[sizeof(int)];
+            var outputData = ArrayPool<byte>.ClaimWithExactLength(sizeof(int));
+            
             messageData.Read(outputData, 0, sizeof(int));
+            var value = BitConverter.ToInt32(outputData, 0);
 
-            return BitConverter.ToInt32(outputData, 0);
+            ArrayPool<byte>.Release(ref outputData, true);
+            return value;
         }
 
         private static uint GetUintFromBytes(Stream messageData)
         {
             CheckDataLeft(messageData.Length, sizeof(uint));
 
-            var outputData = new byte[sizeof(uint)];
+            var outputData = ArrayPool<byte>.ClaimWithExactLength(sizeof(uint));
+            
             messageData.Read(outputData, 0, sizeof(uint));
+            var value = BitConverter.ToUInt32(outputData, 0);
 
-            return BitConverter.ToUInt32(outputData, 0);
+            ArrayPool<byte>.Release(ref outputData, true);
+
+            return value;
         }
 
         private static long GetLongFromBytes(Stream messageData)
         {
             CheckDataLeft(messageData.Length, sizeof(long));
 
-            var outputData = new byte[sizeof(long)];
+            var outputData = ArrayPool<byte>.ClaimWithExactLength(sizeof(long));
+            
             messageData.Read(outputData, 0, sizeof(long));
+            var value = BitConverter.ToInt64(outputData, 0);
 
-            return BitConverter.ToInt64(outputData, 0);
+            ArrayPool<byte>.Release(ref outputData, true);
+
+            return value;
         }
 
         private static float GetFloatFromBytes(Stream messageData)
         {
             CheckDataLeft(messageData.Length, sizeof(float));
 
-            var outputData = new byte[sizeof(float)];
-            messageData.Read(outputData, 0, sizeof(float));
+            var outputData = ArrayPool<byte>.ClaimWithExactLength(sizeof(float));
 
-            return BitConverter.ToSingle(outputData, 0);
+            messageData.Read(outputData, 0, sizeof(float));
+            var value = BitConverter.ToSingle(outputData, 0);
+
+            ArrayPool<byte>.Release(ref outputData, true);
+
+            return value;
         }
 
         private static double GetDoubleFromBytes(Stream messageData)
         {
             CheckDataLeft(messageData.Length, sizeof(double));
 
-            var outputData = new byte[sizeof(double)];
-            messageData.Read(outputData, 0, sizeof(double));
+            var outputData = ArrayPool<byte>.ClaimWithExactLength(sizeof(double));
 
-            return BitConverter.ToDouble(outputData, 0);
+            messageData.Read(outputData, 0, sizeof(double));
+            var value = BitConverter.ToDouble(outputData, 0);
+
+            ArrayPool<byte>.Release(ref outputData, true);
+
+            return value;
         }
 
         private static bool GetBoolFromBytes(Stream messageData)
         {
             CheckDataLeft(messageData.Length, sizeof(bool));
 
-            var outputData = new byte[sizeof(bool)];
-            messageData.Read(outputData, 0, sizeof(bool));
+            var outputData = ArrayPool<byte>.ClaimWithExactLength(sizeof(bool));
 
-            return BitConverter.ToBoolean(outputData, 0);
+            messageData.Read(outputData, 0, sizeof(bool));
+            var value = BitConverter.ToBoolean(outputData, 0);
+
+            ArrayPool<byte>.Release(ref outputData, true);
+
+            return value;
         }
 
         private static byte GetByteFromBytes(Stream messageData)
         {
             CheckDataLeft(messageData.Length, sizeof(byte));
 
-            var outputData = new byte[sizeof(byte)];
-            messageData.Read(outputData, 0, sizeof(byte));
+            var outputData = ArrayPool<byte>.ClaimWithExactLength(sizeof(byte));
 
-            return outputData[0];
+            messageData.Read(outputData, 0, sizeof(byte));
+            var value = outputData[0];
+
+            ArrayPool<byte>.Release(ref outputData, true);
+
+            return value;
         }
 
         private static string GetStringFromBytes(Stream messageData)
