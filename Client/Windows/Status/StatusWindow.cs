@@ -45,15 +45,16 @@ namespace LunaClient.Windows.Status
 
         public override void OnGui()
         {
-            if (!ColorEventHandled)
-            {
-                PlayerNameStyle = new Dictionary<string, GUIStyle>();
-                ColorEventHandled = true;
-            }
             base.OnGui();
             
             if (Display)
             {
+                if (!ColorEventHandled)
+                {
+                    PlayerNameStyle = new Dictionary<string, GUIStyle>();
+                    ColorEventHandled = true;
+                }
+
                 //Calculate the minimum size of the minimize window by drawing it off the screen
                 WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6703 + MainSystem.WindowOffset, 
                     WindowRect, DrawContent, _title, WindowStyle, LayoutOptions));
@@ -124,14 +125,14 @@ namespace LunaClient.Windows.Status
 
         private void CheckWindowLock()
         {
-            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
             if (Display)
             {
+                if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
+                {
+                    RemoveWindowLock();
+                    return;
+                }
+
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 

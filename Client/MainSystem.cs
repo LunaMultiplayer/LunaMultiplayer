@@ -16,7 +16,6 @@ using LunaClient.Windows.Connection;
 using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
-using LunaCommon.Time;
 using LunaUpdater;
 using System;
 using System.Collections.Generic;
@@ -80,9 +79,9 @@ namespace LunaClient
         {
             LunaLog.ProcessLogMessages();
 
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             if (!Enabled) return;
+
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             try
             {
@@ -155,11 +154,10 @@ namespace LunaClient
 
         public void MainSystemFixedUpdate()
         {
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             if (!Enabled)
                 return;
 
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
             SystemsHandler.FixedUpdate();
             LunaProfiler.FixedUpdateData.ReportTime(startClock);
         }
@@ -170,11 +168,10 @@ namespace LunaClient
 
         public void MainSystemLateUpdate()
         {
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             if (!Enabled)
                 return;
 
+            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
             SystemsHandler.LateUpdate();
             LunaProfiler.LateUpdateData.ReportTime(startClock);
         }
@@ -247,12 +244,12 @@ namespace LunaClient
             //Servers window: 6714
             //Systems window: 6715
 
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
+            {
+                var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
                 WindowsHandler.OnGui();
-
-            LunaProfiler.GuiData.ReportTime(startClock);
+                LunaProfiler.GuiData.ReportTime(startClock);
+            }
         }
 
         public void OnExit()

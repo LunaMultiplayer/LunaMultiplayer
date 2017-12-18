@@ -20,18 +20,26 @@ namespace LunaCommon.Message.Base
 
         internal static void RecycleMessage(IMessageBase message)
         {
-            var msgDataQueue = MessageDataDictionary.GetOrAdd(message.Data.ClassName, new ConcurrentBag<IMessageData>());
-            msgDataQueue.Add(message.Data);
+            if (!MessageDataDictionary.TryGetValue(message.Data.ClassName, out var dataBag))
+            {
+                dataBag = new ConcurrentBag<IMessageData>();
+                MessageDataDictionary.TryAdd(message.Data.ClassName, dataBag);
+            }
+            dataBag.Add(message.Data);
+
             message.SetData(null);
 
-            var msgQueue = MessageDictionary.GetOrAdd(message.ClassName, new ConcurrentBag<IMessageBase>());
-            msgQueue.Add(message);
+            if (!MessageDictionary.TryGetValue(message.ClassName, out var messageBag))
+            {
+                messageBag = new ConcurrentBag<IMessageBase>();
+                MessageDictionary.TryAdd(message.ClassName, messageBag);
+            }
+            messageBag.Add(message);
         }
 
         internal static T GetMessageData<T>() where T : class, IMessageData
         {
-            var msgDataQueue = MessageDataDictionary.GetOrAdd(typeof(T).Name, new ConcurrentBag<IMessageData>());
-            if (msgDataQueue.TryTake(out var messageData))
+            if (MessageDataDictionary.TryGetValue(typeof(T).Name, out var bag) && bag.TryTake(out var messageData))
             {
                 //We found a messageData that is already used so return it
                 return messageData as T;
@@ -42,8 +50,7 @@ namespace LunaCommon.Message.Base
 
         internal static IMessageData GetMessageData(Type messageDataType)
         {
-            var msgDataQueue = MessageDataDictionary.GetOrAdd(messageDataType.Name, new ConcurrentBag<IMessageData>());
-            if (msgDataQueue.TryTake(out var messageData))
+            if (MessageDataDictionary.TryGetValue(messageDataType.Name, out var bag) && bag.TryTake(out var messageData))
             {
                 return messageData;
             }
@@ -53,8 +60,7 @@ namespace LunaCommon.Message.Base
 
         internal static T GetMessage<T>() where T : class, IMessageBase
         {
-            var msgQueue = MessageDictionary.GetOrAdd(typeof(T).Name, new ConcurrentBag<IMessageBase>());
-            if (msgQueue.TryTake(out var message))
+            if (MessageDictionary.TryGetValue(typeof(T).Name, out var bag) && bag.TryTake(out var message))
             {
                 //We found a messageData that is already used so return it
                 message.SetData(null);
@@ -66,8 +72,7 @@ namespace LunaCommon.Message.Base
 
         internal static IMessageBase GetMessage(Type type)
         {
-            var msgQueue = MessageDictionary.GetOrAdd(type.Name, new ConcurrentBag<IMessageBase>());
-            if (msgQueue.TryTake(out var message))
+            if (MessageDictionary.TryGetValue(type.Name, out var bag) && bag.TryTake(out var message))
             {
                 //We found a messageData that is already used so return it
                 return message;
@@ -103,15 +108,21 @@ namespace LunaCommon.Message.Base
         {
             if (typeof(IMessageData).IsAssignableFrom(typeof(T)))
             {
-                var ctor = MessageDataConstructorDictionary.GetOrAdd(typeof(T), typeof(T)
-                    .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First());
+                if (!MessageDataConstructorDictionary.TryGetValue(typeof(T), out var ctor))
+                {
+                    ctor = typeof(T).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First();
+                    MessageDataConstructorDictionary.TryAdd(typeof(T), ctor);
+                }
 
                 return ctor.Invoke(null) as T;
             }
             if (typeof(IMessageBase).IsAssignableFrom(typeof(T)))
             {
-                var ctor = MessageConstructorDictionary.GetOrAdd(typeof(T), typeof(T)
-                    .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First());
+                if (!MessageConstructorDictionary.TryGetValue(typeof(T), out var ctor))
+                {
+                    ctor = typeof(T).GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First();
+                    MessageDataConstructorDictionary.TryAdd(typeof(T), ctor);
+                }
 
                 return ctor.Invoke(null) as T;
             }
@@ -126,8 +137,11 @@ namespace LunaCommon.Message.Base
         {
             if (typeof(IMessageBase).IsAssignableFrom(type))
             {
-                var ctor = MessageConstructorDictionary.GetOrAdd(type, type
-                    .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First());
+                if (!MessageConstructorDictionary.TryGetValue(type, out var ctor))
+                {
+                    ctor = type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First();
+                    MessageDataConstructorDictionary.TryAdd(type, ctor);
+                }
 
                 return ctor.Invoke(null) as IMessageBase;
             }
@@ -142,8 +156,11 @@ namespace LunaCommon.Message.Base
         {
             if (typeof(IMessageData).IsAssignableFrom(type))
             {
-                var ctor = MessageDataConstructorDictionary.GetOrAdd(type, type
-                    .GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First());
+                if (!MessageDataConstructorDictionary.TryGetValue(type, out var ctor))
+                {
+                    ctor = type.GetConstructors(BindingFlags.NonPublic | BindingFlags.Instance).First();
+                    MessageDataConstructorDictionary.TryAdd(type, ctor);
+                }
 
                 return ctor.Invoke(null) as IMessageData;
             }

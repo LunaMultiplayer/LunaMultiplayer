@@ -43,7 +43,7 @@ namespace Server.Message.ReceiveHandlers
 
                 LmpPluginHandler.FireOnClientAuthenticated(client);
 
-                LunaLog.Normal($"Client {data.PlayerName} handshook successfully, Version: {data.Version}");
+                LunaLog.Normal($"Client {data.PlayerName} handshook successfully, Version: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}");
 
                 CreatePlayerScenarioFiles(client, data.PlayerName);
 

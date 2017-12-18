@@ -12,7 +12,13 @@ namespace LunaCommon.Message.Base
         internal MessageData() { }
 
         /// <inheritdoc />
-        public virtual string Version { get; set; } = LmpVersioning.CurrentVersion;
+        public virtual ushort MajorVersion { get; set; } = LmpVersioning.MajorVersion;
+
+        /// <inheritdoc />
+        public virtual ushort MinorVersion { get; set; } = LmpVersioning.MinorVersion;
+
+        /// <inheritdoc />
+        public virtual ushort BuildVersion { get; set; } = LmpVersioning.BuildVersion;
 
         /// <inheritdoc />
         public long ReceiveTime { get; set; }
@@ -29,7 +35,9 @@ namespace LunaCommon.Message.Base
         public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             lidgrenMsg.Write(SentTime);
-            lidgrenMsg.Write(Version);
+            lidgrenMsg.Write(MajorVersion);
+            lidgrenMsg.Write(MinorVersion);
+            lidgrenMsg.Write(BuildVersion);
             InternalSerialize(lidgrenMsg, dataCompressed);
         }
 
@@ -38,7 +46,9 @@ namespace LunaCommon.Message.Base
         public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
         {
             SentTime = lidgrenMsg.ReadInt64();
-            Version = lidgrenMsg.ReadString();
+            MajorVersion = lidgrenMsg.ReadUInt16();
+            MinorVersion = lidgrenMsg.ReadUInt16();
+            BuildVersion = lidgrenMsg.ReadUInt16();
             InternalDeserialize(lidgrenMsg, dataCompressed);
         }
 
@@ -48,7 +58,7 @@ namespace LunaCommon.Message.Base
 
         public int GetMessageSize(bool dataCompressed)
         {
-            return sizeof(long) + Version.GetByteCount() + InternalGetMessageSize(dataCompressed);
+            return sizeof(long) + sizeof(ushort) * 3 + InternalGetMessageSize(dataCompressed);
         }
 
         internal abstract int InternalGetMessageSize(bool dataCompressed);

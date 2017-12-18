@@ -1,26 +1,22 @@
 ﻿using LunaClient.Base.Interface;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems
 {
     public class SystemsContainer
     {
-
-        private static readonly Dictionary<Type, ISystem> Systems = new Dictionary<Type, ISystem>();
+        private static readonly ConcurrentDictionary<Type, ISystem> Systems = new ConcurrentDictionary<Type, ISystem>();
 
         public static T Get<T>() where T : class, ISystem
         {
-            var type = typeof(T);
-            Systems.TryGetValue(type, out var instance);
-
-            if (instance == null)
+            if (!Systems.TryGetValue(typeof(T), out var system))
             {
-                instance = Activator.CreateInstance<T>();
-                Systems.Add(type, instance);
+                system = Activator.CreateInstance<T>();
+                Systems.TryAdd(typeof(T), system);
             }
 
-            return instance as T;
+            return system as T;
         }
     }
 }

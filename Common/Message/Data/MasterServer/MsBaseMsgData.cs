@@ -10,11 +10,12 @@ namespace LunaCommon.Message.Data.MasterServer
         /// <inheritdoc />
         internal MsBaseMsgData() { }
 
-        /// <inheritdoc />
-        /// <summary>
-        /// Master server messages does not have versions!
-        /// </summary>
-        public override string Version => "0.0.0.0";
+        // Master server messages does not have versions!
+
+        public override ushort MajorVersion => 0;
+        public override ushort MinorVersion => 0;
+        public override ushort BuildVersion => 0;
+
         public override ushort SubType => (ushort)(int)MasterServerMessageSubType;
         public virtual MasterServerMessageSubType MasterServerMessageSubType => throw new NotImplementedException();
 

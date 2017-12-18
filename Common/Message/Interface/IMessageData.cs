@@ -8,11 +8,21 @@ namespace LunaCommon.Message.Interface
         /// Name of the class
         /// </summary>
         string ClassName { get; }
+        
+        /// <summary>
+        /// Retrieves the major version of the multiplayer
+        /// </summary>
+        ushort MajorVersion { get; }
 
         /// <summary>
-        /// Retrieves the version of the multiplayer
+        /// Retrieves the minor version of the multiplayer
         /// </summary>
-        string Version { get; }
+        ushort MinorVersion { get; }
+
+        /// <summary>
+        /// Retrieves the build version of the multiplayer
+        /// </summary>
+        ushort BuildVersion { get; }
 
         /// <summary>
         /// Receive time timestamp.
