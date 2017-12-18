@@ -53,6 +53,9 @@ namespace LunaClient.Utilities
 
         public void Reset()
         {
+#if !DEBUG
+            return;
+#endif
             MinTime = long.MaxValue;
             MaxTime = long.MinValue;
             CurrentTime = 0;
@@ -67,6 +70,9 @@ namespace LunaClient.Utilities
 
         public void ReportTime(long startClock)
         {
+#if !DEBUG
+            return;
+#endif
             var currentClock = LmpReferenceTime.ElapsedTicks;
 
             CurrentTime = currentClock - startClock;
@@ -99,6 +105,9 @@ namespace LunaClient.Utilities
 
         public override string ToString()
         {
+#if !DEBUG
+            return null;
+#endif
             StringBuilder.Length = 0;
 
             StringBuilder.Append(Math.Round(TimeSpan.FromTicks(Average).TotalMilliseconds, 2)).Append("/");
