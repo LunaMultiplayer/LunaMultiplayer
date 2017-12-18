@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.PlayerConnection
         /// <inheritdoc />
         internal PlayerConnectionJoinMsgData() { }
         public override PlayerConnectionMessageType PlayerConnectionMessageType => PlayerConnectionMessageType.Join;
+
+        public override string ClassName { get; } = nameof(PlayerConnectionJoinMsgData);
     }
 }

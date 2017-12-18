@@ -12,6 +12,8 @@ namespace LunaCommon.Message.Data.Flag
         public int FlagCount;
         public FlagInfo[] FlagFiles = new FlagInfo[0];
 
+        public override string ClassName { get; } = nameof(FlagListResponseMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

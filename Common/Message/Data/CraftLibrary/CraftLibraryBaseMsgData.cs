@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.CraftLibrary
 {
-    public class CraftLibraryBaseMsgData : MessageData
+    public abstract class CraftLibraryBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal CraftLibraryBaseMsgData() { }

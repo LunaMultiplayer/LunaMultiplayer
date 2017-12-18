@@ -11,6 +11,8 @@ namespace LunaCommon.Message.Data.PlayerStatus
 
         public PlayerStatusInfo PlayerStatus = new PlayerStatusInfo();
 
+        public override string ClassName { get; } = nameof(PlayerStatusSetMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

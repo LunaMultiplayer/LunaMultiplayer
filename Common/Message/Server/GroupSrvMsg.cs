@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Server
         internal GroupSrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(GroupSrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)GroupMessageType.ListRequest] = typeof(GroupListRequestMsgData),

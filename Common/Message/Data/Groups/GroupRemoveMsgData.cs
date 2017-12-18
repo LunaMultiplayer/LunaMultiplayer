@@ -12,6 +12,8 @@ namespace LunaCommon.Message.Data.Groups
 
         public string GroupName;
 
+        public override string ClassName { get; } = nameof(GroupRemoveMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

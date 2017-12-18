@@ -14,6 +14,8 @@ namespace LunaCommon.Message.Data.Lock
         public int LocksCount;
         public LockDefinition[] Locks = new LockDefinition[0];
 
+        public override string ClassName { get; } = nameof(LockListReplyMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

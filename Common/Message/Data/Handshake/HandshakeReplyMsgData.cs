@@ -19,6 +19,8 @@ namespace LunaCommon.Message.Data.Handshake
         public Guid  PlayerId;
         public int NumBytes;
         public byte[] ModFileData = new byte[0];
+        
+        public override string ClassName { get; } = nameof(HandshakeReplyMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {

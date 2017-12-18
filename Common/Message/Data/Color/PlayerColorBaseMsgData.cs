@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Color
 {
-    public class PlayerColorBaseMsgData : MessageData
+    public abstract class PlayerColorBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal PlayerColorBaseMsgData() { }

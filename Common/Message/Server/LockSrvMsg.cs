@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Server
         internal LockSrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(LockSrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)LockMessageType.ListReply] = typeof(LockListReplyMsgData),

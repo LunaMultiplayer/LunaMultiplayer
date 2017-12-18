@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Handshake
 {
-    public class HandshakeBaseMsgData : MessageData
+    public abstract class HandshakeBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal HandshakeBaseMsgData() { }

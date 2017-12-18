@@ -14,6 +14,9 @@ namespace LunaCommon.Message.MasterServer
         internal MainMstSrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(MainMstSrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)MasterServerMessageSubType.RegisterServer] = typeof(MsRegisterServerMsgData),

@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.PlayerConnection
         /// <inheritdoc />
         internal PlayerConnectionLeaveMsgData() { }
         public override PlayerConnectionMessageType PlayerConnectionMessageType => PlayerConnectionMessageType.Leave;
+
+        public override string ClassName { get; } = nameof(PlayerConnectionLeaveMsgData);
     }
 }

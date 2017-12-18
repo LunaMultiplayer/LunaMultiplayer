@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.Kerbal
         /// <inheritdoc />
         internal KerbalsRequestMsgData() { }
         public override KerbalMessageType KerbalMessageType => KerbalMessageType.Request;
+
+        public override string ClassName { get; } = nameof(KerbalsRequestMsgData);
     }
 }

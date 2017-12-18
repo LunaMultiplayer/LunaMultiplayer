@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Chat
 {
-    public class ChatBaseMsgData : MessageData
+    public abstract class ChatBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal ChatBaseMsgData() { }

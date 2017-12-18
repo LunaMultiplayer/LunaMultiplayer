@@ -14,9 +14,11 @@ namespace LunaCommon.Message.Server
         internal VesselSrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(VesselSrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)VesselMessageType.ListReply] = typeof(VesselListReplyMsgData),
             [(ushort)VesselMessageType.VesselsReply] = typeof(VesselsReplyMsgData),
             [(ushort)VesselMessageType.Proto] = typeof(VesselProtoMsgData),
             [(ushort)VesselMessageType.ProtoReliable] = typeof(VesselProtoReliableMsgData),

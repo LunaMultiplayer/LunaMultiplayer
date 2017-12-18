@@ -13,6 +13,8 @@ namespace LunaCommon.Message.Data.PlayerStatus
         public int PlayerStatusCount;
         public PlayerStatusInfo[] PlayerStatus = new PlayerStatusInfo[0];
 
+        public override string ClassName { get; } = nameof(PlayerStatusReplyMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Server
         internal WarpSrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(WarpSrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)WarpMessageType.SubspacesReply] = typeof(WarpSubspacesReplyMsgData),

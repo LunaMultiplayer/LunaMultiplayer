@@ -13,6 +13,8 @@ namespace LunaCommon.Message.Data.Groups
         public int GroupsCount;
         public Group[] Groups = new Group[0];
 
+        public override string ClassName { get; } = nameof(GroupListResponseMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

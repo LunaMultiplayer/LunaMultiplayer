@@ -48,7 +48,7 @@ namespace LunaClient.Systems.Asteroid
             
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetAsteroidLock));
             SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, CheckAsteroidsToSpawn));
-            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroidsStatus));
+            SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, CheckAsteroidsStatus));
         }
 
         protected override void OnDisabled()
@@ -159,11 +159,7 @@ namespace LunaClient.Systems.Asteroid
 
         public int GetAsteroidCount()
         {
-            var seenAsteroids = GetCurrentAsteroids().Select(a => a.id.ToString()).Count();
-            seenAsteroids += HighLogic.CurrentGame.flightState.protoVessels
-                .Where(a => ProtoVesselIsAsteroid(a) && !GetCurrentAsteroids().Select(ast => ast.id.ToString()).Contains(a.vesselID.ToString()))
-                .Select(pv => pv.vesselID.ToString()).Count();
-
+            var seenAsteroids = GetCurrentAsteroids().Count();
             return seenAsteroids;
         }
 

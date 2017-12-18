@@ -16,6 +16,9 @@ namespace LunaCommon.Message.Base
                 return ClaimWithExactLength(0);
             }
 
+            if (!IsPowerOfTwo(minimumLength))
+                minimumLength++;
+
             var bucketIndex = 0;
             while ((1 << bucketIndex) < minimumLength && bucketIndex < 30)
             {
@@ -82,8 +85,10 @@ namespace LunaCommon.Message.Base
                 throw new ArgumentException("Expected array type " + typeof(T[]).Name + " but found " + array.GetType().Name + "\nAre you using the correct generic class?\n");
             }
 
-            bool isPowerOfTwo = array.Length != 0 && (array.Length & (array.Length - 1)) == 0;
-            if (!isPowerOfTwo && !allowNonPowerOfTwo && array.Length != 0) throw new System.ArgumentException("Length is not a power of 2");
+            bool isPowerOfTwo = LengthIsPowerOfTwo(array);
+            if (!isPowerOfTwo && !allowNonPowerOfTwo && array.Length != 0)
+                throw new System.ArgumentException("Length is not a power of 2");
+
             lock (Pool)
             {
                 if (!InPool.Add(array))
@@ -118,6 +123,16 @@ namespace LunaCommon.Message.Base
                 }
             }
             array = null;
+        }
+
+        private static bool LengthIsPowerOfTwo(T[] array)
+        {
+            return IsPowerOfTwo(array.Length);
+        }
+
+        private static bool IsPowerOfTwo(int val)
+        {
+            return val != 0 && (val & (val - 1)) == 0;
         }
     }
 

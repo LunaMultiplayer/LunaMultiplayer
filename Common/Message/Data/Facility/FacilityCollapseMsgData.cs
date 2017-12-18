@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.Facility
         /// <inheritdoc />
         internal FacilityCollapseMsgData() { }
         public override FacilityMessageType FacilityMessageType => FacilityMessageType.Collapse;
+        
+        public override string ClassName { get; } = nameof(FacilityCollapseMsgData);
     }
 }

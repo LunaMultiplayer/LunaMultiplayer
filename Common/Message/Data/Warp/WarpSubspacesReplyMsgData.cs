@@ -13,6 +13,8 @@ namespace LunaCommon.Message.Data.Warp
         public int SubspaceCount;
         public SubspaceInfo[] Subspaces = new SubspaceInfo[0];
 
+        public override string ClassName { get; } = nameof(WarpSubspacesReplyMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

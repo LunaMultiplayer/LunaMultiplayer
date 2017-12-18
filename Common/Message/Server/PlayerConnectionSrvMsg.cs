@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Server
         internal PlayerConnectionSrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(PlayerConnectionSrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)PlayerConnectionMessageType.Join] = typeof(PlayerConnectionJoinMsgData),

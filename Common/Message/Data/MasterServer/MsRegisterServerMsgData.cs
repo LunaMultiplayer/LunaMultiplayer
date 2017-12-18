@@ -29,6 +29,8 @@ namespace LunaCommon.Message.Data.MasterServer
         public bool DropControlOnExit;
         public bool ShowVesselsInThePast;
 
+        public override string ClassName { get; } = nameof(MsRegisterServerMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

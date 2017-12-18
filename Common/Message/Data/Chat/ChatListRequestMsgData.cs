@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.Chat
         /// <inheritdoc />
         internal ChatListRequestMsgData() { }
         public override ChatMessageType ChatMessageType => ChatMessageType.ListRequest;
+
+        public override string ClassName { get; } = nameof(ChatListRequestMsgData);
     }
 }

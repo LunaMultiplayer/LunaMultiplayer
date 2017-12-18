@@ -33,6 +33,8 @@ namespace LunaCommon.Message.Data
         /// </summary>
         public byte[] Data;
 
+        public override string ClassName { get; } = nameof(ModMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             lidgrenMsg.Write(ModName);

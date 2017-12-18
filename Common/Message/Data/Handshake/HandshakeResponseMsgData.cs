@@ -13,7 +13,10 @@ namespace LunaCommon.Message.Data.Handshake
         public string PlayerName;
         public string PublicKey;
 
-        public byte[] ChallengeSignature = new byte[1024];
+        public int NumBytes;
+        public byte[] ChallengeSignature = new byte[0];
+
+        public override string ClassName { get; } = nameof(HandshakeResponseMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
@@ -22,7 +25,8 @@ namespace LunaCommon.Message.Data.Handshake
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(PublicKey);
             
-            lidgrenMsg.Write(ChallengeSignature, 0, 1024);
+            lidgrenMsg.Write(NumBytes);
+            lidgrenMsg.Write(ChallengeSignature, 0, NumBytes);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
@@ -31,9 +35,10 @@ namespace LunaCommon.Message.Data.Handshake
 
             PlayerName = lidgrenMsg.ReadString();
             PublicKey = lidgrenMsg.ReadString();
-            
-            ChallengeSignature = ArrayPool<byte>.ClaimWithExactLength(1024);
-            lidgrenMsg.ReadBytes(ChallengeSignature, 0, 1024);
+
+            NumBytes = lidgrenMsg.ReadInt32();
+            ChallengeSignature = ArrayPool<byte>.ClaimWithExactLength(NumBytes);
+            lidgrenMsg.ReadBytes(ChallengeSignature, 0, NumBytes);
         }
 
         public override void Recycle()

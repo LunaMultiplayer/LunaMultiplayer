@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
         /// <inheritdoc />
         internal CraftLibraryListRequestMsgData() { }
         public override CraftMessageType CraftMessageType => CraftMessageType.ListRequest;
+        
+        public override string ClassName { get; } = nameof(CraftLibraryListRequestMsgData);
     }
 }

@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Groups
 {
-    public class GroupBaseMsgData : MessageData
+    public abstract class GroupBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal GroupBaseMsgData() { }

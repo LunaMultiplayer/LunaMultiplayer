@@ -13,6 +13,8 @@ namespace LunaCommon.Message.Data.Kerbal
         public int KerbalsCount;
         public KerbalInfo[] Kerbals = new KerbalInfo[0];
 
+        public override string ClassName { get; } = nameof(KerbalReplyMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

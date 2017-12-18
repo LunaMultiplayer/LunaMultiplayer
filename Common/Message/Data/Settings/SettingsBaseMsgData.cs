@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Settings
 {
-    public class SettingsBaseMsgData : MessageData
+    public abstract class SettingsBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal SettingsBaseMsgData() { }

@@ -5,6 +5,11 @@ namespace LunaCommon.Message.Interface
     public interface IMessageData
     {
         /// <summary>
+        /// Name of the class
+        /// </summary>
+        string ClassName { get; }
+
+        /// <summary>
         /// Retrieves the version of the multiplayer
         /// </summary>
         string Version { get; }

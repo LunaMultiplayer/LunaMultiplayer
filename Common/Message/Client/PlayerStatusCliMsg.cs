@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Client
         internal PlayerStatusCliMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(PlayerStatusCliMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)PlayerStatusMessageType.Request] = typeof(PlayerStatusRequestMsgData),

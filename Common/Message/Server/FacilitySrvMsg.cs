@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Server
         internal FacilitySrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(FacilitySrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)FacilityMessageType.Collapse] = typeof(FacilityCollapseMsgData),

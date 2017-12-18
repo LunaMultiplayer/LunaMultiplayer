@@ -29,6 +29,8 @@ namespace LunaCommon.Message.Data.MasterServer
         public bool[] DropControlOnExitFlight = new bool[0];
         public bool[] DropControlOnExit = new bool[0];
 
+        public override string ClassName { get; } = nameof(MsReplyServersMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

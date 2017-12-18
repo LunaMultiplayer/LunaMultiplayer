@@ -12,6 +12,8 @@ namespace LunaCommon.Message.Data.Kerbal
 
         public string KerbalName;
 
+        public override string ClassName { get; } = nameof(KerbalRemoveMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

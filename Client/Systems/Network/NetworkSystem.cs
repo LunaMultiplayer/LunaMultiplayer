@@ -202,7 +202,7 @@ namespace LunaClient.Systems.Network
                     SystemsContainer.Get<MainSystem>().Status = "Groups synced";
                     SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingVessels;
-                    NetworkSimpleMessageSender.SendVesselListRequest();
+                    NetworkSimpleMessageSender.SendVesselsRequest();
                     break;
                 case ClientState.SyncingVessels:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing vessels";

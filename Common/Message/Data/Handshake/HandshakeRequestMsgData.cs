@@ -8,6 +8,6 @@ namespace LunaCommon.Message.Data.Handshake
         internal HandshakeRequestMsgData() { }
         public override HandshakeMessageType HandshakeMessageType => HandshakeMessageType.Request;
 
-        //Nothing here
+        public override string ClassName { get; } = nameof(HandshakeRequestMsgData);
     }
 }

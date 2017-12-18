@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Kerbal
 {
-    public class KerbalBaseMsgData : MessageData
+    public abstract class KerbalBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal KerbalBaseMsgData() { }

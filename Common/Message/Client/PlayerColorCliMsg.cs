@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Client
         internal PlayerColorCliMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(PlayerColorCliMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)PlayerColorMessageType.Request] = typeof(PlayerColorRequestMsgData),

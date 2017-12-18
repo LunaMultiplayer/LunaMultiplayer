@@ -12,6 +12,8 @@ namespace LunaCommon.Message.Data.Chat
 
         public string Message;
 
+        public override string ClassName { get; } = nameof(ChatConsoleMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

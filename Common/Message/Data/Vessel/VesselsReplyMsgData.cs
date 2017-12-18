@@ -13,6 +13,8 @@ namespace LunaCommon.Message.Data.Vessel
         public int VesselsCount;
         public VesselInfo[] VesselsData = new VesselInfo[0];
 
+        public override string ClassName { get; } = nameof(VesselsReplyMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

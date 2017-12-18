@@ -10,6 +10,9 @@ namespace LunaCommon.Message.Server
         /// <inheritdoc />
         internal ModSrvMsg() { }
 
+        /// <inheritdoc />
+        public override string ClassName { get; } = nameof(ModSrvMsg);
+
         public override ServerMessageType MessageType => ServerMessageType.Mod;
         protected override int DefaultChannel => SendReliably() ? 15 : 0;
         public override NetDeliveryMethod NetDeliveryMethod => SendReliably() ?

@@ -21,9 +21,6 @@ namespace LunaClient.Systems.VesselProtoSys
 
             switch (msgData.VesselMessageType)
             {
-                case VesselMessageType.ListReply:
-                    HandleVesselList((VesselListReplyMsgData)msgData);
-                    break;
                 case VesselMessageType.VesselsReply:
                     HandleVesselResponse((VesselsReplyMsgData)msgData);
                     break;
@@ -53,22 +50,6 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             MainSystem.NetworkState = ClientState.VesselsSynced;
-        }
-
-        /// <summary>
-        /// Here we receive the vessel list msg from the server. And we request all the vesseslw e don't have.
-        /// Before we used a cache system but it was a bad idea as protovessels change very often as they hold the orbit data, etc.
-        /// </summary>
-        private static void HandleVesselList(VesselListReplyMsgData messageData)
-        {
-            //Request the vessel data that we don't have.
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselsRequestMsgData>();
-
-            //Clone the array as the VesselListReplyMsgData will be recycled!
-            msgData.RequestList = messageData.Vessels.Select(v=> v.Clone() as string).ToArray();
-            msgData.RequestCount = messageData.VesselsCount;
-
-            System.MessageSender.SendMessage(msgData);
         }
     }
 }

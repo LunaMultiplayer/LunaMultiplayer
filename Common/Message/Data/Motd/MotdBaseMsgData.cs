@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Motd
 {
-    public class MotdBaseMsgData : MessageData
+    public abstract class MotdBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal MotdBaseMsgData() { }

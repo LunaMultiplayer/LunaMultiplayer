@@ -1,9 +1,9 @@
-﻿using System;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Server
@@ -13,6 +13,9 @@ namespace LunaCommon.Message.Server
         /// <inheritdoc />
         internal ChatSrvMsg() { }
 
+        /// <inheritdoc />
+        public override string ClassName { get; } = nameof(ChatSrvMsg);
+        
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {

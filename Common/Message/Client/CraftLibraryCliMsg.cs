@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Client
         internal CraftLibraryCliMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(CraftLibraryCliMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)CraftMessageType.ListRequest] = typeof(CraftLibraryListRequestMsgData),

@@ -13,8 +13,6 @@ namespace LunaCommon
     {
         public static T[] TrimArray<T>(T[] array, int size)
         {
-            if (size == array.Length) return array;
-
             var newArray = new T[size];
             Array.Copy(array, newArray, size);
             return newArray;

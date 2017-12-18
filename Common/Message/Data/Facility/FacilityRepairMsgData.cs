@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.Facility
         /// <inheritdoc />
         internal FacilityRepairMsgData() { }
         public override FacilityMessageType FacilityMessageType => FacilityMessageType.Repair;
+
+        public override string ClassName { get; } = nameof(FacilityRepairMsgData);
     }
 }

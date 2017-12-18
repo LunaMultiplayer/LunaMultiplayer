@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.MasterServer
 {
-    public class MsBaseMsgData : MessageData
+    public abstract class MsBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal MsBaseMsgData() { }

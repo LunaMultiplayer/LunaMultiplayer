@@ -57,6 +57,9 @@ namespace LunaCommon.Message.Base
         }
 
         /// <inheritdoc />
+        public abstract string ClassName { get; }
+
+        /// <inheritdoc />
         public IMessageData Data
         {
             get => _data;
@@ -119,9 +122,10 @@ namespace LunaCommon.Message.Base
         }
 
         /// <inheritdoc />
-        public void Recycle()
+        public void Recycle(bool recycleData = true)
         {
-            Data.Recycle();
+            if (recycleData)
+                Data.Recycle();
             MessageStore.RecycleMessage(this);
         }
 

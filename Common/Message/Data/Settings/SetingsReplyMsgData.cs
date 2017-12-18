@@ -66,6 +66,8 @@ namespace LunaCommon.Message.Data.Settings
         public int VesselDefinitionSendMsInterval;
         public bool ShowVesselsInThePast;
 
+        public override string ClassName { get; } = nameof(SettingsReplyMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

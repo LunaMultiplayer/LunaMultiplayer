@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.Warp
         /// <inheritdoc />
         internal WarpSubspacesRequestMsgData() { }
         public override WarpMessageType WarpMessageType => WarpMessageType.SubspacesRequest;
+
+        public override string ClassName { get; } = nameof(WarpSubspacesRequestMsgData);
     }
 }

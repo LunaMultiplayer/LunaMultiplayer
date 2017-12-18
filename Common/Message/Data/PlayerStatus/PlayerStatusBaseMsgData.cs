@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.PlayerStatus
 {
-    public class PlayerStatusBaseMsgData : MessageData
+    public abstract class PlayerStatusBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal PlayerStatusBaseMsgData() { }

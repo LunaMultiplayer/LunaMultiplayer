@@ -23,6 +23,9 @@ namespace LunaCommon.Message.Base
         /// <inheritdoc />
         public virtual ushort SubType => 0;
 
+        /// <inheritdoc />
+        public abstract string ClassName { get; }
+
         public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             lidgrenMsg.Write(SentTime);

@@ -6,5 +6,7 @@ namespace LunaCommon.Message.Data.Vessel
     {
         internal VesselProtoMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Proto;
+
+        public override string ClassName { get; } = nameof(VesselProtoMsgData);
     }
 }

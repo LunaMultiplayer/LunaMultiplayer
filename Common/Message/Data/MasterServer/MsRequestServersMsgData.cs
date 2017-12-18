@@ -12,6 +12,8 @@ namespace LunaCommon.Message.Data.MasterServer
 
         public string CurrentVersion;
 
+        public override string ClassName { get; } = nameof(MsRequestServersMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

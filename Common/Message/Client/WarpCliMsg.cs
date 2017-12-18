@@ -1,9 +1,9 @@
-﻿using System;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Client.Base;
 using LunaCommon.Message.Data.Warp;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Client
@@ -12,6 +12,9 @@ namespace LunaCommon.Message.Client
     {
         /// <inheritdoc />
         internal WarpCliMsg() { }
+
+        /// <inheritdoc />
+        public override string ClassName { get; } = nameof(WarpCliMsg);
 
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>

@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
-    public class VesselBaseMsgData : MessageData
+    public abstract class VesselBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal VesselBaseMsgData() { }

@@ -11,6 +11,8 @@ namespace LunaCommon.Message.Data.Handshake
         public override HandshakeMessageType HandshakeMessageType => HandshakeMessageType.Challenge;
 
         public byte[] Challenge = new byte[1024];
+        
+        public override string ClassName { get; } = nameof(HandshakeChallengeMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {

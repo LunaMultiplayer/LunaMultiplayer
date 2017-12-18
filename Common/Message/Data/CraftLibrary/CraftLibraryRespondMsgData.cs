@@ -18,6 +18,8 @@ namespace LunaCommon.Message.Data.CraftLibrary
         public int NumBytes;
         public byte[] CraftData = new byte[0];
 
+        public override string ClassName { get; } = nameof(CraftLibraryRespondMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

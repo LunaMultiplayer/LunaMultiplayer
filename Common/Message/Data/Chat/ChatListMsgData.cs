@@ -13,6 +13,8 @@ namespace LunaCommon.Message.Data.Chat
         public PlayerChatChannels[] PlayerChannels = new PlayerChatChannels[0];
         public int PlayerChannelsCount;
 
+        public override string ClassName { get; } = nameof(ChatListReplyMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

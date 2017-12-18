@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Flag
 {
-    public class FlagBaseMsgData : MessageData
+    public abstract class FlagBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal FlagBaseMsgData() { }

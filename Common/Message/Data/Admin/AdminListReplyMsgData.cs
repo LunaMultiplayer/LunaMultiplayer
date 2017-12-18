@@ -13,7 +13,9 @@ namespace LunaCommon.Message.Data.Admin
 
         public int AdminsNum;
         public string[] Admins = new string[0];
-        
+
+        public override string ClassName { get; } = nameof(AdminListReplyMsgData);
+
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalDeserialize(lidgrenMsg, dataCompressed);

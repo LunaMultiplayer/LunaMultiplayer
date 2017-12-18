@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Warp
 {
-    public class WarpBaseMsgData : MessageData
+    public abstract class WarpBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal WarpBaseMsgData() { }

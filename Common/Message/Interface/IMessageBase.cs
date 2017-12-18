@@ -3,9 +3,14 @@
 namespace LunaCommon.Message.Interface
 {
     public interface IMessageBase
-    {
+    {        
         /// <summary>
-        /// POCO class with the data that it handles
+        /// Name of the class
+        /// </summary>
+        string ClassName { get; }
+
+        /// <summary>
+        /// Class with the data that it handles
         /// </summary>
         IMessageData Data { get; }
 
@@ -60,7 +65,7 @@ namespace LunaCommon.Message.Interface
         /// <summary>
         /// Call this method to send the message back to the pool
         /// </summary>
-        void Recycle();
+        void Recycle(bool recycleData = true);
 
         /// <summary>
         /// Gets the message size in bytes

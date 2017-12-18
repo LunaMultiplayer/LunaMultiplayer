@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.Flag
         /// <inheritdoc />
         internal FlagListRequestMsgData() { }
         public override FlagMessageType FlagMessageType => FlagMessageType.ListRequest;
+
+        public override string ClassName { get; } = nameof(FlagListRequestMsgData);
     }
 }

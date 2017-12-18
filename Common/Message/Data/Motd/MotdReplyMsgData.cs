@@ -12,6 +12,8 @@ namespace LunaCommon.Message.Data.Motd
 
         public string MessageOfTheDay;
 
+        public override string ClassName { get; } = nameof(MotdReplyMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

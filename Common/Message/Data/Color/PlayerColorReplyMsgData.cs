@@ -13,6 +13,8 @@ namespace LunaCommon.Message.Data.Color
         public int PlayerColorsCount;
         public PlayerColor[] PlayersColors = new PlayerColor[0];
 
+        public override string ClassName { get; } = nameof(PlayerColorReplyMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

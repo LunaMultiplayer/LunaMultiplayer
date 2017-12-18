@@ -11,6 +11,8 @@ namespace LunaCommon.Message.Data.Facility
 
         public int Level;
 
+        public override string ClassName { get; } = nameof(FacilityUpgradeMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

@@ -8,8 +8,10 @@ namespace LunaCommon.Message.Data.Kerbal
         /// <inheritdoc />
         internal KerbalProtoMsgData() { }
         public override KerbalMessageType KerbalMessageType => KerbalMessageType.Proto;
-
+        
         public KerbalInfo Kerbal = new KerbalInfo();
+
+        public override string ClassName { get; } = nameof(KerbalProtoMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {

@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Lock
 {
-    public class LockBaseMsgData : MessageData
+    public abstract class LockBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal LockBaseMsgData() { }

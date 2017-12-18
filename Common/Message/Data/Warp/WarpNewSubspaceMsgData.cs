@@ -14,6 +14,8 @@ namespace LunaCommon.Message.Data.Warp
         public int SubspaceKey;
         public double ServerTimeDifference;
 
+        public override string ClassName { get; } = nameof(WarpNewSubspaceMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

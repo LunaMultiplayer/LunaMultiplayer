@@ -5,7 +5,7 @@ using System;
 
 namespace LunaCommon.Message.Data.Facility
 {
-    public class FacilityBaseMsgData : MessageData
+    public abstract class FacilityBaseMsgData : MessageData
     {
         /// <inheritdoc />
         internal FacilityBaseMsgData() { }

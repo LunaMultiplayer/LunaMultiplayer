@@ -14,16 +14,18 @@ namespace LunaCommon.Message.Data.Vessel
         //Avoid using reference types in this message as it can generate allocations and is sent VERY often.
         public Guid VesselId;
         public int BodyIndex;
-        public double[] LatLonAlt = new double[0];
-        public double[] NormalVector = new double[0];
-        public double[] Com = new double[0];
-        public double[] TransformPosition = new double[0];
-        public double[] Velocity = new double[0];
-        public double[] Orbit = new double[0];
+        public double[] LatLonAlt = new double[3];
+        public double[] NormalVector = new double[3];
+        public double[] Com = new double[3];
+        public double[] TransformPosition = new double[3];
+        public double[] Velocity = new double[3];
+        public double[] Orbit = new double[8];
         public bool Landed;
         public bool Splashed;
-        public float[] SrfRelRotation = new float[0];
+        public float[] SrfRelRotation = new float[4];
         public long TimeStamp;
+
+        public override string ClassName { get; } = nameof(VesselPositionMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {

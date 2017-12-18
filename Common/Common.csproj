@@ -66,6 +66,7 @@
     <Compile Include="Enums\ServerMessageType.cs" />
     <Compile Include="Enums\TerrainQuality.cs" />
     <Compile Include="Enums\WarpMode.cs" />
+    <Compile Include="Message\Base\ArrayPool.cs" />
     <Compile Include="Message\Base\StringUtil.cs" />
     <Compile Include="Message\Base\GuidUtil.cs" />
     <Compile Include="Message\Data\Flag\FlagInfo.cs" />
@@ -83,7 +84,6 @@
     <Compile Include="Locks\LockType.cs" />
     <Compile Include="LunaNetUtils.cs" />
     <Compile Include="MasterServerRetriever.cs" />
-    <Compile Include="Message\Base\ArrayPool.cs" />
     <Compile Include="Message\Base\CompressionHelper.cs" />
     <Compile Include="Message\Base\FactoryBase.cs" />
     <Compile Include="Message\Base\MessageBase.cs" />
@@ -196,8 +196,6 @@
     <Compile Include="Message\Data\Vessel\VesselBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselFlightStateMsgData.cs" />
-    <Compile Include="Message\Data\Vessel\VesselListReplyMsgData.cs" />
-    <Compile Include="Message\Data\Vessel\VesselListRequestMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselPositionMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselProtoMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselProtoBaseMsgData.cs" />

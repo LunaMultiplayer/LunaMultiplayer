@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Client
         internal FlagCliMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(FlagCliMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)FlagMessageType.ListRequest] = typeof(FlagListRequestMsgData),

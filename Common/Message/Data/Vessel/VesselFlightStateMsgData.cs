@@ -33,6 +33,8 @@ namespace LunaCommon.Message.Data.Vessel
         public float WheelSteerTrim;
         public long TimeStamp;
 
+        public override string ClassName { get; } = nameof(VesselFlightStateMsgData);
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalSerialize(lidgrenMsg, dataCompressed);

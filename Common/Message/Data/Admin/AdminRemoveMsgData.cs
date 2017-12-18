@@ -12,6 +12,8 @@ namespace LunaCommon.Message.Data.Admin
 
         public string PlayerName;
 
+        public override string ClassName { get; } = nameof(AdminRemoveMsgData);
+
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalDeserialize(lidgrenMsg, dataCompressed);

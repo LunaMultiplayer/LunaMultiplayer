@@ -1,9 +1,9 @@
-﻿using System;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Admin;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Generic;
 
 namespace LunaCommon.Message.Server
@@ -12,6 +12,9 @@ namespace LunaCommon.Message.Server
     {
         /// <inheritdoc />
         internal AdminSrvMsg() { }
+
+        /// <inheritdoc />
+        public override string ClassName { get; } = nameof(AdminSrvMsg);
 
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
@@ -23,6 +26,7 @@ namespace LunaCommon.Message.Server
 
         public override ServerMessageType MessageType => ServerMessageType.Admin;
         protected override int DefaultChannel => 16;
+
         //Must arrive but only the latest is important
         public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }
