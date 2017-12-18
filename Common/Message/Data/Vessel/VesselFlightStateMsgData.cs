@@ -41,6 +41,7 @@ namespace LunaCommon.Message.Data.Vessel
 
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(MainThrottle);
+            lidgrenMsg.Write(WheelThrottle);
             lidgrenMsg.Write(WheelThrottleTrim);
             lidgrenMsg.Write(X);
             lidgrenMsg.Write(Y);
@@ -66,6 +67,7 @@ namespace LunaCommon.Message.Data.Vessel
 
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
             MainThrottle = lidgrenMsg.ReadFloat();
+            WheelThrottle = lidgrenMsg.ReadFloat();
             WheelThrottleTrim = lidgrenMsg.ReadFloat();
             X = lidgrenMsg.ReadFloat();
             Y = lidgrenMsg.ReadFloat();
@@ -74,7 +76,6 @@ namespace LunaCommon.Message.Data.Vessel
             GearUp = lidgrenMsg.ReadBoolean();
             GearDown = lidgrenMsg.ReadBoolean();
             Headlight = lidgrenMsg.ReadBoolean();
-            WheelThrottle = lidgrenMsg.ReadFloat();
             Pitch = lidgrenMsg.ReadFloat();
             Roll = lidgrenMsg.ReadFloat();
             Yaw = lidgrenMsg.ReadFloat();
