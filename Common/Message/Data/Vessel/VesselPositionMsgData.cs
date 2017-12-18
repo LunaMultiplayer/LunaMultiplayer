@@ -96,7 +96,7 @@ namespace LunaCommon.Message.Data.Vessel
             Splashed = lidgrenMsg.ReadBoolean();
 
             SrfRelRotation = ArrayPool<float>.ClaimWithExactLength(4);
-            for (var i = 0; i < 8; i++)
+            for (var i = 0; i < 4; i++)
                 SrfRelRotation[i] = lidgrenMsg.ReadFloat();
 
             TimeStamp = lidgrenMsg.ReadInt64();
