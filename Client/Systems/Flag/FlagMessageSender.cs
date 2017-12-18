@@ -19,22 +19,11 @@ namespace LunaClient.Systems.Flag
         public FlagDataMsgData GetFlagMessageData(string flagName, string fullFlagPath)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<FlagDataMsgData>();
-            if (msgData.Flag != null)
-            {
-                msgData.Flag.Owner = SettingsSystem.CurrentSettings.PlayerName;
-                msgData.Flag.FlagName = flagName;
-                msgData.Flag.FlagData = File.ReadAllBytes(fullFlagPath);
-            }
-            else
-            {
-                //Try to avoid the creation of new classes to not generate garbage...
-                msgData.Flag = new FlagInfo
-                {
-                    Owner = SettingsSystem.CurrentSettings.PlayerName,
-                    FlagName = flagName,
-                    FlagData = File.ReadAllBytes(fullFlagPath)
-                };
-            }
+            msgData.Flag.Owner = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.Flag.FlagName = flagName;
+            msgData.Flag.FlagData = File.ReadAllBytes(fullFlagPath);
+            msgData.Flag.NumBytes = msgData.Flag.FlagData.Length;
+
             return msgData;
         }
     }

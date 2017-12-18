@@ -2,7 +2,6 @@ using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using System.Collections.Generic;
-using System.Globalization;
 using UnityEngine;
 using Random = System.Random;
 
@@ -125,26 +124,7 @@ namespace LunaClient.Systems.PlayerColorSys
                 vessel.orbitDriver.Renderer?.SetColor(colour);
             }
         }
-
-        public string ConvertColorToString(Color convertColour)
-        {
-            var returnArray = new[]
-            {
-                convertColour.r.ToString(CultureInfo.InvariantCulture),
-                convertColour.g.ToString(CultureInfo.InvariantCulture),
-                convertColour.b.ToString(CultureInfo.InvariantCulture)
-            };
-
-            return string.Join(";", returnArray);
-        }
-
-        public Color ConvertStringToColor(string convertArray)
-        {
-            var array = convertArray.Split(';');
-
-            return new Color(float.Parse(array[0]), float.Parse(array[1]), float.Parse(array[2]));
-        }
-
+        
         #endregion
     }
 }

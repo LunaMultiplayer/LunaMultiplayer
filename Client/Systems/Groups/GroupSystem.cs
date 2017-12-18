@@ -3,6 +3,8 @@ using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Groups;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace LunaClient.Systems.Groups
 {
@@ -22,11 +24,13 @@ namespace LunaClient.Systems.Groups
         {
             if (Groups.TryGetValue(groupName, out var existingVal))
             {
-                if (!existingVal.Members.Contains(SettingsSystem.CurrentSettings.PlayerName) && 
-                    !existingVal.Invited.Contains(SettingsSystem.CurrentSettings.PlayerName))
+                if (!existingVal.Members.Any(m=> m == SettingsSystem.CurrentSettings.PlayerName) && 
+                    !existingVal.Invited.Any(m => m == SettingsSystem.CurrentSettings.PlayerName))
                 {
                     var expectedGroup = existingVal.Clone();
-                    expectedGroup.Invited.Add(SettingsSystem.CurrentSettings.PlayerName);
+
+                    var newInvited = new List<string>(expectedGroup.Invited) {SettingsSystem.CurrentSettings.PlayerName};
+                    expectedGroup.Invited = newInvited.ToArray();
 
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
                     msgData.Group = expectedGroup;
@@ -65,8 +69,12 @@ namespace LunaClient.Systems.Groups
             {
                 //TODO: remove this clone and do as with flags to avoid garbage
                 var expectedGroup = existingVal.Clone();
-                expectedGroup.Members.Add(username);
-                expectedGroup.Invited.Remove(username);
+
+                var newMembers = new List<string>(expectedGroup.Members) { username };
+                expectedGroup.Members = newMembers.ToArray();
+
+                var newInvited = new List<string>(expectedGroup.Invited.Except(new []{username}));
+                expectedGroup.Invited = newInvited.ToArray();
 
                 var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
                 msgData.Group = expectedGroup;
@@ -82,8 +90,12 @@ namespace LunaClient.Systems.Groups
             {
                 //TODO: remove this clone and do as with flags to avoid garbage
                 var expectedGroup = existingVal.Clone();
-                expectedGroup.Members.Remove(username);
-                expectedGroup.Invited.Remove(username);
+
+                var newMembers = new List<string>(expectedGroup.Members.Except(new[] { username })) { username };
+                expectedGroup.Members = newMembers.ToArray();
+
+                var newInvited = new List<string>(expectedGroup.Invited.Except(new[] { username }));
+                expectedGroup.Invited = newInvited.ToArray();
 
                 var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<GroupUpdateMsgData>();
                 msgData.Group = expectedGroup;

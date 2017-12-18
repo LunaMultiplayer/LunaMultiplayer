@@ -14,7 +14,7 @@ namespace LunaClient.Systems.Flag
 
         public ExtendedFlagInfo(FlagInfo flagInfo)
         {
-            FlagData = flagInfo.FlagData;
+            FlagData = Common.TrimArray(flagInfo.FlagData, flagInfo.NumBytes);
             Owner = flagInfo.Owner;
             FlagName = flagInfo.FlagName;
         }

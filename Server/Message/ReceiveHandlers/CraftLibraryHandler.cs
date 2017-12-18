@@ -97,18 +97,18 @@ namespace Server.Message.ReceiveHandlers
             var hasCraft = FileHandler.FolderExists(playerPath) && FileHandler.FolderExists(typePath) &&
                            FileHandler.FileExists(craftFile);
 
-            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryRespondMsgData>();
-            msgData.CraftOwner = message.CraftOwner;
-            msgData.RequestedType = message.RequestedType;
-            msgData.HasCraft = hasCraft;
-
             if (hasCraft)
             {
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryRespondMsgData>();
+                msgData.CraftOwner = message.CraftOwner;
+                msgData.RequestedName = message.RequestedName;
+                msgData.RequestedType = message.RequestedType;
                 msgData.CraftData = FileHandler.ReadFile(craftFile);
                 msgData.NumBytes = msgData.CraftData.Length;
+
+                MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
             }
 
-            MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
         }
 
         public void HandleUploadFileMessage(ClientStructure client, CraftLibraryUploadMsgData message)

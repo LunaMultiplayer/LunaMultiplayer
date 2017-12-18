@@ -84,7 +84,7 @@ namespace LunaClient.Systems.Status
                     LastPlayerStatus.VesselText = MyPlayerStatus.VesselText;
                     LastPlayerStatus.StatusText = MyPlayerStatus.StatusText;
 
-                    MessageSender.SendPlayerStatus(MyPlayerStatus);
+                    MessageSender.SendOwnStatus();
                 }
             }
         }

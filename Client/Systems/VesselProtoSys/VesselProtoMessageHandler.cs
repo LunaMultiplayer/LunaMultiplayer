@@ -7,6 +7,7 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System.Collections.Concurrent;
+using UniLinq;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -38,17 +39,17 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private static void HandleVesselProto(VesselProtoBaseMsgData messageData)
         {
-            if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.VesselId))
-                VesselsProtoStore.HandleVesselProtoData(messageData.VesselData, messageData.VesselId);
+            if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.Vessel.VesselId))
+                VesselsProtoStore.HandleVesselProtoData(messageData.Vessel.Data, messageData.Vessel.NumBytes, messageData.Vessel.VesselId);
         }
 
         private static void HandleVesselResponse(VesselsReplyMsgData messageData)
         {
             //We read the vessels syncronously so when we start the game we have the dictionary of all the vessels already loaded
-            foreach (var vesselDataKv in messageData.VesselsData)
+            for (var i = 0; i < messageData.VesselsCount; i++)
             {
-                if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselDataKv.Key))
-                    VesselsProtoStore.HandleVesselProtoData(vesselDataKv.Value, vesselDataKv.Key, true);
+                if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.VesselsData[i].VesselId))
+                    VesselsProtoStore.HandleVesselProtoData(messageData.VesselsData[i].Data, messageData.VesselsData[i].NumBytes, messageData.VesselsData[i].VesselId, true);
             }
 
             MainSystem.NetworkState = ClientState.VesselsSynced;
@@ -62,7 +63,10 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             //Request the vessel data that we don't have.
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselsRequestMsgData>();
-            msgData.RequestList = messageData.Vessels;
+
+            //Clone the array as the VesselListReplyMsgData will be recycled!
+            msgData.RequestList = messageData.Vessels.Select(v=> v.Clone() as string).ToArray();
+            msgData.RequestCount = messageData.VesselsCount;
 
             System.MessageSender.SendMessage(msgData);
         }

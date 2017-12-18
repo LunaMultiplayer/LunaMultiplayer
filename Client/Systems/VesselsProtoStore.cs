@@ -21,7 +21,7 @@ namespace LunaClient.Systems
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
         /// </summary>
-        public static void HandleVesselProtoData(byte[] vesselData, Guid vesselId, bool runSyncronously = false)
+        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, bool runSyncronously = false)
         {
             if (runSyncronously)
                 HandleData();
@@ -32,11 +32,11 @@ namespace LunaClient.Systems
             {
                 if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
                 {
-                    vesselUpdate.Update(vesselData, vesselId);
+                    vesselUpdate.Update(vesselData, numBytes, vesselId);
                 }
                 else
                 {
-                    AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, vesselId));
+                    AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, numBytes, vesselId));
                 }
 
             }
@@ -78,14 +78,14 @@ namespace LunaClient.Systems
         public bool ShouldBeLoaded => SettingsSystem.ServerSettings.ShowVesselsInThePast ||
                                       !VesselCommon.VesselIsControlledAndInPastSubspace(VesselId);
 
-        public VesselProtoUpdate(byte[] vesselData, Guid vesselId)
+        public VesselProtoUpdate(byte[] vesselData, int numBytes, Guid vesselId)
         {
             VesselId = vesselId;
-            VesselNode = ConfigNodeSerializer.Deserialize(vesselData);
+            VesselNode = ConfigNodeSerializer.Deserialize(vesselData, numBytes);
             VesselHash = Common.CalculateSha256Hash(vesselData);
         }
 
-        public void Update(byte[] vesselData, Guid vesselId)
+        public void Update(byte[] vesselData, int numBytes, Guid vesselId)
         {
             if (VesselId != vesselId)
             {
@@ -96,7 +96,7 @@ namespace LunaClient.Systems
             var newHash = Common.CalculateSha256Hash(vesselData);
             if (VesselHash == newHash) return; //Skip Updating as the hash is the same
 
-            VesselNode = ConfigNodeSerializer.Deserialize(vesselData);
+            VesselNode = ConfigNodeSerializer.Deserialize(vesselData, numBytes);
             ProtoVessel = VesselCommon.CreateSafeProtoVesselFromConfigNode(VesselNode, VesselId);
             VesselHash = newHash;
             UpdatesChecked = false;

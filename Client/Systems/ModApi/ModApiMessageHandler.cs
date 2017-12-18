@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaCommon;
 using LunaCommon.Message.Data;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -18,7 +19,7 @@ namespace LunaClient.Systems.ModApi
 
             //Clone it as after that the mesage will be recycled
             //TODO: can this be improved to avoid garbage?
-            var modData = msgData.Data.Clone() as byte[];
+            var modData = Common.TrimArray(msgData.Data.Clone() as byte[], msgData.NumBytes);
             lock (System.EventLock)
             {
                 if (System.UpdateQueue.ContainsKey(modName))

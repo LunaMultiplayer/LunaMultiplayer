@@ -24,9 +24,9 @@ namespace LunaClient.Systems.Flag
                 case FlagMessageType.ListResponse:
                     {
                         var data = (FlagListResponseMsgData)msgData;
-                        foreach (var flag in data.FlagFiles)
+                        for (var i = 0; i < data.FlagCount; i++)
                         {
-                            var extendedFlagInfo = new ExtendedFlagInfo(flag);
+                            var extendedFlagInfo = new ExtendedFlagInfo(data.FlagFiles[i]);
                             System.ServerFlags.TryAdd(extendedFlagInfo.FlagName, extendedFlagInfo);
                         }
                         MainSystem.NetworkState = ClientState.FlagsSynced;

@@ -9,11 +9,11 @@ namespace LunaClient.VesselUtilities
         private static readonly object LockObj = new object();
         private static readonly ConfigNode ConfigNode = new ConfigNode();
 
-        public static ProtoVessel DeserializeVessel(byte[] data)
+        public static ProtoVessel DeserializeVessel(byte[] data, int numBytes)
         {
             try
             {
-                var vesselNode = ConfigNodeSerializer.Deserialize(data);
+                var vesselNode = ConfigNodeSerializer.Deserialize(data, numBytes);
                 var configGuid = vesselNode?.GetValue("pid");
 
                 return VesselCommon.CreateSafeProtoVesselFromConfigNode(vesselNode, new Guid(configGuid));

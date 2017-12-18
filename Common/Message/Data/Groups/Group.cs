@@ -1,6 +1,7 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message.Base;
 using System;
+using UniLinq;
 
 namespace LunaCommon.Message.Data.Groups
 {
@@ -18,7 +19,17 @@ namespace LunaCommon.Message.Data.Groups
         
         public Group Clone()
         {
-            return MemberwiseClone() as Group;
+            if (MemberwiseClone() is Group obj)
+            {
+                obj.Name = Name.Clone() as string;
+                obj.Owner = Owner.Clone() as string;
+                obj.Members = Members.Select(m => m.Clone() as string).ToArray();
+                obj.Invited = Invited.Select(m => m.Clone() as string).ToArray();
+
+                return obj;
+            }
+
+            return null;
         }
         
         public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)

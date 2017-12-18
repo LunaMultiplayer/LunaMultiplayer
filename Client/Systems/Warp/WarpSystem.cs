@@ -1,10 +1,8 @@
 using LunaClient.Base;
-using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
-using LunaCommon.Message.Data.Warp;
 using System.Collections.Concurrent;
 using UniLinq;
 
@@ -34,7 +32,7 @@ namespace LunaClient.Systems.Warp
                         ClientSubspaceList.TryAdd(SettingsSystem.CurrentSettings.PlayerName, 0);
 
                     ClientSubspaceList[SettingsSystem.CurrentSettings.PlayerName] = value;
-                    SendChangeSubspaceMsg(value);
+                    MessageSender.SendChangeSubspaceMsg(value);
 
                     if (value > 0 && !SkipSubspaceProcess)
                         ProcessNewSubspace();
@@ -104,7 +102,7 @@ namespace LunaClient.Systems.Warp
             {
                 //We stopped warping so send our new subspace
                 WaitingSubspaceIdFromServer = true;
-                SendNewSubspace();
+                MessageSender.SendNewSubspace();
             }
         }
 
@@ -186,33 +184,12 @@ namespace LunaClient.Systems.Warp
             return Subspaces.ContainsKey(subspace) ? TimeSyncerSystem.ServerClockSec + Subspaces[subspace] : 0;
         }
 
-        public void SendChangeSubspaceMsg(int subspaceId)
-        {
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<WarpChangeSubspaceMsgData>();
-            msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
-            msgData.Subspace = subspaceId;
-
-            MessageSender.SendMessage(msgData);
-        }
 
         public int GetPlayerSubspace(string playerName)
         {
             if (ClientSubspaceList.ContainsKey(playerName))
                 return ClientSubspaceList[playerName];
             return 0;
-        }
-
-        /// <summary>
-        /// Sends the new subspace that we jumped into
-        /// </summary>
-        public void SendNewSubspace()
-        {
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<WarpNewSubspaceMsgData>();
-            msgData.ServerTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.ServerClockSec;
-            msgData.PlayerCreator = SettingsSystem.CurrentSettings.PlayerName;
-            //we don't send the SubspaceKey as it will be given by the server except when warping that we set it to -1
-
-            MessageSender.SendMessage(msgData);
         }
 
         public void DisplayMessage(string messageText, float messageDuration)

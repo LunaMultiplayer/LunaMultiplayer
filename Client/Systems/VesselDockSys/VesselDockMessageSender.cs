@@ -25,6 +25,7 @@ namespace LunaClient.Systems.VesselDockSys
                 msgData.WeakVesselId = dock.WeakVesselId;
                 msgData.DominantVesselId = dock.DominantVesselId;
                 msgData.FinalVesselData = vesselBytes;
+                msgData.NumBytes = vesselBytes.Length;
                 msgData.SubspaceId = subspaceId;
 
                 if (delaySeconds > 0)

@@ -22,19 +22,21 @@ namespace LunaClient.Systems.Warp
                 case WarpMessageType.SubspacesReply:
                     {
                         var data = (WarpSubspacesReplyMsgData)msgData;
-                        for (var i = 0; i < data.SubspaceKey.Length; i++)
+                        for (var i = 0; i < data.SubspaceCount; i++)
                         {
-                            AddSubspace(data.SubspaceKey[i], data.SubspaceTime[i]);
-                        }
-                        foreach (var ps in data.Players)
-                        {
-                            if (System.ClientSubspaceList.ContainsKey(ps.Value))
+                            var subspaceKey = data.Subspaces[i].SubspaceKey;
+                            AddSubspace(subspaceKey, data.Subspaces[i].SubspaceTime);
+                            for (var j = 0; j < data.Subspaces[i].PlayerCount; j++)
                             {
-                                System.ClientSubspaceList[ps.Value] = ps.Key;
-                            }
-                            else
-                            {
-                                System.ClientSubspaceList.TryAdd(ps.Value, ps.Key);
+                                var player = data.Subspaces[i].Players[j];
+                                if (System.ClientSubspaceList.ContainsKey(player))
+                                {
+                                    System.ClientSubspaceList[player] = subspaceKey;
+                                }
+                                else
+                                {
+                                    System.ClientSubspaceList.TryAdd(player, subspaceKey);
+                                }
                             }
                         }
 

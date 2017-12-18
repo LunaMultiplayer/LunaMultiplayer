@@ -35,7 +35,7 @@ namespace LunaClient.Systems.VesselDockSys
             }
             if (FlightGlobals.ActiveVessel?.id == msgData.DominantVesselId && !VesselCommon.IsSpectating)
             {
-                var newProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData);
+                var newProto = VesselSerializer.DeserializeVessel(msgData.FinalVesselData, msgData.NumBytes);
 
                 /* This is a strange case were we didn't detect the docking on time and the weak vessel send the new definition...
                  * Usually it happens when a vessel in a future subspace docks with a vessel in the past and the vessel in the past is the dominant vessel
@@ -57,7 +57,7 @@ namespace LunaClient.Systems.VesselDockSys
 
             //Some other 2 players docked so just remove the weak vessel.
             SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(msgData.WeakVesselId);
-            VesselsProtoStore.HandleVesselProtoData(msgData.FinalVesselData, msgData.DominantVesselId);
+            VesselsProtoStore.HandleVesselProtoData(msgData.FinalVesselData, msgData.NumBytes, msgData.DominantVesselId);
         }
     }
 }

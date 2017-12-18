@@ -18,8 +18,8 @@ namespace LunaClient.Systems.PlayerColorSys
         public void SendPlayerColorToServer()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<PlayerColorSetMsgData>();
-            msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
-            msgData.Color = System.ConvertColorToString(SettingsSystem.CurrentSettings.PlayerColor);
+            msgData.PlayerColor.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.PlayerColor.Color = SettingsSystem.CurrentSettings.PlayerColor;
             
             SendMessage(msgData);
         }

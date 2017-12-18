@@ -29,7 +29,7 @@ namespace LunaClient.Systems.Warp
                 {
                     //We are warping so set the subspace to -1
                     System.CurrentSubspace = -1;
-                    System.SendChangeSubspaceMsg(-1);
+                    System.MessageSender.SendChangeSubspaceMsg(-1);
                 }
             }
             //Detecting here if warp has stopped (TimeWarp.CurrentRateIndex == 0 && System.CurrentSubspace == -1) is not reliable so we use a routine to check it

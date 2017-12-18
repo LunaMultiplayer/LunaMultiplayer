@@ -18,7 +18,7 @@ namespace LunaClient.Systems.VesselPositionSys
         private CelestialBody _body;
         public CelestialBody Body
         {
-            get { return _body ?? (_body = FlightGlobals.Bodies.Find(b => b.bodyName == BodyName)); }
+            get { return _body ?? (_body = FlightGlobals.Bodies.Find(b => b.flightGlobalsIndex == BodyIndex)); }
             set => _body = value;
         }
 

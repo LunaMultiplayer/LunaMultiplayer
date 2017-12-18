@@ -15,7 +15,7 @@ namespace LunaClient.Systems.VesselPositionSys
             return new VesselPositionUpdate
             {
                 VesselId = msgData.VesselId,
-                BodyName = msgData.BodyName,
+                BodyIndex = msgData.BodyIndex,
                 SrfRelRotation = msgData.SrfRelRotation,
                 TransformPosition = msgData.TransformPosition,
                 Velocity = msgData.Velocity,
@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!(msg.Data is VesselPositionMsgData msgData)) return null;
 
             update.VesselId = msgData.VesselId;
-            update.BodyName = msgData.BodyIndex;
+            update.BodyIndex = msgData.BodyIndex;
             update.SrfRelRotation = msgData.SrfRelRotation;
             update.TransformPosition = msgData.TransformPosition;
             update.Velocity = msgData.Velocity;
@@ -52,7 +52,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public static VesselPositionUpdate UpdateFromUpdate(VesselPositionUpdate update, VesselPositionUpdate updateToUpdate)
         {
             updateToUpdate.VesselId = update.VesselId;
-            updateToUpdate.BodyName = update.BodyName;
+            updateToUpdate.BodyIndex = update.BodyIndex;
             updateToUpdate.SrfRelRotation = update.SrfRelRotation;
             updateToUpdate.TransformPosition = update.TransformPosition;
             updateToUpdate.Velocity = update.Velocity;
@@ -73,7 +73,7 @@ namespace LunaClient.Systems.VesselPositionSys
             try
             {
                 msgData.VesselId = vessel.id;
-                msgData.BodyName = vessel.mainBody.bodyName;
+                msgData.BodyIndex = vessel.mainBody.flightGlobalsIndex;
 
                 SetSrfRelRotation(vessel, msgData);
                 SetTransformPosition(vessel, msgData);

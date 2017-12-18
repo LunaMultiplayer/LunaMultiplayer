@@ -19,23 +19,23 @@ namespace LunaClient.Systems.Scenario
 
             if (msgData.ScenarioMessageType == ScenarioMessageType.Data)
             {
-                var data = ((ScenarioDataMsgData)msgData).ScenarioNameData;
-                foreach (var scenario in data)
+                var data = (ScenarioDataMsgData)msgData;
+                for (var i = 0; i < data.ScenarioCount; i++)
                 {
-                    var scenarioNode = ConfigNodeSerializer.Deserialize(scenario.Value);
+                    var scenarioNode = ConfigNodeSerializer.Deserialize(data.ScenariosData[i].Data, data.ScenariosData[i].NumBytes);
                     if (scenarioNode != null)
                     {
                         var entry = new ScenarioEntry
                         {
-                            ScenarioName = scenario.Key,
+                            ScenarioName = data.ScenariosData[i].Module,
                             ScenarioNode = scenarioNode
                         };
                         System.ScenarioQueue.Enqueue(entry);
                     }
                     else
                     {
-                        LunaLog.LogError($"[LMP]: Scenario data has been lost for {scenario.Key}");
-                        ScreenMessages.PostScreenMessage($"Scenario data has been lost for {scenario.Key}", 5f, ScreenMessageStyle.UPPER_CENTER);
+                        LunaLog.LogError($"[LMP]: Scenario data has been lost for {data.ScenariosData[i].Module}");
+                        ScreenMessages.PostScreenMessage($"Scenario data has been lost for {data.ScenariosData[i].Module}", 5f, ScreenMessageStyle.UPPER_CENTER);
                     }
                 }
                 MainSystem.NetworkState = ClientState.ScneariosSynced;
