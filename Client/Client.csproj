@@ -79,6 +79,7 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
+    <Compile Include="Systems\VesselProtoSys\VesselProtoRefresh.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselUpdater.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\OutdatedVersionDialog.cs" />
