@@ -2,9 +2,6 @@
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using DataDeserializer = LunaCommon.Message.Serialization.DataDeserializer;
-using DataSerializer = LunaCommon.Message.Serialization.DataSerializer;
 
 namespace LunaCommon.Message.Base
 {
@@ -90,7 +87,7 @@ namespace LunaCommon.Message.Base
         public abstract NetDeliveryMethod NetDeliveryMethod { get; }
 
         /// <inheritdoc />
-        public virtual IMessageData Deserialize(ushort subType, MemoryStream data, bool decompress)
+        public virtual IMessageData GetMessageData(ushort subType)
         {
             if (!SubTypeDictionary.ContainsKey(subType))
             {
@@ -98,116 +95,40 @@ namespace LunaCommon.Message.Base
             }
 
             var msgDataType = SubTypeDictionary[subType];
-            var msgData = MessageStore.GetMessageData(msgDataType);
-
-            if (decompress)
-            {
-                var dataSize = (int) data.Length - (int) data.Position;
-                var dataWithoutHeader = ArrayPool<byte>.Claim(dataSize);
-                data.Read(dataWithoutHeader, 0, dataSize);
-
-                var decompressed = CompressionHelper.DecompressBytes(dataWithoutHeader);
-                using (var decompressedStream = StreamManager.MemoryStreamManager.GetStream("", decompressed, 0, decompressed.Length))
-                {
-                    var msg = DataDeserializer.Deserialize(this, msgData, decompressedStream);
-                    ArrayPool<byte>.Release(ref dataWithoutHeader);
-                    return msg;
-                }
-            }
-
-            return DataDeserializer.Deserialize(this, msgData, data);
+            return MessageStore.GetMessageData(msgDataType);
         }
 
         /// <inheritdoc />
         public bool VersionMismatch { get; set; }
 
         /// <inheritdoc />
-        public byte[] Serialize(bool compress, out int totalLength)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            compress = compress && !AvoidCompression;
-
-            //This memory stream is taken from a pool so it's reused
-            using (var memoryStream = StreamManager.MemoryStreamManager.GetStream())
+            try
             {
-                try
-                {
-                    //Write the class to the memory stream and serialize it to an array
-                    DataSerializer.Serialize(Data, memoryStream);
-                    var data = memoryStream.ToArray();
+                lidgrenMsg.Write(MessageTypeId);
+                lidgrenMsg.Write(Data.SubType);
+                lidgrenMsg.Write(compressData);
 
-                    if (compress)
-                    {
-                        var dataCompressed = CompressionHelper.CompressBytes(data);
-                        compress = dataCompressed.Length < data.Length;
-                        if (compress)
-                        {
-                            using (var compressedMemoryStream = StreamManager.MemoryStreamManager.GetStream("", dataCompressed, 0, dataCompressed.Length))
-                            {
-                                data = compressedMemoryStream.ToArray();
-                            }
-                        }
-                    }
-
-                    var header = SerializeHeaderData(Convert.ToUInt32(data.Length), compress);
-                    totalLength = MessageConstants.HeaderLength + data.Length;
-
-                    //The array pool does NOT give you an array with an exact length!
-                    //It gives you an equal or usually a bigger one!
-                    var fullData = ArrayPool<byte>.Claim(totalLength);
-
-                    //Copy the header to the pooled array
-                    Array.Copy(header, 0, fullData, 0, MessageConstants.HeaderLength);
-                    //Copy the data to the pooled array
-                    data.CopyTo(fullData, MessageConstants.HeaderLength);
-
-                    return fullData;
-                }
-                catch (Exception e)
-                {
-                    throw new Exception($"Error serializing message! MsgDataType: {Data.GetType()} Exception: {e}");
-                }
+                Data.Serialize(lidgrenMsg, compressData);
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Error serializing message! MsgDataType: {Data.GetType()} Exception: {e}");
             }
         }
 
         /// <inheritdoc />
         public void Recycle()
         {
+            Data.Recycle();
             MessageStore.RecycleMessage(this);
         }
 
-        /// <summary>
-        ///     Serializes the header information
-        /// </summary>
-        /// <param name="dataLength">Length of the message data without the header</param>
-        /// <param name="dataCompressed">Is data compressed or not</param>
-        /// <returns>Byte with the header serialized</returns>
-        private byte[] SerializeHeaderData(uint dataLength, bool dataCompressed)
+        /// <inheritdoc />
+        public int GetMessageSize(bool dataCompressed)
         {
-            //The array pool does NOT give you an array with an exact length!
-            //It gives you an equal or usually a bigger one!
-            var headerData = ArrayPool<byte>.Claim(MessageConstants.HeaderLength);
-
-            var typeBytes = BitConverter.GetBytes(MessageTypeId);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(typeBytes);
-            typeBytes.CopyTo(headerData, MessageConstants.MessageTypeStartIndex);
-
-            var subTypeBytes = BitConverter.GetBytes(Data.SubType);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(subTypeBytes);
-            subTypeBytes.CopyTo(headerData, MessageConstants.MessageSubTypeStartIndex);
-
-            var lengthBytes = BitConverter.GetBytes(dataLength);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(lengthBytes);
-            lengthBytes.CopyTo(headerData, MessageConstants.MessageLengthStartIndex);
-
-            var compressedByte = BitConverter.GetBytes(dataCompressed);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(compressedByte);
-            compressedByte.CopyTo(headerData, MessageConstants.MessageCompressionValueIndex);
-
-            return headerData;
+            return sizeof(ushort) + sizeof(ushort) + sizeof(bool) + Data.GetMessageSize(dataCompressed);
         }
     }
 }

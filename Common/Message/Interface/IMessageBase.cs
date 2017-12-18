@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using System.IO;
 
 namespace LunaCommon.Message.Interface
 {
@@ -46,25 +45,26 @@ namespace LunaCommon.Message.Interface
         bool AvoidCompression { get; }
 
         /// <summary>
-        /// This method creates a POCO object based on the array without the header
+        /// Retrieves a message data from the pool based on the subtype
         /// </summary>
-        /// <param name="messageSubType">Message subtype (Chat-console is a subtype of chatbase for example)</param>
-        /// <param name="data">The compressed data to read from. Without the header</param>
-        /// <param name="decompress">Decompress the data or not</param>
-        /// <returns>The POCO data structure with it's properties filled</returns>
-        IMessageData Deserialize(ushort messageSubType, MemoryStream data, bool decompress);
+        IMessageData GetMessageData(ushort subType);
 
         /// <summary>
         /// This method retrieves the message as a byte array with it's 8 byte header at the beginning
         /// </summary>
-        /// <param name="compress">Compress the message or not</param>
-        /// <param name="totalLength">Total message length</param>
+        /// <param name="lidgrenMsg">Lidgren message to serialize to</param>
+        /// <param name="compressData">Compress the message or not</param>
         /// <returns>Mesage as a byte array with it's header</returns>
-        byte[] Serialize(bool compress, out int totalLength);
+        void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData);
 
         /// <summary>
         /// Call this method to send the message back to the pool
         /// </summary>
         void Recycle();
+
+        /// <summary>
+        /// Gets the message size in bytes
+        /// </summary>
+        int GetMessageSize(bool dataCompressed);
     }
 }

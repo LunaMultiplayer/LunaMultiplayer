@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using LunaCommon.Flag;
-using LunaCommon.Message.Data.Flag;
+﻿using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Context;
 using Server.Log;
 using Server.Server;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace Server.System
 {
@@ -21,7 +20,7 @@ namespace Server.System
             if (!FileHandler.FolderExists(playerFlagPath))
                 FileHandler.FolderCreate(playerFlagPath);
             LunaLog.Debug($"Saving flag {message.Flag.FlagName} from {client.PlayerName}");
-            FileHandler.WriteToFile(Path.Combine(playerFlagPath, message.Flag.FlagName), message.Flag.FlagData);
+            FileHandler.WriteToFile(Path.Combine(playerFlagPath, message.Flag.FlagName), message.Flag.FlagData, message.Flag.NumBytes);
 
             MessageQueuer.SendToAllClients<FlagSrvMsg>(message);
         }
@@ -62,6 +61,7 @@ namespace Server.System
 
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<FlagListResponseMsgData>();
             msgData.FlagFiles = flagList.Values.ToArray();
+            msgData.FlagCount = msgData.FlagFiles.Length;
 
             MessageQueuer.SendToClient<FlagSrvMsg>(client, msgData);
         }

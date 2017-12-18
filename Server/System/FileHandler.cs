@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Server.Log;
+using Server.Utilities;
+using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-using Server.Log;
-using Server.Utilities;
 
 namespace Server.System
 {
@@ -43,11 +43,15 @@ namespace Server.System
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <param name="data">Data to insert</param>
-        public static void WriteToFile(string path, byte[] data)
+        /// <param name="numBytes">Number of bytes to write</param>
+        public static void WriteToFile(string path, byte[] data, int numBytes)
         {
             lock (GetLockSemaphore(path))
             {
-                File.WriteAllBytes(path, data);
+                using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
+                {
+                    fs.Write(data, 0, numBytes);
+                }
             }
         }
 

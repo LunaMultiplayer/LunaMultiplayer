@@ -2,7 +2,6 @@
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
-using LunaCommon.Flag;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Interface;

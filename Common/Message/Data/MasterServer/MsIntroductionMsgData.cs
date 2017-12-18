@@ -1,4 +1,6 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.MasterServer
 {
@@ -8,8 +10,31 @@ namespace LunaCommon.Message.Data.MasterServer
         internal MsIntroductionMsgData() { }
         public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.Introduction;
 
-        public long Id { get; set; }
-        public string InternalEndpoint { get; set; }
-        public string Token { get; set; }
+        public long Id;
+        public string InternalEndpoint;
+        public string Token;
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalSerialize(lidgrenMsg, dataCompressed);
+
+            lidgrenMsg.Write(Id);
+            lidgrenMsg.Write(InternalEndpoint);
+            lidgrenMsg.Write(Token);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+
+            Id = lidgrenMsg.ReadInt64();
+            InternalEndpoint = lidgrenMsg.ReadString();
+            Token = lidgrenMsg.ReadString();
+        }
+
+        internal override int InternalGetMessageSize(bool dataCompressed)
+        {
+            return base.InternalGetMessageSize(dataCompressed) + sizeof(long) + InternalEndpoint.GetByteCount() + Token.GetByteCount();
+        }
     }
 }

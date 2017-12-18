@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!(msg.Data is VesselPositionMsgData msgData)) return null;
 
             update.VesselId = msgData.VesselId;
-            update.BodyName = msgData.BodyName;
+            update.BodyName = msgData.BodyIndex;
             update.SrfRelRotation = msgData.SrfRelRotation;
             update.TransformPosition = msgData.TransformPosition;
             update.Velocity = msgData.Velocity;

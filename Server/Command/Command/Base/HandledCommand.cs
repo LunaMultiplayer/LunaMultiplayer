@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Server.Log;
+using Server.System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Server.Log;
-using Server.System;
 
 namespace Server.Command.Command.Base
 {
@@ -48,7 +48,7 @@ namespace Server.Command.Command.Base
             lock (CommandLock)
             {
                 //Awaited
-                return Items;
+                return Items.ToArray();
             }
         }
 

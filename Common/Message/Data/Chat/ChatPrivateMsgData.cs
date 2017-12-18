@@ -1,4 +1,6 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Chat
 {
@@ -7,7 +9,29 @@ namespace LunaCommon.Message.Data.Chat
         /// <inheritdoc />
         internal ChatPrivateMsgData() { }
         public override ChatMessageType ChatMessageType => ChatMessageType.PrivateMessage;
-        public string To { get; set; }
-        public string Text { get; set; }
+
+        public string To;
+        public string Text;
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalSerialize(lidgrenMsg, dataCompressed);
+
+            lidgrenMsg.Write(To);
+            lidgrenMsg.Write(Text);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+
+            To = lidgrenMsg.ReadString();
+            Text = lidgrenMsg.ReadString();
+        }
+
+        internal override int InternalGetMessageSize(bool dataCompressed)
+        {
+            return base.InternalGetMessageSize(dataCompressed) + To.GetByteCount() + Text.GetByteCount();
+        }
     }
 }

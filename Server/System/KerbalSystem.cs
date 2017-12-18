@@ -5,7 +5,6 @@ using Server.Context;
 using Server.Log;
 using Server.Properties;
 using Server.Server;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -26,10 +25,10 @@ namespace Server.System
 
         public static void HandleKerbalProto(ClientStructure client, KerbalProtoMsgData data)
         {
-            LunaLog.Debug($"Saving kerbal {data.KerbalName} from {client.PlayerName}");
+            LunaLog.Debug($"Saving kerbal {data.Kerbal.KerbalName} from {client.PlayerName}");
 
-            var path = Path.Combine(KerbalsPath, $"{data.KerbalName}.txt");
-            FileHandler.WriteToFile(path, data.KerbalData);
+            var path = Path.Combine(KerbalsPath, $"{data.Kerbal.KerbalName}.txt");
+            FileHandler.WriteToFile(path, data.Kerbal.KerbalData, data.Kerbal.NumBytes);
 
             MessageQueuer.RelayMessage<KerbalSrvMsg>(client, data);
         }
@@ -37,13 +36,21 @@ namespace Server.System
         public static void HandleKerbalsRequest(ClientStructure client)
         {
             var kerbalFiles = FileHandler.GetFilesInPath(KerbalsPath);
-            var kerbalsData = kerbalFiles.Select(k => new KeyValuePair<string, byte[]>(Path.GetFileNameWithoutExtension(k),
-                FileHandler.ReadFile(k)));
-
+            var kerbalsData = kerbalFiles.Select(k =>
+            {
+                var kerbalData = FileHandler.ReadFile(k);
+                return new KerbalInfo
+                {
+                    KerbalData = kerbalData,
+                    NumBytes = kerbalData.Length,
+                    KerbalName = Path.GetFileNameWithoutExtension(k)
+                };
+            });
             LunaLog.Debug($"Sending {client.PlayerName} {kerbalFiles.Length} kerbals...");
 
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<KerbalReplyMsgData>();
-            msgData.KerbalsData = kerbalsData.ToArray();
+            msgData.Kerbals = kerbalsData.ToArray();
+            msgData.KerbalsCount = msgData.Kerbals.Length;
 
             MessageQueuer.SendToClient<KerbalSrvMsg>(client, msgData);
         }

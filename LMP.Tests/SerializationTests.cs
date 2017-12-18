@@ -1,11 +1,11 @@
-﻿using LunaCommon.Message;
+﻿using Lidgren.Network;
+using LunaCommon.Message;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using LunaCommon.Time;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
-using Lidgren.Network;
 
 namespace LMP.Tests
 {
@@ -22,35 +22,35 @@ namespace LMP.Tests
             new Random().NextBytes(bytes);
 
             var msgData = Factory.CreateNewMessageData<VesselProtoMsgData>();
-            msgData.VesselId = Guid.NewGuid();
-            msgData.VesselData = bytes;
+            msgData.Vessel.VesselId = Guid.NewGuid();
+            msgData.Vessel.Data = bytes;
+            msgData.Vessel.NumBytes = bytes.Length;
             msgData.SentTime = LunaTime.UtcNow.Ticks;
 
             var msg = Factory.CreateNew<VesselSrvMsg>(msgData);
 
             //Serialize and compress
-            var serialized = msg.Serialize(true, out var totalLength);
+            var expectedDataSize = msg.GetMessageSize(false);
+            var lidgrenMsgSend = client.CreateMessage(expectedDataSize);
+            msg.Serialize(lidgrenMsgSend, false);
+            var realSize = lidgrenMsgSend.LengthBytes;
+
+            //Usually the expected size will be a bit more as Lidgren writes the size of the strings in a base128 int (so it uses less bytes)
+            Assert.IsTrue(expectedDataSize >= realSize);
 
             //Simulate sending
-            serialized = serialized.Take(totalLength).ToArray();
-            var lidgrenMsg1 = client.CreateIncomingMessage(NetIncomingMessageType.Data, serialized);
-            lidgrenMsg1.LengthBytes = serialized.Length;
+            var data = lidgrenMsgSend.ReadBytes(lidgrenMsgSend.LengthBytes);
+            var lidgrenMsgRecv = client.CreateIncomingMessage(NetIncomingMessageType.Data, data);
+            lidgrenMsgRecv.LengthBytes = lidgrenMsgSend.LengthBytes;
 
-            //Serialize no compress
-            var serializedNc = msg.Serialize(false, out totalLength);
+            //Deserialize
+            var msgDes = Factory.Deserialize(lidgrenMsgRecv, Environment.TickCount);
 
-            //Simulate sending
-            serializedNc = serializedNc.Take(totalLength).ToArray();
-            var lidgrenMsg2 = client.CreateIncomingMessage(NetIncomingMessageType.Data, serializedNc);
-            lidgrenMsg2.LengthBytes = serializedNc.Length;
+            //Arrays are pooled and will not be of an exact length so resize them
+            Array.Resize(ref ((VesselProtoMsgData)msg.Data).Vessel.Data, 10000);
+            Array.Resize(ref ((VesselProtoMsgData)msgDes.Data).Vessel.Data, 10000);
 
-            //Deserialize compressedMsg
-            var msg2 = Factory.Deserialize(lidgrenMsg1, Environment.TickCount);
-            //Deserialize no compressed message
-            var msg2Nc = Factory.Deserialize(lidgrenMsg2, Environment.TickCount);
-
-           Assert.IsTrue(((VesselProtoMsgData)msg.Data).VesselData.SequenceEqual(((VesselProtoMsgData)msg2.Data).VesselData) &&
-                     ((VesselProtoMsgData)msg2Nc.Data).VesselData.SequenceEqual(((VesselProtoMsgData)msg2.Data).VesselData));
+            Assert.IsTrue(((VesselProtoMsgData)msg.Data).Vessel.Data.SequenceEqual(((VesselProtoMsgData)msgDes.Data).Vessel.Data));
         }
     }
 }

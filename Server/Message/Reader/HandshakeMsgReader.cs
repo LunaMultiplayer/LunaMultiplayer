@@ -1,5 +1,4 @@
-﻿using System;
-using LunaCommon.Enums;
+﻿using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
@@ -11,6 +10,7 @@ using Server.Message.Reader.Base;
 using Server.Message.ReceiveHandlers;
 using Server.Server;
 using Server.System;
+using System;
 
 namespace Server.Message.Reader
 {
@@ -45,11 +45,10 @@ namespace Server.Message.Reader
 
         private static void SetAndSendHandshakeChallangeMessage(ClientStructure client)
         {
-            client.Challange = new byte[1024];
-            new Random().NextBytes(client.Challange);
+            new Random().NextBytes(client.Challenge);
 
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<HandshakeChallengeMsgData>();
-            msgData.Challenge = client.Challange;
+            msgData.Challenge = client.Challenge;
 
             MessageQueuer.SendToClient<HandshakeSrvMsg>(client, msgData);
         }

@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
+using System;
 
 namespace LunaCommon.Locks
 {
@@ -48,6 +50,25 @@ namespace LunaCommon.Locks
         public override string ToString()
         {
             return VesselId != Guid.Empty ? $"{Type} - {VesselId}" : $"{Type}";
+        }
+
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            lidgrenMsg.Write(PlayerName);
+            GuidUtil.Serialize(VesselId, lidgrenMsg);
+            lidgrenMsg.Write((int)Type);
+        }
+
+        public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            PlayerName = lidgrenMsg.ReadString();
+            VesselId = GuidUtil.Deserialize(lidgrenMsg);
+            Type = (LockType) lidgrenMsg.ReadInt32();
+        }
+
+        public int GetByteSize(bool dataCompressed)
+        {
+            return PlayerName.GetByteCount() + GuidUtil.GetByteSize() + sizeof(LockType);
         }
     }
 }

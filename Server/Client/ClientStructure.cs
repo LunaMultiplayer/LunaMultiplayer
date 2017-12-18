@@ -1,22 +1,24 @@
-﻿using System.Collections.Concurrent;
-using System.Net;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
+using System;
+using System.Collections.Concurrent;
+using System.Net;
 
 namespace Server.Client
 {
     public class ClientStructure
     {
         public IPEndPoint Endpoint { get; }
-        
+        public Guid Id { get; set; }
+
         public string ActiveVessel { get; set; } = "";
         public bool Authenticated { get; set; }
 
         public long BytesReceived { get; set; }
         public long BytesSent { get; set; }
-        public byte[] Challange { get; set; }
+        public byte[] Challenge { get; } = new byte[1024];
         public NetConnection Connection { get; set; }
 
         public ConnectionStatus ConnectionStatus { get; set; }
@@ -24,7 +26,7 @@ namespace Server.Client
         public bool IsBanned { get; set; }
         public long LastReceiveTime { get; set; }
         public long LastSendTime { get; set; }
-        public string PlayerColor { get; set; }
+        public UnityEngine.Color PlayerColor { get; set; }
         public string PlayerName { get; set; } = "Unknown";
         public PlayerStatus PlayerStatus { get; set; }
         public string PublicKey { get; set; }

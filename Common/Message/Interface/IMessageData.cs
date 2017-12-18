@@ -1,4 +1,6 @@
-﻿namespace LunaCommon.Message.Interface
+﻿using Lidgren.Network;
+
+namespace LunaCommon.Message.Interface
 {
     public interface IMessageData
     {
@@ -21,5 +23,25 @@
         /// Sent time timestamp.
         /// </summary>
         long SentTime { get; set; }
+
+        /// <summary>
+        /// Serializes this message to the NetOutgoingMessage
+        /// </summary>
+        void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed);
+
+        /// <summary>
+        /// Deserializes a message from the NetIncomingMessage
+        /// </summary>
+        void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed);
+
+        /// <summary>
+        /// Recycles the internal fields of this data
+        /// </summary>
+        void Recycle();
+
+        /// <summary>
+        /// Size of this data in bytes
+        /// </summary>
+        int GetMessageSize(bool dataCompressed);
     }
 }

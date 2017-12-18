@@ -2,7 +2,6 @@
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace LunaCommon.Message.Base
 {
@@ -16,31 +15,23 @@ namespace LunaCommon.Message.Base
         /// <returns>Full message with it's data filled</returns>
         public IMessageBase Deserialize(NetIncomingMessage lidgrenMsg, long receiveTime)
         {
-            var data = ArrayPool<byte>.Claim(lidgrenMsg.LengthBytes);
-            lidgrenMsg.ReadBytes(data, 0, lidgrenMsg.LengthBytes);
-            using (var stream = StreamManager.MemoryStreamManager.GetStream("", data, 0, lidgrenMsg.LengthBytes))
+            if (lidgrenMsg.LengthBytes >= 0)
             {
-                if (lidgrenMsg.LengthBytes >= MessageConstants.HeaderLength)
-                {
-                    var messageType = DeserializeMessageType(stream);
-                    var subtype = DeserializeMessageSubType(stream);
-                    var length = DeserializeMessageLength(stream);
-                    var dataCompressed = DeserializeMessageCompressed(stream);
+                var messageType = lidgrenMsg.ReadUInt16();
+                var subtype = lidgrenMsg.ReadUInt16();
+                var dataCompressed = lidgrenMsg.ReadBoolean();
 
-                    if (stream.Length - MessageConstants.HeaderLength == length)
-                    {
-                        var msg = GetMessageByType(messageType, subtype, stream, dataCompressed);
-                        msg.Data.ReceiveTime = receiveTime;
+                var msg = GetMessageByType(messageType);
+                var data = msg.GetMessageData(subtype);
 
-                        ArrayPool<byte>.Release(ref data);
-                        return msg;
-                    }
-                    ArrayPool<byte>.Release(ref data);
-                    throw new Exception("Message data size mismatch");
-                }
-                ArrayPool<byte>.Release(ref data);
-                throw new Exception("Message length below header size");
+                data.Deserialize(lidgrenMsg, dataCompressed);
+
+                msg.SetData(data);
+                msg.Data.ReceiveTime = receiveTime;
+
+                return msg;
             }
+            throw new Exception("Incorrect message length");
         }
 
         /// <summary>
@@ -91,96 +82,16 @@ namespace LunaCommon.Message.Base
         {
             return MessageStore.GetMessageData<T>(); ;
         }
-
+        
         /// <summary>
-        /// Retrieves the message type
-        /// </summary>
-        /// <param name="stream">Full message stream</param>
-        /// <returns>Message type to be parsed as an enum</returns>
-        private static ushort DeserializeMessageType(Stream stream)
-        {
-            var typeArray = ArrayPool<byte>.Claim(MessageConstants.MessageTypeLength);
-
-            stream.Read(typeArray, 0, MessageConstants.MessageTypeLength);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(typeArray);
-            var type = BitConverter.ToUInt16(typeArray, 0);
-
-            ArrayPool<byte>.Release(ref typeArray);
-            return type;
-        }
-
-        /// <summary>
-        /// Retrieves the message sub-type
-        /// </summary>
-        /// <param name="stream">Full message stream</param>
-        /// <returns>Message sub-type to be parsed as an enum</returns>
-        private static ushort DeserializeMessageSubType(Stream stream)
-        {
-            var subTypeArray = ArrayPool<byte>.Claim(MessageConstants.MessageSubTypeLength);
-
-            stream.Read(subTypeArray, 0, MessageConstants.MessageTypeLength);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(subTypeArray);
-            var subType = BitConverter.ToUInt16(subTypeArray, 0);
-
-            ArrayPool<byte>.Release(ref subTypeArray);
-            return subType;
-        }
-
-        /// <summary>
-        /// Retrieves the message length
-        /// </summary>
-        /// <param name="stream">Full message stream</param>
-        /// <returns>Message length</returns>
-        private static uint DeserializeMessageLength(Stream stream)
-        {
-            var lengthArray = ArrayPool<byte>.Claim(MessageConstants.MessageLengthLength);
-
-            stream.Read(lengthArray, 0, MessageConstants.MessageLengthLength);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(lengthArray);
-            var length = BitConverter.ToUInt32(lengthArray, 0);
-
-            ArrayPool<byte>.Release(ref lengthArray);
-            return length;
-        }
-
-        /// <summary>
-        /// Retrieves the message length
-        /// </summary>
-        /// <param name="stream">Full message stream</param>
-        /// <returns>Message is compressed or not</returns>
-        private static bool DeserializeMessageCompressed(Stream stream)
-        {
-            var compressedArray = ArrayPool<byte>.Claim(MessageConstants.MessageCompressionValueLength);
-
-            stream.Read(compressedArray, 0, MessageConstants.MessageCompressionValueLength);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(compressedArray);
-            var isCompressed = BitConverter.ToBoolean(compressedArray, 0);
-
-            ArrayPool<byte>.Release(ref compressedArray);
-            return isCompressed;
-        }
-
-
-        /// <summary>
-        /// Retrieves a message from the dictionary based on the type
+        /// Retrieves a message from the pool based on the type
         /// </summary>
         /// <param name="messageType">Message type</param>
-        /// <param name="messageSubType">Message subtype</param>
-        /// <param name="content">Message content</param>
-        /// <param name="dataCompressed">Is data compresssed?</param>
-        /// <returns></returns>
-        private IMessageBase GetMessageByType(ushort messageType, ushort messageSubType, MemoryStream content, bool dataCompressed)
+        private IMessageBase GetMessageByType(ushort messageType)
         {
             if (Enum.IsDefined(HandledMessageTypes, (int)messageType) && MessageDictionary.ContainsKey(messageType))
             {
                 var msg = MessageStore.GetMessage(MessageDictionary[messageType]);
-                var data = msg.Deserialize(messageSubType, content, dataCompressed);
-                msg.SetData(data);
-
                 return msg;
             }
             throw new Exception("Cannot deserialize this type of message!");

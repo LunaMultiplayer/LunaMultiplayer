@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
-using LunaCommon.Groups;
 using LunaCommon.Message.Data.Groups;
 using System.Collections.Concurrent;
 

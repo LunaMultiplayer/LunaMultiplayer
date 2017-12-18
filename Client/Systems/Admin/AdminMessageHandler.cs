@@ -21,8 +21,8 @@ namespace LunaClient.Systems.Admin
                 case AdminMessageType.ListReply:
                     {
                         var data = (AdminListReplyMsgData)msgData;
-                        foreach (var adminName in data.Admins)
-                            System.RegisterServerAdmin(adminName);
+                        for (var i = 0; i < data.AdminsNum; i++)
+                            System.RegisterServerAdmin(data.Admins[i]);
                         MainSystem.NetworkState = ClientState.AdminsSynced;
                     }
                     break;

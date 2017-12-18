@@ -38,7 +38,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Message Fields
 
         public Guid VesselId { get; set; }
-        public string BodyName { get; set; }
+        public int BodyIndex { get; set; }
         public double[] LatLonAlt { get; set; }
         public double[] NormalVector { get; set; }
         public double[] Com { get; set; }

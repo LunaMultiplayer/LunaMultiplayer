@@ -1,4 +1,6 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Handshake
 {
@@ -7,8 +9,43 @@ namespace LunaCommon.Message.Data.Handshake
         /// <inheritdoc />
         internal HandshakeResponseMsgData() { }
         public override HandshakeMessageType HandshakeMessageType => HandshakeMessageType.Response;
-        public string PlayerName { get; set; }
-        public string PublicKey { get; set; }
-        public byte[] ChallengeSignature { get; set; }
+
+        public string PlayerName;
+        public string PublicKey;
+
+        public byte[] ChallengeSignature = new byte[1024];
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalSerialize(lidgrenMsg, dataCompressed);
+
+            lidgrenMsg.Write(PlayerName);
+            lidgrenMsg.Write(PublicKey);
+            
+            lidgrenMsg.Write(ChallengeSignature, 0, 1024);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+
+            PlayerName = lidgrenMsg.ReadString();
+            PublicKey = lidgrenMsg.ReadString();
+            
+            ChallengeSignature = ArrayPool<byte>.ClaimWithExactLength(1024);
+            lidgrenMsg.ReadBytes(ChallengeSignature, 0, 1024);
+        }
+
+        public override void Recycle()
+        {
+            base.Recycle();
+
+            ArrayPool<byte>.Release(ref ChallengeSignature, true);
+        }
+
+        internal override int InternalGetMessageSize(bool dataCompressed)
+        {
+            return base.InternalGetMessageSize(dataCompressed) + PlayerName.GetByteCount() + PublicKey.GetByteCount() + sizeof(byte) * 1024;
+        }
     }
 }

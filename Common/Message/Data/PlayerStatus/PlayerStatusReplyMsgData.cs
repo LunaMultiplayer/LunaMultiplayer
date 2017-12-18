@@ -1,4 +1,6 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.PlayerStatus
 {
@@ -8,8 +10,48 @@ namespace LunaCommon.Message.Data.PlayerStatus
         internal PlayerStatusReplyMsgData() { }
         public override PlayerStatusMessageType PlayerStatusMessageType => PlayerStatusMessageType.Reply;
 
-        public string[] PlayerName { get; set; }
-        public string[] VesselText { get; set; }
-        public string[] StatusText { get; set; }
+        public int PlayerStatusCount;
+        public PlayerStatusInfo[] PlayerStatus = new PlayerStatusInfo[0];
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalSerialize(lidgrenMsg, dataCompressed);
+
+            lidgrenMsg.Write(PlayerStatusCount);
+            for (var i = 0; i < PlayerStatusCount; i++)
+            {
+                PlayerStatus[i].Serialize(lidgrenMsg, dataCompressed);
+            }
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+
+            PlayerStatusCount = lidgrenMsg.ReadInt32();
+            PlayerStatus = ArrayPool<PlayerStatusInfo>.Claim(PlayerStatusCount);
+            for (var i = 0; i < PlayerStatusCount; i++)
+            {
+                PlayerStatus[i].Deserialize(lidgrenMsg, dataCompressed);
+            }
+        }
+
+        public override void Recycle()
+        {
+            base.Recycle();
+
+            ArrayPool<PlayerStatusInfo>.Release(ref PlayerStatus);
+        }
+
+        internal override int InternalGetMessageSize(bool dataCompressed)
+        {
+            var arraySize = 0;
+            for (var i = 0; i < PlayerStatusCount; i++)
+            {
+                arraySize += PlayerStatus[i].GetByteCount(dataCompressed);
+            }
+
+            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+        }
     }
 }

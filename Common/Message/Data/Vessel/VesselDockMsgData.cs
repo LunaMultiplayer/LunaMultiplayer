@@ -1,4 +1,6 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
+using LunaCommon.Message.Types;
 using System;
 
 namespace LunaCommon.Message.Data.Vessel
@@ -8,9 +10,51 @@ namespace LunaCommon.Message.Data.Vessel
         /// <inheritdoc />
         internal VesselDockMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Dock;
-        public int SubspaceId { get; set; }
-        public Guid DominantVesselId { get; set; }
-        public Guid WeakVesselId { get; set; }
-        public byte[] FinalVesselData { get; set; }
+
+        public int SubspaceId;
+        public Guid DominantVesselId;
+        public Guid WeakVesselId;
+
+        public int NumBytes;
+        public byte[] FinalVesselData = new byte[0];
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalSerialize(lidgrenMsg, dataCompressed);
+
+            lidgrenMsg.Write(SubspaceId);
+            GuidUtil.Serialize(DominantVesselId, lidgrenMsg);
+            GuidUtil.Serialize(WeakVesselId, lidgrenMsg);
+            
+            lidgrenMsg.Write(NumBytes);
+            lidgrenMsg.Write(FinalVesselData, 0, NumBytes);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+
+            SubspaceId = lidgrenMsg.ReadInt32();
+            DominantVesselId = GuidUtil.Deserialize(lidgrenMsg);
+            WeakVesselId = GuidUtil.Deserialize(lidgrenMsg);
+
+
+            NumBytes = lidgrenMsg.ReadInt32();
+            FinalVesselData = ArrayPool<byte>.Claim(NumBytes);
+            lidgrenMsg.ReadBytes(FinalVesselData, 0, NumBytes);
+        }
+
+        public override void Recycle()
+        {
+            base.Recycle();
+
+            ArrayPool<byte>.Release(ref FinalVesselData);
+        }
+
+        internal override int InternalGetMessageSize(bool dataCompressed)
+        {
+            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + 
+                GuidUtil.GetByteSize() * 2 + sizeof(int) + sizeof(byte) * NumBytes;
+        }
     }
 }

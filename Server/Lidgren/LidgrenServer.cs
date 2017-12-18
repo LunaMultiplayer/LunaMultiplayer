@@ -91,7 +91,6 @@ namespace Server.Lidgren
                                 LunaLog.Debug($"Lidgren: {msg.MessageType.ToString().ToUpper()} -- {details}");
                                 break;
                         }
-                        Server.Recycle(msg);
                     }
                     else
                     {
@@ -117,21 +116,14 @@ namespace Server.Lidgren
 
         public void SendMessageToClient(ClientStructure client, IServerMessageBase message)
         {
+            var outmsg = Server.CreateMessage(message.GetMessageSize(GeneralSettings.SettingsStore.CompressionEnabled));
+
             message.Data.SentTime = LunaTime.UtcNow.Ticks;
-            var messageBytes = message.Serialize(GeneralSettings.SettingsStore.CompressionEnabled, out var totalLength);
-            if (messageBytes == null)
-            {
-                LunaLog.Error("Error serializing message!");
-                return;
-            }
+            message.Serialize(outmsg, GeneralSettings.SettingsStore.CompressionEnabled);
 
             client.LastSendTime = ServerContext.ServerClock.ElapsedMilliseconds;
-            client.BytesSent += messageBytes.Length;
-
-            //Lidgren already recycle messages by itself
-            var outmsg = Server.CreateMessage(totalLength);
-            outmsg.Write(messageBytes, 0, totalLength);
-
+            client.BytesSent += outmsg.LengthBytes;
+            
             Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
             Server.FlushSendQueue(); //Manually force to send the msg
         }
@@ -199,14 +191,13 @@ namespace Server.Lidgren
         {
             Task.Run(() =>
             {
-
                 var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-                var msgBytes = msg.Serialize(true, out var totalLength);
-
+                msg.Data.SentTime = LunaTime.UtcNow.Ticks;
+                
                 try
                 {
-                    var outMsg = Server.CreateMessage(totalLength);
-                    outMsg.Write(msgBytes, 0, totalLength);
+                    var outMsg = Server.CreateMessage(msg.GetMessageSize(GeneralSettings.SettingsStore.CompressionEnabled));
+                    msg.Serialize(outMsg, GeneralSettings.SettingsStore.CompressionEnabled);
                     Server.SendUnconnectedMessage(outMsg, masterServer);
                     Server.FlushSendQueue();
                 }

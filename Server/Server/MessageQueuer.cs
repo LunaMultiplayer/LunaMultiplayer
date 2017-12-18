@@ -1,7 +1,7 @@
-﻿using System.Linq;
-using LunaCommon.Message.Interface;
+﻿using LunaCommon.Message.Interface;
 using Server.Client;
 using Server.Context;
+using System.Linq;
 
 namespace Server.Server
 {
@@ -20,10 +20,8 @@ namespace Server.Server
         /// </summary>
         public static void SendMessageToSubspace<T>(IMessageData data, int subspace) where T : class, IServerMessageBase
         {
-            var newMessage = GenerateMessage<T>(data);
-
             foreach (var otherClient in ServerContext.Clients.Values.Where(c => c.Subspace == subspace))
-                SendToClient(otherClient, newMessage);
+                SendToClient(otherClient, GenerateMessage<T>(data));
         }
 
         /// <summary>
@@ -31,10 +29,8 @@ namespace Server.Server
         /// </summary>
         public static void RelayMessageToSubspace<T>(ClientStructure exceptClient, IMessageData data, int subspace) where T : class, IServerMessageBase
         {
-            var newMessage = GenerateMessage<T>(data);
-
             foreach (var otherClient in ServerContext.Clients.Values.Where(c => !Equals(c, exceptClient) && c.Subspace == subspace))
-                SendToClient(otherClient, newMessage);
+                SendToClient(otherClient, GenerateMessage<T>(data));
         }
 
         /// <summary>
@@ -43,10 +39,8 @@ namespace Server.Server
         public static void RelayMessage<T>(ClientStructure exceptClient, IMessageData data)
             where T : class, IServerMessageBase
         {
-            var newMessage = GenerateMessage<T>(data);
-
             foreach (var otherClient in ServerContext.Clients.Values.Where(c => !Equals(c, exceptClient)))
-                SendToClient(otherClient, newMessage);
+                SendToClient(otherClient, GenerateMessage<T>(data));
         }
 
         /// <summary>
@@ -55,10 +49,8 @@ namespace Server.Server
         public static void SendToAllClients<T>(IMessageData data)
             where T : class, IServerMessageBase
         {
-            var newMessage = GenerateMessage<T>(data);
-
             foreach (var otherClient in ServerContext.Clients.Values)
-                SendToClient(otherClient, newMessage);
+                SendToClient(otherClient, GenerateMessage<T>(data));
         }
 
         /// <summary>
@@ -68,9 +60,8 @@ namespace Server.Server
             where T : class, IServerMessageBase
         {
             if (data == null) return;
-
-            var newMessage = GenerateMessage<T>(data);
-            client.SendMessageQueue.Enqueue(newMessage);
+            
+            client.SendMessageQueue.Enqueue(GenerateMessage<T>(data));
         }
 
         /// <summary>
@@ -95,6 +86,7 @@ namespace Server.Server
         private static void SendToClient(ClientStructure client, IServerMessageBase msg)
         {
             if (msg.Data == null) return;
+
             client.SendMessageQueue.Enqueue(msg);
         }
 

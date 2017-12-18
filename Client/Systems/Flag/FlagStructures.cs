@@ -1,6 +1,6 @@
 ﻿using LunaClient.Utilities;
 using LunaCommon;
-using LunaCommon.Flag;
+using LunaCommon.Message.Data.Flag;
 using System.IO;
 
 namespace LunaClient.Systems.Flag

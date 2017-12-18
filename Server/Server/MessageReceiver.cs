@@ -71,10 +71,6 @@ namespace Server.Server
 
             //Handle the message
             HandlerDictionary[message.MessageType].HandleMessage(client, message.Data);
-
-            //The server does not recycle RECEIVED messages as memory spikes are not so important here
-            //Also this would mess with the relay system
-            //message.Recycle();
         }
 
         private static IClientMessageBase DeserializeMessage(NetIncomingMessage msg)

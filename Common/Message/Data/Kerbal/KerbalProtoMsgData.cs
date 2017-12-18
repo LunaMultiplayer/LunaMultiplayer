@@ -1,4 +1,5 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Kerbal
 {
@@ -7,8 +8,33 @@ namespace LunaCommon.Message.Data.Kerbal
         /// <inheritdoc />
         internal KerbalProtoMsgData() { }
         public override KerbalMessageType KerbalMessageType => KerbalMessageType.Proto;
-        
-        public string KerbalName { get; set; }
-        public byte[] KerbalData { get; set; }
+
+        public KerbalInfo Kerbal = new KerbalInfo();
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalSerialize(lidgrenMsg, dataCompressed);
+
+            Kerbal.Serialize(lidgrenMsg, dataCompressed);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+
+            Kerbal.Deserialize(lidgrenMsg, dataCompressed);
+        }
+
+        public override void Recycle()
+        {
+            base.Recycle();
+
+            Kerbal.Recycle();
+        }
+
+        internal override int InternalGetMessageSize(bool dataCompressed)
+        {
+            return base.InternalGetMessageSize(dataCompressed) + Kerbal.GetByteCount(dataCompressed);
+        }
     }
 }

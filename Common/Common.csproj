@@ -36,12 +36,19 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\External\KSPLibraries\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="FastMember, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\External\Dependencies\FastMember.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
@@ -59,9 +66,11 @@
     <Compile Include="Enums\ServerMessageType.cs" />
     <Compile Include="Enums\TerrainQuality.cs" />
     <Compile Include="Enums\WarpMode.cs" />
-    <Compile Include="Flag\FlagInfo.cs" />
+    <Compile Include="Message\Base\StringUtil.cs" />
+    <Compile Include="Message\Base\GuidUtil.cs" />
+    <Compile Include="Message\Data\Flag\FlagInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Groups\Group.cs" />
+    <Compile Include="Message\Data\Groups\Group.cs" />
     <Compile Include="LmpVersioning.cs" />
     <Compile Include="Locks\LockDefinition.cs" />
     <Compile Include="Locks\LockQuery.cs" />
@@ -78,13 +87,8 @@
     <Compile Include="Message\Base\CompressionHelper.cs" />
     <Compile Include="Message\Base\FactoryBase.cs" />
     <Compile Include="Message\Base\MessageBase.cs" />
-    <Compile Include="Message\Base\MessageConstants.cs" />
     <Compile Include="Message\Base\MessageData.cs" />
     <Compile Include="Message\Base\MessageStore.cs" />
-    <Compile Include="Message\Base\ObjectPool.cs" />
-    <Compile Include="Message\Base\RecyclableMemoryStream.cs" />
-    <Compile Include="Message\Base\RecyclableMemoryStreamManager.cs" />
-    <Compile Include="Message\Base\StreamManager.cs" />
     <Compile Include="Message\ClientMessageFactory.cs" />
     <Compile Include="Message\Client\AdminCliMsg.cs" />
     <Compile Include="Message\Client\Base\CliMsgBase.cs" />
@@ -117,6 +121,8 @@
     <Compile Include="Message\Data\Chat\ChatListMsgData.cs" />
     <Compile Include="Message\Data\Chat\ChatListRequestMsgData.cs" />
     <Compile Include="Message\Data\Chat\ChatPrivateMsgData.cs" />
+    <Compile Include="Message\Data\Chat\PlayerChatChannels.cs" />
+    <Compile Include="Message\Data\Color\PlayerColor.cs" />
     <Compile Include="Message\Data\Color\PlayerColorBaseMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorReplyMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorRequestMsgData.cs" />
@@ -130,6 +136,7 @@
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryRespondMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryUploadMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftListInfo.cs" />
+    <Compile Include="Message\Data\CraftLibrary\PlayerCrafts.cs" />
     <Compile Include="Message\Data\Facility\FacilityBaseMsgData.cs" />
     <Compile Include="Message\Data\Facility\FacilityCollapseMsgData.cs" />
     <Compile Include="Message\Data\Facility\FacilityRepairMsgData.cs" />
@@ -151,6 +158,7 @@
     <Compile Include="Message\Data\Handshake\HandshakeRequestMsgData.cs" />
     <Compile Include="Message\Data\Handshake\HandshakeResponseMsgData.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalBaseMsgData.cs" />
+    <Compile Include="Message\Data\Kerbal\KerbalInfo.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalProtoMsgData.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalRemoveMsgData.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalReplyMsgData.cs" />
@@ -173,15 +181,18 @@
     <Compile Include="Message\Data\PlayerConnection\PlayerConnectionJoinMsgData.cs" />
     <Compile Include="Message\Data\PlayerConnection\PlayerConnectionLeaveMsgData.cs" />
     <Compile Include="Message\Data\PlayerStatus\PlayerStatusBaseMsgData.cs" />
+    <Compile Include="Message\Data\PlayerStatus\PlayerStatusInfo.cs" />
     <Compile Include="Message\Data\PlayerStatus\PlayerStatusReplyMsgData.cs" />
     <Compile Include="Message\Data\PlayerStatus\PlayerStatusRequestMsgData.cs" />
     <Compile Include="Message\Data\PlayerStatus\PlayerStatusSetMsgData.cs" />
+    <Compile Include="Message\Data\Scenario\ScenarioInfo.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioBaseMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioDataMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioRequestMsgData.cs" />
     <Compile Include="Message\Data\Settings\SetingsReplyMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
+    <Compile Include="Message\Data\Vessel\VesselInfo.cs" />
     <Compile Include="Message\Data\Vessel\VesselBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselFlightStateMsgData.cs" />
@@ -194,6 +205,7 @@
     <Compile Include="Message\Data\Vessel\VesselRemoveMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselsReplyMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselsRequestMsgData.cs" />
+    <Compile Include="Message\Data\Warp\SubspaceInfo.cs" />
     <Compile Include="Message\Data\Warp\WarpBaseMsgData.cs" />
     <Compile Include="Message\Data\Warp\WarpChangeSubspaceMsgData.cs" />
     <Compile Include="Message\Data\Warp\WarpNewSubspaceMsgData.cs" />
@@ -207,15 +219,6 @@
     <Compile Include="Message\MasterServerMessageFactory.cs" />
     <Compile Include="Message\MasterServer\Base\MstSrvMsgBase.cs" />
     <Compile Include="Message\MasterServer\MainMstSrvMsg.cs" />
-    <Compile Include="Message\Serialization\BaseSerializer.cs" />
-    <Compile Include="Message\Serialization\CustomTypeDeserializers.cs" />
-    <Compile Include="Message\Serialization\CustomTypeSerializers.cs" />
-    <Compile Include="Message\Serialization\DataDeserializer.cs" />
-    <Compile Include="Message\Serialization\DataSerializer.cs" />
-    <Compile Include="Message\Serialization\EnumerableTypeDeserializers.cs" />
-    <Compile Include="Message\Serialization\EnumerableTypeSerializers.cs" />
-    <Compile Include="Message\Serialization\SimpleTypeDeserializers.cs" />
-    <Compile Include="Message\Serialization\SimpleTypeSerializers.cs" />
     <Compile Include="Message\ServerMessageFactory.cs" />
     <Compile Include="Message\Server\AdminSrvMsg.cs" />
     <Compile Include="Message\Server\Base\SrvMsgBase.cs" />
@@ -283,6 +286,9 @@
       <Project>{dcb5d745-525c-46a1-bfc0-e12f87ab6165}</Project>
       <Name>System.Threading</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Groups\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

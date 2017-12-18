@@ -1,4 +1,4 @@
-﻿using LunaCommon.Flag;
+﻿using Lidgren.Network;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Flag
@@ -8,6 +8,33 @@ namespace LunaCommon.Message.Data.Flag
         /// <inheritdoc />
         internal FlagDataMsgData() { }
         public override FlagMessageType FlagMessageType => FlagMessageType.FlagData;
-        public FlagInfo Flag { get; set; }
+
+        public FlagInfo Flag = new FlagInfo();
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalSerialize(lidgrenMsg, dataCompressed);
+
+            Flag.Serialize(lidgrenMsg, dataCompressed);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+
+            Flag.Deserialize(lidgrenMsg, dataCompressed);
+        }
+
+        public override void Recycle()
+        {
+            base.Recycle();
+
+            Flag.Recycle();
+        }
+
+        internal override int InternalGetMessageSize(bool dataCompressed)
+        {
+            return base.InternalGetMessageSize(dataCompressed) + Flag.GetByteCount(dataCompressed);
+        }
     }
 }

@@ -1,13 +1,13 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using LunaCommon.Message.Data.Chat;
+﻿using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Command.CombinedCommand;
 using Server.Context;
 using Server.Server;
 using Server.Settings;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.System
 {
@@ -26,10 +26,16 @@ namespace Server.System
 
         public static void SendPlayerChatChannels(ClientStructure client)
         {
-            var channels = PlayerChatChannels.Select(v => new KeyValuePair<string, string[]>(v.Key, v.Value.ToArray())).ToArray();
+            var channels = PlayerChatChannels.Select(v => new PlayerChatChannels
+            {
+                PlayerName = v.Key,
+                Channels = v.Value.ToArray(),
+                ChannelCount = v.Value.Count
+            }).ToArray();
 
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ChatListReplyMsgData>();
             msgData.PlayerChannels = channels;
+            msgData.PlayerChannelsCount = channels.Length;
 
             MessageQueuer.SendToClient<ChatSrvMsg>(client, msgData);
         }

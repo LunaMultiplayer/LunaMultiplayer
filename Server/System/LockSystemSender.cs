@@ -1,11 +1,11 @@
-﻿using System.Linq;
-using LunaCommon.Locks;
+﻿using LunaCommon.Locks;
 using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Context;
 using Server.Log;
 using Server.Server;
+using System.Linq;
 
 namespace Server.System
 {
@@ -15,6 +15,7 @@ namespace Server.System
         {
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockListReplyMsgData>();
             msgData.Locks = LockSystem.LockQuery.GetAllLocks().ToArray();
+            msgData.LocksCount = msgData.Locks.Length;
 
             MessageQueuer.SendToClient<LockSrvMsg>(client, msgData);
         }

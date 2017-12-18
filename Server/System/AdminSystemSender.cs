@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using LunaCommon.Message.Data.Admin;
+﻿using LunaCommon.Message.Data.Admin;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Command.CombinedCommand;
 using Server.Context;
 using Server.Server;
+using System.Linq;
 
 namespace Server.System
 {
@@ -12,8 +12,10 @@ namespace Server.System
     {
         public static void SendAdminList(ClientStructure client)
         {
+            var admins = AdminCommands.Admins.ToArray();
             var newMessage = ServerContext.ServerMessageFactory.CreateNewMessageData<AdminListReplyMsgData>();
-            newMessage.Admins = AdminCommands.Admins.ToArray();
+            newMessage.Admins = admins;
+            newMessage.AdminsNum = admins.Length;
 
             MessageQueuer.SendToClient<AdminSrvMsg>(client, newMessage);
         }

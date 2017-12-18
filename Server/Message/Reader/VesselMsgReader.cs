@@ -77,14 +77,14 @@ namespace Server.Message.Reader
         {
             var msgData = (VesselProtoBaseMsgData)message;
 
-            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.Vessel.VesselId)) return;
 
-            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
+            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.Vessel.VesselId}.txt");
 
             if (!File.Exists(path))
-                LunaLog.Debug($"Saving vessel {msgData.VesselId} from {client.PlayerName}");
+                LunaLog.Debug($"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}");
 
-            FileHandler.WriteToFile(path, msgData.VesselData);
+            FileHandler.WriteToFile(path, msgData.Vessel.Data, msgData.Vessel.NumBytes);
 
             VesselRelaySystem.HandleVesselMessage(client, message);
         }
@@ -109,9 +109,8 @@ namespace Server.Message.Reader
 
             var protoVesselLines = FileHandler.ReadFileLines(path);
 
-            //var updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
-
-            //FileHandler.WriteToFile(path, updatedText);
+            var updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
+            FileHandler.WriteToFile(path, updatedText);
         }
 
         /// <summary>
@@ -177,7 +176,7 @@ namespace Server.Message.Reader
             var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.DominantVesselId}.txt");
             if (!File.Exists(path))
                 LunaLog.Debug($"Saving vessel {msgData.DominantVesselId} from {client.PlayerName}");
-            FileHandler.WriteToFile(path, msgData.FinalVesselData);
+            FileHandler.WriteToFile(path, msgData.FinalVesselData, msgData.NumBytes);
 
             //Now remove the weak vessel
             LunaLog.Debug($"Removing weak docked vessel {msgData.WeakVesselId}");
@@ -196,32 +195,32 @@ namespace Server.Message.Reader
         private static void HandleVesselsRequest(ClientStructure client, IMessageData messageData)
         {
             var sendVesselCount = 0;
-            var cachedVesselCount = 0;
             var clientRequested = (messageData as VesselsRequestMsgData)?.RequestList ?? new string[0];
 
-            var vesselList = new List<KeyValuePair<Guid, byte[]>>();
+            var vesselList = new List<VesselInfo>();
 
             foreach (var file in FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels")))
             {
-                var vesselId = Path.GetFileNameWithoutExtension(file);
                 var vesselData = FileHandler.ReadFile(file);
                 var vesselObject = Common.CalculateSha256Hash(vesselData);
-                if (clientRequested.Contains(vesselObject))
+                if (clientRequested.Contains(vesselObject) && Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
                 {
                     sendVesselCount++;
-                    vesselList.Add(new KeyValuePair<Guid, byte[]>(new Guid(vesselId), vesselData));
-                }
-                else
-                {
-                    cachedVesselCount++;
+                    vesselList.Add(new VesselInfo
+                    {
+                        Data = vesselData,
+                        NumBytes = vesselData.Length,
+                        VesselId = vesselId
+                    });
                 }
             }
 
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselsReplyMsgData>();
             msgData.VesselsData = vesselList.ToArray();
+            msgData.VesselsCount = vesselList.Count;
 
             MessageQueuer.SendToClient<VesselSrvMsg>(client, msgData);
-            LunaLog.Debug($"Sending {client.PlayerName} {sendVesselCount} vessels, cached: {cachedVesselCount}...");
+            LunaLog.Debug($"Sending {client.PlayerName} {sendVesselCount} vessels");
         }
 
         private static void HandleVesselListRequest(ClientStructure client)
@@ -230,6 +229,7 @@ namespace Server.Message.Reader
             msgData.Vessels = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels"))
                 .Select(Common.CalculateSha256Hash)
                 .ToArray();
+            msgData.VesselsCount = msgData.Vessels.Length;
 
             MessageQueuer.SendToClient<VesselSrvMsg>(client, msgData);
         }

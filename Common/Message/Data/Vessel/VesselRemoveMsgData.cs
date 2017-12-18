@@ -1,4 +1,6 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
+using LunaCommon.Message.Types;
 using System;
 
 namespace LunaCommon.Message.Data.Vessel
@@ -9,6 +11,25 @@ namespace LunaCommon.Message.Data.Vessel
         internal VesselRemoveMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Remove;
 
-        public Guid VesselId { get; set; }
+        public Guid VesselId;
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalSerialize(lidgrenMsg, dataCompressed);
+
+            GuidUtil.Serialize(VesselId, lidgrenMsg);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            
+            VesselId = GuidUtil.Deserialize(lidgrenMsg);
+        }
+
+        internal override int InternalGetMessageSize(bool dataCompressed)
+        {
+            return base.InternalGetMessageSize(dataCompressed) + GuidUtil.GetByteSize();
+        }
     }
 }

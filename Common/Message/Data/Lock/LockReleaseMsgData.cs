@@ -1,4 +1,5 @@
-﻿using LunaCommon.Locks;
+﻿using Lidgren.Network;
+using LunaCommon.Locks;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Lock
@@ -8,7 +9,29 @@ namespace LunaCommon.Message.Data.Lock
         /// <inheritdoc />
         internal LockReleaseMsgData() { }
         public override LockMessageType LockMessageType => LockMessageType.Release;
-        public LockDefinition Lock { get; set; }
-        public bool LockResult { get; set; }
+
+        public LockDefinition Lock = new LockDefinition();
+        public bool LockResult;
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalSerialize(lidgrenMsg, dataCompressed);
+
+            lidgrenMsg.Write(LockResult);
+            Lock.Serialize(lidgrenMsg, dataCompressed);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        {
+            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+
+            LockResult = lidgrenMsg.ReadBoolean();
+            Lock.Deserialize(lidgrenMsg, dataCompressed);
+        }
+
+        internal override int InternalGetMessageSize(bool dataCompressed)
+        {
+            return base.InternalGetMessageSize(dataCompressed) + Lock.GetByteSize(dataCompressed) + sizeof(bool);
+        }
     }
 }
