@@ -1,14 +1,16 @@
-﻿using System;
+﻿using LunaCommon;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using LunaCommon;
 
 namespace LunaClient.Utilities
 {
     public class CommonUtil
     {
+        private static readonly Random Rnd = new Random();
+
         private static string _debugPort;
         public static string DebugPort => _debugPort ?? (_debugPort = GetDebugPort());
 
@@ -63,6 +65,15 @@ namespace LunaClient.Utilities
             var deletedItems = list1.Except(list2).Any();
             var newItems = list2.Except(list1).Any();
             return !newItems && !deletedItems;
+        }
+
+        /// <summary>
+        /// Allocates 100mb in the mono heap
+        /// </summary>
+        public static void Reserve100Mb()
+        {
+            var bytes = new byte[104857600];
+            Rnd.NextBytes(bytes);
         }
     }
 }

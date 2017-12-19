@@ -29,6 +29,7 @@ using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
+using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 
@@ -214,9 +215,8 @@ namespace LunaClient.Systems.Network
                     MainSystem.NetworkState = ClientState.Starting;
                     break;
                 case ClientState.Starting:
-
                     SystemsContainer.Get<MainSystem>().Status = "Running";
-
+                    CommonUtil.Reserve100Mb();
                     LunaLog.Log("[LMP]: All systems up and running. Поехали!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
