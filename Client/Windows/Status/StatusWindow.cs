@@ -14,7 +14,7 @@ namespace LunaClient.Windows.Status
 
         #region Public
 
-        public override bool Display => MainSystem.NetworkState >= ClientState.Running &&
+        public override bool Display => MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
                                         HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
         public IEnumerable<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
@@ -107,7 +107,9 @@ namespace LunaClient.Windows.Status
 
         public override void Update()
         {
-            if (Display && Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
+            if (!Display) return;
+
+            if (Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
             {
                 LastStatusUpdate = Time.realtimeSinceStartup;
                 SubspaceDisplay = SystemsContainer.Get<WarpSystem>().WarpEntryDisplay.GetSubspaceDisplayEntries();

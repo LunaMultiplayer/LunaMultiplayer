@@ -59,7 +59,7 @@ namespace LunaClient
         public const int WindowOffset = 1664147604;
         
         public bool ShowGui { get; set; } = true;
-        public bool ToolbarShowGui { get; set; } = true;
+        public static bool ToolbarShowGui { get; set; } = true;
         public static ServerEntry CommandLineServer { get; set; }
         public bool LmpSaveChecked { get; set; }
         public bool ForceQuit { get; set; }
