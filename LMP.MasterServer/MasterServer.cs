@@ -169,12 +169,12 @@ namespace LMP.MasterServer
             msgData.TerrainQuality = values.Select(s => s.Info.TerrainQuality).ToArray();
 
             var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-            var data = msg.Serialize(true, out var totalLength);
+            var outMsg = peer.CreateMessage(msg.GetMessageSize(false));
 
-            var outMsg = peer.CreateMessage(totalLength);
-            outMsg.Write(data, 0, totalLength);
+            msg.Serialize(outMsg, false);
             peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
             peer.FlushSendQueue();
+            msg.Recycle(false);
         }
 
         private static void RegisterServer(IMessageBase message, NetIncomingMessage netMsg)
