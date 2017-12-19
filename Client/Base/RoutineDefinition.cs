@@ -27,12 +27,7 @@ namespace LunaClient.Base
         /// Interval in ms at witch this routine will be executed. Set it to 0 if you want to run it on every update/fixed update
         /// </summary>
         public int IntervalInMs { get; set; }
-
-        /// <summary>
-        /// Specify if this routine must be run only one time
-        /// </summary>
-        public bool RunOnce { get; set; }
-
+        
         /// <summary>
         /// Method that this routine will execute
         /// </summary>
@@ -64,17 +59,6 @@ namespace LunaClient.Base
             IntervalInMs = intervalInMs;
             Execution = execution;
             Method = method;
-        }
-
-        /// <summary>
-        /// Create a routine definition that will only run once
-        /// </summary>
-        public RoutineDefinition(RoutineExecution execution, Action method) : this()
-        {
-            IntervalInMs = 0;
-            Execution = execution;
-            Method = method;
-            RunOnce = true;
         }
 
         #endregion

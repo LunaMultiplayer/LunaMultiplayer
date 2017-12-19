@@ -22,13 +22,6 @@ namespace LunaClient.Base
             new ConcurrentDictionary<string, RoutineDefinition>();
 
         /// <summary>
-        /// This dictionary hold all the routines that will be executed during the FixedUpdate() only once
-        /// The key is the method name that will be executed
-        /// </summary>
-        private ConcurrentDictionary<string, RoutineDefinition> FixedUpdateRunOnceRoutines { get; } =
-            new ConcurrentDictionary<string, RoutineDefinition>();
-
-        /// <summary>
         /// This dictionary hold all the routines that will be executed during the Update()
         /// The key is the method name that will be executed
         /// </summary>
@@ -36,24 +29,10 @@ namespace LunaClient.Base
             new ConcurrentDictionary<string, RoutineDefinition>();
 
         /// <summary>
-        /// This dictionary hold all the routines that will be executed during the Update() only once
-        /// The key is the method name that will be executed
-        /// </summary>
-        private ConcurrentDictionary<string, RoutineDefinition> UpdateRunOnceRoutines { get; } =
-            new ConcurrentDictionary<string, RoutineDefinition>();
-
-        /// <summary>
         /// This dictionary hold all the routines that will be executed during the LateUpdate()
         /// The key is the method name that will be executed
         /// </summary>
         private ConcurrentDictionary<string, RoutineDefinition> LateUpdateRoutines { get; } =
-            new ConcurrentDictionary<string, RoutineDefinition>();
-
-        /// <summary>
-        /// This dictionary hold all the routines that will be executed during the LateUpdate() only once
-        /// The key is the method name that will be executed
-        /// </summary>
-        private ConcurrentDictionary<string, RoutineDefinition> LateUpdateRunOnceRoutines { get; } =
             new ConcurrentDictionary<string, RoutineDefinition>();
 
         private static readonly StringBuilder StringBuilder = new StringBuilder();
@@ -69,25 +48,15 @@ namespace LunaClient.Base
             {
                 if (routine.Execution == RoutineExecution.FixedUpdate && !FixedUpdateRoutines.ContainsKey(routine.Name))
                 {
-                    if (routine.RunOnce)
-                        FixedUpdateRunOnceRoutines.TryAdd(routine.Name, routine);
-                    else
-                        FixedUpdateRoutines.TryAdd(routine.Name, routine);
+                    FixedUpdateRoutines.TryAdd(routine.Name, routine);
                 }
                 else if (routine.Execution == RoutineExecution.Update && !UpdateRoutines.ContainsKey(routine.Name))
                 {
-                    if (routine.RunOnce)
-                        UpdateRunOnceRoutines.TryAdd(routine.Name, routine);
-                    else
-                        UpdateRoutines.TryAdd(routine.Name, routine);
+                    UpdateRoutines.TryAdd(routine.Name, routine);
                 }
-                else if (routine.Execution == RoutineExecution.LateUpdate &&
-                         !LateUpdateRoutines.ContainsKey(routine.Name))
+                else if (routine.Execution == RoutineExecution.LateUpdate && !LateUpdateRoutines.ContainsKey(routine.Name))
                 {
-                    if (routine.RunOnce)
-                        LateUpdateRunOnceRoutines.TryAdd(routine.Name, routine);
-                    else
-                        LateUpdateRoutines.TryAdd(routine.Name, routine);
+                    LateUpdateRoutines.TryAdd(routine.Name, routine);
                 }
                 else
                 {
@@ -187,11 +156,8 @@ namespace LunaClient.Base
         protected virtual void RemoveRoutines()
         {
             UpdateRoutines.Clear();
-            UpdateRunOnceRoutines.Clear();
             FixedUpdateRoutines.Clear();
-            FixedUpdateRunOnceRoutines.Clear();
             LateUpdateRoutines.Clear();
-            LateUpdateRunOnceRoutines.Clear();
         }
 
 
@@ -201,15 +167,6 @@ namespace LunaClient.Base
         /// </summary>
         public void FixedUpdate()
         {
-            if (FixedUpdateRunOnceRoutines.Any())
-            {
-                foreach (var routine in FixedUpdateRunOnceRoutines)
-                {
-                    routine.Value.RunRoutine();
-                }
-                FixedUpdateRunOnceRoutines.Clear();
-            }
-
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             foreach (var routine in FixedUpdateRoutines)
@@ -226,15 +183,6 @@ namespace LunaClient.Base
         /// </summary>
         public void Update()
         {
-            if (UpdateRunOnceRoutines.Any())
-            {
-                foreach (var routine in UpdateRunOnceRoutines)
-                {
-                    routine.Value.RunRoutine();
-                }
-                UpdateRunOnceRoutines.Clear();
-            }
-
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             foreach (var routine in UpdateRoutines)
@@ -251,15 +199,6 @@ namespace LunaClient.Base
         /// </summary>
         public void LateUpdate()
         {
-            if (LateUpdateRunOnceRoutines.Any())
-            {
-                foreach (var routine in LateUpdateRunOnceRoutines)
-                {
-                    routine.Value.RunRoutine();
-                }
-                LateUpdateRunOnceRoutines.Clear();
-            }
-
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
             foreach (var routine in LateUpdateRoutines)
