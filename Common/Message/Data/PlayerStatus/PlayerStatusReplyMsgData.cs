@@ -34,6 +34,9 @@ namespace LunaCommon.Message.Data.PlayerStatus
             PlayerStatus = ArrayPool<PlayerStatusInfo>.Claim(PlayerStatusCount);
             for (var i = 0; i < PlayerStatusCount; i++)
             {
+                if (PlayerStatus[i] == null)
+                    PlayerStatus[i] = new PlayerStatusInfo();
+
                 PlayerStatus[i].Deserialize(lidgrenMsg, dataCompressed);
             }
         }
