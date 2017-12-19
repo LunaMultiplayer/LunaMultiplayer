@@ -26,7 +26,6 @@ namespace LunaClient.Systems.SettingsSys
         public List<ServerEntry> Servers { get; set; } = new List<ServerEntry>();
         public string PrivateKey { get; set; }
         public string PublicKey { get; set; }
-        public int PlayerStatusCheckMsInterval { get; set; } = 500;
         public int InitialConnectionSyncTimeRequests { get; set; } = 10;
         public bool RevertEnabled { get; set; }
         public bool InterpolationEnabled { get; set; } = false;

@@ -81,7 +81,7 @@ namespace LunaClient.Systems.Chat
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(250, RoutineExecution.Update, HandleChatEvents));
+            SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, HandleChatEvents));
         }
 
         protected override void OnDisabled()

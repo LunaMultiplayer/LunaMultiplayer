@@ -15,7 +15,7 @@ namespace LunaClient.Systems.Ping
 
         #region Fields & properties
 
-        private static ConcurrentQueue<string> PingQueue { get; } = new ConcurrentQueue<string>();
+        private static ConcurrentBag<string> PingQueue { get; } = new ConcurrentBag<string>();
 
         #endregion
 
@@ -29,7 +29,7 @@ namespace LunaClient.Systems.Ping
 
         public static void QueuePing(string endpoint)
         {
-            PingQueue.Enqueue(endpoint);
+            PingQueue.Add(endpoint);
         }
         
         #endregion
@@ -38,7 +38,7 @@ namespace LunaClient.Systems.Ping
 
         private static void PerformPings()
         {
-            while (PingQueue.TryDequeue(out var endpoint))
+            while (PingQueue.TryTake(out var endpoint))
             {
                 Client.Singleton.StartCoroutine(PingUpdate(endpoint));
             }

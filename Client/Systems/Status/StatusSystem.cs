@@ -34,8 +34,7 @@ namespace LunaClient.Systems.Status
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(SettingsSystem.CurrentSettings.PlayerStatusCheckMsInterval,
-                RoutineExecution.Update, CheckPlayerStatus));
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckPlayerStatus));
         }
 
         protected override void OnDisabled()

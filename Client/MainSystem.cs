@@ -145,7 +145,6 @@ namespace LunaClient
             {
                 HandleException(e, "Main system- update");
             }
-            LunaProfiler.UpdateData.ReportTime(startClock);
         }
 
         #endregion
@@ -156,10 +155,8 @@ namespace LunaClient
         {
             if (!Enabled)
                 return;
-
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
+            
             SystemsHandler.FixedUpdate();
-            LunaProfiler.FixedUpdateData.ReportTime(startClock);
         }
 
         #endregion
@@ -170,10 +167,8 @@ namespace LunaClient
         {
             if (!Enabled)
                 return;
-
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
+            
             SystemsHandler.LateUpdate();
-            LunaProfiler.LateUpdateData.ReportTime(startClock);
         }
 
         #endregion
@@ -246,9 +241,7 @@ namespace LunaClient
 
             if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
             {
-                var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
                 WindowsHandler.OnGui();
-                LunaProfiler.GuiData.ReportTime(startClock);
             }
         }
 

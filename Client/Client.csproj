@@ -18,7 +18,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug</OutputPath>
-    <DefineConstants>DEBUG</DefineConstants>
+    <DefineConstants>DEBUG;ENABLE_PROFILER</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
@@ -82,6 +82,7 @@
     <Compile Include="Systems\VesselProtoSys\VesselProtoRefresh.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselUpdater.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
+    <Compile Include="Utilities\LunaProfiler.cs" />
     <Compile Include="Utilities\OutdatedVersionDialog.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeEvents.cs" />
@@ -211,7 +212,6 @@
     <Compile Include="Systems\Network\NetworkSystem.cs" />
     <Compile Include="Systems\PlayerColorSys\PlayerColorSystem.cs" />
     <Compile Include="Systems\Status\StatusSystem.cs" />
-    <Compile Include="Utilities\LunaProfiler.cs" />
     <Compile Include="Systems\Scenario\ScenarioSystem.cs" />
     <Compile Include="Systems\SettingsSys\SettingsSystem.cs" />
     <Compile Include="Systems\TimeSyncer\TimeSyncerSystem.cs" />

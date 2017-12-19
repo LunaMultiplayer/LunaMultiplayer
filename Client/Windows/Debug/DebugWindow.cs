@@ -140,14 +140,14 @@ namespace LunaClient.Windows.Debug
 
         private void CheckWindowLock()
         {
-            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
             if (SafeDisplay)
             {
+                if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
+                {
+                    RemoveWindowLock();
+                    return;
+                }
+
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 

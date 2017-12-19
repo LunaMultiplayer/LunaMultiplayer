@@ -11,6 +11,9 @@ using LunaClient.Windows.Status;
 using LunaClient.Windows.Systems;
 using LunaClient.Windows.UniverseConverter;
 using System;
+using UnityEngine;
+
+// ReSharper disable ForCanBeConvertedToForeach
 
 namespace LunaClient.Windows
 {
@@ -32,11 +35,13 @@ namespace LunaClient.Windows
 
         public static void Update()
         {
-            foreach (var window in Windows)
+            for (var i = 0; i < Windows.Length; i++)
             {
                 try
                 {
-                    window.Update();
+                    Profiler.BeginSample($"Window {Windows[i].GetType().Name} - Update");
+                    Windows[i].Update();
+                    Profiler.EndSample();
                 }
                 catch (Exception e)
                 {
@@ -47,11 +52,13 @@ namespace LunaClient.Windows
 
         public static void OnGui()
         {
-            foreach (var window in Windows)
+            for (var i = 0; i < Windows.Length; i++)
             {
                 try
                 {
-                    window.OnGui();
+                    Profiler.BeginSample($"Window {Windows[i].GetType().Name} - OnGUI");
+                    Windows[i].OnGui();
+                    Profiler.EndSample();
                 }
                 catch (Exception e)
                 {

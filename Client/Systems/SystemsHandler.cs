@@ -33,6 +33,9 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
 using System;
+using UnityEngine;
+
+// ReSharper disable ForCanBeConvertedToForeach
 
 namespace LunaClient.Systems
 {
@@ -80,11 +83,13 @@ namespace LunaClient.Systems
         /// </summary>
         public static void FixedUpdate()
         {
-            foreach (var system in Systems)
+            for (var i = 0; i < Systems.Length; i++)
             {
                 try
                 {
-                    system.FixedUpdate();
+                    Profiler.BeginSample($"System {Systems[i].GetType().Name} - FixedUpdate");
+                    Systems[i].FixedUpdate();
+                    Profiler.EndSample();
                 }
                 catch (Exception e)
                 {
@@ -98,11 +103,13 @@ namespace LunaClient.Systems
         /// </summary>
         public static void Update()
         {
-            foreach (var system in Systems)
+            for (var i = 0; i < Systems.Length; i++)
             {
                 try
                 {
-                    system.Update();
+                    Profiler.BeginSample($"System {Systems[i].GetType().Name} - Update");
+                    Systems[i].Update();
+                    Profiler.EndSample();
                 }
                 catch (Exception e)
                 {
@@ -116,11 +123,13 @@ namespace LunaClient.Systems
         /// </summary>
         public static void LateUpdate()
         {
-            foreach (var system in Systems)
+            for (var i = 0; i < Systems.Length; i++)
             {
                 try
                 {
-                    system.LateUpdate();
+                    Profiler.BeginSample($"System {Systems[i].GetType().Name} - LateUpdate");
+                    Systems[i].LateUpdate();
+                    Profiler.EndSample();
                 }
                 catch (Exception e)
                 {
@@ -134,9 +143,9 @@ namespace LunaClient.Systems
         /// </summary>
         public static void KillAllSystems()
         {
-            foreach (var system in Systems)
+            for (var i = 0; i < Systems.Length; i++)
             {
-                system.Enabled = false;
+                Systems[i].Enabled = false;
             }
         }
     }
