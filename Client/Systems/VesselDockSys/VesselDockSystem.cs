@@ -6,6 +6,8 @@ namespace LunaClient.Systems.VesselDockSys
     {
         private VesselDockEvents VesselDockEvents { get; } = new VesselDockEvents();
 
+        public override string SystemName { get; } = nameof(VesselDockSystem);
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

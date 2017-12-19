@@ -13,6 +13,8 @@ namespace LunaClient.Systems.Ping
         /// </summary>
         public override bool Enabled => true;
 
+        public override string SystemName { get; } = nameof(PingSystem);
+
         #region Fields & properties
 
         private static ConcurrentBag<string> PingQueue { get; } = new ConcurrentBag<string>();

@@ -12,6 +12,8 @@ namespace LunaClient.Systems.Groups
     {
         public ConcurrentDictionary<string, Group> Groups { get; } = new ConcurrentDictionary<string, Group>();
 
+        public override string SystemName { get; } = nameof(GroupSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnDisabled()

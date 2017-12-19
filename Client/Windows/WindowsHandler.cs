@@ -39,7 +39,7 @@ namespace LunaClient.Windows
             {
                 try
                 {
-                    Profiler.BeginSample($"Window {Windows[i].GetType().Name} - Update");
+                    Profiler.BeginSample(Windows[i].WindowName);
                     Windows[i].Update();
                     Profiler.EndSample();
                 }
@@ -56,7 +56,7 @@ namespace LunaClient.Windows
             {
                 try
                 {
-                    Profiler.BeginSample($"Window {Windows[i].GetType().Name} - OnGUI");
+                    Profiler.BeginSample(Windows[i].WindowName);
                     Windows[i].OnGui();
                     Profiler.EndSample();
                 }

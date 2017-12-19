@@ -76,6 +76,8 @@ namespace LunaClient.Systems.Chat
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(ChatSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()

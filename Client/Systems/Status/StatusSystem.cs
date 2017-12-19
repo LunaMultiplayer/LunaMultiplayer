@@ -29,6 +29,8 @@ namespace LunaClient.Systems.Status
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(StatusSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()

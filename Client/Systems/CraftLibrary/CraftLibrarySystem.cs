@@ -8,8 +8,7 @@ using System.Linq;
 
 namespace LunaClient.Systems.CraftLibrary
 {
-    public class CraftLibrarySystem :
-        MessageSystem<CraftLibrarySystem, CraftLibraryMessageSender, CraftLibraryMessageHandler>
+    public class CraftLibrarySystem : MessageSystem<CraftLibrarySystem, CraftLibraryMessageSender, CraftLibraryMessageHandler>
     {
         private CraftLibraryEvents CraftLibraryEventHandler { get; } = new CraftLibraryEvents();
 
@@ -51,6 +50,8 @@ namespace LunaClient.Systems.CraftLibrary
         #endregion
 
         #region Base overrides
+
+        public override string SystemName { get; } = nameof(CraftLibrarySystem);
 
         protected override bool ProcessMessagesInUnityThread => false;
 

@@ -2,6 +2,7 @@
 {
     public interface IWindow
     {
+        string WindowName { get; }
         void Update();
         void SafeUpdate();
         void OnGui();

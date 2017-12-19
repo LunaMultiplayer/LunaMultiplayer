@@ -28,6 +28,8 @@ namespace LunaClient.Systems.Toolbar
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(ToolbarSystem);
+
         protected override void OnEnabled()
         {
             ButtonTexture = GameDatabase.Instance.GetTexture("LunaMultiPlayer/Button/LMPButton", false);

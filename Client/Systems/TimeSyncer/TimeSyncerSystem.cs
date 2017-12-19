@@ -83,6 +83,8 @@ namespace LunaClient.Systems.TimeSyncer
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(TimeSyncerSystem);
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

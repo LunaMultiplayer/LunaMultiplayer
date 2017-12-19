@@ -14,6 +14,8 @@ namespace LunaClient.Systems.Admin
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(AdminSystem);
+
         protected override void OnDisabled()
         {
             base.OnDisabled();

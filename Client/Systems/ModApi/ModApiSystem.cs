@@ -44,6 +44,8 @@ namespace LunaClient.Systems.ModApi
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(ModApiSystem);
+
         /// <summary>
         /// This system must be ALWAYS enabled!
         /// </summary>

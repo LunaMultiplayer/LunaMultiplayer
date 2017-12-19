@@ -31,6 +31,8 @@ namespace LunaClient
     /// </summary>
     public class MainSystem : Base.System
     {
+        public override string SystemName { get; } = nameof(MainSystem);
+
         #region Fields
 
         private static ClientState _networkState;

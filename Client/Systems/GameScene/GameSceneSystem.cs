@@ -9,6 +9,8 @@
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(GameSceneSystem);
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

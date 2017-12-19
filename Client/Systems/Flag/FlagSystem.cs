@@ -22,6 +22,8 @@ namespace LunaClient.Systems.Flag
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(FlagSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()

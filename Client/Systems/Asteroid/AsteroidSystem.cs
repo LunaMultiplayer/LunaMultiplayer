@@ -41,6 +41,8 @@ namespace LunaClient.Systems.Asteroid
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(AsteroidSystem);
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

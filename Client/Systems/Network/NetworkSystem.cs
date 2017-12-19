@@ -43,6 +43,8 @@ namespace LunaClient.Systems.Network
 
         #endregion
 
+        public override string SystemName { get; } = nameof(NetworkSystem);
+
         private static bool _enabled = true;
 
         /// <summary>

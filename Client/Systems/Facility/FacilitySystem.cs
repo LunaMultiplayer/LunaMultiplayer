@@ -21,6 +21,8 @@ namespace LunaClient.Systems.Facility
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(FacilitySystem);
+
         protected override void OnEnabled()
         {
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityEvents.FacilityUpgraded);

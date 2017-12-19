@@ -57,6 +57,8 @@ namespace LunaClient.Systems.Warp
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(WarpSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnDisabled()

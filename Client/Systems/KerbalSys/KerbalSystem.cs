@@ -50,6 +50,8 @@ namespace LunaClient.Systems.KerbalSys
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(KerbalSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()

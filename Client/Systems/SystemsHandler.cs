@@ -87,7 +87,7 @@ namespace LunaClient.Systems
             {
                 try
                 {
-                    Profiler.BeginSample($"System {Systems[i].GetType().Name} - FixedUpdate");
+                    Profiler.BeginSample(Systems[i].SystemName);
                     Systems[i].FixedUpdate();
                     Profiler.EndSample();
                 }
@@ -107,7 +107,7 @@ namespace LunaClient.Systems
             {
                 try
                 {
-                    Profiler.BeginSample($"System {Systems[i].GetType().Name} - Update");
+                    Profiler.BeginSample(Systems[i].SystemName);
                     Systems[i].Update();
                     Profiler.EndSample();
                 }
@@ -127,7 +127,7 @@ namespace LunaClient.Systems
             {
                 try
                 {
-                    Profiler.BeginSample($"System {Systems[i].GetType().Name} - LateUpdate");
+                    Profiler.BeginSample(Systems[i].SystemName);
                     Systems[i].LateUpdate();
                     Profiler.EndSample();
                 }

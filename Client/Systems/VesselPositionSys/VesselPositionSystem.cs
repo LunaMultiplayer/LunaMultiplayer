@@ -39,7 +39,9 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Base overrides
-        
+
+        public override string SystemName { get; } = nameof(VesselPositionSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()

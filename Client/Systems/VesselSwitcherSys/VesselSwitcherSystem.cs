@@ -17,7 +17,9 @@ namespace LunaClient.Systems.VesselSwitcherSys
         #endregion
 
         #region Base overrides
-        
+
+        public override string SystemName { get; } = nameof(VesselSwitcherSystem);
+
         protected override void OnDisabled()
         {
             base.OnDisabled();

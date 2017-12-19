@@ -23,6 +23,8 @@ namespace LunaClient.Systems.Mod
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(ModSystem);
+
         protected override void OnDisabled()
         {
             base.OnDisabled();

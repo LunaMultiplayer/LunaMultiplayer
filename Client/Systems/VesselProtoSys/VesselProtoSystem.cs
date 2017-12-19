@@ -46,6 +46,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(VesselProtoSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()

@@ -14,6 +14,8 @@ namespace LunaClient.Base
     {
         #region Field & Properties
 
+        public abstract string SystemName { get; }
+
         /// <summary>
         /// This dictionary hold all the routines that will be executed during the FixedUpdate()
         /// The key is the method name that will be executed

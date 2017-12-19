@@ -25,6 +25,8 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(VesselRemoveSystem);
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

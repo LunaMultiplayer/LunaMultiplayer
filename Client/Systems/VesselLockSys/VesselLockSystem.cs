@@ -36,6 +36,8 @@ namespace LunaClient.Systems.VesselLockSys
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(VesselLockSystem);
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

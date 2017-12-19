@@ -40,6 +40,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(VesselFlightStateSystem);
+
         /// <inheritdoc />
         /// <summary>
         /// This system is multithreaded as we can receive the messages in one thread and store them in a concurrent dictionary

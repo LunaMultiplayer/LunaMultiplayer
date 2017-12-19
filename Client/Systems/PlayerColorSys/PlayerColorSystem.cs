@@ -22,6 +22,8 @@ namespace LunaClient.Systems.PlayerColorSys
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(PlayerColorSystem);
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

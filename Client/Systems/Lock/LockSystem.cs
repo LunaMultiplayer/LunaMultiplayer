@@ -22,6 +22,8 @@ namespace LunaClient.Systems.Lock
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(LockSystem);
+
         protected override void OnDisabled()
         {
             base.OnDisabled();

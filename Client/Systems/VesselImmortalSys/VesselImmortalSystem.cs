@@ -29,6 +29,8 @@ namespace LunaClient.Systems.VesselImmortalSys
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(VesselImmortalSystem);
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

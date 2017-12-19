@@ -26,6 +26,8 @@ namespace LunaClient.Systems.Scenario
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(ScenarioSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
