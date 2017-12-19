@@ -27,7 +27,7 @@ namespace LMP.Tests
             Assert.AreEqual(0, MessageStore.GetMessageDataCount(typeof(VesselPositionMsgData)));
 
             //Set first message as "used"
-            msg1.Recycle();
+            msg1.Recycle(false);
 
             Assert.AreEqual(1, MessageStore.GetMessageCount(typeof(VesselSrvMsg)));
             Assert.AreEqual(1, MessageStore.GetMessageDataCount(typeof(VesselPositionMsgData)));
@@ -35,8 +35,8 @@ namespace LMP.Tests
             //If we retrieve a new message the first one should be reused
             var msg3 = Factory.CreateNew<VesselSrvMsg, VesselPositionMsgData>();
 
-            msg2.Recycle();
-            msg3.Recycle();
+            msg2.Recycle(false);
+            msg3.Recycle(false);
 
             Assert.AreEqual(2, MessageStore.GetMessageCount(typeof(VesselSrvMsg)));
             Assert.AreEqual(2, MessageStore.GetMessageDataCount(typeof(VesselPositionMsgData)));
