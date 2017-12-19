@@ -53,20 +53,25 @@ namespace LunaClient.Systems.Network
         public override bool Enabled
         {
             get => _enabled;
-            set => _enabled |= value;
+            set
+            {
+                base.Enabled |= value;
+                _enabled |= value;
+            }
         }
 
-        #region Constructor
+        #region Base overrides
 
-        public NetworkSystem()
+        protected override void OnEnabled()
         {
-            //We setup the routine in the constructor as this system is always enabled
+            base.OnEnabled();
+
             SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, NetworkUpdate));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ShowDisconnectMessage));
         }
 
         #endregion
-        
+
         #region Update method
 
         private static void NetworkUpdate()

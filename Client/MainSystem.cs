@@ -4,6 +4,8 @@ using LunaClient.Systems;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Mod;
+using LunaClient.Systems.ModApi;
+using LunaClient.Systems.Network;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
@@ -179,6 +181,9 @@ namespace LunaClient
 
         public void Start()
         {
+            SystemsContainer.Get<ModApiSystem>().Enabled = true;
+            SystemsContainer.Get<NetworkSystem>().Enabled = true;
+
             if (!SettingsSystem.CurrentSettings.DisclaimerAccepted)
             {
                 Enabled = false;

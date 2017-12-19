@@ -10,6 +10,21 @@ namespace LunaClient.Systems.ModApi
     {
         #region Fields & properties
 
+        private static bool _enabled = true;
+
+        /// <summary>
+        /// This system must be ALWAYS enabled!
+        /// </summary>
+        public override bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                base.Enabled |= value;
+                _enabled |= value;
+            }
+        }
+
         internal readonly object EventLock = new object();
 
         public Dictionary<string, MessageCallback> RegisteredRawMods { get; } =
@@ -28,28 +43,18 @@ namespace LunaClient.Systems.ModApi
             new Dictionary<string, MessageCallback>();
 
         #endregion
-
-        #region Constructor
-
-        public ModApiSystem()
-        {
-            //Call the on enabled as otherwise the ReadAndHandleAllReceivedMessages is not registered.
-            base.OnEnabled();
-            //We setup the routines in the constructor as this system is always enabled
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ModApiUpdate));
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ModApiFixedUpdate));
-        }
-
-        #endregion
-
+        
         #region Base overrides
 
         public override string SystemName { get; } = nameof(ModApiSystem);
 
-        /// <summary>
-        /// This system must be ALWAYS enabled!
-        /// </summary>
-        public override bool Enabled => true;
+        protected override void OnEnabled()
+        {
+            base.OnEnabled();
+
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ModApiUpdate));
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ModApiFixedUpdate));
+        }
 
         #endregion
 

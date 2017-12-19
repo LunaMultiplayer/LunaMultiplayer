@@ -84,9 +84,12 @@ namespace LunaClient.Windows.Connection
 
         public override void Update()
         {
-            Status = SystemsContainer.Get<MainSystem>().Status;
-            SelectedSafe = Selected;
-            AddingServerSafe = AddingServer;
+            if (Display)
+            {
+                Status = SystemsContainer.Get<MainSystem>().Status;
+                SelectedSafe = Selected;
+                AddingServerSafe = AddingServer;
+            }
         }
 
         #endregion
