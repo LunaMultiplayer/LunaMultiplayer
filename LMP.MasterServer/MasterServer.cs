@@ -87,7 +87,7 @@ namespace LMP.MasterServer
             }
             catch (Exception e)
             {
-                ConsoleLogger.Log(LogLevels.Error, $"Error deserializing message! :{e}");
+                //ConsoleLogger.Log(LogLevels.Error, $"Error deserializing message! :{e}");
                 return null;
             }
         }
