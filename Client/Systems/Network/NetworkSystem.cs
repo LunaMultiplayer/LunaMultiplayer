@@ -223,7 +223,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.Starting:
                     SystemsContainer.Get<MainSystem>().Status = "Running";
-                    CommonUtil.Reserve100Mb();
+                    CommonUtil.Reserve20Mb();
                     LunaLog.Log("[LMP]: All systems up and running. Поехали!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {

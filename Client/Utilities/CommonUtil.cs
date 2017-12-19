@@ -68,11 +68,11 @@ namespace LunaClient.Utilities
         }
 
         /// <summary>
-        /// Allocates 100mb in the mono heap
+        /// Allocates 20mb in the mono heap
         /// </summary>
-        public static void Reserve100Mb()
+        public static void Reserve20Mb()
         {
-            var bytes = new byte[104857600];
+            var bytes = new byte[20971520];
             Rnd.NextBytes(bytes);
         }
     }
