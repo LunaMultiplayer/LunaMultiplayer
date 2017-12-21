@@ -85,7 +85,7 @@ namespace LMP.MasterServer
                 var message = MasterServerMessageFactory.Deserialize(msg, LunaTime.UtcNow.Ticks) as IMasterServerMessageBase;
                 return message;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 //ConsoleLogger.Log(LogLevels.Error, $"Error deserializing message! :{e}");
                 return null;
@@ -174,7 +174,7 @@ namespace LMP.MasterServer
             msg.Serialize(outMsg, false);
             peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
             peer.FlushSendQueue();
-            msg.Recycle(false);
+            msg.Recycle();
         }
 
         private static void RegisterServer(IMessageBase message, NetIncomingMessage netMsg)

@@ -122,10 +122,9 @@ namespace LunaCommon.Message.Base
         }
 
         /// <inheritdoc />
-        public void Recycle(bool recycleData = true)
+        public void Recycle()
         {
-            if (recycleData)
-                Data.Recycle();
+            Data.Recycle();
             MessageStore.RecycleMessage(this);
         }
 

@@ -87,7 +87,7 @@ namespace LunaCommon.Message.Base
 
             bool isPowerOfTwo = LengthIsPowerOfTwo(array);
             if (!isPowerOfTwo && !allowNonPowerOfTwo && array.Length != 0)
-                throw new System.ArgumentException("Length is not a power of 2");
+                return;
 
             lock (Pool)
             {

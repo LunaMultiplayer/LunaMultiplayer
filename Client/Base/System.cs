@@ -228,7 +228,7 @@ namespace LunaClient.Base
             if (FixedUpdateRoutines.Any())
             {
                 StringBuilder.Append("Total Fix upd: ").Append(FixedUpdateProfiler).AppendLine();
-                foreach (var routine in FixedUpdateRoutines)
+                foreach (var routine in FixedUpdateRoutines.Where(r => r != null))
                 {
                     StringBuilder.Append(routine.Name).Append(": ").Append(routine.Profiler).AppendLine();
                 }
@@ -237,7 +237,7 @@ namespace LunaClient.Base
             if (UpdateRoutines.Any())
             {
                 StringBuilder.Append("Total upd: ").Append(UpdateProfiler).AppendLine();
-                foreach (var routine in UpdateRoutines)
+                foreach (var routine in UpdateRoutines.Where(r=> r != null))
                 {
                     StringBuilder.Append(routine.Name).Append(": ").Append(routine.Profiler).AppendLine();
                 }
@@ -246,7 +246,7 @@ namespace LunaClient.Base
             if (LateUpdateRoutines.Any())
             {
                 StringBuilder.Append("Total Late upd: ").Append(LateUpdateProfiler).AppendLine();
-                foreach (var routine in LateUpdateRoutines)
+                foreach (var routine in LateUpdateRoutines.Where(r => r != null))
                 {
                     StringBuilder.Append(routine.Name).Append(": ").Append(routine.Profiler).AppendLine();
                 }

@@ -65,7 +65,7 @@ namespace LunaCommon.Message.Interface
         /// <summary>
         /// Call this method to send the message back to the pool
         /// </summary>
-        void Recycle(bool recycleData = true);
+        void Recycle();
 
         /// <summary>
         /// Gets the message size in bytes

@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Time;
@@ -101,6 +102,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static void SetOrbit(Vessel vessel, VesselPositionMsgData msgData)
         {
+            if (msgData.Orbit == null)
+                msgData.Orbit = ArrayPool<double>.Claim(8);
+
             msgData.Orbit[0] = vessel.orbit.inclination;
             msgData.Orbit[1] = vessel.orbit.eccentricity;
             msgData.Orbit[2] = vessel.orbit.semiMajorAxis;
@@ -113,6 +117,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static void SetNormalVector(Vessel vessel, VesselPositionMsgData msgData)
         {
+            if (msgData.NormalVector == null)
+                msgData.NormalVector = ArrayPool<double>.Claim(3);
+
             msgData.NormalVector[0] = vessel.terrainNormal.x;
             msgData.NormalVector[1] = vessel.terrainNormal.y;
             msgData.NormalVector[2] = vessel.terrainNormal.z;
@@ -120,6 +127,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static void GetCom(Vessel vessel, VesselPositionMsgData msgData)
         {
+            if (msgData.Com == null)
+                msgData.Com = ArrayPool<double>.Claim(3);
+
             msgData.Com[0] = vessel.CoM.x;
             msgData.Com[1] = vessel.CoM.y;
             msgData.Com[2] = vessel.CoM.z;
@@ -127,6 +137,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static void SetLatLonAlt(Vessel vessel, VesselPositionMsgData msgData)
         {
+            if (msgData.LatLonAlt == null)
+                msgData.LatLonAlt = ArrayPool<double>.Claim(3);
+
             msgData.LatLonAlt[0] = vessel.latitude;
             msgData.LatLonAlt[1] = vessel.longitude;
             msgData.LatLonAlt[2] = vessel.altitude;
@@ -134,6 +147,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static void SetVelocity(Vessel vessel, VesselPositionMsgData msgData)
         {
+            if (msgData.Velocity == null)
+                msgData.Velocity = ArrayPool<double>.Claim(3);
+
             Vector3d srfVel = UnityEngine.Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
             msgData.Velocity[0] = srfVel.x;
             msgData.Velocity[1] = srfVel.y;
@@ -142,6 +158,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static void SetTransformPosition(Vessel vessel, VesselPositionMsgData msgData)
         {
+            if (msgData.TransformPosition == null)
+                msgData.TransformPosition = ArrayPool<double>.Claim(3);
+
             msgData.TransformPosition[0] = vessel.ReferenceTransform.position.x;
             msgData.TransformPosition[1] = vessel.ReferenceTransform.position.y;
             msgData.TransformPosition[2] = vessel.ReferenceTransform.position.z;
@@ -149,6 +168,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private static void SetSrfRelRotation(Vessel vessel, VesselPositionMsgData msgData)
         {
+            if (msgData.SrfRelRotation == null)
+                msgData.SrfRelRotation = ArrayPool<float>.Claim(4);
+
             msgData.SrfRelRotation[0] = vessel.srfRelRotation.x;
             msgData.SrfRelRotation[1] = vessel.srfRelRotation.y;
             msgData.SrfRelRotation[2] = vessel.srfRelRotation.z;

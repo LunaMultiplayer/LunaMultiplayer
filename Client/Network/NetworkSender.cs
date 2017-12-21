@@ -86,7 +86,7 @@ namespace LunaClient.Network
                 }
                 
                 NetworkMain.ClientConnection.FlushSendQueue();
-                message.Recycle(false);
+                message.Recycle();
             }
             catch (Exception e)
             {
