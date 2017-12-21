@@ -22,11 +22,11 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (vessel == null || vessel.situation == Vessel.Situations.PRELAUNCH || VesselCommon.IsInSafetyBubble(vessel))
                 return;
-            
+
             VesselProtoRefresh.RefreshVesselProto(vessel);
             SendVesselMessage(vessel.protoVessel, reliable);
         }
-        
+
         public void SendVesselMessage(ProtoVessel protoVessel, bool reliable)
         {
             if (protoVessel == null) return;

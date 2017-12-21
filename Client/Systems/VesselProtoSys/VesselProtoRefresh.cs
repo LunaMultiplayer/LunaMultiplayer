@@ -10,69 +10,93 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public static void RefreshVesselProto(Vessel vessel)
         {
-            var proto = vessel.protoVessel;
-
-            proto.vesselRef = vessel;
-
-            proto.orbitSnapShot.semiMajorAxis = vessel.orbit.semiMajorAxis;
-            proto.orbitSnapShot.eccentricity = vessel.orbit.eccentricity;
-            proto.orbitSnapShot.inclination = vessel.orbit.inclination;
-            proto.orbitSnapShot.argOfPeriapsis = vessel.orbit.argumentOfPeriapsis;
-            proto.orbitSnapShot.LAN = vessel.orbit.LAN;
-            proto.orbitSnapShot.meanAnomalyAtEpoch = vessel.orbit.meanAnomalyAtEpoch;
-            proto.orbitSnapShot.epoch = vessel.orbit.epoch;
-            proto.orbitSnapShot.ReferenceBodyIndex = FlightGlobals.Bodies.IndexOf(vessel.orbit.referenceBody);
-
-            proto.vesselID = vessel.id;
-            proto.refTransform = vessel.referenceTransformId;
-            proto.vesselType = vessel.vesselType;
-            proto.situation = vessel.situation;
-            proto.landed = vessel.Landed;
-            proto.landedAt = vessel.landedAt;
-            proto.displaylandedAt = vessel.displaylandedAt;
-            proto.splashed = vessel.Splashed;
-            proto.vesselName = vessel.vesselName;
-            proto.missionTime = vessel.missionTime;
-            proto.launchTime = vessel.launchTime;
-            proto.lastUT = vessel.lastUT;
-            proto.autoClean = vessel.AutoClean;
-            proto.autoCleanReason = vessel.AutoCleanReason;
-            proto.wasControllable = vessel.IsControllable;
-
-            if (vessel.parts.Count != proto.protoPartSnapshots.Count)
+            if (vessel.protoVessel.vesselID != vessel.id)
             {
-                proto.protoPartSnapshots.Clear();
+                LunaLog.LogError($"Cannot update a protovessel id {vessel.protoVessel.vesselID} from a vessel with id {vessel.id}");
+                return;
+            }
+
+            vessel.protoVessel.vesselRef = vessel;
+
+            vessel.protoVessel.orbitSnapShot.semiMajorAxis = vessel.orbit.semiMajorAxis;
+            vessel.protoVessel.orbitSnapShot.eccentricity = vessel.orbit.eccentricity;
+            vessel.protoVessel.orbitSnapShot.inclination = vessel.orbit.inclination;
+            vessel.protoVessel.orbitSnapShot.argOfPeriapsis = vessel.orbit.argumentOfPeriapsis;
+            vessel.protoVessel.orbitSnapShot.LAN = vessel.orbit.LAN;
+            vessel.protoVessel.orbitSnapShot.meanAnomalyAtEpoch = vessel.orbit.meanAnomalyAtEpoch;
+            vessel.protoVessel.orbitSnapShot.epoch = vessel.orbit.epoch;
+            vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = FlightGlobals.Bodies.IndexOf(vessel.orbit.referenceBody);
+
+            vessel.protoVessel.vesselID = vessel.id;
+            vessel.protoVessel.refTransform = vessel.referenceTransformId;
+            vessel.protoVessel.vesselType = vessel.vesselType;
+            vessel.protoVessel.situation = vessel.situation;
+            vessel.protoVessel.landed = vessel.Landed;
+            vessel.protoVessel.landedAt = vessel.landedAt;
+            vessel.protoVessel.displaylandedAt = vessel.displaylandedAt;
+            vessel.protoVessel.splashed = vessel.Splashed;
+            vessel.protoVessel.vesselName = vessel.vesselName;
+            vessel.protoVessel.missionTime = vessel.missionTime;
+            vessel.protoVessel.launchTime = vessel.launchTime;
+            vessel.protoVessel.lastUT = vessel.lastUT;
+            vessel.protoVessel.autoClean = vessel.AutoClean;
+            vessel.protoVessel.autoCleanReason = vessel.AutoCleanReason;
+            vessel.protoVessel.wasControllable = vessel.IsControllable;
+
+            if (vessel.parts.Count != vessel.protoVessel.protoPartSnapshots.Count)
+            {
+                vessel.protoVessel.protoPartSnapshots.Clear();
                 
                 foreach (var part in vessel.parts.Where(p=> p.State != PartStates.DEAD))
                 {
-                    proto.protoPartSnapshots.Add(new ProtoPartSnapshot(part, proto));
+                    vessel.protoVessel.protoPartSnapshots.Add(new ProtoPartSnapshot(part, vessel.protoVessel));
                 }
 
-                foreach (var part in proto.protoPartSnapshots)
+                foreach (var part in vessel.protoVessel.protoPartSnapshots)
                 {
                     part.storePartRefs();
                 }
             }
-
-            if (vessel.crewedParts != proto.crewedParts || vessel.crewableParts != proto.crewableParts)
+            else
             {
-                ((List<ProtoCrewMember>)CrewField.GetValue(proto)).Clear();
-                proto.RebuildCrewCounts();
+                RefreshPartModules(vessel);
             }
 
-            proto.CoM = vessel.localCoM;
-            proto.latitude = vessel.latitude;
-            proto.longitude = vessel.longitude;
-            proto.altitude = vessel.altitude;
-            proto.height = vessel.heightFromTerrain;
-            proto.normal = vessel.terrainNormal;
-            proto.rotation = vessel.srfRelRotation;
-            proto.stage = vessel.currentStage;
-            proto.persistent = vessel.isPersistent;
-            proto.vesselRef.protoVessel = proto;
+            if (vessel.crewedParts != vessel.protoVessel.crewedParts || vessel.crewableParts != vessel.protoVessel.crewableParts)
+            {
+                ((List<ProtoCrewMember>)CrewField.GetValue(vessel.protoVessel)).Clear();
+                vessel.protoVessel.RebuildCrewCounts();
+            }
+
+            vessel.protoVessel.CoM = vessel.localCoM;
+            vessel.protoVessel.latitude = vessel.latitude;
+            vessel.protoVessel.longitude = vessel.longitude;
+            vessel.protoVessel.altitude = vessel.altitude;
+            vessel.protoVessel.height = vessel.heightFromTerrain;
+            vessel.protoVessel.normal = vessel.terrainNormal;
+            vessel.protoVessel.rotation = vessel.srfRelRotation;
+            vessel.protoVessel.stage = vessel.currentStage;
+            vessel.protoVessel.persistent = vessel.isPersistent;
+            vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
             
-            proto.actionGroups.ClearData();
-            proto.vesselRef.ActionGroups.Save(proto.actionGroups);
+            vessel.protoVessel.actionGroups.ClearData();
+            vessel.protoVessel.vesselRef.ActionGroups.Save(vessel.protoVessel.actionGroups);
+        }
+
+        private static void RefreshPartModules(Vessel vessel)
+        {
+            for (var i = 0; i < vessel.parts.Count; i++)
+            {
+                var part = vessel.parts[i];
+                if (part.State == PartStates.DEAD) continue;
+
+                for (var j = 0; j < part.Modules.Count; j++)
+                {
+                    var module = part.Modules[j];
+                    module.snapshot.moduleValues.ClearData();
+                    module.Save(module.snapshot.moduleValues);
+                }
+            }
         }
     }
 }

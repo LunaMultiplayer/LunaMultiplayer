@@ -124,7 +124,7 @@ namespace Server.Lidgren
             client.LastSendTime = ServerContext.ServerClock.ElapsedMilliseconds;
             client.BytesSent += outmsg.LengthBytes;
             
-            Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
+            var sendResult = Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
             Server.FlushSendQueue(); //Manually force to send the msg
         }
 
