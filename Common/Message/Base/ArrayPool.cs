@@ -80,6 +80,8 @@ namespace LunaCommon.Message.Base
 		 */
         public static void Release(ref T[] array, bool allowNonPowerOfTwo = false)
         {
+            if (array == null) return;
+
             if (array.GetType() != typeof(T[]))
             {
                 throw new ArgumentException("Expected array type " + typeof(T[]).Name + " but found " + array.GetType().Name + "\nAre you using the correct generic class?\n");
