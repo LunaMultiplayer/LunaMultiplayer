@@ -39,13 +39,13 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public Guid VesselId { get; set; }
         public int BodyIndex { get; set; }
-        public double[] LatLonAlt { get; set; }
-        public double[] NormalVector { get; set; }
-        public double[] Com { get; set; }
-        public double[] TransformPosition { get; set; }
-        public double[] Velocity { get; set; }
-        public double[] Orbit { get; set; }
-        public float[] SrfRelRotation { get; set; }
+        public double[] LatLonAlt { get; set; } = new double[3];
+        public double[] NormalVector { get; set; } = new double[3];
+        public double[] Com { get; set; } = new double[3];
+        public double[] TransformPosition { get; set; } = new double[3];
+        public double[] Velocity { get; set; } = new double[3];
+        public double[] Orbit { get; set; } = new double[8];
+        public float[] SrfRelRotation { get; set; } = new float[4];
         public bool Landed { get; set; }
         public bool Splashed { get; set; }
         public long TimeStamp;
