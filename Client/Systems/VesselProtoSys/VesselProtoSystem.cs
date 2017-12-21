@@ -57,8 +57,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
             GameEvents.onVesselWasModified.Add(VesselProtoEvents.VesselModified);
             GameEvents.onVesselGoOnRails.Add(VesselProtoEvents.VesselGoOnRails);
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckVesselsToLoadReloadWhileNotInFlight));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckVesselsToLoadReloadWhileNotInFlight));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval,
                 RoutineExecution.Update, SendVesselDefinition));

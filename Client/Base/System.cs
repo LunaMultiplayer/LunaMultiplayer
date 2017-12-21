@@ -3,6 +3,7 @@ using LunaClient.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+// ReSharper disable ForCanBeConvertedToForeach
 
 namespace LunaClient.Base
 {
@@ -43,26 +44,28 @@ namespace LunaClient.Base
         /// </summary>
         protected void SetupRoutine(RoutineDefinition routine)
         {
-            if (routine == null) return;
-            TaskFactory.StartNew(() =>
+            if (routine == null)
             {
-                if (routine.Execution == RoutineExecution.FixedUpdate && !FixedUpdateRoutines.Any(r=> r.Name == routine.Name))
-                {
-                    FixedUpdateRoutines.Add(routine);
-                }
-                else if (routine.Execution == RoutineExecution.Update && !UpdateRoutines.Any(r => r.Name == routine.Name))
-                {
-                    UpdateRoutines.Add(routine);
-                }
-                else if (routine.Execution == RoutineExecution.LateUpdate && !LateUpdateRoutines.Any(r => r.Name == routine.Name))
-                {
-                    LateUpdateRoutines.Add(routine);
-                }
-                else
-                {
-                    LunaLog.LogError($"[LMP]: Routine {routine.Name} already defined");
-                }
-            });
+                LunaLog.LogError($"[LMP]: Cannot set a null routine!");
+                return;
+            }
+
+            if (routine.Execution == RoutineExecution.FixedUpdate && !FixedUpdateRoutines.Any(r => r.Name == routine.Name))
+            {
+                FixedUpdateRoutines.Add(routine);
+            }
+            else if (routine.Execution == RoutineExecution.Update && !UpdateRoutines.Any(r => r.Name == routine.Name))
+            {
+                UpdateRoutines.Add(routine);
+            }
+            else if (routine.Execution == RoutineExecution.LateUpdate && !LateUpdateRoutines.Any(r => r.Name == routine.Name))
+            {
+                LateUpdateRoutines.Add(routine);
+            }
+            else
+            {
+                LunaLog.LogError($"[LMP]: Routine {routine.Name} already defined");
+            }
         }
 
         /// <summary>
@@ -70,31 +73,28 @@ namespace LunaClient.Base
         /// </summary>
         protected void ChangeRoutineExecutionInterval(string routineName, int newIntervalInMs)
         {
-            TaskFactory.StartNew(() =>
+            var routine = FixedUpdateRoutines.FirstOrDefault(r => r.Name == routineName);
+            if (routine != null)
             {
-                var routine = FixedUpdateRoutines.FirstOrDefault(r => r.Name == routineName);
-                if (routine != null)
-                {
-                    routine.IntervalInMs = newIntervalInMs;
-                    return;
-                }
+                routine.IntervalInMs = newIntervalInMs;
+                return;
+            }
 
-                routine = UpdateRoutines.FirstOrDefault(r => r.Name == routineName);
-                if (routine != null)
-                {
-                    routine.IntervalInMs = newIntervalInMs;
-                    return;
-                }
+            routine = UpdateRoutines.FirstOrDefault(r => r.Name == routineName);
+            if (routine != null)
+            {
+                routine.IntervalInMs = newIntervalInMs;
+                return;
+            }
 
-                routine = LateUpdateRoutines.FirstOrDefault(r => r.Name == routineName);
-                if (routine != null)
-                {
-                    routine.IntervalInMs = newIntervalInMs;
-                    return;
-                }
+            routine = LateUpdateRoutines.FirstOrDefault(r => r.Name == routineName);
+            if (routine != null)
+            {
+                routine.IntervalInMs = newIntervalInMs;
+                return;
+            }
 
-                LunaLog.LogError($"[LMP]: Routine {routineName} not defined");
-            });
+            LunaLog.LogError($"[LMP]: Routine {routineName} not defined");
         }
 
         private bool _enabled;
@@ -175,9 +175,9 @@ namespace LunaClient.Base
         {
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
-            foreach (var routine in FixedUpdateRoutines)
+            for (var i = 0; i < FixedUpdateRoutines.Count; i++)
             {
-                routine?.RunRoutine();
+                FixedUpdateRoutines[i]?.RunRoutine();
             }
 
             FixedUpdateProfiler.ReportTime(startClock);
@@ -191,9 +191,9 @@ namespace LunaClient.Base
         {
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
-            foreach (var routine in UpdateRoutines)
+            for (var i = 0; i < UpdateRoutines.Count; i++)
             {
-                routine?.RunRoutine();
+                UpdateRoutines[i]?.RunRoutine();
             }
 
             UpdateProfiler.ReportTime(startClock);
@@ -207,9 +207,9 @@ namespace LunaClient.Base
         {
             var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
-            foreach (var routine in LateUpdateRoutines)
+            for (var i = 0; i < LateUpdateRoutines.Count; i++)
             {
-                routine?.RunRoutine();
+                LateUpdateRoutines[i]?.RunRoutine();
             }
 
             LateUpdateProfiler.ReportTime(startClock);
@@ -266,17 +266,17 @@ namespace LunaClient.Base
 
             foreach (var routine in FixedUpdateRoutines)
             {
-                routine.Profiler.Reset();
+                routine?.Profiler.Reset();
             }
 
             foreach (var routine in UpdateRoutines)
             {
-                routine.Profiler.Reset();
+                routine?.Profiler.Reset();
             }
 
             foreach (var routine in LateUpdateRoutines)
             {
-                routine.Profiler.Reset();
+                routine?.Profiler.Reset();
             }
         }
     }
