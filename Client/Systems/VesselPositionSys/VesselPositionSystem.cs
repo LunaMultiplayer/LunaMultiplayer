@@ -36,6 +36,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public static Queue<Guid> VesselsToRemove { get; } = new Queue<Guid>();
 
+        private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
+        private List<Vessel>AbandonedVesselsToUpdate { get; } = new List<Vessel>();
+
         #endregion
 
         #region Base overrides
@@ -104,10 +107,12 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
             {
-                var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
-                foreach (var secondaryVessel in secondaryVesselsToUpdate)
+                SecondaryVesselsToUpdate.Clear();
+                SecondaryVesselsToUpdate.AddRange(VesselCommon.GetSecondaryVessels());
+
+                for (var i = 0; i < SecondaryVesselsToUpdate.Count; i++)
                 {
-                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
+                    MessageSender.SendVesselPositionUpdate(SecondaryVesselsToUpdate[i]);
                 }
             }
         }
@@ -119,10 +124,12 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
             {
-                var abandonedVesselsToUpdate = VesselCommon.GetUnloadedSecondaryVessels();
-                foreach (var secondaryVessel in abandonedVesselsToUpdate)
+                AbandonedVesselsToUpdate.Clear();
+                AbandonedVesselsToUpdate.AddRange(VesselCommon.GetUnloadedSecondaryVessels());
+
+                for (var i = 0; i < AbandonedVesselsToUpdate.Count; i++)
                 {
-                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
+                    MessageSender.SendVesselPositionUpdate(AbandonedVesselsToUpdate[i]);
                 }
             }
         }

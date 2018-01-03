@@ -84,9 +84,7 @@ namespace LunaClient
             LunaLog.ProcessLogMessages();
 
             if (!Enabled) return;
-
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
+            
             try
             {
                 if (HighLogic.LoadedScene == GameScenes.MAINMENU && !LmpSaveChecked)

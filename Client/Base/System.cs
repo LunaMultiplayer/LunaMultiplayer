@@ -1,8 +1,8 @@
 ﻿using LunaClient.Base.Interface;
-using LunaClient.Utilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 // ReSharper disable ForCanBeConvertedToForeach
 
 namespace LunaClient.Base
@@ -122,21 +122,6 @@ namespace LunaClient.Base
         }
 
         /// <summary>
-        /// Used to control the performance of the system
-        /// </summary>
-        private ProfilerData UpdateProfiler { get; } = new ProfilerData();
-
-        /// <summary>
-        /// Used to control the performance of the system
-        /// </summary>
-        private ProfilerData FixedUpdateProfiler { get; } = new ProfilerData();
-
-        /// <summary>
-        /// Used to control the performance of the system
-        /// </summary>
-        private ProfilerData LateUpdateProfiler { get; } = new ProfilerData();
-
-        /// <summary>
         /// Override to write code to execute when system is enabled.
         /// Use this method to SetupRoutines or to subscribe to game events
         /// </summary>
@@ -173,14 +158,10 @@ namespace LunaClient.Base
         /// </summary>
         public void FixedUpdate()
         {
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             for (var i = 0; i < FixedUpdateRoutines.Count; i++)
             {
                 FixedUpdateRoutines[i]?.RunRoutine();
             }
-
-            FixedUpdateProfiler.ReportTime(startClock);
         }
 
         /// <summary>
@@ -189,14 +170,10 @@ namespace LunaClient.Base
         /// </summary>
         public void Update()
         {
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             for (var i = 0; i < UpdateRoutines.Count; i++)
             {
                 UpdateRoutines[i]?.RunRoutine();
             }
-
-            UpdateProfiler.ReportTime(startClock);
         }
 
         /// <summary>
@@ -205,78 +182,9 @@ namespace LunaClient.Base
         /// </summary>
         public void LateUpdate()
         {
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             for (var i = 0; i < LateUpdateRoutines.Count; i++)
             {
                 LateUpdateRoutines[i]?.RunRoutine();
-            }
-
-            LateUpdateProfiler.ReportTime(startClock);
-        }
-
-        /// <summary>
-        /// Get the performance counter of the system and it's routines
-        /// </summary>
-        public string GetProfilersData()
-        {
-            StringBuilder.Length = 0;
-
-            if (FixedUpdateRoutines.Any() || UpdateRoutines.Any() || LateUpdateRoutines.Any())
-                StringBuilder.AppendLine("Times in ms (average/max/min/now) ");
-
-            if (FixedUpdateRoutines.Any())
-            {
-                StringBuilder.Append("Total Fix upd: ").Append(FixedUpdateProfiler).AppendLine();
-                foreach (var routine in FixedUpdateRoutines.Where(r => r != null))
-                {
-                    StringBuilder.Append(routine.Name).Append(": ").Append(routine.Profiler).AppendLine();
-                }
-            }
-
-            if (UpdateRoutines.Any())
-            {
-                StringBuilder.Append("Total upd: ").Append(UpdateProfiler).AppendLine();
-                foreach (var routine in UpdateRoutines.Where(r=> r != null))
-                {
-                    StringBuilder.Append(routine.Name).Append(": ").Append(routine.Profiler).AppendLine();
-                }
-            }
-
-            if (LateUpdateRoutines.Any())
-            {
-                StringBuilder.Append("Total Late upd: ").Append(LateUpdateProfiler).AppendLine();
-                foreach (var routine in LateUpdateRoutines.Where(r => r != null))
-                {
-                    StringBuilder.Append(routine.Name).Append(": ").Append(routine.Profiler).AppendLine();
-                }
-            }
-
-            return StringBuilder.ToString();
-        }
-
-        /// <summary>
-        /// Reset the performance counter of the system and it's routines
-        /// </summary>
-        public void ResetProfilers()
-        {
-            UpdateProfiler.Reset();
-            FixedUpdateProfiler.Reset();
-            LateUpdateProfiler.Reset();
-
-            foreach (var routine in FixedUpdateRoutines)
-            {
-                routine?.Profiler.Reset();
-            }
-
-            foreach (var routine in UpdateRoutines)
-            {
-                routine?.Profiler.Reset();
-            }
-
-            foreach (var routine in LateUpdateRoutines)
-            {
-                routine?.Profiler.Reset();
             }
         }
     }

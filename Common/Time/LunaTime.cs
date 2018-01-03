@@ -41,10 +41,11 @@ namespace LunaCommon.Time
         private static void RefreshTimeDifference()
         {
             //In case we run several servers/clients we use a OS level mutex to avoid being kicked from the servers if we make too many requests
-            using (var timeMutex = GetLunaMutex())
+            using (var timeMutex = new Mutex(true, "LunaTimeMutex", out var createdNew))
             {
-                if (timeMutex.WaitOne(10))
+                if (createdNew || timeMutex.WaitOne(10))
                 {
+                    //We OWN the mutex!
                     try
                     {
                         var nistTime = TimeRetriever.GetTime(TimeProvider.Nist);
@@ -58,6 +59,9 @@ namespace LunaCommon.Time
 
                     //Make it sleep for 5 seconds to force other instances to advance the timer in case they try to flood the server
                     LunaDelay.Delay(5000);
+
+                    //after all this, release the mutex so others can access it...
+                    timeMutex.ReleaseMutex();
                 }
                 else
                 {
@@ -65,31 +69,6 @@ namespace LunaCommon.Time
                     Timer.Change(5500, TimeSyncIntervalMs);
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets the OS wide mutex
-        /// </summary>
-        /// <returns></returns>
-        private static Mutex GetLunaMutex()
-        {
-            try
-            {
-                return TryOpenMutex();
-            }
-            catch (Exception)
-            {
-                return new Mutex(false, "LunaTimeMutex");
-            }
-        }
-
-        /// <summary>
-        /// Tries to open a mutex. This function is refactored because in unity it crashes as mscorlib.dll does not contain "OpenExisting"
-        /// </summary>
-        /// <returns></returns>
-        private static Mutex TryOpenMutex()
-        {
-            return Mutex.OpenExisting("LunaTimeMutex");
         }
     }
 }

@@ -10,7 +10,5 @@
         void FixedUpdate();
         void Update();
         void LateUpdate();
-        string GetProfilersData();
-        void ResetProfilers();
     }
 }

@@ -34,15 +34,15 @@ namespace LunaClient.Base
         public Action Method { private get; set; }
 
         /// <summary>
+        /// The method name
+        /// </summary>
+        public string MethodName { get; }
+
+        /// <summary>
         /// Select here if the routine must run in update or in fixed update
         /// </summary>
         public RoutineExecution Execution { get; set; }
-
-        /// <summary>
-        /// Profiler to see the performance of the routine
-        /// </summary>
-        public ProfilerData Profiler { get; } = new ProfilerData();
-
+        
         #region Constructors
 
         private RoutineDefinition()
@@ -59,6 +59,7 @@ namespace LunaClient.Base
             IntervalInMs = intervalInMs;
             Execution = execution;
             Method = method;
+            MethodName = method.Method.Name;
         }
 
         #endregion
@@ -70,13 +71,18 @@ namespace LunaClient.Base
         {
             if (IntervalInMs <= 0 || _stopwatch.ElapsedMilliseconds > IntervalInMs)
             {
-                var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
+                UnityEngine.Profiler.BeginSample(MethodName);
+
+                //var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
 
                 Method.Invoke();
 
-                Profiler.ReportTime(startClock);
+                //Profiler.ReportTime(startClock);
+
                 _stopwatch.Reset();
                 _stopwatch.Start();
+
+                UnityEngine.Profiler.EndSample();
             }
         }
     }

@@ -10,12 +10,6 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public static void RefreshVesselProto(Vessel vessel)
         {
-            if (vessel.protoVessel.vesselID != vessel.id)
-            {
-                LunaLog.LogError($"Cannot update a protovessel id {vessel.protoVessel.vesselID} from a vessel with id {vessel.id}");
-                return;
-            }
-
             vessel.protoVessel.vesselRef = vessel;
 
             vessel.protoVessel.orbitSnapShot.semiMajorAxis = vessel.orbit.semiMajorAxis;
@@ -93,10 +87,29 @@ namespace LunaClient.Systems.VesselProtoSys
                 for (var j = 0; j < part.Modules.Count; j++)
                 {
                     var module = part.Modules[j];
-                    module.snapshot.moduleValues.ClearData();
-                    module.Save(module.snapshot.moduleValues);
+                    for (var k = 0; k < module.Fields.Count; k++)
+                    {
+                        var field = module.Fields[k];
+                        var nodeValue = GetConfigNodeVal(field.name, module.snapshot.moduleValues);
+
+                        if (nodeValue?.value != null && field.GetStringValue(field.host, false) != nodeValue.value)
+                        {
+                            nodeValue.value = field.GetStringValue(field.host, false);
+                        }
+                    }
                 }
             }
+        }
+
+        private static ConfigNode.Value GetConfigNodeVal(string name, ConfigNode node)
+        {
+            for (var i = 0; i < node.CountValues; i++)
+            {
+                if (node.values[i].name == name)
+                    return node.values[i];
+            }
+
+            return null;
         }
     }
 }
