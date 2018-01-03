@@ -1,6 +1,6 @@
-﻿using LunaClient.Utilities;
-using System;
+﻿using System;
 using System.Diagnostics;
+using Profiler = UnityEngine.Profiler;
 
 namespace LunaClient.Base
 {
@@ -71,18 +71,14 @@ namespace LunaClient.Base
         {
             if (IntervalInMs <= 0 || _stopwatch.ElapsedMilliseconds > IntervalInMs)
             {
-                UnityEngine.Profiler.BeginSample(MethodName);
-
-                //var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
+                Profiler.BeginSample(MethodName);
 
                 Method.Invoke();
-
-                //Profiler.ReportTime(startClock);
 
                 _stopwatch.Reset();
                 _stopwatch.Start();
 
-                UnityEngine.Profiler.EndSample();
+                Profiler.EndSample();
             }
         }
     }
