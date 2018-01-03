@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base.Interface;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 // ReSharper disable ForCanBeConvertedToForeach
 
@@ -34,8 +33,6 @@ namespace LunaClient.Base
         /// The key is the method name that will be executed
         /// </summary>
         private List<RoutineDefinition> LateUpdateRoutines { get; } = new List<RoutineDefinition>();
-
-        private static readonly StringBuilder StringBuilder = new StringBuilder();
 
         #endregion
 
