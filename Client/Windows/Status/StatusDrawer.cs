@@ -5,6 +5,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.Warp;
+using LunaClient.Utilities;
 using LunaClient.Windows.Chat;
 using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
@@ -109,6 +110,11 @@ namespace LunaClient.Windows.Status
             var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, "D1", ButtonStyle);
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
             {
+                CommonUtil.Reserve20Mb();
+                CommonUtil.Reserve20Mb();
+                CommonUtil.Reserve20Mb();
+                CommonUtil.Reserve20Mb();
+
                 SettingsSystem.CurrentSettings.Debug1 = d1;
                 SettingsSystem.SaveSettings();
             }
