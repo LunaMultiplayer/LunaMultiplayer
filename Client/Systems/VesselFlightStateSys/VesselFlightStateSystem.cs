@@ -101,13 +101,11 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private void SendFlightState()
         {
-            if (Enabled && FlightStateSystemReady)
-            {
-                MessageSender.SendCurrentFlightState();
-            }
-
             if (Enabled)
             {
+                if (FlightStateSystemReady)
+                    MessageSender.SendCurrentFlightState();
+
                 ChangeRoutineExecutionInterval("SendFlightState", VesselCommon.IsSomeoneSpectatingUs ? 30 : 500);
             }
         }

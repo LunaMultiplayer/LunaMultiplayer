@@ -134,8 +134,6 @@ namespace LunaClient.Systems.VesselRemoveSys
                 RemovedVessels.TryAdd(vesselId, LunaTime.Now);
                 VesselsProtoStore.RemoveVessel(vesselId);
             }
-
-            VesselsToRemove = new ConcurrentQueue<Guid>();
         }
 
         /// <summary>

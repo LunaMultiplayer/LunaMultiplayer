@@ -112,12 +112,15 @@ namespace LunaClient.Systems.TimeSyncer
         {
             if (Enabled && !CurrentlyWarping && CanSyncTime && !SystemsContainer.Get<WarpSystem>().WaitingSubspaceIdFromServer)
             {
-                var targetTime = (int)SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
-                var currentError = TimeSpan.FromSeconds(CurrentErrorSec).TotalMilliseconds;
-                if (targetTime != 0 && Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < PhisicsClockLimitMs)
+                var targetTime = SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
+                if (targetTime > 0)
                 {
-                    //Time error is not so big so we can fix it adjusting the physics time
-                    SkewClock();
+                    var currentError = TimeSpan.FromSeconds(CurrentErrorSec).TotalMilliseconds;
+                    if (Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < PhisicsClockLimitMs)
+                    {
+                        //Time error is not so big so we can fix it adjusting the physics time
+                        SkewClock();
+                    }
                 }
             }
         }
