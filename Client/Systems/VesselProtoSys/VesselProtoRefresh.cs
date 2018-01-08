@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using UniLinq;
 
@@ -73,8 +74,25 @@ namespace LunaClient.Systems.VesselProtoSys
             vessel.protoVessel.persistent = vessel.isPersistent;
             vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
             
-            vessel.protoVessel.actionGroups.ClearData();
-            vessel.protoVessel.vesselRef.ActionGroups.Save(vessel.protoVessel.actionGroups);
+            if (vessel.protoVessel.vesselRef.ActionGroups.groups.Count != vessel.protoVessel.actionGroups.CountValues)
+            {
+                vessel.protoVessel.actionGroups.ClearData();
+                vessel.protoVessel.vesselRef.ActionGroups.Save(vessel.protoVessel.actionGroups);
+            }
+            else
+            {
+                for (var i = 0; i < vessel.protoVessel.vesselRef.ActionGroups.groups.Count; i++)
+                {
+                    var currentVal = vessel.protoVessel.vesselRef.ActionGroups.groups[i].ToString();
+                    var protoVal = vessel.protoVessel.actionGroups.values[i].value;
+
+                    if (currentVal != protoVal)
+                    {
+                        vessel.protoVessel.actionGroups.values[i].value = string.Concat(vessel.protoVessel.vesselRef.ActionGroups.groups[i].ToString(), ", ",
+                            vessel.protoVessel.vesselRef.ActionGroups.cooldownTimes[i].ToString(CultureInfo.InvariantCulture));
+                    }
+                }
+            }
         }
 
         private static void RefreshPartModules(Vessel vessel)
@@ -92,7 +110,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         var field = module.Fields[k];
                         var nodeValue = GetConfigNodeVal(field.name, module.snapshot.moduleValues);
 
-                        if (nodeValue?.value != null && field.GetStringValue(field.host, false) != nodeValue.value)
+                        if (nodeValue?.value != null)
                         {
                             nodeValue.value = field.GetStringValue(field.host, false);
                         }
