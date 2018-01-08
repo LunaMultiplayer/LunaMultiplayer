@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Scenario
@@ -31,7 +30,9 @@ namespace LunaCommon.Message.Data.Scenario
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             ScenarioCount = lidgrenMsg.ReadInt32();
-            ScenariosData = ArrayPool<ScenarioInfo>.Claim(ScenarioCount);
+            if (ScenariosData.Length < ScenarioCount)
+                ScenariosData = new ScenarioInfo[ScenarioCount];
+
             for (var i = 0; i < ScenarioCount; i++)
             {
                 if (ScenariosData[i] == null)
@@ -39,17 +40,6 @@ namespace LunaCommon.Message.Data.Scenario
 
                 ScenariosData[i].Deserialize(lidgrenMsg, dataCompressed);
             }
-        }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            for (var i = 0; i < ScenarioCount; i++)
-            {
-                ScenariosData[i].Recycle();
-            }
-            ArrayPool<ScenarioInfo>.Release(ref ScenariosData);
         }
 
         internal override int InternalGetMessageSize(bool dataCompressed)

@@ -21,7 +21,10 @@ namespace LunaCommon.Message.Data.Admin
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             AdminsNum = lidgrenMsg.ReadInt32();
-            Admins = ArrayPool<string>.Claim(AdminsNum);
+
+            if (Admins.Length < AdminsNum)
+                Admins = new string[AdminsNum];
+
             for (var i = 0; i < AdminsNum; i++)
             {
                 Admins[0] = lidgrenMsg.ReadString();
@@ -38,13 +41,7 @@ namespace LunaCommon.Message.Data.Admin
                 lidgrenMsg.Write(Admins[i]);
             }
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-            ArrayPool<string>.Release(ref Admins);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + Admins.GetByteCount(AdminsNum);

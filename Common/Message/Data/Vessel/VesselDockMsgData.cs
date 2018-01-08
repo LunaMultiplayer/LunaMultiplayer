@@ -42,17 +42,12 @@ namespace LunaCommon.Message.Data.Vessel
 
 
             NumBytes = lidgrenMsg.ReadInt32();
-            FinalVesselData = ArrayPool<byte>.Claim(NumBytes);
+            if (FinalVesselData.Length < NumBytes)
+                FinalVesselData = new byte[NumBytes];
+
             lidgrenMsg.ReadBytes(FinalVesselData, 0, NumBytes);
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<byte>.Release(ref FinalVesselData);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + 

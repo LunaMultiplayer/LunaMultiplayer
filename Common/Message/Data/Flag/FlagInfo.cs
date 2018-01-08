@@ -24,14 +24,11 @@ namespace LunaCommon.Message.Data.Flag
             Owner = lidgrenMsg.ReadString();
             FlagName = lidgrenMsg.ReadString();
             NumBytes = lidgrenMsg.ReadInt32();
+            
+            if (FlagData.Length < NumBytes)
+                FlagData = new byte[NumBytes];
 
-            FlagData = ArrayPool<byte>.Claim(NumBytes);
             lidgrenMsg.ReadBytes(FlagData, 0, NumBytes);
-        }
-
-        public void Recycle()
-        {
-            ArrayPool<byte>.Release(ref FlagData);
         }
 
         public int GetByteCount(bool dataCompressed)

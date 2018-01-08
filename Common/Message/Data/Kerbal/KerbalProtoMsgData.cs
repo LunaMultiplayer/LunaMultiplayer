@@ -26,14 +26,7 @@ namespace LunaCommon.Message.Data.Kerbal
 
             Kerbal.Deserialize(lidgrenMsg, dataCompressed);
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            Kerbal.Recycle();
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + Kerbal.GetByteCount(dataCompressed);

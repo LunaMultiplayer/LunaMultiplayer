@@ -53,9 +53,7 @@ namespace LunaCommon.Message.Base
         }
 
         internal abstract void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed);
-
-        public abstract void Recycle();
-
+        
         public int GetMessageSize(bool dataCompressed)
         {
             return sizeof(long) + sizeof(ushort) * 3 + InternalGetMessageSize(dataCompressed);

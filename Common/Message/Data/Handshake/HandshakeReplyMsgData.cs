@@ -49,17 +49,12 @@ namespace LunaCommon.Message.Data.Handshake
             PlayerId = GuidUtil.Deserialize(lidgrenMsg);
 
             NumBytes = lidgrenMsg.ReadInt32();
-            ModFileData = ArrayPool<byte>.Claim(NumBytes);
+
+            if (ModFileData.Length < NumBytes)
+                ModFileData = new byte[NumBytes];
             lidgrenMsg.ReadBytes(ModFileData, 0, NumBytes);
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<byte>.Release(ref ModFileData);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + sizeof(HandshakeReply) + Reason.GetByteCount() + sizeof(ModControlMode)

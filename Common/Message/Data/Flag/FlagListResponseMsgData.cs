@@ -39,16 +39,6 @@ namespace LunaCommon.Message.Data.Flag
             }
         }
 
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            for (var i = 0; i < FlagCount; i++)
-            {
-                FlagFiles[i].Recycle();
-            }
-        }
-
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             var arraySize = 0;

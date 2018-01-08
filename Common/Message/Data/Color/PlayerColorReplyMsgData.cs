@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Color
@@ -32,8 +31,10 @@ namespace LunaCommon.Message.Data.Color
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             PlayerColorsCount = lidgrenMsg.ReadInt32();
+            
+            if (PlayersColors.Length < PlayerColorsCount)
+                PlayersColors = new PlayerColor[PlayerColorsCount];
 
-            PlayersColors = ArrayPool<PlayerColor>.Claim(PlayerColorsCount);
             for (var i = 0; i < PlayerColorsCount; i++)
             {
                 if (PlayersColors[i] == null)
@@ -42,14 +43,7 @@ namespace LunaCommon.Message.Data.Color
                 PlayersColors[i].Deserialize(lidgrenMsg, dataCompressed);
             }
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<PlayerColor>.Release(ref PlayersColors);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             var arraySize = 0;

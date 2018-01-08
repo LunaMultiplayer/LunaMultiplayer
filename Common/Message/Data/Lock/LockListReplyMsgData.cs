@@ -1,6 +1,5 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Locks;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Lock
@@ -32,7 +31,9 @@ namespace LunaCommon.Message.Data.Lock
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             LocksCount = lidgrenMsg.ReadInt32();
-            Locks = ArrayPool<LockDefinition>.Claim(LocksCount);
+            if (Locks.Length < LocksCount)
+                Locks = new LockDefinition[LocksCount];
+
             for (var i = 0; i < LocksCount; i++)
             {
                 if (Locks[i] == null)
@@ -41,14 +42,7 @@ namespace LunaCommon.Message.Data.Lock
                 Locks[i].Deserialize(lidgrenMsg, dataCompressed);
             }
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<LockDefinition>.Release(ref Locks);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             var arraySize = 0;

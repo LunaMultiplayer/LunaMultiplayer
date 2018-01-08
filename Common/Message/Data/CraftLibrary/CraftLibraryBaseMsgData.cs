@@ -24,11 +24,6 @@ namespace LunaCommon.Message.Data.CraftLibrary
             PlayerName = lidgrenMsg.ReadString();
         }
 
-        public override void Recycle()
-        {
-            //Nothing to implement here
-        }
-
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return PlayerName.GetByteCount();

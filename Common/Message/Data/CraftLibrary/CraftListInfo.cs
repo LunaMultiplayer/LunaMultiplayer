@@ -44,28 +44,27 @@ namespace LunaCommon.Message.Data.CraftLibrary
             SubassemblyExists = lidgrenMsg.ReadBoolean();
 
             VabCraftCount = lidgrenMsg.ReadInt32();
-            VabCraftNames = ArrayPool<string>.Claim(VabCraftCount);
+            if (VabCraftNames.Length < VabCraftCount)
+                VabCraftNames = new string[VabCraftCount];
+
             for (var i = 0; i < VabCraftCount; i++)
                 VabCraftNames[i] = lidgrenMsg.ReadString();
 
             SphCraftCount = lidgrenMsg.ReadInt32();
-            SphCraftNames = ArrayPool<string>.Claim(SphCraftCount);
+            if (SphCraftNames.Length < SphCraftCount)
+                SphCraftNames = new string[SphCraftCount];
+
             for (var i = 0; i < SphCraftCount; i++)
                 SphCraftNames[i] = lidgrenMsg.ReadString();
 
             SubassemblyCraftCount = lidgrenMsg.ReadInt32();
-            SubassemblyCraftNames = ArrayPool<string>.Claim(SubassemblyCraftCount);
+            if (SubassemblyCraftNames.Length < SubassemblyCraftCount)
+                SubassemblyCraftNames = new string[SubassemblyCraftCount];
+
             for (var i = 0; i < SubassemblyCraftCount; i++)
                 SubassemblyCraftNames[i] = lidgrenMsg.ReadString();
         }
-
-        public void Recycle()
-        {
-            ArrayPool<string>.Release(ref VabCraftNames);
-            ArrayPool<string>.Release(ref SphCraftNames);
-            ArrayPool<string>.Release(ref SubassemblyCraftNames);
-        }
-
+        
         public int GetByteCount()
         {
             return sizeof(bool) * 3 + sizeof(int) * 3

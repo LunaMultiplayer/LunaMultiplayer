@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Chat
@@ -31,7 +30,10 @@ namespace LunaCommon.Message.Data.Chat
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             PlayerChannelsCount = lidgrenMsg.ReadInt32();
-            PlayerChannels = ArrayPool<PlayerChatChannels>.Claim(PlayerChannelsCount);
+
+            if (PlayerChannels.Length < PlayerChannelsCount)
+                PlayerChannels = new PlayerChatChannels[PlayerChannelsCount];
+
             for (var i = 0; i < PlayerChannelsCount; i++)
             {
                 if (PlayerChannels[i] == null)
@@ -39,17 +41,6 @@ namespace LunaCommon.Message.Data.Chat
 
                 PlayerChannels[i].Deserialize(lidgrenMsg, dataCompressed);
             }
-        }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            for (var i = 0; i < PlayerChannelsCount; i++)
-            {
-                PlayerChannels[i].Recycle();
-            }
-            ArrayPool<PlayerChatChannels>.Release(ref PlayerChannels);
         }
 
         internal override int InternalGetMessageSize(bool dataCompressed)

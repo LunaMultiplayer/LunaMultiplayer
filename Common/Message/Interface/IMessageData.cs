@@ -50,11 +50,6 @@ namespace LunaCommon.Message.Interface
         void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed);
 
         /// <summary>
-        /// Recycles the internal fields of this data
-        /// </summary>
-        void Recycle();
-
-        /// <summary>
         /// Size of this data in bytes
         /// </summary>
         int GetMessageSize(bool dataCompressed);

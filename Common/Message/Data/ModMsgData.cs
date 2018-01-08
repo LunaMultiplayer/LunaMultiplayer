@@ -51,15 +51,12 @@ namespace LunaCommon.Message.Data
             Reliable = lidgrenMsg.ReadBoolean();
             NumBytes = lidgrenMsg.ReadInt32();
 
-            Data = ArrayPool<byte>.Claim(NumBytes);
+            if (Data.Length < NumBytes)
+                Data = new byte[NumBytes];
+
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
         }
-
-        public override void Recycle()
-        {
-            ArrayPool<byte>.Release(ref Data);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return ModName.GetByteCount() + sizeof(bool) + sizeof(bool) + sizeof(int) + sizeof(byte) * NumBytes;

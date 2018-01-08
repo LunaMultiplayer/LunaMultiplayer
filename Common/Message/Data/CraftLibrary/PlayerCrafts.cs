@@ -19,12 +19,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
             PlayerName = lidgrenMsg.ReadString();
             Crafts.Deserialize(lidgrenMsg, dataCompressed);
         }
-
-        public void Recycle()
-        {
-            Crafts.Recycle();
-        }
-
+        
         public int GetByteCount()
         {
             return PlayerName.GetByteCount() + Crafts.GetByteCount();

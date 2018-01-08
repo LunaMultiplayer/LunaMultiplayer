@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Handshake
@@ -24,18 +23,9 @@ namespace LunaCommon.Message.Data.Handshake
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
         {
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
-            
-            Challenge = ArrayPool<byte>.ClaimWithExactLength(1024);
             lidgrenMsg.ReadBytes(Challenge, 0, 1024);
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<byte>.Release(ref Challenge, true);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + sizeof(byte) * 1024;

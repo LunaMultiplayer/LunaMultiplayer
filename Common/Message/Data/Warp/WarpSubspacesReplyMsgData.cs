@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Warp
@@ -31,7 +30,9 @@ namespace LunaCommon.Message.Data.Warp
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             SubspaceCount = lidgrenMsg.ReadInt32();
-            Subspaces = ArrayPool<SubspaceInfo>.Claim(SubspaceCount);
+            if (Subspaces.Length < SubspaceCount)
+                Subspaces = new SubspaceInfo[SubspaceCount];
+
             for (var i = 0; i < SubspaceCount; i++)
             {
                 if (Subspaces[i] == null)
@@ -40,18 +41,7 @@ namespace LunaCommon.Message.Data.Warp
                 Subspaces[i].Deserialize(lidgrenMsg, dataCompressed);
             }
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            for (var i = 0; i < SubspaceCount; i++)
-            {
-                Subspaces[i].Recycle();
-            }
-            ArrayPool<SubspaceInfo>.Release(ref Subspaces);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             var arraySize = 0;

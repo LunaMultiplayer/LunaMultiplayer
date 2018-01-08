@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.CraftLibrary
@@ -31,7 +30,9 @@ namespace LunaCommon.Message.Data.CraftLibrary
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             PlayerCraftsCount = lidgrenMsg.ReadInt32();
-            PlayerCrafts = ArrayPool<PlayerCrafts>.Claim(PlayerCraftsCount);
+
+            if (PlayerCrafts.Length < PlayerCraftsCount)
+                PlayerCrafts = new PlayerCrafts[PlayerCraftsCount];
 
             for (var i = 0; i < PlayerCraftsCount; i++)
             {
@@ -41,18 +42,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
                 PlayerCrafts[i].Deserialize(lidgrenMsg, dataCompressed);
             }
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            for (var i = 0; i < PlayerCraftsCount; i++)
-            {
-                PlayerCrafts[i].Recycle();
-            }
-            ArrayPool<PlayerCrafts>.Release(ref PlayerCrafts);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             var arraySize = 0;

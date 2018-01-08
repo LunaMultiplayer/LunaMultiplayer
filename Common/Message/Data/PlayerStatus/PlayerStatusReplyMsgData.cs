@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.PlayerStatus
@@ -31,7 +30,9 @@ namespace LunaCommon.Message.Data.PlayerStatus
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             PlayerStatusCount = lidgrenMsg.ReadInt32();
-            PlayerStatus = ArrayPool<PlayerStatusInfo>.Claim(PlayerStatusCount);
+            if (PlayerStatus.Length < PlayerStatusCount)
+                PlayerStatus = new PlayerStatusInfo[PlayerStatusCount];
+
             for (var i = 0; i < PlayerStatusCount; i++)
             {
                 if (PlayerStatus[i] == null)
@@ -39,13 +40,6 @@ namespace LunaCommon.Message.Data.PlayerStatus
 
                 PlayerStatus[i].Deserialize(lidgrenMsg, dataCompressed);
             }
-        }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<PlayerStatusInfo>.Release(ref PlayerStatus);
         }
 
         internal override int InternalGetMessageSize(bool dataCompressed)

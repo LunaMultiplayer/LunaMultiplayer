@@ -22,13 +22,10 @@ namespace LunaCommon.Message.Data.Scenario
             Module = lidgrenMsg.ReadString();
 
             NumBytes = lidgrenMsg.ReadInt32();
-            Data = ArrayPool<byte>.Claim(NumBytes);
-            lidgrenMsg.ReadBytes(Data, 0, NumBytes);
-        }
+            if (Data.Length < NumBytes)
+                Data = new byte[NumBytes];
 
-        public void Recycle()
-        {
-            ArrayPool<byte>.Release(ref Data);
+            lidgrenMsg.ReadBytes(Data, 0, NumBytes);
         }
 
         public int GetByteCount(bool dataCompressed)

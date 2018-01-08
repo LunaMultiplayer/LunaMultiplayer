@@ -22,13 +22,10 @@ namespace LunaCommon.Message.Data.Kerbal
             KerbalName = lidgrenMsg.ReadString();
 
             NumBytes = lidgrenMsg.ReadInt32();
-            KerbalData = ArrayPool<byte>.Claim(NumBytes);
-            lidgrenMsg.ReadBytes(KerbalData, 0, NumBytes);
-        }
+            if (KerbalData.Length < NumBytes)
+                KerbalData = new byte[NumBytes];
 
-        public void Recycle()
-        {
-            ArrayPool<byte>.Release(ref KerbalData);
+            lidgrenMsg.ReadBytes(KerbalData, 0, NumBytes);
         }
 
         public int GetByteCount(bool dataCompressed)

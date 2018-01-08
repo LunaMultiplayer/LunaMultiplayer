@@ -27,13 +27,6 @@ namespace LunaCommon.Message.Data.Groups
             Group.Deserialize(lidgrenMsg, dataCompressed);
         }
 
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            Group.Recycle();
-        }
-
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + Group.GetByteCount(dataCompressed);

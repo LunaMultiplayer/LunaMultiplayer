@@ -37,17 +37,13 @@ namespace LunaCommon.Message.Data.CraftLibrary
             UploadName = lidgrenMsg.ReadString();
 
             NumBytes = lidgrenMsg.ReadInt32();
-            CraftData = ArrayPool<byte>.Claim(NumBytes);
+
+            if (CraftData.Length < NumBytes)
+                CraftData = new byte[NumBytes];
+
             lidgrenMsg.ReadBytes(CraftData, 0, NumBytes);
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<byte>.Release(ref CraftData);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + sizeof(CraftType) + UploadName.GetByteCount() + sizeof(int) + sizeof(byte) * NumBytes;

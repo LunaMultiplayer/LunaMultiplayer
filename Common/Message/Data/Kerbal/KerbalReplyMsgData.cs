@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Kerbal
@@ -31,7 +30,9 @@ namespace LunaCommon.Message.Data.Kerbal
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             KerbalsCount = lidgrenMsg.ReadInt32();
-            Kerbals = ArrayPool<KerbalInfo>.Claim(KerbalsCount);
+            if (Kerbals.Length < KerbalsCount)
+                Kerbals = new KerbalInfo[KerbalsCount];
+
             for (var i = 0; i < KerbalsCount; i++)
             {
                 if (Kerbals[i] == null)
@@ -40,18 +41,7 @@ namespace LunaCommon.Message.Data.Kerbal
                 Kerbals[i].Deserialize(lidgrenMsg, dataCompressed);
             }
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            for (var i = 0; i < KerbalsCount; i++)
-            {
-                Kerbals[i].Recycle();
-            }
-            ArrayPool<KerbalInfo>.Release(ref Kerbals);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             var arraySize = 0;

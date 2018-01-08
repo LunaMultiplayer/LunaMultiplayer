@@ -67,54 +67,34 @@ namespace LunaCommon.Message.Data.Vessel
 
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
             BodyIndex = lidgrenMsg.ReadInt32();
-
-            LatLonAlt = ArrayPool<double>.ClaimWithExactLength(3);
+            
             for (var i = 0; i < 3; i++)
                 LatLonAlt[i] = lidgrenMsg.ReadDouble();
-
-            NormalVector = ArrayPool<double>.ClaimWithExactLength(3);
+            
             for (var i = 0; i < 3; i++)
                 NormalVector[i] = lidgrenMsg.ReadDouble();
-
-            Com = ArrayPool<double>.ClaimWithExactLength(3);
+            
             for (var i = 0; i < 3; i++)
                 Com[i] = lidgrenMsg.ReadDouble();
-
-            TransformPosition = ArrayPool<double>.ClaimWithExactLength(3);
+            
             for (var i = 0; i < 3; i++)
                 TransformPosition[i] = lidgrenMsg.ReadDouble();
-
-            Velocity = ArrayPool<double>.ClaimWithExactLength(3);
+            
             for (var i = 0; i < 3; i++)
                 Velocity[i] = lidgrenMsg.ReadDouble();
-
-            Orbit = ArrayPool<double>.ClaimWithExactLength(8);
+            
             for (var i = 0; i < 8; i++)
                 Orbit[i] = lidgrenMsg.ReadDouble();
 
             Landed = lidgrenMsg.ReadBoolean();
             Splashed = lidgrenMsg.ReadBoolean();
-
-            SrfRelRotation = ArrayPool<float>.ClaimWithExactLength(4);
+            
             for (var i = 0; i < 4; i++)
                 SrfRelRotation[i] = lidgrenMsg.ReadFloat();
 
             TimeStamp = lidgrenMsg.ReadInt64();
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<double>.Release(ref LatLonAlt, true);
-            ArrayPool<double>.Release(ref NormalVector, true);
-            ArrayPool<double>.Release(ref Com, true);
-            ArrayPool<double>.Release(ref TransformPosition, true);
-            ArrayPool<double>.Release(ref Velocity, true);
-            ArrayPool<double>.Release(ref Orbit, true);
-            ArrayPool<float>.Release(ref SrfRelRotation, true);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 6 + 

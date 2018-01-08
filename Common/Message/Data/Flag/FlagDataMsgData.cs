@@ -26,14 +26,7 @@ namespace LunaCommon.Message.Data.Flag
 
             Flag.Deserialize(lidgrenMsg, dataCompressed);
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            Flag.Recycle();
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + Flag.GetByteCount(dataCompressed);

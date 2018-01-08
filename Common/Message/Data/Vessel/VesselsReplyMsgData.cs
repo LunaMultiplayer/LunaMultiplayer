@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Vessel
@@ -31,7 +30,9 @@ namespace LunaCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             VesselsCount = lidgrenMsg.ReadInt32();
-            VesselsData = ArrayPool<VesselInfo>.Claim(VesselsCount);
+            if (VesselsData.Length < VesselsCount)
+                VesselsData = new VesselInfo[VesselsCount];
+            
             for (var i = 0; i < VesselsCount; i++)
             {
                 if (VesselsData[i] == null)
@@ -39,17 +40,6 @@ namespace LunaCommon.Message.Data.Vessel
 
                 VesselsData[i].Deserialize(lidgrenMsg, dataCompressed);
             }
-        }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            for (var i = 0; i < VesselsCount; i++)
-            {
-                VesselsData[i].Recycle();
-            }
-            ArrayPool<VesselInfo>.Release(ref VesselsData);
         }
 
         internal override int InternalGetMessageSize(bool dataCompressed)

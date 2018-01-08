@@ -63,22 +63,36 @@ namespace LunaCommon.Message.Data.MasterServer
 
             ServersCount = lidgrenMsg.ReadInt32();
 
-            Id = ArrayPool<long>.Claim(ServersCount);
-            ServerVersion = ArrayPool<string>.Claim(ServersCount);
-            InternalEndpoint = ArrayPool<string>.Claim(ServersCount);
-            Cheats = ArrayPool<bool>.Claim(ServersCount);
-            GameMode = ArrayPool<int>.Claim(ServersCount);
-            MaxPlayers = ArrayPool<int>.Claim(ServersCount);
-            ModControl = ArrayPool<int>.Claim(ServersCount);
-            PlayerCount = ArrayPool<int>.Claim(ServersCount);
-            ServerName = ArrayPool<string>.Claim(ServersCount);
-            Description = ArrayPool<string>.Claim(ServersCount);
-            WarpMode = ArrayPool<int>.Claim(ServersCount);
-            TerrainQuality = ArrayPool<int>.Claim(ServersCount);
-            VesselUpdatesSendMsInterval = ArrayPool<int>.Claim(ServersCount);
-            DropControlOnVesselSwitching = ArrayPool<bool>.Claim(ServersCount);
-            DropControlOnExitFlight = ArrayPool<bool>.Claim(ServersCount);
-            DropControlOnExit = ArrayPool<bool>.Claim(ServersCount);
+            if (Id.Length < ServersCount)
+                Id = new long[ServersCount];
+            if (ServerVersion.Length < ServersCount)
+                ServerVersion = new string[ServersCount];
+            if (InternalEndpoint.Length < ServersCount)
+                InternalEndpoint = new string[ServersCount];
+            if (Cheats.Length < ServersCount)
+                Cheats = new bool[ServersCount];
+            if (GameMode.Length < ServersCount)
+                GameMode = new int[ServersCount];
+            if (MaxPlayers.Length < ServersCount)
+                MaxPlayers = new int[ServersCount];
+            if (PlayerCount.Length < ServersCount)
+                PlayerCount = new int[ServersCount];
+            if (ServerName.Length < ServersCount)
+                ServerName = new string[ServersCount];
+            if (Description.Length < ServersCount)
+                Description = new string[ServersCount];
+            if (WarpMode.Length < ServersCount)
+                WarpMode = new int[ServersCount];
+            if (TerrainQuality.Length < ServersCount)
+                TerrainQuality = new int[ServersCount];
+            if (VesselUpdatesSendMsInterval.Length < ServersCount)
+                VesselUpdatesSendMsInterval = new int[ServersCount];
+            if (DropControlOnVesselSwitching.Length < ServersCount)
+                DropControlOnVesselSwitching = new bool[ServersCount];
+            if (DropControlOnExitFlight.Length < ServersCount)
+                DropControlOnExitFlight = new bool[ServersCount];
+            if (DropControlOnExit.Length < ServersCount)
+                DropControlOnExit = new bool[ServersCount];
 
             for (var i = 0; i < ServersCount; i++)
             {
@@ -100,29 +114,7 @@ namespace LunaCommon.Message.Data.MasterServer
                 DropControlOnExit[i] = lidgrenMsg.ReadBoolean();
             }
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<long>.Release(ref Id);
-            ArrayPool<string>.Release(ref ServerVersion);
-            ArrayPool<string>.Release(ref InternalEndpoint);
-            ArrayPool<bool>.Release(ref Cheats);
-            ArrayPool<int>.Release(ref GameMode);
-            ArrayPool<int>.Release(ref MaxPlayers);
-            ArrayPool<int>.Release(ref ModControl);
-            ArrayPool<int>.Release(ref PlayerCount);
-            ArrayPool<string>.Release(ref ServerName);
-            ArrayPool<string>.Release(ref Description);
-            ArrayPool<int>.Release(ref WarpMode);
-            ArrayPool<int>.Release(ref TerrainQuality);
-            ArrayPool<int>.Release(ref VesselUpdatesSendMsInterval);
-            ArrayPool<bool>.Release(ref DropControlOnVesselSwitching);
-            ArrayPool<bool>.Release(ref DropControlOnExitFlight);
-            ArrayPool<bool>.Release(ref DropControlOnExit);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + 

@@ -21,12 +21,7 @@ namespace LunaCommon.Message.Data.Flag
         {
             //Nothing to implement here
         }
-
-        public override void Recycle()
-        {
-            //Nothing to implement here
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return 0;

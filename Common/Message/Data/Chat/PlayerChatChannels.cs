@@ -24,18 +24,16 @@ namespace LunaCommon.Message.Data.Chat
         {
             PlayerName = lidgrenMsg.ReadString();
             ChannelCount = lidgrenMsg.ReadInt32();
-            Channels = ArrayPool<string>.Claim(ChannelCount);
+
+            if (Channels.Length < ChannelCount)
+                Channels = new string[ChannelCount];
+
             for (var i = 0; i < ChannelCount; i++)
             {
                 Channels[i] = lidgrenMsg.ReadString();
             }
         }
-
-        public void Recycle()
-        {
-            ArrayPool<string>.Release(ref Channels);
-        }
-
+        
         public int GetByteCount()
         {
             return PlayerName.GetByteCount() + sizeof(int) + Channels.GetByteCount(ChannelCount);

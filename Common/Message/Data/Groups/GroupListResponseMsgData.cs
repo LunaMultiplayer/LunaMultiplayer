@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Groups
@@ -31,7 +30,8 @@ namespace LunaCommon.Message.Data.Groups
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             GroupsCount = lidgrenMsg.ReadInt32();
-            Groups = ArrayPool<Group>.Claim(GroupsCount);
+            if (Groups.Length < GroupsCount)
+                Groups = new Group[GroupsCount];
 
             for (var i = 0; i < GroupsCount; i++)
             {
@@ -41,18 +41,7 @@ namespace LunaCommon.Message.Data.Groups
                 Groups[i].Deserialize(lidgrenMsg, dataCompressed);
             }
         }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-            
-            for (var i = 0; i < GroupsCount; i++)
-            {
-                Groups[i].Recycle();
-            }
-            ArrayPool<Group>.Release(ref Groups);
-        }
-
+        
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             var arraySize = 0;

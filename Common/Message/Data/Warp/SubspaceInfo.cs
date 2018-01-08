@@ -27,17 +27,13 @@ namespace LunaCommon.Message.Data.Warp
             SubspaceTime = lidgrenMsg.ReadDouble();
 
             PlayerCount = lidgrenMsg.ReadInt32();
-            Players = ArrayPool<string>.Claim(PlayerCount);
+            if (Players.Length < PlayerCount )
+                Players = new string[PlayerCount];
 
             for (var i = 0; i < PlayerCount; i++)
                 Players[i] = lidgrenMsg.ReadString();
         }
-
-        public void Recycle()
-        {
-            ArrayPool<string>.Release(ref Players);
-        }
-
+        
         public int GetByteCount(bool dataCompressed)
         {
             return sizeof(int) + sizeof(double) + sizeof(int) + Players.GetByteCount(PlayerCount);

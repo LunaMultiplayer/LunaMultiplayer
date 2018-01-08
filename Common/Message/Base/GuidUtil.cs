@@ -1,5 +1,6 @@
 ﻿using Lidgren.Network;
 using System;
+using System.Collections.Concurrent;
 using System.Reflection;
 // ReSharper disable InconsistentNaming
 
@@ -7,6 +8,8 @@ namespace LunaCommon.Message.Base
 {
     public static class GuidUtil
     {
+        private static readonly ConcurrentBag<byte[]> ArrayPool = new ConcurrentBag<byte[]>();
+
         private static readonly FieldInfo _a = typeof(Guid).GetField("_a", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo _b = typeof(Guid).GetField("_b", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo _c = typeof(Guid).GetField("_c", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -21,7 +24,8 @@ namespace LunaCommon.Message.Base
 
         public static void Serialize(Guid guid, NetOutgoingMessage lidgrenMsg)
         {
-            var array = ArrayPool<byte>.Claim(16);
+            if (!ArrayPool.TryTake(out var array))
+                array = new byte[16];
 
             array[0] = (byte)((int)_a.GetValue(guid));
             array[1] = (byte)((int)_a.GetValue(guid) >> 8);
@@ -42,17 +46,18 @@ namespace LunaCommon.Message.Base
 
             lidgrenMsg.Write(array, 0, 16);
 
-            ArrayPool<byte>.Release(ref array);
+            ArrayPool.Add(array);
         }
 
         public static Guid Deserialize(NetIncomingMessage lidgrenMsg)
         {
-            var array = ArrayPool<byte>.Claim(16);
+            if (!ArrayPool.TryTake(out var array))
+                array = new byte[16];
 
             lidgrenMsg.ReadBytes(array, 0, 16);
             var guid = new Guid(array);
 
-            ArrayPool<byte>.Release(ref array);
+            ArrayPool.Add(array);
 
             return guid;
         }

@@ -37,15 +37,10 @@ namespace LunaCommon.Message.Data.Handshake
             PublicKey = lidgrenMsg.ReadString();
 
             NumBytes = lidgrenMsg.ReadInt32();
-            ChallengeSignature = ArrayPool<byte>.ClaimWithExactLength(NumBytes);
+            if (ChallengeSignature.Length < NumBytes)
+                ChallengeSignature = new byte[NumBytes];
+
             lidgrenMsg.ReadBytes(ChallengeSignature, 0, NumBytes);
-        }
-
-        public override void Recycle()
-        {
-            base.Recycle();
-
-            ArrayPool<byte>.Release(ref ChallengeSignature, true);
         }
 
         internal override int InternalGetMessageSize(bool dataCompressed)

@@ -24,15 +24,12 @@ namespace LunaCommon.Message.Data.Vessel
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
 
             NumBytes = lidgrenMsg.ReadInt32();
-            Data = ArrayPool<byte>.Claim(NumBytes);
+            if (Data.Length < NumBytes)
+                Data = new byte[NumBytes];
+
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
         }
-
-        public void Recycle()
-        {
-            ArrayPool<byte>.Release(ref Data);
-        }
-
+        
         public int GetByteCount(bool dataCompressed)
         {
             return GuidUtil.GetByteSize() + sizeof(int) + sizeof(byte) * NumBytes;

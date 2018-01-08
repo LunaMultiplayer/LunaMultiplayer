@@ -52,22 +52,19 @@ namespace LunaCommon.Message.Data.Groups
             Owner = lidgrenMsg.ReadString();
 
             MembersCount = lidgrenMsg.ReadInt32();
-            Members = ArrayPool<string>.Claim(MembersCount);
+            if (Members.Length < MembersCount)
+                Members = new string[MembersCount];
+
             for (var i = 0; i < MembersCount; i++)
                 Members[i] = lidgrenMsg.ReadString();
 
             InvitedCount = lidgrenMsg.ReadInt32();
-            Invited = ArrayPool<string>.Claim(InvitedCount);
+            if (Invited.Length < InvitedCount)
+                Invited = new string[InvitedCount];
+
             for (var i = 0; i < InvitedCount; i++)
                 Invited[i] = lidgrenMsg.ReadString();
         }
-
-        public void Recycle()
-        {
-            ArrayPool<string>.Release(ref Members);
-            ArrayPool<string>.Release(ref Invited);
-        }
-
         public int GetByteCount(bool dataCompressed)
         {
             return Name.GetByteCount() + Owner.GetByteCount() + 
