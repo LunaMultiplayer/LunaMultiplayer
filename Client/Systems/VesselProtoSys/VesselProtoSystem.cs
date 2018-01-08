@@ -114,8 +114,8 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemReady)
                 {
-                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
-                    MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels(), false);
+                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
+                    MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
                 }
             }
             catch (Exception e)

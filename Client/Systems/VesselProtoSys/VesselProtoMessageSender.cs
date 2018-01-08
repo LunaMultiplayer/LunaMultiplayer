@@ -13,12 +13,17 @@ namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselProtoMessageSender : SubSystem<VesselProtoSystem>, IMessageSender
     {
+        /// <summary>
+        /// Pre allocated array to store the vessel data into it. Max 10 megabytes
+        /// </summary>
+        private static readonly byte[] VesselSerializedBytes = new byte[10 * 1024 * 1000];
+
         public void SendMessage(IMessageData msg)
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselMessage(Vessel vessel, bool reliable)
+        public void SendVesselMessage(Vessel vessel, bool reliable = true)
         {
             if (vessel == null || vessel.situation == Vessel.Situations.PRELAUNCH || VesselCommon.IsInSafetyBubble(vessel))
                 return;
@@ -27,13 +32,13 @@ namespace LunaClient.Systems.VesselProtoSys
             SendVesselMessage(vessel.protoVessel, reliable);
         }
 
-        public void SendVesselMessage(ProtoVessel protoVessel, bool reliable)
+        public void SendVesselMessage(ProtoVessel protoVessel, bool reliable = true)
         {
             if (protoVessel == null) return;
             TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, reliable));
         }
 
-        public void SendVesselMessage(IEnumerable<Vessel> vessels, bool reliable)
+        public void SendVesselMessage(IEnumerable<Vessel> vessels, bool reliable = true)
         {
             foreach (var vessel in vessels)
             {
@@ -48,36 +53,42 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool reliable)
         {
-            //TODO: FIX THIS
-            reliable = true;
             //Never send empty vessel id's (it happens with flags...)
             if (protoVessel.vesselID == Guid.Empty) return;
 
-            var vesselBytes = VesselSerializer.SerializeVessel(protoVessel);
-            if (vesselBytes.Length > 0)
+            //VesselSerializedBytes is shared so lock it!
+            lock (VesselSerializedBytes)
             {
-                if (reliable)
+                VesselSerializer.SerializeVesselToArray(protoVessel, VesselSerializedBytes, out var numBytes);
+                if (VesselSerializedBytes.Length > 0)
                 {
-                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoReliableMsgData>();
-                    FillAndSendProtoMessageData(protoVessel.vesselID, msgData, vesselBytes);
+                    if (reliable)
+                    {
+                        var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoReliableMsgData>();
+                        FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
+                    }
+                    else
+                    {
+                        var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
+                        FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
+                    }
                 }
                 else
                 {
-                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
-                    FillAndSendProtoMessageData(protoVessel.vesselID, msgData, vesselBytes);
+                    LunaLog.LogError($"[LMP]: Failed to create byte[] data for {protoVessel.vesselID}");
                 }
-            }
-            else
-            {
-                LunaLog.LogError($"[LMP]: Failed to create byte[] data for {protoVessel.vesselID}");
             }
         }
 
-        private void FillAndSendProtoMessageData(Guid vesselId, VesselProtoBaseMsgData msgData, byte[] vesselBytes)
+        private void FillAndSendProtoMessageData(Guid vesselId, VesselProtoBaseMsgData msgData, byte[] vesselBytes, int numBytes)
         {
             msgData.Vessel.VesselId = vesselId;
-            msgData.Vessel.Data = vesselBytes;
-            msgData.Vessel.NumBytes = vesselBytes.Length;
+
+            if (msgData.Vessel.Data.Length < numBytes)
+                Array.Resize(ref msgData.Vessel.Data, numBytes);
+
+            Array.Copy(vesselBytes, 0, msgData.Vessel.Data, 0, numBytes);
+            msgData.Vessel.NumBytes = numBytes;
 
             SendMessage(msgData);
         }

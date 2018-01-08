@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using UniLinq;
@@ -83,10 +84,10 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 for (var i = 0; i < vessel.protoVessel.vesselRef.ActionGroups.groups.Count; i++)
                 {
-                    var currentVal = vessel.protoVessel.vesselRef.ActionGroups.groups[i].ToString();
+                    var currentVal = vessel.protoVessel.vesselRef.ActionGroups.groups[i];
                     var protoVal = vessel.protoVessel.actionGroups.values[i].value;
 
-                    if (currentVal != protoVal)
+                    if (!bool.TryParse(protoVal, out var boolProtoVal) || currentVal != boolProtoVal)
                     {
                         vessel.protoVessel.actionGroups.values[i].value = string.Concat(vessel.protoVessel.vesselRef.ActionGroups.groups[i].ToString(), ", ",
                             vessel.protoVessel.vesselRef.ActionGroups.cooldownTimes[i].ToString(CultureInfo.InvariantCulture));
@@ -112,7 +113,16 @@ namespace LunaClient.Systems.VesselProtoSys
 
                         if (nodeValue?.value != null)
                         {
-                            nodeValue.value = field.GetStringValue(field.host, false);
+                            try
+                            {
+                                var castedValue = Convert.ChangeType(nodeValue.value, field.FieldInfo.FieldType);
+                                if (castedValue != field.GetValue(field.host))
+                                    nodeValue.value = field.GetStringValue(field.host, false);
+                            }
+                            catch (Exception)
+                            {
+                                nodeValue.value = field.GetStringValue(field.host, false);
+                            }
                         }
                     }
                 }
