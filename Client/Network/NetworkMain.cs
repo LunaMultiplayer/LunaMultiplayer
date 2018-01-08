@@ -20,6 +20,7 @@ namespace LunaClient.Network
 
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
         {
+            UseMessageRecycling = true,
             ReceiveBufferSize = 500000, //500Kb
             SendBufferSize = 500000, //500Kb
             AutoFlushSendQueue = false,
