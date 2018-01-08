@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 
 namespace LunaClient.Systems.KerbalSys
@@ -31,12 +32,18 @@ namespace LunaClient.Systems.KerbalSys
             }
         }
 
+        /// <summary>
+        /// Event triggered when any kerbal status changes (kerbal dies, etc)
+        /// </summary>
         public void StatusChange(ProtoCrewMember kerbal, ProtoCrewMember.RosterStatus previousStatus, ProtoCrewMember.RosterStatus newStatus)
         {
             if (previousStatus != newStatus)
             {
-                System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
-                System.MessageSender.SendKerbal(kerbal);
+                if (kerbal.seat.vessel == null || LockSystem.LockQuery.UpdateLockBelongsToPlayer(kerbal.seat.vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                {
+                    System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
+                    System.MessageSender.SendKerbal(kerbal);
+                }
             }
         }
 
