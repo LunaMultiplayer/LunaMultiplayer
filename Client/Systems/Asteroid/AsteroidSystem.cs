@@ -37,6 +37,8 @@ namespace LunaClient.Systems.Asteroid
         public Dictionary<string, string> ServerAsteroidTrackStatus { get; } = new Dictionary<string, string>();
         private AsteroidEventHandler AsteroidEventHandler { get; } = new AsteroidEventHandler();
 
+        public bool AsteroidSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene >= GameScenes.FLIGHT;
+
         #endregion
 
         #region Base overrides
@@ -83,7 +85,7 @@ namespace LunaClient.Systems.Asteroid
         {
             if (!Enabled) return;
 
-            if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName) && Time.timeSinceLevelLoad > 1f)
+            if (AsteroidSystemReady && LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName) && Time.timeSinceLevelLoad > 1f)
             {            
                 //We have the spawn lock so spawn some asteroids if there are less than expected
                 var beforeSpawn = GetAsteroidCount();
