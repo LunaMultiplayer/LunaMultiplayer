@@ -1,13 +1,12 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.Network;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselStateSys;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System.Collections.Concurrent;
-using UniLinq;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -37,7 +36,11 @@ namespace LunaClient.Systems.VesselProtoSys
         private static void HandleVesselProto(VesselProtoBaseMsgData messageData)
         {
             if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.Vessel.VesselId))
-                VesselsProtoStore.HandleVesselProtoData(messageData.Vessel.Data, messageData.Vessel.NumBytes, messageData.Vessel.VesselId);
+            {
+                //Don't update vessel protos for vessels that are not unpacked
+                if (VesselStateSystem.VesselsOnRails.ContainsKey(messageData.Vessel.VesselId))
+                    VesselsProtoStore.HandleVesselProtoData(messageData.Vessel.Data, messageData.Vessel.NumBytes, messageData.Vessel.VesselId, messageData.VesselHasChanges);
+            }
         }
 
         private static void HandleVesselResponse(VesselsReplyMsgData messageData)
@@ -46,7 +49,7 @@ namespace LunaClient.Systems.VesselProtoSys
             for (var i = 0; i < messageData.VesselsCount; i++)
             {
                 if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.VesselsData[i].VesselId))
-                    VesselsProtoStore.HandleVesselProtoData(messageData.VesselsData[i].Data, messageData.VesselsData[i].NumBytes, messageData.VesselsData[i].VesselId, true);
+                    VesselsProtoStore.HandleVesselProtoData(messageData.VesselsData[i].Data, messageData.VesselsData[i].NumBytes, messageData.VesselsData[i].VesselId, true, true);
             }
 
             MainSystem.NetworkState = ClientState.VesselsSynced;

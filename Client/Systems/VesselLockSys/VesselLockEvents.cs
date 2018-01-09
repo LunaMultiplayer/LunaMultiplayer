@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselLockSys
             if (LockSystem.LockQuery.ControlLockExists(vessel.id) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 //We switched to a vessel that is controlled by another player so start spectating
-                System.StartSpectating();
+                System.StartSpectating(vessel.id);
             }
         }
     }

@@ -21,7 +21,7 @@ namespace LunaClient.Systems
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
         /// </summary>
-        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, bool runSyncronously = false)
+        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, bool vesselHasChanges = true, bool runSyncronously = false)
         {
             if (runSyncronously)
                 HandleData();
@@ -32,7 +32,8 @@ namespace LunaClient.Systems
             {
                 if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
                 {
-                    vesselUpdate.Update(vesselData, numBytes, vesselId);
+                    if (vesselHasChanges || VesselCommon.SpectatingVesselId == vesselId)
+                        vesselUpdate.Update(vesselData, numBytes, vesselId);
                 }
                 else
                 {
@@ -92,7 +93,6 @@ namespace LunaClient.Systems
                 LunaLog.LogError("Cannot update a VesselProtoUpdate with a differente vesselId");
                 return;
             }
-
             var newHash = Common.CalculateSha256Hash(vesselData);
             if (VesselHash == newHash) return; //Skip Updating as the hash is the same
 

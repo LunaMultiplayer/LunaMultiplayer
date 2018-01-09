@@ -179,7 +179,7 @@ namespace LunaClient.Systems.VesselLockSys
                 SystemsContainer.Get<LockSystem>().ReleaseControlLocksExcept(activeVesselId.Value);
         }
 
-        public void StartSpectating()
+        public void StartSpectating(Guid spectatingVesselId)
         {
             //Lock all vessel controls
             InputLockManager.SetControlLock(LmpGuiUtil.BlockAllControls, SpectateLock);
@@ -189,6 +189,7 @@ namespace LunaClient.Systems.VesselLockSys
                 SystemsContainer.Get<LockSystem>().AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
 
             VesselCommon.IsSpectating = true;
+            VesselCommon.SpectatingVesselId = spectatingVesselId;
 
             //Disable "EVA" button
             HighLogic.CurrentGame.Parameters.Flight.CanEVA = false;

@@ -48,7 +48,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public static readonly Dictionary<string, string[]> FieldsToIgnore = new Dictionary<string, string[]>()
         {
-            ["ModuleEnginesFX"] = new[] { "currentThrottle" }
+            ["ModuleEnginesFX"] = new[] { "currentThrottle" },
+            ["ModuleWheelSuspension"] = new[] { "suspensionPos", "autoBoost" }
         };
 
         private static readonly List<ProtoCrewMember> MembersToAdd = new List<ProtoCrewMember>();

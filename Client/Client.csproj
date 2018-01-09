@@ -81,6 +81,8 @@
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoRefresh.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselUpdater.cs" />
+    <Compile Include="Systems\VesselStateSys\VesselStateEvents.cs" />
+    <Compile Include="Systems\VesselStateSys\VesselStateSystem.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\OutdatedVersionDialog.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />

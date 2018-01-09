@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using UniLinq;
@@ -8,9 +9,17 @@ namespace LunaClient.Systems.VesselProtoSys
     public class VesselProtoRefresh
     {
         private static readonly FieldInfo CrewField = typeof(ProtoVessel).GetField("crew", BindingFlags.Instance | BindingFlags.NonPublic);
-
-        public static void RefreshVesselProto(Vessel vessel)
+        
+        /// <summary>
+        /// Here we refresh the protovessel based on a vessel. This method is much better than calling vessel.BackupVessel()
+        /// as it does not generate garbage.
+        /// Also it returns true or false if there are substantial changes in the vessel so that require the other players to deserialize it.
+        /// </summary>
+        /// <returns></returns>
+        public static bool RefreshVesselProto(Vessel vessel)
         {
+            var vesselHasChanges = vessel.situation != vessel.protoVessel.situation || vessel.currentStage != vessel.protoVessel.stage;
+
             vessel.protoVessel.vesselRef = vessel;
             vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
             vessel.protoVessel.vesselID = vessel.id;
@@ -49,15 +58,20 @@ namespace LunaClient.Systems.VesselProtoSys
             vessel.protoVessel.stage = vessel.currentStage;
             vessel.protoVessel.persistent = vessel.isPersistent;
 
-            RefreshParts(vessel);
-            RefreshCrew(vessel);
-            RefreshActionGroups(vessel);
+            vesselHasChanges |= RefreshParts(vessel);
+            vesselHasChanges |= RefreshCrew(vessel);
+            vesselHasChanges |= RefreshActionGroups(vessel);
+
+            return vesselHasChanges;
         }
 
-        private static void RefreshActionGroups(Vessel vessel)
+        private static bool RefreshActionGroups(Vessel vessel)
         {
+            var actionGroupsHaveChanges = false;
+
             if (vessel.protoVessel.vesselRef.ActionGroups.groups.Count != vessel.protoVessel.actionGroups.CountValues)
             {
+                actionGroupsHaveChanges = true;
                 vessel.protoVessel.actionGroups.ClearData();
                 vessel.protoVessel.vesselRef.ActionGroups.Save(vessel.protoVessel.actionGroups);
             }
@@ -66,29 +80,34 @@ namespace LunaClient.Systems.VesselProtoSys
                 for (var i = 0; i < vessel.protoVessel.vesselRef.ActionGroups.groups.Count; i++)
                 {
                     var currentVal = vessel.protoVessel.vesselRef.ActionGroups.groups[i];
-                    var protoVal = vessel.protoVessel.actionGroups.values[i].value;
+                    var protoVal = vessel.protoVessel.actionGroups.values[i].value.Substring(0, vessel.protoVessel.actionGroups.values[i].value.IndexOf(",", StringComparison.Ordinal));
 
                     if (!bool.TryParse(protoVal, out var boolProtoVal) || currentVal != boolProtoVal)
                     {
+                        actionGroupsHaveChanges = true;
                         vessel.protoVessel.actionGroups.values[i].value = string.Concat(
                             vessel.protoVessel.vesselRef.ActionGroups.groups[i].ToString(), ", ",
                             vessel.protoVessel.vesselRef.ActionGroups.cooldownTimes[i].ToString(CultureInfo.InvariantCulture));
                     }
                 }
             }
+
+            return actionGroupsHaveChanges;
         }
 
-        private static void RefreshCrew(Vessel vessel)
+        private static bool RefreshCrew(Vessel vessel)
         {
-            if (vessel.crewedParts != vessel.protoVessel.crewedParts ||
-                vessel.crewableParts != vessel.protoVessel.crewableParts)
+            if (vessel.crewedParts != vessel.protoVessel.crewedParts || vessel.crewableParts != vessel.protoVessel.crewableParts)
             {
-                ((List<ProtoCrewMember>) CrewField.GetValue(vessel.protoVessel)).Clear();
+                ((List<ProtoCrewMember>)CrewField.GetValue(vessel.protoVessel)).Clear();
                 vessel.protoVessel.RebuildCrewCounts();
+                return true;
             }
+
+            return false;
         }
 
-        private static void RefreshParts(Vessel vessel)
+        private static bool RefreshParts(Vessel vessel)
         {
             if (vessel.parts.Count != vessel.protoVessel.protoPartSnapshots.Count)
             {
@@ -103,20 +122,23 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     part.storePartRefs();
                 }
-            }
-            else
-            {
-                for (var i = 0; i < vessel.parts.Count; i++)
-                {
-                    if (vessel.parts[i].State == PartStates.DEAD) continue;
 
-                    RefreshPartModules(vessel.parts[i]);
-                    RefreshPartResources(vessel.parts[i]);
-                }
+                return true;
             }
+
+            var partsHaveChanges = false;
+            for (var i = 0; i < vessel.parts.Count; i++)
+            {
+                if (vessel.parts[i].State == PartStates.DEAD) continue;
+
+                partsHaveChanges |= RefreshPartModules(vessel.parts[i]);
+                RefreshPartResources(vessel.parts[i]);
+            }
+
+            return partsHaveChanges;
         }
 
-        private static void RefreshPartModules(Part part)
+        private static bool RefreshPartModules(Part part)
         {
             if (part.protoPartSnapshot.modules.Count != part.Modules.Count)
             {
@@ -125,29 +147,52 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     part.protoPartSnapshot.modules.Add(new ProtoPartModuleSnapshot(part.Modules[i]));
                 }
-            }
-            else
-            {
-                for (var i = 0; i < part.Modules.Count; i++)
-                {
-                    var module = part.Modules[i];
-                    for (var j = 0; j < module.Fields.Count; j++)
-                    {
-                        var field = module.Fields[j];
-                        var nodeValue = GetConfigNodeVal(field.name, module.snapshot.moduleValues);
 
-                        if (nodeValue?.value != null)
+                return true;
+            }
+
+            var moduleHaveChanges = false;
+            for (var i = 0; i < part.Modules.Count; i++)
+            {
+                var module = part.Modules[i];
+                for (var j = 0; j < module.Fields.Count; j++)
+                {
+                    var field = module.Fields[j];
+                    var nodeValue = GetConfigNodeVal(field.name, module.snapshot.moduleValues);
+
+                    if (nodeValue?.value != null)
+                    {
+                        var fieldValueAsString = field.GetStringValue(field.host, false);
+                        if (fieldValueAsString != null && nodeValue.value != fieldValueAsString)
                         {
-                            var fieldValueAsString = field.GetStringValue(field.host, false);
-                            if (fieldValueAsString != null && nodeValue.value != fieldValueAsString)
+                            if (!ModuleIsIgnored(module) && !FieldIsIgnored(module, field))
                             {
-                                nodeValue.value = fieldValueAsString;
+                                LunaLog.Log($"Detected a part module change. Module: {module.moduleName} field: {field.name}");
+                                moduleHaveChanges = true;
                             }
+
+                            nodeValue.value = fieldValueAsString;
                         }
                     }
                 }
             }
+
+            return moduleHaveChanges;
         }
+
+        private static bool ModuleIsIgnored(PartModule module)
+        {
+            return VesselUpdater.ModulesToIgnore.Contains(module.moduleName) 
+                && VesselUpdater.ModulesToDontStart.Contains(module.moduleName) 
+                && VesselUpdater.ModulesToDontAwake.Contains(module.moduleName)
+                && VesselUpdater.ModulesToDontLoad.Contains(module.moduleName);
+        }
+
+        private static bool FieldIsIgnored(PartModule module, BaseField field)
+        {
+            return VesselUpdater.FieldsToIgnore.TryGetValue(module.moduleName, out var fields) && fields != null && fields.Contains(field.name);
+        }
+
         private static void RefreshPartResources(Part part)
         {
             if (part.protoPartSnapshot.resources.Count != part.Resources.Count)
@@ -163,6 +208,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 for (var i = 0; i < part.protoPartSnapshot.resources.Count; i++)
                 {
                     var resourceSnapshot = part.protoPartSnapshot.resources[i];
+                    if (resourceSnapshot.resourceRef == null) continue;
 
                     resourceSnapshot.amount = resourceSnapshot.resourceRef.amount;
                     resourceSnapshot.flowState = resourceSnapshot.resourceRef.flowState;

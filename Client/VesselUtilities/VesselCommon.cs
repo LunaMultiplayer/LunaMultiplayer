@@ -57,6 +57,13 @@ namespace LunaClient.VesselUtilities
             set => _isSpectating = value;
         }
 
+        private static Guid _spectatingVesselId;
+        public static Guid SpectatingVesselId
+        {
+            get => IsSpectating ? _spectatingVesselId : Guid.Empty;
+            set => _spectatingVesselId = value;
+        }
+
         /// <summary>
         /// Return the controlled vessels
         /// </summary>

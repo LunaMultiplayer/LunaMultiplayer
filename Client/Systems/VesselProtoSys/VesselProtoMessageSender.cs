@@ -28,14 +28,14 @@ namespace LunaClient.Systems.VesselProtoSys
             if (vessel == null || vessel.situation == Vessel.Situations.PRELAUNCH || VesselCommon.IsInSafetyBubble(vessel))
                 return;
 
-            VesselProtoRefresh.RefreshVesselProto(vessel);
-            SendVesselMessage(vessel.protoVessel, reliable);
+            var vesselHasChanges = VesselProtoRefresh.RefreshVesselProto(vessel);
+            SendVesselMessage(vessel.protoVessel, vesselHasChanges, reliable);
         }
 
-        public void SendVesselMessage(ProtoVessel protoVessel, bool reliable = true)
+        public void SendVesselMessage(ProtoVessel protoVessel, bool vesselHasChanges, bool reliable = true)
         {
             if (protoVessel == null) return;
-            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, reliable));
+            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, vesselHasChanges, reliable));
         }
 
         public void SendVesselMessage(IEnumerable<Vessel> vessels, bool reliable = true)
@@ -51,7 +51,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// This method prepares the protovessel class and send the message, it's intended to be run in another thread
         /// </summary>
-        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool reliable)
+        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool vesselHasChanges, bool reliable)
         {
             //Never send empty vessel id's (it happens with flags...)
             if (protoVessel.vesselID == Guid.Empty) return;
@@ -62,16 +62,15 @@ namespace LunaClient.Systems.VesselProtoSys
                 VesselSerializer.SerializeVesselToArray(protoVessel, VesselSerializedBytes, out var numBytes);
                 if (VesselSerializedBytes.Length > 0)
                 {
+                    VesselProtoBaseMsgData msgData;
+
                     if (reliable)
-                    {
-                        var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoReliableMsgData>();
-                        FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
-                    }
+                        msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoReliableMsgData>();
                     else
-                    {
-                        var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
-                        FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
-                    }
+                        msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
+
+                    msgData.VesselHasChanges = vesselHasChanges;
+                    FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
                 }
                 else
                 {
