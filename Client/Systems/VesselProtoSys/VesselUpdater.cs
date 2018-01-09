@@ -18,41 +18,37 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Add here modules that fail when calling "OnAwake" on it's partmodule or are useless and can be skipped
         /// </summary>
-        public static readonly List<string> ModulesToDontAwake = new List<string>
-        {
+        public static readonly string[] ModulesToDontAwake = {
             "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension", "ModuleScienceContainer", "KerbalEVA"
         };
 
         /// <summary>
         /// Add here modules that fail when calling "OnLoad" on it's partmodule or are useless and can be skipped
         /// </summary>
-        public static readonly List<string> ModulesToDontLoad = new List<string>
-        {
+        public static readonly string[] ModulesToDontLoad = {
             "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension", "ModuleScienceContainer", "KerbalEVA"
         };
 
         /// <summary>
         /// Add here modules that fail when calling "OnStart" on it's partmodule or are useless and can be skipped
         /// </summary>
-        public static readonly List<string> ModulesToDontStart = new List<string>
-        {
+        public static readonly string[] ModulesToDontStart = {
             "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension", "ModuleScienceContainer", "KerbalEVA"
         };
 
         /// <summary>
         /// Add here modules that should be ignored (just for performance)
         /// </summary>
-        public static readonly List<string> ModulesToIgnore = new List<string>
-        {
+        public static readonly string[] ModulesToIgnore = {
             "CModuleLinkedMesh", "FXModuleAnimateThrottle", "ModuleTripLogger"
         };
 
         /// <summary>
         /// Add fields of a Module that can be ignored (just for performance)
         /// </summary>
-        public static readonly Dictionary<string, List<string>> FieldsToIgnore = new Dictionary<string, List<string>>()
+        public static readonly Dictionary<string, string[]> FieldsToIgnore = new Dictionary<string, string[]>()
         {
-            ["ModuleEnginesFX"] = new List<string> { "currentThrottle" }
+            ["ModuleEnginesFX"] = new[] { "currentThrottle" }
         };
 
         private static readonly List<ProtoCrewMember> MembersToAdd = new List<ProtoCrewMember>();

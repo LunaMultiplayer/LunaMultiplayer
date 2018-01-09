@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using UniLinq;
@@ -13,6 +12,8 @@ namespace LunaClient.Systems.VesselProtoSys
         public static void RefreshVesselProto(Vessel vessel)
         {
             vessel.protoVessel.vesselRef = vessel;
+            vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
+            vessel.protoVessel.vesselID = vessel.id;
 
             vessel.protoVessel.orbitSnapShot.semiMajorAxis = vessel.orbit.semiMajorAxis;
             vessel.protoVessel.orbitSnapShot.eccentricity = vessel.orbit.eccentricity;
@@ -23,7 +24,6 @@ namespace LunaClient.Systems.VesselProtoSys
             vessel.protoVessel.orbitSnapShot.epoch = vessel.orbit.epoch;
             vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = FlightGlobals.Bodies.IndexOf(vessel.orbit.referenceBody);
 
-            vessel.protoVessel.vesselID = vessel.id;
             vessel.protoVessel.refTransform = vessel.referenceTransformId;
             vessel.protoVessel.vesselType = vessel.vesselType;
             vessel.protoVessel.situation = vessel.situation;
@@ -39,31 +39,6 @@ namespace LunaClient.Systems.VesselProtoSys
             vessel.protoVessel.autoCleanReason = vessel.AutoCleanReason;
             vessel.protoVessel.wasControllable = vessel.IsControllable;
 
-            if (vessel.parts.Count != vessel.protoVessel.protoPartSnapshots.Count)
-            {
-                vessel.protoVessel.protoPartSnapshots.Clear();
-                
-                foreach (var part in vessel.parts.Where(p=> p.State != PartStates.DEAD))
-                {
-                    vessel.protoVessel.protoPartSnapshots.Add(new ProtoPartSnapshot(part, vessel.protoVessel));
-                }
-
-                foreach (var part in vessel.protoVessel.protoPartSnapshots)
-                {
-                    part.storePartRefs();
-                }
-            }
-            else
-            {
-                RefreshPartModules(vessel);
-            }
-
-            if (vessel.crewedParts != vessel.protoVessel.crewedParts || vessel.crewableParts != vessel.protoVessel.crewableParts)
-            {
-                ((List<ProtoCrewMember>)CrewField.GetValue(vessel.protoVessel)).Clear();
-                vessel.protoVessel.RebuildCrewCounts();
-            }
-
             vessel.protoVessel.CoM = vessel.localCoM;
             vessel.protoVessel.latitude = vessel.latitude;
             vessel.protoVessel.longitude = vessel.longitude;
@@ -73,8 +48,14 @@ namespace LunaClient.Systems.VesselProtoSys
             vessel.protoVessel.rotation = vessel.srfRelRotation;
             vessel.protoVessel.stage = vessel.currentStage;
             vessel.protoVessel.persistent = vessel.isPersistent;
-            vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
-            
+
+            RefreshParts(vessel);
+            RefreshCrew(vessel);
+            RefreshActionGroups(vessel);
+        }
+
+        private static void RefreshActionGroups(Vessel vessel)
+        {
             if (vessel.protoVessel.vesselRef.ActionGroups.groups.Count != vessel.protoVessel.actionGroups.CountValues)
             {
                 vessel.protoVessel.actionGroups.ClearData();
@@ -89,42 +70,103 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     if (!bool.TryParse(protoVal, out var boolProtoVal) || currentVal != boolProtoVal)
                     {
-                        vessel.protoVessel.actionGroups.values[i].value = string.Concat(vessel.protoVessel.vesselRef.ActionGroups.groups[i].ToString(), ", ",
+                        vessel.protoVessel.actionGroups.values[i].value = string.Concat(
+                            vessel.protoVessel.vesselRef.ActionGroups.groups[i].ToString(), ", ",
                             vessel.protoVessel.vesselRef.ActionGroups.cooldownTimes[i].ToString(CultureInfo.InvariantCulture));
                     }
                 }
             }
         }
 
-        private static void RefreshPartModules(Vessel vessel)
+        private static void RefreshCrew(Vessel vessel)
         {
-            for (var i = 0; i < vessel.parts.Count; i++)
+            if (vessel.crewedParts != vessel.protoVessel.crewedParts ||
+                vessel.crewableParts != vessel.protoVessel.crewableParts)
             {
-                var part = vessel.parts[i];
-                if (part.State == PartStates.DEAD) continue;
+                ((List<ProtoCrewMember>) CrewField.GetValue(vessel.protoVessel)).Clear();
+                vessel.protoVessel.RebuildCrewCounts();
+            }
+        }
 
-                for (var j = 0; j < part.Modules.Count; j++)
+        private static void RefreshParts(Vessel vessel)
+        {
+            if (vessel.parts.Count != vessel.protoVessel.protoPartSnapshots.Count)
+            {
+                vessel.protoVessel.protoPartSnapshots.Clear();
+
+                foreach (var part in vessel.parts.Where(p => p.State != PartStates.DEAD))
                 {
-                    var module = part.Modules[j];
-                    for (var k = 0; k < module.Fields.Count; k++)
+                    vessel.protoVessel.protoPartSnapshots.Add(new ProtoPartSnapshot(part, vessel.protoVessel));
+                }
+
+                foreach (var part in vessel.protoVessel.protoPartSnapshots)
+                {
+                    part.storePartRefs();
+                }
+            }
+            else
+            {
+                for (var i = 0; i < vessel.parts.Count; i++)
+                {
+                    if (vessel.parts[i].State == PartStates.DEAD) continue;
+
+                    RefreshPartModules(vessel.parts[i]);
+                    RefreshPartResources(vessel.parts[i]);
+                }
+            }
+        }
+
+        private static void RefreshPartModules(Part part)
+        {
+            if (part.protoPartSnapshot.modules.Count != part.Modules.Count)
+            {
+                part.protoPartSnapshot.modules.Clear();
+                for (var i = 0; i < part.Modules.Count; i++)
+                {
+                    part.protoPartSnapshot.modules.Add(new ProtoPartModuleSnapshot(part.Modules[i]));
+                }
+            }
+            else
+            {
+                for (var i = 0; i < part.Modules.Count; i++)
+                {
+                    var module = part.Modules[i];
+                    for (var j = 0; j < module.Fields.Count; j++)
                     {
-                        var field = module.Fields[k];
+                        var field = module.Fields[j];
                         var nodeValue = GetConfigNodeVal(field.name, module.snapshot.moduleValues);
 
                         if (nodeValue?.value != null)
                         {
-                            try
+                            var fieldValueAsString = field.GetStringValue(field.host, false);
+                            if (fieldValueAsString != null && nodeValue.value != fieldValueAsString)
                             {
-                                var castedValue = Convert.ChangeType(nodeValue.value, field.FieldInfo.FieldType);
-                                if (castedValue != field.GetValue(field.host))
-                                    nodeValue.value = field.GetStringValue(field.host, false);
-                            }
-                            catch (Exception)
-                            {
-                                nodeValue.value = field.GetStringValue(field.host, false);
+                                nodeValue.value = fieldValueAsString;
                             }
                         }
                     }
+                }
+            }
+        }
+        private static void RefreshPartResources(Part part)
+        {
+            if (part.protoPartSnapshot.resources.Count != part.Resources.Count)
+            {
+                part.protoPartSnapshot.resources.Clear();
+                for (var i = 0; i < part.Resources.Count; i++)
+                {
+                    part.protoPartSnapshot.resources.Add(new ProtoPartResourceSnapshot(part.Resources[i]));
+                }
+            }
+            else
+            {
+                for (var i = 0; i < part.protoPartSnapshot.resources.Count; i++)
+                {
+                    var resourceSnapshot = part.protoPartSnapshot.resources[i];
+
+                    resourceSnapshot.amount = resourceSnapshot.resourceRef.amount;
+                    resourceSnapshot.flowState = resourceSnapshot.resourceRef.flowState;
+                    resourceSnapshot.maxAmount = resourceSnapshot.resourceRef.maxAmount;
                 }
             }
         }
