@@ -71,9 +71,8 @@ namespace LunaClient.Utilities
             catch (Exception e)
             {
                 LunaLog.LogError($"Error serializing vessel! Details {e}");
+                numBytes = 0;
             }
-
-            numBytes = 0;
         }
         
         public static ConfigNode Deserialize(byte[] data, int numBytes)

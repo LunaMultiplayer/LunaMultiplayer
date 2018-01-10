@@ -25,7 +25,6 @@ namespace LunaClient.Systems.GameScene
             SystemsContainer.Get<VesselLockSystem>().StopSpectating();
 
             //We are going to another screen so clear up the systems
-            VesselsProtoStore.ClearSystem();
             SystemsContainer.Get<VesselRemoveSystem>().ClearSystem();
             SystemsContainer.Get<VesselFlightStateSystem>().ClearSystem();
             SystemsContainer.Get<VesselStateSystem>().ClearSystem();

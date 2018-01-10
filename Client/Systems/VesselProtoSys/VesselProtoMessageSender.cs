@@ -27,18 +27,18 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             foreach (var vessel in vessels)
             {
-                SendVesselMessage(vessel);
+                SendVesselMessage(vessel, false);
             }
         }
 
-        public void SendVesselMessage(Vessel vessel)
+        public void SendVesselMessage(Vessel vessel, bool force)
         {
-            if (vessel == null || vessel.situation == Vessel.Situations.PRELAUNCH)
+            if (vessel == null)
                 return;
 
             var vesselHasChanges = VesselProtoRefresh.RefreshVesselProto(vessel);
 
-            if (vesselHasChanges || VesselCommon.IsSomeoneSpectatingUs)
+            if (force || vesselHasChanges || VesselCommon.IsSomeoneSpectatingUs)
                 SendVesselMessage(vessel.protoVessel);
         }
 

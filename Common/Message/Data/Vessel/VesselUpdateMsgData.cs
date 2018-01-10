@@ -71,7 +71,12 @@ namespace LunaCommon.Message.Data.Vessel
             Controllable = lidgrenMsg.ReadBoolean();
 
             for (var i = 0; i < 17; i++)
+            {
+                if (ActionGroups[i] == null)
+                    ActionGroups[i] = new ActionGroup();
+
                 ActionGroups[i].Deserialize(lidgrenMsg, dataCompressed);
+            }
         }
         
         internal override int InternalGetMessageSize(bool dataCompressed)

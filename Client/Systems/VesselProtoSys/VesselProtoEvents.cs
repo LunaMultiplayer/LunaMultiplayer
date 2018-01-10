@@ -11,7 +11,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public void FlightReady()
         {
-            System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
+            System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
         }
 
         /// <summary>
@@ -23,7 +23,7 @@ namespace LunaClient.Systems.VesselProtoSys
             //Perhaps we are shooting stuff at other uncontrolled vessel...
             if (!LockSystem.LockQuery.ControlLockExists(data.id))
             {
-                System.MessageSender.SendVesselMessage(data);
+                System.MessageSender.SendVesselMessage(data, false);
 
                 if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.id))
                     VesselsProtoStore.AllPlayerVessels[data.id].ProtoVessel = data.BackupVessel();
@@ -42,7 +42,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 data.id = Guid.NewGuid();
                 data.protoVessel.vesselID = data.id;
-                System.MessageSender.SendVesselMessage(data);
+                System.MessageSender.SendVesselMessage(data, true);
             }
         }
     }

@@ -117,7 +117,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemReady)
                 {
-                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
+                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
                     MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
                 }
             }
@@ -176,7 +176,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     //Load vessels that don't exist, are in our subspace and out of safety bubble
                     var vesselsToLoad = VesselsProtoStore.AllPlayerVessels
-                        .Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded && VesselCommon.IsInSafetyBubble(v.Value.ProtoVessel));
+                        .Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded && !VesselCommon.IsInSafetyBubble(v.Value.ProtoVessel));
 
                     foreach (var vesselProto in vesselsToLoad)
                     {
