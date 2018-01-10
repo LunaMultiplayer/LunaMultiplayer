@@ -160,23 +160,54 @@ namespace LunaClient.VesselUtilities
         /// <summary>
         /// Returns whether the given vessel is in a starting safety bubble or not.
         /// </summary>
-        /// <param name="vessel">The vessel used to determine the distance.  If null, the vessel is not in the safety bubble.</param>
-        /// <returns></returns>
         public static bool IsInSafetyBubble(Vessel vessel)
         {
             //If not at Kerbin or past ceiling we're definitely clear
             if (vessel == null || vessel.mainBody?.name != "Kerbin")
                 return false;
 
-            var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), LandingPadPosition);
+            return IsInSafetyBubble(vessel.GetWorldPos3D());
+        }
+
+        /// <summary>
+        /// Returns whether the given protovessel is in a starting safety bubble or not.
+        /// </summary>
+        public static bool IsInSafetyBubble(ProtoVessel protoVessel)
+        {
+            if (protoVessel?.orbitSnapShot == null)
+                return false;
+
+            return IsInSafetyBubble(protoVessel.latitude, protoVessel.longitude, protoVessel.altitude, protoVessel.orbitSnapShot.ReferenceBodyIndex);
+        }
+
+        /// <summary>
+        /// Returns whether the given position is in a starting safety bubble or not.
+        /// </summary>
+        public static bool IsInSafetyBubble(double lat, double lon, double alt, int bodyIndex)
+        {
+            var body = FlightGlobals.Bodies[bodyIndex];
+            if (body == null || body.name != "Kerbin")
+                return false;
+
+            return IsInSafetyBubble(FlightGlobals.Bodies[bodyIndex].GetWorldSurfacePosition(lat, lon, alt));
+        }
+
+        /// <summary>
+        /// Returns whether the given position is in a starting safety bubble or not.
+        /// </summary>
+        public static bool IsInSafetyBubble(Vector3d position)
+        {
+            var landingPadDistance = Vector3d.Distance(position, LandingPadPosition);
 
             if (landingPadDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance) return true;
 
             //We are far from the pad, let's see if happens the same in the runway...
-            var runwayDistance = Vector3d.Distance(vessel.GetWorldPos3D(), RunwayPosition);
+            var runwayDistance = Vector3d.Distance(position, RunwayPosition);
 
             return runwayDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance;
         }
+
+
 
         /// <summary>
         /// Creates a protovessel from a ConfigNode

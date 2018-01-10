@@ -19,7 +19,8 @@ namespace LunaClient.Systems.VesselProtoSys
         public static bool RefreshVesselProto(Vessel vessel)
         {
             var rootPartIndex = GetRootPartIndex(vessel);
-            var vesselHasChanges = vessel.situation != vessel.protoVessel.situation || vessel.currentStage != vessel.protoVessel.stage || vessel.protoVessel.rootIndex != rootPartIndex;
+            var vesselHasChanges = vessel.situation != vessel.protoVessel.situation || 
+                vessel.currentStage != vessel.protoVessel.stage || vessel.protoVessel.rootIndex != rootPartIndex;
 
             vessel.protoVessel.vesselRef = vessel;
             vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
@@ -61,18 +62,16 @@ namespace LunaClient.Systems.VesselProtoSys
 
             vesselHasChanges |= RefreshParts(vessel);
             vesselHasChanges |= RefreshCrew(vessel);
-            vesselHasChanges |= RefreshActionGroups(vessel);
+
+            RefreshActionGroups(vessel);
 
             return vesselHasChanges;
         }
 
-        private static bool RefreshActionGroups(Vessel vessel)
+        private static void RefreshActionGroups(Vessel vessel)
         {
-            var actionGroupsHaveChanges = false;
-
             if (vessel.protoVessel.vesselRef.ActionGroups.groups.Count != vessel.protoVessel.actionGroups.CountValues)
             {
-                actionGroupsHaveChanges = true;
                 vessel.protoVessel.actionGroups.ClearData();
                 vessel.protoVessel.vesselRef.ActionGroups.Save(vessel.protoVessel.actionGroups);
             }
@@ -85,15 +84,12 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     if (!bool.TryParse(protoVal, out var boolProtoVal) || currentVal != boolProtoVal)
                     {
-                        actionGroupsHaveChanges = true;
                         vessel.protoVessel.actionGroups.values[i].value = string.Concat(
                             vessel.protoVessel.vesselRef.ActionGroups.groups[i].ToString(), ", ",
                             vessel.protoVessel.vesselRef.ActionGroups.cooldownTimes[i].ToString(CultureInfo.InvariantCulture));
                     }
                 }
             }
-
-            return actionGroupsHaveChanges;
         }
 
         private static bool RefreshCrew(Vessel vessel)
@@ -183,15 +179,13 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private static bool ModuleIsIgnored(PartModule module)
         {
-            return VesselUpdater.ModulesToIgnore.Contains(module.moduleName) 
-                && VesselUpdater.ModulesToDontStart.Contains(module.moduleName) 
-                && VesselUpdater.ModulesToDontAwake.Contains(module.moduleName)
-                && VesselUpdater.ModulesToDontLoad.Contains(module.moduleName);
+            return VesselModulesToIgnore.ModulesToIgnore.Contains(module.moduleName)
+                   && VesselModulesToIgnore.ModulesToIgnoreWhenChecking.Contains(module.moduleName);
         }
 
         private static bool FieldIsIgnored(PartModule module, BaseField field)
         {
-            return VesselUpdater.FieldsToIgnore.TryGetValue(module.moduleName, out var fields) && fields != null && fields.Contains(field.name);
+            return VesselModulesToIgnore.FieldsToIgnore.TryGetValue(module.moduleName, out var fields) && fields != null && fields.Contains(field.name);
         }
 
         private static void RefreshPartResources(Part part)

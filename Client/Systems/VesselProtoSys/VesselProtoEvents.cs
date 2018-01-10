@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.Lock;
 using System;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -6,13 +7,27 @@ namespace LunaClient.Systems.VesselProtoSys
     public class VesselProtoEvents: SubSystem<VesselProtoSystem>
     {
         /// <summary>
+        /// Sends our vessel just when we start the flight
+        /// </summary>
+        public void FlightReady()
+        {
+            System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel);
+        }
+
+        /// <summary>
         /// Called when a vessel is modified. We use it to update our own proto dictionary 
         /// and reflect changes so we don't have to call the "backupvessel" so often
         /// </summary>
         public void VesselModified(Vessel data)
         {
-            if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.id))
-                VesselsProtoStore.AllPlayerVessels[data.id].ProtoVessel = data.BackupVessel();
+            //Perhaps we are shooting stuff at other uncontrolled vessel...
+            if (!LockSystem.LockQuery.ControlLockExists(data.id))
+            {
+                System.MessageSender.SendVesselMessage(data);
+
+                if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.id))
+                    VesselsProtoStore.AllPlayerVessels[data.id].ProtoVessel = data.BackupVessel();
+            }
         }
 
         /// <summary>

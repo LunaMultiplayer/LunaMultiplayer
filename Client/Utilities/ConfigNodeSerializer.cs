@@ -55,16 +55,25 @@ namespace LunaClient.Utilities
         /// </summary>
         public static void SerializeToArray(ConfigNode node, byte[] data, out int numBytes)
         {
-            if (node == null) throw new ArgumentNullException(nameof(node));
-
-            //Call the insides of what ConfigNode would have called if we said Save(filename)
-            using (var stream = new MemoryStream(data))
-            using (var writer = new StreamWriter(stream))
+            try
             {
-                //we late bind to the instance by passing the instance as the first argument
-                WriteNodeThunk(node, writer);
-                numBytes = (int)stream.Position;
+                if (node == null) throw new ArgumentNullException(nameof(node));
+
+                //Call the insides of what ConfigNode would have called if we said Save(filename)
+                using (var stream = new MemoryStream(data))
+                using (var writer = new StreamWriter(stream))
+                {
+                    //we late bind to the instance by passing the instance as the first argument
+                    WriteNodeThunk(node, writer);
+                    numBytes = (int)stream.Position;
+                }
             }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"Error serializing vessel! Details {e}");
+            }
+
+            numBytes = 0;
         }
         
         public static ConfigNode Deserialize(byte[] data, int numBytes)

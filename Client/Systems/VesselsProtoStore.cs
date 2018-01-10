@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselStateSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using LunaCommon;
@@ -22,7 +21,7 @@ namespace LunaClient.Systems
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
         /// </summary>
-        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, bool vesselHasChanges = true, bool runSyncronously = false)
+        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, bool runSyncronously = false)
         {
             if (runSyncronously)
                 HandleData();
@@ -33,17 +32,12 @@ namespace LunaClient.Systems
             {
                 if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
                 {
-                    if (VesselStateSystem.VesselsOnRails.ContainsKey(vesselId) && !vesselUpdate.Vessel.LandedOrSplashed)
-                        return;
-
-                    if (vesselHasChanges || VesselCommon.SpectatingVesselId == vesselId)
-                        vesselUpdate.Update(vesselData, numBytes, vesselId);
+                    vesselUpdate.Update(vesselData, numBytes, vesselId);
                 }
                 else
                 {
                     AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, numBytes, vesselId));
                 }
-
             }
         }
 

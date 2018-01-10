@@ -23,15 +23,6 @@ namespace LunaClient.Systems.VesselProtoSys
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselMessage(Vessel vessel)
-        {
-            if (vessel == null || vessel.situation == Vessel.Situations.PRELAUNCH || VesselCommon.IsInSafetyBubble(vessel))
-                return;
-
-            var vesselHasChanges = VesselProtoRefresh.RefreshVesselProto(vessel);
-            SendVesselMessage(vessel.protoVessel, vesselHasChanges);
-        }
-
         public void SendVesselMessage(IEnumerable<Vessel> vessels)
         {
             foreach (var vessel in vessels)
@@ -40,18 +31,30 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
+        public void SendVesselMessage(Vessel vessel)
+        {
+            if (vessel == null || vessel.situation == Vessel.Situations.PRELAUNCH)
+                return;
+
+            var vesselHasChanges = VesselProtoRefresh.RefreshVesselProto(vessel);
+
+            if (vesselHasChanges || VesselCommon.IsSomeoneSpectatingUs)
+                SendVesselMessage(vessel.protoVessel);
+        }
+
+
         #region Private methods
-        
-        private void SendVesselMessage(ProtoVessel protoVessel, bool vesselHasChanges = true)
+
+        private void SendVesselMessage(ProtoVessel protoVessel)
         {
             if (protoVessel == null) return;
-            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel, vesselHasChanges));
+            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
         }
 
         /// <summary>
         /// This method prepares the protovessel class and send the message, it's intended to be run in another thread
         /// </summary>
-        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool vesselHasChanges)
+        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel)
         {
             //Never send empty vessel id's (it happens with flags...)
             if (protoVessel.vesselID == Guid.Empty) return;
@@ -60,16 +63,10 @@ namespace LunaClient.Systems.VesselProtoSys
             lock (VesselSerializedBytes)
             {
                 VesselSerializer.SerializeVesselToArray(protoVessel, VesselSerializedBytes, out var numBytes);
-                if (VesselSerializedBytes.Length > 0)
+                if (numBytes > 0)
                 {
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
-
-                    msgData.VesselHasChanges = vesselHasChanges;
                     FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
-                }
-                else
-                {
-                    LunaLog.LogError($"[LMP]: Failed to create byte[] data for {protoVessel.vesselID}");
                 }
             }
         }

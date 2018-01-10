@@ -90,10 +90,6 @@ namespace Server.Message.Reader
             VesselRelaySystem.HandleVesselMessage(client, message);
         }
 
-
-
-
-
         private static void HandleVesselDock(ClientStructure client, VesselBaseMsgData message)
         {
             var msgData = (VesselDockMsgData)message;

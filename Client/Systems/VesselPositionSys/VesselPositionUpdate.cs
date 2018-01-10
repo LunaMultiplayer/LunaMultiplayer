@@ -132,7 +132,11 @@ namespace LunaClient.Systems.VesselPositionSys
             }
 
             if (InterpolationFinished) return;
-            if (!InterpolationStarted) InterpolationStarted = true;
+            if (!InterpolationStarted)
+            {
+                InterpolationStarted = true;
+                UpdateProtoVesselValues();
+            }
 
             if (RestartRequested)
             {
@@ -158,6 +162,37 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Private
+
+
+        private void UpdateProtoVesselValues()
+        {
+            Vessel.protoVessel.latitude = LatLonAlt[0];
+            Vessel.protoVessel.longitude = LatLonAlt[0];
+            Vessel.protoVessel.altitude = LatLonAlt[0];
+            Vessel.protoVessel.height = HeightFromTerrain;
+
+            Vessel.protoVessel.normal[0] = Normal[0];
+            Vessel.protoVessel.normal[1] = Normal[1];
+            Vessel.protoVessel.normal[2] = Normal[2];
+
+            Vessel.protoVessel.rotation[0] = SrfRelRotation[0];
+            Vessel.protoVessel.rotation[1] = SrfRelRotation[1];
+            Vessel.protoVessel.rotation[2] = SrfRelRotation[2];
+            Vessel.protoVessel.rotation[3] = SrfRelRotation[3];
+
+            Vessel.protoVessel.CoM[0] = CoM[0];
+            Vessel.protoVessel.CoM[1] = CoM[1];
+            Vessel.protoVessel.CoM[2] = CoM[2];
+            
+            Vessel.protoVessel.orbitSnapShot.inclination = Orbit[0];
+            Vessel.protoVessel.orbitSnapShot.eccentricity = Orbit[1];
+            Vessel.protoVessel.orbitSnapShot.semiMajorAxis = Orbit[2];
+            Vessel.protoVessel.orbitSnapShot.LAN = Orbit[3];
+            Vessel.protoVessel.orbitSnapShot.argOfPeriapsis = Orbit[4];
+            Vessel.protoVessel.orbitSnapShot.meanAnomalyAtEpoch = Orbit[5];
+            Vessel.protoVessel.orbitSnapShot.epoch = Orbit[6];
+            Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Orbit[7];
+        }
 
         private void ApplyInterpolations(float lerpPercentage)
         {

@@ -57,6 +57,8 @@ namespace LunaClient.Systems.VesselProtoSys
 
             GameEvents.onVesselWasModified.Add(VesselProtoEvents.VesselModified);
             GameEvents.onVesselGoOnRails.Add(VesselProtoEvents.VesselGoOnRails);
+            GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
+
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckVesselsToLoadReloadWhileNotInFlight));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
@@ -71,6 +73,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             GameEvents.onVesselWasModified.Remove(VesselProtoEvents.VesselModified);
             GameEvents.onVesselGoOnRails.Remove(VesselProtoEvents.VesselGoOnRails);
+            GameEvents.onFlightReady.Remove(VesselProtoEvents.FlightReady);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();
@@ -171,9 +174,9 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
                 {
-                    //Load vessels that don't exist and are in our subspace
+                    //Load vessels that don't exist, are in our subspace and out of safety bubble
                     var vesselsToLoad = VesselsProtoStore.AllPlayerVessels
-                        .Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded);
+                        .Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded && VesselCommon.IsInSafetyBubble(v.Value.ProtoVessel));
 
                     foreach (var vesselProto in vesselsToLoad)
                     {

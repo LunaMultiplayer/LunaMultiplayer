@@ -83,7 +83,9 @@ namespace LunaClient.VesselUtilities
                     ConfigNodeSerializer.SerializeToArray(ConfigNode, data, out numBytes);
                 }
                 else
+                {
                     numBytes = 0;
+                }
             }
         }
 

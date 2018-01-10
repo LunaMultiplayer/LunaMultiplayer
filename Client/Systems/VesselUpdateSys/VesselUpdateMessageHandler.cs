@@ -20,13 +20,13 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             var vessel = FlightGlobals.FindVessel(msgData.VesselId);
             if (vessel == null) return;
-
+            
             vessel.name = msgData.Name;
-            vessel.protoVessel.vesselName = msgData.Name;
+            vessel.protoVessel.vesselName = vessel.name;
 
             vessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), msgData.Type);
             vessel.protoVessel.vesselType = vessel.vesselType;
-
+            
             vessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
             vessel.protoVessel.situation = vessel.situation;
 
