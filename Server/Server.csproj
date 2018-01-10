@@ -40,6 +40,7 @@
     <Reference Include="LiteDB, Version=4.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\LiteDB.4.0.0\lib\net40\LiteDB.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="UnityEngine">
@@ -145,6 +146,7 @@
     <Compile Include="System\ModDataSystemSender.cs" />
     <Compile Include="System\ModFileSystem.cs" />
     <Compile Include="System\VesselContext.cs" />
+    <Compile Include="System\VesselFileUpdater.cs" />
     <Compile Include="System\VesselRelaySystem.cs" />
     <Compile Include="System\VesselRelaySystemDataBase.cs" />
     <Compile Include="System\VesselRelaySystemDictionary.cs" />

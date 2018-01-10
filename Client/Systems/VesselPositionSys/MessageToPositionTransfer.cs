@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Time;
@@ -17,8 +16,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 VesselId = msgData.VesselId,
                 BodyIndex = msgData.BodyIndex,
-                Landed = msgData.Landed,
-                Splashed = msgData.Splashed,
+                HeightFromTerrain = msgData.HeightFromTerrain,
                 TimeStamp = msgData.TimeStamp
             };
 
@@ -39,8 +37,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             update.VesselId = msgData.VesselId;
             update.BodyIndex = msgData.BodyIndex;
-            update.Landed = msgData.Landed;
-            update.Splashed = msgData.Splashed;
+            update.HeightFromTerrain = msgData.HeightFromTerrain;
             update.TimeStamp = msgData.TimeStamp;
 
             Array.Copy(msgData.SrfRelRotation, update.SrfRelRotation, 4);
@@ -58,8 +55,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             updateToUpdate.VesselId = update.VesselId;
             updateToUpdate.BodyIndex = update.BodyIndex;
-            updateToUpdate.Landed = update.Landed;
-            updateToUpdate.Splashed = update.Splashed;
+            updateToUpdate.HeightFromTerrain = update.HeightFromTerrain;
             updateToUpdate.TimeStamp = update.TimeStamp;
 
             Array.Copy(update.SrfRelRotation, updateToUpdate.SrfRelRotation, 4);
@@ -89,8 +85,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 SetNormalVector(vessel, msgData);
                 SetOrbit(vessel, msgData);
 
-                msgData.Landed = vessel.Landed;
-                msgData.Splashed = vessel.Splashed;
+                msgData.HeightFromTerrain = vessel.heightFromTerrain;
                 msgData.TimeStamp = LunaTime.UtcNow.Ticks;
                 
                 return msgData;

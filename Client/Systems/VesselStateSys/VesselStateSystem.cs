@@ -4,7 +4,7 @@ using System.Collections.Concurrent;
 namespace LunaClient.Systems.VesselStateSys
 {
     /// <summary>
-    /// This class handles the locks in the vessel
+    /// This class handles the states of the vessels (if they are packed or not) so they can be checked in another threads
     /// </summary>
     public class VesselStateSystem : Base.System
     {

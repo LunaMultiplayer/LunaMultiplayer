@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselStateSys;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -24,8 +23,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     HandleVesselResponse((VesselsReplyMsgData)msgData);
                     break;
                 case VesselMessageType.Proto:
-                case VesselMessageType.ProtoReliable:
-                    HandleVesselProto((VesselProtoBaseMsgData)msgData);
+                    HandleVesselProto((VesselProtoMsgData)msgData);
                     break;
                 default:
                     LunaLog.LogError($"[LMP]: Cannot handle messages of type: {msgData.VesselMessageType} in VesselProtoMessageHandler");
@@ -33,13 +31,12 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
-        private static void HandleVesselProto(VesselProtoBaseMsgData messageData)
+        private static void HandleVesselProto(VesselProtoMsgData messageData)
         {
             if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.Vessel.VesselId))
             {
                 //Don't update vessel protos for vessels that are not unpacked
-                if (VesselStateSystem.VesselsOnRails.ContainsKey(messageData.Vessel.VesselId))
-                    VesselsProtoStore.HandleVesselProtoData(messageData.Vessel.Data, messageData.Vessel.NumBytes, messageData.Vessel.VesselId, messageData.VesselHasChanges);
+                VesselsProtoStore.HandleVesselProtoData(messageData.Vessel.Data, messageData.Vessel.NumBytes, messageData.Vessel.VesselId, messageData.VesselHasChanges);
             }
         }
 

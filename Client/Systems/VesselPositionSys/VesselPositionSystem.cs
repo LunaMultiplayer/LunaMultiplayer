@@ -100,6 +100,10 @@ namespace LunaClient.Systems.VesselPositionSys
             }
         }
 
+        #endregion
+
+        #region Update methods
+
         /// <summary>
         /// Send updates for vessels that we own the update lock. And also send it for the abandoned ones
         /// </summary>

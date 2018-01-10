@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselStateSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using LunaCommon;
@@ -32,6 +33,9 @@ namespace LunaClient.Systems
             {
                 if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
                 {
+                    if (VesselStateSystem.VesselsOnRails.ContainsKey(vesselId) && !vesselUpdate.Vessel.LandedOrSplashed)
+                        return;
+
                     if (vesselHasChanges || VesselCommon.SpectatingVesselId == vesselId)
                         vesselUpdate.Update(vesselData, numBytes, vesselId);
                 }

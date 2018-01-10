@@ -142,7 +142,6 @@ namespace LunaClient.Network
                             break;
                         case VesselMessageType.VesselsReply:
                         case VesselMessageType.Proto:
-                        case VesselMessageType.ProtoReliable:
                             SystemsContainer.Get<VesselProtoSystem>().EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Dock:

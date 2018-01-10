@@ -46,8 +46,8 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] Velocity { get; set; } = new double[3];
         public double[] Orbit { get; set; } = new double[8];
         public float[] SrfRelRotation { get; set; } = new float[4];
-        public bool Landed { get; set; }
-        public bool Splashed { get; set; }
+
+        public float HeightFromTerrain;
         public long TimeStamp;
 
         #endregion
@@ -181,8 +181,7 @@ namespace LunaClient.Systems.VesselPositionSys
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
             //Vessel.updateSituation() is called in the Vessel.LateUpdate(). Same applies for landed and splashed
             Vessel.staticPressurekPa = FlightGlobals.getStaticPressure(Target.LatLonAlt[2], Vessel.mainBody);
-            Vessel.Landed = Landed;
-            Vessel.Splashed = Splashed;
+            Vessel.heightFromTerrain = HeightFromTerrain;
 
             if (!Vessel.loaded)
             {
@@ -299,8 +298,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Orbit[6] = Vessel.orbit.epoch;
             Orbit[7] = Vessel.orbit.referenceBody.flightGlobalsIndex;
 
-            Landed = Vessel.Landed;
-            Splashed = Vessel.Splashed;
+            HeightFromTerrain = Vessel.heightFromTerrain;
         }
 
         #region Helper methods

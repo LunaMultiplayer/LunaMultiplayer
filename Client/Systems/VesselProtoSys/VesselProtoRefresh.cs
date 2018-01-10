@@ -18,7 +18,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <returns></returns>
         public static bool RefreshVesselProto(Vessel vessel)
         {
-            var vesselHasChanges = vessel.situation != vessel.protoVessel.situation || vessel.currentStage != vessel.protoVessel.stage;
+            var rootPartIndex = GetRootPartIndex(vessel);
+            var vesselHasChanges = vessel.situation != vessel.protoVessel.situation || vessel.currentStage != vessel.protoVessel.stage || vessel.protoVessel.rootIndex != rootPartIndex;
 
             vessel.protoVessel.vesselRef = vessel;
             vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
@@ -226,6 +227,16 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             return null;
+        }
+
+        private static int GetRootPartIndex(Vessel vessel)
+        {
+            for (var i = 0; i < vessel.parts.Count; i++)
+            {
+                if (vessel.parts[i] == vessel.rootPart)
+                    return i;
+            }
+            return 0;
         }
     }
 }
