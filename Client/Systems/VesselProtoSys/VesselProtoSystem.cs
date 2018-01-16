@@ -209,8 +209,11 @@ namespace LunaClient.Systems.VesselProtoSys
                 if ((DateTime.UtcNow - LastReloadCheck).TotalMilliseconds > 1500 && ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
                 {
                     VesselsToReload.Clear();
-                    //We get the vessels that already exist. 
-                    VesselsToReload.AddRange(VesselsProtoStore.AllPlayerVessels.Where(pv => pv.Value.VesselExist && !pv.Value.UpdatesChecked).Select(v => v.Key));
+
+                    //We get the vessels that already exist and are in LOAD distance. 
+                    VesselsToReload.AddRange(VesselsProtoStore.AllPlayerVessels
+                        .Where(pv => pv.Value.VesselExist && pv.Value.VesselHasUpdate && pv.Value.Vessel.loaded)
+                        .Select(v => v.Key));
 
                     //Do not iterate directly trough the AllPlayerVessels dictionary as the collection can be modified in another threads!
                     foreach (var vesselIdToReload in VesselsToReload)
@@ -225,7 +228,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpdate))
                         {
                             VesselUpdater.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel);
-                            vesselProtoUpdate.UpdatesChecked = true;
+                            vesselProtoUpdate.VesselHasUpdate = false;
                         }
                     }
 
