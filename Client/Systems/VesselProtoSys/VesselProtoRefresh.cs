@@ -18,6 +18,12 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <returns></returns>
         public static bool RefreshVesselProto(Vessel vessel)
         {
+            if (vessel.protoVessel == null)
+            {
+                vessel.BackupVessel();
+                return true;
+            }
+
             var rootPartIndex = GetRootPartIndex(vessel);
             var vesselHasChanges = vessel.situation != vessel.protoVessel.situation || 
                 vessel.currentStage != vessel.protoVessel.stage || vessel.protoVessel.rootIndex != rootPartIndex;
