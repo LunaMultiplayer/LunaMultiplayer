@@ -38,12 +38,11 @@ namespace LunaCommon
             return best;
         }
 
-        public static IPAddress GetMyAddress(out IPAddress mask)
+        public static IPAddress GetMyAddress()
         {
             var ni = GetNetworkInterface();
             if (ni == null)
             {
-                mask = null;
                 return null;
             }
 
@@ -52,12 +51,10 @@ namespace LunaCommon
             {
                 if (unicastAddress?.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    mask = unicastAddress.IPv4Mask;
                     return unicastAddress.Address;
                 }
             }
-
-            mask = null;
+            
             return null;
         }
     }

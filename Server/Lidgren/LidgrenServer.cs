@@ -139,7 +139,7 @@ namespace Server.Lidgren
 
             LunaLog.Normal("Registering with master servers...");
 
-            var adr = LunaNetUtils.GetMyAddress(out var _);
+            var adr = LunaNetUtils.GetMyAddress();
             if (adr == null) return;
 
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
