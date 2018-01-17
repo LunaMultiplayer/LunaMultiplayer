@@ -35,7 +35,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.Vessel.VesselId))
             {
-                VesselsProtoStore.HandleVesselProtoData(messageData.Vessel.Data, messageData.Vessel.NumBytes, messageData.Vessel.VesselId);
+                VesselsProtoStore.HandleVesselProtoData(messageData.Vessel.Data, messageData.Vessel.NumBytes, messageData.Vessel.VesselId, false, messageData.Vessel.VesselSituation);
             }
         }
 
@@ -45,7 +45,7 @@ namespace LunaClient.Systems.VesselProtoSys
             for (var i = 0; i < messageData.VesselsCount; i++)
             {
                 if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.VesselsData[i].VesselId))
-                    VesselsProtoStore.HandleVesselProtoData(messageData.VesselsData[i].Data, messageData.VesselsData[i].NumBytes, messageData.VesselsData[i].VesselId, true);
+                    VesselsProtoStore.HandleVesselProtoData(messageData.VesselsData[i].Data, messageData.VesselsData[i].NumBytes, messageData.VesselsData[i].VesselId, true, messageData.VesselsData[i].VesselSituation);
             }
 
             MainSystem.NetworkState = ClientState.VesselsSynced;

@@ -21,7 +21,7 @@ namespace LunaClient.Systems
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
         /// </summary>
-        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, bool runSyncronously = false)
+        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, bool runSyncronously, int vesselSituation = int.MinValue)
         {
             if (runSyncronously)
                 HandleData();
@@ -32,7 +32,7 @@ namespace LunaClient.Systems
             {
                 if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
                 {
-                    vesselUpdate.Update(vesselData, numBytes, vesselId);
+                    vesselUpdate.Update(vesselData, numBytes, vesselId, vesselSituation);
                 }
                 else
                 {
@@ -64,6 +64,7 @@ namespace LunaClient.Systems
 
         public Guid VesselId { get; set; }
         public bool VesselHasUpdate { get; set; }
+        public bool VesselSituationChanged { get; set; }
 
         private ProtoVessel _protoVessel;
         public ProtoVessel ProtoVessel
@@ -105,7 +106,7 @@ namespace LunaClient.Systems
         /// <summary>
         /// Update this class with the new data received
         /// </summary>
-        public void Update(byte[] vesselData, int numBytes, Guid vesselId)
+        public void Update(byte[] vesselData, int numBytes, Guid vesselId, int situation)
         {
             if (VesselId != vesselId)
             {
@@ -119,6 +120,8 @@ namespace LunaClient.Systems
 
             _vesselHash = newHash;
             VesselHasUpdate = true;
+            
+            VesselSituationChanged = _protoVessel != null && situation != int.MinValue && (int)_protoVessel.situation != situation;
         }
 
         /// <summary>

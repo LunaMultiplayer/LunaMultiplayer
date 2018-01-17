@@ -210,9 +210,9 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     VesselsToReload.Clear();
 
-                    //We get the vessels that already exist and are in LOAD distance. 
+                    //We get the vessels that already exist and are in LOAD distance or it's situation has changed. 
                     VesselsToReload.AddRange(VesselsProtoStore.AllPlayerVessels
-                        .Where(pv => pv.Value.VesselExist && pv.Value.VesselHasUpdate && pv.Value.Vessel.loaded)
+                        .Where(pv => pv.Value.VesselExist && pv.Value.VesselHasUpdate && (pv.Value.Vessel.loaded || pv.Value.VesselSituationChanged))
                         .Select(v => v.Key));
 
                     //Do not iterate directly trough the AllPlayerVessels dictionary as the collection can be modified in another threads!

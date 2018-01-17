@@ -66,6 +66,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (numBytes > 0)
                 {
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
+                    msgData.Vessel.VesselSituation = (int) protoVessel.situation;
                     FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
                 }
             }

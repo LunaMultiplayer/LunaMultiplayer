@@ -57,7 +57,7 @@ namespace LunaClient.Systems.VesselDockSys
 
             //Some other 2 players docked so just remove the weak vessel.
             SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(msgData.WeakVesselId);
-            VesselsProtoStore.HandleVesselProtoData(msgData.FinalVesselData, msgData.NumBytes, msgData.DominantVesselId);
+            VesselsProtoStore.HandleVesselProtoData(msgData.FinalVesselData, msgData.NumBytes, msgData.DominantVesselId, false);
         }
     }
 }
