@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using System.Reflection;
 using Upgradeables;
 
 namespace LunaClient.Systems.Facility
@@ -10,12 +9,7 @@ namespace LunaClient.Systems.Facility
 
         public FacilityEvents FacilityEvents { get; } = new FacilityEvents();
 
-        #region Reflection fields
-
-        private static readonly FieldInfo IntactField = typeof(DestructibleBuilding).GetField("intact", BindingFlags.Instance | BindingFlags.NonPublic);
-        private static readonly FieldInfo DestroyedField = typeof(DestructibleBuilding).GetField("destroyed", BindingFlags.Instance | BindingFlags.NonPublic);
-
-        #endregion
+        public string BuildingIdToIgnore;
 
         #endregion
 
@@ -44,50 +38,44 @@ namespace LunaClient.Systems.Facility
         #region Public Methods
 
         /// <summary>
-        /// If we call facility.SetLevel() then we woud trigger the KSP event and send a message to the server. Here we just do the same logic
-        /// as KSP but without triggering the event
+        /// If we call facility.SetLevel() then we woud trigger the KSP event and send a message to the server. 
+        /// Therefore we add the id to the ignore field so the event FacilityUpgraded doesn't send a network message
         /// </summary>
-        public void UpgradeFacilityWithoutTriggeringEvent(UpgradeableFacility facility, int level)
+        public void UpgradeFacilityWithoutSendingMessage(UpgradeableFacility facility, int level)
         {
+            BuildingIdToIgnore = facility.id;
             facility.setLevel(level);
+            BuildingIdToIgnore = string.Empty;
         }
 
         /// <summary>
-        /// If we call building.Repair() then we woud trigger the KSP event and send a message to the server. Here we just do the same logic
-        /// as KSP but without triggering the event
+        /// If we call building.Repair() then we woud trigger the KSP event and send a message to the server.         
+        /// Therefore we add the id to the ignore field so the event FacilityRepaired doesn't send a network message
         /// </summary>
-        public void RepairFacilityWithoutTriggeringEvent(DestructibleBuilding building)
+        public void RepairFacilityWithoutSendingMessage(DestructibleBuilding building)
         {
             if (building == null) return;
-            if ((bool) IntactField.GetValue(building) || !(bool)DestroyedField.GetValue(building))
+            if (building.IsIntact || !building.IsDestroyed)
                 return;
 
-            foreach (var objectCollapsible in building.CollapsibleObjects)
-            {
-                objectCollapsible.Repair(building);
-            }
-
-            IntactField?.SetValue(building, true);
-            DestroyedField?.SetValue(building, false);
+            BuildingIdToIgnore = building.id;
+            building.Repair();
+            BuildingIdToIgnore = string.Empty;
         }
 
         /// <summary>
-        /// If we call building.Demolish() then we woud trigger the KSP event and send a message to the server. Here we just do the same logic
-        /// as KSP but without triggering the event
+        /// If we call building.Demolish() then we woud trigger the KSP event and send a message to the server.         
+        /// Therefore we add the id to the ignore field so the event FacilityCollapsing doesn't send a network message
         /// </summary>
-        public void CollapseFacilityWithoutTriggeringEvent(DestructibleBuilding building)
+        public void CollapseFacilityWithoutSendingMessage(DestructibleBuilding building)
         {
             if (building == null) return;
-            if (!(bool)IntactField.GetValue(building) || (bool)DestroyedField.GetValue(building))
+            if (!building.IsIntact || building.IsDestroyed)
                 return;
 
-            foreach (var objectCollapsible in building.CollapsibleObjects)
-            {
-                objectCollapsible.Collapse(building);
-            }
-
-            IntactField?.SetValue(building, false);
-            DestroyedField?.SetValue(building, true);
+            BuildingIdToIgnore = building.id;
+            building.Demolish();
+            BuildingIdToIgnore = string.Empty;
         }
 
         #endregion
