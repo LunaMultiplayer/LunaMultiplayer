@@ -168,7 +168,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         var fieldValueAsString = field.GetStringValue(field.host, false);
                         if (fieldValueAsString != null && nodeValue.value != fieldValueAsString)
                         {
-                            if (!ModuleIsIgnored(module) && !FieldIsIgnored(module, field))
+                            if (!ModuleIsIgnored(module.moduleName) && !FieldIsIgnored(module, field))
                             {
                                 LunaLog.Log($"Detected a part module change. Module: {module.moduleName} field: {field.name}");
                                 moduleHaveChanges = true;
@@ -183,10 +183,9 @@ namespace LunaClient.Systems.VesselProtoSys
             return moduleHaveChanges;
         }
 
-        private static bool ModuleIsIgnored(PartModule module)
+        private static bool ModuleIsIgnored(string moduleName)
         {
-            return VesselModulesToIgnore.ModulesToIgnore.Contains(module.moduleName)
-                   && VesselModulesToIgnore.ModulesToIgnoreWhenChecking.Contains(module.moduleName);
+            return VesselModulesToIgnore.ModulesToIgnore.Contains(moduleName) || VesselModulesToIgnore.ModulesToIgnoreWhenChecking.Contains(moduleName);
         }
 
         private static bool FieldIsIgnored(PartModule module, BaseField field)

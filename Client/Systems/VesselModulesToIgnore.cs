@@ -11,7 +11,7 @@ namespace LunaClient.Systems
         /// Add here modules that should be ignored (just for performance) when applying changes and when checking for changes
         /// </summary>
         public static readonly string[] ModulesToIgnore = {
-            "CModuleLinkedMesh", "FXModuleAnimateThrottle", "ModuleTripLogger"
+            "CModuleLinkedMesh", "FXModuleAnimateThrottle", "ModuleTripLogger", "ModuleCoreHeat"
         };
 
         /// <summary>
