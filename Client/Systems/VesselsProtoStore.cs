@@ -121,7 +121,8 @@ namespace LunaClient.Systems
             _vesselHash = newHash;
             VesselHasUpdate = true;
             
-            VesselSituationChanged = _protoVessel != null && situation != int.MinValue && (int)_protoVessel.situation != situation;
+            VesselSituationChanged = _protoVessel != null && situation != int.MinValue && 
+                ((int)_protoVessel.situation != situation || (Vessel != null && (int)Vessel.situation != situation));
         }
 
         /// <summary>
