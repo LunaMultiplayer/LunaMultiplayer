@@ -49,7 +49,7 @@ namespace Server.System.VesselRelay
 
                 //This is the case when a user reverted (the message received has a game time LOWER than the last message received). 
                 //To handle this, we remove all the messages that we received UNTIL this revert.
-                if (vesselQueue.Last().GameTime > gameTime)
+                if (vesselQueue.LastOrDefault()?.GameTime > gameTime)
                 {
                     while (vesselQueue.TryPeek(out var peekValue) && peekValue.GameTime > gameTime)
                     {
@@ -57,7 +57,7 @@ namespace Server.System.VesselRelay
                     }
                 }
 
-                vesselQueue.Enqueue(new VesselRelayItem(msg.SubspaceId, vesselId, gameTime, msg));
+                vesselQueue.Enqueue(new VesselRelayItem(subspace, vesselId, gameTime, msg));
             }
         }
 
