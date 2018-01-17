@@ -31,7 +31,7 @@ namespace LunaCommon.Locks
                         return updateLock.PlayerName == playerName;
                     break;
                 case LockType.UnloadedUpdate:
-                    if (LockStore.UpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
+                    if (LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
                         return unloadedUpdateLock.PlayerName == playerName;
                     break;
                 default:
