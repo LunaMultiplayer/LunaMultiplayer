@@ -43,6 +43,8 @@ namespace LunaClient.Systems.Facility
         /// </summary>
         public void UpgradeFacilityWithoutSendingMessage(UpgradeableFacility facility, int level)
         {
+            if (facility == null || facility.FacilityLevel == level) return;
+
             BuildingIdToIgnore = facility.id;
             facility.setLevel(level);
             BuildingIdToIgnore = string.Empty;
@@ -54,8 +56,7 @@ namespace LunaClient.Systems.Facility
         /// </summary>
         public void RepairFacilityWithoutSendingMessage(DestructibleBuilding building)
         {
-            if (building == null) return;
-            if (building.IsIntact || !building.IsDestroyed)
+            if (building == null || building.IsIntact || !building.IsDestroyed)
                 return;
 
             BuildingIdToIgnore = building.id;
@@ -69,8 +70,7 @@ namespace LunaClient.Systems.Facility
         /// </summary>
         public void CollapseFacilityWithoutSendingMessage(DestructibleBuilding building)
         {
-            if (building == null) return;
-            if (!building.IsIntact || building.IsDestroyed)
+            if (building == null || !building.IsIntact || building.IsDestroyed)
                 return;
 
             BuildingIdToIgnore = building.id;
