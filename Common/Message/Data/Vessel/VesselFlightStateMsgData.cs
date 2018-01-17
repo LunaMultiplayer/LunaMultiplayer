@@ -32,6 +32,7 @@ namespace LunaCommon.Message.Data.Vessel
         public float WheelSteer;
         public float WheelSteerTrim;
         public long TimeStamp;
+        public double GameTime;
 
         public override string ClassName { get; } = nameof(VesselFlightStateMsgData);
 
@@ -59,6 +60,7 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(WheelSteer);
             lidgrenMsg.Write(WheelSteerTrim);
             lidgrenMsg.Write(TimeStamp);
+            lidgrenMsg.Write(TimeStamp);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
@@ -85,12 +87,13 @@ namespace LunaCommon.Message.Data.Vessel
             WheelSteer = lidgrenMsg.ReadFloat();
             WheelSteerTrim = lidgrenMsg.ReadFloat();
             TimeStamp = lidgrenMsg.ReadInt64();
+            GameTime = lidgrenMsg.ReadDouble();
         }
 
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) +
-                   GuidUtil.GetByteSize() + sizeof(float) * 14 + sizeof(bool) * 4 + sizeof(long);
+                   GuidUtil.GetByteSize() + sizeof(float) * 14 + sizeof(bool) * 4 + sizeof(long) + sizeof(double);
         }
     }
 }

@@ -1,10 +1,10 @@
-﻿using System;
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Message.Data.Vessel;
 using Server.Client;
 using Server.Enums;
 using Server.Settings;
+using System;
 
-namespace Server.System
+namespace Server.System.VesselRelay
 {
     /// <summary>
     /// This class relay the vessel messages to the correct subspaces

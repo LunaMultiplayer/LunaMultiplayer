@@ -9,6 +9,7 @@ using Server.Message.Reader.Base;
 using Server.Server;
 using Server.Settings;
 using Server.System;
+using Server.System.VesselRelay;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -43,19 +44,14 @@ namespace Server.Message.Reader
                     VesselRelaySystem.HandleVesselMessage(client, message);
                     break;
                 case VesselMessageType.Update:
-                    HandleVesselUpdate(message);
+                    VesselFileUpdater.RewriteVesselFile(message);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
                     break;
                 default:
                     throw new NotImplementedException("Warp Type not implemented");
             }
         }
-
-        private static void HandleVesselUpdate(VesselBaseMsgData message)
-        {
-            VesselFileUpdater.RewriteVesselFile(message);
-            MessageQueuer.SendToAllClients<VesselSrvMsg>(message);
-        }
-
+        
         private static void HandleVesselRemove(ClientStructure client, VesselBaseMsgData message)
         {
             var data = (VesselRemoveMsgData)message;
@@ -87,7 +83,7 @@ namespace Server.Message.Reader
 
             FileHandler.WriteToFile(path, msgData.Vessel.Data, msgData.Vessel.NumBytes);
 
-            VesselRelaySystem.HandleVesselMessage(client, message);
+            MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
         }
 
         private static void HandleVesselDock(ClientStructure client, VesselBaseMsgData message)

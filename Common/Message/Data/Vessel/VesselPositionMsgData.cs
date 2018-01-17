@@ -23,6 +23,7 @@ namespace LunaCommon.Message.Data.Vessel
         public float[] SrfRelRotation = new float[4];
         public float HeightFromTerrain;
         public long TimeStamp;
+        public double GameTime;
 
         public override string ClassName { get; } = nameof(VesselPositionMsgData);
 
@@ -56,6 +57,7 @@ namespace LunaCommon.Message.Data.Vessel
 
             lidgrenMsg.Write(HeightFromTerrain);
             lidgrenMsg.Write(TimeStamp);
+            lidgrenMsg.Write(TimeStamp);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
@@ -88,12 +90,13 @@ namespace LunaCommon.Message.Data.Vessel
 
             HeightFromTerrain = lidgrenMsg.ReadFloat();
             TimeStamp = lidgrenMsg.ReadInt64();
+            GameTime = lidgrenMsg.ReadDouble();
         }
         
         internal override int InternalGetMessageSize(bool dataCompressed)
         {
             return base.InternalGetMessageSize(dataCompressed) + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 6 + 
-                sizeof(float) + sizeof(float) * 4 * 1 + sizeof(long);
+                sizeof(float) + sizeof(float) * 4 * 1 + sizeof(long) + sizeof(double);
         }
     }
 }

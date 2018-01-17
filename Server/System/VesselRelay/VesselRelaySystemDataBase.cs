@@ -5,11 +5,12 @@ using Server.Client;
 using Server.Context;
 using Server.Server;
 using Server.Settings;
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Server.System
+namespace Server.System.VesselRelay
 {
     /// <summary>
     /// This class relay the vessel messages to the correct subspaces
@@ -31,35 +32,31 @@ namespace Server.System
 
         #endregion
 
-        #region VesselRelayMsg Structure
+        #region VesselRelayDB Structure
 
-        private class VesselRelayMessage
+        private class VesselRelayDbItem : VesselRelayItem
         {
             public ObjectId Id = ObjectId.NewObjectId();
 
-            public int SubspaceId { get; set; }
-            public VesselBaseMsgData Msg { get; }
-
-            public VesselRelayMessage(int subspaceId, VesselBaseMsgData msg)
-            {
-                SubspaceId = subspaceId;
-                Msg = msg;
-            }
+            public VesselRelayDbItem(int subspaceId, Guid vesselId, double gameTime, VesselBaseMsgData msg) : base(subspaceId, vesselId, gameTime, msg) { }
         }
 
         #endregion
 
         private static readonly string DbFile = Path.Combine(ServerContext.UniverseDirectory, "Relay", "RelayDatabase.db");
         private static readonly LiteDatabase DataBase = new LiteDatabase(DbFile);
-        private static LiteCollection<VesselRelayMessage> DbCollection => DataBase.GetCollection<VesselRelayMessage>();
+        private static LiteCollection<VesselRelayDbItem> DbCollection => DataBase.GetCollection<VesselRelayDbItem>();
 
         /// <summary>
         /// This method relays a message to the other clients in the same subspace.
         /// In case there are other players in OLDER subspaces it stores it in their queue for further processing
         /// </summary>
-        public static void HandleVesselMessage(ClientStructure client, VesselBaseMsgData msg)
+        public static void HandleVesselMessage(ClientStructure client, dynamic msg)
         {
             if (client.Subspace == -1) return;
+
+            var vesselId = (Guid)msg.VesselId;
+            var gameTime = (double)msg.GameTime;
 
             MessageQueuer.RelayMessageToSubspace<VesselSrvMsg>(client, msg);
 
@@ -73,11 +70,21 @@ namespace Server.System
             msg.SentTime += WarpSystem.GetSubspaceTimeDifference(client.Subspace);
             foreach (var subspace in WarpSystem.GetPastSubspaces(client.Subspace))
             {
-                DbCollection.Insert(new VesselRelayMessage(subspace, msg));
+                //This is the case when a user reverted (the message received has a game time LOWER than the last message received). 
+                //To handle this, we remove all the messages that we received UNTIL this revert.
+                if (DbCollection.Exists(x => x.VesselId == vesselId && x.GameTime > gameTime))
+                {
+                    DbCollection.Delete(x => x.VesselId == vesselId && x.GameTime > gameTime);
+                    DataBase.Shrink();
+                }
+
+                DbCollection.Insert(new VesselRelayDbItem(subspace, vesselId, gameTime, msg));
             }
 
             DbCollection.EnsureIndex(x => x.Id);
             DbCollection.EnsureIndex(x => x.SubspaceId);
+            DbCollection.EnsureIndex(x => x.VesselId);
+            DbCollection.EnsureIndex(x => x.GameTime);
         }
 
         /// <summary>
@@ -103,7 +110,7 @@ namespace Server.System
                 //Te idea is that we are going to use a queue with a lot of messages that came from future and use for our new subspace
                 //But in that queue there might be messages that are too old so we can remove them to save space
                 var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspaceId);
-                var messageQueue = DbCollection.Find(v=> v.SubspaceId == closestPastSubspace && v.Msg.SentTime < subspaceTime).ToList();
+                var messageQueue = DbCollection.Find(v => v.SubspaceId == closestPastSubspace && v.Msg.SentTime < subspaceTime).ToList();
 
                 //Once we've got the queue clean of old messages we add it do the db 
                 //so the future subspaces fill up our queue.
@@ -111,6 +118,7 @@ namespace Server.System
                 DbCollection.InsertBulk(messageQueue);
                 DbCollection.EnsureIndex(x => x.Id);
                 DbCollection.EnsureIndex(x => x.SubspaceId);
+                DbCollection.EnsureIndex(x => x.GameTime);
             }
         }
 
@@ -136,7 +144,7 @@ namespace Server.System
                 {
                     var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspace.Key);
                     var msgToSend = subspace.Where(m => subspaceTime >= m.Msg.SentTime).ToList();
-                    msgToSend.ForEach(m=>
+                    msgToSend.ForEach(m =>
                     {
                         MessageQueuer.SendMessageToSubspace<VesselSrvMsg>(m.Msg, m.SubspaceId);
                         DbCollection.Delete(m.Id);

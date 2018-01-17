@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
-using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Interface;
 
@@ -18,6 +17,8 @@ namespace LunaClient.Systems.VesselPositionSys
         {                
             var msg = MessageToPositionTransfer.CreateMessageFromVessel(vessel);
             if (msg == null) return;
+
+            msg.GameTime = Planetarium.GetUniversalTime();
 
             SendMessage(msg);
         }

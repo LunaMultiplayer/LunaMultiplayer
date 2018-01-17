@@ -147,9 +147,10 @@
     <Compile Include="System\ModFileSystem.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselFileUpdater.cs" />
-    <Compile Include="System\VesselRelaySystem.cs" />
-    <Compile Include="System\VesselRelaySystemDataBase.cs" />
-    <Compile Include="System\VesselRelaySystemDictionary.cs" />
+    <Compile Include="System\VesselRelay\VesselRelayItem.cs" />
+    <Compile Include="System\VesselRelay\VesselRelaySystem.cs" />
+    <Compile Include="System\VesselRelay\VesselRelaySystemDataBase.cs" />
+    <Compile Include="System\VesselRelay\VesselRelaySystemDictionary.cs" />
     <Compile Include="System\VesselUpdateRelaySystem.cs" />
     <Compile Include="System\WarpSystem.cs" />
     <Compile Include="System\WarpSystemReceiver.cs" />

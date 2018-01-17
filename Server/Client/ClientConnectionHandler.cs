@@ -11,6 +11,7 @@ using Server.Log;
 using Server.Plugin;
 using Server.Server;
 using Server.System;
+using Server.System.VesselRelay;
 
 namespace Server.Client
 {
