@@ -183,7 +183,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.CoM[0] = CoM[0];
             Vessel.protoVessel.CoM[1] = CoM[1];
             Vessel.protoVessel.CoM[2] = CoM[2];
-            
+
             Vessel.protoVessel.orbitSnapShot.inclination = Orbit[0];
             Vessel.protoVessel.orbitSnapShot.eccentricity = Orbit[1];
             Vessel.protoVessel.orbitSnapShot.semiMajorAxis = Orbit[2];
@@ -258,7 +258,8 @@ namespace LunaClient.Systems.VesselPositionSys
                     Vessel.orbitDriver.updateFromParameters();
                     if (!Vessel.packed)
                     {
-                        Vessel.SetWorldVelocity(Vessel.orbitDriver.orbit.GetVel() - Body.getRFrmVelOrbit(Vessel.orbitDriver.orbit) - Krakensbane.GetFrameVelocity());
+                        var fudgeVel = Body.inverseRotation ? Body.getRFrmVelOrbit(Vessel.orbitDriver.orbit) : Vector3d.zero;
+                        Vessel.SetWorldVelocity(Vessel.orbitDriver.orbit.vel.xzy - fudgeVel - Krakensbane.GetFrameVelocity());
                     }
                 }
                 else
