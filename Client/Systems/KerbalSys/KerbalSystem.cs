@@ -120,6 +120,8 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void SetKerbalStatusWithoutTriggeringEvent(ProtoCrewMember crew, ProtoCrewMember.RosterStatus newStatus)
         {
+            if (crew == null) return;
+
             KerbalStatusField.SetValue(crew, newStatus);
         }
 
@@ -128,6 +130,8 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void SetKerbalTypeWithoutTriggeringEvent(ProtoCrewMember crew, ProtoCrewMember.KerbalType newType)
         {
+            if (crew == null) return;
+
             KerbalTypeField.SetValue(crew, newType);
         }
 
