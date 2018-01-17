@@ -57,7 +57,7 @@ namespace LunaClient.Systems.VesselProtoSys
         private void PrepareAndSendProtoVessel(ProtoVessel protoVessel)
         {
             //Never send empty vessel id's (it happens with flags...)
-            if (protoVessel.vesselID == Guid.Empty) return;
+            if (protoVessel.vesselID == Guid.Empty || protoVessel.vesselName == null) return;
 
             //VesselSerializedBytes is shared so lock it!
             lock (VesselSerializedBytes)
