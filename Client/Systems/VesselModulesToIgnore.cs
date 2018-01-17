@@ -48,7 +48,8 @@ namespace LunaClient.Systems
         public static readonly Dictionary<string, string[]> FieldsToIgnore = new Dictionary<string, string[]>()
         {
             ["ModuleEnginesFX"] = new[] { "currentThrottle" },
-            ["ModuleWheelSuspension"] = new[] { "suspensionPos", "autoBoost" }
+            ["ModuleWheelSuspension"] = new[] { "suspensionPos", "autoBoost" },
+            ["ModuleDeployableSolarPanel"] = new[] { "launchUT", "currentRotation" }
         };
     }
 }
