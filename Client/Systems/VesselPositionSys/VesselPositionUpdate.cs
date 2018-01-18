@@ -253,7 +253,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
 
                 var surfacePos = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
-                if (useOrbitDriver || Vessel.packed)
+                if (useOrbitDriver || (Vessel.packed && SettingsSystem.CurrentSettings.Debug1))
                 {
                     Vessel.orbitDriver.updateFromParameters();
                     if (!Vessel.packed)
