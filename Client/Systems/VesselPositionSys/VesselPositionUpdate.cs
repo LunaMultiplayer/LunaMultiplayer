@@ -253,10 +253,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
 
                 var surfacePos = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
-                if (useOrbitDriver || (Vessel.packed && SettingsSystem.CurrentSettings.Debug1))
+                if (useOrbitDriver || (Vessel.packed))
                 {
                     Vessel.orbitDriver.updateFromParameters();
-                    if (!Vessel.packed)
+                    if (!Vessel.packed && SettingsSystem.CurrentSettings.Debug1)
                     {
                         var fudgeVel = Body.inverseRotation ? Body.getRFrmVelOrbit(Vessel.orbitDriver.orbit) : Vector3d.zero;
                         Vessel.SetWorldVelocity(Vessel.orbitDriver.orbit.vel.xzy - fudgeVel - Krakensbane.GetFrameVelocity());
