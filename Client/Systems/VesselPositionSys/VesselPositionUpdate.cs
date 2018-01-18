@@ -118,7 +118,7 @@ namespace LunaClient.Systems.VesselPositionSys
             TimeStamp = Target.TimeStamp;
             ResetFields();
         }
-
+        
         /// <summary>
         /// Call this method to apply a vessel update either by interpolation or just by raw positioning the vessel
         /// </summary>
@@ -162,8 +162,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Private
-
-
+        
         private void UpdateProtoVesselValues()
         {
             Vessel.protoVessel.latitude = LatLonAlt[0];
@@ -192,6 +191,153 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.orbitSnapShot.meanAnomalyAtEpoch = Orbit[5];
             Vessel.protoVessel.orbitSnapShot.epoch = Orbit[6];
             Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Orbit[7];
+        }
+        
+        private void OldApplyInterpolationsToLoadedVessel(float lerpPercentage)
+        {
+            var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
+            var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
+
+            //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
+            Vessel.SetWorldVelocity(curVelocity);
+            Vessel.velocityD = curVelocity;
+
+            //Apply rotation
+            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
+            //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
+            Vessel.srfRelRotation = currentSurfaceRelRotation;
+
+            //If you do Vessel.ReferenceTransform.position = curPosition 
+            //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
+            //that is the reason why we pack vessels at close distance when landed...
+            switch (Vessel.situation)
+            {
+                case Vessel.Situations.LANDED:
+                case Vessel.Situations.SPLASHED:
+                    Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                    Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                    Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                    break;
+            }
+
+            //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
+            Vessel.orbitDriver.updateFromParameters();
+            foreach (var part in Vessel.Parts)
+                part.ResumeVelocity();
+        }
+
+        private void DarkApplyInterpolationsToLoadedVessel(float lerpPercentage)
+        {
+            //Get worldspace rotation quaternion and velocity vectors.
+            var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
+            //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
+            Vessel.srfRelRotation = currentSurfaceRelRotation;
+            var curVelocity = (Vessel.mainBody.bodyTransform.rotation * Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage)) - Krakensbane.GetFrameVelocity();
+            //Use lat/long/alt/vel under 1km
+            var useOrbitDriver = Target.LatLonAlt[2] > 1000;
+
+            //DO NOT lerp the latlonalt as otherwise if you are in 
+            //orbit you will see landed vessels in the map view with weird jittering
+            if (useOrbitDriver)
+            {
+                Vessel.latitude = Target.LatLonAlt[0];
+                Vessel.longitude = Target.LatLonAlt[1];
+                Vessel.altitude = Target.LatLonAlt[2];
+            }
+            else
+            {
+                Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+            }
+
+            var surfacePos = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+            if (useOrbitDriver || (Vessel.packed))
+            {
+                Vessel.orbitDriver.updateFromParameters();
+                if (!Vessel.packed && SettingsSystem.CurrentSettings.Debug1)
+                {
+                    var fudgeVel = Body.inverseRotation ? Body.getRFrmVelOrbit(Vessel.orbitDriver.orbit) : Vector3d.zero;
+                    Vessel.SetWorldVelocity(Vessel.orbitDriver.orbit.vel.xzy - fudgeVel - Krakensbane.GetFrameVelocity());
+                }
+            }
+            else
+            {
+                Vessel.SetPosition(surfacePos);
+                Vessel.SetWorldVelocity(curVelocity);
+                //This sets obt_vel so acceleration can be fixed in Vessel.UpdateAcceleration
+                if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
+                {
+                    Vessel.orbitDriver.UpdateOrbit();
+                }
+            }
+
+
+            //Apply rotation (also resets posistion)
+            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
+            //Not sure if we need to touch reference transform?
+            //If you do Vessel.ReferenceTransform.position = curPosition 
+            //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
+            //that is the reason why we pack vessels at close distance when landed...
+
+            //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
+            Vessel.UpdatePosVel();
+            if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
+            {
+                Vessel.UpdateAcceleration(1 / TimeWarp.fixedDeltaTime, false);
+            }
+        }
+
+        private void MixedApplyInterpolationsToLoadedVessel(float lerpPercentage)
+        {
+            var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
+
+            //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
+            Vessel.srfRelRotation = currentSurfaceRelRotation;
+
+            var curVelocity = (Vessel.mainBody.bodyTransform.rotation * Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage)) 
+                - Krakensbane.GetFrameVelocity();
+            //Use lat/long/alt/vel under 1km
+            var useOrbitDriver = Target.LatLonAlt[2] > 1000;
+
+            Vessel.latitude = Target.LatLonAlt[0];
+            Vessel.longitude = Target.LatLonAlt[1];
+            Vessel.altitude = Target.LatLonAlt[2];
+
+            var surfacePos = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
+            if (useOrbitDriver || (Vessel.packed))
+            {
+                Vessel.orbitDriver.updateFromParameters();
+                if (!Vessel.packed)
+                {
+                    var fudgeVel = Body.inverseRotation ? Body.getRFrmVelOrbit(Vessel.orbitDriver.orbit) : Vector3d.zero;
+                    Vessel.SetWorldVelocity(Vessel.orbitDriver.orbit.vel.xzy - fudgeVel - Krakensbane.GetFrameVelocity());
+                }
+            }
+            else
+            {
+                Vessel.SetPosition(surfacePos);
+                Vessel.SetWorldVelocity(curVelocity);
+                //This sets obt_vel so acceleration can be fixed in Vessel.UpdateAcceleration
+                if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
+                {
+                    Vessel.orbitDriver.UpdateOrbit();
+                }
+            }
+
+            //Apply rotation (also resets posistion)
+            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
+            //Not sure if we need to touch reference transform?
+            //If you do Vessel.ReferenceTransform.position = curPosition 
+            //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
+            //that is the reason why we pack vessels at close distance when landed...
+
+            //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
+            Vessel.UpdatePosVel();
+            if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
+            {
+                Vessel.UpdateAcceleration(1 / TimeWarp.fixedDeltaTime, false);
+            }
         }
 
         private void ApplyInterpolations(float lerpPercentage)
@@ -229,63 +375,21 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
-                //Get worldspace rotation quaternion and velocity vectors.
-                var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
-                //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
-                Vessel.srfRelRotation = currentSurfaceRelRotation;
-                var curVelocity = (Vessel.mainBody.bodyTransform.rotation * Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage)) - Krakensbane.GetFrameVelocity();
-                //Use lat/long/alt/vel under 1km
-                var useOrbitDriver = Target.LatLonAlt[2] > 1000;
-
-                //DO NOT lerp the latlonalt as otherwise if you are in 
-                //orbit you will see landed vessels in the map view with weird jittering
-                if (useOrbitDriver)
+                if (SettingsSystem.CurrentSettings.Debug1)
                 {
-                    Vessel.latitude = Target.LatLonAlt[0];
-                    Vessel.longitude = Target.LatLonAlt[1];
-                    Vessel.altitude = Target.LatLonAlt[2];
-                }
-                else
-                {
-                    Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                    Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
-                    Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                    DarkApplyInterpolationsToLoadedVessel(lerpPercentage);
+                    return;
                 }
 
-                var surfacePos = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
-                if (useOrbitDriver || (Vessel.packed))
+                if (SettingsSystem.CurrentSettings.Debug2)
                 {
-                    Vessel.orbitDriver.updateFromParameters();
-                    if (!Vessel.packed && SettingsSystem.CurrentSettings.Debug1)
-                    {
-                        var fudgeVel = Body.inverseRotation ? Body.getRFrmVelOrbit(Vessel.orbitDriver.orbit) : Vector3d.zero;
-                        Vessel.SetWorldVelocity(Vessel.orbitDriver.orbit.vel.xzy - fudgeVel - Krakensbane.GetFrameVelocity());
-                    }
-                }
-                else
-                {
-                    Vessel.SetPosition(surfacePos);
-                    Vessel.SetWorldVelocity(curVelocity);
-                    //This sets obt_vel so acceleration can be fixed in Vessel.UpdateAcceleration
-                    if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
-                    {
-                        Vessel.orbitDriver.UpdateOrbit();
-                    }
+                    OldApplyInterpolationsToLoadedVessel(lerpPercentage);
+                    return;
                 }
 
-
-                //Apply rotation (also resets posistion)
-                Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
-                //Not sure if we need to touch reference transform?
-                //If you do Vessel.ReferenceTransform.position = curPosition 
-                //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
-                //that is the reason why we pack vessels at close distance when landed...
-
-                //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
-                Vessel.UpdatePosVel();
-                if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
+                if (SettingsSystem.CurrentSettings.Debug3)
                 {
-                    Vessel.UpdateAcceleration(1 / TimeWarp.fixedDeltaTime, false);
+                    MixedApplyInterpolationsToLoadedVessel(lerpPercentage);
                 }
             }
         }
