@@ -23,6 +23,11 @@ namespace LunaCommon
             return Environment.OSVersion.Platform == PlatformID.Win32NT;
         }
 
+        public static bool IsX64()
+        {
+            return IntPtr.Size == 8;
+        }
+
         /// <summary>
         /// Compare two ienumerables and return if they are the same or not IGNORING the order
         /// </summary>
