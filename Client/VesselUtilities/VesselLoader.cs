@@ -240,7 +240,8 @@ namespace LunaClient.VesselUtilities
             {
                 //When in trackstation rebuild the vessels left panel as otherwise the new vessel won't be listed
                 var spaceTracking = Object.FindObjectOfType<SpaceTracking>();
-                BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
+                if (spaceTracking != null)
+                    BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
             }
             return true;
         }
