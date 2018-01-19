@@ -37,7 +37,7 @@ namespace LunaClient.Systems.Asteroid
         public Dictionary<string, string> ServerAsteroidTrackStatus { get; } = new Dictionary<string, string>();
         private AsteroidEventHandler AsteroidEventHandler { get; } = new AsteroidEventHandler();
 
-        public bool AsteroidSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene >= GameScenes.FLIGHT;
+        public bool AsteroidSystemReady => Enabled && Time.timeSinceLevelLoad > 5f && HighLogic.LoadedScene >= GameScenes.FLIGHT;
 
         #endregion
 
