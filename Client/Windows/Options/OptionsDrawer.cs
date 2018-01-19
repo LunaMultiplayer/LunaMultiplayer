@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems;
+﻿using LunaClient.Network;
+using LunaClient.Systems;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
@@ -28,15 +29,15 @@ namespace LunaClient.Windows.Options
             GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, TempColorLabelStyle);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("R: ");
+            GUILayout.Label("R: ", SmallOption);
             TempColor.r = GUILayout.HorizontalScrollbar(TempColor.r, 0, 0, 1);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("G: ");
+            GUILayout.Label("G: ", SmallOption);
             TempColor.g = GUILayout.HorizontalScrollbar(TempColor.g, 0, 0, 1);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("B: ");
+            GUILayout.Label("B: ", SmallOption);
             TempColor.b = GUILayout.HorizontalScrollbar(TempColor.b, 0, 0, 1);
             GUILayout.EndHorizontal();
             TempColorLabelStyle.active.textColor = TempColor;
@@ -131,6 +132,28 @@ namespace LunaClient.Windows.Options
 #if DEBUG
             if (GUILayout.Button("Check Common.dll stock parts"))
                 SystemsContainer.Get<ModSystem>().CheckCommonStockParts();
+            GUILayout.Space(10);
+
+            ShowBadNetworkSimulationFields = GUILayout.Toggle(ShowBadNetworkSimulationFields, "Bad network simulation", ButtonStyle);
+            if (ShowBadNetworkSimulationFields)
+            {
+                if (MainSystem.NetworkState <= ClientState.Disconnected)
+                {
+                    GUILayout.Label($"Packet loss %: {(NetworkMain.Config.SimulatedLoss * 100):0.#} %");
+                    NetworkMain.Config.SimulatedLoss = GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedLoss, 0, 0, 1);
+                    GUILayout.Label($"Packet duplication %: {(NetworkMain.Config.SimulatedDuplicatesChance * 100):0.#} %");
+                    NetworkMain.Config.SimulatedDuplicatesChance = GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedDuplicatesChance, 0, 0, 1);
+                    GUILayout.Label($"Max random latency: {NetworkMain.Config.SimulatedRandomLatency * 1000} ms");
+                    NetworkMain.Config.SimulatedRandomLatency = GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedRandomLatency, 0, 0, 5);
+                    GUILayout.Label($"Min latency: {NetworkMain.Config.SimulatedMinimumLatency * 1000} ms");
+                    NetworkMain.Config.SimulatedMinimumLatency = GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedMinimumLatency, 0, 0, 5);
+
+                }
+                else
+                {
+                    GUILayout.Label("Cannot change latency simulation while connected");
+                }
+            }
 #endif
             GUILayout.FlexibleSpace();
             if (GUILayout.Button("Close", ButtonStyle))

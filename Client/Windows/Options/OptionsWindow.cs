@@ -118,6 +118,7 @@ namespace LunaClient.Windows.Options
         protected string ToolbarMode { get; set; }
         protected bool SettingChat { get; set; }
         protected GUIStyle TempColorLabelStyle { get; set; }
+        protected bool ShowBadNetworkSimulationFields { get; set; }
 
         #endregion
     }
