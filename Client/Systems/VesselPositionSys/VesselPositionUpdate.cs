@@ -255,7 +255,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (useOrbitDriver || (Vessel.packed))
             {
                 Vessel.orbitDriver.updateFromParameters();
-                if (!Vessel.packed && SettingsSystem.CurrentSettings.Debug1)
+                if (!Vessel.packed)
                 {
                     var fudgeVel = Body.inverseRotation ? Body.getRFrmVelOrbit(Vessel.orbitDriver.orbit) : Vector3d.zero;
                     Vessel.SetWorldVelocity(Vessel.orbitDriver.orbit.vel.xzy - fudgeVel - Krakensbane.GetFrameVelocity());
