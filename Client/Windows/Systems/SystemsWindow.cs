@@ -19,7 +19,7 @@ namespace LunaClient.Windows.Systems
             {
                 if (!_display) return false;
 
-                return MainSystem.NetworkState >= ClientState.Running &&
+                return MainSystem.NetworkState >= ClientState.Running && MainSystem.ToolbarShowGui && 
                     HighLogic.LoadedScene >= GameScenes.SPACECENTER;
             } 
             set => _display = value;

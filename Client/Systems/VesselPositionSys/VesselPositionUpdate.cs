@@ -375,21 +375,20 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
-                if (SettingsSystem.CurrentSettings.Debug1)
+                switch (SettingsSystem.CurrentSettings.PositionSystem)
                 {
-                    DarkApplyInterpolationsToLoadedVessel(lerpPercentage);
-                    return;
-                }
-
-                if (SettingsSystem.CurrentSettings.Debug2)
-                {
-                    OldApplyInterpolationsToLoadedVessel(lerpPercentage);
-                    return;
-                }
-
-                if (SettingsSystem.CurrentSettings.Debug3)
-                {
-                    MixedApplyInterpolationsToLoadedVessel(lerpPercentage);
+                    case 0:
+                        DarkApplyInterpolationsToLoadedVessel(lerpPercentage);
+                        break;
+                    case 1:
+                        OldApplyInterpolationsToLoadedVessel(lerpPercentage);
+                        break;
+                    case 2:
+                        MixedApplyInterpolationsToLoadedVessel(lerpPercentage);
+                        break;
+                    default:
+                        LunaLog.LogError("Position system setting out of range!");
+                        break;
                 }
             }
         }

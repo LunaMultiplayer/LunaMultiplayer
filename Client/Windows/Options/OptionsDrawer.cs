@@ -97,6 +97,16 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.SaveSettings();
             }
             GUILayout.Space(10);
+            GUILayout.BeginVertical();
+            GUILayout.Label("Positioning system:");
+            var positionSetting = GUILayout.SelectionGrid(SettingsSystem.CurrentSettings.PositionSystem, new[] { "Dark", "Dagger", "Mixed" }, 3, "toggle");
+            if (positionSetting != SettingsSystem.CurrentSettings.PositionSystem)
+            {
+                SettingsSystem.CurrentSettings.PositionSystem = positionSetting;
+                SettingsSystem.SaveSettings();
+            }
+            GUILayout.EndVertical();
+            GUILayout.Space(10);
             GUILayout.Label("Generate a server LMPModControl:");
             if (GUILayout.Button("Generate blacklist LMPModControl.txt"))
                 SystemsContainer.Get<ModSystem>().GenerateModControlFile(false);
