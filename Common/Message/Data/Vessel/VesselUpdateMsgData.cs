@@ -27,7 +27,7 @@ namespace LunaCommon.Message.Data.Vessel
         public bool Controllable;
         public ActionGroup[] ActionGroups = new ActionGroup[17];
 
-        public override string ClassName { get; } = nameof(VesselPositionMsgData);
+        public override string ClassName { get; } = nameof(VesselUpdateMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
         {
@@ -63,6 +63,7 @@ namespace LunaCommon.Message.Data.Vessel
             Landed = lidgrenMsg.ReadBoolean();
             LandedAt = lidgrenMsg.ReadString();
             DisplayLandedAt = lidgrenMsg.ReadString();
+            Splashed = lidgrenMsg.ReadBoolean();
             MissionTime = lidgrenMsg.ReadDouble();
             LaunchTime = lidgrenMsg.ReadDouble();
             LastUt = lidgrenMsg.ReadDouble();
