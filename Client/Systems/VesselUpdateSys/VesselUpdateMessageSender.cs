@@ -41,6 +41,8 @@ namespace LunaClient.Systems.VesselUpdateSys
                 msgData.ActionGroups[i].State = vessel.ActionGroups.groups[i];
                 msgData.ActionGroups[i].Time = vessel.ActionGroups.cooldownTimes[i];
             }
+
+            SendMessage(msgData);
         }
     }
 }

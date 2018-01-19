@@ -9,7 +9,7 @@ namespace LunaCommon.Message.Data.Vessel
     {
         /// <inheritdoc />
         internal VesselUpdateMsgData() { }
-        public override VesselMessageType VesselMessageType => VesselMessageType.Position;
+        public override VesselMessageType VesselMessageType => VesselMessageType.Update;
         
         public Guid VesselId;
         public string Name;
