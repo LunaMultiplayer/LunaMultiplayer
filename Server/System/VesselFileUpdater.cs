@@ -31,7 +31,7 @@ namespace Server.System
         /// </summary>
         public static void RewriteVesselFile(VesselBaseMsgData message)
         {
-            var msgData = message as VesselPositionMsgData ?? (dynamic) (message as VesselUpdateMsgData);
+            var msgData = message as VesselPositionMsgData ?? (dynamic)(message as VesselUpdateMsgData);
             if (msgData == null) return;
 
             if (!LastUpdateDictionary.TryGetValue((Guid)msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FileUpdateIntervalMs)
@@ -183,11 +183,7 @@ namespace Server.System
             foreach (var actionGroup in msgData.ActionGroups)
             {
                 regex = new Regex($"(?<prefix>{actionGroup.ActionGroupName} = )(.*)");
-                var newValue = string.Concat(actionGroup.ActionGroupName, 
-                    " = ",
-                    actionGroup.State.ToString(CultureInfo.InvariantCulture), 
-                    ", ",
-                    actionGroup.Time.ToString(CultureInfo.InvariantCulture));
+                var newValue = actionGroup.State.ToString(CultureInfo.InvariantCulture) + ", " + actionGroup.Time.ToString(CultureInfo.InvariantCulture);
 
                 fullText = regex.Replace(fullText, "${prefix}" + newValue);
             }
