@@ -21,6 +21,7 @@ using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -149,6 +150,9 @@ namespace LunaClient.Network
                             break;
                         case VesselMessageType.Remove:
                             SystemsContainer.Get<VesselRemoveSystem>().EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.Update:
+                            SystemsContainer.Get<VesselUpdateSystem>().EnqueueMessage(msg);
                             break;
                     }
                     break;
