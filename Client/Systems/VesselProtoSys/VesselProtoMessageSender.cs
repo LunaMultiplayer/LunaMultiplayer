@@ -38,10 +38,11 @@ namespace LunaClient.Systems.VesselProtoSys
 
             var vesselHasChanges = VesselProtoRefresh.RefreshVesselProto(vessel);
 
+            //TODO: Now we send the protovessel all the time if someone is spectating us, perhaps we can just make a new system that sends the resources
+            //as this will be better in terms of memory garbage...
             if (force || vesselHasChanges || VesselCommon.IsSomeoneSpectatingUs)
                 SendVesselMessage(vessel.protoVessel);
         }
-
 
         #region Private methods
 
