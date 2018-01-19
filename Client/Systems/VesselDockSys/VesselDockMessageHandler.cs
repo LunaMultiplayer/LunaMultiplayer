@@ -48,7 +48,6 @@ namespace LunaClient.Systems.VesselDockSys
                 /* We own the dominant vessel and dind't detected the docking event so we need to reload our OWN vessel
                  * so if we send our own protovessel later, we send the updated definition
                  */
-                FlightGlobals.ActiveVessel.protoVessel = newProto;
                 VesselUpdater.UpdateVesselPartsFromProtoVessel(FlightGlobals.ActiveVessel, newProto);
 
                 WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
