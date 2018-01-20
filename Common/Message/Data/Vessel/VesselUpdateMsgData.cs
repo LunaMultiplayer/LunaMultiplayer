@@ -16,15 +16,17 @@ namespace LunaCommon.Message.Data.Vessel
         public string Type;
         public string Situation;
         public bool Landed;
+        public bool Splashed;
+        public bool Persistent;
+        public bool Controllable;
         public string LandedAt;
         public string DisplayLandedAt;
-        public bool Splashed;
         public double MissionTime;
         public double LaunchTime;
         public double LastUt;
-        public bool Persistent;
+
         public uint RefTransformId;
-        public bool Controllable;
+
         public ActionGroup[] ActionGroups = new ActionGroup[17];
 
         public override string ClassName { get; } = nameof(VesselUpdateMsgData);
@@ -38,15 +40,16 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(Type);
             lidgrenMsg.Write(Situation);
             lidgrenMsg.Write(Landed);
+            lidgrenMsg.Write(Splashed);
+            lidgrenMsg.Write(Persistent);
+            lidgrenMsg.Write(Controllable);
             lidgrenMsg.Write(LandedAt);
             lidgrenMsg.Write(DisplayLandedAt);
-            lidgrenMsg.Write(Splashed);
             lidgrenMsg.Write(MissionTime);
             lidgrenMsg.Write(LaunchTime);
             lidgrenMsg.Write(LastUt);
-            lidgrenMsg.Write(Persistent);
             lidgrenMsg.Write(RefTransformId);
-            lidgrenMsg.Write(Controllable);
+
 
             for (var i = 0; i < 17; i++)
                 ActionGroups[i].Serialize(lidgrenMsg, dataCompressed);
@@ -61,15 +64,17 @@ namespace LunaCommon.Message.Data.Vessel
             Type = lidgrenMsg.ReadString();
             Situation = lidgrenMsg.ReadString();
             Landed = lidgrenMsg.ReadBoolean();
+            Splashed = lidgrenMsg.ReadBoolean();
+            Persistent = lidgrenMsg.ReadBoolean();
+            Controllable = lidgrenMsg.ReadBoolean();
             LandedAt = lidgrenMsg.ReadString();
             DisplayLandedAt = lidgrenMsg.ReadString();
-            Splashed = lidgrenMsg.ReadBoolean();
             MissionTime = lidgrenMsg.ReadDouble();
             LaunchTime = lidgrenMsg.ReadDouble();
             LastUt = lidgrenMsg.ReadDouble();
-            Persistent = lidgrenMsg.ReadBoolean();
+
             RefTransformId = lidgrenMsg.ReadUInt32();
-            Controllable = lidgrenMsg.ReadBoolean();
+
 
             for (var i = 0; i < 17; i++)
             {

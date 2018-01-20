@@ -20,6 +20,8 @@ namespace LunaCommon.Message.Data.Lock
             base.InternalSerialize(lidgrenMsg, dataCompressed);
 
             lidgrenMsg.Write(LockResult);
+            lidgrenMsg.WritePadBits();
+
             Lock.Serialize(lidgrenMsg, dataCompressed);
         }
 
@@ -28,12 +30,15 @@ namespace LunaCommon.Message.Data.Lock
             base.InternalDeserialize(lidgrenMsg, dataCompressed);
 
             LockResult = lidgrenMsg.ReadBoolean();
+            lidgrenMsg.SkipPadBits();
+
             Lock.Deserialize(lidgrenMsg, dataCompressed);
         }
 
         internal override int InternalGetMessageSize(bool dataCompressed)
-        {
-            return base.InternalGetMessageSize(dataCompressed) + Lock.GetByteSize(dataCompressed) + sizeof(bool);
+        {            
+            //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
+            return base.InternalGetMessageSize(dataCompressed) + Lock.GetByteSize(dataCompressed) + sizeof(byte);
         }
     }
 }

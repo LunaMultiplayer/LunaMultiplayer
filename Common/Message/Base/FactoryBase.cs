@@ -20,6 +20,7 @@ namespace LunaCommon.Message.Base
                 var messageType = lidgrenMsg.ReadUInt16();
                 var subtype = lidgrenMsg.ReadUInt16();
                 var dataCompressed = lidgrenMsg.ReadBoolean();
+                lidgrenMsg.SkipPadBits();
 
                 var msg = GetMessageByType(messageType);
                 var data = msg.GetMessageData(subtype);

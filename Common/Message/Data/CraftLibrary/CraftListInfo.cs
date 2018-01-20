@@ -23,6 +23,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
             lidgrenMsg.Write(VabExists);
             lidgrenMsg.Write(SphExists);
             lidgrenMsg.Write(SubassemblyExists);
+            lidgrenMsg.WritePadBits();
 
             lidgrenMsg.Write(VabCraftCount);
             for (var i = 0; i < VabCraftCount; i++)
@@ -42,6 +43,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
             VabExists = lidgrenMsg.ReadBoolean();
             SphExists = lidgrenMsg.ReadBoolean();
             SubassemblyExists = lidgrenMsg.ReadBoolean();
+            lidgrenMsg.SkipPadBits();
 
             VabCraftCount = lidgrenMsg.ReadInt32();
             if (VabCraftNames.Length < VabCraftCount)
@@ -66,8 +68,9 @@ namespace LunaCommon.Message.Data.CraftLibrary
         }
         
         public int GetByteCount()
-        {
-            return sizeof(bool) * 3 + sizeof(int) * 3
+        {            
+            //We use sizeof(byte) instead of sizeof(bool) * 3 because we use the WritePadBits()
+            return sizeof(byte) + sizeof(int) * 3
                    + VabCraftNames.GetByteCount(VabCraftCount)
                    + SphCraftNames.GetByteCount(SphCraftCount)
                    + SubassemblyCraftNames.GetByteCount(SubassemblyCraftCount);

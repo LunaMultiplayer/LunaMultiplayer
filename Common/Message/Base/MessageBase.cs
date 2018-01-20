@@ -112,6 +112,7 @@ namespace LunaCommon.Message.Base
                 lidgrenMsg.Write(MessageTypeId);
                 lidgrenMsg.Write(Data.SubType);
                 lidgrenMsg.Write(compressData);
+                lidgrenMsg.WritePadBits();
 
                 Data.Serialize(lidgrenMsg, compressData);
             }
@@ -129,8 +130,9 @@ namespace LunaCommon.Message.Base
 
         /// <inheritdoc />
         public int GetMessageSize(bool dataCompressed)
-        {
-            return sizeof(ushort) + sizeof(ushort) + sizeof(bool) + Data.GetMessageSize(dataCompressed);
+        {            
+            //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
+            return sizeof(ushort) + sizeof(ushort) + sizeof(byte) + Data.GetMessageSize(dataCompressed);
         }
     }
 }
