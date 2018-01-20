@@ -33,7 +33,7 @@ namespace Server.Message.Reader
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;
 
-            if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
+            if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom && GameplaySettings.SettingsStore != null)
             {
                 msgData.EnableCommNet = GameplaySettings.SettingsStore.CommNetwork;
                 msgData.RespawnTimer = GameplaySettings.SettingsStore.RespawnTime;
