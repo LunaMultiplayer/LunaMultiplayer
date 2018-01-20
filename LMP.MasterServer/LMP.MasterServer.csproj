@@ -37,9 +37,6 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />

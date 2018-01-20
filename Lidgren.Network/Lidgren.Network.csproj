@@ -37,7 +37,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\Lidgren.Network.XML</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
     <NoWarn>3002, 1591, 3001, 0162, 0168</NoWarn>
   </PropertyGroup>
@@ -51,6 +52,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>3002, 1591, 3001, 0162, 0168</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
