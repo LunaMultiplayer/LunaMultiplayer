@@ -53,7 +53,7 @@ namespace Server.Message.ReceiveHandlers
                     newPlayerCraft.SphCraftNames = sphCraftNames.ToArray();
                     newPlayerCraft.SphCraftCount = newPlayerCraft.SphCraftNames.Length;
                 }
-                if (newPlayerCraft.VabExists)
+                if (newPlayerCraft.SubassemblyExists)
                 {
                     subassemblyCraftNames.AddRange(FileHandler.GetFilesInPath(subassemplyPath).Select(Path.GetFileNameWithoutExtension));
                     newPlayerCraft.SubassemblyCraftNames = subassemblyCraftNames.ToArray();
