@@ -62,7 +62,7 @@ namespace Lidgren.Network
 		{
 			if (checkMag)
 			{
-				var i = 0;
+				int i = 0;
 				while (i < mag.Length && mag[i] == 0)
 				{
 					++i;
@@ -142,7 +142,7 @@ namespace Lidgren.Network
 			}
 
 
-			var index = 0;
+			int index = 0;
 			m_sign = 1;
 
 			if (str[0] == '-')
@@ -174,18 +174,18 @@ namespace Lidgren.Network
 			// storage in one hit?, then Generate the magnitude in one hit too?
 			//////
 
-			var b = Zero;
+			NetBigInteger b = Zero;
 
 
-			var next = index + chunk;
+			int next = index + chunk;
 
 			if (next <= str.Length)
 			{
 				do
 				{
-					var s = str.Substring(index, chunk);
-					var i = ulong.Parse(s, style);
-					var bi = createUValueOf(i);
+					string s = str.Substring(index, chunk);
+					ulong i = ulong.Parse(s, style);
+					NetBigInteger bi = createUValueOf(i);
 
 					switch (radix)
 					{
@@ -213,9 +213,9 @@ namespace Lidgren.Network
 
 			if (index < str.Length)
 			{
-				var s = str.Substring(index);
-				var i = ulong.Parse(s, style);
-				var bi = createUValueOf(i);
+				string s = str.Substring(index);
+				ulong i = ulong.Parse(s, style);
+				NetBigInteger bi = createUValueOf(i);
 
 				if (b.m_sign > 0)
 				{
@@ -272,7 +272,7 @@ namespace Lidgren.Network
 			{
 				m_sign = -1;
 
-				var end = offset + length;
+				int end = offset + length;
 
 				int iBval;
 				// strip leading sign bytes
@@ -286,10 +286,10 @@ namespace Lidgren.Network
 				}
 				else
 				{
-					var numBytes = end - iBval;
-					var inverse = new byte[numBytes];
+					int numBytes = end - iBval;
+					byte[] inverse = new byte[numBytes];
 
-					var index = 0;
+					int index = 0;
 					while (index < numBytes)
 					{
 						inverse[index++] = (byte)~bytes[iBval++];
@@ -320,7 +320,7 @@ namespace Lidgren.Network
 			int offset,
 			int length)
 		{
-			var end = offset + length;
+			int end = offset + length;
 
 			// strip leading zeros
 			int firstSignificant;
@@ -334,8 +334,8 @@ namespace Lidgren.Network
 				return ZeroMagnitude;
 			}
 
-			var nInts = (end - firstSignificant + 3) / BytesPerInt;
-			var bCount = (end - firstSignificant) % BytesPerInt;
+			int nInts = (end - firstSignificant + 3) / BytesPerInt;
+			int bCount = (end - firstSignificant) % BytesPerInt;
 			if (bCount == 0)
 			{
 				bCount = BytesPerInt;
@@ -346,11 +346,11 @@ namespace Lidgren.Network
 				return ZeroMagnitude;
 			}
 
-			var mag = new int[nInts];
+			int[] mag = new int[nInts];
 
-			var v = 0;
-			var magnitudeIndex = 0;
-			for (var i = firstSignificant; i < end; ++i)
+			int v = 0;
+			int magnitudeIndex = 0;
+			for (int i = firstSignificant; i < end; ++i)
 			{
 				v <<= 8;
 				v |= bytes[i] & 0xff;
@@ -411,8 +411,8 @@ namespace Lidgren.Network
 			int[] a,
 			int[] b)
 		{
-			var tI = a.Length - 1;
-			var vI = b.Length - 1;
+			int tI = a.Length - 1;
+			int vI = b.Length - 1;
 			long m = 0;
 
 			while (vI >= 0)
@@ -468,11 +468,11 @@ namespace Lidgren.Network
 			}
 
 			// Conservatively avoid over-allocation when no overflow possible
-			var limit = uint.MaxValue;
+			uint limit = uint.MaxValue;
 			if (big.Length == small.Length)
 				limit -= (uint)small[0];
 
-			var possibleOverflow = (uint)big[0] >= limit;
+			bool possibleOverflow = (uint)big[0] >= limit;
 
 			int[] bigCopy;
 			if (possibleOverflow)
@@ -498,25 +498,25 @@ namespace Lidgren.Network
 				return Zero;
 			}
 
-			var aMag = m_sign > 0
+			int[] aMag = m_sign > 0
 				? m_magnitude
 				: Add(One).m_magnitude;
 
-			var bMag = value.m_sign > 0
+			int[] bMag = value.m_sign > 0
 				? value.m_magnitude
 				: value.Add(One).m_magnitude;
 
-			var resultNeg = m_sign < 0 && value.m_sign < 0;
-			var resultLength = System.Math.Max(aMag.Length, bMag.Length);
-			var resultMag = new int[resultLength];
+			bool resultNeg = m_sign < 0 && value.m_sign < 0;
+			int resultLength = System.Math.Max(aMag.Length, bMag.Length);
+			int[] resultMag = new int[resultLength];
 
-			var aStart = resultMag.Length - aMag.Length;
-			var bStart = resultMag.Length - bMag.Length;
+			int aStart = resultMag.Length - aMag.Length;
+			int bStart = resultMag.Length - bMag.Length;
 
-			for (var i = 0; i < resultMag.Length; ++i)
+			for (int i = 0; i < resultMag.Length; ++i)
 			{
-				var aWord = i >= aStart ? aMag[i - aStart] : 0;
-				var bWord = i >= bStart ? bMag[i - bStart] : 0;
+				int aWord = i >= aStart ? aMag[i - aStart] : 0;
+				int bWord = i >= bStart ? bMag[i - bStart] : 0;
 
 				if (m_sign < 0)
 				{
@@ -536,7 +536,7 @@ namespace Lidgren.Network
 				}
 			}
 
-			var result = new NetBigInteger(1, resultMag, true);
+			NetBigInteger result = new NetBigInteger(1, resultMag, true);
 
 			if (resultNeg)
 			{
@@ -562,10 +562,10 @@ namespace Lidgren.Network
 			}
 
 			// bit length for everything after the first int
-			var bitLength = 32 * ((mag.Length - indx) - 1);
+			int bitLength = 32 * ((mag.Length - indx) - 1);
 
 			// and determine bitlength of first int
-			var firstMag = mag[indx];
+			int firstMag = mag[indx];
 			bitLength += BitLen(firstMag);
 
 			// Check for negative powers of two
@@ -661,7 +661,7 @@ namespace Lidgren.Network
 			int yIndx,
 			int[] y)
 		{
-			var diff = (x.Length - y.Length) - (xIndx - yIndx);
+			int diff = (x.Length - y.Length) - (xIndx - yIndx);
 
 			if (diff != 0)
 			{
@@ -672,8 +672,8 @@ namespace Lidgren.Network
 
 			while (xIndx < x.Length)
 			{
-				var v1 = (uint)x[xIndx++];
-				var v2 = (uint)y[yIndx++];
+				uint v1 = (uint)x[xIndx++];
+				uint v2 = (uint)y[yIndx++];
 
 				if (v1 != v2)
 					return v1 < v2 ? -1 : 1;
@@ -696,13 +696,13 @@ namespace Lidgren.Network
 			int[] x,
 			int[] y)
 		{
-			var xStart = 0;
+			int xStart = 0;
 			while (xStart < x.Length && x[xStart] == 0)
 			{
 				++xStart;
 			}
 
-			var yStart = 0;
+			int yStart = 0;
 			while (yStart < y.Length && y[yStart] == 0)
 			{
 				++yStart;
@@ -710,21 +710,21 @@ namespace Lidgren.Network
 
 			Debug.Assert(yStart < y.Length);
 
-			var xyCmp = CompareNoLeadingZeroes(xStart, x, yStart, y);
+			int xyCmp = CompareNoLeadingZeroes(xStart, x, yStart, y);
 			int[] count;
 
 			if (xyCmp > 0)
 			{
-				var yBitLength = calcBitLength(yStart, y);
-				var xBitLength = calcBitLength(xStart, x);
-				var shift = xBitLength - yBitLength;
+				int yBitLength = calcBitLength(yStart, y);
+				int xBitLength = calcBitLength(xStart, x);
+				int shift = xBitLength - yBitLength;
 
 				int[] iCount;
-				var iCountStart = 0;
+				int iCountStart = 0;
 
 				int[] c;
-				var cStart = 0;
-				var cBitLength = yBitLength;
+				int cStart = 0;
+				int cBitLength = yBitLength;
 				if (shift > 0)
 				{
 					//					iCount = ShiftLeft(One.magnitude, shift);
@@ -738,7 +738,7 @@ namespace Lidgren.Network
 				{
 					iCount = new int[] { 1 };
 
-					var len = y.Length - yStart;
+					int len = y.Length - yStart;
 					c = new int[len];
 					Array.Copy(y, yStart, c, 0, len);
 				}
@@ -779,8 +779,8 @@ namespace Lidgren.Network
 					// NB: The case where c[cStart] is 1-bit is harmless
 					if (shift == 1)
 					{
-						var firstC = (uint)c[cStart] >> 1;
-						var firstX = (uint)x[xStart];
+						uint firstC = (uint)c[cStart] >> 1;
+						uint firstX = (uint)x[xStart];
 						if (firstC > firstX)
 							++shift;
 					}
@@ -835,11 +835,11 @@ namespace Lidgren.Network
 
 			if (val.QuickPow2Check()) // val is power of two
 			{
-				var result = Abs().ShiftRight(val.Abs().BitLength - 1);
+				NetBigInteger result = Abs().ShiftRight(val.Abs().BitLength - 1);
 				return val.m_sign == m_sign ? result : result.Negate();
 			}
 
-			var mag = (int[])m_magnitude.Clone();
+			int[] mag = (int[])m_magnitude.Clone();
 
 			return new NetBigInteger(m_sign * val.m_sign, Divide(mag, val.m_magnitude), true);
 		}
@@ -850,7 +850,7 @@ namespace Lidgren.Network
 			if (val.m_sign == 0)
 				throw new ArithmeticException("Division by zero error");
 
-			var biggies = new NetBigInteger[2];
+			NetBigInteger[] biggies = new NetBigInteger[2];
 
 			if (m_sign == 0)
 			{
@@ -859,17 +859,17 @@ namespace Lidgren.Network
 			}
 			else if (val.QuickPow2Check()) // val is power of two
 			{
-				var e = val.Abs().BitLength - 1;
-				var quotient = Abs().ShiftRight(e);
-				var remainder = LastNBits(e);
+				int e = val.Abs().BitLength - 1;
+				NetBigInteger quotient = Abs().ShiftRight(e);
+				int[] remainder = LastNBits(e);
 
 				biggies[0] = val.m_sign == m_sign ? quotient : quotient.Negate();
 				biggies[1] = new NetBigInteger(m_sign, remainder, true);
 			}
 			else
 			{
-				var remainder = (int[])m_magnitude.Clone();
-				var quotient = Divide(remainder, val.m_magnitude);
+				int[] remainder = (int[])m_magnitude.Clone();
+				int[] quotient = Divide(remainder, val.m_magnitude);
 
 				biggies[0] = new NetBigInteger(m_sign * val.m_sign, quotient, true);
 				biggies[1] = new NetBigInteger(m_sign, remainder, true);
@@ -884,14 +884,14 @@ namespace Lidgren.Network
 			if (obj == this)
 				return true;
 
-			var biggie = obj as NetBigInteger;
+			NetBigInteger biggie = obj as NetBigInteger;
 			if (biggie == null)
 				return false;
 
 			if (biggie.m_sign != m_sign || biggie.m_magnitude.Length != m_magnitude.Length)
 				return false;
 
-			for (var i = 0; i < m_magnitude.Length; i++)
+			for (int i = 0; i < m_magnitude.Length; i++)
 			{
 				if (biggie.m_magnitude[i] != m_magnitude[i])
 				{
@@ -912,8 +912,8 @@ namespace Lidgren.Network
 				return value.Abs();
 
 			NetBigInteger r;
-			var u = this;
-			var v = value;
+			NetBigInteger u = this;
+			NetBigInteger v = value;
 
 			while (v.m_sign != 0)
 			{
@@ -927,7 +927,7 @@ namespace Lidgren.Network
 
 		public override int GetHashCode()
 		{
-			var hc = m_magnitude.Length;
+			int hc = m_magnitude.Length;
 			if (m_magnitude.Length > 0)
 			{
 				hc ^= m_magnitude[0];
@@ -980,7 +980,7 @@ namespace Lidgren.Network
 			if (m.m_sign < 1)
 				throw new ArithmeticException("Modulus must be positive");
 
-			var biggie = Remainder(m);
+			NetBigInteger biggie = Remainder(m);
 
 			return (biggie.m_sign >= 0 ? biggie : biggie.Add(m));
 		}
@@ -991,8 +991,8 @@ namespace Lidgren.Network
 			if (m.m_sign < 1)
 				throw new ArithmeticException("Modulus must be positive");
 
-			var x = new NetBigInteger();
-			var gcd = ExtEuclid(this, m, x, null);
+			NetBigInteger x = new NetBigInteger();
+			NetBigInteger gcd = ExtEuclid(this, m, x, null);
 
 			if (!gcd.Equals(One))
 				throw new ArithmeticException("Numbers not relatively prime.");
@@ -1013,17 +1013,17 @@ namespace Lidgren.Network
 			NetBigInteger u1Out,
 			NetBigInteger u2Out)
 		{
-			var u1 = One;
-			var u3 = a;
-			var v1 = Zero;
-			var v3 = b;
+			NetBigInteger u1 = One;
+			NetBigInteger u3 = a;
+			NetBigInteger v1 = Zero;
+			NetBigInteger v3 = b;
 
 			while (v3.m_sign > 0)
 			{
-				var q = u3.DivideAndRemainder(v3);
+				NetBigInteger[] q = u3.DivideAndRemainder(v3);
 
-				var tmp = v1.Multiply(q[0]);
-				var tn = u1.Subtract(tmp);
+				NetBigInteger tmp = v1.Multiply(q[0]);
+				NetBigInteger tn = u1.Subtract(tmp);
 				u1 = v1;
 				v1 = tn;
 
@@ -1039,9 +1039,9 @@ namespace Lidgren.Network
 
 			if (u2Out != null)
 			{
-				var tmp = u1.Multiply(a);
+				NetBigInteger tmp = u1.Multiply(a);
 				tmp = u3.Subtract(tmp);
-				var res = tmp.Divide(b);
+				NetBigInteger res = tmp.Divide(b);
 				u2Out.m_sign = res.m_sign;
 				u2Out.m_magnitude = res.m_magnitude;
 			}
@@ -1077,14 +1077,14 @@ namespace Lidgren.Network
 
 			// Montgomery exponentiation is only possible if the modulus is odd,
 			// but AFAIK, this is always the case for crypto algo's
-			var useMonty = ((m.m_magnitude[m.m_magnitude.Length - 1] & 1) == 1);
+			bool useMonty = ((m.m_magnitude[m.m_magnitude.Length - 1] & 1) == 1);
 			long mQ = 0;
 			if (useMonty)
 			{
 				mQ = m.GetMQuote();
 
 				// tmp = this * R mod m
-				var tmp = ShiftLeft(32 * m.m_magnitude.Length).Mod(m);
+				NetBigInteger tmp = ShiftLeft(32 * m.m_magnitude.Length).Mod(m);
 				zVal = tmp.m_magnitude;
 
 				useMonty = (zVal.Length <= m.m_magnitude.Length);
@@ -1094,7 +1094,7 @@ namespace Lidgren.Network
 					yAccum = new int[m.m_magnitude.Length + 1];
 					if (zVal.Length < m.m_magnitude.Length)
 					{
-						var longZ = new int[m.m_magnitude.Length];
+						int[] longZ = new int[m.m_magnitude.Length];
 						zVal.CopyTo(longZ, longZ.Length - zVal.Length);
 						zVal = longZ;
 					}
@@ -1114,7 +1114,7 @@ namespace Lidgren.Network
 					//
 					// in normal practice we'll never see ..
 					//
-					var tmp = Remainder(m);
+					NetBigInteger tmp = Remainder(m);
 
 					//zAccum = new int[m.magnitude.Length * 2];
 					zVal = new int[m.m_magnitude.Length];
@@ -1129,10 +1129,10 @@ namespace Lidgren.Network
 			//
 			// from LSW to MSW
 			//
-			for (var i = 0; i < exponent.m_magnitude.Length; i++)
+			for (int i = 0; i < exponent.m_magnitude.Length; i++)
 			{
-				var v = exponent.m_magnitude[i];
-				var bits = 0;
+				int v = exponent.m_magnitude[i];
+				int bits = 0;
 
 				if (i == 0)
 				{
@@ -1213,7 +1213,7 @@ namespace Lidgren.Network
 				MultiplyMonty(yAccum, yVal, zVal, m.m_magnitude, mQ);
 			}
 
-			var result = new NetBigInteger(1, yVal, true);
+			NetBigInteger result = new NetBigInteger(1, yVal, true);
 
 			return exponent.m_sign > 0
 				? result
@@ -1231,11 +1231,11 @@ namespace Lidgren.Network
 
 			ulong u1, u2, c;
 
-			var wBase = w.Length - 1;
+			int wBase = w.Length - 1;
 
-			for (var i = x.Length - 1; i != 0; i--)
+			for (int i = x.Length - 1; i != 0; i--)
 			{
-				var v = (ulong)(uint)x[i];
+				ulong v = (ulong)(uint)x[i];
 
 				u1 = v * v;
 				u2 = u1 >> 32;
@@ -1246,7 +1246,7 @@ namespace Lidgren.Network
 				w[wBase] = (int)(uint)u1;
 				c = u2 + (u1 >> 32);
 
-				for (var j = i - 1; j >= 0; j--)
+				for (int j = i - 1; j >= 0; j--)
 				{
 					--wBase;
 					u1 = v * (ulong)(uint)x[j];
@@ -1298,19 +1298,19 @@ namespace Lidgren.Network
 			int[] y,
 			int[] z)
 		{
-			var i = z.Length;
+			int i = z.Length;
 
 			if (i < 1)
 				return x;
 
-			var xBase = x.Length - y.Length;
+			int xBase = x.Length - y.Length;
 
 			for (; ; )
 			{
-				var a = z[--i] & IMASK;
+				long a = z[--i] & IMASK;
 				long val = 0;
 
-				for (var j = y.Length - 1; j >= 0; j--)
+				for (int j = y.Length - 1; j >= 0; j--)
 				{
 					val += a * (y[j] & IMASK) + (x[xBase + j] & IMASK);
 
@@ -1346,9 +1346,9 @@ namespace Lidgren.Network
 			long[] uOut)
 		{
 			long u1 = 1;
-			var u3 = a;
+			long u3 = a;
 			long v1 = 0;
-			var v3 = b;
+			long v3 = b;
 
 			while (v3 > 0)
 			{
@@ -1378,8 +1378,8 @@ namespace Lidgren.Network
 			if (m < 1)
 				throw new ArithmeticException("Modulus must be positive");
 
-			var x = new long[2];
-			var gcd = FastExtEuclid(v, m, x);
+			long[] x = new long[2];
+			long gcd = FastExtEuclid(v, m, x);
 
 			if (gcd != 1)
 				throw new ArithmeticException("Numbers not relatively prime.");
@@ -1406,7 +1406,7 @@ namespace Lidgren.Network
 				return -1; // not for even numbers
 			}
 
-			var v = (((~m_magnitude[m_magnitude.Length - 1]) | 1) & 0xffffffffL);
+			long v = (((~m_magnitude[m_magnitude.Length - 1]) | 1) & 0xffffffffL);
 			m_quote = FastModInverse(v, 0x100000000L);
 
 			return m_quote;
@@ -1426,27 +1426,27 @@ namespace Lidgren.Network
 				return;
 			}
 
-			var n = m.Length;
-			var nMinus1 = n - 1;
-			var y_0 = y[nMinus1] & IMASK;
+			int n = m.Length;
+			int nMinus1 = n - 1;
+			long y_0 = y[nMinus1] & IMASK;
 
 			// 1. a = 0 (Notation: a = (a_{n} a_{n-1} ... a_{0})_{b} )
 			Array.Clear(a, 0, n + 1);
 
 			// 2. for i from 0 to (n - 1) do the following:
-			for (var i = n; i > 0; i--)
+			for (int i = n; i > 0; i--)
 			{
-				var x_i = x[i - 1] & IMASK;
+				long x_i = x[i - 1] & IMASK;
 
 				// 2.1 u = ((a[0] + (x[i] * y[0]) * mQuote) mod b
-				var u = ((((a[n] & IMASK) + ((x_i * y_0) & IMASK)) & IMASK) * mQuote) & IMASK;
+				long u = ((((a[n] & IMASK) + ((x_i * y_0) & IMASK)) & IMASK) * mQuote) & IMASK;
 
 				// 2.2 a = (a + x_i * y + u * m) / b
-				var prod1 = x_i * y_0;
-				var prod2 = u * (m[nMinus1] & IMASK);
-				var tmp = (a[n] & IMASK) + (prod1 & IMASK) + (prod2 & IMASK);
-				var carry = (long)((ulong)prod1 >> 32) + (long)((ulong)prod2 >> 32) + (long)((ulong)tmp >> 32);
-				for (var j = nMinus1; j > 0; j--)
+				long prod1 = x_i * y_0;
+				long prod2 = u * (m[nMinus1] & IMASK);
+				long tmp = (a[n] & IMASK) + (prod1 & IMASK) + (prod2 & IMASK);
+				long carry = (long)((ulong)prod1 >> 32) + (long)((ulong)prod2 >> 32) + (long)((ulong)tmp >> 32);
+				for (int j = nMinus1; j > 0; j--)
 				{
 					prod1 = x_i * (y[j - 1] & IMASK);
 					prod2 = u * (m[j - 1] & IMASK);
@@ -1477,11 +1477,11 @@ namespace Lidgren.Network
 			ulong mQuote)
 		{
 			ulong um = m;
-			var prod1 = (ulong)x * (ulong)y;
-			var u = (prod1 * mQuote) & UIMASK;
-			var prod2 = u * um;
-			var tmp = (prod1 & UIMASK) + (prod2 & UIMASK);
-			var carry = (prod1 >> 32) + (prod2 >> 32) + (tmp >> 32);
+			ulong prod1 = (ulong)x * (ulong)y;
+			ulong u = (prod1 * mQuote) & UIMASK;
+			ulong prod2 = u * um;
+			ulong tmp = (prod1 & UIMASK) + (prod2 & UIMASK);
+			ulong carry = (prod1 >> 32) + (prod2 >> 32) + (tmp >> 32);
 
 			if (carry > um)
 			{
@@ -1505,20 +1505,20 @@ namespace Lidgren.Network
 
 			if (val.QuickPow2Check()) // val is power of two
 			{
-				var result = ShiftLeft(val.Abs().BitLength - 1);
+				NetBigInteger result = ShiftLeft(val.Abs().BitLength - 1);
 				return val.m_sign > 0 ? result : result.Negate();
 			}
 
 			if (QuickPow2Check()) // this is power of two
 			{
-				var result = val.ShiftLeft(Abs().BitLength - 1);
+				NetBigInteger result = val.ShiftLeft(Abs().BitLength - 1);
 				return m_sign > 0 ? result : result.Negate();
 			}
 
-			var maxBitLength = BitLength + val.BitLength;
-			var resLength = (maxBitLength + BitsPerInt - 1) / BitsPerInt;
+			int maxBitLength = BitLength + val.BitLength;
+			int resLength = (maxBitLength + BitsPerInt - 1) / BitsPerInt;
 
-			var res = new int[resLength];
+			int[] res = new int[resLength];
 
 			if (val == this)
 			{
@@ -1562,8 +1562,8 @@ namespace Lidgren.Network
 				return this;
 			}
 
-			var y = One;
-			var z = this;
+			NetBigInteger y = One;
+			NetBigInteger z = this;
 
 			for (; ; )
 			{
@@ -1585,7 +1585,7 @@ namespace Lidgren.Network
 			Debug.Assert(m > 0);
 
 			long acc = 0;
-			for (var pos = 0; pos < m_magnitude.Length; ++pos)
+			for (int pos = 0; pos < m_magnitude.Length; ++pos)
 			{
 				long posVal = (uint)m_magnitude[pos];
 				acc = (acc << 32 | posVal) % m;
@@ -1599,13 +1599,13 @@ namespace Lidgren.Network
 			int[] x,
 			int[] y)
 		{
-			var xStart = 0;
+			int xStart = 0;
 			while (xStart < x.Length && x[xStart] == 0)
 			{
 				++xStart;
 			}
 
-			var yStart = 0;
+			int yStart = 0;
 			while (yStart < y.Length && y[yStart] == 0)
 			{
 				++yStart;
@@ -1613,17 +1613,17 @@ namespace Lidgren.Network
 
 			Debug.Assert(yStart < y.Length);
 
-			var xyCmp = CompareNoLeadingZeroes(xStart, x, yStart, y);
+			int xyCmp = CompareNoLeadingZeroes(xStart, x, yStart, y);
 
 			if (xyCmp > 0)
 			{
-				var yBitLength = calcBitLength(yStart, y);
-				var xBitLength = calcBitLength(xStart, x);
-				var shift = xBitLength - yBitLength;
+				int yBitLength = calcBitLength(yStart, y);
+				int xBitLength = calcBitLength(xStart, x);
+				int shift = xBitLength - yBitLength;
 
 				int[] c;
-				var cStart = 0;
-				var cBitLength = yBitLength;
+				int cStart = 0;
+				int cBitLength = yBitLength;
 				if (shift > 0)
 				{
 					c = ShiftLeft(y, shift);
@@ -1632,7 +1632,7 @@ namespace Lidgren.Network
 				}
 				else
 				{
-					var len = y.Length - yStart;
+					int len = y.Length - yStart;
 					c = new int[len];
 					Array.Copy(y, yStart, c, 0, len);
 				}
@@ -1670,8 +1670,8 @@ namespace Lidgren.Network
 					// NB: The case where c[cStart] is 1-bit is harmless
 					if (shift == 1)
 					{
-						var firstC = (uint)c[cStart] >> 1;
-						var firstX = (uint)x[xStart];
+						uint firstC = (uint)c[cStart] >> 1;
+						uint firstX = (uint)x[xStart];
 						if (firstC > firstX)
 							++shift;
 					}
@@ -1715,14 +1715,14 @@ namespace Lidgren.Network
 			// For small values, use fast remainder method
 			if (n.m_magnitude.Length == 1)
 			{
-				var val = n.m_magnitude[0];
+				int val = n.m_magnitude[0];
 
 				if (val > 0)
 				{
 					if (val == 1)
 						return Zero;
 
-					var rem = Remainder(val);
+					int rem = Remainder(val);
 
 					return rem == 0
 						? Zero
@@ -1753,13 +1753,13 @@ namespace Lidgren.Network
 			if (n < 1)
 				return ZeroMagnitude;
 
-			var numWords = (n + BitsPerInt - 1) / BitsPerInt;
+			int numWords = (n + BitsPerInt - 1) / BitsPerInt;
 			numWords = System.Math.Min(numWords, m_magnitude.Length);
-			var result = new int[numWords];
+			int[] result = new int[numWords];
 
 			Array.Copy(m_magnitude, m_magnitude.Length - numWords, result, 0, numWords);
 
-			var hiBits = n % 32;
+			int hiBits = n % 32;
 			if (hiBits != 0)
 			{
 				result[0] &= ~(-1 << hiBits);
@@ -1774,9 +1774,9 @@ namespace Lidgren.Network
 			int[] mag,
 			int n)
 		{
-			var nInts = (int)((uint)n >> 5);
-			var nBits = n & 0x1f;
-			var magLen = mag.Length;
+			int nInts = (int)((uint)n >> 5);
+			int nBits = n & 0x1f;
+			int magLen = mag.Length;
 			int[] newMag;
 
 			if (nBits == 0)
@@ -1786,9 +1786,9 @@ namespace Lidgren.Network
 			}
 			else
 			{
-				var i = 0;
-				var nBits2 = 32 - nBits;
-				var highBits = (int)((uint)mag[0] >> nBits2);
+				int i = 0;
+				int nBits2 = 32 - nBits;
+				int highBits = (int)((uint)mag[0] >> nBits2);
 
 				if (highBits != 0)
 				{
@@ -1800,10 +1800,10 @@ namespace Lidgren.Network
 					newMag = new int[magLen + nInts];
 				}
 
-				var m = mag[0];
-				for (var j = 0; j < magLen - 1; j++)
+				int m = mag[0];
+				for (int j = 0; j < magLen - 1; j++)
 				{
-					var next = mag[j + 1];
+					int next = mag[j + 1];
 
 					newMag[i++] = (m << nBits) | (int)((uint)next >> nBits2);
 					m = next;
@@ -1827,7 +1827,7 @@ namespace Lidgren.Network
 			if (n < 0)
 				return ShiftRight(-n);
 
-			var result = new NetBigInteger(m_sign, ShiftLeft(m_magnitude, n), true);
+			NetBigInteger result = new NetBigInteger(m_sign, ShiftLeft(m_magnitude, n), true);
 
 			if (m_numBits != -1)
 			{
@@ -1850,19 +1850,19 @@ namespace Lidgren.Network
 			int[] mag,
 			int n)
 		{
-			var nInts = (int)((uint)n >> 5) + start;
-			var nBits = n & 0x1f;
-			var magEnd = mag.Length - 1;
+			int nInts = (int)((uint)n >> 5) + start;
+			int nBits = n & 0x1f;
+			int magEnd = mag.Length - 1;
 
 			if (nInts != start)
 			{
-				var delta = (nInts - start);
+				int delta = (nInts - start);
 
-				for (var i = magEnd; i >= nInts; i--)
+				for (int i = magEnd; i >= nInts; i--)
 				{
 					mag[i] = mag[i - delta];
 				}
-				for (var i = nInts - 1; i >= start; i--)
+				for (int i = nInts - 1; i >= start; i--)
 				{
 					mag[i] = 0;
 				}
@@ -1870,12 +1870,12 @@ namespace Lidgren.Network
 
 			if (nBits != 0)
 			{
-				var nBits2 = 32 - nBits;
-				var m = mag[magEnd];
+				int nBits2 = 32 - nBits;
+				int m = mag[magEnd];
 
-				for (var i = magEnd; i > nInts; --i)
+				for (int i = magEnd; i > nInts; --i)
 				{
-					var next = mag[i - 1];
+					int next = mag[i - 1];
 
 					mag[i] = (int)((uint)m >> nBits) | (next << nBits2);
 					m = next;
@@ -1892,12 +1892,12 @@ namespace Lidgren.Network
 			int start,
 			int[] mag)
 		{
-			var i = mag.Length;
-			var m = mag[i - 1];
+			int i = mag.Length;
+			int m = mag[i - 1];
 
 			while (--i > start)
 			{
-				var next = mag[i - 1];
+				int next = mag[i - 1];
 				mag[i] = ((int)((uint)m >> 1)) | (next << 31);
 				m = next;
 			}
@@ -1925,11 +1925,11 @@ namespace Lidgren.Network
 			//
 			//			return new BigInteger(sign, res, true);
 
-			var resultLength = (BitLength - n + 31) >> 5;
-			var res = new int[resultLength];
+			int resultLength = (BitLength - n + 31) >> 5;
+			int[] res = new int[resultLength];
 
-			var numInts = n >> 5;
-			var numBits = n & 31;
+			int numInts = n >> 5;
+			int numBits = n & 31;
 
 			if (numBits == 0)
 			{
@@ -1937,10 +1937,10 @@ namespace Lidgren.Network
 			}
 			else
 			{
-				var numBits2 = 32 - numBits;
+				int numBits2 = 32 - numBits;
 
-				var magPos = m_magnitude.Length - 1 - numInts;
-				for (var i = resultLength - 1; i >= 0; --i)
+				int magPos = m_magnitude.Length - 1 - numInts;
+				for (int i = resultLength - 1; i >= 0; --i)
 				{
 					res[i] = (int)((uint)m_magnitude[magPos--] >> numBits);
 
@@ -1971,10 +1971,10 @@ namespace Lidgren.Network
 			Debug.Assert(yStart < y.Length);
 			Debug.Assert(x.Length - xStart >= y.Length - yStart);
 
-			var iT = x.Length;
-			var iV = y.Length;
+			int iT = x.Length;
+			int iV = y.Length;
 			long m;
-			var borrow = 0;
+			int borrow = 0;
 
 			do
 			{
@@ -2008,7 +2008,7 @@ namespace Lidgren.Network
 			if (m_sign != n.m_sign)
 				return Add(n.Negate());
 
-			var compare = CompareNoLeadingZeroes(0, m_magnitude, 0, n.m_magnitude);
+			int compare = CompareNoLeadingZeroes(0, m_magnitude, 0, n.m_magnitude);
 			if (compare == 0)
 				return Zero;
 
@@ -2031,7 +2031,7 @@ namespace Lidgren.Network
 			int[] bigMag,
 			int[] lilMag)
 		{
-			var res = (int[])bigMag.Clone();
+			int[] res = (int[])bigMag.Clone();
 
 			return Subtract(0, res, 0, lilMag);
 		}
@@ -2052,28 +2052,28 @@ namespace Lidgren.Network
 			if (m_sign == 0)
 				return unsigned ? ZeroEncoding : new byte[1];
 
-			var nBits = (unsigned && m_sign > 0)
+			int nBits = (unsigned && m_sign > 0)
 				? BitLength
 				: BitLength + 1;
 
-			var nBytes = GetByteLength(nBits);
-			var bytes = new byte[nBytes];
+			int nBytes = GetByteLength(nBits);
+			byte[] bytes = new byte[nBytes];
 
-			var magIndex = m_magnitude.Length;
-			var bytesIndex = bytes.Length;
+			int magIndex = m_magnitude.Length;
+			int bytesIndex = bytes.Length;
 
 			if (m_sign > 0)
 			{
 				while (magIndex > 1)
 				{
-					var mag = (uint)m_magnitude[--magIndex];
+					uint mag = (uint)m_magnitude[--magIndex];
 					bytes[--bytesIndex] = (byte)mag;
 					bytes[--bytesIndex] = (byte)(mag >> 8);
 					bytes[--bytesIndex] = (byte)(mag >> 16);
 					bytes[--bytesIndex] = (byte)(mag >> 24);
 				}
 
-				var lastMag = (uint)m_magnitude[0];
+				uint lastMag = (uint)m_magnitude[0];
 				while (lastMag > byte.MaxValue)
 				{
 					bytes[--bytesIndex] = (byte)lastMag;
@@ -2084,11 +2084,11 @@ namespace Lidgren.Network
 			}
 			else // sign < 0
 			{
-				var carry = true;
+				bool carry = true;
 
 				while (magIndex > 1)
 				{
-					var mag = ~((uint)m_magnitude[--magIndex]);
+					uint mag = ~((uint)m_magnitude[--magIndex]);
 
 					if (carry)
 					{
@@ -2101,7 +2101,7 @@ namespace Lidgren.Network
 					bytes[--bytesIndex] = (byte)(mag >> 24);
 				}
 
-				var lastMag = (uint)m_magnitude[0];
+				uint lastMag = (uint)m_magnitude[0];
 
 				if (carry)
 				{
@@ -2153,13 +2153,13 @@ namespace Lidgren.Network
 
 			Debug.Assert(m_magnitude.Length > 0);
 
-			var sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 
 			if (radix == 16)
 			{
 				sb.Append(m_magnitude[0].ToString("x"));
 
-				for (var i = 1; i < m_magnitude.Length; i++)
+				for (int i = 1; i < m_magnitude.Length; i++)
 				{
 					sb.Append(m_magnitude[i].ToString("x8"));
 				}
@@ -2168,7 +2168,7 @@ namespace Lidgren.Network
 			{
 				sb.Append('1');
 
-				for (var i = BitLength - 2; i >= 0; --i)
+				for (int i = BitLength - 2; i >= 0; --i)
 				{
 					sb.Append(TestBit(i) ? '1' : '0');
 				}
@@ -2176,10 +2176,10 @@ namespace Lidgren.Network
 			else
 			{
 				// This is algorithm 1a from chapter 4.4 in Seminumerical Algorithms, slow but it works
-				var S = new Stack();
-				var bs = ValueOf(radix);
+				Stack S = new Stack();
+				NetBigInteger bs = ValueOf(radix);
 
-				var u = Abs();
+				NetBigInteger u = Abs();
 				NetBigInteger b;
 
 				while (u.m_sign != 0)
@@ -2204,14 +2204,14 @@ namespace Lidgren.Network
 				}
 			}
 
-			var s = sb.ToString();
+			string s = sb.ToString();
 
 			Debug.Assert(s.Length > 0);
 
 			// Strip leading zeros. (We know this number is not all zeroes though)
 			if (s[0] == '0')
 			{
-				var nonZeroPos = 0;
+				int nonZeroPos = 0;
 				while (s[++nonZeroPos] == '0') { }
 
 				s = s.Substring(nonZeroPos);
@@ -2228,15 +2228,15 @@ namespace Lidgren.Network
 		private static NetBigInteger createUValueOf(
 			ulong value)
 		{
-			var msw = (int)(value >> 32);
-			var lsw = (int)value;
+			int msw = (int)(value >> 32);
+			int lsw = (int)value;
 
 			if (msw != 0)
 				return new NetBigInteger(1, new int[] { msw, lsw }, false);
 
 			if (lsw != 0)
 			{
-				var n = new NetBigInteger(1, new int[] { lsw }, false);
+				NetBigInteger n = new NetBigInteger(1, new int[] { lsw }, false);
 				// Check for a power of two
 				if ((lsw & -lsw) == lsw)
 				{
@@ -2287,7 +2287,7 @@ namespace Lidgren.Network
 			if (m_sign == 0)
 				return -1;
 
-			var w = m_magnitude.Length;
+			int w = m_magnitude.Length;
 
 			while (--w > 0)
 			{
@@ -2295,10 +2295,10 @@ namespace Lidgren.Network
 					break;
 			}
 
-			var word = (int)m_magnitude[w];
+			int word = (int)m_magnitude[w];
 			Debug.Assert(word != 0);
 
-			var b = (word & 0x0000FFFF) == 0
+			int b = (word & 0x0000FFFF) == 0
 				? (word & 0x00FF0000) == 0
 					? 7
 					: 15
@@ -2326,11 +2326,11 @@ namespace Lidgren.Network
 			if (m_sign < 0)
 				return !Not().TestBit(n);
 
-			var wordNum = n / 32;
+			int wordNum = n / 32;
 			if (wordNum >= m_magnitude.Length)
 				return false;
 
-			var word = m_magnitude[m_magnitude.Length - 1 - wordNum];
+			int word = m_magnitude[m_magnitude.Length - 1 - wordNum];
 			return ((word >> (n % 32)) & 1) > 0;
 		}
 	}

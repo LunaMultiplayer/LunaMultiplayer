@@ -49,7 +49,7 @@ namespace Lidgren.Network
 			connectionReset = false;
 
 			// simulate loss
-			var loss = m_configuration.m_loss;
+			float loss = m_configuration.m_loss;
 			if (loss > 0.0f)
 			{
 				if ((float)MWCRandom.Instance.NextDouble() < loss)
@@ -62,13 +62,13 @@ namespace Lidgren.Network
 			m_statistics.PacketSent(numBytes, numMessages);
 
 			// simulate latency
-			var m = m_configuration.m_minimumOneWayLatency;
-			var r = m_configuration.m_randomOneWayLatency;
+			float m = m_configuration.m_minimumOneWayLatency;
+			float r = m_configuration.m_randomOneWayLatency;
 			if (m == 0.0f && r == 0.0f)
 			{
 				// no latency simulation
 				// LogVerbose("Sending packet " + numBytes + " bytes");
-				var wasSent = ActuallySendPacket(m_sendBuffer, numBytes, target, out connectionReset);
+				bool wasSent = ActuallySendPacket(m_sendBuffer, numBytes, target, out connectionReset);
 				// TODO: handle wasSent == false?
 
 				if (m_configuration.m_duplicates > 0.0f && MWCRandom.Instance.NextDouble() < m_configuration.m_duplicates)
@@ -77,22 +77,20 @@ namespace Lidgren.Network
 				return;
 			}
 
-			var num = 1;
+			int num = 1;
 			if (m_configuration.m_duplicates > 0.0f && MWCRandom.Instance.NextSingle() < m_configuration.m_duplicates)
 				num++;
 
 			float delay = 0;
-			for (var i = 0; i < num; i++)
+			for (int i = 0; i < num; i++)
 			{
 				delay = m_configuration.m_minimumOneWayLatency + (MWCRandom.Instance.NextSingle() * m_configuration.m_randomOneWayLatency);
 
-                // Enqueue delayed packet
-                var p = new DelayedPacket
-                {
-                    Target = target,
-                    Data = new byte[numBytes]
-                };
-                Buffer.BlockCopy(m_sendBuffer, 0, p.Data, 0, numBytes);
+				// Enqueue delayed packet
+				DelayedPacket p = new DelayedPacket();
+				p.Target = target;
+				p.Data = new byte[numBytes];
+				Buffer.BlockCopy(m_sendBuffer, 0, p.Data, 0, numBytes);
 				p.DelayedUntil = NetTime.Now + delay;
 
 				m_delayedPackets.Add(p);
@@ -106,28 +104,30 @@ namespace Lidgren.Network
 			if (m_delayedPackets.Count <= 0)
 				return;
 
-			var now = NetTime.Now;
+			double now = NetTime.Now;
 
+			bool connectionReset;
 
-        RestartDelaySending:
-            foreach (var p in m_delayedPackets)
-            {
-                if (now > p.DelayedUntil)
-                {
-                    ActuallySendPacket(p.Data, p.Data.Length, p.Target, out var connectionReset);
-                    m_delayedPackets.Remove(p);
-                    goto RestartDelaySending;
-                }
-            }
-        }
+		RestartDelaySending:
+			foreach (DelayedPacket p in m_delayedPackets)
+			{
+				if (now > p.DelayedUntil)
+				{
+					ActuallySendPacket(p.Data, p.Data.Length, p.Target, out connectionReset);
+					m_delayedPackets.Remove(p);
+					goto RestartDelaySending;
+				}
+			}
+		}
 
 		private void FlushDelayedPackets()
 		{
 			try
 			{
-                foreach (var p in m_delayedPackets)
-                    ActuallySendPacket(p.Data, p.Data.Length, p.Target, out var connectionReset);
-                m_delayedPackets.Clear();
+				bool connectionReset;
+				foreach (DelayedPacket p in m_delayedPackets)
+					ActuallySendPacket(p.Data, p.Data.Length, p.Target, out connectionReset);
+				m_delayedPackets.Clear();
 			}
 			catch { }
 		}
@@ -135,13 +135,13 @@ namespace Lidgren.Network
 		internal bool ActuallySendPacket(byte[] data, int numBytes, NetEndPoint target, out bool connectionReset)
 		{
 			connectionReset = false;
-			var ba = default(IPAddress);
+			IPAddress ba = default(IPAddress);
 			try
 			{
-                ba = NetUtility.GetCachedBroadcastAddress();
+				ba = NetUtility.GetCachedBroadcastAddress();
 
-                // TODO: refactor this check outta here
-                if (target.Address == ba)
+				// TODO: refactor this check outta here
+				if (target.Address.Equals(ba))
 				{
 					// Some networks do not allow 
 					// a global broadcast so we use the BroadcastAddress from the configuration
@@ -150,7 +150,7 @@ namespace Lidgren.Network
 					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
 				}
 
-				var bytesSent = m_socket.SendTo(data, 0, numBytes, SocketFlags.None, target);
+				int bytesSent = m_socket.SendTo(data, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 
@@ -189,7 +189,7 @@ namespace Lidgren.Network
 			try
 			{
 				m_socket.DontFragment = true;
-				var bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
+				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 
@@ -225,7 +225,7 @@ namespace Lidgren.Network
 			try
 			{
 				m_socket.DontFragment = true;
-				var bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
+				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 			}
@@ -263,7 +263,7 @@ namespace Lidgren.Network
 			m_statistics.PacketSent(numBytes, numMessages);
 #endif
 			connectionReset = false;
-			var ba = default(IPAddress);
+			IPAddress ba = default(IPAddress);
 			try
 			{
 				// TODO: refactor this check outta here
@@ -271,7 +271,7 @@ namespace Lidgren.Network
 				if (target.Address == ba)
 					m_socket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.Broadcast, true);
 
-				var bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
+				int bytesSent = m_socket.SendTo(m_sendBuffer, 0, numBytes, SocketFlags.None, target);
 				if (numBytes != bytesSent)
 					LogWarning("Failed to send the full " + numBytes + "; only " + bytesSent + " bytes sent in packet!");
 			}

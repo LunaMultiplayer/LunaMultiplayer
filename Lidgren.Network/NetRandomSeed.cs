@@ -16,9 +16,9 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public static uint GetUInt32()
 		{
-			var seed = GetUInt64();
-			var low = (uint)seed;
-			var high = (uint)(seed >> 32);
+			ulong seed = GetUInt64();
+			uint low = (uint)seed;
+			uint high = (uint)(seed >> 32);
 			return low ^ high;
 		}
 
@@ -29,7 +29,7 @@ namespace Lidgren.Network
 		public static ulong GetUInt64()
 		{
 			var guidBytes = Guid.NewGuid().ToByteArray();
-			var seed =
+			ulong seed =
 				((ulong)guidBytes[0] << (8 * 0)) |
 				((ulong)guidBytes[1] << (8 * 1)) |
 				((ulong)guidBytes[2] << (8 * 2)) |

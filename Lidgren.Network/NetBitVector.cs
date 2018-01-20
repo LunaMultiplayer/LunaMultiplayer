@@ -67,16 +67,16 @@ namespace Lidgren.Network
 		/// </summary>
 		public void RotateDown()
 		{
-			var lenMinusOne = m_data.Length - 1;
+			int lenMinusOne = m_data.Length - 1;
 
-			var firstBit = m_data[0] & 1;
-			for (var i = 0; i < lenMinusOne; i++)
+			int firstBit = m_data[0] & 1;
+			for (int i = 0; i < lenMinusOne; i++)
 				m_data[i] = ((m_data[i] >> 1) & ~(1 << 31)) | m_data[i + 1] << 31;
 
-			var lastIndex = m_capacity - 1 - (32 * lenMinusOne);
+			int lastIndex = m_capacity - 1 - (32 * lenMinusOne);
 
 			// special handling of last int
-			var cur = m_data[lenMinusOne];
+			int cur = m_data[lenMinusOne];
 			cur = cur >> 1;
 			cur |= firstBit << lastIndex;
 
@@ -88,16 +88,16 @@ namespace Lidgren.Network
 		/// </summary>
 		public int GetFirstSetIndex()
 		{
-			var idx = 0;
+			int idx = 0;
 
-			var data = m_data[0];
+			int data = m_data[0];
 			while (data == 0)
 			{
 				idx++;
 				data = m_data[idx];
 			}
 
-			var a = 0;
+			int a = 0;
 			while (((data >> a) & 1) == 0)
 				a++;
 
@@ -121,7 +121,7 @@ namespace Lidgren.Network
 		{
 			NetException.Assert(bitIndex >= 0 && bitIndex < m_capacity);
 
-			var idx = bitIndex / 32;
+			int idx = bitIndex / 32;
 			if (value)
 			{
 				if ((m_data[idx] & (1 << (bitIndex % 32))) == 0)
@@ -161,9 +161,9 @@ namespace Lidgren.Network
 		/// </summary>
 		public override string ToString()
 		{
-			var bdr = new StringBuilder(m_capacity + 2);
+			StringBuilder bdr = new StringBuilder(m_capacity + 2);
 			bdr.Append('[');
-			for (var i = 0; i < m_capacity; i++)
+			for (int i = 0; i < m_capacity; i++)
 				bdr.Append(Get(m_capacity - i - 1) ? '1' : '0');
 			bdr.Append(']');
 			return bdr.ToString();

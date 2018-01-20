@@ -17,7 +17,7 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public static ulong GetPlatformSeed(int seedInc)
 		{
-			var seed = (ulong)System.Diagnostics.Stopwatch.GetTimestamp();
+			ulong seed = (ulong)System.Diagnostics.Stopwatch.GetTimestamp();
 			return seed ^ ((ulong)Environment.WorkingSet + (ulong)seedInc);
 		}
 
@@ -34,7 +34,7 @@ namespace Lidgren.Network
 				return null;
 
 			NetworkInterface best = null;
-			foreach (var adapter in nics)
+			foreach (NetworkInterface adapter in nics)
 			{
 				if (adapter.NetworkInterfaceType == NetworkInterfaceType.Loopback || adapter.NetworkInterfaceType == NetworkInterfaceType.Unknown)
 					continue;
@@ -46,8 +46,8 @@ namespace Lidgren.Network
 					continue;
 
 				// make sure this adapter has any ipv4 addresses
-				var properties = adapter.GetIPProperties();
-				foreach (var unicastAddress in properties.UnicastAddresses)
+				IPInterfaceProperties properties = adapter.GetIPProperties();
+				foreach (UnicastIPAddressInformation unicastAddress in properties.UnicastAddresses)
 				{
 					if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
 					{
@@ -77,19 +77,19 @@ namespace Lidgren.Network
 				return null;
 
 			var properties = ni.GetIPProperties();
-			foreach (var unicastAddress in properties.UnicastAddresses)
+			foreach (UnicastIPAddressInformation unicastAddress in properties.UnicastAddresses)
 			{
 				if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
 				{
 					var mask = unicastAddress.IPv4Mask;
-					var ipAdressBytes = unicastAddress.Address.GetAddressBytes();
-					var subnetMaskBytes = mask.GetAddressBytes();
+					byte[] ipAdressBytes = unicastAddress.Address.GetAddressBytes();
+					byte[] subnetMaskBytes = mask.GetAddressBytes();
 
 					if (ipAdressBytes.Length != subnetMaskBytes.Length)
 						throw new ArgumentException("Lengths of IP address and subnet mask do not match.");
 
-					var broadcastAddress = new byte[ipAdressBytes.Length];
-					for (var i = 0; i < broadcastAddress.Length; i++)
+					byte[] broadcastAddress = new byte[ipAdressBytes.Length];
+					for (int i = 0; i < broadcastAddress.Length; i++)
 					{
 						broadcastAddress[i] = (byte)(ipAdressBytes[i] | (subnetMaskBytes[i] ^ 255));
 					}
@@ -111,8 +111,8 @@ namespace Lidgren.Network
 				return null;
 			}
 
-			var properties = ni.GetIPProperties();
-			foreach (var unicastAddress in properties.UnicastAddresses)
+			IPInterfaceProperties properties = ni.GetIPProperties();
+			foreach (UnicastIPAddressInformation unicastAddress in properties.UnicastAddresses)
 			{
 				if (unicastAddress != null && unicastAddress.Address != null && unicastAddress.Address.AddressFamily == AddressFamily.InterNetwork)
 				{

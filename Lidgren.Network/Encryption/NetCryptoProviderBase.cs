@@ -18,22 +18,22 @@ namespace Lidgren.Network
 
 		public override void SetKey(byte[] data, int offset, int count)
 		{
-			var len = m_algorithm.Key.Length;
+			int len = m_algorithm.Key.Length;
 			var key = new byte[len];
-			for (var i = 0; i < len; i++)
+			for (int i = 0; i < len; i++)
 				key[i] = data[offset + (i % count)];
 			m_algorithm.Key = key;
 
 			len = m_algorithm.IV.Length;
 			key = new byte[len];
-			for (var i = 0; i < len; i++)
+			for (int i = 0; i < len; i++)
 				key[len - 1 - i] = data[offset + (i % count)];
 			m_algorithm.IV = key;
 		}
 
 		public override bool Encrypt(NetOutgoingMessage msg)
 		{
-			var unEncLenBits = msg.LengthBits;
+			int unEncLenBits = msg.LengthBits;
 
 			var ms = new MemoryStream();
 			var cs = new CryptoStream(ms, m_algorithm.CreateEncryptor(), CryptoStreamMode.Write);
@@ -55,7 +55,7 @@ namespace Lidgren.Network
 
 		public override bool Decrypt(NetIncomingMessage msg)
 		{
-			var unEncLenBits = (int)msg.ReadUInt32();
+			int unEncLenBits = (int)msg.ReadUInt32();
 
 			var ms = new MemoryStream(msg.m_data, 4, msg.LengthBytes - 4);
 			var cs = new CryptoStream(ms, m_algorithm.CreateDecryptor(), CryptoStreamMode.Read);

@@ -50,9 +50,9 @@ namespace Lidgren.Network
 				throw new NetException("This message has already been sent! Use NetPeer.SendMessage() to send to multiple recipients efficiently");
 			msg.m_isSent = true;
 
-			var suppressFragmentation = (method == NetDeliveryMethod.Unreliable || method == NetDeliveryMethod.UnreliableSequenced) && m_configuration.UnreliableSizeBehaviour != NetUnreliableSizeBehaviour.NormalFragmentation;
+			bool suppressFragmentation = (method == NetDeliveryMethod.Unreliable || method == NetDeliveryMethod.UnreliableSequenced) && m_configuration.UnreliableSizeBehaviour != NetUnreliableSizeBehaviour.NormalFragmentation;
 
-			var len = NetConstants.UnfragmentedMessageHeaderSize + msg.LengthBytes; // headers + length, faster than calling msg.GetEncodedSize
+			int len = NetConstants.UnfragmentedMessageHeaderSize + msg.LengthBytes; // headers + length, faster than calling msg.GetEncodedSize
 			if (len <= recipient.m_currentMTU || suppressFragmentation)
 			{
 				Interlocked.Increment(ref msg.m_recyclingCount);
@@ -69,9 +69,9 @@ namespace Lidgren.Network
 
 		internal static int GetMTU(IList<NetConnection> recipients)
 		{
-			var count = recipients.Count;
+			int count = recipients.Count;
 
-			var mtu = int.MaxValue;
+			int mtu = int.MaxValue;
 			if (count < 1)
 			{
 #if DEBUG
@@ -82,10 +82,10 @@ namespace Lidgren.Network
 #endif
 			}
 
-			for(var i=0;i<count;i++)
+			for(int i=0;i<count;i++)
 			{
 				var conn = recipients[i];
-				var cmtu = conn.m_currentMTU;
+				int cmtu = conn.m_currentMTU;
 				if (cmtu < mtu)
 					mtu = cmtu;
 			}
@@ -121,20 +121,20 @@ namespace Lidgren.Network
 				throw new NetException("This message has already been sent! Use NetPeer.SendMessage() to send to multiple recipients efficiently");
 			msg.m_isSent = true;
 
-			var mtu = GetMTU(recipients);
+			int mtu = GetMTU(recipients);
 
-			var len = msg.GetEncodedSize();
+			int len = msg.GetEncodedSize();
 			if (len <= mtu)
 			{
 				Interlocked.Add(ref msg.m_recyclingCount, recipients.Count);
-				foreach (var conn in recipients)
+				foreach (NetConnection conn in recipients)
 				{
 					if (conn == null)
 					{
 						Interlocked.Decrement(ref msg.m_recyclingCount);
 						continue;
 					}
-					var res = conn.EnqueueMessage(msg, method, sequenceChannel);
+					NetSendResult res = conn.EnqueueMessage(msg, method, sequenceChannel);
 					if (res == NetSendResult.Dropped)
 						Interlocked.Decrement(ref msg.m_recyclingCount);
 				}
@@ -214,7 +214,7 @@ namespace Lidgren.Network
 			msg.m_isSent = true;
 
 			Interlocked.Add(ref msg.m_recyclingCount, recipients.Count);
-			foreach (var ep in recipients)
+			foreach (NetEndPoint ep in recipients)
 				m_unsentUnconnectedMessages.Enqueue(new NetTuple<NetEndPoint, NetOutgoingMessage>(ep, msg));
 		}
 
@@ -238,7 +238,7 @@ namespace Lidgren.Network
 			}
 
 			// convert outgoing to incoming
-			var im = CreateIncomingMessage(NetIncomingMessageType.UnconnectedData, om.LengthBytes);
+			NetIncomingMessage im = CreateIncomingMessage(NetIncomingMessageType.UnconnectedData, om.LengthBytes);
 			im.Write(om);
 			im.m_isFragment = false;
 			im.m_receiveTime = NetTime.Now;

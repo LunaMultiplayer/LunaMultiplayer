@@ -38,14 +38,14 @@ namespace Lidgren.Network
 		{
 			if (ob == null)
 				return;
-			var tp = ob.GetType();
+			Type tp = ob.GetType();
 
-			var fields = tp.GetFields(flags);
+			FieldInfo[] fields = tp.GetFields(flags);
 			NetUtility.SortMembersList(fields);
 
-			foreach (var fi in fields)
+			foreach (FieldInfo fi in fields)
 			{
-				var value = fi.GetValue(ob);
+				object value = fi.GetValue(ob);
 
 				// find the appropriate Write method
 				MethodInfo writeMethod;
@@ -71,17 +71,17 @@ namespace Lidgren.Network
 		{
 			if (ob == null)
 				return;
-			var tp = ob.GetType();
+			Type tp = ob.GetType();
 
-			var fields = tp.GetProperties(flags);
+			PropertyInfo[] fields = tp.GetProperties(flags);
 			NetUtility.SortMembersList(fields);
 
-			foreach (var fi in fields)
+			foreach (PropertyInfo fi in fields)
 			{
-				var getMethod = fi.GetGetMethod();
+				MethodInfo getMethod = fi.GetGetMethod();
 				if (getMethod != null)
 				{
-					var value = getMethod.Invoke(ob, null);
+					object value = getMethod.Invoke(ob, null);
 
 					// find the appropriate Write method
 					MethodInfo writeMethod;

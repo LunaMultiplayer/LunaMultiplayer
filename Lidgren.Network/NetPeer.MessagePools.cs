@@ -41,9 +41,9 @@ namespace Lidgren.Network
 
 			lock (m_storagePool)
 			{
-				for (var i = 0; i < m_storagePool.Count; i++)
+				for (int i = 0; i < m_storagePool.Count; i++)
 				{
-					var retval = m_storagePool[i];
+					byte[] retval = m_storagePool[i];
 					if (retval != null && retval.Length >= minimumCapacityInBytes)
 					{
 						m_storagePool[i] = null;
@@ -64,8 +64,8 @@ namespace Lidgren.Network
 
 			lock (m_storagePool)
 			{
-				var cnt = m_storagePool.Count;
-				for (var i = 0; i < cnt; i++)
+				int cnt = m_storagePool.Count;
+				for (int i = 0; i < cnt; i++)
 				{
 					if (m_storagePool[i] == null)
 					{
@@ -174,7 +174,7 @@ namespace Lidgren.Network
 
 			NetException.Assert(m_incomingMessagesPool.Contains(msg) == false, "Recyling already recycled incoming message! Thread race?");
 
-			var storage = msg.m_data;
+			byte[] storage = msg.m_data;
 			msg.m_data = null;
 			Recycle(storage);
 			msg.Reset();
@@ -207,7 +207,7 @@ namespace Lidgren.Network
 			// however, in RELEASE, we'll just have to accept this and move on with life
 			msg.m_recyclingCount = 0;
 
-			var storage = msg.m_data;
+			byte[] storage = msg.m_data;
 			msg.m_data = null;
 
 			// message fragments cannot be recycled
@@ -233,7 +233,7 @@ namespace Lidgren.Network
 				return retval;
 			}
 
-			var numBytes = System.Text.Encoding.UTF8.GetByteCount(text);
+			int numBytes = System.Text.Encoding.UTF8.GetByteCount(text);
 			retval = CreateIncomingMessage(tp, numBytes + (numBytes > 127 ? 2 : 1));
 			retval.Write(text);
 

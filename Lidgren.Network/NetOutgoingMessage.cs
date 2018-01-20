@@ -66,7 +66,7 @@ namespace Lidgren.Network
 			
 			intoBuffer[ptr++] = (byte)m_messageType;
 
-			var low = (byte)((sequenceNumber << 1) | (m_fragmentGroup == 0 ? 0 : 1));
+			byte low = (byte)((sequenceNumber << 1) | (m_fragmentGroup == 0 ? 0 : 1));
 			intoBuffer[ptr++] = low;
 			intoBuffer[ptr++] = (byte)(sequenceNumber >> 7);
 
@@ -75,7 +75,7 @@ namespace Lidgren.Network
 				intoBuffer[ptr++] = (byte)m_bitLength;
 				intoBuffer[ptr++] = (byte)(m_bitLength >> 8);
 
-				var byteLen = NetUtility.BytesToHoldBits(m_bitLength);
+				int byteLen = NetUtility.BytesToHoldBits(m_bitLength);
 				if (byteLen > 0)
 				{
 					Buffer.BlockCopy(m_data, 0, intoBuffer, ptr, byteLen);
@@ -84,7 +84,7 @@ namespace Lidgren.Network
 			}
 			else
 			{
-				var wasPtr = ptr;
+				int wasPtr = ptr;
 				intoBuffer[ptr++] = (byte)m_bitLength;
 				intoBuffer[ptr++] = (byte)(m_bitLength >> 8);
 
@@ -92,14 +92,14 @@ namespace Lidgren.Network
 				// write fragmentation header
 				//
 				ptr = NetFragmentationHelper.WriteHeader(intoBuffer, ptr, m_fragmentGroup, m_fragmentGroupTotalBits, m_fragmentChunkByteSize, m_fragmentChunkNumber);
-				var hdrLen = ptr - wasPtr - 2;
+				int hdrLen = ptr - wasPtr - 2;
 
 				// update length
-				var realBitLength = m_bitLength + (hdrLen * 8);
+				int realBitLength = m_bitLength + (hdrLen * 8);
 				intoBuffer[wasPtr] = (byte)realBitLength;
 				intoBuffer[wasPtr + 1] = (byte)(realBitLength >> 8);
 
-				var byteLen = NetUtility.BytesToHoldBits(m_bitLength);
+				int byteLen = NetUtility.BytesToHoldBits(m_bitLength);
 				if (byteLen > 0)
 				{
 					Buffer.BlockCopy(m_data, (int)(m_fragmentChunkNumber * m_fragmentChunkByteSize), intoBuffer, ptr, byteLen);
@@ -113,7 +113,7 @@ namespace Lidgren.Network
 
 		internal int GetEncodedSize()
 		{
-			var retval = NetConstants.UnfragmentedMessageHeaderSize; // regular headers
+			int retval = NetConstants.UnfragmentedMessageHeaderSize; // regular headers
 			if (m_fragmentGroup != 0)
 				retval += NetFragmentationHelper.GetFragmentationHeaderSize(m_fragmentGroup, m_fragmentGroupTotalBits / 8, m_fragmentChunkByteSize, m_fragmentChunkNumber);
 			retval += this.LengthBytes;

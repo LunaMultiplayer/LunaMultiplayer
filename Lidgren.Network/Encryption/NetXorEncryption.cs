@@ -40,10 +40,10 @@ namespace Lidgren.Network
 		/// </summary>
 		public override bool Encrypt(NetOutgoingMessage msg)
 		{
-			var numBytes = msg.LengthBytes;
-			for (var i = 0; i < numBytes; i++)
+			int numBytes = msg.LengthBytes;
+			for (int i = 0; i < numBytes; i++)
 			{
-				var offset = i % m_key.Length;
+				int offset = i % m_key.Length;
 				msg.m_data[i] = (byte)(msg.m_data[i] ^ m_key[offset]);
 			}
 			return true;
@@ -54,10 +54,10 @@ namespace Lidgren.Network
 		/// </summary>
 		public override bool Decrypt(NetIncomingMessage msg)
 		{
-			var numBytes = msg.LengthBytes;
-			for (var i = 0; i < numBytes; i++)
+			int numBytes = msg.LengthBytes;
+			for (int i = 0; i < numBytes; i++)
 			{
-				var offset = i % m_key.Length;
+				int offset = i % m_key.Length;
 				msg.m_data[i] = (byte)(msg.m_data[i] ^ m_key[offset]);
 			}
 			return true;

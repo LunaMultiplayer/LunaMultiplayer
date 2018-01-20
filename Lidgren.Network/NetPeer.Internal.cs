@@ -69,7 +69,7 @@ namespace Lidgren.Network
 				return;
 
 			// remove all callbacks regardless of sync context
-            m_receiveCallbacks.RemoveAll(tuple => tuple.Item2.Equals(callback));
+			m_receiveCallbacks.RemoveAll(tuple => tuple.Item2.Equals(callback));
 
 			if (m_receiveCallbacks.Count < 1)
 				m_receiveCallbacks = null;
@@ -108,7 +108,7 @@ namespace Lidgren.Network
 
 		private void BindSocket(bool reBind)
 		{
-			var now = NetTime.Now;
+			double now = NetTime.Now;
 			if (now - m_lastSocketBind < 1.0)
 			{
 				LogDebug("Suppressed socket rebind; last bound " + (now - m_lastSocketBind) + " seconds ago");
@@ -129,15 +129,26 @@ namespace Lidgren.Network
 			var ep = (EndPoint)new NetEndPoint(m_configuration.LocalAddress, reBind ? m_listenPort : m_configuration.Port);
 			m_socket.Bind(ep);
 
+			// try catch only works on linux not osx
 			try
 			{
-				const uint IOC_IN = 0x80000000;
-				const uint IOC_VENDOR = 0x18000000;
-				var SIO_UDP_CONNRESET = IOC_IN | IOC_VENDOR | 12;
-				m_socket.IOControl((int)SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
+				// this is not supported in mono / mac or linux yet.
+				if(Environment.OSVersion.Platform != PlatformID.Unix)
+				{
+					const uint IOC_IN = 0x80000000;
+					const uint IOC_VENDOR = 0x18000000;
+					uint SIO_UDP_CONNRESET = IOC_IN | IOC_VENDOR | 12;
+					m_socket.IOControl((int)SIO_UDP_CONNRESET, new byte[] { Convert.ToByte(false) }, null);
+				}
+                else
+                {
+                    LogDebug("Platform doesn't support SIO_UDP_CONNRESET");
+                }
 			}
-			catch
+			catch (System.Exception e)
 			{
+                LogDebug("Platform doesn't support SIO_UDP_CONNRESET");
+				// this will be thrown on linux but not mac if it doesn't exist.
 				// ignore; SIO_UDP_CONNRESET not supported on this platform
 			}
 
@@ -172,11 +183,11 @@ namespace Lidgren.Network
 				m_readHelperMessage = new NetIncomingMessage(NetIncomingMessageType.Error);
 				m_readHelperMessage.m_data = m_receiveBuffer;
 
-				var macBytes = NetUtility.GetMacAddressBytes();
+				byte[] macBytes = NetUtility.GetMacAddressBytes();
 
 				var boundEp = m_socket.LocalEndPoint as NetEndPoint;
-				var epBytes = BitConverter.GetBytes(boundEp.GetHashCode());
-				var combined = new byte[epBytes.Length + macBytes.Length];
+				byte[] epBytes = BitConverter.GetBytes(boundEp.GetHashCode());
+				byte[] combined = new byte[epBytes.Length + macBytes.Length];
 				Array.Copy(epBytes, 0, combined, 0, epBytes.Length);
 				Array.Copy(macBytes, 0, combined, epBytes.Length, macBytes.Length);
 				m_uniqueIdentifier = BitConverter.ToInt64(NetUtility.ComputeSHAHash(combined), 0);
@@ -235,7 +246,7 @@ namespace Lidgren.Network
 			}
 
 			// shut down connections
-			foreach (var conn in list)
+			foreach (NetConnection conn in list)
 				conn.Shutdown(m_shutdownReason);
 
 			FlushDelayedPackets();
@@ -297,10 +308,10 @@ namespace Lidgren.Network
 		{
 			VerifyNetworkThread();
 
-			var now = NetTime.Now;
-			var delta = now - m_lastHeartbeat;
+			double now = NetTime.Now;
+			double delta = now - m_lastHeartbeat;
 
-			var maxCHBpS = 1250 - m_connections.Count;
+			int maxCHBpS = 1250 - m_connections.Count;
 			if (maxCHBpS < 250)
 				maxCHBpS = 250;
 			if (delta > (1.0 / (double)maxCHBpS) || delta < 0.0) // max connection heartbeats/second max
@@ -313,7 +324,7 @@ namespace Lidgren.Network
 				{
 					foreach (var kvp in m_handshakes)
 					{
-						var conn = kvp.Value as NetConnection;
+						NetConnection conn = kvp.Value as NetConnection;
 #if DEBUG
 						// sanity check
 						if (kvp.Key != kvp.Key)
@@ -349,7 +360,7 @@ namespace Lidgren.Network
 				// do connection heartbeats
 				lock (m_connections)
 				{
-					for (var i = m_connections.Count - 1; i >= 0; i--)
+					for (int i = m_connections.Count - 1; i >= 0; i--)
 					{
 						var conn = m_connections[i];
 						conn.Heartbeat(now, m_frameCounter);
@@ -369,9 +380,9 @@ namespace Lidgren.Network
 				NetTuple<NetEndPoint, NetOutgoingMessage> unsent;
 				while (m_unsentUnconnectedMessages.TryDequeue(out unsent))
 				{
-					var om = unsent.Item2;
+					NetOutgoingMessage om = unsent.Item2;
 
-					var len = om.Encode(m_sendBuffer, 0, 0);
+					int len = om.Encode(m_sendBuffer, 0, 0);
 
 					Interlocked.Decrement(ref om.m_recyclingCount);
 					if (om.m_recyclingCount <= 0)
@@ -402,7 +413,7 @@ namespace Lidgren.Network
 
 			do
 			{
-				var bytesReceived = 0;
+				int bytesReceived = 0;
 				try
 				{
 					bytesReceived = m_socket.ReceiveFrom(m_receiveBuffer, 0, m_receiveBuffer.Length, SocketFlags.None, ref m_senderRemote);
@@ -439,7 +450,7 @@ namespace Lidgren.Network
 				if (m_upnp != null && now < m_upnp.m_discoveryResponseDeadline && bytesReceived > 32)
 				{
 					// is this an UPnP response?
-					var resp = System.Text.Encoding.UTF8.GetString(m_receiveBuffer, 0, bytesReceived);
+					string resp = System.Text.Encoding.UTF8.GetString(m_receiveBuffer, 0, bytesReceived);
 					if (resp.Contains("upnp:rootdevice") || resp.Contains("UPnP/1.0"))
 					{
 						try
@@ -465,9 +476,9 @@ namespace Lidgren.Network
 				//
 				// parse packet into messages
 				//
-				var numMessages = 0;
-				var numFragments = 0;
-				var ptr = 0;
+				int numMessages = 0;
+				int numFragments = 0;
+				int ptr = 0;
 				while ((bytesReceived - ptr) >= NetConstants.HeaderByteSize)
 				{
 					// decode header
@@ -478,19 +489,19 @@ namespace Lidgren.Network
 
 					numMessages++;
 
-					var tp = (NetMessageType)m_receiveBuffer[ptr++];
+					NetMessageType tp = (NetMessageType)m_receiveBuffer[ptr++];
 
-					var low = m_receiveBuffer[ptr++];
-					var high = m_receiveBuffer[ptr++];
+					byte low = m_receiveBuffer[ptr++];
+					byte high = m_receiveBuffer[ptr++];
 
-					var isFragment = ((low & 1) == 1);
-					var sequenceNumber = (ushort)((low >> 1) | (((int)high) << 7));
+					bool isFragment = ((low & 1) == 1);
+					ushort sequenceNumber = (ushort)((low >> 1) | (((int)high) << 7));
 
 					if (isFragment)
 						numFragments++;
 
-					var payloadBitLength = (ushort)(m_receiveBuffer[ptr++] | (m_receiveBuffer[ptr++] << 8));
-					var payloadByteLength = NetUtility.BytesToHoldBits(payloadBitLength);
+					ushort payloadBitLength = (ushort)(m_receiveBuffer[ptr++] | (m_receiveBuffer[ptr++] << 8));
+					int payloadByteLength = NetUtility.BytesToHoldBits(payloadBitLength);
 
 					if (bytesReceived - ptr < payloadByteLength)
 					{
@@ -518,7 +529,7 @@ namespace Lidgren.Network
 							if (sender == null && !m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.UnconnectedData))
 								return; // dropping unconnected message since it's not enabled
 
-							var msg = CreateIncomingMessage(NetIncomingMessageType.Data, payloadByteLength);
+							NetIncomingMessage msg = CreateIncomingMessage(NetIncomingMessageType.Data, payloadByteLength);
 							msg.m_isFragment = isFragment;
 							msg.m_receiveTime = now;
 							msg.m_sequenceNumber = sequenceNumber;
@@ -577,7 +588,7 @@ namespace Lidgren.Network
 		{
 			if (m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.DiscoveryRequest))
 			{
-				var dm = CreateIncomingMessage(NetIncomingMessageType.DiscoveryRequest, payloadByteLength);
+				NetIncomingMessage dm = CreateIncomingMessage(NetIncomingMessageType.DiscoveryRequest, payloadByteLength);
 				if (payloadByteLength > 0)
 					Buffer.BlockCopy(m_receiveBuffer, ptr, dm.m_data, 0, payloadByteLength);
 				dm.m_receiveTime = now;
@@ -591,7 +602,7 @@ namespace Lidgren.Network
 		{
 			if (m_configuration.IsMessageTypeEnabled(NetIncomingMessageType.DiscoveryResponse))
 			{
-				var dr = CreateIncomingMessage(NetIncomingMessageType.DiscoveryResponse, payloadByteLength);
+				NetIncomingMessage dr = CreateIncomingMessage(NetIncomingMessageType.DiscoveryResponse, payloadByteLength);
 				if (payloadByteLength > 0)
 					Buffer.BlockCopy(m_receiveBuffer, ptr, dr.m_data, 0, payloadByteLength);
 				dr.m_receiveTime = now;
@@ -680,18 +691,18 @@ namespace Lidgren.Network
 					// handle connect
 					// It's someone wanting to shake hands with us!
 
-					var reservedSlots = m_handshakes.Count + m_connections.Count;
+					int reservedSlots = m_handshakes.Count + m_connections.Count;
 					if (reservedSlots >= m_configuration.m_maximumConnections)
 					{
 						// server full
-						var full = CreateMessage("Server full");
+						NetOutgoingMessage full = CreateMessage("Server full");
 						full.m_messageType = NetMessageType.Disconnect;
 						SendLibrary(full, senderEndPoint);
 						return;
 					}
 
 					// Ok, start handshake!
-					var conn = new NetConnection(this, senderEndPoint);
+					NetConnection conn = new NetConnection(this, senderEndPoint);
 					conn.m_status = NetConnectionStatus.ReceivedInitiation;
 					m_handshakes.Add(senderEndPoint, conn);
 					conn.ReceivedHandshake(now, tp, ptr, payloadByteLength);
@@ -732,7 +743,7 @@ namespace Lidgren.Network
 		[Conditional("DEBUG")]
 		internal void VerifyNetworkThread()
 		{
-			var ct = Thread.CurrentThread;
+			Thread ct = Thread.CurrentThread;
 			if (Thread.CurrentThread != m_networkThread)
 				throw new NetException("Executing on wrong thread! Should be library system thread (is " + ct.Name + " mId " + ct.ManagedThreadId + ")");
 		}

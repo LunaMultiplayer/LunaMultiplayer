@@ -60,7 +60,7 @@ namespace Lidgren.Network
 			get
 			{
 				m_lock.EnterReadLock();
-				var count = m_size;
+				int count = m_size;
 				m_lock.ExitReadLock();
 				return count;
 			}
@@ -74,7 +74,7 @@ namespace Lidgren.Network
 			get
 			{
 				m_lock.EnterReadLock();
-				var capacity = m_items.Length;
+				int capacity = m_items.Length;
 				m_lock.ExitReadLock();
 				return capacity;
 			}
@@ -99,7 +99,7 @@ namespace Lidgren.Network
 				if (m_size == m_items.Length)
 					SetCapacity(m_items.Length + 8);
 
-				var slot = (m_head + m_size) % m_items.Length;
+				int slot = (m_head + m_size) % m_items.Length;
 				m_items[slot] = item;
 				m_size++;
 			}
@@ -122,7 +122,7 @@ namespace Lidgren.Network
 					if (m_size == m_items.Length)
 						SetCapacity(m_items.Length + 8); // @TODO move this out of loop
 
-					var slot = (m_head + m_size) % m_items.Length;
+					int slot = (m_head + m_size) % m_items.Length;
 					m_items[slot] = item;
 					m_size++;
 				}
@@ -169,7 +169,7 @@ namespace Lidgren.Network
 				}
 			}
 
-			var newItems = new T[newCapacity];
+			T[] newItems = new T[newCapacity];
 
 			if (m_head + m_size - 1 < m_items.Length)
 			{
@@ -240,7 +240,7 @@ namespace Lidgren.Network
 			m_lock.EnterWriteLock();
 			try
 			{
-				var added = m_size;
+				int added = m_size;
 				while (m_size > 0)
 				{
 					var item = m_items[m_head];
@@ -287,8 +287,8 @@ namespace Lidgren.Network
 			m_lock.EnterReadLock();
 			try
 			{
-				var ptr = m_head;
-				for (var i = 0; i < m_size; i++)
+				int ptr = m_head;
+				for (int i = 0; i < m_size; i++)
 				{
 					if (m_items[ptr] == null)
 					{
@@ -318,9 +318,9 @@ namespace Lidgren.Network
 			m_lock.EnterReadLock();
 			try
 			{
-				var retval = new T[m_size];
-				var ptr = m_head;
-				for (var i = 0; i < m_size; i++)
+				T[] retval = new T[m_size];
+				int ptr = m_head;
+				for (int i = 0; i < m_size; i++)
 				{
 					retval[i] = m_items[ptr++];
 					if (ptr >= m_items.Length)
@@ -342,7 +342,7 @@ namespace Lidgren.Network
 			m_lock.EnterWriteLock();
 			try
 			{
-				for (var i = 0; i < m_items.Length; i++)
+				for (int i = 0; i < m_items.Length; i++)
 					m_items[i] = default(T);
 				m_head = 0;
 				m_size = 0;
