@@ -150,6 +150,7 @@ namespace LMP.MasterServer
 
             var msgData = MasterServerMessageFactory.CreateNewMessageData<MsReplyServersMsgData>();
 
+            msgData.ServersCount = values.Length;
             msgData.Id = values.Select(s => s.Info.Id).ToArray();
             msgData.ServerVersion = values.Select(s => s.Info.ServerVersion).ToArray();
             msgData.Cheats = values.Select(s => s.Info.Cheats).ToArray();

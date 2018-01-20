@@ -60,7 +60,7 @@ namespace LunaClient.Network
                 if (msgDeserialized.Data is MsReplyServersMsgData data)
                 {
                     Servers.Clear();
-                    for (var i = 0; i < data.Id.Length; i++)
+                    for (var i = 0; i < data.ServersCount; i++)
                     {
                         //Filter servers with diferent version
                         if (data.ServerVersion[i] != LmpVersioning.CurrentVersion)
