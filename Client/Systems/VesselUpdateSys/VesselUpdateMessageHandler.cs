@@ -22,40 +22,17 @@ namespace LunaClient.Systems.VesselUpdateSys
             if (vessel == null) return;
             
             vessel.name = msgData.Name;
-            vessel.protoVessel.vesselName = vessel.name;
-
             vessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), msgData.Type);
-            vessel.protoVessel.vesselType = vessel.vesselType;
-            
             vessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
-            vessel.protoVessel.situation = vessel.situation;
-
             vessel.Landed = msgData.Landed;
-            vessel.protoVessel.landed = vessel.Landed;
-
             vessel.landedAt = msgData.LandedAt;
-            vessel.protoVessel.landedAt = vessel.landedAt;
-
             vessel.displaylandedAt = msgData.DisplayLandedAt;
-            vessel.protoVessel.displaylandedAt = vessel.displaylandedAt;
-
             vessel.Splashed = msgData.Splashed;
-            vessel.protoVessel.splashed = vessel.Splashed;
-
             vessel.missionTime = msgData.MissionTime;
-            vessel.protoVessel.missionTime = vessel.missionTime;
-
             vessel.launchTime = msgData.LaunchTime;
-            vessel.protoVessel.launchTime = vessel.launchTime;
-
             vessel.lastUT = msgData.LastUt;
-            vessel.protoVessel.lastUT = vessel.lastUT;
-
             vessel.isPersistent = msgData.Persistent;
-            vessel.protoVessel.persistent = vessel.isPersistent;
-
             vessel.referenceTransformId = msgData.RefTransformId;
-            vessel.protoVessel.refTransform = vessel.referenceTransformId;
 
             if (vessel.IsControllable != msgData.Controllable)
             {
@@ -67,7 +44,29 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 vessel.ActionGroups.groups[i] = msgData.ActionGroups[i].State;
                 vessel.ActionGroups.cooldownTimes[i] = msgData.ActionGroups[i].Time;
-                //TODO: Do we need to update the protovessel values aswell?
+            }
+
+            if (vessel.protoVessel != null)
+            {
+                vessel.protoVessel.vesselName = vessel.name;
+                vessel.protoVessel.vesselType = vessel.vesselType;
+                vessel.protoVessel.situation = vessel.situation;
+                vessel.protoVessel.landed = vessel.Landed;
+                vessel.protoVessel.landedAt = vessel.landedAt;
+                vessel.protoVessel.displaylandedAt = vessel.displaylandedAt;
+                vessel.protoVessel.splashed = vessel.Splashed;
+                vessel.protoVessel.missionTime = vessel.missionTime;
+                vessel.protoVessel.launchTime = vessel.launchTime;
+                vessel.protoVessel.lastUT = vessel.lastUT;
+                vessel.protoVessel.persistent = vessel.isPersistent;
+                vessel.protoVessel.refTransform = vessel.referenceTransformId;
+
+                if (vessel.IsControllable != msgData.Controllable)
+                {
+                    vessel.protoVessel.wasControllable = vessel.IsControllable;
+                }
+
+                //TODO: Do we need to update the protovessel action group values aswell?
             }
         }
     }
