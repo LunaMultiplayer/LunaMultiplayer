@@ -41,6 +41,7 @@ namespace LunaCommon.Message.Data.MasterServer
                 lidgrenMsg.Write(Id[i]);
                 lidgrenMsg.Write(ServerVersion[i]);
                 lidgrenMsg.Write(InternalEndpoint[i]);
+                lidgrenMsg.Write(ExternalEndpoint[i]);
                 lidgrenMsg.Write(Cheats[i]);
                 lidgrenMsg.Write(GameMode[i]);
                 lidgrenMsg.Write(MaxPlayers[i]);
@@ -69,12 +70,16 @@ namespace LunaCommon.Message.Data.MasterServer
                 ServerVersion = new string[ServersCount];
             if (InternalEndpoint.Length < ServersCount)
                 InternalEndpoint = new string[ServersCount];
+            if (ExternalEndpoint.Length < ServersCount)
+                ExternalEndpoint = new string[ServersCount];
             if (Cheats.Length < ServersCount)
                 Cheats = new bool[ServersCount];
             if (GameMode.Length < ServersCount)
                 GameMode = new int[ServersCount];
             if (MaxPlayers.Length < ServersCount)
                 MaxPlayers = new int[ServersCount];
+            if (ModControl.Length < ServersCount)
+                ModControl = new int[ServersCount];
             if (PlayerCount.Length < ServersCount)
                 PlayerCount = new int[ServersCount];
             if (ServerName.Length < ServersCount)
@@ -99,6 +104,7 @@ namespace LunaCommon.Message.Data.MasterServer
                 Id[i] = lidgrenMsg.ReadInt64();
                 ServerVersion[i] = lidgrenMsg.ReadString();
                 InternalEndpoint[i] = lidgrenMsg.ReadString();
+                ExternalEndpoint[i] = lidgrenMsg.ReadString();
                 Cheats[i] = lidgrenMsg.ReadBoolean();
                 GameMode[i] = lidgrenMsg.ReadInt32();
                 MaxPlayers[i] = lidgrenMsg.ReadInt32();
@@ -120,7 +126,7 @@ namespace LunaCommon.Message.Data.MasterServer
             return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + 
                 sizeof(long) * ServersCount + ServerVersion.GetByteCount(ServersCount) + InternalEndpoint.GetByteCount(ServersCount) +
                 ExternalEndpoint.GetByteCount(ServersCount) + ServerName.GetByteCount(ServersCount) + Description.GetByteCount(ServersCount) +
-                sizeof(bool) * 4 * ServersCount + sizeof(int) * 7 * ServersCount;
+                sizeof(bool) * 4 * ServersCount + sizeof(int) * 8 * ServersCount;
         }
     }
 }
