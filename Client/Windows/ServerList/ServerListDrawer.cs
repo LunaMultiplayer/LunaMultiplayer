@@ -2,6 +2,7 @@
 using LunaCommon;
 using LunaCommon.Enums;
 using System.Linq;
+using System.Threading;
 using UnityEngine;
 
 namespace LunaClient.Windows.ServerList
@@ -22,7 +23,7 @@ namespace LunaClient.Windows.ServerList
             if (GUILayout.Button("Refresh", ButtonStyle))
             {
                 NetworkServerList.RequestServers();
-                LunaDelay.Delay(500);
+                Thread.Sleep(500);
                 DisplayedServers = NetworkServerList.Servers.Values;
             }
             GUILayout.EndHorizontal();

@@ -58,7 +58,7 @@ namespace LunaCommon.Time
                     }
 
                     //Make it sleep for 5 seconds to force other instances to advance the timer in case they try to flood the server
-                    LunaDelay.Delay(5000);
+                    Thread.Sleep(5000);
 
                     //after all this, release the mutex so others can access it...
                     timeMutex.ReleaseMutex();

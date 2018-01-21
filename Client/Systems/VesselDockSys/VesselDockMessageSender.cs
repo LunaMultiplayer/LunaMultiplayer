@@ -1,4 +1,5 @@
-﻿using LunaClient.Base;
+﻿using System.Threading;
+using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.VesselUtilities;
@@ -42,7 +43,7 @@ namespace LunaClient.Systems.VesselDockSys
         {
             TaskFactory.StartNew(() =>
             {
-                LunaDelay.Delay(delaySeconds);
+                Thread.Sleep(delaySeconds);
                 SendMessage(msgData);
             });
         }

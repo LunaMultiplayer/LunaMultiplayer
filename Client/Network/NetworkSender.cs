@@ -6,6 +6,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
+using System.Threading;
 
 namespace LunaClient.Network
 {
@@ -23,13 +24,13 @@ namespace LunaClient.Network
             {
                 while (!NetworkConnection.ResetRequested)
                 {
-                    if (OutgoingMessages.TryDequeue(out var sendMessage))
+                    if (OutgoingMessages.Count > 0 && OutgoingMessages.TryDequeue(out var sendMessage))
                     {
                         SendNetworkMessage(sendMessage);
                     }
                     else
                     {
-                        LunaDelay.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
+                        Thread.Sleep(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
                     }
                 }
             }

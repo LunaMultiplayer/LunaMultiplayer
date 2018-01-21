@@ -7,6 +7,7 @@ using LunaCommon;
 using LunaCommon.Enums;
 using System;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LunaClient.Network
@@ -56,7 +57,7 @@ namespace LunaClient.Network
             {
                 while (!ConnectThread?.IsCompleted ?? false)
                 {
-                    LunaDelay.Delay(500);
+                    Thread.Sleep(500);
                 }
 
                 ConnectThread = SystemBase.TaskFactory.StartNew(() => ConnectToServer($"{address}:{port}"));
@@ -95,7 +96,7 @@ namespace LunaClient.Network
                            connectionTrials < SettingsSystem.CurrentSettings.ConnectionTries)
                     {
                         connectionTrials++;
-                        LunaDelay.Delay(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
+                        Thread.Sleep(SettingsSystem.CurrentSettings.MsBetweenConnectionTries);
                     }
 
                     if (NetworkMain.ClientConnection.ConnectionStatus == NetConnectionStatus.Connected)
