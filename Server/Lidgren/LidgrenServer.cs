@@ -40,17 +40,17 @@ namespace Server.Lidgren
 #if DEBUG
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             //ServerContext.Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
-            if (DebugSettings.SettingsStore.SimulatedLossChance < 100 && DebugSettings.SettingsStore.SimulatedLossChance > 0)
+            if (DebugSettings.SettingsStore?.SimulatedLossChance < 100 && DebugSettings.SettingsStore?.SimulatedLossChance > 0)
             {
-                ServerContext.Config.SimulatedLoss = DebugSettings.SettingsStore.SimulatedLossChance / 100;
+                ServerContext.Config.SimulatedLoss = DebugSettings.SettingsStore.SimulatedLossChance / 100f;
             }
-            if (DebugSettings.SettingsStore.SimulatedDuplicatesChance < 100 && DebugSettings.SettingsStore.SimulatedLossChance > 0)
+            if (DebugSettings.SettingsStore?.SimulatedDuplicatesChance < 100 && DebugSettings.SettingsStore?.SimulatedLossChance > 0)
             {
-                ServerContext.Config.SimulatedDuplicatesChance = DebugSettings.SettingsStore.SimulatedDuplicatesChance / 100;
+                ServerContext.Config.SimulatedDuplicatesChance = DebugSettings.SettingsStore.SimulatedDuplicatesChance / 100f;
             }
 
-            ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore.MaxSimulatedRandomLatencyMs).TotalSeconds;
-            ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore.MinSimulatedLatencyMs).TotalSeconds;
+            ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore?.MaxSimulatedRandomLatencyMs ?? 0).TotalSeconds;
+            ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore?.MinSimulatedLatencyMs ?? 0).TotalSeconds;
 #endif
 
             Server = new NetServer(ServerContext.Config);
