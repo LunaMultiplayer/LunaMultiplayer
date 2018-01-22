@@ -170,6 +170,12 @@ namespace LunaClient.VesselUtilities
                 return false;
             }
 
+            if (vesselProto.vesselID == Guid.Empty)
+            {
+                LunaLog.LogError("[LMP]: protoVessel id is null!");
+                return false;
+            }
+
             if (vesselProto.situation == Vessel.Situations.FLYING)
             {
                 if (vesselProto.orbitSnapShot == null)
@@ -226,6 +232,9 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         private static bool LoadVesselIntoGame(ProtoVessel currentProto)
         {
+            if (HighLogic.CurrentGame?.flightState == null)
+                return false;
+
             LunaLog.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
             currentProto.Load(HighLogic.CurrentGame.flightState);
 

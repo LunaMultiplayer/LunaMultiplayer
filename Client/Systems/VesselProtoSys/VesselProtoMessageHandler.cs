@@ -5,6 +5,7 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -33,7 +34,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private static void HandleVesselProto(VesselProtoMsgData messageData)
         {
-            if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.Vessel.VesselId))
+            if (!SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(messageData.Vessel.VesselId) && messageData.Vessel.VesselId != Guid.Empty)
             {
                 VesselsProtoStore.HandleVesselProtoData(messageData.Vessel.Data, messageData.Vessel.NumBytes, messageData.Vessel.VesselId, false, messageData.Vessel.VesselSituation);
             }
