@@ -93,6 +93,7 @@
     <Compile Include="Systems\VesselRangeSys\VesselRangeSystem.cs" />
     <Compile Include="Systems\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
+    <Compile Include="Windows\Status\StatusTexts.cs" />
     <Compile Include="Windows\WindowContainer.cs" />
     <Compile Include="Systems\SystemsContainer.cs" />
     <Compile Include="Base\RoutineDefinition.cs" />

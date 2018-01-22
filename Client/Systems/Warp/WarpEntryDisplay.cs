@@ -11,14 +11,20 @@ namespace LunaClient.Systems.Warp
     /// </summary>
     public class WarpEntryDisplay : SubSystem<WarpSystem>
     {
+        private static readonly List<SubspaceDisplayEntry> SubspaceEntries = new List<SubspaceDisplayEntry>();
+
         /// <summary>
         /// Get the list of player and subspaces depending on the warp mode
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<SubspaceDisplayEntry> GetSubspaceDisplayEntries()
+        public List<SubspaceDisplayEntry> GetSubspaceDisplayEntries()
         {
-            return SettingsSystem.ServerSettings.WarpMode == WarpMode.Subspace ?
-                GetSubspaceDisplayEntriesSubspace() : GetSubspaceDisplayEntriesNoneSubspace();
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.Subspace)
+                FillSubspaceDisplayEntriesSubspace();
+            else
+                FillSubspaceDisplayEntriesNoneSubspace();
+
+            return SubspaceEntries;
         }
 
         #region private methods
@@ -26,58 +32,83 @@ namespace LunaClient.Systems.Warp
         /// <summary>
         /// Retrieve the list of subspaces and players when the warp mode is ADMIN or NONE
         /// </summary>
-        private static SubspaceDisplayEntry[] GetSubspaceDisplayEntriesNoneSubspace()
+        private static void FillSubspaceDisplayEntriesNoneSubspace()
         {
-            //TODO: Check if this can be improved as it probably creates a lot of garbage in memory
-            var allPlayers = new List<string> { SettingsSystem.CurrentSettings.PlayerName };
-            allPlayers.AddRange(System.ClientSubspaceList.Keys);
-            allPlayers.Sort(PlayerSorter);
+            if (SubspaceEntries.Count != 1 || System.ClientSubspaceList.Keys.Count + 1 != SubspaceEntries[0].Players.Count)
+            {
+                SubspaceEntries.Clear();
 
-            var sde = new SubspaceDisplayEntry { Players = allPlayers, SubspaceId = 0, SubspaceTime = 0 };
-            return new[] { sde };
+                var allPlayers = new List<string> { SettingsSystem.CurrentSettings.PlayerName };
+                allPlayers.AddRange(System.ClientSubspaceList.Keys);
+                allPlayers.Sort(PlayerSorter);
+
+                SubspaceEntries.Add(new SubspaceDisplayEntry
+                {
+                    Players = allPlayers,
+                    SubspaceId = 0,
+                    SubspaceTime = 0
+                });
+            }
         }
 
         /// <summary>
         /// Retrieve the list of subspaces and players when the warp mode is SUBSPACE
         /// </summary>
-        private static IEnumerable<SubspaceDisplayEntry> GetSubspaceDisplayEntriesSubspace()
+        private static void FillSubspaceDisplayEntriesSubspace()
         {
-            var groupedPlayers = System.ClientSubspaceList.GroupBy(s => s.Value);
-            var subspaceDisplay = new List<SubspaceDisplayEntry>();
-
-            foreach (var subspace in groupedPlayers)
+            //Redo the list only if the subspaces have changed.
+            if (PlayersInSubspacesHaveChanged())
             {
-                //TODO: This is really bad in terms of garbage collection.
-                //Players is being set as "ToList" wich causes garbase also
-                //SubspaceDisplayEntry is created on every ongui.
-                var newSubspaceDisplay = new SubspaceDisplayEntry
+                SubspaceEntries.Clear();
+                var groupedPlayers = System.ClientSubspaceList.GroupBy(s => s.Value);
+                foreach (var subspace in groupedPlayers)
                 {
-                    SubspaceTime = System.GetSubspaceTime(subspace.Key),
-                    SubspaceId = subspace.Key,
-                    Players = subspace.Select(u => u.Key).ToList()
-                };
-
-                if (subspace.Key == System.CurrentSubspace)
-                {
-                    if (subspace.Select(v => v.Key).Contains(SettingsSystem.CurrentSettings.PlayerName))
+                    var newSubspaceDisplay = new SubspaceDisplayEntry
                     {
-                        subspaceDisplay.Insert(0, newSubspaceDisplay);
+                        SubspaceTime = System.GetSubspaceTime(subspace.Key),
+                        SubspaceId = subspace.Key,
+                        Players = subspace.Select(u => u.Key).ToList()
+                    };
+
+                    if (subspace.Key == System.CurrentSubspace)
+                    {
+                        if (subspace.Select(v => v.Key).Contains(SettingsSystem.CurrentSettings.PlayerName))
+                        {
+                            SubspaceEntries.Insert(0, newSubspaceDisplay);
+                        }
+                        else
+                        {
+                            newSubspaceDisplay.Players.Insert(0, SettingsSystem.CurrentSettings.PlayerName);
+                            SubspaceEntries.Insert(0, newSubspaceDisplay);
+                        }
                     }
                     else
                     {
-                        newSubspaceDisplay.Players.Insert(0, SettingsSystem.CurrentSettings.PlayerName);
-                        subspaceDisplay.Insert(0, newSubspaceDisplay);
+                        SubspaceEntries.Add(newSubspaceDisplay);
                     }
                 }
-                else
+            }
+        }
+
+        private static bool PlayersInSubspacesHaveChanged()
+        {
+            if (SubspaceEntries.Count != System.Subspaces.Count)
+                return true;
+
+            for (var i = 0; i < SubspaceEntries.Count; i++)
+            {
+                for (var j = 0; j < SubspaceEntries[i].Players.Count; i++)
                 {
-                    subspaceDisplay.Add(newSubspaceDisplay);
+                    var player = SubspaceEntries[i].Players[j];
+                    var expectedSubspace = SubspaceEntries[i].SubspaceId;
+                    if (!System.ClientSubspaceList.TryGetValue(player, out var realSubspace) || realSubspace != expectedSubspace)
+                        return true;
                 }
             }
 
-            return subspaceDisplay;
+            return false;
         }
-
+        
         /// <summary>
         /// Sorts the players
         /// </summary>

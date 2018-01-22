@@ -17,7 +17,7 @@ namespace LunaClient.Windows.Status
         public override bool Display => MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
                                         HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
-        public IEnumerable<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
+        public List<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
         public bool DisconnectEventHandled { get; set; } = true;
         public bool ColorEventHandled { get; set; } = true;
 
@@ -31,7 +31,7 @@ namespace LunaClient.Windows.Status
 
         protected const float WindowHeight = 400;
         protected const float WindowWidth = 300;
-        private const float UpdateStatusInterval = .2f;
+        private const float UpdateStatusInterval = .5f;
 
         private double LastStatusUpdate { get; set; }
 
@@ -102,7 +102,7 @@ namespace LunaClient.Windows.Status
             StateTextStyle.fontSize = 12;
             StateTextStyle.stretchWidth = true;
 
-            SubspaceDisplay = new SubspaceDisplayEntry[0];
+            SubspaceDisplay = new List<SubspaceDisplayEntry>();
         }
 
         public override void Update()
