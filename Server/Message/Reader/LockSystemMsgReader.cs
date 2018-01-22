@@ -1,10 +1,10 @@
-﻿using System;
-using LunaCommon.Message.Data.Lock;
+﻿using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Server.Client;
 using Server.Message.Reader.Base;
 using Server.System;
+using System;
 
 namespace Server.Message.Reader
 {
@@ -26,7 +26,7 @@ namespace Server.Message.Reader
                 case LockMessageType.Release:
                     var releaseData = (LockReleaseMsgData)message;
                     if (releaseData.Lock.PlayerName == client.PlayerName)
-                        LockSystemSender.ReleaseAndSendLockReleaseMessage(releaseData.Lock);
+                        LockSystemSender.ReleaseAndSendLockReleaseMessage(client, releaseData.Lock);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

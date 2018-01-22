@@ -183,6 +183,11 @@ namespace LunaClient.Systems.Lock
             msgData.Lock = lockDefinition;
 
             MessageSender.SendMessage(msgData);
+
+            //Don't wait until we receive the lock release message as the lock release messages 
+            //are ONLY RELAYED and never sent back to us
+            LockStore.RemoveLock(lockDefinition);
+            FireReleaseEvent(lockDefinition);
         }
         
         /// <summary>

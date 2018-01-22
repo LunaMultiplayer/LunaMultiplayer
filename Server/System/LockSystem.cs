@@ -1,4 +1,5 @@
 using LunaCommon.Locks;
+using Server.Client;
 using Server.Settings;
 
 namespace Server.System
@@ -29,16 +30,16 @@ namespace Server.System
             return false;
         }
 
-        public static void ReleasePlayerLocks(string playerName)
+        public static void ReleasePlayerLocks(ClientStructure client)
         {
-            var removeList = LockQuery.GetAllPlayerLocks(playerName);
+            var removeList = LockQuery.GetAllPlayerLocks(client.PlayerName);
 
             foreach (var lockToRemove in removeList)
             {
                 if (lockToRemove.Type == LockType.Control && !GeneralSettings.SettingsStore.DropControlOnExit)
                     continue;
 
-                LockSystemSender.ReleaseAndSendLockReleaseMessage(lockToRemove);
+                LockSystemSender.ReleaseAndSendLockReleaseMessage(client, lockToRemove);
             }
         }
     }

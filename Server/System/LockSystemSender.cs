@@ -20,7 +20,7 @@ namespace Server.System
             MessageQueuer.SendToClient<LockSrvMsg>(client, msgData);
         }
 
-        public static void ReleaseAndSendLockReleaseMessage(LockDefinition lockDefinition)
+        public static void ReleaseAndSendLockReleaseMessage(ClientStructure client, LockDefinition lockDefinition)
         {
             var lockReleaseResult = LockSystem.ReleaseLock(lockDefinition);
             if (lockReleaseResult)
@@ -29,7 +29,7 @@ namespace Server.System
                 msgData.Lock = lockDefinition;
                 msgData.LockResult = true;
                 
-                MessageQueuer.SendToAllClients<LockSrvMsg>(msgData);
+                MessageQueuer.RelayMessage<LockSrvMsg>(client, msgData);
                 LunaLog.Debug($"{lockDefinition.PlayerName} released lock {lockDefinition}");
             }
             else

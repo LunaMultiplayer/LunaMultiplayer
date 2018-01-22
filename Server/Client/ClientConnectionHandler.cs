@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.PlayerConnection;
@@ -12,6 +9,9 @@ using Server.Plugin;
 using Server.Server;
 using Server.System;
 using Server.System.VesselRelay;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.Client
 {
@@ -64,7 +64,7 @@ namespace Server.Client
                     msgData.PlayerName = client.PlayerName;
 
                     MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
-                    LockSystem.ReleasePlayerLocks(client.PlayerName);
+                    LockSystem.ReleasePlayerLocks(client);
 
                     if (!ServerContext.Clients.Any(c => c.Value.Subspace == client.Subspace))
                     {
