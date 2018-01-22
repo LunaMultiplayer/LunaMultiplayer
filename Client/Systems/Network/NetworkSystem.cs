@@ -92,14 +92,20 @@ namespace LunaClient.Systems.Network
                     _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.Handshaking:
-                    SystemsContainer.Get<MainSystem>().Status = "Connection successful, handshaking";
+                    SystemsContainer.Get<MainSystem>().Status = "Waiting for handshake challenge";
                     if (ConnectionIsStuck())
                         MainSystem.NetworkState = ClientState.Connected;
+                    break;
+                case ClientState.HandshakeChallengeReceived:
+                    SystemsContainer.Get<MainSystem>().Status = "Challenge received, authenticating";
+                    MainSystem.NetworkState = ClientState.Authenticating;
+                    SystemsContainer.Get<HandshakeSystem>().SendHandshakeChallengeResponse();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.Authenticating:
                     SystemsContainer.Get<MainSystem>().Status = "Connection successful, authenticating";
                     if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.Connected;
+                        MainSystem.NetworkState = ClientState.HandshakeChallengeReceived;
                     break;
                 case ClientState.Authenticated:
                     SystemsContainer.Get<MainSystem>().Status = "Handshaking successful";
