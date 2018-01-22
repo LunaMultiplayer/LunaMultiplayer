@@ -21,7 +21,7 @@ namespace Server.Message.Reader
                 case LockMessageType.Acquire:
                     var acquireData = (LockAcquireMsgData)message;
                     if (acquireData.Lock.PlayerName == client.PlayerName)
-                        LockSystemSender.SendLockAquireMessage(acquireData.Lock, acquireData.Force);
+                        LockSystemSender.SendLockAquireMessage(client, acquireData.Lock, acquireData.Force);
                     break;
                 case LockMessageType.Release:
                     var releaseData = (LockReleaseMsgData)message;

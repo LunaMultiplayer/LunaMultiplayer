@@ -34,11 +34,12 @@ namespace Server.System
             }
             else
             {
+                SendStoredLockData(client, lockDefinition);
                 LunaLog.Debug($"{lockDefinition.PlayerName} failed to release lock {lockDefinition}");
             }
         }
 
-        public static void SendLockAquireMessage(LockDefinition lockDefinition, bool force)
+        public static void SendLockAquireMessage(ClientStructure client, LockDefinition lockDefinition, bool force)
         {
             if (LockSystem.AcquireLock(lockDefinition, force))
             {
@@ -51,7 +52,23 @@ namespace Server.System
             }
             else
             {
+                SendStoredLockData(client, lockDefinition);
                 LunaLog.Debug($"{lockDefinition.PlayerName} failed to acquire lock {lockDefinition}");
+            }
+        }
+
+        /// <summary>
+        /// Whenever a release/acquire lock fails, call this method to relay the correct lock definition to the player
+        /// </summary>
+        private static void SendStoredLockData(ClientStructure client, LockDefinition lockDefinition)
+        {
+            var storedLockDef =
+                LockSystem.LockQuery.GetLock(lockDefinition.Type, lockDefinition.PlayerName, lockDefinition.VesselId);
+            if (storedLockDef != null)
+            {
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockAcquireMsgData>();
+                msgData.Lock = storedLockDef;
+                MessageQueuer.SendToClient<LockSrvMsg>(client, msgData);
             }
         }
     }

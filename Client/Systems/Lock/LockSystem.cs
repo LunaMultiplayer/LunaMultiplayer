@@ -175,21 +175,18 @@ namespace LunaClient.Systems.Lock
         /// <summary>
         /// Release the specified lock by sending a message to the server.
         /// </summary>
-        /// <param name="lockDefinition">The definition of the lock to acquire</param>
-        /// <param name="force">Force the aquire. Usually false unless in dockings.</param>
-        public void ReleaseLock(LockDefinition lockDefinition, bool force = false)
+        /// <param name="lockDefinition">The definition of the lock to release</param>
+        public void ReleaseLock(LockDefinition lockDefinition)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockReleaseMsgData>();
-            msgData.Lock = lockDefinition;
+            msgData.Lock.CopyFrom(lockDefinition);
 
-            MessageSender.SendMessage(msgData);
-
-            //Don't wait until we receive the lock release message as the lock release messages 
-            //are ONLY RELAYED and never sent back to us
             LockStore.RemoveLock(lockDefinition);
             FireReleaseEvent(lockDefinition);
+
+            MessageSender.SendMessage(msgData);
         }
-        
+
         /// <summary>
         /// Release the update lock on the given vessel
         /// </summary>
@@ -224,9 +221,10 @@ namespace LunaClient.Systems.Lock
         /// Release the specified control lock excepts the one for the vessel you give as parameter.
         /// </summary>
         public void ReleaseControlLocksExcept(Guid vesselId)
-        {
+        {            
+            //Serialize to array as it's a concurrent collection
             var locksToRemove = LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName)
-                .Where(v => v.VesselId != vesselId);
+                .Where(v => v.VesselId != vesselId).ToArray();
 
             foreach (var lockToRemove in locksToRemove)
             {
@@ -264,7 +262,8 @@ namespace LunaClient.Systems.Lock
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
 
-            foreach (var lockToRelease in locksToRelease)
+            //Serialize to array as it's a concurrent collection
+            foreach (var lockToRelease in locksToRelease.ToArray())
             {
                 ReleaseLock(lockToRelease);
             }

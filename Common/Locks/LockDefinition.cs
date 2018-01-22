@@ -70,5 +70,12 @@ namespace LunaCommon.Locks
         {
             return PlayerName.GetByteCount() + GuidUtil.GetByteSize() + sizeof(LockType);
         }
+        
+        public void CopyFrom(LockDefinition lockDefinition)
+        {
+            PlayerName = lockDefinition.PlayerName.Clone() as string;
+            Type = lockDefinition.Type;
+            VesselId = lockDefinition.VesselId;
+        }
     }
 }
