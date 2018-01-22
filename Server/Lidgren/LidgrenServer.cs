@@ -37,6 +37,11 @@ namespace Server.Lidgren
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
 
+#if DEBUG
+            ServerContext.Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
+            //ServerContext.Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+#endif
+
             Server = new NetServer(ServerContext.Config);
             Server.Start();
             ServerContext.ServerStarting = false;

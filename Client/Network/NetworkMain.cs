@@ -5,6 +5,7 @@ using LunaCommon.Message;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LunaClient.Network
@@ -55,6 +56,11 @@ namespace LunaClient.Network
             Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
             Config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
 
+#if DEBUG
+            Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
+            //Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+#endif
+
             NetworkServerList.RefreshMasterServers();
             NetworkServerList.RequestServers();
         }
@@ -62,6 +68,12 @@ namespace LunaClient.Network
         public static void ResetNetworkSystem()
         {
             NetworkConnection.ResetRequested = true;
+
+            if (ClientConnection?.Status > NetPeerStatus.NotRunning)
+            {
+                ClientConnection.Shutdown("Disconnected");
+                Thread.Sleep(1000);
+            }
 
             ClientConnection = new NetClient(Config);
             ClientConnection.Start();

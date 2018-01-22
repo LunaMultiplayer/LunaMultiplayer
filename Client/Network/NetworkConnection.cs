@@ -72,6 +72,9 @@ namespace LunaClient.Network
 
         public static void ConnectToServer(string endpointString)
         {
+            if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
+                NetworkMain.ClientConnection.Start();
+
             if (MainSystem.NetworkState <= ClientState.Disconnected)
             {
                 var endpoint = CreateEndpoint(endpointString);
@@ -85,8 +88,7 @@ namespace LunaClient.Network
                 {
                     var outmsg = NetworkMain.ClientConnection.CreateMessage(1);
                     outmsg.Write((byte)NetIncomingMessageType.ConnectionApproval);
-
-                    NetworkMain.ClientConnection.Start();
+                    
                     NetworkMain.ClientConnection.Connect(endpoint);
                     NetworkMain.ClientConnection.FlushSendQueue();
 

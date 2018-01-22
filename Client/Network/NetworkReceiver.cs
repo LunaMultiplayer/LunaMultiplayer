@@ -23,7 +23,6 @@ using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
-using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -50,6 +49,12 @@ namespace LunaClient.Network
                         NetworkStatistics.LastReceiveTime = LunaTime.UtcNow;
                         switch (msg.MessageType)
                         {
+                            case NetIncomingMessageType.DebugMessage:
+                                LunaLog.Log("[Lidgen DEBUG] " + msg.ReadString());
+                                break;
+                            case NetIncomingMessageType.VerboseDebugMessage:
+                                LunaLog.Log("[Lidgen VERBOSE] " + msg.ReadString());
+                                break;
                             case NetIncomingMessageType.NatIntroductionSuccess:
                                 NetworkServerList.HandleNatIntroduction(msg);
                                 break;
