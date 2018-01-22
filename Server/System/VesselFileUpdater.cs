@@ -65,70 +65,70 @@ namespace Server.System
             var fullText = string.Join(Environment.NewLine, protoVesselLines);
 
             var regex = new Regex("(?<prefix>lat = )(.*)");
-            var replacement = "${prefix}" + $"{msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture)}";
+            var replacement = "${prefix}" + $"{msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture)}\r";
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>lon = )(.*)");
-            replacement = "${prefix}" + $"{msgData.LatLonAlt[1].ToString(CultureInfo.InvariantCulture)}";
+            replacement = "${prefix}" + $"{msgData.LatLonAlt[1].ToString(CultureInfo.InvariantCulture)}\r";
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>alt = )(.*)");
-            replacement = "${prefix}" + $"{msgData.LatLonAlt[2].ToString(CultureInfo.InvariantCulture)}";
+            replacement = "${prefix}" + $"{msgData.LatLonAlt[2].ToString(CultureInfo.InvariantCulture)}\r";
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>hgt = )(.*)");
-            replacement = "${prefix}" + $"{msgData.HeightFromTerrain.ToString(CultureInfo.InvariantCulture)}";
+            replacement = "${prefix}" + $"{msgData.HeightFromTerrain.ToString(CultureInfo.InvariantCulture)}\r";
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>nrm = )(.*)");
             replacement = "${prefix}" + $"{msgData.NormalVector[0].ToString(CultureInfo.InvariantCulture)}," +
                           $"{msgData.NormalVector[1].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.NormalVector[2].ToString(CultureInfo.InvariantCulture)}";
+                          $"{msgData.NormalVector[2].ToString(CultureInfo.InvariantCulture)}\r";
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>rot = )(.*)");
             replacement = "${prefix}" + $"{msgData.SrfRelRotation[0].ToString(CultureInfo.InvariantCulture)}," +
                           $"{msgData.SrfRelRotation[1].ToString(CultureInfo.InvariantCulture)}," +
                           $"{msgData.SrfRelRotation[2].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.SrfRelRotation[3].ToString(CultureInfo.InvariantCulture)}";
+                          $"{msgData.SrfRelRotation[3].ToString(CultureInfo.InvariantCulture)}\r";
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>CoM = )(.*)");
             replacement = "${prefix}" + $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
                           $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}";
+                          $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}\r";
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>INC = )(.*)"); //inclination
-            replacement = "${prefix}" + msgData.Orbit[0].ToString(CultureInfo.InvariantCulture);
+            replacement = "${prefix}" + msgData.Orbit[0].ToString(CultureInfo.InvariantCulture) + '\r';
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>ECC = )(.*)"); //eccentricity
-            replacement = "${prefix}" + msgData.Orbit[1].ToString(CultureInfo.InvariantCulture);
+            replacement = "${prefix}" + msgData.Orbit[1].ToString(CultureInfo.InvariantCulture) + '\r';
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>SMA = )(.*)"); //semiMajorAxis
-            replacement = "${prefix}" + msgData.Orbit[2].ToString(CultureInfo.InvariantCulture);
+            replacement = "${prefix}" + msgData.Orbit[2].ToString(CultureInfo.InvariantCulture) + '\r';
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>LAN = )(.*)"); //LAN
-            replacement = "${prefix}" + msgData.Orbit[3].ToString(CultureInfo.InvariantCulture);
+            replacement = "${prefix}" + msgData.Orbit[3].ToString(CultureInfo.InvariantCulture) + '\r';
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>LPE = )(.*)"); //argumentOfPeriapsis
-            replacement = "${prefix}" + msgData.Orbit[4].ToString(CultureInfo.InvariantCulture);
+            replacement = "${prefix}" + msgData.Orbit[4].ToString(CultureInfo.InvariantCulture) + '\r';
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>MNA = )(.*)"); //meanAnomalyAtEpoch
-            replacement = "${prefix}" + msgData.Orbit[5].ToString(CultureInfo.InvariantCulture);
+            replacement = "${prefix}" + msgData.Orbit[5].ToString(CultureInfo.InvariantCulture) + '\r';
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>EPH = )(.*)"); //epoch
-            replacement = "${prefix}" + msgData.Orbit[6].ToString(CultureInfo.InvariantCulture);
+            replacement = "${prefix}" + msgData.Orbit[6].ToString(CultureInfo.InvariantCulture) + '\r';
             fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>REF = )(.*)"); //referenceBody.flightGlobalsIndex
-            replacement = "${prefix}" + msgData.Orbit[7].ToString(CultureInfo.InvariantCulture);
+            replacement = "${prefix}" + msgData.Orbit[7].ToString(CultureInfo.InvariantCulture) + '\r';
             fullText = regex.Replace(fullText, replacement, 1);
 
             return fullText;
@@ -142,50 +142,50 @@ namespace Server.System
             var fullText = string.Join(Environment.NewLine, protoVesselLines);
 
             var regex = new Regex("(?<prefix>name = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Name, 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.Name + '\r', 1);
 
             regex = new Regex("(?<prefix>type = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Type, 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.Type + '\r', 1);
 
             regex = new Regex("(?<prefix>sit = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Situation, 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.Situation + '\r', 1);
 
             regex = new Regex("(?<prefix>landed = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Landed.ToString(CultureInfo.InvariantCulture), 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.Landed.ToString(CultureInfo.InvariantCulture) + '\r', 1);
 
             regex = new Regex("(?<prefix>landedAt = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.LandedAt, 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.LandedAt + '\r', 1);
 
             regex = new Regex("(?<prefix>displaylandedAt = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.DisplayLandedAt, 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.DisplayLandedAt + '\r', 1);
 
             regex = new Regex("(?<prefix>splashed = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Splashed.ToString(CultureInfo.InvariantCulture), 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.Splashed.ToString(CultureInfo.InvariantCulture) + '\r', 1);
 
             regex = new Regex("(?<prefix>met = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.MissionTime.ToString(CultureInfo.InvariantCulture), 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.MissionTime.ToString(CultureInfo.InvariantCulture) + '\r', 1);
 
             regex = new Regex("(?<prefix>lct = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.LaunchTime.ToString(CultureInfo.InvariantCulture), 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.LaunchTime.ToString(CultureInfo.InvariantCulture) + '\r', 1);
 
             regex = new Regex("(?<prefix>lastUT = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.LastUt.ToString(CultureInfo.InvariantCulture), 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.LastUt.ToString(CultureInfo.InvariantCulture) + '\r', 1);
 
             regex = new Regex("(?<prefix>prst = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Persistent.ToString(CultureInfo.InvariantCulture), 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.Persistent.ToString(CultureInfo.InvariantCulture) + '\r', 1);
 
             regex = new Regex("(?<prefix>ref = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.RefTransformId.ToString(CultureInfo.InvariantCulture), 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.RefTransformId.ToString(CultureInfo.InvariantCulture) + '\r', 1);
 
             regex = new Regex("(?<prefix>ctrl = )(.*)");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Controllable.ToString(CultureInfo.InvariantCulture), 1);
+            fullText = regex.Replace(fullText, "${prefix}" + msgData.Controllable.ToString(CultureInfo.InvariantCulture) + '\r', 1);
 
             foreach (var actionGroup in msgData.ActionGroups)
             {
                 regex = new Regex($"(?<prefix>{actionGroup.ActionGroupName} = )(.*)");
                 var newValue = actionGroup.State.ToString(CultureInfo.InvariantCulture) + ", " + actionGroup.Time.ToString(CultureInfo.InvariantCulture);
 
-                fullText = regex.Replace(fullText, "${prefix}" + newValue, 1);
+                fullText = regex.Replace(fullText, "${prefix}" + newValue + '\r', 1);
             }
 
             return fullText;
