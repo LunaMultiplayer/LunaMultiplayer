@@ -38,7 +38,7 @@ namespace LunaClient.Systems.Scenario
                         ScreenMessages.PostScreenMessage($"Scenario data has been lost for {data.ScenariosData[i].Module}", 5f, ScreenMessageStyle.UPPER_CENTER);
                     }
                 }
-                MainSystem.NetworkState = ClientState.ScneariosSynced;
+                MainSystem.NetworkState = ClientState.ScenariosSynced;
             }
         }
     }

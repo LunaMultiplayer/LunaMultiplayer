@@ -23,7 +23,7 @@
         SyncingPlayers = 18,
         PlayersSynced = 19,
         SyncingScenarios = 20,
-        ScneariosSynced = 21,
+        ScenariosSynced = 21,
         SyncingCraftlibrary = 22,
         CraftlibrarySynced = 23,
         SyncingChat = 24,
