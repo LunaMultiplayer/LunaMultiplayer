@@ -1,17 +1,16 @@
-﻿using System.IO;
-using LunaCommon.Xml;
+﻿using LunaCommon.Xml;
 using Server.Context;
-using Server.Settings.Definition;
 using Server.System;
+using System.IO;
 
 namespace Server.Settings
 {
-    public abstract class SettingsBase
+    public abstract class SettingsBase<T> where T : class, new()
     {
         protected abstract string SettingsPath { get; }
 
         protected abstract object SettingsHolder { get; set; }
-
+        
         protected SettingsBase()
         {
             if (!FileHandler.FolderExists(ServerContext.ConfigDirectory))
@@ -19,13 +18,13 @@ namespace Server.Settings
 
             Load();
         }
-        
+
         public void Load()
         {
             if (!File.Exists(SettingsPath))
-                LunaXmlSerializer.WriteXml(new SettingsDefinition(), SettingsPath);
+                LunaXmlSerializer.WriteXml(new T(), SettingsPath);
 
-            SettingsHolder = LunaXmlSerializer.ReadXml<SettingsDefinition>(SettingsPath);
+            SettingsHolder = LunaXmlSerializer.ReadXml<T>(SettingsPath);
         }
 
         public void Save()

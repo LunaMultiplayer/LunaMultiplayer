@@ -40,6 +40,17 @@ namespace Server.Lidgren
 #if DEBUG
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             //ServerContext.Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            if (DebugSettings.SettingsStore.SimulatedLossChance < 100 && DebugSettings.SettingsStore.SimulatedLossChance > 0)
+            {
+                ServerContext.Config.SimulatedLoss = DebugSettings.SettingsStore.SimulatedLossChance / 100;
+            }
+            if (DebugSettings.SettingsStore.SimulatedDuplicatesChance < 100 && DebugSettings.SettingsStore.SimulatedLossChance > 0)
+            {
+                ServerContext.Config.SimulatedDuplicatesChance = DebugSettings.SettingsStore.SimulatedDuplicatesChance / 100;
+            }
+
+            ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore.MaxSimulatedRandomLatencyMs).TotalSeconds;
+            ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore.MinSimulatedLatencyMs).TotalSeconds;
 #endif
 
             Server = new NetServer(ServerContext.Config);

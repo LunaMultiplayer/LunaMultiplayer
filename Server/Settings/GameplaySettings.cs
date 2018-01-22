@@ -1,10 +1,10 @@
-﻿using System.IO;
-using Server.Context;
+﻿using Server.Context;
 using Server.Settings.Definition;
+using System.IO;
 
 namespace Server.Settings
 {
-    public class GameplaySettings : SettingsBase
+    public class GameplaySettings : SettingsBase<GameplaySettingsDefinition>
     {
         protected override string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, "GameplaySettings.txt");
 

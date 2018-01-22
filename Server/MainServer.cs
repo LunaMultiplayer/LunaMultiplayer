@@ -8,13 +8,13 @@ using Server.Log;
 using Server.Plugin;
 using Server.Settings;
 using Server.System;
+using Server.System.VesselRelay;
 using Server.Utilities;
 using System;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Server.System.VesselRelay;
 
 namespace Server
 {
@@ -110,6 +110,9 @@ namespace Server
                 LunaLog.Debug("Loading gameplay settings...");
                 GameplaySettings.Singleton.Load();
             }
+#if DEBUG
+            DebugSettings.Singleton.Load();
+#endif
         }
 
         //Gracefully shut down

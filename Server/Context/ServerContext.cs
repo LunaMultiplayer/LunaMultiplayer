@@ -43,10 +43,6 @@ namespace Server.Context
             SuppressUnreliableUnorderedAcks = true,
             PingInterval = (float)TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.HearbeatMsInterval).TotalSeconds,
             ConnectionTimeout = (float)TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds,
-            //SimulatedLoss = 0.1f,
-            //SimulatedDuplicatesChance = 0.1f,
-            //SimulatedRandomLatency = 0.1f,
-            //SimulatedMinimumLatency = 0.05f
         };
 
         public static LidgrenServer LidgrenServer { get; } = new LidgrenServer();
