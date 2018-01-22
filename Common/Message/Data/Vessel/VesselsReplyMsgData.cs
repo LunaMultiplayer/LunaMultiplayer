@@ -14,14 +14,14 @@ namespace LunaCommon.Message.Data.Vessel
 
         public override string ClassName { get; } = nameof(VesselsReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             lidgrenMsg.Write(VesselsCount);
             for (var i = 0; i < VesselsCount; i++)
             {
-                VesselsData[i].Serialize(lidgrenMsg, dataCompressed);
+                VesselsData[i].Serialize(lidgrenMsg, compressData);
             }
         }
 

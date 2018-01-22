@@ -13,7 +13,7 @@ namespace LunaCommon.Message.Data.Groups
 
         public virtual GroupMessageType GroupMessageType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

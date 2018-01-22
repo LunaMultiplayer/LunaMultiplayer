@@ -12,7 +12,7 @@ namespace LunaCommon.Message.Data.Color
         public override ushort SubType => (ushort)(int)PlayerColorMessageType;
         public virtual PlayerColorMessageType PlayerColorMessageType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

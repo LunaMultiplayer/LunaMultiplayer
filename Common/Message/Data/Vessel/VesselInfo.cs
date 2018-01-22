@@ -12,7 +12,7 @@ namespace LunaCommon.Message.Data.Vessel
         public int NumBytes;
         public byte[] Data = new byte[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(VesselSituation);

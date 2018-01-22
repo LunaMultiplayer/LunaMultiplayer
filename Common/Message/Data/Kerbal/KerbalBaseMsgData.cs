@@ -13,7 +13,7 @@ namespace LunaCommon.Message.Data.Kerbal
 
         public virtual KerbalMessageType KerbalMessageType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

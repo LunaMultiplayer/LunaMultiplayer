@@ -18,9 +18,9 @@ namespace LunaCommon.Message.Data.Handshake
 
         public override string ClassName { get; } = nameof(HandshakeResponseMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(PublicKey);

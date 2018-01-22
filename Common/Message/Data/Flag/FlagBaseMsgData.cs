@@ -12,7 +12,7 @@ namespace LunaCommon.Message.Data.Flag
         public override ushort SubType => (ushort)(int)FlagMessageType;
         public virtual FlagMessageType FlagMessageType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

@@ -14,7 +14,7 @@ namespace LunaCommon.Message.Data.PlayerConnection
 
         public string PlayerName;
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(PlayerName);
         }

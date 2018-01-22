@@ -14,14 +14,14 @@ namespace LunaCommon.Message.Data.PlayerStatus
 
         public override string ClassName { get; } = nameof(PlayerStatusReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             lidgrenMsg.Write(PlayerStatusCount);
             for (var i = 0; i < PlayerStatusCount; i++)
             {
-                PlayerStatus[i].Serialize(lidgrenMsg, dataCompressed);
+                PlayerStatus[i].Serialize(lidgrenMsg, compressData);
             }
         }
 

@@ -14,7 +14,7 @@ namespace LunaCommon.Message.Data.Facility
 
         public string ObjectId;
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(ObjectId);
         }

@@ -18,7 +18,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
         public int SubassemblyCraftCount;
         public string[] SubassemblyCraftNames = new string[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(VabExists);
             lidgrenMsg.Write(SphExists);

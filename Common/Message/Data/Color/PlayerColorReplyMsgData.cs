@@ -14,15 +14,15 @@ namespace LunaCommon.Message.Data.Color
 
         public override string ClassName { get; } = nameof(PlayerColorReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             lidgrenMsg.Write(PlayerColorsCount);
 
             for (var i = 0; i < PlayerColorsCount; i++)
             {
-                PlayersColors[i].Serialize(lidgrenMsg, dataCompressed);
+                PlayersColors[i].Serialize(lidgrenMsg, compressData);
             }
         }
 

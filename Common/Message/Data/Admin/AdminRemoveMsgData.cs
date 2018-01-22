@@ -20,9 +20,9 @@ namespace LunaCommon.Message.Data.Admin
             PlayerName = lidgrenMsg.ReadString();
         }
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
             lidgrenMsg.Write(PlayerName);
         }
 

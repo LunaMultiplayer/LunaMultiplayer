@@ -11,7 +11,7 @@ namespace LunaCommon.Message.Data.Flag
         public int NumBytes;
         public byte[] FlagData = new byte[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(Owner);
             lidgrenMsg.Write(FlagName);

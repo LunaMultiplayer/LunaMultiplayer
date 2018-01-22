@@ -11,7 +11,7 @@ namespace LunaCommon.Message.Data.Warp
         public int PlayerCount;
         public string[] Players = new string[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(SubspaceKey);
             lidgrenMsg.Write(SubspaceTime);

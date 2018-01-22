@@ -12,7 +12,7 @@ namespace LunaCommon.Message.Data.Admin
         public override ushort SubType => (ushort)(int)AdminMessageType;
         public virtual AdminMessageType AdminMessageType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

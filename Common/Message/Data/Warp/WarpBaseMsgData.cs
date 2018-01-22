@@ -12,7 +12,7 @@ namespace LunaCommon.Message.Data.Warp
         public override ushort SubType => (ushort)(int)WarpMessageType;
         public virtual WarpMessageType WarpMessageType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

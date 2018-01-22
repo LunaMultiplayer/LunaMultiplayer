@@ -8,10 +8,10 @@ namespace LunaCommon.Message.Data.CraftLibrary
         public string PlayerName;
         public CraftListInfo Crafts = new CraftListInfo();
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(PlayerName);
-            Crafts.Serialize(lidgrenMsg, dataCompressed);
+            Crafts.Serialize(lidgrenMsg, compressData);
         }
 
         public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)

@@ -9,7 +9,7 @@ namespace LunaCommon.Message.Data.Vessel
         public bool State;
         public double Time;
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(ActionGroupName);
             lidgrenMsg.Write(State);

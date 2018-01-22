@@ -31,9 +31,9 @@ namespace LunaCommon.Message.Data.MasterServer
 
         public override string ClassName { get; } = nameof(MsReplyServersMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             lidgrenMsg.Write(ServersCount);
             for (var i = 0; i < ServersCount; i++)

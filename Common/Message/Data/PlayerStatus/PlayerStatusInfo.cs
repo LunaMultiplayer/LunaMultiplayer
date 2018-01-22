@@ -9,7 +9,7 @@ namespace LunaCommon.Message.Data.PlayerStatus
         public string VesselText;
         public string StatusText;
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(VesselText);

@@ -19,7 +19,7 @@ namespace LunaCommon.Message.Data.MasterServer
         public override ushort SubType => (ushort)(int)MasterServerMessageSubType;
         public virtual MasterServerMessageSubType MasterServerMessageSubType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

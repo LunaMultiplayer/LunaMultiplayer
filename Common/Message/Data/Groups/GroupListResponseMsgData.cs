@@ -14,14 +14,14 @@ namespace LunaCommon.Message.Data.Groups
 
         public override string ClassName { get; } = nameof(GroupListResponseMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             lidgrenMsg.Write(GroupsCount);
             for (var i = 0; i < GroupsCount; i++)
             {
-                Groups[i].Serialize(lidgrenMsg, dataCompressed);
+                Groups[i].Serialize(lidgrenMsg, compressData);
             }
         }
 

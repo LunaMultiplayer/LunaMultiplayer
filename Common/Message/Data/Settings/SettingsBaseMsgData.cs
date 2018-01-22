@@ -12,7 +12,7 @@ namespace LunaCommon.Message.Data.Settings
         public override ushort SubType => (ushort)(int)SettingsMessageType;
         public virtual SettingsMessageType SettingsMessageType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

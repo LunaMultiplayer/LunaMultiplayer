@@ -9,7 +9,7 @@ namespace LunaCommon.Message.Data.Kerbal
         public int NumBytes;
         public byte[] KerbalData = new byte[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(KerbalName);
 

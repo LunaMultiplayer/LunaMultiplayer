@@ -15,12 +15,12 @@ namespace LunaCommon.Message.Data.Lock
 
         public override string ClassName { get; } = nameof(LockAcquireMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             lidgrenMsg.Write(Force);
-            Lock.Serialize(lidgrenMsg, dataCompressed);
+            Lock.Serialize(lidgrenMsg, compressData);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)

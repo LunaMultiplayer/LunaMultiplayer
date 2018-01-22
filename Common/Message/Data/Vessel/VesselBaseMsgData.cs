@@ -12,7 +12,7 @@ namespace LunaCommon.Message.Data.Vessel
         public override ushort SubType => (ushort)(int)VesselMessageType;
         public virtual VesselMessageType VesselMessageType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

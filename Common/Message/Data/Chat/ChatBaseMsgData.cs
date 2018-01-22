@@ -14,7 +14,7 @@ namespace LunaCommon.Message.Data.Chat
 
         public string From;
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(From);
         }

@@ -12,7 +12,7 @@ namespace LunaCommon.Message.Data.Motd
         public override ushort SubType => (ushort)(int)MotdMessageType;
         public virtual MotdMessageType MotdMessageType => throw new NotImplementedException();
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             //Nothing to implement here
         }

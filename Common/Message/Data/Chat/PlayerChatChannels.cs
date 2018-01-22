@@ -10,7 +10,7 @@ namespace LunaCommon.Message.Data.Chat
         public int ChannelCount;
         public string[] Channels = new string[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(ChannelCount);

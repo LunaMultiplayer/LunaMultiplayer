@@ -31,9 +31,9 @@ namespace LunaCommon.Message.Data.Vessel
 
         public override string ClassName { get; } = nameof(VesselUpdateMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(Name);
@@ -52,7 +52,7 @@ namespace LunaCommon.Message.Data.Vessel
 
 
             for (var i = 0; i < 17; i++)
-                ActionGroups[i].Serialize(lidgrenMsg, dataCompressed);
+                ActionGroups[i].Serialize(lidgrenMsg, compressData);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)

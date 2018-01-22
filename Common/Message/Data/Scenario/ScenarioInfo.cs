@@ -10,7 +10,7 @@ namespace LunaCommon.Message.Data.Scenario
         public int NumBytes;
         public byte[] Data = new byte[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(Module);
             lidgrenMsg.Write(NumBytes);

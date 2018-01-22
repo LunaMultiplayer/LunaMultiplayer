@@ -32,16 +32,16 @@ namespace LunaCommon.Message.Base
         /// <inheritdoc />
         public abstract string ClassName { get; }
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(SentTime);
             lidgrenMsg.Write(MajorVersion);
             lidgrenMsg.Write(MinorVersion);
             lidgrenMsg.Write(BuildVersion);
-            InternalSerialize(lidgrenMsg, dataCompressed);
+            InternalSerialize(lidgrenMsg, compressData);
         }
 
-        internal abstract void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed);
+        internal abstract void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData);
 
         public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
         {

@@ -14,14 +14,14 @@ namespace LunaCommon.Message.Data.CraftLibrary
 
         public override string ClassName { get; } = nameof(CraftLibraryListReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             lidgrenMsg.Write(PlayerCraftsCount);
             for (var i = 0; i < PlayerCraftsCount; i++)
             {
-                PlayerCrafts[i].Serialize(lidgrenMsg, dataCompressed);
+                PlayerCrafts[i].Serialize(lidgrenMsg, compressData);
             }
         }
 

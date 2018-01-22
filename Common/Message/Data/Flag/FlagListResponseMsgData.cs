@@ -14,14 +14,14 @@ namespace LunaCommon.Message.Data.Flag
 
         public override string ClassName { get; } = nameof(FlagListResponseMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
-            base.InternalSerialize(lidgrenMsg, dataCompressed);
+            base.InternalSerialize(lidgrenMsg, compressData);
 
             lidgrenMsg.Write(FlagCount);
             for (var i = 0; i < FlagCount; i++)
             {
-                FlagFiles[i].Serialize(lidgrenMsg, dataCompressed);
+                FlagFiles[i].Serialize(lidgrenMsg, compressData);
             }
         }
 

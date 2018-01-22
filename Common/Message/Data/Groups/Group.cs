@@ -32,7 +32,7 @@ namespace LunaCommon.Message.Data.Groups
             return null;
         }
         
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
         {
             lidgrenMsg.Write(Name);
             lidgrenMsg.Write(Owner);
