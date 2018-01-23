@@ -7,28 +7,29 @@ namespace LunaCommon.Time
 {
     internal static class TimeRetrieverNtp
     {
-        internal static DateTime GetNtpTime(string server, bool getAsLocalTime)
+        private const int DaysTo1900 = 1900 * 365 + 95; // 95 = offset for leap-years etc.
+        private const long TicksTo1900 = DaysTo1900 * TimeSpan.TicksPerDay;
+
+        private const byte NtpDataLength = 48;
+        private static byte[] _ntpData = new byte[NtpDataLength];
+        private static IPEndPoint _serverAddress;
+
+        internal static DateTime GetNtpTime(string server)
         {
-            const int daysTo1900 = 1900 * 365 + 95; // 95 = offset for leap-years etc.
-            const long ticksTo1900 = daysTo1900 * TimeSpan.TicksPerDay;
+            InitializeStructure();
 
-            var ntpData = new byte[48];
-            ntpData[0] = 0x1B; // LeapIndicator = 0 (no warning), VersionNum = 3 (IPv4 only), Mode = 3 (Client Mode)
-
-            var addresses = Dns.GetHostEntry(server).AddressList;
-            var ipEndPoint = new IPEndPoint(addresses[0], 123);
+            _serverAddress = new IPEndPoint(Dns.GetHostEntry(server).AddressList[0], 123);
 
             // ReSharper disable once RedundantAssignment
             var pingDuration = Stopwatch.GetTimestamp(); // temp access (JIT-Compiler need some time at first call)
 
-            using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp))
+            using (var socket = new UdpClient())
             {
-                socket.Connect(ipEndPoint);
-                socket.ReceiveTimeout = 5000;
-                socket.Send(ntpData);
-                pingDuration = Stopwatch.GetTimestamp(); // after Send-Method to reduce WinSocket API-Call time
+                socket.Connect(_serverAddress);
+                socket.Send(_ntpData, _ntpData.Length);
 
-                socket.Receive(ntpData);
+                pingDuration = Stopwatch.GetTimestamp(); // after Send-Method to reduce WinSocket API-Call time
+                _ntpData = socket.Receive(ref _serverAddress);
                 pingDuration = Stopwatch.GetTimestamp() - pingDuration;
             }
 
@@ -37,14 +38,19 @@ namespace LunaCommon.Time
             // optional: display response-time
             // Console.WriteLine("{0:N2} ms", new TimeSpan(pingTicks).TotalMilliseconds);
 
-            var intPart = (long)ntpData[40] << 24 | (long)ntpData[41] << 16 | (long)ntpData[42] << 8 | ntpData[43];
-            var fractPart = (long)ntpData[44] << 24 | (long)ntpData[45] << 16 | (long)ntpData[46] << 8 | ntpData[47];
+            var intPart = (long)_ntpData[40] << 24 | (long)_ntpData[41] << 16 | (long)_ntpData[42] << 8 | _ntpData[43];
+            var fractPart = (long)_ntpData[44] << 24 | (long)_ntpData[45] << 16 | (long)_ntpData[46] << 8 | _ntpData[47];
             var netTicks = intPart * TimeSpan.TicksPerSecond + (fractPart * TimeSpan.TicksPerSecond >> 32);
 
-            var networkDateTime = new DateTime(ticksTo1900 + netTicks + pingTicks / 2);
+            var networkDateTime = new DateTime(TicksTo1900 + netTicks + pingTicks / 2);
+            
+            return networkDateTime;
+        }
 
-            // without ToLocalTime() = faster
-            return getAsLocalTime ? networkDateTime.ToLocalTime() : networkDateTime;
+        private static void InitializeStructure()
+        {
+            _ntpData[0] = 0x1B; // LeapIndicator = 0 (no warning), VersionNum = 3 (IPv4 only), Mode = 3 (Client Mode)
+            for (var i = 1; i < 48; i++) _ntpData[i] = 0;
         }
     }
 }

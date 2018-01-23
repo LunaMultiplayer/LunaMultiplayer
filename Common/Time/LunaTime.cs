@@ -48,11 +48,11 @@ namespace LunaCommon.Time
                     //We OWN the mutex!
                     try
                     {
-                        var nistTime = TimeRetriever.GetTime(TimeProvider.Nist);
+                        var nistTime = TimeRetriever.GetTime(TimeProvider.Google);
                         if (nistTime != null)
                             TimeDifference = DateTime.UtcNow - nistTime.Value;
                     }
-                    catch (Exception)
+                    catch (Exception e)
                     {
                         // ignored
                     }

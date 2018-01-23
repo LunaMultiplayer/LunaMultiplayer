@@ -23,7 +23,7 @@ namespace LunaCommon.Time
         /// <summary>
         /// Retrieves the date time from specified provider and defend against flooding
         /// </summary>
-        internal static DateTime? GetTime(TimeProvider provider, bool getAsLocalTime = false)
+        internal static DateTime? GetTime(TimeProvider provider)
         {            
             //Max requests are every 4 seconds
             if (!CanRequestTime(provider))
@@ -33,13 +33,16 @@ namespace LunaCommon.Time
             switch (provider)
             {
                 case TimeProvider.Nist:
-                    dateTime = TimeRetrieverNist.GetNistTime();
+                    dateTime = TimeRetrieverNtp.GetNtpTime("time-a.nist.gov");
                     break;
                 case TimeProvider.Microsoft:
-                    dateTime = TimeRetrieverNtp.GetNtpTime("time.windows.com", getAsLocalTime);
+                    dateTime = TimeRetrieverNtp.GetNtpTime("time.windows.com");
+                    break;
+                case TimeProvider.Google:
+                    dateTime = TimeRetrieverNtp.GetNtpTime("time.google.com");
                     break;
                 case TimeProvider.NtpOrg:
-                    dateTime = TimeRetrieverNtp.GetNtpTime("pool.ntp.org", getAsLocalTime);
+                    dateTime = TimeRetrieverNtp.GetNtpTime("pool.ntp.org");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(provider), provider, null);

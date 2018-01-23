@@ -4,6 +4,7 @@
     {
         Nist,
         Microsoft,
+        Google,
         NtpOrg
     }
 }
