@@ -18,7 +18,6 @@ namespace LunaCommon.Message.Data.Vessel
         public bool Landed;
         public bool Splashed;
         public bool Persistent;
-        public bool Controllable;
         public string LandedAt;
         public string DisplayLandedAt;
         public double MissionTime;
@@ -42,7 +41,6 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(Landed);
             lidgrenMsg.Write(Splashed);
             lidgrenMsg.Write(Persistent);
-            lidgrenMsg.Write(Controllable);
             lidgrenMsg.Write(LandedAt);
             lidgrenMsg.Write(DisplayLandedAt);
             lidgrenMsg.Write(MissionTime);
@@ -66,7 +64,6 @@ namespace LunaCommon.Message.Data.Vessel
             Landed = lidgrenMsg.ReadBoolean();
             Splashed = lidgrenMsg.ReadBoolean();
             Persistent = lidgrenMsg.ReadBoolean();
-            Controllable = lidgrenMsg.ReadBoolean();
             LandedAt = lidgrenMsg.ReadString();
             DisplayLandedAt = lidgrenMsg.ReadString();
             MissionTime = lidgrenMsg.ReadDouble();
@@ -94,7 +91,7 @@ namespace LunaCommon.Message.Data.Vessel
             }
 
             return base.InternalGetMessageSize(dataCompressed) + GuidUtil.GetByteSize() 
-                + sizeof(double) * 3 + sizeof(bool) * 4 + sizeof(uint) 
+                + sizeof(double) * 3 + sizeof(bool) * 3 + sizeof(uint) 
                 + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount() + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() +
                 + arraySize;
         }

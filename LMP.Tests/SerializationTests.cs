@@ -73,7 +73,6 @@ namespace LMP.Tests
             msgData.LastUt = Rnd.NextDouble();
             msgData.Persistent = false;
             msgData.RefTransformId = (uint)Rnd.Next();
-            msgData.Controllable = true;
 
             for (var i = 0; i < 17; i++)
             {

@@ -177,10 +177,7 @@ namespace Server.System
 
             regex = new Regex("(?<prefix>ref = )(.*)\n");
             fullText = regex.Replace(fullText, "${prefix}" + msgData.RefTransformId.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
-
-            regex = new Regex("(?<prefix>ctrl = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Controllable.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
-
+            
             foreach (var actionGroup in msgData.ActionGroups)
             {
                 regex = new Regex($"(?<prefix>{actionGroup.ActionGroupName} = )(.*)\n");

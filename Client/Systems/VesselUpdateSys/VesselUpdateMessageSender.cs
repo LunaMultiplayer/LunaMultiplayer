@@ -30,7 +30,6 @@ namespace LunaClient.Systems.VesselUpdateSys
             msgData.LastUt = vessel.lastUT;
             msgData.Persistent = vessel.isPersistent;
             msgData.RefTransformId = vessel.referenceTransformId;
-            msgData.Controllable = vessel.IsControllable;
 
             for (var i = 0; i < 17; i++)
             {

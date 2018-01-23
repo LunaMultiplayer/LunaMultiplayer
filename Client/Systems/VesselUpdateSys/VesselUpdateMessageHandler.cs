@@ -5,14 +5,11 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
-using System.Reflection;
 
 namespace LunaClient.Systems.VesselUpdateSys
 {
     public class VesselUpdateMessageHandler : SubSystem<VesselUpdateSystem>, IMessageHandler
     {
-        private static readonly FieldInfo ControllableField = typeof(Vessel).GetField("isControllable", BindingFlags.Instance | BindingFlags.NonPublic);
-
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
         public void HandleMessage(IServerMessageBase msg)
@@ -41,11 +38,6 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.lastUT = msgData.LastUt;
             vessel.isPersistent = msgData.Persistent;
             vessel.referenceTransformId = msgData.RefTransformId;
-            if (vessel.IsControllable != msgData.Controllable)
-            {
-                ControllableField.SetValue(vessel, msgData.Controllable);
-                vessel.protoVessel.wasControllable = vessel.IsControllable;
-            }
         }
 
         private static void UpdateActionGroups(Vessel vessel, VesselUpdateMsgData msgData)
@@ -81,11 +73,6 @@ namespace LunaClient.Systems.VesselUpdateSys
                 vessel.protoVessel.lastUT = vessel.lastUT;
                 vessel.protoVessel.persistent = vessel.isPersistent;
                 vessel.protoVessel.refTransform = vessel.referenceTransformId;
-
-                if (vessel.IsControllable != msgData.Controllable)
-                {
-                    vessel.protoVessel.wasControllable = vessel.IsControllable;
-                }
 
                 //TODO: Do we need to update the protovessel action group values aswell?
             }
