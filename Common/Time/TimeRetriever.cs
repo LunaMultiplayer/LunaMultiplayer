@@ -12,6 +12,7 @@ namespace LunaCommon.Time
         {
             [TimeProvider.Nist] = DateTime.MinValue,
             [TimeProvider.Microsoft] = DateTime.MinValue,
+            [TimeProvider.Google] = DateTime.MinValue,
             [TimeProvider.NtpOrg] = DateTime.MinValue,
         };
 

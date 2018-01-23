@@ -112,6 +112,7 @@ namespace Server
             }
 #if DEBUG
             DebugSettings.Singleton.Load();
+            LunaTime.SimulatedMsTimeOffset = DebugSettings.SettingsStore.SimulatedMsTimeOffset;
 #endif
         }
 

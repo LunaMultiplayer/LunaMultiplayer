@@ -7,6 +7,7 @@ using LunaClient.Systems.Toolbar;
 using LunaClient.Windows.Status;
 using LunaClient.Windows.UniverseConverter;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 using UnityEngine;
 
@@ -137,6 +138,8 @@ namespace LunaClient.Windows.Options
             ShowBadNetworkSimulationFields = GUILayout.Toggle(ShowBadNetworkSimulationFields, "Bad network simulation", ButtonStyle);
             if (ShowBadNetworkSimulationFields)
             {
+                GUILayout.Label($"NTP time offset: {LunaTime.SimulatedMsTimeOffset:F1}ms");
+                LunaTime.SimulatedMsTimeOffset = (float)Math.Round(GUILayout.HorizontalScrollbar(LunaTime.SimulatedMsTimeOffset, 0, -2500, 2500), 3);
                 if (MainSystem.NetworkState > ClientState.Disconnected)
                 {
                     GUILayout.Label("Cannot change values while connected");

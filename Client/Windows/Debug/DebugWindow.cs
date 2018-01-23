@@ -80,7 +80,8 @@ namespace LunaClient.Windows.Debug
 
                 if (DisplayConnectionQueue)
                 {
-                    StringBuilder.AppendLine($"NIST time diference: {LunaTime.TimeDifference.TotalMilliseconds}ms.");
+                    StringBuilder.AppendLine($"NTP time diference: {LunaTime.TimeDifference.TotalMilliseconds}ms.");
+                    StringBuilder.AppendLine($"NTP + simulated time diference: {LunaTime.TimeDifference.TotalMilliseconds + LunaTime.SimulatedMsTimeOffset}ms.");
                     StringBuilder.AppendLine($"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.");
                     StringBuilder.AppendLine($"Latency: {NetworkStatistics.GetStatistics("Latency")}s.");
                     StringBuilder.AppendLine($"TimeOffset: {TimeSpan.FromTicks(NetworkStatistics.GetStatistics("TimeOffset")).TotalMilliseconds}ms.");

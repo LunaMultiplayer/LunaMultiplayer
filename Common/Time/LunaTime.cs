@@ -13,6 +13,7 @@ namespace LunaCommon.Time
         /// </summary>
         public static DateTime Now => UtcNow.ToLocalTime();
         public static TimeSpan TimeDifference { get; private set; } = TimeSpan.Zero;
+        public static float SimulatedMsTimeOffset { get; set; } = 0;
 
         private static readonly Timer Timer;
 
@@ -32,11 +33,11 @@ namespace LunaCommon.Time
         /// <summary>
         /// Get correctly sync UTC time from internet
         /// </summary>
-        public static DateTime UtcNow => DateTime.UtcNow - TimeDifference;
+        public static DateTime UtcNow => DateTime.UtcNow - TimeDifference - TimeSpan.FromMilliseconds(SimulatedMsTimeOffset);
 
         /// <summary>
         /// Here we refresh the time difference between our OS clock and the time providers clock.
-        /// We use a mutex at OS level to prevent flooding the NIST server and getting kicked
+        /// We use a mutex at OS level to prevent flooding the NTP server and getting kicked
         /// </summary>
         private static void RefreshTimeDifference()
         {
@@ -48,9 +49,9 @@ namespace LunaCommon.Time
                     //We OWN the mutex!
                     try
                     {
-                        var nistTime = TimeRetriever.GetTime(TimeProvider.Google);
-                        if (nistTime != null)
-                            TimeDifference = DateTime.UtcNow - nistTime.Value;
+                        var ntpTime = TimeRetriever.GetTime(TimeProvider.Google);
+                        if (ntpTime != null)
+                            TimeDifference = DateTime.UtcNow - ntpTime.Value;
                     }
                     catch (Exception e)
                     {
