@@ -33,7 +33,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public void SendVesselMessage(Vessel vessel, bool force)
         {
-            if (vessel == null)
+            if (vessel == null || VesselCommon.IsSpectating)
                 return;
 
             var vesselHasChanges = VesselProtoRefresh.RefreshVesselProto(vessel);
@@ -48,7 +48,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private void SendVesselMessage(ProtoVessel protoVessel)
         {
-            if (protoVessel == null) return;
+            if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
             TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
         }
 
