@@ -49,14 +49,14 @@ namespace Server
 
                 //Set day for log change
                 ServerContext.Day = LunaTime.Now.Day;
-                
+
                 LunaLog.Normal($"Starting Luna Server version: {LmpVersioning.CurrentVersion}");
 
                 Universe.CheckUniverse();
+                LoadSettingsAndGroups();
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
                 ChatSystem.Reset();
-                LoadSettingsAndGroups();
 
                 LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
 
