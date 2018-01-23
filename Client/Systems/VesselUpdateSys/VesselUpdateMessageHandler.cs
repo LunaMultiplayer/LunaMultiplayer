@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
@@ -42,6 +43,13 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             for (var i = 0; i < 17; i++)
             {
+                //Ignore SAS if we are spectating as it will fight with the FI
+                if ((KSPActionGroup) (1 << (i & 31)) == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == vessel.id)
+                {
+                    vessel.ActionGroups.groups[i] = false;
+                    continue;
+                }
+
                 vessel.ActionGroups.groups[i] = msgData.ActionGroups[i].State;
                 vessel.ActionGroups.cooldownTimes[i] = msgData.ActionGroups[i].Time;
             }

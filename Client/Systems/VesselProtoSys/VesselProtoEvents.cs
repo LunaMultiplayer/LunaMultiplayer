@@ -17,11 +17,12 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Called when a vessel is modified. We use it to update our own proto dictionary 
         /// and reflect changes so we don't have to call the "backupvessel" so often
+        /// We should not send out own vessel data using this event as this is handled in a routine
         /// </summary>
         public void VesselModified(Vessel data)
         {
             //Perhaps we are shooting stuff at other uncontrolled vessel...
-            if (!LockSystem.LockQuery.ControlLockExists(data.id))
+            if (data.id != FlightGlobals.ActiveVessel?.id && !LockSystem.LockQuery.UpdateLockExists(data.id))
             {
                 System.MessageSender.SendVesselMessage(data, false);
 

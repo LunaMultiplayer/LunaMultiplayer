@@ -34,7 +34,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private static void FillSubspaceDisplayEntriesNoneSubspace()
         {
-            if (SubspaceEntries.Count != 1 || System.ClientSubspaceList.Keys.Count + 1 != SubspaceEntries[0].Players.Count)
+            if (SubspaceEntries.Count != 1 || System.ClientSubspaceList.Keys.Count != SubspaceEntries[0].Players.Count)
             {
                 SubspaceEntries.Clear();
 
@@ -94,6 +94,8 @@ namespace LunaClient.Systems.Warp
         {
             //We add 1 as subspace always contain the -1 subspace
             if (SubspaceEntries.Count + 1 != System.Subspaces.Count)
+                return true;
+            if (SubspaceEntries.Sum(s => s.Players.Count) != System.ClientSubspaceList.Keys.Count)
                 return true;
 
             for (var i = 0; i < SubspaceEntries.Count; i++)
