@@ -22,9 +22,16 @@ namespace LunaClient.Systems.VesselUpdateSys
             var vessel = FlightGlobals.FindVessel(msgData.VesselId);
             if (vessel == null) return;
             
+            UpdateVesselFields(vessel, msgData);
+            UpdateActionGroups(vessel, msgData);
+            UpdateProtoVesselValues(vessel, msgData);
+        }
+
+        private static void UpdateVesselFields(Vessel vessel, VesselUpdateMsgData msgData)
+        {
             vessel.vesselName = msgData.Name;
-            vessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), msgData.Type);
-            vessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
+            vessel.vesselType = (VesselType) Enum.Parse(typeof(VesselType), msgData.Type);
+            vessel.situation = (Vessel.Situations) Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
             vessel.Landed = msgData.Landed;
             vessel.landedAt = msgData.LandedAt;
             vessel.displaylandedAt = msgData.DisplayLandedAt;
@@ -34,17 +41,20 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.lastUT = msgData.LastUt;
             vessel.isPersistent = msgData.Persistent;
             vessel.referenceTransformId = msgData.RefTransformId;
-
             if (vessel.IsControllable != msgData.Controllable)
             {
                 ControllableField.SetValue(vessel, msgData.Controllable);
                 vessel.protoVessel.wasControllable = vessel.IsControllable;
             }
+        }
 
+        private static void UpdateActionGroups(Vessel vessel, VesselUpdateMsgData msgData)
+        {
             for (var i = 0; i < 17; i++)
             {
                 //Ignore SAS if we are spectating as it will fight with the FI
-                if ((KSPActionGroup) (1 << (i & 31)) == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
+                if ((KSPActionGroup) (1 << (i & 31)) == KSPActionGroup.SAS && VesselCommon.IsSpectating &&
+                    FlightGlobals.ActiveVessel?.id == vessel.id)
                 {
                     vessel.ActionGroups.groups[i] = false;
                     continue;
@@ -53,7 +63,10 @@ namespace LunaClient.Systems.VesselUpdateSys
                 vessel.ActionGroups.groups[i] = msgData.ActionGroups[i].State;
                 vessel.ActionGroups.cooldownTimes[i] = msgData.ActionGroups[i].Time;
             }
+        }
 
+        private static void UpdateProtoVesselValues(Vessel vessel, VesselUpdateMsgData msgData)
+        {
             if (vessel.protoVessel != null)
             {
                 vessel.protoVessel.vesselName = vessel.name;
