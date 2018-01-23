@@ -92,12 +92,13 @@ namespace LunaClient.Systems.Warp
 
         private static bool PlayersInSubspacesHaveChanged()
         {
-            if (SubspaceEntries.Count != System.Subspaces.Count)
+            //We add 1 as subspace always contain the -1 subspace
+            if (SubspaceEntries.Count + 1 != System.Subspaces.Count)
                 return true;
 
             for (var i = 0; i < SubspaceEntries.Count; i++)
             {
-                for (var j = 0; j < SubspaceEntries[i].Players.Count; i++)
+                for (var j = 0; j < SubspaceEntries[i].Players.Count; j++)
                 {
                     var player = SubspaceEntries[i].Players[j];
                     var expectedSubspace = SubspaceEntries[i].SubspaceId;
