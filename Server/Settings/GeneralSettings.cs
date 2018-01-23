@@ -1,10 +1,11 @@
 using Server.Context;
 using Server.Settings.Definition;
+using System;
 using System.IO;
 
 namespace Server.Settings
 {
-    public class GeneralSettings: SettingsBase<SettingsDefinition>
+    public class GeneralSettings: SettingsBase
     {
         protected override string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, "Settings.txt");
 
@@ -13,6 +14,8 @@ namespace Server.Settings
             get => SettingsStore;
             set => SettingsStore = value as SettingsDefinition;
         }
+
+        protected override Type SettingsHolderType => typeof(SettingsDefinition);
 
         public static SettingsDefinition SettingsStore { get; private set; }
 

@@ -53,7 +53,7 @@ namespace LunaCommon.Time
                         if (ntpTime != null)
                             TimeDifference = DateTime.UtcNow - ntpTime.Value;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         // ignored
                     }
