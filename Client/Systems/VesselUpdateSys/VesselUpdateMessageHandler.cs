@@ -44,7 +44,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             for (var i = 0; i < 17; i++)
             {
                 //Ignore SAS if we are spectating as it will fight with the FI
-                if ((KSPActionGroup) (1 << (i & 31)) == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == vessel.id)
+                if ((KSPActionGroup) (1 << (i & 31)) == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
                 {
                     vessel.ActionGroups.groups[i] = false;
                     continue;
