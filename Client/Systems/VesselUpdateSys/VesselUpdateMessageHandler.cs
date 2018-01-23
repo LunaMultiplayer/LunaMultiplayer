@@ -17,7 +17,7 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public void HandleMessage(IServerMessageBase msg)
         {
-            if (!(msg.Data is VesselUpdateMsgData msgData)) return;
+            if (!(msg.Data is VesselUpdateMsgData msgData) || !System.UpdateSystemReady) return;
 
             var vessel = FlightGlobals.FindVessel(msgData.VesselId);
             if (vessel == null) return;
