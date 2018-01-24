@@ -264,7 +264,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.SyncingVessels:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing vessels";
-                    if (ConnectionIsStuck(20000))
+                    if (ConnectionIsStuck(60000))
                         MainSystem.NetworkState = ClientState.GroupsSynced;
                     break;
                 case ClientState.VesselsSynced:
