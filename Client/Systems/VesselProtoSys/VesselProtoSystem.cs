@@ -159,9 +159,10 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
-                HighLogic.CurrentGame.flightState.protoVessels.Clear();
-                var protoVessels = VesselsProtoStore.AllPlayerVessels.Values.Where(v => v.ShouldBeLoaded).Select(v => v.ProtoVessel);
-                HighLogic.CurrentGame.flightState.protoVessels.AddRange(protoVessels);
+                var currentVesselIds = HighLogic.CurrentGame.flightState.protoVessels.Select(v => v.vesselID);
+                var missingVessels = VesselsProtoStore.AllPlayerVessels.Values
+                    .Where(p => !currentVesselIds.Contains(p.VesselId)).Select(v => v.ProtoVessel);
+                HighLogic.CurrentGame.flightState.protoVessels.AddRange(missingVessels);
             }
         }
 
