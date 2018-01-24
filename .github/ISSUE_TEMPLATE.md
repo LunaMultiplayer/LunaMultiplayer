@@ -6,6 +6,9 @@ In case you are using a nighly build of LMP from appveyor include the build numb
 For example: 0.0.9.**384**
 Otherwise, specify the version of LMP you are using from the github releases.
 
+**If you have access to the server. Please zip the whole "Universe" and "Config" folder.
+Also if you are running mods in the server, attach the "LMPModControl.txt"**
+
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
 ------------------------------------------------------------------------------
