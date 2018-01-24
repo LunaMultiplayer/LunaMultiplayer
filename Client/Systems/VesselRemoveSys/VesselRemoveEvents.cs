@@ -14,8 +14,9 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void OnVesselWillDestroy(Vessel dyingVessel)
         {
-            //Only remove the vessel if we own the update lock
-            if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            //Only send the vessel remove msg if we own the unloaded update lock
+            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName) ||
+                !LockSystem.LockQuery.UnloadedUpdateLockExists(dyingVessel.id))
             {
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
                 SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(dyingVessel);

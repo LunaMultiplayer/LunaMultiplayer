@@ -110,7 +110,7 @@ namespace LunaClient.Systems.VesselLockSys
                 var vesselIdsWithUpdateLocks = GetVesselIdsWeCurrentlyUpdate();
                 foreach (var vesselId in vesselIdsWithUpdateLocks)
                 {
-                    //For all the vessels we are updating we FORCE the unloaded update lock if we don't have it.
+                    //For all the vessels we HAVE the update lock, we FORCE the UNLOADED update lock if we don't have it.
                     if (!LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                         SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vesselId, true);
                 }

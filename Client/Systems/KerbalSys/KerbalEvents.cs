@@ -39,7 +39,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (previousStatus != newStatus)
             {
-                if (kerbal?.seat?.vessel == null || LockSystem.LockQuery.UpdateLockBelongsToPlayer(kerbal.seat.vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                if (kerbal?.seat?.vessel == null || LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(kerbal.seat.vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 {
                     System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
                     System.MessageSender.SendKerbal(kerbal);

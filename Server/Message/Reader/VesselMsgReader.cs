@@ -55,12 +55,7 @@ namespace Server.Message.Reader
         private static void HandleVesselRemove(ClientStructure client, VesselBaseMsgData message)
         {
             var data = (VesselRemoveMsgData)message;
-
-            if (!LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(data.VesselId, client.PlayerName) &&
-                !LockSystem.LockQuery.UpdateLockBelongsToPlayer(data.VesselId, client.PlayerName))
-                return;
-
-            //Don't care about the Subspace on the server.
+            
             LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
 
             Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt"));
