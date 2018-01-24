@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -14,8 +15,15 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             if (!(msg.Data is VesselRemoveMsgData msgData)) return;
 
+            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == msgData.VesselId)
+                return;
+
             LunaLog.Log($"[LMP]: Received a vessel remove message. Removing vessel: {msgData.VesselId}");
-            System.AddToKillList(msgData.VesselId);
+
+            if (msgData.AddToKillList)
+                System.AddToKillList(msgData.VesselId);
+            else //Do a simple kill and accept future updates of that vessel instead of just ignoring them
+                System.KillVessel(msgData.VesselId);
         }
     }
 }

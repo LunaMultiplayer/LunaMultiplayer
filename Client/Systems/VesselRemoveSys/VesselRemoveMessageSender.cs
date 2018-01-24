@@ -16,14 +16,14 @@ namespace LunaClient.Systems.VesselRemoveSys
         }
 
         /// <summary>
-        /// Sends a vessel remove to the server, it will then broadcast this message to the OTHER clients.
-        /// If you set broadcast to true the server will broadcast the msg to ALL the clients.
+        /// Sends a vessel remove to the server
         /// </summary>
-        public void SendVesselRemove(Guid vesselId, bool broadcast = false)
+        public void SendVesselRemove(Guid vesselId, bool keepVesselInRemoveList = true)
         {
             LunaLog.Log($"[LMP]: Removing {vesselId} from the server");
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselRemoveMsgData>();
             msgData.VesselId = vesselId;
+            msgData.AddToKillList = true;
 
             SendMessage(msgData);
         }

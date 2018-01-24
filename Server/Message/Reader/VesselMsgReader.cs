@@ -59,7 +59,9 @@ namespace Server.Message.Reader
             LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
 
             Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt"));
-            VesselContext.RemovedVessels.Add(data.VesselId);
+
+            if (data.AddToKillList)
+                VesselContext.RemovedVessels.Add(data.VesselId);
 
             //Relay the message.
             MessageQueuer.SendToAllClients<VesselSrvMsg>(data);
