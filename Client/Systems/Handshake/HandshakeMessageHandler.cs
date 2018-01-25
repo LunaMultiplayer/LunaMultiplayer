@@ -68,7 +68,7 @@ namespace LunaClient.Systems.Handshake
             {
                 case HandshakeReply.HandshookSuccessfully:
 
-                    if (ModFileParser.ParseModFile(modFileData))
+                    if (ModFileHandler.ParseModFile(modFileData))
                     {
                         LunaLog.Log("[LMP]: Handshake successful");
                         MainSystem.NetworkState = ClientState.Authenticated;
