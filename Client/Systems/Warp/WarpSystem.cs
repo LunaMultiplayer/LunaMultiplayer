@@ -4,6 +4,7 @@ using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System.Collections.Concurrent;
+using System.Threading;
 using UniLinq;
 
 namespace LunaClient.Systems.Warp
@@ -100,11 +101,14 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private void CheckWarpStopped()
         {
-            if (TimeWarp.CurrentRateIndex == 0 && CurrentSubspace == -1)
+            if (TimeWarp.CurrentRateIndex == 0 && CurrentSubspace == -1 && !WaitingSubspaceIdFromServer)
             {
-                //We stopped warping so send our new subspace
-                WaitingSubspaceIdFromServer = true;
-                MessageSender.SendNewSubspace();
+                TaskFactory.StartNew(() =>
+                {
+                    WaitingSubspaceIdFromServer = true;
+                    Thread.Sleep(3000);
+                    MessageSender.SendNewSubspace();
+                });
             }
         }
 
