@@ -157,11 +157,11 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private void CheckVesselsToLoadReloadWhileNotInFlight()
         {
-            if (Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene == GameScenes.SPACECENTER)
+            if (Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene == GameScenes.SPACECENTER && HighLogic.CurrentGame?.flightState?.protoVessels != null)
             {
-                var currentVesselIds = HighLogic.CurrentGame.flightState.protoVessels.Select(v => v.vesselID);
-                var missingVessels = VesselsProtoStore.AllPlayerVessels.Values
-                    .Where(p => !currentVesselIds.Contains(p.VesselId)).Select(v => v.ProtoVessel);
+                var currentVesselIds = HighLogic.CurrentGame?.flightState?.protoVessels?.Select(v => v.vesselID);
+                var missingVessels = VesselsProtoStore.AllPlayerVessels.Values.Where(p => !currentVesselIds.Contains(p.VesselId) && p.ProtoVessel != null)
+                    .Select(v => v.ProtoVessel);
                 HighLogic.CurrentGame.flightState.protoVessels.AddRange(missingVessels);
             }
         }
@@ -199,7 +199,7 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         private List<Guid> VesselsToReload { get; } = new List<Guid>();
-        
+
         /// <summary>
         /// Check vessels that must be reloaded
         /// </summary>
@@ -243,7 +243,7 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         #endregion
-        
+
         #region Private
 
         private static string GetInvalidVesselParts(Vessel checkVessel)
