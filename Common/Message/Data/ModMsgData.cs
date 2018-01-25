@@ -31,7 +31,7 @@ namespace LunaCommon.Message.Data
         /// <summary>
         /// Data to send
         /// </summary>
-        public byte[] Data;
+        public byte[] Data = new byte[0];
 
         public override string ClassName { get; } = nameof(ModMsgData);
 
