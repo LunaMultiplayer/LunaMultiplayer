@@ -1,7 +1,7 @@
 ﻿using Server.Log;
 using Server.Utilities;
 using System;
-using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -13,13 +13,18 @@ namespace Server.System
     public class FileHandler
     {
         /// <summary>
-        ///     This dictionary is for retrieving the correct lock based on the path of the file/folder
+        /// This object is used for accesing the lock semaphore dictionary as only 1 thread is allowed there
         /// </summary>
-        private static readonly ConcurrentDictionary<string, object> LockSemaphore =
-            new ConcurrentDictionary<string, object>();
+        private static readonly object SemaphoreLock = new object();
 
         /// <summary>
-        ///     Thread safe method to append text
+        /// This dictionary is for retrieving the correct lock based on the path of the file/folder
+        /// </summary>
+        private static readonly Dictionary<string, object> LockSemaphore =
+            new Dictionary<string, object>();
+
+        /// <summary>
+        /// Thread safe method to append text
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <param name="text">Text to insert</param>
@@ -252,17 +257,20 @@ namespace Server.System
         /// <returns></returns>
         private static object GetLockSemaphore(string path)
         {
-            var realPath = Path.HasExtension(path) ? Path.GetDirectoryName(path) : path;
-            if (!string.IsNullOrEmpty(realPath))
+            lock (SemaphoreLock)
             {
-                if (!LockSemaphore.TryGetValue(realPath, out var semaphore))
+                var realPath = Path.HasExtension(path) ? Path.GetDirectoryName(path) : path;
+                if (!string.IsNullOrEmpty(realPath))
                 {
-                    semaphore = new object();
-                    LockSemaphore.TryAdd(realPath, semaphore);
+                    if (!LockSemaphore.TryGetValue(realPath, out var semaphore))
+                    {
+                        semaphore = new object();
+                        LockSemaphore.Add(realPath, semaphore);
+                    }
+                    return semaphore;
                 }
-                return semaphore;
+                throw new HandledException($"Bad folder/file path ({path})");
             }
-            throw new HandledException($"Bad folder/file path ({path})");
         }
     }
 }
