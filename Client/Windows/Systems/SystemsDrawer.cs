@@ -49,12 +49,12 @@ namespace LunaClient.Windows.Systems
 
         private void PrintSystemButtons()
         {
-            Asteroid = GUILayout.Toggle(Asteroid, "Asteroid system", ButtonStyle);
-            if (Asteroid)
-            {
-                //This system should never be toggled
-                //SystemContainer.Get<AsteroidSystem>().Enabled = GUILayout.Toggle(SystemContainer.Get<AsteroidSystem>().Enabled, "ON/OFF", ButtonStyle);
-            }
+            //Asteroid = GUILayout.Toggle(Asteroid, "Asteroid system", ButtonStyle);
+            //if (Asteroid)
+            //{
+            //    //This system should never be toggled
+            //    //SystemContainer.Get<AsteroidSystem>().Enabled = GUILayout.Toggle(SystemContainer.Get<AsteroidSystem>().Enabled, "ON/OFF", ButtonStyle);
+            //}
             CraftLibrary = GUILayout.Toggle(CraftLibrary, "Craft library system", ButtonStyle);
             if (CraftLibrary)
             {
@@ -95,12 +95,12 @@ namespace LunaClient.Windows.Systems
             {
                 SystemsContainer.Get<ModSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<ModSystem>().Enabled, "ON/OFF", ButtonStyle);
             }
-            ModApi = GUILayout.Toggle(ModApi, "Mod api system", ButtonStyle);
-            if (ModApi)
-            {
-                //This system cannot be toggled
-                //SystemContainer.Get<ModApiSystem>().Enabled = GUILayout.Toggle(SystemContainer.Get<ModApiSystem>().Enabled, "ON/OFF", ButtonStyle);
-            }
+            //ModApi = GUILayout.Toggle(ModApi, "Mod api system", ButtonStyle);
+            //if (ModApi)
+            //{
+            //    //This system cannot be toggled
+            //    //SystemContainer.Get<ModApiSystem>().Enabled = GUILayout.Toggle(SystemContainer.Get<ModApiSystem>().Enabled, "ON/OFF", ButtonStyle);
+            //}
             PlayerColor = GUILayout.Toggle(PlayerColor, "Player color system", ButtonStyle);
             if (PlayerColor)
             {
