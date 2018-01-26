@@ -3,6 +3,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using UniLinq;
@@ -53,6 +54,7 @@ namespace LunaClient.Systems.Warp
         public bool SkipSubspaceProcess { get; set; }
         public bool WaitingSubspaceIdFromServer { get; set; }
         public bool SyncedToLastSubspace { get; set; }
+        private static DateTime StoppedWarpingTimeStamp { get; set; }
 
         #endregion
 
@@ -81,7 +83,10 @@ namespace LunaClient.Systems.Warp
             GameEvents.onTimeWarpRateChanged.Add(WarpEvents.OnTimeWarpChanged);
             GameEvents.onLevelWasLoadedGUIReady.Add(WarpEvents.OnSceneChanged);
             if (SettingsSystem.ServerSettings.WarpMode != WarpMode.None)
+            {
                 SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, CheckWarpStopped));
+                SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckStuckAtWarp));
+            }
 
             if (SettingsSystem.ServerSettings.WarpMode == WarpMode.Master &&
                 !string.IsNullOrEmpty(SettingsSystem.ServerSettings.WarpMaster) &&
@@ -97,18 +102,26 @@ namespace LunaClient.Systems.Warp
         #region Update methods
 
         /// <summary>
+        /// This routine checks if we are stuck at warping and if that's the case it request a new subspace again
+        /// </summary>
+        private void CheckStuckAtWarp()
+        {
+            if (CurrentSubspace == -1 && WaitingSubspaceIdFromServer && DateTime.Now - StoppedWarpingTimeStamp > TimeSpan.FromSeconds(15))
+            {
+                //We've waited for 15 seconds to get a subspace Id and the server didn't assigned one to us so send our subspace again...
+                StoppedWarpingTimeStamp = DateTime.Now;
+                RequestNewSubspace();
+            }
+        }
+
+        /// <summary>
         /// This routine checks if we stopped warping.
         /// </summary>
         private void CheckWarpStopped()
         {
             if (TimeWarp.CurrentRateIndex == 0 && CurrentSubspace == -1 && !WaitingSubspaceIdFromServer)
             {
-                TaskFactory.StartNew(() =>
-                {
-                    WaitingSubspaceIdFromServer = true;
-                    Thread.Sleep(3000);
-                    MessageSender.SendNewSubspace();
-                });
+                RequestNewSubspace();
             }
         }
 
@@ -222,6 +235,22 @@ namespace LunaClient.Systems.Warp
         {
             TimeWarp.fetch.WarpTo(CurrentSubspaceTime);
             ClockHandler.StepClock(CurrentSubspaceTime);
+        }
+
+
+        /// <summary>
+        /// Task that requests a new subspace to the server.
+        /// It has a sleep of 3 seconds to avoid errors like when you press "warp to next morning" or warp to a node
+        /// </summary>
+        private void RequestNewSubspace()
+        {
+            TaskFactory.StartNew(() =>
+            {
+                WaitingSubspaceIdFromServer = true;
+                Thread.Sleep(3000);
+                MessageSender.SendNewSubspace();
+                StoppedWarpingTimeStamp = DateTime.Now;
+            });
         }
 
         #endregion
