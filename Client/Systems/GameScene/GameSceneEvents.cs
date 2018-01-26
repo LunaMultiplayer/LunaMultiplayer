@@ -8,6 +8,8 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselStateSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Locks;
+using System.Collections;
+using UnityEngine;
 
 namespace LunaClient.Systems.GameScene
 {
@@ -56,10 +58,20 @@ namespace LunaClient.Systems.GameScene
                 //if that player goes to orbit, you will see the marker on the launchpad. This means that you 
                 //won't be able to launch without recovering it and if that player release the control lock,
                 //you will be recovering a valid vessel that is already in space.
-                FlightGlobals.Vessels.Clear();
-                HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-                KSCVesselMarkers.fetch.RefreshMarkers();
+                Client.Singleton.StartCoroutine(DelayedClearVessels());
             }
+        }
+
+        /// <summary>
+        /// This coroutine removes the vessels when switching to the KSC. We delay the removal of the vessels so 
+        /// in case we recover a vessel while in flight we correctly recover the crew, funds etc
+        /// </summary>
+        private static IEnumerator DelayedClearVessels()
+        {
+            yield return new WaitForSeconds(3f);
+            FlightGlobals.Vessels.Clear();
+            HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
+            KSCVesselMarkers.fetch.RefreshMarkers();
         }
         
         /// <summary>
