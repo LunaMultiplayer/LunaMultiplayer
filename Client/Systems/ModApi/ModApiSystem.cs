@@ -205,6 +205,7 @@ namespace LunaClient.Systems.ModApi
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ModMsgData>();
             msgData.Data = messageData;
+            msgData.NumBytes = messageData.Length;
             msgData.Relay = relay;
             msgData.ModName = modName;
 
