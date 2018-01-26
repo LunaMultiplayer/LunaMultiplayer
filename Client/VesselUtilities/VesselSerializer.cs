@@ -27,6 +27,12 @@ namespace LunaClient.VesselUtilities
 
         private static bool PreSerializationChecks(ProtoVessel protoVessel)
         {
+            if (protoVessel == null)
+            {
+                LunaLog.LogError("[LMP]: Cannot serialize a null protovessel");
+                return false;
+            }
+
             ConfigNode.ClearData();
             try
             {
