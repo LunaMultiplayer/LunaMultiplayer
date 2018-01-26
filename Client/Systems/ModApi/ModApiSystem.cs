@@ -1,6 +1,7 @@
 using LunaClient.Base;
 using LunaClient.Network;
 using LunaCommon.Message.Data;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
@@ -191,9 +192,21 @@ namespace LunaClient.Systems.ModApi
         ///     Sends a mod Message.
         /// </summary>
         /// <param name="modName">Mod Name</param>
-        /// <param name="messageData">The Message payload (MessageWriter can make this easier)</param>
+        /// <param name="messageData">The message payload</param>
         /// <param name="relay">If set to <c>true</c>, The server will relay the Message to all other authenticated clients</param>
         public void SendModMessage(string modName, byte[] messageData, bool relay)
+        {
+            SendModMessage(modName, messageData, messageData.Length, relay);
+        }
+
+        /// <summary>
+        ///     Sends a mod Message.
+        /// </summary>
+        /// <param name="modName">Mod Name</param>
+        /// <param name="messageData">The message payload</param>
+        /// <param name="numBytes">Number of bytes to take from the array</param>
+        /// <param name="relay">If set to <c>true</c>, The server will relay the Message to all other authenticated clients</param>
+        public void SendModMessage(string modName, byte[] messageData, int numBytes, bool relay)
         {
             if (modName == null)
                 return;
@@ -204,8 +217,13 @@ namespace LunaClient.Systems.ModApi
             }
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ModMsgData>();
-            msgData.Data = messageData;
-            msgData.NumBytes = messageData.Length;
+
+            if (msgData.Data.Length < numBytes)
+                msgData.Data = new byte[numBytes];
+
+            Array.Copy(messageData, msgData.Data, numBytes);
+
+            msgData.NumBytes = numBytes;
             msgData.Relay = relay;
             msgData.ModName = modName;
 
