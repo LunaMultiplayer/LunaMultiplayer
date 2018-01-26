@@ -226,7 +226,7 @@ namespace LunaClient.VesselUtilities
                 foreach (var pps in pv.protoPartSnapshots)
                 {
                     if (SystemsContainer.Get<ModSystem>().ModControl != ModControlMode.Disabled &&
-                        !SystemsContainer.Get<ModSystem>().AllowedParts.Contains(pps.partName.ToLower()))
+                        !SystemsContainer.Get<ModSystem>().AllowedParts.Contains(pps.partName))
                     {
                         var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the banned " +
                                   $"part '{pps.partName}'!. Skipping load.";
