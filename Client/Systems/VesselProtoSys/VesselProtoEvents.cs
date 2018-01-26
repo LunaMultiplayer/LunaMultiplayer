@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
+using LunaClient.VesselUtilities;
 using System;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -11,7 +12,18 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public void FlightReady()
         {
-            System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+            if (FlightGlobals.ActiveVessel != null)
+            {
+                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                
+                //Add our own vessel to the dictionary aswell
+                var ownVesselData = VesselSerializer.SerializeVessel(FlightGlobals.ActiveVessel.protoVessel);
+                if (ownVesselData.Length > 0)
+                {
+                    var newProtoUpdate = new VesselProtoUpdate(ownVesselData, ownVesselData.Length, FlightGlobals.ActiveVessel.id);
+                    VesselsProtoStore.AllPlayerVessels.AddOrUpdate(FlightGlobals.ActiveVessel.id, newProtoUpdate, (key, existingVal) => newProtoUpdate);
+                }
+            }
         }
 
         /// <summary>
