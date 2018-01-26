@@ -18,8 +18,6 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == msgData.VesselId)
                 return;
 
-            LunaLog.Log($"[LMP]: Received a vessel remove message. Removing vessel: {msgData.VesselId}");
-
             if (msgData.AddToKillList)
                 System.AddToKillList(msgData.VesselId);
             else //Do a simple kill and accept future updates of that vessel instead of just ignoring them

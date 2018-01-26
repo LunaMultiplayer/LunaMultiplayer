@@ -23,7 +23,11 @@ namespace LunaClient.Systems.VesselRemoveSys
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
                 SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(dyingVessel);
 
-                System.MessageSender.SendVesselRemove(dyingVessel.id);
+                var killingOwnVessel = FlightGlobals.ActiveVessel?.id == dyingVessel.id;
+
+                //If we are killing our own vessel there's the possibility that the player hits "revert" so in this case
+                //DO NOT keep it in the remove list
+                System.MessageSender.SendVesselRemove(dyingVessel.id, !killingOwnVessel);
 
                 //Vessel is dead so remove the locks
                 SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(dyingVessel.id);

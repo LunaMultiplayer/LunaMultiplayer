@@ -109,13 +109,16 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void KillVessel(Guid vesselId)
         {
+            //ALWAYS remove it from the proto store as this dictionary is maintained even if we are in the KSC
+            //This means that while in KSC if we receive a vessel remove msg, our FlightGlobals.Vessels will be empty
+            //But our VesselsProtoStore probably contains that vessel that must be removed.
+            VesselsProtoStore.RemoveVessel(vesselId);
+
             var killVessel = FlightGlobals.FindVessel(vesselId);
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)
                 return;
 
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}");
-
-            VesselsProtoStore.RemoveVessel(vesselId);
             SwitchVesselIfSpectating(killVessel);
             UnloadVesselFromGame(killVessel);
             KillGivenVessel(killVessel);
@@ -150,6 +153,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             {
                 KillVessel(vesselId);
 
+                //Always add to the killed list even if it exists that vessel or not.
                 RemovedVessels.TryAdd(vesselId, LunaTime.Now);
             }
         }
