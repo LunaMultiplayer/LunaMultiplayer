@@ -1,4 +1,5 @@
-﻿using LunaClient.Base;
+﻿using KSP.UI.Screens;
+using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
@@ -44,6 +45,20 @@ namespace LunaClient.Systems.GameScene
                     if (SettingsSystem.ServerSettings.DropControlOnExitFlight)
                         ReleaseAllControlLocks();
                     break;
+            }
+
+            if (data == GameScenes.SPACECENTER)
+            {
+                //If we are going to space center clear all the vessels.
+                //This will avoid all the headaches of recovering vessels and so on with the KSCVesselMarkers.
+                //Those markers appear on the KSC when you return from flight but they are NEVER updated
+                //So if a vessel from another player was in the launchpad and you return to the KSC, even 
+                //if that player goes to orbit, you will see the marker on the launchpad. This means that you 
+                //won't be able to launch without recovering it and if that player release the control lock,
+                //you will be recovering a valid vessel that is already in space.
+                FlightGlobals.Vessels.Clear();
+                HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
+                KSCVesselMarkers.fetch.RefreshMarkers();
             }
         }
         

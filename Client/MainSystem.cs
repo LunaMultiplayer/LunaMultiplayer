@@ -12,7 +12,6 @@ using LunaClient.Systems.Status;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
-using LunaClient.VesselUtilities;
 using LunaClient.Windows;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.Status;
@@ -374,9 +373,6 @@ namespace LunaClient
 
             //Load kerbals BEFORE loading the vessels or the loading of vessels will fail!
             SystemsContainer.Get<KerbalSystem>().LoadKerbalsIntoGame();
-
-            //Load the vessels we've received during connect into the game
-            VesselLoader.LoadVesselsIntoGame();
 
             //Load the scenarios from the server
             SystemsContainer.Get<ScenarioSystem>().LoadScenarioDataIntoGame();

@@ -1,7 +1,6 @@
 ﻿using KSP.UI.Screens;
 using LunaClient.Systems;
 using LunaClient.Systems.Asteroid;
-using LunaClient.Systems.Chat;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -30,34 +29,6 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         private static MethodInfo BuildSpaceTrackingVesselList { get; } = typeof(SpaceTracking).GetMethod("buildVesselsList", BindingFlags.NonPublic | BindingFlags.Instance);
         
-        /// <summary>
-        /// Load all the received vessels from the server into the game
-        /// This should be called before the game starts as it only loads them in the scenario
-        /// </summary>
-        public static void LoadVesselsIntoGame()
-        {
-            //TODO: Do we really need this now that vessels are loaded in a routine while in space center???
-            LunaLog.Log("[LMP]: Loading vessels in subspace 0 into game");
-            var numberOfLoads = 0;
-
-            foreach (var vessel in VesselsProtoStore.AllPlayerVessels)
-            {
-                if (vessel.Value.ProtoVessel != null && vessel.Value.ProtoVessel.vesselID == vessel.Key)
-                {
-                    RegisterServerAsteriodIfVesselIsAsteroid(vessel.Value.ProtoVessel);
-                    HighLogic.CurrentGame.flightState.protoVessels.Add(vessel.Value.ProtoVessel);
-                    numberOfLoads++;
-                }
-                else
-                {
-                    LunaLog.LogWarning($"[LMP]: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
-                    SystemsContainer.Get<ChatSystem>().PmMessageServer($"WARNING: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
-                }
-            }
-
-            LunaLog.Log($"[LMP]: {numberOfLoads} Vessels loaded into game");
-        }
-
         /// <summary>
         /// Load a vessel into the game
         /// </summary>

@@ -60,7 +60,6 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
 
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ClearVesselsWhileInSpaceCenter));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval,
                 RoutineExecution.Update, SendVesselDefinition));
@@ -150,14 +149,6 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 LunaLog.LogError($"[LMP]: Error in UpdateBannedPartsMessage {e}");
             }
-        }
-
-        /// <summary>
-        /// Check vessels that must be loaded or reloaded while we are in a different scene than in flight
-        /// </summary>
-        private void ClearVesselsWhileInSpaceCenter()
-        {
-            HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
         }
 
         /// <summary>
