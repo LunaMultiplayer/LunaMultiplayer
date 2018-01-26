@@ -60,7 +60,7 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
 
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckVesselsToLoadReloadWhileNotInFlight));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ClearVesselsWhileInSpaceCenter));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval,
                 RoutineExecution.Update, SendVesselDefinition));
@@ -155,15 +155,9 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Check vessels that must be loaded or reloaded while we are in a different scene than in flight
         /// </summary>
-        private void CheckVesselsToLoadReloadWhileNotInFlight()
+        private void ClearVesselsWhileInSpaceCenter()
         {
-            if (Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene == GameScenes.SPACECENTER && HighLogic.CurrentGame?.flightState?.protoVessels != null)
-            {
-                var currentVesselIds = HighLogic.CurrentGame?.flightState?.protoVessels?.Select(v => v.vesselID);
-                var missingVessels = VesselsProtoStore.AllPlayerVessels.Values.Where(p => !currentVesselIds.Contains(p.VesselId) && p.ProtoVessel != null)
-                    .Select(v => v.ProtoVessel);
-                HighLogic.CurrentGame.flightState.protoVessels.AddRange(missingVessels);
-            }
+            HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
         }
 
         /// <summary>
