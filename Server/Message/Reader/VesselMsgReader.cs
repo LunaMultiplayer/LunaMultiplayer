@@ -55,10 +55,14 @@ namespace Server.Message.Reader
         private static void HandleVesselRemove(ClientStructure client, VesselBaseMsgData message)
         {
             var data = (VesselRemoveMsgData)message;
-            
-            LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
 
-            Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt"));
+            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt");
+
+            if (FileHandler.FileExists(path))
+            {
+                LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
+                Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt"));
+            }
 
             if (data.AddToKillList)
                 VesselContext.RemovedVessels.Add(data.VesselId);
