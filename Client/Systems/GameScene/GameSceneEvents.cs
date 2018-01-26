@@ -9,12 +9,15 @@ using LunaClient.Systems.VesselStateSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Locks;
 using System.Collections;
+using System.Reflection;
 using UnityEngine;
 
 namespace LunaClient.Systems.GameScene
 {
     public class GameSceneEvents : SubSystem<GameSceneSystem>
     {
+        private static readonly MethodInfo ClearVesselMarkers = typeof(KSCVesselMarkers).GetMethod("ClearVesselMarkers", BindingFlags.NonPublic | BindingFlags.Instance);
+
         /// <summary>
         /// Called when the scene changes
         /// </summary>
@@ -58,6 +61,9 @@ namespace LunaClient.Systems.GameScene
                 //if that player goes to orbit, you will see the marker on the launchpad. This means that you 
                 //won't be able to launch without recovering it and if that player release the control lock,
                 //you will be recovering a valid vessel that is already in space.
+
+                if(KSCVesselMarkers.fetch != null)
+                    ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
                 Client.Singleton.StartCoroutine(DelayedClearVessels());
             }
         }
