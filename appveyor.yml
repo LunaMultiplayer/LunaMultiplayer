@@ -65,8 +65,6 @@ artifacts:
 #     deployment configuration    #
 #---------------------------------#
 
-before_deploy:
- - ps: ren "$env:appveyor_build_folder\LunaMultiPlayer-$env:appveyor_build_version-$env:configuration.zip" $env:appveyor_build_folder\LunaMultiPlayer-$env:configuration.zip
 deploy:
  - provider: GitHub
    tag: $(smallversion)-Draft
