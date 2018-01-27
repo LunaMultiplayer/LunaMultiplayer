@@ -52,6 +52,8 @@ after_build:
  - ps: xcopy /s/y "$env:appveyor_build_folder\Server\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
 #7zip everything
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiPlayer-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
+#Create a clone of the file but with a different filename (do not include the build version) we use this for the deployment...
+ - ps: copy "$env:appveyor_build_folder\LunaMultiPlayer-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\LunaMultiPlayer-$env:configuration.zip"
 
 #---------------------------------#
 #      artifacts configuration    #
@@ -59,6 +61,8 @@ after_build:
 
 artifacts:
  - path: .\LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
+   name: LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
+ - path: .\LunaMultiPlayer-$(configuration).zip
    name: LunaMultiPlayer-$(configuration).zip
    
 #---------------------------------#
