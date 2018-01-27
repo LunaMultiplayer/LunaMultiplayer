@@ -14,6 +14,7 @@ image: Visual Studio 2017
 #---------------------------------#
 
 environment:
+  smallversion: 0.0.10
   ZIPPASSWORD:
     secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=
 assembly_info:
@@ -46,10 +47,10 @@ after_build:
 #Master server post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
  - ps: xcopy /s/y "$env:appveyor_build_folder\MasterServer\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
- #Server server post build commands
+#Server server post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: xcopy /s/y "$env:appveyor_build_folder\Server\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
- #7zip everything
+#7zip everything
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiPlayer-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
 
 #---------------------------------#
@@ -64,7 +65,20 @@ artifacts:
 #     deployment configuration    #
 #---------------------------------#
 
-deploy: off
+before_deploy:
+ - ps: ren "$env:appveyor_build_folder\LunaMultiPlayer-$env:appveyor_build_version-$env:configuration.zip" $env:appveyor_build_folder\LunaMultiPlayer-$env:configuration.zip
+deploy:
+ - provider: GitHub
+   tag: $(smallversion)
+   release: Luna Multi Player $(smallversion) - Draft
+   description: 'LMP release from AppVeyor'
+   artifact: .\LunaMultiPlayer-$(configuration).zip
+   auth_token:
+    secure: zWJqDvz3LjR2J358JIJKICwghW/DWRzs73KWb3KApTLOreA4c8DN1tos+O3qBMR7
+   draft: true
+   force_update: true
+   on:
+    branch: master                # release from master branch only
 
 #---------------------------------#
 #         notifications           #
