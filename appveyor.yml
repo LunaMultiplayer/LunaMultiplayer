@@ -51,14 +51,14 @@ after_build:
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: xcopy /s/y "$env:appveyor_build_folder\Server\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
 #7zip everything
- - ps: 7z a "$env:appveyor_build_folder\LunaMultiPlayer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
+ - ps: 7z a "$env:appveyor_build_folder\LunaMultiPlayer-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
 
 #---------------------------------#
 #      artifacts configuration    #
 #---------------------------------#
 
 artifacts:
- - path: .\LunaMultiPlayer-$(configuration).zip
+ - path: .\LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
    name: LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
    
 #---------------------------------#
@@ -70,7 +70,7 @@ deploy:
    tag: $(smallversion)-Draft
    release: Luna Multi Player $(smallversion)-Draft
    description: 'Build $(appveyor_build_version)'
-   artifact: LunaMultiPlayer-$(configuration).zip
+   artifact: LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
    auth_token:
     secure: zWJqDvz3LjR2J358JIJKICwghW/DWRzs73KWb3KApTLOreA4c8DN1tos+O3qBMR7
    draft: true
