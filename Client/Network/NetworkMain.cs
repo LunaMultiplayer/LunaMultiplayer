@@ -60,8 +60,6 @@ namespace LunaClient.Network
             Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             //Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
 #endif
-
-            NetworkServerList.RefreshMasterServers();
             NetworkServerList.RequestServers();
         }
 

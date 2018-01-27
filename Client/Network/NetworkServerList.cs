@@ -15,25 +15,26 @@ namespace LunaClient.Network
 {
     public class NetworkServerList
     {
-        public static List<IPEndPoint> MasterServers { get; } = new List<IPEndPoint>();
-        public static ConcurrentDictionary<string, ServerInfo> Servers { get; private set; } = new ConcurrentDictionary<string, ServerInfo>();
-        private static readonly Random Random = new Random();
-
-        /// <summary>
-        /// Refreshes the list of master servers
-        /// </summary>
-        public static void RefreshMasterServers()
+        private static readonly List<IPEndPoint> PrivMasterServers = new List<IPEndPoint>();
+        public static List<IPEndPoint> MasterServers
         {
-            if (!MasterServers.Any())
+            get
             {
-                var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-                foreach (var server in servers)
+                lock (PrivMasterServers)
                 {
-                    MasterServers.Add(Common.CreateEndpointFromString(server));
+                    if (!PrivMasterServers.Any())
+                    {
+                        var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
+                        PrivMasterServers.AddRange(servers.Select(Common.CreateEndpointFromString));
+                    }
+                    return PrivMasterServers;
                 }
             }
         }
 
+        public static ConcurrentDictionary<string, ServerInfo> Servers { get; } = new ConcurrentDictionary<string, ServerInfo>();
+        private static readonly Random Random = new Random();
+        
         /// <summary>
         /// Sends a request servers to the master servers
         /// </summary>
