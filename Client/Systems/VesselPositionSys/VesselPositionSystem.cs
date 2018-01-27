@@ -155,6 +155,18 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         /// <summary>
+        /// Gets the latest received ref body of a vessel
+        /// </summary>
+        public int GetLatestVesselRefBody(Guid vesselId)
+        {
+            return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ?
+                vesselPosition.BodyIndex :
+                CurrentVesselUpdate.TryGetValue(vesselId, out vesselPosition) ?
+                    vesselPosition.BodyIndex :
+                    int.MinValue;
+        }
+
+        /// <summary>
         /// Removes a vessel from the system
         /// </summary>
         public void RemoveVesselFromSystem(Vessel vessel)

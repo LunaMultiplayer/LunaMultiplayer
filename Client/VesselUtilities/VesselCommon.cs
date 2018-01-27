@@ -3,6 +3,7 @@ using LunaClient.Systems.Chat;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;
 using LunaCommon.Enums;
 using System;
@@ -178,6 +179,21 @@ namespace LunaClient.VesselUtilities
                 return false;
 
             return IsInSafetyBubble(protoVessel.latitude, protoVessel.longitude, protoVessel.altitude, protoVessel.orbitSnapShot.ReferenceBodyIndex);
+        }
+
+        /// <summary>
+        /// Returns whether the given protovessel is in a starting safety bubble or not.
+        /// </summary>
+        public static bool IsInSafetyBubble(Guid vesselId)
+        {
+            if (SystemsContainer.Get<VesselPositionSystem>().GetLatestVesselRefBody(vesselId) != 1)
+                return false;
+
+            var lastPos = SystemsContainer.Get<VesselPositionSystem>().GetLatestVesselPosition(vesselId);
+            if (lastPos == null)
+                return false;
+
+            return IsInSafetyBubble(lastPos[0], lastPos[1], lastPos[2], 1);
         }
 
         /// <summary>
