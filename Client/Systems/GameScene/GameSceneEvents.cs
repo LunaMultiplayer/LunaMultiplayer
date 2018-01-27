@@ -77,7 +77,7 @@ namespace LunaClient.Systems.GameScene
             yield return new WaitForSeconds(3f);
             FlightGlobals.Vessels.Clear();
             HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-            KSCVesselMarkers.fetch.RefreshMarkers();
+            KSCVesselMarkers.fetch?.RefreshMarkers();
         }
         
         /// <summary>
