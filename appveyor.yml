@@ -57,7 +57,7 @@ after_build:
 #---------------------------------#
 
 artifacts:
- - path: .\LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
+ - path: $(appveyor_build_folder)\LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
    name: LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
    
 #---------------------------------#
