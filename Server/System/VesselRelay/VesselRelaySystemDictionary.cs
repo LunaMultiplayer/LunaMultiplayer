@@ -92,7 +92,7 @@ namespace Server.System.VesselRelay
                         //messages for this subspace
                         var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspaceId);
 
-                        while (messageQueue.TryPeek(out var relayItem))
+                        while (messageQueue.TryDequeue(out var relayItem))
                         {
                             if (relayItem.Msg.SentTime >= subspaceTime)
                                 break;
