@@ -59,7 +59,7 @@ after_build:
 
 artifacts:
  - path: .\LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
-   name: LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
+   name: LunaMultiPlayer-$(configuration).zip
    
 #---------------------------------#
 #     deployment configuration    #
@@ -70,7 +70,7 @@ deploy:
    tag: $(smallversion)-Draft
    release: Luna Multi Player $(smallversion)-Draft
    description: 'Build $(appveyor_build_version)'
-   artifact: LunaMultiPlayer-$(appveyor_build_version)-$(configuration).zip
+   artifact: LunaMultiPlayer-$(configuration).zip
    auth_token:
     secure: zWJqDvz3LjR2J358JIJKICwghW/DWRzs73KWb3KApTLOreA4c8DN1tos+O3qBMR7
    draft: true
