@@ -53,7 +53,7 @@ namespace LunaClient.Systems
             ["ModuleEngines"] = new[] { "currentThrottle" },
             ["ModuleEnginesFX"] = new[] { "currentThrottle" },
             ["ModuleWheelSuspension"] = new[] { "suspensionPos", "autoBoost" },
-            ["ModuleDeployableSolarPanel"] = new[] { "launchUT", "currentRotation" }
+            ["ModuleDeployableSolarPanel"] = new[] { "launchUT", "currentRotation", "storedAnimationTime" }
         };
     }
 }
