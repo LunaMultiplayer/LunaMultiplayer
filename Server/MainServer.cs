@@ -67,6 +67,7 @@ namespace Server
                 Task.Run(() => new ClientMainThread().ThreadMain());
 
                 Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
+                Task.Run(() => ServerContext.LidgrenServer.RefreshMasterServersList());
                 Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
                 Task.Run(() => LogThread.RunLogThread());
 

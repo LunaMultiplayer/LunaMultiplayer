@@ -149,6 +149,23 @@ namespace Server.Lidgren
             Server.Shutdown("Goodbye and thanks for all the fish");
         }
 
+        public async void RefreshMasterServersList()
+        {
+            if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
+
+            while (ServerContext.ServerRunning)
+            {
+                lock (MasterServerEndpoints)
+                {
+                    MasterServerEndpoints.Clear();
+                    MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
+                        .Select(Common.CreateEndpointFromString));
+                }
+
+                await Task.Delay((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
+            }
+        }
+
         public async void RegisterWithMasterServer()
         {
             if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
@@ -159,11 +176,6 @@ namespace Server.Lidgren
             if (adr == null) return;
 
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
-
-            if (!MasterServerEndpoints.Any())
-                MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
-                    .Select(Common.CreateEndpointFromString));
-
             while (ServerContext.ServerRunning)
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<MsRegisterServerMsgData>();
@@ -194,9 +206,12 @@ namespace Server.Lidgren
                     ? msgData.ServerName.Substring(0, 30)
                     : msgData.ServerName;
 
-                foreach (var masterServer in MasterServerEndpoints)
+                lock (MasterServerEndpoints)
                 {
-                    RegisterWithMasterServer(msgData, masterServer);
+                    foreach (var masterServer in MasterServerEndpoints)
+                    {
+                        RegisterWithMasterServer(msgData, masterServer);
+                    }
                 }
 
                 await Task.Delay(MasterServerRegistrationMsInterval);
