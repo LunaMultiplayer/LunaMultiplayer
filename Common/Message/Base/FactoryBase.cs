@@ -29,6 +29,9 @@ namespace LunaCommon.Message.Base
 
                 msg.SetData(data);
                 msg.Data.ReceiveTime = receiveTime;
+                msg.VersionMismatch = msg.Data.BuildVersion != LmpVersioning.BuildVersion ||
+                                      msg.Data.MinorVersion != LmpVersioning.MinorVersion || 
+                                      msg.Data.MajorVersion != LmpVersioning.MajorVersion;
 
                 return msg;
             }
@@ -83,7 +86,7 @@ namespace LunaCommon.Message.Base
         {
             return MessageStore.GetMessageData<T>(); ;
         }
-        
+
         /// <summary>
         /// Retrieves a message from the pool based on the type
         /// </summary>
