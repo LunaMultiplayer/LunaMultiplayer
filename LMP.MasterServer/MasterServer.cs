@@ -111,33 +111,40 @@ namespace LMP.MasterServer
 
         private static void HandleMessage(IMasterServerMessageBase message, NetIncomingMessage netMsg, NetPeer peer)
         {
-            switch ((message?.Data as MsBaseMsgData)?.MasterServerMessageSubType)
+            try
             {
-                case MasterServerMessageSubType.RegisterServer:
-                    RegisterServer(message, netMsg);
-                    break;
-                case MasterServerMessageSubType.RequestServers:
-                    var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
-                    ConsoleLogger.Log(LogLevels.Normal, $"LIST REQUEST from: {netMsg.SenderEndPoint} v: {version}");
-                    SendServerLists(netMsg, peer);
-                    break;
-                case MasterServerMessageSubType.Introduction:
-                    var msgData = (MsIntroductionMsgData)message.Data;
-                    if (ServerDictionary.TryGetValue(msgData.Id, out var server))
-                    {
-                        ConsoleLogger.Log(LogLevels.Normal, $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
-                        peer.Introduce(
-                            server.InternalEndpoint,
-                            server.ExternalEndpoint,
-                            Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
-                            netMsg.SenderEndPoint,// client external
-                            msgData.Token); // request token
-                    }
-                    else
-                    {
-                        ConsoleLogger.Log(LogLevels.Error, "Client requested introduction to nonlisted host!");
-                    }
-                    break;
+                switch ((message?.Data as MsBaseMsgData)?.MasterServerMessageSubType)
+                {
+                    case MasterServerMessageSubType.RegisterServer:
+                        RegisterServer(message, netMsg);
+                        break;
+                    case MasterServerMessageSubType.RequestServers:
+                        var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
+                        ConsoleLogger.Log(LogLevels.Normal, $"LIST REQUEST from: {netMsg.SenderEndPoint} v: {version}");
+                        SendServerLists(netMsg, peer);
+                        break;
+                    case MasterServerMessageSubType.Introduction:
+                        var msgData = (MsIntroductionMsgData)message.Data;
+                        if (ServerDictionary.TryGetValue(msgData.Id, out var server))
+                        {
+                            ConsoleLogger.Log(LogLevels.Normal, $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
+                            peer.Introduce(
+                                server.InternalEndpoint,
+                                server.ExternalEndpoint,
+                                Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
+                                netMsg.SenderEndPoint,// client external
+                                msgData.Token); // request token
+                        }
+                        else
+                        {
+                            ConsoleLogger.Log(LogLevels.Error, "Client requested introduction to nonlisted host!");
+                        }
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                ConsoleLogger.Log(LogLevels.Error, $"Error handling message. Details: {e}");
             }
         }
 
