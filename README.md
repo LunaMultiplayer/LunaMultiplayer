@@ -43,7 +43,7 @@ Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-comp
 ---
 ### Servers:
 
-You can check the available servers in the official website [here](http://lunamultiplayer.com/servers) or trough the website inside the repo [here](http://cdn.rawgit.com/LunaMultiplayer/LunaMultiplayer/master/WebDisplayServers/servers.html)
+You can check the available servers in the official website [here](http://lunamultiplayer.com/servers) or trough the website inside the repo [here](http://htmlpreview.github.io/?http://github.com/LunaMultiplayer/LunaMultiplayer/blob/master/WebDisplayServers/servers.html)
 
 ---
 
