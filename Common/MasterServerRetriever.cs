@@ -1,11 +1,11 @@
-﻿using System;
+﻿using LmpGlobal;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
-using LmpGlobal;
 
 namespace LunaCommon
 {
@@ -43,11 +43,7 @@ namespace LunaCommon
                             var ipPort = server.Split(':');
                             if (!IPAddress.TryParse(ipPort[0], out var ip))
                             {
-                                var hostEntry = Dns.GetHostEntry(ipPort[0]);
-                                if (hostEntry.AddressList.Length > 0)
-                                {
-                                    ip = hostEntry.AddressList[0];
-                                }
+                                ip = Common.GetIpFromString(ipPort[0]);
                             }
 
                             if (ip != null && ushort.TryParse(ipPort[1], out var port))

@@ -18,6 +18,7 @@ namespace LunaCommon.Time
         {
             InitializeStructure();
 
+
             _serverAddress = new IPEndPoint(Dns.GetHostEntry(server).AddressList[0], 123);
 
             // ReSharper disable once RedundantAssignment
