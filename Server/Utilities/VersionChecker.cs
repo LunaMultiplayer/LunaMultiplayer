@@ -35,6 +35,7 @@ namespace Server.Utilities
                 if (LatestVersion > new Version(LmpVersioning.CurrentVersion))
                 {
                     LunaLog.Warning($"There is a new version of LMP! Please download it! Current: {LmpVersioning.CurrentVersion} Latest: {LatestVersion}");
+                    LunaLog.Warning("You won't be listed in the master servers if you don't have the latest version!");
                 }
 
                 //Sleep for 30 seconds...

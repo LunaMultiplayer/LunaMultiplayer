@@ -67,7 +67,8 @@ namespace LMP.MasterServer
                             if (FloodControl.AllowRequest(msg.SenderEndPoint.Address))
                             {
                                 var message = GetMessage(msg);
-                                if (message != null && !message.VersionMismatch)
+                                //TODO: add this check once next version is out:  if (message != null && !message.VersionMismatch)
+                                if (message != null)
                                     HandleMessage(message, msg, peer);
                             }
                             break;

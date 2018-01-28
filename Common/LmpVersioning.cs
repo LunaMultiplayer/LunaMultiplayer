@@ -1,13 +1,16 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 
 namespace LunaCommon
 {
     public class LmpVersioning
     {
-        public static ushort MajorVersion { get; } = (ushort)Assembly.GetExecutingAssembly().GetName().Version.Major;
-        public static ushort MinorVersion { get; } = (ushort)Assembly.GetExecutingAssembly().GetName().Version.Minor;
-        public static ushort BuildVersion { get; } = (ushort)Assembly.GetExecutingAssembly().GetName().Version.Build;
+        private static Version AssemblyVersion { get; } = Assembly.GetExecutingAssembly().GetName().Version;
 
-        public static string CurrentVersion { get; } = Assembly.GetExecutingAssembly().GetName().Version.ToString(3);
+        public static ushort MajorVersion { get; } = (ushort)AssemblyVersion.Major;
+        public static ushort MinorVersion { get; } = (ushort)AssemblyVersion.Minor;
+        public static ushort BuildVersion { get; } = (ushort)AssemblyVersion.Build;
+
+        public static string CurrentVersion { get; } = AssemblyVersion.ToString(3);
     }
 }
