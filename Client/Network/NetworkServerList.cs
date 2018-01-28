@@ -41,8 +41,6 @@ namespace LunaClient.Network
         public static void RequestServers()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsRequestServersMsgData>();
-            msgData.CurrentVersion = LmpVersioning.CurrentVersion;
-
             var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
             NetworkSender.QueueOutgoingMessage(requestMsg);
         }
