@@ -1,5 +1,6 @@
 ﻿using KSP.UI.Screens.Flight;
 using LunaClient.Utilities;
+using LunaClient.VesselIgnore;
 using LunaClient.VesselUtilities;
 using System.Collections.Generic;
 using System.Linq;

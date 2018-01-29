@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace LunaClient.Systems
+namespace LunaClient.VesselIgnore
 {
     /// <summary>
     /// Here we hold a collection of modules and fields that can be ignored when checking for changes

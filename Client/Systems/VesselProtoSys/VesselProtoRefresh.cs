@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LunaClient.VesselIgnore;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
@@ -11,11 +12,9 @@ namespace LunaClient.Systems.VesselProtoSys
         private static readonly FieldInfo CrewField = typeof(ProtoVessel).GetField("crew", BindingFlags.Instance | BindingFlags.NonPublic);
         
         /// <summary>
-        /// Here we refresh the protovessel based on a vessel. This method is much better than calling vessel.BackupVessel()
-        /// as it does not generate garbage.
-        /// Also it returns true or false if there are substantial changes in the vessel so that require the other players to deserialize it.
+        /// Here we refresh the protovessel based on a vessel. This method is much better than calling vessel.BackupVessel() as it does not generate garbage.
+        /// Also it returns true or false if there are substantial changes in the vessel that require updating the whole definition to the server and clients.
         /// </summary>
-        /// <returns></returns>
         public static bool RefreshVesselProto(Vessel vessel)
         {
             if (vessel.protoVessel == null)
@@ -74,6 +73,11 @@ namespace LunaClient.Systems.VesselProtoSys
             return vesselHasChanges;
         }
 
+        /// <summary>
+        /// Refresh the action groups of the protovessel based on the values of the vessel.
+        /// Changes to action groups do not trigger a change to "vesselHasChanges" as the
+        /// action groups are sent using the VesselUpdateSys
+        /// </summary>
         private static void RefreshActionGroups(Vessel vessel)
         {
             if (vessel.protoVessel.vesselRef.ActionGroups.groups.Count != vessel.protoVessel.actionGroups.CountValues)
@@ -98,6 +102,9 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
+        /// <summary>
+        /// Refreshes the crew from the vessel and returns true if there's a change
+        /// </summary>
         private static bool RefreshCrew(Vessel vessel)
         {
             if (vessel.crewedParts != vessel.protoVessel.crewedParts || vessel.crewableParts != vessel.protoVessel.crewableParts)
@@ -110,6 +117,11 @@ namespace LunaClient.Systems.VesselProtoSys
             return false;
         }
 
+        /// <summary>
+        /// Refreshes protovessel parts, protovessel parts modules and protovessel parts resources.
+        /// Will return true if there's a change in the part count or a part module has changed
+        /// Will NOT return true if the change is only in a part resource
+        /// </summary>
         private static bool RefreshParts(Vessel vessel)
         {
             if (vessel.parts.Count != vessel.protoVessel.protoPartSnapshots.Count)
@@ -141,6 +153,10 @@ namespace LunaClient.Systems.VesselProtoSys
             return partsHaveChanges;
         }
 
+        /// <summary>
+        /// Refreshes all the protovessel part modules based on a part.
+        /// Will return true if there's a change in any of the values
+        /// </summary>
         private static bool RefreshPartModules(Part part)
         {
             if (part.protoPartSnapshot.modules.Count != part.Modules.Count)
@@ -183,16 +199,26 @@ namespace LunaClient.Systems.VesselProtoSys
             return moduleHaveChanges;
         }
 
+        /// <summary>
+        /// Returns true if the module must be ignored when checking for changes
+        /// </summary>
         private static bool ModuleIsIgnored(string moduleName)
         {
             return VesselModulesToIgnore.ModulesToIgnore.Contains(moduleName) || VesselModulesToIgnore.ModulesToIgnoreWhenChecking.Contains(moduleName);
         }
 
+        /// <summary>
+        /// Returns true if the field in a module must be ignored when checking for changes
+        /// </summary>
         private static bool FieldIsIgnored(PartModule module, BaseField field)
         {
             return VesselModulesToIgnore.FieldsToIgnore.TryGetValue(module.moduleName, out var fields) && fields != null && fields.Contains(field.name);
         }
 
+        /// <summary>
+        /// Refreshes the protovessel part resource based on a part.
+        /// We don't check for changes here as doing so will send too much data (resources change VERY often)
+        /// </summary>
         private static void RefreshPartResources(Part part)
         {
             if (part.protoPartSnapshot.resources.Count != part.Resources.Count)
@@ -217,6 +243,9 @@ namespace LunaClient.Systems.VesselProtoSys
             }
         }
 
+        /// <summary>
+        /// Gets a value from a config node
+        /// </summary>
         private static ConfigNode.Value GetConfigNodeVal(string name, ConfigNode node)
         {
             for (var i = 0; i < node.CountValues; i++)
@@ -228,6 +257,9 @@ namespace LunaClient.Systems.VesselProtoSys
             return null;
         }
 
+        /// <summary>
+        /// Get the root part index so it can be refreshed in the protovessel
+        /// </summary>
         private static int GetRootPartIndex(Vessel vessel)
         {
             for (var i = 0; i < vessel.parts.Count; i++)
