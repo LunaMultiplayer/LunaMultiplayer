@@ -1,6 +1,8 @@
 ﻿using LunaClient.Base;
+using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace LunaClient.VesselStore
 {
@@ -51,6 +53,37 @@ namespace LunaClient.VesselStore
         public static void RemoveVessel(Guid vesselId)
         {
             AllPlayerVessels.TryRemove(vesselId, out var _);
+        }
+
+        /// <summary>
+        /// Check in the store if there's a vessel with that part in it's protovessel. If so it returns that vessel
+        /// </summary>
+        public static Vessel GetVesselByPartId(uint flightId)
+        {
+            var keys = AllPlayerVessels.Keys.ToArray();
+            for (var i = 0; i < keys.Length; i++)
+            {
+                if (AllPlayerVessels.TryGetValue(keys[i], out var vesselProtoUpd))
+                {
+                    if (vesselProtoUpd.VesselParts.ContainsKey(flightId))
+                        return vesselProtoUpd.Vessel;
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Adds a vessel manually to the dictionary. Use this to add your own spawned vessels.
+        /// </summary>
+        public static void AddVesselToDictionary(Vessel vessel)
+        {
+            var ownVesselData = VesselSerializer.SerializeVessel(vessel.protoVessel);
+            if (ownVesselData.Length > 0)
+            {
+                var newProtoUpdate = new VesselProtoUpdate(ownVesselData, ownVesselData.Length, FlightGlobals.ActiveVessel.id);
+                AllPlayerVessels.AddOrUpdate(FlightGlobals.ActiveVessel.id, newProtoUpdate, (key, existingVal) => newProtoUpdate);
+            }
         }
     }
 }

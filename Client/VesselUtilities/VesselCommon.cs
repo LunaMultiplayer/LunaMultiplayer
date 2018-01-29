@@ -120,7 +120,6 @@ namespace LunaClient.VesselUtilities
         public static IEnumerable<Vessel> GetSecondaryVessels()
         {
             //We don't need to check if vessel is in safety bubble as the update locks are updated accordingly
-
             return LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                 .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id)
                 .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == vi.VesselId))

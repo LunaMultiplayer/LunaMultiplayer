@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.VesselStore;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;

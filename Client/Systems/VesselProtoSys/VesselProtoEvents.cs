@@ -1,8 +1,9 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselStore;
-using LunaClient.VesselUtilities;
 using System;
+using System.Linq;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -16,14 +17,8 @@ namespace LunaClient.Systems.VesselProtoSys
             if (FlightGlobals.ActiveVessel != null)
             {
                 System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
-                
                 //Add our own vessel to the dictionary aswell
-                var ownVesselData = VesselSerializer.SerializeVessel(FlightGlobals.ActiveVessel.protoVessel);
-                if (ownVesselData.Length > 0)
-                {
-                    var newProtoUpdate = new VesselProtoUpdate(ownVesselData, ownVesselData.Length, FlightGlobals.ActiveVessel.id);
-                    VesselsProtoStore.AllPlayerVessels.AddOrUpdate(FlightGlobals.ActiveVessel.id, newProtoUpdate, (key, existingVal) => newProtoUpdate);
-                }
+                VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
             }
         }
 
@@ -32,15 +27,94 @@ namespace LunaClient.Systems.VesselProtoSys
         /// and reflect changes so we don't have to call the "backupvessel" so often
         /// We should not send out own vessel data using this event as this is handled in a routine
         /// </summary>
-        public void VesselModified(Vessel data)
+        public void VesselStandardModification(Vessel data)
         {
-            //Perhaps we are shooting stuff at other uncontrolled vessel...
-            if (data.id != FlightGlobals.ActiveVessel?.id && !LockSystem.LockQuery.UpdateLockExists(data.id))
+            LunaLog.Log($"VesselStandardModification triggered for vesselId {data.id} name {data.vesselName}");
+            if (data.id != VesselProtoSystem.CurrentlyUpdatingVesselId)
             {
-                System.MessageSender.SendVesselMessage(data, false);
-
+                //We are modifying a vessel that LMP is not handling
                 if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.id))
-                    VesselsProtoStore.AllPlayerVessels[data.id].ProtoVessel = data.BackupVessel();
+                {
+                    //The vessel even exists on the store so probably it's a vessel that has lost a part or smth like that...
+                    if(LockSystem.LockQuery.UpdateLockBelongsToPlayer(data.id, SettingsSystem.CurrentSettings.PlayerName))
+                    {
+                        //We own the update lock of that vessel that suffered a modification so just leave it here
+                        //The main system has a routine that will check changes and send the new definition
+                        return;
+                    }
+                    else
+                    {
+                        if (!LockSystem.LockQuery.UpdateLockExists(data.id))
+                        {
+                            if(LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(data.id, SettingsSystem.CurrentSettings.PlayerName))
+                            {
+                                //Vessel is probably very far away and nobody is near it. Still, as we have the unloaded update lock we must
+                                //update the vessel definition. We don't need to force it anyway
+                                System.MessageSender.SendVesselMessage(data, false);
+                            }
+                            else
+                            {
+                                //Nobody has the unloaded update/update lock or perhaps another person has it.
+                                //Therefore roll back the changes we detected
+                                VesselsProtoStore.AllPlayerVessels[data.id].VesselHasUpdate = true;
+                            }
+                        }
+                        else
+                        {
+                            //Somebody else has the update lock, so roll back the changes we detected
+                            VesselsProtoStore.AllPlayerVessels[data.id].VesselHasUpdate = true;
+                        }
+                    }
+                }
+                else
+                {
+                    //The vessel is NEW as it's not in the store. It might be a debris...
+                    var rootPartOrFirstPart = data.rootPart ?? data.parts.FirstOrDefault();
+                    if (rootPartOrFirstPart != null)
+                    {
+                        var originalVessel = VesselsProtoStore.GetVesselByPartId(rootPartOrFirstPart.flightID);
+                        //The vessel even exists on the store so probably it's a vessel that has lost a part or smth like that...
+                        if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                        {
+                            //We own the update lock of that vessel that originated that part so let's get that updat lock and send the definition
+                            SystemsContainer.Get<LockSystem>().AcquireUpdateLock(data.id, true);
+                            //Now send this debris and force it!
+                            System.MessageSender.SendVesselMessage(data, true);
+                            //Add it also to our store
+                            VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
+                            return;
+                        }
+                        else
+                        {
+                            if (!LockSystem.LockQuery.UpdateLockExists(originalVessel.id))
+                            {
+                                if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                                {
+                                    //Original vessel is probably very far away and nobody is near it. Still, as we have the unloaded update lock we must
+                                    //update the vessel debris definition.
+
+                                    //We own the update lock of that vessel that originated that part so let's get that updat lock and send the definition
+                                    SystemsContainer.Get<LockSystem>().AcquireUpdateLock(data.id, true);
+                                    //Now send this debris and force it!
+                                    System.MessageSender.SendVesselMessage(data, true);
+                                    //Add it also to our store
+                                    VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
+                                }
+                                else
+                                {
+                                    //Nobody has the unloaded update/update lock or perhaps another person has it.
+                                    //Therefore roll back the changes we detected
+                                    data.Die();
+                                }
+                            }
+                            else
+                            {
+                                //Somebody else has the update lock, so roll back the changes we detected
+                                data.Die();
+                            }
+                        }
+                    }
+                }
             }
         }
 
