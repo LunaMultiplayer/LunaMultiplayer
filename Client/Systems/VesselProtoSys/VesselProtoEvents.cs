@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using System;
 

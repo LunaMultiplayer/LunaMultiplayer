@@ -3,6 +3,7 @@ using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
 using System;
@@ -197,9 +198,9 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     VesselsToReload.Clear();
 
-                    //We get the vessels that already exist and are in LOAD distance or it's situation has changed. 
+                    //We get the vessels that already exist
                     VesselsToReload.AddRange(VesselsProtoStore.AllPlayerVessels
-                        .Where(pv => pv.Value.VesselExist && pv.Value.VesselHasUpdate && (pv.Value.Vessel.loaded || pv.Value.VesselSituationChanged))
+                        .Where(pv => pv.Value.VesselExist && pv.Value.VesselHasUpdate)
                         .Select(v => v.Key));
 
                     //Do not iterate directly trough the AllPlayerVessels dictionary as the collection can be modified in another threads!

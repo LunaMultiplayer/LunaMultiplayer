@@ -82,7 +82,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             Array.Copy(vesselBytes, 0, msgData.Vessel.Data, 0, numBytes);
             msgData.Vessel.NumBytes = numBytes;
-
+            
             SendMessage(msgData);
         }
 

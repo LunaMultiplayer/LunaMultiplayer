@@ -81,6 +81,7 @@
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoRefresh.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselUpdater.cs" />
+    <Compile Include="VesselStore\VesselProtoUpdate.cs" />
     <Compile Include="Systems\VesselStateSys\VesselStateEvents.cs" />
     <Compile Include="Systems\VesselStateSys\VesselStateSystem.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
@@ -91,7 +92,7 @@
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeEvents.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeSystem.cs" />
-    <Compile Include="Systems\VesselsProtoStore.cs" />
+    <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\Status\StatusTexts.cs" />
     <Compile Include="Windows\WindowContainer.cs" />
