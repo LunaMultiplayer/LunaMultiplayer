@@ -3,8 +3,7 @@ using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using LunaCommon;
 using System;
-using System.Collections.Generic;
-using UniLinq;
+using System.Collections.Concurrent;
 
 namespace LunaClient.VesselStore
 {
@@ -33,19 +32,7 @@ namespace LunaClient.VesselStore
         public bool VesselExist => Vessel != null;
         public bool ShouldBeLoaded => SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(VesselId);
 
-        private List<uint> _vesselPartIds = new List<uint>();
-        public List<uint> VesselPartIds
-        {
-            get
-            {
-                if (VesselHasUpdate || _protoVessel == null)
-                {
-                    DeserializeVesselBytes();
-                }
-                return _vesselPartIds;
-            }
-            set => _vesselPartIds = value;
-        }
+        public readonly ConcurrentDictionary<uint, ProtoPartSnapshot> VesselParts = new ConcurrentDictionary<uint, ProtoPartSnapshot>();
 
         #region Private
 
@@ -102,8 +89,11 @@ namespace LunaClient.VesselStore
             _vesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
             ProtoVessel = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
 
-            VesselPartIds.Clear();
-            VesselPartIds.AddRange(ProtoVessel.protoPartSnapshots.Select(p => p.flightID).ToList());
+            VesselParts.Clear();
+            foreach (var protoPart in ProtoVessel.protoPartSnapshots)
+            {
+                VesselParts.TryAdd(protoPart.flightID, protoPart);
+            }
         }
     }
 }
