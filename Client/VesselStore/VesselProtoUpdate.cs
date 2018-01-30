@@ -19,30 +19,28 @@ namespace LunaClient.VesselStore
         {
             get
             {
-                if (VesselHasUpdate || _protoVessel == null)
+                if (_needToDeserializeData || _protoVessel == null)
                 {
                     DeserializeVesselBytes();
                 }
                 return _protoVessel;
             }
-            set => _protoVessel = value;
+            private set => _protoVessel = value;
         }
 
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
         public bool VesselExist => Vessel != null;
         public bool ShouldBeLoaded => SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(VesselId);
 
-        private ConcurrentDictionary<uint, ProtoPartSnapshot> _vesselParts;
+        private readonly ConcurrentDictionary<uint, ProtoPartSnapshot> _vesselParts = new ConcurrentDictionary<uint, ProtoPartSnapshot>();
         public ConcurrentDictionary<uint, ProtoPartSnapshot> VesselParts
         {
             get
             {
-                if (VesselHasUpdate || _vesselParts == null)
+                if (_needToDeserializeData)
                 {
-                    _vesselParts = new ConcurrentDictionary<uint, ProtoPartSnapshot>();
                     DeserializeVesselBytes();
                 }
-
                 return _vesselParts;
             }
         }
@@ -53,6 +51,7 @@ namespace LunaClient.VesselStore
         private int _numBytes;
         private ConfigNode _vesselNode;
         private string _vesselHash;
+        private bool _needToDeserializeData = true;
 
         #endregion
 
@@ -80,6 +79,7 @@ namespace LunaClient.VesselStore
             CopyVesselBytes(vesselData, numBytes);
 
             _vesselHash = newHash;
+            _needToDeserializeData = true;
             VesselHasUpdate = true;
         }
 
@@ -99,13 +99,15 @@ namespace LunaClient.VesselStore
         /// </summary>
         public void DeserializeVesselBytes()
         {
+            _needToDeserializeData = false;
+
             _vesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
             ProtoVessel = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
 
-            _vesselParts.Clear();
+            VesselParts.Clear();
             foreach (var protoPart in ProtoVessel.protoPartSnapshots)
             {
-                _vesselParts.TryAdd(protoPart.flightID, protoPart);
+                VesselParts.TryAdd(protoPart.flightID, protoPart);
             }
         }
     }
