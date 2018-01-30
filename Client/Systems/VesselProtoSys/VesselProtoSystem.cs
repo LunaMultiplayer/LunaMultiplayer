@@ -60,7 +60,7 @@ namespace LunaClient.Systems.VesselProtoSys
             base.OnEnabled();
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, CheckVesselsToRefresh);
 
-            GameEvents.onVesselStandardModification.Add(VesselProtoEvents.VesselStandardModification);
+            GameEvents.onVesselCreate.Add(VesselProtoEvents.VesselCreate);
             GameEvents.onVesselGoOnRails.Add(VesselProtoEvents.VesselGoOnRails);
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
 
@@ -75,7 +75,7 @@ namespace LunaClient.Systems.VesselProtoSys
             base.OnDisabled();
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, CheckVesselsToRefresh);
 
-            GameEvents.onVesselStandardModification.Remove(VesselProtoEvents.VesselStandardModification);
+            GameEvents.onVesselCreate.Remove(VesselProtoEvents.VesselCreate);
             GameEvents.onVesselGoOnRails.Remove(VesselProtoEvents.VesselGoOnRails);
             GameEvents.onFlightReady.Remove(VesselProtoEvents.FlightReady);
 
