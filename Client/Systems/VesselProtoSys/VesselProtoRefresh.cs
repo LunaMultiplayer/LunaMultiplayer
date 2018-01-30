@@ -19,7 +19,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (vessel.protoVessel == null)
             {
-                vessel.BackupVessel();
+                vessel.protoVessel = new ProtoVessel(vessel);
                 return true;
             }
 
