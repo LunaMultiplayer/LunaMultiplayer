@@ -42,6 +42,7 @@ namespace LunaClient.VesselStore
                     _vesselParts = new ConcurrentDictionary<uint, ProtoPartSnapshot>();
                     DeserializeVesselBytes();
                 }
+
                 return _vesselParts;
             }
         }
@@ -101,10 +102,10 @@ namespace LunaClient.VesselStore
             _vesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
             ProtoVessel = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
 
-            VesselParts.Clear();
+            _vesselParts.Clear();
             foreach (var protoPart in ProtoVessel.protoPartSnapshots)
             {
-                VesselParts.TryAdd(protoPart.flightID, protoPart);
+                _vesselParts.TryAdd(protoPart.flightID, protoPart);
             }
         }
     }
