@@ -1,5 +1,7 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.VesselUtilities;
+using LunaCommon.Message.Data.Vessel;
 using System;
 using System.Collections.Concurrent;
 using System.Linq;
@@ -83,6 +85,58 @@ namespace LunaClient.VesselStore
             {
                 var newProtoUpdate = new VesselProtoUpdate(ownVesselData, ownVesselData.Length, FlightGlobals.ActiveVessel.id);
                 AllPlayerVessels.AddOrUpdate(FlightGlobals.ActiveVessel.id, newProtoUpdate, (key, existingVal) => newProtoUpdate);
+            }
+        }
+
+        public static void UpdateVesselProtoPosition(VesselPositionUpdate vesselPositionUpdate)
+        {
+            if (AllPlayerVessels.TryGetValue(vesselPositionUpdate.VesselId, out var vesselProtoUpd))
+            {
+                vesselProtoUpd.ProtoVessel.latitude = vesselPositionUpdate.LatLonAlt[0];
+                vesselProtoUpd.ProtoVessel.longitude = vesselPositionUpdate.LatLonAlt[0];
+                vesselProtoUpd.ProtoVessel.altitude = vesselPositionUpdate.LatLonAlt[0];
+                vesselProtoUpd.ProtoVessel.height = vesselPositionUpdate.HeightFromTerrain;
+
+                vesselProtoUpd.ProtoVessel.normal[0] = vesselPositionUpdate.Normal[0];
+                vesselProtoUpd.ProtoVessel.normal[1] = vesselPositionUpdate.Normal[1];
+                vesselProtoUpd.ProtoVessel.normal[2] = vesselPositionUpdate.Normal[2];
+
+                vesselProtoUpd.ProtoVessel.rotation[0] = vesselPositionUpdate.SrfRelRotation[0];
+                vesselProtoUpd.ProtoVessel.rotation[1] = vesselPositionUpdate.SrfRelRotation[1];
+                vesselProtoUpd.ProtoVessel.rotation[2] = vesselPositionUpdate.SrfRelRotation[2];
+                vesselProtoUpd.ProtoVessel.rotation[3] = vesselPositionUpdate.SrfRelRotation[3];
+
+                vesselProtoUpd.ProtoVessel.CoM[0] = vesselPositionUpdate.CoM[0];
+                vesselProtoUpd.ProtoVessel.CoM[1] = vesselPositionUpdate.CoM[1];
+                vesselProtoUpd.ProtoVessel.CoM[2] = vesselPositionUpdate.CoM[2];
+
+                vesselProtoUpd.ProtoVessel.orbitSnapShot.inclination = vesselPositionUpdate.Orbit[0];
+                vesselProtoUpd.ProtoVessel.orbitSnapShot.eccentricity = vesselPositionUpdate.Orbit[1];
+                vesselProtoUpd.ProtoVessel.orbitSnapShot.semiMajorAxis = vesselPositionUpdate.Orbit[2];
+                vesselProtoUpd.ProtoVessel.orbitSnapShot.LAN = vesselPositionUpdate.Orbit[3];
+                vesselProtoUpd.ProtoVessel.orbitSnapShot.argOfPeriapsis = vesselPositionUpdate.Orbit[4];
+                vesselProtoUpd.ProtoVessel.orbitSnapShot.meanAnomalyAtEpoch = vesselPositionUpdate.Orbit[5];
+                vesselProtoUpd.ProtoVessel.orbitSnapShot.epoch = vesselPositionUpdate.Orbit[6];
+                vesselProtoUpd.ProtoVessel.orbitSnapShot.ReferenceBodyIndex = (int)vesselPositionUpdate.Orbit[7];
+            }
+        }
+
+        public static void UpdateVesselProtoValues(VesselUpdateMsgData msgData)
+        {
+            if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
+            {
+                vesselProtoUpd.ProtoVessel.vesselName = msgData.Name;
+                vesselProtoUpd.ProtoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), msgData.Type);
+                vesselProtoUpd.ProtoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
+                vesselProtoUpd.ProtoVessel.landed = msgData.Landed;
+                vesselProtoUpd.ProtoVessel.landedAt = msgData.LandedAt;
+                vesselProtoUpd.ProtoVessel.displaylandedAt = msgData.DisplayLandedAt;
+                vesselProtoUpd.ProtoVessel.splashed = msgData.Splashed;
+                vesselProtoUpd.ProtoVessel.missionTime = msgData.MissionTime;
+                vesselProtoUpd.ProtoVessel.launchTime = msgData.LaunchTime;
+                vesselProtoUpd.ProtoVessel.lastUT = msgData.LastUt;
+                vesselProtoUpd.ProtoVessel.persistent = msgData.Persistent;
+                vesselProtoUpd.ProtoVessel.refTransform = msgData.RefTransformId;
             }
         }
     }

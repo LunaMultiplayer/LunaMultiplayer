@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -21,7 +22,8 @@ namespace LunaClient.Systems.VesselUpdateSys
             
             UpdateVesselFields(vessel, msgData);
             UpdateActionGroups(vessel, msgData);
-            UpdateProtoVesselValues(vessel, msgData);
+            UpdateProtoVesselValues(vessel.protoVessel, msgData);
+            VesselsProtoStore.UpdateVesselProtoValues(msgData);
         }
 
         private static void UpdateVesselFields(Vessel vessel, VesselUpdateMsgData msgData)
@@ -57,22 +59,22 @@ namespace LunaClient.Systems.VesselUpdateSys
             }
         }
 
-        private static void UpdateProtoVesselValues(Vessel vessel, VesselUpdateMsgData msgData)
+        private static void UpdateProtoVesselValues(ProtoVessel protoVessel, VesselUpdateMsgData msgData)
         {
-            if (vessel.protoVessel != null)
+            if (protoVessel != null)
             {
-                vessel.protoVessel.vesselName = vessel.name;
-                vessel.protoVessel.vesselType = vessel.vesselType;
-                vessel.protoVessel.situation = vessel.situation;
-                vessel.protoVessel.landed = vessel.Landed;
-                vessel.protoVessel.landedAt = vessel.landedAt;
-                vessel.protoVessel.displaylandedAt = vessel.displaylandedAt;
-                vessel.protoVessel.splashed = vessel.Splashed;
-                vessel.protoVessel.missionTime = vessel.missionTime;
-                vessel.protoVessel.launchTime = vessel.launchTime;
-                vessel.protoVessel.lastUT = vessel.lastUT;
-                vessel.protoVessel.persistent = vessel.isPersistent;
-                vessel.protoVessel.refTransform = vessel.referenceTransformId;
+                protoVessel.vesselName = msgData.Name;
+                protoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), msgData.Type);
+                protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
+                protoVessel.landed = msgData.Landed;
+                protoVessel.landedAt = msgData.LandedAt;
+                protoVessel.displaylandedAt = msgData.DisplayLandedAt;
+                protoVessel.splashed = msgData.Splashed;
+                protoVessel.missionTime = msgData.MissionTime;
+                protoVessel.launchTime = msgData.LaunchTime;
+                protoVessel.lastUT = msgData.LastUt;
+                protoVessel.persistent = msgData.Persistent;
+                protoVessel.refTransform = msgData.RefTransformId;
 
                 //TODO: Do we need to update the protovessel action group values aswell?
             }

@@ -1,4 +1,5 @@
 ﻿using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using System;
 using UnityEngine;
@@ -191,6 +192,8 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.orbitSnapShot.meanAnomalyAtEpoch = Orbit[5];
             Vessel.protoVessel.orbitSnapShot.epoch = Orbit[6];
             Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Orbit[7];
+
+            VesselsProtoStore.UpdateVesselProtoPosition(this);
         }
         
         private void OldApplyInterpolationsToLoadedVessel(float lerpPercentage)
