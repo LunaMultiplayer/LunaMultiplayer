@@ -80,7 +80,7 @@ namespace Server.Message.Reader
             var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.Vessel.VesselId}.txt");
 
             if (!File.Exists(path))
-                LunaLog.Debug($"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}");
+                LunaLog.Debug($"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}. Bytes: {msgData.Vessel.NumBytes}");
 
             FileHandler.WriteToFile(path, msgData.Vessel.Data, msgData.Vessel.NumBytes);
 

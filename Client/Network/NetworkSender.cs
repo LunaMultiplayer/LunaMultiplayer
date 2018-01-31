@@ -7,6 +7,7 @@ using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using LunaCommon.Message.Data.Vessel;
 
 namespace LunaClient.Network
 {
@@ -83,6 +84,11 @@ namespace LunaClient.Network
 
                         message.Serialize(lidgrenMsg, SettingsSystem.CurrentSettings.CompressionEnabled);
                         NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
+
+                        if (message.Data.GetType() == typeof(VesselProtoMsgData))
+                        {
+                            LunaLog.Log($"PROTODATA: {((VesselProtoMsgData)message.Data).Vessel.VesselId} bytes: {((VesselProtoMsgData)message.Data).Vessel.NumBytes} LdgMsg: {lidgrenMsg.LengthBytes} ");
+                        }
                     }
                 }
                 

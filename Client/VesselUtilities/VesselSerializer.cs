@@ -6,9 +6,6 @@ namespace LunaClient.VesselUtilities
 {
     public class VesselSerializer
     {
-        private static readonly object LockObj = new object();
-        private static readonly ConfigNode ConfigNode = new ConfigNode();
-
         public static ProtoVessel DeserializeVessel(byte[] data, int numBytes)
         {
             try
@@ -25,18 +22,19 @@ namespace LunaClient.VesselUtilities
             }
         }
 
-        private static bool PreSerializationChecks(ProtoVessel protoVessel)
+        private static bool PreSerializationChecks(ProtoVessel protoVessel, out ConfigNode configNode)
         {
+            configNode = new ConfigNode();
+
             if (protoVessel == null)
             {
                 LunaLog.LogError("[LMP]: Cannot serialize a null protovessel");
                 return false;
             }
 
-            ConfigNode.ClearData();
             try
             {
-                protoVessel.Save(ConfigNode);
+                protoVessel.Save(configNode);
             }
             catch (Exception)
             {
@@ -44,17 +42,17 @@ namespace LunaClient.VesselUtilities
                 return false;
             }
 
-            var vesselId = new Guid(ConfigNode.GetValue("pid"));
+            var vesselId = new Guid(configNode.GetValue("pid"));
 
             //Defend against NaN orbits
-            if (VesselHasNaNPosition(ConfigNode))
+            if (VesselHasNaNPosition(configNode))
             {
                 LunaLog.LogError($"[LMP]: Vessel {vesselId} has NaN position");
                 return false;
             }
             
             //Clean up the vessel so we send only the important data
-            CleanUpVesselNode(ConfigNode, vesselId);
+            CleanUpVesselNode(configNode, vesselId);
             
             //TODO: Remove tourists from the vessel. This must be done in the CleanUpVesselNode method
             //foreach (var pps in protoVessel.protoPartSnapshots)
@@ -69,11 +67,7 @@ namespace LunaClient.VesselUtilities
 
         public static byte[] SerializeVessel(ProtoVessel protoVessel)
         {
-            //Lock this as we are using a shared ConfigNode
-            lock (LockObj)
-            {
-                return PreSerializationChecks(protoVessel) ? ConfigNodeSerializer.Serialize(ConfigNode) : new byte[0];
-            }
+            return PreSerializationChecks(protoVessel, out var confiNode) ? ConfigNodeSerializer.Serialize(confiNode) : new byte[0];
         }
 
         /// <summary>
@@ -81,17 +75,14 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         public static void SerializeVesselToArray(ProtoVessel protoVessel, byte[] data, out int numBytes)
         {
-            //Lock this as we are using a shared ConfigNode
-            lock (LockObj)
+            if (PreSerializationChecks(protoVessel, out var confiNode))
             {
-                if (PreSerializationChecks(protoVessel))
-                {
-                    ConfigNodeSerializer.SerializeToArray(ConfigNode, data, out numBytes);
-                }
-                else
-                {
-                    numBytes = 0;
-                }
+
+                ConfigNodeSerializer.SerializeToArray(confiNode, data, out numBytes);
+            }
+            else
+            {
+                numBytes = 0;
             }
         }
 

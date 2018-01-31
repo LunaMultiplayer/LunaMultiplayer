@@ -40,6 +40,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FileHandlerTest.cs" />
     <Compile Include="MessageStoreTest.cs" />
     <Compile Include="SerializationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -53,6 +54,10 @@
     <ProjectReference Include="..\Lidgren.Network\Lidgren.Network.csproj">
       <Project>{49ba1c69-6104-41ac-a5d8-b54fa9f696e8}</Project>
       <Name>Lidgren.Network</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Server\Server.csproj">
+      <Project>{fa6e9184-e243-49cc-94fa-ac557493b900}</Project>
+      <Name>Server</Name>
     </ProjectReference>
     <ProjectReference Include="..\TPL\System.Threading.csproj">
       <Project>{dcb5d745-525c-46a1-bfc0-e12f87ab6165}</Project>

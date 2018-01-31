@@ -1,6 +1,7 @@
 ﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Enums;
+using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Time;
 using Server.Client;
@@ -44,6 +45,7 @@ namespace Server.Server
 
         public void ReceiveCallback(ClientStructure client, NetIncomingMessage msg)
         {
+            var length = msg.LengthBytes;
             if (client == null || msg.LengthBytes <= 1) return;
 
             if (client.ConnectionStatus == ConnectionStatus.Connected)
@@ -51,6 +53,11 @@ namespace Server.Server
 
             var message = DeserializeMessage(msg);
             if (message == null) return;
+
+            if (message.Data.GetType() == typeof(VesselProtoMsgData))
+            {
+                LunaLog.NetworkDebug($"PROTODATA: {((VesselProtoMsgData)message.Data).Vessel.VesselId} bytes: {((VesselProtoMsgData)message.Data).Vessel.NumBytes} LdgMsg: {length} ");
+            }
 
             LmpPluginHandler.FireOnMessageReceived(client, message);
             //A plugin has handled this message and requested suppression of the default behavior
