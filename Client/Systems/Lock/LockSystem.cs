@@ -120,7 +120,7 @@ namespace LunaClient.Systems.Lock
         /// </summary>
         /// <param name="lockDefinition">The definition of the lock to acquire</param>
         /// <param name="force">Force the aquire. Usually false unless in dockings.</param>
-        public void AcquireLock(LockDefinition lockDefinition, bool force = false)
+        private void AcquireLock(LockDefinition lockDefinition, bool force = false)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockAcquireMsgData>();
             msgData.Lock = lockDefinition;
@@ -134,7 +134,8 @@ namespace LunaClient.Systems.Lock
         /// </summary>
         public void AcquireControlLock(Guid vesselId, bool force = false)
         {
-            AcquireLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+            if (!LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                AcquireLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
         }
 
         /// <summary>
@@ -142,7 +143,8 @@ namespace LunaClient.Systems.Lock
         /// </summary>
         public void AcquireUpdateLock(Guid vesselId, bool force = false)
         {
-            AcquireLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+            if (!LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                AcquireLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
         }
 
         /// <summary>
@@ -150,7 +152,8 @@ namespace LunaClient.Systems.Lock
         /// </summary>
         public void AcquireUnloadedUpdateLock(Guid vesselId, bool force = false)
         {
-            AcquireLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+            if (!LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                AcquireLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
         }
 
         /// <summary>
