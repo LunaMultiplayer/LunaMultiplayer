@@ -4,9 +4,12 @@ using LunaClient.Systems;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
+using LunaClient.VesselStore;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -89,11 +92,24 @@ namespace LunaClient.Windows.Debug
                     StringBuilder.AppendLine($"Last receive time: {NetworkStatistics.GetStatistics("LastReceiveTime")}ms ago.");
                     StringBuilder.AppendLine($"Messages in cache: {NetworkStatistics.GetStatistics("MessagesInCache")}.");
                     StringBuilder.AppendLine($"Message data in cache: {NetworkStatistics.GetStatistics("MessageDataInCache")}.");
-#if DEBUG
                     StringBuilder.AppendLine($"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.");
                     StringBuilder.AppendLine($"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n");
-#endif
                     ConnectionText = StringBuilder.ToString();
+                    StringBuilder.Length = 0;
+                }
+
+                if (DisplayVesselStoreData)
+                {
+                    StringBuilder.Append("Num of vessels: ").Append(VesselsProtoStore.AllPlayerVessels.Count).AppendLine();
+
+                    VesselProtoStoreData.Clear();
+                    VesselProtoStoreData.AddRange(VesselsProtoStore.AllPlayerVessels.Select(p=> new Tuple<Guid, string>(p.Key, p.Value.Vessel?.vesselName)));
+                    foreach (var vessel in VesselProtoStoreData)
+                    {
+                        StringBuilder.Append(vessel.Item1).Append(" - ").AppendLine(vessel.Item2);
+                    }
+
+                    VesselStoreText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }
             }
@@ -176,8 +192,11 @@ namespace LunaClient.Windows.Debug
         public string VectorText { get; set; } = "";
         public string NtpText { get; set; } = "";
         public string ConnectionText { get; set; } = "";
+        public string VesselStoreText { get; set; } = "";
         public float LastUpdateTime { get; set; }
         private float DisplayUpdateInterval { get; } = .2f;
+
+        private static readonly List<Tuple<Guid, string>> VesselProtoStoreData = new List<Tuple<Guid, string>>();
 
         #endregion
 
@@ -187,6 +206,8 @@ namespace LunaClient.Windows.Debug
         protected bool DisplayVectors { get; set; }
         protected bool DisplayNtp { get; set; }
         protected bool DisplayConnectionQueue { get; set; }
+
+        protected bool DisplayVesselStoreData { get; set; }
 
         #endregion
     }
