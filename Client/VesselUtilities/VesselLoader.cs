@@ -18,6 +18,8 @@ namespace LunaClient.VesselUtilities
 {
     public class VesselLoader
     {
+        public static Guid ReloadingVesselId { get; set; }
+
         /// <summary>
         /// Here we hold all the messages of "Target: xxx" message created by SetVesselTarget to remove them when we reload a vessel and set
         /// back the target to it
@@ -52,6 +54,7 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         public static bool ReloadVessel(ProtoVessel vesselProto)
         {
+            ReloadingVesselId = vesselProto.vesselID;
             try
             {
                 //Are we realoading our current active vessel?
@@ -89,6 +92,10 @@ namespace LunaClient.VesselUtilities
             {
                 LunaLog.LogError($"[LMP]: Error reloading vessel: {e}");
                 return false;
+            }
+            finally
+            {
+                ReloadingVesselId = Guid.Empty;
             }
         }
 

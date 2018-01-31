@@ -85,7 +85,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// Unloads a vessel from the game in 1 frame. Caution with this method as it can generate issues!
         /// Specially if you receive a message for a vessel and that vessel is not found as you called this method
         /// </summary>
-        public void UnloadVessel(Vessel killVessel)
+        private void UnloadVessel(Vessel killVessel)
         {
             if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel))
             {
@@ -98,8 +98,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         }
 
         /// <summary>
-        /// Unloads a vessel from the game in 1 frame. Caution with this method as it can generate issues!
-        /// Specially if you receive a message for a vessel and that vessel is not found as you called this method
+        /// Unloads a vessel from the game in 1 frame.
         /// </summary>
         public void UnloadVessel(Guid vesselId)
         {
@@ -138,7 +137,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         private void RemoveSafetyBubbleDebris()
         {
             var vesselToRemove = FlightGlobals.Vessels.Where(v => v != null && v.state == Vessel.State.INACTIVE && v.vesselType != VesselType.Flag &&
-                                                                  v.id != FlightGlobals.ActiveVessel?.id && VesselCommon.IsInSafetyBubble(v));
+                                            v.id != FlightGlobals.ActiveVessel?.id && VesselCommon.IsInSafetyBubble(v));
 
             foreach (var vessel in vesselToRemove)
             {
@@ -239,7 +238,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             try
             {
-                //This method will call our event "OnVesselWillDestroy" and remove the locks if needed...
+                //CAUTION!!!!! This method will call our event "VesselRemoveEvents.OnVesselWillDestroy" Check the method to see what can happen!
                 killVessel?.Die();
             }
             catch (Exception killException)

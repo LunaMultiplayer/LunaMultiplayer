@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselUtilities;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -40,7 +41,7 @@ namespace LunaClient.Systems.KerbalSys
             if (previousStatus != newStatus)
             {
                 var vesselId = System.FindVesselForKerbal(kerbal);
-                if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName) || 
+                if (vesselId == VesselLoader.ReloadingVesselId || LockSystem.LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName) || 
                     LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                 {
                     System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);

@@ -16,9 +16,12 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void OnVesselWillDestroy(Vessel dyingVessel)
         {
+            //We are just reloading a vessel and the vessel.Die() was triggered so we should not do anything!
+            if (dyingVessel.id == VesselLoader.ReloadingVesselId)
+                return;
+
             //Only send the vessel remove msg if we own the unloaded update lock
-            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName) ||
-                !LockSystem.LockQuery.UnloadedUpdateLockExists(dyingVessel.id))
+            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
 
