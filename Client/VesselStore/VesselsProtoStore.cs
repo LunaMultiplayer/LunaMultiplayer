@@ -110,14 +110,17 @@ namespace LunaClient.VesselStore
                 vesselProtoUpd.ProtoVessel.CoM[1] = vesselPositionUpdate.CoM[1];
                 vesselProtoUpd.ProtoVessel.CoM[2] = vesselPositionUpdate.CoM[2];
 
-                vesselProtoUpd.ProtoVessel.orbitSnapShot.inclination = vesselPositionUpdate.Orbit[0];
-                vesselProtoUpd.ProtoVessel.orbitSnapShot.eccentricity = vesselPositionUpdate.Orbit[1];
-                vesselProtoUpd.ProtoVessel.orbitSnapShot.semiMajorAxis = vesselPositionUpdate.Orbit[2];
-                vesselProtoUpd.ProtoVessel.orbitSnapShot.LAN = vesselPositionUpdate.Orbit[3];
-                vesselProtoUpd.ProtoVessel.orbitSnapShot.argOfPeriapsis = vesselPositionUpdate.Orbit[4];
-                vesselProtoUpd.ProtoVessel.orbitSnapShot.meanAnomalyAtEpoch = vesselPositionUpdate.Orbit[5];
-                vesselProtoUpd.ProtoVessel.orbitSnapShot.epoch = vesselPositionUpdate.Orbit[6];
-                vesselProtoUpd.ProtoVessel.orbitSnapShot.ReferenceBodyIndex = (int)vesselPositionUpdate.Orbit[7];
+                if (vesselProtoUpd.ProtoVessel.orbitSnapShot != null)
+                {
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.inclination = vesselPositionUpdate.Orbit[0];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.eccentricity = vesselPositionUpdate.Orbit[1];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.semiMajorAxis = vesselPositionUpdate.Orbit[2];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.LAN = vesselPositionUpdate.Orbit[3];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.argOfPeriapsis = vesselPositionUpdate.Orbit[4];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.meanAnomalyAtEpoch = vesselPositionUpdate.Orbit[5];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.epoch = vesselPositionUpdate.Orbit[6];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.ReferenceBodyIndex = (int) vesselPositionUpdate.Orbit[7];
+                }
             }
         }
 
