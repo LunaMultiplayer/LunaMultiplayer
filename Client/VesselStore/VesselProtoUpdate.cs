@@ -31,6 +31,7 @@ namespace LunaClient.VesselStore
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
         public bool VesselExist => Vessel != null;
         public bool ShouldBeLoaded => SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(VesselId);
+        public bool IsInSafetyBubble => VesselCommon.IsInSafetyBubble(ProtoVessel);
 
         private readonly ConcurrentDictionary<uint, ProtoPartSnapshot> _vesselParts = new ConcurrentDictionary<uint, ProtoPartSnapshot>();
         public ConcurrentDictionary<uint, ProtoPartSnapshot> VesselParts
