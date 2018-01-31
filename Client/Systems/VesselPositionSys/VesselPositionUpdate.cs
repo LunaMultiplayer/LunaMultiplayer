@@ -166,8 +166,8 @@ namespace LunaClient.Systems.VesselPositionSys
         private void UpdateProtoVesselValues()
         {
             Vessel.protoVessel.latitude = LatLonAlt[0];
-            Vessel.protoVessel.longitude = LatLonAlt[0];
-            Vessel.protoVessel.altitude = LatLonAlt[0];
+            Vessel.protoVessel.longitude = LatLonAlt[1];
+            Vessel.protoVessel.altitude = LatLonAlt[2];
             Vessel.protoVessel.height = HeightFromTerrain;
 
             Vessel.protoVessel.normal[0] = Normal[0];

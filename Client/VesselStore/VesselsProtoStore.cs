@@ -92,8 +92,8 @@ namespace LunaClient.VesselStore
             if (AllPlayerVessels.TryGetValue(vesselPositionMsgData.VesselId, out var vesselProtoUpd))
             {
                 vesselProtoUpd.ProtoVessel.latitude = vesselPositionMsgData.LatLonAlt[0];
-                vesselProtoUpd.ProtoVessel.longitude = vesselPositionMsgData.LatLonAlt[0];
-                vesselProtoUpd.ProtoVessel.altitude = vesselPositionMsgData.LatLonAlt[0];
+                vesselProtoUpd.ProtoVessel.longitude = vesselPositionMsgData.LatLonAlt[1];
+                vesselProtoUpd.ProtoVessel.altitude = vesselPositionMsgData.LatLonAlt[2];
                 vesselProtoUpd.ProtoVessel.height = vesselPositionMsgData.HeightFromTerrain;
 
                 vesselProtoUpd.ProtoVessel.normal[0] = (float)vesselPositionMsgData.NormalVector[0];
