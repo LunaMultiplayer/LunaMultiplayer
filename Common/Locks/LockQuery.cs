@@ -22,6 +22,8 @@ namespace LunaCommon.Locks
         {
             switch (type)
             {
+                case LockType.Spectator:
+                    return SpectatorLockExists(playerName);
                 case LockType.Asteroid:
                     return AsteroidLockBelongsToPlayer(playerName);
                 case LockType.Control:
