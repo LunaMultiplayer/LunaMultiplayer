@@ -43,6 +43,8 @@ namespace LunaClient.Systems.GameScene
                     ReleaseAsteroidLock();
                     if (SettingsSystem.ServerSettings.DropControlOnExit)
                         ReleaseAllControlLocks();
+                    //When going to main menu activate LMP in case it was hidden
+                    MainSystem.ToolbarShowGui = true;
                     break;
                 case GameScenes.SPACECENTER:
                 case GameScenes.EDITOR:
