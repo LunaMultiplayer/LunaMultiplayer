@@ -125,6 +125,9 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void ApplyVesselUpdate()
         {
+            //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
+            VesselsProtoStore.UpdateVesselProtoPosition(this);
+
             if (Body == null || Vessel == null || Vessel.precalc == null || Vessel.state == Vessel.State.DEAD || Target == null ||
                 FlightGlobals.ActiveVessel?.id == VesselId && !VesselCommon.IsSpectating)
             {
@@ -192,8 +195,6 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.orbitSnapShot.meanAnomalyAtEpoch = Orbit[5];
             Vessel.protoVessel.orbitSnapShot.epoch = Orbit[6];
             Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Orbit[7];
-
-            VesselsProtoStore.UpdateVesselProtoPosition(this);
         }
         
         private void OldApplyInterpolationsToLoadedVessel(float lerpPercentage)

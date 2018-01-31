@@ -17,13 +17,15 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             if (!(msg.Data is VesselUpdateMsgData msgData) || !System.UpdateSystemReady) return;
 
+            //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
+            VesselsProtoStore.UpdateVesselProtoValues(msgData);
+
             var vessel = FlightGlobals.FindVessel(msgData.VesselId);
             if (vessel == null) return;
             
             UpdateVesselFields(vessel, msgData);
             UpdateActionGroups(vessel, msgData);
             UpdateProtoVesselValues(vessel.protoVessel, msgData);
-            VesselsProtoStore.UpdateVesselProtoValues(msgData);
         }
 
         private static void UpdateVesselFields(Vessel vessel, VesselUpdateMsgData msgData)
