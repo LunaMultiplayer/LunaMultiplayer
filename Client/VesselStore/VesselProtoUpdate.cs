@@ -1,4 +1,6 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems;
+using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using LunaCommon;
@@ -109,6 +111,13 @@ namespace LunaClient.VesselStore
             //In case there's a deserialization error skip it and keep the older proto
             if (newProto != null) 
                 ProtoVessel = newProto;
+
+            //If protovessel is still null then unfortunately we must remove that vessel as the server sent us a bad vessel
+            if (_protoVessel == null)
+            {
+                LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
+                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(VesselId);
+            }
 
             VesselParts.Clear();
             foreach (var protoPart in ProtoVessel.protoPartSnapshots)
