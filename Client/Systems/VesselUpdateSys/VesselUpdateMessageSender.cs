@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -16,6 +17,8 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public void SendVesselUpdate(Vessel vessel)
         {
+
+
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselUpdateMsgData>();
             msgData.VesselId = vessel.id;
             msgData.Name = vessel.vesselName;
@@ -40,6 +43,9 @@ namespace LunaClient.Systems.VesselUpdateSys
                 msgData.ActionGroups[i].State = vessel.ActionGroups.groups[i];
                 msgData.ActionGroups[i].Time = vessel.ActionGroups.cooldownTimes[i];
             }
+
+            //Update our own values in the store aswell as otherwise if we leave the vessel it can still be in the safety bubble
+            VesselsProtoStore.UpdateVesselProtoValues(msgData);
 
             SendMessage(msgData);
         }

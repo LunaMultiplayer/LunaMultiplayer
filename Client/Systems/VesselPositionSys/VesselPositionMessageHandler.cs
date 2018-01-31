@@ -3,6 +3,7 @@ using LunaClient.Base.Interface;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.VesselStore;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -26,6 +27,9 @@ namespace LunaClient.Systems.VesselPositionSys
             //Ignore updates if vessel is in kill list
             if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselId))
                 return;
+
+            //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
+            VesselsProtoStore.UpdateVesselProtoPosition(msgData);
 
             if (!VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var existingPositionUpdate))
             {
