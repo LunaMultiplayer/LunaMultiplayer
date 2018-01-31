@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Utilities;
+using LunaClient.VesselStore;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
@@ -64,7 +65,8 @@ namespace LunaClient.Windows.Locks
                             VesselName = FlightGlobals.Vessels[i].name,
                             ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id),
                             UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id),
-                            UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id)
+                            UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id),
+                            ExistsInStore = VesselsProtoStore.AllPlayerVessels.ContainsKey(FlightGlobals.Vessels[i].id)
                         });
                     }
                     else
@@ -73,6 +75,7 @@ namespace LunaClient.Windows.Locks
                         existingVesselLock.ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id);
                         existingVesselLock.UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id);
                         existingVesselLock.UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id);
+                        existingVesselLock.ExistsInStore = VesselsProtoStore.AllPlayerVessels.ContainsKey(FlightGlobals.Vessels[i].id);
                     }
                 }
 
