@@ -38,6 +38,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, KillPastSubspaceVessels));
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, RemoveQueuedVessels));
             SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, FlushRemovedVessels));
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, RemoveSafetyBubbleDebris));
         }
 
         protected override void OnDisabled()
@@ -129,6 +130,22 @@ namespace LunaClient.Systems.VesselRemoveSys
         #endregion
 
         #region Update methods
+
+        /// <summary>
+        /// The debris that is on the safety bubble SHOULD NEVER be synced with the server and at the same time 
+        /// it won't exist for any other player so here we just remove it in a routine
+        /// </summary>
+        private void RemoveSafetyBubbleDebris()
+        {
+            var vesselToRemove = FlightGlobals.Vessels.Where(v => v != null && v.state == Vessel.State.INACTIVE && v.vesselType != VesselType.Flag &&
+                                                                  v.id != FlightGlobals.ActiveVessel?.id && VesselCommon.IsInSafetyBubble(v));
+
+            foreach (var vessel in vesselToRemove)
+            {
+                LunaLog.Log($"[LMP]: Vessel {vessel.id} name {vessel.vesselName} it's an inactive vessel inside the safety bubble. Adding to kill list");
+                AddToKillList(vessel.id);
+            }
+        }
 
         /// <summary>
         /// Flush vessels older than 20 seconds
