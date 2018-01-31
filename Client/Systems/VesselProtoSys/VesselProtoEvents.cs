@@ -3,19 +3,20 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
+using LunaClient.VesselUtilities;
 using System;
 using System.Linq;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
-    public class VesselProtoEvents: SubSystem<VesselProtoSystem>
+    public class VesselProtoEvents : SubSystem<VesselProtoSystem>
     {
         /// <summary>
         /// Sends our vessel just when we start the flight
         /// </summary>
         public void FlightReady()
         {
-            if (FlightGlobals.ActiveVessel != null)
+            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
             {
                 System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
                 //Add our own vessel to the dictionary aswell
@@ -30,13 +31,13 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             //No need to check the unloaded update locks as vessels when unloaded don't have parts!
 
-            if (data.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(data.id))
+            if (!VesselCommon.IsSpectating && data.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(data.id))
             {
                 //We are modifying a vessel that LMP is not handling
                 if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.id))
                 {
                     //The vessel even exists on the store so probably it's a vessel that has lost a part or smth like that...
-                    if(LockSystem.LockQuery.UpdateLockBelongsToPlayer(data.id, SettingsSystem.CurrentSettings.PlayerName))
+                    if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(data.id, SettingsSystem.CurrentSettings.PlayerName))
                     {
                         //We own the update lock of that vessel that suffered a modification so just leave it here
                         //The main system has a routine that will check changes and send the new definition
@@ -91,7 +92,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <param name="data"></param>
         public void VesselGoOnRails(Vessel data)
         {
-            if (data.vesselType == VesselType.Flag && data.id == Guid.Empty)
+            if (!VesselCommon.IsSpectating && data.vesselType == VesselType.Flag && data.id == Guid.Empty)
             {
                 data.id = Guid.NewGuid();
                 data.protoVessel.vesselID = data.id;
@@ -104,7 +105,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public void OnPartDie(Part data)
         {
-            if(data.vessel == null) return;
+            if (VesselCommon.IsSpectating || data.vessel == null) return;
             if (data.vessel.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(data.vessel.id))
             {
                 if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.vessel.id))
@@ -125,7 +126,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         {
                             return;
                         }
-                        
+
                         if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
                         {
                             VesselsProtoStore.AllPlayerVessels[originalVessel.id].VesselHasUpdate = true;
