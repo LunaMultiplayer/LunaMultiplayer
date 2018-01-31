@@ -19,7 +19,6 @@ namespace LunaClient.Windows.CraftLibrary
 
         public override void Update()
         {
-            Display &= MainSystem.NetworkState >= ClientState.Running;
             SafeDisplay = Display;
         }
 
