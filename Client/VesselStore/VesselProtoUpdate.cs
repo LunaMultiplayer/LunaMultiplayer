@@ -103,7 +103,12 @@ namespace LunaClient.VesselStore
             _needToDeserializeData = false;
 
             _vesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
-            ProtoVessel = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
+
+            var newProto = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
+            
+            //In case there's a deserialization error skip it and keep the older proto
+            if (newProto != null) 
+                ProtoVessel = newProto;
 
             VesselParts.Clear();
             foreach (var protoPart in ProtoVessel.protoPartSnapshots)
