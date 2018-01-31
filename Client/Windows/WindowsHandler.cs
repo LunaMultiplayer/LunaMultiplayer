@@ -4,6 +4,7 @@ using LunaClient.Windows.Chat;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
+using LunaClient.Windows.Locks;
 using LunaClient.Windows.Mod;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.ServerList;
@@ -27,6 +28,7 @@ namespace LunaClient.Windows
             WindowsContainer.Get<CraftLibraryWindow>(),
             WindowsContainer.Get<DebugWindow>(),
             WindowsContainer.Get<SystemsWindow>(),
+            WindowsContainer.Get<LocksWindow>(),
             WindowsContainer.Get<ModWindow>(),
             WindowsContainer.Get<OptionsWindow>(),
             WindowsContainer.Get<UniverseConverterWindow>(),

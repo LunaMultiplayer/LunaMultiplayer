@@ -16,6 +16,7 @@ namespace LunaClient.Windows.Status
         public const string CraftBtnTxt = "Craft";
         public const string DebugBtnTxt = "Debug";
         public const string SystemsBtnTxt = "Systems";
+        public const string LocksBtnTxt = "Locks";
         public const string WarpingLabelTxt = "WARPING";
         public const string SyncBtnTxt = "Sync";
         public const string DisconnectBtnTxt = "Disconnect";

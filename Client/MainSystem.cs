@@ -244,6 +244,7 @@ namespace LunaClient
             //Disclaimer window: 6713
             //Servers window: 6714
             //Systems window: 6715
+            //Locks window: 6716
 
             if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
             {

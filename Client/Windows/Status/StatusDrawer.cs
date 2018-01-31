@@ -8,6 +8,7 @@ using LunaClient.Systems.Warp;
 using LunaClient.Windows.Chat;
 using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
+using LunaClient.Windows.Locks;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.Systems;
 using LunaCommon;
@@ -45,6 +46,7 @@ namespace LunaClient.Windows.Status
             WindowsContainer.Get<DebugWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<DebugWindow>().Display, StatusTexts.DebugBtnTxt, ButtonStyle);
 #if DEBUG
             WindowsContainer.Get<SystemsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<SystemsWindow>().Display, StatusTexts.SystemsBtnTxt, ButtonStyle);
+            WindowsContainer.Get<LocksWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<LocksWindow>().Display, StatusTexts.LocksBtnTxt, ButtonStyle);
 #endif
 
             GUILayout.EndHorizontal();
