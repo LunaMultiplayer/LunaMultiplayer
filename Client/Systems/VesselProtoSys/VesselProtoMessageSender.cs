@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
@@ -31,7 +32,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 SendVesselMessage(vessel, false);
             }
         }
-        
+
         public void SendVesselMessage(Vessel vessel, bool force)
         {
             if (vessel == null || VesselCommon.IsSpectating || vessel.state == Vessel.State.DEAD)
@@ -70,8 +71,16 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (numBytes > 0)
                 {
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
-                    msgData.Vessel.VesselSituation = (int) protoVessel.situation;
+                    msgData.Vessel.VesselSituation = (int)protoVessel.situation;
                     FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
+                }
+                else
+                {
+                    if (protoVessel.vesselType == VesselType.Debris)
+                    {
+                        LunaLog.Log($"Serialization of debris vessel: {protoVessel.vesselID} name: {protoVessel.vesselName} failed. Adding to kill list");
+                        SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(protoVessel.vesselID);
+                    }
                 }
             }
         }
@@ -85,7 +94,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             Array.Copy(vesselBytes, 0, msgData.Vessel.Data, 0, numBytes);
             msgData.Vessel.NumBytes = numBytes;
-            
+
             SendMessage(msgData);
         }
 
