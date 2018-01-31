@@ -28,6 +28,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public void VesselCreate(Vessel data)
         {
+            //No need to check the unloaded update locks as vessels when unloaded don't have parts!
+
             if (data.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(data.id))
             {
                 //We are modifying a vessel that LMP is not handling
@@ -39,33 +41,11 @@ namespace LunaClient.Systems.VesselProtoSys
                         //We own the update lock of that vessel that suffered a modification so just leave it here
                         //The main system has a routine that will check changes and send the new definition
                         LunaLog.Log($"SKIPPING detected change in vesselId {data.id} name {data.vesselName} (we own update lock)");
-                        return;
                     }
                     else
                     {
-                        if (!LockSystem.LockQuery.UpdateLockExists(data.id))
-                        {
-                            if(LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(data.id, SettingsSystem.CurrentSettings.PlayerName))
-                            {
-                                //Vessel is probably very far away and nobody is near it. Still, as we have the unloaded update lock we must
-                                //update the vessel definition. We don't need to force it anyway
-                                LunaLog.Log($"SENDING change in NEW vesselId {data.id} name {data.vesselName} (we own UnloadedUpdate lock)");
-                                System.MessageSender.SendVesselMessage(data, false);
-                            }
-                            else
-                            {
-                                //Nobody has the unloaded update/update lock or perhaps another person has it.
-                                //Therefore roll back the changes we detected
-                                VesselsProtoStore.AllPlayerVessels[data.id].VesselHasUpdate = true;
-                                LunaLog.Log($"REVERTING change in NEW vesselId {data.id} name {data.vesselName} (DON'T own UnloadedUpdate lock)");
-                            }
-                        }
-                        else
-                        {
-                            //Somebody else has the update lock, so roll back the changes we detected
-                            LunaLog.Log($"REVERTING change in NEW vesselId {data.id} name {data.vesselName} (DON'T own UnloadedUpdate lock)");
-                            VesselsProtoStore.AllPlayerVessels[data.id].VesselHasUpdate = true;
-                        }
+                        LunaLog.Log($"REVERTING change in NEW vesselId {data.id} name {data.vesselName} (DON'T own UnloadedUpdate lock)");
+                        VesselsProtoStore.AllPlayerVessels[data.id].VesselHasUpdate = true;
                     }
                 }
                 else
@@ -92,40 +72,11 @@ namespace LunaClient.Systems.VesselProtoSys
                             System.MessageSender.SendVesselMessage(data, true);
                             //Add it also to our store
                             VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
-                            return;
                         }
                         else
                         {
-                            if (!LockSystem.LockQuery.UpdateLockExists(originalVessel.id))
-                            {
-                                if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                                {
-                                    //Original vessel is probably very far away and nobody is near it. Still, as we have the unloaded update lock we must
-                                    //update the vessel debris definition.
-                                    LunaLog.Log($"SENDING NEW vesselId {data.id} name {data.vesselName} (Original vessel UNL UPD lock is ours)");
-                                    //We own the update lock of that vessel that originated that part so let's get that updat lock and send the definition
-                                    SystemsContainer.Get<LockSystem>().AcquireUpdateLock(data.id, true);
-                                    //Now send this debris and force it!
-                                    System.MessageSender.SendVesselMessage(data, true);
-                                    //Add it also to our store
-                                    VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
-                                }
-                                else
-                                {
-                                    LunaLog.Log($"REVERTING NEW vesselId {data.id} name {data.vesselName} (UNL UPD lock is NOT ours)");
-
-                                    //Nobody has the unloaded update/update lock or perhaps another person has it.
-                                    //Therefore roll back the changes we detected
-                                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(data.id);
-                                }
-                            }
-                            else
-                            {
-                                LunaLog.Log($"REVERTING NEW vesselId {data.id} name {data.vesselName} (UPD lock is NOT ours)");
-
-                                //Somebody else has the update lock, so roll back the changes we detected
-                                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(data.id);
-                            }
+                            LunaLog.Log($"REVERTING NEW vesselId {data.id} name {data.vesselName} (UPD lock is NOT ours)");
+                            SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(data.id);
                         }
                     }
                 }
@@ -145,6 +96,42 @@ namespace LunaClient.Systems.VesselProtoSys
                 data.id = Guid.NewGuid();
                 data.protoVessel.vesselID = data.id;
                 System.MessageSender.SendVesselMessage(data, true);
+            }
+        }
+
+        /// <summary>
+        /// Event called when a part is dead and removed from the game
+        /// </summary>
+        public void OnPartDie(Part data)
+        {
+            if(data.vessel == null) return;
+            if (data.vessel.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(data.vessel.id))
+            {
+                if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.vessel.id))
+                {
+                    if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(data.vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                    {
+                        VesselsProtoStore.AllPlayerVessels[data.vessel.id].VesselHasUpdate = true;
+                    }
+                }
+                else
+                {
+                    //The vessel is NEW as it's not in the store. It might be a debris...
+                    var rootPartOrFirstPart = data.vessel.rootPart ?? data.vessel.parts.FirstOrDefault();
+                    if (rootPartOrFirstPart != null)
+                    {
+                        var originalVessel = VesselsProtoStore.GetVesselByPartId(rootPartOrFirstPart.flightID);
+                        if (originalVessel == null)
+                        {
+                            return;
+                        }
+                        
+                        if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                        {
+                            VesselsProtoStore.AllPlayerVessels[originalVessel.id].VesselHasUpdate = true;
+                        }
+                    }
+                }
             }
         }
     }

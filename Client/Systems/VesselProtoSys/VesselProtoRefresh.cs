@@ -12,7 +12,9 @@ namespace LunaClient.Systems.VesselProtoSys
         private static readonly FieldInfo CrewField = typeof(ProtoVessel).GetField("crew", BindingFlags.Instance | BindingFlags.NonPublic);
         
         /// <summary>
-        /// Here we refresh the protovessel based on a vessel. This method is much better than calling vessel.BackupVessel() as it does not generate garbage.
+        /// Here we refresh the protovessel based on a vessel. 
+        /// Vessel -----------> Protovessel
+        /// This method is much better than calling vessel.BackupVessel() as it does not generate garbage.
         /// Also it returns true or false if there are substantial changes in the vessel that require updating the whole definition to the server and clients.
         /// </summary>
         public static bool RefreshVesselProto(Vessel vessel)

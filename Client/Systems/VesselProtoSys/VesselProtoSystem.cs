@@ -63,6 +63,7 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onVesselCreate.Add(VesselProtoEvents.VesselCreate);
             GameEvents.onVesselGoOnRails.Add(VesselProtoEvents.VesselGoOnRails);
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
+            GameEvents.onPartDie.Add(VesselProtoEvents.OnPartDie);
 
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
@@ -78,6 +79,7 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onVesselCreate.Remove(VesselProtoEvents.VesselCreate);
             GameEvents.onVesselGoOnRails.Remove(VesselProtoEvents.VesselGoOnRails);
             GameEvents.onFlightReady.Remove(VesselProtoEvents.FlightReady);
+            GameEvents.onPartDie.Remove(VesselProtoEvents.OnPartDie);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();
@@ -223,7 +225,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpdate))
                         {
                             CurrentlyUpdatingVesselId = vesselIdToReload;
-                            VesselUpdater.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel);
+                            VesselUpdater.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
                             vesselProtoUpdate.VesselHasUpdate = false;
                             CurrentlyUpdatingVesselId = Guid.Empty;
                         }

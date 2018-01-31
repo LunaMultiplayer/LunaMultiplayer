@@ -21,9 +21,10 @@ namespace LunaClient.Systems.VesselProtoSys
 
         /// <summary>
         /// This method will take a vessel and update all it's parts based on a protovessel
+        /// Protovessel --------------> Vessel
         /// This way we avoid having to unload and reload a vessel and it's terrible performance
         /// </summary>
-        public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel)
+        public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel, IEnumerable<uint> vesselPartsId = null)
         {
             if (vessel == null || protoVessel == null || vessel.state == Vessel.State.DEAD) return;
 
@@ -33,10 +34,11 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
             }
 
-            var hasMissingparts = vessel.loaded ? protoVessel.protoPartSnapshots.Any(pp => !vessel.parts.Any(p => p.missionID == pp.missionID && p.craftID == pp.craftID)) :
-                protoVessel.protoPartSnapshots.Any(pp => !vessel.protoVessel.protoPartSnapshots.Any(p => p.missionID == pp.missionID && p.craftID == pp.craftID));
-
-            if ((vessel.situation != protoVessel.situation && !VesselCommon.IsSpectating) || hasMissingparts)
+            var vesselProtoPartIds = vesselPartsId ?? protoVessel.protoPartSnapshots.Select(p => p.flightID);
+            var vesselPartsIds = vessel.parts.Select(p => p.flightID);
+            
+            var hasMissingparts = vesselProtoPartIds.Except(vesselPartsIds).Any();
+            if (hasMissingparts || (vessel.situation != protoVessel.situation && !VesselCommon.IsSpectating))
             {
                 //Better to reload the whole vessel if situation changes as it makes the transition more soft.
                 //Better to reload if has missing parts as creating them dinamically is a PIA
@@ -54,7 +56,7 @@ namespace LunaClient.Systems.VesselProtoSys
             for (var i = 0; i < vessel.parts.Count; i++)
             {
                 var part = vessel.parts[i];
-                var partSnapshot = protoVessel.protoPartSnapshots.FirstOrDefault(ps => ps.missionID == part.missionID && ps.craftID == part.craftID);
+                var partSnapshot = protoVessel.protoPartSnapshots.FirstOrDefault(ps => ps.flightID == part.flightID);
                 if (partSnapshot == null) //Part does not exist in the protovessel definition so kill it
                 {
                     part.Die();
@@ -67,52 +69,8 @@ namespace LunaClient.Systems.VesselProtoSys
                 //Set part "state" field... I don't know if this is really needed...
                 StateField?.SetValue(part, partSnapshot.state);
 
-                //Run trough all the part DEFINITION modules
-                foreach (var moduleSnapshot in partSnapshot.modules.Where(m => !VesselModulesToIgnore.ModulesToIgnore.Contains(m.moduleName)))
-                {
-                    //Get the corresponding module from the actual PART
-                    var module = part.Modules.Cast<PartModule>().FirstOrDefault(pm => pm.moduleName == moduleSnapshot.moduleName);
-                    if (module == null) continue;
-
-                    var definitionPartModuleFieldVals = moduleSnapshot.moduleValues.values.Cast<ConfigNode.Value>().Select(v => new { v.name, v.value }).ToArray();
-                    var partModuleFieldVals = module.Fields.Cast<BaseField>().Where(f => definitionPartModuleFieldVals.Any(mf => mf.name == f.name)).ToArray();
-
-                    //Run trough the current part Modules
-                    foreach (var existingField in partModuleFieldVals)
-                    {
-                        if (VesselModulesToIgnore.FieldsToIgnore.TryGetValue(module.moduleName, out var fieldsToIgnoreList) && fieldsToIgnoreList.Contains(existingField.name))
-                            continue;
-
-                        //Sometimes we get a proto part module value of 17.0001 and the part value is 17.0 so it's useless to reload
-                        //a whole part module for such a small change! FormatModuleValue() strips the decimals if the value is a decimal
-                        var value = existingField.GetValue(existingField.host).ToString().FormatModuleValue();
-                        var newVal = definitionPartModuleFieldVals.First(mf => mf.name == existingField.name).value.FormatModuleValue();
-
-                        //Field value between part module and part DEFINITION module are different!
-                        if (value != newVal)
-                        {
-                            PartModuleFields?.SetValue(module, new BaseFieldList(module));
-                            module.Fields.Load(moduleSnapshot.moduleValues);
-
-                            if (!VesselModulesToIgnore.ModulesToDontAwake.Contains(module.moduleName))
-                                module.OnAwake();
-                            if (!VesselModulesToIgnore.ModulesToDontLoad.Contains(module.moduleName))
-                                module.OnLoad(moduleSnapshot.moduleValues);
-                            if (!VesselModulesToIgnore.ModulesToDontStart.Contains(module.moduleName))
-                                module.OnStart(PartModule.StartState.Flying);
-                        }
-                    }
-                }
-
-                //Run trough the poart DEFINITION resources
-                foreach (var resourceSnapshot in partSnapshot.resources)
-                {
-                    //Get the corresponding resource from the actual PART
-                    var resource = part.Resources?.FirstOrDefault(pr => pr.info.name == resourceSnapshot.resourceName);
-                    if (resource == null) continue;
-
-                    resource.amount = resourceSnapshot.amount;
-                }
+                UpdatePartModules(partSnapshot, part);
+                UpdateVesselResources(partSnapshot, part);
             }
 
             if (hasCrewChanges)
@@ -148,6 +106,63 @@ namespace LunaClient.Systems.VesselProtoSys
             ////Init new parts. This must be done in another loop as otherwise new parts won't have their correct attachment parts.
             //foreach (var partSnapshot in PartsToInit)
             //    partSnapshot.Init(vessel);
+        }
+
+        private static void UpdatePartModules(ProtoPartSnapshot partSnapshot, Part part)
+        {
+            //Run trough all the part DEFINITION modules
+            foreach (var moduleSnapshot in partSnapshot.modules.Where(m => !VesselModulesToIgnore.ModulesToIgnore.Contains(m.moduleName)))
+            {
+                //Get the corresponding module from the actual PART
+                var module = part.Modules.Cast<PartModule>().FirstOrDefault(pm => pm.moduleName == moduleSnapshot.moduleName);
+                if (module == null) continue;
+
+                var definitionPartModuleFieldVals = moduleSnapshot.moduleValues.values.Cast<ConfigNode.Value>()
+                    .Select(v => new {v.name, v.value}).ToArray();
+                var partModuleFieldVals = module.Fields.Cast<BaseField>()
+                    .Where(f => definitionPartModuleFieldVals.Any(mf => mf.name == f.name)).ToArray();
+
+                //Run trough the current part Modules
+                foreach (var existingField in partModuleFieldVals)
+                {
+                    if (VesselModulesToIgnore.FieldsToIgnore.TryGetValue(module.moduleName, out var fieldsToIgnoreList) &&
+                        fieldsToIgnoreList.Contains(existingField.name))
+                        continue;
+
+                    //Sometimes we get a proto part module value of 17.0001 and the part value is 17.0 so it's useless to reload
+                    //a whole part module for such a small change! FormatModuleValue() strips the decimals if the value is a decimal
+                    var value = existingField.GetValue(existingField.host).ToString().FormatModuleValue();
+                    var newVal = definitionPartModuleFieldVals.First(mf => mf.name == existingField.name).value
+                        .FormatModuleValue();
+
+                    //Field value between part module and part DEFINITION module are different!
+                    if (value != newVal)
+                    {
+                        PartModuleFields?.SetValue(module, new BaseFieldList(module));
+                        module.Fields.Load(moduleSnapshot.moduleValues);
+
+                        if (!VesselModulesToIgnore.ModulesToDontAwake.Contains(module.moduleName))
+                            module.OnAwake();
+                        if (!VesselModulesToIgnore.ModulesToDontLoad.Contains(module.moduleName))
+                            module.OnLoad(moduleSnapshot.moduleValues);
+                        if (!VesselModulesToIgnore.ModulesToDontStart.Contains(module.moduleName))
+                            module.OnStart(PartModule.StartState.Flying);
+                    }
+                }
+            }
+        }
+
+        private static void UpdateVesselResources(ProtoPartSnapshot partSnapshot, Part part)
+        {
+            //Run trough the poart DEFINITION resources
+            foreach (var resourceSnapshot in partSnapshot.resources)
+            {
+                //Get the corresponding resource from the actual PART
+                var resource = part.Resources?.FirstOrDefault(pr => pr.info.name == resourceSnapshot.resourceName);
+                if (resource == null) continue;
+
+                resource.amount = resourceSnapshot.amount;
+            }
         }
 
         /// <summary>
