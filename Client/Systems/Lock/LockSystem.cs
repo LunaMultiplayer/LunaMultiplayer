@@ -6,6 +6,7 @@ using LunaCommon.Message.Data.Lock;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace LunaClient.Systems.Lock
 {
@@ -207,14 +208,20 @@ namespace LunaClient.Systems.Lock
         /// <summary>
         /// Release all the locks (update and control) of a vessel
         /// </summary>
-        public void ReleaseAllVesselLocks(Guid vesselId)
+        public void ReleaseAllVesselLocks(Guid vesselId, int msDelay = 0)
         {
-            if (LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId));
-            if (LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
-            if (LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+            TaskFactory.StartNew(() =>
+            {
+                if (msDelay > 0)
+                    Thread.Sleep(msDelay);
+
+                if (LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName,vesselId));
+                if (LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                    ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+                if (LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName,vesselId));
+            });
         }
 
         /// <summary>
