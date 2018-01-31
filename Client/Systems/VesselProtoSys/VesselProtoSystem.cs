@@ -30,8 +30,7 @@ namespace LunaClient.Systems.VesselProtoSys
         public VesselLoader VesselLoader { get; } = new VesselLoader();
 
         public bool ProtoSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready &&
-            HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating
-            && FlightGlobals.ActiveVessel.state != Vessel.State.DEAD;
+            HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating;
 
         public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null ||
@@ -65,10 +64,10 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
             GameEvents.onPartDie.Add(VesselProtoEvents.OnPartDie);
 
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval,
-                RoutineExecution.Update, SendVesselDefinition));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval, RoutineExecution.Update, SendVesselDefinition));
         }
 
         protected override void OnDisabled()
@@ -113,6 +112,23 @@ namespace LunaClient.Systems.VesselProtoSys
         #endregion
 
         #region Update routines
+
+
+        /// <summary>
+        /// While spectating, the vessel you are watching can crash or something and create debris that shouldn't exist.
+        /// Here we run trough all the current vessels that are in your game and remove the ones that are not in the proto store
+        /// </summary>
+        private static void RemoveBadDebrisWhileSpectating()
+        {
+            if (VesselCommon.IsSpectating)
+            {
+                foreach (var vessel in FlightGlobals.Vessels.Where(v => !VesselsProtoStore.AllPlayerVessels.ContainsKey(v.id)))
+                {
+                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(vessel.id);
+                }
+            }
+        }
+
 
         /// <summary>
         /// Send the definition of our own vessel and the secondary vessels.
@@ -192,7 +208,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 LunaLog.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
             }
         }
-        
+
         /// <summary>
         /// Check vessels that must be reloaded
         /// </summary>
