@@ -33,6 +33,7 @@ namespace LunaCommon.Message.Data.Vessel
             VesselSituation = lidgrenMsg.ReadInt32();
 
             NumBytes = lidgrenMsg.ReadInt32();
+
             if (Data.Length < NumBytes)
                 Data = new byte[NumBytes];
 
