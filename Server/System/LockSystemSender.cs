@@ -41,14 +41,17 @@ namespace Server.System
 
         public static void SendLockAquireMessage(ClientStructure client, LockDefinition lockDefinition, bool force)
         {
-            if (LockSystem.AcquireLock(lockDefinition, force))
+            if (LockSystem.AcquireLock(lockDefinition, force, out var repeatedAcquire))
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockAcquireMsgData>();
                 msgData.Lock = lockDefinition;
                 msgData.Force = force;
 
                 MessageQueuer.SendToAllClients<LockSrvMsg>(msgData);
-                LunaLog.Debug($"{lockDefinition.PlayerName} acquired lock {lockDefinition}");
+
+                //Just log it if we actually changed the value. Users might send repeated acquire locks as they take a bit of time to reach them...
+                if (!repeatedAcquire) 
+                    LunaLog.Debug($"{lockDefinition.PlayerName} acquired lock {lockDefinition}");
             }
             else
             {

@@ -9,13 +9,15 @@ namespace Server.System
         private static readonly LockStore LockStore = new LockStore();
         public static readonly LockQuery LockQuery = new LockQuery(LockStore);
         
-        public static bool AcquireLock(LockDefinition lockDef, bool force)
+        public static bool AcquireLock(LockDefinition lockDef, bool force, out bool repeatedAcquire)
         {
             if (force || !LockQuery.LockExists(lockDef))
             {
+                repeatedAcquire = LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.PlayerName);
                 LockStore.AddOrUpdateLock(lockDef);
                 return true;
             }
+            repeatedAcquire = false;
             return false;
         }
 

@@ -22,6 +22,8 @@ namespace LunaCommon.Locks
         {
             switch (type)
             {
+                case LockType.Asteroid:
+                    return AsteroidLockBelongsToPlayer(playerName);
                 case LockType.Control:
                     if (LockStore.ControlLocks.TryGetValue(vesselId, out var controlLock))
                         return controlLock.PlayerName == playerName;
