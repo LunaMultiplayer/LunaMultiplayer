@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
@@ -30,11 +31,10 @@ namespace LunaClient.Systems.VesselProtoSys
                 SendVesselMessage(vessel, false);
             }
         }
-
-
+        
         public void SendVesselMessage(Vessel vessel, bool force)
         {
-            if (vessel == null || VesselCommon.IsSpectating)
+            if (vessel == null || VesselCommon.IsSpectating || vessel.state == Vessel.State.DEAD)
                 return;
 
             VesselProtoSystem.CurrentlyUpdatingVesselId = vessel.id;
@@ -43,7 +43,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             //TODO: Now we send the protovessel all the time if someone is spectating us, perhaps we can just make a new system that sends the resources
             //as this will be better in terms of memory garbage...
-            if (force || vesselHasChanges || VesselCommon.IsSomeoneSpectatingUs)
+            if (force || vesselHasChanges || VesselCommon.IsSomeoneSpectatingUs || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
                 SendVesselMessage(vessel.protoVessel);
         }
 
