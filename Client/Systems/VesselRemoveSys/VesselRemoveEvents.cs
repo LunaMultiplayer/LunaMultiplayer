@@ -21,6 +21,10 @@ namespace LunaClient.Systems.VesselRemoveSys
                 !LockSystem.LockQuery.UnloadedUpdateLockExists(dyingVessel.id))
             {
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
+
+                //Add to the kill list so it's also removed from the store later on!
+                System.AddToKillList(dyingVessel.id);
+
                 SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(dyingVessel);
 
                 var killingOwnVessel = FlightGlobals.ActiveVessel?.id == dyingVessel.id;
