@@ -170,7 +170,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     //Load vessels that don't exist, are in our subspace and out of safety bubble
                     var vesselsToLoad = VesselsProtoStore.AllPlayerVessels
                         .Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded && 
-                        !VesselCommon.IsInSafetyBubble(v.Key));
+                        !VesselCommon.IsInSafetyBubble(v.Value.ProtoVessel));
 
                     foreach (var vesselProto in vesselsToLoad)
                     {
@@ -225,7 +225,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpdate))
                         {
                             CurrentlyUpdatingVesselId = vesselIdToReload;
-                            VesselUpdater.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
+                            ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
                             vesselProtoUpdate.VesselHasUpdate = false;
                             CurrentlyUpdatingVesselId = Guid.Empty;
                         }

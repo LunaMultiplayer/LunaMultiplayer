@@ -11,7 +11,7 @@ namespace LunaClient.Systems.VesselProtoSys
     /// <summary>
     /// Class that updates a vessel based on a protovessel definition
     /// </summary>
-    public static class VesselUpdater
+    public static class ProtoToVesselRefresh
     {
         private static FieldInfo StateField { get; } = typeof(Part).GetField("state", BindingFlags.Instance | BindingFlags.NonPublic);
         private static FieldInfo PartModuleFields { get; } = typeof(PartModule).GetField("fields", BindingFlags.Instance | BindingFlags.NonPublic);

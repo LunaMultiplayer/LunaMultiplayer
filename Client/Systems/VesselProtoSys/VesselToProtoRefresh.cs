@@ -7,7 +7,7 @@ using UniLinq;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
-    public class VesselProtoRefresh
+    public class VesselToProtoRefresh
     {
         private static readonly FieldInfo CrewField = typeof(ProtoVessel).GetField("crew", BindingFlags.Instance | BindingFlags.NonPublic);
         
