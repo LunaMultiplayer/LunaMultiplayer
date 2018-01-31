@@ -40,7 +40,8 @@ namespace LunaClient.Systems.KerbalSys
             if (previousStatus != newStatus)
             {
                 var vesselId = System.FindVesselForKerbal(kerbal);
-                if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName) || 
+                    LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                 {
                     System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
                     System.MessageSender.SendKerbal(kerbal);
