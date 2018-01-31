@@ -17,11 +17,11 @@ namespace LunaCommon.Message.Data.Vessel
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(VesselSituation);
 
-            if (compressData)
-            {
-                Data = CompressionHelper.CompressBytes(Data);
-                NumBytes = Data.Length;
-            }
+            //if (compressData)
+            //{
+            //    Data = CompressionHelper.CompressBytes(Data);
+            //    NumBytes = Data.Length;
+            //}
 
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
@@ -39,11 +39,11 @@ namespace LunaCommon.Message.Data.Vessel
 
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
 
-            if (dataCompressed)
-            {
-                Data = CompressionHelper.DecompressBytes(Data);
-                NumBytes = Data.Length;
-            }
+            //if (dataCompressed)
+            //{
+            //    Data = CompressionHelper.DecompressBytes(Data);
+            //    NumBytes = Data.Length;
+            //}
         }
         
         public int GetByteCount(bool dataCompressed)
