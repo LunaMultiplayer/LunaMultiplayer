@@ -50,10 +50,10 @@ namespace LunaClient.VesselUtilities
                 LunaLog.LogError($"[LMP]: Vessel {vesselId} has NaN position");
                 return false;
             }
-            
+
             //Clean up the vessel so we send only the important data
             CleanUpVesselNode(configNode, vesselId);
-            
+
             //TODO: Remove tourists from the vessel. This must be done in the CleanUpVesselNode method
             //foreach (var pps in protoVessel.protoPartSnapshots)
             //{
