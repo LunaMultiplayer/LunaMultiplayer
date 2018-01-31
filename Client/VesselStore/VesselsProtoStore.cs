@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems.VesselPositionSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using System;
@@ -88,38 +87,38 @@ namespace LunaClient.VesselStore
             }
         }
 
-        public static void UpdateVesselProtoPosition(VesselPositionUpdate vesselPositionUpdate)
+        public static void UpdateVesselProtoPosition(VesselPositionMsgData vesselPositionMsgData)
         {
-            if (AllPlayerVessels.TryGetValue(vesselPositionUpdate.VesselId, out var vesselProtoUpd))
+            if (AllPlayerVessels.TryGetValue(vesselPositionMsgData.VesselId, out var vesselProtoUpd))
             {
-                vesselProtoUpd.ProtoVessel.latitude = vesselPositionUpdate.LatLonAlt[0];
-                vesselProtoUpd.ProtoVessel.longitude = vesselPositionUpdate.LatLonAlt[0];
-                vesselProtoUpd.ProtoVessel.altitude = vesselPositionUpdate.LatLonAlt[0];
-                vesselProtoUpd.ProtoVessel.height = vesselPositionUpdate.HeightFromTerrain;
+                vesselProtoUpd.ProtoVessel.latitude = vesselPositionMsgData.LatLonAlt[0];
+                vesselProtoUpd.ProtoVessel.longitude = vesselPositionMsgData.LatLonAlt[0];
+                vesselProtoUpd.ProtoVessel.altitude = vesselPositionMsgData.LatLonAlt[0];
+                vesselProtoUpd.ProtoVessel.height = vesselPositionMsgData.HeightFromTerrain;
 
-                vesselProtoUpd.ProtoVessel.normal[0] = vesselPositionUpdate.Normal[0];
-                vesselProtoUpd.ProtoVessel.normal[1] = vesselPositionUpdate.Normal[1];
-                vesselProtoUpd.ProtoVessel.normal[2] = vesselPositionUpdate.Normal[2];
+                vesselProtoUpd.ProtoVessel.normal[0] = (float)vesselPositionMsgData.NormalVector[0];
+                vesselProtoUpd.ProtoVessel.normal[1] = (float)vesselPositionMsgData.NormalVector[1];
+                vesselProtoUpd.ProtoVessel.normal[2] = (float)vesselPositionMsgData.NormalVector[2];
 
-                vesselProtoUpd.ProtoVessel.rotation[0] = vesselPositionUpdate.SrfRelRotation[0];
-                vesselProtoUpd.ProtoVessel.rotation[1] = vesselPositionUpdate.SrfRelRotation[1];
-                vesselProtoUpd.ProtoVessel.rotation[2] = vesselPositionUpdate.SrfRelRotation[2];
-                vesselProtoUpd.ProtoVessel.rotation[3] = vesselPositionUpdate.SrfRelRotation[3];
+                vesselProtoUpd.ProtoVessel.rotation[0] = vesselPositionMsgData.SrfRelRotation[0];
+                vesselProtoUpd.ProtoVessel.rotation[1] = vesselPositionMsgData.SrfRelRotation[1];
+                vesselProtoUpd.ProtoVessel.rotation[2] = vesselPositionMsgData.SrfRelRotation[2];
+                vesselProtoUpd.ProtoVessel.rotation[3] = vesselPositionMsgData.SrfRelRotation[3];
 
-                vesselProtoUpd.ProtoVessel.CoM[0] = vesselPositionUpdate.CoM[0];
-                vesselProtoUpd.ProtoVessel.CoM[1] = vesselPositionUpdate.CoM[1];
-                vesselProtoUpd.ProtoVessel.CoM[2] = vesselPositionUpdate.CoM[2];
+                vesselProtoUpd.ProtoVessel.CoM[0] = (float)vesselPositionMsgData.Com[0];
+                vesselProtoUpd.ProtoVessel.CoM[1] = (float)vesselPositionMsgData.Com[1];
+                vesselProtoUpd.ProtoVessel.CoM[2] = (float)vesselPositionMsgData.Com[2];
 
                 if (vesselProtoUpd.ProtoVessel.orbitSnapShot != null)
                 {
-                    vesselProtoUpd.ProtoVessel.orbitSnapShot.inclination = vesselPositionUpdate.Orbit[0];
-                    vesselProtoUpd.ProtoVessel.orbitSnapShot.eccentricity = vesselPositionUpdate.Orbit[1];
-                    vesselProtoUpd.ProtoVessel.orbitSnapShot.semiMajorAxis = vesselPositionUpdate.Orbit[2];
-                    vesselProtoUpd.ProtoVessel.orbitSnapShot.LAN = vesselPositionUpdate.Orbit[3];
-                    vesselProtoUpd.ProtoVessel.orbitSnapShot.argOfPeriapsis = vesselPositionUpdate.Orbit[4];
-                    vesselProtoUpd.ProtoVessel.orbitSnapShot.meanAnomalyAtEpoch = vesselPositionUpdate.Orbit[5];
-                    vesselProtoUpd.ProtoVessel.orbitSnapShot.epoch = vesselPositionUpdate.Orbit[6];
-                    vesselProtoUpd.ProtoVessel.orbitSnapShot.ReferenceBodyIndex = (int) vesselPositionUpdate.Orbit[7];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.inclination = vesselPositionMsgData.Orbit[0];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.eccentricity = vesselPositionMsgData.Orbit[1];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.semiMajorAxis = vesselPositionMsgData.Orbit[2];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.LAN = vesselPositionMsgData.Orbit[3];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.argOfPeriapsis = vesselPositionMsgData.Orbit[4];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.meanAnomalyAtEpoch = vesselPositionMsgData.Orbit[5];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.epoch = vesselPositionMsgData.Orbit[6];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.ReferenceBodyIndex = (int) vesselPositionMsgData.Orbit[7];
                 }
             }
         }
