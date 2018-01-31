@@ -111,8 +111,7 @@ namespace LunaClient.Systems.VesselLockSys
                 foreach (var vesselId in vesselIdsWithUpdateLocks)
                 {
                     //For all the vessels we HAVE the update lock, we FORCE the UNLOADED update lock if we don't have it.
-                    if (!LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                        SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vesselId, true);
+                    SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vesselId, true);
                 }
 
                 //Now we get the vessels that we were updating and now are unloaded,dead or in safety bubble and release it's "Update" lock
@@ -243,10 +242,8 @@ namespace LunaClient.Systems.VesselLockSys
         {
             if (vessel == null) return;
 
-            if (!LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                SystemsContainer.Get<LockSystem>().AcquireUpdateLock(vessel.id, force);
-            if (!LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vessel.id, force);
+            SystemsContainer.Get<LockSystem>().AcquireUpdateLock(vessel.id, force);
+            SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vessel.id, force);
         }
 
         /// <summary>
