@@ -82,6 +82,17 @@ namespace LunaClient.VesselStore
             }
         }
 
+        /// <summary>
+        /// Raw updates a vessel on the dictionary. Use this to update vessels that you have the update/unloaded update lock.
+        /// </summary>
+        public static void RawUpdateVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId)
+        {
+            if (AllPlayerVessels.TryGetValue(vesselId, out var vesselProtoUpd))
+            {
+                vesselProtoUpd.Update(vesselData, numBytes, vesselId);
+            }
+        }
+
         public static void UpdateVesselProtoPosition(VesselPositionMsgData vesselPositionMsgData)
         {
             if (AllPlayerVessels.TryGetValue(vesselPositionMsgData.VesselId, out var vesselProtoUpd))
