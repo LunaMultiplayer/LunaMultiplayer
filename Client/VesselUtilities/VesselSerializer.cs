@@ -22,6 +22,29 @@ namespace LunaClient.VesselUtilities
             }
         }
 
+        public static byte[] SerializeVessel(ProtoVessel protoVessel)
+        {
+            return PreSerializationChecks(protoVessel, out var confiNode) ? ConfigNodeSerializer.Serialize(confiNode) : new byte[0];
+        }
+
+        /// <summary>
+        /// Serializes a vessel to a previous preallocated array (avoids garbage generation)
+        /// </summary>
+        public static void SerializeVesselToArray(ProtoVessel protoVessel, byte[] data, out int numBytes)
+        {
+            if (PreSerializationChecks(protoVessel, out var confiNode))
+            {
+
+                ConfigNodeSerializer.SerializeToArray(confiNode, data, out numBytes);
+            }
+            else
+            {
+                numBytes = 0;
+            }
+        }
+
+        #region Private methods
+
         private static bool PreSerializationChecks(ProtoVessel protoVessel, out ConfigNode configNode)
         {
             configNode = new ConfigNode();
@@ -64,29 +87,6 @@ namespace LunaClient.VesselUtilities
 
             return true;
         }
-
-        public static byte[] SerializeVessel(ProtoVessel protoVessel)
-        {
-            return PreSerializationChecks(protoVessel, out var confiNode) ? ConfigNodeSerializer.Serialize(confiNode) : new byte[0];
-        }
-
-        /// <summary>
-        /// Serializes a vessel to a previous preallocated array (avoids garbage generation)
-        /// </summary>
-        public static void SerializeVesselToArray(ProtoVessel protoVessel, byte[] data, out int numBytes)
-        {
-            if (PreSerializationChecks(protoVessel, out var confiNode))
-            {
-
-                ConfigNodeSerializer.SerializeToArray(confiNode, data, out numBytes);
-            }
-            else
-            {
-                numBytes = 0;
-            }
-        }
-
-        #region Private methods
 
         /// <summary>
         /// Here we clean up the node in order to NOT send some of the data (like maneuver nodes, etc)
