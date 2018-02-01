@@ -9,8 +9,8 @@
 </p>
 
 <p align="center">
-  <a href="../../releases"><img src="https://img.shields.io/github/release/gavazquez/lunamultiplayer.svg" alt="Latest release" /></a>
-  <img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" />
+  <a href="../../releases"><img src="https://img.shields.io/github/release/lunamultiplayer/lunamultiplayer.svg" alt="Latest release" /></a>
+  <a href="../../releases"><img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" />
   <img src="https://img.shields.io/github/search/lunamultiplayer/lunamultiplayer/goto.svg" alt="Total hits" />
 </p>
 
@@ -52,7 +52,7 @@ You can check the available servers in the official website [here](http://lunamu
 
 |   Branch   |   Build  |   Tests  |  Last commit  |   Activity    |
 | ---------- | -------- | -------- | ------------- | ------------- |
-| **master** |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/gavazquez/lunamultiplayer/master.svg)](../../commits/master) | [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/gavazquez/lunamultiplayer.svg)](../../commits/master)
+| **master** |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/lunamultiplayer/lunamultiplayer/master.svg)](../../commits/master) | [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lunamultiplayer/lunamultiplayer.svg)](../../commits/master)
 
 ---
 
@@ -76,5 +76,5 @@ Please visit [this page](../../wiki/Troubleshooting) in the wiki to solve the mo
 
 <p align="center">
   <a href="mailto:gavazquez@gmail.com"><img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" /></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/lunamultiplayer/LunaMultiPlayer.svg" alt="License" /></a>
 </p>
