@@ -10,7 +10,8 @@
 
 <p align="center">
   <a href="../../releases"><img src="https://img.shields.io/github/release/gavazquez/lunamultiplayer.svg" alt="Latest release" /></a>
-  <img src="https://img.shields.io/github/downloads/gavazquez/lunamultiplayer/total.svg" alt="Total downloads" />
+  <img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" />
+  <img src="https://img.shields.io/github/search/lunamultiplayer/lunamultiplayer/goto.svg" alt="Total hits" />
 </p>
 
 ---
