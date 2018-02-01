@@ -6,11 +6,10 @@ using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselStateSys;
+using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using LunaCommon.Locks;
-using System.Collections;
 using System.Reflection;
-using UnityEngine;
 
 namespace LunaClient.Systems.GameScene
 {
@@ -66,7 +65,7 @@ namespace LunaClient.Systems.GameScene
 
                 if(KSCVesselMarkers.fetch != null)
                     ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
-                Client.Singleton.StartCoroutine(DelayedClearVessels());
+                DelayedClearVessels();
             }
         }
 
@@ -74,12 +73,14 @@ namespace LunaClient.Systems.GameScene
         /// This coroutine removes the vessels when switching to the KSC. We delay the removal of the vessels so 
         /// in case we recover a vessel while in flight we correctly recover the crew, funds etc
         /// </summary>
-        private static IEnumerator DelayedClearVessels()
+        private static void DelayedClearVessels()
         {
-            yield return new WaitForSeconds(3f);
-            FlightGlobals.Vessels.Clear();
-            HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-            KSCVesselMarkers.fetch?.RefreshMarkers();
+            CoroutineUtil.StartDelayedRoutine(() =>
+            {
+                FlightGlobals.Vessels.Clear();
+                HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
+                KSCVesselMarkers.fetch?.RefreshMarkers();
+            }, 3);
         }
         
         /// <summary>
