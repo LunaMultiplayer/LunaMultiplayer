@@ -31,17 +31,18 @@ namespace LunaClient.Systems.Warp
                     _currentSubspace = value;
 
                     if (!ClientSubspaceList.ContainsKey(SettingsSystem.CurrentSettings.PlayerName))
-                        ClientSubspaceList.TryAdd(SettingsSystem.CurrentSettings.PlayerName, 0);
+                        ClientSubspaceList.TryAdd(SettingsSystem.CurrentSettings.PlayerName, _currentSubspace);
+                    else
+                        ClientSubspaceList[SettingsSystem.CurrentSettings.PlayerName] = _currentSubspace;
 
-                    ClientSubspaceList[SettingsSystem.CurrentSettings.PlayerName] = value;
-                    MessageSender.SendChangeSubspaceMsg(value);
+                    MessageSender.SendChangeSubspaceMsg(_currentSubspace);
 
-                    if (value > 0 && !SkipSubspaceProcess)
+                    if (_currentSubspace > 0 && !SkipSubspaceProcess)
                         ProcessNewSubspace();
 
                     SkipSubspaceProcess = false;
 
-                    LunaLog.Log($"[LMP]: Locked to subspace {value}, time: {CurrentSubspaceTime}");
+                    LunaLog.Log($"[LMP]: Locked to subspace {_currentSubspace}, time: {CurrentSubspaceTime}");
                 }
             }
         }
