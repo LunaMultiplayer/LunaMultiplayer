@@ -42,6 +42,8 @@ namespace LunaClient.Windows.Options
             SmallOption[0] = GUILayout.Width(100);
             SmallOption[1] = GUILayout.ExpandWidth(false);
 
+            TextAreaStyle = new GUIStyle(GUI.skin.textArea);
+
             TempColor = new Color();
             TempColorLabelStyle = new GUIStyle(GUI.skin.label);
             UpdateToolbarString();
@@ -119,6 +121,8 @@ namespace LunaClient.Windows.Options
         protected bool SettingChat { get; set; }
         protected GUIStyle TempColorLabelStyle { get; set; }
         protected bool ShowBadNetworkSimulationFields { get; set; }
+        protected bool ShowAdvancedNetworkFields { get; set; }
+        protected bool InfiniteTimeout { get; set; }
 
         #endregion
     }
