@@ -20,24 +20,19 @@ namespace LunaClient.VesselStore
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
         /// </summary>
-        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, bool runSyncronously, int vesselSituation = int.MinValue)
+        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId)
         {
-            if (runSyncronously)
-                HandleData();
-            else
-                SystemBase.TaskFactory.StartNew(HandleData);
-
-            void HandleData()
+            SystemBase.TaskFactory.StartNew(() =>
             {
                 if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
                 {
-                    vesselUpdate.Update(vesselData, numBytes, vesselId, vesselSituation);
+                    vesselUpdate.Update(vesselData, numBytes, vesselId);
                 }
                 else
                 {
                     AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, numBytes, vesselId));
                 }
-            }
+            });
         }
 
         /// <summary>

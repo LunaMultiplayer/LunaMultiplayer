@@ -8,7 +8,6 @@ namespace LunaCommon.Message.Data.Vessel
     public class VesselInfo
     {
         public Guid VesselId;
-        public int VesselSituation;
 
         public int NumBytes;
         public byte[] Data = new byte[0];
@@ -16,7 +15,6 @@ namespace LunaCommon.Message.Data.Vessel
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             GuidUtil.Serialize(VesselId, lidgrenMsg);
-            lidgrenMsg.Write(VesselSituation);
 
             Array.Resize(ref Data, NumBytes);
             Data = CompressionHelper.compress(Data, 3);
@@ -29,7 +27,6 @@ namespace LunaCommon.Message.Data.Vessel
         public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
-            VesselSituation = lidgrenMsg.ReadInt32();
 
             NumBytes = lidgrenMsg.ReadInt32();
             if (Data.Length < NumBytes)
@@ -44,7 +41,7 @@ namespace LunaCommon.Message.Data.Vessel
 
         public int GetByteCount()
         {
-            return GuidUtil.GetByteSize() + sizeof(int) * 2 + sizeof(byte) * NumBytes;
+            return GuidUtil.GetByteSize() + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }

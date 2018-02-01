@@ -69,7 +69,7 @@ namespace LunaClient.VesselStore
         /// <summary>
         /// Update this class with the new data received
         /// </summary>
-        public void Update(byte[] vesselData, int numBytes, Guid vesselId, int situation)
+        public void Update(byte[] vesselData, int numBytes, Guid vesselId)
         {
             if (VesselId != vesselId)
             {
