@@ -1,11 +1,14 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.Lock;
+using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using LunaClient.Systems.VesselProtoSys;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
 {
@@ -89,6 +92,7 @@ namespace LunaClient.Systems.VesselDockSys
 
             if (dock.DominantVesselId == FlightGlobals.ActiveVessel?.id)
             {
+                JumpIfVesselOwnerIsInFuture(dock.WeakVesselId);
                 if (eva)
                 {
                     LunaLog.Log($"[LMP]: Crewboard detected! We own the kerbal {dock.DominantVesselId}");
@@ -114,6 +118,7 @@ namespace LunaClient.Systems.VesselDockSys
             }
             else if (dock.WeakVesselId == FlightGlobals.ActiveVessel?.id)
             {
+                JumpIfVesselOwnerIsInFuture(dock.DominantVesselId);
                 if (eva)
                 {
                     LunaLog.Log($"[LMP]: Crewboard detected! We own the vessel {dock.WeakVesselId}");
@@ -126,6 +131,7 @@ namespace LunaClient.Systems.VesselDockSys
 
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
 
+
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
                 }
                 else
@@ -135,16 +141,55 @@ namespace LunaClient.Systems.VesselDockSys
 
                     if (dock.DominantVessel == null)
                         dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
-
-                    //Switch to the dominant vessel
+                    
+                    //Switch to the dominant vessel, but before that save the dominant vessel proto.
+                    //We save it as in case the dominant player didn't detected the dock he will send us a
+                    //NOT docked protovessel and that would remove the weak vessel because we are going to be an
+                    //spectator...
+                    var finalVesselProto = dock.DominantVessel?.BackupVessel();
                     SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(dock.DominantVesselId);
-
-                    /* We are NOT the dominant vessel so wait 5 seconds so the dominant vessel detects the docking.
-                     * If we send the vessel definition BEFORE the dominant detects it, then the dominant won't be able
-                     * to undock properly as he will think that he is the weak vessel.
-                     */
-                    System.MessageSender.SendDockInformation(dock, currentSubspaceId, 5);
+                    Client.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock, finalVesselProto));
                 }
+            }
+        }
+
+        /// <summary>
+        /// Jumps to the subspace of the controller vessel in case he is more advanced in time
+        /// </summary>
+        private static void JumpIfVesselOwnerIsInFuture(Guid vesselId)
+        {
+            var dominantVesselOwner = LockSystem.LockQuery.GetControlLockOwner(vesselId);
+            var dominantVesselOwnerSubspace = SystemsContainer.Get<WarpSystem>().GetPlayerSubspace(dominantVesselOwner);
+            SystemsContainer.Get<WarpSystem>().WarpIfSubspaceIsMoreAdvanced(dominantVesselOwnerSubspace);
+        }
+
+        /// <summary>
+        /// Here we wait until we fully switched to the dominant vessel and THEN we send the vessel dock information.
+        /// We wait 5 seconds before sending the data to give time to the dominant vessel to detect the dock
+        /// </summary>
+        private static IEnumerator WaitUntilWeSwitchedThenSendDockInfo(VesselDockStructure dockInfo, ProtoVessel finalVesselProto)
+        {
+            var start = DateTime.Now;
+            var currentSubspaceId = SystemsContainer.Get<WarpSystem>().CurrentSubspace;
+            var waitInterval = new WaitForSeconds(0.5f);
+
+            while (FlightGlobals.ActiveVessel.id != dockInfo.DominantVesselId && DateTime.Now - start < TimeSpan.FromSeconds(30))
+            {
+                yield return waitInterval;
+            }
+
+            if (FlightGlobals.ActiveVessel.id == dockInfo.DominantVesselId)
+            {
+                /* We are NOT the dominant vessel so wait 5 seconds so the dominant vessel detects the docking.
+                 * If we send the vessel definition BEFORE the dominant detects it, then the dominant won't be able
+                 * to undock properly as he will think that he is the weak vessel.
+                 */
+
+                yield return new WaitForSeconds(5);
+                LunaLog.Log($"[LMP]: Sending dock info to the server! Final dominant vessel parts {finalVesselProto.protoPartSnapshots.Count} " +
+                            $"Current: {dockInfo.DominantVessel?.parts?.Count}");
+
+                System.MessageSender.SendDockInformation(dockInfo, currentSubspaceId, finalVesselProto);
             }
         }
 

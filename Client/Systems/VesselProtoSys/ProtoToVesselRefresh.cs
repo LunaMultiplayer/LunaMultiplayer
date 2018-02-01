@@ -87,25 +87,43 @@ namespace LunaClient.Systems.VesselProtoSys
                     Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
                 }
             }
+        }
 
-            //TODO: This is old code where we created parts dinamically but it's quite buggy. It create parts in the CURRENT vessel instead of in the target vessel
-            ////We've run trough all the vessel parts and removed the ones that don't exist in the definition.
-            ////Now run trough the parts in the definition and add the parts that don't exist in the vessel.
-            //PartsToInit.Clear();
-            //foreach (var partSnapshot in protoVessel.protoPartSnapshots)
-            //{
-            //    //Skip parts that already exists
-            //    if (vessel.parts.Any(p => p.missionID == partSnapshot.missionID && p.craftID == partSnapshot.craftID))
-            //        continue;
+        public static void CreateMissingPartsInCurrentProtoVessel(Vessel vessel, ProtoVessel protoVessel)
+        {
+            //TODO: This is old code where we created parts dinamically but it's quite buggy. It create parts in the CURRENT vessel so it wont work for other vessels
 
-            //    var newPart = partSnapshot.Load(vessel, false);
-            //    vessel.parts.Add(newPart);
-            //    PartsToInit.Add(partSnapshot);
-            //}
+            //We've run trough all the vessel parts and removed the ones that don't exist in the definition.
+            //Now run trough the parts in the definition and add the parts that don't exist in the vessel.
+            var partsToInit = new List<ProtoPartSnapshot>();
+            foreach (var partSnapshot in protoVessel.protoPartSnapshots)
+            {
+                if (partSnapshot.FindModule("ModuleDockingNode") != null)
+                {
+                    //We are in a docking port part so remove it from our own vessel if we have it
+                    var vesselPart = vessel.parts.FirstOrDefault(p => p.flightID == partSnapshot.flightID);
+                    if (vesselPart != null)
+                    {
+                        vesselPart.Die();
+                    }
+                }
 
-            ////Init new parts. This must be done in another loop as otherwise new parts won't have their correct attachment parts.
-            //foreach (var partSnapshot in PartsToInit)
-            //    partSnapshot.Init(vessel);
+                //Skip parts that already exists
+                if (vessel.parts.Any(p => p.flightID == partSnapshot.flightID))
+                    continue;
+
+                var newPart = partSnapshot.Load(vessel, false);
+                vessel.parts.Add(newPart);
+                partsToInit.Add(partSnapshot);
+            }
+
+            //Init new parts. This must be done in another loop as otherwise new parts won't have their correct attachment parts.
+            foreach (var partSnapshot in partsToInit)
+                partSnapshot.Init(vessel);
+
+            vessel.RebuildCrewList();
+            Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
+            Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
         }
 
         private static void UpdatePartModules(ProtoPartSnapshot partSnapshot, Part part)
