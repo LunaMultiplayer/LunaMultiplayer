@@ -64,6 +64,7 @@ namespace LunaClient.VesselUtilities
                 var currentTargetId = FlightGlobals.fetch.VesselTarget?.GetVessel()?.id;
 
                 //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
+                //Bear in mind that UnloadVessel will trigger VesselRemoveEvents.OnVesselWillDestroy!! So be sure to set ReloadingVesselId correctly
                 SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vesselProto.vesselID);
                 if (LoadVesselImpl(vesselProto))
                 {
