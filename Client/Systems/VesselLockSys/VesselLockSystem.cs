@@ -27,8 +27,7 @@ namespace LunaClient.Systems.VesselLockSys
 
         private VesselLockEvents VesselMainEvents { get; } = new VesselLockEvents();
 
-        private bool VesselLockSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f &&
-            FlightGlobals.ActiveVessel != null;
+        private bool VesselLockSystemReady => Enabled && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
 
         private string SpectatingMessage => VesselCommon.IsSpectating ? $"This vessel is being controlled by {GetVesselOwner}." : "";
 
@@ -65,9 +64,9 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         private void TryGetCurrentVesselControlLock()
         {
-            if (Enabled && VesselLockSystemReady)
+            if (Enabled && VesselLockSystemReady && FlightGlobals.ActiveVessel != null)
             {
-                TryGetControlLockForActiveVessel();
+                TryGetControlLockForVessel(FlightGlobals.ActiveVessel);
             }
         }
 
@@ -88,7 +87,7 @@ namespace LunaClient.Systems.VesselLockSys
                     SystemsContainer.Get<VesselPositionSystem>().RemoveVesselFromSystem(FlightGlobals.ActiveVessel);
                 }
 
-                ForceGetUpdateLocksForActiveVessel();
+                GetUpdateLocksForVessel(FlightGlobals.ActiveVessel, true);
             }
         }
 
@@ -208,13 +207,6 @@ namespace LunaClient.Systems.VesselLockSys
 
         #region Private methods
 
-        /// <summary>
-        /// Tries to get the control lock for a vessel in case it's possible to do so
-        /// </summary>
-        private static void TryGetControlLockForActiveVessel()
-        {
-            TryGetControlLockForVessel(FlightGlobals.ActiveVessel);
-        }
 
         /// <summary>
         /// Tries to get the control lock for a vessel in case it's possible to do so
@@ -225,14 +217,6 @@ namespace LunaClient.Systems.VesselLockSys
 
             if (!LockSystem.LockQuery.ControlLockExists(vessel.id))
                 SystemsContainer.Get<LockSystem>().AcquireControlLock(vessel.id);
-        }
-
-        /// <summary>
-        /// Forces to get the update and unloaded update locks of active vessel
-        /// </summary>
-        private static void ForceGetUpdateLocksForActiveVessel()
-        {
-            GetUpdateLocksForVessel(FlightGlobals.ActiveVessel, true);
         }
 
         /// <summary>
