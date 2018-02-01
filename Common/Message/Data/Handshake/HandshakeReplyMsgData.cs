@@ -22,9 +22,9 @@ namespace LunaCommon.Message.Data.Handshake
         
         public override string ClassName { get; } = nameof(HandshakeReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write((int)Response);
             lidgrenMsg.Write(Reason);
@@ -37,9 +37,9 @@ namespace LunaCommon.Message.Data.Handshake
             lidgrenMsg.Write(ModFileData, 0, NumBytes);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             Response = (HandshakeReply)lidgrenMsg.ReadInt32();
             Reason = lidgrenMsg.ReadString();
@@ -55,9 +55,9 @@ namespace LunaCommon.Message.Data.Handshake
             lidgrenMsg.ReadBytes(ModFileData, 0, NumBytes);
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(HandshakeReply) + Reason.GetByteCount() + sizeof(ModControlMode)
+            return base.InternalGetMessageSize() + sizeof(HandshakeReply) + Reason.GetByteCount() + sizeof(ModControlMode)
                 + sizeof(long) + GuidUtil.GetByteSize() + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }

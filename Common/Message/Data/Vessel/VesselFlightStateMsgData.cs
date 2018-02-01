@@ -36,9 +36,9 @@ namespace LunaCommon.Message.Data.Vessel
 
         public override string ClassName { get; } = nameof(VesselFlightStateMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(MainThrottle);
@@ -63,9 +63,9 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(TimeStamp);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
             MainThrottle = lidgrenMsg.ReadFloat();
@@ -90,9 +90,9 @@ namespace LunaCommon.Message.Data.Vessel
             GameTime = lidgrenMsg.ReadDouble();
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) +
+            return base.InternalGetMessageSize() +
                    GuidUtil.GetByteSize() + sizeof(float) * 14 + sizeof(bool) * 4 + sizeof(long) + sizeof(double);
         }
     }

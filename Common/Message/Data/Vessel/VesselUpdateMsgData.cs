@@ -30,9 +30,9 @@ namespace LunaCommon.Message.Data.Vessel
 
         public override string ClassName { get; } = nameof(VesselUpdateMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(Name);
@@ -50,12 +50,12 @@ namespace LunaCommon.Message.Data.Vessel
 
 
             for (var i = 0; i < 17; i++)
-                ActionGroups[i].Serialize(lidgrenMsg, compressData);
+                ActionGroups[i].Serialize(lidgrenMsg);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
             Name = lidgrenMsg.ReadString();
@@ -78,19 +78,19 @@ namespace LunaCommon.Message.Data.Vessel
                 if (ActionGroups[i] == null)
                     ActionGroups[i] = new ActionGroup();
 
-                ActionGroups[i].Deserialize(lidgrenMsg, dataCompressed);
+                ActionGroups[i].Deserialize(lidgrenMsg);
             }
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < 17; i++)
             {
-                arraySize += ActionGroups[i].GetByteCount(dataCompressed);
+                arraySize += ActionGroups[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + GuidUtil.GetByteSize() 
+            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() 
                 + sizeof(double) * 3 + sizeof(bool) * 3 + sizeof(uint) 
                 + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount() + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() +
                 + arraySize;

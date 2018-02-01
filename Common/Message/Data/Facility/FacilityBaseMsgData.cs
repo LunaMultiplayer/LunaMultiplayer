@@ -14,17 +14,17 @@ namespace LunaCommon.Message.Data.Facility
 
         public string ObjectId;
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(ObjectId);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             ObjectId = lidgrenMsg.ReadString();
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             return ObjectId.GetByteCount();
         }

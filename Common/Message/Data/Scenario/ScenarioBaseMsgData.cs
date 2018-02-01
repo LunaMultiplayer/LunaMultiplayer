@@ -14,17 +14,17 @@ namespace LunaCommon.Message.Data.Scenario
 
         public override string ClassName { get; } = nameof(ScenarioBaseMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             //Nothing to implement here
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             //Nothing to implement here
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             return 0;
         }

@@ -31,9 +31,9 @@ namespace LunaCommon.Message.Data.MasterServer
 
         public override string ClassName { get; } = nameof(MsReplyServersMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(ServersCount);
             for (var i = 0; i < ServersCount; i++)
@@ -58,9 +58,9 @@ namespace LunaCommon.Message.Data.MasterServer
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             ServersCount = lidgrenMsg.ReadInt32();
 
@@ -121,9 +121,9 @@ namespace LunaCommon.Message.Data.MasterServer
             }
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + 
+            return base.InternalGetMessageSize() + sizeof(int) + 
                 sizeof(long) * ServersCount + ServerVersion.GetByteCount(ServersCount) + InternalEndpoint.GetByteCount(ServersCount) +
                 ExternalEndpoint.GetByteCount(ServersCount) + ServerName.GetByteCount(ServersCount) + Description.GetByteCount(ServersCount) +
                 sizeof(bool) * 4 * ServersCount + sizeof(int) * 8 * ServersCount;

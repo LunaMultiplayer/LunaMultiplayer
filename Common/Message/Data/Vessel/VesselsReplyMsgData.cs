@@ -14,20 +14,20 @@ namespace LunaCommon.Message.Data.Vessel
 
         public override string ClassName { get; } = nameof(VesselsReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(VesselsCount);
             for (var i = 0; i < VesselsCount; i++)
             {
-                VesselsData[i].Serialize(lidgrenMsg, compressData);
+                VesselsData[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             VesselsCount = lidgrenMsg.ReadInt32();
             if (VesselsData.Length < VesselsCount)
@@ -38,19 +38,19 @@ namespace LunaCommon.Message.Data.Vessel
                 if (VesselsData[i] == null)
                     VesselsData[i] = new VesselInfo();
 
-                VesselsData[i].Deserialize(lidgrenMsg, dataCompressed);
+                VesselsData[i].Deserialize(lidgrenMsg);
             }
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < VesselsCount; i++)
             {
-                arraySize += VesselsData[i].GetByteCount(dataCompressed);
+                arraySize += VesselsData[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

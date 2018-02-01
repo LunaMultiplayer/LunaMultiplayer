@@ -32,10 +32,10 @@ namespace LMP.Tests
 
             var msg = Factory.CreateNew<VesselSrvMsg>(msgData);
 
-            //Serialize and compress
-            var expectedDataSize = msg.GetMessageSize(false);
+            //Serialize
+            var expectedDataSize = msg.GetMessageSize();
             var lidgrenMsgSend = Client.CreateMessage(expectedDataSize);
-            msg.Serialize(lidgrenMsgSend, false);
+            msg.Serialize(lidgrenMsgSend);
             var realSize = lidgrenMsgSend.LengthBytes;
 
             //Usually the expected size will be a bit more as Lidgren writes the size of the strings in a base128 int (so it uses less bytes)
@@ -86,10 +86,10 @@ namespace LMP.Tests
 
             var msg = Factory.CreateNew<VesselCliMsg>(msgData);
             
-            //Serialize and compress
-            var expectedDataSize = msg.GetMessageSize(false);
+            //Serialize
+            var expectedDataSize = msg.GetMessageSize();
             var lidgrenMsgSend = Client.CreateMessage(expectedDataSize);
-            msg.Serialize(lidgrenMsgSend, false);
+            msg.Serialize(lidgrenMsgSend);
             var realSize = lidgrenMsgSend.LengthBytes;
 
             //Usually the expected size will be a bit more as Lidgren writes the size of the strings in a base128 int (so it uses less bytes)
@@ -117,10 +117,10 @@ namespace LMP.Tests
 
             var msg = Factory.CreateNew<ChatCliMsg>(msgData);
 
-            //Serialize and compress
-            var expectedDataSize = msg.GetMessageSize(false);
+            //Serialize
+            var expectedDataSize = msg.GetMessageSize();
             var lidgrenMsgSend = Client.CreateMessage(expectedDataSize);
-            msg.Serialize(lidgrenMsgSend, false);
+            msg.Serialize(lidgrenMsgSend);
             var realSize = lidgrenMsgSend.LengthBytes;
 
             //Usually the expected size will be a bit more as Lidgren writes the size of the strings in a base128 int (so it uses less bytes)

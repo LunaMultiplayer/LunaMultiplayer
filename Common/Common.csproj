@@ -78,7 +78,7 @@
     <Compile Include="Locks\LockType.cs" />
     <Compile Include="LunaNetUtils.cs" />
     <Compile Include="MasterServerRetriever.cs" />
-    <Compile Include="Message\Base\CompressionHelper.cs" />
+    <Compile Include="Compression\CompressionHelper.cs" />
     <Compile Include="Message\Base\FactoryBase.cs" />
     <Compile Include="Message\Base\MessageBase.cs" />
     <Compile Include="Message\Base\MessageData.cs" />

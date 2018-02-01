@@ -13,23 +13,23 @@ namespace LunaCommon.Message.Data.Groups
 
         public override string ClassName { get; } = nameof(GroupUpdateMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
-            Group.Serialize(lidgrenMsg, compressData);
+            Group.Serialize(lidgrenMsg);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
-            Group.Deserialize(lidgrenMsg, dataCompressed);
+            Group.Deserialize(lidgrenMsg);
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + Group.GetByteCount(dataCompressed);
+            return base.InternalGetMessageSize() + Group.GetByteCount();
         }
     }
 }

@@ -13,8 +13,9 @@
 // Version: 1.5.0 final
 using System;
 // ReSharper disable All
+#pragma warning disable CS0675, IDE0007, IDE1006
 
-namespace LunaCommon.Message.Base
+namespace LunaCommon.Compression
 {
     public static class CompressionHelper
     {
@@ -38,7 +39,38 @@ namespace LunaCommon.Message.Base
         private const int QLZ_POINTERS_1 = 1;
         private const int QLZ_POINTERS_3 = 16;
 
-        public static byte[] CompressBytes(byte[] source, int level = 3)
+        private static int headerLen(byte[] source)
+        {
+            return ((source[0] & 2) == 2) ? 9 : 3;
+        }
+
+        public static int sizeDecompressed(byte[] source)
+        {
+            if (headerLen(source) == 9)
+                return source[5] | (source[6] << 8) | (source[7] << 16) | (source[8] << 24);
+            else
+                return source[2];
+        }
+
+        public static int sizeCompressed(byte[] source)
+        {
+            if (headerLen(source) == 9)
+                return source[1] | (source[2] << 8) | (source[3] << 16) | (source[4] << 24);
+            else
+                return source[1];
+        }
+
+        private static void write_header(byte[] dst, int level, bool compressible, int size_compressed, int size_decompressed)
+        {
+            dst[0] = (byte)(2 | (compressible ? 1 : 0));
+            dst[0] |= (byte)(level << 2);
+            dst[0] |= (1 << 6);
+            dst[0] |= (0 << 4);
+            fast_write(dst, 1, size_decompressed, 4);
+            fast_write(dst, 5, size_compressed, 4);
+        }
+
+        public static byte[] compress(byte[] source, int level)
         {
             int src = 0;
             int dst = DEFAULT_HEADERLEN + CWORD_LEN;
@@ -263,11 +295,18 @@ namespace LunaCommon.Message.Base
             return d2;
         }
 
-        public static byte[] DecompressBytes(byte[] source)
+
+        private static void fast_write(byte[] a, int i, int value, int numbytes)
+        {
+            for (int j = 0; j < numbytes; j++)
+                a[i + j] = (byte)(value >> (j * 8));
+        }
+
+        public static byte[] decompress(byte[] source)
         {
             int level;
-            int size = SizeDecompressed(source);
-            int src = HeaderLen(source);
+            int size = sizeDecompressed(source);
+            int src = headerLen(source);
             int dst = 0;
             uint cword_val = 1;
             byte[] destination = new byte[size];
@@ -286,7 +325,7 @@ namespace LunaCommon.Message.Base
             if ((source[0] & 1) != 1)
             {
                 byte[] d2 = new byte[size];
-                System.Array.Copy(source, HeaderLen(source), d2, 0, size);
+                System.Array.Copy(source, headerLen(source), d2, 0, size);
                 return d2;
             }
 
@@ -384,9 +423,7 @@ namespace LunaCommon.Message.Base
                             hash = (int)(((fetch >> 12) ^ fetch) & (HASH_VALUES - 1));
                             hashtable[hash] = last_hashed;
                             hash_counter[hash] = 1;
-#pragma warning disable CS0675 // Bitwise-or operator used on a sign-extended operand
                             fetch = (uint)(fetch >> 8 & 0xffff | destination[last_hashed + 3] << 16);
-#pragma warning restore CS0675 // Bitwise-or operator used on a sign-extended operand
                         }
                         fetch = (uint)(source[src] | (source[src + 1] << 8) | (source[src + 2] << 16));
                     }
@@ -415,15 +452,11 @@ namespace LunaCommon.Message.Base
                                 hashtable[hash] = last_hashed;
                                 hash_counter[hash] = 1;
                             }
-#pragma warning disable CS0675 // Bitwise-or operator used on a sign-extended operand
                             fetch = (uint)(fetch >> 8 & 0xffff | source[src + 2] << 16);
-#pragma warning restore CS0675 // Bitwise-or operator used on a sign-extended operand
                         }
                         else
                         {
-#pragma warning disable CS0675 // Bitwise-or operator used on a sign-extended operand
                             fetch = (uint)(fetch >> 8 & 0xffff | source[src + 2] << 16 | source[src + 3] << 24);
-#pragma warning restore CS0675 // Bitwise-or operator used on a sign-extended operand
                         }
                     }
                     else
@@ -445,43 +478,6 @@ namespace LunaCommon.Message.Base
                     }
                 }
             }
-        }
-
-        private static int HeaderLen(byte[] source)
-        {
-            return ((source[0] & 2) == 2) ? 9 : 3;
-        }
-
-        public static int SizeDecompressed(byte[] source)
-        {
-            if (HeaderLen(source) == 9)
-                return source[5] | (source[6] << 8) | (source[7] << 16) | (source[8] << 24);
-
-            return source[2];
-        }
-
-        public static int SizeCompressed(byte[] source)
-        {
-            if (HeaderLen(source) == 9)
-                return source[1] | (source[2] << 8) | (source[3] << 16) | (source[4] << 24);
-
-            return source[1];
-        }
-
-        private static void write_header(byte[] dst, int level, bool compressible, int size_compressed, int size_decompressed)
-        {
-            dst[0] = (byte)(2 | (compressible ? 1 : 0));
-            dst[0] |= (byte)(level << 2);
-            dst[0] |= (1 << 6);
-            dst[0] |= (0 << 4);
-            fast_write(dst, 1, size_decompressed, 4);
-            fast_write(dst, 5, size_compressed, 4);
-        }
-
-        private static void fast_write(byte[] a, int i, int value, int numbytes)
-        {
-            for (int j = 0; j < numbytes; j++)
-                a[i + j] = (byte)(value >> (j * 8));
         }
     }
 }

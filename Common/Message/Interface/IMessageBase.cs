@@ -43,12 +43,7 @@ namespace LunaCommon.Message.Interface
         /// Attaches the data to the message
         /// </summary>
         void SetData(IMessageData data);
-
-        /// <summary>
-        /// Set this to true to avoid compression of this message
-        /// </summary>
-        bool AvoidCompression { get; }
-
+        
         /// <summary>
         /// Retrieves a message data from the pool based on the subtype
         /// </summary>
@@ -58,9 +53,8 @@ namespace LunaCommon.Message.Interface
         /// This method retrieves the message as a byte array with it's 8 byte header at the beginning
         /// </summary>
         /// <param name="lidgrenMsg">Lidgren message to serialize to</param>
-        /// <param name="compressData">Compress the message or not</param>
         /// <returns>Mesage as a byte array with it's header</returns>
-        void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData);
+        void Serialize(NetOutgoingMessage lidgrenMsg);
 
         /// <summary>
         /// Call this method to send the message back to the pool
@@ -70,6 +64,6 @@ namespace LunaCommon.Message.Interface
         /// <summary>
         /// Gets the message size in bytes
         /// </summary>
-        int GetMessageSize(bool dataCompressed);
+        int GetMessageSize();
     }
 }

@@ -18,9 +18,9 @@ namespace LunaCommon.Message.Data.Handshake
 
         public override string ClassName { get; } = nameof(HandshakeResponseMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(PublicKey);
@@ -29,9 +29,9 @@ namespace LunaCommon.Message.Data.Handshake
             lidgrenMsg.Write(ChallengeSignature, 0, NumBytes);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             PlayerName = lidgrenMsg.ReadString();
             PublicKey = lidgrenMsg.ReadString();
@@ -43,9 +43,9 @@ namespace LunaCommon.Message.Data.Handshake
             lidgrenMsg.ReadBytes(ChallengeSignature, 0, NumBytes);
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + PlayerName.GetByteCount() + PublicKey.GetByteCount() + sizeof(byte) * 1024;
+            return base.InternalGetMessageSize() + PlayerName.GetByteCount() + PublicKey.GetByteCount() + sizeof(byte) * 1024;
         }
     }
 }

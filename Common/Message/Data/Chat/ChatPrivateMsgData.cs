@@ -15,25 +15,25 @@ namespace LunaCommon.Message.Data.Chat
 
         public override string ClassName { get; } = nameof(ChatPrivateMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(To);
             lidgrenMsg.Write(Text);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             To = lidgrenMsg.ReadString();
             Text = lidgrenMsg.ReadString();
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + To.GetByteCount() + Text.GetByteCount();
+            return base.InternalGetMessageSize() + To.GetByteCount() + Text.GetByteCount();
         }
     }
 }

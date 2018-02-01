@@ -16,9 +16,9 @@ namespace LunaCommon.Message.Data.Admin
 
         public override string ClassName { get; } = nameof(AdminListReplyMsgData);
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             AdminsNum = lidgrenMsg.ReadInt32();
 
@@ -31,9 +31,9 @@ namespace LunaCommon.Message.Data.Admin
             }
         }
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(AdminsNum);
             for (var i = 0; i < AdminsNum; i++)
@@ -42,9 +42,9 @@ namespace LunaCommon.Message.Data.Admin
             }
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + Admins.GetByteCount(AdminsNum);
+            return base.InternalGetMessageSize() + sizeof(int) + Admins.GetByteCount(AdminsNum);
         }
     }
 }

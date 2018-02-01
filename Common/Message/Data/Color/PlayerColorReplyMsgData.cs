@@ -14,21 +14,21 @@ namespace LunaCommon.Message.Data.Color
 
         public override string ClassName { get; } = nameof(PlayerColorReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PlayerColorsCount);
 
             for (var i = 0; i < PlayerColorsCount; i++)
             {
-                PlayersColors[i].Serialize(lidgrenMsg, compressData);
+                PlayersColors[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             PlayerColorsCount = lidgrenMsg.ReadInt32();
             
@@ -40,11 +40,11 @@ namespace LunaCommon.Message.Data.Color
                 if (PlayersColors[i] == null)
                     PlayersColors[i] = new PlayerColor();
 
-                PlayersColors[i].Deserialize(lidgrenMsg, dataCompressed);
+                PlayersColors[i].Deserialize(lidgrenMsg);
             }
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < PlayerColorsCount; i++)
@@ -52,7 +52,7 @@ namespace LunaCommon.Message.Data.Color
                 arraySize += PlayersColors[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

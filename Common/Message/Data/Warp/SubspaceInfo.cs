@@ -11,7 +11,7 @@ namespace LunaCommon.Message.Data.Warp
         public int PlayerCount;
         public string[] Players = new string[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(SubspaceKey);
             lidgrenMsg.Write(SubspaceTime);
@@ -21,7 +21,7 @@ namespace LunaCommon.Message.Data.Warp
                 lidgrenMsg.Write(Players[i]);
         }
 
-        public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             SubspaceKey = lidgrenMsg.ReadInt32();
             SubspaceTime = lidgrenMsg.ReadDouble();
@@ -34,7 +34,7 @@ namespace LunaCommon.Message.Data.Warp
                 Players[i] = lidgrenMsg.ReadString();
         }
         
-        public int GetByteCount(bool dataCompressed)
+        public int GetByteCount()
         {
             return sizeof(int) + sizeof(double) + sizeof(int) + Players.GetByteCount(PlayerCount);
         }

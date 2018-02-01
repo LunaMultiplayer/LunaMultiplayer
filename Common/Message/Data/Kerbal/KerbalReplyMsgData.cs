@@ -14,20 +14,20 @@ namespace LunaCommon.Message.Data.Kerbal
 
         public override string ClassName { get; } = nameof(KerbalReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(KerbalsCount);
             for (var i = 0; i < KerbalsCount; i++)
             {
-                Kerbals[i].Serialize(lidgrenMsg, compressData);
+                Kerbals[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             KerbalsCount = lidgrenMsg.ReadInt32();
             if (Kerbals.Length < KerbalsCount)
@@ -38,19 +38,19 @@ namespace LunaCommon.Message.Data.Kerbal
                 if (Kerbals[i] == null)
                     Kerbals[i] = new KerbalInfo();
 
-                Kerbals[i].Deserialize(lidgrenMsg, dataCompressed);
+                Kerbals[i].Deserialize(lidgrenMsg);
             }
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < KerbalsCount; i++)
             {
-                arraySize += Kerbals[i].GetByteCount(dataCompressed);
+                arraySize += Kerbals[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

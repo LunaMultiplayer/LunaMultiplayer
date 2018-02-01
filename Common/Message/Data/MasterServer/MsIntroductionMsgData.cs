@@ -16,27 +16,27 @@ namespace LunaCommon.Message.Data.MasterServer
 
         public override string ClassName { get; } = nameof(MsIntroductionMsgData);
         
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(Id);
             lidgrenMsg.Write(InternalEndpoint);
             lidgrenMsg.Write(Token);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             Id = lidgrenMsg.ReadInt64();
             InternalEndpoint = lidgrenMsg.ReadString();
             Token = lidgrenMsg.ReadString();
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(long) + InternalEndpoint.GetByteCount() + Token.GetByteCount();
+            return base.InternalGetMessageSize() + sizeof(long) + InternalEndpoint.GetByteCount() + Token.GetByteCount();
         }
     }
 }

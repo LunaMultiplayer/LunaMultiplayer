@@ -15,25 +15,25 @@ namespace LunaCommon.Message.Data.Warp
 
         public override string ClassName { get; } = nameof(WarpChangeSubspaceMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(Subspace);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             PlayerName = lidgrenMsg.ReadString();
             Subspace = lidgrenMsg.ReadInt32();
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + PlayerName.GetByteCount() + sizeof(int);
+            return base.InternalGetMessageSize() + PlayerName.GetByteCount() + sizeof(int);
         }
     }
 }

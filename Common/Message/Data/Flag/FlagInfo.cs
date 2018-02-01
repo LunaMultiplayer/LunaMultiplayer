@@ -11,7 +11,7 @@ namespace LunaCommon.Message.Data.Flag
         public int NumBytes;
         public byte[] FlagData = new byte[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(Owner);
             lidgrenMsg.Write(FlagName);
@@ -19,7 +19,7 @@ namespace LunaCommon.Message.Data.Flag
             lidgrenMsg.Write(FlagData, 0, NumBytes);
         }
 
-        public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             Owner = lidgrenMsg.ReadString();
             FlagName = lidgrenMsg.ReadString();
@@ -31,7 +31,7 @@ namespace LunaCommon.Message.Data.Flag
             lidgrenMsg.ReadBytes(FlagData, 0, NumBytes);
         }
 
-        public int GetByteCount(bool dataCompressed)
+        public int GetByteCount()
         {
             return Owner.GetByteCount() + FlagName.GetByteCount() + sizeof(int) + sizeof(byte) * NumBytes;
         }

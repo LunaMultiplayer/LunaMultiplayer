@@ -16,25 +16,25 @@ namespace LunaCommon.Message.Data.CraftLibrary
 
         public override string ClassName { get; } = nameof(CraftLibraryAddMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write((int)UploadType);
             lidgrenMsg.Write(UploadName);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             UploadType = (CraftType)lidgrenMsg.ReadInt32();
             UploadName = lidgrenMsg.ReadString();
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(CraftType) + UploadName.GetByteCount();
+            return base.InternalGetMessageSize() + sizeof(CraftType) + UploadName.GetByteCount();
         }
     }
 }

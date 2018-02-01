@@ -14,20 +14,20 @@ namespace LunaCommon.Message.Data.PlayerStatus
 
         public override string ClassName { get; } = nameof(PlayerStatusReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PlayerStatusCount);
             for (var i = 0; i < PlayerStatusCount; i++)
             {
-                PlayerStatus[i].Serialize(lidgrenMsg, compressData);
+                PlayerStatus[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             PlayerStatusCount = lidgrenMsg.ReadInt32();
             if (PlayerStatus.Length < PlayerStatusCount)
@@ -38,19 +38,19 @@ namespace LunaCommon.Message.Data.PlayerStatus
                 if (PlayerStatus[i] == null)
                     PlayerStatus[i] = new PlayerStatusInfo();
 
-                PlayerStatus[i].Deserialize(lidgrenMsg, dataCompressed);
+                PlayerStatus[i].Deserialize(lidgrenMsg);
             }
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < PlayerStatusCount; i++)
             {
-                arraySize += PlayerStatus[i].GetByteCount(dataCompressed);
+                arraySize += PlayerStatus[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

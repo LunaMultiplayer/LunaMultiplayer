@@ -68,9 +68,9 @@ namespace LunaCommon.Message.Data.Settings
 
         public override string ClassName { get; } = nameof(SettingsReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write((int)WarpMode);
             lidgrenMsg.Write((int)GameMode);
@@ -128,9 +128,9 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(ShowVesselsInThePast);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             WarpMode = (WarpMode)lidgrenMsg.ReadInt32();
             GameMode = (GameMode)lidgrenMsg.ReadInt32();
@@ -188,9 +188,9 @@ namespace LunaCommon.Message.Data.Settings
             ShowVesselsInThePast = lidgrenMsg.ReadBoolean();
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) + 
+            return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) + 
                 sizeof(bool) * 25 + sizeof(int) * 4 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
         }
     }

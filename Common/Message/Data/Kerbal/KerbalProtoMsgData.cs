@@ -13,23 +13,23 @@ namespace LunaCommon.Message.Data.Kerbal
 
         public override string ClassName { get; } = nameof(KerbalProtoMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
-            Kerbal.Serialize(lidgrenMsg, compressData);
+            Kerbal.Serialize(lidgrenMsg);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
-            Kerbal.Deserialize(lidgrenMsg, dataCompressed);
+            Kerbal.Deserialize(lidgrenMsg);
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + Kerbal.GetByteCount(dataCompressed);
+            return base.InternalGetMessageSize() + Kerbal.GetByteCount();
         }
     }
 }

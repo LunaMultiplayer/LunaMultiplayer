@@ -132,10 +132,10 @@ namespace Server.Lidgren
 
         public void SendMessageToClient(ClientStructure client, IServerMessageBase message)
         {
-            var outmsg = Server.CreateMessage(message.GetMessageSize(GeneralSettings.SettingsStore.CompressionEnabled));
+            var outmsg = Server.CreateMessage(message.GetMessageSize());
 
             message.Data.SentTime = LunaTime.UtcNow.Ticks;
-            message.Serialize(outmsg, GeneralSettings.SettingsStore.CompressionEnabled);
+            message.Serialize(outmsg);
 
             client.LastSendTime = ServerContext.ServerClock.ElapsedMilliseconds;
             client.BytesSent += outmsg.LengthBytes;
@@ -227,8 +227,8 @@ namespace Server.Lidgren
                 
                 try
                 {
-                    var outMsg = Server.CreateMessage(msg.GetMessageSize(GeneralSettings.SettingsStore.CompressionEnabled));
-                    msg.Serialize(outMsg, GeneralSettings.SettingsStore.CompressionEnabled);
+                    var outMsg = Server.CreateMessage(msg.GetMessageSize());
+                    msg.Serialize(outMsg);
                     Server.SendUnconnectedMessage(outMsg, masterServer);
                     Server.FlushSendQueue();
                 }

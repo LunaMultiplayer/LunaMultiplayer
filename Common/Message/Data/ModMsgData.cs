@@ -35,7 +35,7 @@ namespace LunaCommon.Message.Data
 
         public override string ClassName { get; } = nameof(ModMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(ModName);
             lidgrenMsg.Write(Relay);
@@ -44,7 +44,7 @@ namespace LunaCommon.Message.Data
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             ModName = lidgrenMsg.ReadString();
             Relay = lidgrenMsg.ReadBoolean();
@@ -57,7 +57,7 @@ namespace LunaCommon.Message.Data
             lidgrenMsg.ReadBytes(Data, 0, NumBytes);
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             return ModName.GetByteCount() + sizeof(bool) + sizeof(bool) + sizeof(int) + sizeof(byte) * NumBytes;
         }

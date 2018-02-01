@@ -42,16 +42,16 @@ namespace LunaCommon.Message.Interface
         /// <summary>
         /// Serializes this message to the NetOutgoingMessage
         /// </summary>
-        void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed);
+        void Serialize(NetOutgoingMessage lidgrenMsg);
 
         /// <summary>
         /// Deserializes a message from the NetIncomingMessage
         /// </summary>
-        void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed);
+        void Deserialize(NetIncomingMessage lidgrenMsg);
 
         /// <summary>
         /// Size of this data in bytes
         /// </summary>
-        int GetMessageSize(bool dataCompressed);
+        int GetMessageSize();
     }
 }

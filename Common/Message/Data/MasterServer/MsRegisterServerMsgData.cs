@@ -31,9 +31,9 @@ namespace LunaCommon.Message.Data.MasterServer
 
         public override string ClassName { get; } = nameof(MsRegisterServerMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(Id);
             lidgrenMsg.Write(ServerVersion);
@@ -60,9 +60,9 @@ namespace LunaCommon.Message.Data.MasterServer
             lidgrenMsg.Write(ShowVesselsInThePast);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             Id = lidgrenMsg.ReadInt64();
             ServerVersion = lidgrenMsg.ReadString();
@@ -87,10 +87,10 @@ namespace LunaCommon.Message.Data.MasterServer
             ShowVesselsInThePast = lidgrenMsg.ReadBoolean();
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {            
             //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
+            return base.InternalGetMessageSize() + sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
                 sizeof(byte) + sizeof(int) * 8 + ServerName.GetByteCount() + Description.GetByteCount() + sizeof(bool) * 4;
         }
     }

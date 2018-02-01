@@ -80,12 +80,6 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.DisclaimerAccepted = false;
                 SettingsSystem.SaveSettings();
             }
-            var settingCompression = GUILayout.Toggle(SettingsSystem.CurrentSettings.CompressionEnabled, "Enable compression", ButtonStyle);
-            if (settingCompression != SettingsSystem.CurrentSettings.CompressionEnabled)
-            {
-                SettingsSystem.CurrentSettings.CompressionEnabled = settingCompression;
-                SettingsSystem.SaveSettings();
-            }
             var settingInterpolation = GUILayout.Toggle(SettingsSystem.CurrentSettings.InterpolationEnabled, "Enable interpolation", ButtonStyle);
             if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
             {

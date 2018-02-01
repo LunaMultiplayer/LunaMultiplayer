@@ -179,9 +179,9 @@ namespace LMP.MasterServer
             msgData.TerrainQuality = values.Select(s => s.Info.TerrainQuality).ToArray();
 
             var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-            var outMsg = peer.CreateMessage(msg.GetMessageSize(false));
+            var outMsg = peer.CreateMessage(msg.GetMessageSize());
 
-            msg.Serialize(outMsg, false);
+            msg.Serialize(outMsg);
             peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
             peer.FlushSendQueue();
             msg.Recycle();

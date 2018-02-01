@@ -13,23 +13,23 @@ namespace LunaCommon.Message.Data.Color
 
         public override string ClassName { get; } = nameof(PlayerColorSetMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
-            PlayerColor.Serialize(lidgrenMsg, compressData);
+            PlayerColor.Serialize(lidgrenMsg);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
-            PlayerColor.Deserialize(lidgrenMsg, dataCompressed);
+            PlayerColor.Deserialize(lidgrenMsg);
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + PlayerColor.GetByteCount();
+            return base.InternalGetMessageSize() + PlayerColor.GetByteCount();
         }
     }
 }

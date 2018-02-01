@@ -14,25 +14,25 @@ namespace LunaCommon.Message.Data.Vessel
 
         public override string ClassName { get; } = nameof(VesselProtoMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(SubspaceId);
-            Vessel.Serialize(lidgrenMsg, compressData);
+            Vessel.Serialize(lidgrenMsg);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             SubspaceId = lidgrenMsg.ReadInt32();
-            Vessel.Deserialize(lidgrenMsg, dataCompressed);
+            Vessel.Deserialize(lidgrenMsg);
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + Vessel.GetByteCount(dataCompressed);
+            return base.InternalGetMessageSize() + sizeof(int) + Vessel.GetByteCount();
         }
     }
 }

@@ -37,8 +37,5 @@ namespace LunaCommon.Message.Server
         {
             return Data.SubType == (ushort)VesselMessageType.Position || Data.SubType == (ushort)VesselMessageType.Flightstate;
         }
-
-        //Avoid compression of this message to reduce the GC
-        public override bool AvoidCompression => Data.SubType == (ushort)VesselMessageType.Position || Data.SubType == (ushort)VesselMessageType.Flightstate;
     }
 }

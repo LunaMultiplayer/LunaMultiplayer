@@ -8,13 +8,13 @@ namespace LunaCommon.Message.Data.Color
         public string PlayerName;
         public UnityEngine.Color Color;
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.WriteRgbColor(Color);
         }
 
-        public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             PlayerName = lidgrenMsg.ReadString();
             Color = lidgrenMsg.ReadRgbColor();

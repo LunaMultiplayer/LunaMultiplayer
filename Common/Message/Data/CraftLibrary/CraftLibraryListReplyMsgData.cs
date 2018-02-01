@@ -14,20 +14,20 @@ namespace LunaCommon.Message.Data.CraftLibrary
 
         public override string ClassName { get; } = nameof(CraftLibraryListReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PlayerCraftsCount);
             for (var i = 0; i < PlayerCraftsCount; i++)
             {
-                PlayerCrafts[i].Serialize(lidgrenMsg, compressData);
+                PlayerCrafts[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             PlayerCraftsCount = lidgrenMsg.ReadInt32();
 
@@ -39,11 +39,11 @@ namespace LunaCommon.Message.Data.CraftLibrary
                 if(PlayerCrafts[i] == null)
                     PlayerCrafts[i] = new PlayerCrafts();
 
-                PlayerCrafts[i].Deserialize(lidgrenMsg, dataCompressed);
+                PlayerCrafts[i].Deserialize(lidgrenMsg);
             }
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < PlayerCraftsCount; i++)
@@ -51,7 +51,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
                 arraySize += PlayerCrafts[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

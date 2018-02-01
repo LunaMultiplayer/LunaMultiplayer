@@ -81,9 +81,6 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Enable white-listing.")]
         public bool Whitelisted { get; set; } = false;
 
-        [XmlComment(Value = "Compress messages or not")]
-        public bool CompressionEnabled { get; set; } = true;
-
         [XmlComment(Value = "Heartbeat interval in Ms")]
         public int HearbeatMsInterval { get; set; } = 1000;
 

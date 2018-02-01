@@ -13,23 +13,23 @@ namespace LunaCommon.Message.Data.PlayerStatus
 
         public override string ClassName { get; } = nameof(PlayerStatusSetMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
-            PlayerStatus.Serialize(lidgrenMsg, compressData);
+            PlayerStatus.Serialize(lidgrenMsg);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
-            PlayerStatus.Deserialize(lidgrenMsg, dataCompressed);
+            PlayerStatus.Deserialize(lidgrenMsg);
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + PlayerStatus.GetByteCount(dataCompressed);
+            return base.InternalGetMessageSize() + PlayerStatus.GetByteCount();
         }
     }
 }

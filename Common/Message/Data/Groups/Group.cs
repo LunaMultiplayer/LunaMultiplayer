@@ -32,7 +32,7 @@ namespace LunaCommon.Message.Data.Groups
             return null;
         }
         
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(Name);
             lidgrenMsg.Write(Owner);
@@ -46,7 +46,7 @@ namespace LunaCommon.Message.Data.Groups
                 lidgrenMsg.Write(Invited[i]);
         }
 
-        public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             Name = lidgrenMsg.ReadString();
             Owner = lidgrenMsg.ReadString();
@@ -65,7 +65,7 @@ namespace LunaCommon.Message.Data.Groups
             for (var i = 0; i < InvitedCount; i++)
                 Invited[i] = lidgrenMsg.ReadString();
         }
-        public int GetByteCount(bool dataCompressed)
+        public int GetByteCount()
         {
             return Name.GetByteCount() + Owner.GetByteCount() + 
                 sizeof(int) + Members.GetByteCount(MembersCount) +

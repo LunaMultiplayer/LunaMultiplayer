@@ -19,9 +19,9 @@ namespace LunaCommon.Message.Data.CraftLibrary
 
         public override string ClassName { get; } = nameof(CraftLibraryUploadMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write((int)UploadType);
             lidgrenMsg.Write(UploadName);
@@ -29,9 +29,9 @@ namespace LunaCommon.Message.Data.CraftLibrary
             lidgrenMsg.Write(CraftData, 0, NumBytes);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             UploadType = (CraftType)lidgrenMsg.ReadInt32();
             UploadName = lidgrenMsg.ReadString();
@@ -44,9 +44,9 @@ namespace LunaCommon.Message.Data.CraftLibrary
             lidgrenMsg.ReadBytes(CraftData, 0, NumBytes);
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(CraftType) + UploadName.GetByteCount() + sizeof(int) + sizeof(byte) * NumBytes;
+            return base.InternalGetMessageSize() + sizeof(CraftType) + UploadName.GetByteCount() + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }

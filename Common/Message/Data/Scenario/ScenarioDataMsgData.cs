@@ -14,20 +14,20 @@ namespace LunaCommon.Message.Data.Scenario
 
         public override string ClassName { get; } = nameof(ScenarioDataMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(ScenarioCount);
             for (var i = 0; i < ScenarioCount; i++)
             {
-                ScenariosData[i].Serialize(lidgrenMsg, compressData);
+                ScenariosData[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             ScenarioCount = lidgrenMsg.ReadInt32();
             if (ScenariosData.Length < ScenarioCount)
@@ -38,19 +38,19 @@ namespace LunaCommon.Message.Data.Scenario
                 if (ScenariosData[i] == null)
                     ScenariosData[i] = new ScenarioInfo();
 
-                ScenariosData[i].Deserialize(lidgrenMsg, dataCompressed);
+                ScenariosData[i].Deserialize(lidgrenMsg);
             }
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < ScenarioCount; i++)
             {
-                arraySize += ScenariosData[i].GetByteCount(dataCompressed);
+                arraySize += ScenariosData[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

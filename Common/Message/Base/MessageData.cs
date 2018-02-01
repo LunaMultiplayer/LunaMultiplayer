@@ -32,33 +32,33 @@ namespace LunaCommon.Message.Base
         /// <inheritdoc />
         public abstract string ClassName { get; }
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(SentTime);
             lidgrenMsg.Write(MajorVersion);
             lidgrenMsg.Write(MinorVersion);
             lidgrenMsg.Write(BuildVersion);
-            InternalSerialize(lidgrenMsg, compressData);
+            InternalSerialize(lidgrenMsg);
         }
 
-        internal abstract void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData);
+        internal abstract void InternalSerialize(NetOutgoingMessage lidgrenMsg);
 
-        public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             SentTime = lidgrenMsg.ReadInt64();
             MajorVersion = lidgrenMsg.ReadUInt16();
             MinorVersion = lidgrenMsg.ReadUInt16();
             BuildVersion = lidgrenMsg.ReadUInt16();
-            InternalDeserialize(lidgrenMsg, dataCompressed);
+            InternalDeserialize(lidgrenMsg);
         }
 
-        internal abstract void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed);
+        internal abstract void InternalDeserialize(NetIncomingMessage lidgrenMsg);
         
-        public int GetMessageSize(bool dataCompressed)
+        public int GetMessageSize()
         {
-            return sizeof(long) + sizeof(ushort) * 3 + InternalGetMessageSize(dataCompressed);
+            return sizeof(long) + sizeof(ushort) * 3 + InternalGetMessageSize();
         }
 
-        internal abstract int InternalGetMessageSize(bool dataCompressed);
+        internal abstract int InternalGetMessageSize();
     }
 }

@@ -16,9 +16,9 @@ namespace LunaCommon.Message.Data.Chat
 
         public override string ClassName { get; } = nameof(ChatChannelMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(SendToAll);
             if (SendToAll)
@@ -31,9 +31,9 @@ namespace LunaCommon.Message.Data.Chat
             lidgrenMsg.Write(Text);
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             SendToAll = lidgrenMsg.ReadBoolean();
             lidgrenMsg.SkipPadBits();
@@ -42,10 +42,10 @@ namespace LunaCommon.Message.Data.Chat
             Text = lidgrenMsg.ReadString();
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(byte) + Channel.GetByteCount() + Text.GetByteCount();
+            return base.InternalGetMessageSize() + sizeof(byte) + Channel.GetByteCount() + Text.GetByteCount();
         }
     }
 }

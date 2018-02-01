@@ -33,10 +33,6 @@ namespace LunaCommon.Message.Base
         /// </summary>
         protected abstract ushort MessageTypeId { get; }
 
-
-        /// <inheritdoc />
-        public virtual bool AvoidCompression { get; } = false;
-
         /// <summary>
         ///     This parameter can be used to specify a channel for the lidgren delivery methods that preserve order
         ///     (whether by holding back, or dropping messages received out of order).
@@ -105,16 +101,15 @@ namespace LunaCommon.Message.Base
         public bool VersionMismatch { get; set; }
 
         /// <inheritdoc />
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             try
             {
                 lidgrenMsg.Write(MessageTypeId);
                 lidgrenMsg.Write(Data.SubType);
-                lidgrenMsg.Write(compressData);
                 lidgrenMsg.WritePadBits();
 
-                Data.Serialize(lidgrenMsg, compressData);
+                Data.Serialize(lidgrenMsg);
             }
             catch (Exception e)
             {
@@ -129,10 +124,9 @@ namespace LunaCommon.Message.Base
         }
 
         /// <inheritdoc />
-        public int GetMessageSize(bool dataCompressed)
-        {            
-            //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
-            return sizeof(ushort) + sizeof(ushort) + sizeof(byte) + Data.GetMessageSize(dataCompressed);
+        public int GetMessageSize()
+        {
+            return sizeof(ushort) + sizeof(ushort) + Data.GetMessageSize();
         }
     }
 }

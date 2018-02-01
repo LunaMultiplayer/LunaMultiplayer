@@ -14,20 +14,20 @@ namespace LunaCommon.Message.Data.Groups
 
         public override string ClassName { get; } = nameof(GroupListResponseMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(GroupsCount);
             for (var i = 0; i < GroupsCount; i++)
             {
-                Groups[i].Serialize(lidgrenMsg, compressData);
+                Groups[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             GroupsCount = lidgrenMsg.ReadInt32();
             if (Groups.Length < GroupsCount)
@@ -38,19 +38,19 @@ namespace LunaCommon.Message.Data.Groups
                 if (Groups[i] == null)
                     Groups[i] = new Group();
 
-                Groups[i].Deserialize(lidgrenMsg, dataCompressed);
+                Groups[i].Deserialize(lidgrenMsg);
             }
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < GroupsCount; i++)
             {
-                arraySize += Groups[i].GetByteCount(dataCompressed);
+                arraySize += Groups[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

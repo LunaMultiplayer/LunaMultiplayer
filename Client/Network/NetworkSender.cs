@@ -67,9 +67,9 @@ namespace LunaClient.Network
                     foreach (var masterServer in NetworkServerList.MasterServers)
                     {
                         //Don't reuse lidgren messages, he does that on it's own
-                        var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(message.GetMessageSize(SettingsSystem.CurrentSettings.CompressionEnabled));
+                        var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(message.GetMessageSize());
 
-                        message.Serialize(lidgrenMsg, SettingsSystem.CurrentSettings.CompressionEnabled);
+                        message.Serialize(lidgrenMsg);
                         NetworkMain.ClientConnection.SendUnconnectedMessage(lidgrenMsg, masterServer);
                         NetworkMain.ClientConnection.FlushSendQueue();
                     }
@@ -78,9 +78,9 @@ namespace LunaClient.Network
                 {
                     if (MainSystem.NetworkState >= ClientState.Connected)
                     {
-                        var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(message.GetMessageSize(SettingsSystem.CurrentSettings.CompressionEnabled));
+                        var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(message.GetMessageSize());
 
-                        message.Serialize(lidgrenMsg, SettingsSystem.CurrentSettings.CompressionEnabled);
+                        message.Serialize(lidgrenMsg);
                         NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
                     }
                 }

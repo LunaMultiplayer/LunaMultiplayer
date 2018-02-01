@@ -9,7 +9,7 @@ namespace LunaCommon.Message.Data.Kerbal
         public int NumBytes;
         public byte[] KerbalData = new byte[0];
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(KerbalName);
 
@@ -17,7 +17,7 @@ namespace LunaCommon.Message.Data.Kerbal
             lidgrenMsg.Write(KerbalData, 0, NumBytes);
         }
 
-        public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             KerbalName = lidgrenMsg.ReadString();
 
@@ -28,7 +28,7 @@ namespace LunaCommon.Message.Data.Kerbal
             lidgrenMsg.ReadBytes(KerbalData, 0, NumBytes);
         }
 
-        public int GetByteCount(bool dataCompressed)
+        public int GetByteCount()
         {
             return KerbalName.GetByteCount() + sizeof(int) + sizeof(byte) * NumBytes;
         }

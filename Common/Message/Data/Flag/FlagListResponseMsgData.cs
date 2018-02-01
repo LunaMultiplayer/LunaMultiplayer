@@ -14,20 +14,20 @@ namespace LunaCommon.Message.Data.Flag
 
         public override string ClassName { get; } = nameof(FlagListResponseMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(FlagCount);
             for (var i = 0; i < FlagCount; i++)
             {
-                FlagFiles[i].Serialize(lidgrenMsg, compressData);
+                FlagFiles[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             FlagCount = lidgrenMsg.ReadInt32();
             for (var i = 0; i < FlagCount; i++)
@@ -35,19 +35,19 @@ namespace LunaCommon.Message.Data.Flag
                 if(FlagFiles[i] == null)
                     FlagFiles[i] = new FlagInfo();
 
-                FlagFiles[i].Deserialize(lidgrenMsg, dataCompressed);
+                FlagFiles[i].Deserialize(lidgrenMsg);
             }
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < FlagCount; i++)
             {
-                arraySize += FlagFiles[i].GetByteCount(dataCompressed);
+                arraySize += FlagFiles[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

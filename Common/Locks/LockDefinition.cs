@@ -52,21 +52,21 @@ namespace LunaCommon.Locks
             return VesselId != Guid.Empty ? $"{Type} - {VesselId}" : $"{Type}";
         }
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool dataCompressed)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(PlayerName);
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write((int)Type);
         }
 
-        public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             PlayerName = lidgrenMsg.ReadString();
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
             Type = (LockType) lidgrenMsg.ReadInt32();
         }
 
-        public int GetByteSize(bool dataCompressed)
+        public int GetByteCount()
         {
             return PlayerName.GetByteCount() + GuidUtil.GetByteSize() + sizeof(LockType);
         }

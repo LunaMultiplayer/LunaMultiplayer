@@ -15,20 +15,20 @@ namespace LunaCommon.Message.Data.Lock
 
         public override string ClassName { get; } = nameof(LockListReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(LocksCount);
             for (var i = 0; i < LocksCount; i++)
             {
-                Locks[i].Serialize(lidgrenMsg, compressData);
+                Locks[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             LocksCount = lidgrenMsg.ReadInt32();
             if (Locks.Length < LocksCount)
@@ -39,19 +39,19 @@ namespace LunaCommon.Message.Data.Lock
                 if (Locks[i] == null)
                     Locks[i] = new LockDefinition();
 
-                Locks[i].Deserialize(lidgrenMsg, dataCompressed);
+                Locks[i].Deserialize(lidgrenMsg);
             }
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < LocksCount; i++)
             {
-                arraySize += Locks[i].GetByteSize(dataCompressed);
+                arraySize += Locks[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

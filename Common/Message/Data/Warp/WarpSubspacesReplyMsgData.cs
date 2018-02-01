@@ -14,20 +14,20 @@ namespace LunaCommon.Message.Data.Warp
 
         public override string ClassName { get; } = nameof(WarpSubspacesReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(SubspaceCount);
             for (var i = 0; i < SubspaceCount; i++)
             {
-                Subspaces[i].Serialize(lidgrenMsg, compressData);
+                Subspaces[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             SubspaceCount = lidgrenMsg.ReadInt32();
             if (Subspaces.Length < SubspaceCount)
@@ -38,19 +38,19 @@ namespace LunaCommon.Message.Data.Warp
                 if (Subspaces[i] == null)
                     Subspaces[i] = new SubspaceInfo();
 
-                Subspaces[i].Deserialize(lidgrenMsg, dataCompressed);
+                Subspaces[i].Deserialize(lidgrenMsg);
             }
         }
         
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < SubspaceCount; i++)
             {
-                arraySize += Subspaces[i].GetByteCount(dataCompressed);
+                arraySize += Subspaces[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

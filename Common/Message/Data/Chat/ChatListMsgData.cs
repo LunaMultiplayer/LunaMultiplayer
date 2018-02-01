@@ -14,20 +14,20 @@ namespace LunaCommon.Message.Data.Chat
 
         public override string ClassName { get; } = nameof(ChatListReplyMsgData);
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(PlayerChannelsCount);
             for (var i = 0; i < PlayerChannelsCount; i++)
             {
-                PlayerChannels[i].Serialize(lidgrenMsg, compressData);
+                PlayerChannels[i].Serialize(lidgrenMsg);
             }
         }
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
 
             PlayerChannelsCount = lidgrenMsg.ReadInt32();
 
@@ -39,11 +39,11 @@ namespace LunaCommon.Message.Data.Chat
                 if (PlayerChannels[i] == null)
                     PlayerChannels[i] = new PlayerChatChannels();
 
-                PlayerChannels[i].Deserialize(lidgrenMsg, dataCompressed);
+                PlayerChannels[i].Deserialize(lidgrenMsg);
             }
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
             var arraySize = 0;
             for (var i = 0; i < PlayerChannelsCount; i++)
@@ -51,7 +51,7 @@ namespace LunaCommon.Message.Data.Chat
                 arraySize += PlayerChannels[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize(dataCompressed) + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
         }
     }
 }

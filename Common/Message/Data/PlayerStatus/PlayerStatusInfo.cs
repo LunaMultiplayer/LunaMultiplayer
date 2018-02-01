@@ -9,21 +9,21 @@ namespace LunaCommon.Message.Data.PlayerStatus
         public string VesselText;
         public string StatusText;
 
-        public void Serialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(PlayerName);
             lidgrenMsg.Write(VesselText);
             lidgrenMsg.Write(StatusText);
         }
 
-        public void Deserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             PlayerName = lidgrenMsg.ReadString();
             VesselText = lidgrenMsg.ReadString();
             StatusText = lidgrenMsg.ReadString();
         }
 
-        public int GetByteCount(bool dataCompressed)
+        public int GetByteCount()
         {
             return PlayerName.GetByteCount() + VesselText.GetByteCount() + StatusText.GetByteCount();
         }

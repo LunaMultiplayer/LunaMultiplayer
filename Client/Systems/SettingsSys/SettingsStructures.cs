@@ -17,7 +17,6 @@ namespace LunaClient.Systems.SettingsSys
         public int MsBetweenConnectionTries { get; set; } = 3000;
         public int HearbeatMsInterval { get; set; } = 2000;
         public int MtuSize { get; set; } = 1408;
-        public bool CompressionEnabled { get; set; } = true;
         public bool DisclaimerAccepted { get; set; } = false;
         public Color PlayerColor { get; set; } = PlayerColorSystem.GenerateRandomColor();
         public KeyCode ChatKey { get; set; } = KeyCode.BackQuote;

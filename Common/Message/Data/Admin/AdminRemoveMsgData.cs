@@ -14,21 +14,21 @@ namespace LunaCommon.Message.Data.Admin
 
         public override string ClassName { get; } = nameof(AdminRemoveMsgData);
 
-        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg, bool dataCompressed)
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            base.InternalDeserialize(lidgrenMsg, dataCompressed);
+            base.InternalDeserialize(lidgrenMsg);
             PlayerName = lidgrenMsg.ReadString();
         }
 
-        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg, bool compressData)
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            base.InternalSerialize(lidgrenMsg, compressData);
+            base.InternalSerialize(lidgrenMsg);
             lidgrenMsg.Write(PlayerName);
         }
 
-        internal override int InternalGetMessageSize(bool dataCompressed)
+        internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize(dataCompressed) + PlayerName.GetByteCount();
+            return base.InternalGetMessageSize() + PlayerName.GetByteCount();
         }
     }
 }
