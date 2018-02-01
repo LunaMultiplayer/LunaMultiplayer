@@ -17,6 +17,7 @@ namespace LMP.Tests
             var task2 = new Thread(() => FileHandler.WriteToFile(filePath, "TASK2"));
 
             task1.Start();
+            Thread.Sleep(1);
             task2.Start();
             
             Thread.Sleep(100);

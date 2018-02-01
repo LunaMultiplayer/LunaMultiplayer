@@ -1,13 +1,10 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message;
 using LunaCommon.Message.Client;
+using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Data.Vessel;
-using LunaCommon.Message.Server;
-using LunaCommon.Time;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Linq;
-using LunaCommon.Message.Data.Chat;
 
 namespace LMP.Tests
 {
@@ -17,44 +14,6 @@ namespace LMP.Tests
         private static readonly ServerMessageFactory Factory = new ServerMessageFactory();
         private static readonly Random Rnd = new Random();
         private static readonly NetClient Client = new NetClient(new NetPeerConfiguration("TESTS"));
-
-        [TestMethod]
-        public void TestSerializeDeserialize()
-        {
-            var bytes = new byte[10000];
-            new Random().NextBytes(bytes);
-
-            var msgData = Factory.CreateNewMessageData<VesselProtoMsgData>();
-            msgData.Vessel.VesselId = Guid.NewGuid();
-            msgData.Vessel.Data = bytes;
-            msgData.Vessel.NumBytes = bytes.Length;
-            msgData.SentTime = LunaTime.UtcNow.Ticks;
-
-            var msg = Factory.CreateNew<VesselSrvMsg>(msgData);
-
-            //Serialize
-            var expectedDataSize = msg.GetMessageSize();
-            var lidgrenMsgSend = Client.CreateMessage(expectedDataSize);
-            msg.Serialize(lidgrenMsgSend);
-            var realSize = lidgrenMsgSend.LengthBytes;
-
-            //Usually the expected size will be a bit more as Lidgren writes the size of the strings in a base128 int (so it uses less bytes)
-            Assert.IsTrue(expectedDataSize >= realSize);
-
-            //Simulate sending
-            var data = lidgrenMsgSend.ReadBytes(lidgrenMsgSend.LengthBytes);
-            var lidgrenMsgRecv = Client.CreateIncomingMessage(NetIncomingMessageType.Data, data);
-            lidgrenMsgRecv.LengthBytes = lidgrenMsgSend.LengthBytes;
-
-            //Deserialize
-            var msgDes = Factory.Deserialize(lidgrenMsgRecv, Environment.TickCount);
-
-            //Arrays are pooled and will not be of an exact length so resize them
-            Array.Resize(ref ((VesselProtoMsgData)msg.Data).Vessel.Data, 10000);
-            Array.Resize(ref ((VesselProtoMsgData)msgDes.Data).Vessel.Data, 10000);
-
-            Assert.IsTrue(((VesselProtoMsgData)msg.Data).Vessel.Data.SequenceEqual(((VesselProtoMsgData)msgDes.Data).Vessel.Data));
-        }
 
         [TestMethod]
         public void TestSerializeDeserializeVesselUpdateMsg()
