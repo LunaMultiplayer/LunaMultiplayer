@@ -13,10 +13,8 @@ namespace LunaClient.Systems.SettingsSys
         public int ConnectionTries { get; set; } = 3;
         public int InitialConnectionMsTimeout { get; set; } = 5000;
         public int SendReceiveMsInterval { get; set; } = 5;
-        public int ConnectionMsTimeout { get; set; } = 20000;
         public int MsBetweenConnectionTries { get; set; } = 3000;
         public int HearbeatMsInterval { get; set; } = 2000;
-        public int MtuSize { get; set; } = 1408;
         public bool DisclaimerAccepted { get; set; } = false;
         public Color PlayerColor { get; set; } = PlayerColorSystem.GenerateRandomColor();
         public KeyCode ChatKey { get; set; } = KeyCode.BackQuote;
