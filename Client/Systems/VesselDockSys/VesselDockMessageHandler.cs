@@ -58,7 +58,8 @@ namespace LunaClient.Systems.VesselDockSys
                  * so if we send our own protovessel later, we send the updated definition
                  */
                 LunaLog.Log($"Creating the missing parts in our own vessel. Current: {FlightGlobals.ActiveVessel.parts.Count} Expected: {newProto.protoPartSnapshots.Count}");
-                ProtoToVesselRefresh.CreateMissingPartsInCurrentProtoVessel(FlightGlobals.ActiveVessel, newProto);
+                //ProtoToVesselRefresh.CreateMissingPartsInCurrentProtoVessel(FlightGlobals.ActiveVessel, newProto);
+                VesselLoader.ReloadVessel(newProto);
 
                 LunaLog.Log("Force sending the new proto vessel");
                 SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
