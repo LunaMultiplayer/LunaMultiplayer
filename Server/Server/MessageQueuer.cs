@@ -61,7 +61,7 @@ namespace Server.Server
         {
             if (data == null) return;
             
-            client.SendMessageQueue.Enqueue(GenerateMessage<T>(data));
+            client?.SendMessageQueue.Enqueue(GenerateMessage<T>(data));
         }
 
         /// <summary>
