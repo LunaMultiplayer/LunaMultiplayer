@@ -26,34 +26,45 @@ namespace Server.System
         private static readonly ConcurrentDictionary<Guid, DateTime> LastUpdateDictionary = new ConcurrentDictionary<Guid, DateTime>();
 
         /// <summary>
-        /// We received a position/update information from a player
+        /// We received a position information from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later receive an update vesselproto
         /// </summary>
-        public static void RewriteVesselFile(VesselBaseMsgData message)
+        public static void WritePositionDataToFile(VesselBaseMsgData message)
         {
-            var msgData = message as VesselPositionMsgData ?? (dynamic)(message as VesselUpdateMsgData);
-            if (msgData == null) return;
-
+            if (!(message is VesselPositionMsgData msgData)) return;
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 
-            if (!LastUpdateDictionary.TryGetValue((Guid)msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FileUpdateIntervalMs)
+            if (!LastUpdateDictionary.TryGetValue(msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FileUpdateIntervalMs)
             {
-                LastUpdateDictionary.AddOrUpdate((Guid)msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
+                LastUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
 
                 var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
                 if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
                 var protoVesselLines = FileHandler.ReadFileLines(path);
 
-                string updatedText;
-                if (message is VesselPositionMsgData)
-                {
-                    updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
-                }
-                else
-                {
-                    updatedText = UpdateProtoVesselFileWithNewUpdateData(protoVesselLines, msgData);
-                }
+                var updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
+                FileHandler.WriteToFile(path, updatedText);
+            }
+        }
 
+        /// <summary>
+        /// We received a update information from a player
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an update vesselproto
+        /// </summary>
+        public static void WriteUpdateDataToFile(VesselBaseMsgData message)
+        {
+            if (!(message is VesselUpdateMsgData msgData)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
+            if (!LastUpdateDictionary.TryGetValue(msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FileUpdateIntervalMs)
+            {
+                LastUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
+
+                var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
+                if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
+                var protoVesselLines = FileHandler.ReadFileLines(path);
+
+                var updatedText = UpdateProtoVesselFileWithNewUpdateData(protoVesselLines, msgData);
                 FileHandler.WriteToFile(path, updatedText);
             }
         }
