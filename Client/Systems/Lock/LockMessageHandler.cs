@@ -28,7 +28,8 @@ namespace LunaClient.Systems.Lock
                             LockSystem.LockStore.AddOrUpdateLock(data.Locks[i]);
                         }
 
-                        MainSystem.NetworkState = ClientState.LocksSynced;
+                        if (MainSystem.NetworkState < ClientState.LocksSynced)
+                            MainSystem.NetworkState = ClientState.LocksSynced;
                     }
                     break;
                 case LockMessageType.Acquire:

@@ -1,6 +1,12 @@
 using LunaCommon.Locks;
+using LunaCommon.Message.Data.Lock;
+using LunaCommon.Message.Server;
 using Server.Client;
+using Server.Context;
+using Server.Server;
 using Server.Settings;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.System
 {
@@ -42,6 +48,23 @@ namespace Server.System
                     continue;
 
                 LockSystemSender.ReleaseAndSendLockReleaseMessage(client, lockToRemove);
+            }
+        }
+
+        /// <summary>
+        /// This method send all locks to all clients at a interval of 30 seconds.
+        /// </summary>
+        public static async void SendAllLocks()
+        {
+            while (ServerContext.ServerRunning)
+            {
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockListReplyMsgData>();
+                msgData.Locks = LockQuery.GetAllLocks().ToArray();
+                msgData.LocksCount = msgData.Locks.Length;
+
+                MessageQueuer.SendToAllClients<LockSrvMsg>(msgData);
+
+                await Task.Delay(30000);
             }
         }
     }
