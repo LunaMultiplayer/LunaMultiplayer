@@ -124,7 +124,7 @@ namespace LunaClient.VesselStore
                     vesselProtoUpd.ProtoVessel.orbitSnapShot.argOfPeriapsis = vesselPositionMsgData.Orbit[4];
                     vesselProtoUpd.ProtoVessel.orbitSnapShot.meanAnomalyAtEpoch = vesselPositionMsgData.Orbit[5];
                     vesselProtoUpd.ProtoVessel.orbitSnapShot.epoch = vesselPositionMsgData.Orbit[6];
-                    vesselProtoUpd.ProtoVessel.orbitSnapShot.ReferenceBodyIndex = (int) vesselPositionMsgData.Orbit[7];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.ReferenceBodyIndex = (int)vesselPositionMsgData.Orbit[7];
                 }
             }
         }
@@ -145,6 +145,23 @@ namespace LunaClient.VesselStore
                 vesselProtoUpd.ProtoVessel.lastUT = msgData.LastUt;
                 vesselProtoUpd.ProtoVessel.persistent = msgData.Persistent;
                 vesselProtoUpd.ProtoVessel.refTransform = msgData.RefTransformId;
+            }
+        }
+
+        public static void UpdateVesselProtoResources(VesselResourceMsgData msgData)
+        {
+            if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
+            {
+                for (var i = 0; i < msgData.ResourcesCount; i++)
+                {
+                    var resource = msgData.Resources[i];
+                    var partSnapshot = VesselCommon.FindProtoPartInProtovessel(vesselProtoUpd.ProtoVessel, resource.PartFlightId);
+                    var resourceSnapshot = VesselCommon.FindResourceInProtoPart(partSnapshot, resource.ResourceName);
+                    if (resourceSnapshot != null)
+                    {
+                        resourceSnapshot.amount = resource.Amount;
+                    }
+                }
             }
         }
     }

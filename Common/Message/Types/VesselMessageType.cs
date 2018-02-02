@@ -9,6 +9,7 @@
         Remove = 4,
         Position = 5,
         Flightstate = 6,
-        Update = 7
+        Update = 7,
+        Resource = 8
     }
 }

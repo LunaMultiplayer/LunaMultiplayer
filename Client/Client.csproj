@@ -77,6 +77,9 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
+    <Compile Include="Systems\VesselResourceSys\VesselResourceMessageHandler.cs" />
+    <Compile Include="Systems\VesselResourceSys\VesselResourceMessageSender.cs" />
+    <Compile Include="Systems\VesselResourceSys\VesselResourceSystem.cs" />
     <Compile Include="Utilities\CoroutineUtil.cs" />
     <Compile Include="VesselIgnore\VesselModulesToIgnore.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />

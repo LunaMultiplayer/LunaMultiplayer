@@ -78,7 +78,10 @@ namespace LunaClient.Systems.VesselUpdateSys
                 protoVessel.persistent = msgData.Persistent;
                 protoVessel.refTransform = msgData.RefTransformId;
 
-                //TODO: Do we need to update the protovessel action group values aswell?
+                for (var i = 0; i < 17; i++)
+                {
+                    protoVessel.actionGroups.SetValue(msgData.ActionGroups[i].ActionGroupName, $"{msgData.ActionGroups[i].State}, {msgData.ActionGroups[i].Time}");
+                }
             }
         }
     }

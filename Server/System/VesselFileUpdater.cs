@@ -15,8 +15,26 @@ namespace Server.System
     /// </summary>
     public class VesselFileUpdater
     {
+        #region Constants and update dictionaries
+
+        #region Position
+
         /// <summary>
-        /// Update the vessel files max at a 2,5 seconds interval
+        /// Update the vessel files with position data max at a 2,5 seconds interval
+        /// </summary>
+        private const int FilePositionUpdateIntervalMs = 2500;
+
+        /// <summary>
+        /// Avoid updating the vessel files so often as otherwise the server will lag a lot!
+        /// </summary>
+        private static readonly ConcurrentDictionary<Guid, DateTime> LastPositionUpdateDictionary = new ConcurrentDictionary<Guid, DateTime>();
+
+        #endregion
+
+        #region Position
+
+        /// <summary>
+        /// Update the vessel files with update data max at a 2,5 seconds interval
         /// </summary>
         private const int FileUpdateIntervalMs = 2500;
 
@@ -25,6 +43,23 @@ namespace Server.System
         /// </summary>
         private static readonly ConcurrentDictionary<Guid, DateTime> LastUpdateDictionary = new ConcurrentDictionary<Guid, DateTime>();
 
+        #endregion
+
+        #region Resources
+
+        /// <summary>
+        /// Update the vessel files with resource data max at a 2,5 seconds interval
+        /// </summary>
+        private const int FileResourcesUpdateIntervalMs = 2500;
+
+        /// <summary>
+        /// Avoid updating the vessel files so often as otherwise the server will lag a lot!
+        /// </summary>
+        private static readonly ConcurrentDictionary<Guid, DateTime> LastResourcesUpdateDictionary = new ConcurrentDictionary<Guid, DateTime>();
+
+        #endregion
+
+        #endregion
         /// <summary>
         /// We received a position information from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later receive an update vesselproto
@@ -34,9 +69,9 @@ namespace Server.System
             if (!(message is VesselPositionMsgData msgData)) return;
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 
-            if (!LastUpdateDictionary.TryGetValue(msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FileUpdateIntervalMs)
+            if (!LastPositionUpdateDictionary.TryGetValue(msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FilePositionUpdateIntervalMs)
             {
-                LastUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
+                LastPositionUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
 
                 var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
                 if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
@@ -66,6 +101,28 @@ namespace Server.System
 
                 var updatedText = UpdateProtoVesselFileWithNewUpdateData(protoVesselLines, msgData);
                 FileHandler.WriteToFile(path, updatedText);
+            }
+        }
+
+        /// <summary>
+        /// We received a resource information from a player
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an update vesselproto
+        /// </summary>
+        public static void WriteResourceDataToFile(VesselBaseMsgData message)
+        {
+            if (!(message is VesselResourceMsgData msgData)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
+            if (!LastResourcesUpdateDictionary.TryGetValue(msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FileResourcesUpdateIntervalMs)
+            {
+                LastResourcesUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
+
+                var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
+                if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
+                var protoVesselLines = FileHandler.ReadFileLines(path);
+
+                //var updatedText = UpdateProtoVesselFileWithNewResourceData(protoVesselLines, msgData);
+                //FileHandler.WriteToFile(path, updatedText);
             }
         }
 
@@ -198,6 +255,14 @@ namespace Server.System
             }
 
             return fullText;
+        }
+
+        /// <summary>
+        /// Updates the proto vessel file with the values we received about a position of a vessel
+        /// </summary>
+        private static string UpdateProtoVesselFileWithNewResourceData(string[] protoVesselLines, VesselResourceMsgData msgData)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -41,10 +41,8 @@ namespace LunaClient.Systems.VesselProtoSys
             VesselProtoSystem.CurrentlyUpdatingVesselId = vessel.id;
             var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
             VesselProtoSystem.CurrentlyUpdatingVesselId = Guid.Empty;
-
-            //TODO: Now we send the protovessel all the time if someone is spectating us, perhaps we can just make a new system that sends the resources
-            //as this will be better in terms of memory garbage...
-            if (force || vesselHasChanges || VesselCommon.IsSomeoneSpectatingUs || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
+            
+            if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
                 SendVesselMessage(vessel.protoVessel);
         }
 

@@ -114,6 +114,66 @@ namespace LunaClient.VesselUtilities
         }
 
         /// <summary>
+        /// Finds a part in a vessel without generating garbage. Returns null if not found
+        /// </summary>
+        public static Part FindPartInVessel(Vessel vessel, uint partFlightId)
+        {
+            if (vessel == null) return null;
+
+            for (var i = 0; i < vessel.Parts.Count; i++)
+            {
+                if (vessel.Parts[i].flightID == partFlightId)
+                    return vessel.Parts[i];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds a proto part snapshot in a proto vessel without generating garbage. Returns null if not found
+        /// </summary>
+        public static ProtoPartSnapshot FindProtoPartInProtovessel(ProtoVessel protoVessel, uint partFlightId)
+        {
+            if (protoVessel == null) return null;
+
+            for (var i = 0; i < protoVessel.protoPartSnapshots.Count; i++)
+            {
+                if (protoVessel.protoPartSnapshots[i].flightID == partFlightId)
+                    return protoVessel.protoPartSnapshots[i];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds a resource in a part without generating garbage. Returns null if not found
+        /// </summary>
+        public static PartResource FindResourceInPart(Part part, string resourceName)
+        {
+            if (part == null) return null;
+
+            for (var i = 0; i < part.Resources.Count; i++)
+            {
+                if (part.Resources[i].resourceName == resourceName)
+                    return part.Resources[i];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds a proto part resource snapshot in a proto part snapshot without generating garbage. Returns null if not found
+        /// </summary>
+        public static ProtoPartResourceSnapshot FindResourceInProtoPart(ProtoPartSnapshot protoPart, string resourceName)
+        {
+            if (protoPart == null) return null;
+
+            for (var i = 0; i < protoPart.resources.Count; i++)
+            {
+                if (protoPart.resources[i].resourceName == resourceName)
+                    return protoPart.resources[i];
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Return all the vessels except the active one that we have the update lock and that are loaded
         /// </summary>
         public static IEnumerable<Vessel> GetSecondaryVessels()
