@@ -23,37 +23,6 @@ namespace LunaClient.Systems.GameScene
         /// </summary>
         public void OnSceneChanged(GameScenes data)
         {
-            if (data == GameScenes.FLIGHT) return;
-
-            //Always release the Update/UnloadedUpdate lock and the spectate lock
-            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Update);
-            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.UnloadedUpdate);
-            SystemsContainer.Get<VesselLockSystem>().StopSpectating();
-
-            //We are going to another screen so clear up the systems
-            SystemsContainer.Get<VesselRemoveSystem>().ClearSystem();
-            SystemsContainer.Get<VesselFlightStateSystem>().ClearSystem();
-            SystemsContainer.Get<VesselStateSystem>().ClearSystem();
-
-            switch (data)
-            {
-                case GameScenes.MAINMENU:
-                case GameScenes.SETTINGS:
-                case GameScenes.CREDITS:
-                    ReleaseAsteroidLock();
-                    if (SettingsSystem.ServerSettings.DropControlOnExit)
-                        ReleaseAllControlLocks();
-                    //When going to main menu activate LMP in case it was hidden
-                    MainSystem.ToolbarShowGui = true;
-                    break;
-                case GameScenes.SPACECENTER:
-                case GameScenes.EDITOR:
-                case GameScenes.TRACKSTATION:
-                    if (SettingsSystem.ServerSettings.DropControlOnExitFlight)
-                        ReleaseAllControlLocks();
-                    break;
-            }
-
             if (data == GameScenes.SPACECENTER)
             {
                 //If we are going to space center clear all the vessels.
@@ -75,13 +44,44 @@ namespace LunaClient.Systems.GameScene
         /// </summary>
         public void OnSceneRequested(GameScenes requestedScene)
         {
-            if (FlightGlobals.ActiveVessel == null || VesselCommon.IsSpectating) return;
-
             if (HighLogic.LoadedSceneIsFlight && requestedScene != GameScenes.FLIGHT)
             {
                 //When quitting flight send the vessel one last time
                 SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
             }
+
+            if (requestedScene == GameScenes.FLIGHT) return;
+
+            //Always release the Update/UnloadedUpdate lock and the spectate lock
+            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Update);
+            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.UnloadedUpdate);
+            SystemsContainer.Get<VesselLockSystem>().StopSpectating();
+
+            //We are going to another screen so clear up the systems
+            SystemsContainer.Get<VesselRemoveSystem>().ClearSystem();
+            SystemsContainer.Get<VesselFlightStateSystem>().ClearSystem();
+            SystemsContainer.Get<VesselStateSystem>().ClearSystem();
+
+            switch (requestedScene)
+            {
+                case GameScenes.MAINMENU:
+                case GameScenes.SETTINGS:
+                case GameScenes.CREDITS:
+                    ReleaseAsteroidLock();
+                    if (SettingsSystem.ServerSettings.DropControlOnExit)
+                        ReleaseAllControlLocks();
+                    //When going to main menu activate LMP in case it was hidden
+                    MainSystem.ToolbarShowGui = true;
+                    break;
+                case GameScenes.SPACECENTER:
+                case GameScenes.EDITOR:
+                case GameScenes.TRACKSTATION:
+                    if (SettingsSystem.ServerSettings.DropControlOnExitFlight)
+                        ReleaseAllControlLocks();
+                    break;
+            }
+
+            OnSceneChanged(requestedScene);
         }
 
         /// <summary>
