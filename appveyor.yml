@@ -99,6 +99,11 @@ notifications:
    on_build_failure: true
    on_build_status_changed: true
    
+ - provider: Webhook
+   url:  https://registry.hub.docker.com/u/thesystem/lunamultiplayer/trigger/d9d50936-8115-40b9-a087-24330d5cc59c/
+   on_build_success: true
+   on_build_failure: true
+   on_build_status_changed: true
 #Old webhook for discord...
 # - provider: Webhook 
 #   url: https://skyhook.glitch.me/api/webhooks/385378686481727498/O8urCLjjAVW1zDi6MOhsI_TUe8iohTJJoLVtLfkVUuOQdT-b-Q9Ebyk7Xpxyw4RuVu5r/appveyor
