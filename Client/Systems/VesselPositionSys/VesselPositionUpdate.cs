@@ -291,52 +291,41 @@ namespace LunaClient.Systems.VesselPositionSys
         private void MixedApplyInterpolationsToLoadedVessel(float lerpPercentage)
         {
             var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
+            var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
+            //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
+            Vessel.SetWorldVelocity(curVelocity);
+            Vessel.velocityD = curVelocity;
+
+            //Apply rotation
+            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             Vessel.srfRelRotation = currentSurfaceRelRotation;
+            
+            //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
+            Vessel.orbitDriver.updateFromParameters();
 
-            var curVelocity = (Vessel.mainBody.bodyTransform.rotation * Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage)) 
-                - Krakensbane.GetFrameVelocity();
-            //Use lat/long/alt/vel under 1km
-            var useOrbitDriver = Target.LatLonAlt[2] > 1000;
-
-            Vessel.latitude = Target.LatLonAlt[0];
-            Vessel.longitude = Target.LatLonAlt[1];
-            Vessel.altitude = Target.LatLonAlt[2];
-
-            var surfacePos = Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude);
-            if (useOrbitDriver || (Vessel.packed))
-            {
-                Vessel.orbitDriver.updateFromParameters();
-                if (!Vessel.packed)
-                {
-                    var fudgeVel = Body.inverseRotation ? Body.getRFrmVelOrbit(Vessel.orbitDriver.orbit) : Vector3d.zero;
-                    Vessel.SetWorldVelocity(Vessel.orbitDriver.orbit.vel.xzy - fudgeVel - Krakensbane.GetFrameVelocity());
-                }
-            }
-            else
-            {
-                Vessel.SetPosition(surfacePos);
-                Vessel.SetWorldVelocity(curVelocity);
-                //This sets obt_vel so acceleration can be fixed in Vessel.UpdateAcceleration
-                if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
-                {
-                    Vessel.orbitDriver.UpdateOrbit();
-                }
-            }
-
-            //Apply rotation (also resets posistion)
-            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
-            //Not sure if we need to touch reference transform?
             //If you do Vessel.ReferenceTransform.position = curPosition 
             //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
             //that is the reason why we pack vessels at close distance when landed...
-
-            //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
-            Vessel.UpdatePosVel();
-            if (Vessel.orbitDriver.updateMode != OrbitDriver.UpdateMode.UPDATE)
+            switch (Vessel.situation)
             {
-                Vessel.UpdateAcceleration(1 / TimeWarp.fixedDeltaTime, false);
+                case Vessel.Situations.LANDED:
+                case Vessel.Situations.SPLASHED:
+                    Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                    Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                    Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                    Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+                    Vessel.SetWorldVelocity(curVelocity);
+                    break;
+            }
+
+            foreach (var part in Vessel.Parts)
+                part.ResumeVelocity();
+            
+            if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == VesselId)
+            {
+                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
         }
 
