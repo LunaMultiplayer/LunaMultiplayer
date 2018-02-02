@@ -15,7 +15,7 @@ namespace LunaClient.Systems.VesselProtoSys
     {
         private static FieldInfo StateField { get; } = typeof(Part).GetField("state", BindingFlags.Instance | BindingFlags.NonPublic);
         private static FieldInfo PartModuleFields { get; } = typeof(PartModule).GetField("fields", BindingFlags.Instance | BindingFlags.NonPublic);
-        
+
         private static readonly List<ProtoCrewMember> MembersToAdd = new List<ProtoCrewMember>();
         private static readonly List<string> MembersToRemove = new List<string>();
 
@@ -36,7 +36,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             var vesselProtoPartIds = vesselPartsId ?? protoVessel.protoPartSnapshots.Select(p => p.flightID);
             var vesselPartsIds = vessel.parts.Select(p => p.flightID);
-            
+
             var hasMissingparts = vesselProtoPartIds.Except(vesselPartsIds).Any();
             if (hasMissingparts || (vessel.situation != protoVessel.situation && !VesselCommon.IsSpectating))
             {
@@ -56,7 +56,7 @@ namespace LunaClient.Systems.VesselProtoSys
             for (var i = 0; i < vessel.parts.Count; i++)
             {
                 var part = vessel.parts[i];
-                var partSnapshot = protoVessel.protoPartSnapshots.FirstOrDefault(ps => ps.flightID == part.flightID);
+                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(protoVessel, part.flightID);
                 if (partSnapshot == null) //Part does not exist in the protovessel definition so kill it
                 {
                     part.Die();
@@ -101,7 +101,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (partSnapshot.FindModule("ModuleDockingNode") != null)
                 {
                     //We are in a docking port part so remove it from our own vessel if we have it
-                    var vesselPart = vessel.parts.FirstOrDefault(p => p.flightID == partSnapshot.flightID);
+                    var vesselPart = VesselCommon.FindPartInVessel(vessel, partSnapshot.flightID);
                     if (vesselPart != null)
                     {
                         vesselPart.Die();
@@ -109,7 +109,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
 
                 //Skip parts that already exists
-                if (vessel.parts.Any(p => p.flightID == partSnapshot.flightID))
+                if (VesselCommon.FindPartInVessel(vessel, partSnapshot.flightID) != null)
                     continue;
 
                 var newPart = partSnapshot.Load(vessel, false);
@@ -136,7 +136,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (module == null) continue;
 
                 var definitionPartModuleFieldVals = moduleSnapshot.moduleValues.values.Cast<ConfigNode.Value>()
-                    .Select(v => new {v.name, v.value}).ToArray();
+                    .Select(v => new { v.name, v.value }).ToArray();
                 var partModuleFieldVals = module.Fields.Cast<BaseField>()
                     .Where(f => definitionPartModuleFieldVals.Any(mf => mf.name == f.name)).ToArray();
 
@@ -176,7 +176,7 @@ namespace LunaClient.Systems.VesselProtoSys
             foreach (var resourceSnapshot in partSnapshot.resources)
             {
                 //Get the corresponding resource from the actual PART
-                var resource = part.Resources?.FirstOrDefault(pr => pr.info.name == resourceSnapshot.resourceName);
+                var resource = part.Resources?.FirstOrDefault(pr => pr.resourceName == resourceSnapshot.resourceName);
                 if (resource == null) continue;
 
                 resource.amount = resourceSnapshot.amount;

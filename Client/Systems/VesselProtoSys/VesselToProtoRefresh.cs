@@ -19,6 +19,17 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public static bool RefreshVesselProto(Vessel vessel)
         {
+            return RefreshVesselProto(vessel, vessel.protoVessel);
+        }
+
+        /// <summary>
+        /// Here we refresh the protovessel based on a vessel. 
+        /// Vessel -----------> Protovessel
+        /// This method is much better than calling vessel.BackupVessel() as it does not generate garbage.
+        /// Also it returns true or false if there are substantial changes in the vessel that require updating the whole definition to the server and clients.
+        /// </summary>
+        public static bool RefreshVesselProto(Vessel vessel, ProtoVessel protoVesselToRefresh)
+        {
             if (vessel.protoVessel == null)
             {
                 vessel.protoVessel = new ProtoVessel(vessel);
@@ -26,7 +37,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             var rootPartIndex = GetRootPartIndex(vessel);
-            var vesselHasChanges = vessel.situation != vessel.protoVessel.situation || 
+            var vesselHasChanges = vessel.situation != vessel.protoVessel.situation ||
                 vessel.currentStage != vessel.protoVessel.stage || vessel.protoVessel.rootIndex != rootPartIndex;
 
             vessel.protoVessel.vesselRef = vessel;
