@@ -159,8 +159,11 @@ namespace LunaClient.Systems.VesselDockSys
         private static void JumpIfVesselOwnerIsInFuture(Guid vesselId)
         {
             var dominantVesselOwner = LockSystem.LockQuery.GetControlLockOwner(vesselId);
-            var dominantVesselOwnerSubspace = SystemsContainer.Get<WarpSystem>().GetPlayerSubspace(dominantVesselOwner);
-            SystemsContainer.Get<WarpSystem>().WarpIfSubspaceIsMoreAdvanced(dominantVesselOwnerSubspace);
+            if (dominantVesselOwner != null)
+            {
+                var dominantVesselOwnerSubspace = SystemsContainer.Get<WarpSystem>().GetPlayerSubspace(dominantVesselOwner);
+                SystemsContainer.Get<WarpSystem>().WarpIfSubspaceIsMoreAdvanced(dominantVesselOwnerSubspace);
+            }
         }
 
         /// <summary>
