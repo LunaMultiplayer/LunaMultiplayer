@@ -50,7 +50,7 @@ namespace LunaClient.VesselIgnore
             ["ModuleWheelMotor"] = new[] { "driveLimiter" },
             ["ModuleWheelBrakes"] = new[] { "brakeInput" },
             ["ModuleReactionWheel"] = new[] { "stateString" },
-            ["ModuleEngines"] = new[] { "currentThrottle" },
+            //["ModuleEngines"] = new[] { "currentThrottle" },
             ["ModuleEnginesFX"] = new[] { "currentThrottle" },
             ["ModuleWheelSuspension"] = new[] { "suspensionPos", "autoBoost" },
             ["ModuleDeployableSolarPanel"] = new[] { "launchUT", "currentRotation", "storedAnimationTime" }
