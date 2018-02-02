@@ -4,6 +4,7 @@ using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselLockSys;
+using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselStateSys;
 using LunaClient.Utilities;
@@ -70,6 +71,20 @@ namespace LunaClient.Systems.GameScene
         }
 
         /// <summary>
+        /// Triggered when requesting a scene change. If we are leaving flight send our protovessel one last time
+        /// </summary>
+        public void OnSceneRequested(GameScenes requestedScene)
+        {
+            if (FlightGlobals.ActiveVessel == null || VesselCommon.IsSpectating) return;
+
+            if (HighLogic.LoadedSceneIsFlight && requestedScene != GameScenes.FLIGHT)
+            {
+                //When quitting flight send the vessel one last time
+                SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+            }
+        }
+
+        /// <summary>
         /// This coroutine removes the vessels when switching to the KSC. We delay the removal of the vessels so 
         /// in case we recover a vessel while in flight we correctly recover the crew, funds etc
         /// </summary>
@@ -82,7 +97,7 @@ namespace LunaClient.Systems.GameScene
                 KSCVesselMarkers.fetch?.RefreshMarkers();
             }, 3);
         }
-        
+
         /// <summary>
         /// Release the control locks
         /// </summary>
@@ -99,5 +114,6 @@ namespace LunaClient.Systems.GameScene
         {
             SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Asteroid);
         }
+
     }
 }
