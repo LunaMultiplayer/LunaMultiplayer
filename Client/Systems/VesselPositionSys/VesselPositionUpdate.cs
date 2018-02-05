@@ -118,7 +118,7 @@ namespace LunaClient.Systems.VesselPositionSys
             TimeStamp = Target.TimeStamp;
             ResetFields();
         }
-
+        
         /// <summary>
         /// Call this method to apply a vessel update either by interpolation or just by raw positioning the vessel
         /// </summary>
@@ -162,7 +162,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Private
-
+        
         private void UpdateProtoVesselValues()
         {
             Vessel.protoVessel.latitude = LatLonAlt[0];
@@ -192,7 +192,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.orbitSnapShot.epoch = Orbit[6];
             Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Orbit[7];
         }
-
+        
         private void OldApplyInterpolationsToLoadedVessel(float lerpPercentage)
         {
             var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
@@ -301,7 +301,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             Vessel.srfRelRotation = currentSurfaceRelRotation;
-
+            
             //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
             Vessel.orbitDriver.updateFromParameters();
 
@@ -322,7 +322,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             foreach (var part in Vessel.Parts)
                 part.ResumeVelocity();
-
+            
             if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == VesselId)
             {
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
@@ -337,8 +337,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 Lerp(Orbit[0], Target.Orbit[0], lerpPercentage),
                 Lerp(Orbit[1], Target.Orbit[1], lerpPercentage),
                 Lerp(Orbit[2], Target.Orbit[2], lerpPercentage),
-                LerpAngle(Orbit[3], Target.Orbit[3], lerpPercentage),
-                LerpAngle(Orbit[4], Target.Orbit[4], lerpPercentage),
+                Lerp(Orbit[3], Target.Orbit[3], lerpPercentage),
+                Lerp(Orbit[4], Target.Orbit[4], lerpPercentage),
                 Lerp(Orbit[5], Target.Orbit[5], lerpPercentage),
                 Lerp(Orbit[6], Target.Orbit[6], lerpPercentage),
                 Body
@@ -437,21 +437,6 @@ namespace LunaClient.Systems.VesselPositionSys
         private static double Lerp(double from, double to, float t)
         {
             return from * (1 - t) + to * t;
-        }
-
-        public static double LerpAngle(double from, double to, float t)
-        {
-            var single = Repeat(to - from, 360);
-            if (single > 180f)
-            {
-                single -= 360f;
-            }
-            return from + single * t;
-        }
-
-        public static double Repeat(double t, double length)
-        {
-            return t - Math.Floor(t / length) * length;
         }
 
         #endregion
