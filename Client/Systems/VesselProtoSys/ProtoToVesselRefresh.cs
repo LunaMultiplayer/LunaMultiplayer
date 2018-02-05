@@ -35,7 +35,9 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             var vesselProtoPartIds = vesselPartsId ?? protoVessel.protoPartSnapshots.Select(p => p.flightID);
-            var vesselPartsIds = vessel.parts.Select(p => p.flightID);
+
+            //If vessel is UNLOADED it won't have parts so we must take them from the proto...
+            var vesselPartsIds = vessel.loaded ? vessel.parts.Select(p => p.flightID) : vessel.protoVessel.protoPartSnapshots.Select(p=> p.flightID);
 
             var hasMissingparts = vesselProtoPartIds.Except(vesselPartsIds).Any();
             if (hasMissingparts || (vessel.situation != protoVessel.situation && !VesselCommon.IsSpectating))

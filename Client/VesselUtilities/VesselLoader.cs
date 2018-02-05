@@ -54,6 +54,7 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         public static bool ReloadVessel(ProtoVessel vesselProto)
         {
+            LunaLog.Log($"Reloading vessel {vesselProto.vesselID}");
             ReloadingVesselId = vesselProto.vesselID;
             try
             {
