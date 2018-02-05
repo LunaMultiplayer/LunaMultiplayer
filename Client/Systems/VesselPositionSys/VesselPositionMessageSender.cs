@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Interface;
 
@@ -16,7 +17,14 @@ namespace LunaClient.Systems.VesselPositionSys
         public void SendVesselPositionUpdate(Vessel vessel)
         {                
             var msg = MessageToPositionTransfer.CreateMessageFromVessel(vessel);
-            NetworkSender.QueueOutgoingMessage(msg);
+            if (msg == null) return;
+
+            msg.GameTime = Planetarium.GetUniversalTime();
+
+            //Update our own values in the store aswell as otherwise if we leave the vessel it can still be in the safety bubble
+            VesselsProtoStore.UpdateVesselProtoPosition(msg);
+
+            SendMessage(msg);
         }
     }
 }

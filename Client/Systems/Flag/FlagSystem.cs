@@ -22,6 +22,8 @@ namespace LunaClient.Systems.Flag
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(FlagSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
@@ -29,7 +31,7 @@ namespace LunaClient.Systems.Flag
             base.OnEnabled();
             GameEvents.onFlagSelect.Add(FlagEvents.OnFlagSelect);
             GameEvents.onMissionFlagSelect.Add(FlagEvents.OnMissionFlagSelect);
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, HandleFlags));
+            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, HandleFlags));
         }
 
         protected override void OnDisabled()

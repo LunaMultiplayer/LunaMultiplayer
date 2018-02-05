@@ -2,6 +2,7 @@
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.SettingsSys;
+using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
@@ -23,53 +24,44 @@ namespace LunaClient.Systems.CraftLibrary
                 case CraftMessageType.ListReply:
                     {
                         var data = (CraftLibraryListReplyMsgData)msgData;
-                        var playerList = data.PlayerCrafts;
-                        foreach (var playerCraft in playerList)
+                        for (var i = 0; i < data.PlayerCraftsCount; i++)
                         {
-                            var vabExists = playerCraft.Value.VabExists;
-                            var sphExists = playerCraft.Value.SphExists;
-                            var subassemblyExists = playerCraft.Value.SubassemblyExists;
-                            LunaLog.Log($"[LMP]: Player: {playerCraft.Key}, VAB: {vabExists}, SPH: {sphExists}, SUBASSEMBLY {subassemblyExists}");
-                            if (vabExists)
+                            if (data.PlayerCrafts[i].Crafts.VabExists)
                             {
-                                var vabCrafts = playerCraft.Value.VabCraftNames;
-                                foreach (var vabCraft in vabCrafts)
+                                for (var j = 0; j < data.PlayerCrafts[i].Crafts.VabCraftCount; j++)
                                 {
-                                    var cce = new CraftChangeEntry
+                                    System.QueueCraftAdd(new CraftChangeEntry
                                     {
-                                        PlayerName = playerCraft.Key,
+                                        PlayerName = data.PlayerCrafts[i].PlayerName,
                                         CraftType = CraftType.Vab,
-                                        CraftName = vabCraft
-                                    };
-                                    System.QueueCraftAdd(cce);
+                                        CraftName = data.PlayerCrafts[i].Crafts.VabCraftNames[j]
+                                    });
                                 }
                             }
-                            if (sphExists)
+
+                            if (data.PlayerCrafts[i].Crafts.SphExists)
                             {
-                                var sphCrafts = playerCraft.Value.SphCraftNames;
-                                foreach (var sphCraft in sphCrafts)
+                                for (var j = 0; j < data.PlayerCrafts[i].Crafts.SphCraftCount; j++)
                                 {
-                                    var cce = new CraftChangeEntry
+                                    System.QueueCraftAdd(new CraftChangeEntry
                                     {
-                                        PlayerName = playerCraft.Key,
+                                        PlayerName = data.PlayerCrafts[i].PlayerName,
                                         CraftType = CraftType.Sph,
-                                        CraftName = sphCraft
-                                    };
-                                    System.QueueCraftAdd(cce);
+                                        CraftName = data.PlayerCrafts[i].Crafts.SphCraftNames[j]
+                                    });
                                 }
                             }
-                            if (subassemblyExists)
+
+                            if (data.PlayerCrafts[i].Crafts.SubassemblyExists)
                             {
-                                var subassemblyCrafts = playerCraft.Value.SubassemblyCraftNames;
-                                foreach (var subassemblyCraft in subassemblyCrafts)
+                                for (var j = 0; j < data.PlayerCrafts[i].Crafts.SubassemblyCraftCount; j++)
                                 {
-                                    var cce = new CraftChangeEntry
+                                    System.QueueCraftAdd(new CraftChangeEntry
                                     {
-                                        PlayerName = playerCraft.Key,
+                                        PlayerName = data.PlayerCrafts[i].PlayerName,
                                         CraftType = CraftType.Subassembly,
-                                        CraftName = subassemblyCraft
-                                    };
-                                    System.QueueCraftAdd(cce);
+                                        CraftName = data.PlayerCrafts[i].Crafts.SubassemblyCraftNames[j]
+                                    });
                                 }
                             }
                         }
@@ -105,18 +97,17 @@ namespace LunaClient.Systems.CraftLibrary
                 case CraftMessageType.RespondFile:
                     {
                         var data = (CraftLibraryRespondMsgData)msgData;
+                        var craftData = Common.TrimArray(data.CraftData, data.NumBytes);
+
                         var cre = new CraftResponseEntry
                         {
                             PlayerName = data.PlayerName,
                             CraftType = data.RequestedType,
-                            CraftName = data.RequestedName
+                            CraftName = data.RequestedName,
+                            CraftData = craftData
                         };
-                        var hasCraft = data.HasCraft;
-                        if (hasCraft)
-                        {
-                            cre.CraftData = data.CraftData;
-                            System.QueueCraftResponse(cre);
-                        }
+
+                        System.QueueCraftResponse(cre);
                     }
                     break;
             }

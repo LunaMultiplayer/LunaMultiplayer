@@ -40,6 +40,7 @@
     <Reference Include="LiteDB, Version=4.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\LiteDB.4.0.0\lib\net40\LiteDB.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="UnityEngine">
@@ -127,7 +128,9 @@
     <Compile Include="Server\MessageQueuer.cs" />
     <Compile Include="Server\MessageReceiver.cs" />
     <Compile Include="Server\MessageSender.cs" />
+    <Compile Include="Settings\DebugSettings.cs" />
     <Compile Include="Settings\Definition\GameplaySettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\DebugSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\SettingsDefinition.cs" />
     <Compile Include="Settings\GameplaySettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
@@ -145,9 +148,11 @@
     <Compile Include="System\ModDataSystemSender.cs" />
     <Compile Include="System\ModFileSystem.cs" />
     <Compile Include="System\VesselContext.cs" />
-    <Compile Include="System\VesselRelaySystem.cs" />
-    <Compile Include="System\VesselRelaySystemDataBase.cs" />
-    <Compile Include="System\VesselRelaySystemDictionary.cs" />
+    <Compile Include="System\VesselFileUpdater.cs" />
+    <Compile Include="System\VesselRelay\VesselRelayItem.cs" />
+    <Compile Include="System\VesselRelay\VesselRelaySystem.cs" />
+    <Compile Include="System\VesselRelay\VesselRelaySystemDataBase.cs" />
+    <Compile Include="System\VesselRelay\VesselRelaySystemDictionary.cs" />
     <Compile Include="System\VesselUpdateRelaySystem.cs" />
     <Compile Include="System\WarpSystem.cs" />
     <Compile Include="System\WarpSystemReceiver.cs" />

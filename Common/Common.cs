@@ -11,9 +11,21 @@ namespace LunaCommon
 {
     public class Common
     {
+        public static T[] TrimArray<T>(T[] array, int size)
+        {
+            var newArray = new T[size];
+            Array.Copy(array, newArray, size);
+            return newArray;
+        }
+
         public static bool PlatformIsWindows()
         {
             return Environment.OSVersion.Platform == PlatformID.Win32NT;
+        }
+
+        public static bool IsX64()
+        {
+            return IntPtr.Size == 8;
         }
 
         /// <summary>
@@ -56,7 +68,28 @@ namespace LunaCommon
 
         public static IPEndPoint CreateEndpointFromString(string endpoint)
         {
+            if (IPAddress.TryParse(endpoint.Split(':')[0], out var ip))
+            {
+                return new IPEndPoint(ip, int.Parse(endpoint.Split(':')[1]));
+            }
+
             return new IPEndPoint(Dns.GetHostAddresses(endpoint.Split(':')[0])[0], int.Parse(endpoint.Split(':')[1]));
+        }
+
+        public static IPAddress GetIpFromString(string server)
+        {
+            try
+            {
+                if (IPAddress.TryParse(server, out var ip))
+                {
+                    return ip;
+                }
+                return Dns.GetHostEntry(server).AddressList[0];
+            }
+            catch (Exception)
+            {
+                throw new Exception($"Error trying to get the ip doing a DNS resolve from: {server}");
+            }
         }
 
         public static string StringFromEndpoint(IPEndPoint endpoint)

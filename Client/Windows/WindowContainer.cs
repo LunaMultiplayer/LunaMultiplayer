@@ -1,26 +1,22 @@
 ﻿using LunaClient.Base.Interface;
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Windows
 {
     public class WindowsContainer
     {
-
-        private static readonly Dictionary<Type, IWindow> Windows = new Dictionary<Type, IWindow>();
+        private static readonly ConcurrentDictionary<Type, IWindow> Windows = new ConcurrentDictionary<Type, IWindow>();
 
         public static T Get<T>() where T : class, IWindow
         {
-            var type = typeof(T);
-            Windows.TryGetValue(type, out var instance);
-
-            if (instance == null)
+            if (!Windows.TryGetValue(typeof(T), out var window))
             {
-                instance = Activator.CreateInstance<T>();
-                Windows.Add(type, instance);
+                window = Activator.CreateInstance<T>();
+                Windows.TryAdd(typeof(T), window);
             }
 
-            return instance as T;
+            return window as T;
         }
     }
 }

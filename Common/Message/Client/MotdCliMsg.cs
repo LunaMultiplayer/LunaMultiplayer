@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Client
         internal MotdCliMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(MotdCliMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)MotdMessageType.Request] = typeof(MotdRequestMsgData)

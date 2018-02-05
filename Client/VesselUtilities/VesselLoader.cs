@@ -1,7 +1,6 @@
 ﻿using KSP.UI.Screens;
 using LunaClient.Systems;
 using LunaClient.Systems.Asteroid;
-using LunaClient.Systems.Chat;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -19,6 +18,8 @@ namespace LunaClient.VesselUtilities
 {
     public class VesselLoader
     {
+        public static Guid ReloadingVesselId { get; set; }
+
         /// <summary>
         /// Here we hold all the messages of "Target: xxx" message created by SetVesselTarget to remove them when we reload a vessel and set
         /// back the target to it
@@ -30,34 +31,6 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         private static MethodInfo BuildSpaceTrackingVesselList { get; } = typeof(SpaceTracking).GetMethod("buildVesselsList", BindingFlags.NonPublic | BindingFlags.Instance);
         
-        /// <summary>
-        /// Load all the received vessels from the server into the game
-        /// This should be called before the game starts as it only loads them in the scenario
-        /// </summary>
-        public static void LoadVesselsIntoGame()
-        {
-            //TODO: Do we really need this now that vessels are loaded in a routine while in space center???
-            LunaLog.Log("[LMP]: Loading vessels in subspace 0 into game");
-            var numberOfLoads = 0;
-
-            foreach (var vessel in VesselsProtoStore.AllPlayerVessels)
-            {
-                if (vessel.Value.ProtoVessel != null && vessel.Value.ProtoVessel.vesselID == vessel.Key)
-                {
-                    RegisterServerAsteriodIfVesselIsAsteroid(vessel.Value.ProtoVessel);
-                    HighLogic.CurrentGame.flightState.protoVessels.Add(vessel.Value.ProtoVessel);
-                    numberOfLoads++;
-                }
-                else
-                {
-                    LunaLog.LogWarning($"[LMP]: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
-                    SystemsContainer.Get<ChatSystem>().PmMessageServer($"WARNING: Protovessel {vessel.Key} is DAMAGED!. Skipping load.");
-                }
-            }
-
-            LunaLog.Log($"[LMP]: {numberOfLoads} Vessels loaded into game");
-        }
-
         /// <summary>
         /// Load a vessel into the game
         /// </summary>
@@ -81,6 +54,8 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         public static bool ReloadVessel(ProtoVessel vesselProto)
         {
+            LunaLog.Log($"Reloading vessel {vesselProto.vesselID}");
+            ReloadingVesselId = vesselProto.vesselID;
             try
             {
                 //Are we realoading our current active vessel?
@@ -90,6 +65,7 @@ namespace LunaClient.VesselUtilities
                 var currentTargetId = FlightGlobals.fetch.VesselTarget?.GetVessel()?.id;
 
                 //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
+                //Bear in mind that UnloadVessel will trigger VesselRemoveEvents.OnVesselWillDestroy!! So be sure to set ReloadingVesselId correctly
                 SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vesselProto.vesselID);
                 if (LoadVesselImpl(vesselProto))
                 {
@@ -118,6 +94,10 @@ namespace LunaClient.VesselUtilities
             {
                 LunaLog.LogError($"[LMP]: Error reloading vessel: {e}");
                 return false;
+            }
+            finally
+            {
+                ReloadingVesselId = Guid.Empty;
             }
         }
 
@@ -167,6 +147,12 @@ namespace LunaClient.VesselUtilities
             if (vesselProto == null)
             {
                 LunaLog.LogError("[LMP]: protoVessel is null!");
+                return false;
+            }
+
+            if (vesselProto.vesselID == Guid.Empty)
+            {
+                LunaLog.LogError("[LMP]: protoVessel id is null!");
                 return false;
             }
 
@@ -226,6 +212,9 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         private static bool LoadVesselIntoGame(ProtoVessel currentProto)
         {
+            if (HighLogic.CurrentGame?.flightState == null)
+                return false;
+
             LunaLog.Log($"[LMP]: Loading {currentProto.vesselID}, Name: {currentProto.vesselName}, type: {currentProto.vesselType}");
             currentProto.Load(HighLogic.CurrentGame.flightState);
 
@@ -240,7 +229,8 @@ namespace LunaClient.VesselUtilities
             {
                 //When in trackstation rebuild the vessels left panel as otherwise the new vessel won't be listed
                 var spaceTracking = Object.FindObjectOfType<SpaceTracking>();
-                BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
+                if (spaceTracking != null)
+                    BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
             }
             return true;
         }

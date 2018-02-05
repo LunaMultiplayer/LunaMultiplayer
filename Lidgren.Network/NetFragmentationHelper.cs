@@ -12,7 +12,7 @@ namespace Lidgren.Network
 			int chunkByteSize,
 			int chunkNumber)
 		{
-			var num1 = (uint)group;
+			uint num1 = (uint)group;
 			while (num1 >= 0x80)
 			{
 				destination[ptr++] = (byte)(num1 | 0x80);
@@ -21,7 +21,7 @@ namespace Lidgren.Network
 			destination[ptr++] = (byte)num1;
 
 			// write variable length fragment total bits
-			var num2 = (uint)totalBits;
+			uint num2 = (uint)totalBits;
 			while (num2 >= 0x80)
 			{
 				destination[ptr++] = (byte)(num2 | 0x80);
@@ -30,7 +30,7 @@ namespace Lidgren.Network
 			destination[ptr++] = (byte)num2;
 
 			// write variable length fragment chunk size
-			var num3 = (uint)chunkByteSize;
+			uint num3 = (uint)chunkByteSize;
 			while (num3 >= 0x80)
 			{
 				destination[ptr++] = (byte)(num3 | 0x80);
@@ -39,7 +39,7 @@ namespace Lidgren.Network
 			destination[ptr++] = (byte)num3;
 
 			// write variable length fragment chunk number
-			var num4 = (uint)chunkNumber;
+			uint num4 = (uint)chunkNumber;
 			while (num4 >= 0x80)
 			{
 				destination[ptr++] = (byte)(num4 | 0x80);
@@ -52,11 +52,11 @@ namespace Lidgren.Network
 
 		internal static int ReadHeader(byte[] buffer, int ptr, out int group, out int totalBits, out int chunkByteSize, out int chunkNumber)
 		{
-			var num1 = 0;
-			var num2 = 0;
+			int num1 = 0;
+			int num2 = 0;
 			while (true)
 			{
-				var num3 = buffer[ptr++];
+				byte num3 = buffer[ptr++];
 				num1 |= (num3 & 0x7f) << (num2 & 0x1f);
 				num2 += 7;
 				if ((num3 & 0x80) == 0)
@@ -70,7 +70,7 @@ namespace Lidgren.Network
 			num2 = 0;
 			while (true)
 			{
-				var num3 = buffer[ptr++];
+				byte num3 = buffer[ptr++];
 				num1 |= (num3 & 0x7f) << (num2 & 0x1f);
 				num2 += 7;
 				if ((num3 & 0x80) == 0)
@@ -84,7 +84,7 @@ namespace Lidgren.Network
 			num2 = 0;
 			while (true)
 			{
-				var num3 = buffer[ptr++];
+				byte num3 = buffer[ptr++];
 				num1 |= (num3 & 0x7f) << (num2 & 0x1f);
 				num2 += 7;
 				if ((num3 & 0x80) == 0)
@@ -98,7 +98,7 @@ namespace Lidgren.Network
 			num2 = 0;
 			while (true)
 			{
-				var num3 = buffer[ptr++];
+				byte num3 = buffer[ptr++];
 				num1 |= (num3 & 0x7f) << (num2 & 0x1f);
 				num2 += 7;
 				if ((num3 & 0x80) == 0)
@@ -113,10 +113,10 @@ namespace Lidgren.Network
 
 		internal static int GetFragmentationHeaderSize(int groupId, int totalBytes, int chunkByteSize, int numChunks)
 		{
-			var len = 4;
+			int len = 4;
 
 			// write variable length fragment group id
-			var num1 = (uint)groupId;
+			uint num1 = (uint)groupId;
 			while (num1 >= 0x80)
 			{
 				len++;
@@ -124,7 +124,7 @@ namespace Lidgren.Network
 			}
 
 			// write variable length fragment total bits
-			var num2 = (uint)(totalBytes * 8);
+			uint num2 = (uint)(totalBytes * 8);
 			while (num2 >= 0x80)
 			{
 				len++;
@@ -132,7 +132,7 @@ namespace Lidgren.Network
 			}
 
 			// write variable length fragment chunk byte size
-			var num3 = (uint)chunkByteSize;
+			uint num3 = (uint)chunkByteSize;
 			while (num3 >= 0x80)
 			{
 				len++;
@@ -140,7 +140,7 @@ namespace Lidgren.Network
 			}
 
 			// write variable length fragment chunk number
-			var num4 = (uint)numChunks;
+			uint num4 = (uint)numChunks;
 			while (num4 >= 0x80)
 			{
 				len++;
@@ -152,16 +152,16 @@ namespace Lidgren.Network
 
 		internal static int GetBestChunkSize(int group, int totalBytes, int mtu)
 		{
-			var tryChunkSize = mtu - NetConstants.HeaderByteSize - 4; // naive approximation
-			var est = GetFragmentationHeaderSize(group, totalBytes, tryChunkSize, totalBytes / tryChunkSize);
+			int tryChunkSize = mtu - NetConstants.HeaderByteSize - 4; // naive approximation
+			int est = GetFragmentationHeaderSize(group, totalBytes, tryChunkSize, totalBytes / tryChunkSize);
 			tryChunkSize = mtu - NetConstants.HeaderByteSize - est; // slightly less naive approximation
 
-			var headerSize = 0;
+			int headerSize = 0;
 			do
 			{
 				tryChunkSize--; // keep reducing chunk size until it fits within MTU including header
 
-				var numChunks = totalBytes / tryChunkSize;
+				int numChunks = totalBytes / tryChunkSize;
 				if (numChunks * tryChunkSize < totalBytes)
 					numChunks++;
 

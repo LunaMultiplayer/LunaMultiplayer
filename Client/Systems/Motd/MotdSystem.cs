@@ -6,5 +6,7 @@ namespace LunaClient.Systems.Motd
     {
         public string ServerMotd { get; set; }
         public bool DisplayMotd { get; set; }
+
+        public override string SystemName { get; } = nameof(MotdSystem);
     }
 }

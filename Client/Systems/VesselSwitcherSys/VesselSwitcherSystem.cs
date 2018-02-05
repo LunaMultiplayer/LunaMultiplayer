@@ -17,7 +17,9 @@ namespace LunaClient.Systems.VesselSwitcherSys
         #endregion
 
         #region Base overrides
-        
+
+        public override string SystemName { get; } = nameof(VesselSwitcherSystem);
+
         protected override void OnDisabled()
         {
             base.OnDisabled();
@@ -63,6 +65,18 @@ namespace LunaClient.Systems.VesselSwitcherSys
                 }
 
                 LunaLog.Log($"Tries: {tries} Loaded: {VesselToSwitchTo.loaded}");
+
+                if (!VesselToSwitchTo.loaded)
+                {
+                    tries = 0;
+                    //Vessels still didn't loaded after 100 fixued update frames, let's wait for 1 more second...
+                    while (!VesselToSwitchTo.loaded && tries < 10)
+                    {
+                        tries++;
+                        yield return new WaitForSeconds(0.1f);
+                    }
+                }
+
                 FlightGlobals.ForceSetActiveVessel(VesselToSwitchTo);
                 FlightCamera.fetch.SetDistance(zoom);
                 VesselToSwitchTo = null;

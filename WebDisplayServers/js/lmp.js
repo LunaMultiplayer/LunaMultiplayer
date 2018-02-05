@@ -1,7 +1,7 @@
 function requestData(selector) {
   $.ajax({
       type: 'GET',
-      url: 'http://37.59.50.110:8701',
+      url: 'http://dagger.ole32.com:8701',
       dataType: 'jsonp',
       success: function(json) {
       	buildHtmlTable(json, selector);

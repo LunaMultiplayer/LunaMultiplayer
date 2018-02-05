@@ -18,13 +18,14 @@ namespace LunaClient.Systems.Scenario
         private ConcurrentDictionary<string, string> CheckData { get; } = new ConcurrentDictionary<string, string>();
         public ConcurrentQueue<ScenarioEntry> ScenarioQueue { get; private set; } = new ConcurrentQueue<ScenarioEntry>();
         private ConcurrentDictionary<string, Type> AllScenarioTypesInAssemblies { get; } = new ConcurrentDictionary<string, Type>();
-
-        private static ConfigNode ConfigNode { get; } = new ConfigNode();
+        
         private static List<string> ScenarioName { get; } = new List<string>();
         private static List<byte[]> ScenarioData { get; } = new List<byte[]>();
         #endregion
 
         #region Base overrides
+
+        public override string SystemName { get; } = nameof(ScenarioSystem);
 
         protected override bool ProcessMessagesInUnityThread => false;
 
@@ -42,6 +43,8 @@ namespace LunaClient.Systems.Scenario
             ScenarioQueue = new ConcurrentQueue<ScenarioEntry>();
             AllScenarioTypesInAssemblies.Clear();
         }
+
+        private static readonly List<Tuple<string,ConfigNode>> ScenariosConfigNodes = new List<Tuple<string,ConfigNode>>();
 
         #endregion
 
@@ -69,40 +72,58 @@ namespace LunaClient.Systems.Scenario
         {
             if (Enabled)
             {
-                TaskFactory.StartNew(() => ParseAndSendModules(ScenarioRunner.GetLoadedModules()));
+                var modules = ScenarioRunner.GetLoadedModules();
+                ParseModulesToConfigNodes(modules);
+                TaskFactory.StartNew(SendModulesConfigNodes);
             }
         }
 
-        private void ParseAndSendModules(IEnumerable<ScenarioModule> modules)
+        /// <summary>
+        /// This transforms the scenarioModule to a config node. We cannot do this in another thread as Lingoona 
+        /// is called sometimes and that makes a hard crash
+        /// </summary>
+        private void ParseModulesToConfigNodes(IEnumerable<ScenarioModule> modules)
         {
-            ScenarioData.Clear();
-            ScenarioName.Clear();
-
+            ScenariosConfigNodes.Clear();
             foreach (var scenarioModule in modules)
             {
                 var scenarioType = scenarioModule.GetType().Name;
 
                 if (!IsScenarioModuleAllowed(scenarioType))
                     continue;
-                
-                ConfigNode.ClearData();
-                scenarioModule.Save(ConfigNode);
 
-                var scenarioBytes = ConfigNodeSerializer.Serialize(ConfigNode);
+                var configNode = new ConfigNode();
+                scenarioModule.Save(configNode);
+
+                ScenariosConfigNodes.Add(new Tuple<string, ConfigNode>(scenarioType, configNode));
+            }
+        }
+
+        /// <summary>
+        /// Sends the parsed config nodes to the server after doing basic checks
+        /// </summary>
+        private void SendModulesConfigNodes()
+        {
+            ScenarioData.Clear();
+            ScenarioName.Clear();
+
+            foreach (var scenarioConfigNode in ScenariosConfigNodes)
+            {
+                var scenarioBytes = ConfigNodeSerializer.Serialize(scenarioConfigNode.Item2);
                 var scenarioHash = Common.CalculateSha256Hash(scenarioBytes);
 
                 if (scenarioBytes.Length == 0)
                 {
-                    LunaLog.Log($"[LMP]: Error writing scenario data for {scenarioType}");
+                    LunaLog.Log($"[LMP]: Error writing scenario data for {scenarioConfigNode.Item1}");
                     continue;
                 }
 
                 //Data is the same since last time - Skip it.
-                if (CheckData.ContainsKey(scenarioType) && CheckData[scenarioType] == scenarioHash) continue;
+                if (CheckData.ContainsKey(scenarioConfigNode.Item1) && CheckData[scenarioConfigNode.Item1] == scenarioHash) continue;
 
-                CheckData[scenarioType] = scenarioHash;
+                CheckData[scenarioConfigNode.Item1] = scenarioHash;
 
-                ScenarioName.Add(scenarioType);
+                ScenarioName.Add(scenarioConfigNode.Item1);
                 ScenarioData.Add(scenarioBytes);
             }
 

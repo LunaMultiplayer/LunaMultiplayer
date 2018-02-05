@@ -4,6 +4,7 @@ using LunaClient.Systems.Chat;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.Warp;
+using LunaClient.Utilities;
 using LunaCommon.Message.Data.PlayerConnection;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
@@ -24,6 +25,7 @@ namespace LunaClient.Systems.PlayerConnection
             {
                 case PlayerConnectionMessageType.Join:
                     SystemsContainer.Get<ChatSystem>().Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", $"{playerName} has joined the server");
+                    CommonUtil.Reserve20Mb();
                     break;
                 case PlayerConnectionMessageType.Leave:
                     SystemsContainer.Get<WarpSystem>().RemovePlayer(playerName);

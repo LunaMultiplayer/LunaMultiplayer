@@ -29,13 +29,14 @@ namespace LunaClient.Systems.Status
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(StatusSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(SettingsSystem.CurrentSettings.PlayerStatusCheckMsInterval,
-                RoutineExecution.Update, CheckPlayerStatus));
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckPlayerStatus));
         }
 
         protected override void OnDisabled()
@@ -84,7 +85,7 @@ namespace LunaClient.Systems.Status
                     LastPlayerStatus.VesselText = MyPlayerStatus.VesselText;
                     LastPlayerStatus.StatusText = MyPlayerStatus.StatusText;
 
-                    MessageSender.SendPlayerStatus(MyPlayerStatus);
+                    MessageSender.SendOwnStatus();
                 }
             }
         }

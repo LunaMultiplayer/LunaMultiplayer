@@ -10,10 +10,12 @@ namespace LunaClient.Base
     {
         #region Fields
 
+        public string WindowName { get; } = typeof(T).Name;
+
         private bool _display;
         public virtual bool Display
         {
-            get => _display;
+            get => _display && MainSystem.ToolbarShowGui;
             set
             {
                 if (!_display && value)

@@ -25,7 +25,7 @@ namespace Lidgren.Network
 
 		internal override void ReceiveMessage(NetIncomingMessage message)
 		{
-			var relate = NetUtility.RelativeSequenceNumber(message.m_sequenceNumber, m_windowStart);
+			int relate = NetUtility.RelativeSequenceNumber(message.m_sequenceNumber, m_windowStart);
 
 			// ack no matter what
 			m_connection.QueueAck(message.m_receivedMessageType, message.m_sequenceNumber);
@@ -43,7 +43,7 @@ namespace Lidgren.Network
 				m_peer.ReleaseMessage(message);
 
 				// release withheld messages
-				var nextSeqNr = (message.m_sequenceNumber + 1) % NetConstants.NumSequenceNumbers;
+				int nextSeqNr = (message.m_sequenceNumber + 1) % NetConstants.NumSequenceNumbers;
 
 				while (m_earlyReceived[nextSeqNr % m_windowSize])
 				{

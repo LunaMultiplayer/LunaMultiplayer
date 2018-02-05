@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
+using LunaClient.VesselStore;
 using System;
 
 namespace LunaClient.Systems.Asteroid
@@ -15,7 +16,8 @@ namespace LunaClient.Systems.Asteroid
                 if (System.GetAsteroidCount() <= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
                 {
                     System.ServerAsteroids.Add(asteroid.id.ToString());
-                    SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid);
+                    SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid, true);
+                    VesselsProtoStore.AddVesselToDictionary(asteroid);
                 }
                 else
                 {

@@ -20,10 +20,17 @@ namespace LunaClient.Systems.Scenario
         {
             var data = NetworkMain.CliMsgFactory.CreateNewMessageData<ScenarioDataMsgData>();
 
-            var list = scenarioNames.Select((t, i) => new KeyValuePair<string, byte[]>(t, scenarioData[i]));
-            data.ScenarioNameData = list.ToArray();
+            var scenarios = scenarioNames.Select((t, i) => new ScenarioInfo
+            {
+                Data = scenarioData[i],
+                NumBytes = scenarioData[i].Length,
+                Module = t
+            }).ToArray();
 
-            LunaLog.Log($"[LMP]: Sending {scenarioNames.Count} scenario modules");
+            data.ScenariosData = scenarios;
+            data.ScenarioCount = scenarios.Length;
+
+            LunaLog.Log($"[LMP]: Sending {data.ScenarioCount} scenario modules");
             SendMessage(data);
         }
     }

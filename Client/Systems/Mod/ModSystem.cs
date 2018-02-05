@@ -23,6 +23,8 @@ namespace LunaClient.Systems.Mod
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(ModSystem);
+
         protected override void OnDisabled()
         {
             base.OnDisabled();
@@ -71,13 +73,12 @@ namespace LunaClient.Systems.Mod
             var relativeModDirectories = Directory.GetDirectories(gameDataDir)
                 .Select(d => d.Substring(d.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).ToLower())
                 .Where(d => !d.StartsWith("squad", StringComparison.OrdinalIgnoreCase)
-                            && !d.StartsWith("nasamission", StringComparison.OrdinalIgnoreCase)
                             && !d.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase));
 
             //Add top level dll's to required (It's usually things like modulemanager)
             requiredFiles.AddRange(
                 Directory.GetFiles(gameDataDir)
-                    .Where(f => Path.GetExtension(f)?.ToLower() == ".dll")
+                    .Where(f => Path.GetExtension(f).ToLower() == ".dll")
                     .Select(Path.GetFileName));
 
             foreach (var modDirectory in relativeModDirectories)
@@ -107,7 +108,7 @@ namespace LunaClient.Systems.Mod
 
                                 var cn = ConfigNode.Load(file);
                                 if (cn == null) continue;
-                                foreach (var partName in cn.GetNodes("PART").Select(p => p.GetValue("Name")))
+                                foreach (var partName in cn.GetNodes("PART").Select(p => p.GetValue("name")))
                                 {
                                     LunaLog.Log($"[LMP]: Part detected in {relativeFileName} , Name: {partName}");
                                     modIsRequired = true;

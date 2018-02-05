@@ -9,10 +9,7 @@ using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using ConsoleLogger = LunaCommon.ConsoleLogger;
 using LogLevels = LunaCommon.LogLevels;
@@ -41,6 +38,7 @@ namespace LMP.MasterServer
             };
 
             config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
+
             var peer = new NetPeer(config);
             peer.Start();
             
@@ -69,10 +67,14 @@ namespace LMP.MasterServer
                         case NetIncomingMessageType.UnconnectedData:
                             if (FloodControl.AllowRequest(msg.SenderEndPoint.Address))
                             {
-                                var messageBytes = msg.ReadBytes(msg.LengthBytes);
-                                var message = GetMessage(messageBytes);
+                                var message = GetMessage(msg);
+                                //TODO: add this check once next version is out:  if (message != null && !message.VersionMismatch)
                                 if (message != null)
+                                {
                                     HandleMessage(message, msg, peer);
+                                    message.Recycle();
+                                }
+                                peer.Recycle(msg);
                             }
                             break;
                     }
@@ -82,16 +84,15 @@ namespace LMP.MasterServer
             peer.Shutdown("Goodbye and thanks for all the fish!");
         }
 
-        private static IMasterServerMessageBase GetMessage(byte[] messageBytes)
+        private static IMasterServerMessageBase GetMessage(NetIncomingMessage msg)
         {
             try
             {
-                var message = MasterServerMessageFactory.Deserialize(messageBytes, LunaTime.UtcNow.Ticks) as IMasterServerMessageBase;
+                var message = MasterServerMessageFactory.Deserialize(msg, LunaTime.UtcNow.Ticks) as IMasterServerMessageBase;
                 return message;
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                ConsoleLogger.Log(LogLevels.Error, $"Error deserializing message! :{e}");
                 return null;
             }
         }
@@ -99,7 +100,7 @@ namespace LMP.MasterServer
         private static void CheckMasterServerListed()
         {
             var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-            var ownEndpoint = $"{GetOwnIpAddress()}:{Port}";
+            var ownEndpoint = $"{Helper.GetOwnIpAddress()}:{Port}";
 
             if(!servers.Contains(ownEndpoint))
             {
@@ -112,67 +113,40 @@ namespace LMP.MasterServer
             }
         }
 
-        private static string GetOwnIpAddress()
-        {
-            var currentIpAddress = TryGetIpAddress("http://ip.42.pl/raw");
-
-            if (string.IsNullOrEmpty(currentIpAddress))
-                currentIpAddress = TryGetIpAddress("https://api.ipify.org/");
-            if (string.IsNullOrEmpty(currentIpAddress))
-                currentIpAddress = TryGetIpAddress("http://httpbin.org/ip");
-            if (string.IsNullOrEmpty(currentIpAddress))
-                currentIpAddress = TryGetIpAddress("http://checkip.dyndns.org");
-
-            return currentIpAddress;
-        }
-
-        private static string TryGetIpAddress(string url)
-        {
-            using (var client = new WebClient())
-            using (var stream = client.OpenRead(url))
-            {
-                if (stream == null) return null;
-                using (var reader = new StreamReader(stream))
-                {
-                    var ipRegEx = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
-                    var result = ipRegEx.Matches(reader.ReadToEnd());
-
-                    if (IPAddress.TryParse(result[0].Value, out var ip))
-                        return ip.ToString();
-                }
-            }
-            return null;
-        }
 
         private static void HandleMessage(IMasterServerMessageBase message, NetIncomingMessage netMsg, NetPeer peer)
         {
-            switch ((message?.Data as MsBaseMsgData)?.MasterServerMessageSubType)
+            try
             {
-                case MasterServerMessageSubType.RegisterServer:
-                    RegisterServer(message, netMsg);
-                    break;
-                case MasterServerMessageSubType.RequestServers:
-                    var version = ((MsRequestServersMsgData)message.Data).CurrentVersion;
-                    ConsoleLogger.Log(LogLevels.Normal, $"LIST REQUEST from: {netMsg.SenderEndPoint} v: {version}");
-                    SendServerLists(netMsg, peer);
-                    break;
-                case MasterServerMessageSubType.Introduction:
-                    var msgData = (MsIntroductionMsgData)message.Data;
-                    if (ServerDictionary.TryGetValue(msgData.Id, out var server))
-                    {
-                        ConsoleLogger.Log(LogLevels.Normal, $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
-                        peer.Introduce(
-                            server.InternalEndpoint,
-                            server.ExternalEndpoint,
-                            Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
-                            netMsg.SenderEndPoint,// client external
-                            msgData.Token); // request token
-                    }
-                    else
-                    {
-                        ConsoleLogger.Log(LogLevels.Error, "Client requested introduction to nonlisted host!");
-                    }
-                    break;
+                switch ((message?.Data as MsBaseMsgData)?.MasterServerMessageSubType)
+                {
+                    case MasterServerMessageSubType.RegisterServer:
+                        RegisterServer(message, netMsg);
+                        break;
+                    case MasterServerMessageSubType.RequestServers:
+                        ConsoleLogger.Log(LogLevels.Normal, $"LIST REQUEST from: {netMsg.SenderEndPoint}");
+                        SendServerLists(netMsg, peer);
+                        break;
+                    case MasterServerMessageSubType.Introduction:
+                        var msgData = (MsIntroductionMsgData)message.Data;
+                        if (ServerDictionary.TryGetValue(msgData.Id, out var server))
+                        {
+                            ConsoleLogger.Log(LogLevels.Normal, $"INTRODUCTION request from: {netMsg.SenderEndPoint} to server: {server.ExternalEndpoint}");
+                            peer.Introduce(server.InternalEndpoint, server.ExternalEndpoint,
+                                Common.CreateEndpointFromString(msgData.InternalEndpoint),// client internal
+                                netMsg.SenderEndPoint,// client external
+                                msgData.Token); // request token
+                        }
+                        else
+                        {
+                            ConsoleLogger.Log(LogLevels.Error, $"Client {netMsg.SenderEndPoint} requested introduction to nonlisted host!");
+                        }
+                        break;
+                }
+            }
+            catch (Exception e)
+            {
+                ConsoleLogger.Log(LogLevels.Error, $"Error handling message. Details: {e}");
             }
         }
 
@@ -185,6 +159,7 @@ namespace LMP.MasterServer
 
             var msgData = MasterServerMessageFactory.CreateNewMessageData<MsReplyServersMsgData>();
 
+            msgData.ServersCount = values.Length;
             msgData.Id = values.Select(s => s.Info.Id).ToArray();
             msgData.ServerVersion = values.Select(s => s.Info.ServerVersion).ToArray();
             msgData.Cheats = values.Select(s => s.Info.Cheats).ToArray();
@@ -204,12 +179,12 @@ namespace LMP.MasterServer
             msgData.TerrainQuality = values.Select(s => s.Info.TerrainQuality).ToArray();
 
             var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-            var data = msg.Serialize(true);
+            var outMsg = peer.CreateMessage(msg.GetMessageSize());
 
-            var outMsg = peer.CreateMessage(data.Length);
-            outMsg.Write(data);
+            msg.Serialize(outMsg);
             peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
             peer.FlushSendQueue();
+            msg.Recycle();
         }
 
         private static void RegisterServer(IMessageBase message, NetIncomingMessage netMsg)

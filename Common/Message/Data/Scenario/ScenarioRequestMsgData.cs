@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.Scenario
         /// <inheritdoc />
         internal ScenarioRequestMsgData() { }
         public override ScenarioMessageType ScenarioMessageType => ScenarioMessageType.Request;
+
+        public override string ClassName { get; } = nameof(ScenarioRequestMsgData);
     }
 }

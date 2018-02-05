@@ -77,7 +77,7 @@ namespace Lidgren.Network
 		// gets the time before automatically resending an unacked message
 		internal double GetResendDelay()
 		{
-			var avgRtt = m_averageRoundtripTime;
+			double avgRtt = m_averageRoundtripTime;
 			if (avgRtt <= 0)
 				avgRtt = 0.1; // "default" resend is based on 100 ms roundtrip time
 			return 0.025 + (avgRtt * 2.1); // 25 ms + double rtt
@@ -131,7 +131,7 @@ namespace Lidgren.Network
 			{
 				if (m_outputtedStatus != status)
 				{
-					var info = m_peer.CreateIncomingMessage(NetIncomingMessageType.StatusChanged, 4 + reason.Length + (reason.Length > 126 ? 2 : 1));
+					NetIncomingMessage info = m_peer.CreateIncomingMessage(NetIncomingMessageType.StatusChanged, 4 + reason.Length + (reason.Length > 126 ? 2 : 1));
 					info.m_senderConnection = this;
 					info.m_senderEndPoint = m_remoteEndPoint;
 					info.Write((byte)m_status);
@@ -189,8 +189,8 @@ namespace Lidgren.Network
 			// Note: at this point m_sendBufferWritePtr and m_sendBufferNumMessages may be non-null; resends may already be queued up
 			//
 
-			var sendBuffer = m_peer.m_sendBuffer;
-			var mtu = m_currentMTU;
+			byte[] sendBuffer = m_peer.m_sendBuffer;
+			int mtu = m_currentMTU;
 
 			if ((frameCounter % m_messageCoalesceFrames) == 0) // coalesce a few frames
 			{
@@ -199,7 +199,7 @@ namespace Lidgren.Network
 				//
 				while (m_queuedOutgoingAcks.Count > 0)
 				{
-					var acks = (mtu - (m_sendBufferWritePtr + 5)) / 3; // 3 bytes per actual ack
+					int acks = (mtu - (m_sendBufferWritePtr + 5)) / 3; // 3 bytes per actual ack
 					if (acks > m_queuedOutgoingAcks.Count)
 						acks = m_queuedOutgoingAcks.Count;
 
@@ -211,12 +211,12 @@ namespace Lidgren.Network
 					sendBuffer[m_sendBufferWritePtr++] = (byte)NetMessageType.Acknowledge;
 					sendBuffer[m_sendBufferWritePtr++] = 0; // no sequence number
 					sendBuffer[m_sendBufferWritePtr++] = 0; // no sequence number
-					var len = (acks * 3) * 8; // bits
+					int len = (acks * 3) * 8; // bits
 					sendBuffer[m_sendBufferWritePtr++] = (byte)len;
 					sendBuffer[m_sendBufferWritePtr++] = (byte)(len >> 8);
 
 					// write acks
-					for (var i = 0; i < acks; i++)
+					for (int i = 0; i < acks; i++)
 					{
 						NetTuple<NetMessageType, int> tuple;
 						m_queuedOutgoingAcks.TryDequeue(out tuple);
@@ -246,7 +246,7 @@ namespace Lidgren.Network
 				while (m_queuedIncomingAcks.TryDequeue(out incAck))
 				{
 					//m_peer.LogVerbose("Received ack for " + acktp + "#" + seqNr);
-					var chan = m_sendChannels[(int)incAck.Item1 - 1];
+					NetSenderChannelBase chan = m_sendChannels[(int)incAck.Item1 - 1];
 
 					// If we haven't sent a message on this channel there is no reason to ack it
 					if (chan == null)
@@ -261,7 +261,7 @@ namespace Lidgren.Network
 			//
 			if (m_peer.m_executeFlushSendQueue)
 			{
-				for (var i = m_sendChannels.Length - 1; i >= 0; i--)    // Reverse order so reliable messages are sent first
+				for (int i = m_sendChannels.Length - 1; i >= 0; i--)    // Reverse order so reliable messages are sent first
 				{
 					var channel = m_sendChannels[i];
 					NetException.Assert(m_sendBufferWritePtr < 1 || m_sendBufferNumMessages > 0);
@@ -295,7 +295,7 @@ namespace Lidgren.Network
 		{
 			m_peer.VerifyNetworkThread();
 
-			var sz = om.GetEncodedSize();
+			int sz = om.GetEncodedSize();
 			//if (sz > m_currentMTU)
 			//	m_peer.LogWarning("Message larger than MTU! Fragmentation must have failed!");
 
@@ -350,12 +350,12 @@ namespace Lidgren.Network
 			if (m_status != NetConnectionStatus.Connected)
 				return NetSendResult.FailedNotConnected;
 
-			var tp = (NetMessageType)((int)method + sequenceChannel);
+			NetMessageType tp = (NetMessageType)((int)method + sequenceChannel);
 			msg.m_messageType = tp;
 
 			// TODO: do we need to make this more thread safe?
-			var channelSlot = (int)method - 1 + sequenceChannel;
-			var chan = m_sendChannels[channelSlot];
+			int channelSlot = (int)method - 1 + sequenceChannel;
+			NetSenderChannelBase chan = m_sendChannels[channelSlot];
 			if (chan == null)
 				chan = CreateSenderChannel(tp);
 
@@ -374,10 +374,10 @@ namespace Lidgren.Network
 			NetSenderChannelBase chan;
 			lock (m_sendChannels)
 			{
-				var method = NetUtility.GetDeliveryMethod(tp);
-				var sequenceChannel = (int)tp - (int)method;
+				NetDeliveryMethod method = NetUtility.GetDeliveryMethod(tp);
+				int sequenceChannel = (int)tp - (int)method;
 
-				var channelSlot = (int)method - 1 + sequenceChannel;
+				int channelSlot = (int)method - 1 + sequenceChannel;
 				if (m_sendChannels[channelSlot] != null)
 				{
 					// we were pre-empted by another call to this method
@@ -412,7 +412,7 @@ namespace Lidgren.Network
 		{
 			m_peer.VerifyNetworkThread();
 
-			var now = NetTime.Now;
+			double now = NetTime.Now;
 
 			switch (tp)
 			{
@@ -434,7 +434,7 @@ namespace Lidgren.Network
 					break;
 
 				case NetMessageType.Disconnect:
-					var msg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
+					NetIncomingMessage msg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
 
 					m_disconnectRequested = true;
 					m_disconnectMessage = msg.ReadString();
@@ -442,9 +442,9 @@ namespace Lidgren.Network
 					//ExecuteDisconnect(msg.ReadString(), false);
 					break;
 				case NetMessageType.Acknowledge:
-					for (var i = 0; i < payloadLength; i+=3)
+					for (int i = 0; i < payloadLength; i+=3)
 					{
-						var acktp = (NetMessageType)m_peer.m_receiveBuffer[ptr++]; // netmessagetype
+						NetMessageType acktp = (NetMessageType)m_peer.m_receiveBuffer[ptr++]; // netmessagetype
 						int seqNr = m_peer.m_receiveBuffer[ptr++];
 						seqNr |= (m_peer.m_receiveBuffer[ptr++] << 8);
 
@@ -457,9 +457,9 @@ namespace Lidgren.Network
 					SendPong(pingNr);
 					break;
 				case NetMessageType.Pong:
-					var pmsg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
+					NetIncomingMessage pmsg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
 					int pongNr = pmsg.ReadByte();
-					var remoteSendTime = pmsg.ReadSingle();
+					float remoteSendTime = pmsg.ReadSingle();
 					ReceivedPong(now, pongNr, remoteSendTime);
 					break;
 				case NetMessageType.ExpandMTURequest:
@@ -471,8 +471,8 @@ namespace Lidgren.Network
 						m_peer.LogDebug("Received ExpandMTURequest altho AutoExpandMTU is turned off!");
 						break;
 					}
-					var emsg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
-					var size = emsg.ReadInt32();
+					NetIncomingMessage emsg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
+					int size = emsg.ReadInt32();
 					HandleExpandMTUSuccess(now, size);
 					break;
 				case NetMessageType.NatIntroduction:
@@ -489,10 +489,10 @@ namespace Lidgren.Network
 		{
 			m_peer.VerifyNetworkThread();
 
-			var tp = msg.m_receivedMessageType;
+			NetMessageType tp = msg.m_receivedMessageType;
 
-			var channelSlot = (int)tp - 1;
-			var chan = m_receiveChannels[channelSlot];
+			int channelSlot = (int)tp - 1;
+			NetReceiverChannelBase chan = m_receiveChannels[channelSlot];
 			if (chan == null)
 				chan = CreateReceiverChannel(tp);
 
@@ -505,7 +505,7 @@ namespace Lidgren.Network
 
 			// create receiver channel
 			NetReceiverChannelBase chan;
-			var method = NetUtility.GetDeliveryMethod(tp);
+			NetDeliveryMethod method = NetUtility.GetDeliveryMethod(tp);
 			switch (method)
 			{
 				case NetDeliveryMethod.Unreliable:
@@ -527,7 +527,7 @@ namespace Lidgren.Network
 					throw new NetException("Unhandled NetDeliveryMethod!");
 			}
 
-			var channelSlot = (int)tp - 1;
+			int channelSlot = (int)tp - 1;
 			NetException.Assert(m_receiveChannels[channelSlot] == null);
 			m_receiveChannels[channelSlot] = chan;
 
@@ -545,7 +545,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void GetSendQueueInfo(NetDeliveryMethod method, int sequenceChannel, out int windowSize, out int freeWindowSlots)
 		{
-			var channelSlot = (int)method - 1 + sequenceChannel;
+			int channelSlot = (int)method - 1 + sequenceChannel;
 			var chan = m_sendChannels[channelSlot];
 			if (chan == null)
 			{
@@ -561,7 +561,7 @@ namespace Lidgren.Network
 
 		public bool CanSendImmediately(NetDeliveryMethod method, int sequenceChannel)
 		{
-			var channelSlot = (int)method - 1 + sequenceChannel;
+			int channelSlot = (int)method - 1 + sequenceChannel;
 			var chan = m_sendChannels[channelSlot];
 			if (chan == null)
 				return true;

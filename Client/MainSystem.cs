@@ -4,19 +4,19 @@ using LunaClient.Systems;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Mod;
+using LunaClient.Systems.ModApi;
+using LunaClient.Systems.Network;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
-using LunaClient.VesselUtilities;
 using LunaClient.Windows;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
-using LunaCommon.Time;
 using LunaUpdater;
 using System;
 using System.Collections.Generic;
@@ -32,6 +32,8 @@ namespace LunaClient
     /// </summary>
     public class MainSystem : Base.System
     {
+        public override string SystemName { get; } = nameof(MainSystem);
+
         #region Fields
 
         private static ClientState _networkState;
@@ -56,7 +58,7 @@ namespace LunaClient
         public const int WindowOffset = 1664147604;
         
         public bool ShowGui { get; set; } = true;
-        public bool ToolbarShowGui { get; set; } = true;
+        public static bool ToolbarShowGui { get; set; } = true;
         public static ServerEntry CommandLineServer { get; set; }
         public bool LmpSaveChecked { get; set; }
         public bool ForceQuit { get; set; }
@@ -80,10 +82,8 @@ namespace LunaClient
         {
             LunaLog.ProcessLogMessages();
 
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             if (!Enabled) return;
-
+            
             try
             {
                 if (HighLogic.LoadedScene == GameScenes.MAINMENU && !LmpSaveChecked)
@@ -146,7 +146,6 @@ namespace LunaClient
             {
                 HandleException(e, "Main system- update");
             }
-            LunaProfiler.UpdateData.ReportTime(startClock);
         }
 
         #endregion
@@ -155,13 +154,10 @@ namespace LunaClient
 
         public void MainSystemFixedUpdate()
         {
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             if (!Enabled)
                 return;
-
+            
             SystemsHandler.FixedUpdate();
-            LunaProfiler.FixedUpdateData.ReportTime(startClock);
         }
 
         #endregion
@@ -170,13 +166,10 @@ namespace LunaClient
 
         public void MainSystemLateUpdate()
         {
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
-
             if (!Enabled)
                 return;
-
+            
             SystemsHandler.LateUpdate();
-            LunaProfiler.LateUpdateData.ReportTime(startClock);
         }
 
         #endregion
@@ -185,6 +178,9 @@ namespace LunaClient
 
         public void Start()
         {
+            SystemsContainer.Get<ModApiSystem>().Enabled = true;
+            SystemsContainer.Get<NetworkSystem>().Enabled = true;
+
             if (!SettingsSystem.CurrentSettings.DisclaimerAccepted)
             {
                 Enabled = false;
@@ -201,6 +197,8 @@ namespace LunaClient
 
         public void Awake()
         {
+            Profiler.maxNumberOfSamplesPerFrame = -1;
+
             //We are sure that we are in the unity thread as Awake() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
@@ -246,13 +244,12 @@ namespace LunaClient
             //Disclaimer window: 6713
             //Servers window: 6714
             //Systems window: 6715
-
-            var startClock = ProfilerData.LmpReferenceTime.ElapsedTicks;
+            //Locks window: 6716
 
             if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
+            {
                 WindowsHandler.OnGui();
-
-            LunaProfiler.GuiData.ReportTime(startClock);
+            }
         }
 
         public void OnExit()
@@ -377,9 +374,6 @@ namespace LunaClient
 
             //Load kerbals BEFORE loading the vessels or the loading of vessels will fail!
             SystemsContainer.Get<KerbalSystem>().LoadKerbalsIntoGame();
-
-            //Load the vessels we've received during connect into the game
-            VesselLoader.LoadVesselsIntoGame();
 
             //Load the scenarios from the server
             SystemsContainer.Get<ScenarioSystem>().LoadScenarioDataIntoGame();

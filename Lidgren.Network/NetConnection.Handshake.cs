@@ -100,9 +100,9 @@ namespace Lidgren.Network
 			m_peer.VerifyNetworkThread();
 
 			// clear send queues
-			for (var i = 0; i < m_sendChannels.Length; i++)
+			for (int i = 0; i < m_sendChannels.Length; i++)
 			{
-				var channel = m_sendChannels[i];
+				NetSenderChannelBase channel = m_sendChannels[i];
 				if (channel != null)
 					channel.Reset();
 			}
@@ -133,10 +133,10 @@ namespace Lidgren.Network
 		{
 			m_peer.VerifyNetworkThread();
 
-			var preAllocate = 13 + m_peerConfiguration.AppIdentifier.Length;
+			int preAllocate = 13 + m_peerConfiguration.AppIdentifier.Length;
 			preAllocate += (m_localHailMessage == null ? 0 : m_localHailMessage.LengthBytes);
 
-			var om = m_peer.CreateMessage(preAllocate);
+			NetOutgoingMessage om = m_peer.CreateMessage(preAllocate);
 			om.m_messageType = NetMessageType.Connect;
 			om.Write(m_peerConfiguration.AppIdentifier);
 			om.Write(m_peer.m_uniqueIdentifier);
@@ -160,7 +160,7 @@ namespace Lidgren.Network
 			if (onLibraryThread)
 				m_peer.VerifyNetworkThread();
 
-			var om = m_peer.CreateMessage(m_peerConfiguration.AppIdentifier.Length + 13 + (m_localHailMessage == null ? 0 : m_localHailMessage.LengthBytes));
+			NetOutgoingMessage om = m_peer.CreateMessage(m_peerConfiguration.AppIdentifier.Length + 13 + (m_localHailMessage == null ? 0 : m_localHailMessage.LengthBytes));
 			om.m_messageType = NetMessageType.ConnectResponse;
 			om.Write(m_peerConfiguration.AppIdentifier);
 			om.Write(m_peer.m_uniqueIdentifier);
@@ -187,7 +187,7 @@ namespace Lidgren.Network
 			if (onLibraryThread)
 				m_peer.VerifyNetworkThread();
 
-			var om = m_peer.CreateMessage(reason);
+			NetOutgoingMessage om = m_peer.CreateMessage(reason);
 			om.m_messageType = NetMessageType.Disconnect;
 			Interlocked.Increment(ref om.m_recyclingCount);
 			if (onLibraryThread)
@@ -200,7 +200,7 @@ namespace Lidgren.Network
 		{
 			if (m_localHailMessage != null)
 			{
-				var hi = m_localHailMessage.Data;
+				byte[] hi = m_localHailMessage.Data;
 				if (hi != null && hi.Length >= m_localHailMessage.LengthBytes)
 				{
 					if (om.LengthBytes + m_localHailMessage.LengthBytes > m_peerConfiguration.m_maximumTransmissionUnit - 10)
@@ -212,7 +212,7 @@ namespace Lidgren.Network
 
 		internal void SendConnectionEstablished()
 		{
-			var om = m_peer.CreateMessage(4);
+			NetOutgoingMessage om = m_peer.CreateMessage(4);
 			om.m_messageType = NetMessageType.ConnectionEstablished;
 			om.Write((float)NetTime.Now);
 			m_peer.SendLibrary(om, m_remoteEndPoint);
@@ -290,7 +290,7 @@ namespace Lidgren.Network
 					if (m_status == NetConnectionStatus.ReceivedInitiation)
 					{
 						// Whee! Server full has already been checked
-						var ok = ValidateHandshakeData(ptr, payloadLength, out hail);
+						bool ok = ValidateHandshakeData(ptr, payloadLength, out hail);
 						if (ok)
 						{
 							if (hail != null)
@@ -306,7 +306,7 @@ namespace Lidgren.Network
 							if (m_peerConfiguration.IsMessageTypeEnabled(NetIncomingMessageType.ConnectionApproval))
 							{
 								// ok, let's not add connection just yet
-								var appMsg = m_peer.CreateIncomingMessage(NetIncomingMessageType.ConnectionApproval, (m_remoteHailMessage == null ? 0 : m_remoteHailMessage.LengthBytes));
+								NetIncomingMessage appMsg = m_peer.CreateIncomingMessage(NetIncomingMessageType.ConnectionApproval, (m_remoteHailMessage == null ? 0 : m_remoteHailMessage.LengthBytes));
 								appMsg.m_receiveTime = now;
 								appMsg.m_senderConnection = this;
 								appMsg.m_senderEndPoint = this.m_remoteEndPoint;
@@ -358,7 +358,7 @@ namespace Lidgren.Network
 						case NetConnectionStatus.RespondedConnect:
 							// awesome
 				
-							var msg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
+							NetIncomingMessage msg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
 							InitializeRemoteTimeOffset(msg.ReadSingle());
 
 							m_peer.AcceptConnection(this);
@@ -370,10 +370,10 @@ namespace Lidgren.Network
 
 				case NetMessageType.Disconnect:
 					// ouch
-					var reason = "Ouch";
+					string reason = "Ouch";
 					try
 					{
-						var inc = m_peer.SetupReadHelperMessage(ptr, payloadLength);
+						NetIncomingMessage inc = m_peer.SetupReadHelperMessage(ptr, payloadLength);
 						reason = inc.ReadString();
 					}
 					catch
@@ -407,7 +407,7 @@ namespace Lidgren.Network
 			{
 				case NetConnectionStatus.InitiatedConnect:
 					// awesome
-					var ok = ValidateHandshakeData(ptr, payloadLength, out hail);
+					bool ok = ValidateHandshakeData(ptr, payloadLength, out hail);
 					if (ok)
 					{
 						if (hail != null)
@@ -446,14 +446,14 @@ namespace Lidgren.Network
 			hail = null;
 
 			// create temporary incoming message
-			var msg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
+			NetIncomingMessage msg = m_peer.SetupReadHelperMessage(ptr, payloadLength);
 			try
 			{
-				var remoteAppIdentifier = msg.ReadString();
-				var remoteUniqueIdentifier = msg.ReadInt64();
+				string remoteAppIdentifier = msg.ReadString();
+				long remoteUniqueIdentifier = msg.ReadInt64();
 				InitializeRemoteTimeOffset(msg.ReadSingle());
 
-				var remainingBytes = payloadLength - (msg.PositionInBytes - ptr);
+				int remainingBytes = payloadLength - (msg.PositionInBytes - ptr);
 				if (remainingBytes > 0)
 					hail = msg.ReadBytes(remainingBytes);
 

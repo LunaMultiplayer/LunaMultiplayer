@@ -93,6 +93,7 @@ namespace LunaClient.Systems.CraftLibrary
                 msgData.UploadType = type;
                 msgData.UploadName = name;
                 msgData.CraftData = fileData;
+                msgData.NumBytes = fileData.Length;
 
                 System.MessageSender.SendMessage(msgData);
                 AddCraftEntry(SettingsSystem.CurrentSettings.PlayerName, System.UploadCraftType, System.UploadCraftName);

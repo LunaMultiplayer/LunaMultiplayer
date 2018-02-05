@@ -1,6 +1,6 @@
 ﻿using LunaClient.Utilities;
 using LunaCommon;
-using LunaCommon.Flag;
+using LunaCommon.Message.Data.Flag;
 using System.IO;
 
 namespace LunaClient.Systems.Flag
@@ -14,7 +14,7 @@ namespace LunaClient.Systems.Flag
 
         public ExtendedFlagInfo(FlagInfo flagInfo)
         {
-            FlagData = flagInfo.FlagData;
+            FlagData = Common.TrimArray(flagInfo.FlagData, flagInfo.NumBytes);
             Owner = flagInfo.Owner;
             FlagName = flagInfo.FlagName;
         }

@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Context;
 using Server.Log;
 using Server.Server;
 using Server.Settings;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.System
 {
@@ -59,7 +58,7 @@ namespace Server.System
                     if (IncomingFarUpdates.TryDequeue(out var vesselUpdate) && VesselsDictionary.ContainsKey(vesselUpdate.Key))
                     {
                         var farClients = VesselsDictionary.Where(v => !Equals(v.Key, vesselUpdate.Key) && v.Value != null &&
-                                                                      v.Value.BodyName != vesselUpdate.Value.BodyName)
+                                                                      v.Value.BodyIndex != vesselUpdate.Value.BodyIndex)
                             .Select(v => v.Key);
 
                         foreach (var farClient in farClients.Where(c => ServerContext.Clients.ContainsKey(c.Endpoint)))
@@ -89,7 +88,7 @@ namespace Server.System
 
                         var mediumDistanceClients = VesselsDictionary.Where(
                                 v => !Equals(v.Key, vesselUpdate.Key) && v.Value != null &&
-                                     v.Value.BodyName == vesselUpdate.Value.BodyName &&
+                                     v.Value.BodyIndex == vesselUpdate.Value.BodyIndex &&
                                      CalculateDistance(v.Value, vesselUpdate.Value) >
                                      GeneralSettings.SettingsStore.CloseDistanceInMeters)
                             .Select(v => v.Key);
@@ -124,7 +123,7 @@ namespace Server.System
                         IncomingMediumUpdates.Enqueue(vesselUpdate);
 
                         var closeClients = VesselsDictionary.Where(v => !Equals(v.Key, vesselUpdate.Key) && v.Value != null &&
-                                                                        v.Value.BodyName == vesselUpdate.Value.BodyName &&
+                                                                        v.Value.BodyIndex == vesselUpdate.Value.BodyIndex &&
                                                                         CalculateDistance(v.Value, vesselUpdate.Value) <=
                                                                         GeneralSettings.SettingsStore.CloseDistanceInMeters)
                             .Select(v => v.Key);

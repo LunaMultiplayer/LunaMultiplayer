@@ -8,6 +8,7 @@ using Server.Log;
 using Server.Plugin;
 using Server.Settings;
 using Server.System;
+using Server.System.VesselRelay;
 using Server.Utilities;
 using System;
 using System.Diagnostics;
@@ -48,14 +49,14 @@ namespace Server
 
                 //Set day for log change
                 ServerContext.Day = LunaTime.Now.Day;
-                
+
                 LunaLog.Normal($"Starting Luna Server version: {LmpVersioning.CurrentVersion}");
 
                 Universe.CheckUniverse();
+                LoadSettingsAndGroups();
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
                 ChatSystem.Reset();
-                LoadSettingsAndGroups();
 
                 LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
 
@@ -66,6 +67,7 @@ namespace Server
                 Task.Run(() => new ClientMainThread().ThreadMain());
 
                 Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
+                Task.Run(() => ServerContext.LidgrenServer.RefreshMasterServersList());
                 Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
                 Task.Run(() => LogThread.RunLogThread());
 
@@ -73,6 +75,7 @@ namespace Server
                 Task.Run(() => VesselUpdateRelaySystem.RelayToFarPlayers());
                 Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
                 Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
+                Task.Run(() => LockSystem.SendAllLocks());
                 Task.Run(() => VersionChecker.CheckForNewVersions());
                 
                 while (ServerContext.ServerStarting)
@@ -109,6 +112,10 @@ namespace Server
                 LunaLog.Debug("Loading gameplay settings...");
                 GameplaySettings.Singleton.Load();
             }
+#if DEBUG
+            DebugSettings.Singleton.Load();
+            LunaTime.SimulatedMsTimeOffset = DebugSettings.SettingsStore.SimulatedMsTimeOffset;
+#endif
         }
 
         //Gracefully shut down

@@ -15,7 +15,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void DiscoverLocalPeers(int serverPort)
 		{
-			var um = CreateMessage(0);
+			NetOutgoingMessage um = CreateMessage(0);
 			um.m_messageType = NetMessageType.Discovery;
 			Interlocked.Increment(ref um.m_recyclingCount);
 
@@ -39,7 +39,7 @@ namespace Lidgren.Network
 		/// </summary>
 		public void DiscoverKnownPeer(NetEndPoint endPoint)
 		{
-			var om = CreateMessage(0);
+			NetOutgoingMessage om = CreateMessage(0);
 			om.m_messageType = NetMessageType.Discovery;
 			om.m_recyclingCount = 1;
 			m_unsentUnconnectedMessages.Enqueue(new NetTuple<NetEndPoint, NetOutgoingMessage>(endPoint, om));

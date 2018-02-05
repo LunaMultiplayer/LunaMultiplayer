@@ -15,33 +15,32 @@ namespace LunaClient.Network
 {
     public class NetworkServerList
     {
-        public static List<IPEndPoint> MasterServers { get; } = new List<IPEndPoint>();
-        public static ConcurrentDictionary<string, ServerInfo> Servers { get; private set; } = new ConcurrentDictionary<string, ServerInfo>();
-        private static readonly Random Random = new Random();
-
-        /// <summary>
-        /// Refreshes the list of master servers
-        /// </summary>
-        public static void RefreshMasterServers()
+        private static readonly List<IPEndPoint> PrivMasterServers = new List<IPEndPoint>();
+        public static List<IPEndPoint> MasterServers
         {
-            if (!MasterServers.Any())
+            get
             {
-                var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-                foreach (var server in servers)
+                lock (PrivMasterServers)
                 {
-                    MasterServers.Add(Common.CreateEndpointFromString(server));
+                    if (!PrivMasterServers.Any())
+                    {
+                        var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
+                        PrivMasterServers.AddRange(servers.Select(Common.CreateEndpointFromString));
+                    }
+                    return PrivMasterServers;
                 }
             }
         }
 
+        public static ConcurrentDictionary<string, ServerInfo> Servers { get; } = new ConcurrentDictionary<string, ServerInfo>();
+        private static readonly Random Random = new Random();
+        
         /// <summary>
         /// Sends a request servers to the master servers
         /// </summary>
         public static void RequestServers()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsRequestServersMsgData>();
-            msgData.CurrentVersion = LmpVersioning.CurrentVersion;
-
             var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
             NetworkSender.QueueOutgoingMessage(requestMsg);
         }
@@ -53,14 +52,14 @@ namespace LunaClient.Network
         {
             try
             {
-                var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), LunaTime.UtcNow.Ticks);
+                var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg, LunaTime.UtcNow.Ticks);
                 
                 //Sometimes we receive other type of unconnected messages. 
                 //Therefore we assert that the received message data is of MsReplyServersMsgData
                 if (msgDeserialized.Data is MsReplyServersMsgData data)
                 {
                     Servers.Clear();
-                    for (var i = 0; i < data.Id.Length; i++)
+                    for (var i = 0; i < data.ServersCount; i++)
                     {
                         //Filter servers with diferent version
                         if (data.ServerVersion[i] != LmpVersioning.CurrentVersion)
@@ -104,7 +103,7 @@ namespace LunaClient.Network
             try
             {
                 var token = RandomString(10);
-                var ownEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(out var _), NetworkMain.Config.Port);
+                var ownEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(), NetworkMain.Config.Port);
 
                 var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
                 msgData.Id = currentEntryId;

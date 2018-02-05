@@ -1,6 +1,7 @@
-using System.IO;
 using Server.Context;
 using Server.Settings.Definition;
+using System;
+using System.IO;
 
 namespace Server.Settings
 {
@@ -13,6 +14,8 @@ namespace Server.Settings
             get => SettingsStore;
             set => SettingsStore = value as SettingsDefinition;
         }
+
+        protected override Type SettingsHolderType => typeof(SettingsDefinition);
 
         public static SettingsDefinition SettingsStore { get; private set; }
 

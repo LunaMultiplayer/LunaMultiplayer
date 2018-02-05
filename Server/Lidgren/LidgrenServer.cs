@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon;
 using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Message.Interface;
@@ -16,6 +10,11 @@ using Server.Log;
 using Server.Server;
 using Server.Settings;
 using Server.Utilities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Server.Lidgren
 {
@@ -37,6 +36,22 @@ namespace Server.Lidgren
 
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
+
+#if DEBUG
+            ServerContext.Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
+            //ServerContext.Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            if (DebugSettings.SettingsStore?.SimulatedLossChance < 100 && DebugSettings.SettingsStore?.SimulatedLossChance > 0)
+            {
+                ServerContext.Config.SimulatedLoss = DebugSettings.SettingsStore.SimulatedLossChance / 100f;
+            }
+            if (DebugSettings.SettingsStore?.SimulatedDuplicatesChance < 100 && DebugSettings.SettingsStore?.SimulatedLossChance > 0)
+            {
+                ServerContext.Config.SimulatedDuplicatesChance = DebugSettings.SettingsStore.SimulatedDuplicatesChance / 100f;
+            }
+
+            ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore?.MaxSimulatedRandomLatencyMs ?? 0).TotalSeconds;
+            ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore?.MinSimulatedLatencyMs ?? 0).TotalSeconds;
+#endif
 
             Server = new NetServer(ServerContext.Config);
             Server.Start();
@@ -92,7 +107,6 @@ namespace Server.Lidgren
                                 LunaLog.Debug($"Lidgren: {msg.MessageType.ToString().ToUpper()} -- {details}");
                                 break;
                         }
-                        Server.Recycle(msg);
                     }
                     else
                     {
@@ -118,22 +132,15 @@ namespace Server.Lidgren
 
         public void SendMessageToClient(ClientStructure client, IServerMessageBase message)
         {
+            var outmsg = Server.CreateMessage(message.GetMessageSize());
+
             message.Data.SentTime = LunaTime.UtcNow.Ticks;
-            var messageBytes = message.Serialize(GeneralSettings.SettingsStore.CompressionEnabled);
-            if (messageBytes == null)
-            {
-                LunaLog.Error("Error serializing message!");
-                return;
-            }
+            message.Serialize(outmsg);
 
             client.LastSendTime = ServerContext.ServerClock.ElapsedMilliseconds;
-            client.BytesSent += messageBytes.Length;
-
-            //Lidgren already recycle messages by itself
-            var outmsg = Server.CreateMessage(messageBytes.Length);
-            outmsg.Write(messageBytes);
-
-            Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
+            client.BytesSent += outmsg.LengthBytes;
+            
+            var sendResult = Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
             Server.FlushSendQueue(); //Manually force to send the msg
         }
 
@@ -142,21 +149,33 @@ namespace Server.Lidgren
             Server.Shutdown("Goodbye and thanks for all the fish");
         }
 
+        public async void RefreshMasterServersList()
+        {
+            if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
+
+            while (ServerContext.ServerRunning)
+            {
+                lock (MasterServerEndpoints)
+                {
+                    MasterServerEndpoints.Clear();
+                    MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
+                        .Select(Common.CreateEndpointFromString));
+                }
+
+                await Task.Delay((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
+            }
+        }
+
         public async void RegisterWithMasterServer()
         {
             if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
 
             LunaLog.Normal("Registering with master servers...");
 
-            var adr = LunaNetUtils.GetMyAddress(out var _);
+            var adr = LunaNetUtils.GetMyAddress();
             if (adr == null) return;
 
             var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
-
-            if (!MasterServerEndpoints.Any())
-                MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
-                    .Select(Common.CreateEndpointFromString));
-
             while (ServerContext.ServerRunning)
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<MsRegisterServerMsgData>();
@@ -187,26 +206,37 @@ namespace Server.Lidgren
                     ? msgData.ServerName.Substring(0, 30)
                     : msgData.ServerName;
 
-                var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-                var msgBytes = msg.Serialize(true);
-
-                foreach (var masterServer in MasterServerEndpoints)
+                lock (MasterServerEndpoints)
                 {
-                    try
+                    foreach (var masterServer in MasterServerEndpoints)
                     {
-                        var outMsg = Server.CreateMessage(msgBytes.Length);
-                        outMsg.Write(msgBytes);
-                        Server.SendUnconnectedMessage(outMsg, masterServer);
-                        Server.FlushSendQueue();
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
+                        RegisterWithMasterServer(msgData, masterServer);
                     }
                 }
 
                 await Task.Delay(MasterServerRegistrationMsInterval);
             }
+        }
+
+        private static void RegisterWithMasterServer(MsRegisterServerMsgData msgData, IPEndPoint masterServer)
+        {
+            Task.Run(() =>
+            {
+                var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
+                msg.Data.SentTime = LunaTime.UtcNow.Ticks;
+                
+                try
+                {
+                    var outMsg = Server.CreateMessage(msg.GetMessageSize());
+                    msg.Serialize(outMsg);
+                    Server.SendUnconnectedMessage(outMsg, masterServer);
+                    Server.FlushSendQueue();
+                }
+                catch (Exception)
+                {
+                    // ignored
+                }
+            });
         }
     }
 }

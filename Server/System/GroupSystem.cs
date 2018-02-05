@@ -1,15 +1,14 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using LunaCommon;
-using LunaCommon.Groups;
+﻿using LunaCommon;
 using LunaCommon.Message.Data.Groups;
 using LunaCommon.Message.Server;
 using LunaCommon.Xml;
 using Server.Context;
 using Server.Server;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.System
 {
@@ -30,7 +29,8 @@ namespace Server.System
             if (!Groups.ContainsKey(groupName))
             {
                 var newGroup = new Group();
-                newGroup.Members.Add(clientPlayerName);
+                newGroup.Members = new[] {clientPlayerName};
+                newGroup.MembersCount = 1;
                 newGroup.Owner = clientPlayerName;
                 newGroup.Name = groupName;
                 if (Groups.TryAdd(groupName, newGroup))

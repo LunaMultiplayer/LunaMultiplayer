@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Client
         internal KerbalCliMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(KerbalCliMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)KerbalMessageType.Request] = typeof(KerbalsRequestMsgData),

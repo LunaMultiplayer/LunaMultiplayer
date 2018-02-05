@@ -11,6 +11,14 @@ namespace LunaClient.Windows.Chat
     {
         #region Fields
 
+        private static bool _display;
+        public override bool Display
+        {
+            get => _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
+                   HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => _display = value;
+        }
+
         public string ChatWindowLock { get; set; } = "LMP_Chat_Window_Lock";
         public bool IgnoreChatInput { get; set; }
         public float WindowHeight { get; set; } = 300;
@@ -110,14 +118,14 @@ namespace LunaClient.Windows.Chat
 
         private void CheckWindowLock()
         {
-            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
             if (SafeDisplay)
             {
+                if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
+                {
+                    RemoveWindowLock();
+                    return;
+                }
+
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 

@@ -2,8 +2,6 @@
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
-using DataDeserializer = LunaCommon.Message.Serialization.DataDeserializer;
-using DataSerializer = LunaCommon.Message.Serialization.DataSerializer;
 
 namespace LunaCommon.Message.Base
 {
@@ -55,6 +53,9 @@ namespace LunaCommon.Message.Base
         }
 
         /// <inheritdoc />
+        public abstract string ClassName { get; }
+
+        /// <inheritdoc />
         public IMessageData Data
         {
             get => _data;
@@ -85,7 +86,7 @@ namespace LunaCommon.Message.Base
         public abstract NetDeliveryMethod NetDeliveryMethod { get; }
 
         /// <inheritdoc />
-        public virtual IMessageData Deserialize(ushort subType, byte[] data, bool decompress)
+        public virtual IMessageData GetMessageData(ushort subType)
         {
             if (!SubTypeDictionary.ContainsKey(subType))
             {
@@ -93,45 +94,22 @@ namespace LunaCommon.Message.Base
             }
 
             var msgDataType = SubTypeDictionary[subType];
-            var msgData = MessageStore.GetMessageData(msgDataType);
-
-            if (decompress)
-            {
-                var decompressed = CompressionHelper.DecompressBytes(data);
-                return DataDeserializer.Deserialize(this, msgData, decompressed);
-            }
-
-            return DataDeserializer.Deserialize(this, msgData, data);
+            return MessageStore.GetMessageData(msgDataType);
         }
 
         /// <inheritdoc />
         public bool VersionMismatch { get; set; }
 
         /// <inheritdoc />
-        public byte[] Serialize(bool compress)
+        public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             try
             {
-                var data = DataSerializer.Serialize(Data) ?? new byte[0];
+                lidgrenMsg.Write(MessageTypeId);
+                lidgrenMsg.Write(Data.SubType);
+                lidgrenMsg.WritePadBits();
 
-                if (compress)
-                {
-                    var dataCompressed = CompressionHelper.CompressBytes(data);
-
-                    compress = dataCompressed.Length < data.Length;
-                    if (compress)
-                    {
-                        data = dataCompressed;
-                    }
-                }
-
-                var header = SerializeHeaderData(Convert.ToUInt32(data.Length), compress);
-
-                var fullData = new byte[header.Length + data.Length];
-                header.CopyTo(fullData, 0);
-                data.CopyTo(fullData, header.Length);
-
-                return fullData;
+                Data.Serialize(lidgrenMsg);
             }
             catch (Exception e)
             {
@@ -139,42 +117,16 @@ namespace LunaCommon.Message.Base
             }
         }
 
+        /// <inheritdoc />
         public void Recycle()
         {
             MessageStore.RecycleMessage(this);
         }
 
-        /// <summary>
-        ///     Serializes the header information
-        /// </summary>
-        /// <param name="dataLength">Length of the message data without the header</param>
-        /// <param name="dataCompressed">Is data compressed or not</param>
-        /// <returns>Byte with the header serialized</returns>
-        private byte[] SerializeHeaderData(uint dataLength, bool dataCompressed)
+        /// <inheritdoc />
+        public int GetMessageSize()
         {
-            var headerData = new byte[MessageConstants.HeaderLength];
-
-            var typeBytes = BitConverter.GetBytes(MessageTypeId);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(typeBytes);
-            typeBytes.CopyTo(headerData, MessageConstants.MessageTypeStartIndex);
-
-            var subTypeBytes = BitConverter.GetBytes(Data.SubType);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(subTypeBytes);
-            subTypeBytes.CopyTo(headerData, MessageConstants.MessageSubTypeStartIndex);
-
-            var lengthBytes = BitConverter.GetBytes(dataLength);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(lengthBytes);
-            lengthBytes.CopyTo(headerData, MessageConstants.MessageLengthStartIndex);
-
-            var compressedByte = BitConverter.GetBytes(dataCompressed);
-            if (BitConverter.IsLittleEndian)
-                Array.Reverse(compressedByte);
-            compressedByte.CopyTo(headerData, MessageConstants.MessageCompressionValueIndex);
-
-            return headerData;
+            return sizeof(ushort) + sizeof(ushort) + Data.GetMessageSize();
         }
     }
 }

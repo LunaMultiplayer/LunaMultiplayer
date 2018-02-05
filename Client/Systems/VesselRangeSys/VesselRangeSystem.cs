@@ -31,6 +31,8 @@
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(VesselRangeSystem);
+
         protected override void OnEnabled()
         {
             base.OnEnabled();

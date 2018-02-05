@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.Lock
         /// <inheritdoc />
         internal LockListRequestMsgData() { }
         public override LockMessageType LockMessageType => LockMessageType.ListRequest;
+
+        public override string ClassName { get; } = nameof(LockListRequestMsgData);
     }
 }

@@ -22,7 +22,7 @@ namespace LunaClient.Systems.VesselLockSys
             if (LockSystem.LockQuery.GetControlLockOwner(vessel.id) == SettingsSystem.CurrentSettings.PlayerName)
                 return;
 
-            //Release all update locks as we are switching to a NEW vessel.
+            //Release all UPDATE locks as we are switching to a NEW vessel.
             SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Update);
             SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.UnloadedUpdate);
             if (SettingsSystem.ServerSettings.DropControlOnVesselSwitching)
@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselLockSys
             if (LockSystem.LockQuery.ControlLockExists(vessel.id) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 //We switched to a vessel that is controlled by another player so start spectating
-                System.StartSpectating();
+                System.StartSpectating(vessel.id);
             }
         }
     }

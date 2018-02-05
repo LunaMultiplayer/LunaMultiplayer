@@ -2,6 +2,8 @@
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselUtilities;
+using UniLinq;
 
 namespace LunaClient.Systems.VesselRemoveSys
 {
@@ -14,16 +16,28 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void OnVesselWillDestroy(Vessel dyingVessel)
         {
-            //Only remove the vessel if we own the update lock
-            if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            //We are just reloading a vessel and the vessel.Die() was triggered so we should not do anything!
+            if (dyingVessel.id == VesselLoader.ReloadingVesselId)
+                return;
+
+            //Only send the vessel remove msg if we own the unloaded update lock
+            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
+
+                //Add to the kill list so it's also removed from the store later on!
+                System.AddToKillList(dyingVessel.id);
+
                 SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(dyingVessel);
 
-                System.MessageSender.SendVesselRemove(dyingVessel.id);
+                var killingOwnVessel = FlightGlobals.ActiveVessel?.id == dyingVessel.id;
 
-                //Vessel is dead so remove the locks
-                SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(dyingVessel.id);
+                //If we are killing our own vessel there's the possibility that the player hits "revert" so in this case
+                //DO NOT keep it in the remove list
+                System.MessageSender.SendVesselRemove(dyingVessel.id, !killingOwnVessel);
+
+                //Vessel is dead so remove the locks after 1500ms to get the debris locks if any
+                SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(dyingVessel.id, 1500);
             }
         }
 
@@ -67,6 +81,33 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             //Vessel is terminated so remove locks            
             SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(terminatedVessel.vesselID);
+        }
+
+        /// <summary>
+        /// This event is called after a game is loaded. We use it to detect if the player has done a revert
+        /// </summary>
+        public void OnGameStatePostLoad(ConfigNode data)
+        {
+            if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
+            {
+                LunaLog.Log("[LMP]: Detected a revert!");
+                var vesselIdsToRemove = FlightGlobals.Vessels
+                    .Where(v => v.rootPart?.missionID == FlightGlobals.ActiveVessel.rootPart.missionID && v.id != FlightGlobals.ActiveVessel.id)
+                    .Select(v=> v.id).Distinct();
+
+                //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
+                //vessel and remove them both from our game and server
+                foreach (var vesselIdToRemove in vesselIdsToRemove)
+                {
+                    System.MessageSender.SendVesselRemove(vesselIdToRemove);
+                    System.AddToKillList(vesselIdToRemove);
+                }
+
+                //Now tell the server to remove our old vessel
+                //We say to not keep it in the vessels remove list as perhaps we are reverting to flight and then our vessel id will stay the same. 
+                //If we set the keepvesselinremovelist to true then the server will ignore every change we do to our vessel! 
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, false);
+            }
         }
     }
 }

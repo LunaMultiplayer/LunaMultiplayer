@@ -1,11 +1,28 @@
-﻿namespace LunaCommon.Message.Interface
+﻿using Lidgren.Network;
+
+namespace LunaCommon.Message.Interface
 {
     public interface IMessageData
     {
         /// <summary>
-        /// Retrieves the version of the multiplayer
+        /// Name of the class
         /// </summary>
-        string Version { get; }
+        string ClassName { get; }
+        
+        /// <summary>
+        /// Retrieves the major version of the multiplayer
+        /// </summary>
+        ushort MajorVersion { get; }
+
+        /// <summary>
+        /// Retrieves the minor version of the multiplayer
+        /// </summary>
+        ushort MinorVersion { get; }
+
+        /// <summary>
+        /// Retrieves the build version of the multiplayer
+        /// </summary>
+        ushort BuildVersion { get; }
 
         /// <summary>
         /// Receive time timestamp.
@@ -21,5 +38,20 @@
         /// Sent time timestamp.
         /// </summary>
         long SentTime { get; set; }
+
+        /// <summary>
+        /// Serializes this message to the NetOutgoingMessage
+        /// </summary>
+        void Serialize(NetOutgoingMessage lidgrenMsg);
+
+        /// <summary>
+        /// Deserializes a message from the NetIncomingMessage
+        /// </summary>
+        void Deserialize(NetIncomingMessage lidgrenMsg);
+
+        /// <summary>
+        /// Size of this data in bytes
+        /// </summary>
+        int GetMessageSize();
     }
 }

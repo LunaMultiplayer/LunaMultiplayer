@@ -81,9 +81,6 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Enable white-listing.")]
         public bool Whitelisted { get; set; } = false;
 
-        [XmlComment(Value = "Compress messages or not")]
-        public bool CompressionEnabled { get; set; } = true;
-
         [XmlComment(Value = "Heartbeat interval in Ms")]
         public int HearbeatMsInterval { get; set; } = 1000;
 
@@ -108,7 +105,7 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions (ProtoVessel) to the server." +
                             "Caution! Sending a vessel definition (ProtoVessel) very often could make clients with slow computers to lag a lot!")]
-        public int VesselDefinitionSendMsInterval { get; set; } = 500;
+        public int VesselDefinitionSendMsInterval { get; set; } = 2500;
 
         [XmlComment(Value = "Relay system mode. Dictionary uses more RAM but it's faster. DataBase use disk space instead but it's slower" +
                             "Values: Dictionary, DataBase")]

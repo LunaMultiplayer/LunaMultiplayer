@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="../master/External/logo.png" alt="Luna multiplayer logo" height="250" width="250"/>
+    <img src="../master/External/logo.png" alt="Luna multiplayer logo"/>
 </p>
 
 <p align="center">
@@ -9,8 +9,9 @@
 </p>
 
 <p align="center">
-  <a href="../../releases"><img src="https://img.shields.io/github/release/gavazquez/lunamultiplayer.svg" alt="Latest release" /></a>
-  <img src="https://img.shields.io/github/downloads/gavazquez/lunamultiplayer/total.svg" alt="Total downloads" />
+  <a href="../../releases"><img src="https://img.shields.io/github/release/lunamultiplayer/lunamultiplayer.svg" alt="Latest release" /></a>
+  <a href="../../releases"><img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" />
+  <a href="../../"><img src="https://img.shields.io/github/search/lunamultiplayer/lunamultiplayer/goto.svg" alt="Total hits" />
 </p>
 
 ---
@@ -28,12 +29,12 @@
 - Clean and optimized code, based on systems and windows which makes it easier to read and modify.
 - Multi threaded (as much as Unity allows)
 - Settings saved as XML.
-- Time synced between clients and the server using the [NIST](https://www.nist.gov/) servers.
+- Time synced between clients and the server using [NTP](https://en.wikipedia.org/wiki/Network_Time_Protocol) protocol.
 - [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) based using the [Lidgren](https://github.com/lidgren/lidgren-network-gen3) library for reliable UDP message handling.
 - Uses interpolation so the vessels shouldn't jump from one place to another.
 - [Nat-punchtrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
 - Servers are displayed within the mod.
-- Better creation of network messages so they are easier to modify as you don't need to take care of serialization.
+- Better creation of network messages so they are easier to modify and serialize.
 - Every network message is cached in order to reduce the garbage collector spikes
 - Based on tasks instead of threads.
 - [QuickLZ](http://www.quicklz.com) for fast compression
@@ -43,7 +44,7 @@ Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-comp
 ---
 ### Servers:
 
-You can check the available servers in the official website [here](http://lunamultiplayer.com/servers) or trough the website inside the repo [here](http://cdn.rawgit.com/gavazquez/LunaMultiPlayer/master/WebDisplayServers/servers.html)
+You can check the available servers in the official website [here](http://lunamultiplayer.com/servers) or trough the website inside the repo [here](http://htmlpreview.github.io/?http://github.com/LunaMultiplayer/LunaMultiplayer/blob/master/WebDisplayServers/servers.html)
 
 ---
 
@@ -51,7 +52,7 @@ You can check the available servers in the official website [here](http://lunamu
 
 |   Branch   |   Build  |   Tests  |  Last commit  |   Activity    |
 | ---------- | -------- | -------- | ------------- | ------------- |
-| **master** |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/gavazquez/lunamultiplayer/master.svg)](../../commits/master) | [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/gavazquez/lunamultiplayer.svg)](../../commits/master)
+| **master** |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/lunamultiplayer/lunamultiplayer/master.svg)](../../commits/master) | [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lunamultiplayer/lunamultiplayer.svg)](../../commits/master)
 
 ---
 
@@ -75,5 +76,5 @@ Please visit [this page](../../wiki/Troubleshooting) in the wiki to solve the mo
 
 <p align="center">
   <a href="mailto:gavazquez@gmail.com"><img src="https://img.shields.io/badge/email-gavazquez@gmail.com-blue.svg?style=flat" alt="Email: gavazquez@gmail.com" /></a>
-  <a href="./LICENSE"><img src="https://img.shields.io/github/license/gavazquez/LunaMultiPlayer.svg" alt="License" /></a>
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/lunamultiplayer/LunaMultiPlayer.svg" alt="License" /></a>
 </p>

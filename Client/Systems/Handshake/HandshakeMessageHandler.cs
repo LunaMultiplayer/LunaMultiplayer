@@ -2,7 +2,6 @@
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.Mod;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -11,7 +10,6 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace LunaClient.Systems.Handshake
@@ -27,8 +25,8 @@ namespace LunaClient.Systems.Handshake
             switch (msgData.HandshakeMessageType)
             {
                 case HandshakeMessageType.Challenge:
-                    HandleChallengeReceivedMessage((HandshakeChallengeMsgData)msgData);
-                    MainSystem.NetworkState = ClientState.Authenticating;
+                    Array.Copy(((HandshakeChallengeMsgData)msgData).Challenge, System.Challenge, 1024);
+                    MainSystem.NetworkState = ClientState.HandshakeChallengeReceived;
                     break;
                 case HandshakeMessageType.Reply:
                     HandleHandshakeReplyReceivedMessage((HandshakeReplyMsgData)msgData);
@@ -39,25 +37,6 @@ namespace LunaClient.Systems.Handshake
         }
 
         #region Private
-
-        public void HandleChallengeReceivedMessage(HandshakeChallengeMsgData messageData)
-        {
-            try
-            {
-                var challange = messageData.Challenge;
-                using (var rsa = new RSACryptoServiceProvider(1024))
-                {
-                    rsa.PersistKeyInCsp = false;
-                    rsa.FromXmlString(SettingsSystem.CurrentSettings.PrivateKey);
-                    var signature = rsa.SignData(challange, CryptoConfig.CreateFromName("SHA256"));
-                    System.MessageSender.SendHandshakeResponse(signature);
-                }
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error handling HANDSHAKE_CHALLANGE Message, exception: {e}");
-            }
-        }
 
         public void HandleHandshakeReplyReceivedMessage(HandshakeReplyMsgData data)
         {
@@ -89,7 +68,7 @@ namespace LunaClient.Systems.Handshake
             {
                 case HandshakeReply.HandshookSuccessfully:
 
-                    if (ModFileParser.ParseModFile(modFileData))
+                    if (ModFileHandler.ParseModFile(modFileData))
                     {
                         LunaLog.Log("[LMP]: Handshake successful");
                         MainSystem.NetworkState = ClientState.Authenticated;
@@ -105,7 +84,7 @@ namespace LunaClient.Systems.Handshake
                     //If it's a protocol mismatch, append the client/server version.
                     if (reply == HandshakeReply.ProtocolMismatch)
                     {
-                        disconnectReason += $"\nClient: {LmpVersioning.CurrentVersion}, Server: {data.Version}";
+                        disconnectReason += $"\nClient: {LmpVersioning.CurrentVersion}, Server: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}";
                     }
                     LunaLog.Log(disconnectReason);
                     NetworkConnection.Disconnect(disconnectReason);

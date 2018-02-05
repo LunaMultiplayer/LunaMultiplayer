@@ -57,8 +57,9 @@ namespace LunaClient.Systems.KerbalSys
             if (kerbalBytes != null && kerbalBytes.Length > 0)
             {
                 var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<KerbalProtoMsgData>();
-                msgData.KerbalName = kerbalName;
-                msgData.KerbalData = kerbalBytes;
+                msgData.Kerbal.KerbalName = kerbalName;
+                msgData.Kerbal.KerbalData = kerbalBytes;
+                msgData.Kerbal.NumBytes = kerbalBytes.Length;
 
                 SendMessage(msgData);
             }

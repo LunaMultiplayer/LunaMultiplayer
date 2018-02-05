@@ -28,6 +28,8 @@ namespace LunaClient.Systems.Toolbar
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(ToolbarSystem);
+
         protected override void OnEnabled()
         {
             ButtonTexture = GameDatabase.Instance.GetTexture("LunaMultiPlayer/Button/LMPButton", false);
@@ -122,8 +124,7 @@ namespace LunaClient.Systems.Toolbar
 
         private static void OnBlizzyClick(ClickEvent clickArgs) => HandleButtonClick();
 
-        private static void HandleButtonClick()
-            => SystemsContainer.Get<MainSystem>().ToolbarShowGui = !SystemsContainer.Get<MainSystem>().ToolbarShowGui;
+        private static void HandleButtonClick() => MainSystem.ToolbarShowGui = !MainSystem.ToolbarShowGui;
 
         private static void DoNothing()
         {

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using Server.Client;
 using Server.Log;
+using System.Collections.Generic;
 
 namespace Server.Plugin
 {
@@ -8,8 +8,9 @@ namespace Server.Plugin
     ///     LMP message callback.
     ///     client - The client that has sent the message
     ///     modData - The mod byte[] payload
+    ///     numBytes - The number of usefull bytes in the modData array
     /// </summary>
-    public delegate void LmpMessageCallback(ClientStructure client, byte[] modData);
+    public delegate void LmpMessageCallback(ClientStructure client, byte[] modData, int numBytes);
 
     public class LmpModInterface
     {
@@ -60,12 +61,12 @@ namespace Server.Plugin
         /// <summary>
         ///     Internal use only - Called when a mod message is received from ClientHandler.
         /// </summary>
-        public static void OnModMessageReceived(ClientStructure client, string modName, byte[] modData)
+        public static void OnModMessageReceived(ClientStructure client, string modName, byte[] modData, int numBytes)
         {
             lock (EventLock)
             {
                 if (RegisteredMods.ContainsKey(modName))
-                    RegisteredMods[modName](client, modData);
+                    RegisteredMods[modName](client, modData, numBytes);
             }
         }
     }

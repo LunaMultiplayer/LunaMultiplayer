@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Server
         internal MotdSrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(MotdSrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)MotdMessageType.Reply] = typeof(MotdReplyMsgData)

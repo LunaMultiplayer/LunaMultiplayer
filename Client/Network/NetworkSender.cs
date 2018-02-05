@@ -1,11 +1,11 @@
 ﻿using Lidgren.Network;
 using LunaClient.Systems.SettingsSys;
-using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
+using System.Threading;
 
 namespace LunaClient.Network
 {
@@ -23,13 +23,13 @@ namespace LunaClient.Network
             {
                 while (!NetworkConnection.ResetRequested)
                 {
-                    if (OutgoingMessages.TryDequeue(out var sendMessage))
+                    if (OutgoingMessages.Count > 0 && OutgoingMessages.TryDequeue(out var sendMessage))
                     {
                         SendNetworkMessage(sendMessage);
                     }
                     else
                     {
-                        LunaDelay.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
+                        Thread.Sleep(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
                     }
                 }
             }
@@ -58,49 +58,40 @@ namespace LunaClient.Network
                 NetworkMain.ClientConnection.Start();
 
             message.Data.SentTime = LunaTime.UtcNow.Ticks;
-            var bytes = message.Serialize(SettingsSystem.CurrentSettings.CompressionEnabled);
-            if (bytes != null)
+            try
             {
-                try
+                NetworkStatistics.LastSendTime = LunaTime.UtcNow;
+
+                if (message is IMasterServerMessageBase)
                 {
-                    NetworkStatistics.LastSendTime = LunaTime.Now;
-
-                    if (message is IMasterServerMessageBase)
+                    foreach (var masterServer in NetworkServerList.MasterServers)
                     {
-                        foreach (var masterServer in NetworkServerList.MasterServers)
-                        {
-                            //Create a new message for every main server otherwise lidgren complains when you reuse the msg
-                            var lidgrenMsg = GetLidgrenMessage(bytes);
+                        //Don't reuse lidgren messages, he does that on it's own
+                        var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(message.GetMessageSize());
 
-                            NetworkMain.ClientConnection.SendUnconnectedMessage(lidgrenMsg, masterServer);
-                            NetworkMain.ClientConnection.FlushSendQueue();
-                        }
+                        message.Serialize(lidgrenMsg);
+                        NetworkMain.ClientConnection.SendUnconnectedMessage(lidgrenMsg, masterServer);
+                        NetworkMain.ClientConnection.FlushSendQueue();
                     }
-                    else
-                    {
-                        if (MainSystem.NetworkState >= ClientState.Connected)
-                        {
-                            var lidgrenMsg = GetLidgrenMessage(bytes);
-
-                            NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
-                        }
-                    }
-
-                    NetworkMain.ClientConnection.FlushSendQueue();
                 }
-                catch (Exception e)
+                else
                 {
-                    NetworkMain.HandleDisconnectException(e);
+                    if (MainSystem.NetworkState >= ClientState.Connected)
+                    {
+                        var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(message.GetMessageSize());
+
+                        message.Serialize(lidgrenMsg);
+                        NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
+                    }
                 }
+                
+                NetworkMain.ClientConnection.FlushSendQueue();
+                message.Recycle();
             }
-            message.Recycle();
-        }
-
-        private static NetOutgoingMessage GetLidgrenMessage(byte[] bytes)
-        {
-            var lidgrenMsg = NetworkMain.ClientConnection.CreateMessage(bytes.Length);
-            lidgrenMsg.Write(bytes);
-            return lidgrenMsg;
+            catch (Exception e)
+            {
+                NetworkMain.HandleDisconnectException(e);
+            }
         }
     }
 }

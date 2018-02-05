@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.PlayerStatus
         /// <inheritdoc />
         internal PlayerStatusRequestMsgData() { }
         public override PlayerStatusMessageType PlayerStatusMessageType => PlayerStatusMessageType.Request;
+
+        public override string ClassName { get; } = nameof(PlayerStatusRequestMsgData);
     }
 }

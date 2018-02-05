@@ -1,5 +1,4 @@
-﻿using System.IO;
-using LunaCommon.Enums;
+﻿using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Data.PlayerConnection;
 using LunaCommon.Message.Server;
@@ -9,6 +8,8 @@ using Server.Log;
 using Server.Plugin;
 using Server.Server;
 using Server.System;
+using System;
+using System.IO;
 
 namespace Server.Message.ReceiveHandlers
 {
@@ -37,11 +38,12 @@ namespace Server.Message.ReceiveHandlers
             {
                 client.PlayerName = data.PlayerName;
                 client.PublicKey = data.PublicKey;
+                client.Id = Guid.NewGuid();
                 client.Authenticated = true;
 
                 LmpPluginHandler.FireOnClientAuthenticated(client);
 
-                LunaLog.Normal($"Client {data.PlayerName} handshook successfully, Version: {data.Version}");
+                LunaLog.Normal($"Client {data.PlayerName} handshook successfully, Version: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}");
 
                 CreatePlayerScenarioFiles(client, data.PlayerName);
 

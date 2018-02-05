@@ -50,11 +50,36 @@ namespace LunaClient.Utilities
             }
         }
 
-        public static ConfigNode Deserialize(byte[] data)
+        /// <summary>
+        /// Use this method to serialize to a given array and avoid generating garbage (if you pool the array given as parameter)
+        /// </summary>
+        public static void SerializeToArray(ConfigNode node, byte[] data, out int numBytes)
+        {
+            try
+            {
+                if (node == null) throw new ArgumentNullException(nameof(node));
+
+                //Call the insides of what ConfigNode would have called if we said Save(filename)
+                using (var stream = new MemoryStream(data))
+                using (var writer = new StreamWriter(stream))
+                {
+                    //we late bind to the instance by passing the instance as the first argument
+                    WriteNodeThunk(node, writer);
+                    numBytes = (int)stream.Position;
+                }
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"Error serializing vessel! Details {e}");
+                numBytes = 0;
+            }
+        }
+        
+        public static ConfigNode Deserialize(byte[] data, int numBytes)
         {
             if (data == null || data.Length == 0 || data.All(b => b == 0)) return null;
 
-            using (var stream = new MemoryStream(data))
+            using (var stream = new MemoryStream(data, 0, numBytes))
             using (var reader = new StreamReader(stream))
             {
                 var lines = new List<string>();

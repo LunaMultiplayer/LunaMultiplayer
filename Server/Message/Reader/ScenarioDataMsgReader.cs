@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using LunaCommon.Message.Data.Scenario;
+﻿using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
@@ -11,6 +8,8 @@ using Server.Log;
 using Server.Message.Reader.Base;
 using Server.Server;
 using Server.System;
+using System.IO;
+using System.Linq;
 
 namespace Server.Message.Reader
 {
@@ -26,11 +25,11 @@ namespace Server.Message.Reader
                     break;
                 case ScenarioMessageType.Data:
                     var data = (ScenarioDataMsgData)message;
-                    LunaLog.Debug($"Saving {data.ScenarioNameData.Length} scenario modules from {client.PlayerName}");
-                    foreach (var scenario in data.ScenarioNameData)
+                    LunaLog.Debug($"Saving {data.ScenarioCount} scenario modules from {client.PlayerName}");
+                    for (var i = 0; i < data.ScenarioCount; i++)
                     {
-                        var path = Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName, $"{scenario.Key}.txt");
-                        FileHandler.WriteToFile(path, scenario.Value);
+                        var path = Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName, $"{data.ScenariosData[i].Module}.txt");
+                        FileHandler.WriteToFile(path, data.ScenariosData[i].Data, data.ScenariosData[i].NumBytes);
                     }
                     break;
             }
@@ -39,10 +38,20 @@ namespace Server.Message.Reader
         private static void SendScenarioModules(ClientStructure client)
         {
             var scenarioDataArray = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName))
-                .Select(f => new KeyValuePair<string, byte[]>(Path.GetFileNameWithoutExtension(f), FileHandler.ReadFile(f)));
+                .Select(f =>
+                {
+                    var data = FileHandler.ReadFile(f);
+                    return new ScenarioInfo
+                    {
+                        Data = data,
+                        NumBytes = data.Length,
+                        Module = Path.GetFileNameWithoutExtension(f)
+                    };
+                }).ToArray();
 
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScenarioDataMsgData>();
-            msgData.ScenarioNameData = scenarioDataArray.ToArray();
+            msgData.ScenariosData = scenarioDataArray;
+            msgData.ScenarioCount = scenarioDataArray.Length;
 
             MessageQueuer.SendToClient<ScenarioSrvMsg>(client, msgData);
         }

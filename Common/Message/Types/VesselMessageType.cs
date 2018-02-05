@@ -2,15 +2,14 @@
 {
     public enum VesselMessageType
     {
-        ListRequest = 0,
-        ListReply = 1,
-        VesselsRequest = 2,
-        VesselsReply = 3,
-        Proto = 4,
-        Dock = 5,
-        Remove = 6,
-        Position = 7,
-        Flightstate = 8,
-        Change = 9
+        VesselsRequest = 0,
+        VesselsReply = 1,
+        Proto = 2,
+        Dock = 3,
+        Remove = 4,
+        Position = 5,
+        Flightstate = 6,
+        Update = 7,
+        Resource = 8
     }
 }

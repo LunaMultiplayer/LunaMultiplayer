@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Client
         internal ScenarioCliMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(ScenarioCliMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)ScenarioMessageType.Request] = typeof(ScenarioRequestMsgData),

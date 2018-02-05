@@ -27,8 +27,12 @@ using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselResourceSys;
+using LunaClient.Systems.VesselStateSys;
 using LunaClient.Systems.VesselSwitcherSys;
+using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
+using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 
@@ -42,6 +46,8 @@ namespace LunaClient.Systems.Network
 
         #endregion
 
+        public override string SystemName { get; } = nameof(NetworkSystem);
+
         private static bool _enabled = true;
 
         /// <summary>
@@ -50,20 +56,25 @@ namespace LunaClient.Systems.Network
         public override bool Enabled
         {
             get => _enabled;
-            set => _enabled |= value;
+            set
+            {
+                base.Enabled |= value;
+                _enabled |= value;
+            }
         }
 
-        #region Constructor
+        #region Base overrides
 
-        public NetworkSystem()
+        protected override void OnEnabled()
         {
-            //We setup the routine in the constructor as this system is always enabled
+            base.OnEnabled();
+
             SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, NetworkUpdate));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ShowDisconnectMessage));
         }
 
         #endregion
-        
+
         #region Update method
 
         private static void NetworkUpdate()
@@ -79,30 +90,47 @@ namespace LunaClient.Systems.Network
                     SystemsContainer.Get<MainSystem>().Status = "Connected";
                     MainSystem.NetworkState = ClientState.Handshaking;
                     NetworkSimpleMessageSender.SendHandshakeRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.Handshaking:
-                    SystemsContainer.Get<MainSystem>().Status = "Connection successful, handshaking";
+                    SystemsContainer.Get<MainSystem>().Status = "Waiting for handshake challenge";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.Connected;
+                    break;
+                case ClientState.HandshakeChallengeReceived:
+                    SystemsContainer.Get<MainSystem>().Status = "Challenge received, authenticating";
+                    MainSystem.NetworkState = ClientState.Authenticating;
+                    SystemsContainer.Get<HandshakeSystem>().SendHandshakeChallengeResponse();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.Authenticating:
                     SystemsContainer.Get<MainSystem>().Status = "Connection successful, authenticating";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.HandshakeChallengeReceived;
                     break;
                 case ClientState.Authenticated:
                     SystemsContainer.Get<MainSystem>().Status = "Handshaking successful";
                     SystemsContainer.Get<KerbalSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingKerbals;
                     NetworkSimpleMessageSender.SendKerbalsRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingKerbals:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing kerbals";
+                    if (ConnectionIsStuck(5000))
+                        MainSystem.NetworkState = ClientState.Authenticated;
                     break;
                 case ClientState.KerbalsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Kerbals synced";
                     SystemsContainer.Get<SettingsSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingSettings;
                     NetworkSimpleMessageSender.SendSettingsRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingSettings:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing settings";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.KerbalsSynced;
                     break;
                 case ClientState.SettingsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Settings synced";
@@ -111,28 +139,37 @@ namespace LunaClient.Systems.Network
                         SystemsContainer.Get<WarpSystem>().Enabled = true;
                         MainSystem.NetworkState = ClientState.SyncingWarpsubspaces;
                         NetworkSimpleMessageSender.SendWarpSubspacesRequest();
+                        _lastStateTime = DateTime.Now;
                     }
                     break;
                 case ClientState.SyncingWarpsubspaces:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing warp subspaces";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.SettingsSynced;
                     break;
                 case ClientState.WarpsubspacesSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Warp subspaces synced";
                     SystemsContainer.Get<PlayerColorSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingColors;
                     NetworkSimpleMessageSender.SendColorsRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingColors:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing player colors";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.WarpsubspacesSynced;
                     break;
                 case ClientState.ColorsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Player colors synced";
                     SystemsContainer.Get<FlagSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingFlags;
                     NetworkSimpleMessageSender.SendFlagsRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingFlags:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing flags";
+                    if (ConnectionIsStuck(5000))
+                        MainSystem.NetworkState = ClientState.ColorsSynced;
                     break;
                 case ClientState.FlagsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Flags synced";
@@ -140,72 +177,96 @@ namespace LunaClient.Systems.Network
                     SystemsContainer.Get<PlayerConnectionSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingPlayers;
                     NetworkSimpleMessageSender.SendPlayersRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingPlayers:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing players";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.FlagsSynced;
                     break;
                 case ClientState.PlayersSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Players synced";
                     SystemsContainer.Get<ScenarioSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingScenarios;
                     NetworkSimpleMessageSender.SendScenariosRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingScenarios:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing scenarios";
+                    if (ConnectionIsStuck(10000))
+                        MainSystem.NetworkState = ClientState.PlayersSynced;
                     break;
-                case ClientState.ScneariosSynced:
+                case ClientState.ScenariosSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Scenarios synced";
                     SystemsContainer.Get<CraftLibrarySystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingCraftlibrary;
                     NetworkSimpleMessageSender.SendCraftLibraryRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingCraftlibrary:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing craft library";
+                    if (ConnectionIsStuck(10000))
+                        MainSystem.NetworkState = ClientState.ScenariosSynced;
                     break;
                 case ClientState.CraftlibrarySynced:
                     SystemsContainer.Get<MainSystem>().Status = "Craft library synced";
                     SystemsContainer.Get<ChatSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingChat;
                     NetworkSimpleMessageSender.SendChatRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingChat:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing chat";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.CraftlibrarySynced;
                     break;
                 case ClientState.ChatSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Chat synced";
                     SystemsContainer.Get<LockSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingLocks;
                     NetworkSimpleMessageSender.SendLocksRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingLocks:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing locks";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.ChatSynced;
                     break;
                 case ClientState.LocksSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Locks synced";
                     SystemsContainer.Get<AdminSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingAdmins;
                     NetworkSimpleMessageSender.SendAdminsRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingAdmins:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing admins";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.LocksSynced;
                     break;
                 case ClientState.AdminsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Admins synced";
                     SystemsContainer.Get<GroupSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingGroups;
                     NetworkSimpleMessageSender.SendGroupListRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingGroups:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing groups";
+                    if (ConnectionIsStuck())
+                        MainSystem.NetworkState = ClientState.AdminsSynced;
                     break;
                 case ClientState.GroupsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Groups synced";
                     SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingVessels;
-                    NetworkSimpleMessageSender.SendVesselListRequest();
+                    NetworkSimpleMessageSender.SendVesselsRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingVessels:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing vessels";
+                    if (ConnectionIsStuck(60000))
+                        MainSystem.NetworkState = ClientState.GroupsSynced;
                     break;
                 case ClientState.VesselsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Vessels synced";
@@ -214,9 +275,8 @@ namespace LunaClient.Systems.Network
                     MainSystem.NetworkState = ClientState.Starting;
                     break;
                 case ClientState.Starting:
-
                     SystemsContainer.Get<MainSystem>().Status = "Running";
-
+                    CommonUtil.Reserve20Mb();
                     LunaLog.Log("[LMP]: All systems up and running. Поехали!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
@@ -231,6 +291,9 @@ namespace LunaClient.Systems.Network
                         SystemsContainer.Get<VesselDockSystem>().Enabled = true;
                         SystemsContainer.Get<VesselSwitcherSystem>().Enabled = true;
                         SystemsContainer.Get<VesselRangeSystem>().Enabled = true;
+                        SystemsContainer.Get<VesselStateSystem>().Enabled = true;
+                        SystemsContainer.Get<VesselResourceSystem>().Enabled = true;
+                        SystemsContainer.Get<VesselUpdateSystem>().Enabled = true;
                         SystemsContainer.Get<GameSceneSystem>().Enabled = true;
                         SystemsContainer.Get<AsteroidSystem>().Enabled = true;
                         SystemsContainer.Get<ToolbarSystem>().Enabled = true;
@@ -259,6 +322,21 @@ namespace LunaClient.Systems.Network
 
         #endregion
 
+        #region Private methods
+
+
+        private static DateTime _lastStateTime = DateTime.MinValue;
+        private static bool ConnectionIsStuck(int maxIdleMiliseconds = 2000)
+        {
+            if ((DateTime.Now - _lastStateTime).TotalMilliseconds > maxIdleMiliseconds)
+            {
+                LunaLog.LogWarning($"Connection got stuck while connecting after waiting {maxIdleMiliseconds} ms, resending last request!");
+                return true;
+            }
+
+            return false;
+        }
+
         private static void ShowDisconnectMessage()
         {
             if (HighLogic.LoadedScene < GameScenes.SPACECENTER)
@@ -269,5 +347,7 @@ namespace LunaClient.Systems.Network
                 ScreenMessages.PostScreenMessage("You have been disconnected!", 2f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
+
+        #endregion
     }
 }

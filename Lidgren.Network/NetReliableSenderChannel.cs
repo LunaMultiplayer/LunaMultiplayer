@@ -42,7 +42,7 @@ namespace Lidgren.Network
 
 		internal override int GetAllowedSends()
 		{
-			var retval = m_windowSize - ((m_sendStart + NetConstants.NumSequenceNumbers) - m_windowStart) % NetConstants.NumSequenceNumbers;
+			int retval = m_windowSize - ((m_sendStart + NetConstants.NumSequenceNumbers) - m_windowStart) % NetConstants.NumSequenceNumbers;
 			NetException.Assert(retval >= 0 && retval <= m_windowSize);
 			return retval;
 		}
@@ -50,7 +50,7 @@ namespace Lidgren.Network
 		internal override void Reset()
 		{
 			m_receivedAcks.Clear();
-			for (var i = 0; i < m_storedMessages.Length; i++)
+			for (int i = 0; i < m_storedMessages.Length; i++)
 				m_storedMessages[i].Reset();
 			m_anyStoredResends = false;
 			m_queuedSends.Clear();
@@ -74,16 +74,16 @@ namespace Lidgren.Network
 			// resends
 			//
 			m_anyStoredResends = false;
-			for (var i = 0; i < m_storedMessages.Length; i++)
+			for (int i = 0; i < m_storedMessages.Length; i++)
 			{
 				var storedMsg = m_storedMessages[i];
-				var om = storedMsg.Message;
+				NetOutgoingMessage om = storedMsg.Message;
 				if (om == null)
 					continue;
 
 				m_anyStoredResends = true;
 
-				var t = storedMsg.LastSent;
+				double t = storedMsg.LastSent;
 				if (t > 0 && (now - t) > m_resendDelay)
 				{
 					// deduce sequence number
@@ -110,7 +110,7 @@ namespace Lidgren.Network
 				}
 			}
 
-			var num = GetAllowedSends();
+			int num = GetAllowedSends();
 			if (num < 1)
 				return;
 
@@ -127,7 +127,7 @@ namespace Lidgren.Network
 
 		private void ExecuteSend(double now, NetOutgoingMessage message)
 		{
-			var seqNr = m_sendStart;
+			int seqNr = m_sendStart;
 			m_sendStart = (m_sendStart + 1) % NetConstants.NumSequenceNumbers;
 
 			// must increment recycle count here, since it's decremented in QueueSendMessage and we want to keep it for the future in case or resends
@@ -136,7 +136,7 @@ namespace Lidgren.Network
 
 			m_connection.QueueSendMessage(message, seqNr);
 
-			var storeIndex = seqNr % m_windowSize;
+			int storeIndex = seqNr % m_windowSize;
 			NetException.Assert(m_storedMessages[storeIndex].Message == null);
 
 			m_storedMessages[storeIndex].NumSent++;
@@ -180,7 +180,7 @@ namespace Lidgren.Network
 		internal override void ReceiveAcknowledge(double now, int seqNr)
 		{
 			// late (dupe), on time or early ack?
-			var relate = NetUtility.RelativeSequenceNumber(seqNr, m_windowStart);
+			int relate = NetUtility.RelativeSequenceNumber(seqNr, m_windowStart);
 
 			if (relate < 0)
 			{
@@ -227,7 +227,7 @@ namespace Lidgren.Network
 
 			//m_connection.m_peer.LogDebug("Received early ack for #" + seqNr);
 
-			var sendRelate = NetUtility.RelativeSequenceNumber(seqNr, m_sendStart);
+			int sendRelate = NetUtility.RelativeSequenceNumber(seqNr, m_sendStart);
 			if (sendRelate <= 0)
 			{
 				// yes, we've sent this message - it's an early (but valid) ack
@@ -248,7 +248,7 @@ namespace Lidgren.Network
 			}
 
 			// Ok, lets resend all missing acks
-			var rnr = seqNr;
+			int rnr = seqNr;
 			do
 			{
 				rnr--;
@@ -261,12 +261,12 @@ namespace Lidgren.Network
 				}
 				else
 				{
-					var slot = rnr % m_windowSize;
+					int slot = rnr % m_windowSize;
 					NetException.Assert(m_storedMessages[slot].Message != null);
 					if (m_storedMessages[slot].NumSent == 1)
 					{
 						// just sent once; resend immediately since we found gap in ack sequence
-						var rmsg = m_storedMessages[slot].Message;
+						NetOutgoingMessage rmsg = m_storedMessages[slot].Message;
 						//m_connection.m_peer.LogVerbose("Resending #" + rnr + " (" + rmsg + ")");
 
 						if (now - m_storedMessages[slot].LastSent < (m_resendDelay * 0.35))

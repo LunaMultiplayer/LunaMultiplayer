@@ -14,41 +14,40 @@ namespace LunaClient.Systems.Asteroid
         #region Fields
 
         private ScenarioDiscoverableObjects _scenarioDiscoverableObjects;
+
         public ScenarioDiscoverableObjects ScenarioController
         {
             get
             {
                 if (_scenarioDiscoverableObjects == null)
-                {
-                    foreach (var psm in HighLogic.CurrentGame.scenarios
-                        .Where(psm => psm?.moduleName == "ScenarioDiscoverableObjects" && psm.moduleRef != null))
-                    {
-                        _scenarioDiscoverableObjects = (ScenarioDiscoverableObjects)psm.moduleRef;
-                        _scenarioDiscoverableObjects.spawnInterval = float.MaxValue;
-                        _scenarioDiscoverableObjects.lastSeed = Random.Range(0, 1000000);
-                    }
-                }
+                    _scenarioDiscoverableObjects = Object.FindObjectsOfType<ScenarioDiscoverableObjects>().FirstOrDefault();
+
                 return _scenarioDiscoverableObjects;
             }
-            set => _scenarioDiscoverableObjects = value;
         }
+
 
         public List<string> ServerAsteroids { get; } = new List<string>();
         public Dictionary<string, string> ServerAsteroidTrackStatus { get; } = new Dictionary<string, string>();
         private AsteroidEventHandler AsteroidEventHandler { get; } = new AsteroidEventHandler();
 
+        public bool AsteroidSystemReady => Enabled && Time.timeSinceLevelLoad > 5f && HighLogic.LoadedScene >= GameScenes.FLIGHT;
+
         #endregion
 
         #region Base overrides
+
+        public override string SystemName { get; } = nameof(AsteroidSystem);
 
         protected override void OnEnabled()
         {
             base.OnEnabled();
             GameEvents.onAsteroidSpawned.Add(AsteroidEventHandler.OnAsteroidSpawned);
-            
+
+            SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, FixAsteroidIntervalAndSeed));
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetAsteroidLock));
             SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, CheckAsteroidsToSpawn));
-            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, CheckAsteroidsStatus));
+            SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, CheckAsteroidsStatus));
         }
 
         protected override void OnDisabled()
@@ -65,9 +64,24 @@ namespace LunaClient.Systems.Asteroid
         #region Update methods
 
         /// <summary>
+        /// Here we try to fix the SQUAD error with the seed value and also we stop the automatic asteroid spawner
+        /// </summary>
+        private void FixAsteroidIntervalAndSeed()
+        {
+            if (!Enabled) return;
+
+            if (ScenarioController != null)
+            {
+                ScenarioController.spawnOddsAgainst = int.MaxValue;
+                ScenarioController.spawnInterval = float.MaxValue;
+                ScenarioController.lastSeed = Random.Range(0, 1000000);
+            }
+        }
+
+        /// <summary>
         /// Try to acquire the asteroid-spawning lock if nobody else has it.
         /// </summary>
-        public void TryGetAsteroidLock()
+        private static void TryGetAsteroidLock()
         {
             if (!LockSystem.LockQuery.AsteroidLockExists() && SystemsContainer.Get<WarpSystem>().CurrentSubspace == 0)
                 SystemsContainer.Get<LockSystem>().AcquireAsteroidLock();
@@ -79,10 +93,10 @@ namespace LunaClient.Systems.Asteroid
         /// <returns></returns>
         private void CheckAsteroidsToSpawn()
         {
-            if (!Enabled) return;
+            if (!Enabled || !AsteroidSystemReady) return;
 
-            if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName) && Time.timeSinceLevelLoad > 1f)
-            {            
+            if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
+            {
                 //We have the spawn lock so spawn some asteroids if there are less than expected
                 var beforeSpawn = GetAsteroidCount();
                 var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;
@@ -118,7 +132,7 @@ namespace LunaClient.Systems.Asteroid
                     {
                         LunaLog.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
                         ServerAsteroidTrackStatus[asteroid.id.ToString()] = asteroid.DiscoveryInfo.trackingStatus.Value;
-                        SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid);
+                        SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid, true);
                     }
                 }
             }
@@ -159,11 +173,7 @@ namespace LunaClient.Systems.Asteroid
 
         public int GetAsteroidCount()
         {
-            var seenAsteroids = GetCurrentAsteroids().Select(a => a.id.ToString()).Count();
-            seenAsteroids += HighLogic.CurrentGame.flightState.protoVessels
-                .Where(a => ProtoVesselIsAsteroid(a) && !GetCurrentAsteroids().Select(ast => ast.id.ToString()).Contains(a.vesselID.ToString()))
-                .Select(pv => pv.vesselID.ToString()).Count();
-
+            var seenAsteroids = GetCurrentAsteroids().Count();
             return seenAsteroids;
         }
 

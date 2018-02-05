@@ -4,6 +4,7 @@ using LunaClient.Windows.Chat;
 using LunaClient.Windows.Connection;
 using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
+using LunaClient.Windows.Locks;
 using LunaClient.Windows.Mod;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.ServerList;
@@ -11,6 +12,9 @@ using LunaClient.Windows.Status;
 using LunaClient.Windows.Systems;
 using LunaClient.Windows.UniverseConverter;
 using System;
+using UnityEngine;
+
+// ReSharper disable ForCanBeConvertedToForeach
 
 namespace LunaClient.Windows
 {
@@ -24,6 +28,7 @@ namespace LunaClient.Windows
             WindowsContainer.Get<CraftLibraryWindow>(),
             WindowsContainer.Get<DebugWindow>(),
             WindowsContainer.Get<SystemsWindow>(),
+            WindowsContainer.Get<LocksWindow>(),
             WindowsContainer.Get<ModWindow>(),
             WindowsContainer.Get<OptionsWindow>(),
             WindowsContainer.Get<UniverseConverterWindow>(),
@@ -32,11 +37,13 @@ namespace LunaClient.Windows
 
         public static void Update()
         {
-            foreach (var window in Windows)
+            for (var i = 0; i < Windows.Length; i++)
             {
                 try
                 {
-                    window.Update();
+                    Profiler.BeginSample(Windows[i].WindowName);
+                    Windows[i].Update();
+                    Profiler.EndSample();
                 }
                 catch (Exception e)
                 {
@@ -47,11 +54,13 @@ namespace LunaClient.Windows
 
         public static void OnGui()
         {
-            foreach (var window in Windows)
+            for (var i = 0; i < Windows.Length; i++)
             {
                 try
                 {
-                    window.OnGui();
+                    Profiler.BeginSample(Windows[i].WindowName);
+                    Windows[i].OnGui();
+                    Profiler.EndSample();
                 }
                 catch (Exception e)
                 {

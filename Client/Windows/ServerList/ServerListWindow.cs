@@ -2,6 +2,7 @@
 using LunaClient.Network;
 using LunaClient.Utilities;
 using LunaCommon;
+using LunaCommon.Enums;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,6 +10,14 @@ namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow : Window<ServerListWindow>
     {
+        private static bool _display;
+        public override bool Display
+        {
+            get => _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState == ClientState.Disconnected &&
+                   HighLogic.LoadedScene < GameScenes.SPACECENTER;
+            set => _display = value;
+        }
+
         public IEnumerable<ServerInfo> DisplayedServers { get; set; } = NetworkServerList.Servers.Values;
         protected GUIStyle BigLabelStyle { get; set; }
         protected Vector2 VerticalScrollPosition { get; set; }

@@ -20,11 +20,14 @@ namespace Server.System
             {
                 msgData.ModControlMode = GeneralSettings.SettingsStore.ModControl;
                 msgData.ServerStartTime = ServerContext.StartTime;
+                msgData.PlayerId = client.Id;
+
                 if (GeneralSettings.SettingsStore.ModControl != ModControlMode.Disabled)
                 {
                     if (!FileHandler.FileExists(ServerContext.ModFilePath))
                         ModFileSystem.GenerateNewModFile();
                     msgData.ModFileData = FileHandler.ReadFile(ServerContext.ModFilePath);
+                    msgData.NumBytes = msgData.ModFileData.Length;
                 }
             }
 

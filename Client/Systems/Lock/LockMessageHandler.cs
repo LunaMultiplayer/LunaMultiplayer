@@ -23,12 +23,13 @@ namespace LunaClient.Systems.Lock
                         var data = (LockListReplyMsgData)msgData;
                         LockSystem.LockStore.ClearAllLocks();
 
-                        foreach (var lockKey in data.Locks)
+                        for (var i = 0; i < data.LocksCount; i++)
                         {
-                            LockSystem.LockStore.AddOrUpdateLock(lockKey);
+                            LockSystem.LockStore.AddOrUpdateLock(data.Locks[i]);
                         }
 
-                        MainSystem.NetworkState = ClientState.LocksSynced;
+                        if (MainSystem.NetworkState < ClientState.LocksSynced)
+                            MainSystem.NetworkState = ClientState.LocksSynced;
                     }
                     break;
                 case LockMessageType.Acquire:

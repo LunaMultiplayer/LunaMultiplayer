@@ -1,6 +1,6 @@
-using System.Collections.Generic;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.Admin
 {
@@ -13,6 +13,8 @@ namespace LunaClient.Systems.Admin
         #endregion
 
         #region Base overrides
+
+        public override string SystemName { get; } = nameof(AdminSystem);
 
         protected override void OnDisabled()
         {

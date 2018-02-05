@@ -9,18 +9,24 @@ namespace LunaClient.Systems.Facility
     {
         public void FacilityUpgraded(UpgradeableFacility building, int level)
         {
+            if (System.BuildingIdToIgnore == building.id) return;
+
             System.MessageSender.SendFacilityUpgradeMsg(building.id, level);
             SystemsContainer.Get<ScenarioSystem>().SendScenarioModules();
         }
 
         public void FacilityRepaired(DestructibleBuilding building)
         {
+            if (System.BuildingIdToIgnore == building.id) return;
+
             System.MessageSender.SendFacilityRepairMsg(building.id);
             SystemsContainer.Get<ScenarioSystem>().SendScenarioModules();
         }
 
         public void FacilityCollapsing(DestructibleBuilding building)
         {
+            if (System.BuildingIdToIgnore == building.id) return;
+
             //Don't send this kind of messages when spectating as they are not accurate
             if (!VesselCommon.IsSpectating)
             {

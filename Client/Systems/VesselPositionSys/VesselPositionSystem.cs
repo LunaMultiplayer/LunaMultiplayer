@@ -36,10 +36,15 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public static Queue<Guid> VesselsToRemove { get; } = new Queue<Guid>();
 
+        private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
+        private List<Vessel>AbandonedVesselsToUpdate { get; } = new List<Vessel>();
+
         #endregion
 
         #region Base overrides
-        
+
+        public override string SystemName { get; } = nameof(VesselPositionSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
@@ -61,6 +66,7 @@ namespace LunaClient.Systems.VesselPositionSys
             CurrentVesselUpdate.Clear();
             
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
         }
         
         private static void HandleVesselUpdates()
@@ -95,6 +101,10 @@ namespace LunaClient.Systems.VesselPositionSys
             }
         }
 
+        #endregion
+
+        #region Update methods
+
         /// <summary>
         /// Send updates for vessels that we own the update lock. And also send it for the abandoned ones
         /// </summary>
@@ -102,10 +112,12 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
             {
-                var secondaryVesselsToUpdate = VesselCommon.GetSecondaryVessels();
-                foreach (var secondaryVessel in secondaryVesselsToUpdate)
+                SecondaryVesselsToUpdate.Clear();
+                SecondaryVesselsToUpdate.AddRange(VesselCommon.GetSecondaryVessels());
+
+                for (var i = 0; i < SecondaryVesselsToUpdate.Count; i++)
                 {
-                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
+                    MessageSender.SendVesselPositionUpdate(SecondaryVesselsToUpdate[i]);
                 }
             }
         }
@@ -117,10 +129,12 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
             {
-                var abandonedVesselsToUpdate = VesselCommon.GetUnloadedSecondaryVessels();
-                foreach (var secondaryVessel in abandonedVesselsToUpdate)
+                AbandonedVesselsToUpdate.Clear();
+                AbandonedVesselsToUpdate.AddRange(VesselCommon.GetUnloadedSecondaryVessels());
+
+                for (var i = 0; i < AbandonedVesselsToUpdate.Count; i++)
                 {
-                    MessageSender.SendVesselPositionUpdate(secondaryVessel);
+                    MessageSender.SendVesselPositionUpdate(AbandonedVesselsToUpdate[i]);
                 }
             }
         }
@@ -139,6 +153,18 @@ namespace LunaClient.Systems.VesselPositionSys
                 CurrentVesselUpdate.TryGetValue(vesselId, out vesselPosition) ?
                     vesselPosition.LatLonAlt :
                     null;
+        }
+
+        /// <summary>
+        /// Gets the latest received ref body of a vessel
+        /// </summary>
+        public int GetLatestVesselRefBody(Guid vesselId)
+        {
+            return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ?
+                vesselPosition.BodyIndex :
+                CurrentVesselUpdate.TryGetValue(vesselId, out vesselPosition) ?
+                    vesselPosition.BodyIndex :
+                    int.MinValue;
         }
 
         /// <summary>

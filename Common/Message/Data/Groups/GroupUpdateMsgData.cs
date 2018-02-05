@@ -1,4 +1,4 @@
-﻿using LunaCommon.Groups;
+﻿using Lidgren.Network;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Groups
@@ -9,6 +9,27 @@ namespace LunaCommon.Message.Data.Groups
         internal GroupUpdateMsgData() { }
         public override GroupMessageType GroupMessageType => GroupMessageType.GroupUpdate;
 
-        public Group Group { get; set; }
+        public Group Group = new Group();
+
+        public override string ClassName { get; } = nameof(GroupUpdateMsgData);
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
+        {
+            base.InternalSerialize(lidgrenMsg);
+
+            Group.Serialize(lidgrenMsg);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
+        {
+            base.InternalDeserialize(lidgrenMsg);
+
+            Group.Deserialize(lidgrenMsg);
+        }
+
+        internal override int InternalGetMessageSize()
+        {
+            return base.InternalGetMessageSize() + Group.GetByteCount();
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace Server.Message.Reader
             var data = (ModMsgData) message;
             if (data.Relay)
                 MessageQueuer.RelayMessage<ModSrvMsg>(client, data);
-            LmpModInterface.OnModMessageReceived(client, data.ModName, data.Data);
+            LmpModInterface.OnModMessageReceived(client, data.ModName, data.Data, data.NumBytes);
         }
     }
 }

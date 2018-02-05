@@ -17,7 +17,7 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public static ulong GetPlatformSeed(int seedInc)
 		{
-			var seed = (ulong)Environment.TickCount + (ulong)seedInc;
+			ulong seed = (ulong)Environment.TickCount + (ulong)seedInc;
 			return seed ^ ((ulong)(new object().GetHashCode()) << 32);
 		}
 		

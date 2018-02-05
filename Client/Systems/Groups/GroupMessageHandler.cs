@@ -22,9 +22,9 @@ namespace LunaClient.Systems.Groups
                 case GroupMessageType.ListResponse:
                     {
                         var data = (GroupListResponseMsgData)msgData;
-                        foreach (var group in data.Groups)
+                        for (var i = 0; i < data.GroupsCount; i++)
                         {
-                            System.Groups.TryAdd(group.Name, group);
+                            System.Groups.TryAdd(data.Groups[i].Name, data.Groups[i]);
                         }
                         MainSystem.NetworkState = ClientState.GroupsSynced;
                         break;

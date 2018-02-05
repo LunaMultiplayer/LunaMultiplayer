@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Time;
@@ -13,21 +12,23 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (!(msg.Data is VesselPositionMsgData msgData)) return null;
 
-            return new VesselPositionUpdate
+            var upd = new VesselPositionUpdate
             {
                 VesselId = msgData.VesselId,
-                BodyName = msgData.BodyName,
-                SrfRelRotation = msgData.SrfRelRotation,
-                TransformPosition = msgData.TransformPosition,
-                Velocity = msgData.Velocity,
-                LatLonAlt = msgData.LatLonAlt,
-                Landed = msgData.Landed,
-                Splashed = msgData.Splashed,
-                Com = msgData.Com,
-                NormalVector = msgData.NormalVector,
-                Orbit = msgData.Orbit,
+                BodyIndex = msgData.BodyIndex,
+                HeightFromTerrain = msgData.HeightFromTerrain,
                 TimeStamp = msgData.TimeStamp
             };
+
+            Array.Copy(msgData.SrfRelRotation, upd.SrfRelRotation, 4);
+            Array.Copy(msgData.TransformPosition, upd.TransformPosition, 3);
+            Array.Copy(msgData.Velocity, upd.Velocity, 3);
+            Array.Copy(msgData.LatLonAlt, upd.LatLonAlt, 3);
+            Array.Copy(msgData.Com, upd.Com, 3);
+            Array.Copy(msgData.NormalVector, upd.NormalVector, 3);
+            Array.Copy(msgData.Orbit, upd.Orbit, 8);
+
+            return upd;
         }
 
         public static VesselPositionUpdate UpdateFromMessage(IServerMessageBase msg, VesselPositionUpdate update)
@@ -35,17 +36,17 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!(msg.Data is VesselPositionMsgData msgData)) return null;
 
             update.VesselId = msgData.VesselId;
-            update.BodyName = msgData.BodyName;
-            update.SrfRelRotation = msgData.SrfRelRotation;
-            update.TransformPosition = msgData.TransformPosition;
-            update.Velocity = msgData.Velocity;
-            update.LatLonAlt = msgData.LatLonAlt;
-            update.Landed = msgData.Landed;
-            update.Splashed = msgData.Splashed;
-            update.Com = msgData.Com;
-            update.NormalVector = msgData.NormalVector;
-            update.Orbit = msgData.Orbit;
+            update.BodyIndex = msgData.BodyIndex;
+            update.HeightFromTerrain = msgData.HeightFromTerrain;
             update.TimeStamp = msgData.TimeStamp;
+
+            Array.Copy(msgData.SrfRelRotation, update.SrfRelRotation, 4);
+            Array.Copy(msgData.TransformPosition, update.TransformPosition, 3);
+            Array.Copy(msgData.Velocity, update.Velocity, 3);
+            Array.Copy(msgData.LatLonAlt, update.LatLonAlt, 3);
+            Array.Copy(msgData.Com, update.Com, 3);
+            Array.Copy(msgData.NormalVector, update.NormalVector, 3);
+            Array.Copy(msgData.Orbit, update.Orbit, 8);
 
             return update;
         }
@@ -53,91 +54,108 @@ namespace LunaClient.Systems.VesselPositionSys
         public static VesselPositionUpdate UpdateFromUpdate(VesselPositionUpdate update, VesselPositionUpdate updateToUpdate)
         {
             updateToUpdate.VesselId = update.VesselId;
-            updateToUpdate.BodyName = update.BodyName;
-            updateToUpdate.SrfRelRotation = update.SrfRelRotation;
-            updateToUpdate.TransformPosition = update.TransformPosition;
-            updateToUpdate.Velocity = update.Velocity;
-            updateToUpdate.LatLonAlt = update.LatLonAlt;
-            updateToUpdate.Landed = update.Landed;
-            updateToUpdate.Splashed = update.Splashed;
-            updateToUpdate.Com = update.Com;
-            updateToUpdate.NormalVector = update.NormalVector;
-            updateToUpdate.Orbit = update.Orbit;
+            updateToUpdate.BodyIndex = update.BodyIndex;
+            updateToUpdate.HeightFromTerrain = update.HeightFromTerrain;
             updateToUpdate.TimeStamp = update.TimeStamp;
+
+            Array.Copy(update.SrfRelRotation, updateToUpdate.SrfRelRotation, 4);
+            Array.Copy(update.TransformPosition, updateToUpdate.TransformPosition, 3);
+            Array.Copy(update.Velocity, updateToUpdate.Velocity, 3);
+            Array.Copy(update.LatLonAlt, updateToUpdate.LatLonAlt, 3);
+            Array.Copy(update.Com, updateToUpdate.Com, 3);
+            Array.Copy(update.NormalVector, updateToUpdate.NormalVector, 3);
+            Array.Copy(update.Orbit, updateToUpdate.Orbit, 8);
 
             return update;
         }
-
-        public static VesselCliMsg CreateMessageFromVessel(Vessel vessel)
+        
+        public static VesselPositionMsgData CreateMessageFromVessel(Vessel vessel)
         {
             var msgData = SystemBase.MessageFactory.CreateNewMessageData<VesselPositionMsgData>();
-            var msg = SystemBase.MessageFactory.CreateNew<VesselCliMsg>(msgData);
             try
             {
                 msgData.VesselId = vessel.id;
-                msgData.BodyName = vessel.mainBody.bodyName;
+                msgData.BodyIndex = vessel.mainBody.flightGlobalsIndex;
 
-                msgData.SrfRelRotation = new[]
-                {
-                    vessel.srfRelRotation.x,
-                    vessel.srfRelRotation.y,
-                    vessel.srfRelRotation.z,
-                    vessel.srfRelRotation.w
-                };
-                msgData.TransformPosition = new[]
-                {
-                    (double)vessel.ReferenceTransform.position.x,
-                    (double)vessel.ReferenceTransform.position.y,
-                    (double)vessel.ReferenceTransform.position.z
-                };
-                msgData.Velocity = new[]
-                {
-                    (double)vessel.velocityD.x,
-                    (double)vessel.velocityD.y,
-                    (double)vessel.velocityD.z,
-                };
-                msgData.LatLonAlt = new[]
-                {
-                    vessel.latitude,
-                    vessel.longitude,
-                    vessel.altitude,
-                };
-                msgData.Com = new[]
-                {
-                    (double)vessel.CoM.x,
-                    (double)vessel.CoM.y,
-                    (double)vessel.CoM.z,
-                };
-                msgData.NormalVector = new[]
-                {
-                    (double)vessel.terrainNormal.x,
-                    (double)vessel.terrainNormal.y,
-                    (double)vessel.terrainNormal.z,
-                };
-                msgData.Orbit = new[]
-                {
-                    vessel.orbit.inclination,
-                    vessel.orbit.eccentricity,
-                    vessel.orbit.semiMajorAxis,
-                    vessel.orbit.LAN,
-                    vessel.orbit.argumentOfPeriapsis,
-                    vessel.orbit.meanAnomalyAtEpoch,
-                    vessel.orbit.epoch,
-                    vessel.orbit.referenceBody.flightGlobalsIndex
-                };
-                msgData.Landed = vessel.Landed;
-                msgData.Splashed = vessel.Splashed;
+                SetSrfRelRotation(vessel, msgData);
+                SetTransformPosition(vessel, msgData);
+                SetVelocity(vessel, msgData);
+                SetLatLonAlt(vessel, msgData);
+                GetCom(vessel, msgData);
+                SetNormalVector(vessel, msgData);
+                SetOrbit(vessel, msgData);
+
+                msgData.HeightFromTerrain = vessel.heightFromTerrain;
                 msgData.TimeStamp = LunaTime.UtcNow.Ticks;
-
-                return SystemBase.MessageFactory.CreateNew<VesselCliMsg>(msgData);
+                
+                return msgData;
             }
             catch (Exception e)
             {
-                msg.Recycle();
                 LunaLog.Log($"[LMP]: Failed to get vessel position update, exception: {e}");
             }
 
             return null;
         }
+
+        #region Set message values
+
+        private static void SetOrbit(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.Orbit[0] = vessel.orbit.inclination;
+            msgData.Orbit[1] = vessel.orbit.eccentricity;
+            msgData.Orbit[2] = vessel.orbit.semiMajorAxis;
+            msgData.Orbit[3] = vessel.orbit.LAN;
+            msgData.Orbit[4] = vessel.orbit.argumentOfPeriapsis;
+            msgData.Orbit[5] = vessel.orbit.meanAnomalyAtEpoch;
+            msgData.Orbit[6] = vessel.orbit.epoch;
+            msgData.Orbit[7] = vessel.orbit.referenceBody.flightGlobalsIndex;
+        }
+
+        private static void SetNormalVector(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.NormalVector[0] = vessel.terrainNormal.x;
+            msgData.NormalVector[1] = vessel.terrainNormal.y;
+            msgData.NormalVector[2] = vessel.terrainNormal.z;
+        }
+
+        private static void GetCom(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.Com[0] = vessel.CoM.x;
+            msgData.Com[1] = vessel.CoM.y;
+            msgData.Com[2] = vessel.CoM.z;
+        }
+
+        private static void SetLatLonAlt(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.LatLonAlt[0] = vessel.latitude;
+            msgData.LatLonAlt[1] = vessel.longitude;
+            msgData.LatLonAlt[2] = vessel.altitude;
+        }
+
+        private static void SetVelocity(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            Vector3d srfVel = UnityEngine.Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.srf_velocity;
+            msgData.Velocity[0] = srfVel.x;
+            msgData.Velocity[1] = srfVel.y;
+            msgData.Velocity[2] = srfVel.z;
+        }
+
+        private static void SetTransformPosition(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.TransformPosition[0] = vessel.ReferenceTransform.position.x;
+            msgData.TransformPosition[1] = vessel.ReferenceTransform.position.y;
+            msgData.TransformPosition[2] = vessel.ReferenceTransform.position.z;
+        }
+
+        private static void SetSrfRelRotation(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.SrfRelRotation[0] = vessel.srfRelRotation.x;
+            msgData.SrfRelRotation[1] = vessel.srfRelRotation.y;
+            msgData.SrfRelRotation[2] = vessel.srfRelRotation.z;
+            msgData.SrfRelRotation[3] = vessel.srfRelRotation.w;
+        }
+
+        #endregion
     }
 }

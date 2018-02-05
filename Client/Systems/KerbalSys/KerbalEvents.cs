@@ -1,5 +1,7 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselUtilities;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -20,7 +22,9 @@ namespace LunaClient.Systems.KerbalSys
             if (data == GameScenes.FLIGHT)
             {
                 var crew = FlightDriver.newShipManifest;
-                foreach (var protoCrew in crew.GetAllCrew(false))
+                if (crew == null) return;
+
+                foreach (var protoCrew in crew?.GetAllCrew(false))
                 {
                     //Always set the kerbals in a vessel as assigned
                     System.SetKerbalStatusWithoutTriggeringEvent(protoCrew, ProtoCrewMember.RosterStatus.Assigned);
@@ -29,12 +33,24 @@ namespace LunaClient.Systems.KerbalSys
             }
         }
 
+        /// <summary>
+        /// Event triggered when any kerbal status changes (kerbal dies, etc)
+        /// </summary>
         public void StatusChange(ProtoCrewMember kerbal, ProtoCrewMember.RosterStatus previousStatus, ProtoCrewMember.RosterStatus newStatus)
         {
             if (previousStatus != newStatus)
             {
-                System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
-                System.MessageSender.SendKerbal(kerbal);
+                var vesselId = System.FindVesselForKerbal(kerbal);
+                if (vesselId == VesselLoader.ReloadingVesselId || LockSystem.LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName) || 
+                    LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                {
+                    System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
+                    System.MessageSender.SendKerbal(kerbal);
+                }
+                else
+                {
+                    System.SetKerbalStatusWithoutTriggeringEvent(kerbal, previousStatus);
+                }
             }
         }
 

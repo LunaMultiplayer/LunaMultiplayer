@@ -7,5 +7,7 @@ namespace LunaCommon.Message.Data.Motd
         /// <inheritdoc />
         internal MotdRequestMsgData() { }
         public override MotdMessageType MotdMessageType => MotdMessageType.Request;
+
+        public override string ClassName { get; } = nameof(MotdRequestMsgData);
     }
 }

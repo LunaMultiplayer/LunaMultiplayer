@@ -89,6 +89,33 @@ namespace LunaCommon.Locks
         }
 
         /// <summary>
+        /// Removes given lock from storage
+        /// </summary>
+        public void RemoveLock(LockType lockType, string playerName, Guid vesselId)
+        {
+            switch (lockType)
+            {
+                case LockType.Asteroid:
+                    AsteroidLock = null;
+                    break;
+                case LockType.UnloadedUpdate:
+                    UnloadedUpdateLocks.TryRemove(vesselId, out _);
+                    break;
+                case LockType.Update:
+                    UpdateLocks.TryRemove(vesselId, out _);
+                    break;
+                case LockType.Control:
+                    ControlLocks.TryRemove(vesselId, out _);
+                    break;
+                case LockType.Spectator:
+                    SpectatorLocks.TryRemove(playerName, out _);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        /// <summary>
         /// Clear all locks
         /// </summary>
         public void ClearAllLocks()

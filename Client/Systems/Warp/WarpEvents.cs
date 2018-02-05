@@ -18,8 +18,17 @@ namespace LunaClient.Systems.Warp
             {
                 if (resetWarp)
                 {
-                    if (SettingsSystem.ServerSettings.WarpMode == WarpMode.None)
-                        System.DisplayMessage("Cannot warp, warping is disabled on this server", 5f);
+                    System.DisplayMessage(SettingsSystem.ServerSettings.WarpMode == WarpMode.None ? 
+                        "Cannot warp, warping is disabled on this server" : 
+                        "Cannot warp, you are not the warp master!", 5f);
+
+                    TimeWarp.SetRate(0, true);
+                    return;
+                }
+
+                if (System.WaitingSubspaceIdFromServer)
+                {
+                    System.DisplayMessage("Cannot warp, waiting subspace id from the server", 5f);
 
                     TimeWarp.SetRate(0, true);
                     return;
@@ -29,7 +38,7 @@ namespace LunaClient.Systems.Warp
                 {
                     //We are warping so set the subspace to -1
                     System.CurrentSubspace = -1;
-                    System.SendChangeSubspaceMsg(-1);
+                    System.MessageSender.SendChangeSubspaceMsg(-1);
                 }
             }
             //Detecting here if warp has stopped (TimeWarp.CurrentRateIndex == 0 && System.CurrentSubspace == -1) is not reliable so we use a routine to check it

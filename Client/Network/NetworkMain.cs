@@ -5,6 +5,7 @@ using LunaCommon.Message;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace LunaClient.Network
@@ -20,13 +21,13 @@ namespace LunaClient.Network
 
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
         {
+            UseMessageRecycling = true,
             ReceiveBufferSize = 500000, //500Kb
             SendBufferSize = 500000, //500Kb
             AutoFlushSendQueue = false,
             SuppressUnreliableUnorderedAcks = true, //We don't need ack for unreliable unordered!
-            MaximumTransmissionUnit = SettingsSystem.CurrentSettings.MtuSize,
             PingInterval = (float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.HearbeatMsInterval).TotalSeconds,
-            ConnectionTimeout = (float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.ConnectionMsTimeout).TotalSeconds,
+            ConnectionTimeout = 15
         };
 
         public static NetClient ClientConnection { get; private set; }
@@ -50,13 +51,22 @@ namespace LunaClient.Network
             Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
             Config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
 
-            NetworkServerList.RefreshMasterServers();
+#if DEBUG
+            Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
+            //Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+#endif
             NetworkServerList.RequestServers();
         }
 
         public static void ResetNetworkSystem()
         {
             NetworkConnection.ResetRequested = true;
+
+            if (ClientConnection?.Status > NetPeerStatus.NotRunning)
+            {
+                ClientConnection.Shutdown("Disconnected");
+                Thread.Sleep(1000);
+            }
 
             ClientConnection = new NetClient(Config);
             ClientConnection.Start();

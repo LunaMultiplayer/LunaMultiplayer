@@ -95,8 +95,7 @@ namespace Server.Message.ReceiveHandlers
             return true;
         }
 
-        private bool CheckKey(ClientStructure client, string playerName, string playerPublicKey,
-            byte[] playerChallangeSignature)
+        private bool CheckKey(ClientStructure client, string playerName, string playerPublicKey, byte[] playerChallangeSignature)
         {
             //Check the client matches any database entry
             var storedPlayerFile = Path.Combine(ServerContext.UniverseDirectory, "Players", $"{playerName}.txt");
@@ -113,8 +112,7 @@ namespace Server.Message.ReceiveHandlers
                 {
                     rsa.PersistKeyInCsp = false;
                     rsa.FromXmlString(playerPublicKey);
-                    var result = rsa.VerifyData(client.Challange, CryptoConfig.CreateFromName("SHA256"),
-                        playerChallangeSignature);
+                    var result = rsa.VerifyData(client.Challenge, CryptoConfig.CreateFromName("SHA256"), playerChallangeSignature);
                     if (!result)
                     {
                         Reason = "Public/priv key mismatch";

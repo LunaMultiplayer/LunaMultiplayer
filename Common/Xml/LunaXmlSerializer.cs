@@ -46,7 +46,26 @@ namespace LunaCommon.Xml
                 throw new Exception($"Could not open and read file from path {path}. Details: {e}");
             }
         }
-        
+
+        public static object ReadXml(Type classType, string path)
+        {
+            if (!File.Exists(path))
+                return null;
+            try
+            {
+                using (TextReader r = new StreamReader(path))
+                {
+                    var deserializer = new XmlSerializer(classType);
+                    var structure = deserializer.Deserialize(r);
+                    return structure;
+                }
+            }
+            catch (Exception e)
+            {
+                throw new Exception($"Could not open and read file from path {path}. Details: {e}");
+            }
+        }
+
         private static void WriteComments(object objectToSerialize, string path)
         {
             try

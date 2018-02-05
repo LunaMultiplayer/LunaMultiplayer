@@ -1,5 +1,5 @@
-﻿using LunaCommon.Message.Types;
-using System.Collections.Generic;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Warp
 {
@@ -8,8 +8,49 @@ namespace LunaCommon.Message.Data.Warp
         /// <inheritdoc />
         internal WarpSubspacesReplyMsgData() { }
         public override WarpMessageType WarpMessageType => WarpMessageType.SubspacesReply;
-        public int[] SubspaceKey { get; set; }
-        public double[] SubspaceTime { get; set; }
-        public KeyValuePair<int, string>[] Players { get; set; }
+
+        public int SubspaceCount;
+        public SubspaceInfo[] Subspaces = new SubspaceInfo[0];
+
+        public override string ClassName { get; } = nameof(WarpSubspacesReplyMsgData);
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
+        {
+            base.InternalSerialize(lidgrenMsg);
+
+            lidgrenMsg.Write(SubspaceCount);
+            for (var i = 0; i < SubspaceCount; i++)
+            {
+                Subspaces[i].Serialize(lidgrenMsg);
+            }
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
+        {
+            base.InternalDeserialize(lidgrenMsg);
+
+            SubspaceCount = lidgrenMsg.ReadInt32();
+            if (Subspaces.Length < SubspaceCount)
+                Subspaces = new SubspaceInfo[SubspaceCount];
+
+            for (var i = 0; i < SubspaceCount; i++)
+            {
+                if (Subspaces[i] == null)
+                    Subspaces[i] = new SubspaceInfo();
+
+                Subspaces[i].Deserialize(lidgrenMsg);
+            }
+        }
+        
+        internal override int InternalGetMessageSize()
+        {
+            var arraySize = 0;
+            for (var i = 0; i < SubspaceCount; i++)
+            {
+                arraySize += Subspaces[i].GetByteCount();
+            }
+
+            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
+        }
     }
 }

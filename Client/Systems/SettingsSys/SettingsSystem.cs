@@ -1,7 +1,7 @@
-using System.Text;
 using LunaClient.Base;
 using LunaClient.Network;
 using LunaCommon.Enums;
+using System.Text;
 
 namespace LunaClient.Systems.SettingsSys
 {
@@ -11,6 +11,8 @@ namespace LunaClient.Systems.SettingsSys
         public static SettingsServerStructure ServerSettings { get; private set; } = new SettingsServerStructure();
 
         private static readonly StringBuilder Builder = new StringBuilder();
+
+        public override string SystemName { get; } = nameof(SettingsSystem);
 
         static SettingsSystem()
         {

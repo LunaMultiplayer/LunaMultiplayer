@@ -8,6 +8,7 @@ using LunaClient.Systems.Warp;
 using LunaClient.Windows.Chat;
 using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
+using LunaClient.Windows.Locks;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.Systems;
 using LunaCommon;
@@ -35,17 +36,17 @@ namespace LunaClient.Windows.Status
                 chatButtonStyle = HighlightStyle;
             if (!SettingsSystem.ServerSettings.DropControlOnVesselSwitching)
             {
-                var tooltip = "Drops control of the vessels that you are not controlling so other players can control them";
-                if (GUILayout.Button(new GUIContent("DropCtrl", tooltip), ButtonStyle))
+                if (GUILayout.Button(new GUIContent(StatusTexts.DropCtrlBtnTxt, StatusTexts.DropCtrlBtnTooltip), ButtonStyle))
                 {
                     SystemsContainer.Get<VesselLockSystem>().DropAllOtherVesselControlLocks();
                 }
             }
-            WindowsContainer.Get<ChatWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<ChatWindow>().Display, "Chat", chatButtonStyle);
-            WindowsContainer.Get<CraftLibraryWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<CraftLibraryWindow>().Display, "Craft", ButtonStyle);
-            WindowsContainer.Get<DebugWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<DebugWindow>().Display, "Debug", ButtonStyle);
+            WindowsContainer.Get<ChatWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<ChatWindow>().Display, StatusTexts.ChatBtnTxt, chatButtonStyle);
+            WindowsContainer.Get<CraftLibraryWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<CraftLibraryWindow>().Display, StatusTexts.CraftBtnTxt, ButtonStyle);
+            WindowsContainer.Get<DebugWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<DebugWindow>().Display, StatusTexts.DebugBtnTxt, ButtonStyle);
 #if DEBUG
-            WindowsContainer.Get<SystemsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<SystemsWindow>().Display, "Systems", ButtonStyle);
+            WindowsContainer.Get<SystemsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<SystemsWindow>().Display, StatusTexts.SystemsBtnTxt, ButtonStyle);
+            WindowsContainer.Get<LocksWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<LocksWindow>().Display, StatusTexts.LocksBtnTxt, ButtonStyle);
 #endif
 
             GUILayout.EndHorizontal();
@@ -57,30 +58,30 @@ namespace LunaClient.Windows.Status
             ScrollPosition = GUILayout.BeginScrollView(ScrollPosition, ScrollStyle);
 
             //Draw other subspaces
-            foreach (var currentEntry in SubspaceDisplay)
+            for (var i = 0; i < SubspaceDisplay.Count; i++)
             {
-                if (currentEntry.SubspaceId == -1)
+                if (SubspaceDisplay[i].SubspaceId == -1)
                 {
                     //Draw the warping players
                     GUILayout.BeginHorizontal(SubspaceStyle);
-                    GUILayout.Label("WARPING");
+                    GUILayout.Label(StatusTexts.WarpingLabelTxt);
                     GUILayout.EndHorizontal();
                 }
                 else
                 {
                     GUILayout.BeginHorizontal(SubspaceStyle);
-                    GUILayout.Label($"T: +{KSPUtil.PrintTimeCompact(WarpSystem.GetSubspaceTime(currentEntry.SubspaceId), false)}");
+                    GUILayout.Label(StatusTexts.GetTimeLabel(SubspaceDisplay[i]));
                     GUILayout.FlexibleSpace();
-                    if (NotWarpingAndIsFutureSubspace(currentEntry.SubspaceId) && GUILayout.Button("Sync", ButtonStyle))
-                        WarpSystem.CurrentSubspace = currentEntry.SubspaceId;
+                    if (NotWarpingAndIsFutureSubspace(SubspaceDisplay[i].SubspaceId) && GUILayout.Button(StatusTexts.SyncBtnTxt, ButtonStyle))
+                        WarpSystem.CurrentSubspace = SubspaceDisplay[i].SubspaceId;
                     GUILayout.EndHorizontal();
                 }
 
-                foreach (var currentPlayer in currentEntry.Players)
+                for(var j = 0; j < SubspaceDisplay[i].Players.Count; j++)
                 {
-                    DrawPlayerEntry(currentPlayer == SettingsSystem.CurrentSettings.PlayerName
+                    DrawPlayerEntry(SubspaceDisplay[i].Players[j] == SettingsSystem.CurrentSettings.PlayerName
                         ? SystemsContainer.Get<StatusSystem>().MyPlayerStatus
-                        : SystemsContainer.Get<StatusSystem>().GetPlayerStatus(currentPlayer));
+                        : SystemsContainer.Get<StatusSystem>().GetPlayerStatus(SubspaceDisplay[i].Players[j]));
                 }
             }
 
@@ -95,9 +96,9 @@ namespace LunaClient.Windows.Status
             GUILayout.EndHorizontal();
 #endif
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Disconnect", ButtonStyle))
+            if (GUILayout.Button(StatusTexts.DisconnectBtnTxt, ButtonStyle))
                 DisconnectEventHandled = false;
-            WindowsContainer.Get<OptionsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<OptionsWindow>().Display, "Options", ButtonStyle);
+            WindowsContainer.Get<OptionsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<OptionsWindow>().Display, StatusTexts.OptionsBtnTxt, ButtonStyle);
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
@@ -106,55 +107,55 @@ namespace LunaClient.Windows.Status
         private void DrawDebugSwitches()
         {
 #if DEBUG
-            var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, "D1", ButtonStyle);
+            var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, StatusTexts.Debug1BtnTxt, ButtonStyle);
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
             {
                 SettingsSystem.CurrentSettings.Debug1 = d1;
                 SettingsSystem.SaveSettings();
             }
-            var d2 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug2, "D2", ButtonStyle);
+            var d2 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug2, StatusTexts.Debug2BtnTxt, ButtonStyle);
             if (d2 != SettingsSystem.CurrentSettings.Debug2)
             {
                 SettingsSystem.CurrentSettings.Debug2 = d2;
                 SettingsSystem.SaveSettings();
             }
-            var d3 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug3, "D3", ButtonStyle);
+            var d3 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug3, StatusTexts.Debug3BtnTxt, ButtonStyle);
             if (d3 != SettingsSystem.CurrentSettings.Debug3)
             {
                 SettingsSystem.CurrentSettings.Debug3 = d3;
                 SettingsSystem.SaveSettings();
             }
-            var d4 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug4, "D4", ButtonStyle);
+            var d4 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug4, StatusTexts.Debug4BtnTxt, ButtonStyle);
             if (d4 != SettingsSystem.CurrentSettings.Debug4)
             {
                 SettingsSystem.CurrentSettings.Debug4 = d4;
                 SettingsSystem.SaveSettings();
             }
-            var d5 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug5, "D5", ButtonStyle);
+            var d5 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug5, StatusTexts.Debug5BtnTxt, ButtonStyle);
             if (d5 != SettingsSystem.CurrentSettings.Debug5)
             {
                 SettingsSystem.CurrentSettings.Debug5 = d5;
                 SettingsSystem.SaveSettings();
             }
-            var d6 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug6, "D6", ButtonStyle);
+            var d6 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug6, StatusTexts.Debug6BtnTxt, ButtonStyle);
             if (d6 != SettingsSystem.CurrentSettings.Debug6)
             {
                 SettingsSystem.CurrentSettings.Debug6 = d6;
                 SettingsSystem.SaveSettings();
             }
-            var d7 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug7, "D7", ButtonStyle);
+            var d7 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug7, StatusTexts.Debug7BtnTxt, ButtonStyle);
             if (d7 != SettingsSystem.CurrentSettings.Debug7)
             {
                 SettingsSystem.CurrentSettings.Debug7 = d7;
                 SettingsSystem.SaveSettings();
             }
-            var d8 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug8, "D8", ButtonStyle);
+            var d8 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug8, StatusTexts.Debug8BtnTxt, ButtonStyle);
             if (d8 != SettingsSystem.CurrentSettings.Debug8)
             {
                 SettingsSystem.CurrentSettings.Debug8 = d8;
                 SettingsSystem.SaveSettings();
             }
-            var d9 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug9, "D9", ButtonStyle);
+            var d9 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug9, StatusTexts.Debug9BtnTxt, ButtonStyle);
             if (d9 != SettingsSystem.CurrentSettings.Debug9)
             {
                 SettingsSystem.CurrentSettings.Debug9 = d9;
@@ -190,7 +191,7 @@ namespace LunaClient.Windows.Status
             GUILayout.Label(playerStatus.PlayerName, PlayerNameStyle[playerStatus.PlayerName]);
             GUILayout.FlexibleSpace();
             GUILayout.Label(playerStatus.StatusText, StateTextStyle);
-            GUILayout.Label(playerStatus.VesselText != "" ? $"Pilot: {playerStatus.VesselText}" : "", VesselNameStyle);
+            GUILayout.Label(string.IsNullOrEmpty(playerStatus.VesselText) ? string.Empty : StatusTexts.GetPlayerText(playerStatus), VesselNameStyle);
             GUILayout.EndHorizontal();
         }
     }

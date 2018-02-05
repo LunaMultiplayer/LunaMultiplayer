@@ -15,5 +15,6 @@ namespace LunaClient.Systems.CraftLibrary
         public CraftType CraftType { get; set; }
         public string CraftName { get; set; }
         public byte[] CraftData { get; set; }
+        public int CraftNumBytes { get; set; }
     }
 }

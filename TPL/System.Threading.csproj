@@ -22,7 +22,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>False</ConsolePause>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <NoWarn>CS0108</NoWarn>
+    <NoWarn>CS0108, IDE0007, IDE0017</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>True</Optimize>
@@ -34,7 +34,7 @@
     <DefineConstants>NET_4_5;UNITY</DefineConstants>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
-    <NoWarn>CS0108</NoWarn>
+    <NoWarn>CS0108, IDE0007, IDE0017</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />

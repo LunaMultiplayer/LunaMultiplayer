@@ -119,7 +119,7 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public override uint NextUInt32()
 		{
-			var t = (m_x ^ (m_x << 11));
+			uint t = (m_x ^ (m_x << 11));
 			m_x = m_y; m_y = m_z; m_z = m_w;
 			return (m_w = (m_w ^ (m_w >> 19)) ^ (t ^ (t >> 8)));
 		}
@@ -180,7 +180,7 @@ namespace Lidgren.Network
 			mti = N + 1;
 			mag01 = new UInt32[] { 0x0U, MATRIX_A };
 			mt[0] = seed;
-			for (var i = 1; i < N; i++)
+			for (int i = 1; i < N; i++)
 				mt[i] = (UInt32)(1812433253 * (mt[i - 1] ^ (mt[i - 1] >> 30)) + i);
 		}
 
@@ -206,7 +206,7 @@ namespace Lidgren.Network
 
 		private void GenRandAll()
 		{
-			var kk = 1;
+			int kk = 1;
 			UInt32 y;
 			UInt32 p;
 			y = mt[0] & UPPER_MASK;
@@ -245,7 +245,7 @@ namespace Lidgren.Network
 		[CLSCompliant(false)]
 		public override void Initialize(uint seed)
 		{
-			var tmp = new byte[seed % 16];
+			byte[] tmp = new byte[seed % 16];
 			m_rnd.GetBytes(tmp); // just prime it
 		}
 

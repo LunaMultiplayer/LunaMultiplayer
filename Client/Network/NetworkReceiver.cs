@@ -21,14 +21,16 @@ using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.Systems.VesselResourceSys;
+using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
-using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
+using System.Threading;
 
 namespace LunaClient.Network
 {
@@ -48,6 +50,12 @@ namespace LunaClient.Network
                         NetworkStatistics.LastReceiveTime = LunaTime.UtcNow;
                         switch (msg.MessageType)
                         {
+                            case NetIncomingMessageType.DebugMessage:
+                                LunaLog.Log("[Lidgen DEBUG] " + msg.ReadString());
+                                break;
+                            case NetIncomingMessageType.VerboseDebugMessage:
+                                LunaLog.Log("[Lidgen VERBOSE] " + msg.ReadString());
+                                break;
                             case NetIncomingMessageType.NatIntroductionSuccess:
                                 NetworkServerList.HandleNatIntroduction(msg);
                                 break;
@@ -60,7 +68,7 @@ namespace LunaClient.Network
                             case NetIncomingMessageType.Data:
                                 try
                                 {
-                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg.ReadBytes(msg.LengthBytes), LunaTime.UtcNow.Ticks);
+                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg, LunaTime.UtcNow.Ticks);
                                     if (deserializedMsg != null)
                                     {
                                         EnqueueMessageToSystem(deserializedMsg as IServerMessageBase);
@@ -88,7 +96,7 @@ namespace LunaClient.Network
                     }
                     else
                     {
-                        LunaDelay.Delay(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
+                        Thread.Sleep(SettingsSystem.CurrentSettings.SendReceiveMsInterval);
                     }
                 }
             }
@@ -140,7 +148,6 @@ namespace LunaClient.Network
                         case VesselMessageType.Flightstate:
                             SystemsContainer.Get<VesselFlightStateSystem>().EnqueueMessage(msg);
                             break;
-                        case VesselMessageType.ListReply:
                         case VesselMessageType.VesselsReply:
                         case VesselMessageType.Proto:
                             SystemsContainer.Get<VesselProtoSystem>().EnqueueMessage(msg);
@@ -150,6 +157,12 @@ namespace LunaClient.Network
                             break;
                         case VesselMessageType.Remove:
                             SystemsContainer.Get<VesselRemoveSystem>().EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.Update:
+                            SystemsContainer.Get<VesselUpdateSystem>().EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.Resource:
+                            SystemsContainer.Get<VesselResourceSystem>().EnqueueMessage(msg);
                             break;
                     }
                     break;

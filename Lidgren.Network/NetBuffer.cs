@@ -73,8 +73,8 @@ namespace Lidgren.Network
 		static NetBuffer()
 		{
 			s_readMethods = new Dictionary<Type, MethodInfo>();
-			var methods = typeof(NetIncomingMessage).GetMethods(BindingFlags.Instance | BindingFlags.Public);
-			foreach (var mi in methods)
+			MethodInfo[] methods = typeof(NetIncomingMessage).GetMethods(BindingFlags.Instance | BindingFlags.Public);
+			foreach (MethodInfo mi in methods)
 			{
 				if (mi.GetParameters().Length == 0 && mi.Name.StartsWith("Read", StringComparison.InvariantCulture) && mi.Name.Substring(4) == mi.ReturnType.Name)
 				{
@@ -84,11 +84,11 @@ namespace Lidgren.Network
 
 			s_writeMethods = new Dictionary<Type, MethodInfo>();
 			methods = typeof(NetOutgoingMessage).GetMethods(BindingFlags.Instance | BindingFlags.Public);
-			foreach (var mi in methods)
+			foreach (MethodInfo mi in methods)
 			{
 				if (mi.Name.Equals("Write", StringComparison.InvariantCulture))
 				{
-					var pis = mi.GetParameters();
+					ParameterInfo[] pis = mi.GetParameters();
 					if (pis.Length == 1)
 						s_writeMethods[pis[0].ParameterType] = mi;
 				}

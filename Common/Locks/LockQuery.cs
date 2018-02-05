@@ -22,6 +22,10 @@ namespace LunaCommon.Locks
         {
             switch (type)
             {
+                case LockType.Spectator:
+                    return SpectatorLockExists(playerName);
+                case LockType.Asteroid:
+                    return AsteroidLockBelongsToPlayer(playerName);
                 case LockType.Control:
                     if (LockStore.ControlLocks.TryGetValue(vesselId, out var controlLock))
                         return controlLock.PlayerName == playerName;
@@ -31,7 +35,7 @@ namespace LunaCommon.Locks
                         return updateLock.PlayerName == playerName;
                     break;
                 case LockType.UnloadedUpdate:
-                    if (LockStore.UpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
+                    if (LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
                         return unloadedUpdateLock.PlayerName == playerName;
                     break;
                 default:
@@ -75,7 +79,7 @@ namespace LunaCommon.Locks
                         return updateLock.PlayerName;
                     break;
                 case LockType.UnloadedUpdate:
-                    if (LockStore.UpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
+                    if (LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
                         return unloadedUpdateLock.PlayerName;
                     break;
                 default:

@@ -1,14 +1,16 @@
-﻿using System;
+﻿using LunaCommon;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using LunaCommon;
 
 namespace LunaClient.Utilities
 {
     public class CommonUtil
     {
+        private static readonly Random Rnd = new Random();
+
         private static string _debugPort;
         public static string DebugPort => _debugPort ?? (_debugPort = GetDebugPort());
 
@@ -32,9 +34,11 @@ namespace LunaClient.Utilities
         {
             if (!Common.PlatformIsWindows()) return "0";
 
-            var outputLogFile = File.Exists(CombinePaths(Client.KspPath, "KSP_x64_Data", "output_log.txt")) ?
+            var outputLogFile = Common.IsX64() ?
                 CombinePaths(Client.KspPath, "KSP_x64_Data", "output_log.txt") : 
                 CombinePaths(Client.KspPath, "KSP_Data", "output_log.txt");
+
+            if (!File.Exists(outputLogFile)) return "0";
 
             var regex = new Regex(@"0\.0\.0\.0:(\d+)");
 
@@ -63,6 +67,15 @@ namespace LunaClient.Utilities
             var deletedItems = list1.Except(list2).Any();
             var newItems = list2.Except(list1).Any();
             return !newItems && !deletedItems;
+        }
+
+        /// <summary>
+        /// Allocates 20mb in the mono heap
+        /// </summary>
+        public static void Reserve20Mb()
+        {
+            var bytes = new byte[20971520];
+            Rnd.NextBytes(bytes);
         }
     }
 }

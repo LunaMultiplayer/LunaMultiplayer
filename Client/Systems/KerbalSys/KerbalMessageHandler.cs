@@ -39,15 +39,15 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         private static void HandleKerbalProto(KerbalProtoMsgData messageData)
         {
-            ProcessKerbal(messageData.KerbalData);
+            ProcessKerbal(messageData.Kerbal.KerbalData, messageData.Kerbal.NumBytes);
         }
 
         /// <summary>
         /// Appends the received kerbal to the dictionary
         /// </summary>
-        private static void ProcessKerbal(byte[] kerbalData)
+        private static void ProcessKerbal(byte[] kerbalData, int numBytes)
         {
-            var kerbalNode = ConfigNodeSerializer.Deserialize(kerbalData);
+            var kerbalNode = ConfigNodeSerializer.Deserialize(kerbalData, numBytes);
             if (kerbalNode != null)
             {
                 System.KerbalsToProcess.Enqueue(kerbalNode);
@@ -62,9 +62,9 @@ namespace LunaClient.Systems.KerbalSys
         /// <param name="messageData"></param>
         private static void HandleKerbalReply(KerbalReplyMsgData messageData)
         {
-            foreach (var kerbal in messageData.KerbalsData)
+            for (var i = 0; i < messageData.KerbalsCount; i++)
             {
-                ProcessKerbal(kerbal.Value);
+                ProcessKerbal(messageData.Kerbals[i].KerbalData, messageData.Kerbals[i].NumBytes);
             }
 
             LunaLog.Log("[LMP]: Kerbals Synced!");

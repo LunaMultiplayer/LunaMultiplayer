@@ -1,4 +1,5 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.PlayerStatus
 {
@@ -8,8 +9,27 @@ namespace LunaCommon.Message.Data.PlayerStatus
         internal PlayerStatusSetMsgData() { }
         public override PlayerStatusMessageType PlayerStatusMessageType => PlayerStatusMessageType.Set;
 
-        public string PlayerName { get; set; }
-        public string VesselText { get; set; }
-        public string StatusText { get; set; }
+        public PlayerStatusInfo PlayerStatus = new PlayerStatusInfo();
+
+        public override string ClassName { get; } = nameof(PlayerStatusSetMsgData);
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
+        {
+            base.InternalSerialize(lidgrenMsg);
+
+            PlayerStatus.Serialize(lidgrenMsg);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
+        {
+            base.InternalDeserialize(lidgrenMsg);
+
+            PlayerStatus.Deserialize(lidgrenMsg);
+        }
+
+        internal override int InternalGetMessageSize()
+        {
+            return base.InternalGetMessageSize() + PlayerStatus.GetByteCount();
+        }
     }
 }

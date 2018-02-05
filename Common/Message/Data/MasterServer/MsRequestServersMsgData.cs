@@ -7,6 +7,7 @@ namespace LunaCommon.Message.Data.MasterServer
         /// <inheritdoc />
         internal MsRequestServersMsgData() { }
         public override MasterServerMessageSubType MasterServerMessageSubType => MasterServerMessageSubType.RequestServers;
-        public string CurrentVersion { get; set; }
+        
+        public override string ClassName { get; } = nameof(MsRequestServersMsgData);
     }
 }

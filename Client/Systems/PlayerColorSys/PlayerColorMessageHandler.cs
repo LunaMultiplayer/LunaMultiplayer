@@ -26,11 +26,10 @@ namespace LunaClient.Systems.PlayerColorSys
                     {
                         var data = (PlayerColorReplyMsgData)msgData;
                         System.PlayerColors.Clear();
-                        for (var i = 0; i < data.PlayersColors.Length; i++)
+                        for (var i = 0; i < data.PlayerColorsCount; i++)
                         {
-                            var playerName = data.PlayersColors[i].Key;
-                            var playerColor = System.ConvertStringToColor(data.PlayersColors[i].Value);
-                            System.PlayerColors.Add(playerName, playerColor);
+                            var playerName = data.PlayersColors[i].PlayerName;
+                            System.PlayerColors.Add(playerName, data.PlayersColors[i].Color);
 
                             WindowsContainer.Get<StatusWindow>().ColorEventHandled = false; //Refresh colors in status window
                         }
@@ -41,8 +40,9 @@ namespace LunaClient.Systems.PlayerColorSys
                     {
                         //Player joined or changed it's color so update his controlled vessel orbit colors
                         var data = (PlayerColorSetMsgData)msgData;
-                        var playerName = data.PlayerName;
-                        var playerColor = System.ConvertStringToColor(data.Color);
+                        var playerName = data.PlayerColor.PlayerName;
+                        var playerColor = data.PlayerColor.Color;
+
                         LunaLog.Log($"[LMP]: Color Message, Name: {playerName} , color: {playerColor}");
                         System.PlayerColors[playerName] = playerColor;
                         UpdateVesselColors(playerName);

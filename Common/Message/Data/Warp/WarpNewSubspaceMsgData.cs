@@ -1,4 +1,6 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Warp
 {
@@ -7,8 +9,34 @@ namespace LunaCommon.Message.Data.Warp
         /// <inheritdoc />
         internal WarpNewSubspaceMsgData() { }
         public override WarpMessageType WarpMessageType => WarpMessageType.NewSubspace;
-        public string PlayerCreator { get; set; }
-        public int SubspaceKey { get; set; }
-        public double ServerTimeDifference { get; set; }
+
+        public string PlayerCreator;
+        public int SubspaceKey;
+        public double ServerTimeDifference;
+
+        public override string ClassName { get; } = nameof(WarpNewSubspaceMsgData);
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
+        {
+            base.InternalSerialize(lidgrenMsg);
+
+            lidgrenMsg.Write(PlayerCreator);
+            lidgrenMsg.Write(SubspaceKey);
+            lidgrenMsg.Write(ServerTimeDifference);
+        }
+
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
+        {
+            base.InternalDeserialize(lidgrenMsg);
+
+            PlayerCreator = lidgrenMsg.ReadString();
+            SubspaceKey = lidgrenMsg.ReadInt32();
+            ServerTimeDifference = lidgrenMsg.ReadDouble();
+        }
+
+        internal override int InternalGetMessageSize()
+        {
+            return base.InternalGetMessageSize() + PlayerCreator.GetByteCount() + sizeof(int) + sizeof(double);
+        }
     }
 }

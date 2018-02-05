@@ -7,6 +7,8 @@ namespace LunaCommon.Message.Data.Vessel
         /// <inheritdoc />
         internal VesselsRequestMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.VesselsRequest;
-        public string[] RequestList { get; set; }
+
+        public override string ClassName { get; } = nameof(VesselsRequestMsgData);
+
     }
 }

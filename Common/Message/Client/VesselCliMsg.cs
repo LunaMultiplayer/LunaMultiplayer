@@ -14,24 +14,29 @@ namespace LunaCommon.Message.Client
         internal VesselCliMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(VesselCliMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)VesselMessageType.ListRequest] = typeof(VesselListRequestMsgData),
             [(ushort)VesselMessageType.VesselsRequest] = typeof(VesselsRequestMsgData),
             [(ushort)VesselMessageType.Proto] = typeof(VesselProtoMsgData),
             [(ushort)VesselMessageType.Dock] = typeof(VesselDockMsgData),
             [(ushort)VesselMessageType.Remove] = typeof(VesselRemoveMsgData),
             [(ushort)VesselMessageType.Position] = typeof(VesselPositionMsgData),
-            [(ushort)VesselMessageType.Flightstate] = typeof(VesselFlightStateMsgData)
+            [(ushort)VesselMessageType.Flightstate] = typeof(VesselFlightStateMsgData),
+            [(ushort)VesselMessageType.Update] = typeof(VesselUpdateMsgData),
+            [(ushort)VesselMessageType.Resource] = typeof(VesselResourceMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Vessel;
         protected override int DefaultChannel => IsVesselPositionOrFlightState() ? 0 : 8;
-        public override NetDeliveryMethod NetDeliveryMethod => IsVesselPositionOrFlightState() ? NetDeliveryMethod.UnreliableSequenced : NetDeliveryMethod.ReliableOrdered;
+        public override NetDeliveryMethod NetDeliveryMethod => IsVesselPositionOrFlightState() ? 
+            NetDeliveryMethod.UnreliableSequenced : NetDeliveryMethod.ReliableOrdered;
 
         private bool IsVesselPositionOrFlightState()
         {
-            return Data.SubType == (ushort)VesselMessageType.Position || Data.SubType == (ushort)VesselMessageType.Flightstate;
+            return Data.SubType == (ushort) VesselMessageType.Position || Data.SubType == (ushort) VesselMessageType.Flightstate;
         }
     }
 }

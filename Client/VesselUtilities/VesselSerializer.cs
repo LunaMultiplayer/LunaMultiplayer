@@ -6,14 +6,11 @@ namespace LunaClient.VesselUtilities
 {
     public class VesselSerializer
     {
-        private static readonly object LockObj = new object();
-        private static readonly ConfigNode ConfigNode = new ConfigNode();
-
-        public static ProtoVessel DeserializeVessel(byte[] data)
+        public static ProtoVessel DeserializeVessel(byte[] data, int numBytes)
         {
             try
             {
-                var vesselNode = ConfigNodeSerializer.Deserialize(data);
+                var vesselNode = ConfigNodeSerializer.Deserialize(data, numBytes);
                 var configGuid = vesselNode?.GetValue("pid");
 
                 return VesselCommon.CreateSafeProtoVesselFromConfigNode(vesselNode, new Guid(configGuid));
@@ -27,45 +24,69 @@ namespace LunaClient.VesselUtilities
 
         public static byte[] SerializeVessel(ProtoVessel protoVessel)
         {
-            //Lock this as we are using a shared ConfigNode
-            lock (LockObj)
+            return PreSerializationChecks(protoVessel, out var confiNode) ? ConfigNodeSerializer.Serialize(confiNode) : new byte[0];
+        }
+
+        /// <summary>
+        /// Serializes a vessel to a previous preallocated array (avoids garbage generation)
+        /// </summary>
+        public static void SerializeVesselToArray(ProtoVessel protoVessel, byte[] data, out int numBytes)
+        {
+            if (PreSerializationChecks(protoVessel, out var confiNode))
             {
-                ConfigNode.ClearData();
-                try
-                {
-                    protoVessel.Save(ConfigNode);
-                }
-                catch (Exception)
-                {
-                    LunaLog.LogError("[LMP]: Error while saving vessel");
-                    return new byte[0];
-                }
 
-                var vesselId = new Guid(ConfigNode.GetValue("pid"));
-
-                //Defend against NaN orbits
-                if (VesselHasNaNPosition(ConfigNode))
-                {
-                    LunaLog.LogError($"[LMP]: Vessel {vesselId} has NaN position");
-                    return new byte[0];
-                }
-
-                //Clean up the vessel so we send only the important data
-                CleanUpVesselNode(ConfigNode, vesselId);
-
-                //TODO: Remove tourists from the vessel. This must be done in the CleanUpVesselNode method
-                //foreach (var pps in protoVessel.protoPartSnapshots)
-                //{
-                //    foreach (var pcm in
-                //        pps.protoModuleCrew.Where(pcm => pcm.type == ProtoCrewMember.KerbalType.Tourist).ToArray())
-                //        pps.protoModuleCrew.Remove(pcm);
-                //}
-
-                return ConfigNodeSerializer.Serialize(ConfigNode);
+                ConfigNodeSerializer.SerializeToArray(confiNode, data, out numBytes);
+            }
+            else
+            {
+                numBytes = 0;
             }
         }
 
         #region Private methods
+
+        private static bool PreSerializationChecks(ProtoVessel protoVessel, out ConfigNode configNode)
+        {
+            configNode = new ConfigNode();
+
+            if (protoVessel == null)
+            {
+                LunaLog.LogError("[LMP]: Cannot serialize a null protovessel");
+                return false;
+            }
+
+            try
+            {
+                protoVessel.Save(configNode);
+            }
+            catch (Exception)
+            {
+                LunaLog.LogError("[LMP]: Error while saving vessel");
+                return false;
+            }
+
+            var vesselId = new Guid(configNode.GetValue("pid"));
+
+            //Defend against NaN orbits
+            if (VesselHasNaNPosition(configNode))
+            {
+                LunaLog.LogError($"[LMP]: Vessel {vesselId} has NaN position");
+                return false;
+            }
+
+            //Clean up the vessel so we send only the important data
+            CleanUpVesselNode(configNode, vesselId);
+
+            //TODO: Remove tourists from the vessel. This must be done in the CleanUpVesselNode method
+            //foreach (var pps in protoVessel.protoPartSnapshots)
+            //{
+            //    foreach (var pcm in
+            //        pps.protoModuleCrew.Where(pcm => pcm.type == ProtoCrewMember.KerbalType.Tourist).ToArray())
+            //        pps.protoModuleCrew.Remove(pcm);
+            //}
+
+            return true;
+        }
 
         /// <summary>
         /// Here we clean up the node in order to NOT send some of the data (like maneuver nodes, etc)
@@ -99,7 +120,10 @@ namespace LunaClient.VesselUtilities
                 var orbitNode = vesselNode.GetNode("ORBIT");
                 if (orbitNode != null)
                 {
-                    return orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v))
+                    var allValuesAre0 = orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v)).Take(7)
+                        .All(v => v == "0");
+
+                    return allValuesAre0 || orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v))
                         .Any(val => double.TryParse(val, out var value) && (double.IsNaN(value) || double.IsInfinity(value)));
                 }
             }

@@ -22,9 +22,14 @@ namespace LunaClient.Systems.Chat
                 case ChatMessageType.ListReply:
                     {
                         var data = (ChatListReplyMsgData)msgData;
-                        foreach (var keyVal in data.PlayerChannels)
-                            foreach (var channelName in keyVal.Value)
-                                System.Queuer.QueueChatJoin(keyVal.Key, channelName);
+
+                        for (var i = 0; i < data.PlayerChannelsCount; i++)
+                        {
+                            for (var j = 0; j < data.PlayerChannels[i].ChannelCount; j++)
+                            {
+                                System.Queuer.QueueChatJoin(data.PlayerChannels[i].PlayerName, data.PlayerChannels[i].Channels[j]);
+                            }
+                        }
 
                         MainSystem.NetworkState = ClientState.ChatSynced;
                     }

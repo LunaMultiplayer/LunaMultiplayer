@@ -1,19 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems;
-using LunaClient.Systems.Asteroid;
-using LunaClient.Systems.CraftLibrary;
-using LunaClient.Systems.Flag;
-using LunaClient.Systems.KerbalSys;
-using LunaClient.Systems.ModApi;
-using LunaClient.Systems.Scenario;
-using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.VesselFlightStateSys;
-using LunaClient.Systems.VesselImmortalSys;
-using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselPositionSys;
-using LunaClient.Systems.VesselProtoSys;
-using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using UnityEngine;
@@ -27,62 +12,82 @@ namespace LunaClient.Windows.Systems
     {
         #region Fields & properties
 
+        private static bool _display;
+        public override bool Display
+        {
+            get
+            {
+                if (!_display) return false;
+
+                return MainSystem.NetworkState >= ClientState.Running && MainSystem.ToolbarShowGui && 
+                    HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            } 
+            set => _display = value;
+        }
+
         private float WindowHeight { get; } = 400;
         private float WindowWidth { get; } = 400;
-
-        private bool DisplayFast { get; set; }
-        private float LastUpdateTime { get; set; }
-        private float DisplayUpdateSInterval { get; } = 1f;
-
-        private string LmpProfilerText { get; set; }
-
+        
         #region Vessel systems
 
+        private bool VesselDock { get; set; }
+
         private bool VesselFlightState { get; set; }
-        private string VesselFlightStateProfilerText { get; set; }
 
         private bool VesselImmortal { get; set; }
-        private string VesselImmortalProfilerText { get; set; }
 
         private bool VesselLock { get; set; }
-        private string VesselLockProfilerText { get; set; }
 
         private bool VesselPosition { get; set; }
-        private string VesselPositionProfilerText { get; set; }
+
+        private bool VesselUpdate { get; set; }
+        private bool VesselResource { get; set; }
 
         private bool VesselProto { get; set; }
-        private string VesselProtoProfilerText { get; set; }
+
+        private bool VesselRange { get; set; }
+
+        private bool VesselState { get; set; }
 
         private bool VesselRemove { get; set; }
-        private string VesselRemoveProfilerText { get; set; }
+
+        private bool VesselSwitcher { get; set; }
 
         #endregion
 
         #region Other systems
 
         private bool Asteroid { get; set; }
-        private string AsteroidProfilerText { get; set; }
 
         private bool CraftLibrary { get; set; }
-        private string CraftLibraryProfilerText { get; set; }
+
+        private bool Facility { get; set; }
 
         private bool Flag { get; set; }
-        private string FlagProfilerText { get; set; }
 
-        private bool Scenario { get; set; }
-        private string ScenarioProfilerText { get; set; }
+        private bool GameScene { get; set; }
 
-        private bool TimeSyncer { get; set; }
-        private string TimeSyncerProfilerText { get; set; }
-
-        private bool ModApi { get; set; }
-        private string ModApiProfilerText { get; set; }
+        private bool Group { get; set; }
 
         private bool Kerbal { get; set; }
-        private string KerbalProfilerText { get; set; }
+
+        private bool Lock { get; set; }
+
+        private bool ModS { get; set; }
+
+        private bool ModApi { get; set; }
+
+        private bool PlayerColor { get; set; }
+
+        private bool PlayerConnection { get; set; }
+
+        private bool Scenario { get; set; }
+
+        private bool TimeSyncer { get; set; }
+
+        private bool Toolbar { get; set; }
 
         private bool Warp { get; set; }
-        private string WarpProfilerText { get; set; }
 
         #endregion
 
@@ -91,27 +96,6 @@ namespace LunaClient.Windows.Systems
         public override void Update()
         {
             SafeDisplay = Display;
-            if (Display && (DisplayFast || Time.realtimeSinceStartup - LastUpdateTime > DisplayUpdateSInterval))
-            {
-                LastUpdateTime = Time.realtimeSinceStartup;
-
-                LmpProfilerText = LunaProfiler.GetProfilersData();
-
-                AsteroidProfilerText = SystemsContainer.Get<AsteroidSystem>().GetProfilersData();
-                CraftLibraryProfilerText = SystemsContainer.Get<CraftLibrarySystem>().GetProfilersData();
-                FlagProfilerText = SystemsContainer.Get<FlagSystem>().GetProfilersData();
-                ScenarioProfilerText = SystemsContainer.Get<ScenarioSystem>().GetProfilersData();
-                TimeSyncerProfilerText = SystemsContainer.Get<TimeSyncerSystem>().GetProfilersData();
-                ModApiProfilerText = SystemsContainer.Get<ModApiSystem>().GetProfilersData();
-                KerbalProfilerText = SystemsContainer.Get<KerbalSystem>().GetProfilersData();
-                VesselFlightStateProfilerText = SystemsContainer.Get<VesselFlightStateSystem>().GetProfilersData();
-                VesselImmortalProfilerText = SystemsContainer.Get<VesselImmortalSystem>().GetProfilersData();
-                VesselLockProfilerText = SystemsContainer.Get<VesselLockSystem>().GetProfilersData();
-                VesselPositionProfilerText = SystemsContainer.Get<VesselPositionSystem>().GetProfilersData();
-                VesselProtoProfilerText = SystemsContainer.Get<VesselProtoSystem>().GetProfilersData();
-                VesselRemoveProfilerText = SystemsContainer.Get<VesselRemoveSystem>().GetProfilersData();
-                WarpProfilerText = SystemsContainer.Get<WarpSystem>().GetProfilersData();
-            }
         }
 
         public override void OnGui()
@@ -156,14 +140,14 @@ namespace LunaClient.Windows.Systems
 
         private void CheckWindowLock()
         {
-            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
             if (SafeDisplay)
             {
+                if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
+                {
+                    RemoveWindowLock();
+                    return;
+                }
+
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 

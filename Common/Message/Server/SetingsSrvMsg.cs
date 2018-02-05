@@ -14,6 +14,9 @@ namespace LunaCommon.Message.Server
         internal SetingsSrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(SetingsSrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)SettingsMessageType.Reply] = typeof(SettingsReplyMsgData)

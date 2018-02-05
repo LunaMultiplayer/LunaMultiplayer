@@ -1,6 +1,7 @@
 using LunaClient.Base;
 using LunaClient.Network;
 using LunaCommon.Message.Data;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 
@@ -9,6 +10,21 @@ namespace LunaClient.Systems.ModApi
     public class ModApiSystem : MessageSystem<ModApiSystem, ModApiMessageSender, ModApiMessageHandler>
     {
         #region Fields & properties
+
+        private static bool _enabled = true;
+
+        /// <summary>
+        /// This system must be ALWAYS enabled!
+        /// </summary>
+        public override bool Enabled
+        {
+            get => _enabled;
+            set
+            {
+                base.Enabled |= value;
+                _enabled |= value;
+            }
+        }
 
         internal readonly object EventLock = new object();
 
@@ -28,26 +44,18 @@ namespace LunaClient.Systems.ModApi
             new Dictionary<string, MessageCallback>();
 
         #endregion
+        
+        #region Base overrides
 
-        #region Constructor
+        public override string SystemName { get; } = nameof(ModApiSystem);
 
-        public ModApiSystem()
+        protected override void OnEnabled()
         {
-            //Call the on enabled as otherwise the ReadAndHandleAllReceivedMessages is not registered.
             base.OnEnabled();
-            //We setup the routines in the constructor as this system is always enabled
+
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ModApiUpdate));
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ModApiFixedUpdate));
         }
-
-        #endregion
-
-        #region Base overrides
-
-        /// <summary>
-        /// This system must be ALWAYS enabled!
-        /// </summary>
-        public override bool Enabled => true;
 
         #endregion
 
@@ -184,9 +192,21 @@ namespace LunaClient.Systems.ModApi
         ///     Sends a mod Message.
         /// </summary>
         /// <param name="modName">Mod Name</param>
-        /// <param name="messageData">The Message payload (MessageWriter can make this easier)</param>
+        /// <param name="messageData">The message payload</param>
         /// <param name="relay">If set to <c>true</c>, The server will relay the Message to all other authenticated clients</param>
         public void SendModMessage(string modName, byte[] messageData, bool relay)
+        {
+            SendModMessage(modName, messageData, messageData.Length, relay);
+        }
+
+        /// <summary>
+        ///     Sends a mod Message.
+        /// </summary>
+        /// <param name="modName">Mod Name</param>
+        /// <param name="messageData">The message payload</param>
+        /// <param name="numBytes">Number of bytes to take from the array</param>
+        /// <param name="relay">If set to <c>true</c>, The server will relay the Message to all other authenticated clients</param>
+        public void SendModMessage(string modName, byte[] messageData, int numBytes, bool relay)
         {
             if (modName == null)
                 return;
@@ -197,7 +217,13 @@ namespace LunaClient.Systems.ModApi
             }
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ModMsgData>();
-            msgData.Data = messageData;
+
+            if (msgData.Data.Length < numBytes)
+                msgData.Data = new byte[numBytes];
+
+            Array.Copy(messageData, msgData.Data, numBytes);
+
+            msgData.NumBytes = numBytes;
             msgData.Relay = relay;
             msgData.ModName = modName;
 

@@ -19,6 +19,7 @@ namespace LunaClient.Systems.Handshake
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<HandshakeResponseMsgData>();
             msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            msgData.NumBytes = signature.Length;
             msgData.ChallengeSignature = signature;
             msgData.PublicKey = SettingsSystem.CurrentSettings.PublicKey;
 

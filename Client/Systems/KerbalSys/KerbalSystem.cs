@@ -1,9 +1,10 @@
 ﻿using KSP.UI;
 using KSP.UI.Screens;
 using LunaClient.Base;
+using System;
 using System.Collections.Concurrent;
 using System.Reflection;
-using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -50,6 +51,8 @@ namespace LunaClient.Systems.KerbalSys
 
         #region Base overrides
 
+        public override string SystemName { get; } = nameof(KerbalSystem);
+
         protected override bool ProcessMessagesInUnityThread => false;
 
         protected override void OnEnabled()
@@ -77,6 +80,24 @@ namespace LunaClient.Systems.KerbalSys
         #endregion
 
         #region Public
+
+        public Guid FindVesselForKerbal(ProtoCrewMember kerbal)
+        {
+            if (kerbal.seat?.vessel != null)
+                return kerbal.seat.vessel.id;
+
+            for (var i = 0; i < FlightGlobals.Vessels.Count; i++)
+            {
+                var crew = FlightGlobals.Vessels[i].GetVesselCrew();
+                for (var j = 0; j < crew.Count; j++)
+                {
+                    if (crew[j].name == kerbal.name)
+                        return FlightGlobals.Vessels[i].id;
+                }
+            }
+
+            return Guid.Empty;
+        }
 
         /// <summary>
         /// Load all the received kerbals from the server into the game
@@ -118,6 +139,8 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void SetKerbalStatusWithoutTriggeringEvent(ProtoCrewMember crew, ProtoCrewMember.RosterStatus newStatus)
         {
+            if (crew == null) return;
+
             KerbalStatusField.SetValue(crew, newStatus);
         }
 
@@ -126,6 +149,8 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void SetKerbalTypeWithoutTriggeringEvent(ProtoCrewMember crew, ProtoCrewMember.KerbalType newType)
         {
+            if (crew == null) return;
+
             KerbalTypeField.SetValue(crew, newType);
         }
 
@@ -166,8 +191,7 @@ namespace LunaClient.Systems.KerbalSys
         #endregion
 
         #region Private
-
-
+        
         /// <summary>
         /// Runs trough the concurrentKerbalQueue and process them
         /// </summary>

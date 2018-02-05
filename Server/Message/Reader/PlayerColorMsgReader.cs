@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using LunaCommon.Message.Data.Color;
+﻿using LunaCommon.Message.Data.Color;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
@@ -8,6 +6,7 @@ using Server.Client;
 using Server.Context;
 using Server.Message.Reader.Base;
 using Server.Server;
+using System.Linq;
 
 namespace Server.Message.Reader
 {
@@ -23,9 +22,9 @@ namespace Server.Message.Reader
                     break;
                 case PlayerColorMessageType.Set:
                     var data = (PlayerColorSetMsgData)message;
-                    if (data.PlayerName != client.PlayerName) return;
+                    if (data.PlayerColor.PlayerName != client.PlayerName) return;
 
-                    client.PlayerColor = data.Color;
+                    client.PlayerColor = data.PlayerColor.Color;
                     MessageQueuer.RelayMessage<PlayerColorSrvMsg>(client, data);
                     break;
             }
@@ -33,13 +32,14 @@ namespace Server.Message.Reader
 
         private static void SendAllPlayerColors(ClientStructure client)
         {
-            var sendColors = new Dictionary<string, string>();
-
-            foreach (var otherClient in ClientRetriever.GetAuthenticatedClients().Where(c => !Equals(c, client) && c.PlayerColor != null))
-                sendColors[otherClient.PlayerName] = otherClient.PlayerColor;
-
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<PlayerColorReplyMsgData>();
-            msgData.PlayersColors = sendColors.ToArray();
+            msgData.PlayersColors = ClientRetriever.GetAuthenticatedClients().Where(c => !Equals(c, client))
+                .Select(c => new PlayerColor
+                {
+                    PlayerName = c.PlayerName,
+                    Color = c.PlayerColor
+                }).ToArray();
+            msgData.PlayerColorsCount = msgData.PlayersColors.Length;
 
             MessageQueuer.SendToClient<PlayerColorSrvMsg>(client, msgData);
         }

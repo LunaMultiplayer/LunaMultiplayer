@@ -1,6 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
@@ -13,43 +15,44 @@ namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselProtoMessageSender : SubSystem<VesselProtoSystem>, IMessageSender
     {
+        /// <summary>
+        /// Pre allocated array to store the vessel data into it. Max 10 megabytes
+        /// </summary>
+        private static readonly byte[] VesselSerializedBytes = new byte[10 * 1024 * 1000];
+
         public void SendMessage(IMessageData msg)
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
-        }
-
-        public void SendVesselMessage(Vessel vessel)
-        {
-            if (vessel == null || vessel.situation == Vessel.Situations.PRELAUNCH || VesselCommon.IsInSafetyBubble(vessel))
-                return;
-
-            /* Doing a Vessel.Backup takes a lot of time... 
-             * I tried to make a handler that redo the constructor of ProtoVessel but 
-             * it's very unstable as lingoona acces invalid addresses...
-             * Looks like we won't be able to backup the proto in another thread, at least
-             * in the near future :(
-             * Do not call it in this way as we will send a NOT UPDATED protovessel!
-             * SendVesselMessage(vessel.protoVessel);
-             */
-            var backup = vessel.BackupVessel();
-            SendVesselMessage(backup);
-        }
-        
-        public void SendVesselMessage(ProtoVessel protoVessel)
-        {
-            if (protoVessel == null) return;
-            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
         }
 
         public void SendVesselMessage(IEnumerable<Vessel> vessels)
         {
             foreach (var vessel in vessels)
             {
-                SendVesselMessage(vessel);
+                SendVesselMessage(vessel, false);
             }
         }
 
+        public void SendVesselMessage(Vessel vessel, bool force)
+        {
+            if (vessel == null || VesselCommon.IsSpectating || vessel.state == Vessel.State.DEAD)
+                return;
+
+            VesselProtoSystem.CurrentlyUpdatingVesselId = vessel.id;
+            var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
+            VesselProtoSystem.CurrentlyUpdatingVesselId = Guid.Empty;
+            
+            if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
+                SendVesselMessage(vessel.protoVessel);
+        }
+
         #region Private methods
+
+        private void SendVesselMessage(ProtoVessel protoVessel)
+        {
+            if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
+            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
+        }
 
         /// <summary>
         /// This method prepares the protovessel class and send the message, it's intended to be run in another thread
@@ -57,21 +60,41 @@ namespace LunaClient.Systems.VesselProtoSys
         private void PrepareAndSendProtoVessel(ProtoVessel protoVessel)
         {
             //Never send empty vessel id's (it happens with flags...)
-            if (protoVessel.vesselID == Guid.Empty) return;
+            if (protoVessel.vesselID == Guid.Empty || protoVessel.vesselName == null) return;
 
-            var vesselBytes = VesselSerializer.SerializeVessel(protoVessel);
-            if (vesselBytes.Length > 0)
+            //VesselSerializedBytes is shared so lock it!
+            lock (VesselSerializedBytes)
             {
-                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
-                msgData.VesselId = protoVessel.vesselID;
-                msgData.VesselData = vesselBytes;
+                VesselSerializer.SerializeVesselToArray(protoVessel, VesselSerializedBytes, out var numBytes);
+                if (numBytes > 0)
+                {
+                    VesselsProtoStore.RawUpdateVesselProtoData(VesselSerializedBytes, numBytes, protoVessel.vesselID);
 
-                SendMessage(msgData);
+                    var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
+                    FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
+                }
+                else
+                {
+                    if (protoVessel.vesselType == VesselType.Debris)
+                    {
+                        LunaLog.Log($"Serialization of debris vessel: {protoVessel.vesselID} name: {protoVessel.vesselName} failed. Adding to kill list");
+                        SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(protoVessel.vesselID);
+                    }
+                }
             }
-            else
-            {
-                LunaLog.LogError($"[LMP]: Failed to create byte[] data for {protoVessel.vesselID}");
-            }
+        }
+
+        private void FillAndSendProtoMessageData(Guid vesselId, VesselProtoMsgData msgData, byte[] vesselBytes, int numBytes)
+        {
+            msgData.Vessel.VesselId = vesselId;
+
+            if (msgData.Vessel.Data.Length < numBytes)
+                Array.Resize(ref msgData.Vessel.Data, numBytes);
+
+            Array.Copy(vesselBytes, 0, msgData.Vessel.Data, 0, numBytes);
+            msgData.Vessel.NumBytes = numBytes;
+
+            SendMessage(msgData);
         }
 
         #endregion

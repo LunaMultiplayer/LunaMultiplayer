@@ -14,15 +14,19 @@ namespace LunaCommon.Message.Server
         internal VesselSrvMsg() { }
 
         /// <inheritdoc />
+        public override string ClassName { get; } = nameof(VesselSrvMsg);
+
+        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)VesselMessageType.ListReply] = typeof(VesselListReplyMsgData),
             [(ushort)VesselMessageType.VesselsReply] = typeof(VesselsReplyMsgData),
             [(ushort)VesselMessageType.Proto] = typeof(VesselProtoMsgData),
             [(ushort)VesselMessageType.Dock] = typeof(VesselDockMsgData),
             [(ushort)VesselMessageType.Remove] = typeof(VesselRemoveMsgData),
             [(ushort)VesselMessageType.Position] = typeof(VesselPositionMsgData),
-            [(ushort)VesselMessageType.Flightstate] = typeof(VesselFlightStateMsgData)
+            [(ushort)VesselMessageType.Flightstate] = typeof(VesselFlightStateMsgData),
+            [(ushort)VesselMessageType.Update] = typeof(VesselUpdateMsgData),
+            [(ushort)VesselMessageType.Resource] = typeof(VesselResourceMsgData)
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Vessel;

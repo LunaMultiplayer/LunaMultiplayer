@@ -14,10 +14,10 @@ namespace LunaClient.Windows.Status
 
         #region Public
 
-        public override bool Display => MainSystem.NetworkState >= ClientState.Running &&
+        public override bool Display => MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
                                         HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
-        public IEnumerable<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
+        public List<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
         public bool DisconnectEventHandled { get; set; } = true;
         public bool ColorEventHandled { get; set; } = true;
 
@@ -31,7 +31,7 @@ namespace LunaClient.Windows.Status
 
         protected const float WindowHeight = 400;
         protected const float WindowWidth = 300;
-        private const float UpdateStatusInterval = .2f;
+        private const float UpdateStatusInterval = .5f;
 
         private double LastStatusUpdate { get; set; }
 
@@ -45,15 +45,16 @@ namespace LunaClient.Windows.Status
 
         public override void OnGui()
         {
-            if (!ColorEventHandled)
-            {
-                PlayerNameStyle = new Dictionary<string, GUIStyle>();
-                ColorEventHandled = true;
-            }
             base.OnGui();
             
             if (Display)
             {
+                if (!ColorEventHandled)
+                {
+                    PlayerNameStyle = new Dictionary<string, GUIStyle>();
+                    ColorEventHandled = true;
+                }
+
                 //Calculate the minimum size of the minimize window by drawing it off the screen
                 WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6703 + MainSystem.WindowOffset, 
                     WindowRect, DrawContent, _title, WindowStyle, LayoutOptions));
@@ -101,12 +102,14 @@ namespace LunaClient.Windows.Status
             StateTextStyle.fontSize = 12;
             StateTextStyle.stretchWidth = true;
 
-            SubspaceDisplay = new SubspaceDisplayEntry[0];
+            SubspaceDisplay = new List<SubspaceDisplayEntry>();
         }
 
         public override void Update()
         {
-            if (Display && Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
+            if (!Display) return;
+
+            if (Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
             {
                 LastStatusUpdate = Time.realtimeSinceStartup;
                 SubspaceDisplay = SystemsContainer.Get<WarpSystem>().WarpEntryDisplay.GetSubspaceDisplayEntries();
@@ -124,14 +127,14 @@ namespace LunaClient.Windows.Status
 
         private void CheckWindowLock()
         {
-            if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
-            {
-                RemoveWindowLock();
-                return;
-            }
-
             if (Display)
             {
+                if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
+                {
+                    RemoveWindowLock();
+                    return;
+                }
+
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 

@@ -49,9 +49,7 @@ namespace Server.Server
             if (client.ConnectionStatus == ConnectionStatus.Connected)
                 client.LastReceiveTime = ServerContext.ServerClock.ElapsedMilliseconds;
 
-            var messageBytes = msg.ReadBytes(msg.LengthBytes);
-
-            var message = DeserializeMessage(messageBytes);
+            var message = DeserializeMessage(msg);
             if (message == null) return;
 
             LmpPluginHandler.FireOnMessageReceived(client, message);
@@ -73,17 +71,13 @@ namespace Server.Server
 
             //Handle the message
             HandlerDictionary[message.MessageType].HandleMessage(client, message.Data);
-
-            //The server does not recycle RECEIVED messages as memory spikes are not so important here
-            //Also this would mess with the relay system
-            //message.Recycle();
         }
 
-        private static IClientMessageBase DeserializeMessage(byte[] messageBytes)
+        private static IClientMessageBase DeserializeMessage(NetIncomingMessage msg)
         {
             try
             {
-                return ServerContext.ClientMessageFactory.Deserialize(messageBytes, LunaTime.UtcNow.Ticks) as IClientMessageBase;
+                return ServerContext.ClientMessageFactory.Deserialize(msg, LunaTime.UtcNow.Ticks) as IClientMessageBase;
             }
             catch (Exception e)
             {

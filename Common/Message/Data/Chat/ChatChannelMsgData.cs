@@ -1,4 +1,6 @@
-﻿using LunaCommon.Message.Types;
+﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
+using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Chat
 {
@@ -8,16 +10,42 @@ namespace LunaCommon.Message.Data.Chat
         internal ChatChannelMsgData() { }
         public override ChatMessageType ChatMessageType => ChatMessageType.ChannelMessage;
 
-        private string ChannelPriv { get; set; }
+        public bool SendToAll;
+        public string Channel;
+        public string Text;
 
-        public string Channel
+        public override string ClassName { get; } = nameof(ChatChannelMsgData);
+
+        internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            get => SendToAll ? string.Empty : ChannelPriv;
-            set => ChannelPriv = SendToAll ? string.Empty : value;
+            base.InternalSerialize(lidgrenMsg);
+
+            lidgrenMsg.Write(SendToAll);
+            if (SendToAll)
+            {
+                Channel = string.Empty;
+            }
+            lidgrenMsg.WritePadBits();
+
+            lidgrenMsg.Write(Channel);
+            lidgrenMsg.Write(Text);
         }
 
-        public string Text { get; set; }
+        internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
+        {
+            base.InternalDeserialize(lidgrenMsg);
 
-        public bool SendToAll { get; set; }
+            SendToAll = lidgrenMsg.ReadBoolean();
+            lidgrenMsg.SkipPadBits();
+
+            Channel = lidgrenMsg.ReadString();
+            Text = lidgrenMsg.ReadString();
+        }
+
+        internal override int InternalGetMessageSize()
+        {
+            //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
+            return base.InternalGetMessageSize() + sizeof(byte) + Channel.GetByteCount() + Text.GetByteCount();
+        }
     }
 }
