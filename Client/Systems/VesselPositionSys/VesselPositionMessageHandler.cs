@@ -40,7 +40,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 //Here we check that the message timestamp is lower than the message we received. UDP is not reliable and can deliver packets not in order!
                 //Also we only process messages if the interpolation is finished
-                if (existingPositionUpdate.TimeStamp < msgData.TimeStamp && (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted) && 
+                if (existingPositionUpdate.TimeStamp < msgData.TimeStamp && 
                     VesselPositionSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate) && existingTargetPositionUpdate.TimeStamp < msgData.TimeStamp)
                 {
                     if (SettingsSystem.CurrentSettings.InterpolationEnabled)
