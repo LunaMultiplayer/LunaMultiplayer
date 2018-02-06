@@ -40,12 +40,9 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 //Here we check that the message timestamp is lower than the message we received. UDP is not reliable and can deliver packets not in order!
                 //Also we only process messages if the interpolation is finished
-                if (existingPositionUpdate.TimeStamp < msgData.TimeStamp && (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted) &&
+                if (existingPositionUpdate.TimeStamp < msgData.TimeStamp && (existingPositionUpdate.InterpolationFinished || !existingPositionUpdate.InterpolationStarted) && 
                     VesselPositionSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate) && existingTargetPositionUpdate.TimeStamp < msgData.TimeStamp)
                 {
-                    //Overwrite the TARGET data with the data we've received in the message
-                    MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
-
                     if (SettingsSystem.CurrentSettings.InterpolationEnabled)
                     {
                         //Here we set the start position to the current VESSEL position in order to LERP correctly
@@ -56,6 +53,9 @@ namespace LunaClient.Systems.VesselPositionSys
                         //Here we just set the interpolation as not started
                         existingPositionUpdate.ResetFields();
                     }
+
+                    //Overwrite the TARGET data with the data we've received in the message
+                    MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
                 }
             }
         }
