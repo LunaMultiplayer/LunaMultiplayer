@@ -15,9 +15,9 @@ namespace LunaClient.VesselUtilities
 
                 return VesselCommon.CreateSafeProtoVesselFromConfigNode(vesselNode, new Guid(configGuid));
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                LunaLog.LogError("[LMP]: Error while deserializing vessel");
+                LunaLog.LogError($"[LMP]: Error while deserializing vessel: {e}");
                 return null;
             }
         }
@@ -59,9 +59,9 @@ namespace LunaClient.VesselUtilities
             {
                 protoVessel.Save(configNode);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                LunaLog.LogError("[LMP]: Error while saving vessel");
+                LunaLog.LogError($"[LMP]: Error while saving vessel: {e}");
                 return false;
             }
 
