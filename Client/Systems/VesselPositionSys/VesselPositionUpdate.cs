@@ -334,12 +334,12 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.orbitDriver.orbit.SetOrbit
             (
                 //This probably won't work as orbital definitions aren't necessarily a linear function, and lerping applies a linear interpolation
-                Lerp(Orbit[0], Target.Orbit[0], lerpPercentage),
+                LerpAngle(Orbit[0], Target.Orbit[0], lerpPercentage),
                 Lerp(Orbit[1], Target.Orbit[1], lerpPercentage),
                 Lerp(Orbit[2], Target.Orbit[2], lerpPercentage),
                 LerpAngle(Orbit[3], Target.Orbit[3], lerpPercentage),
                 LerpAngle(Orbit[4], Target.Orbit[4], lerpPercentage),
-                Lerp(Orbit[5], Target.Orbit[5], lerpPercentage),
+                LerpAngle(Orbit[5], Target.Orbit[5], lerpPercentage),
                 Lerp(Orbit[6], Target.Orbit[6], lerpPercentage),
                 Body
             );
