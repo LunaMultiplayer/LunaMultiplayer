@@ -181,7 +181,7 @@ namespace LunaClient.Systems.VesselDockSys
                 yield return waitInterval;
             }
 
-            if (FlightGlobals.ActiveVessel.id == dockInfo.DominantVesselId)
+            if (FlightGlobals.ActiveVessel.id != null && FlightGlobals.ActiveVessel.id == dockInfo.DominantVesselId)
             {
                 /* We are NOT the dominant vessel so wait 5 seconds so the dominant vessel detects the docking.
                  * If we send the vessel definition BEFORE the dominant detects it, then the dominant won't be able
