@@ -222,7 +222,7 @@ namespace LunaClient.VesselUtilities
         public static bool IsInSafetyBubble(Vessel vessel)
         {
             //If not at Kerbin or past ceiling we're definitely clear
-            if (vessel == null || vessel.mainBody?.name != "Kerbin")
+            if (vessel == null || vessel.mainBody?.flightGlobalsIndex != 1 || vessel.orbit?.referenceBody?.flightGlobalsIndex != 1)
                 return false;
 
             return IsInSafetyBubble(vessel.GetWorldPos3D());
@@ -238,7 +238,7 @@ namespace LunaClient.VesselUtilities
             if (protoVessel.orbitSnapShot != null)
                 return IsInSafetyBubble(protoVessel.latitude, protoVessel.longitude, protoVessel.altitude, protoVessel.orbitSnapShot.ReferenceBodyIndex);
 
-            return IsInSafetyBubble(protoVessel.latitude, protoVessel.longitude, protoVessel.altitude, 1);
+            return false;
         }
 
         /// <summary>
