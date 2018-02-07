@@ -81,12 +81,12 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.AppendLine($"Mean anomaly: {ourVessel.orbitDriver.orbit.meanAnomalyAtEpoch}");
                         StringBuilder.AppendLine($"Epoch: {ourVessel.orbitDriver.orbit.epoch}");
 
-                        VectorText = StringBuilder.ToString();
+                        OrbitText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
                     }
                     else
                     {
-                        VectorText = "You have to be in orbit";
+                        OrbitText = "You have to be in orbit";
                     }
                 }
 
@@ -213,6 +213,7 @@ namespace LunaClient.Windows.Debug
         //private parts
         public bool DisplayFast { get; set; }
         public string VectorText { get; set; } = "";
+        public string OrbitText { get; set; } = "";
         public string NtpText { get; set; } = "";
         public string ConnectionText { get; set; } = "";
         public string VesselStoreText { get; set; } = "";
