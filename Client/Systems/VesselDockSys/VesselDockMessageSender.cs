@@ -42,6 +42,8 @@ namespace LunaClient.Systems.VesselDockSys
 
         private void CreateAndSendDockMessage(VesselDockStructure dock, int subspaceId, byte[] vesselBytes)
         {
+            if (dock == null) return;
+
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselDockMsgData>();
             msgData.WeakVesselId = dock.WeakVesselId;
             msgData.DominantVesselId = dock.DominantVesselId;
