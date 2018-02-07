@@ -373,16 +373,15 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyOrbitInterpolation(float lerpPercentage)
         {
+            //Avoid lerping longitude of ascending node / arg of periapsis values when the inclination / eccentricity is close to 0 as it generate rounding errors!
+            if (Math.Abs(Orbit[0]) < 0.001 || Math.Abs(Orbit[1]) < 0.001)
+                lerpPercentage = 1;
+
             var inclination = LerpAngle(Orbit[0], Target.Orbit[0], lerpPercentage);
             var eccentricity = Lerp(Orbit[1], Target.Orbit[1], lerpPercentage);
             var semiMajorAxis = Lerp(Orbit[2], Target.Orbit[2], lerpPercentage);
-
-            //Avoid lerping longitude of ascending node values when the inclination is close to 0 as it generate rounding errors!
-            var lan = Math.Abs(inclination) > 0.0001 ? LerpAngle(Orbit[3], Target.Orbit[3], lerpPercentage) : Target.Orbit[3];
-
-            //Avoid lerping arg of periapsis values when the eccentricity is close to 0 as it generate rounding errors!
-            var argPeriapsis = Math.Abs(eccentricity) > 0.0001 ? LerpAngle(Orbit[4], Target.Orbit[4], lerpPercentage) : Target.Orbit[4];
-
+            var lan = LerpAngle(Orbit[3], Target.Orbit[3], lerpPercentage);
+            var argPeriapsis = LerpAngle(Orbit[4], Target.Orbit[4], lerpPercentage);
             var meanAnomalyEpoch = LerpAngle(Orbit[5], Target.Orbit[5], lerpPercentage);
             var epoch = Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
 
