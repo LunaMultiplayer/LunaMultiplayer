@@ -331,18 +331,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyInterpolations(float lerpPercentage)
         {
-            Vessel.orbitDriver.orbit.SetOrbit
-            (
-                //This probably won't work as orbital definitions aren't necessarily a linear function, and lerping applies a linear interpolation
-                LerpAngle(Orbit[0], Target.Orbit[0], lerpPercentage),
-                Lerp(Orbit[1], Target.Orbit[1], lerpPercentage),
-                Lerp(Orbit[2], Target.Orbit[2], lerpPercentage),
-                LerpAngle(Orbit[3], Target.Orbit[3], lerpPercentage),
-                LerpAngle(Orbit[4], Target.Orbit[4], lerpPercentage),
-                LerpAngle(Orbit[5], Target.Orbit[5], lerpPercentage),
-                Lerp(Orbit[6], Target.Orbit[6], lerpPercentage),
-                Body
-            );
+            ApplyOrbitInterpolation(lerpPercentage);
 
             //TODO: Is CoM and terrainNormal really needed?
             Vessel.CoM = Vector3.Lerp(CoM, Target.CoM, lerpPercentage);
@@ -380,6 +369,34 @@ namespace LunaClient.Systems.VesselPositionSys
                         break;
                 }
             }
+        }
+
+        private void ApplyOrbitInterpolation(float lerpPercentage)
+        {
+            var inclination = LerpAngle(Orbit[0], Target.Orbit[0], lerpPercentage);
+            var eccentricity = Lerp(Orbit[1], Target.Orbit[1], lerpPercentage);
+            var semiMajorAxis = Lerp(Orbit[2], Target.Orbit[2], lerpPercentage);
+
+            //Avoid lerping longitude of ascending node values when the inclination is close to 0 as it generate rounding errors!
+            var lan = Math.Abs(inclination) > 0.0001 ? LerpAngle(Orbit[3], Target.Orbit[3], lerpPercentage) : Target.Orbit[3];
+
+            //Avoid lerping arg of periapsis values when the eccentricity is close to 0 as it generate rounding errors!
+            var argPeriapsis = Math.Abs(eccentricity) > 0.0001 ? LerpAngle(Orbit[4], Target.Orbit[4], lerpPercentage) : Target.Orbit[4];
+
+            var meanAnomalyEpoch = LerpAngle(Orbit[5], Target.Orbit[5], lerpPercentage);
+            var epoch = Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
+
+            Vessel.orbitDriver.orbit.SetOrbit
+            (
+                inclination,
+                eccentricity,
+                semiMajorAxis,
+                lan,
+                argPeriapsis,
+                meanAnomalyEpoch,
+                epoch,
+                Body
+            );
         }
 
         /// <summary>
