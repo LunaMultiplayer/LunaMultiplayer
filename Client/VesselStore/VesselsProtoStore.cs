@@ -77,8 +77,8 @@ namespace LunaClient.VesselStore
             var ownVesselData = VesselSerializer.SerializeVessel(vessel.protoVessel);
             if (ownVesselData.Length > 0)
             {
-                var newProtoUpdate = new VesselProtoUpdate(ownVesselData, ownVesselData.Length, FlightGlobals.ActiveVessel.id);
-                AllPlayerVessels.AddOrUpdate(FlightGlobals.ActiveVessel.id, newProtoUpdate, (key, existingVal) => newProtoUpdate);
+                var newProtoUpdate = new VesselProtoUpdate(ownVesselData, ownVesselData.Length, vessel.id);
+                AllPlayerVessels.AddOrUpdate(vessel.id, newProtoUpdate, (key, existingVal) => newProtoUpdate);
             }
         }
 
