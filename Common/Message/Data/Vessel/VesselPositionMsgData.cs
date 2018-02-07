@@ -57,7 +57,7 @@ namespace LunaCommon.Message.Data.Vessel
 
             lidgrenMsg.Write(HeightFromTerrain);
             lidgrenMsg.Write(TimeStamp);
-            lidgrenMsg.Write(TimeStamp);
+            lidgrenMsg.Write(GameTime);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
