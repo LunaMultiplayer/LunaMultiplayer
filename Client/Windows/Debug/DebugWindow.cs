@@ -67,6 +67,29 @@ namespace LunaClient.Windows.Debug
                     }
                 }
 
+                if (DisplayOrbit)
+                {
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.orbitDriver?.orbit != null)
+                    {
+                        var ourVessel = FlightGlobals.ActiveVessel;
+
+                        StringBuilder.AppendLine($"Semi major axis: {ourVessel.orbitDriver.orbit.semiMajorAxis}");
+                        StringBuilder.AppendLine($"Eccentricity: {ourVessel.orbitDriver.orbit.eccentricity}");
+                        StringBuilder.AppendLine($"Inclination: {ourVessel.orbitDriver.orbit.inclination}");
+                        StringBuilder.AppendLine($"LAN: {ourVessel.orbitDriver.orbit.LAN}");
+                        StringBuilder.AppendLine($"Arg Periapsis: {ourVessel.orbitDriver.orbit.argumentOfPeriapsis}");
+                        StringBuilder.AppendLine($"Mean anomaly: {ourVessel.orbitDriver.orbit.meanAnomalyAtEpoch}");
+                        StringBuilder.AppendLine($"Epoch: {ourVessel.orbitDriver.orbit.epoch}");
+
+                        VectorText = StringBuilder.ToString();
+                        StringBuilder.Length = 0;
+                    }
+                    else
+                    {
+                        VectorText = "You have to be in orbit";
+                    }
+                }
+
                 if (DisplayNtp)
                 {
                     StringBuilder.AppendLine($"Server start time: {new DateTime(TimeSyncerSystem.ServerStartTime):yyyy-MM-dd HH-mm-ss.ffff}");
@@ -204,6 +227,7 @@ namespace LunaClient.Windows.Debug
         private float WindowWidth { get; } = 400;
 
         protected bool DisplayVectors { get; set; }
+        protected bool DisplayOrbit { get; set; }
         protected bool DisplayNtp { get; set; }
         protected bool DisplayConnectionQueue { get; set; }
 

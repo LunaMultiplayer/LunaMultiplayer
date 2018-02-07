@@ -10,6 +10,7 @@ namespace LunaClient.Windows.Debug
             GUI.DragWindow(MoveRect);
             DisplayFast = GUILayout.Toggle(DisplayFast, "Fast debug update", ButtonStyle);
             DisplayVectors = GUILayout.Toggle(DisplayVectors, "Display vessel vectors", ButtonStyle);
+            DisplayOrbit = GUILayout.Toggle(DisplayOrbit, "Display orbit info", ButtonStyle);
             DisplayVesselStoreData = GUILayout.Toggle(DisplayVesselStoreData, "Display vessel store data", ButtonStyle);
             if (DisplayVesselStoreData)
                 GUILayout.Label(VesselStoreText, LabelStyle);
