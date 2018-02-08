@@ -2,7 +2,6 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Utilities;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using System;
@@ -19,15 +18,9 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
             {
-                CoroutineUtil.StartDelayedRoutine(() =>
-                {
-                    if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
-                        return;
-
-                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
-                    //Add our own vessel to the dictionary aswell
-                    VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
-                }, 1.5f);
+                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                //Add our own vessel to the dictionary aswell
+                VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
 
                 ScreenMessages.PostScreenMessage("Remember!! While you're inside the safety bubble you won't see other players!!", 10f, ScreenMessageStyle.UPPER_CENTER);
             }
