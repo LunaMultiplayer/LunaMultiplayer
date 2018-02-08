@@ -141,8 +141,8 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             foreach (var vessel in vesselToRemove)
             {
-                LunaLog.Log($"[LMP]: Vessel {vessel.id} name {vessel.vesselName} it's an inactive vessel inside the safety bubble. Adding to kill list");
-                AddToKillList(vessel.id);
+                LunaLog.Log($"[LMP]: Vessel {vessel.id} name {vessel.vesselName} it's an inactive vessel inside the safety bubble.");
+                KillVessel(vessel.id);
             }
         }
 
