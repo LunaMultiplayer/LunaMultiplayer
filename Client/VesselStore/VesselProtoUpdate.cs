@@ -29,7 +29,6 @@ namespace LunaClient.VesselStore
                 }
                 return _deserializedProtoVessel;
             }
-            private set => _deserializedProtoVessel = value;
         }
 
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
@@ -124,7 +123,7 @@ namespace LunaClient.VesselStore
                 {
                     throw new Exception("BUG: Tried to update the Vessel with a proto from a different vessel ID.");
                 }
-                ProtoVessel = newProto;
+                _deserializedProtoVessel = newProto;
             }
 
             //If protovessel is still null then unfortunately we must remove that vessel as the server sent us a bad vessel
