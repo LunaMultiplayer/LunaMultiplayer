@@ -368,7 +368,7 @@ namespace LunaClient.Systems.VesselPositionSys
                         break;
                     default:
                         LunaLog.LogWarning("Position system setting out of range.  Setting to default...");
-                        SettingsSystem.CurrentSettings.PositionSystem = 1;
+                        SettingsSystem.CurrentSettings.PositionSystem = 2;
                         break;
                 }
             }

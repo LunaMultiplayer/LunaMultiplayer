@@ -12,9 +12,6 @@ namespace LunaClient.VesselStore
     {
         #region Fields & properties
 
-        /// <summary>
-        /// VesselID is immutable--only set in the constructor.  This prevents VesselProtoUpdates from having a corrupted VesselId.
-        /// </summary>
         public Guid VesselId { get; }
         public bool VesselHasUpdate { get; set; }
 
@@ -64,19 +61,13 @@ namespace LunaClient.VesselStore
         {
             _numBytes = numBytes;
 
+            if (VesselId == Guid.Empty)
+                throw new Exception("Cannot create a VesselProtoUpdate with an empty vesselId.");
+
             VesselId = vesselId;
             CopyVesselBytes(vesselData);
-            validate();
         }
-
-        private void validate()
-        {
-            if (VesselId == Guid.Empty)
-            {
-                throw new Exception("Cannot create a VesselProtoUpdate with an empty ID.");
-            }
-        }
-
+        
         /// <summary>
         /// Update this class with the new data received
         /// </summary>
