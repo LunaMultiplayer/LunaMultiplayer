@@ -33,10 +33,18 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.vesselName = msgData.Name;
             vessel.vesselType = (VesselType) Enum.Parse(typeof(VesselType), msgData.Type);
             vessel.situation = (Vessel.Situations) Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
-            vessel.Landed = msgData.Landed;
+
+            //Only change this value if vessel takes off. When the vessel lands the vessel must be reloaded as a whole by the vessel proto system
+            if (vessel.Landed && !msgData.Landed)
+                vessel.Landed = msgData.Landed;
+
             vessel.landedAt = msgData.LandedAt;
             vessel.displaylandedAt = msgData.DisplayLandedAt;
-            vessel.Splashed = msgData.Splashed;
+
+            //Only change this value if vessel splashes. When the vessel splashes the vessel must be reloaded as a whole by the vessel proto system
+            if (vessel.Splashed && !msgData.Splashed)
+                vessel.Splashed = msgData.Splashed;
+
             vessel.missionTime = msgData.MissionTime;
             vessel.launchTime = msgData.LaunchTime;
             vessel.lastUT = msgData.LastUt;
