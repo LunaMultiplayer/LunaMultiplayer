@@ -85,7 +85,7 @@ namespace Server.Settings.Definition
         public int HearbeatMsInterval { get; set; } = 1000;
 
         [XmlComment(Value = "Connection timeout in Ms")]
-        public int ConnectionMsTimeout { get; set; } = 5000;
+        public int ConnectionMsTimeout { get; set; } = 30000;
 
         [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player switch to another vessel.")]
         public bool DropControlOnVesselSwitching { get; set; } = true;
