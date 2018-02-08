@@ -61,7 +61,7 @@ namespace LunaClient.VesselStore
         {
             _numBytes = numBytes;
 
-            if (VesselId == Guid.Empty)
+            if (vesselId == Guid.Empty)
                 throw new Exception("Cannot create a VesselProtoUpdate with an empty vesselId.");
 
             VesselId = vesselId;
