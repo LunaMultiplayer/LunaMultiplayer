@@ -119,7 +119,7 @@ namespace LunaClient.VesselStore
             //In case there's a deserialization error skip it and keep the older proto
             if (newProto != null)
             {
-                if(newProto.vesselID != ProtoVessel.vesselID)
+                if(newProto.vesselID != VesselId)
                 {
                     throw new Exception("BUG: Tried to update the Vessel with a proto from a different vessel ID.");
                 }
