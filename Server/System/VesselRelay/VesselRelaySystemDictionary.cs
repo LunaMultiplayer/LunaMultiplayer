@@ -134,7 +134,7 @@ namespace Server.System.VesselRelay
                         while (queue.Value.TryPeek(out var relayItem) && subspaceTime >= relayItem.Msg.SentTime)
                         {
                             queue.Value.TryDequeue(out relayItem);
-                            MessageQueuer.SendMessageToSubspace<VesselSrvMsg>(relayItem.Msg, subspaceVessels.Key);
+                            MessageQueuer.SendMessageToSubspace<VesselSrvMsg>(relayItem?.Msg, subspaceVessels.Key);
                         }
                     }
                 }
