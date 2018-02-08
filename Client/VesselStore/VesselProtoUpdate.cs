@@ -3,7 +3,6 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
-using LunaCommon;
 using System;
 using System.Collections.Concurrent;
 
@@ -53,7 +52,6 @@ namespace LunaClient.VesselStore
         private byte[] _vesselData = new byte[1000];
         private int _numBytes;
         private ConfigNode _vesselNode;
-        private string _vesselHash;
         private bool _needToDeserializeData = true;
 
         #endregion
@@ -62,8 +60,10 @@ namespace LunaClient.VesselStore
 
         public VesselProtoUpdate(byte[] vesselData, int numBytes, Guid vesselId)
         {
+            _numBytes = numBytes;
+
             VesselId = vesselId;
-            CopyVesselBytes(vesselData, numBytes);
+            CopyVesselBytes(vesselData);
         }
 
         /// <summary>
@@ -76,12 +76,10 @@ namespace LunaClient.VesselStore
                 LunaLog.LogError("Cannot update a VesselProtoUpdate with a differente vesselId");
                 return;
             }
-            var newHash = Common.CalculateSha256Hash(vesselData);
-            if (_vesselHash == newHash) return; //Skip Updating as the hash is the same
 
-            CopyVesselBytes(vesselData, numBytes);
-
-            _vesselHash = newHash;
+            _numBytes = numBytes;
+            CopyVesselBytes(vesselData);
+            
             _needToDeserializeData = true;
             VesselHasUpdate = true;
         }
@@ -89,12 +87,11 @@ namespace LunaClient.VesselStore
         /// <summary>
         /// Copies the received vessel bytes to this class
         /// </summary>
-        private void CopyVesselBytes(byte[] vesselData, int numBytes)
+        private void CopyVesselBytes(byte[] vesselData)
         {
-            if (_vesselData.Length < numBytes)
-                Array.Resize(ref _vesselData, numBytes);
-            Array.Copy(vesselData, _vesselData, numBytes);
-            _numBytes = numBytes;
+            if (_vesselData.Length < _numBytes)
+                Array.Resize(ref _vesselData, _numBytes);
+            Array.Copy(vesselData, _vesselData, _numBytes);
         }
 
         /// <summary>
