@@ -115,7 +115,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public void Restart()
         {
             RestartRequested = true;
-            TimeStamp = Target.TimeStamp;
+            TimeStamp = Target?.TimeStamp ?? TimeStamp;
             ResetFields();
         }
 
