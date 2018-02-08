@@ -12,7 +12,7 @@ namespace LunaCommon.Locks
         /// <summary>
         /// Provides a lock around modifications to the AsteroidLock object to ensure both atomic changes to the AsteroidLock and a memory barrier for changes to the AsteroidLock
         /// </summary>
-        private static readonly object AsteroidSyncLock = new object();
+        private readonly object _asteroidSyncLock = new object();
 
         /// <summary>
         /// You can't have more than one user with the asteroid lock so it's a simple object
@@ -47,7 +47,7 @@ namespace LunaCommon.Locks
             switch (lockDefinition.Type)
             {
                 case LockType.Asteroid:
-                    lock (AsteroidSyncLock)
+                    lock (_asteroidSyncLock)
                     {
                         if (AsteroidLock == null)
                             AsteroidLock = new LockDefinition(LockType.Asteroid, lockDefinition.PlayerName);
@@ -80,7 +80,7 @@ namespace LunaCommon.Locks
             switch (lockDefinition.Type)
             {
                 case LockType.Asteroid:
-                    lock (AsteroidSyncLock)
+                    lock (_asteroidSyncLock)
                     {
                         AsteroidLock = null;
                     }
@@ -110,7 +110,7 @@ namespace LunaCommon.Locks
             switch (lockType)
             {
                 case LockType.Asteroid:
-                    lock (AsteroidSyncLock)
+                    lock (_asteroidSyncLock)
                     {
                         AsteroidLock = null;
                     }
@@ -139,7 +139,7 @@ namespace LunaCommon.Locks
         {
             new Task(() =>
             {
-                lock (AsteroidSyncLock)
+                lock (_asteroidSyncLock)
                 {
                     AsteroidLock = null;
                 }
