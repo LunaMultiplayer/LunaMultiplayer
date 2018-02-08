@@ -42,7 +42,10 @@ namespace LunaCommon.Locks
             switch (lockDefinition.Type)
             {
                 case LockType.Asteroid:
-                    AsteroidLock = lockDefinition;
+                    if (AsteroidLock == null)
+                        AsteroidLock = new LockDefinition(LockType.Asteroid, lockDefinition.PlayerName);
+                    else
+                        AsteroidLock.PlayerName = lockDefinition.PlayerName;
                     break;
                 case LockType.Update:
                     UpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);

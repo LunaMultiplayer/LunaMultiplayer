@@ -25,18 +25,18 @@ namespace LunaCommon.Locks
                 case LockType.Spectator:
                     return SpectatorLockExists(playerName);
                 case LockType.Asteroid:
-                    return AsteroidLockBelongsToPlayer(playerName);
+                    return LockStore.AsteroidLock?.PlayerName == playerName;
                 case LockType.Control:
                     if (LockStore.ControlLocks.TryGetValue(vesselId, out var controlLock))
-                        return controlLock.PlayerName == playerName;
+                        return controlLock.Type == LockType.Control && controlLock.VesselId == vesselId && controlLock.PlayerName == playerName;
                     break;
                 case LockType.Update:
                     if (LockStore.UpdateLocks.TryGetValue(vesselId, out var updateLock))
-                        return updateLock.PlayerName == playerName;
+                        return updateLock.Type == LockType.Update && updateLock.VesselId == vesselId && updateLock.PlayerName == playerName;
                     break;
                 case LockType.UnloadedUpdate:
                     if (LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
-                        return unloadedUpdateLock.PlayerName == playerName;
+                        return unloadedUpdateLock.Type == LockType.UnloadedUpdate && unloadedUpdateLock.VesselId == vesselId && unloadedUpdateLock.PlayerName == playerName;
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
@@ -52,6 +52,8 @@ namespace LunaCommon.Locks
         {
             switch (type)
             {
+                case LockType.Asteroid:
+                    return LockStore.AsteroidLock != null;
                 case LockType.Control:
                     return LockStore.ControlLocks.ContainsKey(vesselId);
                 case LockType.Update:
@@ -70,6 +72,8 @@ namespace LunaCommon.Locks
         {
             switch (type)
             {
+                case LockType.Asteroid:
+                    return LockStore.AsteroidLock?.PlayerName;
                 case LockType.Control:
                     if (LockStore.ControlLocks.TryGetValue(vesselId, out var controlLock))
                         return controlLock.PlayerName;

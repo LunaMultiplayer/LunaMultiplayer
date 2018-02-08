@@ -1,4 +1,6 @@
-﻿namespace LunaCommon.Locks
+﻿using System;
+
+namespace LunaCommon.Locks
 {
     /// <summary>
     /// Class that retrieve locks specific for asteroids
@@ -10,7 +12,7 @@
         /// </summary>
         public bool AsteroidLockExists()
         {
-            return LockStore.AsteroidLock != null;
+            return LockExists(LockType.Asteroid, Guid.Empty);
         }
 
         /// <summary>
@@ -18,7 +20,7 @@
         /// </summary>
         public bool AsteroidLockBelongsToPlayer(string playerName)
         {
-            return LockStore.AsteroidLock?.PlayerName == playerName;
+            return LockBelongsToPlayer(LockType.Asteroid, Guid.Empty, playerName);
         }
 
         /// <summary>
@@ -26,7 +28,7 @@
         /// </summary>
         public string AsteroidLockOwner()
         {
-            return LockStore.AsteroidLock?.PlayerName;
+            return GetLockOwner(LockType.Asteroid, Guid.Empty);
         }
 
         /// <summary>
@@ -34,7 +36,7 @@
         /// </summary>
         public LockDefinition AsteroidLock()
         {
-            return LockStore.AsteroidLock;
+            return GetLock(LockType.Asteroid, string.Empty, Guid.Empty);
         }
     }
 }
