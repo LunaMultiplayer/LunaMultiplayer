@@ -367,7 +367,8 @@ namespace LunaClient.Systems.VesselPositionSys
                         MixedApplyInterpolationsToLoadedVessel(lerpPercentage);
                         break;
                     default:
-                        LunaLog.LogError("Position system setting out of range!");
+                        LunaLog.LogWarning("Position system setting out of range.  Setting to default...");
+                        SettingsSystem.CurrentSettings.PositionSystem = 1;
                         break;
                 }
             }

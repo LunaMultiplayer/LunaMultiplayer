@@ -10,6 +10,11 @@ namespace LunaCommon.Locks
     public class LockStore
     {
         /// <summary>
+        /// Provides a lock around modifications to the AsteroidLock object to ensure both atomic changes to the AsteroidLock and a memory barrier for changes to the AsteroidLock
+        /// </summary>
+        private readonly object asteroidsyncLock = new object();
+
+        /// <summary>
         /// You can't have more than one user with the asteroid lock so it's a simple object
         /// </summary>
         internal LockDefinition AsteroidLock { get; set; }
@@ -42,11 +47,14 @@ namespace LunaCommon.Locks
             switch (lockDefinition.Type)
             {
                 case LockType.Asteroid:
-                    if (AsteroidLock == null)
-                        AsteroidLock = new LockDefinition(LockType.Asteroid, lockDefinition.PlayerName);
-                    else
-                        AsteroidLock.PlayerName = lockDefinition.PlayerName;
-                    break;
+                    lock (asteroidsyncLock)
+                    {
+                        if (AsteroidLock == null)
+                            AsteroidLock = new LockDefinition(LockType.Asteroid, lockDefinition.PlayerName);
+                        else
+                            AsteroidLock.PlayerName = lockDefinition.PlayerName;
+                    }
+                       break;
                 case LockType.Update:
                     UpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
                     break;
@@ -72,7 +80,10 @@ namespace LunaCommon.Locks
             switch (lockDefinition.Type)
             {
                 case LockType.Asteroid:
-                    AsteroidLock = null;
+                    lock (asteroidsyncLock)
+                    {
+                        AsteroidLock = null;
+                    }
                     break;
                 case LockType.UnloadedUpdate:
                     UnloadedUpdateLocks.TryRemove(lockDefinition.VesselId, out _);
@@ -99,7 +110,10 @@ namespace LunaCommon.Locks
             switch (lockType)
             {
                 case LockType.Asteroid:
-                    AsteroidLock = null;
+                    lock (asteroidsyncLock)
+                    {
+                        AsteroidLock = null;
+                    }
                     break;
                 case LockType.UnloadedUpdate:
                     UnloadedUpdateLocks.TryRemove(vesselId, out _);
@@ -125,7 +139,10 @@ namespace LunaCommon.Locks
         {
             new Task(() =>
             {
-                AsteroidLock = null;
+                lock (asteroidsyncLock)
+                {
+                    AsteroidLock = null;
+                }
                 UpdateLocks.Clear();
                 ControlLocks.Clear();
                 SpectatorLocks.Clear();
