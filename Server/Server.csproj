@@ -127,7 +127,6 @@
     </Compile>
     <Compile Include="Server\MessageQueuer.cs" />
     <Compile Include="Server\MessageReceiver.cs" />
-    <Compile Include="Server\MessageSender.cs" />
     <Compile Include="Settings\DebugSettings.cs" />
     <Compile Include="Settings\Definition\GameplaySettingsDefinition.cs" />
     <Compile Include="Settings\Definition\DebugSettingsDefinition.cs" />

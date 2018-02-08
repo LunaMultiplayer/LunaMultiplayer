@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.PlayerConnection;
 using LunaCommon.Message.Server;
@@ -11,7 +10,6 @@ using Server.System;
 using Server.System.VesselRelay;
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Server.Client
 {
@@ -19,17 +17,7 @@ namespace Server.Client
     {
         public static void ConnectClient(NetConnection newClientConnection)
         {
-            var newClientObject = new ClientStructure(newClientConnection.RemoteEndPoint)
-            {
-                Subspace = int.MinValue,
-                PlayerStatus = new PlayerStatus(),
-                ConnectionStatus = ConnectionStatus.Connected,
-                Connection = newClientConnection,
-                LastSendTime = 0,
-                LastReceiveTime = ServerContext.ServerClock.ElapsedMilliseconds
-            };
-
-            Task.Run(() => MessageSender.StartSendingOutgoingMessages(newClientObject));
+            var newClientObject = new ClientStructure(newClientConnection);
 
             LmpPluginHandler.FireOnClientConnect(newClientObject);
 
