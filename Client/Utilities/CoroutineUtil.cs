@@ -11,7 +11,7 @@ namespace LunaClient.Utilities
             Client.Singleton.StartCoroutine(DelaySeconds(action, delayInSec));
         }
 
-        public static IEnumerator DelaySeconds(Action action, float delayInSec)
+        private static IEnumerator DelaySeconds(Action action, float delayInSec)
         {
             yield return new WaitForSeconds(delayInSec);
             action();
