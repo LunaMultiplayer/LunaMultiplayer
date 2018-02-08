@@ -64,6 +64,15 @@ namespace LunaClient.VesselStore
 
             VesselId = vesselId;
             CopyVesselBytes(vesselData);
+            validate();
+        }
+
+        private void validate()
+        {
+            if (VesselId == Guid.Empty)
+            {
+                throw new Exception("Cannot create a VesselProtoUpdate with an empty ID.");
+            }
         }
 
         /// <summary>
