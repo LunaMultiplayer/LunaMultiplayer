@@ -12,21 +12,23 @@ namespace LunaClient.VesselStore
     {
         #region Fields & properties
 
-        public Guid VesselId { get; set; }
+        /// <summary>
+        /// VesselID is immutable--only set in the constructor.  This prevents VesselProtoUpdates from having a corrupted VesselId.
+        /// </summary>
+        public Guid VesselId { get; }
         public bool VesselHasUpdate { get; set; }
 
-        private ProtoVessel _protoVessel;
+        private ProtoVessel _deserializedProtoVessel;
         public ProtoVessel ProtoVessel
         {
             get
             {
-                if (_needToDeserializeData || _protoVessel == null)
+                if (_needToDeserializeData || _deserializedProtoVessel == null)
                 {
                     DeserializeVesselBytes();
                 }
-                return _protoVessel;
+                return _deserializedProtoVessel;
             }
-            private set => _protoVessel = value;
         }
 
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
@@ -64,6 +66,15 @@ namespace LunaClient.VesselStore
 
             VesselId = vesselId;
             CopyVesselBytes(vesselData);
+            validate();
+        }
+
+        private void validate()
+        {
+            if (VesselId == Guid.Empty)
+            {
+                throw new Exception("Cannot create a VesselProtoUpdate with an empty ID.");
+            }
         }
 
         /// <summary>
@@ -73,7 +84,7 @@ namespace LunaClient.VesselStore
         {
             if (VesselId != vesselId)
             {
-                LunaLog.LogError("Cannot update a VesselProtoUpdate with a differente vesselId");
+                LunaLog.LogError("Cannot update a VesselProtoUpdate with a different vesselId");
                 return;
             }
 
@@ -104,13 +115,19 @@ namespace LunaClient.VesselStore
             _vesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
 
             var newProto = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
-            
+
             //In case there's a deserialization error skip it and keep the older proto
-            if (newProto != null) 
-                ProtoVessel = newProto;
+            if (newProto != null)
+            {
+                if(newProto.vesselID != ProtoVessel.vesselID)
+                {
+                    throw new Exception("BUG: Tried to update the Vessel with a proto from a different vessel ID.");
+                }
+                _deserializedProtoVessel = newProto;
+            }
 
             //If protovessel is still null then unfortunately we must remove that vessel as the server sent us a bad vessel
-            if (_protoVessel == null)
+            if (_deserializedProtoVessel == null)
             {
                 LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
                 SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(VesselId);
