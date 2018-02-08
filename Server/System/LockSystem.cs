@@ -17,24 +17,31 @@ namespace Server.System
         
         public static bool AcquireLock(LockDefinition lockDef, bool force, out bool repeatedAcquire)
         {
+            repeatedAcquire = false;
+
+            //Player tried to acquire a lock that he already owns
+            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.PlayerName))
+            {
+                repeatedAcquire = true;
+                return true;
+            }
+
             if (force || !LockQuery.LockExists(lockDef))
             {
-                repeatedAcquire = LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.PlayerName);
                 LockStore.AddOrUpdateLock(lockDef);
                 return true;
             }
-            repeatedAcquire = false;
             return false;
         }
 
         public static bool ReleaseLock(LockDefinition lockDef)
         {
-            if (LockQuery.LockExists(lockDef) && LockQuery.GetLock(lockDef.Type, lockDef.PlayerName, lockDef.VesselId)
-                .PlayerName == lockDef.PlayerName)
+            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.PlayerName))
             {
                 LockStore.RemoveLock(lockDef);
                 return true;
             }
+
             return false;
         }
 
