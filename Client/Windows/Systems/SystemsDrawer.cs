@@ -17,6 +17,7 @@ using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselPositionSys;
+using LunaClient.Systems.VesselPrecalcSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRangeSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -172,6 +173,11 @@ namespace LunaClient.Windows.Systems
             if (VesselRange)
             {
                 SystemsContainer.Get<VesselRangeSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselRangeSystem>().Enabled, "ON/OFF", ButtonStyle);
+            }
+            VesselPrecalc = GUILayout.Toggle(VesselPrecalc, "Vessel precalc", ButtonStyle);
+            if (VesselPrecalc)
+            {
+                SystemsContainer.Get<VesselPrecalcSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselPrecalcSystem>().Enabled, "ON/OFF", ButtonStyle);
             }
             VesselState = GUILayout.Toggle(VesselState, "Vessel state", ButtonStyle);
             if (VesselState)

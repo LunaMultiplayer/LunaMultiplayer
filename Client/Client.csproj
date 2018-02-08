@@ -77,6 +77,8 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
+    <Compile Include="Systems\VesselPrecalcSys\VesselPrecalcEvents.cs" />
+    <Compile Include="Systems\VesselPrecalcSys\VesselPrecalcSystem.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceMessageHandler.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceMessageSender.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceSystem.cs" />
@@ -93,6 +95,7 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\OutdatedVersionDialog.cs" />
+    <Compile Include="Systems\VesselPrecalcSys\LunaPrecalc.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeEvents.cs" />
     <Compile Include="Systems\VesselRangeSys\VesselRangeSystem.cs" />
