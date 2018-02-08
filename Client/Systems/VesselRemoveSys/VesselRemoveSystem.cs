@@ -5,6 +5,7 @@ using LunaClient.VesselUtilities;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselRemoveSys
@@ -21,6 +22,8 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         public ConcurrentQueue<Guid> VesselsToRemove { get; private set; } = new ConcurrentQueue<Guid>();
         public ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
+
+        private static List<Vessel> DebrisInSafetyBubbleToRemove = new List<Vessel>();
 
         #endregion
 
@@ -136,11 +139,13 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         private void RemoveSafetyBubbleDebris()
         {
-            var vesselToRemove = FlightGlobals.Vessels.Where(v => v != null && v.state == Vessel.State.INACTIVE && v.vesselType != VesselType.Flag &&
-                                            v.id != FlightGlobals.ActiveVessel?.id && VesselCommon.IsInSafetyBubble(v));
-
-            foreach (var vessel in vesselToRemove)
+            DebrisInSafetyBubbleToRemove.Clear();
+            DebrisInSafetyBubbleToRemove.AddRange(FlightGlobals.Vessels.Where(v => v != null && v.state == Vessel.State.INACTIVE && v.vesselType != VesselType.Flag &&
+                                                                                   v.id != FlightGlobals.ActiveVessel?.id && VesselCommon.IsInSafetyBubble(v)));
+            foreach (var vessel in DebrisInSafetyBubbleToRemove)
             {
+                if (vessel == null) continue;
+
                 LunaLog.Log($"[LMP]: Vessel {vessel.id} name {vessel.vesselName} it's an inactive vessel inside the safety bubble.");
                 KillVessel(vessel.id);
             }
