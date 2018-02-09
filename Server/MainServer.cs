@@ -75,7 +75,6 @@ namespace Server
                 Task.Run(() => VesselUpdateRelaySystem.RelayToFarPlayers());
                 Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
                 Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
-                Task.Run(() => LockSystem.SendAllLocks());
                 Task.Run(() => VersionChecker.CheckForNewVersions());
                 
                 while (ServerContext.ServerStarting)
