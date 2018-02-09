@@ -10,7 +10,8 @@ namespace LunaClient.Systems.VesselProtoSys
     public class VesselToProtoRefresh
     {
         private static readonly FieldInfo CrewField = typeof(ProtoVessel).GetField("crew", BindingFlags.Instance | BindingFlags.NonPublic);
-        
+        private static readonly FieldInfo FsmField = typeof(ModuleProceduralFairing).GetField("fsm", BindingFlags.Instance | BindingFlags.NonPublic);
+
         /// <summary>
         /// Here we refresh the protovessel based on a vessel. 
         /// Vessel -----------> Protovessel
@@ -120,12 +121,41 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static bool RefreshCrew(Vessel vessel)
         {
-            if (vessel.GetCrewCount() != vessel.protoVessel.GetVesselCrew().Count || vessel.crewedParts != vessel.protoVessel?.crewedParts || 
+            if (vessel.GetCrewCount() != vessel.protoVessel.GetVesselCrew().Count || vessel.crewedParts != vessel.protoVessel?.crewedParts ||
                 vessel.crewableParts != vessel.protoVessel?.crewableParts)
             {
                 ((List<ProtoCrewMember>)CrewField?.GetValue(vessel.protoVessel))?.Clear();
                 vessel.protoVessel?.RebuildCrewCounts();
                 return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if there's a change in the fairings of a vessel
+        /// </summary>
+        private static bool RefreshFairings(Part part)
+        {
+            var fairingModule = part.FindModuleImplementing<ModuleProceduralFairing>();
+            if (fairingModule != null)
+            {
+                if (FsmField?.GetValue(fairingModule) is KerbalFSM fsmVal)
+                {
+                    var currentState = fsmVal.CurrentState;
+                    var protoFsmVal = GetConfigNodeVal("fsm", fairingModule.snapshot.moduleValues);
+
+                    if (protoFsmVal != null && currentState.ToString() != protoFsmVal.value)
+                    {
+                        //Change fairing status as deployed in the proto module snapshot
+                        protoFsmVal.value = currentState.ToString();
+
+                        //Remove all the fairing pieces from the proto module snapshot
+                        fairingModule.snapshot.moduleValues.RemoveNodes("XSECTION");
+
+                        return true;
+                    }
+                }
             }
 
             return false;
@@ -160,6 +190,14 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (vessel.parts[i].State == PartStates.DEAD) continue;
 
+                if (vessel.parts[i].protoPartSnapshot.state != (int) vessel.parts[i].State)
+                {
+                    vessel.parts[i].protoPartSnapshot.state = (int) vessel.parts[i].State;
+                    vessel.parts[i].ResumeState = vessel.parts[i].State;
+                    partsHaveChanges = true;
+                }
+
+                partsHaveChanges |= RefreshFairings(vessel.parts[i]);
                 partsHaveChanges |= RefreshPartModules(vessel.parts[i]);
                 RefreshPartResources(vessel.parts[i]);
             }

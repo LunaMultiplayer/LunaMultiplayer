@@ -9,20 +9,21 @@ using System.Reflection;
 namespace LunaClient.Systems.VesselProtoSys
 {
     /// <summary>
-    /// Class that updates a vessel based on a protovessel definition
+    /// Class that updates a vessel and it's protovessel based on a protovessel definition received from the server
     /// </summary>
     public static class ProtoToVesselRefresh
     {
         private static FieldInfo StateField { get; } = typeof(Part).GetField("state", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static FieldInfo FsmField { get; } = typeof(ModuleProceduralFairing).GetField("fsm", BindingFlags.Instance | BindingFlags.NonPublic);
         private static FieldInfo PartModuleFields { get; } = typeof(PartModule).GetField("fields", BindingFlags.Instance | BindingFlags.NonPublic);
 
         private static readonly List<ProtoCrewMember> MembersToAdd = new List<ProtoCrewMember>();
         private static readonly List<string> MembersToRemove = new List<string>();
 
         /// <summary>
-        /// This method will take a vessel and update all it's parts based on a protovessel
-        /// Protovessel --------------> Vessel
-        /// This way we avoid having to unload and reload a vessel and it's terrible performance
+        /// This method will take a vessel and update all it's parts and proto based on a protovessel we received
+        /// Protovessel --------------> Vessel & ProtoVessel
+        /// This way we avoid having to unload and reload a vessel with it's terrible performance
         /// </summary>
         public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel, IEnumerable<uint> vesselPartsId = null)
         {
@@ -53,26 +54,45 @@ namespace LunaClient.Systems.VesselProtoSys
             //Never do vessel.protoVessel = protoVessel; not even if the vessel is not loaded as when it gets loaded the parts are created in the active vessel 
             //and not on the target vessel
 
-            //Run trough all the vessel parts. vessel.parts will be empty if vessel is unloaded.
-            //Do not do a foreach as vessel parts can change and will result in a modified collection...
-            for (var i = 0; i < vessel.parts.Count; i++)
+            //Run trough all the vessel parts and protoparts. 
+            //Vessel.parts will be empty if vessel is unloaded.
+            var protoPartsToRemove = new List<ProtoPartSnapshot>();
+            for (var i = 0; i < vessel.protoVessel.protoPartSnapshots.Count; i++)
             {
-                var part = vessel.parts[i];
-                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(protoVessel, part.flightID);
+                var protoPartToUpdate = vessel.protoVessel.protoPartSnapshots[i];
+                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(protoVessel, protoPartToUpdate.flightID);
                 if (partSnapshot == null) //Part does not exist in the protovessel definition so kill it
                 {
-                    part.Die();
+                    protoPartsToRemove.Add(protoPartToUpdate);
                     continue;
                 }
 
-                //Remove or add crew members in given part and detect if there have been any change
-                hasCrewChanges |= AdjustCrewMembersInPart(part, partSnapshot);
+                AdjustCrewMembersInProtoPart(protoPartToUpdate, partSnapshot);
+                protoPartToUpdate.state = partSnapshot.state;
+                UpdatePartModulesInProtoPart(protoPartToUpdate, partSnapshot);
+                UpdateProtoVesselResources(protoPartToUpdate, partSnapshot);
+                
+                var part = protoPartToUpdate.partRef;
+                if (part != null) //Part can be null if the vessel is unloaded!!
+                {
+                    //Remove or add crew members in given part and detect if there have been any change
+                    hasCrewChanges |= AdjustCrewMembersInPart(part, partSnapshot);
 
-                //Set part "state" field... I don't know if this is really needed...
-                StateField?.SetValue(part, partSnapshot.state);
+                    //Set part "state" field... Important for fairings for example...
+                    StateField?.SetValue(part, partSnapshot.state);
+                    part.ResumeState = part.State;
 
-                UpdatePartModules(partSnapshot, part);
-                UpdateVesselResources(partSnapshot, part);
+                    UpdatePartModules(partSnapshot, part);
+                    UpdateVesselResources(partSnapshot, part);
+                    UpdatePartFairings(partSnapshot, part);
+                }
+            }
+
+            //Now kill both parts and protoparts that don't exist
+            for (var i = 0; i < protoPartsToRemove.Count; i++)
+            {
+                protoPartsToRemove[i].partRef.Die();
+                vessel.protoVessel.protoPartSnapshots.Remove(protoPartsToRemove[i]);
             }
 
             if (hasCrewChanges)
@@ -171,6 +191,24 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
             }
         }
+        
+        private static void UpdatePartFairings(ProtoPartSnapshot partSnapshot, Part part)
+        {
+            var fairingModule = part.FindModuleImplementing<ModuleProceduralFairing>();
+            if (fairingModule != null)
+            {
+                if (FsmField?.GetValue(fairingModule) is KerbalFSM fsmVal)
+                {
+                    var currentState = fsmVal.CurrentState;
+                    var protoFsmVal = partSnapshot.FindModule("ModuleProceduralFairing")?.moduleValues?.GetValue("fsm");
+
+                    if (protoFsmVal != null && currentState.ToString() != protoFsmVal)
+                    {
+                        fairingModule.DeployFairing();
+                    }
+                }
+            }
+        }
 
         private static void UpdateVesselResources(ProtoPartSnapshot partSnapshot, Part part)
         {
@@ -212,6 +250,58 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Add or remove crew from a protopart based on the part snapshot
+        /// </summary>
+        private static void AdjustCrewMembersInProtoPart(ProtoPartSnapshot protoPartToUpdate, ProtoPartSnapshot partSnapshot)
+        {
+            if (protoPartToUpdate.protoModuleCrew.Count != partSnapshot.protoModuleCrew.Count)
+            {
+                MembersToAdd.Clear();
+                MembersToRemove.Clear();
+                MembersToAdd.AddRange(partSnapshot.protoModuleCrew.Where(mp => protoPartToUpdate.protoModuleCrew.All(m => m.name != mp.name)));
+                MembersToRemove.AddRange(protoPartToUpdate.protoModuleCrew.Select(c => c.name).Except(partSnapshot.protoModuleCrew.Select(c => c.name)));
+
+                foreach (var memberToAdd in MembersToAdd)
+                {
+                    protoPartToUpdate.protoModuleCrew.Add(memberToAdd);
+                }
+
+                foreach (var memberToRemove in MembersToRemove)
+                {
+                    var member = protoPartToUpdate.protoModuleCrew.First(c => c.name == memberToRemove);
+                    protoPartToUpdate.protoModuleCrew.Remove(member);
+                }
+            }
+        }
+        
+        private static void UpdatePartModulesInProtoPart(ProtoPartSnapshot protoPartToUpdate, ProtoPartSnapshot partSnapshot)
+        {
+            //Run trough all the part DEFINITION modules
+            foreach (var moduleSnapshotDefinition in partSnapshot.modules.Where(m => !VesselModulesToIgnore.ModulesToIgnore.Contains(m.moduleName)))
+            {
+                //Get the corresponding module from the actual vessel PROTOPART
+                var currentModule = protoPartToUpdate.FindModule(moduleSnapshotDefinition.moduleName);
+                if (currentModule != null)
+                {
+                    moduleSnapshotDefinition.moduleValues.CopyTo(currentModule.moduleValues);
+                }
+            }
+        }
+
+        private static void UpdateProtoVesselResources(ProtoPartSnapshot protoPartToUpdate, ProtoPartSnapshot partSnapshot)
+        {
+            //Run trough the poart DEFINITION resources
+            foreach (var resourceSnapshot in partSnapshot.resources)
+            {
+                //Get the corresponding resource from the actual PART
+                var resource = protoPartToUpdate.resources?.FirstOrDefault(pr => pr.resourceName == resourceSnapshot.resourceName);
+                if (resource == null) continue;
+
+                resource.amount = resourceSnapshot.amount;
+            }
         }
     }
 }
