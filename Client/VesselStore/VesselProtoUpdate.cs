@@ -52,6 +52,7 @@ namespace LunaClient.VesselStore
         private int _numBytes;
         private ConfigNode _vesselNode;
         private bool _needToDeserializeData = true;
+        private readonly object _vesselDataSyncLock = new object();
 
         #endregion
 
@@ -59,13 +60,11 @@ namespace LunaClient.VesselStore
 
         public VesselProtoUpdate(byte[] vesselData, int numBytes, Guid vesselId)
         {
-            _numBytes = numBytes;
-
             if (vesselId == Guid.Empty)
                 throw new Exception("Cannot create a VesselProtoUpdate with an empty vesselId.");
 
             VesselId = vesselId;
-            CopyVesselBytes(vesselData);
+            CopyVesselBytes(vesselData, numBytes);
         }
         
         /// <summary>
@@ -78,9 +77,8 @@ namespace LunaClient.VesselStore
                 LunaLog.LogError("Cannot update a VesselProtoUpdate with a different vesselId");
                 return;
             }
-
-            _numBytes = numBytes;
-            CopyVesselBytes(vesselData);
+            
+            CopyVesselBytes(vesselData, numBytes);
             
             _needToDeserializeData = true;
             VesselHasUpdate = true;
@@ -89,11 +87,16 @@ namespace LunaClient.VesselStore
         /// <summary>
         /// Copies the received vessel bytes to this class
         /// </summary>
-        private void CopyVesselBytes(byte[] vesselData)
+        private void CopyVesselBytes(byte[] vesselData, int numBytes)
         {
-            if (_vesselData.Length < _numBytes)
-                Array.Resize(ref _vesselData, _numBytes);
-            Array.Copy(vesselData, _vesselData, _numBytes);
+            lock (_vesselDataSyncLock)
+            {
+                _numBytes = numBytes;
+
+                if (_vesselData.Length < _numBytes)
+                    Array.Resize(ref _vesselData, _numBytes);
+                Array.Copy(vesselData, _vesselData, _numBytes);
+            }
         }
 
         /// <summary>
@@ -103,7 +106,10 @@ namespace LunaClient.VesselStore
         {
             _needToDeserializeData = false;
 
-            _vesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
+            lock (_vesselDataSyncLock)
+            {
+                _vesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
+            }
 
             var newProto = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
 
