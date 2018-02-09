@@ -95,16 +95,15 @@ namespace LunaClient.Systems.VesselDockSys
                 JumpIfVesselOwnerIsInFuture(dock.WeakVesselId);
                 if (eva)
                 {
-                    LunaLog.Log($"[LMP]: Crewboard detected! We own the kerbal {dock.DominantVesselId}");
-                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.DominantVesselId);
-                    
                     //The kerbal should never be the dominant!
                     var temp = dock.DominantVesselId;
                     dock.DominantVesselId = dock.WeakVesselId;
                     dock.WeakVesselId = temp;
 
+                    LunaLog.Log($"[LMP]: Crewboard detected! We own the kerbal {dock.WeakVesselId}");
+                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVesselId);
+                    
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
-
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
                 }
                 else
@@ -121,17 +120,15 @@ namespace LunaClient.Systems.VesselDockSys
                 JumpIfVesselOwnerIsInFuture(dock.DominantVesselId);
                 if (eva)
                 {
-                    LunaLog.Log($"[LMP]: Crewboard detected! We own the vessel {dock.WeakVesselId}");
-                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.DominantVesselId);
-
                     //The kerbal should never be the dominant!
                     var temp = dock.DominantVesselId;
                     dock.DominantVesselId = dock.WeakVesselId;
                     dock.WeakVesselId = temp;
 
+                    LunaLog.Log($"[LMP]: Crewboard detected! We own the vessel {dock.DominantVesselId}");
+                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVesselId);
+
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
-
-
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
                 }
                 else
