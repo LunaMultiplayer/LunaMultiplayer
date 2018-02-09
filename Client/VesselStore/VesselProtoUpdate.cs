@@ -104,41 +104,40 @@ namespace LunaClient.VesselStore
         /// </summary>
         public void DeserializeVesselBytes()
         {
-            _needToDeserializeData = false;
-
             lock (_vesselDataSyncLock)
             {
+                _needToDeserializeData = false;
                 _vesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
-            }
+                
+                var newProto = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
 
-            var newProto = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
-
-            //In case there's a deserialization error skip it and keep the older proto
-            if (newProto != null)
-            {
-                if (newProto.vesselID != VesselId)
+                //In case there's a deserialization error skip it and keep the older proto
+                if (newProto != null)
                 {
-                    LunaLog.LogError($"Tried to update the Vessel with a proto from a different vessel ID. Proto: {newProto?.vesselID} CorrectId: {VesselId}");
+                    if (newProto.vesselID != VesselId)
+                    {
+                        LunaLog.LogError($"Tried to update the Vessel with a proto from a different vessel ID. Proto: {newProto.vesselID} CorrectId: {VesselId}");
+                    }
+                    else
+                    {
+                        _deserializedProtoVessel = newProto;
+                    }
+                }
+
+                //If protovessel is still null then unfortunately we must remove that vessel as the server sent us a bad vessel
+                if (_deserializedProtoVessel == null)
+                {
+                    LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
+                    SystemsContainer.Get<VesselRemoveSystem>().KillVessel(VesselId);
+                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(VesselId);
                 }
                 else
                 {
-                    _deserializedProtoVessel = newProto;
-                }
-            }
-
-            //If protovessel is still null then unfortunately we must remove that vessel as the server sent us a bad vessel
-            if (_deserializedProtoVessel == null)
-            {
-                LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
-                SystemsContainer.Get<VesselRemoveSystem>().KillVessel(VesselId);
-                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(VesselId);
-            }
-            else
-            {
-                _vesselParts.Clear();
-                foreach (var protoPart in _deserializedProtoVessel.protoPartSnapshots)
-                {
-                    _vesselParts.TryAdd(protoPart.flightID, protoPart);
+                    _vesselParts.Clear();
+                    foreach (var protoPart in _deserializedProtoVessel.protoPartSnapshots)
+                    {
+                        _vesselParts.TryAdd(protoPart.flightID, protoPart);
+                    }
                 }
             }
         }
