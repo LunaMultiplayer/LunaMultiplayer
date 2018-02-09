@@ -29,8 +29,8 @@ namespace LunaClient.Systems.Mod
             var modFileInfo = ModFileParser.ReadModFile(modFileData);
             if (!CheckFiles(modFileInfo))
             {
-                LunaLog.Log("[LMP]: Mod check failed!");
-                LunaLog.Log(Sb.ToString());
+                LunaLog.LogError("[LMP]: Mod check failed!");
+                LunaLog.LogError(Sb.ToString());
                 SystemsContainer.Get<ModSystem>().FailText = Sb.ToString();
                 WindowsContainer.Get<ModWindow>().Display = true;
                 return false;
@@ -44,7 +44,7 @@ namespace LunaClient.Systems.Mod
         private static void SaveCurrentModConfigurationFile()
         {
             var tempModFilePath = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Plugins", "Data", "LMPModControl.txt");
-            using (var sw = new StreamWriter(tempModFilePath))
+            using (var sw = new StreamWriter(tempModFilePath, false))
             {
                 sw.WriteLine("#This file is downloaded from the server during connection. It is saved here for convenience.");
                 sw.WriteLine(SystemsContainer.Get<ModSystem>().LastModFileData);
