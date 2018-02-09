@@ -116,18 +116,23 @@ namespace LunaClient.VesselStore
             //In case there's a deserialization error skip it and keep the older proto
             if (newProto != null)
             {
-                if(newProto.vesselID != VesselId)
+                if (newProto.vesselID != VesselId)
                 {
-                    throw new Exception("BUG: Tried to update the Vessel with a proto from a different vessel ID.");
+                    LunaLog.LogError($"Tried to update the Vessel with a proto from a different vessel ID. Proto: {newProto?.vesselID} CorrectId: {VesselId}");
                 }
-                _deserializedProtoVessel = newProto;
+                else
+                {
+                    _deserializedProtoVessel = newProto;
+                }
             }
 
             //If protovessel is still null then unfortunately we must remove that vessel as the server sent us a bad vessel
             if (_deserializedProtoVessel == null)
             {
                 LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
+                SystemsContainer.Get<VesselRemoveSystem>().KillVessel(VesselId);
                 SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(VesselId);
+                return;
             }
 
             VesselParts.Clear();
