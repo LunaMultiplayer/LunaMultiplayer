@@ -132,13 +132,14 @@ namespace LunaClient.VesselStore
                 LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
                 SystemsContainer.Get<VesselRemoveSystem>().KillVessel(VesselId);
                 SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(VesselId);
-                return;
             }
-
-            VesselParts.Clear();
-            foreach (var protoPart in ProtoVessel.protoPartSnapshots)
+            else
             {
-                VesselParts.TryAdd(protoPart.flightID, protoPart);
+                _vesselParts.Clear();
+                foreach (var protoPart in _deserializedProtoVessel.protoPartSnapshots)
+                {
+                    _vesselParts.TryAdd(protoPart.flightID, protoPart);
+                }
             }
         }
     }
