@@ -57,22 +57,5 @@ namespace Server.System
                 LockSystemSender.ReleaseAndSendLockReleaseMessage(client, lockToRemove);
             }
         }
-
-        /// <summary>
-        /// This method send all locks to all clients at a interval of 30 seconds.
-        /// </summary>
-        public static async void SendAllLocks()
-        {
-            while (ServerContext.ServerRunning)
-            {
-                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockListReplyMsgData>();
-                msgData.Locks = LockQuery.GetAllLocks().ToArray();
-                msgData.LocksCount = msgData.Locks.Length;
-
-                MessageQueuer.SendToAllClients<LockSrvMsg>(msgData);
-
-                await Task.Delay(30000);
-            }
-        }
     }
 }
