@@ -225,7 +225,8 @@ namespace LunaClient.VesselUtilities
             if (vessel == null || vessel.mainBody?.flightGlobalsIndex != 1 || vessel.orbit?.referenceBody?.flightGlobalsIndex != 1)
                 return false;
 
-            return IsInSafetyBubble(vessel.GetWorldPos3D());
+            //Use the protovessel values as the normal vessel values can be affected by the position system and the situation of the vessel
+            return IsInSafetyBubble(vessel.protoVessel.latitude, vessel.protoVessel.longitude, vessel.protoVessel.altitude, 1);
         }
 
         /// <summary>
