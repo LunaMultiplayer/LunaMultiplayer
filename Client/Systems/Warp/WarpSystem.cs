@@ -168,7 +168,7 @@ namespace LunaClient.Systems.Warp
             {
                 if (CurrentSubspaceTimeDifference < newSubspaceTime && CurrentSubspace != newSubspace)
                 {
-                    CoroutineUtil.StartDelayedRoutine(() => CurrentSubspace = newSubspace, 0.5f);
+                    CoroutineUtil.StartDelayedRoutine(nameof(WarpIfSubspaceIsMoreAdvanced), () => CurrentSubspace = newSubspace, 0.5f);
                 }
             }
         }

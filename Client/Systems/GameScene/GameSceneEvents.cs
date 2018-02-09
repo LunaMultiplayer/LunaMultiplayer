@@ -90,7 +90,7 @@ namespace LunaClient.Systems.GameScene
         /// </summary>
         private static void DelayedClearVessels()
         {
-            CoroutineUtil.StartDelayedRoutine(() =>
+            CoroutineUtil.StartDelayedRoutine(nameof(DelayedClearVessels), () =>
             {
                 FlightGlobals.Vessels.Clear();
                 HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();

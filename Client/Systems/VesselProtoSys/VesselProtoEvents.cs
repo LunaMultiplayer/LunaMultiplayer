@@ -19,7 +19,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
             {
-                CoroutineUtil.StartDelayedRoutine(() =>
+                CoroutineUtil.StartDelayedRoutine(nameof(FlightReady), () =>
                 {
                     if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
                         return;

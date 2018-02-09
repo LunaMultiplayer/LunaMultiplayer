@@ -6,15 +6,22 @@ namespace LunaClient.Utilities
 {
     public class CoroutineUtil
     {
-        public static void StartDelayedRoutine(Action action, float delayInSec)
+        public static void StartDelayedRoutine(string routineName, Action action, float delayInSec)
         {
-            Client.Singleton.StartCoroutine(DelaySeconds(action, delayInSec));
+            Client.Singleton.StartCoroutine(DelaySeconds(routineName, action, delayInSec));
         }
 
-        private static IEnumerator DelaySeconds(Action action, float delayInSec)
+        private static IEnumerator DelaySeconds(string routineName, Action action, float delayInSec)
         {
             yield return new WaitForSeconds(delayInSec);
-            action();
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"Error in delayed coroutine: {routineName}. Details {e}");
+            }
         }
     }
 }
