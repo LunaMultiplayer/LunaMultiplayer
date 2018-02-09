@@ -120,7 +120,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static bool RefreshCrew(Vessel vessel)
         {
-            if (vessel.crewedParts != vessel.protoVessel?.crewedParts || vessel.crewableParts != vessel.protoVessel?.crewableParts)
+            if (vessel.GetCrewCount() != vessel.protoVessel.GetVesselCrew().Count || vessel.crewedParts != vessel.protoVessel?.crewedParts || 
+                vessel.crewableParts != vessel.protoVessel?.crewableParts)
             {
                 ((List<ProtoCrewMember>)CrewField?.GetValue(vessel.protoVessel))?.Clear();
                 vessel.protoVessel?.RebuildCrewCounts();
