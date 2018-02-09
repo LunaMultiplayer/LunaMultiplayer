@@ -56,16 +56,25 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             for (var i = 0; i < 17; i++)
             {
+                var kspActGrp = (KSPActionGroup) (1 << (i & 31));
+
                 //Ignore SAS if we are spectating as it will fight with the FI
-                if ((KSPActionGroup) (1 << (i & 31)) == KSPActionGroup.SAS && VesselCommon.IsSpectating &&
-                    FlightGlobals.ActiveVessel?.id == vessel.id)
+                if (kspActGrp == KSPActionGroup.SAS && VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
                 {
-                    vessel.ActionGroups.groups[i] = false;
+                    if (vessel.ActionGroups[KSPActionGroup.SAS])
+                    {
+                        vessel.ActionGroups.ToggleGroup(KSPActionGroup.SAS);
+                        vessel.ActionGroups.groups[i] = false;
+                    }
                     continue;
                 }
 
-                vessel.ActionGroups.groups[i] = msgData.ActionGroups[i].State;
-                vessel.ActionGroups.cooldownTimes[i] = msgData.ActionGroups[i].Time;
+                if (vessel.ActionGroups.groups[i] != msgData.ActionGroups[i].State)
+                {
+                    vessel.ActionGroups.ToggleGroup(kspActGrp);
+                    vessel.ActionGroups.groups[i] = msgData.ActionGroups[i].State;
+                    vessel.ActionGroups.cooldownTimes[i] = msgData.ActionGroups[i].Time;
+                }
             }
         }
 
