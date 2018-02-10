@@ -17,6 +17,7 @@ namespace LunaClient.Systems.Ping
 
         #region Fields & properties
 
+        private const float PingTimeoutinSec = 7.5f;
         private static ConcurrentBag<string> PingQueue { get; } = new ConcurrentBag<string>();
 
         #endregion
@@ -55,12 +56,17 @@ namespace LunaClient.Systems.Ping
             var host = endpoint.Substring(0, endpoint.LastIndexOf(":"));
             var ping = new UnityEngine.Ping(host);
 
-            yield return new WaitForSeconds(2f);
+            var elapsedSecs = 0;
 
-            var pingTime = ping.isDone ? ping.time : 9999;
+            do
+            {
+                elapsedSecs++;
+                yield return new WaitForSeconds(1f);
+            } while (!ping.isDone && elapsedSecs < PingTimeoutinSec);
+
             if (NetworkServerList.Servers.TryGetValue(endpoint, out var server))
             {
-                server.Ping = pingTime;
+                server.Ping = ping.isDone ? ping.time.ToString() : "∞";
             }
         }
 
