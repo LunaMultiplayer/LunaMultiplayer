@@ -355,6 +355,12 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
+                if (SettingsSystem.CurrentSettings.PositionSystem > 2)
+                {
+                    LunaLog.LogWarning("Position system setting out of range.  Setting to default...");
+                    SettingsSystem.CurrentSettings.PositionSystem = 2;
+                }
+
                 switch (SettingsSystem.CurrentSettings.PositionSystem)
                 {
                     case 0:
@@ -365,10 +371,6 @@ namespace LunaClient.Systems.VesselPositionSys
                         break;
                     case 2:
                         MixedApplyInterpolationsToLoadedVessel(lerpPercentage);
-                        break;
-                    default:
-                        LunaLog.LogWarning("Position system setting out of range.  Setting to default...");
-                        SettingsSystem.CurrentSettings.PositionSystem = 2;
                         break;
                 }
             }
