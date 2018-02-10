@@ -16,7 +16,7 @@ namespace LunaCommon.Message.Data.Vessel
         public int ResourcesCount;
         public VesselResourceInfo[] Resources = new VesselResourceInfo[0];
 
-        public override string ClassName { get; } = nameof(VesselDockMsgData);
+        public override string ClassName { get; } = nameof(VesselResourceMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
