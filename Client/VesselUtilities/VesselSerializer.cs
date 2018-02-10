@@ -1,6 +1,5 @@
 ﻿using LunaClient.Utilities;
 using System;
-using System.Linq;
 
 namespace LunaClient.VesselUtilities
 {
@@ -68,7 +67,7 @@ namespace LunaClient.VesselUtilities
             var vesselId = new Guid(configNode.GetValue("pid"));
 
             //Defend against NaN orbits
-            if (VesselHasNaNPosition(configNode))
+            if (VesselCommon.VesselHasNaNPosition(configNode))
             {
                 LunaLog.LogError($"[LMP]: Vessel {vesselId} has NaN position");
                 return false;
@@ -98,38 +97,6 @@ namespace LunaClient.VesselUtilities
         }
 
         #region Config node fixing
-
-        private static bool VesselHasNaNPosition(ConfigNode vesselNode)
-        {
-            if (vesselNode.GetValue("landed") == "True" || vesselNode.GetValue("splashed") == "True")
-            {
-                if (double.TryParse(vesselNode.values.GetValue("lat"), out var latitude)
-                    && (double.IsNaN(latitude) || double.IsInfinity(latitude)))
-                    return true;
-
-                if (double.TryParse(vesselNode.values.GetValue("lon"), out var longitude)
-                    && (double.IsNaN(longitude) || double.IsInfinity(longitude)))
-                    return true;
-
-                if (double.TryParse(vesselNode.values.GetValue("alt"), out var altitude)
-                    && (double.IsNaN(altitude) || double.IsInfinity(altitude)))
-                    return true;
-            }
-            else
-            {
-                var orbitNode = vesselNode.GetNode("ORBIT");
-                if (orbitNode != null)
-                {
-                    var allValuesAre0 = orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v)).Take(7)
-                        .All(v => v == "0");
-
-                    return allValuesAre0 || orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v))
-                        .Any(val => double.TryParse(val, out var value) && (double.IsNaN(value) || double.IsInfinity(value)));
-                }
-            }
-
-            return false;
-        }
 
         /// <summary>
         /// Removes maneuver nodes from the vessel

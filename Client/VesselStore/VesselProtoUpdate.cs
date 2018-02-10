@@ -107,8 +107,20 @@ namespace LunaClient.VesselStore
             lock (_vesselDataSyncLock)
             {
                 _needToDeserializeData = false;
-                _vesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
-                
+                var newVesselNode = ConfigNodeSerializer.Deserialize(_vesselData, _numBytes);
+                if (!VesselCommon.VesselHasNaNPosition(newVesselNode))
+                {                
+                    //In case there's a deserialization error skip it and keep the older node
+                    _vesselNode = newVesselNode;
+                }
+                if (_vesselNode == null)
+                {
+                    LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
+                    SystemsContainer.Get<VesselRemoveSystem>().KillVessel(VesselId);
+                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(VesselId);
+                    return;
+                }
+
                 var newProto = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
 
                 //In case there's a deserialization error skip it and keep the older proto
