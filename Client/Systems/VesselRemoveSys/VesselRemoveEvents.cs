@@ -3,12 +3,15 @@ using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
+using System;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselRemoveSys
 {
     public class VesselRemoveEvents : SubSystem<VesselRemoveSystem>
     {
+        private static Guid _recoveringTerminatingVesselId = Guid.Empty;
+
         /// <summary>
         /// This event is called when the vessel gone BOOM (the Vessel.Die() is called)
         /// If we have the update lock of it we kill it
@@ -21,9 +24,10 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
 
             //Only send the vessel remove msg if we own the unloaded update lock
-            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName) || dyingVessel.id == _recoveringTerminatingVesselId)
             {
-                LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: Destroyed");
+                var reason = dyingVessel.id == _recoveringTerminatingVesselId ? "Recovered/Terminated" : "Destroyed";
+                LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: {reason}");
 
                 //Add to the kill list so it's also removed from the store later on!
                 System.AddToKillList(dyingVessel.id);
@@ -54,6 +58,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
             }
 
+            _recoveringTerminatingVesselId = recoveredVessel.vesselID;
             LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
             SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(recoveredVessel);
 
@@ -74,6 +79,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
             }
 
+            _recoveringTerminatingVesselId = terminatedVessel.vesselID;
             LunaLog.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
             SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(terminatedVessel);
 
