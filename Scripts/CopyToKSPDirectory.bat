@@ -1,13 +1,15 @@
-::THIS FILE IS BEING UNTRACKED FROM GIT with the command: git update-index --assume-unchanged <file>
-::To resume the tracking of changes to this file use the command: git update-index --no-assume-unchanged <file>
 ::You must keep this file in the solution folder for it to work. 
 ::Make sure to pass the solution configuration when calling it (either Debug or Release)
 
-::Set the path below as you need and then run this bat to copy the files and make them debuggeable
-SET KSPPATH=C:\Kerbal Space Program
-::Set another path in case you run two KSP instances otherwise leave empty
-::EXAMPLE: SET KSPPATH2=C:\Kerbal Space Program2
-SET KSPPATH2=
+::Set the directories in the setdirectories.bat file if you want a different folder than Kerbal Space Program
+::EXAMPLE:
+::SET KSPPATH=C:\Kerbal Space Program
+::SET KSPPATH2=C:\Kerbal Space Program2
+call "%~dp0\SetDirectories.bat"
+
+IF DEFINED KSPPATH (ECHO KSPPATH is defined) ELSE (SET KSPPATH=C:\Kerbal Space Program)
+IF DEFINED KSPPATH2 (ECHO KSPPATH2 is defined)
+
 SET SOLUTIONCONFIGURATION=%1
 
 mkdir "%KSPPATH%\GameData\LunaMultiPlayer\"
