@@ -17,9 +17,10 @@ namespace LMP.Tests
             var task2 = new Thread(() => FileHandler.WriteToFile(filePath, "TASK2"));
 
             task1.Start();
-            task2.Start();
-            //The threads should not take longer than 60 seconds.  If either of them timeout after 60 seconds, fail.
+            //The task should not take longer than 60 seconds.  If it times out after 60 seconds, fail.
             task1.Join(60000);
+            task2.Start();
+            //The task should not take longer than 60 seconds.  If it times out after 60 seconds, fail.
             task2.Join(60000);
 
             Assert.AreEqual("TASK2", File.ReadAllText(filePath));
