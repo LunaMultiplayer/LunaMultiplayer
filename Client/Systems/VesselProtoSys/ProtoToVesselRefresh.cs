@@ -91,7 +91,12 @@ namespace LunaClient.Systems.VesselProtoSys
             //Now kill both parts and protoparts that don't exist
             for (var i = 0; i < protoPartsToRemove.Count; i++)
             {
-                protoPartsToRemove[i].partRef.Die();
+                var part = protoPartsToRemove[i].partRef;
+                //Part can be null if the vessel is unloaded.  In this case, no need to kill it as it's already gone from the game.
+                if (part != null)
+                {
+                    part.Die();
+                }
                 vessel.protoVessel.protoPartSnapshots.Remove(protoPartsToRemove[i]);
             }
 
