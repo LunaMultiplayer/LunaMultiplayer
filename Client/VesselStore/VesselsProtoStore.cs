@@ -97,23 +97,25 @@ namespace LunaClient.VesselStore
         {
             if (AllPlayerVessels.TryGetValue(vesselPositionMsgData.VesselId, out var vesselProtoUpd))
             {
+                if (vesselProtoUpd.ProtoVessel == null) return;
+
                 vesselProtoUpd.ProtoVessel.latitude = vesselPositionMsgData.LatLonAlt[0];
                 vesselProtoUpd.ProtoVessel.longitude = vesselPositionMsgData.LatLonAlt[1];
                 vesselProtoUpd.ProtoVessel.altitude = vesselPositionMsgData.LatLonAlt[2];
                 vesselProtoUpd.ProtoVessel.height = vesselPositionMsgData.HeightFromTerrain;
 
-                vesselProtoUpd.ProtoVessel.normal[0] = (float)vesselPositionMsgData.NormalVector[0];
-                vesselProtoUpd.ProtoVessel.normal[1] = (float)vesselPositionMsgData.NormalVector[1];
-                vesselProtoUpd.ProtoVessel.normal[2] = (float)vesselPositionMsgData.NormalVector[2];
+                vesselProtoUpd.ProtoVessel.normal.x = (float)vesselPositionMsgData.NormalVector[0];
+                vesselProtoUpd.ProtoVessel.normal.y = (float)vesselPositionMsgData.NormalVector[1];
+                vesselProtoUpd.ProtoVessel.normal.z = (float)vesselPositionMsgData.NormalVector[2];
 
-                vesselProtoUpd.ProtoVessel.rotation[0] = vesselPositionMsgData.SrfRelRotation[0];
-                vesselProtoUpd.ProtoVessel.rotation[1] = vesselPositionMsgData.SrfRelRotation[1];
-                vesselProtoUpd.ProtoVessel.rotation[2] = vesselPositionMsgData.SrfRelRotation[2];
-                vesselProtoUpd.ProtoVessel.rotation[3] = vesselPositionMsgData.SrfRelRotation[3];
+                vesselProtoUpd.ProtoVessel.rotation.x = vesselPositionMsgData.SrfRelRotation[0];
+                vesselProtoUpd.ProtoVessel.rotation.y = vesselPositionMsgData.SrfRelRotation[1];
+                vesselProtoUpd.ProtoVessel.rotation.z = vesselPositionMsgData.SrfRelRotation[2];
+                vesselProtoUpd.ProtoVessel.rotation.w = vesselPositionMsgData.SrfRelRotation[3];
 
-                vesselProtoUpd.ProtoVessel.CoM[0] = (float)vesselPositionMsgData.Com[0];
-                vesselProtoUpd.ProtoVessel.CoM[1] = (float)vesselPositionMsgData.Com[1];
-                vesselProtoUpd.ProtoVessel.CoM[2] = (float)vesselPositionMsgData.Com[2];
+                vesselProtoUpd.ProtoVessel.CoM.x = (float)vesselPositionMsgData.Com[0];
+                vesselProtoUpd.ProtoVessel.CoM.y = (float)vesselPositionMsgData.Com[1];
+                vesselProtoUpd.ProtoVessel.CoM.z = (float)vesselPositionMsgData.Com[2];
 
                 if (vesselProtoUpd.ProtoVessel.orbitSnapShot != null)
                 {
