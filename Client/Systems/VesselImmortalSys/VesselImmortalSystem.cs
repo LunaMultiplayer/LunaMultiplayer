@@ -20,10 +20,10 @@ namespace LunaClient.Systems.VesselImmortalSys
 
         private bool VesselImmortalSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
 
-        private static IEnumerable<Vessel> OwnedVessels { get; set; } = new List<Vessel>();
-        private static IEnumerable<Vessel> OtherPeopleVessels { get; set; } = new List<Vessel>();
+        private static List<Vessel> OwnedVessels { get; } = new List<Vessel>();
+        private static List<Vessel> OtherPeopleVessels { get; } = new List<Vessel>();
 
-        private static List<Guid> OwnedVesselIds { get; set; } = new List<Guid>();
+        private static List<Guid> OwnedVesselIds { get; } = new List<Guid>();
 
         #endregion
 
@@ -42,8 +42,8 @@ namespace LunaClient.Systems.VesselImmortalSys
         {
             base.OnDisabled();
 
-            OwnedVessels = new Vessel[0];
-            OtherPeopleVessels = new Vessel[0];
+            OwnedVessels.Clear();
+            OtherPeopleVessels.Clear();
 
             //In case we disable this system, set all the vessels back as mortal...
             foreach (var vessel in FlightGlobals.Vessels)
@@ -71,17 +71,19 @@ namespace LunaClient.Systems.VesselImmortalSys
                     .Select(l => l.VesselId))
                     .Where(v=> !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(v)));
 
-                OwnedVessels = OwnedVesselIds
+                OwnedVessels.Clear();
+                OwnedVessels.AddRange(OwnedVesselIds
                     .Select(FlightGlobals.FindVessel)
-                    .Where(v => v != null);
+                    .Where(v => v != null));
 
-                OtherPeopleVessels = LockSystem.LockQuery.GetAllControlLocks()
+                OtherPeopleVessels.Clear();
+                OtherPeopleVessels.AddRange(LockSystem.LockQuery.GetAllControlLocks()
                     .Union(LockSystem.LockQuery.GetAllUpdateLocks())
                     .Select(l => l.VesselId)
                     .Except(OwnedVesselIds)
                     .Where(v => !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(v))
                     .Select(FlightGlobals.FindVessel)
-                    .Where(v => v != null);
+                    .Where(v => v != null));
             }
         }
 
