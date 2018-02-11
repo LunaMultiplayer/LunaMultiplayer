@@ -1,5 +1,6 @@
 <p align="center">
     <img src="../master/External/logo.png" alt="Luna multiplayer logo"/>
+    <a href="https://www.youtube.com/watch?v=gf6xyLnpnoM"><img src="https://img.youtube.com/vi/gf6xyLnpnoM/0.jpg" alt="Video" height="187" width="250"/></a>
 </p>
 
 <p align="center">
@@ -23,6 +24,7 @@
 *[Official KSP forum post](https://forum.kerbalspaceprogram.com/index.php?/topic/168271-131-luna-multiplayer-lmp-alpha/)*
 
 *[Official website](http://lunamultiplayer.com)*
+
 
 ### Main features:
 
