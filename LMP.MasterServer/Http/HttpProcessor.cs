@@ -78,8 +78,20 @@ namespace LMP.MasterServer.Http
             }
             HttpMethod = tokens[0].ToUpper();
             HttpUrl = tokens[1];
-            JQueryCallBack = HttpUrl.Contains("jQuery") ? HttpUrl.Substring(0, HttpUrl.LastIndexOf("&")).Substring(HttpUrl.IndexOf("jQuery")) : string.Empty;
+            JQueryCallBack = GetJQueryCallback();
             HttpProtocolVersionstring = tokens[2];
+        }
+
+        private string GetJQueryCallback()
+        {
+            try
+            {
+                return HttpUrl.Contains("jQuery") ? HttpUrl.Substring(0, HttpUrl.LastIndexOf("&")).Substring(HttpUrl.IndexOf("jQuery")) : string.Empty;
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
 
         public async void ReadHeaders(BufferedStream inputStream)
