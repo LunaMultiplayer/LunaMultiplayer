@@ -33,6 +33,11 @@ namespace Server
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = LunaTime.UtcNow.Ticks;
 
+                //We disable quick edit as otherwise when you select some text for copy/paste then you can't write to the console and server freezes
+                //This just happens on windows....
+                if (Common.PlatformIsWindows())
+                    ConsoleUtil.DisableConsoleQuickEdit();
+
                 //We cannot run more than 6 instances ofd servers + clients as otherwise the sync time will fail (30 seconds / 5 seconds = 6) but we use 3 for safety
                 if (GetRunningInstances() > 3)
                     throw new HandledException("Cannot run more than 3 servers at a time!");
