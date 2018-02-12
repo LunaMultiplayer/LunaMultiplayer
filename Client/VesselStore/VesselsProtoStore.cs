@@ -135,6 +135,8 @@ namespace LunaClient.VesselStore
         {
             if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
             {
+                if (vesselProtoUpd.ProtoVessel == null) return;
+
                 vesselProtoUpd.ProtoVessel.vesselName = msgData.Name;
                 vesselProtoUpd.ProtoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), msgData.Type);
                 vesselProtoUpd.ProtoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
@@ -156,6 +158,8 @@ namespace LunaClient.VesselStore
             {
                 for (var i = 0; i < msgData.ResourcesCount; i++)
                 {
+                    if (vesselProtoUpd.ProtoVessel == null) return;
+
                     var resource = msgData.Resources[i];
                     var partSnapshot = VesselCommon.FindProtoPartInProtovessel(vesselProtoUpd.ProtoVessel, resource.PartFlightId);
                     var resourceSnapshot = VesselCommon.FindResourceInProtoPart(partSnapshot, resource.ResourceName);
