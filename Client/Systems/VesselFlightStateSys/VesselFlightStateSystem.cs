@@ -106,7 +106,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 if (FlightStateSystemReady)
                     MessageSender.SendCurrentFlightState();
 
-                ChangeRoutineExecutionInterval("SendFlightState", VesselCommon.IsSomeoneSpectatingUs ? 30 : 500);
+                ChangeRoutineExecutionInterval("SendFlightState", VesselCommon.IsSomeoneSpectatingUs ? 30 : 1000);
             }
         }
 
