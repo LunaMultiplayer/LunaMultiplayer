@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace Server.System
 {
@@ -73,12 +74,15 @@ namespace Server.System
             {
                 LastPositionUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
 
-                var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
-                if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
-                var protoVesselLines = FileHandler.ReadFileLines(path);
+                Task.Run(() =>
+                {
+                    var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
+                    if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
+                    var protoVesselLines = FileHandler.ReadFileLines(path);
 
-                var updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
-                FileHandler.WriteToFile(path, updatedText);
+                    var updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
+                    FileHandler.WriteToFile(path, updatedText);
+                });
             }
         }
 
@@ -95,12 +99,15 @@ namespace Server.System
             {
                 LastUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
 
-                var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
-                if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
-                var protoVesselLines = FileHandler.ReadFileLines(path);
+                Task.Run(() =>
+                {
+                    var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
+                    if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
+                    var protoVesselLines = FileHandler.ReadFileLines(path);
 
-                var updatedText = UpdateProtoVesselFileWithNewUpdateData(protoVesselLines, msgData);
-                FileHandler.WriteToFile(path, updatedText);
+                    var updatedText = UpdateProtoVesselFileWithNewUpdateData(protoVesselLines, msgData);
+                    FileHandler.WriteToFile(path, updatedText);
+                });
             }
         }
 
@@ -117,12 +124,15 @@ namespace Server.System
             {
                 LastResourcesUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
 
-                var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
-                if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
-                var protoVesselLines = FileHandler.ReadFileLines(path);
+                Task.Run(() =>
+                {
+                    var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
+                    if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
+                    var protoVesselLines = FileHandler.ReadFileLines(path);
 
-                //var updatedText = UpdateProtoVesselFileWithNewResourceData(protoVesselLines, msgData);
-                //FileHandler.WriteToFile(path, updatedText);
+                    //var updatedText = UpdateProtoVesselFileWithNewResourceData(protoVesselLines, msgData);
+                    //FileHandler.WriteToFile(path, updatedText);
+                });
             }
         }
 
@@ -245,7 +255,7 @@ namespace Server.System
 
             regex = new Regex("(?<prefix>ref = )(.*)\n");
             fullText = regex.Replace(fullText, "${prefix}" + msgData.RefTransformId.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
-            
+
             foreach (var actionGroup in msgData.ActionGroups)
             {
                 regex = new Regex($"(?<prefix>{actionGroup.ActionGroupName} = )(.*)\n");
