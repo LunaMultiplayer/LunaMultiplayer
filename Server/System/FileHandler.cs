@@ -124,7 +124,10 @@ namespace Server.System
         {
             lock (GetLockSemaphore(path))
             {
-                return File.ReadAllLines(path);
+                if (File.Exists(path))
+                    return File.ReadAllLines(path);
+
+                return new string[0];
             }
         }
 

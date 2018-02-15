@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-using System.Linq;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using Server.Command.Command.Base;
@@ -9,6 +6,9 @@ using Server.Log;
 using Server.Server;
 using Server.Settings;
 using Server.System;
+using System;
+using System.IO;
+using System.Linq;
 
 namespace Server.Command.Command
 {
@@ -40,6 +40,9 @@ namespace Server.Command.Command
             foreach (var vesselFilePath in vesselList)
             {
                 var vesselId = Path.GetFileNameWithoutExtension(vesselFilePath);
+
+                if (!File.Exists(vesselFilePath)) continue;
+
                 var vesselIsDebris = FileHandler.ReadFileLines(vesselFilePath).Select(l=> l.ToLower())
                     .Any(l => l.Contains("type = ") && l.Contains("debris"));
 
