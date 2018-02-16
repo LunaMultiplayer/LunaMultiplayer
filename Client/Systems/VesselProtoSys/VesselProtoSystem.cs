@@ -181,7 +181,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             try
             {
-                if (ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
+                if (ProtoSystemBasicReady)
                 {
                     //Load vessels that don't exist, are in our subspace and out of safety bubble
                     var vesselsToLoad = VesselsProtoStore.AllPlayerVessels
@@ -190,6 +190,9 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToLoad)
                     {
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
+                            continue;
+
+                        if (VesselCommon.ActiveVesselIsInSafetyBubble() && VesselCommon.IsNearKsc(vesselProto.Value.ProtoVessel, 20000))
                             continue;
 
                         LunaLog.Log($"[LMP]: Loading vessel {vesselProto.Key}");

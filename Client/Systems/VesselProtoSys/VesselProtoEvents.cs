@@ -29,7 +29,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
                 }, 5f);
 
-                ScreenMessages.PostScreenMessage("Remember!! While you're inside the safety bubble you won't see other players!!", 10f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage("Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!", 10f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

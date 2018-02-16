@@ -371,20 +371,25 @@ namespace LunaClient.VesselUtilities
         }
 
         /// <summary>
-        /// Returns whether the given vessel is near KSC or not.  Measures distance from the landing pad, so very small values may not cover all of KSC.
+        /// Returns whether the given vessel is near KSC or not.  Measures distance from the landing pad / runway, so very small values may not cover all of KSC.
         /// </summary>
-        /// <param name="vessel">The vessel used to determine the distance.  If null, the vessel is not near KSC.</param>
-        /// <param name="distance">The distance to compare</param>
-        private static bool IsNearKsc(Vessel vessel, int distance)
+        public static bool IsNearKsc(ProtoVessel vessel, int distance)
         {
             //If not at Kerbin or past ceiling we're definitely clear
-            if (vessel == null || vessel.mainBody.name != "Kerbin")
+            if (vessel?.orbitSnapShot == null || vessel.orbitSnapShot?.ReferenceBodyIndex != 1)
                 return false;
 
-            var landingPadPosition = vessel.mainBody.GetWorldSurfacePosition(LandingPadLatitude, LandingPadLongitude, KscAltitude);
-            var landingPadDistance = Vector3d.Distance(vessel.GetWorldPos3D(), landingPadPosition);
+            var currentPos = FlightGlobals.Bodies[vessel.orbitSnapShot.ReferenceBodyIndex].GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude);
 
-            return landingPadDistance < distance;
+            var landingPadPosition = FlightGlobals.Bodies[vessel.orbitSnapShot.ReferenceBodyIndex].GetWorldSurfacePosition(LandingPadLatitude, LandingPadLongitude, KscAltitude);
+            var landingPadDistance = Vector3d.Distance(currentPos, landingPadPosition);
+
+            if (landingPadDistance < distance) return true;
+
+            var runwayPosition = FlightGlobals.Bodies[vessel.orbitSnapShot.ReferenceBodyIndex].GetWorldSurfacePosition(RunwayLatitude, RunwayLongitude, KscAltitude);
+            var runwayDistance = Vector3d.Distance(currentPos, runwayPosition);
+
+            return runwayDistance < distance;
         }
     }
 }
