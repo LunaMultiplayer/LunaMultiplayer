@@ -42,6 +42,7 @@ namespace LunaClient.Systems.VesselDockSys
 
         private void CreateAndSendDockMessage(VesselDockStructure dock, int subspaceId, byte[] vesselBytes)
         {
+            //TODO: When would dock be null?
             if (dock == null) return;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselDockMsgData>();
