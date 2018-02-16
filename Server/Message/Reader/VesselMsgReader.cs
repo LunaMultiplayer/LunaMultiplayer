@@ -84,11 +84,16 @@ namespace Server.Message.Reader
 
             if (VesselContext.RemovedVessels.Contains(msgData.Vessel.VesselId)) return;
 
+            if (msgData.Vessel.NumBytes == 0)
+            {
+                LunaLog.Warning($"Received a vessel with 0 bytes ({msgData.Vessel.VesselId}) from {client.PlayerName}.");
+                return;
+            }
+
             var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.Vessel.VesselId}.txt");
 
             if (!File.Exists(path))
-                LunaLog.Debug(
-                    $"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}. Bytes: {msgData.Vessel.NumBytes}");
+                LunaLog.Debug($"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}. Bytes: {msgData.Vessel.NumBytes}");
 
             FileHandler.WriteToFile(path, msgData.Vessel.Data, msgData.Vessel.NumBytes);
 
