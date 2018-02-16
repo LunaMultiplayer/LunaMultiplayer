@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Fields
 
         public Vessel Vessel => FlightGlobals.Vessels.Find(v => v.id == VesselId);
-        public CelestialBody Body => FlightGlobals.Bodies[BodyIndex];
+        public CelestialBody Body => LerpPercentage < 0.5 ? FlightGlobals.Bodies[BodyIndex] : FlightGlobals.Bodies[Target.BodyIndex];
 
         private VesselPositionUpdate _target;
         public VesselPositionUpdate Target
@@ -53,20 +53,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
 
-        private Vector3d _position = Vector3d.zero;
-        public Vector3d Position
-        {
-            get
-            {
-                if (_position == Vector3d.zero && Body != null)
-                {
-                    _position = Body.GetWorldSurfacePosition(LatLonAlt[0], LatLonAlt[1], LatLonAlt[2]);
-                }
-                return _position;
-            }
-        }
-
-
         #endregion
 
         #region Interpolation fields
@@ -97,7 +83,6 @@ namespace LunaClient.Systems.VesselPositionSys
             LerpPercentage = 0;
             InterpolationStarted = false;
             InterpolationFinished = false;
-            _position = Vector3d.zero;
             _target = null;
         }
 
@@ -159,32 +144,32 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void UpdateProtoVesselValues()
         {
-            Vessel.protoVessel.latitude = LatLonAlt[0];
-            Vessel.protoVessel.longitude = LatLonAlt[1];
-            Vessel.protoVessel.altitude = LatLonAlt[2];
-            Vessel.protoVessel.height = HeightFromTerrain;
+            Vessel.protoVessel.latitude = Target.LatLonAlt[0];
+            Vessel.protoVessel.longitude = Target.LatLonAlt[1];
+            Vessel.protoVessel.altitude = Target.LatLonAlt[2];
+            Vessel.protoVessel.height = Target.HeightFromTerrain;
 
-            Vessel.protoVessel.normal[0] = Normal[0];
-            Vessel.protoVessel.normal[1] = Normal[1];
-            Vessel.protoVessel.normal[2] = Normal[2];
+            Vessel.protoVessel.normal[0] = Target.Normal[0];
+            Vessel.protoVessel.normal[1] = Target.Normal[1];
+            Vessel.protoVessel.normal[2] = Target.Normal[2];
 
-            Vessel.protoVessel.rotation[0] = SrfRelRotation[0];
-            Vessel.protoVessel.rotation[1] = SrfRelRotation[1];
-            Vessel.protoVessel.rotation[2] = SrfRelRotation[2];
-            Vessel.protoVessel.rotation[3] = SrfRelRotation[3];
+            Vessel.protoVessel.rotation[0] = Target.SrfRelRotation[0];
+            Vessel.protoVessel.rotation[1] = Target.SrfRelRotation[1];
+            Vessel.protoVessel.rotation[2] = Target.SrfRelRotation[2];
+            Vessel.protoVessel.rotation[3] = Target.SrfRelRotation[3];
 
-            Vessel.protoVessel.CoM[0] = CoM[0];
-            Vessel.protoVessel.CoM[1] = CoM[1];
-            Vessel.protoVessel.CoM[2] = CoM[2];
+            Vessel.protoVessel.CoM[0] = Target.CoM[0];
+            Vessel.protoVessel.CoM[1] = Target.CoM[1];
+            Vessel.protoVessel.CoM[2] = Target.CoM[2];
 
-            Vessel.protoVessel.orbitSnapShot.inclination = Orbit[0];
-            Vessel.protoVessel.orbitSnapShot.eccentricity = Orbit[1];
-            Vessel.protoVessel.orbitSnapShot.semiMajorAxis = Orbit[2];
-            Vessel.protoVessel.orbitSnapShot.LAN = Orbit[3];
-            Vessel.protoVessel.orbitSnapShot.argOfPeriapsis = Orbit[4];
-            Vessel.protoVessel.orbitSnapShot.meanAnomalyAtEpoch = Orbit[5];
-            Vessel.protoVessel.orbitSnapShot.epoch = Orbit[6];
-            Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Orbit[7];
+            Vessel.protoVessel.orbitSnapShot.inclination = Target.Orbit[0];
+            Vessel.protoVessel.orbitSnapShot.eccentricity = Target.Orbit[1];
+            Vessel.protoVessel.orbitSnapShot.semiMajorAxis = Target.Orbit[2];
+            Vessel.protoVessel.orbitSnapShot.LAN = Target.Orbit[3];
+            Vessel.protoVessel.orbitSnapShot.argOfPeriapsis = Target.Orbit[4];
+            Vessel.protoVessel.orbitSnapShot.meanAnomalyAtEpoch = Target.Orbit[5];
+            Vessel.protoVessel.orbitSnapShot.epoch = Target.Orbit[6];
+            Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Target.Orbit[7];
         }
 
         private void OldApplyInterpolationsToLoadedVessel(float lerpPercentage)
@@ -414,7 +399,7 @@ namespace LunaClient.Systems.VesselPositionSys
             TransformPosition[1] = Vessel.ReferenceTransform.position.y;
             TransformPosition[2] = Vessel.ReferenceTransform.position.z;
 
-            Vector3d srfVel = Quaternion.Inverse(Vessel.mainBody.bodyTransform.rotation) * Vessel.srf_velocity;
+            Vector3d srfVel = Quaternion.Inverse(Body.bodyTransform.rotation) * Vessel.srf_velocity;
             Velocity[0] = srfVel.x;
             Velocity[1] = srfVel.y;
             Velocity[2] = srfVel.z;
