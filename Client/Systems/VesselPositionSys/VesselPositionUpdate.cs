@@ -372,7 +372,7 @@ namespace LunaClient.Systems.VesselPositionSys
             var meanAnomalyEpoch = LerpAngle(Orbit[5], Target.Orbit[5], lerpPercentage);
             var epoch = Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
 
-            Vessel.orbitDriver.referenceBody = Body;
+            //Do not set the body explicitely!! Don't do ---> Vessel.orbitDriver.referenceBody = Body;
             Vessel.orbitDriver.orbit.SetOrbit
             (
                 inclination,
