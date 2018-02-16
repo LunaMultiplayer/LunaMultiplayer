@@ -70,7 +70,7 @@ namespace LunaClient.Systems.Scenario
         /// </summary>
         public void SendScenarioModules()
         {
-            if (Enabled)
+            if (Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT)
             {
                 var modules = ScenarioRunner.GetLoadedModules();
                 ParseModulesToConfigNodes(modules);
