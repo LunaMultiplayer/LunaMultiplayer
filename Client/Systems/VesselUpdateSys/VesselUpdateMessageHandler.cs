@@ -32,7 +32,9 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             vessel.vesselName = msgData.Name;
             vessel.vesselType = (VesselType) Enum.Parse(typeof(VesselType), msgData.Type);
-            vessel.situation = (Vessel.Situations) Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
+
+            if (!vessel.isEVA) //Only change this value if vessel is not eva. When vessel is eva we reload it if the situation changes
+                vessel.situation = (Vessel.Situations) Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
 
             //Only change this value if vessel takes off. When the vessel lands the vessel must be reloaded as a whole by the vessel proto system
             if (vessel.Landed && !msgData.Landed)
