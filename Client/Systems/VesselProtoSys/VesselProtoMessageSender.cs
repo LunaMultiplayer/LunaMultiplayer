@@ -43,9 +43,9 @@ namespace LunaClient.Systems.VesselProtoSys
             VesselProtoSystem.CurrentlyUpdatingVesselId = vessel.id;
             var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
             VesselProtoSystem.CurrentlyUpdatingVesselId = Guid.Empty;
-            
+
             if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
-                SendVesselMessage(vessel.protoVessel);
+                SendVesselMessage(vessel.BackupVessel()); //SendVesselMessage(vessel.protoVessel);
         }
 
         #region Private methods
