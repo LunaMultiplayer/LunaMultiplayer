@@ -26,8 +26,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 return _target;
             }
         }
-
-
+        
         #region Message Fields
 
         public Guid VesselId { get; set; }
