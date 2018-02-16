@@ -14,16 +14,9 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Fields
 
         public Vessel Vessel => FlightGlobals.Vessels.Find(v => v.id == VesselId);
-
-        private CelestialBody _body;
-        public CelestialBody Body
-        {
-            get { return _body ?? (_body = FlightGlobals.Bodies.Find(b => b.flightGlobalsIndex == BodyIndex)); }
-            set => _body = value;
-        }
+        public CelestialBody Body => FlightGlobals.Bodies[BodyIndex];
 
         private VesselPositionUpdate _target;
-
         public VesselPositionUpdate Target
         {
             get
@@ -105,7 +98,6 @@ namespace LunaClient.Systems.VesselPositionSys
             InterpolationStarted = false;
             InterpolationFinished = false;
             _position = Vector3d.zero;
-            _body = null;
             _target = null;
         }
 
@@ -390,6 +382,7 @@ namespace LunaClient.Systems.VesselPositionSys
             var meanAnomalyEpoch = LerpAngle(Orbit[5], Target.Orbit[5], lerpPercentage);
             var epoch = Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
 
+            Vessel.orbitDriver.referenceBody = Body;
             Vessel.orbitDriver.orbit.SetOrbit
             (
                 inclination,
