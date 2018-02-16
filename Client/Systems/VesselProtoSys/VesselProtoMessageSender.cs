@@ -20,6 +20,8 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static readonly byte[] VesselSerializedBytes = new byte[10 * 1024 * 1000];
 
+        private static readonly object VesselArraySyncLock = new object();
+
         public void SendMessage(IMessageData msg)
         {
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
@@ -63,7 +65,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (protoVessel.vesselID == Guid.Empty || protoVessel.vesselName == null) return;
 
             //VesselSerializedBytes is shared so lock it!
-            lock (VesselSerializedBytes)
+            lock (VesselArraySyncLock)
             {
                 VesselSerializer.SerializeVesselToArray(protoVessel, VesselSerializedBytes, out var numBytes);
                 if (numBytes > 0)
