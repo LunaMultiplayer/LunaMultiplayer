@@ -9,7 +9,8 @@ namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselToProtoRefresh
     {
-        private static readonly FieldInfo CrewField = typeof(ProtoVessel).GetField("crew", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly FieldInfo VesselCrewField = typeof(Vessel).GetField("crew", BindingFlags.Instance | BindingFlags.NonPublic);
+        private static readonly FieldInfo ProtoVesselCrewField = typeof(ProtoVessel).GetField("crew", BindingFlags.Instance | BindingFlags.NonPublic);
         private static readonly FieldInfo FsmField = typeof(ModuleProceduralFairing).GetField("fsm", BindingFlags.Instance | BindingFlags.NonPublic);
 
         /// <summary>
@@ -125,8 +126,14 @@ namespace LunaClient.Systems.VesselProtoSys
             if (vessel.GetCrewCount() != vessel.protoVessel.GetVesselCrew().Count || vessel.crewedParts != vessel.protoVessel?.crewedParts ||
                 vessel.crewableParts != vessel.protoVessel?.crewableParts)
             {
-                ((List<ProtoCrewMember>)CrewField?.GetValue(vessel.protoVessel))?.Clear();
-                vessel.protoVessel?.RebuildCrewCounts();
+                ((List<ProtoCrewMember>)ProtoVesselCrewField?.GetValue(vessel.protoVessel))?.Clear();
+
+                if (VesselCrewField?.GetValue(vessel) is List<ProtoCrewMember> crew)
+                    ProtoVesselCrewField?.SetValue(vessel.protoVessel, crew);
+                
+                vessel.protoVessel.crewableParts = vessel.crewableParts;
+                vessel.protoVessel.crewedParts = vessel.crewedParts;
+
                 return true;
             }
 
@@ -178,9 +185,9 @@ namespace LunaClient.Systems.VesselProtoSys
                     vessel.protoVessel.protoPartSnapshots.Add(new ProtoPartSnapshot(part, vessel.protoVessel));
                 }
 
-                foreach (var part in vessel.protoVessel.protoPartSnapshots)
+                foreach (var partSnapshot in vessel.protoVessel.protoPartSnapshots)
                 {
-                    part.storePartRefs();
+                    partSnapshot.storePartRefs();
                 }
 
                 return true;
@@ -191,9 +198,9 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (vessel.parts[i].State == PartStates.DEAD) continue;
 
-                if (vessel.parts[i].protoPartSnapshot.state != (int) vessel.parts[i].State)
+                if (vessel.parts[i].protoPartSnapshot.state != (int)vessel.parts[i].State)
                 {
-                    vessel.parts[i].protoPartSnapshot.state = (int) vessel.parts[i].State;
+                    vessel.parts[i].protoPartSnapshot.state = (int)vessel.parts[i].State;
                     vessel.parts[i].ResumeState = vessel.parts[i].State;
                     partsHaveChanges = true;
                 }
