@@ -88,9 +88,8 @@ namespace LunaClient.Systems.Asteroid
         }
 
         /// <summary>
-        /// This routine tries to ackquire the asteroid lock. If we have it spawn the needed asteroids.
+        /// This spawn the needed asteroids if we have the asteroid lock
         /// </summary>
-        /// <returns></returns>
         private void CheckAsteroidsToSpawn()
         {
             if (!Enabled || !AsteroidSystemReady) return;
@@ -98,8 +97,8 @@ namespace LunaClient.Systems.Asteroid
             if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
             {
                 //We have the spawn lock so spawn some asteroids if there are less than expected
-                var beforeSpawn = GetAsteroidCount();
-                var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - beforeSpawn;
+                var currentAsteroidCount = GetAsteroidCount();
+                var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - currentAsteroidCount;
 
                 if (asteroidsToSpawn > 0)
                 {
