@@ -19,14 +19,14 @@ namespace LunaCommon.Message.Client
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)VesselMessageType.VesselsRequest] = typeof(VesselsRequestMsgData),
             [(ushort)VesselMessageType.Proto] = typeof(VesselProtoMsgData),
             [(ushort)VesselMessageType.Dock] = typeof(VesselDockMsgData),
             [(ushort)VesselMessageType.Remove] = typeof(VesselRemoveMsgData),
             [(ushort)VesselMessageType.Position] = typeof(VesselPositionMsgData),
             [(ushort)VesselMessageType.Flightstate] = typeof(VesselFlightStateMsgData),
             [(ushort)VesselMessageType.Update] = typeof(VesselUpdateMsgData),
-            [(ushort)VesselMessageType.Resource] = typeof(VesselResourceMsgData)
+            [(ushort)VesselMessageType.Resource] = typeof(VesselResourceMsgData),
+            [(ushort)VesselMessageType.Sync] = typeof(VesselSyncMsgData)
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Vessel;

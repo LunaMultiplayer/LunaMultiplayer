@@ -13,6 +13,7 @@ using Server.System.VesselRelay;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace Server.Message.Reader
 {
@@ -23,8 +24,8 @@ namespace Server.Message.Reader
             var message = messageData as VesselBaseMsgData;
             switch (message?.VesselMessageType)
             {
-                case VesselMessageType.VesselsRequest:
-                    HandleVesselsRequest(client);
+                case VesselMessageType.Sync:
+                    HandleVesselsSync(client, message);
                     break;
                 case VesselMessageType.Proto:
                     HandleVesselProto(client, message);
@@ -37,7 +38,8 @@ namespace Server.Message.Reader
                     break;
                 case VesselMessageType.Position:
                     VesselRelaySystem.HandleVesselMessage(client, message);
-                    if (!GeneralSettings.SettingsStore.ShowVesselsInThePast || client.Subspace == WarpContext.LatestSubspace)
+                    if (!GeneralSettings.SettingsStore.ShowVesselsInThePast ||
+                        client.Subspace == WarpContext.LatestSubspace)
                         VesselFileUpdater.WritePositionDataToFile(message);
                     break;
                 case VesselMessageType.Flightstate:
@@ -55,17 +57,18 @@ namespace Server.Message.Reader
                     throw new NotImplementedException("Warp Type not implemented");
             }
         }
-        
+
         private static void HandleVesselRemove(ClientStructure client, VesselBaseMsgData message)
         {
-            var data = (VesselRemoveMsgData)message;
+            var data = (VesselRemoveMsgData) message;
 
             var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt");
 
             if (FileHandler.FileExists(path))
             {
                 LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
-                Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt"));
+                Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels",
+                    $"{data.VesselId}.txt"));
             }
 
             if (data.AddToKillList)
@@ -77,14 +80,15 @@ namespace Server.Message.Reader
 
         private static void HandleVesselProto(ClientStructure client, VesselBaseMsgData message)
         {
-            var msgData = (VesselProtoMsgData)message;
+            var msgData = (VesselProtoMsgData) message;
 
             if (VesselContext.RemovedVessels.Contains(msgData.Vessel.VesselId)) return;
 
             var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.Vessel.VesselId}.txt");
 
             if (!File.Exists(path))
-                LunaLog.Debug($"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}. Bytes: {msgData.Vessel.NumBytes}");
+                LunaLog.Debug(
+                    $"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}. Bytes: {msgData.Vessel.NumBytes}");
 
             FileHandler.WriteToFile(path, msgData.Vessel.Data, msgData.Vessel.NumBytes);
 
@@ -93,7 +97,7 @@ namespace Server.Message.Reader
 
         private static void HandleVesselDock(ClientStructure client, VesselBaseMsgData message)
         {
-            var msgData = (VesselDockMsgData)message;
+            var msgData = (VesselDockMsgData) message;
 
             LunaLog.Debug($"Docking message received! Dominant vessel: {msgData.DominantVesselId}");
 
@@ -106,7 +110,8 @@ namespace Server.Message.Reader
 
             //Now remove the weak vessel
             LunaLog.Debug($"Removing weak docked vessel {msgData.WeakVesselId}");
-            Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.WeakVesselId}.txt"));
+            Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels",
+                $"{msgData.WeakVesselId}.txt"));
             VesselContext.RemovedVessels.Add(msgData.WeakVesselId);
 
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
@@ -118,33 +123,54 @@ namespace Server.Message.Reader
             MessageQueuer.SendToAllClients<VesselSrvMsg>(removeMsgData);
         }
 
-        private static void HandleVesselsRequest(ClientStructure client)
+        private static void HandleVesselsSync(ClientStructure client, VesselBaseMsgData message)
         {
-            var sendVesselCount = 0;
+            var msgData = (VesselSyncMsgData) message;
 
-            var vesselList = new List<VesselInfo>();
-
-            foreach (var file in FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels")))
+            var vesselsToSend = GetCurrentVesselIds().Except(msgData.VesselIds).ToArray();
+            foreach (var vesselId in vesselsToSend)
             {
-                var vesselData = FileHandler.ReadFile(file);
-                if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
+                var vesselData = FileHandler.ReadFile(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{vesselId}.txt"));
+                if (vesselData.Length > 0)
                 {
-                    sendVesselCount++;
-                    vesselList.Add(new VesselInfo
-                    {
-                        Data = vesselData,
-                        NumBytes = vesselData.Length,
-                        VesselId = vesselId
-                    });
+                    var protoMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselProtoMsgData>();
+                    protoMsg.Vessel.Data = vesselData;
+                    protoMsg.Vessel.NumBytes = vesselData.Length;
+                    protoMsg.Vessel.VesselId = vesselId;
+
+                    MessageQueuer.SendToClient<VesselSrvMsg>(client, protoMsg);
                 }
             }
 
-            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselsReplyMsgData>();
-            msgData.VesselsData = vesselList.ToArray();
-            msgData.VesselsCount = vesselList.Count;
+            if (vesselsToSend.Length > 0)
+                LunaLog.Debug($"Sending {client.PlayerName} {vesselsToSend.Length} vessels");
 
-            MessageQueuer.SendToClient<VesselSrvMsg>(client, msgData);
-            LunaLog.Debug($"Sending {client.PlayerName} {sendVesselCount} vessels");
+            var vesselsToRemove = msgData.VesselIds.Except(GetCurrentVesselIds()).ToArray();
+            foreach (var vesselId in vesselsToRemove)
+            {
+                var removeMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
+                removeMsg.VesselId = vesselId;
+                removeMsg.AddToKillList = true;
+
+                MessageQueuer.SendToClient<VesselSrvMsg>(client, removeMsg);
+            }
+
+            if (vesselsToRemove.Length > 0)
+                LunaLog.Debug($"Telling {client.PlayerName} to remove {vesselsToRemove.Length} vessels");
+        }
+
+        private static IEnumerable<Guid> GetCurrentVesselIds()
+        {
+            var vesselIds = new List<Guid>();
+            foreach (var file in FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels")))
+            {
+                if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
+                {
+                    vesselIds.Add(vesselId);
+                }
+            }
+
+            return vesselIds;
         }
     }
 }

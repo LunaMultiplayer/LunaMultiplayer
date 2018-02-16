@@ -35,12 +35,7 @@ namespace LunaClient.Network
         {
             SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<KerbalCliMsg, KerbalsRequestMsgData>()));
         }
-
-        public static void SendVesselsRequest()
-        {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<VesselCliMsg, VesselsRequestMsgData>()));
-        }
-
+        
         public static void SendSettingsRequest()
         {
             SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<SettingsCliMsg, SettingsRequestMsgData>()));

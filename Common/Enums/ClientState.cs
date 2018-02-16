@@ -36,8 +36,6 @@
         AdminsSynced = 29,
         SyncingGroups = 30,
         GroupsSynced = 31,
-        SyncingVessels = 32,
-        VesselsSynced = 33,
 
         Starting = 34,
         Running = 35

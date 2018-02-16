@@ -31,6 +31,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselResourceSys;
 using LunaClient.Systems.VesselStateSys;
 using LunaClient.Systems.VesselSwitcherSys;
+using LunaClient.Systems.VesselSyncSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
@@ -111,9 +112,15 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.Authenticated:
                     SystemsContainer.Get<MainSystem>().Status = "Handshaking successful";
+
                     SystemsContainer.Get<KerbalSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselSyncSystem>().Enabled = true;
+                    SystemsContainer.Get<VesselSyncSystem>().MessageSender.SendVesselsSyncMsg();
+
                     MainSystem.NetworkState = ClientState.SyncingKerbals;
                     NetworkSimpleMessageSender.SendKerbalsRequest();
+
                     _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingKerbals:
@@ -259,19 +266,6 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.GroupsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Groups synced";
-                    SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
-                    MainSystem.NetworkState = ClientState.SyncingVessels;
-                    NetworkSimpleMessageSender.SendVesselsRequest();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.SyncingVessels:
-                    SystemsContainer.Get<MainSystem>().Status = "Syncing vessels";
-                    if (ConnectionIsStuck(60000))
-                        MainSystem.NetworkState = ClientState.GroupsSynced;
-                    break;
-                case ClientState.VesselsSynced:
-                    SystemsContainer.Get<MainSystem>().Status = "Vessels synced";
-
                     SystemsContainer.Get<MainSystem>().StartGame = true;
                     MainSystem.NetworkState = ClientState.Starting;
                     break;
@@ -286,7 +280,6 @@ namespace LunaClient.Systems.Network
                         SystemsContainer.Get<VesselLockSystem>().Enabled = true;
                         SystemsContainer.Get<VesselPositionSystem>().Enabled = true;
                         SystemsContainer.Get<VesselFlightStateSystem>().Enabled = true;
-                        SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
                         SystemsContainer.Get<VesselRemoveSystem>().Enabled = true;
                         SystemsContainer.Get<VesselImmortalSystem>().Enabled = true;
                         SystemsContainer.Get<VesselDockSystem>().Enabled = true;

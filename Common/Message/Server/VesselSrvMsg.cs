@@ -19,7 +19,6 @@ namespace LunaCommon.Message.Server
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)VesselMessageType.VesselsReply] = typeof(VesselsReplyMsgData),
             [(ushort)VesselMessageType.Proto] = typeof(VesselProtoMsgData),
             [(ushort)VesselMessageType.Dock] = typeof(VesselDockMsgData),
             [(ushort)VesselMessageType.Remove] = typeof(VesselRemoveMsgData),

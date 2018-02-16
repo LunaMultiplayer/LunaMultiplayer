@@ -2,14 +2,13 @@
 {
     public enum VesselMessageType
     {
-        VesselsRequest = 0,
-        VesselsReply = 1,
-        Proto = 2,
-        Dock = 3,
-        Remove = 4,
-        Position = 5,
-        Flightstate = 6,
-        Update = 7,
-        Resource = 8
+        Proto = 0,
+        Dock = 1,
+        Remove = 2,
+        Position = 3,
+        Flightstate = 4,
+        Update = 5,
+        Resource = 6,
+        Sync = 7
     }
 }

@@ -148,7 +148,6 @@ namespace LunaClient.Network
                         case VesselMessageType.Flightstate:
                             SystemsContainer.Get<VesselFlightStateSystem>().EnqueueMessage(msg);
                             break;
-                        case VesselMessageType.VesselsReply:
                         case VesselMessageType.Proto:
                             SystemsContainer.Get<VesselProtoSystem>().EnqueueMessage(msg);
                             break;

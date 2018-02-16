@@ -82,6 +82,9 @@
     <Compile Include="Systems\VesselResourceSys\VesselResourceMessageHandler.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceMessageSender.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceSystem.cs" />
+    <Compile Include="Systems\VesselSyncSys\VesselSyncMessageHandler.cs" />
+    <Compile Include="Systems\VesselSyncSys\VesselSyncMessageSender.cs" />
+    <Compile Include="Systems\VesselSyncSys\VesselSyncSystem.cs" />
     <Compile Include="Utilities\CoroutineUtil.cs" />
     <Compile Include="VesselIgnore\VesselModulesToIgnore.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
