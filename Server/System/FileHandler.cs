@@ -98,7 +98,7 @@ namespace Server.System
         {
             lock (GetLockSemaphore(path))
             {
-                return File.ReadAllBytes(path);
+                return File.Exists(path) ? File.ReadAllBytes(path) : new byte[0];
             }
         }
 
@@ -111,7 +111,7 @@ namespace Server.System
         {
             lock (GetLockSemaphore(path))
             {
-                return File.ReadAllText(path);
+                return File.Exists(path) ? File.ReadAllText(path): string.Empty;
             }
         }
 
@@ -124,10 +124,7 @@ namespace Server.System
         {
             lock (GetLockSemaphore(path))
             {
-                if (File.Exists(path))
-                    return File.ReadAllLines(path);
-
-                return new string[0];
+                return File.Exists(path) ? File.ReadAllLines(path) : new string[0];
             }
         }
 
