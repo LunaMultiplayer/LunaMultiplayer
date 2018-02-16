@@ -149,19 +149,6 @@ namespace Server.Message.Reader
 
             if (vesselsToSend.Length > 0)
                 LunaLog.Debug($"Sending {client.PlayerName} {vesselsToSend.Length} vessels");
-
-            var vesselsToRemove = msgData.VesselIds.Except(GetCurrentVesselIds()).ToArray();
-            foreach (var vesselId in vesselsToRemove)
-            {
-                var removeMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
-                removeMsg.VesselId = vesselId;
-                removeMsg.AddToKillList = true;
-
-                MessageQueuer.SendToClient<VesselSrvMsg>(client, removeMsg);
-            }
-
-            if (vesselsToRemove.Length > 0)
-                LunaLog.Debug($"Telling {client.PlayerName} to remove {vesselsToRemove.Length} vessels");
         }
 
         private static IEnumerable<Guid> GetCurrentVesselIds()
