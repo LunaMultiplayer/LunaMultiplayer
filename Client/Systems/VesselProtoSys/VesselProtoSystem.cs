@@ -184,12 +184,15 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (ProtoSystemBasicReady)
                 {
                     //Load vessels that don't exist, are in our subspace and out of safety bubble
-                    var vesselsToLoad = VesselsProtoStore.AllPlayerVessels
-                        .Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded && !v.Value.IsInSafetyBubble);
+                    var vesselsToLoad = VesselsProtoStore.AllPlayerVessels.Where(v => !v.Value.VesselExist && v.Value.ShouldBeLoaded);
 
                     foreach (var vesselProto in vesselsToLoad)
                     {
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
+                            continue;
+
+                        //Only load vessels that are in safety bubble on the track station
+                        if (vesselProto.Value.IsInSafetyBubble && HighLogic.LoadedScene != GameScenes.TRACKSTATION)
                             continue;
 
                         if (VesselCommon.ActiveVesselIsInSafetyBubble() && VesselCommon.IsNearKsc(vesselProto.Value.ProtoVessel, 20000))
