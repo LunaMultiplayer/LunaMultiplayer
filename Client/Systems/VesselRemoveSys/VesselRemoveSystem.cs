@@ -139,6 +139,8 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         private void RemoveSafetyBubbleDebris()
         {
+            if (!HighLogic.LoadedSceneIsFlight) return;
+
             DebrisInSafetyBubbleToRemove.Clear();
             DebrisInSafetyBubbleToRemove.AddRange(FlightGlobals.Vessels.Where(v => v != null && v.state == Vessel.State.INACTIVE && v.vesselType != VesselType.Flag &&
                                                                                    v.id != FlightGlobals.ActiveVessel?.id && VesselCommon.IsInSafetyBubble(v)));
