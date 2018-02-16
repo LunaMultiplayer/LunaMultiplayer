@@ -6,7 +6,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 0.1.13.{build}
+version: 0.1.14.{build}
 image: Visual Studio 2017
 
 #---------------------------------#
@@ -14,7 +14,7 @@ image: Visual Studio 2017
 #---------------------------------#
 
 environment:
-  smallversion: 0.1.13
+  smallversion: 0.1.14
   ZIPPASSWORD:
     secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=
 assembly_info:
