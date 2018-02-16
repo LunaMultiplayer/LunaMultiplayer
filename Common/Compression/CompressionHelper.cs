@@ -304,6 +304,12 @@ namespace LunaCommon.Compression
 
         public static byte[] decompress(byte[] source)
         {
+            //When decompressing an empty array, return the original empty array.  Otherwise, we'll fail trying to access source[0] later.
+            if (source.Length == 0)
+            {
+                return source;
+            }
+
             int level;
             int size = sizeDecompressed(source);
             int src = headerLen(source);
