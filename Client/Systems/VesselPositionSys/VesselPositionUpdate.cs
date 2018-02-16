@@ -13,7 +13,7 @@ namespace LunaClient.Systems.VesselPositionSys
     {
         #region Fields
 
-        public Vessel Vessel => FlightGlobals.Vessels.Find(v => v.id == VesselId);
+        public Vessel Vessel { get; set; }
         public CelestialBody Body => LerpPercentage < 0.5 ? FlightGlobals.Bodies[BodyIndex] : FlightGlobals.Bodies[Target.BodyIndex];
 
         private VesselPositionUpdate _target;
@@ -79,6 +79,8 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void ResetFields()
         {
+            Vessel = FlightGlobals.Vessels.Find(v => v.id == VesselId);
+
             LerpPercentage = 0;
             InterpolationStarted = false;
             InterpolationFinished = false;
@@ -90,6 +92,8 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void Restart()
         {
+            Vessel = FlightGlobals.Vessels.Find(v => v.id == VesselId);
+
             RestartRequested = true;
             TimeStamp = Target?.TimeStamp ?? TimeStamp;
             ResetFields();
@@ -100,6 +104,8 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void ApplyVesselUpdate()
         {
+            Vessel = FlightGlobals.Vessels.Find(v => v.id == VesselId);
+
             if (Body == null || Vessel == null || Vessel.precalc == null || Vessel.state == Vessel.State.DEAD || Target == null ||
                 FlightGlobals.ActiveVessel?.id == VesselId && !VesselCommon.IsSpectating)
             {
