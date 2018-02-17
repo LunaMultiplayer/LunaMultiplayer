@@ -2,6 +2,7 @@
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
 using UniLinq;
@@ -99,7 +100,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 LunaLog.Log("[LMP]: Detected a revert!");
                 var vesselIdsToRemove = FlightGlobals.Vessels
                     .Where(v => v.rootPart?.missionID == FlightGlobals.ActiveVessel.rootPart.missionID && v.id != FlightGlobals.ActiveVessel.id)
-                    .Select(v=> v.id).Distinct();
+                    .Select(v => v.id).Distinct();
 
                 //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
                 //vessel and remove them both from our game and server
@@ -110,9 +111,14 @@ namespace LunaClient.Systems.VesselRemoveSys
                 }
 
                 //Now tell the server to remove our old vessel
-                //We say to not keep it in the vessels remove list as perhaps we are reverting to flight and then our vessel id will stay the same. 
-                //If we set the keepvesselinremovelist to true then the server will ignore every change we do to our vessel! 
-                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, false);
+                CoroutineUtil.StartDelayedRoutine("SendProperVesselRemoveMsg", () =>
+                {
+                    //We delay the send vessel remove to wait until the proper scene is loaded.
+                    //In case we revert to editor we must fully delete that vessel as when flying again we will get a new ID.
+                    //Otherwise we say to not keep it in the vessels remove list as perhaps we are reverting to flight and then our vessel id will stay the same. 
+                    //If we set the keepvesselinremovelist to true then the server will ignore every change we do to our vessel! 
+                    System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, HighLogic.LoadedSceneIsEditor);
+                }, 3);
             }
         }
     }
