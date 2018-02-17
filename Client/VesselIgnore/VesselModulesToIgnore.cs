@@ -6,7 +6,7 @@ namespace LunaClient.VesselIgnore
     /// Here we hold a collection of modules and fields that can be ignored when checking for changes
     /// </summary>
     public class VesselModulesToIgnore
-    {        
+    {
         /// <summary>
         /// Add here modules that should be ignored (just for performance) when applying changes and when checking for changes
         /// </summary>
@@ -53,7 +53,8 @@ namespace LunaClient.VesselIgnore
             ["ModuleEngines"] = new[] { "currentThrottle" },
             ["ModuleEnginesFX"] = new[] { "currentThrottle" },
             ["ModuleWheelSuspension"] = new[] { "suspensionPos", "autoBoost" },
-            ["ModuleDeployableSolarPanel"] = new[] { "launchUT", "currentRotation", "storedAnimationTime" }
+            ["ModuleDeployableSolarPanel"] = new[] { "launchUT", "currentRotation", "storedAnimationTime" },
+            ["ModuleDeployableRadiator"] = new[] { "currentRotation" }
         };
     }
 }
