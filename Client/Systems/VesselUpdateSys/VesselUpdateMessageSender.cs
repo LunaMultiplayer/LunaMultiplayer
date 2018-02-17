@@ -17,6 +17,8 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         public void SendVesselUpdate(Vessel vessel)
         {
+            if (vessel == null) return;
+
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselUpdateMsgData>();
             msgData.VesselId = vessel.id;
             msgData.Name = vessel.vesselName;

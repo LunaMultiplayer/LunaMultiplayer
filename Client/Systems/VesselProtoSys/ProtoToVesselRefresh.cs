@@ -42,10 +42,11 @@ namespace LunaClient.Systems.VesselProtoSys
 
             var hasMissingparts = vesselProtoPartIds.Except(vesselPartsIds).Any();
             if (hasMissingparts || !VesselCommon.IsSpectating && (vessel.isEVA && vessel.situation != protoVessel.situation || 
-                !vessel.Landed && protoVessel.landed || !vessel.Splashed && protoVessel.splashed))
+                !vessel.Landed && protoVessel.landed || !vessel.Splashed && protoVessel.splashed || 
+                vessel.situation != protoVessel.situation && HighLogic.LoadedScene == GameScenes.TRACKSTATION))
             {
                 //Reload the whole vessel if vessel lands/splashes as otherwise map view puts the vessel next to the other player.
-                //Also reload the whole vesse if it's a EVA and situation changed....
+                //Also reload the whole vesse if it's a EVA and situation changed or in track station....
                 //Better to reload if has missing parts as creating them dinamically is a PIA
                 VesselLoader.ReloadVessel(protoVessel);
                 return;

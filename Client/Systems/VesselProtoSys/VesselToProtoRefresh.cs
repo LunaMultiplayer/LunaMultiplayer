@@ -41,7 +41,7 @@ namespace LunaClient.Systems.VesselProtoSys
             var rootPartIndex = GetRootPartIndex(vessel);
             var vesselHasChanges = vessel.Landed && !vessel.protoVessel.landed || vessel.Splashed && !vessel.protoVessel.splashed ||
                 vessel.currentStage != vessel.protoVessel.stage || vessel.protoVessel.rootIndex != rootPartIndex ||
-                vessel.isEVA && vessel.situation != vessel.protoVessel.situation;
+                vessel.situation != vessel.protoVessel.situation;
 
             vessel.protoVessel.vesselRef = vessel;
             vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
