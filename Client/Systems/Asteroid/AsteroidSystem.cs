@@ -81,8 +81,10 @@ namespace LunaClient.Systems.Asteroid
         /// <summary>
         /// Try to acquire the asteroid-spawning lock if nobody else has it.
         /// </summary>
-        private static void TryGetAsteroidLock()
+        private void TryGetAsteroidLock()
         {
+            if (!Enabled || !AsteroidSystemReady) return;
+
             if (!LockSystem.LockQuery.AsteroidLockExists() && SystemsContainer.Get<WarpSystem>().CurrentSubspace == 0)
                 SystemsContainer.Get<LockSystem>().AcquireAsteroidLock();
         }
@@ -116,7 +118,7 @@ namespace LunaClient.Systems.Asteroid
         /// </summary>
         private void CheckAsteroidsStatus()
         {
-            if (!Enabled) return;
+            if (!Enabled || !AsteroidSystemReady) return;
 
             //Check for changes to tracking
             foreach (var asteroid in GetCurrentAsteroids().Where(asteroid => asteroid.state != Vessel.State.DEAD))
