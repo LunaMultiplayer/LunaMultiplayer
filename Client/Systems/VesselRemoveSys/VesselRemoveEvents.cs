@@ -110,6 +110,9 @@ namespace LunaClient.Systems.VesselRemoveSys
                     System.AddToKillList(vesselIdToRemove);
                 }
 
+                //Store it here so the delayed routine can access it!
+                var activeVesselId = FlightGlobals.ActiveVessel.id;
+
                 //Now tell the server to remove our old vessel
                 CoroutineUtil.StartDelayedRoutine("SendProperVesselRemoveMsg", () =>
                 {
@@ -117,7 +120,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                     //In case we revert to editor we must fully delete that vessel as when flying again we will get a new ID.
                     //Otherwise we say to not keep it in the vessels remove list as perhaps we are reverting to flight and then our vessel id will stay the same. 
                     //If we set the keepvesselinremovelist to true then the server will ignore every change we do to our vessel! 
-                    System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, HighLogic.LoadedSceneIsEditor);
+                    System.MessageSender.SendVesselRemove(activeVesselId, HighLogic.LoadedSceneIsEditor);
                 }, 3);
             }
         }
