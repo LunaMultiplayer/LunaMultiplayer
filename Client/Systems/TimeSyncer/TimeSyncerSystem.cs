@@ -49,11 +49,11 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Limit at wich we won't fix the time with the GAME timescale
         /// </summary>
-        private const int PhisicsClockLimitMs = 10000;
+        private const int PhisicsClockLimitMs = 20000;
         /// <summary>
         /// If the time difference is greater than this, the game will set a new time as a global
         /// </summary>
-        private const int MaxClockErrorMs = 10000;
+        private const int MaxClockErrorMs = 20000;
 
         #endregion
 
