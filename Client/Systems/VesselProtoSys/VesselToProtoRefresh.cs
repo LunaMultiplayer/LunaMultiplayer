@@ -130,9 +130,9 @@ namespace LunaClient.Systems.VesselProtoSys
 
                 if (VesselCrewField?.GetValue(vessel) is List<ProtoCrewMember> crew)
                     ProtoVesselCrewField?.SetValue(vessel.protoVessel, crew);
-                
+
                 vessel.protoVessel.crewableParts = vessel.crewableParts;
-                vessel.protoVessel.crewedParts = vessel.crewedParts;
+                //vessel.protoVessel.crewedParts = vessel.crewedParts; //THIS LINE CORRUPTS THE VESSEL!!!!!!!!!!!!!!!
 
                 return true;
             }
@@ -202,6 +202,13 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     vessel.parts[i].protoPartSnapshot.state = (int)vessel.parts[i].State;
                     vessel.parts[i].ResumeState = vessel.parts[i].State;
+                    partsHaveChanges = true;
+                }
+
+                if (vessel.parts[i].protoModuleCrew.Count != vessel.parts[i].protoPartSnapshot.protoModuleCrew.Count)
+                {
+                    vessel.parts[i].protoPartSnapshot.protoModuleCrew.Clear();
+                    vessel.parts[i].protoPartSnapshot.protoModuleCrew.AddRange(vessel.parts[i].protoModuleCrew);
                     partsHaveChanges = true;
                 }
 
