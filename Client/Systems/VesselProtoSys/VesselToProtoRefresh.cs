@@ -1,6 +1,5 @@
 ﻿using LunaClient.VesselIgnore;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using UniLinq;
@@ -82,7 +81,6 @@ namespace LunaClient.Systems.VesselProtoSys
             vessel.protoVessel.persistent = vessel.isPersistent;
 
             vesselHasChanges |= RefreshParts(vessel);
-            vesselHasChanges |= RefreshCrew(vessel);
 
             RefreshActionGroups(vessel);
 
@@ -116,28 +114,6 @@ namespace LunaClient.Systems.VesselProtoSys
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Refreshes the crew from the vessel and returns true if there's a change
-        /// </summary>
-        private static bool RefreshCrew(Vessel vessel)
-        {
-            if (vessel.GetCrewCount() != vessel.protoVessel.GetVesselCrew().Count || vessel.crewedParts != vessel.protoVessel?.crewedParts ||
-                vessel.crewableParts != vessel.protoVessel?.crewableParts)
-            {
-                ((List<ProtoCrewMember>)ProtoVesselCrewField?.GetValue(vessel.protoVessel))?.Clear();
-
-                if (VesselCrewField?.GetValue(vessel) is List<ProtoCrewMember> crew)
-                    ProtoVesselCrewField?.SetValue(vessel.protoVessel, crew);
-
-                vessel.protoVessel.crewableParts = vessel.crewableParts;
-                //vessel.protoVessel.crewedParts = vessel.crewedParts; //THIS LINE CORRUPTS THE VESSEL!!!!!!!!!!!!!!!
-
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -205,10 +181,14 @@ namespace LunaClient.Systems.VesselProtoSys
                     partsHaveChanges = true;
                 }
 
-                if (vessel.parts[i].protoModuleCrew.Count != vessel.parts[i].protoPartSnapshot.protoModuleCrew.Count)
+                if (!vessel.isEVA && vessel.parts[i].protoModuleCrew.Count != vessel.parts[i].protoPartSnapshot.protoModuleCrew.Count)
                 {
                     vessel.parts[i].protoPartSnapshot.protoModuleCrew.Clear();
                     vessel.parts[i].protoPartSnapshot.protoModuleCrew.AddRange(vessel.parts[i].protoModuleCrew);
+
+                    vessel.parts[i].protoPartSnapshot.protoCrewNames.Clear();
+                    vessel.parts[i].protoPartSnapshot.protoCrewNames.AddRange(vessel.parts[i].protoModuleCrew.Select(c => c.name));
+
                     partsHaveChanges = true;
                 }
 
