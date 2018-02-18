@@ -35,7 +35,7 @@ namespace LunaClient.Systems.TimeSyncer
         #region Constants
 
         /// <summary>
-        /// If the time between UTC and game is greater than this, the game time 
+        /// If the time between UTC and game is greater than this, the game time will be fixed using the phisics clock (makes game go faster/slower)
         /// </summary>
         private const int MaxPhisicsClockMsError = 25;
         /// <summary>
@@ -49,11 +49,11 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Limit at wich we won't fix the time with the GAME timescale
         /// </summary>
-        private const int PhisicsClockLimitMs = 5000;
+        private const int PhisicsClockLimitMs = 10000;
         /// <summary>
         /// If the time difference is greater than this, the game will set a new time as a global
         /// </summary>
-        private const int MaxClockErrorMs = 5000;
+        private const int MaxClockErrorMs = 10000;
 
         #endregion
 
