@@ -23,7 +23,7 @@ namespace LunaClient.VesselUtilities
 
         public static byte[] SerializeVessel(ProtoVessel protoVessel)
         {
-            return PreSerializationChecks(protoVessel, out var confiNode) ? ConfigNodeSerializer.Serialize(confiNode) : new byte[0];
+            return PreSerializationChecks(protoVessel, out var configNode) ? ConfigNodeSerializer.Serialize(configNode) : new byte[0];
         }
 
         /// <summary>
@@ -31,10 +31,9 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         public static void SerializeVesselToArray(ProtoVessel protoVessel, byte[] data, out int numBytes)
         {
-            if (PreSerializationChecks(protoVessel, out var confiNode))
+            if (PreSerializationChecks(protoVessel, out var configNode))
             {
-
-                ConfigNodeSerializer.SerializeToArray(confiNode, data, out numBytes);
+                ConfigNodeSerializer.SerializeToArray(configNode, data, out numBytes);
             }
             else
             {

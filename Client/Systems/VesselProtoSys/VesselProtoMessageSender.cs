@@ -53,7 +53,9 @@ namespace LunaClient.Systems.VesselProtoSys
         private void SendVesselMessage(ProtoVessel protoVessel)
         {
             if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
-            TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
+            //Doing this in another thread can crash the game as during the serialization into a config node Lingoona is called...
+            //TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
+            PrepareAndSendProtoVessel(protoVessel);
         }
 
         /// <summary>
