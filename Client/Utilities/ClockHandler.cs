@@ -48,7 +48,7 @@ namespace LunaClient.Utilities
             if (FlightGlobals.Vessels != null)
             {
                 VesselsToPack.Clear();
-                VesselsToPack.AddRange(FlightGlobals.Vessels.Where(v => !v.packed && SafeToStepClock(v, targetTick)));
+                VesselsToPack.AddRange(FlightGlobals.Vessels.Where(v => !v.packed && SafeToStepClock(v, targetTick) && FlightGlobals.ActiveVessel?.id != v.id));
                 foreach (var vessel in VesselsToPack)
                 {
                     try
