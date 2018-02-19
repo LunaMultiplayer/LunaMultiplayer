@@ -34,6 +34,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] LatLonAlt { get; set; } = new double[3];
         public double[] NormalVector { get; set; } = new double[3];
         public double[] Com { get; set; } = new double[3];
+        public double[] ComD { get; set; } = new double[3];
         public double[] TransformPosition { get; set; } = new double[3];
         public double[] Velocity { get; set; } = new double[3];
         public double[] Orbit { get; set; } = new double[8];
@@ -49,6 +50,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
         public Vector3d TransformPos => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
         public Vector3 CoM => new Vector3d(Com[0], Com[1], Com[2]);
+        public Vector3 CoMd => new Vector3d(ComD[0], ComD[1], ComD[2]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
 
@@ -319,6 +321,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             //TODO: Is CoM and terrainNormal really needed?
             Vessel.CoM = Vector3.Lerp(CoM, Target.CoM, lerpPercentage);
+            Vessel.CoMD = Vector3d.Lerp(CoMd, Target.CoMd, lerpPercentage);
             Vessel.terrainNormal = Vector3.Lerp(Normal, Target.Normal, lerpPercentage);
 
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
@@ -334,6 +337,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.longitude = Target.LatLonAlt[1];
                 Vessel.altitude = Target.LatLonAlt[2];
                 Vessel.orbitDriver.updateFromParameters();
+                Vessel.ReferenceTransform.position = TransformPos;
             }
             else
             {
@@ -416,6 +420,10 @@ namespace LunaClient.Systems.VesselPositionSys
             Com[0] = Vessel.CoM.x;
             Com[1] = Vessel.CoM.y;
             Com[2] = Vessel.CoM.z;
+            
+            ComD[0] = Vessel.CoMD.x;
+            ComD[1] = Vessel.CoMD.y;
+            ComD[2] = Vessel.CoMD.z;
 
             NormalVector[0] = Vessel.terrainNormal.x;
             NormalVector[1] = Vessel.terrainNormal.y;

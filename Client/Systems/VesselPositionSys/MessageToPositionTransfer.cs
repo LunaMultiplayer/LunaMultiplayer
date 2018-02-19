@@ -25,6 +25,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Array.Copy(msgData.Velocity, upd.Velocity, 3);
             Array.Copy(msgData.LatLonAlt, upd.LatLonAlt, 3);
             Array.Copy(msgData.Com, upd.Com, 3);
+            Array.Copy(msgData.ComD, upd.ComD, 3);
             Array.Copy(msgData.NormalVector, upd.NormalVector, 3);
             Array.Copy(msgData.Orbit, upd.Orbit, 8);
 
@@ -45,6 +46,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Array.Copy(msgData.Velocity, update.Velocity, 3);
             Array.Copy(msgData.LatLonAlt, update.LatLonAlt, 3);
             Array.Copy(msgData.Com, update.Com, 3);
+            Array.Copy(msgData.ComD, update.ComD, 3);
             Array.Copy(msgData.NormalVector, update.NormalVector, 3);
             Array.Copy(msgData.Orbit, update.Orbit, 8);
 
@@ -63,6 +65,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Array.Copy(update.Velocity, updateToUpdate.Velocity, 3);
             Array.Copy(update.LatLonAlt, updateToUpdate.LatLonAlt, 3);
             Array.Copy(update.Com, updateToUpdate.Com, 3);
+            Array.Copy(update.ComD, updateToUpdate.ComD, 3);
             Array.Copy(update.NormalVector, updateToUpdate.NormalVector, 3);
             Array.Copy(update.Orbit, updateToUpdate.Orbit, 8);
 
@@ -82,6 +85,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 SetVelocity(vessel, msgData);
                 SetLatLonAlt(vessel, msgData);
                 GetCom(vessel, msgData);
+                GetComD(vessel, msgData);
                 SetNormalVector(vessel, msgData);
                 SetOrbit(vessel, msgData);
 
@@ -124,6 +128,13 @@ namespace LunaClient.Systems.VesselPositionSys
             msgData.Com[0] = vessel.CoM.x;
             msgData.Com[1] = vessel.CoM.y;
             msgData.Com[2] = vessel.CoM.z;
+        }
+
+        private static void GetComD(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.ComD[0] = vessel.CoMD.x;
+            msgData.ComD[1] = vessel.CoMD.y;
+            msgData.ComD[2] = vessel.CoMD.z;
         }
 
         private static void SetLatLonAlt(Vessel vessel, VesselPositionMsgData msgData)
