@@ -23,7 +23,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         public ConcurrentQueue<Guid> VesselsToRemove { get; private set; } = new ConcurrentQueue<Guid>();
         public ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
 
-        private static List<Vessel> DebrisInSafetyBubbleToRemove = new List<Vessel>();
+        private static readonly List<Vessel> DebrisInSafetyBubbleToRemove = new List<Vessel>();
 
         #endregion
 
@@ -98,6 +98,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             UnloadVesselFromGame(killVessel);
             KillGivenVessel(killVessel);
             UnloadVesselFromScenario(killVessel);
+            UnityEngine.Object.Destroy(killVessel.gameObject);
         }
 
         /// <summary>
