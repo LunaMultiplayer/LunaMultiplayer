@@ -75,7 +75,7 @@ namespace LunaClient.Systems.VesselLockSys
         /// </summary>
         private void UpdateActiveVesselsLocks()
         {
-            if (Enabled && VesselLockSystemReady && LockSystem.LockQuery.ControlLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+            if (Enabled && VesselLockSystemReady && FlightGlobals.ActiveVessel != null && LockSystem.LockQuery.ControlLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName))
             {
                 //We have a control lock over the active vessel so if we are spectating stop doing it.
                 if (VesselCommon.IsSpectating)
