@@ -36,8 +36,11 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public void VesselCreate(Vessel data)
         {
-            //No need to check the unloaded update locks as vessels when unloaded don't have parts!
+            //We are just reloading a vessel and the vessel.Load() was triggered so we should not do anything!
+            if (data.id == VesselLoader.ReloadingVesselId)
+                return;
 
+            //No need to check the unloaded update locks as vessels when unloaded don't have parts!
             if (!VesselCommon.IsSpectating && data.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(data.id))
             {
                 //We are modifying a vessel that LMP is not handling
