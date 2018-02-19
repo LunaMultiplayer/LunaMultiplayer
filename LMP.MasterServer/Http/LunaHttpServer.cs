@@ -23,9 +23,6 @@ namespace LMP.MasterServer.Http
             {
                 var client = await Listener.AcceptTcpClientAsync();
                 await TcpClientWorker.ParseClientRequest(client);
-                //var client = Listener.AcceptTcpClientAsync();
-                //if (client.IsCompleted)
-                //    await TcpClientWorker.ParseClientRequest(client.Result);
             }
             Listener.Stop();
         }
