@@ -13,7 +13,8 @@ namespace LunaClient.Utilities
 
         private static IEnumerator DelaySeconds(string routineName, Action action, float delayInSec)
         {
-            yield return new WaitForSeconds(delayInSec);
+            if (delayInSec > 0)
+                yield return new WaitForSeconds(delayInSec);
             try
             {
                 action();
