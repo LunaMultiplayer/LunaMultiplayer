@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Fields
 
         public Vessel Vessel { get; set; }
-        public CelestialBody Body => LerpPercentage < 0.5 ? FlightGlobals.Bodies[BodyIndex] : FlightGlobals.Bodies[Target.BodyIndex];
+        public CelestialBody Body => LerpPercentage < 0.5 ? GetBody(BodyIndex) : GetBody(Target.BodyIndex);
 
         private VesselPositionUpdate _target;
         public VesselPositionUpdate Target
@@ -443,7 +443,7 @@ namespace LunaClient.Systems.VesselPositionSys
             return from * (1 - t) + to * t;
         }
 
-        public static double LerpAngle(double from, double to, float t)
+        private static double LerpAngle(double from, double to, float t)
         {
             var single = Repeat(to - from, 360);
             if (single > 180f)
@@ -453,9 +453,21 @@ namespace LunaClient.Systems.VesselPositionSys
             return from + single * t;
         }
 
-        public static double Repeat(double t, double length)
+        private static double Repeat(double t, double length)
         {
             return t - Math.Floor(t / length) * length;
+        }
+
+        private static CelestialBody GetBody(int bodyIndex)
+        {
+            try
+            {
+                return FlightGlobals.Bodies[bodyIndex];
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         #endregion
