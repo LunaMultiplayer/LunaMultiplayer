@@ -33,16 +33,7 @@ namespace LunaClient.Systems.Lock
                             LockSystem.LockStore.AddOrUpdateLock(data.Locks[i]);
                         }
 
-                        LocksToRemove.Clear();
-                        foreach (var existingLock in LockSystem.LockQuery.GetAllLocks())
-                        {
-                            if (existingLock.PlayerName != SettingsSystem.CurrentSettings.PlayerName && !data.Locks.Contains(existingLock))
-                                LocksToRemove.Add(existingLock);
-                        }
-                        foreach (var lockToRemove in LocksToRemove)
-                        {
-                            LockSystem.LockStore.RemoveLock(lockToRemove);
-                        }
+                        RemoveCorruptLocks(data);
 
                         if (MainSystem.NetworkState < ClientState.LocksSynced)
                             MainSystem.NetworkState = ClientState.LocksSynced;
@@ -64,6 +55,22 @@ namespace LunaClient.Systems.Lock
                         System.FireReleaseEvent(data.Lock);
                     }
                     break;
+            }
+        }
+
+        //Here we run trough OUR lock list and if we find a lock that is not ours and it does not exist on the server, we remove it.
+        //We don't remove OUR locks as perhaps we just acquired one and we are waiting for the server to receive it.
+        private static void RemoveCorruptLocks(LockListReplyMsgData data)
+        {
+            LocksToRemove.Clear();
+            foreach (var existingLock in LockSystem.LockQuery.GetAllLocks())
+            {
+                if (existingLock.PlayerName != SettingsSystem.CurrentSettings.PlayerName && !data.Locks.Contains(existingLock))
+                    LocksToRemove.Add(existingLock);
+            }
+            foreach (var lockToRemove in LocksToRemove)
+            {
+                LockSystem.LockStore.RemoveLock(lockToRemove);
             }
         }
     }
