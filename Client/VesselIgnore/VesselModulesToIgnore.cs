@@ -55,7 +55,8 @@ namespace LunaClient.VesselIgnore
             ["ModuleWheelSuspension"] = new[] { "suspensionPos", "autoBoost" },
             ["ModuleDeployableSolarPanel"] = new[] { "launchUT", "currentRotation", "storedAnimationTime" },
             ["ModuleDeployableRadiator"] = new[] { "currentRotation" },
-            ["ModuleLogisticsConsumer"] = new[] { "lastCheck" } //Ignore USI field
+            ["ModuleLogisticsConsumer"] = new[] { "lastCheck" }, //Ignore USI field
+            ["ModuleDeployableAntenna"] = new[] { "currentRotation" }
         };
     }
 }
