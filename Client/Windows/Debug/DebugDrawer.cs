@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using LunaClient.VesselStore;
+using LunaClient.VesselUtilities;
+using UniLinq;
+using UnityEngine;
 
 namespace LunaClient.Windows.Debug
 {
@@ -29,6 +32,16 @@ namespace LunaClient.Windows.Debug
             DisplayConnectionQueue = GUILayout.Toggle(DisplayConnectionQueue, "Display connection statistics", ButtonStyle);
             if (DisplayConnectionQueue)
                 GUILayout.Label(ConnectionText, LabelStyle);
+
+            if (GUILayout.Button("Reload all vessels", ButtonStyle))
+            {
+                var protos = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.ProtoVessel);
+                foreach (var proto in protos)
+                {
+                    VesselLoader.ReloadVessel(proto);
+                }
+            }
+
 
             GUILayout.EndVertical();
         }
