@@ -9,12 +9,10 @@ using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Data.Groups;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Data.Kerbal;
-using LunaCommon.Message.Data.Lock;
 using LunaCommon.Message.Data.Motd;
 using LunaCommon.Message.Data.PlayerStatus;
 using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Data.Settings;
-using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Data.Warp;
 
 namespace LunaClient.Network
@@ -80,11 +78,6 @@ namespace LunaClient.Network
             msgData.From = SettingsSystem.CurrentSettings.PlayerName;
 
             SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<ChatCliMsg>(msgData)));
-        }
-
-        public static void SendLocksRequest()
-        {
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<LockCliMsg, LockListRequestMsgData>()));
         }
 
         public static void SendAdminsRequest()

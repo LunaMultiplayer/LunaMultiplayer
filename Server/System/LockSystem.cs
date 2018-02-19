@@ -1,12 +1,7 @@
 using LunaCommon.Locks;
-using LunaCommon.Message.Data.Lock;
-using LunaCommon.Message.Server;
 using Server.Client;
-using Server.Context;
-using Server.Server;
 using Server.Settings;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace Server.System
 {
@@ -28,6 +23,15 @@ namespace Server.System
 
             if (force || !LockQuery.LockExists(lockDef))
             {
+                if (GeneralSettings.SettingsStore.DropControlOnVesselSwitching && lockDef.Type == LockType.Control)
+                {
+                    //If he acquired a control lock he probably switched vessels or smth like that and he can only have 1 control lock.
+                    //So remove the other control locks just for safety...
+                    var controlLocks = LockQuery.GetAllPlayerLocks(lockDef.PlayerName).Where(l => l.Type == LockType.Control);
+                    foreach (var control in controlLocks)
+                        ReleaseLock(control);
+                }
+
                 LockStore.AddOrUpdateLock(lockDef);
                 return true;
             }

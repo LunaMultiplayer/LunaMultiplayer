@@ -21,12 +21,12 @@ namespace LunaClient.Systems.VesselPositionSys
             TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > VesselUpdatesSendMsInterval :
             TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > 250;
 
-        public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
+        public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 3f &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
                                          FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
                                          FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
 
-        public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
+        public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 3f &&
             PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
         public static ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } =
@@ -128,7 +128,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void SendUnloadedSecondaryVesselPositionUpdates()
         {
-            if (PositionUpdateSystemReady && !VesselCommon.IsSpectating)
+            if (PositionUpdateSystemBasicReady && !VesselCommon.IsSpectating)
             {
                 AbandonedVesselsToUpdate.Clear();
                 AbandonedVesselsToUpdate.AddRange(VesselCommon.GetUnloadedSecondaryVessels());

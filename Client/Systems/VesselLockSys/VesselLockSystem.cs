@@ -27,7 +27,7 @@ namespace LunaClient.Systems.VesselLockSys
 
         private VesselLockEvents VesselMainEvents { get; } = new VesselLockEvents();
 
-        private bool VesselLockSystemReady => Enabled && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
+        private bool VesselLockSystemReady => Enabled && Time.timeSinceLevelLoad > 10f;
 
         private string SpectatingMessage => VesselCommon.IsSpectating ? $"This vessel is being controlled by {GetVesselOwner}." : "";
 
@@ -47,6 +47,8 @@ namespace LunaClient.Systems.VesselLockSys
             SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, UpdateSecondaryVesselsLocks));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, UpdateUnloadedVesselsLocks));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
+
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, SystemsContainer.Get<LockSystem>().MessageSender.SendLocksRequest));
         }
 
         protected override void OnDisabled()
@@ -252,7 +254,7 @@ namespace LunaClient.Systems.VesselLockSys
         private static IEnumerable<Guid> GetValidUnloadedVesselIds()
         {
             return FlightGlobals.Vessels
-                .Where(v => v != null && v.state != Vessel.State.DEAD && !v.loaded && v.vesselType != VesselType.Flag &&
+                .Where(v => v != null && v.state != Vessel.State.DEAD && !v.loaded &&
                             v.id != FlightGlobals.ActiveVessel?.id &&
                             !VesselCommon.IsInSafetyBubble(v) &&
                             !LockSystem.LockQuery.UnloadedUpdateLockExists(v.id) &&
@@ -271,7 +273,7 @@ namespace LunaClient.Systems.VesselLockSys
                 return new Guid[0];
 
             return FlightGlobals.VesselsLoaded
-                .Where(v => v != null && v.state != Vessel.State.DEAD && v.vesselType != VesselType.Flag &&
+                .Where(v => v != null && v.state != Vessel.State.DEAD &&
                             v.id != FlightGlobals.ActiveVessel?.id &&
                             !VesselCommon.IsInSafetyBubble(v) &&
                             !LockSystem.LockQuery.UpdateLockExists(v.id))

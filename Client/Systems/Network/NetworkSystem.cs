@@ -232,7 +232,7 @@ namespace LunaClient.Systems.Network
                     SystemsContainer.Get<MainSystem>().Status = "Chat synced";
                     SystemsContainer.Get<LockSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingLocks;
-                    NetworkSimpleMessageSender.SendLocksRequest();
+                    SystemsContainer.Get<LockSystem>().MessageSender.SendLocksRequest();
                     _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingLocks:
