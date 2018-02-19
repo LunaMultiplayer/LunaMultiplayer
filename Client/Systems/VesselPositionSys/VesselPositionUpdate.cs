@@ -337,7 +337,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.longitude = Target.LatLonAlt[1];
                 Vessel.altitude = Target.LatLonAlt[2];
                 Vessel.orbitDriver.updateFromParameters();
-                Vessel.ReferenceTransform.position = TransformPos;
             }
             else
             {
