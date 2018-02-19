@@ -25,8 +25,6 @@ namespace LunaClient.Systems.VesselProtoSys
                         return;
 
                     System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
-                    //Add our own vessel to the dictionary aswell
-                    VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
                 }, 5f);
 
                 ScreenMessages.PostScreenMessage("Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!", 10f, ScreenMessageStyle.UPPER_CENTER);
@@ -76,12 +74,9 @@ namespace LunaClient.Systems.VesselProtoSys
                         {
                             LunaLog.Log($"SENDING NEW vesselId {data.id} name {data.vesselName} (Original vessel UPD lock is ours)");
 
-                            //We own the update lock of that vessel that originated that part so let's get that updat lock and send the definition
+                            //We own the update lock of that vessel that originated that part so let's get that update lock as forced 
+                            //and send the definition with the main system routine
                             SystemsContainer.Get<LockSystem>().AcquireUpdateLock(data.id, true);
-                            //Now send this debris and force it!
-                            System.MessageSender.SendVesselMessage(data, true);
-                            //Add it also to our store
-                            VesselsProtoStore.AddVesselToDictionary(FlightGlobals.ActiveVessel);
                         }
                         else
                         {

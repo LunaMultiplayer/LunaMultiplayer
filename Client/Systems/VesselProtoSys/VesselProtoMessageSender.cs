@@ -46,6 +46,9 @@ namespace LunaClient.Systems.VesselProtoSys
 
             if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
                 SendVesselMessage(vessel.protoVessel);
+
+            if(!VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
+                VesselsProtoStore.AddVesselToDictionary(vessel);
         }
 
         #region Private methods
