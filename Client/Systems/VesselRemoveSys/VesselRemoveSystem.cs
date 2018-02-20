@@ -98,7 +98,6 @@ namespace LunaClient.Systems.VesselRemoveSys
             UnloadVesselFromGame(killVessel);
             KillGivenVessel(killVessel);
             UnloadVesselFromScenario(killVessel);
-            UnityEngine.Object.Destroy(killVessel.gameObject);
         }
 
         /// <summary>
