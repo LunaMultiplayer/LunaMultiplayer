@@ -54,6 +54,10 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="Localization\LocalizationContainer.cs" />
+    <Compile Include="Localization\Structures\ConnectionWindowText.cs" />
+    <Compile Include="Localization\Base\Languages.cs" />
+    <Compile Include="Localization\Structures\SettingsWindowText.cs" />
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
     <Compile Include="Systems\Facility\FacilityEvents.cs" />
@@ -281,7 +285,9 @@
       <Name>System.Threading</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Localization\XML\" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>

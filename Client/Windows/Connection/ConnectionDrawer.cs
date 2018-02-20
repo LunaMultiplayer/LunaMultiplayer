@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Localization;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.ServerList;
 using LunaCommon.Enums;
@@ -14,7 +15,7 @@ namespace LunaClient.Windows.Connection
             GUI.DragWindow(MoveRect);
             GUILayout.Space(20);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Player Name:", LabelOptions);
+            GUILayout.Label(LocalizationContainer.ConnectionWindowText.PlayerName, LabelOptions);
             var oldPlayerName = SettingsSystem.CurrentSettings.PlayerName;
             SettingsSystem.CurrentSettings.PlayerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.PlayerName, 32, TextAreaStyle); // Max 32 characters
             if (oldPlayerName != SettingsSystem.CurrentSettings.PlayerName)
@@ -25,10 +26,10 @@ namespace LunaClient.Windows.Connection
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             //Draw add button
-            var addMode = SelectedSafe == -1 ? "Add" : "Edit";
+            var addMode = SelectedSafe == -1 ? LocalizationContainer.ConnectionWindowText.Add : LocalizationContainer.ConnectionWindowText.Edit;
             var buttonAddMode = addMode;
             if (AddingServer)
-                buttonAddMode = "Cancel";
+                buttonAddMode = LocalizationContainer.ConnectionWindowText.Cancel;
             AddingServer = GUILayout.Toggle(AddingServer, buttonAddMode, ButtonStyle);
             if (AddingServer && !AddingServerSafe && Selected != -1)
             {
@@ -42,40 +43,40 @@ namespace LunaClient.Windows.Connection
             if (MainSystem.NetworkState == ClientState.Disconnected)
             {
                 GUI.enabled = SelectedSafe != -1;
-                if (GUILayout.Button("Connect", ButtonStyle))
+                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Connect, ButtonStyle))
                     ConnectEventHandled = false;
             }
             else if (MainSystem.NetworkState > ClientState.Disconnected)
             {
-                if (GUILayout.Button("Disconnect", ButtonStyle))
+                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Disconnect, ButtonStyle))
                     DisconnectEventHandled = false;
             }
             //Draw remove button
-            if (GUILayout.Button("Remove", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Remove, ButtonStyle))
                 if (RemoveEventHandled)
                     RemoveEventHandled = false;
             GUI.enabled = true;
-            WindowsContainer.Get<OptionsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<OptionsWindow>().Display, "Options", ButtonStyle);
-            if (GUILayout.Button("Servers", ButtonStyle))
+            WindowsContainer.Get<OptionsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<OptionsWindow>().Display, LocalizationContainer.ConnectionWindowText.Options, ButtonStyle);
+            if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Servers, ButtonStyle))
                 WindowsContainer.Get<ServerListWindow>().Display = true;
-            if(SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow && GUILayout.Button("Close", ButtonStyle))
+            if(SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow && GUILayout.Button(LocalizationContainer.ConnectionWindowText.Close, ButtonStyle))
                 Closed = true;
             GUILayout.EndHorizontal();
             if (AddingServerSafe)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Name:", LabelOptions);
+                GUILayout.Label(LocalizationContainer.ConnectionWindowText.Name, LabelOptions);
                 ServerName = GUILayout.TextArea(ServerName, TextAreaStyle);
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Address:", LabelOptions);
+                GUILayout.Label(LocalizationContainer.ConnectionWindowText.Address, LabelOptions);
                 ServerAddress = GUILayout.TextArea(ServerAddress, TextAreaStyle).Trim();
                 GUILayout.EndHorizontal();
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Port:", LabelOptions);
+                GUILayout.Label(LocalizationContainer.ConnectionWindowText.Port, LabelOptions);
                 ServerPort = GUILayout.TextArea(ServerPort, TextAreaStyle).Trim();
                 GUILayout.EndHorizontal();
-                if (GUILayout.Button($"{addMode} server", ButtonStyle))
+                if (GUILayout.Button($"{addMode} {LocalizationContainer.ConnectionWindowText.Server}", ButtonStyle))
                     if (AddEventHandled)
                         if (Selected == -1)
                         {
@@ -101,9 +102,9 @@ namespace LunaClient.Windows.Connection
                         }
             }
 
-            GUILayout.Label("Custom servers:");
+            GUILayout.Label(LocalizationContainer.ConnectionWindowText.CustomServers);
             if (SettingsSystem.CurrentSettings.Servers.Count == 0)
-                GUILayout.Label("(None - Add a server first)");
+                GUILayout.Label(LocalizationContainer.ConnectionWindowText.NoServers);
 
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5),
                 GUILayout.Height(WindowHeight - 100));

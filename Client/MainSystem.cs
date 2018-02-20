@@ -1,4 +1,5 @@
 ﻿using CommNet;
+using LunaClient.Localization;
 using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Flag;
@@ -178,6 +179,8 @@ namespace LunaClient
 
         public void Start()
         {
+            LocalizationContainer.LoadLanguage(SettingsSystem.CurrentSettings.Language);
+
             SystemsContainer.Get<ModApiSystem>().Enabled = true;
             SystemsContainer.Get<NetworkSystem>().Enabled = true;
 

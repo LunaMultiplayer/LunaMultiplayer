@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.PlayerColorSys;
+﻿using LunaClient.Localization;
+using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.Toolbar;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ namespace LunaClient.Systems.SettingsSys
     [Serializable]
     public class SettingStructure
     {
+        public Languages Language { get; set; } = Languages.English;
         public string PlayerName { get; set; } = "Player";
         public int ConnectionTries { get; set; } = 3;
         public int InitialConnectionMsTimeout { get; set; } = 5000;

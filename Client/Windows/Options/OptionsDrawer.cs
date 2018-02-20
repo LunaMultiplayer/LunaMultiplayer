@@ -1,4 +1,5 @@
-﻿using LunaClient.Network;
+﻿using LunaClient.Localization;
+using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
@@ -26,6 +27,15 @@ namespace LunaClient.Windows.Options
             //Player color
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(LocalizationContainer.SettingsWindowText.Language);
+            if (GUILayout.Button(LocalizationContainer.CurrentLanguage.ToString(), ButtonStyle))
+            {
+                LocalizationContainer.LoadLanguage(LocalizationContainer.GetNextLanguage());
+                SettingsSystem.CurrentSettings.Language = LocalizationContainer.CurrentLanguage;
+                SettingsSystem.SaveSettings();
+            }
+            GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Player Name color: ");
             GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, TempColorLabelStyle);
