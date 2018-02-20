@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -20,7 +21,7 @@ namespace LunaClient.Systems.VesselSyncSys
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselSyncMsgData>();
 
-            var vesselIds = FlightGlobals.Vessels?.Select(v => v.id).ToArray() ?? new Guid[0];
+            var vesselIds = VesselsProtoStore.AllPlayerVessels.Keys.ToArray();
             msgData.VesselsCount = vesselIds.Length;
 
             //Always clear the array just for safety...

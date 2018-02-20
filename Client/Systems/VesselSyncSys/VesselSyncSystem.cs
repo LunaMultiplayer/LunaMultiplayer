@@ -4,14 +4,13 @@ using UnityEngine;
 namespace LunaClient.Systems.VesselSyncSys
 {
     /// <summary>
-    /// This class sends some parts of the vessel information to other players. We do it in another system as we don't want to send this information so often as
-    /// the vessel position system and also we want to send it more oftenly than the vessel proto.
+    /// This system syncs your current vessels that you have in proto store against the server vessels. Server will send you the vessels that you don't have if necessary.
     /// </summary>
     public class VesselSyncSystem : MessageSystem<VesselSyncSystem, VesselSyncMessageSender, VesselSyncMessageHandler>
     {
         #region Fields & properties
 
-        public bool UpdateSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && HighLogic.LoadedScene >= GameScenes.FLIGHT;
+        public bool UpdateSystemReady => Enabled && Time.timeSinceLevelLoad > 1f;
 
         #endregion
 
