@@ -72,9 +72,16 @@ namespace LunaClient.Systems.Scenario
         {
             if (Enabled && HighLogic.LoadedSceneIsFlight)
             {
-                var modules = ScenarioRunner.GetLoadedModules();
-                ParseModulesToConfigNodes(modules);
-                TaskFactory.StartNew(SendModulesConfigNodes);
+                try
+                {
+                    var modules = ScenarioRunner.GetLoadedModules();
+                    ParseModulesToConfigNodes(modules);
+                    TaskFactory.StartNew(SendModulesConfigNodes);
+                }
+                catch (Exception e)
+                {
+                    LunaLog.LogError($"Error while trying to send the scenario modules!. Details {e}");
+                }
             }
         }
 
@@ -327,7 +334,8 @@ namespace LunaClient.Systems.Scenario
         {
             //Blacklist asteroid module from every game mode
             //We hijack this and enable / disable it if we need to.
-            if (string.IsNullOrEmpty(scenarioName) || scenarioName == "ScenarioDiscoverableObjects") return false;
+            //Do not send kerbnet custom waypoints aswell. they fuck it up sometimes
+            if (string.IsNullOrEmpty(scenarioName) || scenarioName == "ScenarioDiscoverableObjects" || scenarioName == "ScenarioCustomWaypoints") return false;
 
             if (!AllScenarioTypesInAssemblies.Any()) LoadScenarioTypes(); //Load type dictionary on first use
 
