@@ -143,6 +143,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
                 }
 
+                //This system runs BEFORE even getting the server settings so here we just make sure that we change the interval to the correct one once we receive the settings
                 ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(SendVesselDefinition), SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval);
             }
             catch (Exception e)
