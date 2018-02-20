@@ -16,6 +16,8 @@ namespace Updater
     {
         public const string ApiUrl = "https://ci.appveyor.com/api";
         public static string ProjectUrl = $"{ApiUrl}/projects/gavazquez/lunamultiplayer";
+        public const string FileName = "LunaMultiPlayer-Debug.zip";
+        public static string FolderToDecompress = $"{Path.GetTempPath()}LMP";
 
         public static void Main(string[] args)
         {
@@ -40,12 +42,12 @@ namespace Updater
                         CleanTempFiles();
                         using (var client = new WebClient())
                         {
-                            client.DownloadFile(downloadUrl, $"{Path.GetTempPath()}LunaMultiPlayer-Debug.zip");
-                            Console.WriteLine($"Downloading succeeded! Path: {Path.GetTempPath()}LunaMultiPlayer-Debug.zip");
+                            client.DownloadFile(downloadUrl, $"{Path.GetTempPath()}{FileName}");
+                            Console.WriteLine($"Downloading succeeded! Path: {Path.GetTempPath()}{FileName}");
                         }
 
-                        Console.WriteLine($"Decompressing file to {Path.GetTempPath()}LMP");
-                        ZipFile.ExtractToDirectory($"{Path.GetTempPath()}LunaMultiPlayer-Debug.zip", $"{Path.GetTempPath()}LMP");
+                        Console.WriteLine($"Decompressing file to {FolderToDecompress}");
+                        ZipFile.ExtractToDirectory($"{Path.GetTempPath()}{FileName}", $"{FolderToDecompress}");
 
                         CopyFilesFromTempToDestination();
 
@@ -68,16 +70,16 @@ namespace Updater
 
         private static void CopyFilesFromTempToDestination()
         {
-            foreach (var dirPath in Directory.GetDirectories($@"{Path.GetTempPath()}LMP\LMPClient", "*", SearchOption.AllDirectories))
+            foreach (var dirPath in Directory.GetDirectories($@"{FolderToDecompress}\LMPClient", "*", SearchOption.AllDirectories))
             {
-                var destFolder = dirPath.Replace($@"{Path.GetTempPath()}LMP\LMPClient", $@"{Directory.GetCurrentDirectory()}");
+                var destFolder = dirPath.Replace($@"{FolderToDecompress}\LMPClient", $@"{Directory.GetCurrentDirectory()}");
                 Console.WriteLine($"Creatind dest folder: {destFolder}");
                 Directory.CreateDirectory(destFolder);
             }
 
-            foreach (var newPath in Directory.GetFiles($@"{Path.GetTempPath()}LMP\LMPClient", "*.*", SearchOption.AllDirectories))
+            foreach (var newPath in Directory.GetFiles($@"{FolderToDecompress}\LMPClient", "*.*", SearchOption.AllDirectories))
             {
-                var destPath = newPath.Replace($@"{Path.GetTempPath()}LMP\LMPClient", $@"{Directory.GetCurrentDirectory()}");
+                var destPath = newPath.Replace($@"{FolderToDecompress}\LMPClient", $@"{Directory.GetCurrentDirectory()}");
                 Console.WriteLine($"Copying {Path.GetFileName(newPath)} to {destPath}");
                 File.Copy(newPath, destPath, true);
             }
@@ -85,9 +87,9 @@ namespace Updater
 
         private static void CleanTempFiles()
         {
-            if (Directory.Exists($"{Path.GetTempPath()}LMP"))
-                Directory.Delete($"{Path.GetTempPath()}LMP", true);
-            File.Delete($"{Path.GetTempPath()}LunaMultiPlayer-Debug.zip");
+            if (Directory.Exists($"{FolderToDecompress}"))
+                Directory.Delete($"{FolderToDecompress}", true);
+            File.Delete($"{Path.GetTempPath()}{FileName}");
         }
 
         private static async Task<string> GetDownloadUrl(HttpClient client)
@@ -104,12 +106,12 @@ namespace Updater
                     if (job != null)
                     {
                         Console.WriteLine($"Downloading DEBUG version: {obj.build.version}");
-                        return $"{ApiUrl}/buildjobs/{job.jobId}/artifacts/LunaMultiPlayer-Debug.zip";
+                        return $"{ApiUrl}/buildjobs/{job.jobId}/artifacts/{FileName}";
                     }
                 }
                 else
                 {
-                    Console.WriteLine("Latest build was not a success. Cannot download");
+                    Console.WriteLine($"Latest build status ({obj.build.status}) is not \"success\". Cannot download at this moment");
                 }
             }
 
