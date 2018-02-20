@@ -260,6 +260,10 @@
     <Compile Include="Windows\WindowsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Localization\XML\ConnectionWindowText_English.xml" />
+    <Content Include="Localization\XML\ConnectionWindowText_Russian.xml" />
+    <Content Include="Localization\XML\SettingsWindowText_English.xml" />
+    <Content Include="Localization\XML\SettingsWindowText_Russian.xml" />
     <Content Include="Resources\LMPButton.png" />
     <Content Include="Resources\LMPButtonLow.png" />
   </ItemGroup>
@@ -285,9 +289,7 @@
       <Name>System.Threading</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Localization\XML\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
