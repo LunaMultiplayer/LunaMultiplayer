@@ -51,12 +51,13 @@ namespace LunaClient.VesselIgnore
             ["ModuleWheelBrakes"] = new[] { "brakeInput" },
             ["ModuleReactionWheel"] = new[] { "stateString" },
             ["ModuleEngines"] = new[] { "currentThrottle" },
-            ["ModuleEnginesFX"] = new[] { "currentThrottle" },
+            ["ModuleEnginesFX"] = new[] { "currentThrottle", "manuallyOverridden" /*MOD*/ },
             ["ModuleWheelSuspension"] = new[] { "suspensionPos", "autoBoost" },
             ["ModuleDeployableSolarPanel"] = new[] { "launchUT", "currentRotation", "storedAnimationTime" },
             ["ModuleDeployableRadiator"] = new[] { "currentRotation" },
             ["ModuleLogisticsConsumer"] = new[] { "lastCheck" }, //Ignore USI field
-            ["ModuleDeployableAntenna"] = new[] { "currentRotation" }
+            ["ModuleDeployableAntenna"] = new[] { "currentRotation" }, //MOD
+            ["MultiModeEngine"] = new[] { "runningPrimary" }, //MOD?
         };
     }
 }
