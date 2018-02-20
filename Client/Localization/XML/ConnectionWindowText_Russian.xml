@@ -15,5 +15,5 @@
   <Port>Порт:</Port>
   <Server>Сервер</Server>
   <CustomServers>Ваши сервера:</CustomServers>
-  <NoServers>(Нет серверов - Для начала добавте сервер)</NoServers>
+  <NoServers>(Нет серверов - Для начала добавьте сервер)</NoServers>
 </ConnectionWindowText>
