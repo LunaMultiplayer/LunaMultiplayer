@@ -1,4 +1,4 @@
-﻿namespace LunaClient.Localization
+﻿namespace LunaClient.Localization.Base
 {
     public enum Languages
     {

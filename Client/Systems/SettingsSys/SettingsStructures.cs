@@ -1,4 +1,4 @@
-﻿using LunaClient.Localization;
+﻿using LunaClient.Localization.Base;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.Toolbar;
 using System;

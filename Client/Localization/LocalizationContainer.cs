@@ -1,4 +1,5 @@
-﻿using LunaClient.Localization.Structures;
+﻿using LunaClient.Localization.Base;
+using LunaClient.Localization.Structures;
 using LunaClient.Utilities;
 using LunaCommon.Xml;
 using System;
