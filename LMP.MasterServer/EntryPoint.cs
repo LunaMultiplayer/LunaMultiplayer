@@ -23,6 +23,8 @@ namespace LMP.MasterServer
 
         public static void MainEntryPoint(string[] args)
         {
+            ConsoleUtil.DisableConsoleQuickEdit();
+
             Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
             Console.OutputEncoding = Encoding.Unicode;
 

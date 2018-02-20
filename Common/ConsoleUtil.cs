@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace Server.Utilities
+namespace LunaCommon
 {
     public static class ConsoleUtil
     {
@@ -18,8 +18,10 @@ namespace Server.Utilities
         [DllImport("kernel32.dll")]
         private static extern bool SetConsoleMode(IntPtr hConsoleHandle, uint dwMode);
 
-        internal static bool DisableConsoleQuickEdit()
+        public static bool DisableConsoleQuickEdit()
         {
+            if (!Common.PlatformIsWindows()) return true;
+
             var consoleHandle = GetStdHandle(StdInputHandle);
 
             // get current console mode
