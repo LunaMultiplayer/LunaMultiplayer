@@ -37,6 +37,8 @@ namespace LunaClient.Systems.VesselPositionSys
         public double[] ComD { get; set; } = new double[3];
         public double[] TransformPosition { get; set; } = new double[3];
         public double[] Velocity { get; set; } = new double[3];
+        public double[] OrbitPos { get; set; } = new double[3];
+        public double[] OrbitVel { get; set; } = new double[3];
         public double[] Orbit { get; set; } = new double[8];
         public float[] SrfRelRotation { get; set; } = new float[4];
 
@@ -53,6 +55,8 @@ namespace LunaClient.Systems.VesselPositionSys
         public Vector3 CoMd => new Vector3d(ComD[0], ComD[1], ComD[2]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
+        public Vector3d OrbitPosVec => new Vector3d(OrbitPos[0], OrbitPos[1], OrbitPos[2]);
+        public Vector3d OrbitVelVec => new Vector3d(OrbitVel[0], OrbitVel[1], OrbitVel[2]);
 
         #endregion
 
@@ -387,6 +391,11 @@ namespace LunaClient.Systems.VesselPositionSys
                 epoch,
                 Body
             );
+
+            Vessel.orbitDriver.orbit.pos = Vector3d.Lerp(OrbitPosVec, Target.OrbitPosVec, lerpPercentage);
+            Vessel.orbitDriver.orbit.vel = Vector3d.Lerp(OrbitVelVec, Target.OrbitVelVec, lerpPercentage);
+
+            Vessel.orbitDriver.orbit.UpdateFromStateVectors(Vessel.orbitDriver.orbit.pos, Vessel.orbitDriver.orbit.vel, Body, Planetarium.GetUniversalTime());
         }
 
         /// <summary>
@@ -427,6 +436,14 @@ namespace LunaClient.Systems.VesselPositionSys
             NormalVector[0] = Vessel.terrainNormal.x;
             NormalVector[1] = Vessel.terrainNormal.y;
             NormalVector[2] = Vessel.terrainNormal.z;
+
+            OrbitPos[0] = Vessel.orbit.pos.x;
+            OrbitPos[1] = Vessel.orbit.pos.y;
+            OrbitPos[2] = Vessel.orbit.pos.z;
+
+            OrbitVel[0] = Vessel.orbit.vel.x;
+            OrbitVel[1] = Vessel.orbit.vel.y;
+            OrbitVel[2] = Vessel.orbit.vel.z;
 
             Orbit[0] = Vessel.orbit.inclination;
             Orbit[1] = Vessel.orbit.eccentricity;

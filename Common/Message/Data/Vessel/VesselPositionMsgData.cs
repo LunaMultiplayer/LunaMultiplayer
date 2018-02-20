@@ -20,6 +20,8 @@ namespace LunaCommon.Message.Data.Vessel
         public double[] ComD = new double[3];
         public double[] TransformPosition = new double[3];
         public double[] Velocity = new double[3];
+        public double[] OrbitPos = new double[3];
+        public double[] OrbitVel = new double[3];
         public double[] Orbit = new double[8];
         public float[] SrfRelRotation = new float[4];
         public float HeightFromTerrain;
@@ -52,6 +54,12 @@ namespace LunaCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(Velocity[i]);
+
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(OrbitPos[i]);
+
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(OrbitVel[i]);
 
             for (var i = 0; i < 8; i++)
                 lidgrenMsg.Write(Orbit[i]);
@@ -88,7 +96,13 @@ namespace LunaCommon.Message.Data.Vessel
             
             for (var i = 0; i < 3; i++)
                 Velocity[i] = lidgrenMsg.ReadDouble();
-            
+
+            for (var i = 0; i < 3; i++)
+                OrbitPos[i] = lidgrenMsg.ReadDouble();
+
+            for (var i = 0; i < 3; i++)
+                OrbitVel[i] = lidgrenMsg.ReadDouble();
+
             for (var i = 0; i < 8; i++)
                 Orbit[i] = lidgrenMsg.ReadDouble();
             
@@ -102,7 +116,7 @@ namespace LunaCommon.Message.Data.Vessel
         
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 6 + 
+            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 8 + 
                 sizeof(float) * 4 * 1 + sizeof(float) + sizeof(long) + sizeof(double);
         }
     }

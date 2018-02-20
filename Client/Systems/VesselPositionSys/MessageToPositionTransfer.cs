@@ -23,6 +23,8 @@ namespace LunaClient.Systems.VesselPositionSys
             Array.Copy(msgData.SrfRelRotation, upd.SrfRelRotation, 4);
             Array.Copy(msgData.TransformPosition, upd.TransformPosition, 3);
             Array.Copy(msgData.Velocity, upd.Velocity, 3);
+            Array.Copy(msgData.OrbitPos, upd.OrbitPos, 3);
+            Array.Copy(msgData.OrbitVel, upd.OrbitVel, 3);
             Array.Copy(msgData.LatLonAlt, upd.LatLonAlt, 3);
             Array.Copy(msgData.Com, upd.Com, 3);
             Array.Copy(msgData.ComD, upd.ComD, 3);
@@ -44,6 +46,8 @@ namespace LunaClient.Systems.VesselPositionSys
             Array.Copy(msgData.SrfRelRotation, update.SrfRelRotation, 4);
             Array.Copy(msgData.TransformPosition, update.TransformPosition, 3);
             Array.Copy(msgData.Velocity, update.Velocity, 3);
+            Array.Copy(msgData.OrbitPos, update.OrbitPos, 3);
+            Array.Copy(msgData.OrbitVel, update.OrbitVel, 3);
             Array.Copy(msgData.LatLonAlt, update.LatLonAlt, 3);
             Array.Copy(msgData.Com, update.Com, 3);
             Array.Copy(msgData.ComD, update.ComD, 3);
@@ -63,6 +67,8 @@ namespace LunaClient.Systems.VesselPositionSys
             Array.Copy(update.SrfRelRotation, updateToUpdate.SrfRelRotation, 4);
             Array.Copy(update.TransformPosition, updateToUpdate.TransformPosition, 3);
             Array.Copy(update.Velocity, updateToUpdate.Velocity, 3);
+            Array.Copy(update.OrbitPos, updateToUpdate.OrbitPos, 3);
+            Array.Copy(update.OrbitVel, updateToUpdate.OrbitVel, 3);
             Array.Copy(update.LatLonAlt, updateToUpdate.LatLonAlt, 3);
             Array.Copy(update.Com, updateToUpdate.Com, 3);
             Array.Copy(update.ComD, updateToUpdate.ComD, 3);
@@ -83,6 +89,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 SetSrfRelRotation(vessel, msgData);
                 SetTransformPosition(vessel, msgData);
                 SetVelocity(vessel, msgData);
+                SetOrbitPos(vessel, msgData);
+                SetOrbitVel(vessel, msgData);
                 SetLatLonAlt(vessel, msgData);
                 GetCom(vessel, msgData);
                 GetComD(vessel, msgData);
@@ -150,6 +158,20 @@ namespace LunaClient.Systems.VesselPositionSys
             msgData.Velocity[0] = srfVel.x;
             msgData.Velocity[1] = srfVel.y;
             msgData.Velocity[2] = srfVel.z;
+        }
+
+        private static void SetOrbitPos(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.OrbitPos[0] = vessel.orbitDriver.orbit.pos.x;
+            msgData.OrbitPos[1] = vessel.orbitDriver.orbit.pos.y;
+            msgData.OrbitPos[2] = vessel.orbitDriver.orbit.pos.z;
+        }
+
+        private static void SetOrbitVel(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.OrbitVel[0] = vessel.orbitDriver.orbit.vel.x;
+            msgData.OrbitVel[1] = vessel.orbitDriver.orbit.vel.y;
+            msgData.OrbitVel[2] = vessel.orbitDriver.orbit.vel.z;
         }
 
         private static void SetTransformPosition(Vessel vessel, VesselPositionMsgData msgData)
