@@ -383,10 +383,11 @@ namespace LunaClient.Systems.VesselPositionSys
                 Body
             );
 
-            Vessel.orbitDriver.orbit.pos = Vector3d.Lerp(OrbitPosVec, Target.OrbitPosVec, lerpPercentage);
-            Vessel.orbitDriver.orbit.vel = Vector3d.Lerp(OrbitVelVec, Target.OrbitVelVec, lerpPercentage);
+            //TODO: check if this can be used for interpolation instead of setting an orbit...
+            //Vessel.orbitDriver.orbit.pos = Vector3d.Lerp(OrbitPosVec, Target.OrbitPosVec, lerpPercentage);
+            //Vessel.orbitDriver.orbit.vel = Vector3d.Lerp(OrbitVelVec, Target.OrbitVelVec, lerpPercentage);
 
-            Vessel.orbitDriver.orbit.UpdateFromStateVectors(Vessel.orbitDriver.orbit.pos, Vessel.orbitDriver.orbit.vel, Body, Planetarium.GetUniversalTime());
+            //Vessel.orbitDriver.orbit.UpdateFromStateVectors(Vessel.orbitDriver.orbit.pos, Vessel.orbitDriver.orbit.vel, Body, Planetarium.GetUniversalTime());
         }
 
         /// <summary>
