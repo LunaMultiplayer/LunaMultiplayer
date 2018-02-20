@@ -16,8 +16,6 @@ namespace LunaCommon.Message.Data.Vessel
         public int BodyIndex;
         public double[] LatLonAlt = new double[3];
         public double[] NormalVector = new double[3];
-        public double[] Com = new double[3];
-        public double[] ComD = new double[3];
         public double[] TransformPosition = new double[3];
         public double[] Velocity = new double[3];
         public double[] OrbitPos = new double[3];
@@ -42,12 +40,6 @@ namespace LunaCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(NormalVector[i]);
-
-            for (var i = 0; i < 3; i++)
-                lidgrenMsg.Write(Com[i]);
-
-            for (var i = 0; i < 3; i++)
-                lidgrenMsg.Write(ComD[i]);
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(TransformPosition[i]);
@@ -84,12 +76,6 @@ namespace LunaCommon.Message.Data.Vessel
             
             for (var i = 0; i < 3; i++)
                 NormalVector[i] = lidgrenMsg.ReadDouble();
-            
-            for (var i = 0; i < 3; i++)
-                Com[i] = lidgrenMsg.ReadDouble();
-
-            for (var i = 0; i < 3; i++)
-                ComD[i] = lidgrenMsg.ReadDouble();
 
             for (var i = 0; i < 3; i++)
                 TransformPosition[i] = lidgrenMsg.ReadDouble();
@@ -116,7 +102,7 @@ namespace LunaCommon.Message.Data.Vessel
         
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 8 + 
+            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 6 + 
                 sizeof(float) * 4 * 1 + sizeof(float) + sizeof(long) + sizeof(double);
         }
     }

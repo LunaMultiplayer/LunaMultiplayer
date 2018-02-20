@@ -172,11 +172,12 @@ namespace Server.System
                           $"{msgData.SrfRelRotation[3].ToString(CultureInfo.InvariantCulture)}{Environment.NewLine}";
             fullText = regex.Replace(fullText, replacement, 1);
 
-            regex = new Regex("(?<prefix>CoM = )(.*)\n");
-            replacement = "${prefix}" + $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}\r";
-            fullText = regex.Replace(fullText, replacement, 1);
+            //NEVER! patch the CoM in the protovessel as then it will be drawn with incorrect CommNet lines!
+            //regex = new Regex("(?<prefix>CoM = )(.*)\n");
+            //replacement = "${prefix}" + $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
+            //              $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
+            //              $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}\r";
+            //fullText = regex.Replace(fullText, replacement, 1);
 
             regex = new Regex("(?<prefix>INC = )(.*)\n"); //inclination
             replacement = "${prefix}" + msgData.Orbit[0].ToString(CultureInfo.InvariantCulture) + Environment.NewLine;

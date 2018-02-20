@@ -33,8 +33,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public int BodyIndex { get; set; }
         public double[] LatLonAlt { get; set; } = new double[3];
         public double[] NormalVector { get; set; } = new double[3];
-        public double[] Com { get; set; } = new double[3];
-        public double[] ComD { get; set; } = new double[3];
         public double[] TransformPosition { get; set; } = new double[3];
         public double[] Velocity { get; set; } = new double[3];
         public double[] OrbitPos { get; set; } = new double[3];
@@ -51,8 +49,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
         public Vector3d TransformPos => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
-        public Vector3 CoM => new Vector3d(Com[0], Com[1], Com[2]);
-        public Vector3 CoMd => new Vector3d(ComD[0], ComD[1], ComD[2]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
         public Vector3d OrbitPosVec => new Vector3d(OrbitPos[0], OrbitPos[1], OrbitPos[2]);
@@ -168,10 +164,6 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.rotation[1] = Target.SrfRelRotation[1];
             Vessel.protoVessel.rotation[2] = Target.SrfRelRotation[2];
             Vessel.protoVessel.rotation[3] = Target.SrfRelRotation[3];
-
-            Vessel.protoVessel.CoM[0] = Target.CoM[0];
-            Vessel.protoVessel.CoM[1] = Target.CoM[1];
-            Vessel.protoVessel.CoM[2] = Target.CoM[2];
 
             Vessel.protoVessel.orbitSnapShot.inclination = Target.Orbit[0];
             Vessel.protoVessel.orbitSnapShot.eccentricity = Target.Orbit[1];
@@ -322,10 +314,9 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ApplyInterpolations(float lerpPercentage)
         {
             ApplyOrbitInterpolation(lerpPercentage);
-
-            //TODO: Is CoM and terrainNormal really needed?
-            Vessel.CoM = Vector3.Lerp(CoM, Target.CoM, lerpPercentage);
-            Vessel.CoMD = Vector3d.Lerp(CoMd, Target.CoMd, lerpPercentage);
+            
+            //Do not use CoM. It's not needed and it generate issues when you patch the protovessel with it as it generate weird commnet lines
+            //TODO: Is terrainNormal really needed?
             Vessel.terrainNormal = Vector3.Lerp(Normal, Target.Normal, lerpPercentage);
 
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
@@ -424,15 +415,7 @@ namespace LunaClient.Systems.VesselPositionSys
             LatLonAlt[0] = Vessel.latitude;
             LatLonAlt[1] = Vessel.longitude;
             LatLonAlt[2] = Vessel.altitude;
-
-            Com[0] = Vessel.CoM.x;
-            Com[1] = Vessel.CoM.y;
-            Com[2] = Vessel.CoM.z;
             
-            ComD[0] = Vessel.CoMD.x;
-            ComD[1] = Vessel.CoMD.y;
-            ComD[2] = Vessel.CoMD.z;
-
             NormalVector[0] = Vessel.terrainNormal.x;
             NormalVector[1] = Vessel.terrainNormal.y;
             NormalVector[2] = Vessel.terrainNormal.z;

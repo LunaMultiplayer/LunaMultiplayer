@@ -113,10 +113,6 @@ namespace LunaClient.VesselStore
                 vesselProtoUpd.ProtoVessel.rotation.z = vesselPositionMsgData.SrfRelRotation[2];
                 vesselProtoUpd.ProtoVessel.rotation.w = vesselPositionMsgData.SrfRelRotation[3];
 
-                vesselProtoUpd.ProtoVessel.CoM.x = (float)vesselPositionMsgData.Com[0];
-                vesselProtoUpd.ProtoVessel.CoM.y = (float)vesselPositionMsgData.Com[1];
-                vesselProtoUpd.ProtoVessel.CoM.z = (float)vesselPositionMsgData.Com[2];
-
                 if (vesselProtoUpd.ProtoVessel.orbitSnapShot != null)
                 {
                     vesselProtoUpd.ProtoVessel.orbitSnapShot.inclination = vesselPositionMsgData.Orbit[0];
