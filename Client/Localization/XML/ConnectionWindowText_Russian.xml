@@ -4,8 +4,8 @@
   <Add>Добавить</Add>
   <Edit>Изменить</Edit>
   <Cancel>Отменить</Cancel>
-  <Connect>Подключится</Connect>
-  <Disconnect>Отключится</Disconnect>
+  <Connect>Подключиться</Connect>
+  <Disconnect>Отключиться</Disconnect>
   <Remove>Удалить</Remove>
   <Options>Настройки</Options>
   <Servers>Сервера</Servers>
