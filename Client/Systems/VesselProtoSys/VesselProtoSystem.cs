@@ -142,6 +142,8 @@ namespace LunaClient.Systems.VesselProtoSys
                     MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
                     MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
                 }
+
+                ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(SendVesselDefinition), SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval);
             }
             catch (Exception e)
             {

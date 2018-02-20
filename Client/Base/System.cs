@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -68,30 +69,33 @@ namespace LunaClient.Base
         /// <summary>
         /// Changes the routine execution interval on the fly
         /// </summary>
-        protected void ChangeRoutineExecutionInterval(string routineName, int newIntervalInMs)
+        protected void ChangeRoutineExecutionInterval(RoutineExecution execution, string routineName, int newIntervalInMs)
         {
-            var routine = FixedUpdateRoutines.FirstOrDefault(r => r.Name == routineName);
+            RoutineDefinition routine;
+            switch (execution)
+            {
+                case RoutineExecution.FixedUpdate:
+                    routine = FixedUpdateRoutines.FirstOrDefault(r => r.Name == routineName);
+                    break;
+                case RoutineExecution.Update:
+                    routine = UpdateRoutines.FirstOrDefault(r => r.Name == routineName);
+                    break;
+                case RoutineExecution.LateUpdate:
+                    routine = LateUpdateRoutines.FirstOrDefault(r => r.Name == routineName);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(execution), execution, null);
+            }
+
             if (routine != null)
             {
                 routine.IntervalInMs = newIntervalInMs;
-                return;
             }
-
-            routine = UpdateRoutines.FirstOrDefault(r => r.Name == routineName);
-            if (routine != null)
+            else
             {
-                routine.IntervalInMs = newIntervalInMs;
-                return;
+                LunaLog.LogError($"[LMP]: Routine {execution}/{routineName} not defined");
             }
 
-            routine = LateUpdateRoutines.FirstOrDefault(r => r.Name == routineName);
-            if (routine != null)
-            {
-                routine.IntervalInMs = newIntervalInMs;
-                return;
-            }
-
-            LunaLog.LogError($"[LMP]: Routine {routineName} not defined");
         }
 
         private bool _enabled;
