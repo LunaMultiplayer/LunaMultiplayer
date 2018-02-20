@@ -2,7 +2,7 @@
 <ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <PlayerName>Имя Игрока:</PlayerName>
   <Add>Добавить</Add>
-  <Edit>Edit</Edit>
+  <Edit>Изменить</Edit>
   <Cancel>Отменить</Cancel>
   <Connect>Подключится</Connect>
   <Disconnect>Отключится</Disconnect>
@@ -10,10 +10,10 @@
   <Options>Настройки</Options>
   <Servers>Сервера</Servers>
   <Close>Закрыть</Close>
-  <Name>Name:</Name>
-  <Address>Address:</Address>
-  <Port>Port:</Port>
-  <Server>server</Server>
+  <Name>Имя:</Name>
+  <Address>Адрес:</Address>
+  <Port>Порт:</Port>
+  <Server>Сервер</Server>
   <CustomServers>Ваши сервера:</CustomServers>
-  <NoServers>(None - Add a server first)</NoServers>
+  <NoServers>(Нет серверов - Для начала добавте сервер)</NoServers>
 </ConnectionWindowText>
