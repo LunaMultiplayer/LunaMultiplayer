@@ -224,6 +224,8 @@ namespace LunaClient.VesselUtilities
                 return false;
             }
 
+            currentProto.vesselRef.orbitDriver?.updateFromParameters();
+
             SystemsContainer.Get<PlayerColorSystem>().SetVesselOrbitColor(currentProto.vesselRef);
             if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
             {
