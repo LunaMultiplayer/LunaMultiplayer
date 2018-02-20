@@ -30,3 +30,6 @@ Server/obj/*
 LmpGlobal/*.csproj.user
 LmpGlobal/bin/*
 LmpGlobal/obj/*
+Updater/*.csproj.user
+Updater/bin/*
+Updater/obj/*
