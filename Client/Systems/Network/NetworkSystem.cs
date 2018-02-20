@@ -71,7 +71,7 @@ namespace LunaClient.Systems.Network
         {
             base.OnEnabled();
 
-            SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, NetworkUpdate));
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, NetworkUpdate));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ShowDisconnectMessage));
         }
 
@@ -79,13 +79,14 @@ namespace LunaClient.Systems.Network
 
         #region Update method
 
-        private static void NetworkUpdate()
+        private void NetworkUpdate()
         {
             switch (MainSystem.NetworkState)
             {
                 case ClientState.DisconnectRequested:
                 case ClientState.Disconnected:
                 case ClientState.Connecting:
+                    ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(NetworkUpdate), 0);
                     return;
                 case ClientState.Connected:
                     SystemsContainer.Get<HandshakeSystem>().Enabled = true;
@@ -112,48 +113,46 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.Authenticated:
                     SystemsContainer.Get<MainSystem>().Status = "Handshaking successful";
-
-                    SystemsContainer.Get<KerbalSystem>().Enabled = true;
-                    SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
-                    SystemsContainer.Get<VesselSyncSystem>().Enabled = true;
-                    SystemsContainer.Get<VesselSyncSystem>().MessageSender.SendVesselsSyncMsg();
-
-                    MainSystem.NetworkState = ClientState.SyncingKerbals;
-                    NetworkSimpleMessageSender.SendKerbalsRequest();
-
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.SyncingKerbals:
-                    SystemsContainer.Get<MainSystem>().Status = "Syncing kerbals";
-                    if (ConnectionIsStuck(5000))
-                        MainSystem.NetworkState = ClientState.Authenticated;
-                    break;
-                case ClientState.KerbalsSynced:
-                    SystemsContainer.Get<MainSystem>().Status = "Kerbals synced";
                     SystemsContainer.Get<SettingsSystem>().Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingSettings;
                     NetworkSimpleMessageSender.SendSettingsRequest();
+
                     _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingSettings:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing settings";
                     if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.KerbalsSynced;
+                        MainSystem.NetworkState = ClientState.Authenticated;
                     break;
                 case ClientState.SettingsSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Settings synced";
                     if (SettingsSystem.ValidateSettings())
                     {
-                        SystemsContainer.Get<WarpSystem>().Enabled = true;
-                        MainSystem.NetworkState = ClientState.SyncingWarpsubspaces;
-                        NetworkSimpleMessageSender.SendWarpSubspacesRequest();
+                        SystemsContainer.Get<KerbalSystem>().Enabled = true;
+                        SystemsContainer.Get<VesselProtoSystem>().Enabled = true;
+                        SystemsContainer.Get<VesselSyncSystem>().Enabled = true;
+                        SystemsContainer.Get<VesselSyncSystem>().MessageSender.SendVesselsSyncMsg();
+                        MainSystem.NetworkState = ClientState.SyncingKerbals;
+                        NetworkSimpleMessageSender.SendKerbalsRequest();
                         _lastStateTime = DateTime.Now;
                     }
+                    break;
+                case ClientState.SyncingKerbals:
+                    SystemsContainer.Get<MainSystem>().Status = "Syncing kerbals";
+                    if (ConnectionIsStuck(10000))
+                        MainSystem.NetworkState = ClientState.SettingsSynced;
+                    break;
+                case ClientState.KerbalsSynced:
+                    SystemsContainer.Get<MainSystem>().Status = "Kerbals synced";
+                    SystemsContainer.Get<WarpSystem>().Enabled = true;
+                    MainSystem.NetworkState = ClientState.SyncingWarpsubspaces;
+                    NetworkSimpleMessageSender.SendWarpSubspacesRequest();
+                    _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingWarpsubspaces:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing warp subspaces";
                     if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.SettingsSynced;
+                        MainSystem.NetworkState = ClientState.KerbalsSynced;
                     break;
                 case ClientState.WarpsubspacesSynced:
                     SystemsContainer.Get<MainSystem>().Status = "Warp subspaces synced";
@@ -176,7 +175,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.SyncingFlags:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing flags";
-                    if (ConnectionIsStuck(5000))
+                    if (ConnectionIsStuck(10000))
                         MainSystem.NetworkState = ClientState.ColorsSynced;
                     break;
                 case ClientState.FlagsSynced:
@@ -213,7 +212,7 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.SyncingCraftlibrary:
                     SystemsContainer.Get<MainSystem>().Status = "Syncing craft library";
-                    if (ConnectionIsStuck(10000))
+                    if (ConnectionIsStuck(20000))
                         MainSystem.NetworkState = ClientState.ScenariosSynced;
                     break;
                 case ClientState.CraftlibrarySynced:
@@ -270,6 +269,8 @@ namespace LunaClient.Systems.Network
                     MainSystem.NetworkState = ClientState.Starting;
                     break;
                 case ClientState.Starting:
+                    //Once we start the game we don't need to run this routine on every frame
+                    ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(NetworkUpdate), 1500);
                     SystemsContainer.Get<MainSystem>().Status = "Running";
                     CommonUtil.Reserve20Mb();
                     LunaLog.Log("[LMP]: All systems up and running. Поехали!");
