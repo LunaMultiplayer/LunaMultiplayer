@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Close>Close</Close>
-  <Refresh>Refresh</Refresh>
-  <NoServers>No servers!</NoServers>
-  <Ping>Ping</Ping>
-  <Players>Players</Players>
-  <MaxPlayers>Max players</MaxPlayers>
-  <Mode>Mode</Mode>
-  <WarpMode>Warp mode</WarpMode>
-  <Terrain>Terrain</Terrain>
-  <Cheats>Cheats</Cheats>
-  <Name>Name</Name>
-  <Description>Description</Description>
+  <Close>Закрыть</Close>
+  <Refresh>Обновить</Refresh>
+  <NoServers>Нет серверов!</NoServers>
+  <Ping>Задержка</Ping>
+  <Players>Игроки</Players>
+  <MaxPlayers>Максимальное кол. игроков</MaxPlayers>
+  <Mode>Режим</Mode>
+  <WarpMode>Режим ускорения времени</WarpMode>
+  <Terrain>Качество детализации</Terrain>
+  <Cheats>Читы</Cheats>
+  <Name>Имя</Name>
+  <Description>Описание</Description>
 </ServerListWindowText>
