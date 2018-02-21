@@ -216,7 +216,10 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == VesselId)
             {
-                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+                if (Vessel.LandedOrSplashed)
+                    Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+                else
+                    Vessel.SetPosition((Body.position + Vessel.orbitDriver.pos) - (Vessel.orbitDriver.driverTransform.rotation * Vessel.localCoM));
             }
         }
 
