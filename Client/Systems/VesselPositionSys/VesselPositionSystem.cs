@@ -70,8 +70,10 @@ namespace LunaClient.Systems.VesselPositionSys
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
         }
         
-        private static void HandleVesselUpdates()
+        private void HandleVesselUpdates()
         {
+            if (!PositionUpdateSystemBasicReady) return;
+
             foreach (var keyVal in CurrentVesselUpdate)
             {
                 keyVal.Value.ApplyVesselUpdate();
@@ -118,6 +120,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 for (var i = 0; i < SecondaryVesselsToUpdate.Count; i++)
                 {
+                    UpdateSecondaryVesselValues(SecondaryVesselsToUpdate[i]);
                     MessageSender.SendVesselPositionUpdate(SecondaryVesselsToUpdate[i]);
                 }
             }
@@ -135,11 +138,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 for (var i = 0; i < AbandonedVesselsToUpdate.Count; i++)
                 {
+                    UpdateUnloadedVesselValues(SecondaryVesselsToUpdate[i]);
                     MessageSender.SendVesselPositionUpdate(AbandonedVesselsToUpdate[i]);
                 }
             }
         }
-
+        
         #endregion
 
         #region Public methods
@@ -177,6 +181,42 @@ namespace LunaClient.Systems.VesselPositionSys
 
             VesselsToRemove.Enqueue(vessel.id);
         }
+
+        #endregion
+
+        #region Private methods
+
+        /// <summary>
+        /// Unloaded vessels don't update their lat/lon/alt and it's orbit params.
+        /// As we have the unloadedupdate lock of that vessel we need to refresh those values manually
+        /// </summary>
+        private static void UpdateUnloadedVesselValues(Vessel vessel)
+        {
+            if (vessel.orbit != null)
+            {
+                vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, Planetarium.GetUniversalTime());
+                if (!vessel.LandedOrSplashed)
+                    vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
+            }
+        }
+
+        /// <summary>
+        /// Secondary vessels (vessels that are loaded and we have the update lock) don't get their lat/lon/alt values updated by the game engine
+        /// Here we manually update them so we send updateded lat/lon/alt values
+        /// </summary>
+        private static void UpdateSecondaryVesselValues(Vessel vessel)
+        {
+            if (vessel.LandedOrSplashed)
+            {
+                vessel.mainBody.GetLatLonAlt(vessel.GetWorldPos3D(), out vessel.latitude, out vessel.longitude, out vessel.altitude);
+            }
+            else
+            {
+                if (vessel.orbit != null)
+                    vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
+            }
+        }
+
 
         #endregion
     }
