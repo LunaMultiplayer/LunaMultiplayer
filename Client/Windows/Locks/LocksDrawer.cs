@@ -39,6 +39,8 @@ namespace LunaClient.Windows.Locks
         {
             StrBuilder.Length = 0;
             StrBuilder.AppendLine(vesselLock.VesselName)
+                .Append("Loaded: ").Append(vesselLock.Loaded).AppendLine()
+                .Append("Packed: ").Append(vesselLock.Packed).AppendLine()
                 .Append("Control: ").Append(vesselLock.ControlLockOwner).AppendLine()
                 .Append("Update: ").Append(vesselLock.UpdateLockOwner).AppendLine()
                 .Append("UnlUpdate: ").Append(vesselLock.UnloadedUpdateLockOwner).AppendLine()
