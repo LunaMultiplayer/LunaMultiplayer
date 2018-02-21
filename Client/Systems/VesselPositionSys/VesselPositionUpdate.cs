@@ -260,13 +260,11 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
-            if (!Vessel.loaded)
-            {
-                ApplyOrbitInterpolation(lerpPercentage);
-                Vessel.orbitDriver.updateFromParameters();
-            }
+            ApplyOrbitInterpolation(lerpPercentage);
+            Vessel.orbitDriver.updateFromParameters();
 
-            Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+            if (Vessel.situation < Vessel.Situations.ORBITING)
+                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
         }
 
         private void ApplyOrbitInterpolation(float lerpPercentage)
