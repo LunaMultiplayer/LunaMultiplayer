@@ -14,6 +14,7 @@ namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselProtoEvents : SubSystem<VesselProtoSystem>
     {
+        private static readonly MethodInfo SetupFsm = typeof(KerbalEVA).GetMethod("SetupFSM", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo PropellantResourceFld = typeof(KerbalEVA).GetField("propellantResource", BindingFlags.NonPublic | BindingFlags.Instance);
 
         /// <summary>
@@ -143,21 +144,6 @@ namespace LunaClient.Systems.VesselProtoSys
                         }
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// Sometimes the eva component of a kerbal doesn't get the value of propellantResource field. Here we fix it so we don't have NRE
-        /// </summary>
-        public void FixEvaPropellant(Vessel evaVessel)
-        {
-            if (!evaVessel.isEVA || FlightGlobals.ActiveVessel?.id == evaVessel.id) return;
-
-            var eva = evaVessel.GetComponent<KerbalEVA>();
-            if (eva != null && PropellantResourceFld?.GetValue(eva) == null)
-            {
-                PropellantResourceFld?.SetValue(eva, eva.part.Resources[0]);
-                eva.fsm.StartFSM(evaVessel.LandedOrSplashed ? eva.st_idle_gr : eva.st_idle_fl);
             }
         }
     }

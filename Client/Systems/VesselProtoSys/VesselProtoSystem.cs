@@ -63,7 +63,6 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onVesselGoOnRails.Add(VesselProtoEvents.VesselGoOnRails);
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
             GameEvents.onPartDie.Add(VesselProtoEvents.OnPartDie);
-            GameEvents.onVesselLoaded.Add(VesselProtoEvents.FixEvaPropellant);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
@@ -80,7 +79,6 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onVesselGoOnRails.Remove(VesselProtoEvents.VesselGoOnRails);
             GameEvents.onFlightReady.Remove(VesselProtoEvents.FlightReady);
             GameEvents.onPartDie.Remove(VesselProtoEvents.OnPartDie);
-            GameEvents.onVesselLoaded.Remove(VesselProtoEvents.FixEvaPropellant);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();
@@ -248,7 +246,15 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpdate))
                         {
                             CurrentlyUpdatingVesselId = vesselIdToReload;
-                            ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
+                            if (vesselProtoUpdate.Vessel.isEVA)
+                            {
+                                ProtoToKerbalRefresh.UpdateKerbalPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
+                            }
+                            else
+                            {
+
+                                ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
+                            }
                             vesselProtoUpdate.VesselHasUpdate = false;
                             CurrentlyUpdatingVesselId = Guid.Empty;
                         }

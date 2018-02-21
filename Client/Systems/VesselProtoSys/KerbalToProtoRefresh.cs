@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselProtoSys
             var vesselHasChanges = vessel.Landed && !vessel.protoVessel.landed || vessel.Splashed && !vessel.protoVessel.splashed ||
                 vessel.currentStage != vessel.protoVessel.stage || vessel.protoVessel.rootIndex != rootPartIndex ||
                 vessel.situation != vessel.protoVessel.situation;
-            
+
             vesselHasChanges |= RefreshParts(vessel);
 
             RefreshActionGroups(vessel);
@@ -92,7 +92,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     return true;
                 }
-                
+
                 partsHaveChanges |= RefreshPartModules(vessel.parts[i]);
             }
 
@@ -114,12 +114,16 @@ namespace LunaClient.Systems.VesselProtoSys
             for (var i = 0; i < part.Modules.Count; i++)
             {
                 var module = part.Modules[i];
-                
+
                 if (module is KerbalEVA kerbalEvaModule)
                 {
                     var nodeValue = GetConfigNodeVal("state", module.snapshot.moduleValues);
                     if (kerbalEvaModule.fsm.currentStateName != null && nodeValue == null || string.IsNullOrEmpty(nodeValue?.value))
-                        LunaLog.Log($"Detected a fsm change. Node: {nodeValue?.value} current: {kerbalEvaModule.fsm.currentStateName}");
+                        return true;
+
+                    var lampValStr = module.snapshot.moduleValues.GetValue("lampOn");
+                    if (bool.TryParse(lampValStr, out var lampVal) && kerbalEvaModule.lampOn != lampVal)
+                        return true;
                 }
 
                 for (var j = 0; j < module.Fields.Count; j++)
@@ -141,7 +145,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             return moduleHaveChanges;
         }
-        
+
         /// <summary>
         /// Refreshes the protovessel part resource based on a part.
         /// We don't check for changes here as doing so will send too much data (resources change VERY often)
