@@ -179,7 +179,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Target.Orbit[7];
         }
 
-        private void MixedApplyInterpolationsToLoadedVessel(float lerpPercentage)
+        private void ApplyInterpolationsToLoadedVessel(float lerpPercentage)
         {
             var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
             var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
@@ -240,10 +240,13 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.longitude = Target.LatLonAlt[1];
                 Vessel.altitude = Target.LatLonAlt[2];
                 Vessel.orbitDriver.updateFromParameters();
+
+                if (Vessel.LandedOrSplashed)
+                    Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
             else
             {
-                MixedApplyInterpolationsToLoadedVessel(lerpPercentage);
+                ApplyInterpolationsToLoadedVessel(lerpPercentage);
             }
         }
 
@@ -253,15 +256,17 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.longitude = Target.LatLonAlt[1];
             Vessel.altitude = Target.LatLonAlt[2];
 
+            var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
+            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
+            Vessel.srfRelRotation = currentSurfaceRelRotation;
+
             if (!Vessel.loaded)
             {
                 ApplyOrbitInterpolation(lerpPercentage);
                 Vessel.orbitDriver.updateFromParameters();
             }
-            else
-            {
-                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
-            }
+
+            Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
         }
 
         private void ApplyOrbitInterpolation(float lerpPercentage)
