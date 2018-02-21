@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ChatWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Leave>Leave</Leave>
-  <Send>Send</Send>
+  <Leave>Verlassen</Leave>
+  <Send>Senden</Send>
   <Global>#Global</Global>
 </ChatWindowText>

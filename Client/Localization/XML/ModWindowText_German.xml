@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
 <ModWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Failed>Failed mod validation</Failed>
-  <Close>Close</Close>
+  <Failed>Fehler bei der Mod-Validierung</Failed>
+  <Close>Schließen</Close>
 </ModWindowText>
