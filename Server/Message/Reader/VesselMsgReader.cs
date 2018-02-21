@@ -61,8 +61,10 @@ namespace Server.Message.Reader
         {
             var data = (VesselRemoveMsgData) message;
 
-            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt");
+            if (LockSystem.LockQuery.ControlLockExists(data.VesselId) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(data.VesselId, client.PlayerName))
+                return;
 
+            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt");
             if (FileHandler.FileExists(path))
             {
                 LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
