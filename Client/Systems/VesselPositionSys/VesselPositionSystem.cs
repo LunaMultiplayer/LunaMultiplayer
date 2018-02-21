@@ -138,7 +138,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 for (var i = 0; i < AbandonedVesselsToUpdate.Count; i++)
                 {
-                    UpdateUnloadedVesselValues(SecondaryVesselsToUpdate[i]);
+                    UpdateUnloadedVesselValues(AbandonedVesselsToUpdate[i]);
                     MessageSender.SendVesselPositionUpdate(AbandonedVesselsToUpdate[i]);
                 }
             }
