@@ -100,7 +100,8 @@ namespace LunaClient.Systems.VesselProtoSys
                         var lampValStr = moduleSnapshot.moduleValues.GetValue("lampOn");
                         if (bool.TryParse(lampValStr, out var lampVal) && currentEva.lampOn != lampVal)
                         {
-                            currentEva.ToggleLamp();
+                            currentEva.lampOn = lampVal;
+                            currentEva.headLamp.SetActive(lampVal);
                         }
                     }
 
