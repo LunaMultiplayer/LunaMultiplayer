@@ -73,9 +73,9 @@ namespace LunaClient.Windows.Locks
                     }
                     else
                     {
-                        existingVesselLock.VesselName = FlightGlobals.Vessels[i].name;
                         existingVesselLock.Loaded = FlightGlobals.Vessels[i].loaded;
                         existingVesselLock.Packed = FlightGlobals.Vessels[i].packed;
+                        existingVesselLock.VesselName = FlightGlobals.Vessels[i].name;
                         existingVesselLock.ControlLockOwner = LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.Vessels[i].id);
                         existingVesselLock.UpdateLockOwner = LockSystem.LockQuery.GetUpdateLockOwner(FlightGlobals.Vessels[i].id);
                         existingVesselLock.UnloadedUpdateLockOwner = LockSystem.LockQuery.GetUnloadedUpdateLockOwner(FlightGlobals.Vessels[i].id);
