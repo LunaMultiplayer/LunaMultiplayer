@@ -37,6 +37,16 @@ namespace LunaClient.Utilities
                                 {
                                     LunaLog.LogError("[LMP]: User did not accept disclaimer");
                                 }
+                            ),
+                            new DialogGUIFlexibleSpace(),
+                            new DialogGUIButton(LocalizationContainer.CurrentLanguage.ToString(),
+                                delegate
+                                {
+                                    LocalizationContainer.LoadLanguage(LocalizationContainer.GetNextLanguage());
+                                    SettingsSystem.CurrentSettings.Language = LocalizationContainer.CurrentLanguage;
+                                    SettingsSystem.SaveSettings();
+                                    SpawnDialog();
+                                }
                             )
                         )
                     )

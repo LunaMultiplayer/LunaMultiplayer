@@ -14,7 +14,7 @@
 
         public string Title { get; set; } = "LunaMultiPlayer - Disclaimer";
         public string Accept { get; set; } = "Accept";
-        public string OpenUrl { get; set; } = "Open the KSP Addon rules in browser";
+        public string OpenUrl { get; set; } = "KSP Addon rules";
         public string Decline { get; set; } = "Decline";
     }
 }
