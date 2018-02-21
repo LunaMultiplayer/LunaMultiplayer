@@ -18,8 +18,6 @@ namespace LunaClient.VesselUtilities
 {
     public class VesselLoader
     {
-        private static readonly FieldInfo PropellantResourceFld = typeof(KerbalEVA).GetField("propellantResource", BindingFlags.NonPublic | BindingFlags.Instance);
-
         public static Guid ReloadingVesselId { get; set; }
 
         /// <summary>
@@ -225,9 +223,7 @@ namespace LunaClient.VesselUtilities
                 LunaLog.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
                 return false;
             }
-
-            if (currentProto.vesselRef.isEVA) FixEvaPropellentField(currentProto.vesselRef);
-
+            
             currentProto.vesselRef.orbitDriver?.updateFromParameters();
 
             SystemsContainer.Get<PlayerColorSystem>().SetVesselOrbitColor(currentProto.vesselRef);
@@ -240,23 +236,7 @@ namespace LunaClient.VesselUtilities
             }
             return true;
         }
-
-        /// <summary>
-        /// Sometimes the eva component of a kerbal doesn't get the value of propellantResource field. Here we fix it so we don't have NRE
-        /// </summary>
-        private static void FixEvaPropellentField(Vessel evaVessel)
-        {
-            var eva = evaVessel.GetComponent<KerbalEVA>();
-            if (eva != null)
-            {
-                if (PropellantResourceFld?.GetValue(eva) == null)
-                {
-                    PropellantResourceFld?.SetValue(eva, eva.part.Resources[0]);
-                }
-                eva.Animations.syncLayers = new int[0];
-            }
-        }
-
+        
         /// <summary>
         /// This method removes the "Target: xxx" message created by SetVesselTarget
         /// </summary>

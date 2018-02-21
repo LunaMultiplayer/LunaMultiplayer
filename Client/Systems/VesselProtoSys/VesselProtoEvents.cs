@@ -8,11 +8,14 @@ using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using System;
 using System.Linq;
+using System.Reflection;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselProtoEvents : SubSystem<VesselProtoSystem>
     {
+        private static readonly FieldInfo PropellantResourceFld = typeof(KerbalEVA).GetField("propellantResource", BindingFlags.NonPublic | BindingFlags.Instance);
+
         /// <summary>
         /// Sends our vessel just when we start the flight
         /// </summary>
@@ -97,14 +100,13 @@ namespace LunaClient.Systems.VesselProtoSys
         /// We don't use the onflagplanted event as that is triggered too early and we need to set the id
         /// AFTER we filled the plaque in the flag
         /// </summary>
-        /// <param name="data"></param>
-        public void VesselGoOnRails(Vessel data)
+        public void VesselGoOnRails(Vessel vessel)
         {
-            if (!VesselCommon.IsSpectating && data.vesselType == VesselType.Flag && data.id == Guid.Empty)
+            if (!VesselCommon.IsSpectating && vessel.vesselType == VesselType.Flag && vessel.id == Guid.Empty)
             {
-                data.id = Guid.NewGuid();
-                data.protoVessel.vesselID = data.id;
-                System.MessageSender.SendVesselMessage(data, true);
+                vessel.id = Guid.NewGuid();
+                vessel.protoVessel.vesselID = vessel.id;
+                System.MessageSender.SendVesselMessage(vessel, true);
             }
         }
 
@@ -141,6 +143,20 @@ namespace LunaClient.Systems.VesselProtoSys
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Sometimes the eva component of a kerbal doesn't get the value of propellantResource field. Here we fix it so we don't have NRE
+        /// </summary>
+        public void FixEvaPropellant(Vessel evaVessel)
+        {
+            if (!evaVessel.isEVA || FlightGlobals.ActiveVessel?.id == evaVessel.id) return;
+
+            var eva = evaVessel.GetComponent<KerbalEVA>();
+            if (eva != null && PropellantResourceFld?.GetValue(eva) == null)
+            {
+                PropellantResourceFld?.SetValue(eva, eva.part.Resources[0]);
             }
         }
     }
