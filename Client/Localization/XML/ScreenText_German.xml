@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <Global>#Global:</Global>
-  <CraftUploaded>Craft uploaded!</CraftUploaded>
-  <CraftSaved>Craft saved!</CraftSaved>
-  <ModFileGenerated>LMPModFile.txt file generated in your KSP folder</ModFileGenerated>
-  <Disconected>You have been disconnected!</Disconected>
-  <Spectating>This vessel is being controlled by</Spectating>
-  <SafetyBubble>Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!</SafetyBubble>
-  <CannotRecover>Cannot recover vessel, the vessel is not yours.</CannotRecover>
-  <CannotTerminate>Cannot terminate vessel, the vessel is not yours.</CannotTerminate>
-  <SpectatingRemoved>The vessel you were spectating was removed</SpectatingRemoved>
-  <WarpDisabled>Cannot warp, warping is disabled on this server</WarpDisabled>
-  <NotWarpMaster>Cannot warp, you are not the warp master!</NotWarpMaster>
-  <WaitingSubspace>Cannot warp, waiting subspace id from the server</WaitingSubspace>
+  <CraftUploaded>Fahrzeug hochgeladen!</CraftUploaded>
+  <CraftSaved>Fahrzeug gespeichert!</CraftSaved>
+  <ModFileGenerated>LMPModFile.txt Datei wurde in deinem KSP Ordner generiert</ModFileGenerated>
+  <Disconected>Deine Verbindung wurde getrennt!</Disconected>
+  <Spectating>Dieses Fahrzeug wird kontrolliert von</Spectating>
+  <SafetyBubble>Bitte beachten!! Während du dich innerhalb der Sicherheitsblase befindest werden dir keine Fahrzeuge in der Nähe angezeigt!!</SafetyBubble>
+  <CannotRecover>Zurücksetzen des Fahrzeugs nicht möglich, das Fahrzeug gehört dir nicht.</CannotRecover>
+  <CannotTerminate>Löschen des Fahrzeugs nicht möglich, das Fahrzeug gehört dir nicht.</CannotTerminate>
+  <SpectatingRemoved>Das beobachtete Fahrzeug wurde gelöscht</SpectatingRemoved>
+  <WarpDisabled>Zeitraffer nicht möglich, Zeitraffer ist auf diesem Server deaktiviert</WarpDisabled>
+  <NotWarpMaster>Zeitraffer nicht möglich, du bist nicht der Meister des Zeitraffers!</NotWarpMaster>
+  <WaitingSubspace>Zeitraffer nicht möglich, warte auf Sub-Universum-ID vom Server</WaitingSubspace>
 </ScreenText>
