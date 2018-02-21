@@ -42,6 +42,15 @@ namespace LunaClient.Windows.Debug
                 }
             }
 
+            if (GUILayout.Button("Reload all EVAs", ButtonStyle))
+            {
+                var protos = VesselsProtoStore.AllPlayerVessels.Values.Where(v=> v.Vessel?.isEVA ?? false).Select(v => v.ProtoVessel);
+                foreach (var proto in protos)
+                {
+                    VesselLoader.ReloadVessel(proto);
+                }
+            }
+
 
             GUILayout.EndVertical();
         }
