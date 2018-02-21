@@ -157,7 +157,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (eva != null && PropellantResourceFld?.GetValue(eva) == null)
             {
                 PropellantResourceFld?.SetValue(eva, eva.part.Resources[0]);
-                eva.fsm.StartFSM("st_idle");
+                eva.fsm.StartFSM(evaVessel.LandedOrSplashed ? eva.st_idle_gr : eva.st_idle_fl);
             }
         }
     }
