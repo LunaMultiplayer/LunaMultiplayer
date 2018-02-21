@@ -258,6 +258,7 @@ namespace LunaClient.Systems.VesselLockSys
                 .Where(v => v != null && v.state != Vessel.State.DEAD && !v.loaded &&
                             v.id != FlightGlobals.ActiveVessel?.id &&
                             !VesselCommon.IsInSafetyBubble(v) &&
+                            !v.LandedOrSplashed && //DO NOT get unloaded locks on landed vessels!
                             !LockSystem.LockQuery.UnloadedUpdateLockExists(v.id) &&
                             !LockSystem.LockQuery.UpdateLockExists(v.id))
                 .Select(v => v.id);
