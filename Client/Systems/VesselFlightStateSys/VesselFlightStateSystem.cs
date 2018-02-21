@@ -31,7 +31,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             new ConcurrentDictionary<Guid, VesselFlightStateUpdate>();
 
         public bool FlightStateSystemReady
-            => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
+            => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 3f &&
                FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
                FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
                FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
@@ -101,10 +101,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private void SendFlightState()
         {
-            if (Enabled)
+            if (Enabled && FlightStateSystemReady && !FlightGlobals.ActiveVessel.isEVA)
             {
-                if (FlightStateSystemReady)
-                    MessageSender.SendCurrentFlightState();
+                MessageSender.SendCurrentFlightState();
 
                 ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(SendFlightState), VesselCommon.IsSomeoneSpectatingUs ? 30 : 1000);
             }
@@ -159,7 +158,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (Enabled && FlightStateSystemReady)
             {
                 var vesselsToAdd = FlightGlobals.VesselsLoaded
-                    .Where(v => !v.packed && !FlyByWireDictionary.Keys.Contains(v.id));
+                    .Where(v => !v.isEVA && !v.packed && !FlyByWireDictionary.Keys.Contains(v.id));
                 
                 foreach (var vesselToAdd in vesselsToAdd)
                 {
