@@ -13,5 +13,5 @@ For more information - see the KSP addon rules
   <Title>LunaMultiPlayer - Disclaimer</Title>
   <Accept>Подтвердить</Accept>
   <OpenUrl>KSP Addon rules</OpenUrl>
-  <Decline>Потклонить</Decline>
+  <Decline>Отклонить</Decline>
 </DisclaimerDialogText>
