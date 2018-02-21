@@ -33,12 +33,13 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.vesselName = msgData.Name;
             vessel.vesselType = (VesselType) Enum.Parse(typeof(VesselType), msgData.Type);
 
-            //Only change this value if vessel is not eva. When vessel is eva or we are in track station we reload it if the situation changes
-            if (!vessel.isEVA && HighLogic.LoadedSceneIsFlight) 
+            //Only change this value if vessel is not eva. When vessel is eva or is not loaded we reload it if the situation changes
+            if (!vessel.isEVA && vessel.loaded) 
                 vessel.situation = (Vessel.Situations) Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
 
-            //Only change this value if vessel takes off. When the vessel lands the vessel must be reloaded as a whole by the vessel proto system
-            if (vessel.Landed && !msgData.Landed)
+            //Only change this value if vessel takes off and is loaded. 
+            //When the vessel lands the vessel must be reloaded as a whole by the vessel proto system if it's not loaded
+            if (vessel.loaded && vessel.Landed && !msgData.Landed)
                 vessel.Landed = msgData.Landed;
 
             vessel.landedAt = msgData.LandedAt;
