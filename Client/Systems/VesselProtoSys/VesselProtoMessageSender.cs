@@ -41,11 +41,11 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
 
             VesselProtoSystem.CurrentlyUpdatingVesselId = vessel.id;
-            var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
+            var vesselHasChanges = vessel.isEVA ? KerbalToProtoRefresh.RefreshVesselProto(vessel) : VesselToProtoRefresh.RefreshVesselProto(vessel);
             VesselProtoSystem.CurrentlyUpdatingVesselId = Guid.Empty;
 
             if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
-                SendVesselMessage(vessel.protoVessel);
+                SendVesselMessage(vessel.isEVA ? vessel.BackupVessel() : vessel.protoVessel);
 
             if(!VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
                 VesselsProtoStore.AddVesselToDictionary(vessel);

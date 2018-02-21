@@ -18,7 +18,7 @@ namespace LunaClient.VesselIgnore
         /// Add here modules that can be ignored when checking if a part module has changes
         /// </summary>
         public static readonly string[] ModulesToIgnoreWhenChecking = {
-            "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension", "ModuleScienceContainer", "KerbalEVA"
+            "ModuleWheelBase", "ModuleWheelSteering", "ModuleWheelSuspension", "ModuleScienceContainer"
         };
 
         /// <summary>
