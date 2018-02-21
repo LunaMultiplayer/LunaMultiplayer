@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Global>#Global:</Global>
+  <CraftUploaded>Craft uploaded!</CraftUploaded>
+  <CraftSaved>Craft saved!</CraftSaved>
+  <ModFileGenerated>LMPModFile.txt file generated in your KSP folder</ModFileGenerated>
+  <Disconected>You have been disconnected!</Disconected>
+  <Spectating>This vessel is being controlled by</Spectating>
+  <SafetyBubble>Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!</SafetyBubble>
+  <CannotRecover>Cannot recover vessel, the vessel is not yours.</CannotRecover>
+  <CannotTerminate>Cannot terminate vessel, the vessel is not yours.</CannotTerminate>
+  <SpectatingRemoved>The vessel you were spectating was removed</SpectatingRemoved>
+  <WarpDisabled>Cannot warp, warping is disabled on this server</WarpDisabled>
+  <NotWarpMaster>Cannot warp, you are not the warp master!</NotWarpMaster>
+  <WaitingSubspace>Cannot warp, waiting subspace id from the server</WaitingSubspace>
+</ScreenText>

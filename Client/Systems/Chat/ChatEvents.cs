@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows;
@@ -132,7 +133,7 @@ namespace LunaClient.Systems.Chat
                     ScreenMessages.PostScreenMessage(
                         ce.Channel != "" ?
                         $"{ce.FromPlayer} -> #{ce.Channel}: {ce.Message}" :
-                        $"{ce.FromPlayer} -> #Global : {ce.Message}",
+                        $"{ce.FromPlayer} -> {LocalizationContainer.ScreenText.Global} {ce.Message}",
                         5f, ScreenMessageStyle.UPPER_LEFT);
                 }
 

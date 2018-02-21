@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -27,7 +28,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
                 }, 5f);
 
-                ScreenMessages.PostScreenMessage("Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!", 10f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

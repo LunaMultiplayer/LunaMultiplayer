@@ -1,3 +1,4 @@
+using LunaClient.Localization;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -145,7 +146,7 @@ namespace LunaClient.Systems.Mod
                 sw.Write(modFileData);
             }
 
-            ScreenMessages.PostScreenMessage("LMPModFile.txt file generated in your KSP folder", 5f,
+            ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ModFileGenerated, 5f,
                 ScreenMessageStyle.UPPER_CENTER);
         }
 

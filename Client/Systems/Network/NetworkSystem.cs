@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Network;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
@@ -340,7 +341,7 @@ namespace LunaClient.Systems.Network
 
             if (DisplayDisconnectMessage)
             {
-                ScreenMessages.PostScreenMessage("You have been disconnected!", 2f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.Disconected, 2f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

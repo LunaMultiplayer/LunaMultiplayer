@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Language>Sprache:</Language>
+  <Color>Player color:</Color>
+  <Red>R:</Red>
+  <Green>G:</Green>
+  <Blue>B:</Blue>
+  <Random>Random</Random>
+  <Set>Set</Set>
+  <SetChatKey>Set chat key. Current:</SetChatKey>
+  <SettingChatKey>Setting chat key (click to cancel)...</SettingChatKey>
+  <ResetDisclaimer>Reset disclaimer</ResetDisclaimer>
+  <Interpolation>Enable interpolation</Interpolation>
+  <ShowClose>Show "Close" button in connection window</ShowClose>
+  <GenerateLmpModControl>Generate a server LMPModControl:</GenerateLmpModControl>
+  <GenerateBlackList>Generate blacklist LMPModControl.txt</GenerateBlackList>
+  <GenerateWhiteList>Generate whitelist LMPModControl.txt</GenerateWhiteList>
+  <GenerateUniverse>Generate Universe from saved game</GenerateUniverse>
+  <Toolbar>Toolbar:</Toolbar>
+  <Close>Close</Close>
+</OptionsWindowText>

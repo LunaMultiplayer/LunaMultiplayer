@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
@@ -63,7 +64,7 @@ namespace LunaClient.Systems.CraftLibrary
 
             if (DisplayCraftUploadingMessage)
             {
-                ScreenMessages.PostScreenMessage("Craft uploaded!", 2f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CraftUploaded, 2f, ScreenMessageStyle.UPPER_CENTER);
                 DisplayCraftUploadingMessage = false;
             }
         }
@@ -170,7 +171,7 @@ namespace LunaClient.Systems.CraftLibrary
 
             var craftFile = CommonUtil.CombinePaths(savePath, $"{craftName}.craft");
             File.WriteAllBytes(craftFile, craftData);
-            ScreenMessages.PostScreenMessage($"Craft {craftName} saved!", 5f, ScreenMessageStyle.UPPER_CENTER);
+            ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CraftSaved, 5f, ScreenMessageStyle.UPPER_CENTER);
         }
     }
 }

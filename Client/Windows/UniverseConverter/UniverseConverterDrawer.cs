@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LunaClient.Localization;
+using UnityEngine;
 
 namespace LunaClient.Windows.UniverseConverter
 {
@@ -14,7 +15,7 @@ namespace LunaClient.Windows.UniverseConverter
                     Utilities.UniverseConverter.GenerateUniverse(saveFolder);
             GUILayout.EndScrollView();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Close", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.UniverseConverterWindowText.Close, ButtonStyle))
                 Display = false;
             GUILayout.EndVertical();
         }

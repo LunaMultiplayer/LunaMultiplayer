@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LunaClient.Localization;
+using UnityEngine;
 
 namespace LunaClient.Utilities
 {
@@ -6,12 +7,13 @@ namespace LunaClient.Utilities
     {
         public static void SpawnDialog(string latestVersion, string currentVersion)
         {
-            var disclaimerText = "You are running an outdated version of LMP.\n";
-            disclaimerText += $"Yours {currentVersion}\n";
-            disclaimerText += $"Latest {latestVersion}\n";
+
+            var disclaimerText = LocalizationContainer.OutdatedDialogText.RunningOutdated + "\n";
+            disclaimerText += LocalizationContainer.OutdatedDialogText.Yours + $"{currentVersion}\n";
+            disclaimerText += LocalizationContainer.OutdatedDialogText.Latest + $"{latestVersion}\n";
 
             PopupDialog.SpawnPopupDialog(
-                new MultiOptionDialog("OutdatedDialog", disclaimerText, "LunaMultiPlayer - Update available",
+                new MultiOptionDialog("OutdatedDialog", disclaimerText, LocalizationContainer.OutdatedDialogText.Title,
                     HighLogic.UISkin,
                     new Rect(.5f, .5f, 425f, 150f),
                     new DialogGUIFlexibleSpace(),

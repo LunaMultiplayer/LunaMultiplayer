@@ -35,7 +35,6 @@ namespace LunaClient.Systems.Scenario
                     else
                     {
                         LunaLog.LogError($"[LMP]: Scenario data has been lost for {data.ScenariosData[i].Module}");
-                        ScreenMessages.PostScreenMessage($"Scenario data has been lost for {data.ScenariosData[i].Module}", 5f, ScreenMessageStyle.UPPER_CENTER);
                     }
                 }
                 MainSystem.NetworkState = ClientState.ScenariosSynced;

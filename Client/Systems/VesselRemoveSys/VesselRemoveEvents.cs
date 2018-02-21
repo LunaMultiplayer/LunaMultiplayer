@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
@@ -55,7 +56,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             if (!LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(recoveredVessel.vesselID, SettingsSystem.CurrentSettings.PlayerName))
             {
-                ScreenMessages.PostScreenMessage("Cannot recover vessel, the vessel is not yours.", 5f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CannotRecover, 5f, ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
 
@@ -76,7 +77,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             if (!LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(terminatedVessel.vesselID, SettingsSystem.CurrentSettings.PlayerName))
             {
-                ScreenMessages.PostScreenMessage("Cannot terminate vessel, the vessel is not yours.", 5f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CannotTerminate, 5f, ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
 

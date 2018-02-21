@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselPositionSys;
@@ -29,7 +30,7 @@ namespace LunaClient.Systems.VesselLockSys
 
         private bool VesselLockSystemReady => Enabled && Time.timeSinceLevelLoad > 10f;
 
-        private string SpectatingMessage => VesselCommon.IsSpectating ? $"This vessel is being controlled by {GetVesselOwner}." : "";
+        private string SpectatingMessage => VesselCommon.IsSpectating ? LocalizationContainer.ScreenText.Spectating + $" {GetVesselOwner}." : "";
 
         #endregion
 

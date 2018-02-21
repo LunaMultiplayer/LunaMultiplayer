@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
@@ -217,7 +218,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 else
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
 
-                ScreenMessages.PostScreenMessage("The vessel you were spectating was removed", 10f);
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.SpectatingRemoved, 10f);
             }
         }
 

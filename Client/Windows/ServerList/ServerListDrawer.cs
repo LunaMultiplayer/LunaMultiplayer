@@ -1,5 +1,5 @@
-﻿using LunaClient.Network;
-using LunaCommon;
+﻿using LunaClient.Localization;
+using LunaClient.Network;
 using LunaCommon.Enums;
 using System.Linq;
 using System.Threading;
@@ -18,9 +18,9 @@ namespace LunaClient.Windows.ServerList
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Close", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Close, ButtonStyle))
                 Display = false;
-            if (GUILayout.Button("Refresh", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Refresh, ButtonStyle))
             {
                 NetworkServerList.RequestServers();
                 Thread.Sleep(500);
@@ -58,7 +58,7 @@ namespace LunaClient.Windows.ServerList
                 GUILayout.Space(WindowWidth * 0.25f);
                 GUILayout.BeginVertical();
                 GUILayout.Space(WindowHeight * 0.25f);
-                GUILayout.Label("No servers!", BigLabelStyle);
+                GUILayout.Label(LocalizationContainer.ServerListWindowText.NoServers, BigLabelStyle);
                 GUILayout.EndVertical();
                 GUILayout.EndHorizontal();
             }
@@ -152,7 +152,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(50));
-            if (GUILayout.Button("Ping", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Ping) : 
                     DisplayedServers.OrderByDescending(s => s.Ping);
@@ -160,7 +160,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(50));
-            if (GUILayout.Button("Players", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Players, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.PlayerCount) :
                     DisplayedServers.OrderByDescending(s => s.PlayerCount);
@@ -168,7 +168,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(85));
-            if (GUILayout.Button("Max players", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.MaxPlayers, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.MaxPlayers) :
                     DisplayedServers.OrderByDescending(s => s.MaxPlayers);
@@ -176,7 +176,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(85));
-            if (GUILayout.Button("Mode", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Mode, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.GameMode) :
                     DisplayedServers.OrderByDescending(s => s.GameMode);
@@ -184,7 +184,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(75));
-            if (GUILayout.Button("Warp mode", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.WarpMode, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.WarpMode) :
                     DisplayedServers.OrderByDescending(s => s.WarpMode);
@@ -192,7 +192,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(50));
-            if (GUILayout.Button("Terrain", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Terrain, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.TerrainQuality) :
                     DisplayedServers.OrderByDescending(s => s.TerrainQuality);
@@ -200,7 +200,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(50));
-            if (GUILayout.Button("Cheats", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Cheats, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Cheats) :
                     DisplayedServers.OrderByDescending(s => s.Cheats);
@@ -208,7 +208,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(325));
-            if (GUILayout.Button("Name", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Name, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.ServerName) :
                     DisplayedServers.OrderByDescending(s => s.ServerName);
@@ -216,7 +216,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.Width(1000));
-            if (GUILayout.Button("Description", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Description, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Description) :
                     DisplayedServers.OrderByDescending(s => s.Description);

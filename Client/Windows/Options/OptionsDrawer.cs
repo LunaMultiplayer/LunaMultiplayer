@@ -28,7 +28,7 @@ namespace LunaClient.Windows.Options
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
             GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.SettingsWindowText.Language);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Language);
             if (GUILayout.Button(LocalizationContainer.CurrentLanguage.ToString(), ButtonStyle))
             {
                 LocalizationContainer.LoadLanguage(LocalizationContainer.GetNextLanguage());
@@ -37,27 +37,27 @@ namespace LunaClient.Windows.Options
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Player Name color: ");
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Color);
             GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, TempColorLabelStyle);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("R: ", SmallOption);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Red, SmallOption);
             TempColor.r = GUILayout.HorizontalScrollbar(TempColor.r, 0, 0, 1);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("G: ", SmallOption);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Green, SmallOption);
             TempColor.g = GUILayout.HorizontalScrollbar(TempColor.g, 0, 0, 1);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label("B: ", SmallOption);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Blue, SmallOption);
             TempColor.b = GUILayout.HorizontalScrollbar(TempColor.b, 0, 0, 1);
             GUILayout.EndHorizontal();
             TempColorLabelStyle.active.textColor = TempColor;
             TempColorLabelStyle.normal.textColor = TempColor;
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Random", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Random, ButtonStyle))
                 TempColor = PlayerColorSystem.GenerateRandomColor();
-            if (GUILayout.Button("Set", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Set, ButtonStyle))
             {
                 WindowsContainer.Get<StatusWindow>().ColorEventHandled = false;
                 SettingsSystem.CurrentSettings.PlayerColor = TempColor;
@@ -68,10 +68,10 @@ namespace LunaClient.Windows.Options
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
             //Key bindings
-            var chatDescription = $"Set chat key (current: {SettingsSystem.CurrentSettings.ChatKey})";
+            var chatDescription = LocalizationContainer.OptionsWindowText.SetChatKey + " " + "SettingsSystem.CurrentSettings.ChatKey";
             if (SettingChat)
             {
-                chatDescription = "Setting chat key (click to cancel)...";
+                chatDescription = LocalizationContainer.OptionsWindowText.SettingChatKey;
                 if (Event.current.isKey)
                     if (Event.current.keyCode != KeyCode.Escape)
                     {
@@ -86,18 +86,18 @@ namespace LunaClient.Windows.Options
             }
             if (GUILayout.Button(chatDescription))
                 SettingChat = !SettingChat;
-            if (GUILayout.Button("Reset disclaimer"))
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.ResetDisclaimer))
             {
                 SettingsSystem.CurrentSettings.DisclaimerAccepted = false;
                 SettingsSystem.SaveSettings();
             }
-            var settingInterpolation = GUILayout.Toggle(SettingsSystem.CurrentSettings.InterpolationEnabled, "Enable interpolation", ButtonStyle);
+            var settingInterpolation = GUILayout.Toggle(SettingsSystem.CurrentSettings.InterpolationEnabled, LocalizationContainer.OptionsWindowText.Interpolation, ButtonStyle);
             if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
             {
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
                 SettingsSystem.SaveSettings();
             }
-            var closeBtnInConnectionWindow = GUILayout.Toggle(SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow, "Show \"Close\" button in connection window", ButtonStyle);
+            var closeBtnInConnectionWindow = GUILayout.Toggle(SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow, LocalizationContainer.OptionsWindowText.ShowClose, ButtonStyle);
             if (closeBtnInConnectionWindow != SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow)
             {
                 SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow = closeBtnInConnectionWindow;
@@ -114,15 +114,15 @@ namespace LunaClient.Windows.Options
             }
             GUILayout.EndVertical();
             GUILayout.Space(10);
-            GUILayout.Label("Generate a server LMPModControl:");
-            if (GUILayout.Button("Generate blacklist LMPModControl.txt"))
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.GenerateLmpModControl);
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateBlackList))
                 SystemsContainer.Get<ModSystem>().GenerateModControlFile(false);
-            if (GUILayout.Button("Generate whitelist LMPModControl.txt"))
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateWhiteList))
                 SystemsContainer.Get<ModSystem>().GenerateModControlFile(true);
-            WindowsContainer.Get<UniverseConverterWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<UniverseConverterWindow>().Display, "Generate Universe from saved game", ButtonStyle);
+            WindowsContainer.Get<UniverseConverterWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<UniverseConverterWindow>().Display, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Toolbar:", SmallOption);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Toolbar, SmallOption);
             if (GUILayout.Button(ToolbarMode, ButtonStyle))
             {
                 var newSetting = (int)SettingsSystem.CurrentSettings.ToolbarType + 1;
@@ -139,7 +139,7 @@ namespace LunaClient.Windows.Options
             DrawAdvancedDebugOptions();
 #endif
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Close", ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Close, ButtonStyle))
                 Display = false;
             GUILayout.EndVertical();
         }

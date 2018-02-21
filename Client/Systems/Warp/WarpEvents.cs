@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
 
@@ -19,8 +20,8 @@ namespace LunaClient.Systems.Warp
                 if (resetWarp)
                 {
                     System.DisplayMessage(SettingsSystem.ServerSettings.WarpMode == WarpMode.None ? 
-                        "Cannot warp, warping is disabled on this server" : 
-                        "Cannot warp, you are not the warp master!", 5f);
+                        LocalizationContainer.ScreenText.WarpDisabled :
+                        LocalizationContainer.ScreenText.NotWarpMaster, 5f);
 
                     TimeWarp.SetRate(0, true);
                     return;
@@ -28,7 +29,7 @@ namespace LunaClient.Systems.Warp
 
                 if (System.WaitingSubspaceIdFromServer)
                 {
-                    System.DisplayMessage("Cannot warp, waiting subspace id from the server", 5f);
+                    System.DisplayMessage(LocalizationContainer.ScreenText.WaitingSubspace, 5f);
 
                     TimeWarp.SetRate(0, true);
                     return;

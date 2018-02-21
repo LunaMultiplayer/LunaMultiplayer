@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Localization;
+using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LunaClient.Windows.CraftLibrary
@@ -34,7 +35,7 @@ namespace LunaClient.Windows.CraftLibrary
             GUI.DragWindow(MoveRect);
             var newShowUpload = false;
             if (System.SelectedPlayer == SettingsSystem.CurrentSettings.PlayerName)
-                newShowUpload = GUILayout.Toggle(ShowUpload, "Upload", ButtonStyle);
+                newShowUpload = GUILayout.Toggle(ShowUpload, LocalizationContainer.CraftLibraryWindowText.Upload, ButtonStyle);
             if (newShowUpload && !ShowUpload)
                 System.BuildUploadList();
             ShowUpload = newShowUpload;
@@ -84,7 +85,7 @@ namespace LunaClient.Windows.CraftLibrary
                                 System.DownloadCraftType = entry.Key;
                                 System.DownloadCraftName = craftName;
                             }
-                            if (GUILayout.Button("Remove", ButtonStyle))
+                            if (GUILayout.Button(LocalizationContainer.CraftLibraryWindowText.Remove, ButtonStyle))
                             {
                                 System.DeleteCraftType = entry.Key;
                                 System.DeleteCraftName = craftName;

@@ -1,3 +1,4 @@
+using LunaClient.Localization;
 using System.IO;
 using System.Reflection;
 using UnityEngine;
@@ -35,8 +36,10 @@ namespace LunaClient.Utilities
             {
                 LunaLog.Log($"[InstallChecker] Mod '{Assembly.GetExecutingAssembly().GetName().Name}' is not correctly installed.");
                 LunaLog.Log($"[InstallChecker] LMP is Currently installed on '{_currentPath}', should be installed at '{_correctPath}'");
-                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("InstallChecker", $"LunaMultiPlayer is not correctly installed.\n\nCurrent location: {_currentPath}\n\nCorrect location: {_correctPath}\n",
-                    "Incorrect Install Detected", HighLogic.UISkin), true, HighLogic.UISkin);
+                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("InstallChecker", LocalizationContainer.InstallDialogText.IncorrectInstall +"\n\n" +
+                                                                                     LocalizationContainer.InstallDialogText.CurrentLoc + " " + _currentPath + "\n\n" +
+                                                                                     LocalizationContainer.InstallDialogText.CorrectLoc + " " + _correctPath + "\n",
+                    LocalizationContainer.InstallDialogText.Title, HighLogic.UISkin), true, HighLogic.UISkin);
             }
         }
     }

@@ -1,9 +1,10 @@
-﻿using LunaClient.Systems.Admin;
+﻿using LunaClient.Localization;
+using LunaClient.Systems;
+using LunaClient.Systems.Admin;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Utilities;
 using System.Collections.Generic;
-using LunaClient.Systems;
 using UnityEngine;
 
 namespace LunaClient.Windows.Chat
@@ -21,7 +22,7 @@ namespace LunaClient.Windows.Chat
             GUILayout.FlexibleSpace();
             if (System.SelectedChannel != null && System.SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier ||
                 System.SelectedPmChannel != null)
-                if (GUILayout.Button("Leave", ButtonStyle))
+                if (GUILayout.Button(LocalizationContainer.ChatWindowText.Leave, ButtonStyle))
                     System.LeaveEventHandled = false;
             DrawConsole();
             GUILayout.EndHorizontal();
@@ -106,7 +107,7 @@ namespace LunaClient.Windows.Chat
                     System.SendText = tempSendText;
             if (System.SendText == "")
                 GUI.enabled = false;
-            if (GUILayout.Button("Send", ButtonStyle, SmallSizeOption))
+            if (GUILayout.Button(LocalizationContainer.ChatWindowText.Send, ButtonStyle, SmallSizeOption))
                 System.SendEventHandled = false;
             GUI.enabled = true;
             GUILayout.EndHorizontal();
@@ -155,7 +156,7 @@ namespace LunaClient.Windows.Chat
             if (System.SelectedChannel == null && System.SelectedPmChannel == null)
                 GUI.enabled = false;
             var possibleHighlightButtonStyle = System.HighlightChannel.Contains("") ? HighlightStyle : ButtonStyle;
-            if (GUILayout.Button("#Global", possibleHighlightButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ChatWindowText.Global, possibleHighlightButtonStyle))
             {
                 if (System.HighlightChannel.Contains(""))
                     System.HighlightChannel.Remove("");
