@@ -270,12 +270,42 @@
     <Compile Include="Windows\WindowsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Localization\XML\ChatWindowText_English.xml" />
+    <Content Include="Localization\XML\ChatWindowText_German.xml" />
+    <Content Include="Localization\XML\ChatWindowText_Russian.xml" />
     <Content Include="Localization\XML\ConnectionWindowText_English.xml" />
     <Content Include="Localization\XML\ConnectionWindowText_German.xml" />
     <Content Include="Localization\XML\ConnectionWindowText_Russian.xml" />
-    <Content Include="Localization\XML\SettingsWindowText_English.xml" />
-    <Content Include="Localization\XML\SettingsWindowText_German.xml" />
-    <Content Include="Localization\XML\SettingsWindowText_Russian.xml" />
+    <Content Include="Localization\XML\CraftLibraryWindowText_English.xml" />
+    <Content Include="Localization\XML\CraftLibraryWindowText_German.xml" />
+    <Content Include="Localization\XML\CraftLibraryWindowText_Russian.xml" />
+    <Content Include="Localization\XML\DisclaimerDialogText_English.xml" />
+    <Content Include="Localization\XML\DisclaimerDialogText_German.xml" />
+    <Content Include="Localization\XML\DisclaimerDialogText_Russian.xml" />
+    <Content Include="Localization\XML\InstallDialogText_English.xml" />
+    <Content Include="Localization\XML\InstallDialogText_German.xml" />
+    <Content Include="Localization\XML\InstallDialogText_Russian.xml" />
+    <Content Include="Localization\XML\ModWindowText_English.xml" />
+    <Content Include="Localization\XML\ModWindowText_German.xml" />
+    <Content Include="Localization\XML\ModWindowText_Russian.xml" />
+    <Content Include="Localization\XML\OptionsWindowText_English.xml" />
+    <Content Include="Localization\XML\OptionsWindowText_German.xml" />
+    <Content Include="Localization\XML\OptionsWindowText_Russian.xml" />
+    <Content Include="Localization\XML\OutdatedDialogText_English.xml" />
+    <Content Include="Localization\XML\OutdatedDialogText_German.xml" />
+    <Content Include="Localization\XML\OutdatedDialogText_Russian.xml" />
+    <Content Include="Localization\XML\ScreenText_English.xml" />
+    <Content Include="Localization\XML\ScreenText_German.xml" />
+    <Content Include="Localization\XML\ScreenText_Russian.xml" />
+    <Content Include="Localization\XML\ServerListWindowText_English.xml" />
+    <Content Include="Localization\XML\ServerListWindowText_German.xml" />
+    <Content Include="Localization\XML\ServerListWindowText_Russian.xml" />
+    <Content Include="Localization\XML\StatusWindowText_English.xml" />
+    <Content Include="Localization\XML\StatusWindowText_German.xml" />
+    <Content Include="Localization\XML\StatusWindowText_Russian.xml" />
+    <Content Include="Localization\XML\UniverseConverterWindowText_English.xml" />
+    <Content Include="Localization\XML\UniverseConverterWindowText_German.xml" />
+    <Content Include="Localization\XML\UniverseConverterWindowText_Russian.xml" />
     <Content Include="Resources\LMPButton.png" />
     <Content Include="Resources\LMPButtonLow.png" />
   </ItemGroup>
