@@ -24,6 +24,14 @@ namespace LunaClient.Systems.VesselPositionSys
             if (LockSystem.LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                 return;
 
+            //Ignore vessel updates for our own updated vessels
+            if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                return;
+
+            //Ignore vessel updates for our own updated vessels
+            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                return;
+
             //Ignore updates if vessel is in kill list
             if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselId))
                 return;
