@@ -114,8 +114,6 @@
     <Compile Include="Utilities\OutdatedVersionDialog.cs" />
     <Compile Include="Systems\VesselPrecalcSys\LunaPrecalc.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
-    <Compile Include="Systems\VesselRangeSys\VesselRangeEvents.cs" />
-    <Compile Include="Systems\VesselRangeSys\VesselRangeSystem.cs" />
     <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\Locks\LockDisplay.cs" />
