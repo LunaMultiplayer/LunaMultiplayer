@@ -54,6 +54,10 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="ModuleStore\Structures\CustomFieldDefinition.cs" />
+    <Compile Include="ModuleStore\Structures\CustomModuleDefinition.cs" />
+    <Compile Include="ModuleStore\FieldModuleDefinition.cs" />
+    <Compile Include="ModuleStore\FieldModuleStore.cs" />
     <Compile Include="Localization\LocalizationContainer.cs" />
     <Compile Include="Localization\Structures\ChatWindowText.cs" />
     <Compile Include="Localization\Structures\ConnectionWindowText.cs" />
@@ -306,6 +310,7 @@
     <Content Include="Localization\XML\UniverseConverterWindowText_English.xml" />
     <Content Include="Localization\XML\UniverseConverterWindowText_German.xml" />
     <Content Include="Localization\XML\UniverseConverterWindowText_Russian.xml" />
+    <Content Include="ModuleStore\XML\PartsBehaviour.xml" />
     <Content Include="Resources\LMPButton.png" />
     <Content Include="Resources\LMPButtonLow.png" />
   </ItemGroup>

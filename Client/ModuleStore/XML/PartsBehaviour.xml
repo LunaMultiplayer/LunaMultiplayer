@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ArrayOfCustomModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <CustomModuleDefinition>
+    <ModuleName>ModuleDeployablePart</ModuleName>
+    <Fields>
+      <CustomFieldDefinition>
+        <FieldName>currentRotation</FieldName>
+        <IgnoreSend>false</IgnoreSend>
+        <IgnoreReceive>false</IgnoreReceive>
+        <IntervalCheckChangesMs>1000</IntervalCheckChangesMs>
+        <IntervalApplyChangesMs>1000</IntervalApplyChangesMs>
+      </CustomFieldDefinition>
+    </Fields>
+  </CustomModuleDefinition>
+  <CustomModuleDefinition>
+    <ModuleName>ModuleEngines</ModuleName>
+    <Fields>
+      <CustomFieldDefinition>
+        <FieldName>currentThrottle</FieldName>
+        <IgnoreSend>false</IgnoreSend>
+        <IgnoreReceive>false</IgnoreReceive>
+        <IntervalCheckChangesMs>1000</IntervalCheckChangesMs>
+        <IntervalApplyChangesMs>1000</IntervalApplyChangesMs>
+      </CustomFieldDefinition>
+    </Fields>
+  </CustomModuleDefinition>
+</ArrayOfCustomModuleDefinition>
