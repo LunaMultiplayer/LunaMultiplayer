@@ -10,6 +10,11 @@
         <IntervalCheckChangesMs>1000</IntervalCheckChangesMs>
         <IntervalApplyChangesMs>1000</IntervalApplyChangesMs>
       </CustomFieldDefinition>
+      <CustomFieldDefinition>
+        <FieldName>storedAnimationTime</FieldName>
+        <IgnoreSend>true</IgnoreSend>
+        <IgnoreReceive>true</IgnoreReceive>
+      </CustomFieldDefinition>
     </Fields>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
@@ -21,6 +26,40 @@
         <IgnoreReceive>false</IgnoreReceive>
         <IntervalCheckChangesMs>1000</IntervalCheckChangesMs>
         <IntervalApplyChangesMs>1000</IntervalApplyChangesMs>
+      </CustomFieldDefinition>
+      <CustomFieldDefinition>
+        <FieldName>manuallyOverridden</FieldName>
+        <IgnoreSend>false</IgnoreSend>
+        <IgnoreReceive>false</IgnoreReceive>
+        <IntervalCheckChangesMs>600000</IntervalCheckChangesMs>
+        <IntervalApplyChangesMs>600000</IntervalApplyChangesMs>
+      </CustomFieldDefinition>
+    </Fields>
+  </CustomModuleDefinition>
+  <CustomModuleDefinition>
+    <ModuleName>ModuleWheelSuspension</ModuleName>
+    <Fields>
+      <CustomFieldDefinition>
+        <FieldName>suspensionPos</FieldName>
+        <IgnoreSend>true</IgnoreSend>
+        <IgnoreReceive>true</IgnoreReceive>
+      </CustomFieldDefinition>
+      <CustomFieldDefinition>
+        <FieldName>autoBoost</FieldName>
+        <IgnoreSend>true</IgnoreSend>
+        <IgnoreReceive>true</IgnoreReceive>
+      </CustomFieldDefinition>
+    </Fields>
+  </CustomModuleDefinition>
+  <CustomModuleDefinition>
+    <ModuleName>ModuleDeployableSolarPanel</ModuleName>
+    <Fields>
+      <CustomFieldDefinition>
+        <FieldName>launchUT</FieldName>
+        <IgnoreSend>false</IgnoreSend>
+        <IgnoreReceive>false</IgnoreReceive>
+        <IntervalCheckChangesMs>600000</IntervalCheckChangesMs>
+        <IntervalApplyChangesMs>600000</IntervalApplyChangesMs>
       </CustomFieldDefinition>
     </Fields>
   </CustomModuleDefinition>

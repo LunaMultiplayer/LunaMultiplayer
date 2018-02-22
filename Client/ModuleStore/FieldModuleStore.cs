@@ -104,6 +104,12 @@ namespace LunaClient.ModuleStore
                             IgnoreSend = false,
                             IntervalApplyChangesMs = 1000,
                             IntervalCheckChangesMs = 1000
+                        },
+                        new CustomFieldDefinition
+                        {
+                            FieldName = "storedAnimationTime",
+                            IgnoreReceive = false,
+                            IgnoreSend = false
                         }
                     }
                 },
@@ -119,10 +125,59 @@ namespace LunaClient.ModuleStore
                             IgnoreSend = false,
                             IntervalApplyChangesMs = 1000,
                             IntervalCheckChangesMs = 1000
+                        },
+                        new CustomFieldDefinition
+                        {
+                            FieldName = "manuallyOverridden",
+                            IgnoreReceive = false,
+                            IgnoreSend = false,
+                            IntervalApplyChangesMs = 600000,
+                            IntervalCheckChangesMs = 600000
+                        },
+                    }
+                },
+                new CustomModuleDefinition
+                {
+                    ModuleName = "ModuleWheelSuspension",
+                    Fields = new List<CustomFieldDefinition>
+                    {
+                        new CustomFieldDefinition
+                        {
+                            FieldName = "suspensionPos",
+                            IgnoreReceive = true,
+                            IgnoreSend = true,
+                        },
+                        new CustomFieldDefinition
+                        {
+                            FieldName = "autoBoost",
+                            IgnoreReceive = true,
+                            IgnoreSend = true,
+                        }
+                    }
+                },
+                new CustomModuleDefinition
+                {
+                    ModuleName = "ModuleDeployableSolarPanel",
+                    Fields = new List<CustomFieldDefinition>
+                    {
+                        new CustomFieldDefinition
+                        {
+                            FieldName = "launchUT",
+                            IgnoreReceive = false,
+                            IgnoreSend = false,
+                            IntervalApplyChangesMs = 600000,
+                            IntervalCheckChangesMs = 600000
                         }
                     }
                 }
             };
+        }
+
+        public static CustomFieldDefinition GetCustomFieldDefinition(string moduleName, string fieldName)
+        {
+            return CustomizedModuleFieldsBehaviours.TryGetValue(moduleName, out var customization) ?
+                customization.Fields.FirstOrDefault(f => f.FieldName == fieldName)
+                : null;
         }
     }
 }
