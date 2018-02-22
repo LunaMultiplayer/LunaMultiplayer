@@ -9,12 +9,17 @@ using System.Reflection;
 
 namespace LunaClient.ModuleStore
 {
+    /// <summary>
+    /// This storage class stores all the fields that have the "ispersistent" as true. And also the customizations to them
+    /// When we run trough all the part modules looking for changes we will get the fields to check from this class.
+    /// Also we will use the customization values to decide if we apply the change or we send it accordingly
+    /// </summary>
     public class FieldModuleStore
     {
         private static readonly string CustomPartSyncFolder = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "PartSync");
 
         /// <summary>
-        /// Here we store all the part modules loaded and its fields
+        /// Here we store all the part modules loaded and its fields that have the "ispersistent" as true.
         /// </summary>
         public static readonly Dictionary<Type, FieldModuleDefinition> ModuleFieldsDictionary = new Dictionary<Type, FieldModuleDefinition>();
 
