@@ -9,6 +9,7 @@
         Flightstate = 4,
         Update = 5,
         Resource = 6,
-        Sync = 7
+        Sync = 7,
+        PartSync = 8
     }
 }

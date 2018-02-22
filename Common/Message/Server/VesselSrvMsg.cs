@@ -25,7 +25,8 @@ namespace LunaCommon.Message.Server
             [(ushort)VesselMessageType.Position] = typeof(VesselPositionMsgData),
             [(ushort)VesselMessageType.Flightstate] = typeof(VesselFlightStateMsgData),
             [(ushort)VesselMessageType.Update] = typeof(VesselUpdateMsgData),
-            [(ushort)VesselMessageType.Resource] = typeof(VesselResourceMsgData)
+            [(ushort)VesselMessageType.Resource] = typeof(VesselResourceMsgData),
+            [(ushort)VesselMessageType.PartSync] = typeof(VesselPartSyncMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Vessel;
