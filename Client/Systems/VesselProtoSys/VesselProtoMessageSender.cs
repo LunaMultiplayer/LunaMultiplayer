@@ -41,7 +41,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
 
             VesselProtoSystem.CurrentlyUpdatingVesselId = vessel.id;
-            var vesselHasChanges = vessel.isEVA ? KerbalToProtoRefresh.RefreshVesselProto(vessel) : VesselToProtoRefresh.RefreshVesselProto(vessel);
+            var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
             VesselProtoSystem.CurrentlyUpdatingVesselId = Guid.Empty;
 
             if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))

@@ -246,15 +246,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpdate))
                         {
                             CurrentlyUpdatingVesselId = vesselIdToReload;
-                            if (vesselProtoUpdate.Vessel.isEVA)
-                            {
-                                ProtoToKerbalRefresh.UpdateKerbalPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
-                            }
-                            else
-                            {
-
-                                ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
-                            }
+                            ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
                             vesselProtoUpdate.VesselHasUpdate = false;
                             CurrentlyUpdatingVesselId = Guid.Empty;
                         }

@@ -106,8 +106,6 @@
     <Compile Include="Systems\VesselPositionSys\VesselPositionUpdate.cs" />
     <Compile Include="Systems\VesselPrecalcSys\VesselPrecalcEvents.cs" />
     <Compile Include="Systems\VesselPrecalcSys\VesselPrecalcSystem.cs" />
-    <Compile Include="Systems\VesselProtoSys\KerbalToProtoRefresh.cs" />
-    <Compile Include="Systems\VesselProtoSys\ProtoToKerbalRefresh.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceMessageHandler.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceMessageSender.cs" />
     <Compile Include="Systems\VesselResourceSys\VesselResourceSystem.cs" />
