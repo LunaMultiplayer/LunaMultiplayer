@@ -1,5 +1,4 @@
-﻿using LunaClient.VesselIgnore;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Reflection;
 using UniLinq;
@@ -181,7 +180,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     partsHaveChanges = true;
                 }
 
-                if (!vessel.isEVA && vessel.parts[i].protoModuleCrew.Count != vessel.parts[i].protoPartSnapshot.protoModuleCrew.Count)
+                if (vessel.parts[i].protoModuleCrew.Count != vessel.parts[i].protoPartSnapshot.protoModuleCrew.Count)
                 {
                     vessel.parts[i].protoPartSnapshot.protoModuleCrew.Clear();
                     vessel.parts[i].protoPartSnapshot.protoModuleCrew.AddRange(vessel.parts[i].protoModuleCrew);
@@ -193,73 +192,10 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
 
                 partsHaveChanges |= RefreshFairings(vessel.parts[i]);
-                partsHaveChanges |= RefreshPartModules(vessel.parts[i]);
                 RefreshPartResources(vessel.parts[i]);
             }
 
             return partsHaveChanges;
-        }
-
-        /// <summary>
-        /// Refreshes all the protovessel part modules based on a part.
-        /// Will return true if there's a change in any of the values
-        /// </summary>
-        private static bool RefreshPartModules(Part part)
-        {
-            if (part.protoPartSnapshot.modules.Count != part.Modules.Count)
-            {
-                part.protoPartSnapshot.modules.Clear();
-                for (var i = 0; i < part.Modules.Count; i++)
-                {
-                    part.protoPartSnapshot.modules.Add(new ProtoPartModuleSnapshot(part.Modules[i]));
-                }
-
-                return true;
-            }
-
-            var moduleHaveChanges = false;
-            for (var i = 0; i < part.Modules.Count; i++)
-            {
-                var module = part.Modules[i];
-                for (var j = 0; j < module.Fields.Count; j++)
-                {
-                    var field = module.Fields[j];
-                    var nodeValue = GetConfigNodeVal(field.name, module.snapshot.moduleValues);
-
-                    if (nodeValue?.value != null)
-                    {
-                        var fieldValueAsString = field.GetStringValue(field.host, false);
-                        if (fieldValueAsString != null && nodeValue.value != fieldValueAsString)
-                        {
-                            if (!ModuleIsIgnored(module.moduleName) && !FieldIsIgnored(module, field))
-                            {
-                                LunaLog.Log($"Detected a part module change. Module: {module.moduleName} field: {field.name}");
-                                moduleHaveChanges = true;
-                            }
-
-                            nodeValue.value = fieldValueAsString;
-                        }
-                    }
-                }
-            }
-
-            return moduleHaveChanges;
-        }
-
-        /// <summary>
-        /// Returns true if the module must be ignored when checking for changes
-        /// </summary>
-        private static bool ModuleIsIgnored(string moduleName)
-        {
-            return VesselModulesToIgnore.ModulesToIgnore.Contains(moduleName) || VesselModulesToIgnore.ModulesToIgnoreWhenChecking.Contains(moduleName);
-        }
-
-        /// <summary>
-        /// Returns true if the field in a module must be ignored when checking for changes
-        /// </summary>
-        private static bool FieldIsIgnored(PartModule module, BaseField field)
-        {
-            return VesselModulesToIgnore.FieldsToIgnore.TryGetValue(module.moduleName, out var fields) && fields != null && fields.Contains(field.name);
         }
 
         /// <summary>
@@ -274,18 +210,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 for (var i = 0; i < part.Resources.Count; i++)
                 {
                     part.protoPartSnapshot.resources.Add(new ProtoPartResourceSnapshot(part.Resources[i]));
-                }
-            }
-            else
-            {
-                for (var i = 0; i < part.protoPartSnapshot.resources.Count; i++)
-                {
-                    var resourceSnapshot = part.protoPartSnapshot.resources[i];
-                    if (resourceSnapshot.resourceRef == null) continue;
-
-                    resourceSnapshot.amount = resourceSnapshot.resourceRef.amount;
-                    resourceSnapshot.flowState = resourceSnapshot.resourceRef.flowState;
-                    resourceSnapshot.maxAmount = resourceSnapshot.resourceRef.maxAmount;
                 }
             }
         }

@@ -52,8 +52,12 @@ namespace Server.Message.Reader
                     VesselFileUpdater.WriteResourceDataToFile(message);
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
                     break;
+                case VesselMessageType.PartSync:
+                    VesselFileUpdater.WriteModuleDataToFile(message);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
+                    break;
                 default:
-                    throw new NotImplementedException("Warp Type not implemented");
+                    throw new NotImplementedException("Vessel message type not implemented");
             }
         }
 

@@ -181,8 +181,8 @@ namespace LunaClient
         {
             LocalizationContainer.LoadLanguage(SettingsSystem.CurrentSettings.Language);
 
-            ModuleStore.FieldModuleStore.ReadLoadedPartModules();
             ModuleStore.FieldModuleStore.ReadCustomizationXml();
+            ModuleStore.FieldModuleStore.ReadLoadedPartModules();
 
             SystemsContainer.Get<ModApiSystem>().Enabled = true;
             SystemsContainer.Get<NetworkSystem>().Enabled = true;

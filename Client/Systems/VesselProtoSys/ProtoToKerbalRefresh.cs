@@ -1,6 +1,4 @@
-﻿using LunaClient.Utilities;
-using LunaClient.VesselIgnore;
-using LunaClient.VesselUtilities;
+﻿using LunaClient.VesselUtilities;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -56,8 +54,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
                 
                 protoPartToUpdate.state = partSnapshot.state;
-                UpdatePartModulesInProtoPart(protoPartToUpdate, partSnapshot);
-                UpdateProtoVesselResources(protoPartToUpdate, partSnapshot);
 
                 var part = protoPartToUpdate.partRef;
                 if (part != null) //Part can be null if the vessel is unloaded!!
@@ -65,9 +61,6 @@ namespace LunaClient.Systems.VesselProtoSys
                     //Set part "state" field... Important for fairings for example...
                     StateField?.SetValue(part, partSnapshot.state);
                     part.ResumeState = part.State;
-
-                    UpdatePartModules(partSnapshot, part);
-                    UpdateVesselResources(partSnapshot, part);
                 }
             }
 
@@ -84,106 +77,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
 
                 vessel.protoVessel.protoPartSnapshots.Remove(protoPartsToRemove[i]);
-            }
-        }
-        
-        private static void UpdatePartModules(ProtoPartSnapshot partSnapshot, Part part)
-        {
-            //Run trough all the part DEFINITION modules
-            foreach (var moduleSnapshot in partSnapshot.modules.Where(m => !VesselModulesToIgnore.ModulesToIgnore.Contains(m.moduleName)))
-            {
-                if (moduleSnapshot.moduleName == "KerbalEVA")
-                {
-                    var currentEva = part.FindModuleImplementing<KerbalEVA>();
-                    if (currentEva != null)
-                    {
-                        var lampValStr = moduleSnapshot.moduleValues.GetValue("lampOn");
-                        if (bool.TryParse(lampValStr, out var lampVal) && currentEva.lampOn != lampVal)
-                        {
-                            currentEva.lampOn = lampVal;
-                            currentEva.headLamp.SetActive(lampVal);
-                        }
-                    }
-
-                    continue;
-                }
-
-                //Get the corresponding module from the actual PART
-                var module = part.Modules.Cast<PartModule>().FirstOrDefault(pm => pm.moduleName == moduleSnapshot.moduleName);
-                if (module == null) continue;
-
-                var definitionPartModuleFieldVals = moduleSnapshot.moduleValues.values.Cast<ConfigNode.Value>()
-                    .Select(v => new { v.name, v.value }).ToArray();
-                var partModuleFieldVals = module.Fields.Cast<BaseField>()
-                    .Where(f => definitionPartModuleFieldVals.Any(mf => mf.name == f.name)).ToArray();
-
-                //Run trough the current part Modules
-                foreach (var existingField in partModuleFieldVals)
-                {
-                    if (VesselModulesToIgnore.FieldsToIgnore.TryGetValue(module.moduleName, out var fieldsToIgnoreList) &&
-                        fieldsToIgnoreList.Contains(existingField.name))
-                        continue;
-
-                    //Sometimes we get a proto part module value of 17.0001 and the part value is 17.0 so it's useless to reload
-                    //a whole part module for such a small change! FormatModuleValue() strips the decimals if the value is a decimal
-                    var value = existingField.GetValue(existingField.host).ToString().FormatModuleValue();
-                    var newVal = definitionPartModuleFieldVals.First(mf => mf.name == existingField.name).value
-                        .FormatModuleValue();
-
-                    //Field value between part module and part DEFINITION module are different!
-                    if (value != newVal)
-                    {
-                        PartModuleFields?.SetValue(module, new BaseFieldList(module));
-                        module.Fields.Load(moduleSnapshot.moduleValues);
-
-                        if (!VesselModulesToIgnore.ModulesToDontAwake.Contains(module.moduleName))
-                            module.OnAwake();
-                        if (!VesselModulesToIgnore.ModulesToDontLoad.Contains(module.moduleName))
-                            module.OnLoad(moduleSnapshot.moduleValues);
-                        if (!VesselModulesToIgnore.ModulesToDontStart.Contains(module.moduleName))
-                            module.OnStart(PartModule.StartState.Flying);
-                    }
-                }
-            }
-        }
-        
-        private static void UpdateVesselResources(ProtoPartSnapshot partSnapshot, Part part)
-        {
-            //Run trough the poart DEFINITION resources
-            foreach (var resourceSnapshot in partSnapshot.resources)
-            {
-                //Get the corresponding resource from the actual PART
-                var resource = part.Resources?.FirstOrDefault(pr => pr.resourceName == resourceSnapshot.resourceName);
-                if (resource == null) continue;
-
-                resource.amount = resourceSnapshot.amount;
-            }
-        }
-
-        private static void UpdatePartModulesInProtoPart(ProtoPartSnapshot protoPartToUpdate, ProtoPartSnapshot partSnapshot)
-        {
-            //Run trough all the part DEFINITION modules
-            foreach (var moduleSnapshotDefinition in partSnapshot.modules.Where(m => !VesselModulesToIgnore.ModulesToIgnore.Contains(m.moduleName)))
-            {
-                //Get the corresponding module from the actual vessel PROTOPART
-                var currentModule = protoPartToUpdate.FindModule(moduleSnapshotDefinition.moduleName);
-                if (currentModule != null)
-                {
-                    moduleSnapshotDefinition.moduleValues.CopyTo(currentModule.moduleValues);
-                }
-            }
-        }
-
-        private static void UpdateProtoVesselResources(ProtoPartSnapshot protoPartToUpdate, ProtoPartSnapshot partSnapshot)
-        {
-            //Run trough the poart DEFINITION resources
-            foreach (var resourceSnapshot in partSnapshot.resources)
-            {
-                //Get the corresponding resource from the actual PART
-                var resource = protoPartToUpdate.resources?.FirstOrDefault(pr => pr.resourceName == resourceSnapshot.resourceName);
-                if (resource == null) continue;
-
-                resource.amount = resourceSnapshot.amount;
             }
         }
 

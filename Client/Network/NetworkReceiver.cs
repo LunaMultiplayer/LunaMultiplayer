@@ -18,6 +18,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselPartModuleSyncSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -162,6 +163,9 @@ namespace LunaClient.Network
                             break;
                         case VesselMessageType.Resource:
                             SystemsContainer.Get<VesselResourceSystem>().EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.PartSync:
+                            SystemsContainer.Get<VesselPartModuleSyncSystem>().EnqueueMessage(msg);
                             break;
                     }
                     break;

@@ -15,5 +15,14 @@ namespace LunaClient.Utilities
             return decimal.TryParse(str, out var decimalValue) ? 
                 Math.Round(decimalValue, 2).ToString(CultureInfo.InvariantCulture) : str;
         }
+
+        /// <summary>
+        /// Prints an object as invariant culture if possible
+        /// </summary>
+        public static string ToInvariantString(this object obj)
+        {
+            return obj is IConvertible convertible ? convertible.ToString(CultureInfo.InvariantCulture)
+                : (obj as IFormattable)?.ToString(null, CultureInfo.InvariantCulture) ?? obj.ToString();
+        }
     }
 }

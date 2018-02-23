@@ -188,7 +188,6 @@
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
     <Compile Include="Message\Data\Vessel\ActionGroup.cs" />
-    <Compile Include="Message\Data\Vessel\PartSync.cs" />
     <Compile Include="Message\Data\Vessel\VesselInfo.cs" />
     <Compile Include="Message\Data\Vessel\VesselBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />
@@ -267,6 +266,7 @@
     <Compile Include="Time\TimeRetriever.cs" />
     <Compile Include="Time\TimeRetrieverNist.cs" />
     <Compile Include="Time\TimeRetrieverNtp.cs" />
+    <Compile Include="Xml\ConfigNodeXmlParser.cs" />
     <Compile Include="Xml\LunaXmlSerializer.cs" />
     <Compile Include="Xml\XmlCommentAttribute.cs" />
   </ItemGroup>

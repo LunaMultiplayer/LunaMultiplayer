@@ -10,9 +10,10 @@ namespace LunaCommon.Message.Data.Vessel
         internal VesselPartSyncMsgData() { }
 
         public Guid VesselId;
-
-        public int NumParts;
-        public PartSync[] Parts = new PartSync[0];
+        public uint PartFlightId;
+        public string ModuleName;
+        public string FieldName;
+        public string Value;
 
         public override VesselMessageType VesselMessageType => VesselMessageType.PartSync;
 
@@ -23,12 +24,10 @@ namespace LunaCommon.Message.Data.Vessel
             base.InternalSerialize(lidgrenMsg);
 
             GuidUtil.Serialize(VesselId, lidgrenMsg);
-
-            lidgrenMsg.Write(NumParts);
-            for (var i = 0; i < NumParts; i++)
-            {
-                Parts[i].Serialize(lidgrenMsg);
-            }
+            lidgrenMsg.Write(PartFlightId);
+            lidgrenMsg.Write(ModuleName);
+            lidgrenMsg.Write(FieldName);
+            lidgrenMsg.Write(Value);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -36,29 +35,15 @@ namespace LunaCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg);
 
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
-
-            NumParts = lidgrenMsg.ReadInt32();
-            if (Parts.Length < NumParts)
-                Parts = new PartSync[NumParts];
-
-            for (var i = 0; i < NumParts; i++)
-            {
-                if (Parts[i] == null)
-                    Parts[i] = new PartSync();
-
-                Parts[i].Deserialize(lidgrenMsg);
-            }
+            PartFlightId = lidgrenMsg.ReadUInt32();
+            ModuleName = lidgrenMsg.ReadString();
+            FieldName = lidgrenMsg.ReadString();
+            Value = lidgrenMsg.ReadString();
         }
 
         internal override int InternalGetMessageSize()
         {
-            var arraySize = 0;
-            for (var i = 0; i < NumParts; i++)
-            {
-                arraySize += Parts[i].GetByteCount();
-            }
-
-            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(uint) + ModuleName.GetByteCount() + FieldName.GetByteCount() + Value.GetByteCount();
         }
     }
 }

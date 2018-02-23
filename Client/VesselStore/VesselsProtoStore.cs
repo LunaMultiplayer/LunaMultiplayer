@@ -148,6 +148,21 @@ namespace LunaClient.VesselStore
             }
         }
 
+        public static void UpdateVesselProtoPartModules(VesselPartSyncMsgData msgData)
+        {
+            if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
+            {
+                if (vesselProtoUpd.ProtoVessel == null) return;
+
+                var part = VesselCommon.FindProtoPartInProtovessel(vesselProtoUpd.ProtoVessel, msgData.PartFlightId);
+                if (part != null)
+                {
+                    var module = VesselCommon.FindProtoPartModuleInProtoPart(part, msgData.ModuleName);
+                    module?.moduleValues.SetValue(msgData.FieldName, msgData.Value);
+                }
+            }
+        }
+
         public static void UpdateVesselProtoResources(VesselResourceMsgData msgData)
         {
             if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
@@ -162,6 +177,7 @@ namespace LunaClient.VesselStore
                     if (resourceSnapshot != null)
                     {
                         resourceSnapshot.amount = resource.Amount;
+                        resourceSnapshot.flowState = resource.FlowState;
                     }
                 }
             }

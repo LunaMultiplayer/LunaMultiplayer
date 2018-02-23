@@ -26,6 +26,7 @@ using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
+using LunaClient.Systems.VesselPartModuleSyncSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.VesselPrecalcSys;
 using LunaClient.Systems.VesselProtoSys;
@@ -59,6 +60,7 @@ namespace LunaClient.Systems
             SystemsContainer.Get<VesselSyncSystem>(),
             SystemsContainer.Get<VesselPositionSystem>(),
             SystemsContainer.Get<VesselFlightStateSystem>(),
+            SystemsContainer.Get<VesselPartModuleSyncSystem>(),
             SystemsContainer.Get<VesselUpdateSystem>(),
             SystemsContainer.Get<VesselProtoSystem>(),
             SystemsContainer.Get<VesselRemoveSystem>(),
