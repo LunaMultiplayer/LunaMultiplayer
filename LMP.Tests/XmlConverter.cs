@@ -9,13 +9,13 @@ namespace LMP.Tests
     {
         private static readonly string XmlExamplePath = Directory.GetCurrentDirectory() + "\\..\\..\\XmlExampleFiles\\";
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void TestConvertEvaToXml()
         {
             SwitchToXmlAndBack("EVA.txt");
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void TestConvertVesselToXml()
         {
             SwitchToXmlAndBack("Vessel.txt");
