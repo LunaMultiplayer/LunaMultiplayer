@@ -30,30 +30,33 @@ namespace LunaClient.Systems.VesselUpdateSys
 
         private static void UpdateVesselFields(Vessel vessel, VesselUpdateMsgData msgData)
         {
-            vessel.vesselName = msgData.Name;
-            vessel.vesselType = (VesselType) Enum.Parse(typeof(VesselType), msgData.Type);
+            vessel.protoVessel.vesselName = vessel.vesselName = msgData.Name;
+            vessel.protoVessel.vesselType = vessel.vesselType = (VesselType) Enum.Parse(typeof(VesselType), msgData.Type);
 
+            vessel.protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
             //Only change this value if vessel is not eva. When vessel is eva or is not loaded we reload it if the situation changes
             if (!vessel.isEVA && vessel.loaded) 
-                vessel.situation = (Vessel.Situations) Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
+                vessel.situation = vessel.protoVessel.situation;
 
+            vessel.protoVessel.landed = msgData.Landed;
             //Only change this value if vessel takes off and is loaded. 
             //When the vessel lands the vessel must be reloaded as a whole by the vessel proto system if it's not loaded
             if (vessel.loaded && vessel.Landed && !msgData.Landed)
-                vessel.Landed = msgData.Landed;
+                vessel.Landed = vessel.protoVessel.landed;
 
-            vessel.landedAt = msgData.LandedAt;
-            vessel.displaylandedAt = msgData.DisplayLandedAt;
+            vessel.protoVessel.landedAt = vessel.landedAt = msgData.LandedAt;
+            vessel.protoVessel.displaylandedAt = vessel.displaylandedAt = msgData.DisplayLandedAt;
 
+            vessel.protoVessel.splashed = msgData.Splashed;
             //Only change this value if vessel splashes. When the vessel splashes the vessel must be reloaded as a whole by the vessel proto system
             if (vessel.Splashed && !msgData.Splashed)
-                vessel.Splashed = msgData.Splashed;
+                vessel.Splashed = vessel.protoVessel.splashed;
 
-            vessel.missionTime = msgData.MissionTime;
-            vessel.launchTime = msgData.LaunchTime;
-            vessel.lastUT = msgData.LastUt;
-            vessel.isPersistent = msgData.Persistent;
-            vessel.referenceTransformId = msgData.RefTransformId;
+            vessel.protoVessel.missionTime = vessel.missionTime = msgData.MissionTime;
+            vessel.protoVessel.launchTime = vessel.launchTime = msgData.LaunchTime;
+            vessel.protoVessel.lastUT = vessel.lastUT = msgData.LastUt;
+            vessel.protoVessel.persistent = vessel.isPersistent = msgData.Persistent;
+            vessel.protoVessel.refTransform = vessel.referenceTransformId = msgData.RefTransformId;
         }
 
         private static void UpdateActionGroups(Vessel vessel, VesselUpdateMsgData msgData)

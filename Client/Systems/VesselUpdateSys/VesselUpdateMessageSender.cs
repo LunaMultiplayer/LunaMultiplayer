@@ -46,8 +46,33 @@ namespace LunaClient.Systems.VesselUpdateSys
 
             //Update our own values in the store aswell as otherwise if we leave the vessel it can still be in the safety bubble
             VesselsProtoStore.UpdateVesselProtoValues(msgData);
+            UpdateOwnProtoVesselValues(vessel);
 
             SendMessage(msgData);
+        }
+
+
+        private static void UpdateOwnProtoVesselValues(Vessel vessel)
+        {
+            if (vessel.protoVessel == null) return;
+
+            vessel.protoVessel.vesselName = vessel.vesselName;
+            vessel.protoVessel.vesselType = vessel.vesselType;
+            vessel.protoVessel.situation = vessel.situation;
+            vessel.protoVessel.landed = vessel.Landed;
+            vessel.protoVessel.landedAt = vessel.landedAtLast;
+            vessel.protoVessel.displaylandedAt = vessel.displaylandedAt;
+            vessel.protoVessel.splashed = vessel.Splashed;
+            vessel.protoVessel.missionTime = vessel.missionTime;
+            vessel.protoVessel.launchTime = vessel.launchTime;
+            vessel.protoVessel.lastUT = vessel.lastUT;
+            vessel.protoVessel.persistent = vessel.isPersistent;
+            vessel.protoVessel.refTransform = vessel.referenceTransformId;
+
+            for (var i = 0; i < 17; i++)
+            {
+                vessel.protoVessel.actionGroups.values[i].value = vessel.ActionGroups.groups[i] + ", " + vessel.ActionGroups.cooldownTimes[i];
+            }
         }
     }
 }

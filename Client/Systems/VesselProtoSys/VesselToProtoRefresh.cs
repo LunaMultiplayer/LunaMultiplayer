@@ -1,6 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Reflection;
+﻿using System.Reflection;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -44,38 +42,12 @@ namespace LunaClient.Systems.VesselProtoSys
             vessel.protoVessel.vesselRef = vessel;
             vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
             vessel.protoVessel.vesselID = vessel.id;
-
-            vessel.protoVessel.orbitSnapShot.semiMajorAxis = vessel.orbit.semiMajorAxis;
-            vessel.protoVessel.orbitSnapShot.eccentricity = vessel.orbit.eccentricity;
-            vessel.protoVessel.orbitSnapShot.inclination = vessel.orbit.inclination;
-            vessel.protoVessel.orbitSnapShot.argOfPeriapsis = vessel.orbit.argumentOfPeriapsis;
-            vessel.protoVessel.orbitSnapShot.LAN = vessel.orbit.LAN;
-            vessel.protoVessel.orbitSnapShot.meanAnomalyAtEpoch = vessel.orbit.meanAnomalyAtEpoch;
-            vessel.protoVessel.orbitSnapShot.epoch = vessel.orbit.epoch;
-            vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = FlightGlobals.Bodies.IndexOf(vessel.orbit.referenceBody);
-
-            vessel.protoVessel.refTransform = vessel.referenceTransformId;
-            vessel.protoVessel.vesselType = vessel.vesselType;
-            vessel.protoVessel.situation = vessel.situation;
-            vessel.protoVessel.landed = vessel.Landed;
-            vessel.protoVessel.landedAt = vessel.landedAt;
-            vessel.protoVessel.displaylandedAt = vessel.displaylandedAt;
-            vessel.protoVessel.splashed = vessel.Splashed;
-            vessel.protoVessel.vesselName = vessel.vesselName;
-            vessel.protoVessel.missionTime = vessel.missionTime;
-            vessel.protoVessel.launchTime = vessel.launchTime;
-            vessel.protoVessel.lastUT = vessel.lastUT;
+            
             vessel.protoVessel.autoClean = vessel.AutoClean;
             vessel.protoVessel.autoCleanReason = vessel.AutoCleanReason;
             vessel.protoVessel.wasControllable = vessel.IsControllable;
 
             vessel.protoVessel.CoM = vessel.localCoM;
-            vessel.protoVessel.latitude = vessel.latitude;
-            vessel.protoVessel.longitude = vessel.longitude;
-            vessel.protoVessel.altitude = vessel.altitude;
-            vessel.protoVessel.height = vessel.heightFromTerrain;
-            vessel.protoVessel.normal = vessel.terrainNormal;
-            vessel.protoVessel.rotation = vessel.srfRelRotation;
             vessel.protoVessel.stage = vessel.currentStage;
             vessel.protoVessel.persistent = vessel.isPersistent;
 
@@ -97,21 +69,6 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 vessel.protoVessel.actionGroups.ClearData();
                 vessel.protoVessel.vesselRef.ActionGroups.Save(vessel.protoVessel.actionGroups);
-            }
-            else
-            {
-                for (var i = 0; i < vessel.protoVessel.vesselRef.ActionGroups.groups.Count; i++)
-                {
-                    var currentVal = vessel.protoVessel.vesselRef.ActionGroups.groups[i];
-                    var protoVal = vessel.protoVessel.actionGroups.values[i].value.Substring(0, vessel.protoVessel.actionGroups.values[i].value.IndexOf(",", StringComparison.Ordinal));
-
-                    if (!bool.TryParse(protoVal, out var boolProtoVal) || currentVal != boolProtoVal)
-                    {
-                        vessel.protoVessel.actionGroups.values[i].value = string.Concat(
-                            vessel.protoVessel.vesselRef.ActionGroups.groups[i].ToString(), ", ",
-                            vessel.protoVessel.vesselRef.ActionGroups.cooldownTimes[i].ToString(CultureInfo.InvariantCulture));
-                    }
-                }
             }
         }
 
