@@ -43,6 +43,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
     </Reference>
@@ -152,6 +153,7 @@
     <Compile Include="System\VesselRelay\VesselRelaySystem.cs" />
     <Compile Include="System\VesselRelay\VesselRelaySystemDataBase.cs" />
     <Compile Include="System\VesselRelay\VesselRelaySystemDictionary.cs" />
+    <Compile Include="System\VesselStoreSystem.cs" />
     <Compile Include="System\VesselUpdateRelaySystem.cs" />
     <Compile Include="System\WarpSystem.cs" />
     <Compile Include="System\WarpSystemReceiver.cs" />

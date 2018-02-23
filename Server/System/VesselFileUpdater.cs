@@ -1,11 +1,12 @@
 ﻿using LunaCommon.Message.Data.Vessel;
+using LunaCommon.Xml;
 using Server.Context;
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Server.System
 {
@@ -14,7 +15,7 @@ namespace Server.System
     /// This class patches the vessel file with the information messages we receive about a position and other vessel properties.
     /// This way we send the whole vessel definition only when there are parts that have changed 
     /// </summary>
-    public class VesselFileUpdater
+    public class VesselDataUpdater
     {
         #region Constants and update dictionaries
 
@@ -90,12 +91,11 @@ namespace Server.System
 
                 Task.Run(() =>
                 {
-                    var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
-                    if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
-                    var protoVesselLines = FileHandler.ReadFileLines(path);
-
-                    var updatedText = UpdateProtoVesselFileWithNewPositionData(protoVesselLines, msgData);
-                    FileHandler.WriteToFile(path, updatedText);
+                    if (VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData))
+                    {
+                        var updatedText = UpdateProtoVesselWithNewPositionData(xmlData, msgData);
+                        VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                    }
                 });
             }
         }
@@ -115,12 +115,11 @@ namespace Server.System
 
                 Task.Run(() =>
                 {
-                    var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
-                    if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
-                    var protoVesselLines = FileHandler.ReadFileLines(path);
-
-                    var updatedText = UpdateProtoVesselFileWithNewUpdateData(protoVesselLines, msgData);
-                    FileHandler.WriteToFile(path, updatedText);
+                    if (VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData))
+                    {
+                        var updatedText = UpdateProtoVesselWithNewUpdateData(xmlData, msgData);
+                        VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                    }
                 });
             }
         }
@@ -176,139 +175,119 @@ namespace Server.System
         }
 
         /// <summary>
-        /// Updates the proto vessel file with the values we received about a position of a vessel
+        /// Updates the proto vessel with the values we received about a position of a vessel
         /// </summary>
-        private static string UpdateProtoVesselFileWithNewPositionData(string[] protoVesselLines, VesselPositionMsgData msgData)
+        private static string UpdateProtoVesselWithNewPositionData(string vesselData, VesselPositionMsgData msgData)
         {
-            var fullText = string.Join(Environment.NewLine, protoVesselLines);
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
 
-            var regex = new Regex("(?<prefix>lat = )(.*)\n");
-            var replacement = "${prefix}" + $"{msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture)}{Environment.NewLine}";
-            fullText = regex.Replace(fullText, replacement, 1);
+            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='lat']");
+            if(node != null) node.Value = msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>lon = )(.*)\n");
-            replacement = "${prefix}" + $"{msgData.LatLonAlt[1].ToString(CultureInfo.InvariantCulture)}{Environment.NewLine}";
-            fullText = regex.Replace(fullText, replacement, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='lon']");
+            if (node != null) node.Value = msgData.LatLonAlt[1].ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>alt = )(.*)\n");
-            replacement = "${prefix}" + $"{msgData.LatLonAlt[2].ToString(CultureInfo.InvariantCulture)}{Environment.NewLine}";
-            fullText = regex.Replace(fullText, replacement, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='alt']");
+            if (node != null) node.Value = msgData.LatLonAlt[2].ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>hgt = )(.*)\n");
-            replacement = "${prefix}" + $"{msgData.HeightFromTerrain.ToString(CultureInfo.InvariantCulture)}{Environment.NewLine}";
-            fullText = regex.Replace(fullText, replacement, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='hgt']");
+            if (node != null) node.Value = msgData.HeightFromTerrain.ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>nrm = )(.*)\n");
-            replacement = "${prefix}" + $"{msgData.NormalVector[0].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.NormalVector[1].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.NormalVector[2].ToString(CultureInfo.InvariantCulture)}{Environment.NewLine}";
-            fullText = regex.Replace(fullText, replacement, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='nrm']");
+            if (node != null)
+                node.Value = $"{msgData.NormalVector[0].ToString(CultureInfo.InvariantCulture)}," +
+                             $"{msgData.NormalVector[1].ToString(CultureInfo.InvariantCulture)}," +
+                             $"{msgData.NormalVector[2].ToString(CultureInfo.InvariantCulture)}";
 
-            regex = new Regex("(?<prefix>rot = )(.*)\n");
-            replacement = "${prefix}" + $"{msgData.SrfRelRotation[0].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.SrfRelRotation[1].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.SrfRelRotation[2].ToString(CultureInfo.InvariantCulture)}," +
-                          $"{msgData.SrfRelRotation[3].ToString(CultureInfo.InvariantCulture)}{Environment.NewLine}";
-            fullText = regex.Replace(fullText, replacement, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='rot']");
+            if (node != null)
+                node.Value = $"{msgData.SrfRelRotation[0].ToString(CultureInfo.InvariantCulture)}," +
+                             $"{msgData.SrfRelRotation[1].ToString(CultureInfo.InvariantCulture)}," +
+                             $"{msgData.SrfRelRotation[2].ToString(CultureInfo.InvariantCulture)}," +
+                             $"{msgData.SrfRelRotation[3].ToString(CultureInfo.InvariantCulture)}";
 
             //NEVER! patch the CoM in the protovessel as then it will be drawn with incorrect CommNet lines!
-            //regex = new Regex("(?<prefix>CoM = )(.*)\n");
-            //replacement = "${prefix}" + $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
-            //              $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
-            //              $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}\r";
-            //fullText = regex.Replace(fullText, replacement, 1);
+            //node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='CoM']");
+            //if (node != null) node.Value = $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
+            //                                $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
+            //                                $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}";
 
-            regex = new Regex("(?<prefix>INC = )(.*)\n"); //inclination
-            replacement = "${prefix}" + msgData.Orbit[0].ToString(CultureInfo.InvariantCulture) + Environment.NewLine;
-            fullText = regex.Replace(fullText, replacement, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='INC']");
+            if (node != null) node.Value = msgData.Orbit[0].ToString(CultureInfo.InvariantCulture);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='ECC']");
+            if (node != null) node.Value = msgData.Orbit[1].ToString(CultureInfo.InvariantCulture);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='SMA']");
+            if (node != null) node.Value = msgData.Orbit[2].ToString(CultureInfo.InvariantCulture);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='LAN']");
+            if (node != null) node.Value = msgData.Orbit[3].ToString(CultureInfo.InvariantCulture);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='LPE']");
+            if (node != null) node.Value = msgData.Orbit[4].ToString(CultureInfo.InvariantCulture);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='MNA']");
+            if (node != null) node.Value = msgData.Orbit[5].ToString(CultureInfo.InvariantCulture);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='EPH']");
+            if (node != null) node.Value = msgData.Orbit[6].ToString(CultureInfo.InvariantCulture);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='REF']");
+            if (node != null) node.Value = msgData.Orbit[7].ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>ECC = )(.*)\n"); //eccentricity
-            replacement = "${prefix}" + msgData.Orbit[1].ToString(CultureInfo.InvariantCulture) + Environment.NewLine;
-            fullText = regex.Replace(fullText, replacement, 1);
-
-            regex = new Regex("(?<prefix>SMA = )(.*)\n"); //semiMajorAxis
-            replacement = "${prefix}" + msgData.Orbit[2].ToString(CultureInfo.InvariantCulture) + Environment.NewLine;
-            fullText = regex.Replace(fullText, replacement, 1);
-
-            regex = new Regex("(?<prefix>LAN = )(.*)\n"); //LAN
-            replacement = "${prefix}" + msgData.Orbit[3].ToString(CultureInfo.InvariantCulture) + Environment.NewLine;
-            fullText = regex.Replace(fullText, replacement, 1);
-
-            regex = new Regex("(?<prefix>LPE = )(.*)\n"); //argumentOfPeriapsis
-            replacement = "${prefix}" + msgData.Orbit[4].ToString(CultureInfo.InvariantCulture) + Environment.NewLine;
-            fullText = regex.Replace(fullText, replacement, 1);
-
-            regex = new Regex("(?<prefix>MNA = )(.*)\n"); //meanAnomalyAtEpoch
-            replacement = "${prefix}" + msgData.Orbit[5].ToString(CultureInfo.InvariantCulture) + Environment.NewLine;
-            fullText = regex.Replace(fullText, replacement, 1);
-
-            regex = new Regex("(?<prefix>EPH = )(.*)\n"); //epoch
-            replacement = "${prefix}" + msgData.Orbit[6].ToString(CultureInfo.InvariantCulture) + Environment.NewLine;
-            fullText = regex.Replace(fullText, replacement, 1);
-
-            regex = new Regex("(?<prefix>REF = )(.*)\n"); //referenceBody.flightGlobalsIndex
-            replacement = "${prefix}" + msgData.Orbit[7].ToString(CultureInfo.InvariantCulture) + Environment.NewLine;
-            fullText = regex.Replace(fullText, replacement, 1);
-
-            return fullText;
+            return document.OuterXml;
         }
-
+        
         /// <summary>
-        /// Updates the proto vessel file with the values we received about a position of a vessel
+        /// Updates the proto vessel with the values we received about a position of a vessel
         /// </summary>
-        private static string UpdateProtoVesselFileWithNewUpdateData(string[] protoVesselLines, VesselUpdateMsgData msgData)
+        private static string UpdateProtoVesselWithNewUpdateData(string vesselData, VesselUpdateMsgData msgData)
         {
-            var fullText = string.Join(Environment.NewLine, protoVesselLines);
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
 
-            var regex = new Regex("(?<prefix>name = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Name + Environment.NewLine, 1);
+            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='name']");
+            if (node != null) node.Value = msgData.Name;
 
-            regex = new Regex("(?<prefix>type = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Type + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='type']");
+            if (node != null) node.Value = msgData.Type;
 
-            regex = new Regex("(?<prefix>sit = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Situation + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='sit']");
+            if (node != null) node.Value = msgData.Situation;
 
-            regex = new Regex("(?<prefix>landed = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Landed.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='landed']");
+            if (node != null) node.Value = msgData.Landed.ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>landedAt = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.LandedAt + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='landedAt']");
+            if (node != null) node.Value = msgData.LandedAt;
 
-            regex = new Regex("(?<prefix>displaylandedAt = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.DisplayLandedAt + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='displaylandedAt']");
+            if (node != null) node.Value = msgData.DisplayLandedAt;
 
-            regex = new Regex("(?<prefix>splashed = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Splashed.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='splashed']");
+            if (node != null) node.Value = msgData.Splashed.ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>met = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.MissionTime.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='met']");
+            if (node != null) node.Value = msgData.MissionTime.ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>lct = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.LaunchTime.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='lct']");
+            if (node != null) node.Value = msgData.LaunchTime.ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>lastUT = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.LastUt.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='lastUT']");
+            if (node != null) node.Value = msgData.LastUt.ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>prst = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.Persistent.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='prst']");
+            if (node != null) node.Value = msgData.Persistent.ToString(CultureInfo.InvariantCulture);
 
-            regex = new Regex("(?<prefix>ref = )(.*)\n");
-            fullText = regex.Replace(fullText, "${prefix}" + msgData.RefTransformId.ToString(CultureInfo.InvariantCulture) + Environment.NewLine, 1);
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='ref']");
+            if (node != null) node.Value = msgData.RefTransformId.ToString(CultureInfo.InvariantCulture);
 
             foreach (var actionGroup in msgData.ActionGroups)
             {
-                regex = new Regex($"(?<prefix>{actionGroup.ActionGroupName} = )(.*)\n");
-                var newValue = actionGroup.State.ToString(CultureInfo.InvariantCulture) + ", " + actionGroup.Time.ToString(CultureInfo.InvariantCulture);
-
-                fullText = regex.Replace(fullText, "${prefix}" + newValue + Environment.NewLine, 1);
+                node = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='{actionGroup.ActionGroupName}']");
+                if (node != null) node.Value = $"{actionGroup.State.ToString(CultureInfo.InvariantCulture)}, {actionGroup.Time.ToString(CultureInfo.InvariantCulture)}";
             }
 
-            return fullText;
+            return document.OuterXml;
         }
 
         /// <summary>
-        /// Updates the proto vessel file with the values we received about the resources of a vessel
+        /// Updates the proto vessel with the values we received about the resources of a vessel
         /// </summary>
         private static string UpdateProtoVesselFileWithNewResourceData(string[] protoVesselLines, VesselResourceMsgData msgData)
         {
@@ -317,7 +296,7 @@ namespace Server.System
         }
 
         /// <summary>
-        /// Updates the proto vessel file with the values we received about a part module change of a vessel
+        /// Updates the proto vessel with the values we received about a part module change of a vessel
         /// </summary>
         private static string UpdateProtoVesselFileWithNewPartModulesData(string[] protoVesselLines, VesselResourceMsgData msgData)
         {

@@ -1,5 +1,6 @@
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
+using LunaCommon.Xml;
 using Server.Command.Command.Base;
 using Server.Context;
 using Server.Log;
@@ -7,8 +8,7 @@ using Server.Server;
 using Server.Settings;
 using Server.System;
 using System;
-using System.IO;
-using System.Linq;
+using System.Xml;
 
 namespace Server.Command.Command
 {
@@ -35,27 +35,20 @@ namespace Server.Command.Command
 
         private static void RunDekessler()
         {
-            var vesselList = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels"));
             var removalCount = 0;
-            foreach (var vesselFilePath in vesselList)
+
+            var vesselList = VesselStoreSystem.CurrentVesselsInXmlFormat.ToArray();
+            foreach (var vesselKeyVal in vesselList)
             {
-                var vesselId = Path.GetFileNameWithoutExtension(vesselFilePath);
-
-                if (!File.Exists(vesselFilePath)) continue;
-
-                var vesselIsDebris = FileHandler.ReadFileLines(vesselFilePath).Select(l=> l.ToLower())
-                    .Any(l => l.Contains("type = ") && l.Contains("debris"));
-
-                if (vesselId != null && vesselIsDebris)
+                if (IsVesselDebris(vesselKeyVal.Value))
                 {
-                    LunaLog.Normal($"Removing debris vessel: {vesselId}");
+                    LunaLog.Normal($"Removing debris vessel: {vesselKeyVal.Key}");
 
-                    //Delete it from the universe
-                    Universe.RemoveFromUniverse(vesselFilePath);
+                    VesselStoreSystem.RemoveVessel(vesselKeyVal.Key);
 
                     //Send a vessel remove message
                     var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
-                    msgData.VesselId = Guid.Parse(vesselId);
+                    msgData.VesselId = vesselKeyVal.Key;
 
                     MessageQueuer.SendToAllClients<VesselSrvMsg>(msgData);
 
@@ -65,6 +58,20 @@ namespace Server.Command.Command
 
             if (removalCount > 0)
                 LunaLog.Normal($"Removed {removalCount} debris");
+        }
+
+        private static bool IsVesselDebris(string vesselData)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
+
+            var typeElement = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='type']");
+            if (typeElement != null)
+            {
+                return typeElement.Value.ToLower().Contains("debris");
+            }
+
+            return false;
         }
     }
 }

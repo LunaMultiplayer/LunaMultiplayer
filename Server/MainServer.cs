@@ -58,6 +58,7 @@ namespace Server
 
                 Universe.CheckUniverse();
                 LoadSettingsAndGroups();
+                VesselStoreSystem.LoadExistingVessels();
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
                 ChatSystem.Reset();
@@ -70,6 +71,7 @@ namespace Server
                 Task.Run(() => new CommandHandler().ThreadMain());
                 Task.Run(() => new ClientMainThread().ThreadMain());
 
+                Task.Run(() => VesselStoreSystem.BackupVesselsThread());
                 Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
                 Task.Run(() => ServerContext.LidgrenServer.RefreshMasterServersList());
                 Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());

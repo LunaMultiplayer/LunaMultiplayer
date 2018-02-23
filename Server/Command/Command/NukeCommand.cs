@@ -1,5 +1,6 @@
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
+using LunaCommon.Xml;
 using Server.Command.Command.Base;
 using Server.Context;
 using Server.Log;
@@ -7,8 +8,7 @@ using Server.Server;
 using Server.Settings;
 using Server.System;
 using System;
-using System.IO;
-using System.Linq;
+using System.Xml;
 
 namespace Server.Command.Command
 {
@@ -35,25 +35,20 @@ namespace Server.Command.Command
 
         private static void RunNuke()
         {
-            var vesselList = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels"));
             var removalCount = 0;
-            foreach (var vesselFilePath in vesselList)
+
+            var vesselList = VesselStoreSystem.CurrentVesselsInXmlFormat.ToArray();
+            foreach (var vesselKeyVal in vesselList)
             {
-                var vesselId = Path.GetFileNameWithoutExtension(vesselFilePath);
-
-                var landed = FileHandler.ReadFileLines(vesselFilePath).Select(l => l.ToLower())
-                    .Any(l => l.Contains("landedat = ") && (l.Contains("ksc") || l.Contains("runway")));
-
-                if (vesselId != null && landed && !LockSystem.LockQuery.ControlLockExists(new Guid(vesselId)))
+                if (IsVesselLandedAtKsc(vesselKeyVal.Value))
                 {
-                    LunaLog.Normal($"Removing vessel {vesselId} from KSC");
+                    LunaLog.Normal($"Removing vessel: {vesselKeyVal.Key} from KSC");
 
-                    //Delete it from the universe                            
-                    Universe.RemoveFromUniverse(vesselFilePath);
+                    VesselStoreSystem.RemoveVessel(vesselKeyVal.Key);
 
                     //Send a vessel remove message
                     var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselRemoveMsgData>();
-                    msgData.VesselId = Guid.Parse(vesselId);
+                    msgData.VesselId = vesselKeyVal.Key;
 
                     MessageQueuer.SendToAllClients<VesselSrvMsg>(msgData);
 
@@ -63,6 +58,20 @@ namespace Server.Command.Command
 
             if (removalCount > 0)
                 LunaLog.Normal($"Nuked {removalCount} vessels around the KSC");
+        }
+        
+        private static bool IsVesselLandedAtKsc(string vesselData)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
+
+            var typeElement = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='landedAt']");
+            if (typeElement != null)
+            {
+                return typeElement.Value.ToLower().Contains("ksc") || typeElement.Value.ToLower().Contains("runway");
+            }
+
+            return false;
         }
     }
 }

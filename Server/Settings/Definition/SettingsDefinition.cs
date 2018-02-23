@@ -137,5 +137,8 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Use UTC instead of system time in the log.")]
         public bool UseUtcTimeInLog { get; set; } = false;
+
+        [XmlComment(Value = "Interval in ms at wich vessels will be written to the Universe/Vessels folder")]
+        public int VesselsBackupIntervalMs { get; set; } = 30000;
     }
 }

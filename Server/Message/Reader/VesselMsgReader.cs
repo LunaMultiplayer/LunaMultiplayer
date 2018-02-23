@@ -11,9 +11,8 @@ using Server.Settings;
 using Server.System;
 using Server.System.VesselRelay;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Server.Message.Reader
 {
@@ -39,21 +38,21 @@ namespace Server.Message.Reader
                 case VesselMessageType.Position:
                     VesselRelaySystem.HandleVesselMessage(client, message);
                     if (!GeneralSettings.SettingsStore.ShowVesselsInThePast || client.Subspace == WarpContext.LatestSubspace)
-                        VesselFileUpdater.WritePositionDataToFile(message);
+                        VesselDataUpdater.WritePositionDataToFile(message);
                     break;
                 case VesselMessageType.Flightstate:
                     VesselRelaySystem.HandleVesselMessage(client, message);
                     break;
                 case VesselMessageType.Update:
-                    VesselFileUpdater.WriteUpdateDataToFile(message);
+                    VesselDataUpdater.WriteUpdateDataToFile(message);
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
                     break;
                 case VesselMessageType.Resource:
-                    VesselFileUpdater.WriteResourceDataToFile(message);
+                    VesselDataUpdater.WriteResourceDataToFile(message);
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
                     break;
                 case VesselMessageType.PartSync:
-                    VesselFileUpdater.WriteModuleDataToFile(message);
+                    VesselDataUpdater.WriteModuleDataToFile(message);
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
                     break;
                 default:
@@ -68,12 +67,10 @@ namespace Server.Message.Reader
             if (LockSystem.LockQuery.ControlLockExists(data.VesselId) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(data.VesselId, client.PlayerName))
                 return;
 
-            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{data.VesselId}.txt");
-            if (FileHandler.FileExists(path))
+            if (VesselStoreSystem.VesselExists(data.VesselId))
             {
                 LunaLog.Debug($"Removing vessel {data.VesselId} from {client.PlayerName}");
-                Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels",
-                    $"{data.VesselId}.txt"));
+                VesselStoreSystem.RemoveVessel(data.VesselId);
             }
 
             if (data.AddToKillList)
@@ -95,13 +92,12 @@ namespace Server.Message.Reader
                 return;
             }
 
-            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.Vessel.VesselId}.txt");
-
-            if (!File.Exists(path))
+            if (VesselStoreSystem.VesselExists(msgData.Vessel.VesselId))
+            {
                 LunaLog.Debug($"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}. Bytes: {msgData.Vessel.NumBytes}");
+            }
 
-            FileHandler.WriteToFile(path, msgData.Vessel.Data, msgData.Vessel.NumBytes);
-
+            VesselStoreSystem.AddUpdateVesselInConfigNodeFormat(msgData.Vessel.VesselId, Encoding.UTF8.GetString(msgData.Vessel.Data, 0, msgData.Vessel.NumBytes));
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
         }
 
@@ -113,15 +109,15 @@ namespace Server.Message.Reader
 
             if (VesselContext.RemovedVessels.Contains(msgData.WeakVesselId)) return;
 
-            var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.DominantVesselId}.txt");
-            if (!File.Exists(path))
-                LunaLog.Debug($"Saving vessel {msgData.DominantVesselId} from {client.PlayerName}");
-            FileHandler.WriteToFile(path, msgData.FinalVesselData, msgData.NumBytes);
+            if (VesselStoreSystem.VesselExists(msgData.DominantVesselId))
+            {
+                LunaLog.Debug($"Saving DOCKED vessel {msgData.DominantVesselId} from {client.PlayerName}. Bytes: {msgData.NumBytes}");
+            }
+            VesselStoreSystem.AddUpdateVesselInConfigNodeFormat(msgData.DominantVesselId, Encoding.UTF8.GetString(msgData.FinalVesselData, 0, msgData.NumBytes));
 
             //Now remove the weak vessel
             LunaLog.Debug($"Removing weak docked vessel {msgData.WeakVesselId}");
-            Universe.RemoveFromUniverse(Path.Combine(ServerContext.UniverseDirectory, "Vessels",
-                $"{msgData.WeakVesselId}.txt"));
+            VesselStoreSystem.RemoveVessel(msgData.WeakVesselId);
             VesselContext.RemovedVessels.Add(msgData.WeakVesselId);
 
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
@@ -137,14 +133,14 @@ namespace Server.Message.Reader
         {
             var msgData = (VesselSyncMsgData) message;
 
-            var vesselsToSend = GetCurrentVesselIds().Except(msgData.VesselIds).ToArray();
+            var vesselsToSend = VesselStoreSystem.CurrentVesselsInXmlFormat.Keys.Except(msgData.VesselIds).ToArray();
             foreach (var vesselId in vesselsToSend)
             {
-                var vesselData = FileHandler.ReadFile(Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{vesselId}.txt"));
+                var vesselData = VesselStoreSystem.GetVesselInConfigNodeFormat(vesselId);
                 if (vesselData.Length > 0)
                 {
                     var protoMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselProtoMsgData>();
-                    protoMsg.Vessel.Data = vesselData;
+                    protoMsg.Vessel.Data = Encoding.UTF8.GetBytes(vesselData);
                     protoMsg.Vessel.NumBytes = vesselData.Length;
                     protoMsg.Vessel.VesselId = vesselId;
 
@@ -154,20 +150,6 @@ namespace Server.Message.Reader
 
             if (vesselsToSend.Length > 0)
                 LunaLog.Debug($"Sending {client.PlayerName} {vesselsToSend.Length} vessels");
-        }
-
-        private static IEnumerable<Guid> GetCurrentVesselIds()
-        {
-            var vesselIds = new List<Guid>();
-            foreach (var file in FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Vessels")))
-            {
-                if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
-                {
-                    vesselIds.Add(vesselId);
-                }
-            }
-
-            return vesselIds;
         }
     }
 }
