@@ -21,6 +21,12 @@ namespace LMP.Tests
             SwitchToXmlAndBack("Vessel.txt");
         }
 
+        [TestMethod, Ignore]
+        public void TestConvertBigVesselToXml()
+        {
+            SwitchToXmlAndBack("BigVessel.txt");
+        }
+
         private void SwitchToXmlAndBack(string fileName)
         {
             var configNode = File.ReadAllText(XmlExamplePath + fileName);

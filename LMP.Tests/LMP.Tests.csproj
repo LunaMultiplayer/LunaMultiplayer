@@ -68,8 +68,11 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="XmlExampleFiles\" />
+    <Content Include="XmlExampleFiles\BigVessel.txt" />
+    <Content Include="XmlExampleFiles\Eva.txt" />
+    <Content Include="XmlExampleFiles\Vessel.txt" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
