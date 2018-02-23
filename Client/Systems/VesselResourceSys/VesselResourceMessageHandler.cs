@@ -21,39 +21,29 @@ namespace LunaClient.Systems.VesselResourceSys
 
             var vessel = FlightGlobals.FindVessel(msgData.VesselId);
             if (vessel == null) return;
-
-            UpdateVesselResources(vessel, msgData);
+            
             UpdateProtoVesselResources(vessel.protoVessel, msgData);
-        }
-        
-        private static void UpdateVesselResources(Vessel vessel, VesselResourceMsgData msgData)
-        {
-            for (var i = 0; i < msgData.ResourcesCount; i++)
-            {
-                var resource = msgData.Resources[i];
-                var part = VesselCommon.FindPartInVessel(vessel, resource.PartFlightId);
-                var partResource = VesselCommon.FindResourceInPart(part, resource.ResourceName);
-                if (partResource != null)
-                {
-                    partResource.amount = resource.Amount;
-                }
-            }
         }
 
         private static void UpdateProtoVesselResources(ProtoVessel protoVessel, VesselResourceMsgData msgData)
         {
-            if (protoVessel != null)
+            if (protoVessel == null) return;
+
+            for (var i = 0; i < msgData.ResourcesCount; i++)
             {
-                for (var i = 0; i < msgData.ResourcesCount; i++)
-                {
-                    var resource = msgData.Resources[i];
+                var resource = msgData.Resources[i];
                     
-                    var partSnapshot = VesselCommon.FindProtoPartInProtovessel(protoVessel, resource.PartFlightId);
-                    var resourceSnapshot = VesselCommon.FindResourceInProtoPart(partSnapshot, resource.ResourceName);
-                    if (resourceSnapshot != null)
-                    {
-                        resourceSnapshot.amount = resource.Amount;
-                    }
+                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(protoVessel, resource.PartFlightId);
+                var resourceSnapshot = VesselCommon.FindResourceInProtoPart(partSnapshot, resource.ResourceName);
+                if (resourceSnapshot != null)
+                {
+                    resourceSnapshot.amount = resource.Amount;
+                    resourceSnapshot.flowState = resource.FlowState;
+
+                    if (resourceSnapshot.resourceRef == null) continue;
+
+                    resourceSnapshot.resourceRef.amount = resource.Amount;
+                    resourceSnapshot.resourceRef.flowState = resource.FlowState;
                 }
             }
         }

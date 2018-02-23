@@ -32,16 +32,26 @@ namespace LunaClient.Systems.VesselResourceSys
                 _resources = new VesselResourceInfo[resourcesCount];
 
             var resourceIndex = 0;
-            for (var i = 0; i < vessel.Parts.Count; i++)
+
+            for (var i = 0; i < vessel.protoVessel.protoPartSnapshots.Count; i++)
             {
-                for (var j = 0; j < vessel.Parts[i].Resources.Count; j++)
+                for (var j = 0; j < vessel.protoVessel.protoPartSnapshots[i].resources.Count; j++)
                 {
+                    var protoResource = vessel.protoVessel.protoPartSnapshots[i].resources[j];
+                    var resource = vessel.protoVessel.protoPartSnapshots[i].resources[j].resourceRef;
+
                     if (_resources[resourceIndex] == null)
                         _resources[resourceIndex] = new VesselResourceInfo();
 
-                    _resources[resourceIndex].ResourceName = vessel.Parts[i].Resources[j].resourceName;
-                    _resources[resourceIndex].PartFlightId = vessel.Parts[i].flightID;
-                    _resources[resourceIndex].Amount = vessel.Parts[i].Resources[j].amount;
+                    _resources[resourceIndex].ResourceName = resource.resourceName;
+                    _resources[resourceIndex].PartFlightId = vessel.protoVessel.protoPartSnapshots[i].flightID;
+
+                    _resources[resourceIndex].Amount = resource.amount;
+                    _resources[resourceIndex].FlowState = resource.flowState;
+
+                    //Now update the proto values our vessel...
+                    protoResource.amount = resource.amount;
+                    protoResource.flowState = resource.flowState;
 
                     resourceIndex++;
                 }
