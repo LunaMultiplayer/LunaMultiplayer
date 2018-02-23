@@ -9,25 +9,25 @@ namespace LMP.Tests
     {
         private static readonly string XmlExamplePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "XmlExampleFiles");
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void TestConvertEvaToXml()
         {
             SwitchToXmlAndBack(Path.Combine(XmlExamplePath, "EVA.txt"));
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void TestConvertVesselToXml()
         {
             SwitchToXmlAndBack(Path.Combine(XmlExamplePath, "Vessel.txt"));
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void TestConvertBigVesselToXml()
         {
             SwitchToXmlAndBack(Path.Combine(XmlExamplePath, "BigVessel.txt"));
         }
 
-        [TestMethod]
+        [TestMethod, Ignore]
         public void TestSeveralVesselsToXml()
         {
             foreach (var file in Directory.GetFiles(Path.Combine(XmlExamplePath, "Others")))
@@ -36,7 +36,7 @@ namespace LMP.Tests
             }
         }
         
-        private void SwitchToXmlAndBack(string filePath)
+        private static void SwitchToXmlAndBack(string filePath)
         {
             if (!File.Exists(filePath)) return;
 
