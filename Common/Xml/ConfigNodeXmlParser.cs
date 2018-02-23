@@ -9,7 +9,7 @@ namespace LunaCommon.Xml
     public static class ConfigNodeXmlParser
     {
         private const string StartElement = "LMPConfigNodeToXML";
-        private const string ValueNode = "VALUE";
+        private const string ValueNode = "Parameter";
         private const string AttributeName = "name";
 
         public static string ConvertToXml(string configNode)
@@ -63,19 +63,16 @@ namespace LunaCommon.Xml
                                 if (xmlReader.Name == ValueNode)
                                 {
                                     var valueName = xmlReader.GetAttribute(AttributeName);
-                                    writer.Write(GetDepthTabs(xmlReader.Depth - 1) + valueName + " = ");
+                                    writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + valueName + " = " + xmlReader.ReadString());
                                 }
                                 else
                                 {
                                     writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + xmlReader.Name);
                                     writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + "{");
-                                    if(xmlReader.IsEmptyElement)
+                                    if (xmlReader.IsEmptyElement)
                                         writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + "}");
                                 }
                             }
-                            break;
-                        case XmlNodeType.Text:
-                            writer.WriteLine(xmlReader.Value);
                             break;
                         case XmlNodeType.EndElement:
                             if (xmlReader.Name != StartElement && xmlReader.Name != ValueNode)
@@ -85,7 +82,7 @@ namespace LunaCommon.Xml
                             break;
                     }
                 }
-                
+
                 return writer.ToString().Trim();
             }
         }

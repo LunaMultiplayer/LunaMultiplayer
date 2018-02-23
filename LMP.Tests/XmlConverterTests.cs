@@ -5,23 +5,23 @@ using System.IO;
 namespace LMP.Tests
 {
     [TestClass]
-    public class XmlConverter
+    public class XmlConverterTests
     {
         private static readonly string XmlExamplePath = Directory.GetCurrentDirectory() + "\\..\\..\\XmlExampleFiles\\";
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestConvertEvaToXml()
         {
             SwitchToXmlAndBack("EVA.txt");
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestConvertVesselToXml()
         {
             SwitchToXmlAndBack("Vessel.txt");
         }
 
-        [TestMethod, Ignore]
+        [TestMethod]
         public void TestConvertBigVesselToXml()
         {
             SwitchToXmlAndBack("BigVessel.txt");
