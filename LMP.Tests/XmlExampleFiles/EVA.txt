@@ -1,0 +1,282 @@
+pid = 7fc7a09690ac413a92fb165c11776a97
+name = Valentina Kerman
+type = EVA
+sit = LANDED
+landed = True
+landedAt = Runway
+displaylandedAt = #autoLOC_6002131
+splashed = False
+met = 181.380000000049
+lct = 82.6999999999982
+lastUT = 264.100000000047
+root = 0
+lat = -0.0471662588293559
+lon = -74.7159655086635
+alt = 69.206089639687
+hgt = 0.2849967
+nrm = 0.000762924551963806,0.999997437000275,0.00209414958953857
+rot = -0.391873,0.4644132,-0.5888699,0.5329055
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = True
+cPch = 0.5479999
+cHdg = -0.786
+cMod = 0
+ORBIT
+{
+	SMA = 300816.943065505
+	ECC = 0.994798564118682
+	INC = 0.0471718938816727
+	LPE = 90.885623740647
+	LAN = 108.849498943496
+	MNA = -3.14159260490528
+	EPH = 266.440000000045
+	REF = 1
+}
+PART
+{
+	name = kerbalEVAfemale
+	cid = 4294769024
+	uid = 3010396226
+	mid = 840190029
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	mass = 0.09375
+	shielded = False
+	temp = 313.89190924553446
+	tempExt = 314.2740294539143
+	tempExtUnexp = 314.27380608910403
+	expt = 0
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/default
+	rTrf = referenceTransform
+	modCost = 0
+	crew = Valentina Kerman
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = KerbalEVA
+		isEnabled = True
+		JetpackDeployed = False
+		lampOn = True
+		lastBoundStep = 1.20833337
+		_flags = 1
+		stagingEnabled = True
+		state = Idle (Grounded)
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		vInfo
+		{
+			vesselName = Valentina Kerman
+			vesselType = EVA
+			rootUId = 3010396226
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceExperiment
+		isEnabled = True
+		Deployed = False
+		Inoperable = False
+		cooldownToGo = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DeployAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ResetAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceExperiment
+		isEnabled = True
+		Deployed = False
+		Inoperable = False
+		cooldownToGo = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DeployAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ResetAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceContainer
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			CollectAllAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTripLogger
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		Log
+		{
+			flight = 0
+			0 = Land,Kerbin
+			0 = Flight,Kerbin
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = EVA Propellant
+		amount = 5
+		maxAmount = 5
+		flowState = True
+		isTweakable = False
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = True, 166.520000000009
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = False
+	}
+}
