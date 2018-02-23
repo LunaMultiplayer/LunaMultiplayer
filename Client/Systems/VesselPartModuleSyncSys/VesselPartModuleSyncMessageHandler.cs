@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.ModuleStore;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
@@ -33,7 +32,6 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
 
         private static void UpdateVesselValues(ProtoVessel protoVessel, VesselPartSyncMsgData msgData)
         {
-            if (SettingsSystem.CurrentSettings.Debug9) return;
             if (protoVessel == null) return;
 
             var part = VesselCommon.FindProtoPartInProtovessel(protoVessel, msgData.PartFlightId);
@@ -50,8 +48,6 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
 
         private static void UpdateVesselModuleIfNeeded(Guid vesselId, string fieldName, ProtoPartModuleSnapshot module, ProtoPartSnapshot part)
         {
-            if (SettingsSystem.CurrentSettings.Debug8) return;
-
             if (module.moduleRef == null) return;
 
             var fieldCustomization = FieldModuleStore.GetCustomFieldDefinition(module.moduleName, fieldName);
@@ -65,14 +61,10 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                 LastUpdatedDictionary[vesselId].Update();
 
             //After we update the protovessel value try to update the vessel values...
-            if (SettingsSystem.CurrentSettings.Debug7)
-                module.moduleRef?.Load(module.moduleValues);
-            if (SettingsSystem.CurrentSettings.Debug6)
-                module.moduleRef?.OnAwake();
-            if (SettingsSystem.CurrentSettings.Debug5)
-                module.moduleRef?.OnLoad(module.moduleValues);
-            if (SettingsSystem.CurrentSettings.Debug5)
-                module.moduleRef?.OnStart(part.partRef.GetModuleStartState());
+            module.moduleRef?.Load(module.moduleValues);
+            module.moduleRef?.OnAwake();
+            module.moduleRef?.OnLoad(module.moduleValues);
+            module.moduleRef?.OnStart(part.partRef.GetModuleStartState());
         }
     }
 }

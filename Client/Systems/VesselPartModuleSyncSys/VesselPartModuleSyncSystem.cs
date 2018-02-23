@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.ModuleStore;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
@@ -86,8 +85,6 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                             {
                                 foreach (var fieldInfo in definition.PersistentModuleField)
                                 {
-                                    if (SettingsSystem.CurrentSettings.Debug1) return;
-
                                     var fieldCustomization = FieldModuleStore.GetCustomFieldDefinition(moduleName, fieldInfo.Name);
                                     if (fieldCustomization.IgnoreSend) continue;
                                     if (LastUpdatedDictionary.TryGetValue(vessel.id, out var lastUpdateValue) && !lastUpdateValue.TimeToCheck) continue;
@@ -102,11 +99,8 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
 
                                     if (snapshotVal != null && fieldVal != null && fieldVal != snapshotVal)
                                     {
-                                        if (SettingsSystem.CurrentSettings.Debug2) return;
                                         vessel.protoVessel.protoPartSnapshots[i].modules[j].moduleValues.SetValue(fieldInfo.Name, fieldVal);
-                                        if (SettingsSystem.CurrentSettings.Debug3) return;
                                         LunaLog.Log($"Detected a part module change. FlightId: {part.flightID} PartName: {part.partName} Module: {moduleName} Field: {fieldInfo.Name}");
-                                        if (SettingsSystem.CurrentSettings.Debug4) return;
                                         MessageSender.SendVesselPartSyncMsg(vessel.id, part.flightID, module.moduleName, fieldInfo.Name, fieldVal);
                                     }
                                 }
