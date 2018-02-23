@@ -38,6 +38,8 @@ namespace LMP.Tests
         
         private void SwitchToXmlAndBack(string filePath)
         {
+            if (!File.Exists(filePath)) return;
+
             var configNode = File.ReadAllText(filePath);
             var xml = ConfigNodeXmlParser.ConvertToXml(configNode);
             var backToConfigNode = ConfigNodeXmlParser.ConvertToConfigNode(xml);
