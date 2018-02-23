@@ -70,9 +70,9 @@ namespace LunaClient.Localization
         {
             var filePath = CommonUtil.CombinePaths(LocalizationFolder, $"{classToReplace.GetType().Name}_{lang}.xml");
             if (!File.Exists(filePath))
-                LunaXmlSerializer.WriteXml(new T(), filePath);
+                LunaXmlSerializer.WriteToXmlFile(new T(), filePath);
 
-            classToReplace = LunaXmlSerializer.ReadXml<T>(filePath);
+            classToReplace = LunaXmlSerializer.ReadXmlFromPath<T>(filePath);
         }
 
         #endregion

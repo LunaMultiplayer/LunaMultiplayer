@@ -39,13 +39,13 @@ namespace LunaClient.Systems.SettingsSys
                 File.Copy(SettingsFilePath, BackupSettingsFilePath);
             }
 
-            return LunaXmlSerializer.ReadXml<SettingStructure>(SettingsFilePath);
+            return LunaXmlSerializer.ReadXmlFromPath<SettingStructure>(SettingsFilePath);
         }
 
         public static void SaveSettings(SettingStructure currentSettings)
         {
             CheckDataDirectory();
-            LunaXmlSerializer.WriteXml(currentSettings, SettingsFilePath);
+            LunaXmlSerializer.WriteToXmlFile(currentSettings, SettingsFilePath);
             File.Copy(SettingsFilePath, BackupSettingsFilePath, true);
         }
 
@@ -67,7 +67,7 @@ namespace LunaClient.Systems.SettingsSys
             defaultSettings.PrivateKey = newKey.Key;
             defaultSettings.PublicKey = newKey.Value;
 
-            LunaXmlSerializer.WriteXml(defaultSettings, SettingsFilePath);
+            LunaXmlSerializer.WriteToXmlFile(defaultSettings, SettingsFilePath);
         }
 
         private static KeyValuePair<string, string> GenerateNewKeypair()

@@ -1,4 +1,5 @@
 ﻿using LunaClient.ModuleStore.Structures;
+using LunaClient.Properties;
 using LunaClient.Utilities;
 using LunaCommon.Xml;
 using System;
@@ -16,17 +17,34 @@ namespace LunaClient.ModuleStore
     /// </summary>
     public class FieldModuleStore
     {
+        private static CustomFieldDefinition DefaultFieldDefinition = new CustomFieldDefinition
+        {
+            FieldName = string.Empty,
+            IgnoreReceive = false,
+            IgnoreSend = false,
+            IntervalCheckChangesMs = 2500,
+            IntervalApplyChangesMs = 2500,
+        };
+
         private static readonly string CustomPartSyncFolder = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "PartSync");
 
         /// <summary>
         /// Here we store all the part modules loaded and its fields that have the "ispersistent" as true.
         /// </summary>
-        public static readonly Dictionary<Type, FieldModuleDefinition> ModuleFieldsDictionary = new Dictionary<Type, FieldModuleDefinition>();
+        public static readonly Dictionary<string, FieldModuleDefinition> ModuleFieldsDictionary = new Dictionary<string, FieldModuleDefinition>();
 
         /// <summary>
         /// Here we store our customized part module fields
         /// </summary>
         public static Dictionary<string, CustomModuleDefinition> CustomizedModuleFieldsBehaviours = new Dictionary<string, CustomModuleDefinition>();
+
+        /// <summary>
+        /// Here we store the inheritance chain of the types up to PartModule
+        /// For example. 
+        /// ModuleEngineFX inherits from ModuleEngine and ModuleEngine inherits from PartModule
+        /// So for the value of ModuleEngineFX we get an array containing ModuleEngineFX and ModuleEngine
+        /// </summary>
+        public static Dictionary<string, string[]> InheritanceTypeChain = new Dictionary<string, string[]>();
 
         /// <summary>
         /// Check all part modules that inherit from PartModule. Then it gets all the fields of those classes that have the "ispersistent" as true.
@@ -38,10 +56,15 @@ namespace LunaClient.ModuleStore
                 var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
                 foreach (var partModule in partModules)
                 {
-                    var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy)
-                        .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant));
+                    var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                        .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant)).ToArray();
 
-                    ModuleFieldsDictionary.Add(partModule, new FieldModuleDefinition(partModule, persistentFields));
+                    if (persistentFields.Any())
+                    {
+                        ModuleFieldsDictionary.Add(partModule.Name, new FieldModuleDefinition(partModule, persistentFields));
+                    }
+
+                    InheritanceTypeChain.Add(partModule.Name, GetInheritChain(partModule));
                 }
             }
 
@@ -55,23 +78,25 @@ namespace LunaClient.ModuleStore
         {
             var filePath = CommonUtil.CombinePaths(CustomPartSyncFolder, "PartsBehaviour.xml");
             if (!File.Exists(filePath))
-                LunaXmlSerializer.WriteXml(GetDefaultPartsBehaviour(), filePath);
+            {
+                LunaXmlSerializer.WriteToXmlFile(Resources.PartsBehaviour, filePath);
+            }
 
             List<CustomModuleDefinition> moduleValues;
             try
             {
-                moduleValues = LunaXmlSerializer.ReadXml<List<CustomModuleDefinition>>(filePath);
+                moduleValues = LunaXmlSerializer.ReadXmlFromPath<List<CustomModuleDefinition>>(filePath);
                 if (moduleValues.Select(m => m.ModuleName).Distinct().Count() != moduleValues.Count)
                 {
                     LunaLog.LogError("Duplicate modules found in PartsBehaviour.xml. Loading default values");
-                    moduleValues = GetDefaultPartsBehaviour();
+                    moduleValues = LoadDefaults();
                 }
                 foreach (var moduleVal in moduleValues)
                 {
                     if (moduleVal.Fields.Select(m => m.FieldName).Distinct().Count() != moduleVal.Fields.Count)
                     {
                         LunaLog.LogError($"Duplicate fields found in module {moduleVal.ModuleName} of PartsBehaviour.xml. Loading default values");
-                        moduleValues = GetDefaultPartsBehaviour();
+                        moduleValues = LoadDefaults();
                         break;
                     }
                 }
@@ -79,105 +104,47 @@ namespace LunaClient.ModuleStore
             catch (Exception e)
             {
                 LunaLog.LogError($"Error reading PartsBehaviour.xml. Loading default values. Details {e}");
-                moduleValues = GetDefaultPartsBehaviour();
+                moduleValues = LoadDefaults();
             }
 
             CustomizedModuleFieldsBehaviours = moduleValues.ToDictionary(m => m.ModuleName, v => v);
         }
 
-        /// <summary>
-        /// Gets a default parts behaviour XML
-        /// </summary>
-        public static List<CustomModuleDefinition> GetDefaultPartsBehaviour()
+        private static List<CustomModuleDefinition> LoadDefaults()
         {
-            return new List<CustomModuleDefinition>
-            {
-                new CustomModuleDefinition
-                {
-                    ModuleName = "ModuleDeployablePart",
-                    Fields = new List<CustomFieldDefinition>
-                    {
-                        new CustomFieldDefinition
-                        {
-                            FieldName = "currentRotation",
-                            IgnoreReceive = false,
-                            IgnoreSend = false,
-                            IntervalApplyChangesMs = 1000,
-                            IntervalCheckChangesMs = 1000
-                        },
-                        new CustomFieldDefinition
-                        {
-                            FieldName = "storedAnimationTime",
-                            IgnoreReceive = false,
-                            IgnoreSend = false
-                        }
-                    }
-                },
-                new CustomModuleDefinition
-                {
-                    ModuleName = "ModuleEngines",
-                    Fields = new List<CustomFieldDefinition>
-                    {
-                        new CustomFieldDefinition
-                        {
-                            FieldName = "currentThrottle",
-                            IgnoreReceive = false,
-                            IgnoreSend = false,
-                            IntervalApplyChangesMs = 1000,
-                            IntervalCheckChangesMs = 1000
-                        },
-                        new CustomFieldDefinition
-                        {
-                            FieldName = "manuallyOverridden",
-                            IgnoreReceive = false,
-                            IgnoreSend = false,
-                            IntervalApplyChangesMs = 600000,
-                            IntervalCheckChangesMs = 600000
-                        },
-                    }
-                },
-                new CustomModuleDefinition
-                {
-                    ModuleName = "ModuleWheelSuspension",
-                    Fields = new List<CustomFieldDefinition>
-                    {
-                        new CustomFieldDefinition
-                        {
-                            FieldName = "suspensionPos",
-                            IgnoreReceive = true,
-                            IgnoreSend = true,
-                        },
-                        new CustomFieldDefinition
-                        {
-                            FieldName = "autoBoost",
-                            IgnoreReceive = true,
-                            IgnoreSend = true,
-                        }
-                    }
-                },
-                new CustomModuleDefinition
-                {
-                    ModuleName = "ModuleDeployableSolarPanel",
-                    Fields = new List<CustomFieldDefinition>
-                    {
-                        new CustomFieldDefinition
-                        {
-                            FieldName = "launchUT",
-                            IgnoreReceive = false,
-                            IgnoreSend = false,
-                            IntervalApplyChangesMs = 600000,
-                            IntervalCheckChangesMs = 600000
-                        }
-                    }
-                }
-            };
+            return LunaXmlSerializer.ReadXmlFromString<List<CustomModuleDefinition>>(Resources.PartsBehaviour);
         }
 
+        /// <summary>
+        /// Rwturns the customization for a field. if it doesn't exist, it returns a default value
+        /// </summary>
         public static CustomFieldDefinition GetCustomFieldDefinition(string moduleName, string fieldName)
         {
             return CustomizedModuleFieldsBehaviours.TryGetValue(moduleName, out var customization) ?
-                customization.Fields.FirstOrDefault(f => f.FieldName == fieldName)
-                : null;
+                customization.Fields.FirstOrDefault(f => f.FieldName == fieldName) ?? DefaultFieldDefinition
+                : DefaultFieldDefinition;
+        }
+
+        /// <summary>
+        /// Gets the inheritance chain of a type up to PartModule.
+        /// For example. 
+        /// ModuleEngineFX inherits from ModuleEngine and ModuleEngine inherits from PartModule
+        /// So for the value of ModuleEngineFX we get an array containing ModuleEngineFX and ModuleEngine
+        /// </summary>
+        private static string[] GetInheritChain(Type partModuleType)
+        {
+            var list = new List<string>();
+            if (partModuleType != null)
+            {
+                var current = partModuleType;
+                while (current != typeof(PartModule) && current != null)
+                {
+                    list.Add(current.Name);
+                    current = current.BaseType;
+                }
+            }
+
+            return list.ToArray();
         }
     }
 }

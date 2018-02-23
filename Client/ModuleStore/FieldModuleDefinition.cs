@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 
 namespace LunaClient.ModuleStore
@@ -7,12 +6,12 @@ namespace LunaClient.ModuleStore
     public class FieldModuleDefinition
     {
         public Type ModuleType { get; }
-        public List<FieldInfo> PersistentModuleField { get; } = new List<FieldInfo>();
+        public FieldInfo[] PersistentModuleField { get; } = new FieldInfo[0];
 
-        public FieldModuleDefinition(Type moduleType, IEnumerable<FieldInfo> persistentFields)
+        public FieldModuleDefinition(Type moduleType, FieldInfo[] persistentFields)
         {
             ModuleType = moduleType;
-            PersistentModuleField.AddRange(persistentFields);
+            PersistentModuleField = persistentFields;
         }
     }
 }
