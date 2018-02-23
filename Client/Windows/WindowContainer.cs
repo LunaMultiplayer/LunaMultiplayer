@@ -18,5 +18,19 @@ namespace LunaClient.Windows
 
             return window as T;
         }
+
+        public static IWindow Get(Type type)
+        {
+            if (!typeof(IWindow).IsAssignableFrom(type))
+                return null;
+
+            if (!Windows.TryGetValue(type, out var window))
+            {
+                window = Activator.CreateInstance(type) as IWindow;
+                Windows.TryAdd(type, window);
+            }
+
+            return window;
+        }
     }
 }

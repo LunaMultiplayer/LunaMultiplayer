@@ -1,17 +1,8 @@
 ﻿using LunaClient.Base.Interface;
 using LunaClient.Systems;
-using LunaClient.Windows.Chat;
-using LunaClient.Windows.Connection;
-using LunaClient.Windows.CraftLibrary;
-using LunaClient.Windows.Debug;
-using LunaClient.Windows.Locks;
-using LunaClient.Windows.Mod;
-using LunaClient.Windows.Options;
-using LunaClient.Windows.ServerList;
-using LunaClient.Windows.Status;
-using LunaClient.Windows.Systems;
-using LunaClient.Windows.UniverseConverter;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // ReSharper disable ForCanBeConvertedToForeach
@@ -20,29 +11,36 @@ namespace LunaClient.Windows
 {
     public static class WindowsHandler
     {
-        private static readonly IWindow[] Windows =
+        private static IWindow[] _windows = new IWindow[0];
+
+        /// <summary>
+        /// Here we pick all the classes that inherit from ISystem and we put them in the systems array
+        /// </summary>
+        public static void FillUpWindowsList()
         {
-            WindowsContainer.Get<ConnectionWindow>(),
-            WindowsContainer.Get<StatusWindow>(),
-            WindowsContainer.Get<ChatWindow>(),
-            WindowsContainer.Get<CraftLibraryWindow>(),
-            WindowsContainer.Get<DebugWindow>(),
-            WindowsContainer.Get<SystemsWindow>(),
-            WindowsContainer.Get<LocksWindow>(),
-            WindowsContainer.Get<ModWindow>(),
-            WindowsContainer.Get<OptionsWindow>(),
-            WindowsContainer.Get<UniverseConverterWindow>(),
-            WindowsContainer.Get<ServerListWindow>(),
-        };
+            var windowsList = new List<IWindow>();
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var systems = assembly.GetTypes().Where(t => t.IsClass && typeof(IWindow).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
+                foreach (var sys in systems)
+                {
+                    var systemImplementation = WindowsContainer.Get(sys);
+                    if (systemImplementation != null)
+                        windowsList.Add(systemImplementation);
+                }
+            }
+
+            _windows = windowsList.ToArray();
+        }
 
         public static void Update()
         {
-            for (var i = 0; i < Windows.Length; i++)
+            for (var i = 0; i < _windows.Length; i++)
             {
                 try
                 {
-                    Profiler.BeginSample(Windows[i].WindowName);
-                    Windows[i].Update();
+                    Profiler.BeginSample(_windows[i].WindowName);
+                    _windows[i].Update();
                     Profiler.EndSample();
                 }
                 catch (Exception e)
@@ -54,12 +52,12 @@ namespace LunaClient.Windows
 
         public static void OnGui()
         {
-            for (var i = 0; i < Windows.Length; i++)
+            for (var i = 0; i < _windows.Length; i++)
             {
                 try
                 {
-                    Profiler.BeginSample(Windows[i].WindowName);
-                    Windows[i].OnGui();
+                    Profiler.BeginSample(_windows[i].WindowName);
+                    _windows[i].OnGui();
                     Profiler.EndSample();
                 }
                 catch (Exception e)

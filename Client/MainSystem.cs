@@ -182,6 +182,7 @@ namespace LunaClient
             LocalizationContainer.LoadLanguage(SettingsSystem.CurrentSettings.Language);
 
             SystemsHandler.FillUpSystemsList();
+            WindowsHandler.FillUpWindowsList();
 
             ModuleStore.FieldModuleStore.ReadCustomizationXml();
             ModuleStore.FieldModuleStore.ReadLoadedPartModules();
