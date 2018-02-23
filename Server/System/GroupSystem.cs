@@ -97,7 +97,7 @@ namespace Server.System
             lock (FileLock)
             {
                 if (FileHandler.FolderExists(GroupsDirectory))
-                    LunaXmlSerializer.WriteXml(Groups.Values.ToList(), GroupsFilePath);
+                    LunaXmlSerializer.WriteToXmlFile(Groups.Values.ToList(), GroupsFilePath);
             }
         }
 
@@ -107,7 +107,7 @@ namespace Server.System
             {
                 if (File.Exists(GroupsFilePath))
                 {
-                    var values = LunaXmlSerializer.ReadXml<List<Group>>(GroupsFilePath);
+                    var values = LunaXmlSerializer.ReadXmlFromPath<List<Group>>(GroupsFilePath);
                     foreach (var value in values)
                     {
                         Groups.TryAdd(value.Name, value);

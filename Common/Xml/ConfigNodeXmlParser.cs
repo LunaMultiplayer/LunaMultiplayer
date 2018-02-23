@@ -62,7 +62,8 @@ namespace LunaCommon.Xml
                             {
                                 if (xmlReader.Name == ValueNode)
                                 {
-                                    writer.Write(GetDepthTabs(xmlReader.Depth - 1) + xmlReader.GetAttribute(AttributeName) + " = ");
+                                    var valueName = xmlReader.GetAttribute(AttributeName);
+                                    writer.Write(GetDepthTabs(xmlReader.Depth - 1) + valueName + " = ");
                                 }
                                 else
                                 {

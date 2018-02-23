@@ -25,14 +25,14 @@ namespace Server.Settings
         public void Load()
         {
             if (!File.Exists(SettingsPath))
-                LunaXmlSerializer.WriteXml(Activator.CreateInstance(SettingsHolderType), SettingsPath);
+                LunaXmlSerializer.WriteToXmlFile(Activator.CreateInstance(SettingsHolderType), SettingsPath);
 
-            SettingsHolder = LunaXmlSerializer.ReadXml(SettingsHolderType, SettingsPath);
+            SettingsHolder = LunaXmlSerializer.ReadXmlFromPath(SettingsHolderType, SettingsPath);
         }
 
         public void Save()
         {
-            LunaXmlSerializer.WriteXml(SettingsHolder, SettingsPath);
+            LunaXmlSerializer.WriteToXmlFile(SettingsHolder, SettingsPath);
         }
     }
 }

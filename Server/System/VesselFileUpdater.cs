@@ -60,10 +60,24 @@ namespace Server.System
 
         #endregion
 
+        #region PartSync
+
+        /// <summary>
+        /// Update the vessel files with resource data max at a 2,5 seconds interval
+        /// </summary>
+        private const int FilePartSyncUpdateIntervalMs = 100;
+
+        /// <summary>
+        /// Avoid updating the vessel files so often as otherwise the server will lag a lot!
+        /// </summary>
+        private static readonly ConcurrentDictionary<Guid, DateTime> LastPartSyncUpdateDictionary = new ConcurrentDictionary<Guid, DateTime>();
+
+        #endregion
+
         #endregion
         /// <summary>
         /// We received a position information from a player
-        /// Then we rewrite the vesselproto with that last information so players that connect later receive an update vesselproto
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
         /// </summary>
         public static void WritePositionDataToFile(VesselBaseMsgData message)
         {
@@ -88,7 +102,7 @@ namespace Server.System
 
         /// <summary>
         /// We received a update information from a player
-        /// Then we rewrite the vesselproto with that last information so players that connect later receive an update vesselproto
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
         /// </summary>
         public static void WriteUpdateDataToFile(VesselBaseMsgData message)
         {
@@ -113,7 +127,7 @@ namespace Server.System
 
         /// <summary>
         /// We received a resource information from a player
-        /// Then we rewrite the vesselproto with that last information so players that connect later receive an update vesselproto
+        /// Then we rewrite the vesselproto with that last information so players that connect later received an update vesselproto
         /// </summary>
         public static void WriteResourceDataToFile(VesselBaseMsgData message)
         {
@@ -131,6 +145,31 @@ namespace Server.System
                     var protoVesselLines = FileHandler.ReadFileLines(path);
 
                     //var updatedText = UpdateProtoVesselFileWithNewResourceData(protoVesselLines, msgData);
+                    //FileHandler.WriteToFile(path, updatedText);
+                });
+            }
+        }
+
+        /// <summary>
+        /// We received a part module change from a player
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
+        /// </summary>
+        public static void WriteModuleDataToFile(VesselBaseMsgData message)
+        {
+            if (!(message is VesselPartSyncMsgData msgData)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
+            if (!LastPartSyncUpdateDictionary.TryGetValue(msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FilePartSyncUpdateIntervalMs)
+            {
+                LastPartSyncUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
+
+                Task.Run(() =>
+                {
+                    var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
+                    if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
+                    var protoVesselLines = FileHandler.ReadFileLines(path);
+
+                    //var updatedText = UpdateProtoVesselFileWithNewPartModulesData(protoVesselLines, msgData);
                     //FileHandler.WriteToFile(path, updatedText);
                 });
             }
@@ -269,11 +308,21 @@ namespace Server.System
         }
 
         /// <summary>
-        /// Updates the proto vessel file with the values we received about a position of a vessel
+        /// Updates the proto vessel file with the values we received about the resources of a vessel
         /// </summary>
         private static string UpdateProtoVesselFileWithNewResourceData(string[] protoVesselLines, VesselResourceMsgData msgData)
         {
-            throw new NotImplementedException();
+            //TODO
+            return null;
+        }
+
+        /// <summary>
+        /// Updates the proto vessel file with the values we received about a part module change of a vessel
+        /// </summary>
+        private static string UpdateProtoVesselFileWithNewPartModulesData(string[] protoVesselLines, VesselResourceMsgData msgData)
+        {
+            //TODO
+            return null;
         }
     }
 }
