@@ -1,0 +1,96 @@
+pid = c7ad1a51b7d944cb9301ed812e623456
+name = Ast. XPA-727
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314478702857.34
+lct = 228314478702857.34
+lastUT = -1
+root = 0
+lat = -0.14702764472040922
+lon = -34.28855722215728
+alt = 16631029581.029762
+hgt = -1
+nrm = 0,1,0
+rot = 0.222465128,-0.694850266,0.680266678,0.0702118501
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16064948751.478672
+	ECC = 0.15731124218904419
+	INC = 0.20884513096460303
+	LPE = 197.79494152603618
+	LAN = 276.17483480462533
+	MNA = -0.20617792341058422
+	EPH = 228314510461374.72
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314478702857.34
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

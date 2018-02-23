@@ -1,0 +1,96 @@
+pid = 1836a955a1fd4d37afa90f832b57de1f
+name = Ast. HLX-250
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 7601002.3957446264
+lct = 7601002.3957446264
+lastUT = -1
+root = 0
+lat = 0.41287450414833299
+lon = -42.001457537074081
+alt = 14438321116.331778
+hgt = -1
+nrm = 0,1,0
+rot = -0.523586094,0.487509847,0.468260616,0.518578649
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14173382903.053047
+	ECC = 0.038966436619661274
+	INC = 1.8335198123636789
+	LPE = 176.11315267489675
+	LAN = 159.1579533182146
+	MNA = 0.0044471314029371758
+	EPH = 31591489.040349465
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 7601002.3957446264
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

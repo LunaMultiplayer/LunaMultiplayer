@@ -1,0 +1,4685 @@
+pid = 7b1dcb95f42747478a522eac0a1248d2
+name = Mun
+type = Ship
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 36784.307534832333
+lct = 183452.10195506914
+lastUT = 220236.40948990147
+root = 0
+lat = 0.14767334881520833
+lon = -31.350618211891685
+alt = 39359855.330758862
+hgt = -1
+nrm = -0.693689883,-0.481974691,-0.535252213
+rot = -0.215797648,0.668669939,0.666327834,-0.249638215
+CoM = 0.00401675701,-2.65205526,2.20537186E-06
+stg = 1
+prst = False
+ref = 2197578032
+ctrl = True
+cPch = 0.04800005
+cHdg = 1.878
+cMod = 0
+ORBIT
+{
+	SMA = 36921834.393104963
+	ECC = 0.92705371657251645
+	INC = 1.7596319986017404
+	LPE = 205.00009370717302
+	LAN = 133.05825185255105
+	MNA = 0.73627539039352907
+	EPH = 220236.40948990147
+	REF = 1
+}
+PART
+{
+	name = mk1pod
+	cid = 4290983140
+	uid = 2197578032
+	mid = 2319462132
+	launchID = 2
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = bottom, 1
+	attN = top, 31
+	mass = 0.800000012
+	shielded = False
+	temp = 216.13382806772421
+	tempExt = 215.93368204681045
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Heaviest
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = mk1pod (Mun)
+	modCost = 0
+	crew = Seancott Kerman
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleCommand
+		isEnabled = True
+		hibernation = False
+		hibernateOnWarp = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			HibernateToggle
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleReactionWheel
+		isEnabled = True
+		actuatorModeCycle = 0
+		authorityLimiter = 100
+		stateString = Running
+		stagingEnabled = True
+		WheelState = Active
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			CycleAction
+			{
+				actionGroup = None
+			}
+			Activate
+			{
+				actionGroup = None
+			}
+			Deactivate
+			{
+				actionGroup = None
+			}
+			Toggle
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleColorChanger
+		isEnabled = True
+		animState = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = Light
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceExperiment
+		isEnabled = True
+		Deployed = True
+		Inoperable = False
+		cooldownToGo = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DeployAction
+			{
+				actionGroup = None
+			}
+			ResetAction
+			{
+				actionGroup = None
+			}
+		}
+		ScienceData
+		{
+			data = 5
+			subjectID = crewReport@KerbinInSpaceHigh
+			xmit = 1
+			xmitBonus = 1
+			title = Crew Report while in space high over Kerbin
+			triggered = False
+			container = 2197578032
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceContainer
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			CollectAllAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleConductionMultiplier
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleDataTransmitter
+		isEnabled = True
+		xmitIncomplete = False
+		stagingEnabled = True
+		canComm = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			StartTransmissionAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleLiftingSurface
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = RasterPropMonitorComputer
+		isEnabled = True
+		vesselDescription = 
+		RPMCid = 65b30ce3-db07-4560-a177-8b098e82424d
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 588
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = SCANRPMStorage
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		SCANsatRPM
+		{
+			Prop
+			{
+				Prop ID = scansat34
+				Mode = 0
+				Zoom = 0
+				Resource = 0
+				Color = True
+				Lines = True
+				Anomalies = True
+				DrawResource = True
+			}
+			Prop
+			{
+				Prop ID = scansat35
+				Mode = 0
+				Zoom = 0
+				Resource = 0
+				Color = True
+				Lines = True
+				Anomalies = True
+				DrawResource = True
+			}
+			Prop
+			{
+				Prop ID = scansat36
+				Mode = 0
+				Zoom = 0
+				Resource = 0
+				Color = True
+				Lines = True
+				Anomalies = True
+				DrawResource = True
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTripLogger
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		Log
+		{
+			flight = 0
+			0 = Flight,Kerbin
+			0 = Suborbit,Kerbin
+			0 = Orbit,Kerbin
+			0 = Flyby,Mun
+			0 = Escape,Mun
+			0 = Flyby,Kerbin
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleKISInventory
+		isEnabled = True
+		invName = 
+		helmetEquipped = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = ElectricCharge
+		amount = 45.176706529967461
+		maxAmount = 50
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = MonoPropellant
+		amount = 10
+		maxAmount = 10
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = ServiceBay.125
+	cid = 4290910832
+	uid = 1843362845
+	mid = 2319462132
+	launchID = 2
+	parent = 0
+	position = 0,-0.66028594970703125,0
+	rotation = 0,0,0,1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = top2, -1
+	attN = bottom2, -1
+	attN = top, 0
+	attN = bottom, 2
+	mass = 0.100000001
+	shielded = False
+	temp = 215.79630932331611
+	tempExt = 215.22698809079034
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = ServiceBay.125
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleAnimateGeneric
+		isEnabled = True
+		aniState = LOCKED
+		animSwitch = True
+		animTime = 0
+		animSpeed = 1
+		deployPercent = 100
+		animationIsDisabled = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleCargoBay
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleSeeThroughObject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleConductionMultiplier
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 500
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = HeatShield1
+	cid = 4290906084
+	uid = 1511236688
+	mid = 2319462132
+	launchID = 2
+	parent = 1
+	position = 0,-0.98272609710693359,0
+	rotation = 0,-0.707106948,0,0.707106948
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 1
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = direct, -1
+	attN = bottom, 3
+	attN = top, 1
+	mass = 0.104039989
+	shielded = False
+	temp = 215.52503835603994
+	tempExt = 215.00263825677072
+	tempExtUnexp = 4
+	expt = 0.530603945
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = HeatShield1
+	modCost = 14.2007809
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleJettison
+		isEnabled = True
+		isJettisoned = False
+		shroudHideOverride = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			JettisonAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAblator
+		isEnabled = True
+		nominalAmountRecip = 0.0047116119370495292
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleColorChanger
+		isEnabled = True
+		animState = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleDecouple
+		isEnabled = True
+		ejectionForcePercent = 100
+		isDecoupled = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleLiftingSurface
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.27499998
+		defaultScale = 1.25
+		defaultTransformScale = (1, 1, 1)
+		DryCost = 208.079987
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = Ablator
+		amount = 212.24158809356712
+		maxAmount = 212.24158809356712
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = stackDecoupler
+	cid = 4290902994
+	uid = 3745248209
+	mid = 2319462132
+	launchID = 2
+	parent = 2
+	position = 0,-1.2211780548095703,0
+	rotation = 0,-0.707106948,0,0.707106948
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 3
+	sqor = 0
+	sepI = 0
+	sidx = 1
+	attm = 0
+	srfN = , -1
+	attN = bottom, 4
+	attN = top, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 215.58585091818833
+	tempExt = 215.31043021880689
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = stackDecoupler
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDecouple
+		isEnabled = True
+		ejectionForcePercent = 100
+		isDecoupled = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleToggleCrossfeed
+		isEnabled = True
+		crossfeedStatus = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+			EnableAction
+			{
+				actionGroup = None
+			}
+			DisableAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 400
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = fuelTank
+	cid = 4290897944
+	uid = 2332404021
+	mid = 2319462132
+	launchID = 2
+	parent = 3
+	position = 0,-2.3198623657226563,0
+	rotation = 0,-0.707106948,0,0.707106948
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 4
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, 3
+	attN = bottom, -1
+	mass = 0.25
+	shielded = False
+	temp = 215.59333266200585
+	tempExt = 215.39386860968216
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Heaviest
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = fuelTank
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 316.399994
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = LiquidFuel
+		amount = 6.8782032283517074
+		maxAmount = 180
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = Oxidizer
+		amount = 8.4066826430715071
+		maxAmount = 220
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = radialDecoupler
+	cid = 4290895150
+	uid = 1460397003
+	mid = 2319462132
+	launchID = 2
+	parent = 4
+	position = -7.1054273576010019E-15,-2.5655183792114258,-0.62435060739517212
+	rotation = 0,-0.707106948,0,0.707106948
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 5
+	sqor = 1
+	sepI = 0
+	sidx = 0
+	attm = 1
+	sym = 11
+	sym = 17
+	sym = 23
+	srfN = srfAttach, 4
+	mass = 0.00624999963
+	shielded = False
+	temp = 215.68568166691432
+	tempExt = 215.45268896861671
+	tempExtUnexp = 4
+	expt = 0.0625
+	state = 0
+	attached = True
+	autostrutMode = Heaviest
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = radialDecoupler
+	modCost = -175.735931
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleAnchoredDecoupler
+		isEnabled = True
+		ejectionForcePercent = 100
+		isDecoupled = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleToggleCrossfeed
+		isEnabled = True
+		crossfeedStatus = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+			EnableAction
+			{
+				actionGroup = None
+			}
+			DisableAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 50
+		defaultScale = 100
+		defaultTransformScale = (1, 1, 1)
+		DryCost = 424.264069
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = fuelTankSmall
+	cid = 4290896452
+	uid = 3480248921
+	mid = 2319462132
+	launchID = 2
+	parent = 5
+	position = -1.4210854715202004E-14,-2.5065202713012695,-1.3318769931793213
+	rotation = 0,-0.707106948,0,0.707106948
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 12
+	sym = 18
+	sym = 24
+	srfN = srfAttach, 5
+	attN = top, 9
+	attN = bottom, 7
+	mass = 0.125
+	shielded = False
+	temp = 215.73037786135691
+	tempExt = 215.48661843722519
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = fuelTankSmall
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 183.199997
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = LiquidFuel
+		amount = 3.4391016141758537
+		maxAmount = 90
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = Oxidizer
+		amount = 4.2033413215357536
+		maxAmount = 110
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = fuelTankSmall
+	cid = 4290889716
+	uid = 2021373739
+	mid = 2319462132
+	launchID = 2
+	parent = 6
+	position = -1.4210854715202004E-14,-3.6170206069946289,-1.3318774700164795
+	rotation = 0,-1.00000036,0,0
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	sym = 13
+	sym = 19
+	sym = 25
+	srfN = srfAttach, -1
+	attN = top, 6
+	attN = bottom, 8
+	mass = 0.125
+	shielded = False
+	temp = 215.70914376835719
+	tempExt = 215.57711629251369
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = fuelTankSmall
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 183.199997
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = LiquidFuel
+		amount = 3.4391016141758537
+		maxAmount = 90
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = Oxidizer
+		amount = 4.2033413215357536
+		maxAmount = 110
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = liquidEngine3
+	cid = 4290876448
+	uid = 4045192782
+	mid = 2319462132
+	launchID = 2
+	parent = 7
+	position = -1.4210854715202004E-14,-4.4428930282592773,-1.3318779468536377
+	rotation = 0,-1.00000036,0,0
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 1
+	resPri = 0
+	dstg = 6
+	sqor = 1
+	sepI = 0
+	sidx = 0
+	attm = 0
+	sym = 14
+	sym = 20
+	sym = 26
+	srfN = , -1
+	attN = top, 7
+	attN = bottom, -1
+	mass = 0.5
+	shielded = False
+	temp = 215.69516379604377
+	tempExt = 215.67020851871408
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 1
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = liquidEngine3
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleEngines
+		isEnabled = True
+		staged = True
+		flameout = False
+		EngineIgnited = True
+		engineShutdown = False
+		currentThrottle = 0
+		thrustPercentage = 100
+		manuallyOverridden = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			OnAction
+			{
+				actionGroup = None
+			}
+			ShutdownAction
+			{
+				actionGroup = None
+			}
+			ActivateAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleGimbal
+		isEnabled = True
+		gimbalLock = False
+		gimbalLimiter = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		gimbalActive = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+			LockAction
+			{
+				actionGroup = None
+			}
+			FreeAction
+			{
+				actionGroup = None
+			}
+			TogglePitchAction
+			{
+				actionGroup = None
+			}
+			ToggleYawAction
+			{
+				actionGroup = None
+			}
+			ToggleRollAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FXModuleAnimateThrottle
+		isEnabled = True
+		animState = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleJettison
+		isEnabled = True
+		isJettisoned = True
+		shroudHideOverride = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			JettisonAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleSurfaceFX
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 390
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = noseCone
+	cid = 4290885808
+	uid = 3054884356
+	mid = 2319462132
+	launchID = 2
+	parent = 6
+	position = -1.4210854715202004E-14,-1.9512701034545898,-1.3318774700164795
+	rotation = 0,-1.00000036,0,0
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	sym = 15
+	sym = 21
+	sym = 27
+	srfN = , -1
+	attN = bottom01, 6
+	mass = 0.0299999993
+	shielded = False
+	temp = 215.71321294322721
+	tempExt = 215.4455157150351
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = noseCone
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 240
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = strutConnector
+	cid = 4290868544
+	uid = 2212656196
+	mid = 2319462132
+	launchID = 2
+	parent = 6
+	position = 0.56317991018295288,-2.6927366256713867,-1.3318772315979004
+	rotation = 8.94070027E-08,-1.00000036,-3.01457806E-14,2.52881136E-07
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 16
+	sym = 22
+	sym = 28
+	srfN = srfAttach, 6
+	mass = 0.0500000007
+	shielded = False
+	temp = 215.79113214534476
+	tempExt = 215.78749037326676
+	tempExtUnexp = 4
+	expt = 0
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = strutConnector
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+		tgt = 4290892648
+		pos = -0.654868305,-0.0302182417,-0.770431757
+		rot = 1.04056971E-15,-0.707107306,-1.26440625E-07,0.707107186
+		dir = -0.647360146,-0.029871786,-0.761598647
+	}
+	MODULE
+	{
+		name = CModuleLinkedMesh
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = CModuleStrut
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = radialDecoupler
+	cid = 4290894488
+	uid = 3751117719
+	mid = 2319462132
+	launchID = 2
+	parent = 4
+	position = -0.62435060739517212,-2.5655183792114258,-5.9604644775390625E-08
+	rotation = 0,0,0,1.00000036
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 5
+	sqor = 5
+	sepI = 0
+	sidx = 0
+	attm = 1
+	sym = 5
+	sym = 17
+	sym = 23
+	srfN = srfAttach, 4
+	mass = 0.00624999963
+	shielded = False
+	temp = 215.66784089651605
+	tempExt = 215.43971038664009
+	tempExtUnexp = 4
+	expt = 0.0625
+	state = 0
+	attached = True
+	autostrutMode = Heaviest
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = radialDecoupler
+	modCost = -175.735931
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleAnchoredDecoupler
+		isEnabled = True
+		ejectionForcePercent = 100
+		isDecoupled = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleToggleCrossfeed
+		isEnabled = True
+		crossfeedStatus = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+			EnableAction
+			{
+				actionGroup = None
+			}
+			DisableAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 50
+		defaultScale = 100
+		defaultTransformScale = (1, 1, 1)
+		DryCost = 424.264069
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = fuelTankSmall
+	cid = 4290892748
+	uid = 2970059873
+	mid = 2319462132
+	launchID = 2
+	parent = 11
+	position = -1.331878662109375,-2.5065202713012695,0
+	rotation = 0,0,0,1.00000036
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 6
+	sym = 18
+	sym = 24
+	srfN = srfAttach, 11
+	attN = top, 15
+	attN = bottom, 13
+	mass = 0.125
+	shielded = False
+	temp = 215.70505030803153
+	tempExt = 215.46211169880905
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = fuelTankSmall
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 183.199997
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = LiquidFuel
+		amount = 3.4391016141758537
+		maxAmount = 90
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = Oxidizer
+		amount = 4.2033413215357536
+		maxAmount = 110
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = fuelTankSmall
+	cid = 4290889928
+	uid = 4234600135
+	mid = 2319462132
+	launchID = 2
+	parent = 12
+	position = -1.3318793773651123,-3.6170206069946289,0
+	rotation = 0,-0.707107067,0,0.707107067
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	sym = 7
+	sym = 19
+	sym = 25
+	srfN = srfAttach, -1
+	attN = top, 12
+	attN = bottom, 14
+	mass = 0.125
+	shielded = False
+	temp = 215.67507629230366
+	tempExt = 215.5156596362028
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = fuelTankSmall
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 183.199997
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = LiquidFuel
+		amount = 3.4391016141758537
+		maxAmount = 90
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = Oxidizer
+		amount = 4.2033413215357536
+		maxAmount = 110
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = liquidEngine3
+	cid = 4290877392
+	uid = 315047194
+	mid = 2319462132
+	launchID = 2
+	parent = 13
+	position = -1.3318800926208496,-4.4428930282592773,0
+	rotation = 0,-0.707107067,0,0.707107067
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 1
+	resPri = 0
+	dstg = 6
+	sqor = 1
+	sepI = 0
+	sidx = 0
+	attm = 0
+	sym = 8
+	sym = 20
+	sym = 26
+	srfN = , -1
+	attN = top, 13
+	attN = bottom, -1
+	mass = 0.5
+	shielded = False
+	temp = 215.64909862782775
+	tempExt = 215.57780145165231
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 1
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = liquidEngine3
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleEngines
+		isEnabled = True
+		staged = True
+		flameout = False
+		EngineIgnited = True
+		engineShutdown = False
+		currentThrottle = 0
+		thrustPercentage = 100
+		manuallyOverridden = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			OnAction
+			{
+				actionGroup = None
+			}
+			ShutdownAction
+			{
+				actionGroup = None
+			}
+			ActivateAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleGimbal
+		isEnabled = True
+		gimbalLock = False
+		gimbalLimiter = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		gimbalActive = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+			LockAction
+			{
+				actionGroup = None
+			}
+			FreeAction
+			{
+				actionGroup = None
+			}
+			TogglePitchAction
+			{
+				actionGroup = None
+			}
+			ToggleYawAction
+			{
+				actionGroup = None
+			}
+			ToggleRollAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FXModuleAnimateThrottle
+		isEnabled = True
+		animState = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleJettison
+		isEnabled = True
+		isJettisoned = True
+		shroudHideOverride = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			JettisonAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleSurfaceFX
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 390
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = noseCone
+	cid = 4290886482
+	uid = 4257044907
+	mid = 2319462132
+	launchID = 2
+	parent = 12
+	position = -1.3318793773651123,-1.9512701034545898,0
+	rotation = 0,-0.707107067,0,0.707107067
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	sym = 9
+	sym = 21
+	sym = 27
+	srfN = , -1
+	attN = bottom01, 12
+	mass = 0.0299999993
+	shielded = False
+	temp = 215.68793254456332
+	tempExt = 215.42084839360373
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = noseCone
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 240
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = strutConnector
+	cid = 4290869252
+	uid = 3223853959
+	mid = 2319462132
+	launchID = 2
+	parent = 12
+	position = -1.331878662109375,-2.6927366256713867,-0.56318008899688721
+	rotation = 6.3220277E-08,-0.707106888,-6.32203196E-08,0.707107246
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 10
+	sym = 22
+	sym = 28
+	srfN = srfAttach, 12
+	mass = 0.0500000007
+	shielded = False
+	temp = 215.72165762426562
+	tempExt = 215.58596679420555
+	tempExtUnexp = 4
+	expt = 0
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = strutConnector
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+		tgt = 4290896452
+		pos = -0.654871404,-0.0302201491,-0.770432234
+		rot = 3.18719969E-18,-0.707107425,-8.42938306E-08,0.707107067
+		dir = -0.647361636,-0.0298735965,-0.761597216
+	}
+	MODULE
+	{
+		name = CModuleLinkedMesh
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = CModuleStrut
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = radialDecoupler
+	cid = 4290894418
+	uid = 2542665035
+	mid = 2319462132
+	launchID = 2
+	parent = 4
+	position = 5.960465898624534E-08,-2.5655183792114258,0.62435060739517212
+	rotation = 0,0.707107067,0,0.707106888
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 5
+	sqor = 1
+	sepI = 0
+	sidx = 0
+	attm = 1
+	sym = 5
+	sym = 11
+	sym = 23
+	srfN = srfAttach, 4
+	mass = 0.00624999963
+	shielded = False
+	temp = 215.74404459648864
+	tempExt = 215.61806831336673
+	tempExtUnexp = 4
+	expt = 0.0625
+	state = 0
+	attached = True
+	autostrutMode = Heaviest
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = radialDecoupler
+	modCost = -175.735931
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleAnchoredDecoupler
+		isEnabled = True
+		ejectionForcePercent = 100
+		isDecoupled = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleToggleCrossfeed
+		isEnabled = True
+		crossfeedStatus = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+			EnableAction
+			{
+				actionGroup = None
+			}
+			DisableAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 50
+		defaultScale = 100
+		defaultTransformScale = (1, 1, 1)
+		DryCost = 424.264069
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = fuelTankSmall
+	cid = 4290892698
+	uid = 3473893343
+	mid = 2319462132
+	launchID = 2
+	parent = 17
+	position = 2.3841863594498136E-07,-2.5065202713012695,1.3318772315979004
+	rotation = 0,0.707107067,0,0.707106888
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 6
+	sym = 12
+	sym = 24
+	srfN = srfAttach, 17
+	attN = top, 21
+	attN = bottom, 19
+	mass = 0.125
+	shielded = False
+	temp = 215.80981998346934
+	tempExt = 215.87141821120204
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = fuelTankSmall
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 183.199997
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = LiquidFuel
+		amount = 3.4391016141758537
+		maxAmount = 90
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = Oxidizer
+		amount = 4.2033413215357536
+		maxAmount = 110
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = fuelTankSmall
+	cid = 4290889654
+	uid = 3738032832
+	mid = 2319462132
+	launchID = 2
+	parent = 18
+	position = 2.3841863594498136E-07,-3.6170206069946289,1.3318777084350586
+	rotation = 0,1.6858742E-07,0,1.00000036
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	sym = 7
+	sym = 13
+	sym = 25
+	srfN = srfAttach, -1
+	attN = top, 18
+	attN = bottom, 20
+	mass = 0.125
+	shielded = False
+	temp = 215.88981800110921
+	tempExt = 216.19137451191858
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = fuelTankSmall
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 183.199997
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = LiquidFuel
+		amount = 3.4391016141758537
+		maxAmount = 90
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = Oxidizer
+		amount = 4.2033413215357536
+		maxAmount = 110
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = liquidEngine3
+	cid = 4290876314
+	uid = 3771156606
+	mid = 2319462132
+	launchID = 2
+	parent = 19
+	position = 2.3841863594498136E-07,-4.4428930282592773,1.3318781852722168
+	rotation = 0,1.6858742E-07,0,1.00000036
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 1
+	resPri = 0
+	dstg = 6
+	sqor = 1
+	sepI = 0
+	sidx = 0
+	attm = 0
+	sym = 8
+	sym = 14
+	sym = 26
+	srfN = , -1
+	attN = top, 19
+	attN = bottom, -1
+	mass = 0.5
+	shielded = False
+	temp = 215.99589334204805
+	tempExt = 216.41723695823009
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 1
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = liquidEngine3
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleEngines
+		isEnabled = True
+		staged = True
+		flameout = False
+		EngineIgnited = True
+		engineShutdown = False
+		currentThrottle = 0
+		thrustPercentage = 100
+		manuallyOverridden = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			OnAction
+			{
+				actionGroup = None
+			}
+			ShutdownAction
+			{
+				actionGroup = None
+			}
+			ActivateAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleGimbal
+		isEnabled = True
+		gimbalLock = False
+		gimbalLimiter = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		gimbalActive = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+			LockAction
+			{
+				actionGroup = None
+			}
+			FreeAction
+			{
+				actionGroup = None
+			}
+			TogglePitchAction
+			{
+				actionGroup = None
+			}
+			ToggleYawAction
+			{
+				actionGroup = None
+			}
+			ToggleRollAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FXModuleAnimateThrottle
+		isEnabled = True
+		animState = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleJettison
+		isEnabled = True
+		isJettisoned = True
+		shroudHideOverride = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			JettisonAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleSurfaceFX
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 390
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = noseCone
+	cid = 4290885760
+	uid = 3925671693
+	mid = 2319462132
+	launchID = 2
+	parent = 18
+	position = 2.3841863594498136E-07,-1.9512701034545898,1.3318777084350586
+	rotation = 0,1.6858742E-07,0,1.00000036
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	sym = 9
+	sym = 15
+	sym = 27
+	srfN = , -1
+	attN = bottom01, 18
+	mass = 0.0299999993
+	shielded = False
+	temp = 215.8097444254565
+	tempExt = 215.82813359073674
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = noseCone
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 240
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = strutConnector
+	cid = 4290868440
+	uid = 1683145250
+	mid = 2319462132
+	launchID = 2
+	parent = 18
+	position = -0.56317967176437378,-2.6927366256713867,1.3318774700164795
+	rotation = -4.0194373E-14,4.2146857E-07,-8.94070027E-08,1.00000036
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 10
+	sym = 16
+	sym = 28
+	srfN = srfAttach, 18
+	mass = 0.0500000007
+	shielded = False
+	temp = 215.75898655320401
+	tempExt = 215.70434697410701
+	tempExtUnexp = 4
+	expt = 0
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = strutConnector
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+		tgt = 4290892748
+		pos = -0.654868305,-0.0302191954,-0.770432115
+		rot = -2.51209432E-15,-0.707107663,-1.2644081E-07,0.707106829
+		dir = -0.647360027,-0.0298727211,-0.761598825
+	}
+	MODULE
+	{
+		name = CModuleLinkedMesh
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = CModuleStrut
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = radialDecoupler
+	cid = 4290894348
+	uid = 2570973403
+	mid = 2319462132
+	launchID = 2
+	parent = 4
+	position = 0.62435048818588257,-2.5655183792114258,0
+	rotation = 0,1.00000036,0,0
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 5
+	sqor = 1
+	sepI = 0
+	sidx = 0
+	attm = 1
+	sym = 5
+	sym = 11
+	sym = 17
+	srfN = srfAttach, 4
+	mass = 0.00624999963
+	shielded = False
+	temp = 215.77503350206953
+	tempExt = 215.69898657324725
+	tempExtUnexp = 4
+	expt = 0.0625
+	state = 0
+	attached = True
+	autostrutMode = Heaviest
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = radialDecoupler
+	modCost = -175.735931
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleAnchoredDecoupler
+		isEnabled = True
+		ejectionForcePercent = 100
+		isDecoupled = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleToggleCrossfeed
+		isEnabled = True
+		crossfeedStatus = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+			EnableAction
+			{
+				actionGroup = None
+			}
+			DisableAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 50
+		defaultScale = 100
+		defaultTransformScale = (1, 1, 1)
+		DryCost = 424.264069
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = fuelTankSmall
+	cid = 4290892648
+	uid = 2439492343
+	mid = 2319462132
+	launchID = 2
+	parent = 23
+	position = 1.331878662109375,-2.5065202713012695,1.1920928955078125E-07
+	rotation = 0,1.00000036,0,0
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 6
+	sym = 12
+	sym = 18
+	srfN = srfAttach, 23
+	attN = top, 27
+	attN = bottom, 25
+	mass = 0.125
+	shielded = False
+	temp = 215.85219406897701
+	tempExt = 216.05220981460104
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = fuelTankSmall
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 183.199997
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = LiquidFuel
+		amount = 3.4391016141758537
+		maxAmount = 90
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = Oxidizer
+		amount = 4.2033413215357536
+		maxAmount = 110
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = fuelTankSmall
+	cid = 4290889592
+	uid = 1422637937
+	mid = 2319462132
+	launchID = 2
+	parent = 24
+	position = 1.3318793773651123,-3.6170206069946289,1.1920928955078125E-07
+	rotation = 0,0.707107067,0,0.707107067
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	sym = 7
+	sym = 13
+	sym = 19
+	srfN = srfAttach, -1
+	attN = top, 24
+	attN = bottom, 26
+	mass = 0.125
+	shielded = False
+	temp = 215.93500237396992
+	tempExt = 216.23232211436482
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = fuelTankSmall
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 183.199997
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = LiquidFuel
+		amount = 3.4391016141758537
+		maxAmount = 90
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+	RESOURCE
+	{
+		name = Oxidizer
+		amount = 4.2033413215357536
+		maxAmount = 110
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = liquidEngine3
+	cid = 4290876180
+	uid = 2344442038
+	mid = 2319462132
+	launchID = 2
+	parent = 25
+	position = 1.3318800926208496,-4.4428930282592773,1.1920928955078125E-07
+	rotation = 0,0.707107067,0,0.707107067
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 1
+	resPri = 0
+	dstg = 6
+	sqor = 1
+	sepI = 0
+	sidx = 0
+	attm = 0
+	sym = 8
+	sym = 14
+	sym = 20
+	srfN = , -1
+	attN = top, 25
+	attN = bottom, -1
+	mass = 0.5
+	shielded = False
+	temp = 216.04755679115686
+	tempExt = 216.49367443082696
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 1
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = liquidEngine3
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleEngines
+		isEnabled = True
+		staged = True
+		flameout = False
+		EngineIgnited = True
+		engineShutdown = False
+		currentThrottle = 0
+		thrustPercentage = 100
+		manuallyOverridden = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			OnAction
+			{
+				actionGroup = None
+			}
+			ShutdownAction
+			{
+				actionGroup = None
+			}
+			ActivateAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleGimbal
+		isEnabled = True
+		gimbalLock = False
+		gimbalLimiter = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		gimbalActive = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+			LockAction
+			{
+				actionGroup = None
+			}
+			FreeAction
+			{
+				actionGroup = None
+			}
+			TogglePitchAction
+			{
+				actionGroup = None
+			}
+			ToggleYawAction
+			{
+				actionGroup = None
+			}
+			ToggleRollAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FXModuleAnimateThrottle
+		isEnabled = True
+		animState = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleJettison
+		isEnabled = True
+		isJettisoned = True
+		shroudHideOverride = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			JettisonAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleSurfaceFX
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 390
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = noseCone
+	cid = 4290885712
+	uid = 1601605892
+	mid = 2319462132
+	launchID = 2
+	parent = 24
+	position = 1.3318793773651123,-1.9512701034545898,1.1920928955078125E-07
+	rotation = 0,0.707107067,0,0.707107067
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	sym = 9
+	sym = 15
+	sym = 21
+	srfN = , -1
+	attN = bottom01, 24
+	mass = 0.0299999993
+	shielded = False
+	temp = 215.89468211545866
+	tempExt = 215.99401990434851
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = noseCone
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 1.25
+		defaultScale = 1.25
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 240
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = strutConnector
+	cid = 4290868336
+	uid = 4032316078
+	mid = 2319462132
+	launchID = 2
+	parent = 24
+	position = 1.3318791389465332,-2.6927366256713867,0.56318080425262451
+	rotation = -6.32203125E-08,0.707107246,-6.3220277E-08,0.707106888
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 6
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	sym = 10
+	sym = 16
+	sym = 22
+	srfN = srfAttach, 24
+	mass = 0.0500000007
+	shielded = False
+	temp = 215.85123231099712
+	tempExt = 215.94585903571456
+	tempExtUnexp = 4
+	expt = 0
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = strutConnector
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+		tgt = 4290892698
+		pos = -0.654872715,-0.0302201491,-0.770432353
+		rot = -1.41612199E-15,-0.707107186,-8.4293724E-08,0.707107306
+		dir = -0.647362351,-0.0298735723,-0.761596739
+	}
+	MODULE
+	{
+		name = CModuleLinkedMesh
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = CModuleStrut
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = radialDrogue
+	cid = 4290763298
+	uid = 1256925261
+	mid = 2319462132
+	launchID = 2
+	parent = 1
+	position = 7.1054273576010019E-15,-0.63703346252441406,0.64290165901184082
+	rotation = 0,1.00000024,-2.07822538E-07,-8.42937098E-08
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = -1
+	sidx = 0
+	attm = 1
+	sym = 30
+	srfN = srfAttach, 1
+	mass = 0.10800001
+	shielded = False
+	temp = 215.78237364998861
+	tempExt = 215.39628645368791
+	tempExtUnexp = 4
+	expt = 0.864000082
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = radialDrogue
+	modCost = 66
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleParachute
+		isEnabled = True
+		persistentState = STOWED
+		animTime = 0
+		minAirPressureToOpen = 0.0199999996
+		deployAltitude = 2500
+		spreadAngle = 7
+		automateSafeDeploy = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DeployAction
+			{
+				actionGroup = None
+			}
+			CutAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleDragModifier
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleDragModifier
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 120
+		defaultScale = 100
+		defaultTransformScale = (0.5, 0.5, 0.5)
+		DryCost = 216
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = radialDrogue
+	cid = 4290762956
+	uid = 1812331749
+	mid = 2319462132
+	launchID = 2
+	parent = 1
+	position = -5.960465898624534E-08,-0.63703346252441406,-0.64290165901184082
+	rotation = -2.07822538E-07,-1.6858742E-07,0,-1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = -1
+	sidx = 0
+	attm = 1
+	sym = 29
+	srfN = srfAttach, 1
+	mass = 0.10800001
+	shielded = False
+	temp = 215.78237364998861
+	tempExt = 215.39628645368791
+	tempExtUnexp = 4
+	expt = 0.864000082
+	state = 0
+	attached = True
+	autostrutMode = Root
+	rigidAttachment = True
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = radialDrogue
+	modCost = 66
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleParachute
+		isEnabled = True
+		persistentState = STOWED
+		animTime = 0
+		minAirPressureToOpen = 0.0199999996
+		deployAltitude = 2500
+		spreadAngle = 7
+		automateSafeDeploy = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DeployAction
+			{
+				actionGroup = None
+			}
+			CutAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleDragModifier
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleDragModifier
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 120
+		defaultScale = 100
+		defaultTransformScale = (0.5, 0.5, 0.5)
+		DryCost = 216
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = parachuteSingle
+	cid = 4290772306
+	uid = 3804994424
+	mid = 2319462132
+	launchID = 2
+	parent = 0
+	position = 0,0.65745735168457031,0
+	rotation = 0,-0.707106948,0,0.707106948
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = -1
+	sidx = 2
+	attm = 0
+	srfN = srfAttach, -1
+	attN = bottom, 0
+	mass = 0.100000001
+	shielded = False
+	temp = 215.89148762180909
+	tempExt = 215.7520416976802
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = parachuteSingle
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleParachute
+		isEnabled = True
+		persistentState = STOWED
+		animTime = 0
+		minAirPressureToOpen = 0.0399999991
+		deployAltitude = 1000
+		spreadAngle = 7
+		automateSafeDeploy = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DeployAction
+			{
+				actionGroup = None
+			}
+			CutAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTestSubject
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleDragModifier
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleDragModifier
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = TweakScale
+		isEnabled = True
+		currentScale = 0.625
+		defaultScale = 0.625
+		defaultTransformScale = (0, 0, 0)
+		DryCost = 422
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = JSIPrimitiveExternalCamera
+	cid = 4290757512
+	uid = 1222925144
+	mid = 2319462132
+	launchID = 2
+	parent = 0
+	position = 0.56624072790145874,-0.14636993408203125,0
+	rotation = -0.127300948,-0.69555372,0.127300918,-0.695553482
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 1
+	srfN = srfAttach, 0
+	mass = 0.0399999991
+	shielded = False
+	temp = 216.17340273347355
+	tempExt = 215.93829627407922
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Sentinel_Flag
+	rTrf = JSIPrimitiveExternalCamera
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = JSIExternalCameraSelector
+		isEnabled = True
+		current = 1
+		showCones = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = WBIPartScrapper
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = True, 0.08
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = True, 0.08
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+	MANEUVER
+	{
+		UT = 185400.98300726627
+		dV = 0,0,739
+	}
+}
+CTRLSTATE
+{
+	pitch = -5.0081394E-07
+	yaw = 9.0056534E-07
+	roll = -1.03052651E-06
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	GoldStrikeVesselModule
+	{
+		lastProspectLongitude = 0
+		lastProspectLatitude = 0
+		lastProspectAltitude = 0
+		lastProspectPlanet = -1
+		lastProspectBiome = 
+	}
+	RPMVesselComputer
+	{
+		RPM_PERSISTENT_VARS
+		{
+			name = 65b30ce3-db07-4560-a177-8b098e82424d
+			activePage34 = System.Int32,21
+			activePage35 = System.Int32,21
+			activePage36 = System.Int32,21
+			targetfilter34 = System.Int32,15
+			targetfilter35 = System.Int32,15
+			targetfilter36 = System.Int32,15
+		}
+	}
+	CommNetVessel
+	{
+		controlState = KerbalFull
+		canComm = True
+	}
+}

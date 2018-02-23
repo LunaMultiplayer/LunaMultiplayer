@@ -1,0 +1,107 @@
+pid = 120558c4833b409b9c78d01b39e317f5
+name = Ast. GDO-701
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 11814676.023318693
+lct = 11814676.023318693
+lastUT = -1
+root = 0
+lat = -0.13178280490927682
+lon = -2.3048444539144644
+alt = 19730997248.640072
+hgt = -1
+nrm = 0,1,0
+rot = -0.500231922,0.147306755,-0.601441622,0.605257571
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16776776953.053965
+	ECC = 0.19168961495046594
+	INC = 0.65035684770401536
+	LPE = 12.087790472792303
+	LAN = 291.56811033804183
+	MNA = -0.13013513490972806
+	EPH = 30488697.423777256
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 11814676.023318693
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	GoldStrikeVesselModule
+	{
+		lastProspectLongitude = 0
+		lastProspectLatitude = 0
+		lastProspectAltitude = 0
+		lastProspectPlanet = -1
+		lastProspectBiome = 
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

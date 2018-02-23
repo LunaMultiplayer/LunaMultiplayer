@@ -1,0 +1,107 @@
+pid = 621237795e5b474a8ef1895048e82a65
+name = Ast. CDD-541
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 171755410392460.06
+lct = 171755410392460.06
+lastUT = -1
+root = 0
+lat = -0.92369450512986617
+lon = 156.47647526662013
+alt = 16123252877.616091
+hgt = -1
+nrm = 0,1,0
+rot = 0.577421784,0.622697234,0.483760983,0.211678028
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15000732873.616364
+	ECC = 0.09669066297587578
+	INC = 2.1140542210411191
+	LPE = 10.107648750417814
+	LAN = 130.96186698641333
+	MNA = -0.15137383258707374
+	EPH = 171755425563912.13
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 171755410392460.06
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	GoldStrikeVesselModule
+	{
+		lastProspectLongitude = 0
+		lastProspectLatitude = 0
+		lastProspectAltitude = 0
+		lastProspectPlanet = -1
+		lastProspectBiome = 
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

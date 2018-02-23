@@ -1,0 +1,107 @@
+pid = a2be8dc9e0da49b29f8f119a733e81b0
+name = Ast. MMF-093
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 171755410316104.19
+lct = 171755410316104.19
+lastUT = -1
+root = 0
+lat = 1.2566932493675094
+lon = -33.373232215902995
+alt = 13326463129.575502
+hgt = -1
+nrm = 0,1,0
+rot = 0.372270465,0.857559919,-0.0366241224,0.353078574
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15131220255.98497
+	ECC = 0.10461335212700067
+	INC = 2.3103686107896735
+	LPE = 18.677514830155889
+	LAN = 50.442423026559084
+	MNA = -0.25891514000682281
+	EPH = 171755441928022.84
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 171755410316104.19
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	GoldStrikeVesselModule
+	{
+		lastProspectLongitude = 0
+		lastProspectLatitude = 0
+		lastProspectAltitude = 0
+		lastProspectPlanet = -1
+		lastProspectBiome = 
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

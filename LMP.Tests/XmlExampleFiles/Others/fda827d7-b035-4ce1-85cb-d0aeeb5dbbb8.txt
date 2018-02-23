@@ -1,0 +1,99 @@
+pid = fda827d7b0354ce185cbd0aeeb5dbbb8
+name = Ast. ZNE-743
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 71654498.912314847
+lct = 71654498.912314847
+lastUT = -1
+root = 0
+lat = 0.053461716985036448
+lon = 136.20355504249105
+alt = 13268912613.479046
+hgt = -1
+nrm = 0,1,0
+rot = 0.667229891,-0.00186641095,0.52258724,0.530757308
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13478693298.0564
+	ECC = 0.0041657411711495144
+	INC = 0.28096327113052821
+	LPE = 11.586268268029823
+	LAN = 279.25502665527972
+	MNA = 3.1365083934239828
+	EPH = 99463258.665928379
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 71654498.912314847
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

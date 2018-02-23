@@ -1,0 +1,96 @@
+pid = dbe327b0ae924347a443e8c1e17e27ea
+name = Ast. FSB-189
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 54641829.229944102
+lct = 54641829.229944102
+lastUT = -1
+root = 0
+lat = 0.064242146440906506
+lon = 64.020261366552774
+alt = 16898876694.153217
+hgt = -1
+nrm = 0,1,0
+rot = -0.546603799,0.735775709,0.18751286,0.353125155
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15957727671.928593
+	ECC = 0.14943273721750558
+	INC = 0.30281372669477769
+	LPE = 244.8042755685091
+	LAN = 226.62964452303731
+	MNA = -0.033629277003008162
+	EPH = 62608674.437365048
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 54641829.229944102
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

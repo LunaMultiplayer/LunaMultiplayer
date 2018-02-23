@@ -1,0 +1,96 @@
+pid = f5e5d2f5709d4db9b4e07b442e31468f
+name = Ast. XSC-018
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 4605.7434173018328
+lct = 4605.7434173018328
+lastUT = -1
+root = 0
+lat = -0.39852257467657259
+lon = -117.53685967789075
+alt = 14988285167.400249
+hgt = -1
+nrm = 0,1,0
+rot = -0.0944758952,0.572010934,-0.498457253,0.644529462
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14533478295.231998
+	ECC = 0.071901627622631123
+	INC = 0.40360978651555429
+	LPE = 142.89600561531233
+	LAN = 327.19456082782085
+	MNA = 0.56578808010562132
+	EPH = 17575408.166506857
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 4605.7434173018328
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

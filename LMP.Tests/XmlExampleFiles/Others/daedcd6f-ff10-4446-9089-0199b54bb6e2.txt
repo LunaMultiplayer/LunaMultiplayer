@@ -1,0 +1,99 @@
+pid = daedcd6fff10444690890199b54bb6e2
+name = Ast. RAF-533
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 71654498.912314847
+lct = 71654498.912314847
+lastUT = -1
+root = 0
+lat = 1.3433381148980501
+lon = -55.333527549443815
+alt = 14629907077.48942
+hgt = -1
+nrm = 0,1,0
+rot = 0.0223751049,0.77794522,-0.595949888,0.197848871
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14870794501.86636
+	ECC = 0.091134278140388783
+	INC = 1.5234964272675759
+	LPE = 22.043069607662382
+	LAN = 138.59708518102622
+	MNA = -0.32190702951560757
+	EPH = 100181695.91365844
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 71654498.912314847
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

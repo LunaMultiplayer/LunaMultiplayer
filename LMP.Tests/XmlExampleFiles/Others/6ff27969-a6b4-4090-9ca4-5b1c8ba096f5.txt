@@ -1,0 +1,189 @@
+pid = 6ff27969a6b440909ca45b1c8ba096f5
+name = Ast. QZV-764
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 220339129714321.31
+lct = 2057362.5543095199
+lastUT = 220339131771683.88
+root = 0
+lat = 0.85256892417393093
+lon = -118.52374712101862
+alt = 13779503719.941706
+hgt = -1
+nrm = 0.762284994,-0.446507931,-0.468564212
+rot = -0.067755729,0.525142133,0.79592222,0.2935009
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0.2439998
+cHdg = -4.84
+cMod = 0
+ORBIT
+{
+	SMA = 14564545877.419294
+	ECC = 0.067736690966559251
+	INC = 0.90663551429654343
+	LPE = 8.8053548433251745
+	LAN = 354.43460898950178
+	MNA = 0.95409998155106823
+	EPH = 220339131771683.88
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = -1
+	sidx = 0
+	attm = 0
+	srfN = , -1
+	mass = 906.531128
+	shielded = False
+	temp = 269.31107077785651
+	tempExt = 269.31107377986649
+	tempExtUnexp = 269.31106933852516
+	expt = 0.100000001
+	state = 1
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = PotatoRoid (Ast. QZV-764)
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleAsteroid
+		isEnabled = True
+		seed = 3.816028E+07
+		AsteroidName = Ast. QZV-764
+		prefabBaseURL = Procedural/PA_E
+		currentState = 1
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAsteroidInfo
+		isEnabled = True
+		massThreshold = 108.7837353515625
+		currentMass = 906.5311279296875
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAsteroidResource
+		isEnabled = True
+		abundance = 1
+		displayAbundance = 0.879999995
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = 25
+	lastObservedTime = 2057362.5543095199
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	KSPWheelVesselControl
+	{
+	}
+	KSPWheelVesselDebug
+	{
+	}
+	KSPWheelDustCamera
+	{
+	}
+}

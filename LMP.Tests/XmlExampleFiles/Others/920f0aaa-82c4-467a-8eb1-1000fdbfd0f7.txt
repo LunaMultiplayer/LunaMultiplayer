@@ -1,0 +1,99 @@
+pid = 920f0aaa82c4467a8eb11000fdbfd0f7
+name = Ast. HPR-686
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 11792666.629228348
+lct = 11792666.629228348
+lastUT = -1
+root = 0
+lat = 1.7766506936610891
+lon = -58.508311187694318
+alt = 17223522458.028046
+hgt = -1
+nrm = 0,1,0
+rot = -0.52811259,0.122253284,0.301701427,0.784300625
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16241007188.945618
+	ECC = 0.15981944156434358
+	INC = 2.1355929292767644
+	LPE = 182.71982324249882
+	LAN = 352.4292580523765
+	MNA = 0.0098353178545554712
+	EPH = 27512451.151823506
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 11792666.629228348
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

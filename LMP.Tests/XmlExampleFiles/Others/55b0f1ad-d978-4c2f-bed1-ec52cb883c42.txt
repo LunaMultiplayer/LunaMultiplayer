@@ -1,0 +1,107 @@
+pid = 55b0f1add9784c2fbed1ec52cb883c42
+name = Ast. OVN-241
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 12429811.863784257
+lct = 12429811.863784257
+lastUT = -1
+root = 0
+lat = 0.18228082026172332
+lon = 45.394409994670355
+alt = 16466513907.797539
+hgt = -1
+nrm = 0,1,0
+rot = -0.568826854,-0.563733578,-0.0800530612,0.593491375
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15401526622.891094
+	ECC = 0.11935024774549331
+	INC = 0.20016276951580023
+	LPE = 206.34243872083684
+	LAN = 257.97392173476408
+	MNA = 0.076320705582969744
+	EPH = 16614888.995348928
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 12429811.863784257
+	lifetime = Infinity
+	refTime = Infinity
+	size = 1
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	GoldStrikeVesselModule
+	{
+		lastProspectLongitude = 0
+		lastProspectLatitude = 0
+		lastProspectAltitude = 0
+		lastProspectPlanet = -1
+		lastProspectBiome = 
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

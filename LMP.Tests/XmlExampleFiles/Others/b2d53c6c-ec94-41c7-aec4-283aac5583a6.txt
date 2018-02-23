@@ -1,0 +1,96 @@
+pid = b2d53c6cec9441c7aec4283aac5583a6
+name = Ast. GPZ-167
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314486782449.84
+lct = 228314486782449.84
+lastUT = -1
+root = 0
+lat = 0.81903339995426661
+lon = 118.95720773497246
+alt = 13695348032.766518
+hgt = -1
+nrm = 0,1,0
+rot = 0.633366108,0.619229674,0.404684514,0.227227852
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13829607684.43434
+	ECC = 0.017917070497727963
+	INC = 0.91012702899428599
+	LPE = 354.05122589051291
+	LAN = 161.80988931005879
+	MNA = -0.026858946486657469
+	EPH = 228314511908324.16
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314486782449.84
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

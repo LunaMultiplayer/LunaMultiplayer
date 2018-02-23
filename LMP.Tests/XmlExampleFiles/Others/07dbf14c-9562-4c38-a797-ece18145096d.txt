@@ -1,0 +1,91 @@
+pid = 07dbf14c95624c38a797ece18145096d
+name = Ast. WER-679
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+splashed = False
+met = 630455772.85398245
+lct = 630455772.85398245
+lastUT = -1
+root = 0
+lat = -0.05249932463777008
+lon = -79.598164643781047
+alt = 14270465885.25412
+hgt = -1
+nrm = 0,1,0
+rot = 0.323773682,-0.0783750936,0.930916309,0.149742484
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+displaylandedAt = 
+ORBIT
+{
+	SMA = 14132957641.023521
+	ECC = 0.039365827377208042
+	INC = 0.3661100052034989
+	LPE = 214.36832209585504
+	LAN = 68.456939607173581
+	MNA = -0.37429782352042124
+	EPH = 655488554.14736235
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 21
+	lastObservedTime = 23754947.681344643
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

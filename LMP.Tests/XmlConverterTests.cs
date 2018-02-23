@@ -7,29 +7,38 @@ namespace LMP.Tests
     [TestClass]
     public class XmlConverterTests
     {
-        private static readonly string XmlExamplePath = Directory.GetCurrentDirectory() + "\\..\\..\\XmlExampleFiles\\";
+        private static readonly string XmlExamplePath = Path.Combine(Directory.GetCurrentDirectory(), "..", "..", "XmlExampleFiles");
 
         [TestMethod]
         public void TestConvertEvaToXml()
         {
-            SwitchToXmlAndBack("EVA.txt");
+            SwitchToXmlAndBack(Path.Combine(XmlExamplePath, "EVA.txt"));
         }
 
         [TestMethod]
         public void TestConvertVesselToXml()
         {
-            SwitchToXmlAndBack("Vessel.txt");
+            SwitchToXmlAndBack(Path.Combine(XmlExamplePath, "Vessel.txt"));
         }
 
         [TestMethod]
         public void TestConvertBigVesselToXml()
         {
-            SwitchToXmlAndBack("BigVessel.txt");
+            SwitchToXmlAndBack(Path.Combine(XmlExamplePath, "BigVessel.txt"));
         }
 
-        private void SwitchToXmlAndBack(string fileName)
+        [TestMethod]
+        public void TestSeveralVesselsToXml()
         {
-            var configNode = File.ReadAllText(XmlExamplePath + fileName);
+            foreach (var file in Directory.GetFiles(Path.Combine(XmlExamplePath, "Others")))
+            {
+                SwitchToXmlAndBack(file);
+            }
+        }
+        
+        private void SwitchToXmlAndBack(string filePath)
+        {
+            var configNode = File.ReadAllText(filePath);
             var xml = ConfigNodeXmlParser.ConvertToXml(configNode);
             var backToConfigNode = ConfigNodeXmlParser.ConvertToConfigNode(xml);
 

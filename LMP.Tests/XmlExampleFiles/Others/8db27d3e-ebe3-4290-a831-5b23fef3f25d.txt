@@ -1,0 +1,3536 @@
+pid = 8db27d3eebe34290a8315b23fef3f25d
+name = Spaceship avec launcher avec station part 3 Ship
+type = Ship
+sit = ESCAPING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 0
+lct = 228314486904849.63
+lastUT = 228314486904849.63
+root = 0
+lat = -5.0546027675591801E-06
+lon = 22.219226062990867
+alt = 86753.33845043066
+hgt = -1
+nrm = -0.186399996,-0.0789068341,-0.979300141
+rot = -0.563069284,0.635998964,0.424346179,-0.31366992
+CoM = -0.155591175,3.39789438,0.150334895
+stg = 1
+prst = False
+ref = 0
+ctrl = False
+cPch = 0
+cHdg = 0
+cMod = -1
+ORBIT
+{
+	SMA = -2175453.633913876
+	ECC = 1.3156826423703802
+	INC = 0.00018486713269028282
+	LPE = 3.6232906147282318
+	LAN = 358.99883983911246
+	MNA = -6.5272353449320736E-06
+	EPH = 228314486904849.63
+	REF = 1
+}
+PART
+{
+	name = dockingPort2
+	cid = 4293224476
+	uid = 171632702
+	mid = 1194999114
+	launchID = 3
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 1
+	srfN = srfAttach, -1
+	attN = top, -1
+	attN = bottom, -1
+	mass = 0.0500000007
+	shielded = False
+	temp = 299.98908151022573
+	tempExt = 299.28775681567606
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = dockingPort2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = Acquire
+		dockUId = 1280099858
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = dockingPort2
+	cid = 4294043340
+	uid = 1280099858
+	mid = 1194999114
+	launchID = 3
+	parent = 0
+	position = -0.15133628249168396,0.28229251503944397,0.15133652091026306
+	rotation = 1.00000024,-7.22252054E-08,7.41954098E-09,-4.08007352E-08
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	srfN = srfAttach, 0
+	attN = top, -1
+	attN = bottom, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.0134312902008
+	tempExt = 299.30455359781234
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = dockingPort2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = Docked (dockee)
+		dockUId = 171632702
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = crewCabin
+	cid = 4293987612
+	uid = 3520882120
+	mid = 1194999114
+	launchID = 3
+	parent = 1
+	position = -0.15133632719516754,1.2691956758499146,0.15133735537528992
+	rotation = 5.17035588E-08,1.68665608E-07,-7.02239475E-08,1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = top, 19
+	attN = bottom, 1
+	mass = 2.5
+	shielded = False
+	temp = 300.05379447854301
+	tempExt = 299.31741326085177
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = crewCabin
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleColorChanger
+		isEnabled = True
+		animState = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = Light
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceExperiment
+		isEnabled = True
+		Deployed = False
+		Inoperable = False
+		cooldownToGo = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DeployAction
+			{
+				actionGroup = None
+			}
+			ResetAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceContainer
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			CollectAllAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTripLogger
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		Log
+		{
+			flight = 0
+			0 = Orbit,Kerbin
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293891650
+	uid = 4272991704
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -1.2108794450759888,1.2388061285018921,0.61260688304901123
+	rotation = 4.09307326E-08,-0.500000596,-4.52616327E-08,0.866025329
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 4
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293891382
+	uid = 2717831377
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = 0.9082065224647522,1.2388036251068115,-0.30993157625198364
+	rotation = 9.32928614E-08,0.866025448,-3.9982794E-08,0.500000477
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 3
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293891714
+	uid = 3959290587
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -1.2184712886810303,1.2488006353378296,-0.29678213596343994
+	rotation = 2.58109711E-08,0.866026402,1.08935516E-09,-0.499998599
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 6
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293891250
+	uid = 2587794631
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = 0.91579967737197876,1.24880051612854,0.59945756196975708
+	rotation = -1.31904514E-07,-0.499998957,8.71093278E-08,-0.866026163
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 5
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293891182
+	uid = 2077590074
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = 0.91293025016784668,1.6886931657791138,-0.30174893140792847
+	rotation = 7.00007874E-08,0.866026342,2.73951688E-08,0.499998808
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 8
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293891150
+	uid = 2815540274
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -1.2156031131744385,1.6886956691741943,0.60442459583282471
+	rotation = 2.05710524E-08,0.499998748,1.05427112E-07,-0.866026521
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 7
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.0289279949302
+	tempExt = 299.31223126198853
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293891074
+	uid = 1451221349
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = 0.90455389022827148,0.78928881883621216,-0.31625926494598389
+	rotation = 7.00007874E-08,0.866026342,2.73951688E-08,0.499998808
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 10
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293891042
+	uid = 2957433190
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -1.2072263956069946,0.78928846120834351,0.61893445253372192
+	rotation = 2.05710524E-08,0.499998748,1.05427112E-07,-0.866026521
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 9
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293890978
+	uid = 1279545252
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = 0.90905839204788208,1.6858090162277222,0.61113452911376953
+	rotation = 3.91739263E-08,0.499999523,5.02645348E-09,0.866025925
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 12
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293890946
+	uid = 1607483361
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -1.2117307186126709,1.6858096122741699,-0.30845949053764343
+	rotation = 4.63199292E-08,0.866025925,1.10862729E-07,-0.499999523
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 11
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293890886
+	uid = 3153541550
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = 0.91142529249191284,0.80557066202163696,0.60703104734420776
+	rotation = 3.91739263E-08,0.499999523,5.02645348E-09,0.866025925
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 14
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = solarPanels5
+	cid = 4293890854
+	uid = 3678410214
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -1.2140984535217285,0.80556833744049072,-0.30435657501220703
+	rotation = 4.63199292E-08,0.866025925,1.10862729E-07,-0.499999523
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 13
+	srfN = srfAttach, 2
+	mass = 0.00499999989
+	shielded = False
+	temp = 300.02892799329379
+	tempExt = 299.31223126077646
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = solarPanels5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDeployableSolarPanel
+		isEnabled = True
+		efficiencyMult = 1
+		launchUT = 228314486904833.75
+		currentRotation = (0, -6.057208E-07, 0, 1)
+		storedAnimationTime = 0
+		storedAnimationSpeed = 0
+		deployState = EXTENDED
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ExtendPanelsAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ExtendAction
+			{
+				actionGroup = None
+				active = False
+			}
+			RetractAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293887578
+	uid = 2398106612
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -1.3560793399810791,0.53942370414733887,0.15718035399913788
+	rotation = 5.07659337E-08,1.68665608E-07,-5.16988301E-08,1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 16
+	srfN = srfAttach, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.04600340755866
+	tempExt = 299.31658289141171
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293887446
+	uid = 992444297
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = 1.0534065961837769,0.53941947221755981,0.14549492299556732
+	rotation = 1.53942565E-07,1.00000024,7.01954548E-08,1.48390802E-08
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 15
+	srfN = srfAttach, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.04599606851042
+	tempExt = 299.31658052463763
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293887354
+	uid = 850111374
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -0.13202400505542755,0.46898537874221802,-1.0534030199050903
+	rotation = 5.25628217E-08,0.707107008,5.8888542E-08,-0.707106769
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 18
+	srfN = srfAttach, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.04599606851042
+	tempExt = 299.31658052463763
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293887026
+	uid = 4259697743
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -0.17064841091632843,0.46898570656776428,1.3560783863067627
+	rotation = -9.44272074E-08,-0.707106769,2.47538079E-09,-0.707107008
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 17
+	srfN = srfAttach, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.04599606851042
+	tempExt = 299.31658052463763
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = largeAdapter2
+	cid = 4293867482
+	uid = 1504192598
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -0.15133626759052277,2.4453177452087402,0.1513371467590332
+	rotation = 1.00000024,-7.22252054E-08,7.41954098E-09,-4.08007352E-08
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = top, 2
+	attN = bottom, 20
+	mass = 0.0799999982
+	shielded = False
+	temp = 300.03127253660233
+	tempExt = 299.31173934500197
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = largeAdapter2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+}
+PART
+{
+	name = stationHub
+	cid = 4293865228
+	uid = 368365397
+	mid = 1194999114
+	launchID = 3
+	parent = 19
+	position = -0.15133509039878845,3.5466923713684082,0.15133698284626007
+	rotation = 5.17035588E-08,1.68665608E-07,-7.02239475E-08,1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = right, 21
+	attN = left, 24
+	attN = back, 22
+	attN = front, 23
+	attN = top, 25
+	attN = bottom, 19
+	mass = 1.5
+	shielded = False
+	temp = 300.0562670296419
+	tempExt = 299.31535667031005
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = stationHub
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+}
+PART
+{
+	name = dockingPort2
+	cid = 4293857652
+	uid = 1816984277
+	mid = 1194999114
+	launchID = 3
+	parent = 20
+	position = 0.76082152128219604,3.5466890335083008,0.15133729577064514
+	rotation = 6.61067574E-08,-8.93382932E-08,-0.707106709,0.707107186
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 2
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, -1
+	attN = bottom, 20
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.02786502807379
+	tempExt = 299.31113920731866
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = dockingPort2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = Ready
+		dockUId = 0
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = dockingPort2
+	cid = 4293855754
+	uid = 1156168042
+	mid = 1194999114
+	launchID = 3
+	parent = 20
+	position = -0.1513354480266571,3.5466904640197754,1.0634932518005371
+	rotation = -0.0644878373,0.704159915,0.704160273,-0.0644879267
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 2
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, -1
+	attN = bottom, 20
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.02786454195723
+	tempExt = 299.31113890466361
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = dockingPort2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = Ready
+		dockUId = 0
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = dockingPort2
+	cid = 4293855374
+	uid = 2326712335
+	mid = 1194999114
+	launchID = 3
+	parent = 20
+	position = -0.15133519470691681,3.5466911792755127,-0.76081883907318115
+	rotation = 0.704160392,0.0644879267,-0.0644880235,-0.704159975
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 2
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, -1
+	attN = bottom, 20
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.02786454814691
+	tempExt = 299.31113890643252
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = dockingPort2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = Ready
+		dockUId = 0
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = dockingPort2
+	cid = 4293855016
+	uid = 2809773460
+	mid = 1194999114
+	launchID = 3
+	parent = 20
+	position = -1.0634925365447998,3.5466907024383545,0.1513359546661377
+	rotation = -0.70710665,0.707107306,8.14554912E-09,-2.40516442E-07
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 2
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, -1
+	attN = bottom, 20
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.02786502246715
+	tempExt = 299.31113920594368
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = dockingPort2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = Ready
+		dockUId = 0
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = dockingPort2
+	cid = 4293854322
+	uid = 327464683
+	mid = 1194999114
+	launchID = 3
+	parent = 20
+	position = -0.15133519470691681,4.4588446617126465,0.1513364315032959
+	rotation = 7.85046979E-08,0.707106769,-1.81393442E-08,0.707107008
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 2
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, 26
+	attN = bottom, 20
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.02134778198524
+	tempExt = 299.30028858339801
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = dockingPort2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = PreAttached
+		dockUId = 0
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = dockingPort2
+	cid = 4293853948
+	uid = 715330819
+	mid = 1194999114
+	launchID = 3
+	parent = 25
+	position = -0.15133537352085114,5.0246129035949707,0.15133623778820038
+	rotation = -0.707107008,1.70111303E-08,0.707106769,9.68712115E-08
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, 25
+	attN = bottom, 27
+	mass = 0.0500000007
+	shielded = False
+	temp = 299.99481108573372
+	tempExt = 299.28200519587921
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = dockingPort2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = PreAttached
+		dockUId = 0
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSFuelTank
+	cid = 4293822080
+	uid = 4046646575
+	mid = 1194999114
+	launchID = 3
+	parent = 26
+	position = -0.15133474767208099,5.3099184036254883,0.15133637189865112
+	rotation = 7.42211128E-08,7.96312207E-08,-1.11981592E-07,1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = top, 28
+	attN = bottom, 26
+	mass = 0.150000006
+	shielded = False
+	temp = 300.00128619406314
+	tempExt = 299.27402067214052
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSFuelTank
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	RESOURCE
+	{
+		name = MonoPropellant
+		amount = 250
+		maxAmount = 250
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = RCSFuelTank
+	cid = 4293821754
+	uid = 198617394
+	mid = 1194999114
+	launchID = 3
+	parent = 27
+	position = -0.15133453905582428,5.8805246353149414,0.15133720636367798
+	rotation = 7.42211128E-08,7.96312207E-08,-1.11981592E-07,1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = top, 29
+	attN = bottom, 27
+	mass = 0.150000006
+	shielded = False
+	temp = 300.00056197726894
+	tempExt = 299.28262311601219
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSFuelTank
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	RESOURCE
+	{
+		name = MonoPropellant
+		amount = 250
+		maxAmount = 250
+		flowState = True
+		isTweakable = True
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+PART
+{
+	name = dockingPort2
+	cid = 4293816032
+	uid = 1914597388
+	mid = 1194999114
+	launchID = 3
+	parent = 28
+	position = -0.15133525431156158,6.1658267974853516,0.15133638679981232
+	rotation = 7.42211128E-08,7.96312207E-08,-1.11981592E-07,1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 4
+	sidx = -1
+	attm = 0
+	srfN = srfAttach, -1
+	attN = top, -1
+	attN = bottom, 28
+	mass = 0.0500000007
+	shielded = False
+	temp = 299.978084226482
+	tempExt = 299.30398516145868
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = dockingPort2
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = Ready
+		dockUId = 0
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = strutConnector
+	cid = 4292861456
+	uid = 966002036
+	mid = 1194999114
+	launchID = 3
+	parent = 29
+	position = -0.1025003045797348,6.4481239318847656,0.33358991146087646
+	rotation = 0.695344627,-0.695344448,-0.128438413,0.128438443
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 4
+	sidx = -1
+	attm = 1
+	srfN = srfAttach, 29
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00165370678599
+	tempExt = 299.60655452447855
+	tempExtUnexp = 4
+	expt = 0
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = strutConnector
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+		tgt = 4294305064
+		pos = -0.898783445,0.260838449,-1.16574478
+		rot = 0,-0.695344448,-0.128438503,0.70710659
+		dir = -0.601225436,0.174481899,-0.779797494
+	}
+	MODULE
+	{
+		name = CModuleLinkedMesh
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = CModuleStrut
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293810132
+	uid = 945231817
+	mid = 1194999114
+	launchID = 3
+	parent = 28
+	position = 0.50925183296203613,6.092195987701416,0.13655917346477509
+	rotation = 5.72859093E-08,1.00000024,5.02542292E-08,1.98362815E-09
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 1
+	sym = 32
+	srfN = srfAttach, 28
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00815001030998
+	tempExt = 299.27952031993232
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293804638
+	uid = 1067351493
+	mid = 1194999114
+	launchID = 3
+	parent = 28
+	position = -0.81192308664321899,6.0921950340270996,0.16611462831497192
+	rotation = -5.70734642E-08,-7.22116908E-08,1.84168186E-07,-1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 1
+	sym = 31
+	srfN = srfAttach, 28
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00815001030998
+	tempExt = 299.27952031993232
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293804030
+	uid = 3210409775
+	mid = 1194999114
+	launchID = 3
+	parent = 28
+	position = -0.070335462689399719,6.1029205322265625,-0.50924992561340332
+	rotation = 5.05811002E-08,0.707107067,5.9819989E-08,-0.707106888
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 1
+	sym = 34
+	srfN = srfAttach, 28
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00815001030998
+	tempExt = 299.27952031993232
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293803902
+	uid = 3309677613
+	mid = 1194999114
+	launchID = 3
+	parent = 28
+	position = -0.23233434557914734,6.1029214859008789,0.81192368268966675
+	rotation = -1.1690689E-07,-0.707106888,1.16867307E-08,-0.707107186
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 1
+	sym = 33
+	srfN = srfAttach, 28
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00815001030998
+	tempExt = 299.27952031993232
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293804542
+	uid = 1706505132
+	mid = 1194999114
+	launchID = 3
+	parent = 27
+	position = 0.50925183296203613,5.1220498085021973,0.13464219868183136
+	rotation = 4.44638104E-08,1.00000024,5.40626708E-08,-5.43590328E-09
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 1
+	sym = 36
+	srfN = srfAttach, 27
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00882252050445
+	tempExt = 299.27648541881587
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293804414
+	uid = 1406866991
+	mid = 1194999114
+	launchID = 3
+	parent = 27
+	position = -0.81192231178283691,5.1220488548278809,0.16803005337715149
+	rotation = -6.37334097E-08,-7.22116908E-08,1.68973045E-07,-1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 1
+	sym = 35
+	srfN = srfAttach, 27
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00882252050445
+	tempExt = 299.27648541881587
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293804322
+	uid = 4259473751
+	mid = 1194999114
+	launchID = 3
+	parent = 27
+	position = -0.10443402081727982,5.1417546272277832,-0.50924897193908691
+	rotation = 5.05811002E-08,0.707107067,5.9819989E-08,-0.707106888
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 1
+	sym = 38
+	srfN = srfAttach, 27
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00882252050445
+	tempExt = 299.27648541881587
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293804122
+	uid = 1767542386
+	mid = 1194999114
+	launchID = 3
+	parent = 27
+	position = -0.19823558628559113,5.141746997833252,0.81192231178283691
+	rotation = -1.1690689E-07,-0.707106888,1.16867307E-08,-0.707107186
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 1
+	sym = 37
+	srfN = srfAttach, 27
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00882252050445
+	tempExt = 299.27648541881587
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = seatExternalCmd
+	cid = 4293791834
+	uid = 1806818411
+	mid = 1194999114
+	launchID = 3
+	parent = 27
+	position = -0.95540893077850342,5.5305438041687012,0.16987805068492889
+	rotation = 5.5921241E-08,0.707106888,3.60051478E-09,0.707107186
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 3
+	sidx = -1
+	attm = 1
+	srfN = srfAttach, 27
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.00955914805542
+	tempExt = 299.27701302712819
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = seatExternalCmd
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = KerbalSeat
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTripLogger
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		Log
+		{
+			flight = 0
+			0 = Orbit,Kerbin
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293789656
+	uid = 1051570650
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = 1.0547250509262085,2.0755636692047119,0.1505948007106781
+	rotation = 6.74791494E-08,1.00000024,4.65037431E-08,7.41954187E-09
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 41
+	srfN = srfAttach, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.04600624620542
+	tempExt = 299.31658380680159
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293788872
+	uid = 204180137
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -1.3573974370956421,2.0755641460418701,0.15207879245281219
+	rotation = -4.59619294E-08,-1.61246078E-07,1.32918402E-07,-1.00000024
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 40
+	srfN = srfAttach, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.04602679792794
+	tempExt = 299.31659043419853
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293789560
+	uid = 1335685190
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -0.15207807719707489,1.9951590299606323,-1.0617241859436035
+	rotation = -9.36396631E-08,0.707107127,1.88188508E-07,-0.707106769
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 43
+	srfN = srfAttach, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.04599606851042
+	tempExt = 299.31658052463763
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+PART
+{
+	name = RCSBlock
+	cid = 4293788448
+	uid = 3127665463
+	mid = 1194999114
+	launchID = 3
+	parent = 2
+	position = -0.15059436857700348,1.9951598644256592,1.3643996715545654
+	rotation = 2.61974069E-08,-0.707106769,1.47503499E-07,-0.707107008
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 2
+	sqor = -1
+	sepI = 1
+	sidx = -1
+	attm = 1
+	sym = 42
+	srfN = srfAttach, 2
+	mass = 0.0500000007
+	shielded = False
+	temp = 300.04599595773493
+	tempExt = 299.31658048397077
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = RCSBlock
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleRCSFX
+		isEnabled = True
+		rcsEnabled = True
+		thrustPercentage = 100
+		currentShowToggles = False
+		enableYaw = True
+		enablePitch = True
+		enableRoll = True
+		enableX = True
+		enableY = True
+		enableZ = True
+		useThrottle = False
+		fullThrust = False
+		stagingEnabled = False
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

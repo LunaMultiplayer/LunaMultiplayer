@@ -1,0 +1,107 @@
+pid = 12299ac48e8841d8a37385765e66cfb2
+name = Ast. VYY-577
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 619192391.69775569
+lct = 619192391.69775569
+lastUT = -1
+root = 0
+lat = -0.11863776474504004
+lon = -86.730490195010276
+alt = 13263926661.468676
+hgt = -1
+nrm = 0,1,0
+rot = 0.634653509,0.683555245,-0.29192695,0.211531922
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14479728010.817751
+	ECC = 0.066641906396003286
+	INC = 0.27658789589192406
+	LPE = 214.55099560755102
+	LAN = 181.52954533687537
+	MNA = -0.42906919314949282
+	EPH = 649059509.19535255
+	REF = 0
+	IDENT = Sun
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 29
+	lastObservedTime = 619192391.69775569
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	KSPWheelDustCamera
+	{
+	}
+	KSPWheelVesselControl
+	{
+	}
+	KSPWheelVesselDebug
+	{
+	}
+	ModuleDynamicBatteryStorage
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+}

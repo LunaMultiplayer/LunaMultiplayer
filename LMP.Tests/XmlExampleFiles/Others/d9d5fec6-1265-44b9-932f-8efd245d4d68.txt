@@ -1,0 +1,102 @@
+pid = d9d5fec6126544b9932f8efd245d4d68
+name = Ast. IEY-723
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314465818667.75
+lct = 228314465818667.75
+lastUT = -1
+root = 0
+lat = 0.82648468924343965
+lon = -109.17654557053233
+alt = 14122380760.525328
+hgt = -1
+nrm = 0,1,0
+rot = 0.308055997,0.054477673,-0.62513268,0.715082467
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15269624575.540331
+	ECC = 0.10852918618506413
+	INC = 0.99062934297841365
+	LPE = 186.57589770286813
+	LAN = 96.253894114469745
+	MNA = -0.18368809040862727
+	EPH = 228314478043097.53
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314465818667.75
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	FlightGUI
+	{
+	}
+	FARVesselAero
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

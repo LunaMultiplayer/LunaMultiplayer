@@ -1,0 +1,99 @@
+pid = 48a8df49179644f59ecbbcc3ee9dbbd6
+name = Ast. DHK-463
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 71654498.912314847
+lct = 71654498.912314847
+lastUT = -1
+root = 0
+lat = -0.59179278327861118
+lon = -169.99950195566478
+alt = 14138674170.925711
+hgt = -1
+nrm = 0,1,0
+rot = -0.863954365,-0.162676185,0.0637110993,0.472292572
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14030718239.526661
+	ECC = 0.031075718641810159
+	INC = 1.3409223299078967
+	LPE = 355.07288322233444
+	LAN = 295.89812862010524
+	MNA = 0.2233297931012016
+	EPH = 95224291.433038428
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 71654498.912314847
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

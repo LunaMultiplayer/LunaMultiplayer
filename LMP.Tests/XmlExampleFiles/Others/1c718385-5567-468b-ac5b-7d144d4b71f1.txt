@@ -1,0 +1,297 @@
+pid = 1c7183855567468bac5b7d144d4b71f1
+name = Bill Kerman
+type = EVA
+sit = ESCAPING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 967.3125
+lct = 228314486784553.97
+lastUT = 228314486785521.28
+root = 0
+lat = -1.2488278570665619
+lon = -99.036365324193227
+alt = 1746031.544318351
+hgt = -1
+nrm = 0.770018876,-0.0273441467,0.637434959
+rot = -0.00160841772,0.935633957,0.0041135014,0.352944136
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = True
+cPch = 0.5357506
+cHdg = 1.369651
+cMod = 2
+ORBIT
+{
+	SMA = -1742420.869200794
+	ECC = 1.4582914683072412
+	INC = 2.1155912889055211
+	LPE = 119.7567002851404
+	LAN = 191.72371595080932
+	MNA = 0.78406951341663134
+	EPH = 228314486785521.28
+	REF = 1
+}
+PART
+{
+	name = kerbalEVA
+	cid = 4292122348
+	uid = 2436753673
+	mid = 1411178575
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	mass = 0.09375
+	shielded = False
+	temp = 304.65027298885497
+	tempExt = 304.44589169719535
+	tempExtUnexp = 305.94971815911248
+	expt = 0
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbs
+	rTrf = referenceTransform
+	modCost = 0
+	crew = Bill Kerman
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = KerbalEVA
+		isEnabled = True
+		JetpackDeployed = True
+		lampOn = True
+		lastBoundStep = 1.20833337
+		_flags = 1
+		stagingEnabled = True
+		state = Idle (Floating)
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		vInfo
+		{
+			vesselName = Bill Kerman
+			vesselType = EVA
+			rootUId = 2436753673
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceExperiment
+		isEnabled = True
+		Deployed = False
+		Inoperable = False
+		cooldownToGo = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DeployAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ResetAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceExperiment
+		isEnabled = True
+		Deployed = True
+		Inoperable = False
+		cooldownToGo = 0
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			DeployAction
+			{
+				actionGroup = None
+				active = False
+			}
+			ResetAction
+			{
+				actionGroup = None
+				active = False
+			}
+		}
+		ScienceData
+		{
+			data = 8
+			subjectID = evaReport@KerbinInSpaceHigh
+			xmit = 1
+			xmitBonus = 0
+			title = EVA Report while in space high over Kerbin
+			triggered = False
+			container = 2436753673
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleScienceContainer
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			CollectAllAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTripLogger
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		Log
+		{
+			flight = 0
+			0 = Orbit,Kerbin
+			0 = Escape,Kerbin
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	RESOURCE
+	{
+		name = EVA Propellant
+		amount = 2.2780507601961926
+		maxAmount = 5
+		flowState = True
+		isTweakable = False
+		hideFlow = False
+		isVisible = True
+		flowMode = Both
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = True, 228314486785269
+	Light = True, 228314486785270
+	RCS = True, 228314486785201
+	SAS = True, 228314486785341
+	Brakes = True, 228314486785267
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+TARGET
+{
+	type = Vessel
+	vesselID = 0df90f79-6173-4a72-895c-357d4440f143
+}
+CTRLSTATE
+{
+	pitch = 0.182410821
+	yaw = 1
+	roll = -0.643428683
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = False
+	}
+}

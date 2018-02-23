@@ -1,0 +1,96 @@
+pid = cd20e5c6b174450aa338775282a7f472
+name = Ast. DHU-998
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314486783394.41
+lct = 228314486783394.41
+lastUT = -1
+root = 0
+lat = -0.63402137041334894
+lon = 176.18008158313589
+alt = 15741209556.397802
+hgt = -1
+nrm = 0,1,0
+rot = -0.591610551,-0.444411129,-0.474102795,0.477202624
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15473074706.08353
+	ECC = 0.12410949903808934
+	INC = 0.72827542784246568
+	LPE = 353.27736403745604
+	LAN = 95.150729026839201
+	MNA = -0.016888354908552512
+	EPH = 228314500999529.63
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314486783394.41
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

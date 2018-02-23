@@ -1,0 +1,112 @@
+pid = 2cc18b96b0d64f7d892f3c6e4e8e3878
+name = Ast. WJN-793
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 76535448.992181376
+lct = 76535448.992181376
+lastUT = -1
+root = 0
+lat = 0.087124863218348461
+lon = -112.21037335933497
+alt = 13709819895.403484
+hgt = -1
+nrm = 0,1,0
+rot = -0.0132201416,0.243361399,0.0302665848,0.969373226
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13784463101.4979
+	ECC = 0.017783871503367427
+	INC = 0.42043988455180231
+	LPE = 27.687211834347117
+	LAN = 139.28991420130001
+	MNA = -0.63913644282030813
+	EPH = 90736080.455301806
+	REF = 0
+	IDENT = Sun
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 76535448.992181376
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	KSPWheelDustCamera
+	{
+	}
+	KSPWheelVesselControl
+	{
+	}
+	KSPWheelVesselDebug
+	{
+	}
+	ModuleDynamicBatteryStorage
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,99 @@
+pid = d1fd367c3423481d89a1ce4827e72824
+name = Ast. UOM-556
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 135884099.30841732
+lct = 135884099.30841732
+lastUT = -1
+root = 0
+lat = -1.0402430149681368
+lon = 7.2266679239145697
+alt = 16015482727.708424
+hgt = -1
+nrm = 0,1,0
+rot = 0.0118225506,0.724118292,-0.643546224,0.247711793
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16053359083.160618
+	ECC = 0.15431524436659513
+	INC = 1.0537041673933121
+	LPE = 4.7934422481889056
+	LAN = 303.14528149144678
+	MNA = -0.075953955138462509
+	EPH = 150376714.8680816
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 135884099.30841732
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

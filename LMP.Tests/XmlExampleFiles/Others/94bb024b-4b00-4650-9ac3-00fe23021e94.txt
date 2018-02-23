@@ -1,0 +1,96 @@
+pid = 94bb024b4b0046509ac300fe23021e94
+name = Ast. XOS-124
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 510414447797607.88
+lct = 510414447797607.88
+lastUT = -1
+root = 0
+lat = 0.19518910996603528
+lon = 121.37445314402437
+alt = 13277570677.283867
+hgt = -1
+nrm = 0,1,0
+rot = -0.299546361,0.294169664,-0.82686466,0.374207258
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14916275457.07098
+	ECC = 0.092469720729555963
+	INC = 1.0186148767285781
+	LPE = 14.598069558399247
+	LAN = 275.00134363512211
+	MNA = -0.29241301931656843
+	EPH = 510414468535260.19
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 510414447797607.88
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,96 @@
+pid = 2f00c5f4379f4ac582f3a42e30bcea38
+name = Ast. KJD-609
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 104351708.85895105
+lct = 104351708.85895105
+lastUT = -1
+root = 0
+lat = 1.0305026775131749
+lon = -43.983633098622988
+alt = 13900080825.423885
+hgt = -1
+nrm = 0,1,0
+rot = 0.0357527547,-0.611466527,-0.397956878,0.682979286
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16160899242.312712
+	ECC = 0.15703586809745587
+	INC = 1.7111234671557092
+	LPE = 353.06974553878371
+	LAN = 118.75162637793056
+	MNA = 0.036876897266930657
+	EPH = 127190214.80151331
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 104351708.85895105
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

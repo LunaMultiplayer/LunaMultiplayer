@@ -1,0 +1,107 @@
+pid = 87231e02659b4cdd9a9bb7609a2174fd
+name = Ast. QNX-114
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 10418617.550838742
+lct = 10418617.550838742
+lastUT = -1
+root = 0
+lat = -0.75148857529606305
+lon = -151.34824517143102
+alt = 14280001651.783813
+hgt = -1
+nrm = 0,1,0
+rot = -0.51145649,-0.194880366,-0.325227022,0.77114284
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14254412205.997087
+	ECC = 0.047477800710092957
+	INC = 0.98524243145789314
+	LPE = 192.74240380474723
+	LAN = 300.53703902992038
+	MNA = -0.21070122109574335
+	EPH = 16873122.634676896
+	REF = 0
+	IDENT = Sun
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 29
+	lastObservedTime = 10418617.550838742
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	KSPWheelDustCamera
+	{
+	}
+	KSPWheelVesselControl
+	{
+	}
+	KSPWheelVesselDebug
+	{
+	}
+	ModuleDynamicBatteryStorage
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+}

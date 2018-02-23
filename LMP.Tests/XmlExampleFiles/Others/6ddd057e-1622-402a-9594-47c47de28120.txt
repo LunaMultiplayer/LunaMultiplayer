@@ -1,0 +1,96 @@
+pid = 6ddd057e1622402a959447c47de28120
+name = Ast. GFC-800
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 70863079.819163576
+lct = 70863079.819163576
+lastUT = -1
+root = 0
+lat = 1.1090680547820224
+lon = -167.89932894248096
+alt = 16242458131.772833
+hgt = -1
+nrm = 0,1,0
+rot = -0.535203159,0.394501269,0.581192672,0.469192237
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16630019734.377666
+	ECC = 0.18148850524250337
+	INC = 1.1092026812350955
+	LPE = 187.20269281847752
+	LAN = 115.5599908032242
+	MNA = 0.016656109783319904
+	EPH = 86010428.368563175
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 70863079.819163576
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,96 @@
+pid = e75fea2791fd494cba9b0c5ae6e30c3c
+name = Ast. UBS-128
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 21493870.975455411
+lct = 21493870.975455411
+lastUT = -1
+root = 0
+lat = -0.34975864280160734
+lon = 93.053604586084262
+alt = 13339498306.15778
+hgt = -1
+nrm = 0,1,0
+rot = -0.58503443,-0.41214177,-0.689918458,0.109024569
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14123722956.123501
+	ECC = 0.039365626173111484
+	INC = 0.94346329042203247
+	LPE = 181.02639574290535
+	LAN = 162.85464066816576
+	MNA = -0.28246904656506261
+	EPH = 49758310.782694042
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 21493870.975455411
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

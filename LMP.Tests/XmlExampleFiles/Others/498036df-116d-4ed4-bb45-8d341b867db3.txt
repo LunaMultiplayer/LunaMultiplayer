@@ -1,0 +1,96 @@
+pid = 498036df116d4ed4bb458d341b867db3
+name = Ast. WHH-894
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314486457471.19
+lct = 228314486457471.19
+lastUT = -1
+root = 0
+lat = -0.073403445236831844
+lon = 72.358875868594296
+alt = 14824036079.91198
+hgt = -1
+nrm = 0,1,0
+rot = 0.231841147,0.327541232,0.829486847,0.388481677
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14349337793.877768
+	ECC = 0.057780728257127739
+	INC = 1.8705805826486448
+	LPE = 203.63600441823911
+	LAN = 322.49963764487961
+	MNA = -0.36726415739737439
+	EPH = 228314511611853.91
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314486457471.19
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

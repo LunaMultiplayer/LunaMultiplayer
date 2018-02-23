@@ -1,0 +1,96 @@
+pid = e8bd21458212478cb33567ed9f8f3caa
+name = Ast. TMD-216
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 7601061.5741021233
+lct = 7601061.5741021233
+lastUT = -1
+root = 0
+lat = 0.53600974236840127
+lon = -83.398910008781215
+alt = 13650127633.940517
+hgt = -1
+nrm = 0,1,0
+rot = 0.309290349,0.586479843,-0.0190633386,0.748343229
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13735022577.587898
+	ECC = 0.01314837406772253
+	INC = 0.6832302508616841
+	LPE = 320.07908200289745
+	LAN = 2.4943162699602794
+	MNA = 0.70413395120897504
+	EPH = 32313751.012701049
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 7601061.5741021233
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

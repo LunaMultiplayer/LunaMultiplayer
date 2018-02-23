@@ -1,0 +1,96 @@
+pid = 5687337dbe2f42e4adb7ffb35ef108f9
+name = Ast. IBK-181
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 21729302.66219376
+lct = 21729302.66219376
+lastUT = -1
+root = 0
+lat = 0.17818891532318334
+lon = -123.29480564267281
+alt = 13392656888.361355
+hgt = -1
+nrm = 0,1,0
+rot = 0.296506077,0.581207871,0.200915858,0.730694532
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14481662857.93973
+	ECC = 0.060301514188357969
+	INC = 0.51244779490636738
+	LPE = 179.44118342777483
+	LAN = 184.80490589234793
+	MNA = 0.31003908306704958
+	EPH = 32834271.445988551
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 21729302.66219376
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

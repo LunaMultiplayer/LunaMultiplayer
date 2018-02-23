@@ -1,0 +1,96 @@
+pid = 73b3249d2e4e4108b6a6e7923c543253
+name = Ast. ITI-026
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 76828084.939016044
+lct = 76828084.939016044
+lastUT = -1
+root = 0
+lat = -2.4608910211674568
+lon = 147.00046159026556
+alt = 14966040729.729347
+hgt = -1
+nrm = 0,1,0
+rot = 0.774174333,0.622815013,-0.0547209121,0.098798424
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15412068034.6994
+	ECC = 0.11773572932000531
+	INC = 2.5348716725288445
+	LPE = 165.1942850253306
+	LAN = 194.28980913105576
+	MNA = 0.18284051314674715
+	EPH = 96968572.529601544
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 76828084.939016044
+	lifetime = Infinity
+	refTime = Infinity
+	size = 1
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,107 @@
+pid = ed1ed1e0dbe44473a37e06dc44a12c42
+name = Ast. XPP-920
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314448099921.81
+lct = 228314448099921.81
+lastUT = -1
+root = 0
+lat = 0.39197563146848707
+lon = -6.4322425128876066
+alt = 18004877682.290516
+hgt = -1
+nrm = 0,1,0
+rot = 0.0916486308,-0.441510707,-0.75428319,0.477206081
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 16038565531.337595
+	ECC = 0.14958723811780134
+	INC = 0.94884856604870638
+	LPE = 185.6103583996788
+	LAN = 292.43774772632793
+	MNA = -0.073227616694632833
+	EPH = 228314464825817.53
+	REF = 0
+	IDENT = Sun
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 29
+	lastObservedTime = 228314448099921.81
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	KSPWheelDustCamera
+	{
+	}
+	KSPWheelVesselControl
+	{
+	}
+	KSPWheelVesselDebug
+	{
+	}
+	ModuleDynamicBatteryStorage
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+}

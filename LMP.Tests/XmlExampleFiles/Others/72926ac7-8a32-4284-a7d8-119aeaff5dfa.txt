@@ -1,0 +1,175 @@
+pid = 72926ac78a324284a7d8119aeaff5dfa
+name = Communication falcon Relay
+type = Relay
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 11.639999739825726
+lct = 23256757.527914252
+lastUT = 23256769.167913992
+root = 0
+lat = -0.095568303212053923
+lon = -64.167685670047845
+alt = 249451.29307180957
+hgt = -1
+nrm = 0.807271719,-0.253705889,-0.532865465
+rot = -0.626462996,0.165941104,0.751629829,0.122720413
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0
+cHdg = 0
+cMod = -1
+ORBIT
+{
+	SMA = 843219.13308948057
+	ECC = 0.0077880736445596795
+	INC = 0.1607358968805804
+	LPE = 161.75474691026128
+	LAN = 144.83049421753208
+	MNA = 2.8123352584973129
+	EPH = 23256766.667914048
+	REF = 1
+}
+PART
+{
+	name = RelayAntenna5
+	cid = 4294196384
+	uid = 577882902
+	mid = 1550256162
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1.00000012
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 1
+	srfN = srfAttach, -1
+	attN = bottom, -1
+	mass = 0.150000006
+	shielded = False
+	temp = 297.92381094544385
+	tempExt = 297.84854610557409
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/orbit
+	rTrf = RelayAntenna5
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDataTransmitter
+		isEnabled = True
+		xmitIncomplete = False
+		stagingEnabled = True
+		canComm = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			StartTransmissionAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTripLogger
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		Log
+		{
+			flight = 0
+			0 = Flight,Kerbin
+			0 = Orbit,Kerbin
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 23256499.74792
+	Gear = False, 0
+	Light = False, 0
+	RCS = True, 23256490.2879202
+	SAS = True, 23256490.5079202
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = False
+	}
+}

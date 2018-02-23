@@ -1,0 +1,96 @@
+pid = c8a201dba9c34a2ea5c547c8ce530fe0
+name = Ast. SNX-474
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314448099854.69
+lct = 228314448099854.69
+lastUT = -1
+root = 0
+lat = -0.052513840893143461
+lon = -79.434428251116742
+alt = 14495411494.353523
+hgt = -1
+nrm = 0,1,0
+rot = -0.371820867,0.342636198,0.777048171,0.374894291
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14198124787.498478
+	ECC = 0.045776447764127856
+	INC = 0.64718008583340947
+	LPE = 34.034780460764892
+	LAN = 59.123745641777759
+	MNA = -0.49890101131879971
+	EPH = 228314472737631.59
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314448099854.69
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

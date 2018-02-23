@@ -1,0 +1,91 @@
+pid = 9e5f5952572f4fab84ab5191c1bc5a56
+name = Ast. HXJ-602
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+splashed = False
+met = 116923534.42874554
+lct = 116923534.42874554
+lastUT = -1
+root = 0
+lat = 0.41689142015038028
+lon = -83.581999358514068
+alt = 13819102049.613848
+hgt = -1
+nrm = 0,1,0
+rot = 0.0721438676,-0.919709742,0.384966344,0.0270231422
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+displaylandedAt = 
+ORBIT
+{
+	SMA = 15563544568.634819
+	ECC = 0.13098085497006123
+	INC = 0.54246607545550485
+	LPE = 178.53736872542785
+	LAN = 22.916260263270544
+	MNA = -0.09822830678376894
+	EPH = 129209591.44048156
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 21
+	lastObservedTime = 228314424665449.72
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

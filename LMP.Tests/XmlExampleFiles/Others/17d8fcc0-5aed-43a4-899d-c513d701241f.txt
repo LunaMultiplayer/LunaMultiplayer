@@ -1,0 +1,96 @@
+pid = 17d8fcc05aed43a4899dc513d701241f
+name = Ast. IGK-824
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314478466904.94
+lct = 228314478466904.94
+lastUT = -1
+root = 0
+lat = 2.4601518727346141
+lon = -135.99960701760659
+alt = 15214919176.184189
+hgt = -1
+nrm = 0,1,0
+rot = 0.229853496,-0.345683038,-0.857841849,0.302948713
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15032855092.089331
+	ECC = 0.092609523204374933
+	INC = 2.7838723828597618
+	LPE = 175.65019462472603
+	LAN = 231.01259182252099
+	MNA = 0.014480474977801611
+	EPH = 228314481568217.84
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314478466904.94
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

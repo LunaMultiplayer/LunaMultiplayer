@@ -1,0 +1,113 @@
+pid = dcd2c04d846045aaad2df646831c7f1d
+name = Ast. RMB-624
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 853487.30887443933
+lct = 853487.30887443933
+lastUT = -1
+root = 0
+lat = -0.18977330796892899
+lon = -44.475423564920426
+alt = 14494308792.510527
+hgt = -1
+nrm = 0,1,0
+rot = 0.291030079,-0.466061056,0.46388346,0.694910586
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14740503149.377865
+	ECC = 0.080164803325950482
+	INC = 0.26111820509204842
+	LPE = 321.95876972997434
+	LAN = 80.147770326550358
+	MNA = 0.30028489785609269
+	EPH = 24606012.564542104
+	REF = 0
+	IDENT = Sun
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 853487.30887443933
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	ModuleLifeSupportSystem
+	{
+		LastUpdateTime = 0
+	}
+	SnacksVesselModule
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+	ModuleStabilization
+	{
+	}
+	ModuleSwapConverterUpdate
+	{
+	}
+}

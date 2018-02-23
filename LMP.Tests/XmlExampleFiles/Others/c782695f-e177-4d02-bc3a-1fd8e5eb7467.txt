@@ -1,0 +1,96 @@
+pid = c782695fe1774d02bc3a1fd8e5eb7467
+name = Ast. LKS-373
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 76828084.939016044
+lct = 76828084.939016044
+lastUT = -1
+root = 0
+lat = 0.56895397240705281
+lon = 54.883659106353527
+alt = 13473327364.320379
+hgt = -1
+nrm = 0,1,0
+rot = -0.50469178,0.562891483,-0.442173272,0.48262006
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14249859925.822393
+	ECC = 0.045945065656746671
+	INC = 0.71951805981771266
+	LPE = 12.45927068038195
+	LAN = 306.03421918308049
+	MNA = -0.21458702449771958
+	EPH = 95232152.25501214
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 76828084.939016044
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

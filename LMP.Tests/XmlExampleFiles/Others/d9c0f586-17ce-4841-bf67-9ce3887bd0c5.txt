@@ -1,0 +1,96 @@
+pid = d9c0f58617ce4841bf679ce3887bd0c5
+name = Ast. XQF-593
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314425251765.31
+lct = 228314425251765.31
+lastUT = -1
+root = 0
+lat = -0.35784399269801559
+lon = 28.588381419719806
+alt = 17251791669.465321
+hgt = -1
+nrm = 0,1,0
+rot = -0.472469509,0.264918298,-0.242410392,0.804877698
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15656740726.985146
+	ECC = 0.13347869695088252
+	INC = 0.88754427929883573
+	LPE = 359.78049295288594
+	LAN = 187.95042752853229
+	MNA = 0.24064826431072525
+	EPH = 228314430397709.69
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314425251765.31
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

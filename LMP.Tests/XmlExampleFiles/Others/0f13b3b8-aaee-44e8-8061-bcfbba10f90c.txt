@@ -1,0 +1,96 @@
+pid = 0f13b3b8aaee44e88061bcfbba10f90c
+name = Ast. BOO-559
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314425251765.31
+lct = 228314425251765.31
+lastUT = -1
+root = 0
+lat = 1.7748443302960784
+lon = 67.878422007752093
+alt = 14146587502.717472
+hgt = -1
+nrm = 0,1,0
+rot = -0.370140314,-0.422638893,-0.805704057,0.187652826
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14398352980.992517
+	ECC = 0.052115214973750261
+	INC = 1.7770296606870617
+	LPE = 180.89566448025181
+	LAN = 343.85888735685057
+	MNA = 0.034442478268584674
+	EPH = 228314447802775.19
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314425251765.31
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

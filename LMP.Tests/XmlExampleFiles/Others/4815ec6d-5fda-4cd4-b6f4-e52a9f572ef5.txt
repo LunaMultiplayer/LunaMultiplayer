@@ -1,0 +1,96 @@
+pid = 4815ec6d5fda4cd4b6f4e52a9f572ef5
+name = Ast. OMX-561
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 10840261.519411204
+lct = 10840261.519411204
+lastUT = -1
+root = 0
+lat = -0.1775390486905829
+lon = -120.98380115694974
+alt = 13473157820.735643
+hgt = -1
+nrm = 0,1,0
+rot = 0.390229702,-0.575549364,-0.546635151,0.46653381
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13866818879.794634
+	ECC = 0.034337346451533801
+	INC = 0.24385164566240458
+	LPE = 302.52164328762933
+	LAN = 45.843491262948135
+	MNA = 0.9458217421934848
+	EPH = 42589711.069936596
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 10840261.519411204
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

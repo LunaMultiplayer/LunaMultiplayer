@@ -1,0 +1,96 @@
+pid = afee4251b7ab4b39bcea075ed7e210b6
+name = Аст. KEE-538
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 10475535.001774626
+lct = 10475535.001774626
+lastUT = -1
+root = 0
+lat = -0.67799960968975359
+lon = 138.3917987116256
+alt = 13590884923.165829
+hgt = -1
+nrm = 0,1,0
+rot = -0.287776351,0.743105471,-0.575074673,0.18511638
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13901849457.492643
+	ECC = 0.02947188442827077
+	INC = 0.94208686291500354
+	LPE = 310.78864936868081
+	LAN = 1.978941632988267
+	MNA = 0.71479510643697475
+	EPH = 13708449.756134477
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 10475535.001774626
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

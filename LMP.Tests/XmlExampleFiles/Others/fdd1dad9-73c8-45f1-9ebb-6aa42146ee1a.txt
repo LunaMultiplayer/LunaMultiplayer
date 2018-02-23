@@ -1,0 +1,188 @@
+pid = fdd1dad973c845f19ebb6aa42146ee1a
+name = Futur Piste de Ski Lunaire
+type = Flag
+sit = LANDED
+landed = True
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 149.0399966686964
+lct = 21447755.843111966
+lastUT = 21447904.883108635
+root = 0
+lat = -11.922671935995526
+lon = 104.43247142501166
+alt = 3740.0668935988215
+hgt = 0.369915187
+nrm = 0.0597254038,0.985626101,-0.158033907
+rot = 0.759238064,-0.348865539,-0.22460711,0.501400232
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0
+cHdg = 0
+cMod = -1
+ORBIT
+{
+	SMA = 101882.97387913545
+	ECC = 0.99974597458548131
+	INC = 11.922671935995538
+	LPE = 90
+	LAN = 179.20744270837997
+	MNA = 3.1415926535897718
+	EPH = 21447904.903108634
+	REF = 2
+}
+PART
+{
+	name = flag
+	cid = 4292789810
+	uid = 2194909323
+	mid = 3786882352
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	mass = 0.00999999978
+	shielded = False
+	temp = 4
+	tempExt = 4
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/esa_dark_blue
+	rTrf = flag(Clone)(Clone)
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = FlagSite
+		isEnabled = True
+		placedBy = Thomas Kerman
+		PlaqueText = 17/02/2018
+		stagingEnabled = True
+		state = Placed
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = CollisionFX
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleFlagRotator
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+}

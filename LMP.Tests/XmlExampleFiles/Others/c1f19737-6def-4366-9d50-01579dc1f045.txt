@@ -1,0 +1,96 @@
+pid = c1f197376def43669d5001579dc1f045
+name = Ast. EMS-118
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 218980348.38930342
+lct = 218980348.38930342
+lastUT = -1
+root = 0
+lat = 0.12395875513157265
+lon = -77.013455867941261
+alt = 16241520502.369272
+hgt = -1
+nrm = 0,1,0
+rot = 0.437022507,0.563477814,-0.700980008,0.0114512974
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15101568037.18412
+	ECC = 0.10480719632240616
+	INC = 1.3532437417628012
+	LPE = 329.73163160151324
+	LAN = 71.864959885492283
+	MNA = 0.30644117919143266
+	EPH = 245517185.15838024
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 218980348.38930342
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

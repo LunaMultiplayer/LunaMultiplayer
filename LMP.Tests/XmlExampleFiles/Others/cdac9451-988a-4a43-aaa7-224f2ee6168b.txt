@@ -1,0 +1,96 @@
+pid = cdac9451988a4a43aaa7224f2ee6168b
+name = Ast. QMK-775
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 21493870.975455411
+lct = 21493870.975455411
+lastUT = -1
+root = 0
+lat = 0.4207603331373308
+lon = -148.06339467084425
+alt = 14253456954.969507
+hgt = -1
+nrm = 0,1,0
+rot = 0.255177349,-0.385237068,-0.0857660919,0.88267833
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15823746700.002956
+	ECC = 0.14004078455047317
+	INC = 0.45845882205712252
+	LPE = 173.98108382352277
+	LAN = 10.097706537138947
+	MNA = -0.033819941149350004
+	EPH = 46052179.78122431
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 21493870.975455411
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

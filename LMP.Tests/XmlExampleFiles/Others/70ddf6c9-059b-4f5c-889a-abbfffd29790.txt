@@ -1,0 +1,99 @@
+pid = 70ddf6c9059b4f5c889aabbfffd29790
+name = Ast. BYB-561
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 2057362.5543095199
+lct = 2057362.5543095199
+lastUT = -1
+root = 0
+lat = -0.80112226239866258
+lon = 6.2565092006186136
+alt = 17143614806.922718
+hgt = -1
+nrm = 0,1,0
+rot = 0.250586987,0.590523303,0.766902924,0.0186609812
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15921015560.041025
+	ECC = 0.14477033448176124
+	INC = 1.5957184820973256
+	LPE = 346.31289092784658
+	LAN = 70.596357776287732
+	MNA = 0.057373975109601169
+	EPH = 6170792.6441623997
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 2057362.5543095199
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

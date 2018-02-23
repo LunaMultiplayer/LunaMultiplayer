@@ -1,0 +1,96 @@
+pid = df5ef81adc344a1687a8c07d713c4e59
+name = Ast. WQX-893
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 220339132157721.47
+lct = 220339132157721.47
+lastUT = -1
+root = 0
+lat = -1.0937331128637551
+lon = -49.162291613322935
+alt = 14267454559.274876
+hgt = -1
+nrm = 0,1,0
+rot = -0.572878897,0.76822871,0.152129799,0.241849005
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14128171547.720261
+	ECC = 0.04248068348654202
+	INC = 1.6023531074841053
+	LPE = 356.74454852531881
+	LAN = 232.56751260298179
+	MNA = -0.092514469242474834
+	EPH = 220339145280939.59
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 220339132157721.47
+	lifetime = Infinity
+	refTime = Infinity
+	size = 1
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

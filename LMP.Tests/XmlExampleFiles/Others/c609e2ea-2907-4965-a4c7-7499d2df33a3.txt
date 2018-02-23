@@ -1,0 +1,99 @@
+pid = c609e2ea29074965a4c77499d2df33a3
+name = Ast. BZV-689
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 71654498.912314847
+lct = 71654498.912314847
+lastUT = -1
+root = 0
+lat = -0.52468580880188165
+lon = 168.44884911345008
+alt = 13886009685.583683
+hgt = -1
+nrm = 0,1,0
+rot = -0.179572791,-0.703503609,0.406403691,0.554682016
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14075278189.741442
+	ECC = 0.03630231156090992
+	INC = 0.52872062992637558
+	LPE = 176.89058863206239
+	LAN = 203.44814265774016
+	MNA = 0.15163981545363173
+	EPH = 78992504.874898463
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 71654498.912314847
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

@@ -1,0 +1,96 @@
+pid = 807bab874bec4f7eb1e8f9cbe40780d8
+name = Аст. MYG-256
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 8022068.55251728
+lct = 8022068.55251728
+lastUT = -1
+root = 0
+lat = -1.5856553029083815
+lon = -24.361201516345936
+alt = 14759938912.316322
+hgt = -1
+nrm = 0,1,0
+rot = -0.304507315,-0.333403081,-0.539438426,0.710720658
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14844423907.070621
+	ECC = 0.083787539771480596
+	INC = 1.6643332289195343
+	LPE = 184.76935497021918
+	LAN = 253.00362221966782
+	MNA = -0.088061843309242965
+	EPH = 15646383.200060111
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 8022068.55251728
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

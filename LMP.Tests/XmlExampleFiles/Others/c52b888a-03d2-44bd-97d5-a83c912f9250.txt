@@ -1,0 +1,107 @@
+pid = c52b888a03d244bd97d5a83c912f9250
+name = Ast. TXC-416
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 10418617.550838742
+lct = 10418617.550838742
+lastUT = -1
+root = 0
+lat = 0.76120083864581167
+lon = -148.47507442325258
+alt = 13133074054.350872
+hgt = -1
+nrm = 0,1,0
+rot = 0.704413056,0.588796377,-0.210842267,0.335658699
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14289461772.729902
+	ECC = 0.062940597456832198
+	INC = 1.0173600695273759
+	LPE = 125.38933604707161
+	LAN = 122.13894616834597
+	MNA = 0.58992891422463634
+	EPH = 21112089.867566843
+	REF = 0
+	IDENT = Sun
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 29
+	lastObservedTime = 10418617.550838742
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	KSPWheelDustCamera
+	{
+	}
+	KSPWheelVesselControl
+	{
+	}
+	KSPWheelVesselDebug
+	{
+	}
+	ModuleDynamicBatteryStorage
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+}

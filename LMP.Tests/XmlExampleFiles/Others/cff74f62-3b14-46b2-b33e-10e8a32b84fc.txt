@@ -1,0 +1,96 @@
+pid = cff74f623b1446b2b33e10e8a32b84fc
+name = Ast. ERK-079
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 21493870.975455411
+lct = 21493870.975455411
+lastUT = -1
+root = 0
+lat = 0.97611637841329824
+lon = 120.90422948428839
+alt = 14293317543.926247
+hgt = -1
+nrm = 0,1,0
+rot = 0.721887887,0.645964861,0.104005679,0.225366592
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15808514553.845907
+	ECC = 0.14032663378335761
+	INC = 1.1974850797753251
+	LPE = 352.07798634419891
+	LAN = 337.86624107971591
+	MNA = 0.095450717513831607
+	EPH = 31634808.034229111
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 21493870.975455411
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

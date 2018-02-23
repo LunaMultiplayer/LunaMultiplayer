@@ -1,0 +1,96 @@
+pid = 028b9235c06b4ecf8ba0a5fb76eba133
+name = Ast. IEY-093
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 218254409.12952909
+lct = 218254409.12952909
+lastUT = -1
+root = 0
+lat = 0.0060478123758862289
+lon = 52.738064690215928
+alt = 14761635173.038095
+hgt = -1
+nrm = 0,1,0
+rot = -0.171378285,0.706557751,0.588210225,0.354138762
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14373666881.218203
+	ECC = 0.061953034927171816
+	INC = 0.09243056962673421
+	LPE = 37.031898167511855
+	LAN = 315.16392876332458
+	MNA = 0.47604994284964952
+	EPH = 235278623.1495564
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 218254409.12952909
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

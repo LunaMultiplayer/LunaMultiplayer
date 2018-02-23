@@ -1,0 +1,157 @@
+pid = fc8527c774044dd0a76c5ea51c1c4e1c
+name = Gilly sucks for rover
+type = Flag
+sit = LANDED
+landed = True
+landedAt = 
+splashed = False
+met = 674500.03125
+lct = 228314465095448.69
+lastUT = 228314465769948.72
+root = 0
+lat = -0.27706923870200389
+lon = -2.5982677755181109
+alt = 5236.6275020378489
+hgt = 0.332304567
+nrm = 0.197230607,0.884211063,-0.423404038
+rot = -0.197590038,-0.238705903,-0.653164744,0.690907776
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0
+cHdg = 0
+cMod = -1
+ORBIT
+{
+	SMA = 9286.3022637591184
+	ECC = 0.96382014972831809
+	INC = 0.27706923872069483
+	LPE = 89.999329708252247
+	LAN = 339.65337888657194
+	MNA = -3.141592603087541
+	EPH = 228314465769948.72
+	REF = 13
+}
+PART
+{
+	name = flag
+	cid = 4293676600
+	uid = 3269359904
+	mid = 1862952417
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	mass = 0.00999999978
+	shielded = False
+	temp = 4
+	tempExt = 4
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/default
+	rTrf = flag(Clone)(Clone)
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = FlagSite
+		isEnabled = True
+		placedBy = Bobdous Kerman
+		PlaqueText = Engineer was here!
+		stagingEnabled = True
+		state = Placed
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+}

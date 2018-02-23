@@ -1,0 +1,96 @@
+pid = d3ea8cf45e7948eeb6f79fa7685cd3f5
+name = Ast. GUJ-259
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314478466904.94
+lct = 228314478466904.94
+lastUT = -1
+root = 0
+lat = -1.0549688582618955
+lon = -119.59388293853367
+alt = 13390001750.559929
+hgt = -1
+nrm = 0,1,0
+rot = 0.134736732,0.8157897,0.0329841189,0.561467111
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14169026556.898678
+	ECC = 0.039525141985314073
+	INC = 2.0549031827911421
+	LPE = 187.51839075754481
+	LAN = 98.614405230707575
+	MNA = -0.14230203521227588
+	EPH = 228314487444581.94
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314478466904.94
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

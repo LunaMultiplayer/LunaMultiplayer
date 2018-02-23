@@ -1,0 +1,96 @@
+pid = 349d82f61b544045bfea61b84189a91b
+name = Ast. DYV-467
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 176645285.95966935
+lct = 176645285.95966935
+lastUT = -1
+root = 0
+lat = -1.7705050455960931
+lon = -0.67244625501223887
+alt = 14249655914.044569
+hgt = -1
+nrm = 0,1,0
+rot = -0.109740973,-0.577782571,-0.77455312,0.232790992
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14539279373.33206
+	ECC = 0.067987976507327103
+	INC = 1.785853008711207
+	LPE = 170.20798324990403
+	LAN = 61.252050608897775
+	MNA = 0.13796373804861098
+	EPH = 194828175.50119275
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 176645285.95966935
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

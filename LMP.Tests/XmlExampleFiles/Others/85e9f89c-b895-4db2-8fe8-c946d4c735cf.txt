@@ -1,0 +1,107 @@
+pid = 85e9f89cb8954db28fe8c946d4c735cf
+name = Ast. UNZ-717
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 1776457.5003576556
+lct = 1776457.5003576556
+lastUT = -1
+root = 0
+lat = -0.90438623487861092
+lon = -128.03178299043051
+alt = 13491679942.430328
+hgt = -1
+nrm = 0,1,0
+rot = -0.580569208,-0.465040326,0.493578613,0.450618535
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14189867412.855799
+	ECC = 0.046327722478312988
+	INC = 1.6816399217745481
+	LPE = 17.863136094509755
+	LAN = 304.87601901729255
+	MNA = -0.16617176577341938
+	EPH = 12590240.614177475
+	REF = 0
+	IDENT = Sun
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 29
+	lastObservedTime = 1776457.5003576556
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	KSPWheelDustCamera
+	{
+	}
+	KSPWheelVesselControl
+	{
+	}
+	KSPWheelVesselDebug
+	{
+	}
+	ModuleDynamicBatteryStorage
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+}

@@ -1,0 +1,96 @@
+pid = 0bdd02e65b9a4f25ad504b0d1d9ca426
+name = Ast. GAF-246
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 113328832.17746148
+lct = 113328832.17746148
+lastUT = -1
+root = 0
+lat = 0.60356320122857177
+lon = -92.84290244230904
+alt = 15269711678.970865
+hgt = -1
+nrm = 0,1,0
+rot = 0.329141349,-0.114344209,0.610734284,0.71105206
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14626545770.594494
+	ECC = 0.073233449274936913
+	INC = 1.129817901953335
+	LPE = 182.1096456750536
+	LAN = 355.56339048023347
+	MNA = 0.17851902058854785
+	EPH = 138296586.68531817
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 113328832.17746148
+	lifetime = Infinity
+	refTime = Infinity
+	size = 1
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

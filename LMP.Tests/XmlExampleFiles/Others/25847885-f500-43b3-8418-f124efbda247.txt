@@ -1,0 +1,161 @@
+pid = 25847885f50043b38418f124efbda247
+name = RexOnes
+type = Flag
+sit = LANDED
+landed = True
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 4228904.1197494604
+lct = 19886231.413252875
+lastUT = 24115135.533002336
+root = 0
+lat = 23.428762323856404
+lon = -62.026523613392882
+alt = 2055.5524681801617
+hgt = 0.370156467
+nrm = -0.250077665,0.963082314,-0.0996667743
+rot = -0.208143607,0.483384401,-0.524105608,0.669573903
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0
+cHdg = 0
+cMod = 0
+ORBIT
+{
+	SMA = 101038.78466782998
+	ECC = 0.9997820948900743
+	INC = 23.428762323856404
+	LPE = 269.99999950758331
+	LAN = 261.46042308970328
+	MNA = 3.1415926534567093
+	EPH = 24115135.533002336
+	REF = 2
+}
+PART
+{
+	name = flag
+	cid = 4283589238
+	uid = 3380751348
+	mid = 1996777599
+	launchID = 6
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	mass = 0.00999999978
+	shielded = False
+	temp = 4
+	tempExt = 4
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/default
+	rTrf = flag (RexOnes)
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = FlagSite
+		isEnabled = True
+		placedBy = Barvis Kerman
+		PlaqueText = Au moin ils sont en un seul morceau....
+		stagingEnabled = True
+		state = Placed
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

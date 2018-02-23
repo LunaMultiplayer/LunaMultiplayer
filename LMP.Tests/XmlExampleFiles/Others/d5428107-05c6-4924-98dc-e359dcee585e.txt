@@ -1,0 +1,96 @@
+pid = d542810705c6492498dce359dcee585e
+name = Ast. PCO-668
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 218980348.38930342
+lct = 218980348.38930342
+lastUT = -1
+root = 0
+lat = -0.81145476883713463
+lon = -68.543728784087264
+alt = 15662751109.374035
+hgt = -1
+nrm = 0,1,0
+rot = 0.384083271,-0.705473483,0.410524398,0.431574941
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 17190417373.885845
+	ECC = 0.21018329426389554
+	INC = 0.81281014244514438
+	LPE = 185.39724275153628
+	LAN = 348.38942620773037
+	MNA = 0.065812865123680231
+	EPH = 230081830.38452572
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 218980348.38930342
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

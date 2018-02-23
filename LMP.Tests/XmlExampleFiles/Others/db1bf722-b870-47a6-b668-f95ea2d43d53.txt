@@ -1,0 +1,96 @@
+pid = db1bf722b87047a6b668f95ea2d43d53
+name = Ast. BEF-265
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 113328832.17746148
+lct = 113328832.17746148
+lastUT = -1
+root = 0
+lat = 0.19020011529310227
+lon = -122.25881402335206
+alt = 15155051408.309258
+hgt = -1
+nrm = 0,1,0
+rot = -0.659096718,-0.571665883,-0.458031923,0.170283079
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14568086161.677662
+	ECC = 0.066561277097238608
+	INC = 0.23877393008820483
+	LPE = 334.34339720462481
+	LAN = 231.23829248836776
+	MNA = 0.029566724631349801
+	EPH = 129555056.66667306
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 113328832.17746148
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

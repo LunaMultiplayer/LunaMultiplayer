@@ -1,0 +1,96 @@
+pid = 48e54736a64446589216e62972139467
+name = Ast. FNV-085
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314449459467.75
+lct = 228314449459467.75
+lastUT = -1
+root = 0
+lat = -0.78331951365452368
+lon = -133.13560989667644
+alt = 15992817418.50799
+hgt = -1
+nrm = 0,1,0
+rot = -0.395609945,-0.87430042,-0.214141175,0.182305261
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15205946496.736702
+	ECC = 0.11162539904076919
+	INC = 1.3964198952711322
+	LPE = 347.14644674094512
+	LAN = 28.971361060692459
+	MNA = 0.22880512024859861
+	EPH = 228314453577030.69
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314449459467.75
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

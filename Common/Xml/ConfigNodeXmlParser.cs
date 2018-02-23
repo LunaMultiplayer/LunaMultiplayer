@@ -8,9 +8,9 @@ namespace LunaCommon.Xml
     /// </summary>
     public static class ConfigNodeXmlParser
     {
-        private const string StartElement = "LMPConfigNodeToXML";
-        private const string ValueNode = "Parameter";
-        private const string AttributeName = "name";
+        public const string StartElement = "LMPConfigNodeToXML";
+        public const string ValueNode = "Parameter";
+        public const string AttributeName = "name";
 
         public static string ConvertToXml(string configNode)
         {

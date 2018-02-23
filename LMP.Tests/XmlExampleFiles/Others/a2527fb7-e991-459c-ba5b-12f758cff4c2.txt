@@ -1,0 +1,158 @@
+pid = a2527fb7e991459cba5b12f758cff4c2
+name = Peninsula de Vespucio
+type = Flag
+sit = LANDED
+landed = True
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 80.839998193085194
+lct = 19026365.170622393
+lastUT = 19026446.030620586
+root = 0
+lat = 0.37608160018269199
+lon = -10.91978263730582
+alt = 267.20066171220969
+hgt = 0.381702155
+nrm = -0.0034045279,0.998451591,-0.0555232763
+rot = 0.503586411,0.557010651,-0.529076338,0.395244479
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0
+cHdg = 0
+cMod = -1
+ORBIT
+{
+	SMA = 300916.9372849933
+	ECC = 0.99479366657653201
+	INC = 0.37608160018258374
+	LPE = 269.99999973214886
+	LAN = 320.74076207721708
+	MNA = 3.1415926533938276
+	EPH = 19026446.030620586
+	REF = 1
+}
+PART
+{
+	name = flag
+	cid = 4292478612
+	uid = 1183891737
+	mid = 1279373
+	launchID = 2
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	mass = 0.00999999978
+	shielded = False
+	temp = 309.39309144474754
+	tempExt = 309.4720805309247
+	tempExtUnexp = 309.47206114948199
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Bohemia
+	rTrf = flag(Clone)(Clone)
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = FlagSite
+		isEnabled = True
+		placedBy = Albus Kerman
+		PlaqueText = 
+		stagingEnabled = True
+		state = Placed
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+}

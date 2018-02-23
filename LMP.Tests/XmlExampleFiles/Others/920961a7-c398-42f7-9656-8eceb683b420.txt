@@ -1,0 +1,96 @@
+pid = 920961a7c39842f796568eceb683b420
+name = Ast. UXM-900
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 76828084.939016044
+lct = 76828084.939016044
+lastUT = -1
+root = 0
+lat = 0.99133782836815476
+lon = 15.889992081817528
+alt = 13217642395.771723
+hgt = -1
+nrm = 0,1,0
+rot = -0.225034043,0.601959288,0.624384105,0.444014758
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13801886389.473698
+	ECC = 0.025921173068640453
+	INC = 0.99134862507748756
+	LPE = 115.98072924607531
+	LAN = 229.5615402314657
+	MNA = 0.92671856874144676
+	EPH = 97687009.777331606
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 76828084.939016044
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

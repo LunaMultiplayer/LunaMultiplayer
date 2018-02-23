@@ -1,0 +1,180 @@
+pid = 1a1ae95e348a4c52b0c27dbe90389480
+name = Ast. UVT-127
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = -123810895.80860554
+lct = 131409214.56644902
+lastUT = 7598318.7578434777
+root = 0
+lat = 0.0063708923474607463
+lon = -44.920781094114538
+alt = 13310551312.506983
+hgt = -1
+nrm = 0.644459605,-0.737754166,0.200974166
+rot = 0.841265023,-0.446531802,-0.304216474,0.0182995908
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0.33
+cHdg = 6.192007
+cMod = 0
+ORBIT
+{
+	SMA = 13683699140.830759
+	ECC = 0.013743330817625785
+	INC = 0.63630292069490457
+	LPE = 125.17070358976883
+	LAN = 347.58516894096539
+	MNA = 0.92476406143430523
+	EPH = 7598318.7578434777
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = -1
+	sidx = 0
+	attm = 0
+	srfN = , -1
+	mass = 1525.17749
+	shielded = False
+	temp = 289.87895460146058
+	tempExt = 289.87895286576901
+	tempExtUnexp = 289.87895519187504
+	expt = 0.100000001
+	state = 1
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = PotatoRoid (Ast. UVT-127)
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleAsteroid
+		isEnabled = True
+		seed = 1.131323E+07
+		AsteroidName = Ast. UVT-127
+		prefabBaseURL = Procedural/PA_E
+		currentState = 1
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAsteroidInfo
+		isEnabled = True
+		massThreshold = 259.28017333984377
+		currentMass = 1525.177490234375
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAsteroidResource
+		isEnabled = True
+		abundance = 1
+		displayAbundance = 0.829999983
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = 17
+	lastObservedTime = 220339131768695.66
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

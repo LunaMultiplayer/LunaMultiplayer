@@ -1,0 +1,205 @@
+pid = fa70ef31f9a24d2f86bb243417c48fc4
+name = Navette Ship
+type = Ship
+sit = ESCAPING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 1.25
+lct = 220339170710917.56
+lastUT = 220339170710918.81
+root = 0
+lat = 0.23667923226781901
+lon = -27.537255645957231
+alt = 10056600.190341389
+hgt = -1
+nrm = -0.820878327,-0.451336682,0.349934757
+rot = 0.28584075,0.423457801,0.838030696,0.191528469
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0
+cHdg = 0
+cMod = -1
+ORBIT
+{
+	SMA = -161345.2040202473
+	ECC = 67.045818085851707
+	INC = 7.3402605628143354
+	LPE = 178.66219989528147
+	LAN = 171.34189965670976
+	MNA = -0.60665140440755483
+	EPH = 220339170710918.06
+	REF = 1
+	IDENT = Kerbin
+}
+PART
+{
+	name = dockingPortLarge
+	cid = 4293845072
+	uid = 3057746556
+	mid = 1586813710
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1.00000048
+	mirror = 1,1,1
+	symMethod = Mirror
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = 0
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	attN = top, -1
+	attN = bottom, -1
+	mass = 0.200000003
+	shielded = False
+	temp = 225.55466355948514
+	tempExt = 225.42058499998382
+	tempExtUnexp = 306.499048526509
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = KSP français Patch/Flags/frenchflag
+	rTrf = dockingPortLarge
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = ModuleDockingNode
+		isEnabled = True
+		crossfeed = True
+		stagingEnabled = False
+		state = Ready
+		dockUId = 0
+		dockNodeIdx = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			UndockAction
+			{
+				actionGroup = None
+			}
+			DecoupleAction
+			{
+				actionGroup = None
+			}
+			MakeReferenceToggle
+			{
+				actionGroup = None
+			}
+			EnableXFeedAction
+			{
+				actionGroup = None
+			}
+			DisableXFeedAction
+			{
+				actionGroup = None
+			}
+			ToggleXFeedAction
+			{
+				actionGroup = None
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = CollisionFX
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 220339170710844
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	ModularFlightIntegrator
+	{
+	}
+	KSPWheelVesselControl
+	{
+	}
+	KSPWheelVesselDebug
+	{
+	}
+	KSPWheelDustCamera
+	{
+	}
+	KerbetrotterEngineVesselControl
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = False
+	}
+}

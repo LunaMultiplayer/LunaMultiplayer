@@ -1,0 +1,96 @@
+pid = d9370bb0cc9d4eb28132f41a10f9f7ab
+name = Ast. SCX-242
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 116988023.52163333
+lct = 116988023.52163333
+lastUT = -1
+root = 0
+lat = 0.53498656601147299
+lon = -178.10488630450254
+alt = 14690781311.542425
+hgt = -1
+nrm = 0,1,0
+rot = -0.468536615,0.777518332,0.310956627,0.281504393
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14418044184.295441
+	ECC = 0.068514718076536835
+	INC = 1.1263624833184389
+	LPE = 154.34900799470435
+	LAN = 83.560508852104363
+	MNA = 0.51774311082274538
+	EPH = 131195654.57503468
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 116988023.52163333
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

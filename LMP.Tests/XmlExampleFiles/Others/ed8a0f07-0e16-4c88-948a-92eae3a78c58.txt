@@ -1,0 +1,96 @@
+pid = ed8a0f070e164c88948a92eae3a78c58
+name = Ast. HIR-500
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 76537048.034975186
+lct = 76537048.034975186
+lastUT = -1
+root = 0
+lat = 0.10499032177469277
+lon = -116.65199282548855
+alt = 13622547886.4091
+hgt = -1
+nrm = 0,1,0
+rot = -0.318353146,-0.437332451,-0.58448565,0.604787767
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13718073333.554798
+	ECC = 0.013008143898580304
+	INC = 0.13785727990750235
+	LPE = 208.41452905770555
+	LAN = 254.6171133515295
+	MNA = 1.0583957016599461
+	EPH = 100854309.12937868
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 76537048.034975186
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

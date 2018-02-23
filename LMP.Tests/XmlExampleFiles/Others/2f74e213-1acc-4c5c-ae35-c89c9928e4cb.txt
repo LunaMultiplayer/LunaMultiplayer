@@ -1,0 +1,91 @@
+pid = 2f74e2131acc4c5cae35c89c9928e4cb
+name = Ast. TRW-678
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+splashed = False
+met = 116988023.52163333
+lct = 116988023.52163333
+lastUT = -1
+root = 0
+lat = -0.1998170099452837
+lon = 161.81029536071892
+alt = 13436824018.985853
+hgt = -1
+nrm = 0,1,0
+rot = 0.468376428,0.353898823,0.0253828112,0.809156895
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+displaylandedAt = 
+ORBIT
+{
+	SMA = 13997537402.351418
+	ECC = 0.034620788134444552
+	INC = 0.87945800301261334
+	LPE = 40.330700233802354
+	LAN = 104.96145870498424
+	MNA = -0.57169185373246745
+	EPH = 127067231.77096198
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 21
+	lastObservedTime = 228314424665420.53
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

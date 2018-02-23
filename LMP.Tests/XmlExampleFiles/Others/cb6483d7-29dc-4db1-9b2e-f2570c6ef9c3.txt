@@ -1,0 +1,96 @@
+pid = cb6483d729dc4db19b2ef2570c6ef9c3
+name = Ast. HPN-905
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 510414447797648.38
+lct = 510414447797648.38
+lastUT = -1
+root = 0
+lat = 0.63068998719978397
+lon = 20.947871459376351
+alt = 13489818725.622742
+hgt = -1
+nrm = 0,1,0
+rot = -0.375725329,0.114324518,0.697922766,0.598885775
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13799690232.702492
+	ECC = 0.018348700182879391
+	INC = 0.66574901278050613
+	LPE = 151.36710091000475
+	LAN = 114.33261125281001
+	MNA = 0.36824029972810535
+	EPH = 510414459793770.69
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 510414447797648.38
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

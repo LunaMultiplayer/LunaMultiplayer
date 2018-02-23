@@ -1,0 +1,96 @@
+pid = e674a0b0477549f1851807bd154cc3cf
+name = Ast. CLK-981
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314465918252.88
+lct = 228314465918252.88
+lastUT = -1
+root = 0
+lat = 0.24801192072154618
+lon = 106.10582229955857
+alt = 13309783662.555456
+hgt = -1
+nrm = 0,1,0
+rot = -0.457605153,0.646092892,0.329601943,0.514319062
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13645720360.28089
+	ECC = 0.006913702143484279
+	INC = 0.24967803169776509
+	LPE = 45.126565330449807
+	LAN = 74.606037939567614
+	MNA = -0.79492778356016991
+	EPH = 228314473027816.41
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314465918252.88
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

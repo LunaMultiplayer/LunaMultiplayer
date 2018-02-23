@@ -1,0 +1,161 @@
+pid = 8f4e544642304ef3baf11e7b8671dbf0
+name = Peninsula de Amaru (Base Amaru)
+type = Flag
+sit = LANDED
+landed = True
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 82763.641534861177
+lct = 17977907.989408899
+lastUT = 18060671.63094376
+root = 0
+lat = -72.479323485933733
+lon = -147.01890111349644
+alt = 30.042775074834935
+hgt = 0.379219145
+nrm = -0.00537911057,0.997050762,-0.0765557885
+rot = 0.973257124,-0.116908588,-0.141480729,-0.138152704
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 
+cHdg = 
+cMod = 0
+ORBIT
+{
+	SMA = NaN
+	ECC = 1
+	INC = 72.479323485933733
+	LPE = 90
+	LAN = 250.62503130342222
+	MNA = 0
+	EPH = 18060671.65094376
+	REF = 1
+}
+PART
+{
+	name = flag
+	cid = 4293351624
+	uid = 2803084650
+	mid = 3625224262
+	launchID = 1
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	mass = 0.00999999978
+	shielded = False
+	temp = 254.85251773314161
+	tempExt = 255.94336225643272
+	tempExtUnexp = 255.94334316519894
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/Bohemia
+	rTrf = flag (Peninsula de Amaru (Base Amaru))
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = FlagSite
+		isEnabled = True
+		placedBy = Big Boss Kerman
+		PlaqueText = 
+		stagingEnabled = True
+		state = Placed
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

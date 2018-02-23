@@ -1,0 +1,96 @@
+pid = ed2333a165394b35a0f3462e54f0dd96
+name = Ast. XDH-713
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 130593270.37633863
+lct = 130593270.37633863
+lastUT = -1
+root = 0
+lat = -0.34137860859677682
+lon = -142.93605819474627
+alt = 13263073025.571856
+hgt = -1
+nrm = 0,1,0
+rot = 0.70069617,-0.607727766,0.187009335,0.323603809
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14562986053.844694
+	ECC = 0.071777929033858739
+	INC = 0.78697496119403931
+	LPE = 341.412968284295
+	LAN = 350.49590838055434
+	MNA = 0.36823051649768124
+	EPH = 151761995.64426184
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 130593270.37633863
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

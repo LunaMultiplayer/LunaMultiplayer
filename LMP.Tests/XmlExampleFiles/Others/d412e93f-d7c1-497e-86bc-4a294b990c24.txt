@@ -1,0 +1,161 @@
+pid = d412e93fd7c1497e86bc4a294b990c24
+name = FUCKING ALUNISSAGE 1
+type = Flag
+sit = LANDED
+landed = True
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = -220339114186003.78
+lct = 220339132238562.38
+lastUT = 18052558.608093318
+root = 0
+lat = -2.0258353182785505
+lon = 159.16634522609706
+alt = 3035.3781050209363
+hgt = 0.381501168
+nrm = -0.0963327885,0.994361281,-0.0443328023
+rot = 0.57582444,-0.320751041,0.469820857,0.587208152
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+cPch = 0.34
+cHdg = 1.37
+cMod = 0
+ORBIT
+{
+	SMA = 101531.00375588173
+	ECC = 0.99973772142737272
+	INC = 2.0258353182784603
+	LPE = 89.999997657084307
+	LAN = 79.250172036750143
+	MNA = 3.141592651865968
+	EPH = 18052558.608093318
+	REF = 2
+}
+PART
+{
+	name = flag
+	cid = 4286956922
+	uid = 74478184
+	mid = 1901352097
+	launchID = 2
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = -1
+	resPri = 0
+	dstg = 0
+	sqor = -1
+	sepI = -1
+	sidx = -1
+	attm = 0
+	srfN = , -1
+	mass = 0.00999999978
+	shielded = False
+	temp = 4
+	tempExt = 4
+	tempExtUnexp = 4
+	expt = 0.5
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = Squad/Flags/NASA
+	rTrf = flag (FUCKING ALUNISSAGE 1)
+	modCost = 0
+	EVENTS
+	{
+	}
+	ACTIONS
+	{
+	}
+	PARTDATA
+	{
+	}
+	MODULE
+	{
+		name = FlagSite
+		isEnabled = True
+		placedBy = Graoly Kerman
+		PlaqueText = PAR TYREES
+		stagingEnabled = True
+		state = Placed
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FlagDecal
+		isEnabled = True
+		flagDisplayed = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+}
+ACTIONGROUPS
+{
+	Stage = False, 0
+	Gear = False, 0
+	Light = False, 0
+	RCS = False, 0
+	SAS = False, 0
+	Brakes = False, 0
+	Abort = False, 0
+	Custom01 = False, 0
+	Custom02 = False, 0
+	Custom03 = False, 0
+	Custom04 = False, 0
+	Custom05 = False, 0
+	Custom06 = False, 0
+	Custom07 = False, 0
+	Custom08 = False, 0
+	Custom09 = False, 0
+	Custom10 = False, 0
+}
+DISCOVERY
+{
+	state = -1
+	lastObservedTime = 0
+	lifetime = Infinity
+	refTime = Infinity
+	size = 2
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+	pitch = 0
+	yaw = 0
+	roll = 0
+	trimPitch = 0
+	trimYaw = 0
+	trimRoll = 0
+	mainThrottle = 0
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+}

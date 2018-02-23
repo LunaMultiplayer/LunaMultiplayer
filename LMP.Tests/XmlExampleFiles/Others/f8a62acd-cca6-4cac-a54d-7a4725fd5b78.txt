@@ -1,0 +1,96 @@
+pid = f8a62acdcca64caca54d7a4725fd5b78
+name = Ast. CJM-200
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314448098702.22
+lct = 228314448098702.22
+lastUT = -1
+root = 0
+lat = -1.3327099780873763
+lon = -106.12854754670236
+alt = 13980503504.290211
+hgt = -1
+nrm = 0,1,0
+rot = 0.176316753,0.087456353,-0.723832667,0.661309361
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 14039751774.020258
+	ECC = 0.031134249634177491
+	INC = 1.4650339441570754
+	LPE = 4.6094138871472898
+	LAN = 330.66703232224165
+	MNA = -0.080527369202203103
+	EPH = 228314470392859.19
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314448098702.22
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

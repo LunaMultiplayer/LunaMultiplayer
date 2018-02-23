@@ -1,0 +1,96 @@
+pid = 1b6bb96db4db4b9c85a11481bb89c643
+name = Ast. WXT-444
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314486782449.84
+lct = 228314486782449.84
+lastUT = -1
+root = 0
+lat = 0.11588563814861751
+lon = -150.23639021823578
+alt = 14137503508.150522
+hgt = -1
+nrm = 0,1,0
+rot = 0.249246776,0.0132052908,0.939358234,0.235175788
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15032662962.071901
+	ECC = 0.095562392156112896
+	INC = 0.1238454597811131
+	LPE = 0.48705389017791267
+	LAN = 299.12578613326468
+	MNA = -0.0056371086249039047
+	EPH = 228314506413785.19
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314486782449.84
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

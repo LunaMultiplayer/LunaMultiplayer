@@ -1,0 +1,96 @@
+pid = 85eda3a419ed4cf1bc1a95790cf09d6e
+name = Ast. XLE-255
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 228314478656296.16
+lct = 228314478656296.16
+lastUT = -1
+root = 0
+lat = 0.3796568347064449
+lon = 170.9026033354848
+alt = 16227773295.445278
+hgt = -1
+nrm = 0,1,0
+rot = -0.712505698,0.0454084612,-0.514407873,0.475034893
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15916190777.841654
+	ECC = 0.14827601552257821
+	INC = 0.5000499108312475
+	LPE = 161.57969308969192
+	LAN = 348.4197171570346
+	MNA = 0.10767920404196499
+	EPH = 228314493609634.28
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 228314478656296.16
+	lifetime = Infinity
+	refTime = Infinity
+	size = 3
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

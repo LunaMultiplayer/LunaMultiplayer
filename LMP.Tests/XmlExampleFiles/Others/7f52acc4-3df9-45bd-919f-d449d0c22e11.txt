@@ -1,0 +1,99 @@
+pid = 7f52acc43df945bd919fd449d0c22e11
+name = Ast. XLJ-618
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 135884099.30841732
+lct = 135884099.30841732
+lastUT = -1
+root = 0
+lat = -0.13123714216541366
+lon = -99.379147690374097
+alt = 13359211660.40892
+hgt = -1
+nrm = 0,1,0
+rot = 0.810919523,-0.372467816,-0.179382682,0.414124548
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 13621112017.131638
+	ECC = 0.0079972163896112926
+	INC = 0.48627767819208745
+	LPE = 74.642863436905969
+	LAN = 113.02710868918882
+	MNA = -1.2085217866868012
+	EPH = 164075649.36734673
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 135884099.30841732
+	lifetime = Infinity
+	refTime = Infinity
+	size = 4
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	RPMVesselComputer
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}

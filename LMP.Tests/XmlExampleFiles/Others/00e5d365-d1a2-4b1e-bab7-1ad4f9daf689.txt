@@ -1,0 +1,96 @@
+pid = 00e5d365d1a24b1ebab71ad4f9daf689
+name = Ast. LDG-185
+type = SpaceObject
+sit = ORBITING
+landed = False
+landedAt = 
+displaylandedAt = 
+splashed = False
+met = 218258532.06873214
+lct = 218258532.06873214
+lastUT = -1
+root = 0
+lat = -1.1877999603605836
+lon = 63.441275065315857
+alt = 13918331845.23415
+hgt = -1
+nrm = 0,1,0
+rot = -0.536814272,0.584896445,0.0688308254,0.604143202
+CoM = 0,0,0
+stg = 0
+prst = False
+ref = 0
+ctrl = False
+ORBIT
+{
+	SMA = 15260527965.055313
+	ECC = 0.11181758654295829
+	INC = 1.8862576228435353
+	LPE = 163.17156295047252
+	LAN = 286.53254698728773
+	MNA = 0.25616642633510966
+	EPH = 228254056.30602604
+	REF = 0
+}
+PART
+{
+	name = PotatoRoid
+	cid = 0
+	uid = 0
+	mid = 0
+	launchID = 0
+	parent = 0
+	position = 0,0,0
+	rotation = 0,0,0,1
+	mirror = 1,1,1
+	symMethod = Radial
+	istg = 0
+	resPri = 0
+	dstg = 0
+	sqor = 0
+	sepI = 0
+	sidx = 0
+	attm = 0
+	srfN = None, -1
+	mass = 150
+	shielded = False
+	temp = -1
+	tempExt = 0
+	tempExtUnexp = 0
+	expt = 0.100000001
+	state = 0
+	attached = True
+	autostrutMode = Off
+	rigidAttachment = False
+	flag = 
+	rTrf = 
+	modCost = 0
+}
+ACTIONGROUPS
+{
+}
+DISCOVERY
+{
+	state = 1
+	lastObservedTime = 218258532.06873214
+	lifetime = Infinity
+	refTime = Infinity
+	size = 0
+}
+FLIGHTPLAN
+{
+}
+CTRLSTATE
+{
+}
+VESSELMODULES
+{
+	FlightIntegrator
+	{
+	}
+	CommNetVessel
+	{
+		controlState = None
+		canComm = True
+	}
+}
