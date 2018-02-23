@@ -76,6 +76,8 @@ namespace LunaClient.Systems.Network
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ShowDisconnectMessage));
         }
 
+        public override int ExecutionOrder => int.MinValue;
+
         #endregion
 
         #region Update method

@@ -57,6 +57,8 @@ namespace LunaClient.Systems.ModApi
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.FixedUpdate, ModApiFixedUpdate));
         }
 
+        public override int ExecutionOrder => int.MinValue + 2;
+
         #endregion
 
         #region Update methods

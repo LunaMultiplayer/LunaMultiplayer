@@ -1,104 +1,51 @@
 ﻿using LunaClient.Base.Interface;
-using LunaClient.Systems.Admin;
-using LunaClient.Systems.Asteroid;
-using LunaClient.Systems.Chat;
-using LunaClient.Systems.CraftLibrary;
-using LunaClient.Systems.Facility;
-using LunaClient.Systems.Flag;
-using LunaClient.Systems.GameScene;
-using LunaClient.Systems.Groups;
-using LunaClient.Systems.Handshake;
-using LunaClient.Systems.KerbalSys;
-using LunaClient.Systems.Lock;
-using LunaClient.Systems.Mod;
-using LunaClient.Systems.ModApi;
-using LunaClient.Systems.Motd;
-using LunaClient.Systems.Network;
-using LunaClient.Systems.Ping;
-using LunaClient.Systems.PlayerColorSys;
-using LunaClient.Systems.PlayerConnection;
-using LunaClient.Systems.Scenario;
-using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.Status;
-using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.Toolbar;
-using LunaClient.Systems.VesselDockSys;
-using LunaClient.Systems.VesselFlightStateSys;
-using LunaClient.Systems.VesselImmortalSys;
-using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselPartModuleSyncSys;
-using LunaClient.Systems.VesselPositionSys;
-using LunaClient.Systems.VesselPrecalcSys;
-using LunaClient.Systems.VesselProtoSys;
-using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselResourceSys;
-using LunaClient.Systems.VesselStateSys;
-using LunaClient.Systems.VesselSwitcherSys;
-using LunaClient.Systems.VesselSyncSys;
-using LunaClient.Systems.VesselUpdateSys;
-using LunaClient.Systems.Warp;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 // ReSharper disable ForCanBeConvertedToForeach
 
 namespace LunaClient.Systems
 {
+    /// <summary>
+    /// This class contains all the systems. Here they are called from the MainSystem so they are run in the update, fixed update or late update calls
+    /// </summary>
     public static class SystemsHandler
     {
-        private static readonly ISystem[] Systems =
+        private static ISystem[] _systems = new ISystem[0];
+
+        /// <summary>
+        /// Here we pick all the classes that inherit from ISystem and we put them in the systems array
+        /// </summary>
+        public static void FillUpSystemsList()
         {
-            SystemsContainer.Get<NetworkSystem>(),
-            SystemsContainer.Get<ModSystem>(),
-            SystemsContainer.Get<ModApiSystem>(),
-            SystemsContainer.Get<HandshakeSystem>(),
-            SystemsContainer.Get<TimeSyncerSystem>(),
-            SystemsContainer.Get<PingSystem>(),
-            SystemsContainer.Get<KerbalSystem>(),
-            SystemsContainer.Get<VesselLockSystem>(),
-            SystemsContainer.Get<GameSceneSystem>(),
-            SystemsContainer.Get<VesselSyncSystem>(),
-            SystemsContainer.Get<VesselPositionSystem>(),
-            SystemsContainer.Get<VesselFlightStateSystem>(),
-            SystemsContainer.Get<VesselPartModuleSyncSystem>(),
-            SystemsContainer.Get<VesselUpdateSystem>(),
-            SystemsContainer.Get<VesselProtoSystem>(),
-            SystemsContainer.Get<VesselRemoveSystem>(),
-            SystemsContainer.Get<VesselImmortalSystem>(),
-            SystemsContainer.Get<VesselDockSystem>(),
-            SystemsContainer.Get<VesselSwitcherSystem>(),
-            SystemsContainer.Get<VesselPrecalcSystem>(),
-            SystemsContainer.Get<VesselStateSystem>(),
-            SystemsContainer.Get<VesselResourceSystem>(),
-            SystemsContainer.Get<WarpSystem>(),
-            SystemsContainer.Get<LockSystem>(),
-            SystemsContainer.Get<SettingsSystem>(),
-            SystemsContainer.Get<AsteroidSystem>(),
-            SystemsContainer.Get<StatusSystem>(),
-            SystemsContainer.Get<ChatSystem>(),
-            SystemsContainer.Get<AdminSystem>(),
-            SystemsContainer.Get<PlayerColorSystem>(),
-            SystemsContainer.Get<PlayerConnectionSystem>(),
-            SystemsContainer.Get<MotdSystem>(),
-            SystemsContainer.Get<CraftLibrarySystem>(),
-            SystemsContainer.Get<FlagSystem>(),
-            SystemsContainer.Get<ScenarioSystem>(),
-            SystemsContainer.Get<ToolbarSystem>(),
-            SystemsContainer.Get<GroupSystem>(),
-            SystemsContainer.Get<FacilitySystem>()
-        };
+            var systemsList = new List<ISystem>();
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                var systems = assembly.GetTypes().Where(t => t.IsClass && t.IsSubclassOf(typeof(Base.System)) && t != typeof(MainSystem) && !t.IsAbstract).ToArray();
+                foreach (var sys in systems)
+                {
+                    var systemImplementation = SystemsContainer.Get(sys);
+                    if (systemImplementation !=null)
+                        systemsList.Add(systemImplementation);
+                }
+            }
+
+            _systems = systemsList.OrderBy(s=> s.ExecutionOrder).ToArray();
+        }
 
         /// <summary>
         /// Call all the fixed updates of the systems
         /// </summary>
         public static void FixedUpdate()
         {
-            for (var i = 0; i < Systems.Length; i++)
+            for (var i = 0; i < _systems.Length; i++)
             {
                 try
                 {
-                    Profiler.BeginSample(Systems[i].SystemName);
-                    Systems[i].FixedUpdate();
+                    Profiler.BeginSample(_systems[i].SystemName);
+                    _systems[i].FixedUpdate();
                     Profiler.EndSample();
                 }
                 catch (Exception e)
@@ -113,12 +60,12 @@ namespace LunaClient.Systems
         /// </summary>
         public static void Update()
         {
-            for (var i = 0; i < Systems.Length; i++)
+            for (var i = 0; i < _systems.Length; i++)
             {
                 try
                 {
-                    Profiler.BeginSample(Systems[i].SystemName);
-                    Systems[i].Update();
+                    Profiler.BeginSample(_systems[i].SystemName);
+                    _systems[i].Update();
                     Profiler.EndSample();
                 }
                 catch (Exception e)
@@ -133,12 +80,12 @@ namespace LunaClient.Systems
         /// </summary>
         public static void LateUpdate()
         {
-            for (var i = 0; i < Systems.Length; i++)
+            for (var i = 0; i < _systems.Length; i++)
             {
                 try
                 {
-                    Profiler.BeginSample(Systems[i].SystemName);
-                    Systems[i].LateUpdate();
+                    Profiler.BeginSample(_systems[i].SystemName);
+                    _systems[i].LateUpdate();
                     Profiler.EndSample();
                 }
                 catch (Exception e)
@@ -153,9 +100,9 @@ namespace LunaClient.Systems
         /// </summary>
         public static void KillAllSystems()
         {
-            for (var i = 0; i < Systems.Length; i++)
+            for (var i = 0; i < _systems.Length; i++)
             {
-                Systems[i].Enabled = false;
+                _systems[i].Enabled = false;
             }
         }
     }

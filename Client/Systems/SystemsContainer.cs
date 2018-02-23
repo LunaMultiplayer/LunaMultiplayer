@@ -18,5 +18,19 @@ namespace LunaClient.Systems
 
             return system as T;
         }
+
+        public static ISystem Get(Type type)
+        {
+            if (!typeof(ISystem).IsAssignableFrom(type))
+                return null;
+
+            if (!Systems.TryGetValue(type, out var system))
+            {
+                system = Activator.CreateInstance(type) as ISystem;
+                Systems.TryAdd(type, system);
+            }
+
+            return system;
+        }
     }
 }

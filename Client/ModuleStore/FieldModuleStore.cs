@@ -17,7 +17,7 @@ namespace LunaClient.ModuleStore
     /// </summary>
     public class FieldModuleStore
     {
-        private static CustomFieldDefinition DefaultFieldDefinition = new CustomFieldDefinition
+        private static readonly CustomFieldDefinition DefaultFieldDefinition = new CustomFieldDefinition
         {
             FieldName = string.Empty,
             IgnoreReceive = false,

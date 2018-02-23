@@ -6,6 +6,7 @@
     public interface ISystem
     {
         string SystemName { get; }
+        int ExecutionOrder { get; }
         bool Enabled { get; set; }
         void FixedUpdate();
         void Update();

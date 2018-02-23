@@ -36,6 +36,8 @@ namespace LunaClient.Systems.Mod
             LastModFileData = "";
         }
 
+        public override int ExecutionOrder => int.MinValue + 1;
+
         #endregion
 
         #region Public methods

@@ -9,13 +9,20 @@ namespace LunaClient.Base
 {
     /// <summary>
     /// System base class. This class is made for a grouping logic.
-    /// If you create a new system remember to call it on the SystemsHandler class
     /// </summary>
     public abstract class System : SystemBase, ISystem
     {
         #region Field & Properties
 
+        /// <summary>
+        /// Put here the system name
+        /// </summary>
         public abstract string SystemName { get; }
+
+        /// <summary>
+        /// When systems are loaded they are ordered by this number. Put a low value if you want to run your system before the others
+        /// </summary>
+        public virtual int ExecutionOrder { get; } = 0;
 
         /// <summary>
         /// This list hold all the routines that will be executed during the FixedUpdate()
