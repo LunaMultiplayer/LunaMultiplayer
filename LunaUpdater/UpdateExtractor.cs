@@ -54,7 +54,7 @@ namespace LunaUpdater
                 {
                     try
                     {
-                        File.Copy(file, destFolder + "//" + Path.GetFileName(file), true);
+                        File.Copy(file, Path.Combine(destFolder, Path.GetFileName(file)), true);
                     }
                     catch (Exception)
                     {
@@ -73,7 +73,7 @@ namespace LunaUpdater
                 {
                     try
                     {
-                        File.Copy(file, destFolder + "//" + Path.GetFileName(file), true);
+                        File.Copy(file, Path.Combine(destFolder, Path.GetFileName(file)), true);
                     }
                     catch (Exception)
                     {
@@ -92,7 +92,7 @@ namespace LunaUpdater
                 {
                     try
                     {
-                        File.Copy(file, destFolder + "//" + Path.GetFileName(file), true);
+                        File.Copy(file, Path.Combine(destFolder, Path.GetFileName(file)), true);
                     }
                     catch (Exception)
                     {
