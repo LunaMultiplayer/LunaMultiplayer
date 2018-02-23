@@ -42,7 +42,7 @@ namespace LMP.Tests
             var xml = ConfigNodeXmlParser.ConvertToXml(configNode);
             var backToConfigNode = ConfigNodeXmlParser.ConvertToConfigNode(xml);
 
-            Assert.AreEqual(configNode, backToConfigNode, $"Error serializing config node. File: {Path.GetFileName(filePath)}");
+            Assert.IsTrue(configNode.Equals(backToConfigNode), $"Error serializing config node. File: {Path.GetFileName(filePath)}");
         }
     }
 }
