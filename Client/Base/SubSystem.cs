@@ -10,6 +10,9 @@ namespace LunaClient.Base
     public abstract class SubSystem<T> : SystemBase
         where T : class, ISystem, new()
     {
+        /// <summary>
+        /// Reference to the main system where this subsystem belongs
+        /// </summary>
         protected static T System => SystemsContainer.Get<T>();
     }
 }

@@ -10,6 +10,9 @@ namespace LunaClient.Base
         where T : class, IWindow, new()
         where TS : class, ISystem
     {
+        /// <summary>
+        /// Reference to the main system where this system window belongs
+        /// </summary>
         public TS System => SystemsContainer.Get<TS>();
     }
 }

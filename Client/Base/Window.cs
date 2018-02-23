@@ -13,6 +13,10 @@ namespace LunaClient.Base
         public string WindowName { get; } = typeof(T).Name;
 
         private bool _display;
+
+        /// <summary>
+        /// Set it to true or false to display this window
+        /// </summary>
         public virtual bool Display
         {
             get => _display && MainSystem.ToolbarShowGui;
