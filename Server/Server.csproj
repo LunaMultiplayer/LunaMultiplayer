@@ -148,7 +148,7 @@
     <Compile Include="System\ModDataSystemSender.cs" />
     <Compile Include="System\ModFileSystem.cs" />
     <Compile Include="System\VesselContext.cs" />
-    <Compile Include="System\VesselFileUpdater.cs" />
+    <Compile Include="System\VesselDataUpdater.cs" />
     <Compile Include="System\VesselRelay\VesselRelayItem.cs" />
     <Compile Include="System\VesselRelay\VesselRelaySystem.cs" />
     <Compile Include="System\VesselRelay\VesselRelaySystemDataBase.cs" />
