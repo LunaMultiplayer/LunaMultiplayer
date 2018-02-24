@@ -45,7 +45,7 @@ namespace LunaClient.Systems.VesselProtoSys
             VesselProtoSystem.CurrentlyUpdatingVesselId = Guid.Empty;
 
             if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
-                SendVesselMessage(vessel.isEVA ? vessel.BackupVessel() : vessel.protoVessel);
+                SendVesselMessage(vessel.BackupVessel());
 
             if(!VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
                 VesselsProtoStore.AddVesselToDictionary(vessel);

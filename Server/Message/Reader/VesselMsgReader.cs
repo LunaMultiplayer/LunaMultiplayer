@@ -92,7 +92,7 @@ namespace Server.Message.Reader
                 return;
             }
 
-            if (VesselStoreSystem.VesselExists(msgData.Vessel.VesselId))
+            if (!VesselStoreSystem.VesselExists(msgData.Vessel.VesselId))
             {
                 LunaLog.Debug($"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}. Bytes: {msgData.Vessel.NumBytes}");
             }

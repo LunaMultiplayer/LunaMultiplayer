@@ -35,7 +35,7 @@ namespace LunaCommon
                         var servers = content
                             .Trim()
                             .Split('\n')
-                            .Where(s => !s.StartsWith("#") && s.Contains(":"))
+                            .Where(s => !s.StartsWith("#") && s.Contains(":") && !string.IsNullOrEmpty(s))
                             .ToArray();
 
                         foreach (var server in servers)

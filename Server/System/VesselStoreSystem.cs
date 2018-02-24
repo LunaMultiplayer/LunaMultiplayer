@@ -1,5 +1,6 @@
 ﻿using LunaCommon.Xml;
 using Server.Context;
+using Server.Log;
 using Server.Settings;
 using System;
 using System.Collections.Concurrent;
@@ -87,6 +88,7 @@ namespace Server.System
         {
             lock (BackupLock)
             {
+                LunaLog.Normal("Backing up vessels to the disk...");
                 var vesselsInXml = CurrentVesselsInXmlFormat.ToArray();
                 foreach (var vessel in vesselsInXml)
                 {
