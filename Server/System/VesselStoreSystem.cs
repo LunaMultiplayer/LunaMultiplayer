@@ -72,16 +72,26 @@ namespace Server.System
         {
             while (ServerContext.ServerRunning)
             {
-                lock (BackupLock)
-                {
-                    var vesselsInXml = CurrentVesselsInXmlFormat.ToArray();
-                    foreach (var vessel in vesselsInXml)
-                    {
-                        FileHandler.WriteToFile(Path.Combine(VesselsFolder, $"{vessel.Key}.xml"), vessel.Value);
-                    }
-                }
-
+                BackupVessels();
                 Thread.Sleep(GeneralSettings.SettingsStore.VesselsBackupIntervalMs);
+            }
+
+            //Do a last backup before quitting
+            BackupVessels();
+        }
+
+        /// <summary>
+        /// Actually performs the backup of the vessels to file
+        /// </summary>
+        private static void BackupVessels()
+        {
+            lock (BackupLock)
+            {
+                var vesselsInXml = CurrentVesselsInXmlFormat.ToArray();
+                foreach (var vessel in vesselsInXml)
+                {
+                    FileHandler.WriteToFile(Path.Combine(VesselsFolder, $"{vessel.Key}.xml"), vessel.Value);
+                }
             }
         }
     }
