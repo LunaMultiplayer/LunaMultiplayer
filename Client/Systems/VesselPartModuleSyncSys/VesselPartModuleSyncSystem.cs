@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.ModuleStore;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
@@ -92,7 +91,6 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
 
                                     if (snapshotVal != null && fieldVal != null && fieldVal != snapshotVal)
                                     {
-                                        if (SettingsSystem.CurrentSettings.Debug1) customizationResult = CustomizationResult.Ok;
                                         switch (customizationResult)
                                         {
                                             case CustomizationResult.TooEarly: //Do not update anything and wait until next time
