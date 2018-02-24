@@ -83,10 +83,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.protoVessel.persistent = vessel.isPersistent;
             vessel.protoVessel.refTransform = vessel.referenceTransformId;
 
-            for (var i = 0; i < 17; i++)
-            {
-                vessel.protoVessel.actionGroups.values[i].value = vessel.ActionGroups.groups[i] + ", " + vessel.ActionGroups.cooldownTimes[i];
-            }
+            vessel.ActionGroups.Save(vessel.protoVessel.actionGroups);
         }
     }
 }
