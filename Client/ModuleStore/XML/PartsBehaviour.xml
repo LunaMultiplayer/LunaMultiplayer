@@ -58,6 +58,16 @@
     </Fields>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
+    <ModuleName>ModuleWheelMotor</ModuleName>
+    <Fields>
+      <!--We don't really care about it-->
+      <CustomFieldDefinition>
+        <FieldName>driveLimiter</FieldName>
+        <Ignore>true</Ignore>
+      </CustomFieldDefinition>
+    </Fields>
+  </CustomModuleDefinition>
+  <CustomModuleDefinition>
     <ModuleName>ModuleWheelBase</ModuleName>
     <Fields>
       <!--Friction of the wheels. We don't really care about it-->
