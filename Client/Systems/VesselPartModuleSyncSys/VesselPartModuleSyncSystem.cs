@@ -1,9 +1,9 @@
 ﻿using LunaClient.Base;
 using LunaClient.ModuleStore;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System.Collections.Generic;
-using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPartModuleSyncSys
@@ -97,7 +97,8 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                                                 break;
                                             case CustomizationResult.Ok:
                                                 module.snapshot?.moduleValues?.SetValue(fieldInfo.Name, fieldVal);
-                                                LunaLog.Log($"Detected a part module change. FlightId: {part.flightID} PartName: {part.name} Module: {moduleName} Field: {fieldInfo.Name}");
+                                                LunaLog.Log($"Detected a part module change. FlightId: {part.flightID} PartName: {part.name} Module: {moduleName} " +
+                                                            $"Field: {fieldInfo.Name} ValueBefore: {snapshotVal} ValueNow: {fieldVal}");
                                                 MessageSender.SendVesselPartSyncMsg(vessel.id, part.flightID, module.moduleName, fieldInfo.Name, fieldVal);
                                                 break;
                                         }
