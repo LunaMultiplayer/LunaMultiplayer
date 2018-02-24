@@ -35,6 +35,7 @@ namespace LunaClient.Systems.VesselProtoSys
             }
 
             var rootPartIndex = GetRootPartIndex(vessel);
+
             var vesselHasChanges = vessel.Landed && !vessel.protoVessel.landed || vessel.Splashed && !vessel.protoVessel.splashed ||
                 vessel.currentStage != vessel.protoVessel.stage || vessel.protoVessel.rootIndex != rootPartIndex ||
                 vessel.situation != vessel.protoVessel.situation;
@@ -53,25 +54,9 @@ namespace LunaClient.Systems.VesselProtoSys
 
             vesselHasChanges |= RefreshParts(vessel);
 
-            RefreshActionGroups(vessel);
-
             return vesselHasChanges;
         }
-
-        /// <summary>
-        /// Refresh the action groups of the protovessel based on the values of the vessel.
-        /// Changes to action groups do not trigger a change to "vesselHasChanges" as the
-        /// action groups are sent using the VesselUpdateSys
-        /// </summary>
-        private static void RefreshActionGroups(Vessel vessel)
-        {
-            if (vessel.protoVessel.vesselRef.ActionGroups.groups.Count != vessel.protoVessel.actionGroups.CountValues)
-            {
-                vessel.protoVessel.actionGroups.ClearData();
-                vessel.protoVessel.vesselRef.ActionGroups.Save(vessel.protoVessel.actionGroups);
-            }
-        }
-
+        
         /// <summary>
         /// Checks if there's a change in the fairings of a vessel
         /// </summary>
