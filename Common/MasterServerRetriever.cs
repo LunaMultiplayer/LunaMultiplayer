@@ -40,15 +40,22 @@ namespace LunaCommon
 
                         foreach (var server in servers)
                         {
-                            var ipPort = server.Split(':');
-                            if (!IPAddress.TryParse(ipPort[0], out var ip))
+                            try
                             {
-                                ip = Common.GetIpFromString(ipPort[0]);
-                            }
+                                var ipPort = server.Split(':');
+                                if (!IPAddress.TryParse(ipPort[0], out var ip))
+                                {
+                                    ip = Common.GetIpFromString(ipPort[0]);
+                                }
 
-                            if (ip != null && ushort.TryParse(ipPort[1], out var port))
+                                if (ip != null && ushort.TryParse(ipPort[1], out var port))
+                                {
+                                    parsedServers.Add(new IPEndPoint(ip, port));
+                                }
+                            }
+                            catch (Exception)
                             {
-                                parsedServers.Add(new IPEndPoint(ip, port));
+                                //Ignore the bad server   
                             }
                         }
                     }
