@@ -86,6 +86,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                                 {
                                     var customizationResult = SkipSending(vessel.id, part.flightID, moduleName, fieldInfo.Name);
 
+                                    //TODO reflection get generates 8kb... Maybe we can use fastmembers?
                                     var fieldVal = fieldInfo.GetValue(module).ToInvariantString();
                                     var snapshotVal = module.snapshot?.moduleValues.GetValue(fieldInfo.Name);
 
