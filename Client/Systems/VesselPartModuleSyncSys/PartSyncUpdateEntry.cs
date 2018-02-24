@@ -2,7 +2,7 @@
 
 namespace LunaClient.Systems.VesselPartModuleSyncSys
 {
-    public enum CustomizationResult { TooEarly, IgnoreSend, IgnoreReceive, Ok }
+    public enum CustomizationResult { TooEarly, Ignore, Ok }
 
     public class PartSyncUpdateEntry
     {

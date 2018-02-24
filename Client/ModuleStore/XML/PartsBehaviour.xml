@@ -6,17 +6,13 @@
       <!--Rotation of deployable parts, like solar panels or radiators-->
       <CustomFieldDefinition>
         <FieldName>currentRotation</FieldName>
-        <IgnoreSend>false</IgnoreSend>
-        <IgnoreReceive>false</IgnoreReceive>
-        <IntervalCheckChangesMs>5000</IntervalCheckChangesMs>
-        <IntervalApplyChangesMs>5000</IntervalApplyChangesMs>
+        <Ignore>false</Ignore>
+        <Interval>5000</Interval>
       </CustomFieldDefinition>
       <CustomFieldDefinition>
         <FieldName>storedAnimationTime</FieldName>
-        <IgnoreSend>false</IgnoreSend>
-        <IgnoreReceive>false</IgnoreReceive>
-        <IntervalCheckChangesMs>100</IntervalCheckChangesMs>
-        <IntervalApplyChangesMs>100</IntervalApplyChangesMs>
+        <Ignore>false</Ignore>
+        <Interval>100</Interval>
       </CustomFieldDefinition>
     </Fields>
   </CustomModuleDefinition>
@@ -27,16 +23,12 @@
       <CustomFieldDefinition>
         <FieldName>currentThrottle</FieldName>
         <IgnoreSend>false</IgnoreSend>
-        <IgnoreReceive>false</IgnoreReceive>
-        <IntervalCheckChangesMs>1000</IntervalCheckChangesMs>
-        <IntervalApplyChangesMs>1000</IntervalApplyChangesMs>
+        <Interval>1000</Interval>
       </CustomFieldDefinition>
       <CustomFieldDefinition>
         <FieldName>manuallyOverridden</FieldName>
-        <IgnoreSend>false</IgnoreSend>
-        <IgnoreReceive>false</IgnoreReceive>
-        <IntervalCheckChangesMs>600000</IntervalCheckChangesMs>
-        <IntervalApplyChangesMs>600000</IntervalApplyChangesMs>
+        <Ignore>false</Ignore>
+        <Interval>600000</Interval>
       </CustomFieldDefinition>
     </Fields>
   </CustomModuleDefinition>
@@ -46,8 +38,7 @@
       <!--This is just the string that says "Reaction wheels: Running" or "Reaction wheels: Idle" We don't need it at all-->
       <CustomFieldDefinition>
         <FieldName>stateString</FieldName>
-        <IgnoreSend>true</IgnoreSend>
-        <IgnoreReceive>true</IgnoreReceive>
+        <Ignore>true</Ignore>
       </CustomFieldDefinition>
     </Fields>
   </CustomModuleDefinition>
@@ -57,14 +48,12 @@
       <!--Position of the suspension. We don't really care about it-->
       <CustomFieldDefinition>
         <FieldName>suspensionPos</FieldName>
-        <IgnoreSend>true</IgnoreSend>
-        <IgnoreReceive>true</IgnoreReceive>
+        <Ignore>true</Ignore>
       </CustomFieldDefinition>
       <!--No idea-->
       <CustomFieldDefinition>
         <FieldName>autoBoost</FieldName>
-        <IgnoreSend>true</IgnoreSend>
-        <IgnoreReceive>true</IgnoreReceive>
+        <Ignore>true</Ignore>
       </CustomFieldDefinition>
     </Fields>
   </CustomModuleDefinition>
@@ -74,8 +63,7 @@
       <!--Friction of the wheels. We don't really care about it-->
       <CustomFieldDefinition>
         <FieldName>frictionMultiplier</FieldName>
-        <IgnoreSend>true</IgnoreSend>
-        <IgnoreReceive>true</IgnoreReceive>
+        <Ignore>true</Ignore>
       </CustomFieldDefinition>
     </Fields>
   </CustomModuleDefinition>
@@ -85,10 +73,8 @@
       <!--Launch time of the panel. It afects the efficiency. An old solar panel produce less electricity-->
       <CustomFieldDefinition>
         <FieldName>launchUT</FieldName>
-        <IgnoreSend>false</IgnoreSend>
-        <IgnoreReceive>false</IgnoreReceive>
-        <IntervalCheckChangesMs>600000</IntervalCheckChangesMs>
-        <IntervalApplyChangesMs>600000</IntervalApplyChangesMs>
+        <Ignore>false</Ignore>
+        <Interval>600000</Interval>
       </CustomFieldDefinition>
     </Fields>
   </CustomModuleDefinition>

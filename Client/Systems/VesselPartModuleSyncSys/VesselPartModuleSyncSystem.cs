@@ -2,7 +2,6 @@
 using LunaClient.ModuleStore;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,9 +18,6 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
         public bool PartSyncSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 3f;
 
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
-
-        public static readonly Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>> LastUpdatedDictionary =
-            new Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>>();
 
         #endregion
 
@@ -84,7 +80,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                             {
                                 foreach (var fieldInfo in definition.PersistentModuleField)
                                 {
-                                    var customizationResult = SkipSending(vessel.id, part.flightID, moduleName, fieldInfo.Name);
+                                    var customizationResult = CustomizationsHandler.SkipModule(vessel.id, part.flightID, moduleName, fieldInfo.Name, false);
 
                                     var fieldVal = fieldInfo.GetValue(module).ToInvariantString();
                                     var snapshotVal = module.snapshot?.moduleValues.GetValue(fieldInfo.Name);
@@ -95,7 +91,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                                         {
                                             case CustomizationResult.TooEarly: //Do not update anything and wait until next time
                                                 break;
-                                            case CustomizationResult.IgnoreSend: //Update our proto only
+                                            case CustomizationResult.Ignore: //Update our proto only
                                                 module.snapshot?.moduleValues?.SetValue(fieldInfo.Name, fieldVal);
                                                 break;
                                             case CustomizationResult.Ok:
@@ -111,33 +107,6 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                     }
                 }
             }
-        }
-
-        private static CustomizationResult SkipSending(Guid vesselId, uint partFlightId, string moduleName, string fieldName)
-        {
-            var fieldCustomization = FieldModuleStore.GetCustomFieldDefinition(moduleName, fieldName);
-            if (fieldCustomization.IgnoreSend) return CustomizationResult.IgnoreSend;
-
-            try
-            {
-                if (!LastUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].IntervalIsOk()) return CustomizationResult.TooEarly;
-
-                LastUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].Update();
-                return CustomizationResult.Ok;
-            }
-            catch (Exception)
-            {
-                if (!LastUpdatedDictionary.ContainsKey(vesselId))
-                    LastUpdatedDictionary.Add(vesselId, new Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>());
-                if (!LastUpdatedDictionary[vesselId].ContainsKey(partFlightId))
-                    LastUpdatedDictionary[vesselId].Add(partFlightId, new Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>());
-                if (!LastUpdatedDictionary[vesselId][partFlightId].ContainsKey(moduleName))
-                    LastUpdatedDictionary[vesselId][partFlightId].Add(moduleName, new Dictionary<string, PartSyncUpdateEntry>());
-                if (!LastUpdatedDictionary[vesselId][partFlightId][moduleName].ContainsKey(fieldName))
-                    LastUpdatedDictionary[vesselId][partFlightId][moduleName].Add(fieldName, new PartSyncUpdateEntry(fieldCustomization.IntervalCheckChangesMs));
-            }
-
-            return CustomizationResult.Ok;
         }
 
         #endregion

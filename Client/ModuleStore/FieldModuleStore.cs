@@ -20,10 +20,8 @@ namespace LunaClient.ModuleStore
         private static readonly CustomFieldDefinition DefaultFieldDefinition = new CustomFieldDefinition
         {
             FieldName = string.Empty,
-            IgnoreReceive = false,
-            IgnoreSend = false,
-            IntervalCheckChangesMs = 2500,
-            IntervalApplyChangesMs = 2500,
+            Ignore = false,
+            Interval = 2500,
         };
 
         private static readonly string CustomPartSyncFolder = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "PartSync");

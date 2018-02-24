@@ -95,6 +95,7 @@
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateUpdate.cs" />
+    <Compile Include="Systems\VesselPartModuleSyncSys\CustomizationsHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\PartSyncUpdateEntry.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageSender.cs" />
