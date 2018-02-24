@@ -3,6 +3,7 @@ using LunaClient.ModuleStore;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System.Collections.Generic;
+using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPartModuleSyncSys
@@ -28,7 +29,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(10, RoutineExecution.Update, SendVesselPartUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselPartsSyncMsInterval, RoutineExecution.Update, SendVesselPartUpdates));
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendSecondaryVesselPartUpdates));
         }
 

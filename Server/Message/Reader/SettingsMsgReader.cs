@@ -29,7 +29,7 @@ namespace Server.Message.Reader
             msgData.DropControlOnVesselSwitching = GeneralSettings.SettingsStore.DropControlOnVesselSwitching;
             msgData.DropControlOnExitFlight = GeneralSettings.SettingsStore.DropControlOnExitFlight;
             msgData.DropControlOnExit = GeneralSettings.SettingsStore.DropControlOnExit;
-            msgData.VesselDefinitionSendMsInterval = GeneralSettings.SettingsStore.VesselDefinitionSendMsInterval;
+            msgData.VesselPartsSyncMsInterval = GeneralSettings.SettingsStore.VesselPartsSyncMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;
 

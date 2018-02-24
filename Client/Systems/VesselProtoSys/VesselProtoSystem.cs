@@ -67,7 +67,7 @@ namespace LunaClient.Systems.VesselProtoSys
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselDefinitionSendMsInterval, RoutineExecution.Update, SendVesselDefinition));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselPartsSyncMsInterval, RoutineExecution.Update, SendVesselDefinition));
         }
 
         protected override void OnDisabled()

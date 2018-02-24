@@ -103,9 +103,10 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Interval in Ms at wich the client will send updates for vessels that are uncontrolled but nearby him.")]
         public int SecondaryVesselUpdatesSendMsInterval { get; set; } = 500;
 
-        [XmlComment(Value = "Interval in ms at wich users will send the controlled and close uncontrolled vessel definitions (ProtoVessel) to the server." +
-                            "Caution! Sending a vessel definition (ProtoVessel) very often could make clients with slow computers to lag a lot!")]
-        public int VesselDefinitionSendMsInterval { get; set; } = 2500;
+        [XmlComment(Value = "Interval in ms at wich users will check the controlled and close uncontrolled vessel and sync the parts that have changes " +
+                            "(ladders that extend or shields that open) to the server. " +
+                            "Caution! Puting a very low value could make clients with slow computers to lag a lot!")]
+        public int VesselPartsSyncMsInterval { get; set; } = 500;
 
         [XmlComment(Value = "Relay system mode. Dictionary uses more RAM but it's faster. DataBase use disk space instead but it's slower" +
                             "Values: Dictionary, DataBase")]

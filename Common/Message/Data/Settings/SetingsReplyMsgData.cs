@@ -63,7 +63,7 @@ namespace LunaCommon.Message.Data.Settings
         public bool DropControlOnExit;
         public bool DropControlOnExitFlight;
         public string WarpMaster;
-        public int VesselDefinitionSendMsInterval;
+        public int VesselPartsSyncMsInterval;
         public bool ShowVesselsInThePast;
 
         public override string ClassName { get; } = nameof(SettingsReplyMsgData);
@@ -124,7 +124,7 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(DropControlOnExit);
             lidgrenMsg.Write(DropControlOnExitFlight);
             lidgrenMsg.Write(WarpMaster);
-            lidgrenMsg.Write(VesselDefinitionSendMsInterval);
+            lidgrenMsg.Write(VesselPartsSyncMsInterval);
             lidgrenMsg.Write(ShowVesselsInThePast);
         }
 
@@ -184,7 +184,7 @@ namespace LunaCommon.Message.Data.Settings
             DropControlOnExit = lidgrenMsg.ReadBoolean();
             DropControlOnExitFlight = lidgrenMsg.ReadBoolean();
             WarpMaster = lidgrenMsg.ReadString();
-            VesselDefinitionSendMsInterval = lidgrenMsg.ReadInt32();
+            VesselPartsSyncMsInterval = lidgrenMsg.ReadInt32();
             ShowVesselsInThePast = lidgrenMsg.ReadBoolean();
         }
 
