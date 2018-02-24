@@ -97,7 +97,7 @@ namespace Server.Message.Reader
                 LunaLog.Debug($"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}. Bytes: {msgData.Vessel.NumBytes}");
             }
 
-            VesselStoreSystem.AddUpdateVesselInConfigNodeFormat(msgData.Vessel.VesselId, Encoding.UTF8.GetString(msgData.Vessel.Data, 0, msgData.Vessel.NumBytes));
+            VesselDataUpdater.RawConfigNodeInsertOrUpdate(msgData.Vessel.VesselId, Encoding.UTF8.GetString(msgData.Vessel.Data, 0, msgData.Vessel.NumBytes));
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
         }
 
@@ -113,7 +113,7 @@ namespace Server.Message.Reader
             {
                 LunaLog.Debug($"Saving DOCKED vessel {msgData.DominantVesselId} from {client.PlayerName}. Bytes: {msgData.NumBytes}");
             }
-            VesselStoreSystem.AddUpdateVesselInConfigNodeFormat(msgData.DominantVesselId, Encoding.UTF8.GetString(msgData.FinalVesselData, 0, msgData.NumBytes));
+            VesselDataUpdater.RawConfigNodeInsertOrUpdate(msgData.DominantVesselId, Encoding.UTF8.GetString(msgData.FinalVesselData, 0, msgData.NumBytes));
 
             //Now remove the weak vessel
             LunaLog.Debug($"Removing weak docked vessel {msgData.WeakVesselId}");

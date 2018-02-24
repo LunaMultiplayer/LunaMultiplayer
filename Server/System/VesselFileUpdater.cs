@@ -149,6 +149,20 @@ namespace Server.System
         }
 
         /// <summary>
+        /// Raw updates a vessel in the dictionary and takes care of the locking in case we received another vessel message type
+        /// </summary>
+        public static void RawConfigNodeInsertOrUpdate(Guid vesselId, string vesselData)
+        {
+            Task.Run(() =>
+            {
+                lock (Semaphore.GetOrAdd(vesselId, new object()))
+                {
+                    VesselStoreSystem.AddUpdateVesselInConfigNodeFormat(vesselId, vesselData);
+                }
+            });
+        }
+
+        /// <summary>
         /// We received a part module change from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
         /// </summary>
@@ -157,7 +171,7 @@ namespace Server.System
             if (!(message is VesselPartSyncMsgData msgData)) return;
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 
-            //Sync part changes ALWAYS
+            //Sync part changes ALWAYS and ignore the rate they arrive
             Task.Run(() =>
             {
                 lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
