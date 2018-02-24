@@ -1,5 +1,6 @@
 ﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Xml;
+using Server.Utilities;
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
@@ -241,7 +242,7 @@ namespace Server.System
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='REF']");
             if (node != null) node.InnerText = msgData.Orbit[7].ToString(CultureInfo.InvariantCulture);
 
-            return document.OuterXml;
+            return document.ToIndentedString();
         }
 
         /// <summary>
@@ -294,7 +295,7 @@ namespace Server.System
                 if (node != null) node.InnerText = $"{actionGroup.State.ToString(CultureInfo.InvariantCulture)}, {actionGroup.Time.ToString(CultureInfo.InvariantCulture)}";
             }
 
-            return document.OuterXml;
+            return document.ToIndentedString();
         }
 
         /// <summary>
@@ -321,7 +322,7 @@ namespace Server.System
 
             }
 
-            return document.OuterXml;
+            return document.ToIndentedString();
         }
 
         /// <summary>
@@ -339,7 +340,7 @@ namespace Server.System
             var fieldNode = document.SelectSingleNode(xpath);
             if (fieldNode != null) fieldNode.InnerText = msgData.Value;
 
-            return document.OuterXml;
+            return document.ToIndentedString();
         }
     }
 }
