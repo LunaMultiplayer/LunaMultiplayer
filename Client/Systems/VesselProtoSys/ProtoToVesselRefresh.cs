@@ -149,7 +149,6 @@ namespace LunaClient.Systems.VesselProtoSys
             Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
             Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
         }
-
         
         private static void UpdatePartFairings(ProtoPartSnapshot partSnapshot, Part part)
         {
