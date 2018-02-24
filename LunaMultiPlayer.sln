@@ -43,8 +43,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LMP Updater", "LMP Updater"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Updater", "Updater\Updater.csproj", "{16BCA3E1-0036-4693-A363-20D3A6FB6B85}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FastMember", "FastMember\FastMember.csproj", "{8EF4CEAA-4F98-4325-B6CE-FDC69A41FE80}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,10 +92,6 @@ Global
 		{16BCA3E1-0036-4693-A363-20D3A6FB6B85}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16BCA3E1-0036-4693-A363-20D3A6FB6B85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16BCA3E1-0036-4693-A363-20D3A6FB6B85}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8EF4CEAA-4F98-4325-B6CE-FDC69A41FE80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8EF4CEAA-4F98-4325-B6CE-FDC69A41FE80}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8EF4CEAA-4F98-4325-B6CE-FDC69A41FE80}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8EF4CEAA-4F98-4325-B6CE-FDC69A41FE80}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,7 +108,6 @@ Global
 		{92B4486C-6B60-4757-B6F0-50B844D1B2BA} = {C2D6F2FF-CA1B-450B-87E6-78CA6510952A}
 		{DCB5D745-525C-46A1-BFC0-E12F87AB6165} = {622BED4E-ABB5-4F18-802A-E76D36EF47BF}
 		{16BCA3E1-0036-4693-A363-20D3A6FB6B85} = {8FDB08F7-753D-437E-B480-A8CDE45CE708}
-		{8EF4CEAA-4F98-4325-B6CE-FDC69A41FE80} = {622BED4E-ABB5-4F18-802A-E76D36EF47BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {46CE1FFE-A52F-4C6D-8FF1-11B6E792761B}
