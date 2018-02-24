@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Reference Include="Mono.Posix">
+      <HintPath Condition="'$(OS)' == 'Windows_NT'">$(MSBuildThisFileDirectory)win\Mono.Posix.dll</HintPath>
+      <HintPath Condition="'$(OS)' != 'Windows_NT'">$(MSBuildThisFileDirectory)mac\Mono.Posix.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

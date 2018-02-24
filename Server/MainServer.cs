@@ -4,6 +4,7 @@ using LunaCommon.Time;
 using Server.Client;
 using Server.Command;
 using Server.Context;
+using Server.Exit;
 using Server.Log;
 using Server.Plugin;
 using Server.Settings;
@@ -22,6 +23,8 @@ namespace Server
     {
         private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
 
+        private static readonly IExitSignal ExitSignal = ExitCommon.GetExitHandler();
+
         public static void Main()
         {
             try
@@ -32,6 +35,10 @@ namespace Server
 #endif
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = LunaTime.UtcNow.Ticks;
+
+                //Register the ctrl+c event and exit signal
+                Console.CancelKeyPress += (sender, args) => Exit();
+                ExitSignal.Exit += (sender, args) => Exit();
 
                 //We disable quick edit as otherwise when you select some text for copy/paste then you can't write to the console and server freezes
                 //This just happens on windows....
@@ -47,8 +54,7 @@ namespace Server
                 //Set the last player activity time to server start
                 ServerContext.LastPlayerActivity = ServerContext.ServerClock.ElapsedMilliseconds;
 
-                //Register the ctrl+c event
-                Console.CancelKeyPress += CatchExit;
+
                 ServerContext.ServerStarting = true;
 
                 //Set day for log change
@@ -122,19 +128,21 @@ namespace Server
             LunaTime.SimulatedMsTimeOffset = DebugSettings.SettingsStore.SimulatedMsTimeOffset;
 #endif
         }
-
-        //Gracefully shut down
-        private static async void CatchExit(object sender, ConsoleCancelEventArgs args)
-        {
-            ServerContext.Shutdown();
-            QuitEvent.Set();
-            args.Cancel = true;
-            await Task.Delay(5000);
-        }
-
+        
         /// <summary>
         /// Return the number of running instances.
         /// </summary>
         private static int GetRunningInstances() => Process.GetProcessesByName("LunaServer.exe").Length;
+
+        /// <summary>
+        /// Runs the exit logic
+        /// </summary>
+        private static void Exit()
+        {
+            LunaLog.Normal("Exiting... Please give LMP 5 seconds to close the files correctly");
+            ServerContext.Shutdown();
+            QuitEvent.Set();
+            Thread.Sleep(5000);
+        }
     }
 }
