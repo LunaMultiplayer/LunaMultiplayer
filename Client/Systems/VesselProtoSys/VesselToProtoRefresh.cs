@@ -39,10 +39,6 @@ namespace LunaClient.Systems.VesselProtoSys
             var vesselHasChanges = vessel.Landed && !vessel.protoVessel.landed || vessel.Splashed && !vessel.protoVessel.splashed ||
                 vessel.currentStage != vessel.protoVessel.stage || vessel.protoVessel.rootIndex != rootPartIndex ||
                 vessel.situation != vessel.protoVessel.situation;
-
-            vessel.protoVessel.vesselRef = vessel;
-            vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
-            vessel.protoVessel.vesselID = vessel.id;
             
             vesselHasChanges |= RefreshParts(vessel);
 
@@ -85,22 +81,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         private static bool RefreshParts(Vessel vessel)
         {
-            if (vessel.parts.Count != vessel.protoVessel.protoPartSnapshots.Count)
-            {
-                vessel.protoVessel.protoPartSnapshots.Clear();
-
-                foreach (var part in vessel.parts.Where(p => p.State != PartStates.DEAD))
-                {
-                    vessel.protoVessel.protoPartSnapshots.Add(new ProtoPartSnapshot(part, vessel.protoVessel));
-                }
-
-                foreach (var partSnapshot in vessel.protoVessel.protoPartSnapshots)
-                {
-                    partSnapshot.storePartRefs();
-                }
-
-                return true;
-            }
+            if (vessel.parts.Count != vessel.protoVessel.protoPartSnapshots.Count) return true;
 
             var partsHaveChanges = false;
             for (var i = 0; i < vessel.parts.Count; i++)
@@ -126,28 +107,11 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
 
                 partsHaveChanges |= RefreshFairings(vessel.parts[i]);
-                RefreshPartResources(vessel.parts[i]);
             }
 
             return partsHaveChanges;
         }
-
-        /// <summary>
-        /// Refreshes the protovessel part resource based on a part.
-        /// We don't check for changes here as doing so will send too much data (resources change VERY often)
-        /// </summary>
-        private static void RefreshPartResources(Part part)
-        {
-            if (part.protoPartSnapshot.resources.Count != part.Resources.Count)
-            {
-                part.protoPartSnapshot.resources.Clear();
-                for (var i = 0; i < part.Resources.Count; i++)
-                {
-                    part.protoPartSnapshot.resources.Add(new ProtoPartResourceSnapshot(part.Resources[i]));
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Gets a value from a config node
         /// </summary>
