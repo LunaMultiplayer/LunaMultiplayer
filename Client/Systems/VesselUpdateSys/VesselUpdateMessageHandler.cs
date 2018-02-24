@@ -51,12 +51,25 @@ namespace LunaClient.Systems.VesselUpdateSys
             //Only change this value if vessel splashes. When the vessel splashes the vessel must be reloaded as a whole by the vessel proto system
             if (vessel.Splashed && !msgData.Splashed)
                 vessel.Splashed = vessel.protoVessel.splashed;
-
+            
             vessel.protoVessel.missionTime = vessel.missionTime = msgData.MissionTime;
             vessel.protoVessel.launchTime = vessel.launchTime = msgData.LaunchTime;
             vessel.protoVessel.lastUT = vessel.lastUT = msgData.LastUt;
             vessel.protoVessel.persistent = vessel.isPersistent = msgData.Persistent;
             vessel.protoVessel.refTransform = vessel.referenceTransformId = msgData.RefTransformId;
+
+            if (msgData.AutoClean)
+            {
+                vessel.SetAutoClean(msgData.AutoCleanReason);
+            }
+
+            //vessel.IsControllable = msgData.WasControllable;
+
+            vessel.currentStage = msgData.Stage;
+
+            vessel.localCoM.x = msgData.Com[0];
+            vessel.localCoM.y = msgData.Com[1];
+            vessel.localCoM.z = msgData.Com[2];
         }
 
         private static void UpdateActionGroups(Vessel vessel, VesselUpdateMsgData msgData)
@@ -101,7 +114,13 @@ namespace LunaClient.Systems.VesselUpdateSys
                 protoVessel.lastUT = msgData.LastUt;
                 protoVessel.persistent = msgData.Persistent;
                 protoVessel.refTransform = msgData.RefTransformId;
-
+                protoVessel.autoClean = msgData.AutoClean;
+                protoVessel.autoCleanReason = msgData.AutoCleanReason;
+                protoVessel.wasControllable = msgData.WasControllable;
+                protoVessel.stage = msgData.Stage;
+                protoVessel.CoM.x = msgData.Com[0];
+                protoVessel.CoM.y = msgData.Com[1];
+                protoVessel.CoM.z = msgData.Com[2];
                 for (var i = 0; i < 17; i++)
                 {
                     protoVessel.actionGroups.SetValue(msgData.ActionGroups[i].ActionGroupName, $"{msgData.ActionGroups[i].State}, {msgData.ActionGroups[i].Time}");

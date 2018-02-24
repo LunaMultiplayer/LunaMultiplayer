@@ -23,12 +23,17 @@ namespace LunaCommon.Message.Data.Vessel
         public double MissionTime;
         public double LaunchTime;
         public double LastUt;
-
         public uint RefTransformId;
+        public bool AutoClean;
+        public string AutoCleanReason;
+        public bool WasControllable;
+        public int Stage;
+        public float[] Com = new float[3];
 
         public ActionGroup[] ActionGroups = new ActionGroup[17];
 
         public override string ClassName { get; } = nameof(VesselUpdateMsgData);
+
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
@@ -47,7 +52,13 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(LaunchTime);
             lidgrenMsg.Write(LastUt);
             lidgrenMsg.Write(RefTransformId);
+            lidgrenMsg.Write(AutoClean);
+            lidgrenMsg.Write(AutoCleanReason);
+            lidgrenMsg.Write(WasControllable);
+            lidgrenMsg.Write(Stage);
 
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(Com[i]);
 
             for (var i = 0; i < 17; i++)
                 ActionGroups[i].Serialize(lidgrenMsg);
@@ -69,9 +80,14 @@ namespace LunaCommon.Message.Data.Vessel
             MissionTime = lidgrenMsg.ReadDouble();
             LaunchTime = lidgrenMsg.ReadDouble();
             LastUt = lidgrenMsg.ReadDouble();
-
             RefTransformId = lidgrenMsg.ReadUInt32();
+            AutoClean = lidgrenMsg.ReadBoolean();
+            AutoCleanReason = lidgrenMsg.ReadString();
+            WasControllable = lidgrenMsg.ReadBoolean();
+            Stage = lidgrenMsg.ReadInt32();
 
+            for (var i = 0; i < 3; i++)
+                Com[i] = lidgrenMsg.ReadFloat();
 
             for (var i = 0; i < 17; i++)
             {
@@ -91,8 +107,9 @@ namespace LunaCommon.Message.Data.Vessel
             }
 
             return base.InternalGetMessageSize() + GuidUtil.GetByteSize() 
-                + sizeof(double) * 3 + sizeof(bool) * 3 + sizeof(uint) 
-                + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount() + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() +
+                + sizeof(double) * 3 + sizeof(bool) * 5 + sizeof(uint) + sizeof(int)
+                + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount() 
+                + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() + AutoCleanReason.GetByteCount()
                 + arraySize;
         }
     }

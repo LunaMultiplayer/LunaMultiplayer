@@ -44,14 +44,6 @@ namespace LunaClient.Systems.VesselProtoSys
             vessel.protoVessel.vesselRef.protoVessel = vessel.protoVessel;
             vessel.protoVessel.vesselID = vessel.id;
             
-            vessel.protoVessel.autoClean = vessel.AutoClean;
-            vessel.protoVessel.autoCleanReason = vessel.AutoCleanReason;
-            vessel.protoVessel.wasControllable = vessel.IsControllable;
-
-            vessel.protoVessel.CoM = vessel.localCoM;
-            vessel.protoVessel.stage = vessel.currentStage;
-            vessel.protoVessel.persistent = vessel.isPersistent;
-
             vesselHasChanges |= RefreshParts(vessel);
 
             return vesselHasChanges;

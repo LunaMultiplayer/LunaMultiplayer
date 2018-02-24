@@ -218,13 +218,7 @@ namespace Server.System
                              $"{msgData.SrfRelRotation[1].ToString(CultureInfo.InvariantCulture)}," +
                              $"{msgData.SrfRelRotation[2].ToString(CultureInfo.InvariantCulture)}," +
                              $"{msgData.SrfRelRotation[3].ToString(CultureInfo.InvariantCulture)}";
-
-            //NEVER! patch the CoM in the protovessel as then it will be drawn with incorrect CommNet lines!
-            //node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='CoM']");
-            //if (node != null) node.InnerText = $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
-            //                                $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
-            //                                $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}";
-
+            
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='INC']");
             if (node != null) node.InnerText = msgData.Orbit[0].ToString(CultureInfo.InvariantCulture);
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='ECC']");
@@ -288,6 +282,24 @@ namespace Server.System
 
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='ref']");
             if (node != null) node.InnerText = msgData.RefTransformId.ToString(CultureInfo.InvariantCulture);
+
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='cln']");
+            if (node != null) node.InnerText = msgData.AutoClean.ToString(CultureInfo.InvariantCulture);
+
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='clnRsn']");
+            if (node != null) node.InnerText = msgData.AutoCleanReason;
+
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='ctrl']");
+            if (node != null) node.InnerText = msgData.WasControllable.ToString(CultureInfo.InvariantCulture);
+
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='stg']");
+            if (node != null) node.InnerText = msgData.Stage.ToString(CultureInfo.InvariantCulture);
+
+            //NEVER! patch the CoM in the protovessel as then it will be drawn with incorrect CommNet lines!
+            //node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='CoM']");
+            //if (node != null) node.InnerText = $"{msgData.Com[0].ToString(CultureInfo.InvariantCulture)}," +
+            //                                $"{msgData.Com[1].ToString(CultureInfo.InvariantCulture)}," +
+            //                                $"{msgData.Com[2].ToString(CultureInfo.InvariantCulture)}";
 
             foreach (var actionGroup in msgData.ActionGroups)
             {

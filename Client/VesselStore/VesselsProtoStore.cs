@@ -145,6 +145,13 @@ namespace LunaClient.VesselStore
                 vesselProtoUpd.ProtoVessel.lastUT = msgData.LastUt;
                 vesselProtoUpd.ProtoVessel.persistent = msgData.Persistent;
                 vesselProtoUpd.ProtoVessel.refTransform = msgData.RefTransformId;
+                vesselProtoUpd.ProtoVessel.autoClean = msgData.AutoClean;
+                vesselProtoUpd.ProtoVessel.autoCleanReason = msgData.AutoCleanReason;
+                vesselProtoUpd.ProtoVessel.wasControllable = msgData.WasControllable;
+                vesselProtoUpd.ProtoVessel.stage = msgData.Stage;
+                vesselProtoUpd.ProtoVessel.CoM.x = msgData.Com[0];
+                vesselProtoUpd.ProtoVessel.CoM.y = msgData.Com[1];
+                vesselProtoUpd.ProtoVessel.CoM.z = msgData.Com[2];
             }
         }
 

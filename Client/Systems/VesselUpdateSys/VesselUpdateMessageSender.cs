@@ -34,6 +34,20 @@ namespace LunaClient.Systems.VesselUpdateSys
             msgData.Persistent = vessel.isPersistent;
             msgData.RefTransformId = vessel.referenceTransformId;
 
+            msgData.AutoClean = vessel.AutoClean;
+            msgData.AutoCleanReason = vessel.AutoCleanReason;
+            msgData.WasControllable = vessel.IsControllable;
+            msgData.Stage = vessel.currentStage;
+            msgData.Com[0] = vessel.localCoM.x;
+            msgData.Com[1] = vessel.localCoM.y;
+            msgData.Com[2] = vessel.localCoM.z;
+
+            vessel.protoVessel.autoClean = vessel.AutoClean;
+            vessel.protoVessel.autoCleanReason = vessel.AutoCleanReason;
+            vessel.protoVessel.wasControllable = vessel.IsControllable;
+            vessel.protoVessel.CoM = vessel.localCoM;
+            vessel.protoVessel.stage = vessel.currentStage;
+
             for (var i = 0; i < 17; i++)
             {
                 if (msgData.ActionGroups[i] == null)
