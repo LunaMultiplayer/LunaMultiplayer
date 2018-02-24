@@ -33,3 +33,6 @@ LmpGlobal/obj/*
 Updater/*.csproj.user
 Updater/bin/*
 Updater/obj/*
+FastMember/*.csproj.user
+FastMember/bin/*
+FastMember/obj/*
