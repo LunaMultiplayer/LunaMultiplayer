@@ -1,10 +1,8 @@
 ﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Xml;
-using Server.Context;
 using System;
 using System.Collections.Concurrent;
 using System.Globalization;
-using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -33,7 +31,7 @@ namespace Server.System
 
         #endregion
 
-        #region Position
+        #region Updates
 
         /// <summary>
         /// Update the vessel files with update data max at a 2,5 seconds interval
@@ -61,21 +59,17 @@ namespace Server.System
 
         #endregion
 
-        #region PartSync
+        #endregion
+
+        #region Semaphore
 
         /// <summary>
-        /// Update the vessel files with resource data max at a 2,5 seconds interval
+        /// To not overwrite our own data we use a lock
         /// </summary>
-        private const int FilePartSyncUpdateIntervalMs = 100;
-
-        /// <summary>
-        /// Avoid updating the vessel files so often as otherwise the server will lag a lot!
-        /// </summary>
-        private static readonly ConcurrentDictionary<Guid, DateTime> LastPartSyncUpdateDictionary = new ConcurrentDictionary<Guid, DateTime>();
+        private static readonly ConcurrentDictionary<Guid, object> Semaphore = new ConcurrentDictionary<Guid, object>();
 
         #endregion
 
-        #endregion
         /// <summary>
         /// We received a position information from a player
         /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
@@ -91,8 +85,10 @@ namespace Server.System
 
                 Task.Run(() =>
                 {
-                    if (VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData))
+                    lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                     {
+                        if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+
                         var updatedText = UpdateProtoVesselWithNewPositionData(xmlData, msgData);
                         VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
                     }
@@ -115,7 +111,9 @@ namespace Server.System
 
                 Task.Run(() =>
                 {
-                    if (VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData))
+                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+
+                    lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                     {
                         var updatedText = UpdateProtoVesselWithNewUpdateData(xmlData, msgData);
                         VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
@@ -139,12 +137,13 @@ namespace Server.System
 
                 Task.Run(() =>
                 {
-                    var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
-                    if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
-                    var protoVesselLines = FileHandler.ReadFileLines(path);
+                    lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
+                    {
+                        if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
 
-                    //var updatedText = UpdateProtoVesselFileWithNewResourceData(protoVesselLines, msgData);
-                    //FileHandler.WriteToFile(path, updatedText);
+                        var updatedText = UpdateProtoVesselFileWithNewResourceData(xmlData, msgData);
+                        VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                    }
                 });
             }
         }
@@ -158,20 +157,17 @@ namespace Server.System
             if (!(message is VesselPartSyncMsgData msgData)) return;
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 
-            if (!LastPartSyncUpdateDictionary.TryGetValue(msgData.VesselId, out var lastUpdated) || (DateTime.Now - lastUpdated).TotalMilliseconds > FilePartSyncUpdateIntervalMs)
+            //Sync part changes ALWAYS
+            Task.Run(() =>
             {
-                LastPartSyncUpdateDictionary.AddOrUpdate(msgData.VesselId, DateTime.Now, (key, existingVal) => DateTime.Now);
-
-                Task.Run(() =>
+                lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
                 {
-                    var path = Path.Combine(ServerContext.UniverseDirectory, "Vessels", $"{msgData.VesselId}.txt");
-                    if (!File.Exists(path)) return; //didn't found a vessel to rewrite so quit
-                    var protoVesselLines = FileHandler.ReadFileLines(path);
+                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
 
-                    //var updatedText = UpdateProtoVesselFileWithNewPartModulesData(protoVesselLines, msgData);
-                    //FileHandler.WriteToFile(path, updatedText);
-                });
-            }
+                    var updatedText = UpdateProtoVesselFileWithNewPartModulesData(xmlData, msgData);
+                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                }
+            });
         }
 
         /// <summary>
@@ -183,7 +179,7 @@ namespace Server.System
             document.LoadXml(vesselData);
 
             var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='lat']");
-            if(node != null) node.InnerText = msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture);
+            if (node != null) node.InnerText = msgData.LatLonAlt[0].ToString(CultureInfo.InvariantCulture);
 
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='lon']");
             if (node != null) node.InnerText = msgData.LatLonAlt[1].ToString(CultureInfo.InvariantCulture);
@@ -232,7 +228,7 @@ namespace Server.System
 
             return document.OuterXml;
         }
-        
+
         /// <summary>
         /// Updates the proto vessel with the values we received about a position of a vessel
         /// </summary>
@@ -296,22 +292,39 @@ namespace Server.System
 
             foreach (var resourceInfo in msgData.Resources)
             {
-                var resourceNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/PART{ConfigNodeXmlParser.ValueNode}[@uid='{resourceInfo.PartFlightId}]/" +
-                                                     $"RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='name']/{ConfigNodeXmlParser.ValueNode}[name={resourceInfo.ResourceName}]");
-                //var parent = resourceNode?.ParentNode;
-                //resourceNode.SelectSingleNode();
+                var xpath = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{resourceInfo.PartFlightId}""]/" +
+                    $"following-sibling::RESOURCE/{ConfigNodeXmlParser.ValueNode}" +
+                    $@"[@name='name' and text()=""{resourceInfo.ResourceName}""]/parent::RESOURCE";
+
+                var resourceNode = document.SelectSingleNode(xpath);
+
+                var amountNode = resourceNode?.SelectSingleNode($"/RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='amount']");
+                if (amountNode != null) amountNode.InnerText = resourceInfo.Amount.ToString(CultureInfo.InvariantCulture);
+
+                var flowNode = resourceNode?.SelectSingleNode($"/RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='flowState']");
+                if (flowNode != null) flowNode.InnerText = resourceInfo.FlowState.ToString(CultureInfo.InvariantCulture);
 
             }
-            return null;
+
+            return document.OuterXml;
         }
 
         /// <summary>
         /// Updates the proto vessel with the values we received about a part module change of a vessel
         /// </summary>
-        private static string UpdateProtoVesselFileWithNewPartModulesData(string vesselData, VesselResourceMsgData msgData)
+        private static string UpdateProtoVesselFileWithNewPartModulesData(string vesselData, VesselPartSyncMsgData msgData)
         {
-            //TODO
-            return null;
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
+
+            var xpath = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
+                        $"following-sibling::MODULE/{ConfigNodeXmlParser.ValueNode}" +
+                        $@"[@name='name' and text()=""{msgData.ModuleName}""]/parent::MODULE/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.FieldName}']";
+
+            var fieldNode = document.SelectSingleNode(xpath);
+            if (fieldNode != null) fieldNode.InnerText = msgData.Value;
+
+            return document.OuterXml;
         }
     }
 }
