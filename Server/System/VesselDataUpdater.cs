@@ -319,7 +319,6 @@ namespace Server.System
 
                 var flowNode = resourceNode?.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/PART/RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='flowState']");
                 if (flowNode != null) flowNode.InnerText = resourceInfo.FlowState.ToString(CultureInfo.InvariantCulture);
-
             }
 
             return document.ToIndentedString();
