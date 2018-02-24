@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.ModuleStore;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
@@ -20,9 +21,8 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
 
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
 
-        public static readonly Dictionary<Guid, PartSyncUpdateEntry> LastUpdatedDictionary = new Dictionary<Guid, PartSyncUpdateEntry>();
-
-        private static readonly List<Type> InheritTypeChain = new List<Type>();
+        public static readonly Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>> LastUpdatedDictionary =
+            new Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>>();
 
         #endregion
 
@@ -85,23 +85,27 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                             {
                                 foreach (var fieldInfo in definition.PersistentModuleField)
                                 {
-                                    var fieldCustomization = FieldModuleStore.GetCustomFieldDefinition(moduleName, fieldInfo.Name);
-                                    if (fieldCustomization.IgnoreSend) continue;
-                                    if (LastUpdatedDictionary.TryGetValue(vessel.id, out var lastUpdateValue) && !lastUpdateValue.TimeToCheck) continue;
-
-                                    if (!LastUpdatedDictionary.ContainsKey(vessel.id))
-                                        LastUpdatedDictionary.Add(vessel.id, new PartSyncUpdateEntry(fieldCustomization.IntervalCheckChangesMs));
-                                    else
-                                        LastUpdatedDictionary[vessel.id].Update();
+                                    var customizationResult = SkipSending(vessel.id, part.flightID, moduleName, fieldInfo.Name);
 
                                     var fieldVal = fieldInfo.GetValue(module).ToInvariantString();
                                     var snapshotVal = module.snapshot?.moduleValues.GetValue(fieldInfo.Name);
 
                                     if (snapshotVal != null && fieldVal != null && fieldVal != snapshotVal)
                                     {
-                                        vessel.protoVessel.protoPartSnapshots[i].modules[j].moduleValues.SetValue(fieldInfo.Name, fieldVal);
-                                        LunaLog.Log($"Detected a part module change. FlightId: {part.flightID} PartName: {part.partName} Module: {moduleName} Field: {fieldInfo.Name}");
-                                        MessageSender.SendVesselPartSyncMsg(vessel.id, part.flightID, module.moduleName, fieldInfo.Name, fieldVal);
+                                        if (SettingsSystem.CurrentSettings.Debug1) customizationResult = CustomizationResult.Ok;
+                                        switch (customizationResult)
+                                        {
+                                            case CustomizationResult.TooEarly: //Do not update anything and wait until next time
+                                                break;
+                                            case CustomizationResult.IgnoreSend: //Update our proto only
+                                                module.snapshot?.moduleValues?.SetValue(fieldInfo.Name, fieldVal);
+                                                break;
+                                            case CustomizationResult.Ok:
+                                                module.snapshot?.moduleValues?.SetValue(fieldInfo.Name, fieldVal);
+                                                LunaLog.Log($"Detected a part module change. FlightId: {part.flightID} PartName: {part.name} Module: {moduleName} Field: {fieldInfo.Name}");
+                                                MessageSender.SendVesselPartSyncMsg(vessel.id, part.flightID, module.moduleName, fieldInfo.Name, fieldVal);
+                                                break;
+                                        }
                                     }
                                 }
                             }
@@ -111,7 +115,32 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             }
         }
 
+        private static CustomizationResult SkipSending(Guid vesselId, uint partFlightId, string moduleName, string fieldName)
+        {
+            var fieldCustomization = FieldModuleStore.GetCustomFieldDefinition(moduleName, fieldName);
+            if (fieldCustomization.IgnoreSend) return CustomizationResult.IgnoreSend;
 
+            try
+            {
+                if (!LastUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].IntervalIsOk()) return CustomizationResult.TooEarly;
+
+                LastUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].Update();
+                return CustomizationResult.Ok;
+            }
+            catch (Exception)
+            {
+                if (!LastUpdatedDictionary.ContainsKey(vesselId))
+                    LastUpdatedDictionary.Add(vesselId, new Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>());
+                if (!LastUpdatedDictionary[vesselId].ContainsKey(partFlightId))
+                    LastUpdatedDictionary[vesselId].Add(partFlightId, new Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>());
+                if (!LastUpdatedDictionary[vesselId][partFlightId].ContainsKey(moduleName))
+                    LastUpdatedDictionary[vesselId][partFlightId].Add(moduleName, new Dictionary<string, PartSyncUpdateEntry>());
+                if (!LastUpdatedDictionary[vesselId][partFlightId][moduleName].ContainsKey(fieldName))
+                    LastUpdatedDictionary[vesselId][partFlightId][moduleName].Add(fieldName, new PartSyncUpdateEntry(fieldCustomization.IntervalCheckChangesMs));
+            }
+
+            return CustomizationResult.Ok;
+        }
 
         #endregion
     }

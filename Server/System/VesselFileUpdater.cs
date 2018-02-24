@@ -151,13 +151,14 @@ namespace Server.System
         /// <summary>
         /// Raw updates a vessel in the dictionary and takes care of the locking in case we received another vessel message type
         /// </summary>
-        public static void RawConfigNodeInsertOrUpdate(Guid vesselId, string vesselData)
+        public static void RawConfigNodeInsertOrUpdate(Guid vesselId, string vesselDataInConfigNodeFormat)
         {
             Task.Run(() =>
             {
                 lock (Semaphore.GetOrAdd(vesselId, new object()))
                 {
-                    VesselStoreSystem.AddUpdateVesselInConfigNodeFormat(vesselId, vesselData);
+                    var vesselAsXml = ConfigNodeXmlParser.ConvertToXml(vesselDataInConfigNodeFormat);
+                    VesselStoreSystem.CurrentVesselsInXmlFormat.AddOrUpdate(vesselId, vesselAsXml, (key, existingVal) => vesselAsXml);
                 }
             });
         }
@@ -312,10 +313,10 @@ namespace Server.System
 
                 var resourceNode = document.SelectSingleNode(xpath);
 
-                var amountNode = resourceNode?.SelectSingleNode($"/RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='amount']");
+                var amountNode = resourceNode?.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/PART/RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='amount']");
                 if (amountNode != null) amountNode.InnerText = resourceInfo.Amount.ToString(CultureInfo.InvariantCulture);
 
-                var flowNode = resourceNode?.SelectSingleNode($"/RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='flowState']");
+                var flowNode = resourceNode?.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/PART/RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='flowState']");
                 if (flowNode != null) flowNode.InnerText = resourceInfo.FlowState.ToString(CultureInfo.InvariantCulture);
 
             }

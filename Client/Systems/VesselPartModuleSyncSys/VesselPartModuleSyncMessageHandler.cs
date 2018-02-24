@@ -15,7 +15,8 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
-        public static readonly Dictionary<Guid, PartSyncUpdateEntry> LastUpdatedDictionary = new Dictionary<Guid, PartSyncUpdateEntry>();
+        public static readonly Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>> LastUpdatedDictionary =
+            new Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>>();
 
         public void HandleMessage(IServerMessageBase msg)
         {
@@ -41,30 +42,54 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                 if (module != null)
                 {
                     module.moduleValues.SetValue(msgData.FieldName, msgData.Value);
-                    UpdateVesselModuleIfNeeded(protoVessel.vesselID, msgData.FieldName, module, part);
+                    UpdateVesselModuleIfNeeded(protoVessel.vesselID, part.flightID, msgData.FieldName, module, part);
                 }
             }
         }
 
-        private static void UpdateVesselModuleIfNeeded(Guid vesselId, string fieldName, ProtoPartModuleSnapshot module, ProtoPartSnapshot part)
+        private static void UpdateVesselModuleIfNeeded(Guid vesselId, uint partFlightId, string fieldName, ProtoPartModuleSnapshot module, ProtoPartSnapshot part)
         {
             if (module.moduleRef == null) return;
 
-            var fieldCustomization = FieldModuleStore.GetCustomFieldDefinition(module.moduleName, fieldName);
+            switch (SkipUpdateModule(vesselId, partFlightId, module.moduleName, fieldName))
+            {
+                case CustomizationResult.TooEarly:
+                case CustomizationResult.IgnoreSend:
+                    break;
+                case CustomizationResult.Ok:
+                    module.moduleRef?.Load(module.moduleValues);
+                    module.moduleRef?.OnAwake();
+                    module.moduleRef?.OnLoad(module.moduleValues);
+                    module.moduleRef?.OnStart(part.partRef.GetModuleStartState());
+                    break;
+            }
+        }
 
-            if (fieldCustomization.IgnoreReceive) return;
-            if (LastUpdatedDictionary.TryGetValue(vesselId, out var lastUpdateValue) && !lastUpdateValue.TimeToCheck) return;
+        private static CustomizationResult SkipUpdateModule(Guid vesselId, uint partFlightId, string moduleName, string fieldName)
+        {
+            var fieldCustomization = FieldModuleStore.GetCustomFieldDefinition(moduleName, fieldName);
+            if (fieldCustomization.IgnoreSend) return CustomizationResult.IgnoreSend;
 
-            if (!LastUpdatedDictionary.ContainsKey(vesselId))
-                LastUpdatedDictionary.Add(vesselId, new PartSyncUpdateEntry(fieldCustomization.IntervalApplyChangesMs));
-            else
-                LastUpdatedDictionary[vesselId].Update();
+            try
+            {
+                if (!LastUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].IntervalIsOk()) return CustomizationResult.TooEarly;
 
-            //After we update the protovessel value try to update the vessel values...
-            module.moduleRef?.Load(module.moduleValues);
-            module.moduleRef?.OnAwake();
-            module.moduleRef?.OnLoad(module.moduleValues);
-            module.moduleRef?.OnStart(part.partRef.GetModuleStartState());
+                LastUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].Update();
+                return CustomizationResult.Ok;
+            }
+            catch (Exception)
+            {
+                if (!LastUpdatedDictionary.ContainsKey(vesselId))
+                    LastUpdatedDictionary.Add(vesselId, new Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>());
+                if (!LastUpdatedDictionary[vesselId].ContainsKey(partFlightId))
+                    LastUpdatedDictionary[vesselId].Add(partFlightId, new Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>());
+                if (!LastUpdatedDictionary[vesselId][partFlightId].ContainsKey(moduleName))
+                    LastUpdatedDictionary[vesselId][partFlightId].Add(moduleName, new Dictionary<string, PartSyncUpdateEntry>());
+                if (!LastUpdatedDictionary[vesselId][partFlightId][moduleName].ContainsKey(fieldName))
+                    LastUpdatedDictionary[vesselId][partFlightId][moduleName].Add(fieldName, new PartSyncUpdateEntry(fieldCustomization.IntervalCheckChangesMs));
+            }
+
+            return CustomizationResult.Ok;
         }
     }
 }

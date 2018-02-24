@@ -19,35 +19,32 @@ namespace Server.System
 
         public static ConcurrentDictionary<Guid, string> CurrentVesselsInXmlFormat = new ConcurrentDictionary<Guid, string>();
 
-        private static bool _currentlyWriting;
-
-        public static void AddUpdateVesselInConfigNodeFormat(Guid vesselId, string configNodeVesselData)
-        {
-            var vesselAsXml = ConfigNodeXmlParser.ConvertToXml(configNodeVesselData);
-
-            CurrentVesselsInXmlFormat.AddOrUpdate(vesselId, vesselAsXml, (key, existingVal) => vesselAsXml);
-        }
+        private static readonly object BackupLock = new object();
 
         public static bool VesselExists(Guid vesselId) => CurrentVesselsInXmlFormat.ContainsKey(vesselId);
 
+        /// <summary>
+        /// Removes a vessel from the store
+        /// </summary>
         public static void RemoveVessel(Guid vesselId)
         {
             CurrentVesselsInXmlFormat.TryRemove(vesselId, out _);
 
             Task.Run(() =>
             {
-                while (_currentlyWriting)
+                lock (BackupLock)
                 {
-                    Thread.Sleep(100);
+                    FileHandler.FileDelete(Path.Combine(VesselsFolder, $"{vesselId}.xml"));
                 }
-
-                FileHandler.FileDelete(Path.Combine(VesselsFolder, $"{vesselId}.xml"));
             });
         }
-        
+
+        /// <summary>
+        /// Returns a XML vessel in the standard KSP format
+        /// </summary>
         public static string GetVesselInConfigNodeFormat(Guid vesselId)
         {
-            return CurrentVesselsInXmlFormat.TryGetValue(vesselId, out var vesselInXmlFormat) ? 
+            return CurrentVesselsInXmlFormat.TryGetValue(vesselId, out var vesselInXmlFormat) ?
                 ConfigNodeXmlParser.ConvertToConfigNode(vesselInXmlFormat) : null;
         }
 
@@ -56,11 +53,14 @@ namespace Server.System
         /// </summary>
         public static void LoadExistingVessels()
         {
-            foreach (var file in Directory.GetFiles(VesselsFolder).Where(f=> Path.GetExtension(f) == ".xml"))
+            lock (BackupLock)
             {
-                if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
+                foreach (var file in Directory.GetFiles(VesselsFolder).Where(f => Path.GetExtension(f) == ".xml"))
                 {
-                    CurrentVesselsInXmlFormat.TryAdd(vesselId, FileHandler.ReadFileText(file));
+                    if (Guid.TryParse(Path.GetFileNameWithoutExtension(file), out var vesselId))
+                    {
+                        CurrentVesselsInXmlFormat.TryAdd(vesselId, FileHandler.ReadFileText(file));
+                    }
                 }
             }
         }
@@ -72,14 +72,14 @@ namespace Server.System
         {
             while (ServerContext.ServerRunning)
             {
-                _currentlyWriting = true;
-
-                var vesselsInXml = CurrentVesselsInXmlFormat.ToArray();
-                foreach (var vessel in vesselsInXml)
+                lock (BackupLock)
                 {
-                    FileHandler.WriteToFile(Path.Combine(VesselsFolder, $"{vessel.Key}.xml"), vessel.Value);
+                    var vesselsInXml = CurrentVesselsInXmlFormat.ToArray();
+                    foreach (var vessel in vesselsInXml)
+                    {
+                        FileHandler.WriteToFile(Path.Combine(VesselsFolder, $"{vessel.Key}.xml"), vessel.Value);
+                    }
                 }
-                _currentlyWriting = false;
 
                 Thread.Sleep(GeneralSettings.SettingsStore.VesselsBackupIntervalMs);
             }
