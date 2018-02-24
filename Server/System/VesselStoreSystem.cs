@@ -88,7 +88,7 @@ namespace Server.System
         {
             lock (BackupLock)
             {
-                LunaLog.Normal("Backing up vessels to the disk...");
+                LunaLog.Debug("Backing up vessels to the disk...");
                 var vesselsInXml = CurrentVesselsInXmlFormat.ToArray();
                 foreach (var vessel in vesselsInXml)
                 {
