@@ -245,7 +245,7 @@ namespace LunaClient.VesselUtilities
                 owner = LockSystem.LockQuery.GetUpdateLockOwner(vesselId);
             }
 
-            return !String.IsNullOrEmpty(owner) && SystemsContainer.Get<WarpSystem>().PlayerIsInPastSubspace(owner);
+            return !String.IsNullOrEmpty(owner) && WarpSystem.Singleton.PlayerIsInPastSubspace(owner);
         }
 
         /// <summary>
@@ -352,14 +352,14 @@ namespace LunaClient.VesselUtilities
                 var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
                 foreach (var pps in pv.protoPartSnapshots)
                 {
-                    if (SystemsContainer.Get<ModSystem>().ModControl != ModControlMode.Disabled &&
-                        !SystemsContainer.Get<ModSystem>().AllowedParts.Contains(pps.partName))
+                    if (ModSystem.Singleton.ModControl != ModControlMode.Disabled &&
+                        !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
                     {
                         var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the banned " +
                                   $"part '{pps.partName}'!. Skipping load.";
 
                         LunaLog.LogWarning(msg);
-                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
+                        ChatSystem.Singleton.PmMessageServer(msg);
 
                         return null;
                     }
@@ -369,7 +369,7 @@ namespace LunaClient.VesselUtilities
                                   $"part '{pps.partName}'!. Skipping load.";
 
                         LunaLog.LogWarning(msg);
-                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
+                        ChatSystem.Singleton.PmMessageServer(msg);
 
                         ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing {pps.partName}", 10f,
                             ScreenMessageStyle.UPPER_CENTER);
@@ -386,7 +386,7 @@ namespace LunaClient.VesselUtilities
                                   $"contains the missing resource '{missingeResource.resourceName}'!. Skipping load.";
 
                         LunaLog.LogWarning(msg);
-                        SystemsContainer.Get<ChatSystem>().PmMessageServer(msg);
+                        ChatSystem.Singleton.PmMessageServer(msg);
 
                         ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing the resource " +
                                                          $"{missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);

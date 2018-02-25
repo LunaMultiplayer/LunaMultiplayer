@@ -24,38 +24,38 @@ namespace LunaClient
             DontDestroyOnLoad(this);
             try
             {
-                SystemsContainer.Get<MainSystem>().Awake();
+                MainSystem.Singleton.Awake();
             }
             catch (Exception e)
             {
-                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(Awake)}");
+                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(Awake)}");
             }
         }
 
         public void Start()
         {
-            SystemsContainer.Get<MainSystem>().Start();
+            MainSystem.Singleton.Start();
         }
 
         public void OnApplicationQuit()
         {
-            SystemsContainer.Get<MainSystem>().OnExit();
+            MainSystem.Singleton.OnExit();
         }
 
         public void OnDestroy()
         {
-            SystemsContainer.Get<MainSystem>().OnExit();
+            MainSystem.Singleton.OnExit();
         }
 
         public void Update()
         {
             try
             {
-                SystemsContainer.Get<MainSystem>().MainSystemUpdate();
+                MainSystem.Singleton.MainSystemUpdate();
             }
             catch (Exception e)
             {
-                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(Update)}");
+                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(Update)}");
             }
         }
 
@@ -64,11 +64,11 @@ namespace LunaClient
         {
             try
             {
-                SystemsContainer.Get<MainSystem>().OnGui();
+                MainSystem.Singleton.OnGui();
             }
             catch (Exception e)
             {
-                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(OnGUI)}");
+                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(OnGUI)}");
             }
         }
 
@@ -76,11 +76,11 @@ namespace LunaClient
         {
             try
             {
-                SystemsContainer.Get<MainSystem>().MainSystemFixedUpdate();
+                MainSystem.Singleton.MainSystemFixedUpdate();
             }
             catch (Exception e)
             {
-                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(FixedUpdate)}");
+                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(FixedUpdate)}");
             }
         }
 
@@ -88,11 +88,11 @@ namespace LunaClient
         {
             try
             {
-                SystemsContainer.Get<MainSystem>().MainSystemLateUpdate();
+                MainSystem.Singleton.MainSystemLateUpdate();
             }
             catch (Exception e)
             {
-                SystemsContainer.Get<MainSystem>().HandleException(e, $"MainClient-{nameof(LateUpdate)}");
+                MainSystem.Singleton.HandleException(e, $"MainClient-{nameof(LateUpdate)}");
             }
         }
     }

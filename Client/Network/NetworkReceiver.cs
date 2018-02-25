@@ -117,84 +117,84 @@ namespace LunaClient.Network
             switch (msg.MessageType)
             {
                 case ServerMessageType.Handshake:
-                    SystemsContainer.Get<HandshakeSystem>().EnqueueMessage(msg);
+                    HandshakeSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Chat:
-                    SystemsContainer.Get<ChatSystem>().EnqueueMessage(msg);
+                    ChatSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Settings:
-                    SystemsContainer.Get<SettingsSystem>().EnqueueMessage(msg);
+                    SettingsSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.PlayerStatus:
-                    SystemsContainer.Get<StatusSystem>().EnqueueMessage(msg);
+                    StatusSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.PlayerColor:
-                    SystemsContainer.Get<PlayerColorSystem>().EnqueueMessage(msg);
+                    PlayerColorSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.PlayerConnection:
-                    SystemsContainer.Get<PlayerConnectionSystem>().EnqueueMessage(msg);
+                    PlayerConnectionSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Scenario:
-                    SystemsContainer.Get<ScenarioSystem>().EnqueueMessage(msg);
+                    ScenarioSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Kerbal:
-                    SystemsContainer.Get<KerbalSystem>().EnqueueMessage(msg);
+                    KerbalSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Vessel:
                     switch (((VesselBaseMsgData)msg.Data).VesselMessageType)
                     {
                         case VesselMessageType.Position:
-                            SystemsContainer.Get<VesselPositionSystem>().EnqueueMessage(msg);
+                            VesselPositionSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Flightstate:
-                            SystemsContainer.Get<VesselFlightStateSystem>().EnqueueMessage(msg);
+                            VesselFlightStateSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Proto:
-                            SystemsContainer.Get<VesselProtoSystem>().EnqueueMessage(msg);
+                            VesselProtoSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Dock:
-                            SystemsContainer.Get<VesselDockSystem>().EnqueueMessage(msg);
+                            VesselDockSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Remove:
-                            SystemsContainer.Get<VesselRemoveSystem>().EnqueueMessage(msg);
+                            VesselRemoveSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Update:
-                            SystemsContainer.Get<VesselUpdateSystem>().EnqueueMessage(msg);
+                            VesselUpdateSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.Resource:
-                            SystemsContainer.Get<VesselResourceSystem>().EnqueueMessage(msg);
+                            VesselResourceSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case VesselMessageType.PartSync:
-                            SystemsContainer.Get<VesselPartModuleSyncSystem>().EnqueueMessage(msg);
+                            VesselPartModuleSyncSystem.Singleton.EnqueueMessage(msg);
                             break;
                     }
                     break;
                 case ServerMessageType.CraftLibrary:
-                    SystemsContainer.Get<CraftLibrarySystem>().EnqueueMessage(msg);
+                    CraftLibrarySystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Flag:
-                    SystemsContainer.Get<FlagSystem>().EnqueueMessage(msg);
+                    FlagSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Motd:
-                    SystemsContainer.Get<MotdSystem>().EnqueueMessage(msg);
+                    MotdSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Warp:
-                    SystemsContainer.Get<WarpSystem>().EnqueueMessage(msg);
+                    WarpSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Admin:
-                    SystemsContainer.Get<AdminSystem>().EnqueueMessage(msg);
+                    AdminSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Lock:
-                    SystemsContainer.Get<LockSystem>().EnqueueMessage(msg);
+                    LockSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Mod:
-                    SystemsContainer.Get<ModApiSystem>().EnqueueMessage(msg);
+                    ModApiSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Groups:
-                    SystemsContainer.Get<GroupSystem>().EnqueueMessage(msg);
+                    GroupSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Facility:
-                    SystemsContainer.Get<FacilitySystem>().EnqueueMessage(msg);
+                    FacilitySystem.Singleton.EnqueueMessage(msg);
                     break;
                 default:
                     LunaLog.LogError($"[LMP]: Unhandled Message type {msg.MessageType}");

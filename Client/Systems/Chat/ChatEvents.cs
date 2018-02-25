@@ -11,7 +11,7 @@ namespace LunaClient.Systems.Chat
 {
     public class ChatEvents : SubSystem<ChatSystem>
     {
-        private static ChatWindow Screen => WindowsContainer.Get<ChatWindow>();
+        private static ChatWindow Screen => ChatWindow.Singleton;
 
         public void HandleChatEvents()
         {

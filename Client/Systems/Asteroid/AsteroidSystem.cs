@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace LunaClient.Systems.Asteroid
 {
-    public class AsteroidSystem : Base.System
+    public class AsteroidSystem : System<AsteroidSystem>
     {
         #region Fields
 
@@ -85,8 +85,8 @@ namespace LunaClient.Systems.Asteroid
         {
             if (!Enabled || !AsteroidSystemReady) return;
 
-            if (!LockSystem.LockQuery.AsteroidLockExists() && SystemsContainer.Get<WarpSystem>().CurrentSubspace == 0)
-                SystemsContainer.Get<LockSystem>().AcquireAsteroidLock();
+            if (!LockSystem.LockQuery.AsteroidLockExists() && WarpSystem.Singleton.CurrentSubspace == 0)
+                LockSystem.Singleton.AcquireAsteroidLock();
         }
 
         /// <summary>
@@ -133,7 +133,7 @@ namespace LunaClient.Systems.Asteroid
                     {
                         LunaLog.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
                         ServerAsteroidTrackStatus[asteroid.id.ToString()] = asteroid.DiscoveryInfo.trackingStatus.Value;
-                        SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(asteroid, true);
+                        VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid, true);
                     }
                 }
             }

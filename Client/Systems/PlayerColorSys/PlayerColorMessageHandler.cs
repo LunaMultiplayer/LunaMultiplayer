@@ -31,7 +31,7 @@ namespace LunaClient.Systems.PlayerColorSys
                             var playerName = data.PlayersColors[i].PlayerName;
                             System.PlayerColors.Add(playerName, data.PlayersColors[i].Color);
 
-                            WindowsContainer.Get<StatusWindow>().ColorEventHandled = false; //Refresh colors in status window
+                            StatusWindow.Singleton.ColorEventHandled = false; //Refresh colors in status window
                         }
                         MainSystem.NetworkState = ClientState.ColorsSynced;
                     }
@@ -47,7 +47,7 @@ namespace LunaClient.Systems.PlayerColorSys
                         System.PlayerColors[playerName] = playerColor;
                         UpdateVesselColors(playerName);
 
-                        WindowsContainer.Get<StatusWindow>().ColorEventHandled = false;//Refresh colors in status window
+                        StatusWindow.Singleton.ColorEventHandled = false;//Refresh colors in status window
                     }
                     break;
             }

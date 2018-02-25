@@ -47,20 +47,20 @@ namespace LunaClient.Systems.GameScene
             if (HighLogic.LoadedSceneIsFlight && requestedScene != GameScenes.FLIGHT)
             {
                 //When quitting flight send the vessel one last time
-                SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
             }
 
             if (requestedScene == GameScenes.FLIGHT) return;
 
             //Always release the Update/UnloadedUpdate lock and the spectate lock
-            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Update);
-            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.UnloadedUpdate);
-            SystemsContainer.Get<VesselLockSystem>().StopSpectating();
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.Update);
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.UnloadedUpdate);
+            VesselLockSystem.Singleton.StopSpectating();
 
             //We are going to another screen so clear up the systems
-            SystemsContainer.Get<VesselRemoveSystem>().ClearSystem();
-            SystemsContainer.Get<VesselFlightStateSystem>().ClearSystem();
-            SystemsContainer.Get<VesselStateSystem>().ClearSystem();
+            VesselRemoveSystem.Singleton.ClearSystem();
+            VesselFlightStateSystem.Singleton.ClearSystem();
+            VesselStateSystem.Singleton.ClearSystem();
 
             switch (requestedScene)
             {
@@ -103,7 +103,7 @@ namespace LunaClient.Systems.GameScene
         /// </summary>
         private static void ReleaseAllControlLocks()
         {
-            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Control);
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.Control);
             VesselCommon.IsSpectating = false;
         }
 
@@ -112,7 +112,7 @@ namespace LunaClient.Systems.GameScene
         /// </summary>
         private static void ReleaseAsteroidLock()
         {
-            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Asteroid);
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.Asteroid);
         }
 
     }

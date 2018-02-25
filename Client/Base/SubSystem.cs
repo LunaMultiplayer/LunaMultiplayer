@@ -1,5 +1,5 @@
 ﻿using LunaClient.Base.Interface;
-using LunaClient.Systems;
+using System.Reflection;
 
 namespace LunaClient.Base
 {
@@ -10,9 +10,20 @@ namespace LunaClient.Base
     public abstract class SubSystem<T> : SystemBase
         where T : class, ISystem, new()
     {
+        private static T _system;
+
         /// <summary>
         /// Reference to the main system where this subsystem belongs
         /// </summary>
-        protected static T System => SystemsContainer.Get<T>();
+        protected static T System
+        {
+            get
+            {
+                if (_system == null)
+                    _system = typeof(T).GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) as T;
+
+                return _system;
+            }
+        }
     }
 }

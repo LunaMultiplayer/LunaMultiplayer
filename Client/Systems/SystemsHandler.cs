@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 // ReSharper disable ForCanBeConvertedToForeach
@@ -23,16 +24,15 @@ namespace LunaClient.Systems
             var systemsList = new List<ISystem>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                var systems = assembly.GetTypes().Where(t => t.IsClass && t.IsSubclassOf(typeof(Base.System)) && t != typeof(MainSystem) && !t.IsAbstract).ToArray();
+                var systems = assembly.GetTypes().Where(t => t.IsClass && typeof(ISystem).IsAssignableFrom(t) && t != typeof(MainSystem) && !t.IsAbstract).ToArray();
                 foreach (var sys in systems)
                 {
-                    var systemImplementation = SystemsContainer.Get(sys);
-                    if (systemImplementation !=null)
+                    if (sys.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is ISystem systemImplementation)
                         systemsList.Add(systemImplementation);
                 }
             }
 
-            _systems = systemsList.OrderBy(s=> s.ExecutionOrder).ToArray();
+            _systems = systemsList.OrderBy(s => s.ExecutionOrder).ToArray();
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace LunaClient.Systems
                 }
                 catch (Exception e)
                 {
-                    SystemsContainer.Get<MainSystem>().HandleException(e, "SystemHandler-FixedUpdate");
+                    MainSystem.Singleton.HandleException(e, "SystemHandler-FixedUpdate");
                 }
             }
         }
@@ -70,7 +70,7 @@ namespace LunaClient.Systems
                 }
                 catch (Exception e)
                 {
-                    SystemsContainer.Get<MainSystem>().HandleException(e, "SystemHandler-Update");
+                    MainSystem.Singleton.HandleException(e, "SystemHandler-Update");
                 }
             }
         }
@@ -90,7 +90,7 @@ namespace LunaClient.Systems
                 }
                 catch (Exception e)
                 {
-                    SystemsContainer.Get<MainSystem>().HandleException(e, "SystemHandler-Update");
+                    MainSystem.Singleton.HandleException(e, "SystemHandler-Update");
                 }
             }
         }

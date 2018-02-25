@@ -22,7 +22,7 @@ namespace LunaClient.Systems.Chat.Command
                     }
                     catch (FormatException)
                     {
-                        SystemsContainer.Get<ChatSystem>().PrintToSelectedChannel($"Error: {size} is not a valid number");
+                        ChatSystem.Singleton.PrintToSelectedChannel($"Error: {size} is not a valid number");
                         size = 400f;
                     }
                 }
@@ -31,8 +31,8 @@ namespace LunaClient.Systems.Chat.Command
             switch (func)
             {
                 default:
-                    SystemsContainer.Get<ChatSystem>().PrintToSelectedChannel("Undefined function. Usage: /resize [default|medium|large], /resize [x|y] size, or /resize show");
-                    SystemsContainer.Get<ChatSystem>().PrintToSelectedChannel($"Chat window size is currently: {WindowsContainer.Get<ChatWindow>().WindowWidth}x{WindowsContainer.Get<ChatWindow>().WindowHeight}");
+                    ChatSystem.Singleton.PrintToSelectedChannel("Undefined function. Usage: /resize [default|medium|large], /resize [x|y] size, or /resize show");
+                    ChatSystem.Singleton.PrintToSelectedChannel($"Chat window size is currently: {ChatWindow.Singleton.WindowWidth}x{ChatWindow.Singleton.WindowHeight}");
                     break;
                 case "x":
                     SetWindowSize(size);
@@ -50,7 +50,7 @@ namespace LunaClient.Systems.Chat.Command
                     SetWindowSize(800, 800);
                     break;
                 case "show":
-                    SystemsContainer.Get<ChatSystem>().PrintToSelectedChannel($"Chat window size is currently: {WindowsContainer.Get<ChatWindow>().WindowWidth}x{WindowsContainer.Get<ChatWindow>().WindowHeight}");
+                    ChatSystem.Singleton.PrintToSelectedChannel($"Chat window size is currently: {ChatWindow.Singleton.WindowWidth}x{ChatWindow.Singleton.WindowHeight}");
                     break;
             }
         }
@@ -60,22 +60,22 @@ namespace LunaClient.Systems.Chat.Command
             var sizeChanged = false;
             if (x.HasValue && x <= 800 && x >= 300)
             {
-                WindowsContainer.Get<ChatWindow>().WindowWidth = x.Value;
+                ChatWindow.Singleton.WindowWidth = x.Value;
                 sizeChanged = true;
             }
 
             if (y.HasValue && y <= 800 && y >= 300)
             {
-                WindowsContainer.Get<ChatWindow>().WindowHeight = y.Value;
+                ChatWindow.Singleton.WindowHeight = y.Value;
                 sizeChanged = true;
             }
 
             if (y.HasValue && (y > 800 || y < 300) || x.HasValue && (x > 800 || x < 300))
-                SystemsContainer.Get<ChatSystem>().PrintToSelectedChannel("Size is out of range.");
+                ChatSystem.Singleton.PrintToSelectedChannel("Size is out of range.");
 
             if (sizeChanged)
             {
-                WindowsContainer.Get<ChatWindow>().SizeChanged();
+                ChatWindow.Singleton.SizeChanged();
             }
         }
     }

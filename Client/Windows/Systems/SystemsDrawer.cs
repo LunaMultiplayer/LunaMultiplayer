@@ -60,42 +60,42 @@ namespace LunaClient.Windows.Systems
             CraftLibrary = GUILayout.Toggle(CraftLibrary, "Craft library system", ButtonStyle);
             if (CraftLibrary)
             {
-                SystemsContainer.Get<CraftLibrarySystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<CraftLibrarySystem>().Enabled, "ON/OFF", ButtonStyle);
+                CraftLibrarySystem.Singleton.Enabled = GUILayout.Toggle(CraftLibrarySystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             Facility = GUILayout.Toggle(Facility, "Facility system", ButtonStyle);
             if (Facility)
             {
-                SystemsContainer.Get<FacilitySystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<FacilitySystem>().Enabled, "ON/OFF", ButtonStyle);
+                FacilitySystem.Singleton.Enabled = GUILayout.Toggle(FacilitySystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             Flag = GUILayout.Toggle(Flag, "Flag system", ButtonStyle);
             if (Flag)
             {
-                SystemsContainer.Get<FlagSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<FlagSystem>().Enabled, "ON/OFF", ButtonStyle);
+                FlagSystem.Singleton.Enabled = GUILayout.Toggle(FlagSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             GameScene = GUILayout.Toggle(GameScene, "GameScene system", ButtonStyle);
             if (GameScene)
             {
-                SystemsContainer.Get<GameSceneSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<GameSceneSystem>().Enabled, "ON/OFF", ButtonStyle);
+                GameSceneSystem.Singleton.Enabled = GUILayout.Toggle(GameSceneSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             Group = GUILayout.Toggle(Group, "Group system", ButtonStyle);
             if (Group)
             {
-                SystemsContainer.Get<GroupSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<GroupSystem>().Enabled, "ON/OFF", ButtonStyle);
+                GroupSystem.Singleton.Enabled = GUILayout.Toggle(GroupSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             Kerbal = GUILayout.Toggle(Kerbal, "Kerbal system", ButtonStyle);
             if (Kerbal)
             {
-                SystemsContainer.Get<KerbalSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<KerbalSystem>().Enabled, "ON/OFF", ButtonStyle);
+                KerbalSystem.Singleton.Enabled = GUILayout.Toggle(KerbalSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             Lock = GUILayout.Toggle(Lock, "Lock system", ButtonStyle);
             if (Lock)
             {
-                SystemsContainer.Get<LockSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<LockSystem>().Enabled, "ON/OFF", ButtonStyle);
+                LockSystem.Singleton.Enabled = GUILayout.Toggle(LockSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             ModS = GUILayout.Toggle(ModS, "Mod system", ButtonStyle);
             if (ModS)
             {
-                SystemsContainer.Get<ModSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<ModSystem>().Enabled, "ON/OFF", ButtonStyle);
+                ModSystem.Singleton.Enabled = GUILayout.Toggle(ModSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             //ModApi = GUILayout.Toggle(ModApi, "Mod api system", ButtonStyle);
             //if (ModApi)
@@ -106,99 +106,99 @@ namespace LunaClient.Windows.Systems
             PlayerColor = GUILayout.Toggle(PlayerColor, "Player color system", ButtonStyle);
             if (PlayerColor)
             {
-                SystemsContainer.Get<PlayerColorSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<PlayerColorSystem>().Enabled, "ON/OFF", ButtonStyle);
+                PlayerColorSystem.Singleton.Enabled = GUILayout.Toggle(PlayerColorSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             PlayerConnection = GUILayout.Toggle(PlayerConnection, "Player connection system", ButtonStyle);
             if (PlayerConnection)
             {
-                SystemsContainer.Get<PlayerConnectionSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<PlayerConnectionSystem>().Enabled, "ON/OFF", ButtonStyle);
+                PlayerConnectionSystem.Singleton.Enabled = GUILayout.Toggle(PlayerConnectionSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             Scenario = GUILayout.Toggle(Scenario, "Scenario system", ButtonStyle);
             if (Scenario)
             {
                 //This system should never be toggled
-                SystemsContainer.Get<ScenarioSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<ScenarioSystem>().Enabled, "ON/OFF", ButtonStyle);
+                ScenarioSystem.Singleton.Enabled = GUILayout.Toggle(ScenarioSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             TimeSyncer = GUILayout.Toggle(TimeSyncer, "Time sync system", ButtonStyle);
             if (TimeSyncer)
             {
-                SystemsContainer.Get<TimeSyncerSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<TimeSyncerSystem>().Enabled, "ON/OFF", ButtonStyle);
+                TimeSyncerSystem.Singleton.Enabled = GUILayout.Toggle(TimeSyncerSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             Toolbar = GUILayout.Toggle(Toolbar, "Toolbar system", ButtonStyle);
             if (Toolbar)
             {
-                SystemsContainer.Get<ToolbarSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<ToolbarSystem>().Enabled, "ON/OFF", ButtonStyle);
+                ToolbarSystem.Singleton.Enabled = GUILayout.Toggle(ToolbarSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselDock = GUILayout.Toggle(VesselDock, "Vessel dock", ButtonStyle);
             if (VesselDock)
             {
-                SystemsContainer.Get<VesselDockSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselDockSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselDockSystem.Singleton.Enabled = GUILayout.Toggle(VesselDockSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselFlightState = GUILayout.Toggle(VesselFlightState, "Vessel flightstate", ButtonStyle);
             if (VesselFlightState)
             {
-                SystemsContainer.Get<VesselFlightStateSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselFlightStateSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselFlightStateSystem.Singleton.Enabled = GUILayout.Toggle(VesselFlightStateSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselImmortal = GUILayout.Toggle(VesselImmortal, "Vessel immortal", ButtonStyle);
             if (VesselImmortal)
             {
-                SystemsContainer.Get<VesselImmortalSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselImmortalSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselImmortalSystem.Singleton.Enabled = GUILayout.Toggle(VesselImmortalSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselLock = GUILayout.Toggle(VesselLock, "Vessel lock", ButtonStyle);
             if (VesselLock)
             {
-                SystemsContainer.Get<VesselLockSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselLockSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselLockSystem.Singleton.Enabled = GUILayout.Toggle(VesselLockSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselPosition = GUILayout.Toggle(VesselPosition, "Vessel position", ButtonStyle);
             if (VesselPosition)
             {
-                SystemsContainer.Get<VesselPositionSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselPositionSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselPositionSystem.Singleton.Enabled = GUILayout.Toggle(VesselPositionSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselUpdate = GUILayout.Toggle(VesselUpdate, "Vessel update", ButtonStyle);
             if (VesselUpdate)
             {
-                SystemsContainer.Get<VesselUpdateSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselUpdateSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselUpdateSystem.Singleton.Enabled = GUILayout.Toggle(VesselUpdateSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselPartSync = GUILayout.Toggle(VesselPartSync, "Vessel part sync", ButtonStyle);
             if (VesselPartSync)
             {
-                SystemsContainer.Get<VesselPartModuleSyncSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselPartModuleSyncSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselPartModuleSyncSystem.Singleton.Enabled = GUILayout.Toggle(VesselPartModuleSyncSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselResource = GUILayout.Toggle(VesselResource, "Vessel resources", ButtonStyle);
             if (VesselResource)
             {
-                SystemsContainer.Get<VesselResourceSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselResourceSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselResourceSystem.Singleton.Enabled = GUILayout.Toggle(VesselResourceSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselProto = GUILayout.Toggle(VesselProto, "Vessel proto", ButtonStyle);
             if (VesselProto)
             {
-                SystemsContainer.Get<VesselProtoSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselProtoSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselProtoSystem.Singleton.Enabled = GUILayout.Toggle(VesselProtoSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselPrecalc = GUILayout.Toggle(VesselPrecalc, "Vessel precalc", ButtonStyle);
             if (VesselPrecalc)
             {
-                SystemsContainer.Get<VesselPrecalcSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselPrecalcSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselPrecalcSystem.Singleton.Enabled = GUILayout.Toggle(VesselPrecalcSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselState = GUILayout.Toggle(VesselState, "Vessel state", ButtonStyle);
             if (VesselState)
             {
-                SystemsContainer.Get<VesselStateSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselStateSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselStateSystem.Singleton.Enabled = GUILayout.Toggle(VesselStateSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselRemove = GUILayout.Toggle(VesselRemove, "Vessel remove", ButtonStyle);
             if (VesselRemove)
             {
-                SystemsContainer.Get<VesselRemoveSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselRemoveSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselRemoveSystem.Singleton.Enabled = GUILayout.Toggle(VesselRemoveSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselSwitcher = GUILayout.Toggle(VesselSwitcher, "Vessel switcher", ButtonStyle);
             if (VesselSwitcher)
             {
-                SystemsContainer.Get<VesselSwitcherSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<VesselSwitcherSystem>().Enabled, "ON/OFF", ButtonStyle);
+                VesselSwitcherSystem.Singleton.Enabled = GUILayout.Toggle(VesselSwitcherSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             Warp = GUILayout.Toggle(Warp, "Warp system", ButtonStyle);
             if (Warp)
             {
                 //This system should never be toggled
-                SystemsContainer.Get<WarpSystem>().Enabled = GUILayout.Toggle(SystemsContainer.Get<WarpSystem>().Enabled, "ON/OFF", ButtonStyle);
+                WarpSystem.Singleton.Enabled = GUILayout.Toggle(WarpSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
         }
     }

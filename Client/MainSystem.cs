@@ -31,7 +31,7 @@ namespace LunaClient
     /// <summary>
     /// Main system. It handle all the other systems in LMP
     /// </summary>
-    public class MainSystem : Base.System
+    public class MainSystem : Base.System<MainSystem>
     {
         public override string SystemName { get; } = nameof(MainSystem);
 
@@ -114,7 +114,7 @@ namespace LunaClient
                     if (HighLogic.LoadedScene == GameScenes.MAINMENU)
                     {
                         NetworkConnection.Disconnect("Quit to main menu");
-                        SystemsContainer.Get<ToolbarSystem>().Enabled = false; //Always disable toolbar in main menu
+                        ToolbarSystem.Singleton.Enabled = false; //Always disable toolbar in main menu
                     }
 
                     // save every GeeASL from each body in FlightGlobals
@@ -187,8 +187,8 @@ namespace LunaClient
             ModuleStore.FieldModuleStore.ReadCustomizationXml();
             ModuleStore.FieldModuleStore.ReadLoadedPartModules();
 
-            SystemsContainer.Get<ModApiSystem>().Enabled = true;
-            SystemsContainer.Get<NetworkSystem>().Enabled = true;
+            ModApiSystem.Singleton.Enabled = true;
+            NetworkSystem.Singleton.Enabled = true;
 
             if (!SettingsSystem.CurrentSettings.DisclaimerAccepted)
             {
@@ -229,7 +229,7 @@ namespace LunaClient
 
             NetworkMain.AwakeNetworkSystem();
 
-            SystemsContainer.Get<ModSystem>().BuildDllFileList();
+            ModSystem.Singleton.BuildDllFileList();
 
             LunaLog.Log($"[LMP]: Luna MultiPlayer {LmpVersioning.CurrentVersion} initialized!");
 
@@ -305,16 +305,16 @@ namespace LunaClient
 
         private void HandleWindowEvents()
         {
-            if (!WindowsContainer.Get<StatusWindow>().DisconnectEventHandled)
+            if (!StatusWindow.Singleton.DisconnectEventHandled)
             {
-                WindowsContainer.Get<StatusWindow>().DisconnectEventHandled = true;
+                StatusWindow.Singleton.DisconnectEventHandled = true;
                 ForceQuit = true;
                 NetworkConnection.Disconnect("Quit");
-                SystemsContainer.Get<ScenarioSystem>().SendScenarioModules(); // Send scenario modules before disconnecting
+                ScenarioSystem.Singleton.SendScenarioModules(); // Send scenario modules before disconnecting
             }
             if (!ConnectionWindow.RenameEventHandled)
             {
-                SystemsContainer.Get<StatusSystem>().MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+                StatusSystem.Singleton.MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
                 ConnectionWindow.RenameEventHandled = true;
                 SettingsSystem.SaveSettings();
             }
@@ -379,16 +379,16 @@ namespace LunaClient
             SetAdvancedAndCommNetParams(HighLogic.CurrentGame);
 
             //Set universe time
-            HighLogic.CurrentGame.flightState.universalTime = SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
+            HighLogic.CurrentGame.flightState.universalTime = WarpSystem.Singleton.CurrentSubspaceTime;
 
             //Load kerbals BEFORE loading the vessels or the loading of vessels will fail!
-            SystemsContainer.Get<KerbalSystem>().LoadKerbalsIntoGame();
+            KerbalSystem.Singleton.LoadKerbalsIntoGame();
 
             //Load the scenarios from the server
-            SystemsContainer.Get<ScenarioSystem>().LoadScenarioDataIntoGame();
+            ScenarioSystem.Singleton.LoadScenarioDataIntoGame();
 
             //Load the missing scenarios as well (Eg, Contracts and stuff for career mode
-            SystemsContainer.Get<ScenarioSystem>().LoadMissingScenarioDataIntoGame();
+            ScenarioSystem.Singleton.LoadMissingScenarioDataIntoGame();
 
             LunaLog.Log($"[LMP]: Starting {SettingsSystem.ServerSettings.GameMode} game...");
 
@@ -534,7 +534,7 @@ namespace LunaClient
             if (FlagSystem.FlagFileExists())
             {
                 returnGame.flagURL = SettingsSystem.CurrentSettings.SelectedFlag;
-                SystemsContainer.Get<FlagSystem>().SendCurrentFlag();
+                FlagSystem.Singleton.SendCurrentFlag();
             }
             else
             {

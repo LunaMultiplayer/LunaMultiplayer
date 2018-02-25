@@ -23,12 +23,12 @@ namespace LunaClient.Systems.VesselLockSys
                 return;
 
             //Release all UPDATE locks as we are switching to a NEW vessel.
-            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Update);
-            SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.UnloadedUpdate);
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.Update);
+            LockSystem.Singleton.ReleasePlayerLocks(LockType.UnloadedUpdate);
             if (SettingsSystem.ServerSettings.DropControlOnVesselSwitching)
             {
                 //Drop all the control locks if we are switching and the above setting is on
-                SystemsContainer.Get<LockSystem>().ReleasePlayerLocks(LockType.Control);
+                LockSystem.Singleton.ReleasePlayerLocks(LockType.Control);
             }
 
             if (LockSystem.LockQuery.ControlLockExists(vessel.id) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))

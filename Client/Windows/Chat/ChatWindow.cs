@@ -3,6 +3,7 @@ using LunaClient.Systems.Chat;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using System.Reflection;
 using UnityEngine;
 
 namespace LunaClient.Windows.Chat
@@ -78,6 +79,9 @@ namespace LunaClient.Windows.Chat
 
         public override void Update()
         {
+            var ss = typeof(ChatSystem).GetField("Singleton",BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+            var val = ss?.GetValue(null) as ChatSystem;
+
             Display &= MainSystem.NetworkState >= ClientState.Running;
             SafeDisplay = Display;
             IgnoreChatInput = false;

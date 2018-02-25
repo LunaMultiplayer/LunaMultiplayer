@@ -6,7 +6,7 @@ namespace LunaClient.Systems.VesselStateSys
     /// <summary>
     /// This class handles the states of the vessels (if they are packed or not) so they can be checked in another threads
     /// </summary>
-    public class VesselStateSystem : Base.System
+    public class VesselStateSystem : Base.System<VesselStateSystem>
     {
         #region Fields & properties
         

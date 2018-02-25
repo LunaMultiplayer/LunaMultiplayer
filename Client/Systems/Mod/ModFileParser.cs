@@ -1,5 +1,4 @@
 ﻿using LunaClient.Utilities;
-using LunaClient.Windows;
 using LunaClient.Windows.Mod;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -18,11 +17,11 @@ namespace LunaClient.Systems.Mod
 
         public static bool ParseModFile(string modFileData)
         {
-            if (SystemsContainer.Get<ModSystem>().ModControl == ModControlMode.Disabled)
+            if (ModSystem.Singleton.ModControl == ModControlMode.Disabled)
                 return true;
 
             Sb.Length = 0;
-            SystemsContainer.Get<ModSystem>().LastModFileData = modFileData; //Save mod file so we can recheck it.
+            ModSystem.Singleton.LastModFileData = modFileData; //Save mod file so we can recheck it.
 
             SaveCurrentModConfigurationFile();
 
@@ -31,12 +30,12 @@ namespace LunaClient.Systems.Mod
             {
                 LunaLog.LogError("[LMP]: Mod check failed!");
                 LunaLog.LogError(Sb.ToString());
-                SystemsContainer.Get<ModSystem>().FailText = Sb.ToString();
-                WindowsContainer.Get<ModWindow>().Display = true;
+                ModSystem.Singleton.FailText = Sb.ToString();
+                ModWindow.Singleton.Display = true;
                 return false;
             }
 
-            SystemsContainer.Get<ModSystem>().AllowedParts = modFileInfo.PartList;
+            ModSystem.Singleton.AllowedParts = modFileInfo.PartList;
             LunaLog.Log("[LMP]: Mod check passed!");
             return true;
         }
@@ -47,7 +46,7 @@ namespace LunaClient.Systems.Mod
             using (var sw = new StreamWriter(tempModFilePath, false))
             {
                 sw.WriteLine("#This file is downloaded from the server during connection. It is saved here for convenience.");
-                sw.WriteLine(SystemsContainer.Get<ModSystem>().LastModFileData);
+                sw.WriteLine(ModSystem.Singleton.LastModFileData);
             }
         }
         
@@ -87,7 +86,7 @@ namespace LunaClient.Systems.Mod
 
         private static bool CheckBlackList(ModInformation modInfo)
         {
-            var invalidMods = modInfo.BlackListFiles.Where(f => SystemsContainer.Get<ModSystem>().DllList.ContainsKey(f.ModFilename)).ToArray();
+            var invalidMods = modInfo.BlackListFiles.Where(f => ModSystem.Singleton.DllList.ContainsKey(f.ModFilename)).ToArray();
             foreach (var blacklistEntry in invalidMods)
             {
                 Sb.AppendLine($"Banned resource {blacklistEntry} exists on client!");
@@ -99,7 +98,7 @@ namespace LunaClient.Systems.Mod
         private static bool CheckWhiteList(ModInformation modInfo)
         {
             //Allow LMP files, Ignore squad plugins, Check required (Required implies whitelist), Check optional (Optional implies whitelist)
-            var invalidMods = SystemsContainer.Get<ModSystem>().DllList.Where(
+            var invalidMods = ModSystem.Singleton.DllList.Where(
                 f => !AutoAllowedMods.AllowedMods.Contains(f.Key) &&
                      !f.Key.StartsWith("squad/plugins") &&
                      modInfo.RequiredFiles.All(m => m.ModFilename != f.Key) &&
@@ -118,13 +117,13 @@ namespace LunaClient.Systems.Mod
         {
             if (item.ModFilename.EndsWith("dll"))
             {
-                var fileExists = SystemsContainer.Get<ModSystem>().DllList.ContainsKey(item.ModFilename);
+                var fileExists = ModSystem.Singleton.DllList.ContainsKey(item.ModFilename);
                 if (!fileExists && required)
                 {
                     Sb.AppendLine($"Required file {item.ModFilename} is missing!");
                     return false;
                 }
-                if (fileExists && !string.IsNullOrEmpty(item.Sha) && SystemsContainer.Get<ModSystem>().DllList[item.ModFilename] != item.Sha)
+                if (fileExists && !string.IsNullOrEmpty(item.Sha) && ModSystem.Singleton.DllList[item.ModFilename] != item.Sha)
                 {
                     Sb.AppendLine($"Required file {item.ModFilename} does not match hash {item.Sha}!");
                     return false;

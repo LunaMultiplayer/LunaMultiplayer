@@ -46,7 +46,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
 
             //No need to check the unloaded update locks as vessels when unloaded don't have parts!
-            if (!VesselCommon.IsSpectating && data.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(data.id))
+            if (!VesselCommon.IsSpectating && data.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !VesselRemoveSystem.Singleton.VesselWillBeKilled(data.id))
             {
                 //We are modifying a vessel that LMP is not handling
                 if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.id))
@@ -84,12 +84,12 @@ namespace LunaClient.Systems.VesselProtoSys
 
                             //We own the update lock of that vessel that originated that part so let's get that update lock as forced 
                             //and send the definition with the main system routine
-                            SystemsContainer.Get<LockSystem>().AcquireUpdateLock(data.id, true);
+                            LockSystem.Singleton.AcquireUpdateLock(data.id, true);
                         }
                         else
                         {
                             LunaLog.Log($"REVERTING NEW vesselId {data.id} name {data.vesselName} (UPD lock is NOT ours)");
-                            SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(data.id);
+                            VesselRemoveSystem.Singleton.AddToKillList(data.id);
                         }
                     }
                 }
@@ -117,7 +117,7 @@ namespace LunaClient.Systems.VesselProtoSys
         public void OnPartDie(Part data)
         {
             if (VesselCommon.IsSpectating || data.vessel == null) return;
-            if (data.vessel.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(data.vessel.id))
+            if (data.vessel.id != VesselProtoSystem.CurrentlyUpdatingVesselId && !VesselRemoveSystem.Singleton.VesselWillBeKilled(data.vessel.id))
             {
                 if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.vessel.id))
                 {

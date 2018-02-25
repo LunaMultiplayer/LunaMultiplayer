@@ -112,7 +112,7 @@ namespace LunaClient.Windows.Status
             if (Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
             {
                 LastStatusUpdate = Time.realtimeSinceStartup;
-                SubspaceDisplay = SystemsContainer.Get<WarpSystem>().WarpEntryDisplay.GetSubspaceDisplayEntries();
+                SubspaceDisplay = WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries();
             }
         }
 

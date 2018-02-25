@@ -1,8 +1,8 @@
 ﻿using LunaClient.Base.Interface;
-using LunaClient.Systems;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 // ReSharper disable ForCanBeConvertedToForeach
@@ -24,9 +24,8 @@ namespace LunaClient.Windows
                 var systems = assembly.GetTypes().Where(t => t.IsClass && typeof(IWindow).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
                 foreach (var sys in systems)
                 {
-                    var systemImplementation = WindowsContainer.Get(sys);
-                    if (systemImplementation != null)
-                        windowsList.Add(systemImplementation);
+                    if (sys.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is IWindow windowImplementation)
+                        windowsList.Add(windowImplementation);
                 }
             }
 
@@ -45,7 +44,7 @@ namespace LunaClient.Windows
                 }
                 catch (Exception e)
                 {
-                    SystemsContainer.Get<MainSystem>().HandleException(e, "WindowsHandler-Update");
+                    MainSystem.Singleton.HandleException(e, "WindowsHandler-Update");
                 }
             }
         }
@@ -62,7 +61,7 @@ namespace LunaClient.Windows
                 }
                 catch (Exception e)
                 {
-                    SystemsContainer.Get<MainSystem>().HandleException(e, "WindowsHandler-OnGui");
+                    MainSystem.Singleton.HandleException(e, "WindowsHandler-OnGui");
                 }
             }
         }

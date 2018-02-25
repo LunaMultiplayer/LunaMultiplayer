@@ -85,7 +85,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (protoVessel.vesselType == VesselType.Debris)
                     {
                         LunaLog.Log($"Serialization of debris vessel: {protoVessel.vesselID} name: {protoVessel.vesselName} failed. Adding to kill list");
-                        SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(protoVessel.vesselID);
+                        VesselRemoveSystem.Singleton.AddToKillList(protoVessel.vesselID);
                     }
                 }
             }

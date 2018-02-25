@@ -18,7 +18,7 @@ namespace LunaClient.Windows.Status
 {
     public partial class StatusWindow
     {
-        private static readonly WarpSystem WarpSystem = SystemsContainer.Get<WarpSystem>();
+        private static readonly WarpSystem WarpSystem = WarpSystem.Singleton;
 
         public void DrawContent(int windowId)
         {
@@ -32,21 +32,21 @@ namespace LunaClient.Windows.Status
             GUILayout.FlexibleSpace();
 
             var chatButtonStyle = ButtonStyle;
-            if (SystemsContainer.Get<ChatSystem>().ChatButtonHighlighted)
+            if (ChatSystem.Singleton.ChatButtonHighlighted)
                 chatButtonStyle = HighlightStyle;
             if (!SettingsSystem.ServerSettings.DropControlOnVesselSwitching)
             {
                 if (GUILayout.Button(new GUIContent(StatusTexts.DropCtrlBtnTxt, StatusTexts.DropCtrlBtnTooltip), ButtonStyle))
                 {
-                    SystemsContainer.Get<VesselLockSystem>().DropAllOtherVesselControlLocks();
+                    VesselLockSystem.Singleton.DropAllOtherVesselControlLocks();
                 }
             }
-            WindowsContainer.Get<ChatWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<ChatWindow>().Display, StatusTexts.ChatBtnTxt, chatButtonStyle);
-            WindowsContainer.Get<CraftLibraryWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<CraftLibraryWindow>().Display, StatusTexts.CraftBtnTxt, ButtonStyle);
-            WindowsContainer.Get<DebugWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<DebugWindow>().Display, StatusTexts.DebugBtnTxt, ButtonStyle);
+            ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, StatusTexts.ChatBtnTxt, chatButtonStyle);
+            CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, StatusTexts.CraftBtnTxt, ButtonStyle);
+            DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, StatusTexts.DebugBtnTxt, ButtonStyle);
 #if DEBUG
-            WindowsContainer.Get<SystemsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<SystemsWindow>().Display, StatusTexts.SystemsBtnTxt, ButtonStyle);
-            WindowsContainer.Get<LocksWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<LocksWindow>().Display, StatusTexts.LocksBtnTxt, ButtonStyle);
+            SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, StatusTexts.SystemsBtnTxt, ButtonStyle);
+            LocksWindow.Singleton.Display = GUILayout.Toggle(LocksWindow.Singleton.Display, StatusTexts.LocksBtnTxt, ButtonStyle);
 #endif
 
             GUILayout.EndHorizontal();
@@ -80,8 +80,8 @@ namespace LunaClient.Windows.Status
                 for(var j = 0; j < SubspaceDisplay[i].Players.Count; j++)
                 {
                     DrawPlayerEntry(SubspaceDisplay[i].Players[j] == SettingsSystem.CurrentSettings.PlayerName
-                        ? SystemsContainer.Get<StatusSystem>().MyPlayerStatus
-                        : SystemsContainer.Get<StatusSystem>().GetPlayerStatus(SubspaceDisplay[i].Players[j]));
+                        ? StatusSystem.Singleton.MyPlayerStatus
+                        : StatusSystem.Singleton.GetPlayerStatus(SubspaceDisplay[i].Players[j]));
                 }
             }
 
@@ -98,7 +98,7 @@ namespace LunaClient.Windows.Status
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(StatusTexts.DisconnectBtnTxt, ButtonStyle))
                 DisconnectEventHandled = false;
-            WindowsContainer.Get<OptionsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<OptionsWindow>().Display, StatusTexts.OptionsBtnTxt, ButtonStyle);
+            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, StatusTexts.OptionsBtnTxt, ButtonStyle);
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();
@@ -180,9 +180,9 @@ namespace LunaClient.Windows.Status
             {
                 PlayerNameStyle[playerStatus.PlayerName] = new GUIStyle(GUI.skin.label)
                 {
-                    normal = { textColor = SystemsContainer.Get<PlayerColorSystem>().GetPlayerColor(playerStatus.PlayerName) },
-                    hover = { textColor = SystemsContainer.Get<PlayerColorSystem>().GetPlayerColor(playerStatus.PlayerName) },
-                    active = { textColor = SystemsContainer.Get<PlayerColorSystem>().GetPlayerColor(playerStatus.PlayerName) },
+                    normal = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
+                    hover = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
+                    active = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
                     fontStyle = FontStyle.Bold,
                     stretchWidth = true,
                     wordWrap = false

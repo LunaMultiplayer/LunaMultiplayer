@@ -7,7 +7,7 @@ namespace LunaClient.Systems.Chat
 {
     public class ChatQueuer : SubSystem<ChatSystem>
     {
-        private static ChatWindow Screen => WindowsContainer.Get<ChatWindow>();
+        private static ChatWindow Screen => ChatWindow.Singleton;
 
         public ConcurrentQueue<string> DisconnectingPlayers { get; private set; } = new ConcurrentQueue<string>();
         public ConcurrentQueue<JoinLeaveMessage> NewJoinMessages { get; private set; } = new ConcurrentQueue<JoinLeaveMessage>();

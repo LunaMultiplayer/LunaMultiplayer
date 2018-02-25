@@ -134,8 +134,6 @@
     <Compile Include="Windows\Locks\LocksDrawer.cs" />
     <Compile Include="Windows\Locks\LocksWindow.cs" />
     <Compile Include="Windows\Status\StatusTexts.cs" />
-    <Compile Include="Windows\WindowContainer.cs" />
-    <Compile Include="Systems\SystemsContainer.cs" />
     <Compile Include="Base\RoutineDefinition.cs" />
     <Compile Include="Base\StyleLibrary.cs" />
     <Compile Include="Base\SubSystem.cs" />

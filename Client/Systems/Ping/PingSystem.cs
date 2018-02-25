@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace LunaClient.Systems.Ping
 {
-    public class PingSystem : Base.System
+    public class PingSystem : System<PingSystem>
     {
         /// <summary>
         /// This system must be ALWAYS enabled!

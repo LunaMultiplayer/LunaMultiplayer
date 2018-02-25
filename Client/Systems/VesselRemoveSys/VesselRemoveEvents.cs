@@ -34,7 +34,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 //Add to the kill list so it's also removed from the store later on!
                 System.AddToKillList(dyingVessel.id);
 
-                SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(dyingVessel);
+                KerbalSystem.Singleton.ProcessKerbalsInVessel(dyingVessel);
 
                 var killingOwnVessel = FlightGlobals.ActiveVessel?.id == dyingVessel.id;
 
@@ -43,7 +43,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 System.MessageSender.SendVesselRemove(dyingVessel.id, !killingOwnVessel);
 
                 //Vessel is dead so remove the locks after 1500ms to get the debris locks if any
-                SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(dyingVessel.id, 1500);
+                LockSystem.Singleton.ReleaseAllVesselLocks(dyingVessel.id, 1500);
             }
         }
 
@@ -62,12 +62,12 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             _recoveringTerminatingVesselId = recoveredVessel.vesselID;
             LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
-            SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(recoveredVessel);
+            KerbalSystem.Singleton.ProcessKerbalsInVessel(recoveredVessel);
 
             System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
 
             //Vessel is recovered so remove the locks
-            SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(recoveredVessel.vesselID);
+            LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.vesselID);
         }
 
         /// <summary>
@@ -83,12 +83,12 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             _recoveringTerminatingVesselId = terminatedVessel.vesselID;
             LunaLog.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
-            SystemsContainer.Get<KerbalSystem>().ProcessKerbalsInVessel(terminatedVessel);
+            KerbalSystem.Singleton.ProcessKerbalsInVessel(terminatedVessel);
 
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
 
             //Vessel is terminated so remove locks            
-            SystemsContainer.Get<LockSystem>().ReleaseAllVesselLocks(terminatedVessel.vesselID);
+            LockSystem.Singleton.ReleaseAllVesselLocks(terminatedVessel.vesselID);
         }
 
         /// <summary>

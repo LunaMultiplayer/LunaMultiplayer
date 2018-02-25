@@ -52,8 +52,8 @@ namespace LunaClient.Systems.Handshake
                 //If we handshook successfully, the mod data will be available to read.
                 if (reply == HandshakeReply.HandshookSuccessfully)
                 {
-                    SystemsContainer.Get<ModSystem>().ModControl = data.ModControlMode;
-                    if (SystemsContainer.Get<ModSystem>().ModControl != ModControlMode.Disabled)
+                    ModSystem.Singleton.ModControl = data.ModControlMode;
+                    if (ModSystem.Singleton.ModControl != ModControlMode.Disabled)
                         modFileData = Encoding.UTF8.GetString(data.ModFileData);
                 }
             }

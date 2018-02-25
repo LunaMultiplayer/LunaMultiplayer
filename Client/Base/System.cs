@@ -10,9 +10,12 @@ namespace LunaClient.Base
     /// <summary>
     /// System base class. This class is made for a grouping logic.
     /// </summary>
-    public abstract class System : SystemBase, ISystem
+    public abstract class System<T> : SystemBase, ISystem
+        where T : ISystem, new()
     {
         #region Field & Properties
+
+        public static T Singleton { get; } = new T();
 
         /// <summary>
         /// Put here the system name

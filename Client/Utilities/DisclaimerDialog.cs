@@ -20,7 +20,7 @@ namespace LunaClient.Utilities
                                 delegate
                                 {
                                     SettingsSystem.CurrentSettings.DisclaimerAccepted = true;
-                                    SystemsContainer.Get<MainSystem>().Enabled = true;
+                                    MainSystem.Singleton.Enabled = true;
                                     SettingsSystem.SaveSettings();
                                 }
                             ),

@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselDockSys
 {
     public class VesselDockMessageHandler : SubSystem<VesselDockSystem>, IMessageHandler
     {
-        private static WarpSystem WarpSystem => SystemsContainer.Get<WarpSystem>();
+        private static WarpSystem WarpSystem => WarpSystem.Singleton;
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
         public void HandleMessage(IServerMessageBase msg)
@@ -30,8 +30,8 @@ namespace LunaClient.Systems.VesselDockSys
             {
                 LunaLog.Log($"Docking NOT detected. We DON'T OWN the dominant vessel. Switching to {msgData.DominantVesselId}");
 
-                SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(FlightGlobals.ActiveVessel.id);
-                SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(msgData.DominantVesselId);
+                VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel.id);
+                VesselSwitcherSystem.Singleton.SwitchToVessel(msgData.DominantVesselId);
 
                 WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
             }
@@ -50,8 +50,8 @@ namespace LunaClient.Systems.VesselDockSys
                 if (FlightGlobals.FindVessel(msgData.WeakVesselId) != null)
                 {
                     LunaLog.Log($"Weak vessel {msgData.WeakVesselId} still exists in our game. Removing it now");
-                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(msgData.WeakVesselId);
-                    SystemsContainer.Get<VesselRemoveSystem>().KillVessel(msgData.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(msgData.WeakVesselId);
+                    VesselRemoveSystem.Singleton.KillVessel(msgData.WeakVesselId);
                 }
 
                 /* We own the dominant vessel and dind't detected the docking event so we need to reload our OWN vessel
@@ -62,14 +62,14 @@ namespace LunaClient.Systems.VesselDockSys
                 VesselLoader.ReloadVessel(newProto);
 
                 LunaLog.Log("Force sending the new proto vessel");
-                SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
 
                 WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
                 return;
             }
 
             //Some other 2 players docked so just remove the weak vessel.
-            SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(msgData.WeakVesselId);
+            VesselRemoveSystem.Singleton.AddToKillList(msgData.WeakVesselId);
         }
     }
 }

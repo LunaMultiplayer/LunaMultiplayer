@@ -33,7 +33,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
 
             //Ignore updates if vessel is in kill list
-            if (SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(vesselId))
+            if (VesselRemoveSystem.Singleton.VesselWillBeKilled(vesselId))
                 return;
 
             //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)

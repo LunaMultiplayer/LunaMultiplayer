@@ -119,8 +119,8 @@ namespace LunaClient.VesselStore
                 if (_vesselNode == null)
                 {
                     LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
-                    SystemsContainer.Get<VesselRemoveSystem>().KillVessel(VesselId);
-                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(VesselId);
+                    VesselRemoveSystem.Singleton.KillVessel(VesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(VesselId);
                     return;
                 }
 
@@ -143,8 +143,8 @@ namespace LunaClient.VesselStore
                 if (_deserializedProtoVessel == null)
                 {
                     LunaLog.LogError($"Received a malformed vessel from SERVER. Id {VesselId}");
-                    SystemsContainer.Get<VesselRemoveSystem>().KillVessel(VesselId);
-                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(VesselId);
+                    VesselRemoveSystem.Singleton.KillVessel(VesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(VesselId);
                 }
                 else
                 {

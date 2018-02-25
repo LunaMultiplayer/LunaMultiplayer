@@ -20,7 +20,7 @@ namespace LunaClient.Systems.Motd
             {
                 System.DisplayMotd = true;
                 System.ServerMotd = msgData.MessageOfTheDay;
-                SystemsContainer.Get<ChatSystem>().Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", msgData.MessageOfTheDay);
+                ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", msgData.MessageOfTheDay);
             }
         }
     }

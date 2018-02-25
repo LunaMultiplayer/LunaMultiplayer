@@ -66,7 +66,7 @@ namespace LunaClient.VesselUtilities
 
                 //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
                 //Bear in mind that UnloadVessel will trigger VesselRemoveEvents.OnVesselWillDestroy!! So be sure to set ReloadingVesselId correctly
-                SystemsContainer.Get<VesselRemoveSystem>().UnloadVessel(vesselProto.vesselID);
+                VesselRemoveSystem.Singleton.UnloadVessel(vesselProto.vesselID);
                 if (LoadVesselImpl(vesselProto))
                 {
                     //Case when the target is the vessel we are changing
@@ -83,7 +83,7 @@ namespace LunaClient.VesselUtilities
                     {
                         OrbitPhysicsManager.HoldVesselUnpack();
                         FlightGlobals.fetch.activeVessel.GoOnRails();
-                        SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(vesselProto.vesselID);
+                        VesselSwitcherSystem.Singleton.SwitchToVessel(vesselProto.vesselID);
                     }
 
                     return true;
@@ -130,7 +130,7 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         private static void GetLatestProtoVesselPosition(ProtoVessel vesselProto)
         {
-            var latLonAlt = SystemsContainer.Get<VesselPositionSystem>().GetLatestVesselPosition(vesselProto.vesselID);
+            var latLonAlt = VesselPositionSystem.Singleton.GetLatestVesselPosition(vesselProto.vesselID);
             if (latLonAlt != null)
             {
                 vesselProto.latitude = latLonAlt[0];
@@ -194,7 +194,7 @@ namespace LunaClient.VesselUtilities
         {
             //Register asteroids from other players
             if (ProtoVesselIsAsteroid(possibleAsteroid))
-                SystemsContainer.Get<AsteroidSystem>().RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
+                AsteroidSystem.Singleton.RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
         }
 
         /// <summary>
@@ -226,7 +226,7 @@ namespace LunaClient.VesselUtilities
             
             currentProto.vesselRef.orbitDriver?.updateFromParameters();
 
-            SystemsContainer.Get<PlayerColorSystem>().SetVesselOrbitColor(currentProto.vesselRef);
+            PlayerColorSystem.Singleton.SetVesselOrbitColor(currentProto.vesselRef);
             if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
             {
                 //When in trackstation rebuild the vessels left panel as otherwise the new vessel won't be listed

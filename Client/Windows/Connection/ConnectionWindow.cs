@@ -86,7 +86,7 @@ namespace LunaClient.Windows.Connection
         {
             if (Display)
             {
-                Status = SystemsContainer.Get<MainSystem>().Status;
+                Status = MainSystem.Singleton.Status;
                 SelectedSafe = Selected;
                 AddingServerSafe = AddingServer;
             }

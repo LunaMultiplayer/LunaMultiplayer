@@ -8,7 +8,7 @@ namespace LunaClient.Systems.VesselSwitcherSys
     /// This system handles the vessel loading into the game and sending our vessel structure to other players.
     /// We only load vesels that are in our subspace
     /// </summary>
-    public class VesselSwitcherSystem : Base.System
+    public class VesselSwitcherSystem : Base.System<VesselSwitcherSystem>
     {
         #region Fields & properties
 

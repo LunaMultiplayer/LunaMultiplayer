@@ -24,14 +24,14 @@ namespace LunaClient.Systems.PlayerConnection
             switch (msgData.PlayerConnectionMessageType)
             {
                 case PlayerConnectionMessageType.Join:
-                    SystemsContainer.Get<ChatSystem>().Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", $"{playerName} has joined the server");
+                    ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", $"{playerName} has joined the server");
                     CommonUtil.Reserve20Mb();
                     break;
                 case PlayerConnectionMessageType.Leave:
-                    SystemsContainer.Get<WarpSystem>().RemovePlayer(playerName);
-                    SystemsContainer.Get<StatusSystem>().RemovePlayer(playerName);
-                    SystemsContainer.Get<ChatSystem>().Queuer.QueueRemovePlayer(playerName);
-                    SystemsContainer.Get<ChatSystem>().Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", $"{playerName} has left the server");
+                    WarpSystem.Singleton.RemovePlayer(playerName);
+                    StatusSystem.Singleton.RemovePlayer(playerName);
+                    ChatSystem.Singleton.Queuer.QueueRemovePlayer(playerName);
+                    ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "", $"{playerName} has left the server");
                     break;
             }
         }

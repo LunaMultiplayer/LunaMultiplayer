@@ -34,7 +34,7 @@ namespace LunaClient.Network
                     LunaLog.Log($"[LMP]: Disconnected, reason: {reason}");
                     if (!HighLogic.LoadedSceneIsEditor && !HighLogic.LoadedSceneIsFlight)
                     {
-                        SystemsContainer.Get<MainSystem>().ForceQuit = true;
+                        MainSystem.Singleton.ForceQuit = true;
                     }
                     else
                     {
@@ -42,7 +42,7 @@ namespace LunaClient.Network
                         NetworkSystem.DisplayDisconnectMessage = true;
                     }
 
-                    SystemsContainer.Get<MainSystem>().Status = $"Disconnected: {reason}";
+                    MainSystem.Singleton.Status = $"Disconnected: {reason}";
                     
                     NetworkMain.ClientConnection.Disconnect(reason);
                     NetworkMain.ClientConnection.Shutdown(reason);
@@ -80,7 +80,7 @@ namespace LunaClient.Network
                 var endpoint = CreateEndpoint(endpointString);
                 if (endpoint == null) return;
 
-                SystemsContainer.Get<MainSystem>().Status = $"Connecting to {endpoint.Address}:{endpoint.Port}";
+                MainSystem.Singleton.Status = $"Connecting to {endpoint.Address}:{endpoint.Port}";
                 LunaLog.Log($"[LMP]: Connecting to {endpoint.Address} port {endpoint.Port}");
 
                 MainSystem.NetworkState = ClientState.Connecting;
@@ -133,7 +133,7 @@ namespace LunaClient.Network
             }
             catch (Exception)
             {
-                SystemsContainer.Get<MainSystem>().Status = $"Invalid IP address: {endpointString}";
+                MainSystem.Singleton.Status = $"Invalid IP address: {endpointString}";
                 return null;
             }
         }

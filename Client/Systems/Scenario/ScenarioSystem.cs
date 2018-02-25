@@ -284,7 +284,7 @@ namespace LunaClient.Systems.Scenario
                         HighLogic.CurrentGame.CrewRoster.AddCrewMember(pcm);
 
                         //Also send it off to the server
-                        SystemsContainer.Get<KerbalSystem>().MessageSender.SendKerbal(pcm);
+                        KerbalSystem.Singleton.MessageSender.SendKerbal(pcm);
                     }
                 }
             }

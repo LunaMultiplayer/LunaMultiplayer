@@ -78,7 +78,7 @@ namespace LunaClient.Systems.CraftLibrary
                             CraftName = data.UploadName
                         };
                         System.QueueCraftAdd(cce);
-                        SystemsContainer.Get<ChatSystem>().Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "",
+                        ChatSystem.Singleton.Queuer.QueueChannelMessage(SettingsSystem.ServerSettings.ConsoleIdentifier, "",
                             $"{cce.PlayerName} shared {cce.CraftName} ({cce.CraftType})");
                     }
                     break;

@@ -12,7 +12,7 @@ namespace LunaClient.Systems.Facility
             if (System.BuildingIdToIgnore == building.id) return;
 
             System.MessageSender.SendFacilityUpgradeMsg(building.id, level);
-            SystemsContainer.Get<ScenarioSystem>().SendScenarioModules();
+            ScenarioSystem.Singleton.SendScenarioModules();
         }
 
         public void FacilityRepaired(DestructibleBuilding building)
@@ -20,7 +20,7 @@ namespace LunaClient.Systems.Facility
             if (System.BuildingIdToIgnore == building.id) return;
 
             System.MessageSender.SendFacilityRepairMsg(building.id);
-            SystemsContainer.Get<ScenarioSystem>().SendScenarioModules();
+            ScenarioSystem.Singleton.SendScenarioModules();
         }
 
         public void FacilityCollapsing(DestructibleBuilding building)
@@ -31,7 +31,7 @@ namespace LunaClient.Systems.Facility
             if (!VesselCommon.IsSpectating)
             {
                 System.MessageSender.SendFacilityCollapseMsg(building.id);
-                SystemsContainer.Get<ScenarioSystem>().SendScenarioModules();
+                ScenarioSystem.Singleton.SendScenarioModules();
             }
         }
     }

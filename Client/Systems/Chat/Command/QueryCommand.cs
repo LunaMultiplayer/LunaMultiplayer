@@ -8,14 +8,14 @@ namespace LunaClient.Systems.Chat.Command
         public void StartQuery(string commandArgs)
         {
             var playerFound = commandArgs == SettingsSystem.ServerSettings.ConsoleIdentifier ||
-                              SystemsContainer.Get<StatusSystem>().PlayerStatusList.ContainsKey(commandArgs);
+                              StatusSystem.Singleton.PlayerStatusList.ContainsKey(commandArgs);
 
-            if (playerFound && !SystemsContainer.Get<ChatSystem>().JoinedPmChannels.Contains(commandArgs))
+            if (playerFound && !ChatSystem.Singleton.JoinedPmChannels.Contains(commandArgs))
             {
                 LunaLog.Log($"[LMP]: Starting query with {commandArgs}");
-                SystemsContainer.Get<ChatSystem>().JoinedPmChannels.Add(commandArgs);
-                SystemsContainer.Get<ChatSystem>().SelectedChannel = null;
-                SystemsContainer.Get<ChatSystem>().SelectedPmChannel = commandArgs;
+                ChatSystem.Singleton.JoinedPmChannels.Add(commandArgs);
+                ChatSystem.Singleton.SelectedChannel = null;
+                ChatSystem.Singleton.SelectedPmChannel = commandArgs;
             }
             else
             {

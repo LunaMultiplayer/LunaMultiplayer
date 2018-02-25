@@ -13,7 +13,7 @@ namespace LunaClient.Windows.Mod
             GUI.DragWindow(MoveRect);
             GUILayout.Label(LocalizationContainer.ModWindowText.Failed, LabelStyle);
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
-            GUILayout.Label(SystemsContainer.Get<ModSystem>().FailText, LabelStyle);
+            GUILayout.Label(ModSystem.Singleton.FailText, LabelStyle);
             GUILayout.EndScrollView();
             if (GUILayout.Button(LocalizationContainer.ModWindowText.Close, ButtonStyle))
                 Display = false;

@@ -6,9 +6,11 @@ namespace LunaClient.Base
     /// Base class for windows.
     /// </summary>
     public abstract class Window<T> : StyleLibrary, IWindow
-        where T : class, IWindow, new()
+        where T : IWindow, new()
     {
         #region Fields
+
+        public static T Singleton { get; } = new T();
 
         public string WindowName { get; } = typeof(T).Name;
 

@@ -3,7 +3,7 @@
     /// <summary>
     /// This class controls when the scene changes. It resets the needed systems
     /// </summary>
-    public class GameSceneSystem : Base.System
+    public class GameSceneSystem : Base.System<GameSceneSystem>
     {
         private GameSceneEvents GameSceneEvents { get; } = new GameSceneEvents();
 

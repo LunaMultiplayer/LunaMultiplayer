@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace LunaClient.Systems.Mod
 {
-    public class ModSystem : Base.System
+    public class ModSystem : Base.System<ModSystem>
     {
         #region Fields & properties
 

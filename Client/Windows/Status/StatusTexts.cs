@@ -42,7 +42,7 @@ namespace LunaClient.Windows.Status
 
         public static string GetTimeLabel(SubspaceDisplayEntry currentEntry)
         {
-            return $"T: +{KSPUtil.PrintTimeCompact(SystemsContainer.Get<WarpSystem>().GetSubspaceTime(currentEntry.SubspaceId), false)}";
+            return $"T: +{KSPUtil.PrintTimeCompact(WarpSystem.Singleton.GetSubspaceTime(currentEntry.SubspaceId), false)}";
         }
     }
 }

@@ -59,11 +59,11 @@ namespace LunaClient.Windows.Options
                 TempColor = PlayerColorSystem.GenerateRandomColor();
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Set, ButtonStyle))
             {
-                WindowsContainer.Get<StatusWindow>().ColorEventHandled = false;
+                StatusWindow.Singleton.ColorEventHandled = false;
                 SettingsSystem.CurrentSettings.PlayerColor = TempColor;
                 SettingsSystem.SaveSettings();
                 if (MainSystem.NetworkState == ClientState.Running)
-                    SystemsContainer.Get<PlayerColorSystem>().MessageSender.SendPlayerColorToServer();
+                    PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
             }
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
@@ -106,10 +106,10 @@ namespace LunaClient.Windows.Options
             GUILayout.Space(10);
             GUILayout.Label(LocalizationContainer.OptionsWindowText.GenerateLmpModControl);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateBlackList))
-                SystemsContainer.Get<ModSystem>().GenerateModControlFile(false);
+                ModSystem.Singleton.GenerateModControlFile(false);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateWhiteList))
-                SystemsContainer.Get<ModSystem>().GenerateModControlFile(true);
-            WindowsContainer.Get<UniverseConverterWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<UniverseConverterWindow>().Display, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
+                ModSystem.Singleton.GenerateModControlFile(true);
+            UniverseConverterWindow.Singleton.Display = GUILayout.Toggle(UniverseConverterWindow.Singleton.Display, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Toolbar, SmallOption);
@@ -122,7 +122,7 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.ToolbarType = (LmpToolbarType)newSetting;
                 SettingsSystem.SaveSettings();
                 UpdateToolbarString();
-                SystemsContainer.Get<ToolbarSystem>().ToolbarChanged();
+                ToolbarSystem.Singleton.ToolbarChanged();
             }
             GUILayout.EndHorizontal();
 #if DEBUG
@@ -137,7 +137,7 @@ namespace LunaClient.Windows.Options
         private void DrawAdvancedDebugOptions()
         {
             if (GUILayout.Button("Check Common.dll stock parts"))
-                SystemsContainer.Get<ModSystem>().CheckCommonStockParts();
+                ModSystem.Singleton.CheckCommonStockParts();
             GUILayout.Space(10);
 
             ShowAdvancedNetworkFields = GUILayout.Toggle(ShowAdvancedNetworkFields, "Advanced network fields", ButtonStyle);

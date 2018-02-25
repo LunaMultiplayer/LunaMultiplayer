@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselImmortalSys
     /// This class makes the other vessels immortal, this way if we crash against them they are not destroyed but we do.
     /// In the other player screens they will be destroyed and they will send their new vessel definition.
     /// </summary>
-    public class VesselImmortalSystem : Base.System
+    public class VesselImmortalSystem : Base.System<VesselImmortalSystem>
     {
         #region Fields & properties
 
@@ -69,7 +69,7 @@ namespace LunaClient.Systems.VesselImmortalSys
                     .Select(l => l.VesselId)
                     .Union(LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                     .Select(l => l.VesselId))
-                    .Where(v=> !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(v)));
+                    .Where(v=> !VesselRemoveSystem.Singleton.VesselWillBeKilled(v)));
 
                 OwnedVessels.Clear();
                 OwnedVessels.AddRange(OwnedVesselIds
@@ -81,7 +81,7 @@ namespace LunaClient.Systems.VesselImmortalSys
                     .Union(LockSystem.LockQuery.GetAllUpdateLocks())
                     .Select(l => l.VesselId)
                     .Except(OwnedVesselIds)
-                    .Where(v => !SystemsContainer.Get<VesselRemoveSystem>().VesselWillBeKilled(v))
+                    .Where(v => !VesselRemoveSystem.Singleton.VesselWillBeKilled(v))
                     .Select(FlightGlobals.FindVessel)
                     .Where(v => v != null));
             }

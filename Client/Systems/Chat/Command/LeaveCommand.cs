@@ -4,7 +4,7 @@
     {
         public void LeaveChannel(string commandArgs)
         {
-            SystemsContainer.Get<ChatSystem>().LeaveEventHandled = false;
+            ChatSystem.Singleton.LeaveEventHandled = false;
         }
     }
 }

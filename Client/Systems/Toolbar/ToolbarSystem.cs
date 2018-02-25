@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace LunaClient.Systems.Toolbar
 {
-    public class ToolbarSystem : Base.System
+    public class ToolbarSystem : Base.System<ToolbarSystem>
     {
         public void ToolbarChanged()
         {

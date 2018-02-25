@@ -6,7 +6,7 @@ namespace LunaClient.Systems.Chat.Command
 {
     public class JoinCommand
     {
-        private ChatSystem System => SystemsContainer.Get<ChatSystem>();
+        private ChatSystem System => ChatSystem.Singleton;
 
         public void JoinChannel(string commandArgs)
         {
@@ -16,12 +16,12 @@ namespace LunaClient.Systems.Chat.Command
             {
                 if (commandArgs.StartsWith("#"))
                     commandArgs = commandArgs.Substring(1);
-                if (!SystemsContainer.Get<ChatSystem>().JoinedChannels.Contains(commandArgs))
+                if (!ChatSystem.Singleton.JoinedChannels.Contains(commandArgs))
                 {
                     LunaLog.Log($"[LMP]: Joining Channel {commandArgs}");
-                    SystemsContainer.Get<ChatSystem>().JoinedChannels.Add(commandArgs);
-                    SystemsContainer.Get<ChatSystem>().SelectedChannel = commandArgs;
-                    SystemsContainer.Get<ChatSystem>().SelectedPmChannel = null;
+                    ChatSystem.Singleton.JoinedChannels.Add(commandArgs);
+                    ChatSystem.Singleton.SelectedChannel = commandArgs;
+                    ChatSystem.Singleton.SelectedPmChannel = null;
 
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatJoinMsgData>();
                     msgData.From = SettingsSystem.CurrentSettings.PlayerName;

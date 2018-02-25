@@ -15,7 +15,7 @@ namespace LunaClient.Systems.VesselLockSys
     /// <summary>
     /// This class handles the locks in the vessel
     /// </summary>
-    public class VesselLockSystem : Base.System
+    public class VesselLockSystem : System<VesselLockSystem>
     {
         #region Fields & properties
 
@@ -49,7 +49,7 @@ namespace LunaClient.Systems.VesselLockSys
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, UpdateUnloadedVesselsLocks));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateOnScreenSpectateMessage));
 
-            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, SystemsContainer.Get<LockSystem>().MessageSender.SendLocksRequest));
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, LockSystem.Singleton.MessageSender.SendLocksRequest));
         }
 
         protected override void OnDisabled()
@@ -87,7 +87,7 @@ namespace LunaClient.Systems.VesselLockSys
 
                     //We now have the control so stop vessel position system over this vessel as otherwise it will apply last
                     //position received all the time on every fixed update.
-                    SystemsContainer.Get<VesselPositionSystem>().RemoveVesselFromSystem(FlightGlobals.ActiveVessel);
+                    VesselPositionSystem.Singleton.RemoveVesselFromSystem(FlightGlobals.ActiveVessel);
                 }
 
                 GetUpdateLocksForVessel(FlightGlobals.ActiveVessel, true);
@@ -106,21 +106,21 @@ namespace LunaClient.Systems.VesselLockSys
                 foreach (var checkVessel in validSecondaryVessels)
                 {
                     //Don't force it as maybe another player sent this request aswell
-                    SystemsContainer.Get<LockSystem>().AcquireUpdateLock(checkVessel);
+                    LockSystem.Singleton.AcquireUpdateLock(checkVessel);
                 }
 
                 var vesselIdsWithUpdateLocks = GetVesselIdsWeCurrentlyUpdate();
                 foreach (var vesselId in vesselIdsWithUpdateLocks)
                 {
                     //For all the vessels we HAVE the update lock, we FORCE the UNLOADED update lock if we don't have it.
-                    SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vesselId, true);
+                    LockSystem.Singleton.AcquireUnloadedUpdateLock(vesselId, true);
                 }
 
                 //Now we get the vessels that we were updating and now are unloaded,dead or in safety bubble and release it's "Update" lock
                 var vesselsToRelease = GetSecondaryVesselIdsThatShouldBeReleased();
                 foreach (var releaseVessel in vesselsToRelease)
                 {
-                    SystemsContainer.Get<LockSystem>().ReleaseUpdateLock(releaseVessel);
+                    LockSystem.Singleton.ReleaseUpdateLock(releaseVessel);
                 }
             }
         }
@@ -136,7 +136,7 @@ namespace LunaClient.Systems.VesselLockSys
                 foreach (var checkVessel in validSecondaryUnloadedVessels)
                 {
                     //Don't force it as maybe another player sent this request aswell
-                    SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(checkVessel);
+                    LockSystem.Singleton.AcquireUnloadedUpdateLock(checkVessel);
                 }
             }
         }
@@ -177,7 +177,7 @@ namespace LunaClient.Systems.VesselLockSys
         {
             var activeVesselId = FlightGlobals.ActiveVessel?.id;
             if (activeVesselId.HasValue)
-                SystemsContainer.Get<LockSystem>().ReleaseControlLocksExcept(activeVesselId.Value);
+                LockSystem.Singleton.ReleaseControlLocksExcept(activeVesselId.Value);
         }
 
         public void StartSpectating(Guid spectatingVesselId)
@@ -187,7 +187,7 @@ namespace LunaClient.Systems.VesselLockSys
 
             var currentSpectatorLock = LockSystem.LockQuery.GetSpectatorLock(SettingsSystem.CurrentSettings.PlayerName);
             if (FlightGlobals.ActiveVessel != null && currentSpectatorLock == null)
-                SystemsContainer.Get<LockSystem>().AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
+                LockSystem.Singleton.AcquireSpectatorLock(FlightGlobals.ActiveVessel.id);
 
             VesselCommon.IsSpectating = true;
             VesselCommon.SpectatingVesselId = spectatingVesselId;
@@ -199,7 +199,7 @@ namespace LunaClient.Systems.VesselLockSys
         public void StopSpectating()
         {
             InputLockManager.RemoveControlLock(SpectateLock);
-            SystemsContainer.Get<LockSystem>().ReleaseSpectatorLock();
+            LockSystem.Singleton.ReleaseSpectatorLock();
             VesselCommon.IsSpectating = false;
 
             if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters != null && HighLogic.CurrentGame.Parameters.Flight != null)
@@ -219,7 +219,7 @@ namespace LunaClient.Systems.VesselLockSys
             if (vessel == null) return;
 
             if (!LockSystem.LockQuery.ControlLockExists(vessel.id))
-                SystemsContainer.Get<LockSystem>().AcquireControlLock(vessel.id);
+                LockSystem.Singleton.AcquireControlLock(vessel.id);
         }
 
         /// <summary>
@@ -229,8 +229,8 @@ namespace LunaClient.Systems.VesselLockSys
         {
             if (vessel == null) return;
 
-            SystemsContainer.Get<LockSystem>().AcquireUpdateLock(vessel.id, force);
-            SystemsContainer.Get<LockSystem>().AcquireUnloadedUpdateLock(vessel.id, force);
+            LockSystem.Singleton.AcquireUpdateLock(vessel.id, force);
+            LockSystem.Singleton.AcquireUnloadedUpdateLock(vessel.id, force);
         }
 
         /// <summary>

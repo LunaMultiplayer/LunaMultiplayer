@@ -12,7 +12,7 @@ namespace LunaClient.Systems.TimeSyncer
     /// Your game time may shift, for example when you computer hangs or there are lots of vessels etc.
     /// Those "micro hangs" should be corrected so all the players are in the same time as the UTC
     /// </summary>
-    public class TimeSyncerSystem : Base.System
+    public class TimeSyncerSystem : System<TimeSyncerSystem>
     {
         #region Fields & properties
 
@@ -28,7 +28,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Gets the current time error between the server time and the game time
         /// </summary>
-        public static double CurrentErrorSec => Planetarium.GetUniversalTime() - SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
+        public static double CurrentErrorSec => Planetarium.GetUniversalTime() - WarpSystem.Singleton.CurrentSubspaceTime;
 
         #endregion
 
@@ -59,7 +59,7 @@ namespace LunaClient.Systems.TimeSyncer
 
         #region Private
 
-        private static bool CurrentlyWarping => SystemsContainer.Get<WarpSystem>().CurrentSubspace == -1;
+        private static bool CurrentlyWarping => WarpSystem.Singleton.CurrentSubspace == -1;
         
         private static bool CanSyncTime
         {
@@ -110,9 +110,9 @@ namespace LunaClient.Systems.TimeSyncer
         /// </summary>
         private void SyncTimeScale()
         {
-            if (Enabled && !CurrentlyWarping && CanSyncTime && !SystemsContainer.Get<WarpSystem>().WaitingSubspaceIdFromServer)
+            if (Enabled && !CurrentlyWarping && CanSyncTime && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
             {
-                var targetTime = SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
+                var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
                 if (targetTime > 0)
                 {
                     var currentError = TimeSpan.FromSeconds(CurrentErrorSec).TotalMilliseconds;
@@ -132,9 +132,9 @@ namespace LunaClient.Systems.TimeSyncer
         /// <returns></returns>
         private void SyncTime()
         {
-            if (Enabled && !CurrentlyWarping && CanSyncTime && !SystemsContainer.Get<WarpSystem>().WaitingSubspaceIdFromServer)
+            if (Enabled && !CurrentlyWarping && CanSyncTime && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
             {
-                var targetTime = (int)SystemsContainer.Get<WarpSystem>().CurrentSubspaceTime;
+                var targetTime = (int)WarpSystem.Singleton.CurrentSubspaceTime;
                 var currentError = TimeSpan.FromSeconds(CurrentErrorSec).TotalMilliseconds;
                 if (targetTime != 0 && Math.Abs(currentError) > MaxClockErrorMs)
                 {

@@ -88,7 +88,7 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         private static void HandleDocking(VesselDockStructure dock, bool eva)
         {
-            var currentSubspaceId = SystemsContainer.Get<WarpSystem>().CurrentSubspace;
+            var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
 
             if (dock.DominantVesselId == FlightGlobals.ActiveVessel?.id)
             {
@@ -101,7 +101,7 @@ namespace LunaClient.Systems.VesselDockSys
                     dock.WeakVesselId = temp;
 
                     LunaLog.Log($"[LMP]: Crewboard detected! We own the kerbal {dock.WeakVesselId}");
-                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
                     
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -109,7 +109,7 @@ namespace LunaClient.Systems.VesselDockSys
                 else
                 {
                     LunaLog.Log($"[LMP]: Docking detected! We own the dominant vessel {dock.DominantVesselId}");
-                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
                     dock.DominantVessel = FlightGlobals.ActiveVessel;
 
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -126,7 +126,7 @@ namespace LunaClient.Systems.VesselDockSys
                     dock.WeakVesselId = temp;
 
                     LunaLog.Log($"[LMP]: Crewboard detected! We own the vessel {dock.DominantVesselId}");
-                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
 
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -134,7 +134,7 @@ namespace LunaClient.Systems.VesselDockSys
                 else
                 {
                     LunaLog.Log($"[LMP]: Docking detected! We DON'T own the dominant vessel {dock.DominantVesselId}");
-                    SystemsContainer.Get<VesselRemoveSystem>().AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
 
                     if (dock.DominantVessel == null)
                         dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
@@ -144,7 +144,7 @@ namespace LunaClient.Systems.VesselDockSys
                     //NOT docked protovessel and that would remove the weak vessel because we are going to be an
                     //spectator...
                     var finalVesselProto = dock.DominantVessel?.BackupVessel();
-                    SystemsContainer.Get<VesselSwitcherSystem>().SwitchToVessel(dock.DominantVesselId);
+                    VesselSwitcherSystem.Singleton.SwitchToVessel(dock.DominantVesselId);
                     Client.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock, finalVesselProto));
                 }
             }
@@ -158,8 +158,8 @@ namespace LunaClient.Systems.VesselDockSys
             var dominantVesselOwner = LockSystem.LockQuery.GetControlLockOwner(vesselId);
             if (dominantVesselOwner != null)
             {
-                var dominantVesselOwnerSubspace = SystemsContainer.Get<WarpSystem>().GetPlayerSubspace(dominantVesselOwner);
-                SystemsContainer.Get<WarpSystem>().WarpIfSubspaceIsMoreAdvanced(dominantVesselOwnerSubspace);
+                var dominantVesselOwnerSubspace = WarpSystem.Singleton.GetPlayerSubspace(dominantVesselOwner);
+                WarpSystem.Singleton.WarpIfSubspaceIsMoreAdvanced(dominantVesselOwnerSubspace);
             }
         }
 
@@ -170,7 +170,7 @@ namespace LunaClient.Systems.VesselDockSys
         private static IEnumerator WaitUntilWeSwitchedThenSendDockInfo(VesselDockStructure dockInfo, ProtoVessel finalVesselProto)
         {
             var start = DateTime.Now;
-            var currentSubspaceId = SystemsContainer.Get<WarpSystem>().CurrentSubspace;
+            var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
             var waitInterval = new WaitForSeconds(0.5f);
 
             while (FlightGlobals.ActiveVessel.id != dockInfo.DominantVesselId && DateTime.Now - start < TimeSpan.FromSeconds(30))
@@ -198,7 +198,7 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
         {
-            SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(data.from.vessel, true);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
         }
 
         /// <summary>
@@ -206,7 +206,7 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
         {
-            SystemsContainer.Get<VesselProtoSystem>().MessageSender.SendVesselMessage(data.from.vessel, true);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
         }
     }
 }

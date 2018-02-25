@@ -56,9 +56,9 @@ namespace LunaClient.Windows.Connection
                 if (RemoveEventHandled)
                     RemoveEventHandled = false;
             GUI.enabled = true;
-            WindowsContainer.Get<OptionsWindow>().Display = GUILayout.Toggle(WindowsContainer.Get<OptionsWindow>().Display, LocalizationContainer.ConnectionWindowText.Options, ButtonStyle);
+            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, LocalizationContainer.ConnectionWindowText.Options, ButtonStyle);
             if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Servers, ButtonStyle))
-                WindowsContainer.Get<ServerListWindow>().Display = true;
+                ServerListWindow.Singleton.Display = true;
             if(SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow && GUILayout.Button(LocalizationContainer.ConnectionWindowText.Close, ButtonStyle))
                 Closed = true;
             GUILayout.EndHorizontal();

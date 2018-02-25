@@ -63,7 +63,7 @@ namespace LunaClient.Windows.Chat
             else
             {
                 if (System.SelectedChannel == null)
-                    foreach (var player in SystemsContainer.Get<StatusSystem>().PlayerStatusList.Values)
+                    foreach (var player in StatusSystem.Singleton.PlayerStatusList.Values)
                     {
                         if (System.JoinedPmChannels.Contains(player.PlayerName))
                             GUI.enabled = false;
@@ -139,7 +139,7 @@ namespace LunaClient.Windows.Chat
             var possibleHighlightButtonStyle = System.HighlightChannel.Contains(SettingsSystem.ServerSettings.ConsoleIdentifier)
                 ? HighlightStyle
                 : ButtonStyle;
-            if (SystemsContainer.Get<AdminSystem>().IsCurrentPlayerAdmin() &&
+            if (AdminSystem.Singleton.IsCurrentPlayerAdmin() &&
                 GUILayout.Button($"#{SettingsSystem.ServerSettings.ConsoleIdentifier}", possibleHighlightButtonStyle))
             {
                 if (System.HighlightChannel.Contains(SettingsSystem.ServerSettings.ConsoleIdentifier))

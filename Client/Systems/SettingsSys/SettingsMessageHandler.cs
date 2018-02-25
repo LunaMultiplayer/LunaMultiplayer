@@ -38,7 +38,7 @@ namespace LunaClient.Systems.SettingsSys
             {
                 SettingsSystem.ServerSettings.ServerParameters =
                     GameParameters.GetDefaultParameters(
-                        SystemsContainer.Get<MainSystem>().ConvertGameMode(SettingsSystem.ServerSettings.GameMode),
+                        MainSystem.Singleton.ConvertGameMode(SettingsSystem.ServerSettings.GameMode),
                         (GameParameters.Preset)SettingsSystem.ServerSettings.GameDifficulty);
             }
             else

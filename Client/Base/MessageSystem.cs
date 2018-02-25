@@ -6,8 +6,8 @@ using System.Collections.Concurrent;
 
 namespace LunaClient.Base
 {
-    public abstract class MessageSystem<T, TS, TH> : System
-        where T : class, ISystem, new()
+    public abstract class MessageSystem<T, TS, TH> : System<T> 
+        where T : System<T>, new()
         where TS : class, IMessageSender, new()
         where TH : class, IMessageHandler, new()
     {
@@ -16,7 +16,7 @@ namespace LunaClient.Base
         /// from Unity and you have your collections as concurrent
         /// </summary>
         protected virtual bool ProcessMessagesInUnityThread => true;
-
+        
         public TS MessageSender { get; } = new TS();
         public TH MessageHandler { get; } = new TH();
         public virtual IInputHandler InputHandler { get; } = null;
