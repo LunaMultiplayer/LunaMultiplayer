@@ -36,7 +36,7 @@ namespace Server
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = LunaTime.UtcNow.Ticks;
 
-                if(!Common.PlatformIsWindows()) LunaLog.Warning("Remember! Quit the server by using Control+C so the vessels are saved to the hard drive!");
+                if (!Common.PlatformIsWindows()) LunaLog.Warning("Remember! Quit the server by using Control+C so the vessels are saved to the hard drive!");
 
                 //Register the ctrl+c event and exit signal
                 Console.CancelKeyPress += (sender, args) => Exit();
@@ -50,7 +50,7 @@ namespace Server
                 //We cannot run more than 6 instances ofd servers + clients as otherwise the sync time will fail (30 seconds / 5 seconds = 6) but we use 3 for safety
                 if (GetRunningInstances() > 3)
                     throw new HandledException("Cannot run more than 3 servers at a time!");
-                
+
                 //Start the server clock
                 ServerContext.ServerClock.Start();
 
@@ -90,7 +90,7 @@ namespace Server
                 Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
                 Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
                 Task.Run(() => VersionChecker.CheckForNewVersions());
-                
+
                 while (ServerContext.ServerStarting)
                     Thread.Sleep(500);
 
@@ -130,7 +130,7 @@ namespace Server
             LunaTime.SimulatedMsTimeOffset = DebugSettings.SettingsStore.SimulatedMsTimeOffset;
 #endif
         }
-        
+
         /// <summary>
         /// Return the number of running instances.
         /// </summary>
