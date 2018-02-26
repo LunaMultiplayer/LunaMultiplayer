@@ -44,7 +44,19 @@ namespace LunaClient.Systems.ModApi
             new Dictionary<string, MessageCallback>();
 
         #endregion
-        
+
+        #region Constructor
+
+        /// <summary>
+        /// This system must be ALWAYS enabled so we set it as enabled on the constructor
+        /// </summary>
+        public ModApiSystem()
+        {
+            base.Enabled = true;
+        }
+
+        #endregion
+
         #region Base overrides
 
         public override string SystemName { get; } = nameof(ModApiSystem);

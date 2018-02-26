@@ -8,6 +8,19 @@ namespace LunaClient.Systems.Ping
 {
     public class PingSystem : System<PingSystem>
     {
+        #region Constructor
+
+        /// <summary>
+        /// This system must be ALWAYS enabled so we set it as enabled on the constructor
+        /// </summary>
+        public PingSystem()
+        {
+            //We setup the routine in the constructor as this system is always enabled
+            SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, PerformPings));
+        }
+
+        #endregion
+
         /// <summary>
         /// This system must be ALWAYS enabled!
         /// </summary>
@@ -22,11 +35,7 @@ namespace LunaClient.Systems.Ping
 
         #endregion
 
-        public PingSystem()
-        {
-            //We setup the routine in the constructor as this system is always enabled
-            SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, PerformPings));
-        }
+
 
         #region Public methods
 

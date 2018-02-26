@@ -43,6 +43,18 @@ namespace LunaClient.Systems.Network
 {
     public class NetworkSystem : System<NetworkSystem>
     {
+        #region Constructor
+
+        /// <summary>
+        /// This system must be ALWAYS enabled so we set it as enabled on the constructor
+        /// </summary>
+        public NetworkSystem()
+        {
+            base.Enabled = true;
+        }
+
+        #endregion
+
         #region Disconnect message
 
         public static bool DisplayDisconnectMessage { get; set; }
