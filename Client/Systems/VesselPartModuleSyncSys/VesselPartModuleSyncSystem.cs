@@ -83,7 +83,9 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                                 {
                                     var customizationResult = CustomizationsHandler.SkipModule(vessel.id, part.flightID, moduleName, fieldInfo.Name, false);
 
-                                    var fieldVal = fieldInfo.GetValue(module).ToInvariantString();
+                                    var fieldVal = fieldInfo.Name == "fsm" ? (fieldInfo.GetValue(module) as KerbalFSM)?.currentStateName : 
+                                        fieldInfo.GetValue(module).ToInvariantString();
+                                    
                                     var snapshotVal = module.snapshot?.moduleValues.GetValue(fieldInfo.Name);
 
                                     if (snapshotVal != null && fieldVal != null && fieldVal != snapshotVal)

@@ -344,12 +344,27 @@ namespace Server.System
             var document = new XmlDocument();
             document.LoadXml(vesselData);
 
-            var xpath = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
-                        $"following-sibling::MODULE/{ConfigNodeXmlParser.ValueNode}" +
-                        $@"[@name='name' and text()=""{msgData.ModuleName}""]/parent::MODULE/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.FieldName}']";
+            var module = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
+                         $"following-sibling::MODULE/{ConfigNodeXmlParser.ValueNode}" +
+                         $@"[@name='name' and text()=""{msgData.ModuleName}""]/parent::MODULE/";
+
+            var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.FieldName}']";
 
             var fieldNode = document.SelectSingleNode(xpath);
             if (fieldNode != null) fieldNode.InnerText = msgData.Value;
+
+            if (msgData.ModuleName == "ModuleProceduralFairing")
+            {
+                var moduleNode = document.SelectSingleNode(module);
+                var fairingsSections = document.SelectNodes($"{module}/XSECTION");
+                if (moduleNode != null && fairingsSections != null)
+                {
+                    for (var i = 0; i < fairingsSections.Count; i++)
+                    {
+                        moduleNode.RemoveChild(fairingsSections[i]);
+                    }
+                }
+            }
 
             return document.ToIndentedString();
         }

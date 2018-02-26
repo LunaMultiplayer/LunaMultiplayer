@@ -73,12 +73,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     //Remove or add crew members in given part and detect if there have been any change
                     hasCrewChanges |= AdjustCrewMembersInPart(part, partSnapshot);
-
-                    //Set part "state" field... Important for fairings for example...
-                    StateField?.SetValue(part, partSnapshot.state);
-                    part.ResumeState = part.State;
-                    
-                    UpdatePartFairings(partSnapshot, part);
                 }
             }
 
@@ -148,24 +142,6 @@ namespace LunaClient.Systems.VesselProtoSys
             vessel.RebuildCrewList();
             MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
             MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
-        }
-        
-        private static void UpdatePartFairings(ProtoPartSnapshot partSnapshot, Part part)
-        {
-            var fairingModule = part.FindModuleImplementing<ModuleProceduralFairing>();
-            if (fairingModule != null)
-            {
-                if (FsmField?.GetValue(fairingModule) is KerbalFSM fsmVal)
-                {
-                    var currentState = fsmVal.CurrentState;
-                    var protoFsmVal = partSnapshot.FindModule("ModuleProceduralFairing")?.moduleValues?.GetValue("fsm");
-
-                    if (protoFsmVal != null && currentState.ToString() != protoFsmVal)
-                    {
-                        fairingModule.DeployFairing();
-                    }
-                }
-            }
         }
         
         /// <summary>

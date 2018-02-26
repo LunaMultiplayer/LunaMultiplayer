@@ -32,7 +32,9 @@ namespace LunaClient.Systems.KscScene
                 CoroutineUtil.StartDelayedRoutine("ClearVesselsInKsc", () =>
                 {
                     HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-                    System.ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
+
+                    if (KSCVesselMarkers.fetch != null)
+                        System.ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
                 }, 3);
             }
         }

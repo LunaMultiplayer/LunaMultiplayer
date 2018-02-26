@@ -52,10 +52,17 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                 case CustomizationResult.Ignore:
                     break;
                 case CustomizationResult.Ok:
-                    module.moduleRef?.Load(module.moduleValues);
-                    module.moduleRef?.OnAwake();
-                    module.moduleRef?.OnLoad(module.moduleValues);
-                    module.moduleRef?.OnStart(part.partRef.GetModuleStartState());
+                    if (module.moduleName == "ModuleProceduralFairing")
+                        (module.moduleRef as ModuleProceduralFairing)?.DeployFairing();
+                    else
+                    {
+                        module.moduleRef?.Load(module.moduleValues);
+                        module.moduleRef?.OnAwake();
+                        module.moduleRef?.OnLoad(module.moduleValues);
+
+                        if(module.moduleName != "ModuleWheelBase") //TODO fix this
+                            module.moduleRef?.OnStart(part.partRef.GetModuleStartState());
+                    }
                     break;
             }
         }
