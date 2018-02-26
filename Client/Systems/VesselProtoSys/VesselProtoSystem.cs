@@ -63,6 +63,7 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onVesselGoOnRails.Add(VesselProtoEvents.VesselGoOnRails);
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
             GameEvents.onPartDie.Add(VesselProtoEvents.OnPartDie);
+            GameEvents.onGameSceneLoadRequested.Add(VesselProtoEvents.OnSceneRequested);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
@@ -79,6 +80,7 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onVesselGoOnRails.Remove(VesselProtoEvents.VesselGoOnRails);
             GameEvents.onFlightReady.Remove(VesselProtoEvents.FlightReady);
             GameEvents.onPartDie.Remove(VesselProtoEvents.OnPartDie);
+            GameEvents.onGameSceneLoadRequested.Remove(VesselProtoEvents.OnSceneRequested);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();

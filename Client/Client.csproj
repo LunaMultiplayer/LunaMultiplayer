@@ -84,12 +84,13 @@
     <Compile Include="Systems\Facility\FacilityMessageHandler.cs" />
     <Compile Include="Systems\Facility\FacilityMessageSender.cs" />
     <Compile Include="Systems\Flag\FlagEvents.cs" />
-    <Compile Include="Systems\GameScene\GameSceneSystem.cs" />
-    <Compile Include="Systems\GameScene\GameSceneEvents.cs" />
+    <Compile Include="Systems\KscScene\KscSceneEvents.cs" />
+    <Compile Include="Systems\KscScene\KscSceneSystem.cs" />
     <Compile Include="Systems\Groups\GroupMessageHandler.cs" />
     <Compile Include="Systems\Groups\GroupMessageSender.cs" />
     <Compile Include="Systems\Groups\GroupSystem.cs" />
     <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
+    <Compile Include="Systems\Lock\LockEvents.cs" />
     <Compile Include="Systems\Ping\PingSystem.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />

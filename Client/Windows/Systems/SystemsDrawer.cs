@@ -1,10 +1,9 @@
-﻿using LunaClient.Systems;
-using LunaClient.Systems.CraftLibrary;
+﻿using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Facility;
 using LunaClient.Systems.Flag;
-using LunaClient.Systems.GameScene;
 using LunaClient.Systems.Groups;
 using LunaClient.Systems.KerbalSys;
+using LunaClient.Systems.KscScene;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
@@ -72,10 +71,10 @@ namespace LunaClient.Windows.Systems
             {
                 FlagSystem.Singleton.Enabled = GUILayout.Toggle(FlagSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
-            GameScene = GUILayout.Toggle(GameScene, "GameScene system", ButtonStyle);
-            if (GameScene)
+            KscScene = GUILayout.Toggle(KscScene, "KscScene system", ButtonStyle);
+            if (KscScene)
             {
-                GameSceneSystem.Singleton.Enabled = GUILayout.Toggle(GameSceneSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+                KscSceneSystem.Singleton.Enabled = GUILayout.Toggle(KscSceneSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             Group = GUILayout.Toggle(Group, "Group system", ButtonStyle);
             if (Group)

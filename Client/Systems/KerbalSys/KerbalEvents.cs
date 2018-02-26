@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
+using System;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -38,11 +39,17 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void StatusChange(ProtoCrewMember kerbal, ProtoCrewMember.RosterStatus previousStatus, ProtoCrewMember.RosterStatus newStatus)
         {
+            //Revert kerbal status in case we are setting it as dead/missing in KSC
+            if(HighLogic.LoadedScene == GameScenes.SPACECENTER && newStatus > ProtoCrewMember.RosterStatus.Assigned)
+                System.SetKerbalStatusWithoutTriggeringEvent(kerbal, previousStatus);
+
             if (previousStatus != newStatus)
             {
                 var vesselId = System.FindVesselForKerbal(kerbal);
-                if (vesselId == VesselLoader.ReloadingVesselId || LockSystem.LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName) || 
-                    LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+
+                if (vesselId == Guid.Empty) return;
+
+                if (vesselId == VesselLoader.ReloadingVesselId || LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                 {
                     System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
                     System.MessageSender.SendKerbal(kerbal);

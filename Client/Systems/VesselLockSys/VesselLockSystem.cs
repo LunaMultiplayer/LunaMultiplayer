@@ -26,7 +26,7 @@ namespace LunaClient.Systems.VesselLockSys
             LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id) :
             "";
 
-        private VesselLockEvents VesselMainEvents { get; } = new VesselLockEvents();
+        private VesselLockEvents VesselLockEvents { get; } = new VesselLockEvents();
 
         private bool VesselLockSystemReady => Enabled && Time.timeSinceLevelLoad > 10f;
 
@@ -41,7 +41,9 @@ namespace LunaClient.Systems.VesselLockSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onVesselChange.Add(VesselMainEvents.OnVesselChange);
+            GameEvents.onVesselChange.Add(VesselLockEvents.OnVesselChange);
+            GameEvents.onGameSceneLoadRequested.Add(VesselLockEvents.OnSceneRequested);
+
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, TryGetCurrentVesselControlLock));
             SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, UpdateActiveVesselsLocks));
 
@@ -55,7 +57,8 @@ namespace LunaClient.Systems.VesselLockSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onVesselChange.Remove(VesselMainEvents.OnVesselChange);
+            GameEvents.onVesselChange.Remove(VesselLockEvents.OnVesselChange);
+            GameEvents.onGameSceneLoadRequested.Remove(VesselLockEvents.OnSceneRequested);
         }
 
         #endregion

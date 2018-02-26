@@ -1,9 +1,12 @@
 ﻿using KSP.UI;
 using KSP.UI.Screens;
 using LunaClient.Base;
+using LunaClient.VesselStore;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Reflection;
+using UniLinq;
 using Object = UnityEngine.Object;
 
 namespace LunaClient.Systems.KerbalSys
@@ -47,6 +50,8 @@ namespace LunaClient.Systems.KerbalSys
 
         #endregion
 
+        private static List<ProtoVessel> AllVessels = new List<ProtoVessel>();
+
         #endregion
 
         #region Base overrides
@@ -86,13 +91,29 @@ namespace LunaClient.Systems.KerbalSys
             if (kerbal.seat?.vessel != null)
                 return kerbal.seat.vessel.id;
 
-            for (var i = 0; i < FlightGlobals.Vessels.Count; i++)
+            if (kerbal.KerbalRef?.InVessel != null)
+                return kerbal.KerbalRef.InVessel.id;
+
+            if (FlightGlobals.ActiveVessel != null)
             {
-                var crew = FlightGlobals.Vessels[i].GetVesselCrew();
+                var crew = FlightGlobals.ActiveVessel.GetVesselCrew();
                 for (var j = 0; j < crew.Count; j++)
                 {
                     if (crew[j].name == kerbal.name)
-                        return FlightGlobals.Vessels[i].id;
+                        return FlightGlobals.ActiveVessel.id;
+                }
+            }
+
+            AllVessels.Clear();
+            AllVessels.AddRange(VesselsProtoStore.AllPlayerVessels.Values.Select(v=> v.ProtoVessel));
+            
+            for (var i = 0; i < AllVessels.Count; i++)
+            {
+                var crew = AllVessels[i].GetVesselCrew();
+                for (var j = 0; j < crew.Count; j++)
+                {
+                    if (crew[j].name == kerbal.name)
+                        return AllVessels[i].vesselID;
                 }
             }
 
@@ -141,7 +162,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (crew == null) return;
 
-            KerbalStatusField.SetValue(crew, newStatus);
+            KerbalStatusField?.SetValue(crew, newStatus);
         }
 
         /// <summary>
@@ -151,7 +172,7 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (crew == null) return;
 
-            KerbalTypeField.SetValue(crew, newType);
+            KerbalTypeField?.SetValue(crew, newType);
         }
 
         #endregion

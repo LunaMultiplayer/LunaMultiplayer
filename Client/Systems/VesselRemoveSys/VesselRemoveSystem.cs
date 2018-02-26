@@ -26,6 +26,8 @@ namespace LunaClient.Systems.VesselRemoveSys
 
         private static readonly List<Vessel> DebrisInSafetyBubbleToRemove = new List<Vessel>();
 
+        public Guid ManuallyKillingVesselId = Guid.Empty;
+
         #endregion
 
         #region Base overrides
@@ -242,16 +244,25 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// <summary>
         /// Kills the vessel
         /// </summary>
-        private static void KillGivenVessel(Vessel killVessel)
+        private void KillGivenVessel(Vessel killVessel)
         {
             try
             {
+
+                if (killVessel == null) return;
+
+                ManuallyKillingVesselId = killVessel.id;
+
                 //CAUTION!!!!! This method will call our event "VesselRemoveEvents.OnVesselWillDestroy" Check the method to see what can happen!
                 killVessel?.Die();
             }
             catch (Exception killException)
             {
                 LunaLog.LogError($"[LMP]: Error destroying vessel: {killException}");
+            }
+            finally
+            {
+                ManuallyKillingVesselId = Guid.Empty;
             }
         }
 

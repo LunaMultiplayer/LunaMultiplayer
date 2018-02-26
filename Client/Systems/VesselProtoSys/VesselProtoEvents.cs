@@ -97,6 +97,18 @@ namespace LunaClient.Systems.VesselProtoSys
         }
 
         /// <summary>
+        /// Event called when switching scene and before reaching the other scene
+        /// </summary>
+        internal void OnSceneRequested(GameScenes requestedScene)
+        {
+            if (HighLogic.LoadedSceneIsFlight && requestedScene != GameScenes.FLIGHT)
+            {
+                //When quitting flight send the vessel one last time
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+            }
+        }
+
+        /// <summary>
         /// We use this method to detect when a flag has been planted and we are far away from it.
         /// We don't use the onflagplanted event as that is triggered too early and we need to set the id
         /// AFTER we filled the plaque in the flag

@@ -21,9 +21,17 @@ namespace LunaClient.Systems.Lock
         public List<AcquireEvent> LockAcquireEvents { get; } = new List<AcquireEvent>();
         public List<ReleaseEvent> LockReleaseEvents { get; } = new List<ReleaseEvent>();
 
+        public LockEvents LockEvents { get; } = new LockEvents();
+
         #region Base overrides
 
         public override string SystemName { get; } = nameof(LockSystem);
+
+        protected override void OnEnabled()
+        {
+            base.OnEnabled();
+            GameEvents.onGameSceneLoadRequested.Add(LockEvents.OnSceneRequested);
+        }
 
         protected override void OnDisabled()
         {
@@ -31,6 +39,7 @@ namespace LunaClient.Systems.Lock
             LockStore.ClearAllLocks();
             LockAcquireEvents.Clear();
             LockReleaseEvents.Clear();
+            GameEvents.onGameSceneLoadRequested.Remove(LockEvents.OnSceneRequested);
         }
 
         #endregion

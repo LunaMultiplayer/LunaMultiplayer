@@ -37,5 +37,16 @@ namespace LunaClient.Systems.VesselLockSys
                 System.StartSpectating(vessel.id);
             }
         }
+
+        /// <summary>
+        /// Event called when switching scene and before reaching the other scene
+        /// </summary>
+        internal void OnSceneRequested(GameScenes requestedScene)
+        {
+            if (requestedScene != GameScenes.FLIGHT)
+            {
+                VesselLockSystem.Singleton.StopSpectating();
+            }
+        }
     }
 }

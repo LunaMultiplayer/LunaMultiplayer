@@ -68,7 +68,7 @@ namespace LunaClient.Windows.Systems
 
         private bool Flag { get; set; }
 
-        private bool GameScene { get; set; }
+        private bool KscScene { get; set; }
 
         private bool Group { get; set; }
 
