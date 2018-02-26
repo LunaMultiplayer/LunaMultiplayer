@@ -30,13 +30,14 @@ namespace LunaCommon.Message.Server
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Vessel;
-        protected override int DefaultChannel => IsVesselPositionOrFlightState() ? 0 : 8;
-        public override NetDeliveryMethod NetDeliveryMethod => IsVesselPositionOrFlightState() ?
+        protected override int DefaultChannel => IsUnreliableMessage() ? 0 : 8;
+        public override NetDeliveryMethod NetDeliveryMethod => IsUnreliableMessage() ?
             NetDeliveryMethod.UnreliableSequenced : NetDeliveryMethod.ReliableOrdered;
 
-        private bool IsVesselPositionOrFlightState()
+        private bool IsUnreliableMessage()
         {
-            return Data.SubType == (ushort)VesselMessageType.Position || Data.SubType == (ushort)VesselMessageType.Flightstate;
+            return Data.SubType == (ushort)VesselMessageType.Position || Data.SubType == (ushort)VesselMessageType.Flightstate
+                   || Data.SubType == (ushort)VesselMessageType.Update || Data.SubType == (ushort)VesselMessageType.Resource;
         }
     }
 }
