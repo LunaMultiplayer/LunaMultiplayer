@@ -68,7 +68,7 @@ namespace Server.Command
             }
             catch (Exception e)
             {
-                if (ServerContext.ServerRunning)
+                if (ServerContext.ServerRunning && !(e is ThreadAbortException))
                 {
                     LunaLog.Fatal($"Error in command handler thread, Exception: {e}");
                     throw;
