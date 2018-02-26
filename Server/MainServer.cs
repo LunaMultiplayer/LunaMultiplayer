@@ -23,7 +23,7 @@ namespace Server
     {
         private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
 
-        private static readonly IExitSignal ExitSignal = ExitCommon.GetExitHandler();
+        private static readonly WinExitSignal ExitSignal = Common.PlatformIsWindows() ? new WinExitSignal() : null;
 
         public static void Main()
         {
@@ -36,9 +36,12 @@ namespace Server
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = LunaTime.UtcNow.Ticks;
 
+                if(!Common.PlatformIsWindows()) LunaLog.Warning("Remember! Quit the server by using Control+C so the vessels are saved to the hard drive!");
+
                 //Register the ctrl+c event and exit signal
                 Console.CancelKeyPress += (sender, args) => Exit();
-                ExitSignal.Exit += (sender, args) => Exit();
+                if (Common.PlatformIsWindows())
+                    ExitSignal.Exit += (sender, args) => Exit();
 
                 //We disable quick edit as otherwise when you select some text for copy/paste then you can't write to the console and server freezes
                 //This just happens on windows....
@@ -53,7 +56,6 @@ namespace Server
 
                 //Set the last player activity time to server start
                 ServerContext.LastPlayerActivity = ServerContext.ServerClock.ElapsedMilliseconds;
-
 
                 ServerContext.ServerStarting = true;
 

@@ -90,9 +90,6 @@
     <Compile Include="Context\Universe.cs" />
     <Compile Include="Context\WarpContext.cs" />
     <Compile Include="Enums\RelaySystemMode.cs" />
-    <Compile Include="Exit\ExitCommon.cs" />
-    <Compile Include="Exit\IExitSignal.cs" />
-    <Compile Include="Exit\UnixExitSignal.cs" />
     <Compile Include="Exit\WinExitSignal.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Lidgren\LidgrenServer.cs" />
@@ -208,11 +205,4 @@
     <Content Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\External\Nuget\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets" Condition="Exists('..\External\Nuget\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\External\Nuget\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\External\Nuget\Mono.Posix.5.4.0.201\build\net45\Mono.Posix.targets'))" />
-  </Target>
 </Project>

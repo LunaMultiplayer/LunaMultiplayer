@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Server.Exit
 {
-    public class WinExitSignal : IExitSignal
+    public class WinExitSignal
     {
         public event EventHandler Exit;
 
@@ -35,7 +35,6 @@ namespace Server.Exit
             m_hr = ConsoleCtrlCheck;
 
             SetConsoleCtrlHandler(m_hr, true);
-
         }
 
         /// <summary>
