@@ -42,7 +42,7 @@ namespace LunaClient.Systems.Mod
 
         private static void SaveCurrentModConfigurationFile()
         {
-            var tempModFilePath = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Plugins", "Data", "LMPModControl.txt");
+            var tempModFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiPlayer", "Plugins", "Data", "LMPModControl.txt");
             using (var sw = new StreamWriter(tempModFilePath, false))
             {
                 sw.WriteLine("#This file is downloaded from the server during connection. It is saved here for convenience.");
@@ -56,7 +56,7 @@ namespace LunaClient.Systems.Mod
         {
             var checkOk = true;
 
-            var gameFilePaths = Directory.GetFiles(CommonUtil.CombinePaths(Client.KspPath, "GameData"), "*", SearchOption.AllDirectories);
+            var gameFilePaths = Directory.GetFiles(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData"), "*", SearchOption.AllDirectories);
             var gameFileRelativePaths = gameFilePaths
                 .Select( filePath =>filePath.Substring(filePath.ToLowerInvariant().IndexOf("gamedata", StringComparison.Ordinal) + 9)
                 .Replace('\\', '/')).ToArray();
@@ -139,7 +139,7 @@ namespace LunaClient.Systems.Mod
                 }
                 if (!string.IsNullOrEmpty(filePath) && !string.IsNullOrEmpty(item.Sha))
                 {
-                    var fullFilePath = CommonUtil.CombinePaths(Client.KspPath, "GameData", filePath);
+                    var fullFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", filePath);
                     if (Common.CalculateSha256Hash(fullFilePath) != item.Sha)
                     {
                         Sb.AppendLine($"File {item.ModFilename} does not match hash {item.Sha}!");

@@ -141,7 +141,6 @@
     <Compile Include="Base\Window.cs" />
     <Compile Include="Base\SystemWindow.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="MainSystem.cs" />
     <Compile Include="Network\NetworkMain.cs" />
     <Compile Include="Network\NetworkStatistics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -247,7 +246,7 @@
     <Compile Include="Systems\ModApi\ModApiSystem.cs" />
     <Compile Include="Systems\Flag\FlagSystem.cs" />
     <Compile Include="Systems\Lock\LockSystem.cs" />
-    <Compile Include="Client.cs" />
+    <Compile Include="MainSystem.cs" />
     <Compile Include="Systems\Mod\ModSystem.cs" />
     <Compile Include="Network\NetworkReceiver.cs" />
     <Compile Include="Network\NetworkConnection.cs" />

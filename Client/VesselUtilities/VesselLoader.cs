@@ -179,7 +179,7 @@ namespace LunaClient.VesselUtilities
         {
             foreach (var part in vesselProto.protoPartSnapshots.Where(p=> !string.IsNullOrEmpty(p.flagURL)))
             {
-                if (!File.Exists(CommonUtil.CombinePaths(Client.KspPath, "GameData", $"{part.flagURL}.png")))
+                if (!File.Exists(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", $"{part.flagURL}.png")))
                 {
                     LunaLog.Log($"[LMP]: Flag '{part.flagURL}' doesn't exist, setting to default!");
                     part.flagURL = "Squad/Flags/default";

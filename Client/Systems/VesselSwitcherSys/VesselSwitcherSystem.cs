@@ -39,7 +39,7 @@ namespace LunaClient.Systems.VesselSwitcherSys
             if (VesselToSwitchTo != null)
             {
                 LunaLog.Log($"[LMP]: Switching to vessel {vesselId}");
-                Client.Singleton.StartCoroutine(SwitchToVessel());
+                MainSystem.Singleton.StartCoroutine(SwitchToVessel());
             }
         }
 

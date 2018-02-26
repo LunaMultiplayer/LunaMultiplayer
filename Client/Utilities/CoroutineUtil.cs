@@ -8,7 +8,7 @@ namespace LunaClient.Utilities
     {
         public static void StartDelayedRoutine(string routineName, Action action, float delayInSec)
         {
-            Client.Singleton.StartCoroutine(DelaySeconds(routineName, action, delayInSec));
+            MainSystem.Singleton.StartCoroutine(DelaySeconds(routineName, action, delayInSec));
         }
 
         private static IEnumerator DelaySeconds(string routineName, Action action, float delayInSec)

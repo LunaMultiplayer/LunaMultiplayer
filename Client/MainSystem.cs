@@ -1,5 +1,6 @@
-﻿using CommNet;
+using CommNet;
 using LunaClient.Localization;
+using LunaClient.ModuleStore;
 using LunaClient.Network;
 using LunaClient.Systems;
 using LunaClient.Systems.Flag;
@@ -28,14 +29,14 @@ using UnityEngine;
 
 namespace LunaClient
 {
-    /// <summary>
-    /// Main system. It handle all the other systems in LMP
-    /// </summary>
-    public class MainSystem : Base.System<MainSystem>
+    [KSPAddon(KSPAddon.Startup.Instantly, true)]
+    public class MainSystem : MonoBehaviour
     {
-        public override string SystemName { get; } = nameof(MainSystem);
+        public static MainSystem Singleton { get; set; }
 
         #region Fields
+        
+        public static string KspPath { get; private set; }
 
         private static ClientState _networkState;
         public static ClientState NetworkState
@@ -57,14 +58,14 @@ namespace LunaClient
         public string Status { get; set; }
 
         public const int WindowOffset = 1664147604;
-        
+
         public bool ShowGui { get; set; } = true;
         public static bool ToolbarShowGui { get; set; } = true;
         public static ServerEntry CommandLineServer { get; set; }
         public bool LmpSaveChecked { get; set; }
         public bool ForceQuit { get; set; }
         public bool StartGame { get; set; }
-        public override bool Enabled { get; set; } = true;
+        public bool Enabled { get; set; } = true;
 
         private static int _mainThreadId;
         /// <summary>
@@ -79,12 +80,12 @@ namespace LunaClient
 
         #region Update methods
 
-        public void MainSystemUpdate()
+        public void Update()
         {
             LunaLog.ProcessLogMessages();
 
             if (!Enabled) return;
-            
+
             try
             {
                 if (HighLogic.LoadedScene == GameScenes.MAINMENU && !LmpSaveChecked)
@@ -108,7 +109,7 @@ namespace LunaClient
                 //In case ANOTHER thread requested us to disconnect
                 if (NetworkState == ClientState.DisconnectRequested)
                     NetworkState = ClientState.Disconnected;
-                
+
                 if (NetworkState >= ClientState.Running)
                 {
                     if (HighLogic.LoadedScene == GameScenes.MAINMENU)
@@ -153,11 +154,11 @@ namespace LunaClient
 
         #region Fixed update methods
 
-        public void MainSystemFixedUpdate()
+        public void FixedUpdate()
         {
             if (!Enabled)
                 return;
-            
+
             SystemsHandler.FixedUpdate();
         }
 
@@ -165,17 +166,27 @@ namespace LunaClient
 
         #region Late update methods
 
-        public void MainSystemLateUpdate()
+        public void LateUpdate()
         {
             if (!Enabled)
                 return;
-            
+
             SystemsHandler.LateUpdate();
         }
 
         #endregion
 
         #region Public methods
+
+        public void OnApplicationQuit()
+        {
+            OnExit();
+        }
+
+        public void OnDestroy()
+        {
+            OnExit();
+        }
 
         public void Start()
         {
@@ -184,8 +195,8 @@ namespace LunaClient
             SystemsHandler.FillUpSystemsList();
             WindowsHandler.FillUpWindowsList();
 
-            ModuleStore.FieldModuleStore.ReadCustomizationXml();
-            ModuleStore.FieldModuleStore.ReadLoadedPartModules();
+            FieldModuleStore.ReadCustomizationXml();
+            FieldModuleStore.ReadLoadedPartModules();
 
             ModApiSystem.Singleton.Enabled = true;
             NetworkSystem.Singleton.Enabled = true;
@@ -206,12 +217,15 @@ namespace LunaClient
 
         public void Awake()
         {
+            Singleton = this;
+            DontDestroyOnLoad(this);
+            KspPath = UrlDir.ApplicationRootPath;
             Profiler.maxNumberOfSamplesPerFrame = -1;
 
             //We are sure that we are in the unity thread as Awake() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
-            LunaLog.Log($"[LMP]: KSP installed at {Client.KspPath}");
+            LunaLog.Log($"[LMP]: KSP installed at {KspPath}");
             LunaLog.Log($"[LMP]: LMP installed at {Environment.CurrentDirectory}");
 
             if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
@@ -237,7 +251,8 @@ namespace LunaClient
             NetworkState = ClientState.Disconnected;
         }
 
-        public void OnGui()
+        // ReSharper disable once InconsistentNaming
+        public void OnGUI()
         {
             //Window ID's - Doesn't include "random" offset.
             //Connection window: 6702
@@ -462,7 +477,7 @@ namespace LunaClient
                         address = address.Substring("lmp://".Length)
                             .Substring(0, address.LastIndexOf(":", StringComparison.Ordinal));
                         var portString = address.Substring(address.LastIndexOf(":", StringComparison.Ordinal) + 1);
-                        valid = int.TryParse(portString, out port);
+                        valid = Int32.TryParse(portString, out port);
                     }
                     else
                     {
@@ -484,19 +499,19 @@ namespace LunaClient
 
         private static void SetupDirectoriesIfNeeded()
         {
-            var lunaMultiPlayerSavesDirectory = CommonUtil.CombinePaths(Client.KspPath, "saves", "LunaMultiPlayer");
+            var lunaMultiPlayerSavesDirectory = CommonUtil.CombinePaths(KspPath, "saves", "LunaMultiPlayer");
             CreateIfNeeded(lunaMultiPlayerSavesDirectory);
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, "Ships"));
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, CommonUtil.CombinePaths("Ships", "VAB")));
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, CommonUtil.CombinePaths("Ships", "SPH")));
             CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, "Subassemblies"));
-            var lunaMultiPlayerCacheDirectory = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Cache");
+            var lunaMultiPlayerCacheDirectory = CommonUtil.CombinePaths(KspPath, "GameData", "LunaMultiPlayer", "Cache");
             CreateIfNeeded(lunaMultiPlayerCacheDirectory);
-            var lunaMultiPlayerIncomingCacheDirectory = CommonUtil.CombinePaths(Client.KspPath, "GameData",
+            var lunaMultiPlayerIncomingCacheDirectory = CommonUtil.CombinePaths(KspPath, "GameData",
                 "LunaMultiPlayer", "Cache", "Incoming");
 
             CreateIfNeeded(lunaMultiPlayerIncomingCacheDirectory);
-            var lunaMultiPlayerFlagsDirectory = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Flags");
+            var lunaMultiPlayerFlagsDirectory = CommonUtil.CombinePaths(KspPath, "GameData", "LunaMultiPlayer", "Flags");
             CreateIfNeeded(lunaMultiPlayerFlagsDirectory);
         }
 
@@ -508,7 +523,7 @@ namespace LunaClient
 
         private static void SetupBlankGameIfNeeded()
         {
-            var persistentFile = CommonUtil.CombinePaths(Client.KspPath, "saves", "LunaMultiPlayer", "persistent.sfs");
+            var persistentFile = CommonUtil.CombinePaths(KspPath, "saves", "LunaMultiPlayer", "persistent.sfs");
             if (!File.Exists(persistentFile))
             {
                 LunaLog.Log("[LMP]: Creating new blank persistent.sfs file");

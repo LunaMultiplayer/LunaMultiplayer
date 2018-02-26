@@ -25,7 +25,7 @@ namespace LunaClient.Localization
         public static InstallDialogText InstallDialogText = new InstallDialogText();
         public static ScreenText ScreenText = new ScreenText();
 
-        private static readonly string LocalizationFolder = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Localization");
+        private static readonly string LocalizationFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiPlayer", "Localization");
 
         #region Loading
 

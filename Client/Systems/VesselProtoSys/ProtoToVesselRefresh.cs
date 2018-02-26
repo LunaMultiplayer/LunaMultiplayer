@@ -106,9 +106,9 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (FlightGlobals.ActiveVessel?.id == vessel.id)
                 {
                     //If you don't call spawn crew and you do a crew transfer the transfered crew won't appear in the portraits...
-                    Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
+                    MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
                     //If you don't call this the kerbal portraits appear in black...
-                    Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
+                    MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
                 }
             }
         }
@@ -146,8 +146,8 @@ namespace LunaClient.Systems.VesselProtoSys
                 partSnapshot.Init(vessel);
 
             vessel.RebuildCrewList();
-            Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
-            Client.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
+            MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.25f, () => { FlightGlobals.ActiveVessel?.SpawnCrew(); }));
+            MainSystem.Singleton.StartCoroutine(CallbackUtil.DelayedCallback(0.5f, () => { KerbalPortraitGallery.Instance?.SetActivePortraitsForVessel(FlightGlobals.ActiveVessel); }));
         }
         
         private static void UpdatePartFairings(ProtoPartSnapshot partSnapshot, Part part)

@@ -14,7 +14,7 @@ namespace LunaClient.Systems.Flag
         #region Fields
 
         public FlagEvents FlagEvents { get; } = new FlagEvents();
-        public static string FlagPath { get; } = CommonUtil.CombinePaths(Client.KspPath, "GameData", "LunaMultiPlayer", "Flags");
+        public static string FlagPath { get; } = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiPlayer", "Flags");
         public ConcurrentDictionary<string, ExtendedFlagInfo> ServerFlags { get; } = new ConcurrentDictionary<string, ExtendedFlagInfo>();
         private bool FlagSystemReady => Enabled && HighLogic.CurrentGame?.flagURL != null;
 

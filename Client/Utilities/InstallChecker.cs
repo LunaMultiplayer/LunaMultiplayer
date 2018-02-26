@@ -16,7 +16,7 @@ namespace LunaClient.Utilities
             var assembly = Assembly.GetExecutingAssembly();
 
             var assemblyInstalledAt = new DirectoryInfo(assembly.Location).FullName;
-            var kspPath = new DirectoryInfo(Client.KspPath).FullName;
+            var kspPath = new DirectoryInfo(MainSystem.KspPath).FullName;
             var shouldBeInstalledAt = CommonUtil.CombinePaths(kspPath, "GameData", "LunaMultiPlayer", "Plugins", "LunaClient.dll");
 
             _currentPath = assemblyInstalledAt;

@@ -45,7 +45,7 @@ namespace LunaClient.Systems.Mod
         public void BuildDllFileList()
         {
             DllList.Clear();
-            var checkList = Directory.GetFiles(CommonUtil.CombinePaths(Client.KspPath, "GameData"), "*",
+            var checkList = Directory.GetFiles(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData"), "*",
                 SearchOption.AllDirectories);
 
             foreach (var checkFile in checkList.Where(f => f.ToLower().EndsWith(".dll")))
@@ -71,7 +71,7 @@ namespace LunaClient.Systems.Mod
             var optionalFiles = new List<string>();
             var partsList = Common.GetStockParts();
 
-            var gameDataDir = CommonUtil.CombinePaths(Client.KspPath, "GameData");
+            var gameDataDir = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData");
 
             var relativeModDirectories = Directory.GetDirectories(gameDataDir)
                 .Select(d => d.Substring(d.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).ToLower())
@@ -143,7 +143,7 @@ namespace LunaClient.Systems.Mod
                 whitelistMode,
                 new string[0], partsList.ToArray());
 
-            using (var sw = new StreamWriter(CommonUtil.CombinePaths(Client.KspPath, "LMPModControl.txt"), false))
+            using (var sw = new StreamWriter(CommonUtil.CombinePaths(MainSystem.KspPath, "LMPModControl.txt"), false))
             {
                 sw.Write(modFileData);
             }

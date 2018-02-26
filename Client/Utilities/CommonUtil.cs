@@ -35,8 +35,8 @@ namespace LunaClient.Utilities
             if (!Common.PlatformIsWindows()) return "0";
 
             var outputLogFile = Common.IsX64() ?
-                CombinePaths(Client.KspPath, "KSP_x64_Data", "output_log.txt") : 
-                CombinePaths(Client.KspPath, "KSP_Data", "output_log.txt");
+                CombinePaths(MainSystem.KspPath, "KSP_x64_Data", "output_log.txt") : 
+                CombinePaths(MainSystem.KspPath, "KSP_Data", "output_log.txt");
 
             if (!File.Exists(outputLogFile)) return "0";
 

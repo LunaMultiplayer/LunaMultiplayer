@@ -43,7 +43,7 @@ namespace LunaClient.Systems.Ping
         {
             while (PingQueue.TryTake(out var endpoint))
             {
-                Client.Singleton.StartCoroutine(PingUpdate(endpoint));
+                MainSystem.Singleton.StartCoroutine(PingUpdate(endpoint));
             }
         }
 

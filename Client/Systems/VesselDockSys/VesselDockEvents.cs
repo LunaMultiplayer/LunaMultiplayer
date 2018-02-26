@@ -145,7 +145,7 @@ namespace LunaClient.Systems.VesselDockSys
                     //spectator...
                     var finalVesselProto = dock.DominantVessel?.BackupVessel();
                     VesselSwitcherSystem.Singleton.SwitchToVessel(dock.DominantVesselId);
-                    Client.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock, finalVesselProto));
+                    MainSystem.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock, finalVesselProto));
                 }
             }
         }
