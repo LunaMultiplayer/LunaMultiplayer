@@ -189,6 +189,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.velocityD = curVelocity;
 
             //Apply rotation
+            //TODO this fails when spectating
             Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             Vessel.srfRelRotation = currentSurfaceRelRotation;
