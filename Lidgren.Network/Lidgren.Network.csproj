@@ -40,7 +40,7 @@
     <DocumentationFile>
     </DocumentationFile>
     <Prefer32Bit>false</Prefer32Bit>
-    <NoWarn>3002, 1591, 3001, 0162, 0168, IDE0018, IDE0007</NoWarn>
+    <NoWarn>3002, 1591, 3001, 0162, 0168, IDE0018, IDE0007, IDE0017</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>
