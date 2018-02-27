@@ -40,6 +40,7 @@ namespace LunaClient.Network
         /// </summary>
         public static void RequestServers()
         {
+            Servers.Clear();
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsRequestServersMsgData>();
             var requestMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
             NetworkSender.QueueOutgoingMessage(requestMsg);
@@ -58,34 +59,35 @@ namespace LunaClient.Network
                 //Therefore we assert that the received message data is of MsReplyServersMsgData
                 if (msgDeserialized.Data is MsReplyServersMsgData data)
                 {
-                    Servers.Clear();
-                    for (var i = 0; i < data.ServersCount; i++)
-                    {
-                        //Filter servers with diferent version
-                        if (data.ServerVersion[i] != LmpVersioning.CurrentVersion)
-                            continue;
+                    //Filter servers with diferent version
+                    if (data.ServerVersion != LmpVersioning.CurrentVersion)
+                        return;
 
-                        PingSystem.QueuePing(data.ExternalEndpoint[i]);
-                        Servers.TryAdd(data.ExternalEndpoint[i], new ServerInfo
+                    if (!Servers.ContainsKey(data.ExternalEndpoint))
+                    {
+                        var server = new ServerInfo
                         {
-                            Id = data.Id[i],
-                            InternalEndpoint = data.InternalEndpoint[i],
-                            ExternalEndpoint = data.ExternalEndpoint[i],
-                            Description = data.Description[i],
-                            Cheats = data.Cheats[i],
-                            ServerName = data.ServerName[i],
-                            DropControlOnExit = data.DropControlOnExit[i],
-                            MaxPlayers = data.MaxPlayers[i],
-                            WarpMode = data.WarpMode[i],
-                            TerrainQuality = data.TerrainQuality[i],
-                            PlayerCount = data.PlayerCount[i],
-                            GameMode = data.GameMode[i],
-                            ModControl = data.ModControl[i],
-                            DropControlOnExitFlight = data.DropControlOnExitFlight[i],
-                            VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval[i],
-                            DropControlOnVesselSwitching = data.DropControlOnVesselSwitching[i],
-                            ServerVersion = data.ServerVersion[i]
-                        });
+                            Id = data.Id,
+                            InternalEndpoint = data.InternalEndpoint,
+                            ExternalEndpoint = data.ExternalEndpoint,
+                            Description = data.Description,
+                            Cheats = data.Cheats,
+                            ServerName = data.ServerName,
+                            DropControlOnExit = data.DropControlOnExit,
+                            MaxPlayers = data.MaxPlayers,
+                            WarpMode = data.WarpMode,
+                            TerrainQuality = data.TerrainQuality,
+                            PlayerCount = data.PlayerCount,
+                            GameMode = data.GameMode,
+                            ModControl = data.ModControl,
+                            DropControlOnExitFlight = data.DropControlOnExitFlight,
+                            VesselUpdatesSendMsInterval = data.VesselUpdatesSendMsInterval,
+                            DropControlOnVesselSwitching = data.DropControlOnVesselSwitching,
+                            ServerVersion = data.ServerVersion
+                        };
+
+                        if (Servers.TryAdd(data.ExternalEndpoint, server))
+                            PingSystem.QueuePing(data.ExternalEndpoint);
                     }
                 }
             }

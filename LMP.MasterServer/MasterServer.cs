@@ -154,36 +154,36 @@ namespace LMP.MasterServer
         /// </summary>
         private static void SendServerLists(NetIncomingMessage netMsg, NetPeer peer)
         {
-            var values = ServerDictionary.Values.OrderBy(v => v.Info.Id).ToArray();
+            foreach (var server in ServerDictionary.Values.ToArray())
+            {
+                var msgData = MasterServerMessageFactory.CreateNewMessageData<MsReplyServersMsgData>();
 
-            var msgData = MasterServerMessageFactory.CreateNewMessageData<MsReplyServersMsgData>();
+                msgData.Id = server.Info.Id;
+                msgData.ServerVersion = server.Info.ServerVersion;
+                msgData.Cheats = server.Info.Cheats;
+                msgData.Description = server.Info.Description;
+                msgData.DropControlOnExit = server.Info.DropControlOnExit;
+                msgData.DropControlOnExitFlight = server.Info.DropControlOnExitFlight;
+                msgData.DropControlOnVesselSwitching = server.Info.DropControlOnVesselSwitching;
+                msgData.ExternalEndpoint = $"{server.ExternalEndpoint.Address}:{server.ExternalEndpoint.Port}";
+                msgData.GameMode = server.Info.GameMode;
+                msgData.InternalEndpoint = $"{server.InternalEndpoint.Address}:{server.InternalEndpoint.Port}";
+                msgData.MaxPlayers = server.Info.MaxPlayers;
+                msgData.ModControl = server.Info.ModControl;
+                msgData.PlayerCount = server.Info.PlayerCount;
+                msgData.ServerName = server.Info.ServerName;
+                msgData.VesselUpdatesSendMsInterval = server.Info.VesselUpdatesSendMsInterval;
+                msgData.WarpMode = server.Info.WarpMode;
+                msgData.TerrainQuality = server.Info.TerrainQuality;
 
-            msgData.ServersCount = values.Length;
-            msgData.Id = values.Select(s => s.Info.Id).ToArray();
-            msgData.ServerVersion = values.Select(s => s.Info.ServerVersion).ToArray();
-            msgData.Cheats = values.Select(s => s.Info.Cheats).ToArray();
-            msgData.Description = values.Select(s => s.Info.Description).ToArray();
-            msgData.DropControlOnExit = values.Select(s => s.Info.DropControlOnExit).ToArray();
-            msgData.DropControlOnExitFlight = values.Select(s => s.Info.DropControlOnExit).ToArray();
-            msgData.DropControlOnVesselSwitching = values.Select(s => s.Info.DropControlOnExit).ToArray();
-            msgData.ExternalEndpoint = values.Select(s => $"{s.ExternalEndpoint.Address}:{s.ExternalEndpoint.Port}").ToArray();
-            msgData.GameMode = values.Select(s => s.Info.GameMode).ToArray();
-            msgData.InternalEndpoint = values.Select(s => $"{s.InternalEndpoint.Address}:{s.InternalEndpoint.Port}").ToArray();
-            msgData.MaxPlayers = values.Select(s => s.Info.MaxPlayers).ToArray();
-            msgData.ModControl = values.Select(s => s.Info.ModControl).ToArray();
-            msgData.PlayerCount = values.Select(s => s.Info.PlayerCount).ToArray();
-            msgData.ServerName = values.Select(s => s.Info.ServerName).ToArray();
-            msgData.VesselUpdatesSendMsInterval = values.Select(s => s.Info.VesselUpdatesSendMsInterval).ToArray();
-            msgData.WarpMode = values.Select(s => s.Info.WarpMode).ToArray();
-            msgData.TerrainQuality = values.Select(s => s.Info.TerrainQuality).ToArray();
+                var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
+                var outMsg = peer.CreateMessage(msg.GetMessageSize());
 
-            var msg = MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-            var outMsg = peer.CreateMessage(msg.GetMessageSize());
-
-            msg.Serialize(outMsg);
-            peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
-            peer.FlushSendQueue();
-            msg.Recycle();
+                msg.Serialize(outMsg);
+                peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
+                peer.FlushSendQueue();
+                msg.Recycle();
+            }
         }
 
         private static void RegisterServer(IMessageBase message, NetIncomingMessage netMsg)
