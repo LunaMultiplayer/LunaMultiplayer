@@ -31,18 +31,16 @@ namespace LunaClient.Windows.ServerList
             BigLabelStyle = new GUIStyle(GUI.skin.label)
             {
                 fontSize = 80,
-                normal = {textColor = Color.red}
+                normal = { textColor = Color.red }
             };
 
-            WindowRect = new Rect(Screen.width * 0.025f, Screen.height* 0.025f, WindowWidth,WindowHeight);
+            WindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
             TextAreaStyle = new GUIStyle(GUI.skin.textArea);
             ButtonStyle = new GUIStyle(GUI.skin.button);
-            //ButtonStyle.fontSize = 10;
-            StatusStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.yellow } };
-            //StatusStyle.fontSize = 10;
+            LabelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
 
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
