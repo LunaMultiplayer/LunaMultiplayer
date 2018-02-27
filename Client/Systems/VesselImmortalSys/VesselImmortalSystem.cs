@@ -119,7 +119,10 @@ namespace LunaClient.Systems.VesselImmortalSys
         private static void SetVesselImmortalState(Vessel vessel, bool immortal)
         {
             foreach (var part in vessel.Parts.Where(p => p.attachJoint != null))
+            {
                 part.attachJoint.SetUnbreakable(immortal, part.rigidAttachment);
+                part.SetDetectCollisions(!immortal);
+            }
         }
 
         #endregion
