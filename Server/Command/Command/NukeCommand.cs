@@ -65,12 +65,14 @@ namespace Server.Command.Command
             var document = new XmlDocument();
             document.LoadXml(vesselData);
 
-            var typeElement = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='landedAt']");
-            if (typeElement != null)
+            var landed = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='landed']");
+            if (landed?.InnerText == "True")
             {
-                return typeElement.Value.ToLower().Contains("ksc") || typeElement.Value.ToLower().Contains("runway");
+                var landedAtNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='landedAt']");
+                if (landedAtNode != null)
+                    return landedAtNode.InnerText.ToLower().Contains("ksc") || landedAtNode.InnerText.ToLower().Contains("runway") || landedAtNode.InnerText.ToLower().Contains("launchpad");
             }
-
+            
             return false;
         }
     }

@@ -67,11 +67,8 @@ namespace Server.Command.Command
                 var document = new XmlDocument();
                 document.LoadXml(vesselData);
 
-                var typeElement = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='type']");
-                if (typeElement != null)
-                {
-                    return typeElement.Value.ToLower().Contains("debris");
-                }
+                var typeNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='type']");
+                if (typeNode != null) return typeNode.InnerText.ToLower().Contains("debris");
             }
             catch (Exception e)
             {
