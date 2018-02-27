@@ -53,15 +53,12 @@ namespace LunaClient.Systems.Scenario
         public void LoadMissingScenarioDataIntoGame()
         {
             var validScenarios = KSPScenarioType.GetAllScenarioTypesInAssemblies()
-                .Where(s =>
-                    !HighLogic.CurrentGame.scenarios.Exists(psm => psm.moduleName == s.ModuleType.Name) &&
-                    LoadModuleByGameMode(s));
+                .Where(s => !HighLogic.CurrentGame.scenarios.Exists(psm => psm.moduleName == s.ModuleType.Name) && LoadModuleByGameMode(s));
 
             foreach (var validScenario in validScenarios)
             {
                 LunaLog.Log($"[LMP]: Creating new scenario module {validScenario.ModuleType.Name}");
-                HighLogic.CurrentGame.AddProtoScenarioModule(validScenario.ModuleType,
-                    validScenario.ScenarioAttributes.TargetScenes);
+                HighLogic.CurrentGame.AddProtoScenarioModule(validScenario.ModuleType, validScenario.ScenarioAttributes.TargetScenes);
             }
         }
 
@@ -309,9 +306,7 @@ namespace LunaClient.Systems.Scenario
                 case Game.Modes.CAREER:
                     return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewCareerGames);
                 case Game.Modes.SCIENCE_SANDBOX:
-                    return
-                        validScenario.ScenarioAttributes.HasCreateOption(
-                            ScenarioCreationOptions.AddToNewScienceSandboxGames);
+                    return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewScienceSandboxGames);
                 case Game.Modes.SANDBOX:
                     return validScenario.ScenarioAttributes.HasCreateOption(ScenarioCreationOptions.AddToNewSandboxGames);
             }
