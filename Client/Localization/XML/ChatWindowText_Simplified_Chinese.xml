@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<ChatWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Leave>离开</Leave>
+  <Send>发送</Send>
+  <Global>#公共</Global>
+</ChatWindowText>

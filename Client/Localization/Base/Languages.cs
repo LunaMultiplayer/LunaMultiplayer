@@ -1,9 +1,11 @@
-﻿namespace LunaClient.Localization.Base
+﻿// ReSharper disable InconsistentNaming
+namespace LunaClient.Localization.Base
 {
     public enum Languages
     {
         English,
         Russian,
-        German
+        German,
+        Simplified_Chinese
     }
 }

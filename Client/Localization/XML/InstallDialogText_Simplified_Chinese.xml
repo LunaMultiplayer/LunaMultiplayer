@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<InstallDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>检测到安装错误</Title>
+  <IncorrectInstall>LunaMultiPlayer 未被正确安装.</IncorrectInstall>
+  <CurrentLoc>当前位置:</CurrentLoc>
+  <CorrectLoc>正确位置:</CorrectLoc>
+</InstallDialogText>
