@@ -150,6 +150,7 @@
     <Compile Include="System\LockSystemSender.cs" />
     <Compile Include="System\ModDataSystemSender.cs" />
     <Compile Include="System\ModFileSystem.cs" />
+    <Compile Include="System\ScenarioSystem.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselDataUpdater.cs" />
     <Compile Include="System\VesselRelay\VesselRelayItem.cs" />
@@ -190,19 +191,19 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\Bill Kerman.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Bob Kerman.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Jebediah Kerman.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Valentina Kerman.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="Resources\Kerbals\Valentina Kerman.txt" />
+    <None Include="Resources\Kerbals\Jebediah Kerman.txt" />
+    <None Include="Resources\Kerbals\Bob Kerman.txt" />
+    <None Include="Resources\Kerbals\Bill Kerman.txt" />
+    <None Include="Resources\Scenario\VesselRecovery.txt" />
+    <None Include="Resources\Scenario\SentinelScenario.txt" />
+    <None Include="Resources\Scenario\ScenarioDestructibles.txt" />
+    <None Include="Resources\Scenario\ScenarioAchievements.txt" />
+    <None Include="Resources\Scenario\ResourceScenario.txt" />
+    <None Include="Resources\Scenario\ProgressTracking.txt" />
+    <None Include="Resources\Scenario\PartUpgradeManager.txt" />
+    <None Include="Resources\Scenario\CommNetScenario.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

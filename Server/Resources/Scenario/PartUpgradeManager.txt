@@ -1,0 +1,11 @@
+name = PartUpgradeManager
+scene = 6, 5, 7
+UPGRADES
+{
+	Unlocks
+	{
+	}
+	Enableds
+	{
+	}
+}

@@ -9,7 +9,6 @@ using Server.Plugin;
 using Server.Server;
 using Server.System;
 using System;
-using System.IO;
 
 namespace Server.Message.ReceiveHandlers
 {
@@ -45,8 +44,6 @@ namespace Server.Message.ReceiveHandlers
 
                 LunaLog.Normal($"Client {data.PlayerName} handshook successfully, Version: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}");
 
-                CreatePlayerScenarioFiles(client, data.PlayerName);
-
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.HandshookSuccessfully, "success");
 
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<PlayerConnectionJoinMsgData>();
@@ -55,20 +52,6 @@ namespace Server.Message.ReceiveHandlers
                 MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
 
                 LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ClientRetriever.GetClients().Length}");
-            }
-        }
-
-        private static void CreatePlayerScenarioFiles(ClientStructure client, string playerName)
-        {
-            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName)))
-            {
-                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName));
-                foreach (var file in FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", "Initial")))
-                {
-                    var fileName = Path.GetFileName(file);
-                    if (!string.IsNullOrEmpty(fileName))
-                        FileHandler.FileCopy(file, Path.Combine(ServerContext.UniverseDirectory, "Scenarios", playerName, fileName));
-                }
             }
         }
     }

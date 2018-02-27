@@ -127,6 +127,17 @@ namespace Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to name = CommNetScenario
+        ///scene = 7, 8, 5, 6
+        ///.
+        /// </summary>
+        internal static string CommNetScenario {
+            get {
+                return ResourceManager.GetString("CommNetScenario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to name = Jebediah Kerman
         ///gender = Male
         ///type = Crew
@@ -160,6 +171,114 @@ namespace Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to name = PartUpgradeManager
+        ///scene = 6, 5, 7
+        ///UPGRADES
+        ///{
+        ///	Unlocks
+        ///	{
+        ///	}
+        ///	Enableds
+        ///	{
+        ///	}
+        ///}
+        ///.
+        /// </summary>
+        internal static string PartUpgradeManager {
+            get {
+                return ResourceManager.GetString("PartUpgradeManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = ProgressTracking
+        ///scene = 7, 8, 5
+        ///Progress
+        ///{
+        ///}
+        ///.
+        /// </summary>
+        internal static string ProgressTracking {
+            get {
+                return ResourceManager.GetString("ProgressTracking", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = ResourceScenario
+        ///scene = 7, 8, 5, 6
+        ///RESOURCE_SETTINGS
+        ///{
+        ///	GameSeed = 666999666
+        ///	MaxDeltaTime = 21600
+        ///}
+        ///.
+        /// </summary>
+        internal static string ResourceScenario {
+            get {
+                return ResourceManager.GetString("ResourceScenario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = ScenarioAchievements
+        ///scene = 7, 8, 5, 6
+        ///.
+        /// </summary>
+        internal static string ScenarioAchievements {
+            get {
+                return ResourceManager.GetString("ScenarioAchievements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = ScenarioDestructibles
+        ///scene = 5, 7, 6, 8
+        ///SpaceCenter/Administration/Facility/Building
+        ///{
+        ///	intact = True
+        ///}
+        ///SpaceCenter/AstronautComplex/Facility/mainBuilding
+        ///{
+        ///	intact = True
+        ///}
+        ///SpaceCenter/FlagPole/Facility
+        ///{
+        ///	intact = True
+        ///}
+        ///SpaceCenter/LaunchPad/Facility/Flag
+        ///{
+        ///	intact = True
+        ///}
+        ///SpaceCenter/MissionControl/Facility/mainBuilding
+        ///{
+        ///	intact = True
+        ///}
+        ///SpaceCenter/ResearchAndDevelopment/Facility/mainBuilding
+        ///{
+        ///	intact = True
+        ///}
+        ///SpaceCenter/ResearchAndDevelopment/Facility/ForeverAlone [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ScenarioDestructibles {
+            get {
+                return ResourceManager.GetString("ScenarioDestructibles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = SentinelScenario
+        ///scene = 7, 8, 5
+        ///NextSpawnTime = 13500.261279369333
+        ///.
+        /// </summary>
+        internal static string SentinelScenario {
+            get {
+                return ResourceManager.GetString("SentinelScenario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to name = Valentina Kerman
         ///gender = Female
         ///type = Crew
@@ -189,6 +308,17 @@ namespace Server.Properties {
         internal static string Valentina_Kerman {
             get {
                 return ResourceManager.GetString("Valentina_Kerman", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = VesselRecovery
+        ///scene = 5, 7, 8, 6
+        ///.
+        /// </summary>
+        internal static string VesselRecovery {
+            get {
+                return ResourceManager.GetString("VesselRecovery", resourceCulture);
             }
         }
     }

@@ -28,7 +28,7 @@ namespace Server.Message.Reader
                     LunaLog.Debug($"Saving {data.ScenarioCount} scenario modules from {client.PlayerName}");
                     for (var i = 0; i < data.ScenarioCount; i++)
                     {
-                        var path = Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName, $"{data.ScenariosData[i].Module}.txt");
+                        var path = Path.Combine(ServerContext.UniverseDirectory, "Scenarios", $"{data.ScenariosData[i].Module}.txt");
                         FileHandler.WriteToFile(path, data.ScenariosData[i].Data, data.ScenariosData[i].NumBytes);
                     }
                     break;
@@ -37,7 +37,7 @@ namespace Server.Message.Reader
 
         private static void SendScenarioModules(ClientStructure client)
         {
-            var scenarioDataArray = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", client.PlayerName))
+            var scenarioDataArray = FileHandler.GetFilesInPath(Path.Combine(ServerContext.UniverseDirectory, "Scenarios"))
                 .Select(f =>
                 {
                     var data = FileHandler.ReadFile(f);

@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System.Linq;
-using Server.Log;
+﻿using Server.Log;
 using Server.System;
+using System.IO;
+using System.Linq;
 
 namespace Server.Context
 {
@@ -48,9 +48,10 @@ namespace Server.Context
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Relay")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Relay"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Scenarios")))
+            {
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Scenarios"));
-            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", "Initial")))
-                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Scenarios", "Initial"));
+                ScenarioSystem.GenerateDefaultScenarios();
+            }
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Vessels")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Vessels"));
         }
