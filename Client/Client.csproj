@@ -131,6 +131,7 @@
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
+    <Compile Include="Windows\Debug\DebugUtils.cs" />
     <Compile Include="Windows\Locks\LockDisplay.cs" />
     <Compile Include="Windows\Locks\LocksDrawer.cs" />
     <Compile Include="Windows\Locks\LocksWindow.cs" />

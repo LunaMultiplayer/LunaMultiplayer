@@ -42,44 +42,34 @@ namespace LunaClient.Windows.Debug
                     VesselLoader.ReloadVessel(proto);
                 }
             }
-
+            
             if (GUILayout.Button("Pack all vessels", ButtonStyle))
             {
                 var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
                 foreach (var vessel in vessels)
                 {
                     if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.GoOnRails();
+                    vessel.vesselRanges = DebugUtils.PackRanges;
                 }
             }
-
+            
             if (GUILayout.Button("Unpack all vessels", ButtonStyle))
             {
                 var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
                 foreach (var vessel in vessels)
                 {
                     if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.GoOffRails();
+                    vessel.vesselRanges = DebugUtils.UnPackRanges;
                 }
             }
 
-            if (GUILayout.Button("Load all vessels", ButtonStyle))
+            if (GUILayout.Button("Reset ranges", ButtonStyle))
             {
                 var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
                 foreach (var vessel in vessels)
                 {
                     if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.Load();
-                }
-            }
-
-            if (GUILayout.Button("Unload all vessels", ButtonStyle))
-            {
-                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                foreach (var vessel in vessels)
-                {
-                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.Unload();
+                    vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
                 }
             }
 

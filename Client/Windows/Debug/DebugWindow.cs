@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
-using LunaClient.Systems;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
@@ -231,9 +230,12 @@ namespace LunaClient.Windows.Debug
         protected bool DisplayOrbit { get; set; }
         protected bool DisplayNtp { get; set; }
         protected bool DisplayConnectionQueue { get; set; }
-
         protected bool DisplayVesselStoreData { get; set; }
 
+        protected bool PackVessels { get; set; }
+        protected bool UnpackVessels { get; set; }
+        protected bool LoadVessels { get; set; }
+        protected bool UnloadVessels { get; set; }
         #endregion
     }
 }
