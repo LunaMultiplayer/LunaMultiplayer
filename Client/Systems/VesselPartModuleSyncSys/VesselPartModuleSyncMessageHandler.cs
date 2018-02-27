@@ -12,7 +12,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
     public class VesselPartModuleSyncMessageHandler : SubSystem<VesselPartModuleSyncSystem>, IMessageHandler
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
-        
+
         public void HandleMessage(IServerMessageBase msg)
         {
             if (!(msg.Data is VesselPartSyncMsgData msgData) || !System.PartSyncSystemReady) return;
@@ -46,7 +46,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
         {
             if (module.moduleRef == null) return;
 
-            switch (CustomizationsHandler.SkipModule(vesselId, partFlightId, module.moduleName, fieldName, true))
+            switch (CustomizationsHandler.SkipModule(vesselId, partFlightId, module.moduleName, fieldName, true, out var customization))
             {
                 case CustomizationResult.TooEarly:
                 case CustomizationResult.Ignore:
@@ -57,10 +57,11 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                     else
                     {
                         module.moduleRef?.Load(module.moduleValues);
-                        module.moduleRef?.OnAwake();
-                        module.moduleRef?.OnLoad(module.moduleValues);
-
-                        if(module.moduleName != "ModuleWheelBase") //TODO fix this
+                        if (customization.CallOnAwake)
+                            module.moduleRef?.OnAwake();
+                        if (customization.CallOnLoad)
+                            module.moduleRef?.OnLoad(module.moduleValues);
+                        if (customization.CallOnStart)
                             module.moduleRef?.OnStart(part.partRef.GetModuleStartState());
                     }
                     break;

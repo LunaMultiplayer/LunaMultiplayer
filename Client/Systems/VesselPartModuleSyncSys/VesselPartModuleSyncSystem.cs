@@ -81,7 +81,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                             {
                                 foreach (var fieldInfo in definition.PersistentModuleField)
                                 {
-                                    var customizationResult = CustomizationsHandler.SkipModule(vessel.id, part.flightID, moduleName, fieldInfo.Name, false);
+                                    var customizationResult = CustomizationsHandler.SkipModule(vessel.id, part.flightID, moduleName, fieldInfo.Name, false, out _);
 
                                     var fieldVal = fieldInfo.Name == "fsm" ? (fieldInfo.GetValue(module) as KerbalFSM)?.currentStateName : 
                                         fieldInfo.GetValue(module).ToInvariantString();

@@ -22,6 +22,9 @@ namespace LunaClient.ModuleStore
             FieldName = string.Empty,
             Ignore = false,
             Interval = 2500,
+            CallOnAwake = true,
+            CallOnLoad = true,
+            CallOnStart = true
         };
 
         private static readonly string CustomPartSyncFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiPlayer", "PartSync");
