@@ -9,4 +9,4 @@ lunamultiplayer.com:8700
 #PictoCube Server
 37.187.108.37:8700
 #Zarlo's server
-#ms.lmp.pksky.xyz:8700
+ms.lmp.pksky.xyz:8700
