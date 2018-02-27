@@ -40,7 +40,7 @@ namespace Server.Command.Command
             var vesselList = VesselStoreSystem.CurrentVesselsInXmlFormat.ToArray();
             foreach (var vesselKeyVal in vesselList)
             {
-                if (IsVesselDebris(vesselKeyVal.Value))
+                if (IsVesselDebris(vesselKeyVal.Key, vesselKeyVal.Value))
                 {
                     LunaLog.Normal($"Removing debris vessel: {vesselKeyVal.Key}");
 
@@ -60,15 +60,22 @@ namespace Server.Command.Command
                 LunaLog.Normal($"Removed {removalCount} debris");
         }
 
-        private static bool IsVesselDebris(string vesselData)
+        private static bool IsVesselDebris(Guid vesselId, string vesselData)
         {
-            var document = new XmlDocument();
-            document.LoadXml(vesselData);
-
-            var typeElement = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='type']");
-            if (typeElement != null)
+            try
             {
-                return typeElement.Value.ToLower().Contains("debris");
+                var document = new XmlDocument();
+                document.LoadXml(vesselData);
+
+                var typeElement = document.SelectSingleNode($"/{ConfigNodeXmlParser.ValueNode}[@name='type']");
+                if (typeElement != null)
+                {
+                    return typeElement.Value.ToLower().Contains("debris");
+                }
+            }
+            catch (Exception e)
+            {
+                LunaLog.Error($"Error while checking if vessel {vesselId} is debris. Details {e}");
             }
 
             return false;
