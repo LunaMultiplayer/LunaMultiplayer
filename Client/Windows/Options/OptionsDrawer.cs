@@ -67,7 +67,7 @@ namespace LunaClient.Windows.Options
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
             //Key bindings
-            var chatDescription = LocalizationContainer.OptionsWindowText.SetChatKey + " " + "SettingsSystem.CurrentSettings.ChatKey";
+            var chatDescription = $"{LocalizationContainer.OptionsWindowText.SetChatKey} {SettingsSystem.CurrentSettings.ChatKey}";
             if (SettingChat)
             {
                 chatDescription = LocalizationContainer.OptionsWindowText.SettingChatKey;
