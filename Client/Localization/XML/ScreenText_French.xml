@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Global>#Global:</Global>
+  <CraftUploaded>Création partagée !</CraftUploaded>
+  <CraftSaved>Création sauvegardée !</CraftSaved>
+  <ModFileGenerated>Le fichier LMPModFile.txt a été généré dans votre dossier KSP.</ModFileGenerated>
+  <Disconected>Vous avez été déconnecté !</Disconected>
+  <Spectating>Ce vaisseau est controllé par</Spectating>
+  <SafetyBubble>Rappel !! Les vaisseaux situés à proximité ne sont pas visibles tant que vous restez dans la zone de sécurité !!</SafetyBubble> 
+  <CannotRecover>Impossible de récupérer ce vaisseau, il ne vous appartient pas.</CannotRecover>
+  <CannotTerminate>Impossible de supprimer ce vaisseau, il ne vous appartient pas.</CannotTerminate>
+  <SpectatingRemoved>Le vaisseau que vous observiez a été supprimé.</SpectatingRemoved>
+  <WarpDisabled>Warp impossible, le warp a été désactivé sur ce serveur.</WarpDisabled>
+  <NotWarpMaster>Warp impossible, vous n'êtes pas le maître du warp.</NotWarpMaster>
+  <WaitingSubspace>Warp impossible, attente de l'ID de sous-espace du serveur.</WaitingSubspace> 
+</ScreenText>

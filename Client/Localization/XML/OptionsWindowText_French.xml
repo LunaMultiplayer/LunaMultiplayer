@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Language>Langue :</Language>
+  <Color>Couleur du joueur :</Color>
+  <Red>R :</Red>
+  <Green>V :</Green>
+  <Blue>B :</Blue>
+  <Random>Aléatoire</Random>
+  <Set>Appliquer</Set>
+  <SetChatKey>Modifier le raccourci de chat. Actuel :</SetChatKey>
+  <SettingChatKey>Modification du raccourci de chat (cliquer pour annuler)...</SettingChatKey>
+  <ResetDisclaimer>Réinitialiser les clauses d'utilisation</ResetDisclaimer>
+  <Interpolation>Activer l'interpolation</Interpolation>
+  <ShowClose>Afficher le bouton "Fermer" dans la fenêtre de connexion</ShowClose>
+  <GenerateLmpModControl>Générer le fichier serveur "LMPModControl" :</GenerateLmpModControl>
+  <GenerateBlackList>Genérer la whitelist "LMPModControl.txt"</GenerateBlackList>
+  <GenerateWhiteList>Générer la blacklist "LMPModControl.txt"</GenerateWhiteList>
+  <GenerateUniverse>Générer l'univers depuis une sauvegarde</GenerateUniverse>
+  <Toolbar>Barre d'outils :</Toolbar>
+  <Close>Fermer</Close>
+</OptionsWindowText>

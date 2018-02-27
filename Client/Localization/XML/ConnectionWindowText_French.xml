@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PlayerName>Pseudo :</PlayerName>
+  <Add>Ajouter</Add>
+  <Edit>Éditer</Edit>
+  <Cancel>Annuler</Cancel>
+  <Connect>Se connecter</Connect>
+  <Disconnect>Se déconnecter</Disconnect>
+  <Remove>Supprimer</Remove>
+  <Options>Options</Options>
+  <Servers>Serveurs</Servers>
+  <Close>Fermer</Close>
+  <Name>Nom :</Name>
+  <Address>Adresse :</Address>
+  <Port>Port :</Port>
+  <Server>Serveur</Server>
+  <CustomServers>Serveurs personnalisés :</CustomServers>
+  <NoServers>(Aucun - Ajouter d'abord un serveur)</NoServers>
+</ConnectionWindowText>
