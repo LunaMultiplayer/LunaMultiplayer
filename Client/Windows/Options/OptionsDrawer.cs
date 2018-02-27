@@ -1,6 +1,5 @@
 ﻿using LunaClient.Localization;
 using LunaClient.Network;
-using LunaClient.Systems;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
@@ -29,7 +28,7 @@ namespace LunaClient.Windows.Options
             GUI.DragWindow(MoveRect);
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Language);
-            if (GUILayout.Button(LocalizationContainer.CurrentLanguage.ToString(), ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.GetCurrentLanguageAsText(), ButtonStyle))
             {
                 LocalizationContainer.LoadLanguage(LocalizationContainer.GetNextLanguage());
                 SettingsSystem.CurrentSettings.Language = LocalizationContainer.CurrentLanguage;

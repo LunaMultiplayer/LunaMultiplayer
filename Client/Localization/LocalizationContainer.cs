@@ -27,6 +27,11 @@ namespace LunaClient.Localization
 
         private static readonly string LocalizationFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiPlayer", "Localization");
 
+        public static string GetCurrentLanguageAsText()
+        {
+            return CurrentLanguage.ToString().Replace("_", " ");
+        }
+
         #region Loading
 
         public static Languages GetNextLanguage()

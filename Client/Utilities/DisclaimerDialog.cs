@@ -1,5 +1,4 @@
 ﻿using LunaClient.Localization;
-using LunaClient.Systems;
 using LunaClient.Systems.SettingsSys;
 using UnityEngine;
 
@@ -39,7 +38,7 @@ namespace LunaClient.Utilities
                                 }
                             ),
                             new DialogGUIFlexibleSpace(),
-                            new DialogGUIButton(LocalizationContainer.CurrentLanguage.ToString(),
+                            new DialogGUIButton(LocalizationContainer.GetCurrentLanguageAsText(),
                                 delegate
                                 {
                                     LocalizationContainer.LoadLanguage(LocalizationContainer.GetNextLanguage());
