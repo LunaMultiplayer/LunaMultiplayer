@@ -11,7 +11,7 @@ namespace LunaClient.Windows.ServerList
     {
         private static bool Ascending { get; set; } = true;
 
-        private float[] HeaderGridSize = new float[10];
+        private static readonly float[] HeaderGridSize = new float[10];
 
         public void DrawContent(int windowId)
         {
