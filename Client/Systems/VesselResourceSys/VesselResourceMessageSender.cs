@@ -40,6 +40,8 @@ namespace LunaClient.Systems.VesselResourceSys
                     var protoResource = vessel.protoVessel.protoPartSnapshots[i].resources[j];
                     var resource = vessel.protoVessel.protoPartSnapshots[i].resources[j].resourceRef;
 
+                    if(resource == null) continue;
+
                     if (_resources[resourceIndex] == null)
                         _resources[resourceIndex] = new VesselResourceInfo();
 
