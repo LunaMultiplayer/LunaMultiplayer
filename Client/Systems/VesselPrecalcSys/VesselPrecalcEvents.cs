@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.VesselUtilities;
 
 namespace LunaClient.Systems.VesselPrecalcSys
 {
@@ -8,6 +7,14 @@ namespace LunaClient.Systems.VesselPrecalcSys
         public void OnVesselPrecalcAssign(Vessel data)
         {
             data.precalc = data.gameObject.AddComponent<LunaPrecalc>();
+        }
+
+        public void VesselLoaded(Vessel data)
+        {
+            if (data.precalc?.GetType() != typeof(LunaPrecalc))
+            {
+                data.precalc = data.gameObject.AddComponent<LunaPrecalc>();
+            }
         }
     }
 }
