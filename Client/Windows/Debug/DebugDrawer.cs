@@ -38,19 +38,50 @@ namespace LunaClient.Windows.Debug
                 var protos = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.ProtoVessel);
                 foreach (var proto in protos)
                 {
+                    if (FlightGlobals.ActiveVessel?.id == proto.vesselID) continue;
                     VesselLoader.ReloadVessel(proto);
                 }
             }
 
-            if (GUILayout.Button("Reload all EVAs", ButtonStyle))
+            if (GUILayout.Button("Pack all vessels", ButtonStyle))
             {
-                var protos = VesselsProtoStore.AllPlayerVessels.Values.Where(v=> v.Vessel?.isEVA ?? false).Select(v => v.ProtoVessel);
-                foreach (var proto in protos)
+                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
+                foreach (var vessel in vessels)
                 {
-                    VesselLoader.ReloadVessel(proto);
+                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
+                    vessel.GoOnRails();
                 }
             }
 
+            if (GUILayout.Button("Unpack all vessels", ButtonStyle))
+            {
+                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
+                foreach (var vessel in vessels)
+                {
+                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
+                    vessel.GoOffRails();
+                }
+            }
+
+            if (GUILayout.Button("Load all vessels", ButtonStyle))
+            {
+                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
+                foreach (var vessel in vessels)
+                {
+                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
+                    vessel.Load();
+                }
+            }
+
+            if (GUILayout.Button("Unload all vessels", ButtonStyle))
+            {
+                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
+                foreach (var vessel in vessels)
+                {
+                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
+                    vessel.Unload();
+                }
+            }
 
             GUILayout.EndVertical();
         }
