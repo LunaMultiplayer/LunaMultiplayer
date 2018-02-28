@@ -195,8 +195,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
             //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
-            Vessel.orbitDriver.updateFromParameters();
-
+            
             //If you do Vessel.ReferenceTransform.position = curPosition 
             //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
             //that is the reason why we pack vessels at close distance when landed...
@@ -209,6 +208,10 @@ namespace LunaClient.Systems.VesselPositionSys
                     Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
                     Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
                     Vessel.SetWorldVelocity(curVelocity);
+                    break;
+                default:
+                    //Do not apply orbit params while grounded as it makes the vessel jitter. Specially when on different subspaces
+                    Vessel.orbitDriver.updateFromParameters();
                     break;
             }
 
