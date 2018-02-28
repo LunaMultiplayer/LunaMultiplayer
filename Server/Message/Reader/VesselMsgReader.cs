@@ -56,6 +56,10 @@ namespace Server.Message.Reader
                     VesselDataUpdater.WriteModuleDataToFile(messageData);
                     MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
+                case VesselMessageType.Fairing:
+                    VesselDataUpdater.WriteFairingDataToFile(messageData);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
+                    break;
                 default:
                     throw new NotImplementedException("Vessel message type not implemented");
             }

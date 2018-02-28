@@ -187,6 +187,29 @@ namespace Server.System
         }
 
         /// <summary>
+        /// We received a fairing change from a player
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
+        /// </summary>
+        public static void WriteFairingDataToFile(VesselBaseMsgData message)
+        {
+            if (!(message is VesselFairingMsgData msgData)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
+            //Sync fairings ALWAYS and ignore the rate they arrive
+            Task.Run(() =>
+            {
+                lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
+                {
+                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+
+                    var updatedText = UpdateProtoVesselFileWithNewFairingData(xmlData, msgData);
+                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                }
+            });
+        }
+        
+
+        /// <summary>
         /// Updates the proto vessel with the values we received about a position of a vessel
         /// </summary>
         private static string UpdateProtoVesselWithNewPositionData(string vesselData, VesselPositionMsgData msgData)
@@ -353,16 +376,33 @@ namespace Server.System
             var fieldNode = document.SelectSingleNode(xpath);
             if (fieldNode != null) fieldNode.InnerText = msgData.Value;
 
-            if (msgData.ModuleName == "ModuleProceduralFairing")
+            return document.ToIndentedString();
+        }
+
+        /// <summary>
+        /// Updates the proto vessel with the values we received about a fairing change of a vessel
+        /// </summary>
+        private static string UpdateProtoVesselFileWithNewFairingData(string vesselData, VesselFairingMsgData msgData)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
+
+            var module = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
+                         $"following-sibling::MODULE/{ConfigNodeXmlParser.ValueNode}" +
+                         @"[@name='name' and text()=""ModuleProceduralFairing""]/parent::MODULE/";
+
+            var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='fsm']";
+
+            var fieldNode = document.SelectSingleNode(xpath);
+            if (fieldNode != null) fieldNode.InnerText = "st_flight_deployed";
+
+            var moduleNode = document.SelectSingleNode(module);
+            var fairingsSections = document.SelectNodes($"{module}/XSECTION");
+            if (moduleNode != null && fairingsSections != null)
             {
-                var moduleNode = document.SelectSingleNode(module);
-                var fairingsSections = document.SelectNodes($"{module}/XSECTION");
-                if (moduleNode != null && fairingsSections != null)
+                for (var i = 0; i < fairingsSections.Count; i++)
                 {
-                    for (var i = 0; i < fairingsSections.Count; i++)
-                    {
-                        moduleNode.RemoveChild(fairingsSections[i]);
-                    }
+                    moduleNode.RemoveChild(fairingsSections[i]);
                 }
             }
 

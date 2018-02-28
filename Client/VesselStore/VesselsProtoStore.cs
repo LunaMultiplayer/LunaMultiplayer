@@ -161,6 +161,22 @@ namespace LunaClient.VesselStore
             }
         }
 
+        public static void UpdateVesselProtoPartFairing(VesselFairingMsgData msgData)
+        {
+            if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
+            {
+                if (vesselProtoUpd.ProtoVessel == null) return;
+
+                var part = VesselCommon.FindProtoPartInProtovessel(vesselProtoUpd.ProtoVessel, msgData.PartFlightId);
+                if (part != null)
+                {
+                    var module = VesselCommon.FindProtoPartModuleInProtoPart(part, "ModuleProceduralFairing");
+                    module?.moduleValues.SetValue("fsm", "st_flight_deployed");
+                    module?.moduleValues.RemoveNodesStartWith("XSECTION");
+                }
+            }
+        }
+
         public static void UpdateVesselProtoPartModules(VesselPartSyncMsgData msgData)
         {
             if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))

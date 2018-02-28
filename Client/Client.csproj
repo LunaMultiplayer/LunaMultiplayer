@@ -95,6 +95,9 @@
     <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageHandler.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
+    <Compile Include="Systems\VesselFairingsSys\VesselFairingsSystem.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateUpdate.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\CustomizationsHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\PartSyncUpdateEntry.cs" />
@@ -349,6 +352,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>

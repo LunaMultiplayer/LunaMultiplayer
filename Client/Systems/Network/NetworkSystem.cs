@@ -21,6 +21,7 @@ using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.VesselDockSys;
+using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
@@ -305,6 +306,7 @@ namespace LunaClient.Systems.Network
                         VesselResourceSystem.Singleton.Enabled = true;
                         VesselUpdateSystem.Singleton.Enabled = true;
                         VesselPartModuleSyncSystem.Singleton.Enabled = true;
+                        VesselFairingsSystem.Singleton.Enabled = true;
                         KscSceneSystem.Singleton.Enabled = true;
                         AsteroidSystem.Singleton.Enabled = true;
                         ToolbarSystem.Singleton.Enabled = true;

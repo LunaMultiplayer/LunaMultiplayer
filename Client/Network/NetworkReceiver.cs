@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaClient.Systems;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
@@ -17,6 +16,7 @@ using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselDockSys;
+using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPartModuleSyncSys;
 using LunaClient.Systems.VesselPositionSys;
@@ -166,6 +166,9 @@ namespace LunaClient.Network
                             break;
                         case VesselMessageType.PartSync:
                             VesselPartModuleSyncSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.Fairing:
+                            VesselFairingsSystem.Singleton.EnqueueMessage(msg);
                             break;
                     }
                     break;

@@ -12,6 +12,7 @@ using LunaClient.Systems.Scenario;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.VesselDockSys;
+using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
@@ -167,6 +168,11 @@ namespace LunaClient.Windows.Systems
             if (VesselResource)
             {
                 VesselResourceSystem.Singleton.Enabled = GUILayout.Toggle(VesselResourceSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            VesselFairing = GUILayout.Toggle(VesselFairing, "Vessel fairing", ButtonStyle);
+            if (VesselFairing)
+            {
+                VesselFairingsSystem.Singleton.Enabled = GUILayout.Toggle(VesselFairingsSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             VesselProto = GUILayout.Toggle(VesselProto, "Vessel proto", ButtonStyle);
             if (VesselProto)

@@ -46,6 +46,8 @@ namespace LunaClient.Windows.Systems
 
         private bool VesselResource { get; set; }
 
+        private bool VesselFairing { get; set; }
+
         private bool VesselProto { get; set; }
         
         private bool VesselPrecalc { get; set; }

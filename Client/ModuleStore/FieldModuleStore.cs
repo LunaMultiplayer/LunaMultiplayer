@@ -59,7 +59,7 @@ namespace LunaClient.ModuleStore
                 foreach (var partModule in partModules)
                 {
                     var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
-                        .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant) || f.FieldType == typeof(KerbalFSM)).ToArray();
+                        .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant)).ToArray();
                     
                     if (persistentFields.Any())
                     {
