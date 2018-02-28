@@ -126,6 +126,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                     //Otherwise we say to not keep it in the vessels remove list as perhaps we are reverting to flight and then our vessel id will stay the same. 
                     //If we set the keepvesselinremovelist to true then the server will ignore every change we do to our vessel! 
                     System.MessageSender.SendVesselRemove(activeVesselId, HighLogic.LoadedSceneIsEditor);
+                    if (HighLogic.LoadedSceneIsEditor) System.AddToKillList(activeVesselId);
                 }, 3);
             }
         }
