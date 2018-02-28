@@ -183,6 +183,16 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyInterpolationsToLoadedVessel(float lerpPercentage)
         {
+            if (CurrentlySpectatingThisVessel)
+            {
+                Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+
+                Vessel.UpdatePosVel();
+                Vessel.precalc.CalculatePhysicsStats(); //This will update the localCom and other variables of the vessel
+            }
+
             var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
             var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
@@ -196,7 +206,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
             //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
-            
+
             //If you do Vessel.ReferenceTransform.position = curPosition 
             //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
             //that is the reason why we pack vessels at close distance when landed...
@@ -208,7 +218,6 @@ namespace LunaClient.Systems.VesselPositionSys
                     Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
                     Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
                     Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
-                    Vessel.SetWorldVelocity(curVelocity);
                     break;
                 default:
                     //Do not apply orbit params while grounded as it makes the vessel jitter. Specially when on different subspaces
@@ -218,17 +227,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
             foreach (var part in Vessel.Parts)
                 part.ResumeVelocity();
-
-            if (CurrentlySpectatingThisVessel)
-            {
-                Vessel.UpdatePosVel();
-                //CalculatePhysicsStats will update the localCom and other variables of the vessel
-                Vessel.precalc.CalculatePhysicsStats();
-                if (!Vessel.LandedOrSplashed)
-                {
-                    Vessel.SetPosition(Body.position + Vessel.orbitDriver.pos - Vessel.orbitDriver.driverTransform.rotation * Vessel.localCoM, false);
-                }
-            }
         }
 
         private void ApplyInterpolations(float lerpPercentage)
