@@ -27,6 +27,8 @@ namespace LunaClient.Systems.VesselPositionSys
             }
         }
 
+        private bool CurrentlySpectatingThisVessel => VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == VesselId;
+
         #region Message Fields
 
         public Guid VesselId { get; set; }
@@ -217,8 +219,9 @@ namespace LunaClient.Systems.VesselPositionSys
             foreach (var part in Vessel.Parts)
                 part.ResumeVelocity();
 
-            if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == VesselId)
+            if (CurrentlySpectatingThisVessel)
             {
+                Vessel.UpdatePosVel();
                 //CalculatePhysicsStats will update the localCom and other variables of the vessel
                 Vessel.precalc.CalculatePhysicsStats();
                 if (!Vessel.LandedOrSplashed)
