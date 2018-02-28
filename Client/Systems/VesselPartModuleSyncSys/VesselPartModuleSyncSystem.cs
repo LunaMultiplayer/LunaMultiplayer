@@ -101,7 +101,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                                                 module.snapshot?.moduleValues?.SetValue(fieldInfo.Name, fieldVal);
                                                 LunaLog.Log($"Detected a part module change. FlightId: {part.flightID} PartName: {part.name} Module: {moduleName} " +
                                                             $"Field: {fieldInfo.Name} ValueBefore: {snapshotVal} ValueNow: {fieldVal}");
-                                                MessageSender.SendVesselPartSyncMsg(vessel.id, part.flightID, module.moduleName, fieldInfo.Name, fieldVal);
+                                                MessageSender.SendVesselPartSyncMsg(vessel.id, part.flightID, moduleName, fieldInfo.Name, fieldVal);
                                                 break;
                                         }
                                     }

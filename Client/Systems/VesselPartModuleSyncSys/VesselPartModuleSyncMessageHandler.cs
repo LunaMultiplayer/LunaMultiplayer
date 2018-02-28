@@ -56,6 +56,8 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                         (module.moduleRef as ModuleProceduralFairing)?.DeployFairing();
                     else
                     {
+                        if (customization.IgnoreSpectating && FlightGlobals.ActiveVessel?.id == vesselId) break;
+
                         module.moduleRef?.Load(module.moduleValues);
                         if (customization.CallOnAwake)
                             module.moduleRef?.OnAwake();

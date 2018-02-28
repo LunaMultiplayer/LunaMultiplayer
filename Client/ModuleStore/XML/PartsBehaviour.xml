@@ -7,17 +7,22 @@
       <CustomFieldDefinition>
         <FieldName>currentRotation</FieldName>
         <Ignore>false</Ignore>
+        <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>5000</Interval>
+        <CallOnAwake>true</CallOnAwake>
+        <CallOnLoad>true</CallOnLoad>
+        <CallOnStart>true</CallOnStart>
       </CustomFieldDefinition>
       <CustomFieldDefinition>
         <FieldName>storedAnimationTime</FieldName>
         <Ignore>false</Ignore>
+        <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>100</Interval>
+        <CallOnAwake>true</CallOnAwake>
+        <CallOnLoad>true</CallOnLoad>
+        <CallOnStart>true</CallOnStart>
       </CustomFieldDefinition>
     </Fields>
-    <CallOnAwake>true</CallOnAwake>
-    <CallOnLoad>true</CallOnLoad>
-    <CallOnStart>true</CallOnStart>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
     <ModuleName>ModuleEngines</ModuleName>
@@ -25,18 +30,24 @@
       <!--Current throttle of an engine. Probably its related with the exhaust smoke-->
       <CustomFieldDefinition>
         <FieldName>currentThrottle</FieldName>
-        <IgnoreSend>false</IgnoreSend>
+        <Ignore>false</Ignore>
+        <!--You will get errors when spectating if you apply this value-->
+        <IgnoreSpectating>true</IgnoreSpectating>
         <Interval>1000</Interval>
+        <CallOnAwake>false</CallOnAwake>
+        <CallOnLoad>false</CallOnLoad>
+        <CallOnStart>false</CallOnStart>
       </CustomFieldDefinition>
       <CustomFieldDefinition>
         <FieldName>manuallyOverridden</FieldName>
         <Ignore>false</Ignore>
+        <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>600000</Interval>
+        <CallOnAwake>true</CallOnAwake>
+        <CallOnLoad>true</CallOnLoad>
+        <CallOnStart>true</CallOnStart>
       </CustomFieldDefinition>
     </Fields>
-    <CallOnAwake>true</CallOnAwake>
-    <CallOnLoad>true</CallOnLoad>
-    <CallOnStart>true</CallOnStart>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
     <ModuleName>ModuleReactionWheel</ModuleName>
@@ -47,9 +58,6 @@
         <Ignore>true</Ignore>
       </CustomFieldDefinition>
     </Fields>
-    <CallOnAwake>true</CallOnAwake>
-    <CallOnLoad>true</CallOnLoad>
-    <CallOnStart>true</CallOnStart>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
     <ModuleName>ModuleWheelSuspension</ModuleName>
@@ -65,9 +73,6 @@
         <Ignore>true</Ignore>
       </CustomFieldDefinition>
     </Fields>
-    <CallOnAwake>true</CallOnAwake>
-    <CallOnLoad>true</CallOnLoad>
-    <CallOnStart>true</CallOnStart>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
     <ModuleName>ModuleWheelMotor</ModuleName>
@@ -78,9 +83,6 @@
         <Ignore>true</Ignore>
       </CustomFieldDefinition>
     </Fields>
-    <CallOnAwake>true</CallOnAwake>
-    <CallOnLoad>true</CallOnLoad>
-    <CallOnStart>true</CallOnStart>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
     <ModuleName>ModuleWheelBase</ModuleName>
@@ -90,11 +92,12 @@
         <FieldName>frictionMultiplier</FieldName>
         <Ignore>true</Ignore>
       </CustomFieldDefinition>
+      <!--set for grounded wheels. We don't really care about it-->
+      <CustomFieldDefinition>
+        <FieldName>isGrounded</FieldName>
+        <Ignore>true</Ignore>
+      </CustomFieldDefinition>
     </Fields>
-    <CallOnAwake>true</CallOnAwake>
-    <CallOnLoad>true</CallOnLoad>
-    <!--Triggers an error "No transform called WheelCollider found in Part hierarchy" when calling onStart-->
-    <CallOnStart>false</CallOnStart>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
     <ModuleName>ModuleDeployableSolarPanel</ModuleName>
@@ -103,11 +106,12 @@
       <CustomFieldDefinition>
         <FieldName>launchUT</FieldName>
         <Ignore>false</Ignore>
+        <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>600000</Interval>
+        <CallOnAwake>true</CallOnAwake>
+        <CallOnLoad>true</CallOnLoad>
+        <CallOnStart>true</CallOnStart>
       </CustomFieldDefinition>
     </Fields>
-    <CallOnAwake>true</CallOnAwake>
-    <CallOnLoad>true</CallOnLoad>
-    <CallOnStart>true</CallOnStart>
   </CustomModuleDefinition>
 </ArrayOfCustomModuleDefinition>

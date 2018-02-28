@@ -21,6 +21,7 @@ namespace LunaClient.ModuleStore
         {
             FieldName = string.Empty,
             Ignore = false,
+            IgnoreSpectating = false,
             Interval = 2500,
             CallOnAwake = true,
             CallOnLoad = true,
