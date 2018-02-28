@@ -189,7 +189,6 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.velocityD = curVelocity;
 
             //Apply rotation
-            //TODO this fails when spectating
             Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             Vessel.srfRelRotation = currentSurfaceRelRotation;
@@ -220,10 +219,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == VesselId)
             {
-                if (Vessel.LandedOrSplashed)
-                    Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
-                else
-                    Vessel.SetPosition((Body.position + Vessel.orbitDriver.pos) - (Vessel.orbitDriver.driverTransform.rotation * Vessel.localCoM));
+                //CalculatePhysicsStats will update the localCom and other variables of the vessel
+                Vessel.precalc.CalculatePhysicsStats();
+                if (!Vessel.LandedOrSplashed)
+                {
+                    Vessel.SetPosition(Body.position + Vessel.orbitDriver.pos - Vessel.orbitDriver.driverTransform.rotation * Vessel.localCoM, false);
+                }
             }
         }
 
