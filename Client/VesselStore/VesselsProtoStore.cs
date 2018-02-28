@@ -185,6 +185,9 @@ namespace LunaClient.VesselStore
                     if (vesselProtoUpd.ProtoVessel == null) return;
 
                     var resource = msgData.Resources[i];
+
+                    if (resource == null) continue;
+
                     var partSnapshot = VesselCommon.FindProtoPartInProtovessel(vesselProtoUpd.ProtoVessel, resource.PartFlightId);
                     var resourceSnapshot = VesselCommon.FindResourceInProtoPart(partSnapshot, resource.ResourceName);
                     if (resourceSnapshot != null)
