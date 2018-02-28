@@ -28,11 +28,13 @@ namespace Server.System
         {
             if (!Groups.ContainsKey(groupName))
             {
-                var newGroup = new Group();
-                newGroup.Members = new[] {clientPlayerName};
-                newGroup.MembersCount = 1;
-                newGroup.Owner = clientPlayerName;
-                newGroup.Name = groupName;
+                var newGroup = new Group
+                {
+                    Members = new[] {clientPlayerName},
+                    MembersCount = 1,
+                    Owner = clientPlayerName,
+                    Name = groupName
+                };
                 if (Groups.TryAdd(groupName, newGroup))
                 {
                     var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<GroupUpdateMsgData>();
