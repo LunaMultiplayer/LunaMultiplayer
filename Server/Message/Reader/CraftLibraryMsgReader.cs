@@ -20,13 +20,13 @@ namespace Server.Message.Reader
             switch (data.CraftMessageType)
             {
                 case CraftMessageType.UploadFile:
-                    CraftLibraryHandler.HandleUploadFileMessage(client, (CraftLibraryUploadMsgData)message);
+                    CraftLibraryHandler.HandleUploadFileMessage(client, (CraftLibraryUploadMsgData)data);
                     break;
                 case CraftMessageType.RequestFile:
-                    CraftLibraryHandler.HandleRequestFileMessage(client, (CraftLibraryRequestMsgData)message);
+                    CraftLibraryHandler.HandleRequestFileMessage(client, (CraftLibraryRequestMsgData)data);
                     break;
                 case CraftMessageType.DeleteFile:
-                    CraftLibraryHandler.HandleDeleteFileMessage(client, (CraftLibraryDeleteMsgData)message);
+                    CraftLibraryHandler.HandleDeleteFileMessage(client, (CraftLibraryDeleteMsgData)data);
                     break;
                 case CraftMessageType.ListRequest:
                     //We don't use this message anymore so we can recycle it
