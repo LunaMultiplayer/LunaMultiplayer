@@ -146,7 +146,7 @@ namespace Server.Lidgren
 
         public void ShutdownLidgrenServer()
         {
-            Server.Shutdown("Goodbye and thanks for all the fish");
+            Server.Shutdown("So long and thanks for all the fish");
         }
 
         public async void RefreshMasterServersList()

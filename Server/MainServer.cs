@@ -105,7 +105,7 @@ namespace Server
                 WarpSystem.SaveSubspacesToFile();
                 LmpPluginHandler.FireOnServerStop();
 
-                LunaLog.Normal("Goodbye and thanks for all the fish!");
+                LunaLog.Normal("So long and thanks for all the fish!");
             }
             catch (Exception e)
             {

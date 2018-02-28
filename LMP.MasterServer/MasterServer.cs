@@ -80,7 +80,7 @@ namespace LMP.MasterServer
                 }
                 await Task.Delay(ServerMsTick);
             }
-            peer.Shutdown("Goodbye and thanks for all the fish!");
+            peer.Shutdown("So long and thanks for all the fish!");
         }
 
         private static IMasterServerMessageBase GetMessage(NetIncomingMessage msg)
