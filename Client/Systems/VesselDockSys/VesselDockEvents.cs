@@ -143,9 +143,8 @@ namespace LunaClient.Systems.VesselDockSys
                     //We save it as in case the dominant player didn't detected the dock he will send us a
                     //NOT docked protovessel and that would remove the weak vessel because we are going to be an
                     //spectator...
-                    var finalVesselProto = dock.DominantVessel?.BackupVessel();
                     VesselSwitcherSystem.Singleton.SwitchToVessel(dock.DominantVesselId);
-                    MainSystem.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock, finalVesselProto));
+                    MainSystem.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock));
                 }
             }
         }
@@ -167,18 +166,18 @@ namespace LunaClient.Systems.VesselDockSys
         /// Here we wait until we fully switched to the dominant vessel and THEN we send the vessel dock information.
         /// We wait 5 seconds before sending the data to give time to the dominant vessel to detect the dock
         /// </summary>
-        private static IEnumerator WaitUntilWeSwitchedThenSendDockInfo(VesselDockStructure dockInfo, ProtoVessel finalVesselProto)
+        private static IEnumerator WaitUntilWeSwitchedThenSendDockInfo(VesselDockStructure dockInfo)
         {
             var start = DateTime.Now;
             var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
             var waitInterval = new WaitForSeconds(0.5f);
 
-            while (FlightGlobals.ActiveVessel.id != dockInfo.DominantVesselId && DateTime.Now - start < TimeSpan.FromSeconds(30))
+            while (FlightGlobals.ActiveVessel?.id != dockInfo.DominantVesselId && DateTime.Now - start < TimeSpan.FromSeconds(30))
             {
                 yield return waitInterval;
             }
 
-            if (FlightGlobals.ActiveVessel?.id == dockInfo.DominantVesselId)
+            if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == dockInfo.DominantVesselId)
             {
                 /* We are NOT the dominant vessel so wait 5 seconds so the dominant vessel detects the docking.
                  * If we send the vessel definition BEFORE the dominant detects it, then the dominant won't be able
@@ -186,10 +185,11 @@ namespace LunaClient.Systems.VesselDockSys
                  */
 
                 yield return new WaitForSeconds(5);
-                LunaLog.Log($"[LMP]: Sending dock info to the server! Final dominant vessel parts {finalVesselProto.protoPartSnapshots.Count} " +
-                            $"Current: {dockInfo.DominantVessel?.parts?.Count}");
 
-                System.MessageSender.SendDockInformation(dockInfo, currentSubspaceId, finalVesselProto);
+                FlightGlobals.ActiveVessel.BackupVessel();
+                LunaLog.Log($"[LMP]: Sending dock info to the server! Final dominant vessel parts {FlightGlobals.ActiveVessel.protoVessel.protoPartSnapshots.Count}");
+
+                System.MessageSender.SendDockInformation(dockInfo, currentSubspaceId, FlightGlobals.ActiveVessel.protoVessel);
             }
         }
 

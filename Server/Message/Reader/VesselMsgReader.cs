@@ -115,10 +115,9 @@ namespace Server.Message.Reader
             }
             VesselDataUpdater.RawConfigNodeInsertOrUpdate(msgData.DominantVesselId, Encoding.UTF8.GetString(msgData.FinalVesselData, 0, msgData.NumBytes));
 
-            //Now remove the weak vessel
+            //Now remove the weak vessel but DO NOT add to the removed vessels as they might undock!!!
             LunaLog.Debug($"Removing weak docked vessel {msgData.WeakVesselId}");
             VesselStoreSystem.RemoveVessel(msgData.WeakVesselId);
-            VesselContext.RemovedVessels.Add(msgData.WeakVesselId);
 
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
 
