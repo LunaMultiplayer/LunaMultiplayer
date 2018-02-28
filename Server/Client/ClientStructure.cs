@@ -43,9 +43,7 @@ namespace Server.Client
         public ClientStructure(NetConnection playerConnection)
         {
             Connection = playerConnection;
-
-            SendThread = new Task(SendMessagesThread);
-            SendThread.Start();
+            SendThread = MainServer.LongRunTaskFactory.StartNew(SendMessagesThread);
         }
 
         public override bool Equals(object obj)

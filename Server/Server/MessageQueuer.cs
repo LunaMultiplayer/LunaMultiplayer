@@ -68,7 +68,7 @@ namespace Server.Server
         {
             if (data == null) return;
 
-            client?.SendMessageQueue.Enqueue(GenerateMessage<T>(data));
+            SendToClient(client, GenerateMessage<T>(data));
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Server.Server
         {
             if (msg?.Data == null) return;
 
-            client.SendMessageQueue.Enqueue(msg);
+            client?.SendMessageQueue.Enqueue(msg);
         }
 
         private static T GenerateMessage<T>(IMessageData data) where T : class, IServerMessageBase

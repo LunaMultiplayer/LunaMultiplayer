@@ -21,6 +21,8 @@ namespace Server
 {
     public class MainServer
     {
+        public static readonly TaskFactory LongRunTaskFactory = new TaskFactory(TaskCreationOptions.LongRunning, TaskContinuationOptions.None);
+
         private static readonly ManualResetEvent QuitEvent = new ManualResetEvent(false);
 
         private static readonly WinExitSignal ExitSignal = Common.PlatformIsWindows() ? new WinExitSignal() : null;
@@ -76,20 +78,21 @@ namespace Server
                 ServerContext.ServerRunning = true;
                 ServerContext.LidgrenServer.SetupLidgrenServer();
 
-                Task.Run(() => new CommandHandler().ThreadMain());
-                Task.Run(() => new ClientMainThread().ThreadMain());
+                LongRunTaskFactory.StartNew(() => new CommandHandler().ThreadMain());
+                LongRunTaskFactory.StartNew(() => new ClientMainThread().ThreadMain());
 
-                Task.Run(() => VesselStoreSystem.BackupVesselsThread());
-                Task.Run(() => ServerContext.LidgrenServer.StartReceiveingMessages());
-                Task.Run(() => ServerContext.LidgrenServer.RefreshMasterServersList());
-                Task.Run(() => ServerContext.LidgrenServer.RegisterWithMasterServer());
-                Task.Run(() => LogThread.RunLogThread());
+                LongRunTaskFactory.StartNew(VesselStoreSystem.BackupVesselsThread);
+                LongRunTaskFactory.StartNew(ServerContext.LidgrenServer.StartReceiveingMessages);
+                LongRunTaskFactory.StartNew(ServerContext.LidgrenServer.RefreshMasterServersList);
+                LongRunTaskFactory.StartNew(ServerContext.LidgrenServer.RegisterWithMasterServer);
+                LongRunTaskFactory.StartNew(LogThread.RunLogThread);
 
-                Task.Run(() => VesselRelaySystem.RelayOldVesselMessages());
-                Task.Run(() => VesselUpdateRelaySystem.RelayToFarPlayers());
-                Task.Run(() => VesselUpdateRelaySystem.RelayToMediumDistancePlayers());
-                Task.Run(() => VesselUpdateRelaySystem.RelayToClosePlayers());
-                Task.Run(() => VersionChecker.CheckForNewVersions());
+                LongRunTaskFactory.StartNew(VesselRelaySystem.RelayOldVesselMessages);
+                LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToFarPlayers);
+                LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToMediumDistancePlayers);
+                LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToClosePlayers);
+                LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersion);
+                LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsg);
 
                 while (ServerContext.ServerStarting)
                     Thread.Sleep(500);
