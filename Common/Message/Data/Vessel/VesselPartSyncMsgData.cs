@@ -12,6 +12,7 @@ namespace LunaCommon.Message.Data.Vessel
         public Guid VesselId;
         public uint PartFlightId;
         public string ModuleName;
+        public string BaseModuleName;
         public string FieldName;
         public string Value;
 
@@ -26,6 +27,7 @@ namespace LunaCommon.Message.Data.Vessel
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(PartFlightId);
             lidgrenMsg.Write(ModuleName);
+            lidgrenMsg.Write(BaseModuleName);
             lidgrenMsg.Write(FieldName);
             lidgrenMsg.Write(Value);
         }
@@ -37,13 +39,14 @@ namespace LunaCommon.Message.Data.Vessel
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
             PartFlightId = lidgrenMsg.ReadUInt32();
             ModuleName = lidgrenMsg.ReadString();
+            BaseModuleName = lidgrenMsg.ReadString();
             FieldName = lidgrenMsg.ReadString();
             Value = lidgrenMsg.ReadString();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(uint) + ModuleName.GetByteCount() + FieldName.GetByteCount() + Value.GetByteCount();
+            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(uint) + ModuleName.GetByteCount() + BaseModuleName.GetByteCount() + FieldName.GetByteCount() + Value.GetByteCount();
         }
     }
 }

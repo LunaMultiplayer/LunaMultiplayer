@@ -16,12 +16,13 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg));
         }
 
-        public void SendVesselPartSyncMsg(Guid vesselId, uint partFlightId, string moduleName, string fieldName, string value)
+        public void SendVesselPartSyncMsg(Guid vesselId, uint partFlightId, string moduleName, string baseModuleName, string fieldName, string value)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselPartSyncMsgData>();
             msgData.VesselId = vesselId;
             msgData.PartFlightId = partFlightId;
             msgData.ModuleName = moduleName;
+            msgData.BaseModuleName = baseModuleName;
             msgData.FieldName = fieldName;
             msgData.Value = value;
 

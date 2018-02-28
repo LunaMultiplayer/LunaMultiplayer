@@ -37,16 +37,16 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                 if (module != null)
                 {
                     module.moduleValues.SetValue(msgData.FieldName, msgData.Value);
-                    UpdateVesselModuleIfNeeded(protoVessel.vesselID, part.flightID, msgData.FieldName, module, part);
+                    UpdateVesselModuleIfNeeded(protoVessel.vesselID, part.flightID, msgData, module, part);
                 }
             }
         }
 
-        private static void UpdateVesselModuleIfNeeded(Guid vesselId, uint partFlightId, string fieldName, ProtoPartModuleSnapshot module, ProtoPartSnapshot part)
+        private static void UpdateVesselModuleIfNeeded(Guid vesselId, uint partFlightId, VesselPartSyncMsgData msgData, ProtoPartModuleSnapshot module, ProtoPartSnapshot part)
         {
             if (module.moduleRef == null) return;
 
-            switch (CustomizationsHandler.SkipModule(vesselId, partFlightId, module.moduleName, fieldName, true, out var customization))
+            switch (CustomizationsHandler.SkipModule(vesselId, partFlightId, msgData.BaseModuleName, msgData.FieldName, true, out var customization))
             {
                 case CustomizationResult.TooEarly:
                 case CustomizationResult.Ignore:

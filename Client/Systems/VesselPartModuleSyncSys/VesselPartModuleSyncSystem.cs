@@ -75,13 +75,13 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                     var module = part.Modules[j];
                     if (FieldModuleStore.InheritanceTypeChain.TryGetValue(module.moduleName, out var inheritChain))
                     {
-                        foreach (var moduleName in inheritChain)
+                        foreach (var baseModuleName in inheritChain)
                         {
-                            if (FieldModuleStore.ModuleFieldsDictionary.TryGetValue(moduleName, out var definition))
+                            if (FieldModuleStore.ModuleFieldsDictionary.TryGetValue(baseModuleName, out var definition))
                             {
                                 foreach (var fieldInfo in definition.PersistentModuleField)
                                 {
-                                    var customizationResult = CustomizationsHandler.SkipModule(vessel.id, part.flightID, moduleName, fieldInfo.Name, false, out _);
+                                    var customizationResult = CustomizationsHandler.SkipModule(vessel.id, part.flightID, baseModuleName, fieldInfo.Name, false, out _);
 
                                     var fieldVal = fieldInfo.Name == "fsm" ? (fieldInfo.GetValue(module) as KerbalFSM)?.currentStateName : 
                                         fieldInfo.GetValue(module).ToInvariantString();
@@ -99,9 +99,9 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                                                 break;
                                             case CustomizationResult.Ok:
                                                 module.snapshot?.moduleValues?.SetValue(fieldInfo.Name, fieldVal);
-                                                LunaLog.Log($"Detected a part module change. FlightId: {part.flightID} PartName: {part.name} Module: {moduleName} " +
+                                                LunaLog.Log($"Detected a part module change. FlightId: {part.flightID} PartName: {part.name} Module: {module.moduleName} BaseModule: {baseModuleName} " +
                                                             $"Field: {fieldInfo.Name} ValueBefore: {snapshotVal} ValueNow: {fieldVal}");
-                                                MessageSender.SendVesselPartSyncMsg(vessel.id, part.flightID, moduleName, fieldInfo.Name, fieldVal);
+                                                MessageSender.SendVesselPartSyncMsg(vessel.id, part.flightID, module.moduleName, baseModuleName, fieldInfo.Name, fieldVal);
                                                 break;
                                         }
                                     }
