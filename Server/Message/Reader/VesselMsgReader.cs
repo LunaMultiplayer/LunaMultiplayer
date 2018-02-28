@@ -133,7 +133,13 @@ namespace Server.Message.Reader
         {
             var msgData = (VesselSyncMsgData) message;
 
-            var vesselsToSend = VesselStoreSystem.CurrentVesselsInXmlFormat.Keys.Except(msgData.VesselIds).ToArray();
+            var allVessels = VesselStoreSystem.CurrentVesselsInXmlFormat.Keys.ToList();
+            for (var i = 0; i < msgData.VesselsCount; i++)
+            {
+                allVessels.Remove(msgData.VesselIds[i]);
+            }
+
+            var vesselsToSend = allVessels;
             foreach (var vesselId in vesselsToSend)
             {
                 var vesselData = VesselStoreSystem.GetVesselInConfigNodeFormat(vesselId);
@@ -148,8 +154,8 @@ namespace Server.Message.Reader
                 }
             }
 
-            if (vesselsToSend.Length > 0)
-                LunaLog.Debug($"Sending {client.PlayerName} {vesselsToSend.Length} vessels");
+            if (allVessels.Count > 0)
+                LunaLog.Debug($"Sending {client.PlayerName} {vesselsToSend.Count} vessels");
         }
     }
 }
