@@ -4,15 +4,14 @@ using Server.Command.CombinedCommand;
 using Server.Context;
 using Server.Log;
 using Server.Settings;
-using Server.System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
-namespace Server.Message.ReceiveHandlers
+namespace Server.System
 {
-    public partial class HandshakeHandler
+    public partial class HandshakeSystem
     {
         private bool CheckUsernameLength(ClientStructure client, string username)
         {

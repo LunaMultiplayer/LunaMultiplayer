@@ -1,20 +1,20 @@
-﻿using System;
-using LunaCommon.Message.Data.CraftLibrary;
+﻿using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Server.Client;
 using Server.Message.Reader.Base;
-using Server.Message.ReceiveHandlers;
+using Server.System;
+using System;
 
 namespace Server.Message.Reader
 {
     public class CraftLibraryMsgReader : ReaderBase
     {
-        private static readonly CraftLibraryHandler CraftLibraryHandler = new CraftLibraryHandler();
+        private static readonly CraftLibrarySystem CraftLibraryHandler = new CraftLibrarySystem();
 
-        public override void HandleMessage(ClientStructure client, IMessageData message)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var data = (CraftLibraryBaseMsgData)message;
+            var data = (CraftLibraryBaseMsgData)message.Data;
             if (data.PlayerName != client.PlayerName) return;
 
             switch (data.CraftMessageType)
@@ -29,16 +29,9 @@ namespace Server.Message.Reader
                     CraftLibraryHandler.HandleDeleteFileMessage(client, (CraftLibraryDeleteMsgData)message);
                     break;
                 case CraftMessageType.ListRequest:
-                    CraftLibraryHandler.SendCraftList(client);
-                    break;
-                case CraftMessageType.ListReply:
-                    //Do not handle this
-                    break;
-                case CraftMessageType.RespondFile:
-                    //Do not handle this
-                    break;
-                case CraftMessageType.AddFile:
-                    //Do not handle this
+                    //We don't use this message anymore so we can recycle it
+                    message.Recycle();
+                    CraftLibrarySystem.SendCraftList(client);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -4,14 +4,13 @@ using Server.Client;
 using Server.Context;
 using Server.Log;
 using Server.Server;
-using Server.System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace Server.Message.ReceiveHandlers
+namespace Server.System
 {
-    public class CraftLibraryHandler
+    public class CraftLibrarySystem
     {
         public static void SendCraftList(ClientStructure client)
         {

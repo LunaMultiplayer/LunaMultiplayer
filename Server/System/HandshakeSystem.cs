@@ -7,12 +7,11 @@ using Server.Context;
 using Server.Log;
 using Server.Plugin;
 using Server.Server;
-using Server.System;
 using System;
 
-namespace Server.Message.ReceiveHandlers
+namespace Server.System
 {
-    public partial class HandshakeHandler
+    public partial class HandshakeSystem
     {
         private string Reason { get; set; }
 

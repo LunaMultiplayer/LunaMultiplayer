@@ -1,28 +1,30 @@
-﻿using System;
-using LunaCommon.Message.Data.Kerbal;
+﻿using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Server.Client;
 using Server.Message.Reader.Base;
 using Server.System;
+using System;
 
 namespace Server.Message.Reader
 {
     public class KerbalMsgReader : ReaderBase
     {
-        public override void HandleMessage(ClientStructure client, IMessageData messageData)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var message = messageData as KerbalBaseMsgData;
-            switch (message?.KerbalMessageType)
+            var messageData = message.Data as KerbalBaseMsgData;
+            switch (messageData?.KerbalMessageType)
             {
                 case KerbalMessageType.Request:
                     KerbalSystem.HandleKerbalsRequest(client);
+                    //We don't use this message anymore so we can recycle it
+                    message.Recycle();
                     break;
                 case KerbalMessageType.Proto:
-                    KerbalSystem.HandleKerbalProto(client, (KerbalProtoMsgData)message);
+                    KerbalSystem.HandleKerbalProto(client, (KerbalProtoMsgData)messageData);
                     break;
                 case KerbalMessageType.Remove:
-                    KerbalSystem.HandleKerbalRemove(client, (KerbalRemoveMsgData)message);
+                    KerbalSystem.HandleKerbalRemove(client, (KerbalRemoveMsgData)messageData);
 
                     break;
                 default:

@@ -70,7 +70,7 @@ namespace Server.Server
             }
 
             //Handle the message
-            HandlerDictionary[message.MessageType].HandleMessage(client, message.Data);
+            HandlerDictionary[message.MessageType].HandleMessage(client, message);
         }
 
         private static IClientMessageBase DeserializeMessage(NetIncomingMessage msg)

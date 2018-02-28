@@ -10,9 +10,9 @@ namespace Server.Message.Reader
 {
     public class ModDataMsgReader : ReaderBase
     {
-        public override void HandleMessage(ClientStructure client, IMessageData message)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var data = (ModMsgData) message;
+            var data = (ModMsgData)message.Data;
             if (data.Relay)
                 MessageQueuer.RelayMessage<ModSrvMsg>(client, data);
             LmpModInterface.OnModMessageReceived(client, data.ModName, data.Data, data.NumBytes);

@@ -18,42 +18,43 @@ namespace Server.Message.Reader
 {
     public class VesselMsgReader : ReaderBase
     {
-        public override void HandleMessage(ClientStructure client, IMessageData messageData)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var message = messageData as VesselBaseMsgData;
-            switch (message?.VesselMessageType)
+            var messageData = message.Data as VesselBaseMsgData;
+            switch (messageData?.VesselMessageType)
             {
                 case VesselMessageType.Sync:
-                    HandleVesselsSync(client, message);
+                    HandleVesselsSync(client, messageData);
+                    message.Recycle();
                     break;
                 case VesselMessageType.Proto:
-                    HandleVesselProto(client, message);
+                    HandleVesselProto(client, messageData);
                     break;
                 case VesselMessageType.Dock:
-                    HandleVesselDock(client, message);
+                    HandleVesselDock(client, messageData);
                     break;
                 case VesselMessageType.Remove:
-                    HandleVesselRemove(client, message);
+                    HandleVesselRemove(client, messageData);
                     break;
                 case VesselMessageType.Position:
-                    VesselRelaySystem.HandleVesselMessage(client, message);
+                    VesselRelaySystem.HandleVesselMessage(client, messageData);
                     if (!GeneralSettings.SettingsStore.ShowVesselsInThePast || client.Subspace == WarpContext.LatestSubspace)
-                        VesselDataUpdater.WritePositionDataToFile(message);
+                        VesselDataUpdater.WritePositionDataToFile(messageData);
                     break;
                 case VesselMessageType.Flightstate:
-                    VesselRelaySystem.HandleVesselMessage(client, message);
+                    VesselRelaySystem.HandleVesselMessage(client, messageData);
                     break;
                 case VesselMessageType.Update:
-                    VesselDataUpdater.WriteUpdateDataToFile(message);
-                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
+                    VesselDataUpdater.WriteUpdateDataToFile(messageData);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
                 case VesselMessageType.Resource:
-                    VesselDataUpdater.WriteResourceDataToFile(message);
-                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
+                    VesselDataUpdater.WriteResourceDataToFile(messageData);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
                 case VesselMessageType.PartSync:
-                    VesselDataUpdater.WriteModuleDataToFile(message);
-                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, message);
+                    VesselDataUpdater.WriteModuleDataToFile(messageData);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     break;
                 default:
                     throw new NotImplementedException("Vessel message type not implemented");

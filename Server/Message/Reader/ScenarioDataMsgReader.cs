@@ -15,16 +15,16 @@ namespace Server.Message.Reader
 {
     public class ScenarioDataMsgReader : ReaderBase
     {
-        public override void HandleMessage(ClientStructure client, IMessageData messageData)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var message = messageData as ScenarioBaseMsgData;
-            switch (message?.ScenarioMessageType)
+            var messageData = message.Data as ScenarioBaseMsgData;
+            switch (messageData?.ScenarioMessageType)
             {
                 case ScenarioMessageType.Request:
                     SendScenarioModules(client);
                     break;
                 case ScenarioMessageType.Data:
-                    var data = (ScenarioDataMsgData)message;
+                    var data = (ScenarioDataMsgData)messageData;
                     LunaLog.Debug($"Saving {data.ScenarioCount} scenario modules from {client.PlayerName}");
                     for (var i = 0; i < data.ScenarioCount; i++)
                     {
@@ -33,6 +33,9 @@ namespace Server.Message.Reader
                     }
                     break;
             }
+
+            //We don't use this message anymore so we can recycle it
+            message.Recycle();
         }
 
         private static void SendScenarioModules(ClientStructure client)

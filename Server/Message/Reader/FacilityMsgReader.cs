@@ -12,13 +12,13 @@ namespace Server.Message.Reader
 {
     public class FacilityMsgReader : ReaderBase
     {
-        public override void HandleMessage(ClientStructure client, IMessageData messageData)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var baseMsg = (FacilityBaseMsgData)messageData;
+            var baseMsg = (FacilityBaseMsgData)message.Data;
             switch (baseMsg.FacilityMessageType)
             {
                 case FacilityMessageType.Upgrade:
-                    var upgradeMsg = (FacilityUpgradeMsgData)messageData;
+                    var upgradeMsg = (FacilityUpgradeMsgData)message.Data;
                     LunaLog.Normal($"{client.PlayerName} UPGRADED facility {upgradeMsg.ObjectId} to level: {upgradeMsg.Level}");
                     break;
                 case FacilityMessageType.Repair:
@@ -32,7 +32,7 @@ namespace Server.Message.Reader
             }
 
             //We don't do anything on the server side with this messages so just relay them.
-            MessageQueuer.RelayMessage<FacilitySrvMsg>(client, messageData);
+            MessageQueuer.RelayMessage<FacilitySrvMsg>(client, message.Data);
         }
     }
 }

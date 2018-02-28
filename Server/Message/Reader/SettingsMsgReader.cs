@@ -12,8 +12,11 @@ namespace Server.Message.Reader
 {
     public class SettingsMsgReader : ReaderBase
     {
-        public override void HandleMessage(ClientStructure client, IMessageData message)
-        {
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
+        {                    
+            //We don't use this message anymore so we can recycle it
+            message.Recycle();
+
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<SettingsReplyMsgData>();
             msgData.WarpMode = GeneralSettings.SettingsStore.WarpMode;
             msgData.GameMode = GeneralSettings.SettingsStore.GameMode;

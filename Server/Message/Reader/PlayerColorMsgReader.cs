@@ -12,16 +12,19 @@ namespace Server.Message.Reader
 {
     public class PlayerColorMsgReader : ReaderBase
     {
-        public override void HandleMessage(ClientStructure client, IMessageData messageData)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var message = messageData as PlayerColorBaseMsgData;
-            switch (message?.PlayerColorMessageType)
+            var messageData = message.Data as PlayerColorBaseMsgData;
+            switch (messageData?.PlayerColorMessageType)
             {
                 case PlayerColorMessageType.Request:
                     SendAllPlayerColors(client);
+
+                    //We don't use this message anymore so we can recycle it
+                    message.Recycle();
                     break;
                 case PlayerColorMessageType.Set:
-                    var data = (PlayerColorSetMsgData)message;
+                    var data = (PlayerColorSetMsgData)messageData;
                     if (data.PlayerColor.PlayerName != client.PlayerName) return;
 
                     client.PlayerColor = data.PlayerColor.Color;

@@ -7,7 +7,6 @@ using Server.Client;
 using Server.Context;
 using Server.Log;
 using Server.Message.Reader.Base;
-using Server.Message.ReceiveHandlers;
 using Server.Server;
 using Server.System;
 using System;
@@ -16,18 +15,18 @@ namespace Server.Message.Reader
 {
     public class HandshakeMsgReader : ReaderBase
     {
-        private static readonly HandshakeHandler HandshakeHandler = new HandshakeHandler();
+        private static readonly HandshakeSystem HandshakeHandler = new HandshakeSystem();
 
-        public override void HandleMessage(ClientStructure client, IMessageData messageData)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var message = messageData as HandshakeBaseMsgData;
-            switch (message?.HandshakeMessageType)
+            var messageData = message.Data as HandshakeBaseMsgData;
+            switch (messageData?.HandshakeMessageType)
             {
                 case HandshakeMessageType.Request:
                     SetAndSendHandshakeChallangeMessage(client);
                     break;
                 case HandshakeMessageType.Response:
-                    var data = (HandshakeResponseMsgData)message;
+                    var data = (HandshakeResponseMsgData)messageData;
                     try
                     {
                         HandshakeHandler.HandleHandshakeResponse(client, data);
@@ -39,8 +38,11 @@ namespace Server.Message.Reader
                     }
                     break;
                 default:
-                    throw new NotImplementedException("Warp Type not implemented");
+                    throw new NotImplementedException("Handshake type not implemented");
             }
+
+            //We don't use this message so we can recycle it
+            message.Recycle();
         }
 
         private static void SetAndSendHandshakeChallangeMessage(ClientStructure client)

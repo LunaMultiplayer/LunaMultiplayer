@@ -12,16 +12,18 @@ namespace Server.Message.Reader
 {
     public class PlayerStatusMsgReader : ReaderBase
     {
-        public override void HandleMessage(ClientStructure client, IMessageData messageData)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var message = messageData as PlayerStatusBaseMsgData;
-            switch (message?.PlayerStatusMessageType)
+            var messageData = message.Data as PlayerStatusBaseMsgData;
+            switch (messageData?.PlayerStatusMessageType)
             {
                 case PlayerStatusMessageType.Request:
                     SendOtherPlayerStatusesToNewPlayer(client);
+                    //We don't use this message anymore so we can recycle it
+                    message.Recycle();
                     break;
                 case PlayerStatusMessageType.Set:
-                    var data = (PlayerStatusSetMsgData)message;
+                    var data = (PlayerStatusSetMsgData)messageData;
                     if (data.PlayerStatus.PlayerName != client.PlayerName) return;
 
                     client.PlayerStatus.VesselText = data.PlayerStatus.VesselText;

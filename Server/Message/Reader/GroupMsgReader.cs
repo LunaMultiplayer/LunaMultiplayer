@@ -13,16 +13,20 @@ namespace Server.Message.Reader
 {
     public class GroupMsgReader : ReaderBase
     {
-        public override void HandleMessage(ClientStructure client, IMessageData messageData)
+        public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var data = (GroupBaseMsgData)messageData;
+            var data = (GroupBaseMsgData)message.Data;
             switch (data.GroupMessageType)
             {
                 case GroupMessageType.ListRequest:
+
                     var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<GroupListResponseMsgData>();
                     msgData.Groups = GroupSystem.Groups.Values.ToArray();
                     msgData.GroupsCount = msgData.Groups.Length;
                     MessageQueuer.SendToClient<GroupSrvMsg>(client, msgData);
+
+                    //We don't use this message anymore so we can recycle it
+                    message.Recycle();
                     break;
                 case GroupMessageType.CreateGroup:
                     GroupSystem.CreateGroup(client.PlayerName, ((GroupCreateMsgData) data).GroupName);
