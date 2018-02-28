@@ -8,15 +8,11 @@ using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using System;
 using System.Linq;
-using System.Reflection;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
     public class VesselProtoEvents : SubSystem<VesselProtoSystem>
     {
-        private static readonly MethodInfo SetupFsm = typeof(KerbalEVA).GetMethod("SetupFSM", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly FieldInfo PropellantResourceFld = typeof(KerbalEVA).GetField("propellantResource", BindingFlags.NonPublic | BindingFlags.Instance);
-
         /// <summary>
         /// Sends our vessel just when we start the flight
         /// </summary>

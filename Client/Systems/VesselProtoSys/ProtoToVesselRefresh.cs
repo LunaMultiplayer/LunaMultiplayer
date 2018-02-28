@@ -2,7 +2,6 @@
 using LunaClient.VesselUtilities;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace LunaClient.Systems.VesselProtoSys
 {
@@ -11,9 +10,6 @@ namespace LunaClient.Systems.VesselProtoSys
     /// </summary>
     public static class ProtoToVesselRefresh
     {
-        private static FieldInfo StateField { get; } = typeof(Part).GetField("state", BindingFlags.Instance | BindingFlags.NonPublic);
-        private static FieldInfo FsmField { get; } = typeof(ModuleProceduralFairing).GetField("fsm", BindingFlags.Instance | BindingFlags.NonPublic);
-
         private static readonly List<ProtoCrewMember> MembersToAdd = new List<ProtoCrewMember>();
         private static readonly List<string> MembersToRemove = new List<string>();
 
