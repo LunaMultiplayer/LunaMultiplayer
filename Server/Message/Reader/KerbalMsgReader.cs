@@ -12,8 +12,8 @@ namespace Server.Message.Reader
     {
         public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var messageData = message.Data as KerbalBaseMsgData;
-            switch (messageData?.KerbalMessageType)
+            var data = message.Data as KerbalBaseMsgData;
+            switch (data?.KerbalMessageType)
             {
                 case KerbalMessageType.Request:
                     KerbalSystem.HandleKerbalsRequest(client);
@@ -21,10 +21,10 @@ namespace Server.Message.Reader
                     message.Recycle();
                     break;
                 case KerbalMessageType.Proto:
-                    KerbalSystem.HandleKerbalProto(client, (KerbalProtoMsgData)messageData);
+                    KerbalSystem.HandleKerbalProto(client, (KerbalProtoMsgData)data);
                     break;
                 case KerbalMessageType.Remove:
-                    KerbalSystem.HandleKerbalRemove(client, (KerbalRemoveMsgData)messageData);
+                    KerbalSystem.HandleKerbalRemove(client, (KerbalRemoveMsgData)data);
 
                     break;
                 default:

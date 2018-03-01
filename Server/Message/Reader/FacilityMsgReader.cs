@@ -14,18 +14,18 @@ namespace Server.Message.Reader
     {
         public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var baseMsg = (FacilityBaseMsgData)message.Data;
-            switch (baseMsg.FacilityMessageType)
+            var data = (FacilityBaseMsgData)message.Data;
+            switch (data.FacilityMessageType)
             {
                 case FacilityMessageType.Upgrade:
                     var upgradeMsg = (FacilityUpgradeMsgData)message.Data;
                     LunaLog.Normal($"{client.PlayerName} UPGRADED facility {upgradeMsg.ObjectId} to level: {upgradeMsg.Level}");
                     break;
                 case FacilityMessageType.Repair:
-                    LunaLog.Normal($"{client.PlayerName} REPAIRED facility {baseMsg.ObjectId}");
+                    LunaLog.Normal($"{client.PlayerName} REPAIRED facility {data.ObjectId}");
                     break;
                 case FacilityMessageType.Collapse:
-                    LunaLog.Normal($"{client.PlayerName} DESTROYED facility {baseMsg.ObjectId}");
+                    LunaLog.Normal($"{client.PlayerName} DESTROYED facility {data.ObjectId}");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -25,19 +25,19 @@ namespace Server.Message.Reader
                     message.Recycle();
                     break;
                 case ChatMessageType.Join:
-                    ChatSystemReceiver.HandleJoinMessage(client, (ChatJoinMsgData)message);
+                    ChatSystemReceiver.HandleJoinMessage(client, (ChatJoinMsgData)data);
                     break;
                 case ChatMessageType.Leave:
-                    ChatSystemReceiver.HandleLeaveMessage(client, (ChatLeaveMsgData)message);
+                    ChatSystemReceiver.HandleLeaveMessage(client, (ChatLeaveMsgData)data);
                     break;
                 case ChatMessageType.ChannelMessage:
-                    ChatSystemReceiver.HandleChannelMessage(client, (ChatChannelMsgData)message);
+                    ChatSystemReceiver.HandleChannelMessage(client, (ChatChannelMsgData)data);
                     break;
                 case ChatMessageType.PrivateMessage:
-                    ChatSystemReceiver.HandlePrivateMessage(client, (ChatPrivateMsgData)message);
+                    ChatSystemReceiver.HandlePrivateMessage(client, (ChatPrivateMsgData)data);
                     break;
                 case ChatMessageType.ConsoleMessage:
-                    ChatSystemReceiver.HandleConsoleMessage(client, (ChatConsoleMsgData)message);
+                    ChatSystemReceiver.HandleConsoleMessage(client, (ChatConsoleMsgData)data);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

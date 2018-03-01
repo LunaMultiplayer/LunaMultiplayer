@@ -21,10 +21,10 @@ namespace Server.Message.Reader
                     message.Recycle();
                     break;
                 case FlagMessageType.FlagDelete:
-                    FlagSyncMsgSender.HandleFlagDeleteMessage(client, (FlagDeleteMsgData)message);
+                    FlagSyncMsgSender.HandleFlagDeleteMessage(client, (FlagDeleteMsgData)data);
                     break;
                 case FlagMessageType.FlagData:
-                    FlagSyncMsgSender.HandleFlagDataMessage(client, (FlagDataMsgData)message);
+                    FlagSyncMsgSender.HandleFlagDataMessage(client, (FlagDataMsgData)data);
                     break;
             }
         }

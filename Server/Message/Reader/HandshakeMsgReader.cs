@@ -19,21 +19,20 @@ namespace Server.Message.Reader
 
         public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
-            var messageData = message.Data as HandshakeBaseMsgData;
-            switch (messageData?.HandshakeMessageType)
+            var data = message.Data as HandshakeBaseMsgData;
+            switch (data?.HandshakeMessageType)
             {
                 case HandshakeMessageType.Request:
                     SetAndSendHandshakeChallangeMessage(client);
                     break;
                 case HandshakeMessageType.Response:
-                    var data = (HandshakeResponseMsgData)messageData;
                     try
                     {
-                        HandshakeHandler.HandleHandshakeResponse(client, data);
+                        HandshakeHandler.HandleHandshakeResponse(client, (HandshakeResponseMsgData)data);
                     }
                     catch (Exception e)
                     {
-                        LunaLog.Debug($"Error in HANDSHAKE_REQUEST from {data.PlayerName}: {e}");
+                        LunaLog.Debug($"Error in HANDSHAKE_REQUEST from {((HandshakeResponseMsgData)data).PlayerName}: {e}");
                         HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.MalformedHandshake, "Malformed handshake");
                     }
                     break;
