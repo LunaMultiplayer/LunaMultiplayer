@@ -31,7 +31,8 @@ namespace Server.Message.Reader
                     ChatSystemReceiver.HandleLeaveMessage(client, (ChatLeaveMsgData)message);
                     break;
                 case ChatMessageType.ChannelMessage:
-                    ChatSystemReceiver.HandleChannelMessage(client, (ChatChannelMsgData)message);
+                    //TODO: Is the fix from message to data correct?  If so, do any of the other cases need to change?  This fix was done as a quick fix to stop the message error because message is a ChatCliMsg but data is a ChatChannelMsgData.
+                    ChatSystemReceiver.HandleChannelMessage(client, (ChatChannelMsgData)data);
                     break;
                 case ChatMessageType.PrivateMessage:
                     ChatSystemReceiver.HandlePrivateMessage(client, (ChatPrivateMsgData)message);
