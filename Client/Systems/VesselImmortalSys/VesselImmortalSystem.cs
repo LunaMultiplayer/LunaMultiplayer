@@ -34,8 +34,8 @@ namespace LunaClient.Systems.VesselImmortalSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, UpdateOwnedAndOtherPeopleVesselList));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, MakeOtherPlayerVesselsImmortal));
+            SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, UpdateOwnedAndOtherPeopleVesselList));
         }
 
         protected override void OnDisabled()
@@ -72,9 +72,7 @@ namespace LunaClient.Systems.VesselImmortalSys
                     .Where(v=> !VesselRemoveSystem.Singleton.VesselWillBeKilled(v)));
 
                 OwnedVessels.Clear();
-                OwnedVessels.AddRange(OwnedVesselIds
-                    .Select(FlightGlobals.FindVessel)
-                    .Where(v => v != null));
+                OwnedVessels.AddRange(OwnedVesselIds.Select(FlightGlobals.FindVessel));
 
                 OtherPeopleVessels.Clear();
                 OtherPeopleVessels.AddRange(LockSystem.LockQuery.GetAllControlLocks()
@@ -82,8 +80,7 @@ namespace LunaClient.Systems.VesselImmortalSys
                     .Select(l => l.VesselId)
                     .Except(OwnedVesselIds)
                     .Where(v => !VesselRemoveSystem.Singleton.VesselWillBeKilled(v))
-                    .Select(FlightGlobals.FindVessel)
-                    .Where(v => v != null));
+                    .Select(FlightGlobals.FindVessel));
             }
         }
 
@@ -104,8 +101,8 @@ namespace LunaClient.Systems.VesselImmortalSys
                     SetVesselImmortalState(vessel, true);
                 }
 
-                if(FlightGlobals.ActiveVessel != null) //If we are spectating set our own vessel as immortal
-                    SetVesselImmortalState(FlightGlobals.ActiveVessel, VesselCommon.IsSpectating);
+                //If we are spectating set our own vessel as immortal
+                SetVesselImmortalState(FlightGlobals.ActiveVessel, VesselCommon.IsSpectating);
             }
         }
 
@@ -118,6 +115,8 @@ namespace LunaClient.Systems.VesselImmortalSys
         /// </summary>
         private static void SetVesselImmortalState(Vessel vessel, bool immortal)
         {
+            if (vessel == null) return;
+
             foreach (var part in vessel.Parts.Where(p => p.attachJoint != null))
             {
                 part.attachJoint.SetUnbreakable(immortal, part.rigidAttachment);
