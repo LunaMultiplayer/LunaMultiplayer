@@ -31,26 +31,26 @@ namespace LunaClient.Base
             }
             else
             {
-                TaskFactory.StartNew(() =>
-                {
-                    HandleMessage(msg);
-                    msg.Recycle();
-                });
+                TaskFactory.StartNew(()=> HandleMessage(msg));
             }
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
+
             //Clear the message queue on disabling
-            MessageHandler.IncomingMessages = new ConcurrentQueue<IServerMessageBase>();
+            if (ProcessMessagesInUnityThread)
+                MessageHandler.IncomingMessages = new ConcurrentQueue<IServerMessageBase>();
         }
 
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            
             //During the update we receive and handle all received messages
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ReadAndHandleAllReceivedMessages));
+            if (ProcessMessagesInUnityThread)
+                SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ReadAndHandleAllReceivedMessages));
         }
 
         /// <summary>
@@ -58,13 +58,9 @@ namespace LunaClient.Base
         /// </summary>
         private void ReadAndHandleAllReceivedMessages()
         {
-            if (!ProcessMessagesInUnityThread)
-                return;
-
             while (MessageHandler.IncomingMessages.TryDequeue(out var msg))
             {
                 HandleMessage(msg);
-                msg.Recycle();
             }
         }
 
@@ -78,6 +74,10 @@ namespace LunaClient.Base
             {
                 LunaLog.LogError($"[LMP]: Error handling Message type {msg.Data.GetType()}, exception: {e}");
                 NetworkConnection.Disconnect($"Error handling {msg.Data.GetType()} Message");
+            }
+            finally
+            {
+                msg.Recycle();
             }
         }
     }
