@@ -27,16 +27,16 @@
   <CustomModuleDefinition>
     <ModuleName>ModuleEngines</ModuleName>
     <Fields>
-      <!--Current throttle of an engine. Probably its related with the exhaust smoke-->
+      <!--Current throttle of an engine. Probably its related with the exhaust smoke but it changes way too much for syncing it-->
       <CustomFieldDefinition>
         <FieldName>currentThrottle</FieldName>
-        <Ignore>false</Ignore>
+        <Ignore>true</Ignore>
         <!--You will get errors when spectating if you apply this value-->
-        <IgnoreSpectating>true</IgnoreSpectating>
+        <!--<IgnoreSpectating>true</IgnoreSpectating>
         <Interval>1000</Interval>
         <CallOnAwake>false</CallOnAwake>
         <CallOnLoad>false</CallOnLoad>
-        <CallOnStart>false</CallOnStart>
+        <CallOnStart>false</CallOnStart>-->
       </CustomFieldDefinition>
       <CustomFieldDefinition>
         <FieldName>manuallyOverridden</FieldName>
