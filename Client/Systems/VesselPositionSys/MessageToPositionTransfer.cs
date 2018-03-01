@@ -74,6 +74,8 @@ namespace LunaClient.Systems.VesselPositionSys
         
         public static VesselPositionMsgData CreateMessageFromVessel(Vessel vessel)
         {
+            if (!OrbitParametersAreOk(vessel)) return null;
+
             var msgData = SystemBase.MessageFactory.CreateNewMessageData<VesselPositionMsgData>();
             try
             {
@@ -168,5 +170,22 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         #endregion
+
+        /// <summary>
+        /// Checks if the vessel contains NaN in any orbit parameter
+        /// </summary>
+        private static bool OrbitParametersAreOk(Vessel vessel)
+        {
+            var orbitParamsAreNan = double.IsNaN(vessel.orbit.inclination) ||
+                                    double.IsNaN(vessel.orbit.eccentricity) ||
+                                    double.IsNaN(vessel.orbit.semiMajorAxis) ||
+                                    double.IsNaN(vessel.orbit.LAN) ||
+                                    double.IsNaN(vessel.orbit.argumentOfPeriapsis) ||
+                                    double.IsNaN(vessel.orbit.meanAnomalyAtEpoch) ||
+                                    double.IsNaN(vessel.orbit.epoch) ||
+                                    double.IsNaN(vessel.orbit.referenceBody.flightGlobalsIndex);
+
+            return !orbitParamsAreNan;
+        }
     }
 }
