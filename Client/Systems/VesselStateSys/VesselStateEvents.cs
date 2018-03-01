@@ -4,16 +4,18 @@ namespace LunaClient.Systems.VesselStateSys
 {
     public class VesselStateEvents : SubSystem<VesselStateSystem>
     {
-        public void OnVesselOnRails(Vessel data)
+        public void OnVesselOnRails(Vessel vessel)
         {
-            VesselStateSystem.VesselsOnRails.TryAdd(data.id, data);
-            VesselStateSystem.VesselsOffRails.TryRemove(data.id, out _);
+            LunaLog.Log($"Vessel {vessel.id} name {vessel.vesselName} gone ON rails");
+            VesselStateSystem.VesselsOnRails.TryAdd(vessel.id, vessel);
+            VesselStateSystem.VesselsOffRails.TryRemove(vessel.id, out _);
         }
 
-        public void OnVesselOffRails(Vessel data)
+        public void OnVesselOffRails(Vessel vessel)
         {
-            VesselStateSystem.VesselsOnRails.TryRemove(data.id, out _);
-            VesselStateSystem.VesselsOffRails.TryAdd(data.id, data);
+            LunaLog.Log($"Vessel {vessel.id} name {vessel.vesselName} gone OFF rails");
+            VesselStateSystem.VesselsOnRails.TryRemove(vessel.id, out _);
+            VesselStateSystem.VesselsOffRails.TryAdd(vessel.id, vessel);
         }
     }
 }
