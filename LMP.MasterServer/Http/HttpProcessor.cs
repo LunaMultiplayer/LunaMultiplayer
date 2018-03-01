@@ -56,14 +56,24 @@ namespace LMP.MasterServer.Http
                     {
                         HandleGetRequest(outputStream);
                     }
+                    outputStream.Flush();
                 }
                 catch (Exception)
                 {
                     WriteFailure(outputStream);
                 }
-                outputStream.Flush();
-                Socket.Close();
-                Socket.Dispose();
+                finally
+                {
+                    try
+                    {
+                        Socket.Close();
+                        Socket.Dispose();
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
+                    }
+                }
             }
         }
 
