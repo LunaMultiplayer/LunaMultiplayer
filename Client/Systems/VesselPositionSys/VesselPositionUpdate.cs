@@ -186,8 +186,6 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.SetWorldVelocity(curVelocity);
             Vessel.velocityD = curVelocity;
 
-            //Apply rotation
-            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
@@ -218,8 +216,11 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 Vessel.UpdatePosVel();
                 Vessel.precalc.CalculatePhysicsStats(); //This will update the localCom and other variables of the vessel
-                Vessel.SetPosition(Vessel.CoMD);
+                Vessel.SetPosition(Vessel.CoMD, true);
             }
+
+            //Apply rotation at the end of everything as it messes up with positions and so on
+            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
         }
 
         private void ApplyInterpolations(float lerpPercentage)
