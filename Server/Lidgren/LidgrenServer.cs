@@ -46,7 +46,6 @@ namespace Server.Lidgren
 
             Server = new NetServer(ServerContext.Config);
             Server.Start();
-            Server.UPnP.ForwardPort(ServerContext.Config.Port, "LMP Server");
 
             ServerContext.ServerStarting = false;
         }

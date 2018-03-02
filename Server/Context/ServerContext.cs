@@ -43,11 +43,9 @@ namespace Server.Context
             SuppressUnreliableUnorderedAcks = true,
             PingInterval = (float)TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.HearbeatMsInterval).TotalSeconds,
             ConnectionTimeout = (float)TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds,
-            EnableUPnP = true
         };
         
         public static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
-
         public static ServerMessageFactory ServerMessageFactory { get; } = new ServerMessageFactory();
         public static ClientMessageFactory ClientMessageFactory { get; } = new ClientMessageFactory();
 
