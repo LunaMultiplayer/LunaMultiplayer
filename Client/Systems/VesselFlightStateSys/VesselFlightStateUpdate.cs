@@ -82,6 +82,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         public FlightCtrlState GetInterpolatedValue(FlightCtrlState currentFlightState)
         {
+            if (currentFlightState == null) currentFlightState = new FlightCtrlState();
+
             if (_resetStart || Start == null)
             {
                 _resetStart = false;

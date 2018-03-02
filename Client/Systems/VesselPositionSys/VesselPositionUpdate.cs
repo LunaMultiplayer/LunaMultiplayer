@@ -183,12 +183,8 @@ namespace LunaClient.Systems.VesselPositionSys
             var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
             //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped.
-            //Do not do it if we are spectating
-            if (!CurrentlySpectatingThisVessel)
-            {
-                Vessel.SetWorldVelocity(curVelocity);
-                Vessel.velocityD = curVelocity;
-            }
+            Vessel.SetWorldVelocity(curVelocity);
+            Vessel.velocityD = curVelocity;
 
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             Vessel.srfRelRotation = currentSurfaceRelRotation;
