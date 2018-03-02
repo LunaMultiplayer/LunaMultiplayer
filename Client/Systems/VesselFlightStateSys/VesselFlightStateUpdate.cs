@@ -11,12 +11,12 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         public long EndTimeStamp;
         public FlightCtrlState Target;
-        
+
         public float InterpolationDuration => (float)TimeSpan.FromTicks(EndTimeStamp - StartTimeStamp).TotalSeconds;
 
 
         private readonly FlightCtrlState _currentFlightControlState = new FlightCtrlState();
-        
+
         private float _lerpPercentage;
         private bool _resetStart;
 
@@ -90,6 +90,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 Start = currentFlightState;
             }
 
+            if (Target == null) Target = new FlightCtrlState();
+
             _currentFlightControlState.X = Lerp(Start.X, Target.X, Mathf.Clamp01(_lerpPercentage));
             _currentFlightControlState.Y = Lerp(Start.Y, Target.Y, Mathf.Clamp01(_lerpPercentage));
             _currentFlightControlState.Z = Lerp(Start.Z, Target.Z, Mathf.Clamp01(_lerpPercentage));
@@ -109,7 +111,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             _currentFlightControlState.headlight = Lerp(Start.headlight, Target.headlight, Mathf.Clamp01(_lerpPercentage));
             _currentFlightControlState.killRot = Lerp(Start.killRot, Target.killRot, Mathf.Clamp01(_lerpPercentage));
 
-            if(InterpolationDuration > 0)
+            if (InterpolationDuration > 0)
                 _lerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
 
             return _currentFlightControlState;
