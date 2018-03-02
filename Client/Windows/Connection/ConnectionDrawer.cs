@@ -37,6 +37,7 @@ namespace LunaClient.Windows.Connection
                 ServerName = SettingsSystem.CurrentSettings.Servers[Selected].Name;
                 ServerAddress = SettingsSystem.CurrentSettings.Servers[Selected].Address;
                 ServerPort = SettingsSystem.CurrentSettings.Servers[Selected].Port.ToString();
+                Password = SettingsSystem.CurrentSettings.Servers[Selected].Password;
             }
 
             //Draw connect button
