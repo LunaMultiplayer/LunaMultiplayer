@@ -78,7 +78,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             foreach (var keyVal in CurrentVesselUpdate)
             {
-                if(DoVesselChecks(keyVal.Key))
+                if(!DoVesselChecks(keyVal.Key))
                     RemoveVesselFromSystem(keyVal.Key);
 
                 keyVal.Value.ApplyVesselUpdate();
@@ -174,7 +174,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                 return false;
 
-            return false;
+            return true;
         }
 
         /// <summary>
