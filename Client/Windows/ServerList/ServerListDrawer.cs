@@ -53,7 +53,7 @@ namespace LunaClient.Windows.ServerList
 
         private void DrawServerList()
         {
-            GUILayout.BeginHorizontal();
+            GUILayout.BeginHorizontal(BoxStyle);
 
             if (DisplayedServers == null || !DisplayedServers.Any())
             {
@@ -89,7 +89,10 @@ namespace LunaClient.Windows.ServerList
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[1]));
-                    GUILayout.Label(new GUIContent($"{currentEntry.Password}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[1]));
+                    if (currentEntry.Password)
+                        GUILayout.Label(new GUIContent(KeyIcon, "Password"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[1]));
+                    else
+                        GUILayout.Label("", GUILayout.MinWidth(HeaderGridSize[1]));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[2]));
@@ -147,8 +150,8 @@ namespace LunaClient.Windows.ServerList
             if (Event.current.type == EventType.Repaint) HeaderGridSize[0] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Password, ButtonStyle))
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(30));
+            if (GUILayout.Button(KeyIcon, ButtonStyle))
             {
                 DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Password) :
                     DisplayedServers.OrderByDescending(s => s.Password);

@@ -14,6 +14,7 @@ namespace LunaClient.Base
         protected GUIStyle TextAreaStyle;
         protected GUIStyle StatusStyle;
         protected GUIStyle HighlightStyle;
+        protected GUIStyle BoxStyle;
 
         protected GUILayoutOption[] LayoutOptions;
         protected GUILayoutOption[] SmallOption;

@@ -284,6 +284,7 @@
     <Compile Include="Windows\Options\OptionsWindow.cs" />
     <Compile Include="Windows\Status\StatusDrawer.cs" />
     <Compile Include="Windows\Status\StatusWindow.cs" />
+    <Compile Include="Windows\WindowUtil.cs" />
     <Compile Include="Windows\WindowsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
