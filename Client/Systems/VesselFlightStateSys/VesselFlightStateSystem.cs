@@ -204,25 +204,22 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (FlightStatesDictionary.TryGetValue(id, out var value))
             {
-                if (value.CanInterpolate)
+                if (VesselCommon.IsSpectating)
                 {
-                    if (VesselCommon.IsSpectating)
+                    st.CopyFrom(value.GetInterpolatedValue(st));
+                }
+                else
+                {
+                    //If we are close to a vessel and we both are in space don't copy the
+                    //input controls as then the vessel jitters, specially if the other player has SAS on
+                    if (FlightGlobals.ActiveVessel.situation > Vessel.Situations.FLYING)
                     {
-                        st.CopyFrom(value.GetInterpolatedValue());
-                    }
-                    else
-                    {
-                        //If we are close to a vessel and we both are in space don't copy the
-                        //input controls as then the vessel jitters, specially if the other player has SAS on
-                        if (FlightGlobals.ActiveVessel.situation > Vessel.Situations.FLYING)
-                        {
-                            var interpolatedState = value.GetInterpolatedValue();
-                            st.mainThrottle = interpolatedState.mainThrottle;
-                            st.gearDown = interpolatedState.gearDown;
-                            st.gearUp = interpolatedState.gearUp;
-                            st.headlight = interpolatedState.headlight;
-                            st.killRot = interpolatedState.killRot;
-                        }
+                        var interpolatedState = value.GetInterpolatedValue(st);
+                        st.mainThrottle = interpolatedState.mainThrottle;
+                        st.gearDown = interpolatedState.gearDown;
+                        st.gearUp = interpolatedState.gearUp;
+                        st.headlight = interpolatedState.headlight;
+                        st.killRot = interpolatedState.killRot;
                     }
                 }
             }

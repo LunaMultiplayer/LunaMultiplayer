@@ -11,63 +11,47 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         public long EndTimeStamp;
         public FlightCtrlState Target;
-
-        public bool InterpolationFinished => _lerpPercentage >= 1;
+        
         public float InterpolationDuration => (float)TimeSpan.FromTicks(EndTimeStamp - StartTimeStamp).TotalSeconds;
 
 
         private readonly FlightCtrlState _currentFlightControlState = new FlightCtrlState();
         
-        public bool CanInterpolate => Start != null && Target != null;
-
         private float _lerpPercentage;
+        private bool _resetStart;
 
         public void SetTarget(VesselFlightStateMsgData msgData)
         {
-            //If we are in the middle of an interpolation let it finish
-            if (CanInterpolate && !InterpolationFinished) return;
-
-            if (Start == null)
-            {
-                Start = GetFlightCtrlStateFromMsg(msgData);
-                StartTimeStamp = msgData.TimeStamp;
-
-                return;
-            }
+            _resetStart = true;
+            _lerpPercentage = 0;
 
             if (Target == null)
             {
                 Target = GetFlightCtrlStateFromMsg(msgData);
-                EndTimeStamp = msgData.TimeStamp;
-
-                return;
+            }
+            else
+            {
+                Target.mainThrottle = msgData.MainThrottle;
+                Target.wheelThrottleTrim = msgData.WheelThrottleTrim;
+                Target.X = msgData.X;
+                Target.Y = msgData.Y;
+                Target.Z = msgData.Z;
+                Target.killRot = msgData.KillRot;
+                Target.gearUp = msgData.GearUp;
+                Target.gearDown = msgData.GearDown;
+                Target.headlight = msgData.Headlight;
+                Target.wheelThrottle = msgData.WheelThrottle;
+                Target.roll = msgData.Roll;
+                Target.yaw = msgData.Yaw;
+                Target.pitch = msgData.Pitch;
+                Target.rollTrim = msgData.RollTrim;
+                Target.yawTrim = msgData.YawTrim;
+                Target.pitchTrim = msgData.PitchTrim;
+                Target.wheelSteer = msgData.WheelSteer;
+                Target.wheelSteerTrim = msgData.WheelSteerTrim;
             }
 
-            //We've finished the interpolation so...
-            _lerpPercentage = 0;
-
-            Start.CopyFrom(Target);
             StartTimeStamp = EndTimeStamp;
-
-            Target.mainThrottle = msgData.MainThrottle;
-            Target.wheelThrottleTrim = msgData.WheelThrottleTrim;
-            Target.X = msgData.X;
-            Target.Y = msgData.Y;
-            Target.Z = msgData.Z;
-            Target.killRot = msgData.KillRot;
-            Target.gearUp = msgData.GearUp;
-            Target.gearDown = msgData.GearDown;
-            Target.headlight = msgData.Headlight;
-            Target.wheelThrottle = msgData.WheelThrottle;
-            Target.roll = msgData.Roll;
-            Target.yaw = msgData.Yaw;
-            Target.pitch = msgData.Pitch;
-            Target.rollTrim = msgData.RollTrim;
-            Target.yawTrim = msgData.YawTrim;
-            Target.pitchTrim = msgData.PitchTrim;
-            Target.wheelSteer = msgData.WheelSteer;
-            Target.wheelSteerTrim = msgData.WheelSteerTrim;
-
             EndTimeStamp = msgData.TimeStamp;
         }
 
@@ -96,28 +80,36 @@ namespace LunaClient.Systems.VesselFlightStateSys
             };
         }
 
-        public FlightCtrlState GetInterpolatedValue()
+        public FlightCtrlState GetInterpolatedValue(FlightCtrlState currentFlightState)
         {
-            _currentFlightControlState.X = Lerp(Start.X, Target.X, _lerpPercentage);
-            _currentFlightControlState.Y = Lerp(Start.Y, Target.Y, _lerpPercentage);
-            _currentFlightControlState.Z = Lerp(Start.Z, Target.Z, _lerpPercentage);
-            _currentFlightControlState.pitch = Lerp(Start.pitch, Target.pitch, _lerpPercentage);
-            _currentFlightControlState.pitchTrim = Lerp(Start.pitchTrim, Target.pitchTrim, _lerpPercentage);
-            _currentFlightControlState.roll = Lerp(Start.roll, Target.roll, _lerpPercentage);
-            _currentFlightControlState.rollTrim = Lerp(Start.rollTrim, Target.rollTrim, _lerpPercentage);
-            _currentFlightControlState.yaw = Lerp(Start.yaw, Target.yaw, _lerpPercentage);
-            _currentFlightControlState.yawTrim = Lerp(Start.yawTrim, Target.yawTrim, _lerpPercentage);
-            _currentFlightControlState.mainThrottle = Lerp(Start.mainThrottle, Target.mainThrottle, _lerpPercentage);
-            _currentFlightControlState.wheelSteer = Lerp(Start.wheelSteer, Target.wheelSteer, _lerpPercentage);
-            _currentFlightControlState.wheelSteerTrim = Lerp(Start.wheelSteerTrim, Target.wheelSteerTrim, _lerpPercentage);
-            _currentFlightControlState.wheelThrottle = Lerp(Start.wheelThrottle, Target.wheelThrottle, _lerpPercentage);
-            _currentFlightControlState.wheelThrottleTrim = Lerp(Start.wheelThrottleTrim, Target.wheelThrottleTrim, _lerpPercentage);
-            _currentFlightControlState.gearDown = Lerp(Start.gearDown, Target.gearDown, _lerpPercentage);
-            _currentFlightControlState.gearUp = Lerp(Start.gearUp, Target.gearUp, _lerpPercentage);
-            _currentFlightControlState.headlight = Lerp(Start.headlight, Target.headlight, _lerpPercentage);
-            _currentFlightControlState.killRot = Lerp(Start.killRot, Target.killRot, _lerpPercentage);
+            if (_resetStart || Start == null)
+            {
+                _resetStart = false;
+                Start = currentFlightState;
+            }
 
-            _lerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
+            _currentFlightControlState.X = Lerp(Start.X, Target.X, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.Y = Lerp(Start.Y, Target.Y, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.Z = Lerp(Start.Z, Target.Z, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.pitch = Lerp(Start.pitch, Target.pitch, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.pitchTrim = Lerp(Start.pitchTrim, Target.pitchTrim, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.roll = Lerp(Start.roll, Target.roll, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.rollTrim = Lerp(Start.rollTrim, Target.rollTrim, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.yaw = Lerp(Start.yaw, Target.yaw, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.yawTrim = Lerp(Start.yawTrim, Target.yawTrim, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.mainThrottle = Lerp(Start.mainThrottle, Target.mainThrottle, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.wheelSteer = Lerp(Start.wheelSteer, Target.wheelSteer, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.wheelSteerTrim = Lerp(Start.wheelSteerTrim, Target.wheelSteerTrim, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.wheelThrottle = Lerp(Start.wheelThrottle, Target.wheelThrottle, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.wheelThrottleTrim = Lerp(Start.wheelThrottleTrim, Target.wheelThrottleTrim, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.gearDown = Lerp(Start.gearDown, Target.gearDown, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.gearUp = Lerp(Start.gearUp, Target.gearUp, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.headlight = Lerp(Start.headlight, Target.headlight, Mathf.Clamp01(_lerpPercentage));
+            _currentFlightControlState.killRot = Lerp(Start.killRot, Target.killRot, Mathf.Clamp01(_lerpPercentage));
+
+            if(InterpolationDuration > 0)
+                _lerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
+
             return _currentFlightControlState;
         }
 

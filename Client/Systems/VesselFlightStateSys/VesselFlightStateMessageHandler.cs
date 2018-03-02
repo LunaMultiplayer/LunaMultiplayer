@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (!(msg.Data is VesselFlightStateMsgData msgData)) return;
 
-            if (System.FlightStatesDictionary.TryGetValue(msgData.VesselId, out var existingFlightState) && existingFlightState.EndTimeStamp < msgData.TimeStamp)
+            if (System.FlightStatesDictionary.TryGetValue(msgData.VesselId, out var existingFlightState))
             {
                 existingFlightState.SetTarget(msgData);
             }
