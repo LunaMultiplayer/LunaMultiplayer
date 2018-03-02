@@ -214,6 +214,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (CurrentlySpectatingThisVessel)
             {
+                //Do not do this on every vessel as it create issues (the vessel goes inside earth)
                 Vessel.UpdatePosVel();
                 Vessel.precalc.CalculatePhysicsStats(); //This will update the localCom and other variables of the vessel
             }
