@@ -52,6 +52,8 @@ namespace LunaClient.Systems.Scenario
 
         public void LoadMissingScenarioDataIntoGame()
         {
+            //ResourceScenario.Instance.Load();
+
             var validScenarios = KSPScenarioType.GetAllScenarioTypesInAssemblies()
                 .Where(s => !HighLogic.CurrentGame.scenarios.Exists(psm => psm.moduleName == s.ModuleType.Name) && LoadModuleByGameMode(s));
 
@@ -67,7 +69,7 @@ namespace LunaClient.Systems.Scenario
         /// </summary>
         public void SendScenarioModules()
         {
-            if (Enabled && HighLogic.LoadedSceneIsFlight)
+            if (Enabled)
             {
                 try
                 {
