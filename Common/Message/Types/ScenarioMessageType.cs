@@ -3,6 +3,7 @@
     public enum ScenarioMessageType
     {
         Request = 0,
-        Data = 1
+        Data = 1,
+        Proto = 2
     }
 }

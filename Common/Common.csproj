@@ -180,6 +180,7 @@
     <Compile Include="Message\Data\PlayerStatus\PlayerStatusReplyMsgData.cs" />
     <Compile Include="Message\Data\PlayerStatus\PlayerStatusRequestMsgData.cs" />
     <Compile Include="Message\Data\PlayerStatus\PlayerStatusSetMsgData.cs" />
+    <Compile Include="Message\Data\Scenario\ScenarioProtoMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioInfo.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioBaseMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioDataMsgData.cs" />

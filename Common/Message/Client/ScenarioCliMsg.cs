@@ -20,7 +20,7 @@ namespace LunaCommon.Message.Client
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
             [(ushort)ScenarioMessageType.Request] = typeof(ScenarioRequestMsgData),
-            [(ushort)ScenarioMessageType.Data] = typeof(ScenarioDataMsgData)
+            [(ushort)ScenarioMessageType.Data] = typeof(ScenarioDataMsgData),
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Scenario;

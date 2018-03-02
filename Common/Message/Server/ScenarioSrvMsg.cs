@@ -19,7 +19,8 @@ namespace LunaCommon.Message.Server
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)ScenarioMessageType.Data] = typeof(ScenarioDataMsgData)
+            [(ushort)ScenarioMessageType.Data] = typeof(ScenarioDataMsgData),
+            [(ushort)ScenarioMessageType.Proto] = typeof(ScenarioProtoMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Scenario;

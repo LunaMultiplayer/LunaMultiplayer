@@ -141,12 +141,12 @@ namespace LunaClient.Systems.Scenario
         {
             while (ScenarioQueue.TryDequeue(out var scenarioEntry))
             {
-                if (scenarioEntry.ScenarioName == "ContractSystem")
+                if (scenarioEntry.ScenarioModule == "ContractSystem")
                 {
                     SpawnStrandedKerbalsForRescueMissions(scenarioEntry.ScenarioNode);
                     CreateMissingTourists(scenarioEntry.ScenarioNode);
                 }
-                if (scenarioEntry.ScenarioName == "ProgressTracking")
+                if (scenarioEntry.ScenarioModule == "ProgressTracking")
                     CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(scenarioEntry.ScenarioNode);
 
                 CheckForBlankSceneSoTheGameDoesntBugOut(scenarioEntry);
@@ -294,7 +294,7 @@ namespace LunaClient.Systems.Scenario
         {
             if (scenarioEntry.ScenarioNode.GetValue("scene") == string.Empty)
             {
-                var nodeName = scenarioEntry.ScenarioName;
+                var nodeName = scenarioEntry.ScenarioModule;
                 ScreenMessages.PostScreenMessage($"{nodeName} is badly behaved!");
                 LunaLog.Log($"[LMP]: {nodeName} is badly behaved!");
                 scenarioEntry.ScenarioNode.SetValue("scene", "7, 8, 5, 6, 9");

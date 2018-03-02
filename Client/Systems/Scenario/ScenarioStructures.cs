@@ -2,7 +2,7 @@
 {
     public class ScenarioEntry
     {
-        public string ScenarioName { get; set; }
+        public string ScenarioModule { get; set; }
         public ConfigNode ScenarioNode { get; set; }
     }
 }
