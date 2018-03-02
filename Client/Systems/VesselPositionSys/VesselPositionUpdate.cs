@@ -182,9 +182,13 @@ namespace LunaClient.Systems.VesselPositionSys
             var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
             var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
 
-            //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped
-            Vessel.SetWorldVelocity(curVelocity);
-            Vessel.velocityD = curVelocity;
+            //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped.
+            //Do not do it if we are spectating
+            if (!CurrentlySpectatingThisVessel)
+            {
+                Vessel.SetWorldVelocity(curVelocity);
+                Vessel.velocityD = curVelocity;
+            }
 
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             Vessel.srfRelRotation = currentSurfaceRelRotation;
@@ -205,6 +209,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     break;
                 default:
                     //Do not apply orbit params while grounded as it makes the vessel jitter. Specially when on different subspaces
+                    //Also do not apply them if we are spectating as this will be handled by the engine itself
                     Vessel.orbitDriver.updateFromParameters();
                     break;
             }
@@ -216,7 +221,6 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 Vessel.UpdatePosVel();
                 Vessel.precalc.CalculatePhysicsStats(); //This will update the localCom and other variables of the vessel
-                Vessel.SetPosition(Vessel.CoMD, true);
             }
 
             //Apply rotation at the end of everything as it messes up with positions and so on
