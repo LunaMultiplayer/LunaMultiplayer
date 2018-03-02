@@ -38,7 +38,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public static Queue<Guid> VesselsToRemove { get; } = new Queue<Guid>();
 
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
-        private List<Vessel>AbandonedVesselsToUpdate { get; } = new List<Vessel>();
+        private List<Vessel> AbandonedVesselsToUpdate { get; } = new List<Vessel>();
 
         #endregion
 
@@ -51,7 +51,7 @@ namespace LunaClient.Systems.VesselPositionSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            
+
             TimingManager.UpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
 
@@ -65,11 +65,11 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
-            
+
             TimingManager.UpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
         }
-        
+
         private void HandleVesselUpdates()
         {
             if (!PositionUpdateSystemBasicReady) return;
@@ -143,7 +143,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
             }
         }
-        
+
         #endregion
 
         #region Public methods
@@ -153,7 +153,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public double[] GetLatestVesselPosition(Guid vesselId)
         {
-            return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ? 
+            return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ?
                 vesselPosition.LatLonAlt :
                 CurrentVesselUpdate.TryGetValue(vesselId, out vesselPosition) ?
                     vesselPosition.LatLonAlt :
@@ -216,8 +216,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (vessel.orbit != null)
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
             }
-        }
 
+            vessel.UpdatePosVel();
+            vessel.precalc.CalculatePhysicsStats();
+        }
 
         #endregion
     }

@@ -188,6 +188,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             //If you don't set srfRelRotation and vessel is packed it won't change it's rotation
             Vessel.srfRelRotation = currentSurfaceRelRotation;
+            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
 
             //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
 
@@ -218,9 +219,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.UpdatePosVel();
                 Vessel.precalc.CalculatePhysicsStats(); //This will update the localCom and other variables of the vessel
             }
-
-            //Apply rotation at the end of everything as it messes up with positions and so on
-            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
         }
 
         private void ApplyInterpolations(float lerpPercentage)
