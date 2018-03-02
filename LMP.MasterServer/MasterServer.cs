@@ -34,14 +34,16 @@ namespace LMP.MasterServer
                 Port = Port,
                 SuppressUnreliableUnorderedAcks = true,
                 PingInterval = 500,
-                ConnectionTimeout = ServerMsTimeout
+                ConnectionTimeout = ServerMsTimeout,
+                EnableUPnP = true
             };
 
             config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
 
             var peer = new NetPeer(config);
             peer.Start();
-            
+            peer.UPnP.ForwardPort(Port, "LMP Master server");
+
             CheckMasterServerListed();
 
             ConsoleLogger.Log(LogLevels.Normal, $"Master server {LmpVersioning.CurrentVersion} started! Поехали!");
