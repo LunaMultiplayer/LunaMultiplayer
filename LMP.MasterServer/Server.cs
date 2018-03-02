@@ -31,6 +31,7 @@ namespace LMP.MasterServer
                 ExternalEndpoint = $"{ExternalEndpoint.Address}:{ExternalEndpoint.Port}",
                 InternalEndpoint = $"{InternalEndpoint.Address}:{InternalEndpoint.Port}",
                 Cheats = msg.Cheats,
+                Password = msg.Password,
                 ServerVersion = msg.ServerVersion,
                 ShowVesselsInThePast = msg.ShowVesselsInThePast,
                 Description = msg.Description,

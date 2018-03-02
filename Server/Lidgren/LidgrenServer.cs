@@ -1,8 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon;
-using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Message.Interface;
-using LunaCommon.Message.MasterServer;
 using LunaCommon.Time;
 using Server.Client;
 using Server.Context;
@@ -11,23 +9,16 @@ using Server.Server;
 using Server.Settings;
 using Server.Utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace Server.Lidgren
 {
     public class LidgrenServer
     {
-        private static List<IPEndPoint> MasterServerEndpoints { get; } = new List<IPEndPoint>();
-        private static NetServer Server { get; set; }
+        public static NetServer Server { get; private set; }
         public static MessageReceiver ClientMessageReceiver { get; set; } = new MessageReceiver();
 
-        private static int MasterServerRegistrationMsInterval => GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval < 5000 ? 
-            5000 : GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval;
-
-        public void SetupLidgrenServer()
+        public static void SetupLidgrenServer()
         {
             if (Common.PortIsInUse(ServerContext.Config.Port))
             {
@@ -60,7 +51,7 @@ namespace Server.Lidgren
             ServerContext.ServerStarting = false;
         }
 
-        public async void StartReceiveingMessages()
+        public static async void StartReceiveingMessages()
         {
             try
             {
@@ -73,6 +64,15 @@ namespace Server.Lidgren
                         switch (msg.MessageType)
                         {
                             case NetIncomingMessageType.ConnectionApproval:
+                                if (ServerContext.UsePassword)
+                                {
+                                    var password = msg.ReadString();
+                                    if (password != GeneralSettings.SettingsStore.Password)
+                                    {
+                                        msg.SenderConnection.Deny("Invalid password");
+                                        break;
+                                    }
+                                }
                                 msg.SenderConnection.Approve();
                                 break;
                             case NetIncomingMessageType.Data:
@@ -132,7 +132,7 @@ namespace Server.Lidgren
             return null;
         }
 
-        public void SendMessageToClient(ClientStructure client, IServerMessageBase message)
+        public static void SendMessageToClient(ClientStructure client, IServerMessageBase message)
         {
             var outmsg = Server.CreateMessage(message.GetMessageSize());
 
@@ -146,99 +146,9 @@ namespace Server.Lidgren
             Server.FlushSendQueue(); //Manually force to send the msg
         }
 
-        public void ShutdownLidgrenServer()
+        public static void ShutdownLidgrenServer()
         {
             Server.Shutdown("So long and thanks for all the fish");
-        }
-
-        public async void RefreshMasterServersList()
-        {
-            if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
-
-            while (ServerContext.ServerRunning)
-            {
-                lock (MasterServerEndpoints)
-                {
-                    MasterServerEndpoints.Clear();
-                    MasterServerEndpoints.AddRange(MasterServerRetriever.RetrieveWorkingMasterServersEndpoints()
-                        .Select(Common.CreateEndpointFromString));
-                }
-
-                await Task.Delay((int)TimeSpan.FromMinutes(10).TotalMilliseconds);
-            }
-        }
-
-        public async void RegisterWithMasterServer()
-        {
-            if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
-
-            LunaLog.Normal("Registering with master servers...");
-
-            var adr = LunaNetUtils.GetMyAddress();
-            if (adr == null) return;
-
-            var endpoint = new IPEndPoint(adr, ServerContext.Config.Port);
-            while (ServerContext.ServerRunning)
-            {
-                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<MsRegisterServerMsgData>();
-                msgData.Id = Server.UniqueIdentifier;
-                msgData.Cheats = GeneralSettings.SettingsStore.Cheats;
-                msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
-                msgData.Description = GeneralSettings.SettingsStore.Description;
-                msgData.DropControlOnExit = GeneralSettings.SettingsStore.Cheats;
-                msgData.DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats;
-                msgData.DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats;
-                msgData.GameMode = (int)GeneralSettings.SettingsStore.GameMode;
-                msgData.InternalEndpoint = $"{endpoint.Address}:{endpoint.Port}";
-                msgData.MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers;
-                msgData.ModControl = (int)GeneralSettings.SettingsStore.ModControl;
-                msgData.PlayerCount = ServerContext.Clients.Count;
-                msgData.ServerName = GeneralSettings.SettingsStore.ServerName;
-                msgData.ServerVersion = LmpVersioning.CurrentVersion;
-                msgData.VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval;
-                msgData.SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
-                msgData.WarpMode = (int)GeneralSettings.SettingsStore.WarpMode;
-                msgData.TerrainQuality = (int)GeneralSettings.SettingsStore.TerrainQuality;
-
-                msgData.Description = msgData.Description.Length > 200
-                            ? msgData.Description.Substring(0, 200)
-                            : msgData.Description;
-
-                msgData.ServerName = msgData.ServerName.Length > 30
-                    ? msgData.ServerName.Substring(0, 30)
-                    : msgData.ServerName;
-
-                lock (MasterServerEndpoints)
-                {
-                    foreach (var masterServer in MasterServerEndpoints)
-                    {
-                        RegisterWithMasterServer(msgData, masterServer);
-                    }
-                }
-
-                await Task.Delay(MasterServerRegistrationMsInterval);
-            }
-        }
-
-        private static void RegisterWithMasterServer(MsRegisterServerMsgData msgData, IPEndPoint masterServer)
-        {
-            Task.Run(() =>
-            {
-                var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-                msg.Data.SentTime = LunaTime.UtcNow.Ticks;
-                
-                try
-                {
-                    var outMsg = Server.CreateMessage(msg.GetMessageSize());
-                    msg.Serialize(outMsg);
-                    Server.SendUnconnectedMessage(outMsg, masterServer);
-                    Server.FlushSendQueue();
-                }
-                catch (Exception)
-                {
-                    // ignored
-                }
-            });
         }
     }
 }

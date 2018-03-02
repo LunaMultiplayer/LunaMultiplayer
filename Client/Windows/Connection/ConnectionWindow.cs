@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon;
@@ -33,6 +32,8 @@ namespace LunaClient.Windows.Connection
         protected string ServerName { get; set; } = "Local";
         protected string ServerAddress { get; set; } = "127.0.0.1";
         protected string ServerPort { get; set; } = "8800";
+
+        protected string Password { get; set; } = "";
 
         protected const float WindowHeight = 400;
         protected const float WindowWidth = 400;

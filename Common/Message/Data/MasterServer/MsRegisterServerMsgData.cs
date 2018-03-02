@@ -13,6 +13,7 @@ namespace LunaCommon.Message.Data.MasterServer
         public long Id;
         public string ServerVersion;
         public string InternalEndpoint;
+        public bool Password;
         public bool Cheats;
         public int GameMode;
         public int MaxPlayers;
@@ -39,6 +40,7 @@ namespace LunaCommon.Message.Data.MasterServer
             lidgrenMsg.Write(ServerVersion);
             lidgrenMsg.Write(InternalEndpoint);
 
+            lidgrenMsg.Write(Password);
             lidgrenMsg.Write(Cheats);
             lidgrenMsg.WritePadBits();
 
@@ -68,6 +70,7 @@ namespace LunaCommon.Message.Data.MasterServer
             ServerVersion = lidgrenMsg.ReadString();
             InternalEndpoint = lidgrenMsg.ReadString();
 
+            Password = lidgrenMsg.ReadBoolean();
             Cheats = lidgrenMsg.ReadBoolean();
             lidgrenMsg.SkipPadBits();
 
@@ -91,7 +94,7 @@ namespace LunaCommon.Message.Data.MasterServer
         {            
             //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
             return base.InternalGetMessageSize() + sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
-                sizeof(byte) + sizeof(int) * 8 + ServerName.GetByteCount() + Description.GetByteCount() + sizeof(bool) * 4;
+                sizeof(byte) + sizeof(int) * 8 + ServerName.GetByteCount() + Description.GetByteCount() + sizeof(bool) * 5;
         }
     }
 }

@@ -5,6 +5,7 @@ using Server.Client;
 using Server.Command;
 using Server.Context;
 using Server.Exit;
+using Server.Lidgren;
 using Server.Log;
 using Server.Plugin;
 using Server.Settings;
@@ -76,15 +77,15 @@ namespace Server
                 LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
 
                 ServerContext.ServerRunning = true;
-                ServerContext.LidgrenServer.SetupLidgrenServer();
+                LidgrenServer.SetupLidgrenServer();
 
                 LongRunTaskFactory.StartNew(() => new CommandHandler().ThreadMain());
                 LongRunTaskFactory.StartNew(() => new ClientMainThread().ThreadMain());
 
                 LongRunTaskFactory.StartNew(VesselStoreSystem.BackupVesselsThread);
-                LongRunTaskFactory.StartNew(ServerContext.LidgrenServer.StartReceiveingMessages);
-                LongRunTaskFactory.StartNew(ServerContext.LidgrenServer.RefreshMasterServersList);
-                LongRunTaskFactory.StartNew(ServerContext.LidgrenServer.RegisterWithMasterServer);
+                LongRunTaskFactory.StartNew(LidgrenServer.StartReceiveingMessages);
+                LongRunTaskFactory.StartNew(LidgrenMasterServer.RefreshMasterServersList);
+                LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServer);
                 LongRunTaskFactory.StartNew(LogThread.RunLogThread);
 
                 LongRunTaskFactory.StartNew(VesselRelaySystem.RelayOldVesselMessages);

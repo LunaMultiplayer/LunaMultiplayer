@@ -140,7 +140,7 @@ namespace LunaClient.Systems.Mod
                 if (!string.IsNullOrEmpty(filePath) && !string.IsNullOrEmpty(item.Sha))
                 {
                     var fullFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", filePath);
-                    if (Common.CalculateSha256Hash(fullFilePath) != item.Sha)
+                    if (Common.CalculateSha256FileHash(fullFilePath) != item.Sha)
                     {
                         Sb.AppendLine($"File {item.ModFilename} does not match hash {item.Sha}!");
                         return false;

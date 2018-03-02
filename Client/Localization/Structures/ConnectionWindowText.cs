@@ -15,6 +15,7 @@
         public string Name { get; set; } = "Name:";
         public string Address { get; set; } = "Address:";
         public string Port { get; set; } = "Port:";
+        public string Password { get; set; } = "Password:";
         public string Server { get; set; } = "server";
         public string CustomServers { get; set; } = "Custom servers:";
         public string NoServers { get; set; } = "(None - Add a server first)";

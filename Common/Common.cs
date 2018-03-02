@@ -97,22 +97,23 @@ namespace LunaCommon
             return $"{endpoint.Address}:{endpoint.Port}";
         }
 
-        public static string CalculateSha256Hash(string fileName)
+        public string CalculateSha256StringHash(string input)
+        {
+            return CalculateSha256Hash(Encoding.UTF8.GetBytes(input));
+        }
+
+        public static string CalculateSha256FileHash(string fileName)
         {
             return CalculateSha256Hash(File.ReadAllBytes(fileName));
         }
 
-        public static string CalculateSha256Hash(byte[] fileData)
+        public static string CalculateSha256Hash(byte[] data)
         {
-            var sb = new StringBuilder();
-            using (var sha = new SHA256Managed())
+            using (var provider = new SHA256Managed())
             {
-                var fileHashData = sha.ComputeHash(fileData);
-                //Byte[] to string conversion adapted from MSDN...
-                foreach (var b in fileHashData)
-                    sb.Append(b.ToString("x2"));
+                var hashedBytes = provider.ComputeHash(data);
+                return BitConverter.ToString(hashedBytes);
             }
-            return sb.ToString();
         }
 
         public static string ConvertConfigStringToGuidString(string configNodeString)

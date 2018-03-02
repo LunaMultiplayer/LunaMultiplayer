@@ -40,7 +40,7 @@ namespace LunaClient.Systems.Flag
             if (File.Exists(fullFlagPath))
             {
                 //Don't send the flag when the SHA sum already matches as that would mean that the server already has it
-                if (existingFlag != null && existingFlag.ShaSum == Common.CalculateSha256Hash(fullFlagPath)) return;
+                if (existingFlag != null && existingFlag.ShaSum == Common.CalculateSha256FileHash(fullFlagPath)) return;
 
                 LunaLog.Log($"[LMP]: Uploading {Path.GetFileName(fullFlagPath)}");
                 

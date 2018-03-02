@@ -18,6 +18,9 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Description of the server. Max 200 char")]
         public string Description { get; set; } = "Luna Server Description";
 
+        [XmlComment(Value = "Password for the server. Leave it empty if you want to make a public server")]
+        public string Password { get; set; } = "";
+
         [XmlComment(Value = "Specify the server's MOTD (message of the day). 255 chars max")]
         public string ServerMotd { get; set; } = "Welcome, %Name%!";
 

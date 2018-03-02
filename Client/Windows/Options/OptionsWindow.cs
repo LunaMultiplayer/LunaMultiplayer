@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Utilities;
@@ -14,7 +15,7 @@ namespace LunaClient.Windows.Options
             base.OnGui();
             if (SafeDisplay)
                 WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6711 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiPlayer - Options", WindowStyle, LayoutOptions));
+                        DrawContent, LocalizationContainer.OptionsWindowText.Title, WindowStyle, LayoutOptions));
             CheckWindowLock();
         }
 

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using LunaCommon.Time;
 using Server.Command.Command;
 using Server.Context;
+using Server.Lidgren;
 using Server.Log;
 using Server.Plugin;
 using Server.Settings;
@@ -51,7 +52,7 @@ namespace Server.Client
 
                     await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
                 }
-                ServerContext.LidgrenServer.ShutdownLidgrenServer();
+                LidgrenServer.ShutdownLidgrenServer();
             }
             catch (Exception e)
             {

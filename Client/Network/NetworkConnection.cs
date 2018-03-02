@@ -1,10 +1,10 @@
 ﻿using Lidgren.Network;
 using LunaClient.Base;
-using LunaClient.Systems;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon;
 using LunaCommon.Enums;
+using LunaCommon.Message.Base;
 using System;
 using System.Net;
 using System.Threading;
@@ -51,7 +51,7 @@ namespace LunaClient.Network
             }
         }
 
-        public static void ConnectToServer(string address, int port)
+        public static void ConnectToServer(string address, int port, string password)
         {
             try
             {
@@ -60,7 +60,7 @@ namespace LunaClient.Network
                     Thread.Sleep(500);
                 }
 
-                ConnectThread = SystemBase.TaskFactory.StartNew(() => ConnectToServer($"{address}:{port}"));
+                ConnectThread = SystemBase.TaskFactory.StartNew(() => ConnectToServer($"{address}:{port}", password));
             }
             catch (Exception e)
             {
@@ -70,7 +70,7 @@ namespace LunaClient.Network
 
         #region Private
 
-        public static void ConnectToServer(string endpointString)
+        private static void ConnectToServer(string endpointString, string serverPassword)
         {
             if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
                 NetworkMain.ClientConnection.Start();
@@ -86,10 +86,10 @@ namespace LunaClient.Network
                 MainSystem.NetworkState = ClientState.Connecting;
                 try
                 {
-                    var outmsg = NetworkMain.ClientConnection.CreateMessage(1);
-                    outmsg.Write((byte)NetIncomingMessageType.ConnectionApproval);
+                    var outmsg = NetworkMain.ClientConnection.CreateMessage(serverPassword.GetByteCount());
+                    outmsg.Write(serverPassword);
                     
-                    NetworkMain.ClientConnection.Connect(endpoint);
+                    NetworkMain.ClientConnection.Connect(endpoint, outmsg);
                     NetworkMain.ClientConnection.FlushSendQueue();
 
                     var connectionTrials = 0;

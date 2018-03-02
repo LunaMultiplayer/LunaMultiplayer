@@ -76,6 +76,10 @@ namespace LunaClient.Windows.Connection
                 GUILayout.Label(LocalizationContainer.ConnectionWindowText.Port, LabelOptions);
                 ServerPort = GUILayout.TextArea(ServerPort, TextAreaStyle).Trim();
                 GUILayout.EndHorizontal();
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(LocalizationContainer.ConnectionWindowText.Password, LabelOptions);
+                Password = GUILayout.TextArea(Password, TextAreaStyle).Trim();
+                GUILayout.EndHorizontal();
                 if (GUILayout.Button($"{addMode} {LocalizationContainer.ConnectionWindowText.Server}", ButtonStyle))
                     if (AddEventHandled)
                         if (Selected == -1)
@@ -84,7 +88,8 @@ namespace LunaClient.Windows.Connection
                             {
                                 Name = ServerName,
                                 Address = ServerAddress,
-                                Port = 8800
+                                Port = 8800,
+                                Password = Password
                             };
                             int.TryParse(ServerPort, out AddEntry.Port);
                             AddEventHandled = false;
@@ -95,7 +100,8 @@ namespace LunaClient.Windows.Connection
                             {
                                 Name = ServerName,
                                 Address = ServerAddress,
-                                Port = 8800
+                                Port = 8800,
+                                Password = Password
                             };
                             int.TryParse(ServerPort, out EditEntry.Port);
                             EditEventHandled = false;

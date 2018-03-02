@@ -9,6 +9,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Net;
 using System.Threading.Tasks;
+using Server.Lidgren;
 
 namespace Server.Client
 {
@@ -65,7 +66,7 @@ namespace Server.Client
                 {
                     try
                     {
-                        ServerContext.LidgrenServer.SendMessageToClient(this, message);
+                        LidgrenServer.SendMessageToClient(this, message);
                     }
                     catch (Exception e)
                     {

@@ -15,6 +15,8 @@ namespace LunaClient.Network
 {
     public class NetworkServerList
     {
+        public static string Password { get; set; } = string.Empty;
+
         private static readonly List<IPEndPoint> PrivMasterServers = new List<IPEndPoint>();
         public static List<IPEndPoint> MasterServers
         {
@@ -71,6 +73,7 @@ namespace LunaClient.Network
                             InternalEndpoint = data.InternalEndpoint,
                             ExternalEndpoint = data.ExternalEndpoint,
                             Description = data.Description,
+                            Password = data.Password,
                             Cheats = data.Cheats,
                             ServerName = data.ServerName,
                             DropControlOnExit = data.DropControlOnExit,
@@ -132,7 +135,7 @@ namespace LunaClient.Network
             {
                 var token = msg.ReadString();
                 LunaLog.Log($"[LMP]: Nat introduction success to {msg.SenderEndPoint} token is: {token}");
-                NetworkConnection.ConnectToServer(msg.SenderEndPoint.Address.ToString(), msg.SenderEndPoint.Port);
+                NetworkConnection.ConnectToServer(msg.SenderEndPoint.Address.ToString(), msg.SenderEndPoint.Port, Password);
             }
             catch (Exception e)
             {

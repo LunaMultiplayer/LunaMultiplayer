@@ -18,7 +18,7 @@ namespace Server.System
         //Get mod file SHA
         public static string GetModControlSha()
         {
-            return Common.CalculateSha256Hash(ServerContext.ModFilePath);
+            return Common.CalculateSha256FileHash(ServerContext.ModFilePath);
         }
     }
 }

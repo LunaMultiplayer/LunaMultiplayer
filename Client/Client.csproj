@@ -54,6 +54,7 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="Localization\Structures\ServerDetailsWindowText.cs" />
     <Compile Include="ModuleStore\Structures\CustomFieldDefinition.cs" />
     <Compile Include="ModuleStore\Structures\CustomModuleDefinition.cs" />
     <Compile Include="ModuleStore\FieldModuleDefinition.cs" />
@@ -138,6 +139,8 @@
     <Compile Include="Windows\Locks\LockDisplay.cs" />
     <Compile Include="Windows\Locks\LocksDrawer.cs" />
     <Compile Include="Windows\Locks\LocksWindow.cs" />
+    <Compile Include="Windows\ServerDetails\ServerDetailsDrawer.cs" />
+    <Compile Include="Windows\ServerDetails\ServerDetailsWindow.cs" />
     <Compile Include="Windows\Status\StatusTexts.cs" />
     <Compile Include="Base\RoutineDefinition.cs" />
     <Compile Include="Base\StyleLibrary.cs" />

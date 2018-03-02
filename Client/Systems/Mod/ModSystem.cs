@@ -58,7 +58,7 @@ namespace LunaClient.Systems.Mod
                     .Substring(checkFile.ToLowerInvariant().IndexOf("gamedata", StringComparison.Ordinal) + 9)
                     .Replace('\\', '/');
 
-                var fileHash = Common.CalculateSha256Hash(checkFile);
+                var fileHash = Common.CalculateSha256FileHash(checkFile);
                 DllList.Add(relativeFilePath, fileHash);
 
                 //LunaLog.Log($"[LMP]: Hashed file: {relativeFilePath}, hash: {fileHash}");

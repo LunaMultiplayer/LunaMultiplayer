@@ -1,7 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message;
 using Server.Client;
-using Server.Lidgren;
 using Server.Server;
 using Server.Settings;
 using System;
@@ -29,6 +28,7 @@ namespace Server.Context
         public static string Players { get; } = ClientRetriever.GetActivePlayerNames();
         public static int Day { get; set; }
         public static long LastPlayerActivity { get; set; }
+        public static bool UsePassword => !string.IsNullOrEmpty(GeneralSettings.SettingsStore.Password);
 
         // Configuration object
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
@@ -45,8 +45,7 @@ namespace Server.Context
             ConnectionTimeout = (float)TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds,
             EnableUPnP = true
         };
-
-        public static LidgrenServer LidgrenServer { get; } = new LidgrenServer();
+        
         public static MasterServerMessageFactory MasterServerMessageFactory { get; } = new MasterServerMessageFactory();
 
         public static ServerMessageFactory ServerMessageFactory { get; } = new ServerMessageFactory();

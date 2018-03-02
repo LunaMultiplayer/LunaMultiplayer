@@ -92,6 +92,7 @@
     <Compile Include="Enums\RelaySystemMode.cs" />
     <Compile Include="Exit\WinExitSignal.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Lidgren\LidgrenMasterServer.cs" />
     <Compile Include="Lidgren\LidgrenServer.cs" />
     <Compile Include="Log\LogExpire.cs" />
     <Compile Include="Log\LogLevels.cs" />

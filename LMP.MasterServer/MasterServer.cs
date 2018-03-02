@@ -162,6 +162,7 @@ namespace LMP.MasterServer
 
                 msgData.Id = server.Info.Id;
                 msgData.ServerVersion = server.Info.ServerVersion;
+                msgData.Password = server.Info.Password;
                 msgData.Cheats = server.Info.Cheats;
                 msgData.Description = server.Info.Description;
                 msgData.DropControlOnExit = server.Info.DropControlOnExit;

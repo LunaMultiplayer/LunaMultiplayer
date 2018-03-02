@@ -269,6 +269,7 @@ namespace LunaClient
             //Servers window: 6714
             //Systems window: 6715
             //Locks window: 6716
+            //Server details: 6717
 
             if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
             {
@@ -346,6 +347,7 @@ namespace LunaClient
                 SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Name = ConnectionWindow.EditEntry.Name;
                 SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Address = ConnectionWindow.EditEntry.Address;
                 SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Port = ConnectionWindow.EditEntry.Port;
+                SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Password = ConnectionWindow.EditEntry.Password;
                 ConnectionWindow.EditEntry = null;
                 ConnectionWindow.AddingServer = false;
                 ConnectionWindow.EditEventHandled = true;
@@ -363,12 +365,13 @@ namespace LunaClient
                 ConnectionWindow.ConnectEventHandled = true;
                 NetworkConnection.ConnectToServer(
                     SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Address,
-                    SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Port);
+                    SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Port,
+                    SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Password);
             }
             if (CommandLineServer != null && HighLogic.LoadedScene == GameScenes.MAINMENU &&
                 Time.timeSinceLevelLoad > 1f)
             {
-                NetworkConnection.ConnectToServer(CommandLineServer.Address, CommandLineServer.Port);
+                NetworkConnection.ConnectToServer(CommandLineServer.Address, CommandLineServer.Port, CommandLineServer.Password);
                 CommandLineServer = null;
             }
 

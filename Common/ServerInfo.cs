@@ -7,6 +7,7 @@
         public string ExternalEndpoint { get; set; }
         public string ServerVersion { get; set; }
         public string Ping { get; set; } = "?";
+        public bool Password { get; set; }
         public bool Cheats { get; set; }
         public int GameMode { get; set; }
         public int MaxPlayers { get; set; }
