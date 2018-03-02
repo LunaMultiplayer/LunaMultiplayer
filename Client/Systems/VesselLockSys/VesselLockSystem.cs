@@ -2,7 +2,6 @@
 using LunaClient.Localization;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
@@ -87,10 +86,6 @@ namespace LunaClient.Systems.VesselLockSys
                 if (VesselCommon.IsSpectating)
                 {
                     StopSpectating();
-
-                    //We now have the control so stop vessel position system over this vessel as otherwise it will apply last
-                    //position received all the time on every fixed update.
-                    VesselPositionSystem.Singleton.RemoveVesselFromSystem(FlightGlobals.ActiveVessel);
                 }
 
                 GetUpdateLocksForVessel(FlightGlobals.ActiveVessel, true);
