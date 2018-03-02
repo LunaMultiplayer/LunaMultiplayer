@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <PlayerName>Gebruikrsnaam:</PlayerName>
+  <Add>Voeg toe</Add>
+  <Edit>Bewerk</Edit>
+  <Cancel>Annuleer</Cancel>
+  <Connect>Verbind</Connect>
+  <Disconnect>Verbreek verbinding</Disconnect>
+  <Remove>Verwijder</Remove>
+  <Options>Opties</Options>
+  <Servers>Servers</Servers>
+  <Close>Sluit</Close>
+  <Name>Naam:</Name>
+  <Address>Adres:</Address>
+  <Port>Poort:</Port>
+  <Server>server</Server>
+  <CustomServers>Eigengemaakte servers:</CustomServers>
+  <NoServers>(Geen - Voeg eerst een server toe)</NoServers>
+</ConnectionWindowText>
