@@ -192,23 +192,21 @@ namespace LunaClient.Systems.VesselPositionSys
 
             //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
 
-            //If you do Vessel.ReferenceTransform.position = curPosition 
-            //then in orbit vessels crash when they get unpacked and also vessels go inside terrain randomly
-            //that is the reason why we pack vessels at close distance when landed...
-            switch (Vessel.situation)
+            Vessel.checkLanded();
+            Vessel.checkSplashed();
+
+            if (Vessel.LandedOrSplashed)
+            {                    
+                //Do not apply orbit params while grounded as it makes the vessel jitter. Specially when on different subspaces
+                //Also do not apply them if we are spectating as this will be handled by the engine itself
+                Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+            }
+            else
             {
-                case Vessel.Situations.LANDED:
-                case Vessel.Situations.SPLASHED:
-                    Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                    Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
-                    Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
-                    Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
-                    break;
-                default:
-                    //Do not apply orbit params while grounded as it makes the vessel jitter. Specially when on different subspaces
-                    //Also do not apply them if we are spectating as this will be handled by the engine itself
-                    Vessel.orbitDriver.updateFromParameters();
-                    break;
+                Vessel.orbitDriver.updateFromParameters();
             }
 
             foreach (var part in Vessel.Parts)
