@@ -51,6 +51,111 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
         }
 
+        private void DrawGridHeader()
+        {
+            GUILayout.BeginHorizontal(GUI.skin.box);
+
+            GUILayout.BeginHorizontal(GUILayout.Width(25));
+            if (GUILayout.Button(Ascending ? "▲" : "▼", ButtonStyle))
+            {
+                Ascending = !Ascending;
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[0] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(30));
+            if (GUILayout.Button(KeyIcon, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Password) :
+                    DisplayedServers.OrderByDescending(s => s.Password);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[1] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Ping) :
+                    DisplayedServers.OrderByDescending(s => s.Ping);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[2] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Players, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.PlayerCount) :
+                    DisplayedServers.OrderByDescending(s => s.PlayerCount);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[3] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.MaxPlayers, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.MaxPlayers) :
+                    DisplayedServers.OrderByDescending(s => s.MaxPlayers);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[4] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Mode, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.GameMode) :
+                    DisplayedServers.OrderByDescending(s => s.GameMode);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[5] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(75));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.WarpMode, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.WarpMode) :
+                    DisplayedServers.OrderByDescending(s => s.WarpMode);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[6] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Terrain, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.TerrainQuality) :
+                    DisplayedServers.OrderByDescending(s => s.TerrainQuality);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[7] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Cheats, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Cheats) :
+                    DisplayedServers.OrderByDescending(s => s.Cheats);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[8] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(325));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Name, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.ServerName) :
+                    DisplayedServers.OrderByDescending(s => s.ServerName);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(1000));
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Description, ButtonStyle))
+            {
+                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Description) :
+                    DisplayedServers.OrderByDescending(s => s.Description);
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[10] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndHorizontal();
+        }
+
         private void DrawServerList()
         {
             GUILayout.BeginHorizontal(BoxStyle);
@@ -135,111 +240,6 @@ namespace LunaClient.Windows.ServerList
                 }
                 GUILayout.EndVertical();
             }
-            GUILayout.EndHorizontal();
-        }
-
-        private void DrawGridHeader()
-        {
-            GUILayout.BeginHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.Width(25));
-            if (GUILayout.Button(Ascending ? "▲" : "▼", ButtonStyle))
-            {
-                Ascending = !Ascending;
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[0] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(30));
-            if (GUILayout.Button(KeyIcon, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Password) :
-                    DisplayedServers.OrderByDescending(s => s.Password);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[1] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Ping) : 
-                    DisplayedServers.OrderByDescending(s => s.Ping);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[2] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Players, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.PlayerCount) :
-                    DisplayedServers.OrderByDescending(s => s.PlayerCount);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[3] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.MaxPlayers, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.MaxPlayers) :
-                    DisplayedServers.OrderByDescending(s => s.MaxPlayers);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[4] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Mode, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.GameMode) :
-                    DisplayedServers.OrderByDescending(s => s.GameMode);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[5] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(75));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.WarpMode, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.WarpMode) :
-                    DisplayedServers.OrderByDescending(s => s.WarpMode);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[6] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Terrain, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.TerrainQuality) :
-                    DisplayedServers.OrderByDescending(s => s.TerrainQuality);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[7] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Cheats, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Cheats) :
-                    DisplayedServers.OrderByDescending(s => s.Cheats);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[8] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(325));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Name, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.ServerName) :
-                    DisplayedServers.OrderByDescending(s => s.ServerName);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(1000));
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Description, ButtonStyle))
-            {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Description) :
-                    DisplayedServers.OrderByDescending(s => s.Description);
-            }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[10] = GUILayoutUtility.GetLastRect().width;
-            GUILayout.EndHorizontal();
-
             GUILayout.EndHorizontal();
         }
     }
