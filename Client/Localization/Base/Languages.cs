@@ -4,10 +4,12 @@ namespace LunaClient.Localization.Base
     public enum Languages
     {
         English,
+        Spanish,
         French,
         Russian,
         German,
         Japanese,
-        Simplified_Chinese,		
+        Simplified_Chinese,
+        Dutch
     }
 }
