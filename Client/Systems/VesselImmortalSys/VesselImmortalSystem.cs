@@ -117,9 +117,9 @@ namespace LunaClient.Systems.VesselImmortalSys
         {
             if (vessel == null) return;
 
-            foreach (var part in vessel.Parts.Where(p => p.attachJoint != null))
+            foreach (var part in vessel.Parts)
             {
-                part.attachJoint.SetUnbreakable(immortal, part.rigidAttachment);
+                part.attachJoint?.SetUnbreakable(immortal, part.rigidAttachment);
 
                 if(part.collider != null)
                     part.collider.enabled = !immortal;
