@@ -203,7 +203,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public double GetSubspaceTime(int subspace)
         {
-            return Subspaces.ContainsKey(subspace) ? TimeSyncerSystem.ServerClockSec + Subspaces[subspace] : 0;
+            return Subspaces.ContainsKey(subspace) ? TimeSyncerSystem.ServerClockSec + Subspaces[subspace] : 0d;
         }
 
 
@@ -227,19 +227,18 @@ namespace LunaClient.Systems.Warp
                 ClientSubspaceList.TryRemove(playerName, out _);
         }
 
-        #endregion
-
-        #region Private methods
-
         /// <summary>
         /// Here we warp and we set the time to the current subspace
         /// </summary>
-        private void ProcessNewSubspace()
+        public void ProcessNewSubspace()
         {
             TimeWarp.fetch.WarpTo(CurrentSubspaceTime);
             ClockHandler.StepClock(CurrentSubspaceTime);
         }
 
+        #endregion
+
+        #region Private methods
 
         /// <summary>
         /// Task that requests a new subspace to the server.

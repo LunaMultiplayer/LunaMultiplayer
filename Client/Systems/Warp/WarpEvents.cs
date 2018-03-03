@@ -46,7 +46,7 @@ namespace LunaClient.Systems.Warp
         }
 
         /// <summary>
-        /// Event triggered when scene has changed
+        /// Event triggered when scene has changed. We force the player when loading the game to go to the latest subspace
         /// </summary>
         public void OnSceneChanged(GameScenes data)
         {
@@ -54,6 +54,7 @@ namespace LunaClient.Systems.Warp
             {
                 System.CurrentSubspace = System.LatestSubspace;
                 System.SyncedToLastSubspace = true;
+                System.ProcessNewSubspace();
             }
         }
     }

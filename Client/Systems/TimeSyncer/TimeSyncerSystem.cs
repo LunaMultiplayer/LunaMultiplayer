@@ -23,7 +23,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Gets the server clock in seconds.
         /// </summary>
-        public static double ServerClockSec => TimeSpan.FromTicks(LunaTime.UtcNow.Ticks - ServerStartTime).TotalSeconds;
+        public static double ServerClockSec => TimeUtil.TicksToSeconds(LunaTime.UtcNow.Ticks - ServerStartTime);
 
         /// <summary>
         /// Gets the current time error between the server time and the game time
@@ -115,7 +115,7 @@ namespace LunaClient.Systems.TimeSyncer
                 var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
                 if (targetTime > 0)
                 {
-                    var currentError = TimeSpan.FromSeconds(CurrentErrorSec).TotalMilliseconds;
+                    var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
                     if (Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < PhisicsClockLimitMs)
                     {
                         //Time error is not so big so we can fix it adjusting the physics time
@@ -134,8 +134,8 @@ namespace LunaClient.Systems.TimeSyncer
         {
             if (Enabled && !CurrentlyWarping && CanSyncTime && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
             {
-                var targetTime = (int)WarpSystem.Singleton.CurrentSubspaceTime;
-                var currentError = TimeSpan.FromSeconds(CurrentErrorSec).TotalMilliseconds;
+                var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
+                var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
                 if (targetTime != 0 && Math.Abs(currentError) > MaxClockErrorMs)
                 {
                     LunaLog.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
