@@ -78,7 +78,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             foreach (var keyVal in CurrentVesselUpdate)
             {
-                if(!DoVesselChecks(keyVal.Key))
+                if (!DoVesselChecks(keyVal.Key))
                     RemoveVesselFromSystem(keyVal.Key);
 
                 keyVal.Value.ApplyVesselUpdate();
@@ -236,7 +236,8 @@ namespace LunaClient.Systems.VesselPositionSys
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)
             {
-                vessel.mainBody.GetLatLonAlt(vessel.GetWorldPos3D(), out vessel.latitude, out vessel.longitude, out vessel.altitude);
+                if (!vessel.packed) //If you do it and the vessel is packed the vessel will start flying to the sky
+                    vessel.mainBody.GetLatLonAlt(vessel.GetWorldPos3D(), out vessel.latitude, out vessel.longitude, out vessel.altitude);
             }
             else
             {
