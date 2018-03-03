@@ -64,6 +64,25 @@ namespace LMP.MasterServer
                     if (IPAddress.IsLoopback(hostIp)) return true;
                     if (localIPs.Any(l => l.Equals(hostIp))) return true;
                 }
+
+                /* The private address ranges are defined in RFC1918. They are:
+                 * 10.0.0.0 - 10.255.255.255 (10/8 prefix)
+                 * 172.16.0.0 - 172.31.255.255 (172.16/12 prefix)
+                 * 192.168.0.0 - 192.168.255.255 (192.168/16 prefix)
+                 */
+
+                var bytes = host.GetAddressBytes();
+                switch (bytes[0])
+                {
+                    case 10:
+                        return true;
+                    case 172:
+                        return bytes[1] < 32 && bytes[1] >= 16;
+                    case 192:
+                        return bytes[1] == 168;
+                    default:
+                        return false;
+                }
             }
             catch
             {
