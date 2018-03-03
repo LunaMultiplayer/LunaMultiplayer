@@ -68,6 +68,7 @@ namespace LunaClient.Systems.VesselProtoSys
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckRefreshOwnVesselWhileSpectating);
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselPartsSyncMsInterval, RoutineExecution.Update, SendVesselDefinition));
         }
 
@@ -214,6 +215,20 @@ namespace LunaClient.Systems.VesselProtoSys
             catch (Exception e)
             {
                 LunaLog.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
+            }
+        }
+
+        /// <summary>
+        /// Check if we have a different part count in the vessel than in the store while spectating and if that's the case we trigger a reload
+        /// </summary>
+        private void CheckRefreshOwnVesselWhileSpectating()
+        {
+            if (!VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || !ProtoSystemReady) return;
+
+            if (VesselsProtoStore.AllPlayerVessels.TryGetValue(FlightGlobals.ActiveVessel.id, out var vesselProtoUpdate))
+            {
+                if (vesselProtoUpdate.ProtoVessel.protoPartSnapshots.Count != FlightGlobals.ActiveVessel.Parts.Count)
+                    vesselProtoUpdate.VesselHasUpdate = true;
             }
         }
 
