@@ -109,6 +109,8 @@ namespace LunaClient.Systems.KerbalSys
             
             for (var i = 0; i < AllVessels.Count; i++)
             {
+                if(AllVessels[i] == null) continue;
+
                 var crew = AllVessels[i].GetVesselCrew();
                 for (var j = 0; j < crew.Count; j++)
                 {
