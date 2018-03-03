@@ -28,7 +28,7 @@ namespace MasterServer
         private static readonly string DllPath = Path.Combine(Directory.GetCurrentDirectory(), DllFileName);
         private static readonly AppDomainSetup DomainSetup = new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory };
 
-        private static Version CurrentVersion { get; set; }
+        private static Version CurrentVersion => new Version(FileVersionInfo.GetVersionInfo(DllPath).FileVersion);
         private static AppDomain LmpDomain { get; set; }
         private static string[] Arguments { get; set; }
 
@@ -43,7 +43,6 @@ namespace MasterServer
             }
 
             Arguments = args;
-            CurrentVersion = new Version(FileVersionInfo.GetVersionInfo(DllPath).FileVersion);
 
             Console.CancelKeyPress += (sender, eArgs) =>
             {
@@ -123,7 +122,7 @@ namespace MasterServer
                     }
 
                     //Sleep for 30 minutes...
-                    await Task.Delay(30 * 60 * 1000);
+                    await Task.Delay(10 *  1000);
                 }
             });
         }

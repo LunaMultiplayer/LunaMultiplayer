@@ -15,7 +15,6 @@ namespace LMP.MasterServer
     /// </summary>
     public static class EntryPoint
     {
-        
         public static void Stop()
         {
             MasterServer.RunServer = false;
@@ -23,7 +22,8 @@ namespace LMP.MasterServer
 
         public static void MainEntryPoint(string[] args)
         {
-            ConsoleUtil.DisableConsoleQuickEdit();
+            if (Common.PlatformIsWindows())
+                ConsoleUtil.DisableConsoleQuickEdit();
 
             Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
             Console.OutputEncoding = Encoding.Unicode;

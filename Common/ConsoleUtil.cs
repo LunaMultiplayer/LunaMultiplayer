@@ -20,7 +20,7 @@ namespace LunaCommon
 
         public static bool DisableConsoleQuickEdit()
         {
-            if (!Common.PlatformIsWindows()) return true;
+            if (Common.PlatformIsWindows()) return true;
 
             var consoleHandle = GetStdHandle(StdInputHandle);
 
