@@ -45,7 +45,7 @@ after_build:
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Localization"
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\PartSync"
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Icons"
- - ps: xcopy /s/y "$env:appveyor_build_folder\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt"
+ - ps: copy /s/y "$env:appveyor_build_folder\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt"
  - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Resources\*.png" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
  - ps: xcopy /s/y "$env:appveyor_build_folder\Client\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
  - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Localization\XML\*.xml" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Localization"
