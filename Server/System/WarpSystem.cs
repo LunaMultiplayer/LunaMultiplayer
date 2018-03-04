@@ -79,7 +79,7 @@ namespace Server.System
         /// </summary>
         public static long GetSubspaceTimeDifference(int subspace)
         {
-            return WarpContext.Subspaces.ContainsKey(subspace) ? TimeSpan.FromSeconds(WarpContext.Subspaces[subspace]).Ticks : 0;
+            return WarpContext.Subspaces.ContainsKey(subspace) ? (long)TimeUtil.SecondsToTicks(WarpContext.Subspaces[subspace]) : 0;
         }
 
         /// <summary>

@@ -18,9 +18,9 @@ namespace LunaCommon.Time
             return milliseconds / 1000;
         }
 
-        public static double SecondsToTicks(double seconds)
+        public static long SecondsToTicks(double seconds)
         {
-            return seconds * TimeSpan.TicksPerSecond;
+            return (long)(seconds * TimeSpan.TicksPerSecond);
         }
 
         public static double TicksToSeconds(double ticks)
