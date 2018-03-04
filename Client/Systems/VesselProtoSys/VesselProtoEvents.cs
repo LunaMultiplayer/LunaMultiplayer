@@ -154,5 +154,22 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
             }
         }
+
+        /// <summary>
+        /// Triggered when the vessel parts change. We use this to detect if we are spectating and our vessel is different than the controller. 
+        /// If that's the case we trigger a reload
+        /// </summary>
+        public void VesselPartCountChanged(Vessel vessel)
+        {
+            if (!VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || (VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id != vessel.id)) return;
+
+            if (VesselLoader.ReloadingVesselId == vessel.id) return;
+
+            if (VesselsProtoStore.AllPlayerVessels.TryGetValue(FlightGlobals.ActiveVessel.id, out var vesselProtoUpdate))
+            {
+                if (vesselProtoUpdate.ProtoVessel.protoPartSnapshots.Count != FlightGlobals.ActiveVessel.Parts.Count)
+                    vesselProtoUpdate.VesselHasUpdate = true;
+            }
+        }
     }
 }

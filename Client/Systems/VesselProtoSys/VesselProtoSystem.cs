@@ -64,6 +64,7 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
             GameEvents.onPartDie.Add(VesselProtoEvents.OnPartDie);
             GameEvents.onGameSceneLoadRequested.Add(VesselProtoEvents.OnSceneRequested);
+            GameEvents.onVesselPartCountChanged.Add(VesselProtoEvents.VesselPartCountChanged);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
@@ -82,7 +83,8 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onFlightReady.Remove(VesselProtoEvents.FlightReady);
             GameEvents.onPartDie.Remove(VesselProtoEvents.OnPartDie);
             GameEvents.onGameSceneLoadRequested.Remove(VesselProtoEvents.OnSceneRequested);
-
+            GameEvents.onVesselPartCountChanged.Remove(VesselProtoEvents.VesselPartCountChanged);
+            
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();
             BannedPartsStr = string.Empty;
@@ -116,6 +118,19 @@ namespace LunaClient.Systems.VesselProtoSys
 
         #region Update routines
 
+        /// <summary>
+        /// Check if we have a different part count in the vessel than in the store while spectating and if that's the case we trigger a reload
+        /// </summary>
+        private void CheckRefreshOwnVesselWhileSpectating()
+        {
+            if (!VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || !ProtoSystemReady) return;
+
+            if (VesselsProtoStore.AllPlayerVessels.TryGetValue(FlightGlobals.ActiveVessel.id, out var vesselProtoUpdate))
+            {
+                if (vesselProtoUpdate.ProtoVessel.protoPartSnapshots.Count != FlightGlobals.ActiveVessel.Parts.Count)
+                    vesselProtoUpdate.VesselHasUpdate = true;
+            }
+        }
 
         /// <summary>
         /// While spectating, the vessel you are watching can crash or something and create debris that shouldn't exist.
@@ -217,21 +232,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 LunaLog.LogError($"[LMP]: Error in CheckVesselsToLoad {e}");
             }
         }
-
-        /// <summary>
-        /// Check if we have a different part count in the vessel than in the store while spectating and if that's the case we trigger a reload
-        /// </summary>
-        private void CheckRefreshOwnVesselWhileSpectating()
-        {
-            if (!VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || !ProtoSystemReady) return;
-
-            if (VesselsProtoStore.AllPlayerVessels.TryGetValue(FlightGlobals.ActiveVessel.id, out var vesselProtoUpdate))
-            {
-                if (vesselProtoUpdate.ProtoVessel.protoPartSnapshots.Count != FlightGlobals.ActiveVessel.Parts.Count)
-                    vesselProtoUpdate.VesselHasUpdate = true;
-            }
-        }
-
+        
         /// <summary>
         /// Check vessels that must be reloaded
         /// </summary>
