@@ -16,7 +16,7 @@ namespace LunaCommon.ModFile
                 string trimmedLine;
                 var section = string.Empty;
 
-                while ((trimmedLine = sr.ReadLine()?.Trim().Replace('\\', '/')) != null)
+                while ((trimmedLine = sr.ReadLine()?.Trim()?.ToLowerInvariant()?.Replace('\\', '/')) != null)
                 {
                     if (string.IsNullOrEmpty(trimmedLine) || trimmedLine.StartsWith("#"))
                         continue; //Skip comments or empty lines.
