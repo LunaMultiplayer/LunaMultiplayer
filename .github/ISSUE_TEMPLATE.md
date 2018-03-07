@@ -1,6 +1,7 @@
 Remember to attach the "KSP.log" and the "output_log.txt" whenever is possible!  
 You can find the KSP.log in ".\Kerbal Space Program\KSP.log"  
-And output_log.txt in ".\Kerbal Space Program\KSP_x64_Data\output_log.txt"
+And output_log.txt in "C:\Users\YOURUSERNAME\AppData\LocalLow\Squad\Kerbal Space Program\output_log.txt"
+(you probably need to display hidden folders to get into AppData)
 
 In case you are using a nighly build of LMP from appveyor include the build number.
 For example: 0.0.9.**384**
