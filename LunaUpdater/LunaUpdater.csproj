@@ -44,7 +44,9 @@
       <HintPath>..\External\Dependencies\JsonFx.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Runtime.Serialization">
+      <HintPath>..\External\Dependencies\System.Runtime.Serialization.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\GitHubAsset.cs" />
