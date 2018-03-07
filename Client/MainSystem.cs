@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace LunaClient
 {
@@ -220,7 +221,6 @@ namespace LunaClient
             Singleton = this;
             DontDestroyOnLoad(this);
             KspPath = UrlDir.ApplicationRootPath;
-            Profiler.maxNumberOfSamplesPerFrame = -1;
 
             //We are sure that we are in the unity thread as Awake() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;

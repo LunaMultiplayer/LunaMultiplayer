@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
-using Profiler = UnityEngine.Profiler;
+using Profiler = UnityEngine.Profiling.Profiler;
 
 namespace LunaClient.Base
 {
