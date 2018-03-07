@@ -54,8 +54,8 @@ namespace LunaClient.Utilities
         public static bool IsCompatible()
         {
             const int compatibleMajor = 1;
-            const int compatibleMinor = 3;
-            const int compatibleRevision = 1;
+            const int compatibleMinor = 4;
+            const int compatibleRevision = 0;
             return (Versioning.version_major == compatibleMajor) && (Versioning.version_minor == compatibleMinor) && (Versioning.Revision == compatibleRevision);
 
             /*-----------------------------------------------*\
@@ -69,7 +69,7 @@ namespace LunaClient.Utilities
             |    BEGIN IMPLEMENTATION-SPECIFIC EDITS HERE.    |
             \*-----------------------------------------------*/
 
-            return Application.unityVersion == "5.4.0p4";
+            return Application.unityVersion == "2017.1.3p1";
 
             /*-----------------------------------------------*\
             | IMPLEMENTERS SHOULD NOT EDIT BEYOND THIS POINT! |
