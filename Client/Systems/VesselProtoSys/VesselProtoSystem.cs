@@ -215,13 +215,11 @@ namespace LunaClient.Systems.VesselProtoSys
                             continue;
 
                         LunaLog.Log($"[LMP]: Loading vessel {vesselProto.Key}");
-
-                        CurrentlyUpdatingVesselId = vesselProto.Key;
+                        
                         if (VesselLoader.LoadVessel(vesselProto.Value.ProtoVessel))
                         {
                             LunaLog.Log($"[LMP]: Vessel {vesselProto.Key} loaded");
                         }
-                        CurrentlyUpdatingVesselId = Guid.Empty;
                     }
                 }
             }

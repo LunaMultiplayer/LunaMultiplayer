@@ -39,10 +39,8 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (vessel == null || VesselCommon.IsSpectating || vessel.state == Vessel.State.DEAD)
                 return;
-
-            VesselProtoSystem.CurrentlyUpdatingVesselId = vessel.id;
+            
             var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
-            VesselProtoSystem.CurrentlyUpdatingVesselId = Guid.Empty;
 
             if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
                 SendVesselMessage(vessel.BackupVessel());
