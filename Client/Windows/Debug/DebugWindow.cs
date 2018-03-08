@@ -42,6 +42,7 @@ namespace LunaClient.Windows.Debug
                         var ourVessel = FlightGlobals.ActiveVessel;
 
                         StringBuilder.AppendLine($"Id: {ourVessel.id}");
+                        StringBuilder.AppendLine($"Persistent Id: {ourVessel.persistentId}");
                         StringBuilder.AppendLine($"Forward vector: {ourVessel.GetFwdVector()}");
                         StringBuilder.AppendLine($"Up vector: {(Vector3)ourVessel.upAxis}");
                         StringBuilder.AppendLine($"Srf Rotation: {ourVessel.srfRelRotation}");
