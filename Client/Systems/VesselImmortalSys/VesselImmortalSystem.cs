@@ -123,7 +123,7 @@ namespace LunaClient.Systems.VesselImmortalSys
                     part.attachJoint?.SetUnbreakable(immortal, part.rigidAttachment);
 
                 if(part.collider != null)
-                    part.collider.enabled = !immortal;
+                    part.collider.enabled = SettingsSystem.CurrentSettings.CollidersEnabled || !immortal;
 
                 part.gTolerance = immortal ? double.MaxValue : 50;
                 part.maxPressure = immortal ? double.MaxValue : 4000;
@@ -132,5 +132,17 @@ namespace LunaClient.Systems.VesselImmortalSys
         }
 
         #endregion
+
+        /// <summary>
+        /// Call this method when changing the collider settings. It will reset the colliders if we are already in a running game
+        /// </summary>
+        public void ChangedColliderSettings()
+        {
+            if (Enabled)
+            {
+                Enabled = false;
+                Enabled = true;
+            }
+        }
     }
 }
