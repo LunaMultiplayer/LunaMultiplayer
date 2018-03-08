@@ -7,7 +7,6 @@ using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
@@ -15,15 +14,10 @@ namespace LunaClient.Systems.VesselDockSys
     public class VesselDockEvents : SubSystem<VesselDockSystem>
     {
         /// <summary>
-        /// This dictioanry stores the docking events
-        /// </summary>
-        private static Dictionary<Guid, VesselDockStructure> VesselDockings { get; } = new Dictionary<Guid, VesselDockStructure>();
-
-        /// <summary>
-        /// Called when 2 parts couple
+        /// Called when 2 parts couple and we can remove the weak vessel
         /// </summary>
         /// <param name="partAction"></param>
-        public void OnPartCouple(GameEvents.FromToAction<Part, Part> partAction)
+        public void OnPartCoupleComplete(GameEvents.FromToAction<Part, Part> partAction)
         {
             if (!VesselCommon.IsSpectating)
             {
@@ -32,9 +26,7 @@ namespace LunaClient.Systems.VesselDockSys
                     var dock = new VesselDockStructure(partAction.from.vessel.id, partAction.to.vessel.id);
                     if (dock.StructureIsOk())
                     {
-                        //We add it to the event so the event is handled AFTER all the docking event in ksp is over and we can
-                        //safely remove the weak vessel from the game and save the updated dominant vessel.
-                        VesselDockings.Add(dock.DominantVesselId, dock);
+                        HandleDocking(dock, false);
                     }
                 }
             }
@@ -60,7 +52,7 @@ namespace LunaClient.Systems.VesselDockSys
             }
         }
 
-        public void OnPartUndock(Part data)
+        public void OnPartUndockComplete(Part data)
         {
             if (VesselCommon.IsSpectating)
             {
@@ -68,20 +60,7 @@ namespace LunaClient.Systems.VesselDockSys
                 data.vessel.MakeActive();
             }
         }
-
-        /// <summary>
-        /// This event is called AFTER all the docking event is over, so the final 
-        /// vessel is merged and we can safely remove the minor vessel
-        /// </summary>
-        public void OnVesselWasModified(Vessel data)
-        {
-            if (VesselDockings.ContainsKey(data.id))
-            {
-                HandleDocking(VesselDockings[data.id], false);
-                VesselDockings.Remove(data.id);
-            }
-        }
-
+        
         /// <summary>
         /// This method is called after the docking is over and there 
         /// should be only 1 vessel in the screen (the final one)
