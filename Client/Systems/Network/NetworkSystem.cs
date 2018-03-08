@@ -7,6 +7,7 @@ using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Facility;
 using LunaClient.Systems.Flag;
+using LunaClient.Systems.FlagPlant;
 using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
 using LunaClient.Systems.KerbalSys;
@@ -311,6 +312,7 @@ namespace LunaClient.Systems.Network
                         AsteroidSystem.Singleton.Enabled = true;
                         ToolbarSystem.Singleton.Enabled = true;
                         FacilitySystem.Singleton.Enabled = true;
+                        FlagPlantSystem.Singleton.Enabled = true;
                         PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
                         StatusSystem.Singleton.MessageSender.SendOwnStatus();
                         NetworkSimpleMessageSender.SendMotdRequest();

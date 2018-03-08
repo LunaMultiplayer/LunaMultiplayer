@@ -84,6 +84,8 @@
     <Compile Include="Systems\Facility\FacilitySystem.cs" />
     <Compile Include="Systems\Facility\FacilityMessageHandler.cs" />
     <Compile Include="Systems\Facility\FacilityMessageSender.cs" />
+    <Compile Include="Systems\FlagPlant\FlagPlantEvents.cs" />
+    <Compile Include="Systems\FlagPlant\FlagPlantSystem.cs" />
     <Compile Include="Systems\Flag\FlagEvents.cs" />
     <Compile Include="Systems\KscScene\KscSceneEvents.cs" />
     <Compile Include="Systems\KscScene\KscSceneSystem.cs" />

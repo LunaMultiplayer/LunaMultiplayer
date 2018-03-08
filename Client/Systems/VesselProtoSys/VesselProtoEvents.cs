@@ -103,22 +103,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
             }
         }
-
-        /// <summary>
-        /// We use this method to detect when a flag has been planted and we are far away from it.
-        /// We don't use the onflagplanted event as that is triggered too early and we need to set the id
-        /// AFTER we filled the plaque in the flag
-        /// </summary>
-        public void VesselGoOnRails(Vessel vessel)
-        {
-            if (!VesselCommon.IsSpectating && vessel.vesselType == VesselType.Flag && vessel.id == Guid.Empty)
-            {
-                vessel.id = Guid.NewGuid();
-                vessel.protoVessel.vesselID = vessel.id;
-                System.MessageSender.SendVesselMessage(vessel, true);
-            }
-        }
-
+        
         /// <summary>
         /// Event called when a part is dead and removed from the game
         /// </summary>
