@@ -133,6 +133,8 @@ namespace LunaClient.Systems.VesselImmortalSys
 
         #endregion
 
+        #region Public methods
+
         /// <summary>
         /// Call this method when changing the collider settings. It will reset the colliders if we are already in a running game
         /// </summary>
@@ -144,5 +146,7 @@ namespace LunaClient.Systems.VesselImmortalSys
                 Enabled = true;
             }
         }
+
+        #endregion
     }
 }
