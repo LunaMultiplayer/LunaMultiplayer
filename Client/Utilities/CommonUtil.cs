@@ -14,6 +14,8 @@ namespace LunaClient.Utilities
         private static string _debugPort;
         public static string DebugPort => _debugPort ?? (_debugPort = GetDebugPort());
 
+        public static string OutputLogFilePath = CombinePaths(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "..", "LocalLow", "Squad", "Kerbal Space Program", "output_log.txt");
+
         /// <summary>
         /// Combine the paths specified as .net 3.5 doesn't give you a good method
         /// </summary>
@@ -34,14 +36,11 @@ namespace LunaClient.Utilities
         {
             if (!Common.PlatformIsWindows()) return "0";
 
-            var appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            var outputLogFile = CombinePaths(appDataFolder, "..", "LocalLow", "Squad", "Kerbal Space Program", "output_log.txt");
+            if (!File.Exists(OutputLogFilePath)) return "0";
 
-            if (!File.Exists(outputLogFile)) return "0";
+            var regex = new Regex(@"address=0\.0\.0\.0:(\d+)");
 
-            var regex = new Regex(@"0\.0\.0\.0:(\d+)");
-
-            using (var stream = File.Open(outputLogFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            using (var stream = File.Open(OutputLogFilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
             using (var reader = new StreamReader(stream))
             {
                 string line;

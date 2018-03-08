@@ -26,7 +26,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 namespace LunaClient
 {
@@ -220,13 +219,14 @@ namespace LunaClient
         {
             Singleton = this;
             DontDestroyOnLoad(this);
+            
             KspPath = UrlDir.ApplicationRootPath;
 
             //We are sure that we are in the unity thread as Awake() should only be called in a unity thread.
             _mainThreadId = Thread.CurrentThread.ManagedThreadId;
 
-            LunaLog.Log($"[LMP]: KSP installed at {KspPath}");
-            LunaLog.Log($"[LMP]: LMP installed at {Environment.CurrentDirectory}");
+            LunaLog.Log($"[LMP]: KSP installed at: {KspPath}");
+            LunaLog.Log($"[LMP]: LMP installed at: {Environment.CurrentDirectory}");
 
             if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
             {
@@ -236,6 +236,8 @@ namespace LunaClient
 
             SetupDirectoriesIfNeeded();
             HandleCommandLineArgs();
+
+            LunaLog.Log($"[LMP]: Debug port: {CommonUtil.DebugPort}");
 
             //Register events needed to bootstrap the windows.
             GameEvents.onHideUI.Add(() => { ShowGui = false; });
@@ -469,34 +471,44 @@ namespace LunaClient
             var port = 8800;
 
             var commands = Environment.GetCommandLineArgs();
-            var addressIndex = commands.IndexOf("-lmp") + 1;
-            if (commands.Any() && addressIndex > 0 && commands.Length > addressIndex)
+
+            if (commands.Any())
             {
-                var address = commands[addressIndex];
-                if (address.Contains("lmp://"))
+                var logFileIndex = commands.IndexOf("-logFile") + 1;
+                if (logFileIndex > 0 && commands.Length > logFileIndex)
                 {
-                    if (address.Substring("lmp://".Length).Contains(":")) //With port
+                    CommonUtil.OutputLogFilePath = commands[logFileIndex];
+                }
+
+                var addressIndex = commands.IndexOf("-lmp") + 1;
+                if (addressIndex > 0 && commands.Length > addressIndex)
+                {
+                    var address = commands[addressIndex];
+                    if (address.Contains("lmp://"))
                     {
-                        address = address.Substring("lmp://".Length)
-                            .Substring(0, address.LastIndexOf(":", StringComparison.Ordinal));
-                        var portString = address.Substring(address.LastIndexOf(":", StringComparison.Ordinal) + 1);
-                        valid = Int32.TryParse(portString, out port);
+                        if (address.Substring("lmp://".Length).Contains(":")) //With port
+                        {
+                            address = address.Substring("lmp://".Length)
+                                .Substring(0, address.LastIndexOf(":", StringComparison.Ordinal));
+                            var portString = address.Substring(address.LastIndexOf(":", StringComparison.Ordinal) + 1);
+                            valid = Int32.TryParse(portString, out port);
+                        }
+                        else
+                        {
+                            address = address.Substring("lmp://".Length);
+                            valid = true;
+                        }
+                    }
+                    if (valid)
+                    {
+                        CommandLineServer = new ServerEntry { Address = address, Port = port };
+                        LunaLog.Log($"[LMP]: Connecting via command line to: {address}, port: {port}");
                     }
                     else
                     {
-                        address = address.Substring("lmp://".Length);
-                        valid = true;
+                        LunaLog.LogError($"[LMP]: Command line address is invalid: {address}, port: {port}");
                     }
-                }
-                if (valid)
-                {
-                    CommandLineServer = new ServerEntry { Address = address, Port = port };
-                    LunaLog.Log($"[LMP]: Connecting via command line to: {address}, port: {port}");
-                }
-                else
-                {
-                    LunaLog.LogError($"[LMP]: Command line address is invalid: {address}, port: {port}");
-                }
+                }                
             }
         }
 
