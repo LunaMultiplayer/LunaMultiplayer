@@ -1,5 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.VesselStore;
+using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -14,10 +16,13 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (!(msg.Data is VesselFlightStateMsgData msgData)) return;
 
-            if (System.FlightStatesDictionary.TryGetValue(msgData.VesselId, out var existingFlightState))
-            {
-                existingFlightState.SetTarget(msgData);
-            }
+            if (!VesselCommon.DoVesselChecks(msgData.VesselId))
+                return;
+
+            //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
+            VesselsProtoStore.UpdateVesselProtoFlightState(msgData);
+
+            System.FlightStatesDictionary.GetOrAdd(msgData.VesselId, new VesselFlightStateUpdate()).SetTarget(msgData);
         }
     }
 }

@@ -43,6 +43,7 @@ namespace Server.Message.Reader
                     break;
                 case VesselMessageType.Flightstate:
                     VesselRelaySystem.HandleVesselMessage(client, messageData);
+                    VesselDataUpdater.WriteFlightstateDataToFile(messageData);
                     break;
                 case VesselMessageType.Update:
                     VesselDataUpdater.WriteUpdateDataToFile(messageData);

@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.VesselUtilities;
+using LunaCommon.Message.Data.Vessel;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -52,9 +53,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, RemoveUnloadedAndPackedVessels));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AddLoadedUnpackedVesselsToDictionary));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ReasignCallbacks));
+            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AssignCallbacks));
         }
 
         protected override void OnDisabled()
@@ -101,34 +100,10 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private void SendFlightState()
         {
-            if (Enabled && FlightStateSystemReady && !FlightGlobals.ActiveVessel.isEVA)
-            {
-                MessageSender.SendCurrentFlightState();
-
-                ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(SendFlightState), VesselCommon.IsSomeoneSpectatingUs ? 30 : 1000);
-            }
-        }
-
-        /// <summary>
-        /// Removes the unloaded/packed vessels from the system so we don't apply flightstates to them
-        /// </summary>
-        private void RemoveUnloadedAndPackedVessels()
-        {
             if (Enabled && FlightStateSystemReady)
             {
-                var vesselsToRemove = FlightGlobals.Vessels
-                    .Where(v => (!v.loaded || v.packed) && FlyByWireDictionary.Keys.Contains(v.id));
-
-                foreach (var vesselToRemove in vesselsToRemove)
-                {
-                    RemoveVesselFromSystem(vesselToRemove);
-                }
-
-                //We must never have our own active and controlled vessel in the dictionary
-                if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
-                {
-                    RemoveVesselFromSystem(FlightGlobals.ActiveVessel);
-                }
+                MessageSender.SendCurrentFlightState();
+                ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(SendFlightState), VesselCommon.IsSomeoneSpectatingUs ? 30 : 1000);
             }
         }
 
@@ -149,44 +124,23 @@ namespace LunaClient.Systems.VesselFlightStateSys
             FlyByWireDictionary.Remove(vesselToRemove.id);
             FlightStatesDictionary.TryRemove(vesselToRemove.id, out _);
         }
-
+        
         /// <summary>
-        /// Adds the loaded and unpacked vessels to the dictionary
+        /// Assign the callbacks for the vessels we have in the dictionary
         /// </summary>
-        private void AddLoadedUnpackedVesselsToDictionary()
+        private void AssignCallbacks()
         {
             if (Enabled && FlightStateSystemReady)
             {
-                var vesselsToAdd = FlightGlobals.VesselsLoaded
-                    .Where(v => !v.isEVA && !v.packed && !FlyByWireDictionary.Keys.Contains(v.id));
-                
-                foreach (var vesselToAdd in vesselsToAdd)
-                {
-                    //We must never have our own active and controlled vessel in the dictionary
-                    if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vesselToAdd.id)
-                        continue;
-
-                    FlightStatesDictionary.TryAdd(vesselToAdd.id, new VesselFlightStateUpdate());
-                    FlyByWireDictionary.Add(vesselToAdd.id, st => LunaOnVesselFlyByWire(vesselToAdd.id, st));
-
-                    vesselToAdd.OnFlyByWire += FlyByWireDictionary[vesselToAdd.id];
-                }
-            }
-        }
-
-        /// <summary>
-        /// When vessels are reloaded we must assign the callback back to them
-        /// </summary>
-        private void ReasignCallbacks()
-        {
-            if (Enabled && FlightStateSystemReady)
-            {
-                var vesselsToReasign = FlyByWireDictionary.Keys
+                var vesselsToReasign = FlightStatesDictionary.Keys
                     .Select(FlightGlobals.FindVessel)
                     .Where(v => v != null && !v.OnFlyByWire.GetInvocationList().Any(d=> d.Method.Name == nameof(LunaOnVesselFlyByWire)));
 
                 foreach (var vessel in vesselsToReasign)
                 {
+                    if (!FlyByWireDictionary.ContainsKey(vessel.id))
+                        FlyByWireDictionary.Add(vessel.id, st => LunaOnVesselFlyByWire(vessel, st));
+
                     vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
                 }
             }
@@ -200,13 +154,22 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// Here we copy the flight state we received and apply to the specific vessel.
         /// This method is called by ksp as it's a delegate. It's called on every FixedUpdate
         /// </summary>
-        private void LunaOnVesselFlyByWire(Guid id, FlightCtrlState st)
+        private void LunaOnVesselFlyByWire(Vessel vessel, FlightCtrlState st)
         {
-            if (FlightStatesDictionary.TryGetValue(id, out var value))
+            if (vessel == null) return;
+
+            if (!VesselCommon.DoVesselChecks(vessel.id))
+                RemoveVesselFromSystem(vessel);
+
+            if (FlightStatesDictionary.TryGetValue(vessel.id, out var value))
             {
+                var interpolatedFs = value.GetInterpolatedValue(st);
+                UpdateFlightStateInProtoVessel(vessel.protoVessel, interpolatedFs.pitch, interpolatedFs.yaw, interpolatedFs.roll, 
+                    interpolatedFs.pitchTrim, interpolatedFs.yawTrim, interpolatedFs.rollTrim, interpolatedFs.mainThrottle);
+
                 if (VesselCommon.IsSpectating)
                 {
-                    st.CopyFrom(value.GetInterpolatedValue(st));
+                    st.CopyFrom(interpolatedFs);
                 }
                 else
                 {
@@ -214,17 +177,35 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     //input controls as then the vessel jitters, specially if the other player has SAS on
                     if (FlightGlobals.ActiveVessel.situation > Vessel.Situations.FLYING)
                     {
-                        var interpolatedState = value.GetInterpolatedValue(st);
-                        st.mainThrottle = interpolatedState.mainThrottle;
-                        st.gearDown = interpolatedState.gearDown;
-                        st.gearUp = interpolatedState.gearUp;
-                        st.headlight = interpolatedState.headlight;
-                        st.killRot = interpolatedState.killRot;
+                        st.mainThrottle = interpolatedFs.mainThrottle;
+                        st.gearDown = interpolatedFs.gearDown;
+                        st.gearUp = interpolatedFs.gearUp;
+                        st.headlight = interpolatedFs.headlight;
+                        st.killRot = interpolatedFs.killRot;
                     }
                 }
             }
         }
 
         #endregion
+
+        public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
+        {
+            if (protoVessel == null) return;
+
+            protoVessel.ctrlState.SetValue("pitch", pitch);
+            protoVessel.ctrlState.SetValue("yaw", yaw);
+            protoVessel.ctrlState.SetValue("roll", roll);
+            protoVessel.ctrlState.SetValue("trimPitch", pitchTrm);
+            protoVessel.ctrlState.SetValue("trimYaw", yawTrm);
+            protoVessel.ctrlState.SetValue("trimRoll", rollTrm);
+            protoVessel.ctrlState.SetValue("mainThrottle", throttle);
+        }
+        
+        internal void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, VesselFlightStateMsgData msgData)
+        {
+            UpdateFlightStateInProtoVessel(protoVessel, msgData.Pitch, msgData.Yaw, msgData.Roll, msgData.PitchTrim,
+                msgData.YawTrim, msgData.RollTrim, msgData.MainThrottle);
+        }
     }
 }

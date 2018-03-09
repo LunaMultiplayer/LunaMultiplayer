@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -45,6 +46,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
             msgData.GameTime = Planetarium.GetUniversalTime();
 
             SendMessage(msgData);
+
+            VesselsProtoStore.UpdateVesselProtoFlightState(msgData);
+            System.UpdateFlightStateInProtoVessel(FlightGlobals.ActiveVessel.protoVessel, msgData);
         }
     }
 }

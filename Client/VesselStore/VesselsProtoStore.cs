@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.VesselEvaSys;
+using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using System;
@@ -221,6 +222,14 @@ namespace LunaClient.VesselStore
             if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
             {
                 VesselEvaSystem.Singleton.UpdateFsmStateInProtoVessel(vesselProtoUpd.ProtoVessel, msgData.NewState, msgData.LastBoundStep);
+            }
+        }
+
+        public static void UpdateVesselProtoFlightState(VesselFlightStateMsgData msgData)
+        {
+            if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
+            {
+                VesselFlightStateSystem.Singleton.UpdateFlightStateInProtoVessel(vesselProtoUpd.ProtoVessel, msgData);
             }
         }
     }
