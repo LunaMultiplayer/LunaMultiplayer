@@ -483,11 +483,29 @@ namespace LunaCommon
                 "RelayAntenna5",
                 "RelayAntenna50",
                 "HeatShield0",
-                // 1.3 part
-                "InfraredTelescope"
+                //1.3 part
+                "InfraredTelescope",
+                //1.4.0 parts
+                "kerbalEVAVintage",
+                "kerbalEVAfemaleVintage",
+                "mk1-3pod",
+                "Decoupler_0",
+                "Decoupler_1",
+                "Decoupler_2",
+                "Decoupler_3",
+                "Separator_0",
+                "Separator_1",
+                "Separator_2",
+                "Separator_3",
+                "externalTankCapsule",
+                "externalTankRound",
+                "externalTankToroid",
+                "Rockomax16_BW",
+                "Rockomax32_BW",
+                "Rockomax64_BW",
+                "Rockomax8BW"
             };
             return stockPartList;
-            //MAKE SURE TO CHANGE VERSION NUMBER!
         }
 
         public static string GenerateModFileStringData(string[] requiredFiles, string[] optionalFiles, bool isWhiteList,
