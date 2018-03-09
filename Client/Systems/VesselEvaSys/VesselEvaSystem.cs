@@ -85,23 +85,51 @@ namespace LunaClient.Systems.VesselEvaSys
         /// </summary>
         public void LmpOnStateChange(KFSMState prevState, KFSMState newState, KFSMEvent eventToRun)
         {
-            MessageSender.SendEvaData(FlightGlobals.ActiveVessel, newState.name, eventToRun.name);
-            UpdateFsmStateInProtoVessel(FlightGlobals.ActiveVessel.protoVessel, newState.name);
+            var module = GetKerbalEvaModule(FlightGlobals.ActiveVessel) as KerbalEVA;
+            if (module != null)
+            {
+                MessageSender.SendEvaData(FlightGlobals.ActiveVessel, newState.name, eventToRun.name, module.lastBoundStep);
+                UpdateFsmStateInProtoVessel(FlightGlobals.ActiveVessel.protoVessel, newState.name, module.lastBoundStep);
+            }
+            else
+            {
+                MessageSender.SendEvaData(FlightGlobals.ActiveVessel, newState.name, eventToRun.name);
+                UpdateFsmStateInProtoVessel(FlightGlobals.ActiveVessel.protoVessel, newState.name);
+            }
         }
 
         /// <summary>
         /// Updates the fsm state in the given protovessel
         /// </summary>
-        public void UpdateFsmStateInProtoVessel(ProtoVessel protoVessel, string state)
+        public void UpdateFsmStateInProtoVessel(ProtoVessel protoVessel, string state, float lastBoundStep = float.NaN)
         {
-            if (protoVessel == null) return;
-
-            var partSnapshot = VesselCommon.FindProtoPartInProtovessel(protoVessel, "kerbalEVA");
-            if (partSnapshot == null) return;
-
-            var protoModule = VesselCommon.FindProtoPartModuleInProtoPart(partSnapshot, "KerbalEVA");
+            var protoModule = GetKerbalEvaProtoModule(protoVessel);
 
             protoModule?.moduleValues.SetValue("state", state);
+
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (lastBoundStep != float.NaN)
+                protoModule?.moduleValues.SetValue("lastBoundStep", lastBoundStep);
+        }
+        
+        private static ProtoPartModuleSnapshot GetKerbalEvaProtoModule(ProtoVessel protoVessel)
+        {
+            if (protoVessel == null) return null;
+
+            var partSnapshot = VesselCommon.FindProtoPartInProtovessel(protoVessel, "kerbalEVA");
+            if (partSnapshot == null) return null;
+
+            return VesselCommon.FindProtoPartModuleInProtoPart(partSnapshot, "KerbalEVA");
+        }
+
+        private static PartModule GetKerbalEvaModule(Vessel vessel)
+        {
+            if (vessel == null) return null;
+
+            var partSnapshot = VesselCommon.FindPartInVessel(vessel, "kerbalEVA");
+            if (partSnapshot == null) return null;
+
+            return VesselCommon.FindModuleInPart(partSnapshot, "KerbalEVA");
         }
     }
 }

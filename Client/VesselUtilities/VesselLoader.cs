@@ -226,10 +226,11 @@ namespace LunaClient.VesselUtilities
             if (currentProto.vesselRef.isEVA)
             {
                 var evaModule = currentProto.vesselRef.FindPartModuleImplementing<KerbalEVA>();
-                if (evaModule != null)
+                if (evaModule != null && evaModule.fsm != null && !evaModule.fsm.Started)
                 {
                     evaModule.fsm?.StartFSM("Idle (Grounded)");
                 }
+                currentProto.vesselRef.GoOnRails();
             }
             currentProto.vesselRef.orbitDriver?.updateFromParameters();
 

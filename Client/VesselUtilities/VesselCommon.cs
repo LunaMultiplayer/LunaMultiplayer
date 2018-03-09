@@ -129,6 +129,21 @@ namespace LunaClient.VesselUtilities
         }
 
         /// <summary>
+        /// Finds a part in a vessel without generating garbage. Returns null if not found
+        /// </summary>
+        public static Part FindPartInVessel(Vessel vessel, string partName)
+        {
+            if (vessel == null) return null;
+
+            for (var i = 0; i < vessel.Parts.Count; i++)
+            {
+                if (vessel.Parts[i].partName == partName)
+                    return vessel.Parts[i];
+            }
+            return null;
+        }
+
+        /// <summary>
         /// Finds a module in a part without generating garbage. Returns null if not found
         /// </summary>
         public static PartModule FindModuleInPart(Part part, string moduleName)

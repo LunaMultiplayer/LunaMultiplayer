@@ -220,7 +220,7 @@ namespace LunaClient.VesselStore
         {
             if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
             {
-                VesselEvaSystem.Singleton.UpdateFsmStateInProtoVessel(vesselProtoUpd.ProtoVessel, msgData.NewState);
+                VesselEvaSystem.Singleton.UpdateFsmStateInProtoVessel(vesselProtoUpd.ProtoVessel, msgData.NewState, msgData.LastBoundStep);
             }
         }
     }

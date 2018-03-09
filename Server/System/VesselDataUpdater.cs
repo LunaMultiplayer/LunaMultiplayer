@@ -448,6 +448,14 @@ namespace Server.System
             var fieldNode = document.SelectSingleNode(xpath);
             if (fieldNode != null) fieldNode.InnerText = msgData.NewState;
 
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            if (msgData.LastBoundStep != float.NaN)
+            {
+                xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='lastBoundStep']";
+                fieldNode = document.SelectSingleNode(xpath);
+                if (fieldNode != null) fieldNode.InnerText = msgData.LastBoundStep.ToString(CultureInfo.InvariantCulture);
+            }
+
             return document.ToIndentedString();
         }
     }
