@@ -4,16 +4,18 @@ namespace LunaClient.Systems.VesselPrecalcSys
 {
     public class VesselPrecalcEvents : SubSystem<VesselPrecalcSystem>
     {
-        public void OnVesselPrecalcAssign(Vessel data)
+        public void OnVesselPrecalcAssign(Vessel vessel)
         {
-            data.precalc = data.gameObject.AddComponent<LunaPrecalc>();
+            vessel.precalc = vessel.gameObject.AddComponent<LunaPrecalc>();
+            if (vessel.isEVA)
+                vessel.vesselRanges = System.LmpEvaRanges;
         }
 
-        public void VesselLoaded(Vessel data)
+        public void VesselLoaded(Vessel vessel)
         {
-            if (data.precalc?.GetType() != typeof(LunaPrecalc))
+            if (vessel.precalc?.GetType() != typeof(LunaPrecalc))
             {
-                data.precalc = data.gameObject.AddComponent<LunaPrecalc>();
+                vessel.precalc = vessel.gameObject.AddComponent<LunaPrecalc>();
             }
         }
     }

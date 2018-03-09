@@ -2,6 +2,7 @@
 using LunaClient.Base.Interface;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselStore;
+using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -18,7 +19,7 @@ namespace LunaClient.Systems.VesselPositionSys
             
             var vesselId = msgData.VesselId;
 
-            if (!System.DoVesselChecks(vesselId))
+            if (!VesselCommon.DoVesselChecks(vesselId))
                 return;
 
             //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)

@@ -34,10 +34,10 @@ namespace LunaClient.Systems.VesselProtoSys
             var vesselPartsIds = vessel.loaded ? vessel.parts.Select(p => p.flightID) : vessel.protoVessel.protoPartSnapshots.Select(p=> p.flightID);
 
             var hasMissingparts = vesselProtoPartIds.Except(vesselPartsIds).Any();
-            if (hasMissingparts || vessel.isEVA || !VesselCommon.IsSpectating && (UnloadedOrEvaVesselChangedSituation(vessel, protoVessel) || VesselJustLandedOrSplashed(vessel, protoVessel)))
+            if (hasMissingparts || !VesselCommon.IsSpectating && (UnloadedVesselChangedSituation(vessel, protoVessel) || VesselJustLandedOrSplashed(vessel, protoVessel)))
             {
                 //Reload the whole vessel if vessel lands/splashes as otherwise map view puts the vessel next to the other player.
-                //Also reload the whole vessel if it's a EVA or is not loaded and situation changed....
+                //Also reload the whole vessel if is not loaded and situation changed....
                 //Better to reload if has missing parts as creating them dinamically is a PIA
                 VesselLoader.ReloadVessel(protoVessel);
                 return;
@@ -196,12 +196,12 @@ namespace LunaClient.Systems.VesselProtoSys
         
         private static bool VesselJustLandedOrSplashed(Vessel vessel, ProtoVessel protoVessel)
         {
-            return !vessel.Landed && protoVessel.landed || !vessel.Splashed && protoVessel.splashed;
+            return !vessel.isEVA && (!vessel.Landed && protoVessel.landed || !vessel.Splashed && protoVessel.splashed);
         }
 
-        private static bool UnloadedOrEvaVesselChangedSituation(Vessel vessel, ProtoVessel protoVessel)
+        private static bool UnloadedVesselChangedSituation(Vessel vessel, ProtoVessel protoVessel)
         {
-            return (!vessel.loaded || vessel.isEVA) && vessel.situation != protoVessel.situation;
+            return !vessel.loaded && vessel.situation != protoVessel.situation;
         }
     }
 }

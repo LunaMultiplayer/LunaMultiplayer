@@ -16,6 +16,10 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
         public void HandleMessage(IServerMessageBase msg)
         {
             if (!(msg.Data is VesselPartSyncMsgData msgData) || !System.PartSyncSystemReady) return;
+            
+            //We received a msg for our own controlled/updated vessel so ignore it
+            if (!VesselCommon.DoVesselChecks(msgData.VesselId))
+                return;
 
             //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
             VesselsProtoStore.UpdateVesselProtoPartModules(msgData);

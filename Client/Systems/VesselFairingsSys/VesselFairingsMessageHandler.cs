@@ -16,6 +16,10 @@ namespace LunaClient.Systems.VesselFairingsSys
         {
             if (!(msg.Data is VesselFairingMsgData msgData) || !System.FairingSystemReady) return;
 
+            //We received a msg for our own controlled/updated vessel so ignore it
+            if (!VesselCommon.DoVesselChecks(msgData.VesselId))
+                return;
+
             //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
             VesselsProtoStore.UpdateVesselProtoPartFairing(msgData);
 

@@ -1,7 +1,5 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
@@ -78,7 +76,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             foreach (var keyVal in CurrentVesselUpdate)
             {
-                if (!DoVesselChecks(keyVal.Key))
+                if (!VesselCommon.DoVesselChecks(keyVal.Key))
                     RemoveVesselFromSystem(keyVal.Key);
 
                 keyVal.Value.ApplyVesselUpdate();
@@ -152,30 +150,6 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Public methods
-
-        /// <summary>
-        /// Check if we should apply updates to the given vesselId
-        /// </summary>
-        public bool DoVesselChecks(Guid vesselId)
-        {
-            //Ignore updates if vessel is in kill list
-            if (VesselRemoveSystem.Singleton.VesselWillBeKilled(vesselId))
-                return false;
-
-            //Ignore vessel updates for our own controlled vessel
-            if (LockSystem.LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                return false;
-
-            //Ignore vessel updates for our own updated vessels
-            if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                return false;
-
-            //Ignore vessel updates for our own updated vessels
-            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                return false;
-
-            return true;
-        }
 
         /// <summary>
         /// Gets the latest received position of a vessel

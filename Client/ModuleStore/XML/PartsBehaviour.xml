@@ -25,6 +25,16 @@
     </Fields>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
+    <ModuleName>KerbalEVA</ModuleName>
+    <Fields>
+      <!--No idea what this field is but it changes too often to sync it-->
+      <CustomFieldDefinition>
+        <FieldName>lastBoundStep</FieldName>
+        <Ignore>true</Ignore>
+      </CustomFieldDefinition>
+    </Fields>
+  </CustomModuleDefinition>
+  <CustomModuleDefinition>
     <ModuleName>ModuleEngines</ModuleName>
     <Fields>
       <!--Current throttle of an engine. Probably its related with the exhaust smoke but it changes way too much for syncing it-->

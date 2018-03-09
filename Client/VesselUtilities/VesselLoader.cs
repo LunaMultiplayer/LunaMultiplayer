@@ -1,5 +1,4 @@
 ﻿using KSP.UI.Screens;
-using LunaClient.Systems;
 using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.VesselPositionSys;
@@ -30,7 +29,7 @@ namespace LunaClient.VesselUtilities
         /// Invoke this private method to rebuild the vessel lists that appear on the tracking station
         /// </summary>
         private static MethodInfo BuildSpaceTrackingVesselList { get; } = typeof(SpaceTracking).GetMethod("buildVesselsList", BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
         /// <summary>
         /// Load a vessel into the game
         /// </summary>
@@ -102,7 +101,7 @@ namespace LunaClient.VesselUtilities
         }
 
         #region Private methods
-        
+
         /// <summary>
         /// Performs the operation of actually loading the vessel into the game.  Does not handle errors.
         /// </summary>
@@ -177,7 +176,7 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         private static void FixProtoVesselFlags(ProtoVessel vesselProto)
         {
-            foreach (var part in vesselProto.protoPartSnapshots.Where(p=> !string.IsNullOrEmpty(p.flagURL)))
+            foreach (var part in vesselProto.protoPartSnapshots.Where(p => !string.IsNullOrEmpty(p.flagURL)))
             {
                 if (!File.Exists(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", $"{part.flagURL}.png")))
                 {
@@ -223,7 +222,15 @@ namespace LunaClient.VesselUtilities
                 LunaLog.Log($"[LMP]: Protovessel {currentProto.vesselID} failed to create a vessel!");
                 return false;
             }
-            
+
+            if (currentProto.vesselRef.isEVA)
+            {
+                var evaModule = currentProto.vesselRef.FindPartModuleImplementing<KerbalEVA>();
+                if (evaModule != null)
+                {
+                    evaModule.fsm?.StartFSM("Idle (Grounded)");
+                }
+            }
             currentProto.vesselRef.orbitDriver?.updateFromParameters();
 
             PlayerColorSystem.Singleton.SetVesselOrbitColor(currentProto.vesselRef);
@@ -236,7 +243,7 @@ namespace LunaClient.VesselUtilities
             }
             return true;
         }
-        
+
         /// <summary>
         /// This method removes the "Target: xxx" message created by SetVesselTarget
         /// </summary>

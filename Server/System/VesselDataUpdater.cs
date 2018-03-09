@@ -207,7 +207,29 @@ namespace Server.System
                 }
             });
         }
-        
+
+
+        /// <summary>
+        /// We received a eva state change from a player
+        /// Then we rewrite the vesselproto with that last information so players that connect later receive an updated vesselproto
+        /// </summary>
+        public static void WriteEvaDataToFile(VesselBaseMsgData message)
+        {
+            if (!(message is VesselEvaMsgData msgData)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+
+            //Sync eva state ALWAYS and ignore the rate they arrive
+            Task.Run(() =>
+            {
+                lock (Semaphore.GetOrAdd(msgData.VesselId, new object()))
+                {
+                    if (!VesselStoreSystem.CurrentVesselsInXmlFormat.TryGetValue(msgData.VesselId, out var xmlData)) return;
+
+                    var updatedText = UpdateProtoVesselFileWithNewEvaData(xmlData, msgData);
+                    VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
+                }
+            });
+        }
 
         /// <summary>
         /// Updates the proto vessel with the values we received about a position of a vessel
@@ -405,6 +427,26 @@ namespace Server.System
                     moduleNode.RemoveChild(fairingsSections[i]);
                 }
             }
+
+            return document.ToIndentedString();
+        }
+
+        /// <summary>
+        /// Updates the proto vessel with the values we received about a eva state change of a vessel
+        /// </summary>
+        private static string UpdateProtoVesselFileWithNewEvaData(string vesselData, VesselEvaMsgData msgData)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
+
+            var module = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='name' and text()=""kerbalEVA""]/" +
+                         $"following-sibling::MODULE/{ConfigNodeXmlParser.ValueNode}" +
+                         @"[@name='name' and text()=""KerbalEVA""]/parent::MODULE/";
+
+            var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='state']";
+
+            var fieldNode = document.SelectSingleNode(xpath);
+            if (fieldNode != null) fieldNode.InnerText = msgData.NewState;
 
             return document.ToIndentedString();
         }

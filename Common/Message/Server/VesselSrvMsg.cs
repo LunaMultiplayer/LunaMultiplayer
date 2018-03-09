@@ -28,6 +28,7 @@ namespace LunaCommon.Message.Server
             [(ushort)VesselMessageType.Resource] = typeof(VesselResourceMsgData),
             [(ushort)VesselMessageType.PartSync] = typeof(VesselPartSyncMsgData),
             [(ushort)VesselMessageType.Fairing] = typeof(VesselFairingMsgData),
+            [(ushort)VesselMessageType.Eva] = typeof(VesselEvaMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Vessel;

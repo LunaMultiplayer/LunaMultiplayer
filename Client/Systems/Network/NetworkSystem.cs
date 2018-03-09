@@ -22,6 +22,7 @@ using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.VesselDockSys;
+using LunaClient.Systems.VesselEvaSys;
 using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselImmortalSys;
@@ -313,6 +314,7 @@ namespace LunaClient.Systems.Network
                         ToolbarSystem.Singleton.Enabled = true;
                         FacilitySystem.Singleton.Enabled = true;
                         FlagPlantSystem.Singleton.Enabled = true;
+                        VesselEvaSystem.Singleton.Enabled = true;
                         PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
                         StatusSystem.Singleton.MessageSender.SendOwnStatus();
                         NetworkSimpleMessageSender.SendMotdRequest();

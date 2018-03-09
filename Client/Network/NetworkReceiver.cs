@@ -16,6 +16,7 @@ using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselDockSys;
+using LunaClient.Systems.VesselEvaSys;
 using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPartModuleSyncSys;
@@ -169,6 +170,9 @@ namespace LunaClient.Network
                             break;
                         case VesselMessageType.Fairing:
                             VesselFairingsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case VesselMessageType.Eva:
+                            VesselEvaSystem.Singleton.EnqueueMessage(msg);
                             break;
                     }
                     break;

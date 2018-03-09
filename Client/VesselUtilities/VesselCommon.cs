@@ -1,8 +1,8 @@
-﻿using LunaClient.Systems;
-using LunaClient.Systems.Chat;
+﻿using LunaClient.Systems.Chat;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.Warp;
 using LunaCommon.Enums;
 using System;
@@ -161,6 +161,30 @@ namespace LunaClient.VesselUtilities
         }
 
         /// <summary>
+        /// Check if we should apply a message to the given vesselId
+        /// </summary>
+        public static bool DoVesselChecks(Guid vesselId)
+        {
+            //Ignore updates if vessel is in kill list
+            if (VesselRemoveSystem.Singleton.VesselWillBeKilled(vesselId))
+                return false;
+
+            //Ignore vessel updates for our own controlled vessel
+            if (LockSystem.LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                return false;
+
+            //Ignore vessel updates for our own updated vessels
+            if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                return false;
+
+            //Ignore vessel updates for our own updated vessels
+            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                return false;
+
+            return true;
+        }
+
+        /// <summary>
         /// Finds a proto part snapshot in a proto vessel without generating garbage. Returns null if not found
         /// </summary>
         public static ProtoPartSnapshot FindProtoPartInProtovessel(ProtoVessel protoVessel, uint partFlightId)
@@ -170,6 +194,21 @@ namespace LunaClient.VesselUtilities
             for (var i = 0; i < protoVessel.protoPartSnapshots.Count; i++)
             {
                 if (protoVessel.protoPartSnapshots[i].flightID == partFlightId)
+                    return protoVessel.protoPartSnapshots[i];
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds a proto part snapshot in a proto vessel without generating garbage. Returns null if not found
+        /// </summary>
+        public static ProtoPartSnapshot FindProtoPartInProtovessel(ProtoVessel protoVessel, string partName)
+        {
+            if (protoVessel == null) return null;
+
+            for (var i = 0; i < protoVessel.protoPartSnapshots.Count; i++)
+            {
+                if (protoVessel.protoPartSnapshots[i].partName == partName)
                     return protoVessel.protoPartSnapshots[i];
             }
             return null;

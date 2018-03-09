@@ -189,6 +189,7 @@
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
     <Compile Include="Message\Data\Vessel\ActionGroup.cs" />
+    <Compile Include="Message\Data\Vessel\VesselEvaMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselInfo.cs" />
     <Compile Include="Message\Data\Vessel\VesselBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />

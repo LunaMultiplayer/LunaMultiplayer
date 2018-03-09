@@ -17,6 +17,10 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             if (!(msg.Data is VesselUpdateMsgData msgData) || !System.UpdateSystemReady) return;
 
+            //We received a msg for our own controlled/updated vessel so ignore it
+            if (!VesselCommon.DoVesselChecks(msgData.VesselId))
+                return;
+
             //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
             VesselsProtoStore.UpdateVesselProtoValues(msgData);
 
@@ -34,8 +38,8 @@ namespace LunaClient.Systems.VesselUpdateSys
             vessel.protoVessel.vesselType = vessel.vesselType = (VesselType) Enum.Parse(typeof(VesselType), msgData.Type);
 
             vessel.protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
-            //Only change this value if vessel is not eva. When vessel is eva or is not loaded we reload it if the situation changes
-            if (!vessel.isEVA && vessel.loaded) 
+            //Only change this value if vessel is loaded. When vessel is not loaded we reload it if the situation changes
+            if (vessel.loaded) 
                 vessel.situation = vessel.protoVessel.situation;
 
             vessel.protoVessel.landed = msgData.Landed;

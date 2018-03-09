@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.VesselEvaSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using System;
@@ -183,10 +184,10 @@ namespace LunaClient.VesselStore
             {
                 if (vesselProtoUpd.ProtoVessel == null) return;
 
-                var part = VesselCommon.FindProtoPartInProtovessel(vesselProtoUpd.ProtoVessel, msgData.PartFlightId);
-                if (part != null)
+                var partSnapshot = VesselCommon.FindProtoPartInProtovessel(vesselProtoUpd.ProtoVessel, msgData.PartFlightId);
+                if (partSnapshot != null)
                 {
-                    var module = VesselCommon.FindProtoPartModuleInProtoPart(part, msgData.ModuleName);
+                    var module = VesselCommon.FindProtoPartModuleInProtoPart(partSnapshot, msgData.ModuleName);
                     module?.moduleValues.SetValue(msgData.FieldName, msgData.Value);
                 }
             }
@@ -196,10 +197,10 @@ namespace LunaClient.VesselStore
         {
             if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
             {
+                if (vesselProtoUpd.ProtoVessel == null) return;
+
                 for (var i = 0; i < msgData.ResourcesCount; i++)
                 {
-                    if (vesselProtoUpd.ProtoVessel == null) return;
-
                     var resource = msgData.Resources[i];
 
                     if (resource == null) continue;
@@ -212,6 +213,14 @@ namespace LunaClient.VesselStore
                         resourceSnapshot.flowState = resource.FlowState;
                     }
                 }
+            }
+        }
+
+        public static void UpdateVesselProtoEvaFsm(VesselEvaMsgData msgData)
+        {
+            if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
+            {
+                VesselEvaSystem.Singleton.UpdateFsmStateInProtoVessel(vesselProtoUpd.ProtoVessel, msgData.NewState);
             }
         }
     }
