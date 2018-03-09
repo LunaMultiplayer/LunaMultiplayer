@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselEvaSys
     {
         #region Fields & properties
 
-        public bool EvaSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 3f;
+        public bool EvaSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f;
 
         public FieldInfo[] FsmStates { get; } = typeof(KerbalEVA)
             .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)

@@ -16,7 +16,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
     {
         #region Fields & properties
 
-        public bool PartSyncSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 3f;
+        public bool PartSyncSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f;
 
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
 

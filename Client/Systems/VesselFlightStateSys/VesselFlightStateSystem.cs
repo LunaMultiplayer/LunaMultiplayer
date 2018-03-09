@@ -32,7 +32,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             new ConcurrentDictionary<Guid, VesselFlightStateUpdate>();
 
         public bool FlightStateSystemReady
-            => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 3f &&
+            => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
                FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
                FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
                FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;

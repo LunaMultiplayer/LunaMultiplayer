@@ -13,7 +13,7 @@ namespace LunaClient.Systems.VesselUpdateSys
     {
         #region Fields & properties
 
-        public bool UpdateSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 3f;
+        public bool UpdateSystemReady => Enabled && HighLogic.LoadedScene >= GameScenes.FLIGHT && Time.timeSinceLevelLoad > 1f;
 
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
         private List<Vessel> AbandonedVesselsToUpdate { get; } = new List<Vessel>();

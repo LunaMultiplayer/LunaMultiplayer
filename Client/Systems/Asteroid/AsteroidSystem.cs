@@ -74,7 +74,6 @@ namespace LunaClient.Systems.Asteroid
             {
                 ScenarioController.spawnOddsAgainst = int.MaxValue;
                 ScenarioController.spawnInterval = float.MaxValue;
-                ScenarioController.lastSeed = Random.Range(0, 1000000);
             }
         }
 

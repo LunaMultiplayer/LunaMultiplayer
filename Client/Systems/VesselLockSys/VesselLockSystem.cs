@@ -27,7 +27,7 @@ namespace LunaClient.Systems.VesselLockSys
 
         private VesselLockEvents VesselLockEvents { get; } = new VesselLockEvents();
 
-        private bool VesselLockSystemReady => Enabled && Time.timeSinceLevelLoad > 10f;
+        private bool VesselLockSystemReady => Enabled && Time.timeSinceLevelLoad > 1f;
 
         private string SpectatingMessage => VesselCommon.IsSpectating ? LocalizationContainer.ScreenText.Spectating + $" {GetVesselOwner}." : "";
 

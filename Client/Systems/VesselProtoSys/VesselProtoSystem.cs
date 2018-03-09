@@ -29,10 +29,10 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public VesselLoader VesselLoader { get; } = new VesselLoader();
 
-        public bool ProtoSystemReady => Enabled && Time.timeSinceLevelLoad > 10f && FlightGlobals.ready &&
+        public bool ProtoSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready &&
             HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating;
 
-        public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 10f &&
+        public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
             HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null ||
             HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
