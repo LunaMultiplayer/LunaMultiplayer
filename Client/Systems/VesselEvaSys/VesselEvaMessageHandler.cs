@@ -5,6 +5,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselStore;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System;
 using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.VesselEvaSys
@@ -26,8 +27,15 @@ namespace LunaClient.Systems.VesselEvaSys
 
             var vessel = FlightGlobals.FindVessel(msgData.VesselId);
             if (vessel == null || !vessel.isEVA) return;
-            
-            System.RunEvent(vessel, msgData.NewState, msgData.EventToRun);
+
+            try
+            {
+                System.RunEvent(vessel, msgData.NewState, msgData.EventToRun);
+            }
+            catch (Exception)
+            {
+                //Ignore the eva animation errors
+            }
         }
     }
 }
