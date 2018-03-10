@@ -198,6 +198,10 @@ namespace LunaClient.Systems.VesselPositionSys
             if (Vessel.LandedOrSplashed)
             {
                 //Do not apply orbit params while grounded as it makes the vessel jitter. Specially when on different subspaces
+                //If connection is perfect ground sync is really soft but this is not always the case as there are network delays.
+                //This causes the vessel to jitter and go inside kerbin because the orbital parameters are from a late state.
+                //In flight taht's not an issue but on the ground it is because the ground collider...
+
                 //Also do not apply them if we are spectating as this will be handled by the engine itself
                 Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
                 Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
