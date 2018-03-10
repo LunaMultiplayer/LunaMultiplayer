@@ -83,7 +83,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void ResetFields(VesselPositionUpdate target)
         {
-            if(Target.VesselId != VesselId || Vessel == null)
+            if (Target.VesselId != VesselId || Vessel == null)
                 Vessel = FlightGlobals.FindVessel(Target.VesselId);
 
             LerpPercentage = 0;
@@ -196,7 +196,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.checkSplashed();
 
             if (Vessel.LandedOrSplashed)
-            {                    
+            {
                 //Do not apply orbit params while grounded as it makes the vessel jitter. Specially when on different subspaces
                 //Also do not apply them if we are spectating as this will be handled by the engine itself
                 Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
@@ -263,7 +263,7 @@ namespace LunaClient.Systems.VesselPositionSys
             ApplyOrbitInterpolation(lerpPercentage);
             Vessel.orbitDriver.updateFromParameters();
 
-            if (Vessel.situation < Vessel.Situations.ORBITING)
+            if (Vessel.situation < Vessel.Situations.FLYING)
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
         }
 

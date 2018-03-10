@@ -35,6 +35,21 @@
     </Fields>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
+    <ModuleName>ModuleEvaChute</ModuleName>
+    <Fields>
+      <!--State of the parachute sync it always-->
+      <CustomFieldDefinition>
+        <FieldName>persistentState</FieldName>
+        <Ignore>false</Ignore>
+        <IgnoreSpectating>false</IgnoreSpectating>
+        <Interval>250</Interval>
+        <CallOnAwake>true</CallOnAwake>
+        <CallOnLoad>true</CallOnLoad>
+        <CallOnStart>true</CallOnStart>
+      </CustomFieldDefinition>
+    </Fields>
+  </CustomModuleDefinition>
+  <CustomModuleDefinition>
     <ModuleName>ModuleEngines</ModuleName>
     <Fields>
       <!--Current throttle of an engine. Probably its related with the exhaust smoke but it changes way too much for syncing it-->
