@@ -204,6 +204,7 @@ namespace LunaClient.Systems.VesselPositionSys
                  * after that, we get the current lat, lon, alt
                  * After those values are calculated, we set the ALTITUDE based on what the player send
                  * And we reposition again the vessel.
+                 * Doing it in this way we avoid the vessel going inside kerbin
                  */
 
                 Vessel.orbitDriver.updateFromParameters();
