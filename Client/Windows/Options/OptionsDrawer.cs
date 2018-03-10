@@ -98,7 +98,7 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.SaveSettings();
             }
             var enableColliders = GUILayout.Toggle(SettingsSystem.CurrentSettings.CollidersEnabled, LocalizationContainer.OptionsWindowText.Colliders, ButtonStyle);
-            if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
+            if (enableColliders != SettingsSystem.CurrentSettings.CollidersEnabled)
             {
                 SettingsSystem.CurrentSettings.CollidersEnabled = enableColliders;
                 VesselImmortalSystem.Singleton.ChangedColliderSettings();
