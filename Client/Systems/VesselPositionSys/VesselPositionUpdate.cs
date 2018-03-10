@@ -197,14 +197,17 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (Vessel.LandedOrSplashed)
             {
-                //Do not apply orbit params while grounded as it makes the vessel jitter. Specially when on different subspaces
-                //If connection is perfect ground sync is really soft but this is not always the case as there are network delays.
-                //This causes the vessel to jitter and go inside kerbin because the orbital parameters are from a late state.
-                //In flight taht's not an issue but on the ground it is because the ground collider...
+                /*
+                 * When calculating the position of a vessel in the ground the code gets tricky.... Specially when vessels have a high surface speed
+                 * If we called updateFromParameters then the orbital altitude will have a delay (because of the network) and the vessel  might fall inside kerbin
+                 * To solve it, we get the orbital parameters and position the vessel based on them
+                 * after that, we get the current lat, lon, alt
+                 * After those values are calculated, we set the ALTITUDE based on what the player send
+                 * And we reposition again the vessel.
+                 */
 
-                //Also do not apply them if we are spectating as this will be handled by the engine itself
-                Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                Vessel.orbitDriver.updateFromParameters();
+                Vessel.mainBody.GetLatLonAlt(Vessel.vesselTransform.position, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
                 Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
@@ -267,6 +270,7 @@ namespace LunaClient.Systems.VesselPositionSys
             ApplyOrbitInterpolation(lerpPercentage);
             Vessel.orbitDriver.updateFromParameters();
 
+            //We don't do the surface positioning as with vessels because kerbals don't walk at high speeds and with this code it will be enough ;)
             if (Vessel.situation < Vessel.Situations.FLYING)
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
         }
