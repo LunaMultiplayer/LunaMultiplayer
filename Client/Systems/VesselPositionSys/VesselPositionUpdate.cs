@@ -195,6 +195,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.checkLanded();
             Vessel.checkSplashed();
 
+            //Set the position of the vessel based on the orbital parameters
             Vessel.orbitDriver.updateFromParameters();
 
             if (Vessel.LandedOrSplashed)
