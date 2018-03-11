@@ -211,9 +211,6 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (vesselProto.Value.IsInSafetyBubble && HighLogic.LoadedScene != GameScenes.TRACKSTATION)
                             continue;
 
-                        if (VesselCommon.ActiveVesselIsInSafetyBubble() && VesselCommon.IsNearKsc(vesselProto.Value.ProtoVessel, 20000))
-                            continue;
-
                         LunaLog.Log($"[LMP]: Loading vessel {vesselProto.Key}");
                         
                         if (VesselLoader.LoadVessel(vesselProto.Value.ProtoVessel))
