@@ -22,6 +22,10 @@ namespace LunaClient.Systems.VesselFlightStateSys
             //Vessel might exist in the store but not in game (if the vessel is in safety bubble for example)
             VesselsProtoStore.UpdateVesselProtoFlightState(msgData);
 
+            if (!System.FlightStatesDictionary.ContainsKey(msgData.VesselId))
+            {
+                System.VesselsToAssign.Enqueue(msgData.VesselId);
+            }
             System.FlightStatesDictionary.GetOrAdd(msgData.VesselId, new VesselFlightStateUpdate()).SetTarget(msgData);
         }
     }

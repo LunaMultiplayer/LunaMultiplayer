@@ -26,10 +26,15 @@ namespace LunaClient.Systems.VesselFlightStateSys
             new Dictionary<Guid, FlightInputCallback>();
 
         /// <summary>
-        /// This dictioanry contains the latest flight state of a vessel that we received
+        /// This dictionary contains the latest flight state of a vessel that we received
         /// </summary>
         public ConcurrentDictionary<Guid, VesselFlightStateUpdate> FlightStatesDictionary { get; } =
             new ConcurrentDictionary<Guid, VesselFlightStateUpdate>();
+
+        /// <summary>
+        /// This queue contains the vessels that their flight state are still not assigned to the callback
+        /// </summary>
+        public ConcurrentQueue<Guid> VesselsToAssign { get; private set; } = new ConcurrentQueue<Guid>();
 
         public bool FlightStateSystemReady
             => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
@@ -53,7 +58,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, AssignCallbacks));
+            SetupRoutine(new RoutineDefinition(3000, RoutineExecution.Update, AssignCallbacks));
         }
 
         protected override void OnDisabled()
@@ -89,6 +94,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
             FlyByWireDictionary.Clear();
             FlightStatesDictionary.Clear();
+            VesselsToAssign = new ConcurrentQueue<Guid>();
         }
 
         #endregion
@@ -132,17 +138,22 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (Enabled && FlightStateSystemReady)
             {
-                var vesselsToReasign = FlightStatesDictionary.Keys
-                    .Select(FlightGlobals.FindVessel)
-                    .Where(v => v != null && !v.OnFlyByWire.GetInvocationList().Any(d=> d.Method.Name == nameof(LunaOnVesselFlyByWire)));
-
-                foreach (var vessel in vesselsToReasign)
+                var list = new List<Guid>();
+                while (VesselsToAssign.TryDequeue(out var vesselIdToAssign))
                 {
-                    if (!FlyByWireDictionary.ContainsKey(vessel.id))
-                        FlyByWireDictionary.Add(vessel.id, st => LunaOnVesselFlyByWire(vessel, st));
-
-                    vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
+                    var vessel = FlightGlobals.FindVessel(vesselIdToAssign);
+                    if (vessel != null)
+                    {
+                        if (!FlyByWireDictionary.ContainsKey(vessel.id) && vessel.OnFlyByWire.GetInvocationList().Any(d => d.Method.Name == nameof(LunaOnVesselFlyByWire)))
+                            FlyByWireDictionary.Add(vessel.id, st => LunaOnVesselFlyByWire(vessel, st));
+                    }
+                    else
+                    {
+                        //Vessel was not found, perhaps it will be found later so try to assign it later...
+                        list.Add(vesselIdToAssign);
+                    }
                 }
+                list.ForEach(v=> VesselsToAssign.Enqueue(v));
             }
         }
 
@@ -164,7 +175,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (FlightStatesDictionary.TryGetValue(vessel.id, out var value))
             {
                 var interpolatedFs = value.GetInterpolatedValue(st);
-                UpdateFlightStateInProtoVessel(vessel.protoVessel, interpolatedFs.pitch, interpolatedFs.yaw, interpolatedFs.roll, 
+                UpdateFlightStateInProtoVessel(vessel.protoVessel, interpolatedFs.pitch, interpolatedFs.yaw, interpolatedFs.roll,
                     interpolatedFs.pitchTrim, interpolatedFs.yawTrim, interpolatedFs.rollTrim, interpolatedFs.mainThrottle);
 
                 if (VesselCommon.IsSpectating)
