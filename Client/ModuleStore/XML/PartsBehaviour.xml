@@ -124,6 +124,21 @@
     </Fields>
   </CustomModuleDefinition>
   <CustomModuleDefinition>
+    <ModuleName>ModuleWheelBrakes</ModuleName>
+    <Fields>
+      <!--Brakes on wheels-->
+      <CustomFieldDefinition>
+        <FieldName>brakeInput</FieldName>
+        <Ignore>false</Ignore>
+        <IgnoreSpectating>false</IgnoreSpectating>
+        <Interval>250</Interval>
+        <CallOnAwake>true</CallOnAwake>
+        <CallOnLoad>true</CallOnLoad>
+        <CallOnStart>true</CallOnStart>
+      </CustomFieldDefinition>
+    </Fields>
+  </CustomModuleDefinition>
+  <CustomModuleDefinition>
     <ModuleName>ModuleDeployableSolarPanel</ModuleName>
     <Fields>
       <!--Launch time of the panel. It afects the efficiency. An old solar panel produce less electricity-->
