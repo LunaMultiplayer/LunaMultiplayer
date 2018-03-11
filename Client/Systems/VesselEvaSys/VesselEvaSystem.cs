@@ -63,21 +63,21 @@ namespace LunaClient.Systems.VesselEvaSys
             //First update the fsm state in the protovessel as perhaps it's unloaded
             UpdateFsmStateInProtoVessel(evaVessel.protoVessel, newFsmState);
 
-            var kerbalEva = evaVessel.FindPartModuleImplementing<KerbalEVA>();
-            if (kerbalEva == null || kerbalEva.fsm == null) return;
+            //var kerbalEva = evaVessel.FindPartModuleImplementing<KerbalEVA>();
+            //if (kerbalEva == null || kerbalEva.fsm == null) return;
 
-            //Whenever we receive a message of this type, try to remove the delegate
-            // ReSharper disable once DelegateSubtraction
-            kerbalEva.fsm.OnStateChange -= LmpOnStateChange;
+            ////Whenever we receive a message of this type, try to remove the delegate
+            //// ReSharper disable once DelegateSubtraction
+            //kerbalEva.fsm.OnStateChange -= LmpOnStateChange;
             
-            if (!kerbalEva.fsm.Started)
-                kerbalEva.fsm?.StartFSM("Idle (Grounded)");
+            //if (!kerbalEva.fsm.Started)
+            //    kerbalEva.fsm?.StartFSM("Idle (Grounded)");
 
-            var fsmState = FsmStates.FirstOrDefault(e => (e.GetValue(kerbalEva) as KFSMEvent)?.name == eventToRun);
+            //var fsmState = FsmStates.FirstOrDefault(e => (e.GetValue(kerbalEva) as KFSMEvent)?.name == eventToRun);
 
-            if (!(fsmState?.GetValue(kerbalEva) is KFSMEvent kfsmEventToRun)) return;
+            //if (!(fsmState?.GetValue(kerbalEva) is KFSMEvent kfsmEventToRun)) return;
 
-            kerbalEva.fsm.RunEvent(kfsmEventToRun);
+            //kerbalEva.fsm.RunEvent(kfsmEventToRun);
         }
 
         /// <summary>
