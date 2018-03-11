@@ -13,6 +13,7 @@ using Server.System;
 using Server.System.VesselRelay;
 using Server.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
@@ -28,6 +29,10 @@ namespace Server
 
         private static readonly WinExitSignal ExitSignal = Common.PlatformIsWindows() ? new WinExitSignal() : null;
 
+        private static readonly List<Task> TaskContainer = new List<Task>();
+
+        public static readonly CancellationTokenSource CancellationTokenSrc = new CancellationTokenSource();
+
         public static void Main()
         {
             try
@@ -41,10 +46,14 @@ namespace Server
 
                 if (!Common.PlatformIsWindows()) LunaLog.Warning("Remember! Quit the server by using Control+C so the vessels are saved to the hard drive!");
 
-                //Register the ctrl+c event and exit signal
-                Console.CancelKeyPress += (sender, args) => Exit();
+
                 if (Common.PlatformIsWindows())
                     ExitSignal.Exit += (sender, args) => Exit();
+                else
+                {
+                    //Register the ctrl+c event and exit signal if we are on linux
+                    Console.CancelKeyPress += (sender, args) => Exit();
+                }
 
                 //We disable quick edit as otherwise when you select some text for copy/paste then you can't write to the console and server freezes
                 //This just happens on windows....
@@ -80,21 +89,23 @@ namespace Server
                 ServerContext.ServerRunning = true;
                 LidgrenServer.SetupLidgrenServer();
 
-                LongRunTaskFactory.StartNew(() => new CommandHandler().ThreadMain());
-                LongRunTaskFactory.StartNew(() => new ClientMainThread().ThreadMain());
+                //Do not add the command handler thread to the TaskContainer as it's a blocking task
+                LongRunTaskFactory.StartNew(() => new CommandHandler().ThreadMain(), CancellationTokenSrc.Token);
 
-                LongRunTaskFactory.StartNew(VesselStoreSystem.BackupVesselsThread);
-                LongRunTaskFactory.StartNew(LidgrenServer.StartReceiveingMessages);
-                LongRunTaskFactory.StartNew(LidgrenMasterServer.RefreshMasterServersList);
-                LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServer);
-                LongRunTaskFactory.StartNew(LogThread.RunLogThread);
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThread, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(() => new ClientMainThread().ThreadMain(), CancellationTokenSrc.Token));
 
-                LongRunTaskFactory.StartNew(VesselRelaySystem.RelayOldVesselMessages);
-                LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToFarPlayers);
-                LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToMediumDistancePlayers);
-                LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToClosePlayers);
-                LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersion);
-                LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsg);
+                TaskContainer.Add(LongRunTaskFactory.StartNew(() => VesselStoreSystem.BackupVesselsThread(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenServer.StartReceiveingMessages, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RefreshMasterServersList, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServer, CancellationTokenSrc.Token));
+
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VesselRelaySystem.RelayOldVesselMessages, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToFarPlayers, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToMediumDistancePlayers, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToClosePlayers, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersion, CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsg, CancellationTokenSrc.Token));
 
                 while (ServerContext.ServerStarting)
                     Thread.Sleep(500);
@@ -146,10 +157,13 @@ namespace Server
         /// </summary>
         private static void Exit()
         {
-            LunaLog.Normal("Exiting... Please give LMP 5 seconds to close the files correctly");
+            LunaLog.Normal("Exiting... Please wait until all threads are finished");
             ServerContext.Shutdown();
+            CancellationTokenSrc.Cancel();
+
+            Task.WaitAll(TaskContainer.ToArray());
+
             QuitEvent.Set();
-            Thread.Sleep(5000);
         }
     }
 }

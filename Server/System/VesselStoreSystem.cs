@@ -69,12 +69,19 @@ namespace Server.System
         /// <summary>
         /// This multithreaded function backups the vessels from the internal dictionary to a file at a specified interval
         /// </summary>
-        public static void BackupVesselsThread()
+        public static async void BackupVesselsThread(CancellationToken token)
         {
             while (ServerContext.ServerRunning)
             {
                 BackupVessels();
-                Thread.Sleep(GeneralSettings.SettingsStore.VesselsBackupIntervalMs);
+                try
+                {
+                    await Task.Delay(GeneralSettings.SettingsStore.VesselsBackupIntervalMs, token);
+                }
+                catch (TaskCanceledException)
+                {
+                    break;
+                }
             }
 
             //Do a last backup before quitting

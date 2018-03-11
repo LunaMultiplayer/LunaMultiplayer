@@ -3,13 +3,14 @@ using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Interface;
 using Server.Context;
+using Server.Lidgren;
 using Server.Plugin;
 using Server.Settings;
 using System;
 using System.Collections.Concurrent;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
-using Server.Lidgren;
 
 namespace Server.Client
 {
@@ -44,7 +45,7 @@ namespace Server.Client
         public ClientStructure(NetConnection playerConnection)
         {
             Connection = playerConnection;
-            SendThread = MainServer.LongRunTaskFactory.StartNew(SendMessagesThread);
+            SendThread = MainServer.LongRunTaskFactory.StartNew(() => SendMessagesThread(MainServer.CancellationTokenSrc.Token), MainServer.CancellationTokenSrc.Token);
         }
 
         public override bool Equals(object obj)
@@ -58,7 +59,7 @@ namespace Server.Client
             return Endpoint?.GetHashCode() ?? 0;
         }
 
-        private async void SendMessagesThread()
+        private async void SendMessagesThread(CancellationToken token)
         {
             while (ConnectionStatus == ConnectionStatus.Connected)
             {
@@ -78,7 +79,14 @@ namespace Server.Client
                 }
                 else
                 {
-                    await Task.Delay(GeneralSettings.SettingsStore.SendReceiveThreadTickMs);
+                    try
+                    {
+                        await Task.Delay(GeneralSettings.SettingsStore.SendReceiveThreadTickMs, token);
+                    }
+                    catch (TaskCanceledException)
+                    {
+                        break;
+                    }
                 }
             }
         }
