@@ -70,6 +70,9 @@ namespace LunaClient.Systems.Mod
         {
             var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LunaCommon.Properties.Resources.LMPModControl);
 
+            var extraParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name)).Select(p=> p.name);
+            modFile.AllowedParts.AddRange(extraParts);
+
             var gameDataDir = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData");
 
             var relativeModDirectories = Directory.GetDirectories(gameDataDir)
