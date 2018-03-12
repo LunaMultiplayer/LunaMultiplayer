@@ -31,25 +31,21 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Dependencies\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
-    <Compile Include="FloodControl.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Helper.cs" />
-    <Compile Include="Http\HttpProcessor.cs" />
+    <Compile Include="Http\ExceptionHandler.cs" />
+    <Compile Include="Http\HttpException.cs" />
     <Compile Include="Http\LunaHttpServer.cs" />
-    <Compile Include="Http\TcpClientWorker.cs" />
-    <Compile Include="MasterServer.cs" />
+    <Compile Include="Http\ServerInfoRestController.cs" />
+    <Compile Include="Lidgren\MasterServer.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Server.cs" />
+    <Compile Include="Structure\Server.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -63,6 +59,10 @@
     <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
       <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
       <Name>LmpGlobal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\uhttpsharp\uhttpsharp.csproj">
+      <Project>{3d681959-4da3-4a71-a68b-704d6411d5ea}</Project>
+      <Name>uhttpsharp</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

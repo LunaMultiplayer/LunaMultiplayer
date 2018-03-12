@@ -1,49 +1,28 @@
-﻿using System.IO;
-using System.Linq;
+﻿using LunaCommon;
 using System.Net;
 using System.Net.Sockets;
-using System.Threading.Tasks;
+using uhttpsharp;
+using uhttpsharp.Handlers;
+using uhttpsharp.Handlers.Compression;
+using uhttpsharp.Listeners;
+using uhttpsharp.RequestProviders;
 
 namespace LMP.MasterServer.Http
 {
     public class LunaHttpServer
     {
+        public static HttpServer Server { get; set; } = new HttpServer(new HttpRequestProvider());
         public static ushort Port { get; set; } = 8701;
-        private static readonly TcpListener Listener = new TcpListener(IPAddress.Any, Port);
 
-        public void Listen()
+        public static void Start()
         {
-            Listener.Start();
-            Task.Run(() => StartListeningAndParsing());
+            Server.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Loopback, Port)));
+
+            Server.Use(new ExceptionHandler());
+            Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
+            Server.Use(new HttpRouter().With(string.Empty, new RestHandler<ServerInfo>(new ServerInfoRestController(), JsonResponseProvider.Default)));
+
+            Server.Start();
         }
-
-        private static async void StartListeningAndParsing()
-        {
-            while (MasterServer.RunServer)
-            {
-                var client = await Listener.AcceptTcpClientAsync();
-                await TcpClientWorker.ParseClientRequest(client);
-            }
-            Listener.Stop();
-        }
-
-        public static void HandleGetRequest(StreamWriter outputStream)
-        {
-            outputStream.WriteLine("HTTP/1.0 200 OK");
-            outputStream.WriteLine("Content-Type: text/html");
-            outputStream.WriteLine("Connection: close");
-            outputStream.WriteLine("");
-
-            if (!string.IsNullOrEmpty(HttpProcessor.JQueryCallBack))
-            {
-                outputStream.Write($"{HttpProcessor.JQueryCallBack}({Newtonsoft.Json.JsonConvert.SerializeObject(MasterServer.ServerDictionary.Values.Select(s => s.Info))})");
-            }
-            else
-            {
-                outputStream.Write(Newtonsoft.Json.JsonConvert.SerializeObject(MasterServer.ServerDictionary.Values.Select(s => s.Info)));
-            }
-        }
-
-
     }
 }

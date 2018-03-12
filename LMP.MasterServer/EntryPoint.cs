@@ -17,7 +17,8 @@ namespace LMP.MasterServer
     {
         public static void Stop()
         {
-            MasterServer.RunServer = false;
+            Lidgren.MasterServer.RunServer = false;
+            LunaHttpServer.Server.Dispose();
         }
 
         public static void MainEntryPoint(string[] args)
@@ -37,24 +38,23 @@ namespace LMP.MasterServer
 
             if (!ParseMasterServerPortNumber(commandLineArguments)) return;
             if (!ParseHttpServerPort(commandLineArguments)) return;
-            if (!ParseMaxRequestsPerSecond(commandLineArguments)) return;
 
-            ConsoleLogger.Log(LogLevels.Normal, $"Starting MasterServer at port: {MasterServer.Port}");
+            ConsoleLogger.Log(LogLevels.Normal, $"Starting MasterServer at port: {Lidgren.MasterServer.Port}");
             ConsoleLogger.Log(LogLevels.Normal, $"Listening for GET requests at port: {LunaHttpServer.Port}");
 
             if (CheckPort())
             {
-                MasterServer.RunServer = true;
-                Task.Run(() => new LunaHttpServer().Listen());
-                Task.Run(() => MasterServer.Start());
+                Lidgren.MasterServer.RunServer = true;
+                LunaHttpServer.Start();
+                Task.Run(() => Lidgren.MasterServer.Start());
             }
         }
 
         private static bool CheckPort()
         {
-            if (Common.PortIsInUse(MasterServer.Port))
+            if (Common.PortIsInUse(Lidgren.MasterServer.Port))
             {
-                ConsoleLogger.Log(LogLevels.Error, $"Port {MasterServer.Port} is already in use!");
+                ConsoleLogger.Log(LogLevels.Error, $"Port {Lidgren.MasterServer.Port} is already in use!");
                 return false;
             }
             return true;
@@ -73,26 +73,10 @@ namespace LMP.MasterServer
             Console.WriteLine("/h                       ... Show this help");
             Console.WriteLine("/p:<port>                ... Start with the specified port (default port is 8700)");
             Console.WriteLine("/g:<port>                ... Reply to get petitions on the specified port (default is 8701)");
-            Console.WriteLine("/f:<number>              ... Max requests per milisecond per host (default is 500, min is 0)");
             Console.WriteLine("");
         }
 
         #region Command line arguments parsing
-
-        private static bool ParseMaxRequestsPerSecond(Arguments commandLineArguments)
-        {
-            if (commandLineArguments["f"] != null)
-            {
-                if (int.TryParse(commandLineArguments["f"].Trim(), out var floodSeconds) && floodSeconds >= 0)
-                    FloodControl.MaxRequestsPerMs = floodSeconds;
-                else
-                {
-                    ConsoleLogger.Log(LogLevels.Error, $"Invalid max request per second specified: {commandLineArguments["f"].Trim()}");
-                    return false;
-                }
-            }
-            return true;
-        }
 
         private static bool ParseHttpServerPort(Arguments commandLineArguments)
         {
@@ -113,7 +97,7 @@ namespace LMP.MasterServer
                 if (!ParsePortNumber(commandLineArguments, "p", out var port))
                     return false;
 
-                MasterServer.Port = port;
+                Lidgren.MasterServer.Port = port;
             }
             return true;
         }
