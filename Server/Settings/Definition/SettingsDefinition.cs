@@ -61,7 +61,8 @@ namespace Server.Settings.Definition
         public GameMode GameMode { get; set; } = GameMode.Sandbox;
 
         [XmlComment(Value = "Enable mod control. WARNING: Only consider turning off mod control for private servers. " +
-                            "The game will constantly complain about missing parts if there are missing mods.")]
+                            "The game will constantly complain about missing parts if there are missing mods. " +
+                            "Read this wiki page: https://github.com/LunaMultiplayer/LunaMultiplayer/wiki/Mod-file to understand how it works")]
         public bool ModControl { get; set; } = true;
 
         [XmlComment(Value = "How many untracked asteroids to spawn into the universe. 0 = Disabled")]

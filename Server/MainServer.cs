@@ -141,6 +141,12 @@ namespace Server
                 LunaLog.Debug("Loading gameplay settings...");
                 GameplaySettings.Singleton.Load();
             }
+
+            if (GeneralSettings.SettingsStore.ModControl)
+            {
+                LunaLog.Debug("Loading mod control...");
+                ModFileSystem.LoadModFile();
+            }
 #if DEBUG
             DebugSettings.Singleton.Load();
             LunaTime.SimulatedMsTimeOffset = DebugSettings.SettingsStore.SimulatedMsTimeOffset;

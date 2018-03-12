@@ -1,23 +1,31 @@
-﻿using LunaCommon;
-using LunaCommon.ModFile.Structure;
+﻿using LunaCommon.ModFile.Structure;
 using LunaCommon.Xml;
 using Server.Context;
+using Server.Log;
+using System;
 
 namespace Server.System
 {
     public class ModFileSystem
     {
-        public static ModControlStructure ModControl { get; } = LunaXmlSerializer.ReadXmlFromPath<ModControlStructure>(ServerContext.ModFilePath);
+        public static ModControlStructure ModControl { get; private set; }
 
         public static void GenerateNewModFile()
         {
             FileHandler.WriteToFile(ServerContext.ModFilePath, LunaCommon.Properties.Resources.LMPModControl);
         }
 
-        //Get mod file SHA
-        public static string GetModControlSha()
+        public static void LoadModFile()
         {
-            return Common.CalculateSha256FileHash(ServerContext.ModFilePath);
+            try
+            {
+                ModControl = LunaXmlSerializer.ReadXmlFromPath<ModControlStructure>(ServerContext.ModFilePath);
+            }
+            catch (Exception)
+            {
+                LunaLog.Error("Cannot read LMPModControl file. Will load the default one. Please regenerate it");
+                ModControl = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LunaCommon.Properties.Resources.LMPModControl);
+            }
         }
     }
 }
