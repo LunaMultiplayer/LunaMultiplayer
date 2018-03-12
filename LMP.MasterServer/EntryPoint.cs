@@ -1,6 +1,7 @@
 ﻿using LMP.MasterServer.Http;
 using LunaCommon;
 using System;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ConsoleLogger = LunaCommon.ConsoleLogger;
@@ -27,6 +28,10 @@ namespace LMP.MasterServer
                 ConsoleUtil.DisableConsoleQuickEdit();
 
             Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
+
+            if (args.Any(a => a.Contains("nightly")))
+                Console.Title += " NIGHTLY";
+
             Console.OutputEncoding = Encoding.Unicode;
 
             var commandLineArguments = new Arguments(args);

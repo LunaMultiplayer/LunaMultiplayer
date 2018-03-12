@@ -16,7 +16,7 @@ namespace LMP.MasterServer.Http
 
         public static void Start()
         {
-            Server.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Loopback, Port)));
+            Server.Use(new TcpListenerAdapter(new TcpListener(IPAddress.Any, Port)));
 
             Server.Use(new ExceptionHandler());
             Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
