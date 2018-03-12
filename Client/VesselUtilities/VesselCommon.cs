@@ -4,7 +4,6 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.Warp;
-using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -409,41 +408,29 @@ namespace LunaClient.VesselUtilities
                     if (ModSystem.Singleton.ModControl &&
                         !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
                     {
-                        var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the banned " +
-                                  $"part '{pps.partName}'!. Skipping load.";
-
+                        var msg = $"Protovessel {protoVesselId} ({pv.vesselName}) contains the BANNED PART '{pps.partName}'. Skipping load.";
                         LunaLog.LogWarning(msg);
                         ChatSystem.Singleton.PmMessageServer(msg);
 
                         return null;
                     }
+
                     if (pps.partInfo == null)
                     {
-                        var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the missing " +
-                                  $"part '{pps.partName}'!. Skipping load.";
-
-                        LunaLog.LogWarning(msg);
-                        ChatSystem.Singleton.PmMessageServer(msg);
-
-                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing {pps.partName}", 10f,
-                            ScreenMessageStyle.UPPER_CENTER);
+                        LunaLog.LogWarning($"WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the MISSING PART '{pps.partName}'. Skipping load.");
+                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing {pps.partName}", 10f, ScreenMessageStyle.UPPER_CENTER);
 
                         return null;
                     }
 
-                    var missingeResource = pps.resources
-                        .FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
-
+                    var missingeResource = pps.resources.FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
                     if (missingeResource != null)
                     {
-                        var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) " +
-                                  $"contains the missing resource '{missingeResource.resourceName}'!. Skipping load.";
-
+                        var msg = $"WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the MISSING RESOURCE '{missingeResource.resourceName}'. Skipping load.";
                         LunaLog.LogWarning(msg);
                         ChatSystem.Singleton.PmMessageServer(msg);
 
-                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - you are missing the resource " +
-                                                         $"{missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
+                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing resource {missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
                         return null;
                     }
                 }
