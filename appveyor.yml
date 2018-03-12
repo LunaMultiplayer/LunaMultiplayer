@@ -58,12 +58,12 @@ after_build:
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: xcopy /s/y "$env:appveyor_build_folder\Server\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
 #Updater post build commands
- - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\Updater"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Updater\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\Updater"
+ - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPUpdater"
+ - ps: xcopy /s/y "$env:appveyor_build_folder\Updater\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPUpdater"
 #7zip everything
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiPlayer-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiPlayerMasterServer-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
- - ps: 7z a "$env:appveyor_build_folder\LunaMultiPlayerUpdater-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\Updater"
+ - ps: 7z a "$env:appveyor_build_folder\LunaMultiPlayerUpdater-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPUpdater"
  #Create a clone of the LMP files but with a different filename (do not include the build version) we use this for the deployment...
  - ps: copy "$env:appveyor_build_folder\LunaMultiPlayer-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\LunaMultiPlayer-$env:configuration.zip"
  - ps: copy "$env:appveyor_build_folder\LunaMultiPlayerMasterServer-$env:appveyor_build_version-$env:configuration.zip" "$env:appveyor_build_folder\LunaMultiPlayerMasterServer-$env:configuration.zip"
@@ -79,9 +79,12 @@ artifacts:
    name: LunaMultiPlayer-$(configuration).zip
  - path: .\LunaMultiPlayerMasterServer-$(appveyor_build_version)-$(configuration).zip
    name: LunaMultiPlayerMasterServer-$(appveyor_build_version)-$(configuration).zip
+ - path: .\LunaMultiPlayerMasterServer-$(configuration).zip
+   name: LunaMultiPlayerMasterServer-$(configuration).zip
  - path: .\LunaMultiPlayerUpdater-$(appveyor_build_version)-$(configuration).zip
    name: LunaMultiPlayerUpdater-$(appveyor_build_version)-$(configuration).zip
-
+ - path: .\LunaMultiPlayerUpdater-$(configuration).zip
+   name: LunaMultiPlayerUpdater-$(configuration).zip
 #---------------------------------#
 #     deployment configuration    #
 #---------------------------------#
