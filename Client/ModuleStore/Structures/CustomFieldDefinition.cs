@@ -16,6 +16,12 @@ namespace LunaClient.ModuleStore.Structures
         [XmlComment(Value = "In case we are not ignoring, minimum interval when checking for changes")]
         public int Interval { get; set; }
 
+        [XmlComment(Value = "Set the value in the module using reflection")]
+        public bool SetValueInModule { get; set; }
+
+        [XmlComment(Value = "Call the Load function of the module after applying a change")]
+        public bool CallLoad { get; set; }
+
         [XmlComment(Value = "Call the OnAwake function of the module after applying a change")]
         public bool CallOnAwake { get; set; }
 

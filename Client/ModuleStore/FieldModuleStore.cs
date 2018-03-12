@@ -23,6 +23,8 @@ namespace LunaClient.ModuleStore
             Ignore = false,
             IgnoreSpectating = false,
             Interval = 2500,
+            SetValueInModule = false,
+            CallLoad = true,
             CallOnAwake = true,
             CallOnLoad = true,
             CallOnStart = true

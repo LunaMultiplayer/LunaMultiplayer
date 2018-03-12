@@ -9,6 +9,8 @@
         <Ignore>false</Ignore>
         <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>5000</Interval>
+        <SetValueInModule>false</SetValueInModule>
+        <CallLoad>true</CallLoad>
         <CallOnAwake>true</CallOnAwake>
         <CallOnLoad>true</CallOnLoad>
         <CallOnStart>true</CallOnStart>
@@ -18,6 +20,8 @@
         <Ignore>false</Ignore>
         <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>100</Interval>
+        <SetValueInModule>false</SetValueInModule>
+        <CallLoad>true</CallLoad>
         <CallOnAwake>true</CallOnAwake>
         <CallOnLoad>true</CallOnLoad>
         <CallOnStart>true</CallOnStart>
@@ -43,6 +47,8 @@
         <Ignore>false</Ignore>
         <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>250</Interval>
+        <SetValueInModule>false</SetValueInModule>
+        <CallLoad>true</CallLoad>
         <CallOnAwake>true</CallOnAwake>
         <CallOnLoad>true</CallOnLoad>
         <CallOnStart>true</CallOnStart>
@@ -58,6 +64,8 @@
         <Ignore>false</Ignore>
         <IgnoreSpectating>true</IgnoreSpectating>
         <Interval>1000</Interval>
+        <SetValueInModule>true</SetValueInModule>
+        <CallLoad>false</CallLoad>
         <CallOnAwake>false</CallOnAwake>
         <CallOnLoad>false</CallOnLoad>
         <CallOnStart>false</CallOnStart>
@@ -67,6 +75,8 @@
         <Ignore>false</Ignore>
         <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>600000</Interval>
+        <SetValueInModule>false</SetValueInModule>
+        <CallLoad>true</CallLoad>
         <CallOnAwake>true</CallOnAwake>
         <CallOnLoad>true</CallOnLoad>
         <CallOnStart>true</CallOnStart>
@@ -132,6 +142,8 @@
         <Ignore>false</Ignore>
         <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>250</Interval>
+        <SetValueInModule>false</SetValueInModule>
+        <CallLoad>true</CallLoad>
         <CallOnAwake>true</CallOnAwake>
         <CallOnLoad>true</CallOnLoad>
         <CallOnStart>true</CallOnStart>
@@ -147,6 +159,8 @@
         <Ignore>false</Ignore>
         <IgnoreSpectating>false</IgnoreSpectating>
         <Interval>600000</Interval>
+        <SetValueInModule>false</SetValueInModule>
+        <CallLoad>true</CallLoad>
         <CallOnAwake>true</CallOnAwake>
         <CallOnLoad>true</CallOnLoad>
         <CallOnStart>true</CallOnStart>
