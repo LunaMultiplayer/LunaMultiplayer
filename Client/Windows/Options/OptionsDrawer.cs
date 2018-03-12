@@ -153,9 +153,6 @@ namespace LunaClient.Windows.Options
                 }
 
                 GUILayout.Label($"MTU: {NetworkMain.Config.MaximumTransmissionUnit}");
-                //if (MainSystem.NetworkState <= ClientState.Disconnected)
-                //    NetworkMain.Config.MaximumTransmissionUnit = (int)GUILayout.HorizontalScrollbar(NetworkMain.Config.MaximumTransmissionUnit, 0, 0, 10000);
-
                 GUILayout.Label(InfiniteTimeout
                     ? "Timeout: Infinite"
                     : $"Timeout: {NetworkMain.Config.ConnectionTimeout}s. Minimum: {NetworkMain.Config.PingInterval}s");

@@ -405,8 +405,7 @@ namespace LunaClient.VesselUtilities
                 var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
                 foreach (var pps in pv.protoPartSnapshots)
                 {
-                    if (ModSystem.Singleton.ModControl &&
-                        !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
+                    if (ModSystem.Singleton.ModControl && !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
                     {
                         var msg = $"Protovessel {protoVesselId} ({pv.vesselName}) contains the BANNED PART '{pps.partName}'. Skipping load.";
                         LunaLog.LogWarning(msg);
