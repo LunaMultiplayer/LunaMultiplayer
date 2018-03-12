@@ -76,19 +76,7 @@ namespace LunaClient.Systems.Mod
                 .Select(d => d.Substring(d.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).ToLower())
                 .Where(d => !d.StartsWith("squad", StringComparison.OrdinalIgnoreCase)
                             && !d.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase));
-
-            //Add top level dll's
-            modFile.MandatoryPlugins.AddRange(
-                Directory.GetFiles(gameDataDir)
-                    .Where(f => Path.GetExtension(f).ToLower() == ".dll")
-                    .Select(f => new MandatoryDllFile
-                    {
-                        FilePath = Path.GetFileName(f)
-                    }));
-
-            modFile.ForbiddenPlugins.Add("exampleforbiddenpluginpath1/exampleforbiddenFile1.dll");
-            modFile.ForbiddenPlugins.Add("exampleforbiddenpluginpath2/exampleforbiddenFile2.dll");
-
+            
             foreach (var modDirectory in relativeModDirectories)
             {
                 var filesInModFolder = Directory.GetFiles(CommonUtil.CombinePaths(gameDataDir, modDirectory), "*.dll", SearchOption.AllDirectories);

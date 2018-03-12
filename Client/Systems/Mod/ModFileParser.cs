@@ -24,6 +24,8 @@ namespace LunaClient.Systems.Mod
             SaveCurrentModConfigurationFile();
 
             var modFileInfo = ModFileParser.ReadModFileFromString(modFileData);
+
+            SetAllPathsToLowercase(modFileInfo);
             if (!CheckFiles(modFileInfo))
             {
                 LunaLog.LogError("[LMP]: Mod check failed!");
@@ -36,6 +38,12 @@ namespace LunaClient.Systems.Mod
             ModSystem.Singleton.AllowedParts = modFileInfo.AllowedParts;
             LunaLog.Log("[LMP]: Mod check passed!");
             return true;
+        }
+
+        private static void SetAllPathsToLowercase(ModControlStructure modFileInfo)
+        {
+            modFileInfo.MandatoryPlugins.ForEach(m=> m.FilePath = m.FilePath.ToLower());
+            modFileInfo.ForbiddenPlugins = modFileInfo.ForbiddenPlugins.ConvertAll(f => f.ToLower());
         }
 
         private static void SaveCurrentModConfigurationFile()
