@@ -1,5 +1,6 @@
 ﻿using LunaCommon.Xml;
 using Server.Context;
+using Server.Log;
 using Server.System;
 using System;
 using System.IO;
@@ -18,8 +19,6 @@ namespace Server.Settings
         {
             if (!FileHandler.FolderExists(ServerContext.ConfigDirectory))
                 FileHandler.FolderCreate(ServerContext.ConfigDirectory);
-
-            Load();
         }
 
         public void Load()
@@ -27,7 +26,14 @@ namespace Server.Settings
             if (!File.Exists(SettingsPath))
                 LunaXmlSerializer.WriteToXmlFile(Activator.CreateInstance(SettingsHolderType), SettingsPath);
 
-            SettingsHolder = LunaXmlSerializer.ReadXmlFromPath(SettingsHolderType, SettingsPath);
+            try
+            {
+                SettingsHolder = LunaXmlSerializer.ReadXmlFromPath(SettingsHolderType, SettingsPath);
+            }
+            catch (Exception)
+            {
+                LunaLog.Fatal($"Error while trying to read {SettingsPath}. Default settings will be used. Please remove the file so a new one can be generated");
+            }
         }
 
         public void Save()

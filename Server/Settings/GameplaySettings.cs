@@ -7,7 +7,7 @@ namespace Server.Settings
 {
     public class GameplaySettings : SettingsBase
     {
-        protected override string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, "GameplaySettings.txt");
+        protected override string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, "GameplaySettings.xml");
 
         protected override object SettingsHolder
         {
@@ -17,7 +17,7 @@ namespace Server.Settings
 
         protected override Type SettingsHolderType => typeof(GameplaySettingsDefinition);
 
-        public static GameplaySettingsDefinition SettingsStore { get; private set; }
+        public static GameplaySettingsDefinition SettingsStore { get; private set; } = new GameplaySettingsDefinition();
 
         public static GameplaySettings Singleton { get; } = new GameplaySettings();
     }

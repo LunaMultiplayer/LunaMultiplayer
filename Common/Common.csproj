@@ -256,7 +256,6 @@
     <Compile Include="Message\Types\VesselChangeType.cs" />
     <Compile Include="Message\Types\VesselMessageType.cs" />
     <Compile Include="Message\Types\WarpMessageType.cs" />
-    <Compile Include="ModFile\AutoAllowedMods.cs" />
     <Compile Include="ModFile\ModFileParser.cs" />
     <Compile Include="ModFile\Structure\ModControlStructure.cs" />
     <Compile Include="PlayerStatus.cs" />

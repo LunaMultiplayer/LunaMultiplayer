@@ -7,7 +7,7 @@ namespace Server.Settings
 {
     public class DebugSettings : SettingsBase
     {
-        protected override string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, "DebugSettings.txt");
+        protected override string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, "DebugSettings.xml");
 
         protected override object SettingsHolder
         {
