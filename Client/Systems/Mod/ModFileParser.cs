@@ -1,9 +1,7 @@
 ﻿using LunaClient.Utilities;
 using LunaClient.Windows.Mod;
-using LunaCommon;
-using LunaCommon.Enums;
 using LunaCommon.ModFile;
-using System;
+using LunaCommon.ModFile.Structure;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -17,7 +15,7 @@ namespace LunaClient.Systems.Mod
 
         public static bool ParseModFile(string modFileData)
         {
-            if (ModSystem.Singleton.ModControl == ModControlMode.Disabled)
+            if (!ModSystem.Singleton.ModControl)
                 return true;
 
             Sb.Length = 0;
@@ -25,7 +23,7 @@ namespace LunaClient.Systems.Mod
 
             SaveCurrentModConfigurationFile();
 
-            var modFileInfo = ModFileParser.ReadModFile(modFileData);
+            var modFileInfo = ModFileParser.ReadModFileFromString(modFileData);
             if (!CheckFiles(modFileInfo))
             {
                 LunaLog.LogError("[LMP]: Mod check failed!");
@@ -35,118 +33,67 @@ namespace LunaClient.Systems.Mod
                 return false;
             }
 
-            ModSystem.Singleton.AllowedParts = modFileInfo.PartList;
+            ModSystem.Singleton.AllowedParts = modFileInfo.AllowedParts;
             LunaLog.Log("[LMP]: Mod check passed!");
             return true;
         }
 
         private static void SaveCurrentModConfigurationFile()
         {
-            var tempModFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Plugins", "Data", "LMPModControl.txt");
-            using (var sw = new StreamWriter(tempModFilePath, false))
-            {
-                sw.WriteLine("#This file is downloaded from the server during connection. It is saved here for convenience.");
-                sw.WriteLine(ModSystem.Singleton.LastModFileData);
-            }
+            var tempModFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Plugins", "Data", "LMPModControl.xml");
+            File.WriteAllText(tempModFilePath, ModSystem.Singleton.LastModFileData);
         }
-        
+
         #region Check mod files
 
-        private static bool CheckFiles(ModInformation modInfo)
+        private static bool CheckFiles(ModControlStructure modInfo)
         {
             var checkOk = true;
 
-            var gameFilePaths = Directory.GetFiles(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData"), "*", SearchOption.AllDirectories);
-            var gameFileRelativePaths = gameFilePaths
-                .Select( filePath =>filePath.Substring(filePath.ToLowerInvariant().IndexOf("gamedata", StringComparison.Ordinal) + 9)
-                .Replace('\\', '/')).ToArray();
-            
-            foreach (var requiredEntry in modInfo.RequiredFiles)
+            foreach (var file in ModSystem.Singleton.DllList)
             {
-                checkOk &= CheckFile(gameFileRelativePaths, requiredEntry, true);
-            }
-            
-            foreach (var optionalEntry in modInfo.OptionalFiles)
-            {
-                checkOk &= CheckFile(gameFileRelativePaths, optionalEntry, false);
+                checkOk &= CheckExistingFile(modInfo, file);
             }
 
-            if (modInfo.WhiteListFiles.Any()) //Check Resource whitelist
+            foreach (var requiredEntry in modInfo.MandatoryPlugins)
             {
-                checkOk &= CheckWhiteList(modInfo);
-            }
-
-            if (modInfo.BlackListFiles.Any()) //Check Resource blacklist
-            {
-                checkOk &= CheckBlackList(modInfo);
+                checkOk &= CheckMandatoryFile(requiredEntry);
             }
 
             return checkOk;
         }
 
-        private static bool CheckBlackList(ModInformation modInfo)
+        private static bool CheckExistingFile(ModControlStructure modInfo, KeyValuePair<string, string> file)
         {
-            var invalidMods = modInfo.BlackListFiles.Where(f => ModSystem.Singleton.DllList.ContainsKey(f.ModFilename)).ToArray();
-            foreach (var blacklistEntry in invalidMods)
+            if (modInfo.ForbiddenPlugins.Any(f => f == file.Key))
             {
-                Sb.AppendLine($"Banned resource {blacklistEntry} exists on client!");
+                Sb.AppendLine($"Banned file {file.Key} exists on client!");
+                return false;
             }
 
-            return !invalidMods.Any();
+            if (!modInfo.AllowNonListedPlugins && modInfo.MandatoryPlugins.All(f => f.FilePath != file.Key))
+            {
+                Sb.AppendLine($"Banned file {file.Key} exists on client!");
+                return false;
+            }
+
+            return true;
         }
 
-        private static bool CheckWhiteList(ModInformation modInfo)
+        private static bool CheckMandatoryFile(MandatoryDllFile item)
         {
-            //Allow LMP files, Ignore squad plugins, Check required (Required implies whitelist), Check optional (Optional implies whitelist)
-            var invalidMods = ModSystem.Singleton.DllList.Where(
-                f => !AutoAllowedMods.AllowedMods.Contains(f.Key) &&
-                     !f.Key.StartsWith("squad/plugins") &&
-                     modInfo.RequiredFiles.All(m => m.ModFilename != f.Key) &&
-                     modInfo.OptionalFiles.All(m => m.ModFilename != f.Key) &&
-                     modInfo.WhiteListFiles.All(m => m.ModFilename != f.Key)).ToArray();
-
-            foreach (var dllResource in invalidMods)
+            var fileExists = ModSystem.Singleton.DllList.ContainsKey(item.FilePath);
+            if (!fileExists)
             {
-                Sb.AppendLine($"Non-whitelisted resource {dllResource.Key} exists on client!");
+                Sb.AppendLine($"Required file {item.FilePath} is missing!");
+                return false;
+            }
+            if (!string.IsNullOrEmpty(item.Sha) && ModSystem.Singleton.DllList[item.FilePath] != item.Sha)
+            {
+                Sb.AppendLine($"Required file {item.FilePath} does not match hash {item.Sha}!");
+                return false;
             }
 
-            return !invalidMods.Any();
-        }
-
-        private static bool CheckFile(IEnumerable<string> gameFileRelativePaths, ModItem item, bool required)
-        {
-            if (item.ModFilename.EndsWith("dll"))
-            {
-                var fileExists = ModSystem.Singleton.DllList.ContainsKey(item.ModFilename);
-                if (!fileExists && required)
-                {
-                    Sb.AppendLine($"Required file {item.ModFilename} is missing!");
-                    return false;
-                }
-                if (fileExists && !string.IsNullOrEmpty(item.Sha) && ModSystem.Singleton.DllList[item.ModFilename] != item.Sha)
-                {
-                    Sb.AppendLine($"Required file {item.ModFilename} does not match hash {item.Sha}!");
-                    return false;
-                }
-            }
-            else
-            {
-                var filePath = gameFileRelativePaths.FirstOrDefault(f => f.Equals(item.ModFilename, StringComparison.OrdinalIgnoreCase));
-                if (string.IsNullOrEmpty(filePath) && required) //Only show error if the file is required
-                {
-                    Sb.AppendLine($"Required file {item.ModFilename} is missing!");
-                    return false;
-                }
-                if (!string.IsNullOrEmpty(filePath) && !string.IsNullOrEmpty(item.Sha))
-                {
-                    var fullFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", filePath);
-                    if (Common.CalculateSha256FileHash(fullFilePath) != item.Sha)
-                    {
-                        Sb.AppendLine($"File {item.ModFilename} does not match hash {item.Sha}!");
-                        return false;
-                    }
-                }
-            }
             return true;
         }
 

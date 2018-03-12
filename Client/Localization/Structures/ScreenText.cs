@@ -5,7 +5,7 @@
         public string Global { get; set; } = "#Global:";
         public string CraftUploaded { get; set; } = "Craft uploaded!";
         public string CraftSaved { get; set; } = "Craft saved!";
-        public string ModFileGenerated { get; set; } = "LMPModFile.txt file generated in your KSP folder";
+        public string ModFileGenerated { get; set; } = "LMPModControl.xml file generated in your KSP folder";
         public string Disconected { get; set; } = "You have been disconnected!";
         public string Spectating { get; set; } = "This vessel is being controlled by";
         public string SafetyBubble { get; set; } = "Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!";

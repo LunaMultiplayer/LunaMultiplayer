@@ -406,7 +406,7 @@ namespace LunaClient.VesselUtilities
                 var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
                 foreach (var pps in pv.protoPartSnapshots)
                 {
-                    if (ModSystem.Singleton.ModControl != ModControlMode.Disabled &&
+                    if (ModSystem.Singleton.ModControl &&
                         !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
                     {
                         var msg = $"[LMP]: WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the banned " +

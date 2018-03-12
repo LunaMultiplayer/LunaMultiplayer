@@ -12,9 +12,7 @@
   <ResetDisclaimer>Reset disclaimer</ResetDisclaimer>
   <Interpolation>Zet interpolatie aan</Interpolation>
   <ShowClose>Toon "Sloot" knop in connectie venste</ShowClose>
-  <GenerateLmpModControl>Genereer een server LMPModControl:</GenerateLmpModControl>
-  <GenerateBlackList>Genereer zwarte lijst LMPModControl.txt</GenerateBlackList>
-  <GenerateWhiteList>Genereer witte lijst LMPModControl.txt</GenerateWhiteList>
+  <GenerateLmpModControl>Genereer een server LMPModControl.xml</GenerateLmpModControl>
   <GenerateUniverse>Genereer universum van opgeslagen game</GenerateUniverse>
   <Toolbar>Werkbalk:</Toolbar>
   <Close>Sluit</Close>

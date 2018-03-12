@@ -12,9 +12,7 @@
   <ResetDisclaimer>重置免责声明状态</ResetDisclaimer>
   <Interpolation>启用插值</Interpolation>
   <ShowClose>在连接窗口显示“关闭”按钮</ShowClose>
-  <GenerateLmpModControl>生成服务器MOD控制文件 LMPModControl:</GenerateLmpModControl>
-  <GenerateBlackList>生成服务器MOD黑名单控制文件 LMPModControl.txt</GenerateBlackList>
-  <GenerateWhiteList>生成服务器MOD白名单控制文件 LMPModControl.txt</GenerateWhiteList>
+  <GenerateLmpModControl>生成服务器MOD控制文件 LMPModControl.xml</GenerateLmpModControl>
   <GenerateUniverse>从已保存的存档中生成宇宙</GenerateUniverse>
   <Toolbar>工具栏:</Toolbar>
   <Close>关闭</Close>

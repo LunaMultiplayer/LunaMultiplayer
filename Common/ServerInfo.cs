@@ -11,7 +11,7 @@
         public bool Cheats { get; set; }
         public int GameMode { get; set; }
         public int MaxPlayers { get; set; }
-        public int ModControl { get; set; }
+        public bool ModControl { get; set; }
         public int PlayerCount { get; set; }
         public string ServerName { get; set; }
         public string Description { get; set; }

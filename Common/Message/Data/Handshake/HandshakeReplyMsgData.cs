@@ -14,11 +14,10 @@ namespace LunaCommon.Message.Data.Handshake
 
         public HandshakeReply Response;
         public string Reason;
-        public ModControlMode ModControlMode;
+        public bool ModControl;
         public long ServerStartTime;
         public Guid  PlayerId;
-        public int NumBytes;
-        public byte[] ModFileData = new byte[0];
+        public string ModFileData;
         
         public override string ClassName { get; } = nameof(HandshakeReplyMsgData);
 
@@ -28,13 +27,15 @@ namespace LunaCommon.Message.Data.Handshake
 
             lidgrenMsg.Write((int)Response);
             lidgrenMsg.Write(Reason);
-            lidgrenMsg.Write((int)ModControlMode);
+
+            lidgrenMsg.Write(ModControl);
+            lidgrenMsg.WritePadBits();
+
             lidgrenMsg.Write(ServerStartTime);
 
             GuidUtil.Serialize(PlayerId, lidgrenMsg);
 
-            lidgrenMsg.Write(NumBytes);
-            lidgrenMsg.Write(ModFileData, 0, NumBytes);
+            lidgrenMsg.Write(ModFileData);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -43,22 +44,21 @@ namespace LunaCommon.Message.Data.Handshake
 
             Response = (HandshakeReply)lidgrenMsg.ReadInt32();
             Reason = lidgrenMsg.ReadString();
-            ModControlMode = (ModControlMode)lidgrenMsg.ReadInt32();
+
+            ModControl = lidgrenMsg.ReadBoolean();
+            lidgrenMsg.SkipPadBits();
+
             ServerStartTime = lidgrenMsg.ReadInt64();
             
             PlayerId = GuidUtil.Deserialize(lidgrenMsg);
 
-            NumBytes = lidgrenMsg.ReadInt32();
-
-            if (ModFileData.Length < NumBytes)
-                ModFileData = new byte[NumBytes];
-            lidgrenMsg.ReadBytes(ModFileData, 0, NumBytes);
+            ModFileData = lidgrenMsg.ReadString();
         }
         
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(HandshakeReply) + Reason.GetByteCount() + sizeof(ModControlMode)
-                + sizeof(long) + GuidUtil.GetByteSize() + sizeof(int) + sizeof(byte) * NumBytes;
+            return base.InternalGetMessageSize() + sizeof(HandshakeReply) + Reason.GetByteCount() + sizeof(byte) //We write pad bits so it's size of byte
+                + sizeof(long) + GuidUtil.GetByteSize() + ModFileData.GetByteCount();
         }
     }
 }

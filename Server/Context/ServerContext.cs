@@ -21,7 +21,7 @@ namespace Server.Context
         public static bool ServerStarting { get; set; }
         public static Stopwatch ServerClock { get; } = new Stopwatch();
         public static long StartTime { get; set; }
-        public static string ModFilePath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LMPModControl.txt");
+        public static string ModFilePath { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LMPModControl.xml");
         public static int PlayerCount => ClientRetriever.GetActiveClientCount();
         public static string UniverseDirectory { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Universe");
         public static string ConfigDirectory { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config");

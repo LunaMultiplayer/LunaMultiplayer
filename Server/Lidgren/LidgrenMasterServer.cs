@@ -61,7 +61,7 @@ namespace Server.Lidgren
                 msgData.GameMode = (int)GeneralSettings.SettingsStore.GameMode;
                 msgData.InternalEndpoint = $"{endpoint.Address}:{endpoint.Port}";
                 msgData.MaxPlayers = GeneralSettings.SettingsStore.MaxPlayers;
-                msgData.ModControl = (int)GeneralSettings.SettingsStore.ModControl;
+                msgData.ModControl = GeneralSettings.SettingsStore.ModControl;
                 msgData.PlayerCount = ServerContext.Clients.Count;
                 msgData.ServerName = GeneralSettings.SettingsStore.ServerName;
                 msgData.ServerVersion = LmpVersioning.CurrentVersion;

@@ -12,9 +12,7 @@
   <ResetDisclaimer>Reset normativa</ResetDisclaimer>
   <Interpolation>Aplicar interpolationes</Interpolation>
   <ShowClose>Mostrar el boton "Cerrar" en la ventana de conexión</ShowClose>
-  <GenerateLmpModControl>Generar un LMPModControl para servidor:</GenerateLmpModControl>
-  <GenerateBlackList>Generar blacklist LMPModControl.txt</GenerateBlackList>
-  <GenerateWhiteList>Generar whitelist LMPModControl.txt</GenerateWhiteList>
+  <GenerateLmpModControl>Generar un LMPModControl.xml para servidor</GenerateLmpModControl>
   <GenerateUniverse>Generar un universo a partir de una partida guardada</GenerateUniverse>
   <Toolbar>Toolbar:</Toolbar>
   <Close>Cerrar</Close>

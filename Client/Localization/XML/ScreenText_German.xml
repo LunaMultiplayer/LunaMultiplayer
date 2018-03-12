@@ -3,7 +3,7 @@
   <Global>#Global:</Global>
   <CraftUploaded>Fahrzeug hochgeladen!</CraftUploaded>
   <CraftSaved>Fahrzeug gespeichert!</CraftSaved>
-  <ModFileGenerated>LMPModFile.txt Datei wurde in deinem KSP Ordner generiert</ModFileGenerated>
+  <ModFileGenerated>LMPModControl.xml Datei wurde in deinem KSP Ordner generiert</ModFileGenerated>
   <Disconected>Deine Verbindung wurde getrennt!</Disconected>
   <Spectating>Dieses Fahrzeug wird kontrolliert von</Spectating>
   <SafetyBubble>Bitte beachten!! Während du dich innerhalb der Sicherheitsblase befindest werden dir keine Fahrzeuge in der Nähe angezeigt!!</SafetyBubble>

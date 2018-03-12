@@ -1,86 +1,33 @@
-﻿using System.Collections.Generic;
+﻿using LunaCommon.ModFile.Structure;
+using LunaCommon.Properties;
+using LunaCommon.Xml;
+using System;
 using System.IO;
-using System.Linq;
 
 namespace LunaCommon.ModFile
 {
     public class ModFileParser
     {
-        private static readonly ModInformation ModInfo = new ModInformation();
-
-        public static ModInformation ReadModFile(string modFileContent)
+        public static ModControlStructure ReadModFileFromPath(string filePath)
         {
-            ModInfo.Clear();
-            using (var sr = new StringReader(modFileContent))
+            try
             {
-                string trimmedLine;
-                var section = string.Empty;
-
-                while ((trimmedLine = sr.ReadLine()?.Trim()?.ToLowerInvariant()?.Replace('\\', '/')) != null)
+                if (!File.Exists(filePath))
                 {
-                    if (string.IsNullOrEmpty(trimmedLine) || trimmedLine.StartsWith("#"))
-                        continue; //Skip comments or empty lines.
-
-                    if (trimmedLine.StartsWith("!"))
-                        section = GetModFileSection(trimmedLine);
-                    else
-                    {
-                        switch (section)
-                        {
-                            case "required-files":
-                                FillListWithFiles(trimmedLine, ModInfo.RequiredFiles);
-                                break;
-                            case "optional-files":
-                                FillListWithFiles(trimmedLine, ModInfo.OptionalFiles);
-                                break;
-                            case "resource-whitelist":
-                                if (!ModInfo.BlackListFiles.Any())
-                                    FillListWithFiles(trimmedLine, ModInfo.WhiteListFiles);
-                                break;
-                            case "resource-blacklist":
-                                if (!ModInfo.WhiteListFiles.Any())
-                                    FillListWithFiles(trimmedLine, ModInfo.BlackListFiles);
-                                break;
-                            case "partslist":
-                                if (!ModInfo.PartList.Contains(trimmedLine))
-                                    ModInfo.PartList.Add(trimmedLine);
-                                break;
-                        }
-                    }
+                    File.WriteAllText(filePath, Resources.LMPModControl);
                 }
+
+                return LunaXmlSerializer.ReadXmlFromPath<ModControlStructure>(filePath);
             }
-
-            return ModInfo;
-        }
-
-        private static string GetModFileSection(string textLine)
-        {
-            switch (textLine.Substring(1))
+            catch (Exception)
             {
-                case "required-files":
-                case "optional-files":
-                case "partslist":
-                case "resource-blacklist":
-                case "resource-whitelist":
-                    return textLine.Substring(1);
-                default:
-                    return textLine;
+                return LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(Resources.LMPModControl);
             }
         }
 
-        private static void FillListWithFiles(string fileLine, List<ModItem> files)
+        public static ModControlStructure ReadModFileFromString(string contents)
         {
-            if (fileLine.Contains("="))
-            {
-                var splitLine = fileLine.Split('=');
-                if (files.All(f => f.ModFilename != splitLine[0]))
-                    files.Add(new ModItem { ModFilename = splitLine[0], Sha = splitLine.Length == 2 ? splitLine[1].ToLowerInvariant() : string.Empty });
-            }
-            else
-            {
-                if (files.All(f => f.ModFilename != fileLine))
-                    files.Add(new ModItem { ModFilename = fileLine });
-            }
+            return LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(contents);
         }
     }
 }

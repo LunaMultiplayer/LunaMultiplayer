@@ -1,7 +1,8 @@
 using LunaClient.Localization;
 using LunaClient.Utilities;
 using LunaCommon;
-using LunaCommon.Enums;
+using LunaCommon.ModFile.Structure;
+using LunaCommon.Xml;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,7 +14,7 @@ namespace LunaClient.Systems.Mod
     {
         #region Fields & properties
 
-        public ModControlMode ModControl { get; set; } = ModControlMode.EnabledStopInvalidPartSync;
+        public bool ModControl { get; set; } = true;
         public string FailText { get; set; }
 
         public Dictionary<string, string> DllList { get; } = new Dictionary<string, string>();
@@ -29,7 +30,7 @@ namespace LunaClient.Systems.Mod
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            ModControl = ModControlMode.EnabledStopInvalidPartSync;
+            ModControl = true;
             FailText = "";
             DllList.Clear();
             AllowedParts.Clear();
@@ -65,11 +66,9 @@ namespace LunaClient.Systems.Mod
             }
         }
 
-        public void GenerateModControlFile(bool whitelistMode)
+        public void GenerateModControlFile()
         {
-            var requiredFiles = new List<string>();
-            var optionalFiles = new List<string>();
-            var partsList = Common.GetStockParts();
+            var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LunaCommon.Properties.Resources.LMPModControl);
 
             var gameDataDir = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData");
 
@@ -78,99 +77,33 @@ namespace LunaClient.Systems.Mod
                 .Where(d => !d.StartsWith("squad", StringComparison.OrdinalIgnoreCase)
                             && !d.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase));
 
-            //Add top level dll's to required (It's usually things like modulemanager)
-            requiredFiles.AddRange(
+            //Add top level dll's
+            modFile.MandatoryPlugins.AddRange(
                 Directory.GetFiles(gameDataDir)
                     .Where(f => Path.GetExtension(f).ToLower() == ".dll")
-                    .Select(Path.GetFileName));
+                    .Select(f => new MandatoryDllFile
+                    {
+                        FilePath = Path.GetFileName(f)
+                    }));
+
+            modFile.ForbiddenPlugins.Add("exampleforbiddenpluginpath1/exampleforbiddenFile1.dll");
+            modFile.ForbiddenPlugins.Add("exampleforbiddenpluginpath2/exampleforbiddenFile2.dll");
 
             foreach (var modDirectory in relativeModDirectories)
             {
-                var modIsRequired = false;
-
-                var filesInModFolder = Directory.GetFiles(CommonUtil.CombinePaths(gameDataDir, modDirectory), "*",
-                    SearchOption.AllDirectories);
-                var modDllFiles = new List<string>();
-                var modPartCfgFiles = new List<string>();
-
+                var filesInModFolder = Directory.GetFiles(CommonUtil.CombinePaths(gameDataDir, modDirectory), "*.dll", SearchOption.AllDirectories);
                 foreach (var file in filesInModFolder)
                 {
-                    var relativeFileName = file.Substring(file.ToLower().IndexOf("gamedata", StringComparison.Ordinal) +
-                                                          9)
-                        .Replace(@"\", "/");
-
-                    switch (Path.GetExtension(file).ToLower())
+                    var relativeFileName = file.Substring(file.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).Replace(@"\", "/");
+                    modFile.MandatoryPlugins.Add(new MandatoryDllFile
                     {
-                        case ".dll":
-                            modDllFiles.Add(relativeFileName);
-                            break;
-                        case ".cfg":
-                            if (Path.GetExtension(file).ToLower() == ".cfg")
-                            {
-                                var fileIsPartFile = false;
-
-                                var cn = ConfigNode.Load(file);
-                                if (cn == null) continue;
-                                foreach (var partName in cn.GetNodes("PART").Select(p => p.GetValue("name")))
-                                {
-                                    LunaLog.Log($"[LMP]: Part detected in {relativeFileName} , Name: {partName}");
-                                    modIsRequired = true;
-                                    fileIsPartFile = true;
-                                    partsList.Add(partName.Replace('_', '.'));
-                                }
-
-                                if (fileIsPartFile)
-                                    modPartCfgFiles.Add(relativeFileName);
-                            }
-                            break;
-                    }
-                }
-
-                if (modIsRequired)
-                {
-                    //If the mod as a plugin, just require that. It's clear enough.
-                    //If the mod does *not* have a plugin (Scoop-o-matic is an example), add the part files to required instead.
-                    requiredFiles.AddRange(modDllFiles.Count > 0 ? modDllFiles : modPartCfgFiles);
-                }
-                else
-                {
-                    if (whitelistMode)
-                        optionalFiles.AddRange(modDllFiles);
+                        FilePath = relativeFileName
+                    });
                 }
             }
 
-            var modFileData = Common.GenerateModFileStringData(requiredFiles.ToArray(), optionalFiles.ToArray(),
-                whitelistMode,
-                new string[0], partsList.ToArray());
-
-            using (var sw = new StreamWriter(CommonUtil.CombinePaths(MainSystem.KspPath, "LMPModControl.txt"), false))
-            {
-                sw.Write(modFileData);
-            }
-
-            ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ModFileGenerated, 5f,
-                ScreenMessageStyle.UPPER_CENTER);
-        }
-
-        public void CheckCommonStockParts()
-        {
-            var missingPartsCount = 0;
-            LunaLog.Log("[LMP]: Missing parts start");
-            var missingParts = PartLoader.LoadedPartsList.Where(p => !Common.GetStockParts().Contains(p.name));
-
-            foreach (var part in missingParts)
-            {
-                missingPartsCount++;
-                LunaLog.Log($"[LMP]: Missing '{part.name}'");
-            }
-
-            LunaLog.Log("[LMP]: Missing parts end");
-
-            ScreenMessages.PostScreenMessage(
-                missingPartsCount > 0
-                    ? $"{missingPartsCount} missing part(s) from Common.dll printed to debug log ({PartLoader.LoadedPartsList.Count} total)"
-                    : $"No missing parts out of from Common.dll ({PartLoader.LoadedPartsList.Count} total)",
-                5f, ScreenMessageStyle.UPPER_CENTER);
+            LunaXmlSerializer.WriteToXmlFile(modFile, CommonUtil.CombinePaths(MainSystem.KspPath, "LMPModControl.xml"));
+            ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ModFileGenerated, 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
         #endregion

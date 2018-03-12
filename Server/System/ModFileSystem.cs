@@ -7,12 +7,7 @@ namespace Server.System
     {
         public static void GenerateNewModFile()
         {
-            if (FileHandler.FileExists(ServerContext.ModFilePath))
-                FileHandler.MoveFile(ServerContext.ModFilePath, $"{ServerContext.ModFilePath}.bak");
-            var modFileData = Common.GenerateModFileStringData(new string[0],
-                new string[0], false, new string[0], Common.GetStockParts().ToArray());
-
-            FileHandler.WriteToFile(ServerContext.ModFilePath, modFileData);
+            FileHandler.WriteToFile(ServerContext.ModFilePath, LunaCommon.Properties.Resources.LMPModControl);
         }
 
         //Get mod file SHA

@@ -111,11 +111,8 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.SaveSettings();
             }
             GUILayout.Space(10);
-            GUILayout.Label(LocalizationContainer.OptionsWindowText.GenerateLmpModControl);
-            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateBlackList))
-                ModSystem.Singleton.GenerateModControlFile(false);
-            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateWhiteList))
-                ModSystem.Singleton.GenerateModControlFile(true);
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
+                ModSystem.Singleton.GenerateModControlFile();
             UniverseConverterWindow.Singleton.Display = GUILayout.Toggle(UniverseConverterWindow.Singleton.Display, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();
@@ -143,10 +140,6 @@ namespace LunaClient.Windows.Options
 
         private void DrawAdvancedDebugOptions()
         {
-            if (GUILayout.Button("Check Common.dll stock parts"))
-                ModSystem.Singleton.CheckCommonStockParts();
-            GUILayout.Space(10);
-
             ShowAdvancedNetworkFields = GUILayout.Toggle(ShowAdvancedNetworkFields, "Advanced network fields", ButtonStyle);
             if (ShowAdvancedNetworkFields)
             {

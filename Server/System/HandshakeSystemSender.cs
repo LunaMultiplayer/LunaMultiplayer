@@ -18,16 +18,15 @@ namespace Server.System
             
             if (enumResponse == HandshakeReply.HandshookSuccessfully)
             {
-                msgData.ModControlMode = GeneralSettings.SettingsStore.ModControl;
+                msgData.ModControl = GeneralSettings.SettingsStore.ModControl;
                 msgData.ServerStartTime = ServerContext.StartTime;
                 msgData.PlayerId = client.Id;
 
-                if (GeneralSettings.SettingsStore.ModControl != ModControlMode.Disabled)
+                if (GeneralSettings.SettingsStore.ModControl)
                 {
                     if (!FileHandler.FileExists(ServerContext.ModFilePath))
                         ModFileSystem.GenerateNewModFile();
-                    msgData.ModFileData = FileHandler.ReadFile(ServerContext.ModFilePath);
-                    msgData.NumBytes = msgData.ModFileData.Length;
+                    msgData.ModFileData = FileHandler.ReadFileText(ServerContext.ModFilePath);
                 }
             }
 

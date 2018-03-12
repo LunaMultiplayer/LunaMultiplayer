@@ -3,7 +3,7 @@
   <Global>#Global:</Global>
   <CraftUploaded>¡Nave subida!</CraftUploaded>
   <CraftSaved>¡Nave guardada!</CraftSaved>
-  <ModFileGenerated>Se ha generado el LMPModFile.txt en tu carpeta de KSP</ModFileGenerated>
+  <ModFileGenerated>Se ha generado el archivo LMPModControl.xml en tu carpeta de KSP</ModFileGenerated>
   <Disconected>¡Estás desconectado!</Disconected>
   <Spectating>Esta nave está siendo controlada por:</Spectating>
   <SafetyBubble>¡¡Recuerda!! ¡¡Mientras estés en la zona de seguridad no verás las otras naves cercanas!!</SafetyBubble>

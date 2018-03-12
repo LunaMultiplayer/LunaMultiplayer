@@ -12,9 +12,7 @@
   <ResetDisclaimer>Перезапустить дисклеймер</ResetDisclaimer>
   <Interpolation>Включить интерполяцию</Interpolation>
   <ShowClose>Show "Close" button in connection window</ShowClose>
-  <GenerateLmpModControl>Сгенерировать LMPModControl для сервера:</GenerateLmpModControl>
-  <GenerateBlackList>Сгенерировать черный список LMPModControl.txt</GenerateBlackList>
-  <GenerateWhiteList>Сгенерировать белый список LMPModControl.txt</GenerateWhiteList>
+  <GenerateLmpModControl>Сгенерировать LMPModControl.xml для сервера</GenerateLmpModControl>
   <GenerateUniverse>Сгенерировать вселенную из сохраненной игры</GenerateUniverse>
   <Toolbar>Панель инструментов:</Toolbar>
   <Close>Закрыть</Close>

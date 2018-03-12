@@ -83,7 +83,7 @@ namespace LunaClient.ModuleStore
             var filePath = CommonUtil.CombinePaths(CustomPartSyncFolder, "PartsBehaviour.xml");
             if (!File.Exists(filePath))
             {
-                LunaXmlSerializer.WriteToXmlFile(Resources.PartsBehaviour, filePath);
+                File.WriteAllText(filePath, Resources.PartsBehaviour);
             }
 
             List<CustomModuleDefinition> moduleValues;

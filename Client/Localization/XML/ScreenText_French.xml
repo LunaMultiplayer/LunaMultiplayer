@@ -3,7 +3,7 @@
   <Global>#Global:</Global>
   <CraftUploaded>Création partagée !</CraftUploaded>
   <CraftSaved>Création sauvegardée !</CraftSaved>
-  <ModFileGenerated>Le fichier LMPModFile.txt a été généré dans votre dossier KSP.</ModFileGenerated>
+  <ModFileGenerated>Le fichier LMPModControl.xml a été généré dans votre dossier KSP.</ModFileGenerated>
   <Disconected>Vous avez été déconnecté !</Disconected>
   <Spectating>Ce vaisseau est controllé par</Spectating>
   <SafetyBubble>Rappel !! Les vaisseaux situés à proximité ne sont pas visibles tant que vous restez dans la zone de sécurité !!</SafetyBubble> 

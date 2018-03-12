@@ -3,7 +3,7 @@
   <Global>#公共:</Global>
   <CraftUploaded>载具上传成功!</CraftUploaded>
   <CraftSaved>载具已保存!</CraftSaved>
-  <ModFileGenerated>LMPModFile.txt文件已经生成与您的KSP根文件夹</ModFileGenerated>
+  <ModFileGenerated>LMPModControl.xml文件已经生成与您的KSP根文件夹</ModFileGenerated>
   <Disconected>您已断开连接!</Disconected>
   <Spectating>此载具控制由：</Spectating>
   <SafetyBubble>牢记!! 当您在安全区域时您无法看到靠近您的其他载具!!</SafetyBubble>

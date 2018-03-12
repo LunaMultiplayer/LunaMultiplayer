@@ -5,7 +5,6 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
-using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -103,7 +102,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 VesselCommon.IsSpectating)
                 return false;
 
-            if (ModSystem.Singleton.ModControl != ModControlMode.Disabled)
+            if (ModSystem.Singleton.ModControl)
             {
                 BannedPartsStr = GetInvalidVesselParts(FlightGlobals.ActiveVessel);
                 return string.IsNullOrEmpty(BannedPartsStr);
@@ -177,9 +176,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     if (BannedPartsMessage != null)
                         BannedPartsMessage.duration = 0;
-                    if (ModSystem.Singleton.ModControl == ModControlMode.EnabledStopInvalidPartSync)
-                        BannedPartsMessage = ScreenMessages.PostScreenMessage($"Active vessel contains the following banned parts, it will not be saved to the server:\n{BannedPartsStr}", 2f, ScreenMessageStyle.UPPER_CENTER);
-                    if (ModSystem.Singleton.ModControl == ModControlMode.EnabledStopInvalidPartLaunch)
+                    if (ModSystem.Singleton.ModControl)
                         BannedPartsMessage = ScreenMessages.PostScreenMessage($"Active vessel contains the following banned parts, you will be unable to launch on this server:\n{BannedPartsStr}", 2f, ScreenMessageStyle.UPPER_CENTER);
 
                 }

@@ -12,9 +12,7 @@
   <ResetDisclaimer>Réinitialiser les clauses d'utilisation</ResetDisclaimer>
   <Interpolation>Activer l'interpolation</Interpolation>
   <ShowClose>Afficher le bouton "Fermer" dans la fenêtre de connexion</ShowClose>
-  <GenerateLmpModControl>Générer le fichier serveur "LMPModControl" :</GenerateLmpModControl>
-  <GenerateBlackList>Genérer la whitelist "LMPModControl.txt"</GenerateBlackList>
-  <GenerateWhiteList>Générer la blacklist "LMPModControl.txt"</GenerateWhiteList>
+  <GenerateLmpModControl>Générer le fichier serveur "LMPModControl.xml"</GenerateLmpModControl>
   <GenerateUniverse>Générer l'univers depuis une sauvegarde</GenerateUniverse>
   <Toolbar>Barre d'outils :</Toolbar>
   <Close>Fermer</Close>

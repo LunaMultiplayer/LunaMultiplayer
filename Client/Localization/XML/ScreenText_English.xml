@@ -3,7 +3,7 @@
   <Global>#Global:</Global>
   <CraftUploaded>Craft uploaded!</CraftUploaded>
   <CraftSaved>Craft saved!</CraftSaved>
-  <ModFileGenerated>LMPModFile.txt file generated in your KSP folder</ModFileGenerated>
+  <ModFileGenerated>LMPModControl.xml file generated in your KSP folder</ModFileGenerated>
   <Disconected>You have been disconnected!</Disconected>
   <Spectating>This vessel is being controlled by</Spectating>
   <SafetyBubble>Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!</SafetyBubble>

@@ -12,9 +12,7 @@
   <ResetDisclaimer>Ausschlussklaussel zurücksetzen</ResetDisclaimer>
   <Interpolation>Aktiviere Interpolation</Interpolation>
   <ShowClose>Zeige den "Schließen" Button im Verbindungsfenster an</ShowClose>
-  <GenerateLmpModControl>Generiere die Server LMPModControl-Datei:</GenerateLmpModControl>
-  <GenerateBlackList>Generiere die Blacklist für LMPModControl.txt</GenerateBlackList>
-  <GenerateWhiteList>Generiere die Whitelist für LMPModControl.txt</GenerateWhiteList>
+  <GenerateLmpModControl>Generiere die Server LMPModControl.xml-Datei</GenerateLmpModControl>
   <GenerateUniverse>Generiere das Universum von einem gespeicherten Spielstand</GenerateUniverse>
   <Toolbar>Werkzeugleiste:</Toolbar>
   <Close>Schließen</Close>

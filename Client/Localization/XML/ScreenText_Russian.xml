@@ -3,7 +3,7 @@
   <Global>#Global:</Global>
   <CraftUploaded>Корабль загружен!</CraftUploaded>
   <CraftSaved>Корабль сохранен!</CraftSaved>
-  <ModFileGenerated>LMPModFile.txt создан в директории с KSP</ModFileGenerated>
+  <ModFileGenerated>LMPModControl.xml создан в директории с KSP</ModFileGenerated>
   <Disconected>Вы были отключенны!</Disconected>
   <Spectating>Этот корабль управляется игроком</Spectating>
   <SafetyBubble>Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!</SafetyBubble>

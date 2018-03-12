@@ -10,7 +10,6 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
-using System.Text;
 
 namespace LunaClient.Systems.Handshake
 {
@@ -49,12 +48,13 @@ namespace LunaClient.Systems.Handshake
             {
                 reply = data.Response;
                 reason = data.Reason;
+
                 //If we handshook successfully, the mod data will be available to read.
                 if (reply == HandshakeReply.HandshookSuccessfully)
                 {
-                    ModSystem.Singleton.ModControl = data.ModControlMode;
-                    if (ModSystem.Singleton.ModControl != ModControlMode.Disabled)
-                        modFileData = Encoding.UTF8.GetString(data.ModFileData);
+                    ModSystem.Singleton.ModControl = data.ModControl;
+                    if (ModSystem.Singleton.ModControl)
+                        modFileData = data.ModFileData;
                 }
             }
             catch (Exception e)
