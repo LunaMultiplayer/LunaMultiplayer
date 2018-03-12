@@ -46,7 +46,7 @@ Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-comp
 ---
 ### Servers:
 
-You can check the available servers in latest release [here](http://dagger.ole32.com:8701/servers)
+You can check the available servers in latest release [here](http://dagger.ole32.com:8701/servers)  
 You can check the available servers in latest nightly version [here](http://dagger.ole32.com:8751/servers)
 
 ---
