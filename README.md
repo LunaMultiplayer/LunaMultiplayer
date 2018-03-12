@@ -46,7 +46,9 @@ Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-comp
 ---
 ### Servers:
 
-You can check the available servers in the official website or trough the website inside the repo [here](http://htmlpreview.github.io/?http://github.com/LunaMultiplayer/LunaMultiplayer/blob/master/WebDisplayServers/servers.html)
+|                  Release servers                  |                  Nightly servers                 |
+| ------------------------------------------------  | ------------------------------------------------ |
+|  [Release](http://dagger.ole32.com:8701/servers)  |  [Nightly](http://dagger.ole32.com:8751/servers) |
 
 ---
 
