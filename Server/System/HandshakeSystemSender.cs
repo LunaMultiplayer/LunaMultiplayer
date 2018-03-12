@@ -24,8 +24,6 @@ namespace Server.System
 
                 if (GeneralSettings.SettingsStore.ModControl)
                 {
-                    if (!FileHandler.FileExists(ServerContext.ModFilePath))
-                        ModFileSystem.GenerateNewModFile();
                     msgData.ModFileData = FileHandler.ReadFileText(ServerContext.ModFilePath);
                 }
             }

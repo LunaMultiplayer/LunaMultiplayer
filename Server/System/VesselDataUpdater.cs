@@ -1,9 +1,12 @@
 ﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Xml;
+using Server.Log;
 using Server.Utilities;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -199,6 +202,21 @@ namespace Server.System
                 lock (Semaphore.GetOrAdd(vesselId, new object()))
                 {
                     var vesselAsXml = ConfigNodeXmlParser.ConvertToXml(vesselDataInConfigNodeFormat);
+
+                    if (Settings.GeneralSettings.SettingsStore.ModControl)
+                    {
+                        var vesselParts = GetPartNames(vesselAsXml);
+                        if (vesselParts != null)
+                        {
+                            var bannedParts = vesselParts.Except(ModFileSystem.ModControl.AllowedParts);
+                            if (bannedParts.Any())
+                            {
+                                LunaLog.Warning($"Received a vessel with BANNED parts! {vesselId}");
+                                return;
+                            }
+                        }
+                    }
+
                     VesselStoreSystem.CurrentVesselsInXmlFormat.AddOrUpdate(vesselId, vesselAsXml, (key, existingVal) => vesselAsXml);
                 }
             });
@@ -269,6 +287,17 @@ namespace Server.System
                     VesselStoreSystem.CurrentVesselsInXmlFormat.TryUpdate(msgData.VesselId, updatedText, xmlData);
                 }
             });
+        }
+
+        private static IEnumerable<string> GetPartNames(string vesselData)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(vesselData);
+
+            var xpath = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='name']";
+            var parts = document.SelectNodes(xpath);
+
+            return parts?.Cast<XmlNode>().Select(n => n.InnerText).Distinct();
         }
 
         /// <summary>
