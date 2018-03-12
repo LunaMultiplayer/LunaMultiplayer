@@ -49,14 +49,29 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\GitHubAsset.cs" />
-    <Compile Include="Contracts\GitHubUploader.cs" />
-    <Compile Include="Contracts\GitHubAuthor.cs" />
-    <Compile Include="Contracts\GitHubRelease.cs" />
-    <Compile Include="UpdateChecker.cs" />
+    <Compile Include="Appveyor\AppveyorProduct.cs" />
+    <Compile Include="Appveyor\Contracts\AccessRightDefinition.cs" />
+    <Compile Include="Appveyor\Contracts\AccessRight.cs" />
+    <Compile Include="Appveyor\Contracts\Build.cs" />
+    <Compile Include="Appveyor\Contracts\Job.cs" />
+    <Compile Include="Appveyor\Contracts\NuGetFeed.cs" />
+    <Compile Include="Appveyor\Contracts\Project.cs" />
+    <Compile Include="Appveyor\Contracts\RoleAce.cs" />
+    <Compile Include="Appveyor\Contracts\RootObject.cs" />
+    <Compile Include="Appveyor\Contracts\SecurityDescriptor.cs" />
+    <Compile Include="CommonDownloader.cs" />
+    <Compile Include="Github\Contracts\GitHubAsset.cs" />
+    <Compile Include="Github\Contracts\GitHubUploader.cs" />
+    <Compile Include="Github\Contracts\GitHubAuthor.cs" />
+    <Compile Include="Github\Contracts\GitHubRelease.cs" />
+    <Compile Include="Appveyor\AppveyorUpdateChecker.cs" />
+    <Compile Include="Github\GithubProduct.cs" />
+    <Compile Include="Github\GithubUpdateChecker.cs" />
+    <Compile Include="Appveyor\AppveyorUpdateDownloader.cs" />
+    <Compile Include="Appveyor\AppveyorUpdateExtractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UpdateDownloader.cs" />
-    <Compile Include="UpdateExtractor.cs" />
+    <Compile Include="Github\GithubUpdateDownloader.cs" />
+    <Compile Include="Github\GithubUpdateExtractor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.manifest" />
@@ -67,5 +82,6 @@
       <Name>LmpGlobal</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -19,7 +19,7 @@ using LunaClient.Windows.Connection;
 using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
-using LunaUpdater;
+using LunaUpdater.Github;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -207,7 +207,7 @@ namespace LunaClient
                 DisclaimerDialog.SpawnDialog();
             }
 
-            LatestVersion = UpdateChecker.GetLatestVersion();
+            LatestVersion = GithubUpdateChecker.GetLatestVersion();
             if (new Version(LmpVersioning.CurrentVersion) < LatestVersion)
             {
                 LunaLog.LogWarning($"[LMP]: Outdated version detected! Current: {LmpVersioning.CurrentVersion} Latest: {LatestVersion}");

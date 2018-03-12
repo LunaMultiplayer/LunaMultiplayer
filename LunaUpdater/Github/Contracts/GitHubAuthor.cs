@@ -1,9 +1,9 @@
 ﻿using System.Runtime.Serialization;
 
-namespace LunaUpdater.Contracts
+namespace LunaUpdater.Github.Contracts
 {
     [DataContract]
-    public class GitHubUploader
+    public class GitHubAuthor
     {
         [DataMember(Name = "login")]
         public string Login { get; set; }

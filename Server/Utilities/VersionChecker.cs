@@ -1,5 +1,5 @@
 ﻿using LunaCommon;
-using LunaUpdater;
+using LunaUpdater.Github;
 using Server.Context;
 using Server.Log;
 using System;
@@ -15,7 +15,7 @@ namespace Server.Utilities
         {
             while (ServerContext.ServerRunning)
             {
-                LatestVersion = UpdateChecker.GetLatestVersion();
+                LatestVersion = GithubUpdateChecker.GetLatestVersion();
 
                 //Sleep for 30 minutes...
                 await Task.Delay(30 * 60 * 1000);

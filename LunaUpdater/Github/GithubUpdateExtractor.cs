@@ -2,37 +2,27 @@
 using System;
 using System.IO;
 
-namespace LunaUpdater
+namespace LunaUpdater.Github
 {
-    public class UpdateExtractor
+    public class GithubUpdateExtractor
     {
-        public enum ProductToExtract
-        {
-            Client,
-            MasterServer,
-            Server
-        }
-
-        public static void ExtractZipFileToDirectory(string zipFilePath, string destinationFolder, ProductToExtract product)
+        public static void ExtractZipFileToDirectory(string zipFilePath, string destinationFolder, GithubProduct product)
         {
             if (string.IsNullOrEmpty(zipFilePath) || string.IsNullOrEmpty(destinationFolder) || !Directory.Exists(destinationFolder) || !File.Exists(zipFilePath))
                 return;
 
             using (var zipFile = ZipFile.Read(zipFilePath))
             {
-                var tempFolder = Path.Combine(destinationFolder,"TempUnzipFolder");
+                var tempFolder = Path.Combine(destinationFolder, "TempUnzipFolder");
                 Directory.CreateDirectory(tempFolder);
                 zipFile.ExtractAll(tempFolder, ExtractExistingFileAction.OverwriteSilently);
 
                 switch (product)
                 {
-                    case ProductToExtract.Client:
+                    case GithubProduct.Client:
                         ExtractClient(tempFolder);
                         break;
-                    case ProductToExtract.MasterServer:
-                        ExtractMasterServer(tempFolder);
-                        break;
-                    case ProductToExtract.Server:
+                    case GithubProduct.Server:
                         ExtractServer(tempFolder);
                         break;
                     default:
@@ -43,25 +33,6 @@ namespace LunaUpdater
             }
 
             File.Delete(zipFilePath);
-        }
-
-        private static void ExtractMasterServer(string tempFolder)
-        {
-            var destFolder = Path.Combine(tempFolder, "..");
-            foreach (var file in Directory.GetFiles(Path.Combine(tempFolder, "LMPMasterServer")))
-            {
-                if (!Path.GetExtension(file).ToLower().Contains("exe"))
-                {
-                    try
-                    {
-                        File.Copy(file, Path.Combine(destFolder, Path.GetFileName(file)), true);
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
-                }
-            }
         }
 
         private static void ExtractServer(string tempFolder)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace LunaUpdater.Contracts
+namespace LunaUpdater.Github.Contracts
 {
     [DataContract]
     public class GitHubAsset

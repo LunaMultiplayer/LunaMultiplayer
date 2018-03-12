@@ -1,7 +1,10 @@
 ﻿using LunaUpdater;
+using LunaUpdater.Appveyor;
+using LunaUpdater.Github;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -50,7 +53,7 @@ namespace MasterServer
                 eArgs.Cancel = true;
             };
 
-            CheckNewVersion();
+            CheckNewVersion(args.Any(a=> a.Contains("nightly")));
             StartMasterServerDll();
             QuitEvent.WaitOne();
         }
@@ -94,35 +97,36 @@ namespace MasterServer
         /// <summary>
         /// Checks if a new version exists and if it does, it stops the master server, downloads it and restarts it again
         /// </summary>
-        private static void CheckNewVersion()
+        private static void CheckNewVersion(bool nightly)
         {
             Task.Run(async () =>
             {
                 while (true)
                 {
-                    var latestVersion = UpdateChecker.GetLatestVersion();
+                    var latestVersion = nightly ? AppveyorUpdateChecker.GetLatestVersion() : GithubUpdateChecker.GetLatestVersion();
                     if (latestVersion > CurrentVersion)
                     {
-                        ConsoleLogger.Log(LogLevels.Normal, $"Found a new updated version! Current: {CurrentVersion} Latest: {latestVersion}");
-                        ConsoleLogger.Log(LogLevels.Normal, "Downloading and restarting program....");
-
-                        var url = UpdateDownloader.GetZipFileUrl(DebugVersion);
+                        var url = AppveyorUpdateDownloader.GetZipFileUrl(AppveyorProduct.MasterServer, DebugVersion);
                         if (!string.IsNullOrEmpty(url))
                         {
+                            ConsoleLogger.Log(LogLevels.Normal, $"Found a new updated version! Current: {CurrentVersion} Latest: {latestVersion}");
+                            ConsoleLogger.Log(LogLevels.Normal, "Downloading and restarting program....");
+
                             var zipFileName = url.Substring(url.LastIndexOf("/") + 1);
-                            UpdateDownloader.DownloadZipFile(url, Path.Combine(Directory.GetCurrentDirectory(), zipFileName));
+                            if (CommonDownloader.DownloadZipFile(url, Path.Combine(Directory.GetCurrentDirectory(), zipFileName)))
+                            {
+                                StopMasterServerDll();
 
-                            StopMasterServerDll();
+                                AppveyorUpdateExtractor.ExtractZipFileToDirectory(Path.Combine(Directory.GetCurrentDirectory(), zipFileName), Directory.GetCurrentDirectory(),
+                                    AppveyorProduct.MasterServer);
 
-                            UpdateExtractor.ExtractZipFileToDirectory(Path.Combine(Directory.GetCurrentDirectory(), zipFileName), Directory.GetCurrentDirectory(),
-                                UpdateExtractor.ProductToExtract.MasterServer);
-
-                            StartMasterServerDll();
+                                StartMasterServerDll();
+                            }
                         }
                     }
 
-                    //Sleep for 30 minutes...
-                    await Task.Delay(10 *  1000);
+                    //Sleep for 5 minutes...
+                    await Task.Delay(5 * 1000 * 60);
                 }
             });
         }

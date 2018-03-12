@@ -73,6 +73,7 @@ namespace LMP.MasterServer
             Console.WriteLine("/h                       ... Show this help");
             Console.WriteLine("/p:<port>                ... Start with the specified port (default port is 8700)");
             Console.WriteLine("/g:<port>                ... Reply to get petitions on the specified port (default is 8701)");
+            Console.WriteLine("/nightly                 ... Keep this master server updated with last nightly version");
             Console.WriteLine("");
         }
 
