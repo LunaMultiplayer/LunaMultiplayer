@@ -73,8 +73,8 @@ namespace LMP.MasterServer.Http
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Game Mode");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Players/Max");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Mod control");writer.RenderEndTag();
-            writer.RenderBeginTag(HtmlTextWriterTag.Th); writer.Write("Terrain quality"); writer.RenderEndTag();
-            writer.RenderBeginTag(HtmlTextWriterTag.Th); writer.Write("Cheats"); writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Terrain quality");writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Cheats");writer.RenderEndTag();
             writer.RenderEndTag();
 
             // Loop over some strings.
@@ -87,9 +87,9 @@ namespace LMP.MasterServer.Http
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Description);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write((GameMode)server.GameMode);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write($"{server.PlayerCount}/{server.MaxPlayers}");writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.ModControl); writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.TerrainQuality);writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td); writer.Write(server.Cheats); writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.ModControl);writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write((TerrainQuality)server.TerrainQuality);writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Cheats);writer.RenderEndTag();
                 writer.RenderEndTag();
             }
 
