@@ -2,6 +2,8 @@
 #Then each client will query them for the servers and each server will register against them
 #Dagger server
 dagger.ole32.com:8700
+#Dagger nightly server
+dagger.ole32.com:8750
 #Robin server
 lunamultiplayer.com:8700
 #The Hellbox server
