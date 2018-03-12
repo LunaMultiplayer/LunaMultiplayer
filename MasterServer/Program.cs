@@ -89,7 +89,7 @@ namespace MasterServer
         private static void StopMasterServerDll()
         {
             LmpDomain.SetData("Stop", true);
-            Thread.Sleep(10000);
+            Thread.Sleep(5000);
             AppDomain.Unload(LmpDomain);
             Console.Clear();
         }
