@@ -32,7 +32,7 @@ namespace LunaClient.Systems.Toolbar
 
         protected override void OnEnabled()
         {
-            ButtonTexture = GameDatabase.Instance.GetTexture("LunaMultiPlayer/Button/LMPButton", false);
+            ButtonTexture = GameDatabase.Instance.GetTexture("LunaMultiplayer/Button/LMPButton", false);
             if (SettingsSystem.CurrentSettings.ToolbarType == LmpToolbarType.Disabled)
             {
                 //Nothing!
@@ -67,10 +67,10 @@ namespace LunaClient.Systems.Toolbar
         private void EnableBlizzyToolbar()
         {
             BlizzyRegistered = true;
-            BlizzyButton = ToolbarManager.Instance.add("LunaMultiPlayer", "GUIButton");
+            BlizzyButton = ToolbarManager.Instance.add("LunaMultiplayer", "GUIButton");
             BlizzyButton.OnClick += OnBlizzyClick;
             BlizzyButton.ToolTip = "Toggle LMP windows";
-            BlizzyButton.TexturePath = "LunaMultiPlayer/Button/LMPButtonLow";
+            BlizzyButton.TexturePath = "LunaMultiplayer/Button/LMPButtonLow";
             BlizzyButton.Visibility = new GameScenesVisibility(GameScenes.EDITOR, GameScenes.FLIGHT,
                 GameScenes.SPACECENTER, GameScenes.TRACKSTATION);
             LunaLog.Log("[LMP]: Registered blizzy toolbar");

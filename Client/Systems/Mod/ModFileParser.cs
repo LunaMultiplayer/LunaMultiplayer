@@ -42,7 +42,7 @@ namespace LunaClient.Systems.Mod
 
         private static void SaveCurrentModConfigurationFile()
         {
-            var tempModFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiPlayer", "Plugins", "Data", "LMPModControl.txt");
+            var tempModFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Plugins", "Data", "LMPModControl.txt");
             using (var sw = new StreamWriter(tempModFilePath, false))
             {
                 sw.WriteLine("#This file is downloaded from the server during connection. It is saved here for convenience.");

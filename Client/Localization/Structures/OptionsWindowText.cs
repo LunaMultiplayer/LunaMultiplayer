@@ -2,7 +2,7 @@
 {
     public class OptionsWindowText
     {
-        public string Title { get; set; } = "LunaMultiPlayer - Options";
+        public string Title { get; set; } = "LunaMultiplayer - Options";
         public string Language { get; set; } = "Language:";
         public string Color { get; set; } = "Player color:";
         public string Red { get; set; } = "R:";

@@ -247,7 +247,7 @@ namespace LunaClient
 
             ModSystem.Singleton.BuildDllFileList();
 
-            LunaLog.Log($"[LMP]: Luna MultiPlayer {LmpVersioning.CurrentVersion} initialized!");
+            LunaLog.Log($"[LMP]: Luna Multiplayer {LmpVersioning.CurrentVersion} initialized!");
 
             //Trigger a reset!
             NetworkState = ClientState.Disconnected;
@@ -314,7 +314,7 @@ namespace LunaClient
 
         private void StopGame()
         {
-            HighLogic.SaveFolder = "LunaMultiPlayer";
+            HighLogic.SaveFolder = "LunaMultiplayer";
             if (HighLogic.LoadedScene != GameScenes.MAINMENU)
                 HighLogic.LoadScene(GameScenes.MAINMENU);
             //HighLogic.CurrentGame = null; This is no bueno
@@ -514,20 +514,15 @@ namespace LunaClient
 
         private static void SetupDirectoriesIfNeeded()
         {
-            var lunaMultiPlayerSavesDirectory = CommonUtil.CombinePaths(KspPath, "saves", "LunaMultiPlayer");
-            CreateIfNeeded(lunaMultiPlayerSavesDirectory);
-            CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, "Ships"));
-            CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, CommonUtil.CombinePaths("Ships", "VAB")));
-            CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, CommonUtil.CombinePaths("Ships", "SPH")));
-            CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiPlayerSavesDirectory, "Subassemblies"));
-            var lunaMultiPlayerCacheDirectory = CommonUtil.CombinePaths(KspPath, "GameData", "LunaMultiPlayer", "Cache");
-            CreateIfNeeded(lunaMultiPlayerCacheDirectory);
-            var lunaMultiPlayerIncomingCacheDirectory = CommonUtil.CombinePaths(KspPath, "GameData",
-                "LunaMultiPlayer", "Cache", "Incoming");
+            var lunaMultiplayerSavesDirectory = CommonUtil.CombinePaths(KspPath, "saves", "LunaMultiplayer");
+            CreateIfNeeded(lunaMultiplayerSavesDirectory);
+            CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiplayerSavesDirectory, "Ships"));
+            CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiplayerSavesDirectory, CommonUtil.CombinePaths("Ships", "VAB")));
+            CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiplayerSavesDirectory, CommonUtil.CombinePaths("Ships", "SPH")));
+            CreateIfNeeded(CommonUtil.CombinePaths(lunaMultiplayerSavesDirectory, "Subassemblies"));
 
-            CreateIfNeeded(lunaMultiPlayerIncomingCacheDirectory);
-            var lunaMultiPlayerFlagsDirectory = CommonUtil.CombinePaths(KspPath, "GameData", "LunaMultiPlayer", "Flags");
-            CreateIfNeeded(lunaMultiPlayerFlagsDirectory);
+            var lunaMultiplayerFlagsDirectory = CommonUtil.CombinePaths(KspPath, "GameData", "LunaMultiplayer", "Flags");
+            CreateIfNeeded(lunaMultiplayerFlagsDirectory);
         }
 
         private static void CreateIfNeeded(string path)
@@ -538,12 +533,12 @@ namespace LunaClient
 
         private static void SetupBlankGameIfNeeded()
         {
-            var persistentFile = CommonUtil.CombinePaths(KspPath, "saves", "LunaMultiPlayer", "persistent.sfs");
+            var persistentFile = CommonUtil.CombinePaths(KspPath, "saves", "LunaMultiplayer", "persistent.sfs");
             if (!File.Exists(persistentFile))
             {
                 LunaLog.Log("[LMP]: Creating new blank persistent.sfs file");
                 var blankGame = CreateBlankGame();
-                HighLogic.SaveFolder = "LunaMultiPlayer";
+                HighLogic.SaveFolder = "LunaMultiplayer";
                 GamePersistence.SaveGame(blankGame, "persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
             }
         }
@@ -571,7 +566,7 @@ namespace LunaClient
                 returnGame.flagURL = "Squad/Flags/default";
             }
 
-            returnGame.Title = "LunaMultiPlayer";
+            returnGame.Title = "LunaMultiplayer";
             if (SettingsSystem.ServerSettings.WarpMode == WarpMode.Subspace)
             {
                 returnGame.Parameters.Flight.CanQuickLoad = true;
@@ -584,7 +579,7 @@ namespace LunaClient
                 returnGame.Parameters.Flight.CanRestart = false;
                 returnGame.Parameters.Flight.CanLeaveToEditor = false;
             }
-            HighLogic.SaveFolder = "LunaMultiPlayer";
+            HighLogic.SaveFolder = "LunaMultiplayer";
 
             return returnGame;
         }

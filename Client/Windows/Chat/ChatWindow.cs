@@ -108,7 +108,7 @@ namespace LunaClient.Windows.Chat
                 }
                 WindowRect =
                     LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiPlayer Chat", WindowStyle, WindowLayoutOptions));
+                        DrawContent, "LunaMultiplayer Chat", WindowStyle, WindowLayoutOptions));
             }
             CheckWindowLock();
         }

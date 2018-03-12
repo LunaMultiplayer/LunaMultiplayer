@@ -11,7 +11,7 @@ namespace LunaCommon
 {
     /// <summary>
     /// This class retrieves the ips of master servers that are stored in:
-    /// http://raw.githubusercontent.com/gavazquez/LunaMultiPlayer/master/MasterServersList/MasterServersList.txt
+    /// http://raw.githubusercontent.com/LunaMultiplayer/LunaMultiplayer/master/MasterServersList/MasterServersList.txt
     /// </summary>
     public static class MasterServerRetriever
     {

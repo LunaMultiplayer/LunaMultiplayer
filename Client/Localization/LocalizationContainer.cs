@@ -26,7 +26,7 @@ namespace LunaClient.Localization
         public static ServerDetailsWindowText ServerDetailsWindowText = new ServerDetailsWindowText();
         public static ScreenText ScreenText = new ScreenText();
 
-        private static readonly string LocalizationFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiPlayer", "Localization");
+        private static readonly string LocalizationFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Localization");
 
         public static string GetCurrentLanguageAsText()
         {

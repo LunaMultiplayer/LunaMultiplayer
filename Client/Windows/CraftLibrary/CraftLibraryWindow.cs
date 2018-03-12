@@ -28,14 +28,14 @@ namespace LunaClient.Windows.CraftLibrary
             if (SafeDisplay)
                 PlayerWindowRect =
                     LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset, PlayerWindowRect,
-                        DrawContent, "LunaMultiPlayer - Craft Library", WindowStyle, PlayerLayoutOptions));
+                        DrawContent, "LunaMultiplayer - Craft Library", WindowStyle, PlayerLayoutOptions));
             if (SafeDisplay && System.SelectedPlayer != null)
                 if (System.PlayersWithCrafts.Contains(System.SelectedPlayer) ||
                     System.SelectedPlayer == SettingsSystem.CurrentSettings.PlayerName)
                     LibraryWindowRect =
                         LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6708 + MainSystem.WindowOffset,
                             LibraryWindowRect, DrawLibraryContent,
-                            $"LunaMultiPlayer - {System.SelectedPlayer} Craft Library", WindowStyle,
+                            $"LunaMultiplayer - {System.SelectedPlayer} Craft Library", WindowStyle,
                             LibraryLayoutOptions));
                 else
                     System.SelectedPlayer = null;

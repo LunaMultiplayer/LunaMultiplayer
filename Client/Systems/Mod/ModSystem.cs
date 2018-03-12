@@ -50,7 +50,7 @@ namespace LunaClient.Systems.Mod
 
             foreach (var checkFile in checkList.Where(f => f.ToLower().EndsWith(".dll")))
             {
-                //We want the relative path to check against, example: LunaMultiPlayer/Plugins/LunaMultiPlayer.dll
+                //We want the relative path to check against, example: LunaMultiplayer/Plugins/LunaMultiplayer.dll
                 //Strip off everything from GameData
                 //Replace windows backslashes with mac/linux forward slashes.
                 //Make it lowercase so we don't worry about case sensitivity.

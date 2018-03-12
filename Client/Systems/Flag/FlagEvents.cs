@@ -30,7 +30,7 @@ namespace LunaClient.Systems.Flag
             //If it's not a LMP flag don't sync it.
             if (!flagUrl.ToLower().StartsWith("lunamultiplayer/flags/")) return;
 
-            var flagName = flagUrl.Substring("LunaMultiPlayer/Flags/".Length) + ".png";
+            var flagName = flagUrl.Substring("LunaMultiplayer/Flags/".Length) + ".png";
             var fullFlagPath = CommonUtil.CombinePaths(FlagSystem.FlagPath, flagName);
 
             //If the flag is owned by someone else don't sync it

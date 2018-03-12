@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <OutdatedDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>LunaMultiPlayer - Доступно обновление</Title>
+  <Title>LunaMultiplayer - Доступно обновление</Title>
   <RunningOutdated>У вас обнаружена старая версия LMP.</RunningOutdated>
   <Yours>Ваша версия</Yours>
   <Latest>Последняя версия</Latest>

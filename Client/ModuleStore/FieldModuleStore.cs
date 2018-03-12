@@ -28,7 +28,7 @@ namespace LunaClient.ModuleStore
             CallOnStart = true
         };
 
-        private static readonly string CustomPartSyncFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiPlayer", "PartSync");
+        private static readonly string CustomPartSyncFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "PartSync");
 
         /// <summary>
         /// Here we store all the part modules loaded and its fields that have the "ispersistent" as true.

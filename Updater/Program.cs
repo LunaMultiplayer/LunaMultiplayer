@@ -16,7 +16,7 @@ namespace Updater
     {
         public const string ApiUrl = "https://ci.appveyor.com/api";
         public static string ProjectUrl = $"{ApiUrl}/projects/gavazquez/lunamultiplayer";
-        public const string FileName = "LunaMultiPlayer-Debug.zip";
+        public const string FileName = "LunaMultiplayer-Debug.zip";
         public static string FolderToDecompress = $"{Path.GetTempPath()}LMP";
 
         public static void Main(string[] args)

@@ -11,7 +11,7 @@ namespace LunaClient.Systems.SettingsSys
     {
         #region Path properties
 
-        private static string DataFolderPath => CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiPlayer",
+        private static string DataFolderPath => CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer",
                 "Plugins", "Data");
 
         private static string SettingsFilePath => CommonUtil.CombinePaths(DataFolderPath, SettingsFileName);

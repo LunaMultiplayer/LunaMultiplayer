@@ -144,7 +144,7 @@ namespace LunaClient.Windows.Debug
             if (SafeDisplay)
                 WindowRect =
                     LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6705 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiPlayer - Debug", WindowStyle, LayoutOptions));
+                        DrawContent, "LunaMultiplayer - Debug", WindowStyle, LayoutOptions));
             CheckWindowLock();
         }
 

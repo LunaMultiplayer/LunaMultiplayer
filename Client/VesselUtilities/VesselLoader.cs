@@ -172,7 +172,7 @@ namespace LunaClient.VesselUtilities
         }
 
         /// <summary>
-        /// Fixes the flags urls in the vessel. The flag have the value as: "Squad/Flags/default" or "LunaMultiPlayer/Flags/mycoolflag" 
+        /// Fixes the flags urls in the vessel. The flag have the value as: "Squad/Flags/default" or "LunaMultiplayer/Flags/mycoolflag" 
         /// </summary>
         private static void FixProtoVesselFlags(ProtoVessel vesselProto)
         {

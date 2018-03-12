@@ -12,7 +12,7 @@
                                         + "\n"
                                         + "For more information - see the KSP addon rules\n";
 
-        public string Title { get; set; } = "LunaMultiPlayer - Disclaimer";
+        public string Title { get; set; } = "LunaMultiplayer - Disclaimer";
         public string Accept { get; set; } = "Accept";
         public string OpenUrl { get; set; } = "KSP Addon rules";
         public string Decline { get; set; } = "Decline";
