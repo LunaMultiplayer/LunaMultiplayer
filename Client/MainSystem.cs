@@ -272,6 +272,7 @@ namespace LunaClient
             //Systems window: 6715
             //Locks window: 6716
             //Server details: 6717
+            //Banned parts: 6718
 
             if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
             {

@@ -4,6 +4,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
+using LunaClient.Windows.BannedParts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +24,7 @@ namespace LunaClient.Systems.VesselProtoSys
         public static Guid CurrentlyUpdatingVesselId { get; set; } = Guid.Empty;
 
         public ScreenMessage BannedPartsMessage { get; set; }
-
-        public string BannedPartsStr { get; set; }
-
+        
         public VesselLoader VesselLoader { get; } = new VesselLoader();
 
         public bool ProtoSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready &&
@@ -66,7 +65,6 @@ namespace LunaClient.Systems.VesselProtoSys
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, UpdateBannedPartsMessage));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckRefreshOwnVesselWhileSpectating));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.VesselPartsSyncMsInterval, RoutineExecution.Update, SendVesselDefinition));
         }
@@ -84,7 +82,6 @@ namespace LunaClient.Systems.VesselProtoSys
             
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();
-            BannedPartsStr = string.Empty;
         }
 
         #endregion
@@ -94,16 +91,21 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Checks the vessel for invalid parts
         /// </summary>
-        public bool CheckVessel(Vessel vessel)
+        public bool CheckVessel(Vessel vessel, bool displayDialog)
         {
+            if (vessel == null) return true;
+
             if (ModSystem.Singleton.ModControl)
             {
-                BannedPartsStr = string.Join(", ", ModSystem.Singleton.GetBannedPartsFromVessel(FlightGlobals.ActiveVessel).ToArray());
+                var bannedParts = string.Join(Environment.NewLine, ModSystem.Singleton.GetBannedPartsFromVessel(vessel).ToArray());
 
-                if(!string.IsNullOrEmpty(BannedPartsStr))
-                    ScreenMessages.PostScreenMessage($"Banned parts: {BannedPartsStr}", 30f, ScreenMessageStyle.UPPER_CENTER);
+                if (!string.IsNullOrEmpty(bannedParts) && displayDialog)
+                {
+                    LunaLog.LogError($"Vessel {vessel.id}-{vessel.vesselName} Contains the following banned parts: {bannedParts}");
+                    BannedPartsWindow.Singleton.DisplayBannedPartsDialog(vessel, bannedParts);
+                }
 
-                return string.IsNullOrEmpty(BannedPartsStr);
+                return string.IsNullOrEmpty(bannedParts);
             }
 
             return true;
@@ -161,28 +163,6 @@ namespace LunaClient.Systems.VesselProtoSys
                 LunaLog.LogError($"[LMP]: Error in SendVesselDefinition {e}");
             }
 
-        }
-
-        /// <summary>
-        /// Prints the banned parts message
-        /// </summary>
-        private void UpdateBannedPartsMessage()
-        {
-            try
-            {
-                if (ProtoSystemReady && !string.IsNullOrEmpty(BannedPartsStr))
-                {
-                    if (BannedPartsMessage != null)
-                        BannedPartsMessage.duration = 0;
-                    if (ModSystem.Singleton.ModControl)
-                        BannedPartsMessage = ScreenMessages.PostScreenMessage($"Active vessel contains the following banned parts, you will be unable to launch on this server:\n{BannedPartsStr}", 2f, ScreenMessageStyle.UPPER_CENTER);
-
-                }
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error in UpdateBannedPartsMessage {e}");
-            }
         }
 
         /// <summary>

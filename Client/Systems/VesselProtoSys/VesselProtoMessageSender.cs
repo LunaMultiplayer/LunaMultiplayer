@@ -37,7 +37,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public void SendVesselMessage(Vessel vessel, bool force)
         {
-            if (vessel == null || VesselCommon.IsSpectating || vessel.state == Vessel.State.DEAD)
+            if (vessel == null || VesselCommon.IsSpectating || vessel.state == Vessel.State.DEAD || !System.CheckVessel(vessel, false))
                 return;
             
             var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);

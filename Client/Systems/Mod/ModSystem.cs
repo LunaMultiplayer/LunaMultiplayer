@@ -124,8 +124,8 @@ namespace LunaClient.Systems.Mod
             var bannedParts = new List<string>();
             foreach (var part in vessel.parts)
             {
-                if (!ModControlData.AllowedParts.Contains(part.partName))
-                    bannedParts.Add(part.partName);
+                if (!ModControlData.AllowedParts.Contains(part.name))
+                    bannedParts.Add(part.name);
             }
 
             return bannedParts.Distinct();

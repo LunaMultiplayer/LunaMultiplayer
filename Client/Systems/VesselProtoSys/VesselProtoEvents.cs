@@ -20,15 +20,19 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
             {
+                if (!System.CheckVessel(FlightGlobals.ActiveVessel, true))
+                {
+                    VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel.id);
+                    VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel.id);
+                    return;
+                }
+
                 CoroutineUtil.StartDelayedRoutine(nameof(FlightReady), () =>
                 {
                     if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
                         return;
-
-                    if(System.CheckVessel(FlightGlobals.ActiveVessel))
-                        System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
-                    else
-                        VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel.id);
+                    
+                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
                 }, 5f);
 
                 ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
