@@ -140,6 +140,10 @@ namespace LunaClient.Windows.Options
 
         private void DrawAdvancedDebugOptions()
         {
+            if (GUILayout.Button("Check Common.dll stock parts"))
+                ModSystem.Singleton.CheckCommonStockParts();
+            GUILayout.Space(10);
+
             ShowAdvancedNetworkFields = GUILayout.Toggle(ShowAdvancedNetworkFields, "Advanced network fields", ButtonStyle);
             if (ShowAdvancedNetworkFields)
             {

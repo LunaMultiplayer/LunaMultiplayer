@@ -106,6 +106,28 @@ namespace LunaClient.Systems.Mod
             ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ModFileGenerated, 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
+        public void CheckCommonStockParts()
+        {
+            var missingPartsCount = 0;
+            LunaLog.Log("[LMP]: Missing parts start");
+            var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LunaCommon.Properties.Resources.LMPModControl);
+            var missingParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name));
+
+            foreach (var part in missingParts)
+            {
+                missingPartsCount++;
+                LunaLog.Log($"[LMP]: Missing '{part.name}'");
+            }
+
+            LunaLog.Log("[LMP]: Missing parts end");
+
+            ScreenMessages.PostScreenMessage(
+                missingPartsCount > 0
+                    ? $"{missingPartsCount} missing part(s) from Common.dll printed to debug log ({PartLoader.LoadedPartsList.Count} total)"
+                    : $"No missing parts out of from Common.dll ({PartLoader.LoadedPartsList.Count} total)",
+                5f, ScreenMessageStyle.UPPER_CENTER);
+        }
+
         #endregion
     }
 }
