@@ -42,9 +42,15 @@
     <Compile Include="Http\HttpException.cs" />
     <Compile Include="Http\LunaHttpServer.cs" />
     <Compile Include="Http\ServerInfoRestController.cs" />
+    <Compile Include="Http\ServerListHandler.cs" />
     <Compile Include="Lidgren\MasterServer.cs" />
     <Compile Include="EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Structure\Server.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +70,16 @@
       <Project>{3d681959-4da3-4a71-a68b-704d6411d5ea}</Project>
       <Name>uhttpsharp</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Http\Web\style.css" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
