@@ -1,9 +1,8 @@
 ﻿using LunaClient.Utilities;
 using LunaClient.Windows.Mod;
-using LunaCommon.ModFile;
 using LunaCommon.ModFile.Structure;
+using LunaCommon.Xml;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -13,20 +12,18 @@ namespace LunaClient.Systems.Mod
     {
         private static readonly StringBuilder Sb = new StringBuilder();
 
-        public static bool ParseModFile(string modFileData)
+        public static bool ParseModFile(ModControlStructure modFileData)
         {
             if (!ModSystem.Singleton.ModControl)
                 return true;
 
+            ModSystem.Singleton.ModControlData = modFileData;
             Sb.Length = 0;
-            ModSystem.Singleton.LastModFileData = modFileData; //Save mod file so we can recheck it.
 
             SaveCurrentModConfigurationFile();
 
-            var modFileInfo = ModFileParser.ReadModFileFromString(modFileData);
-
-            SetAllPathsToLowercase(modFileInfo);
-            if (!CheckFiles(modFileInfo))
+            SetAllPathsToLowercase(modFileData);
+            if (!CheckFiles(modFileData))
             {
                 LunaLog.LogError("[LMP]: Mod check failed!");
                 LunaLog.LogError(Sb.ToString());
@@ -35,7 +32,7 @@ namespace LunaClient.Systems.Mod
                 return false;
             }
 
-            ModSystem.Singleton.AllowedParts = modFileInfo.AllowedParts;
+            ModSystem.Singleton.AllowedParts = modFileData.AllowedParts;
             LunaLog.Log("[LMP]: Mod check passed!");
             return true;
         }
@@ -49,7 +46,7 @@ namespace LunaClient.Systems.Mod
         private static void SaveCurrentModConfigurationFile()
         {
             var tempModFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Plugins", "Data", "LMPModControl.xml");
-            File.WriteAllText(tempModFilePath, ModSystem.Singleton.LastModFileData);
+            LunaXmlSerializer.WriteToXmlFile(ModSystem.Singleton.ModControlData, tempModFilePath);
         }
 
         #region Check mod files

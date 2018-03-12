@@ -19,7 +19,7 @@ namespace LunaClient.Systems.Mod
 
         public Dictionary<string, string> DllList { get; } = new Dictionary<string, string>();
         public List<string> AllowedParts { get; set; } = new List<string>();
-        public string LastModFileData { get; set; } = "";
+        public ModControlStructure ModControlData { get; set; }
 
         #endregion
 
@@ -34,7 +34,7 @@ namespace LunaClient.Systems.Mod
             FailText = "";
             DllList.Clear();
             AllowedParts.Clear();
-            LastModFileData = "";
+            ModControlData = null;
         }
 
         public override int ExecutionOrder => int.MinValue + 1;
@@ -114,6 +114,18 @@ namespace LunaClient.Systems.Mod
                     ? $"{missingPartsCount} missing part(s) from Common.dll printed to debug log ({PartLoader.LoadedPartsList.Count} total)"
                     : $"No missing parts out of from Common.dll ({PartLoader.LoadedPartsList.Count} total)",
                 5f, ScreenMessageStyle.UPPER_CENTER);
+        }
+
+        public IEnumerable<string> GetBannedPartsFromVessel(Vessel vessel)
+        {
+            var bannedParts = new List<string>();
+            foreach (var part in vessel.parts)
+            {
+                if (!ModControlData.AllowedParts.Contains(part.partName))
+                    bannedParts.Add(part.partName);
+            }
+
+            return bannedParts.Distinct();
         }
 
         #endregion

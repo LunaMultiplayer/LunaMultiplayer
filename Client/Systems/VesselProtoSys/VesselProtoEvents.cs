@@ -25,7 +25,10 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
                         return;
 
-                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                    if(System.CheckVessel(FlightGlobals.ActiveVessel))
+                        System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                    else
+                        VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel.id);
                 }, 5f);
 
                 ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);

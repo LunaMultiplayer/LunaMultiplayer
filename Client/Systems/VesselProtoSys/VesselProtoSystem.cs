@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems.Asteroid;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -24,6 +23,7 @@ namespace LunaClient.Systems.VesselProtoSys
         public static Guid CurrentlyUpdatingVesselId { get; set; } = Guid.Empty;
 
         public ScreenMessage BannedPartsMessage { get; set; }
+
         public string BannedPartsStr { get; set; }
 
         public VesselLoader VesselLoader { get; } = new VesselLoader();
@@ -94,17 +94,15 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Checks the vessel for invalid parts
         /// </summary>
-        public bool CheckVessel()
+        public bool CheckVessel(Vessel vessel)
         {
-            if (HighLogic.LoadedScene != GameScenes.FLIGHT ||
-                FlightGlobals.ActiveVessel == null ||
-                !FlightGlobals.ActiveVessel.loaded ||
-                VesselCommon.IsSpectating)
-                return false;
-
             if (ModSystem.Singleton.ModControl)
             {
-                BannedPartsStr = GetInvalidVesselParts(FlightGlobals.ActiveVessel);
+                BannedPartsStr = string.Join(", ", ModSystem.Singleton.GetBannedPartsFromVessel(FlightGlobals.ActiveVessel).ToArray());
+
+                if(!string.IsNullOrEmpty(BannedPartsStr))
+                    ScreenMessages.PostScreenMessage($"Banned parts: {BannedPartsStr}", 30f, ScreenMessageStyle.UPPER_CENTER);
+
                 return string.IsNullOrEmpty(BannedPartsStr);
             }
 
@@ -267,30 +265,6 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 LunaLog.LogError($"[LMP]: Error in CheckVesselsToReload {e}");
             }
-        }
-
-        #endregion
-
-        #region Private
-
-        private static string GetInvalidVesselParts(Vessel checkVessel)
-        {
-            var bannedParts = checkVessel.BackupVessel().protoPartSnapshots
-                .Where(p => !ModSystem.Singleton.AllowedParts.Contains(p.partName.ToLower())).Distinct();
-
-            var bannedPartsStr = bannedParts.Aggregate("", (current, bannedPart) => current + $"{bannedPart}\n");
-
-            return bannedPartsStr;
-        }
-
-        // ReSharper disable once UnusedMember.Local
-        private void RegisterServerAsteriodIfVesselIsAsteroid(ProtoVessel possibleAsteroid)
-        {
-            //Register asteroids from other players
-            if (possibleAsteroid.vesselType == VesselType.SpaceObject &&
-                possibleAsteroid.protoPartSnapshots?.Count == 1 &&
-                possibleAsteroid.protoPartSnapshots[0].partName == "PotatoRoid")
-                AsteroidSystem.Singleton.RegisterServerAsteroid(possibleAsteroid.vesselID.ToString());
         }
 
         #endregion

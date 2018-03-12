@@ -8,6 +8,7 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using LunaCommon.ModFile;
 using System;
 using System.Collections.Concurrent;
 
@@ -67,8 +68,7 @@ namespace LunaClient.Systems.Handshake
             switch (reply)
             {
                 case HandshakeReply.HandshookSuccessfully:
-
-                    if (ModFileHandler.ParseModFile(modFileData))
+                    if (ModFileHandler.ParseModFile(ModFileParser.ReadModFileFromString(modFileData)))
                     {
                         LunaLog.Log("[LMP]: Handshake successful");
                         MainSystem.NetworkState = ClientState.Authenticated;
