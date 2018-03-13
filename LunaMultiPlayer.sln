@@ -39,8 +39,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LmpGlobal", "LmpGlobal\LmpG
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Threading", "TPL\System.Threading.csproj", "{DCB5D745-525C-46A1-BFC0-E12F87AB6165}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LMP Updater", "LMP Updater", "{8FDB08F7-753D-437E-B480-A8CDE45CE708}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "uhttpsharp", "uhttpsharp\uhttpsharp.csproj", "{3D681959-4DA3-4A71-A68B-704D6411D5EA}"
 EndProject
 Global
