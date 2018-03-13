@@ -81,7 +81,7 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Username of the player who control the warp if WarpMode is set to MASTER")]
         public string WarpMaster { get; set; } = "";
 
-        [XmlComment(Value = "Enable white-listing.")]
+        [XmlComment(Value = "Enable white-listing of users")]
         public bool Whitelisted { get; set; } = false;
 
         [XmlComment(Value = "Heartbeat interval in Ms")]
