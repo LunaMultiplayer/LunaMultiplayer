@@ -1,5 +1,11 @@
-<?xml version="1.0"?>
+<?xml version="1.0" encoding="utf-16"?>
 <ModWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Failed>Проверка модификации не удалась</Failed>
-  <Close>Закрыть</Close>
+  <Title>LunaMultiplayer - Failed Mod Validation</Title>
+  <Failed>Failed mod validation</Failed>
+  <Close>Close</Close>
+  <MandatoryModsNotFound>Mandatory mods not found:</MandatoryModsNotFound>
+  <MandatoryModsDifferentShaFound>Mandatory with different SHA found:</MandatoryModsDifferentShaFound>
+  <Link>Link</Link>
+  <ForbiddenFilesFound>Forbidden mods not found:</ForbiddenFilesFound>
+  <NonListedFilesFound>Non listed and forbidden mods found:</NonListedFilesFound>
 </ModWindowText>

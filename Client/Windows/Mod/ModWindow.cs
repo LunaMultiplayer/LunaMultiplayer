@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Utilities;
 using UnityEngine;
 
@@ -20,7 +21,7 @@ namespace LunaClient.Windows.Mod
             if (SafeDisplay)
                 WindowRect =
                     LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6706 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiplayer - Mod Control", WindowStyle, LayoutOptions));
+                        DrawContent, LocalizationContainer.ModWindowText.Title, WindowStyle, LayoutOptions));
         }
 
         public override void SetStyles()

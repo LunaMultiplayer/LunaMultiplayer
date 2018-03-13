@@ -1,4 +1,5 @@
-﻿using LunaClient.Utilities;
+﻿using LunaClient.Base;
+using LunaClient.Utilities;
 using LunaClient.Windows.Mod;
 using LunaCommon.ModFile.Structure;
 using LunaCommon.Xml;
@@ -8,16 +9,16 @@ using System.Text;
 
 namespace LunaClient.Systems.Mod
 {
-    public class ModFileHandler
+    public class ModFileHandler: SubSystem<ModSystem>
     {
         private static readonly StringBuilder Sb = new StringBuilder();
 
-        public static bool ParseModFile(ModControlStructure modFileData)
+        public bool ParseModFile(ModControlStructure modFileData)
         {
             if (!ModSystem.Singleton.ModControl)
                 return true;
 
-            ModSystem.Singleton.ModControlData = modFileData;
+            System.ModControlData = modFileData;
             Sb.Length = 0;
 
             SaveCurrentModConfigurationFile();
@@ -27,35 +28,35 @@ namespace LunaClient.Systems.Mod
             {
                 LunaLog.LogError("[LMP]: Mod check failed!");
                 LunaLog.LogError(Sb.ToString());
-                ModSystem.Singleton.FailText = Sb.ToString();
                 ModWindow.Singleton.Display = true;
                 return false;
             }
 
-            ModSystem.Singleton.AllowedParts = modFileData.AllowedParts;
+            System.AllowedParts = modFileData.AllowedParts;
             LunaLog.Log("[LMP]: Mod check passed!");
             return true;
         }
 
+        #region Check mod files
+
+
         private static void SetAllPathsToLowercase(ModControlStructure modFileInfo)
         {
-            modFileInfo.MandatoryPlugins.ForEach(m=> m.FilePath = m.FilePath.ToLower());
-            modFileInfo.ForbiddenPlugins = modFileInfo.ForbiddenPlugins.ConvertAll(f => f.ToLower());
+            modFileInfo.MandatoryPlugins.ForEach(m => m.FilePath = m.FilePath.ToLower());
+            modFileInfo.ForbiddenPlugins.ForEach(m => m.FilePath = m.FilePath.ToLower());
         }
 
         private static void SaveCurrentModConfigurationFile()
         {
             var tempModFilePath = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Plugins", "Data", "LMPModControl.xml");
-            LunaXmlSerializer.WriteToXmlFile(ModSystem.Singleton.ModControlData, tempModFilePath);
+            LunaXmlSerializer.WriteToXmlFile(System.ModControlData, tempModFilePath);
         }
-
-        #region Check mod files
 
         private static bool CheckFiles(ModControlStructure modInfo)
         {
             var checkOk = true;
 
-            foreach (var file in ModSystem.Singleton.DllList)
+            foreach (var file in System.DllList)
             {
                 checkOk &= CheckExistingFile(modInfo, file);
             }
@@ -70,15 +71,18 @@ namespace LunaClient.Systems.Mod
 
         private static bool CheckExistingFile(ModControlStructure modInfo, KeyValuePair<string, string> file)
         {
-            if (modInfo.ForbiddenPlugins.Any(f => f == file.Key))
+            var forbiddenItem = modInfo.ForbiddenPlugins.FirstOrDefault(f => f.FilePath == file.Key);
+            if (forbiddenItem != null)
             {
                 Sb.AppendLine($"Banned file {file.Key} exists on client!");
+                System.ForbiddenFilesFound.Add(forbiddenItem);
                 return false;
             }
 
             if (!modInfo.AllowNonListedPlugins && modInfo.MandatoryPlugins.All(f => f.FilePath != file.Key))
             {
-                Sb.AppendLine($"Banned file {file.Key} exists on client!");
+                Sb.AppendLine($"Server does not allow external plugins and banned file {file.Key} exists on client!");
+                System.NonListedFilesFound.Add(file.Key);
                 return false;
             }
 
@@ -87,15 +91,19 @@ namespace LunaClient.Systems.Mod
 
         private static bool CheckMandatoryFile(MandatoryDllFile item)
         {
-            var fileExists = ModSystem.Singleton.DllList.ContainsKey(item.FilePath);
+            var fileExists = System.DllList.ContainsKey(item.FilePath);
             if (!fileExists)
             {
                 Sb.AppendLine($"Required file {item.FilePath} is missing!");
+                System.MandatoryFilesNotFound.Add(item);
+
                 return false;
             }
-            if (!string.IsNullOrEmpty(item.Sha) && ModSystem.Singleton.DllList[item.FilePath] != item.Sha)
+            if (!string.IsNullOrEmpty(item.Sha) && System.DllList[item.FilePath] != item.Sha)
             {
                 Sb.AppendLine($"Required file {item.FilePath} does not match hash {item.Sha}!");
+                System.MandatoryFilesDifferentSha.Add(item);
+
                 return false;
             }
 

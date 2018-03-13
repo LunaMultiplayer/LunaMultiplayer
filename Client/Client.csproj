@@ -254,7 +254,7 @@
     <Compile Include="Systems\Lock\LockStructures.cs" />
     <Compile Include="Systems\ModApi\ModApiMessageHandler.cs" />
     <Compile Include="Systems\ModApi\ModApiStructures.cs" />
-    <Compile Include="Systems\Mod\ModFileParser.cs" />
+    <Compile Include="Systems\Mod\ModFileHandler.cs" />
     <Compile Include="Systems\Scenario\ScenarioStructures.cs" />
     <Compile Include="Systems\SettingsSys\SettingsReadSaveHandler.cs" />
     <Compile Include="Systems\SettingsSys\SettingsStructures.cs" />

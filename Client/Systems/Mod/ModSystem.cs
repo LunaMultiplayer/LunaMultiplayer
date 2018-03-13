@@ -5,6 +5,7 @@ using LunaCommon.ModFile.Structure;
 using LunaCommon.Xml;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
@@ -15,11 +16,14 @@ namespace LunaClient.Systems.Mod
         #region Fields & properties
 
         public bool ModControl { get; set; } = true;
-        public string FailText { get; set; }
-
         public Dictionary<string, string> DllList { get; } = new Dictionary<string, string>();
         public List<string> AllowedParts { get; set; } = new List<string>();
         public ModControlStructure ModControlData { get; set; }
+        public List<ForbiddenDllFile> ForbiddenFilesFound { get; } = new List<ForbiddenDllFile>();
+        public List<string> NonListedFilesFound { get; } = new List<string>();
+        public List<MandatoryDllFile> MandatoryFilesNotFound { get; } = new List<MandatoryDllFile>();
+        public List<MandatoryDllFile> MandatoryFilesDifferentSha { get; } = new List<MandatoryDllFile>();
+        public ModFileHandler ModFileHandler { get; } = new ModFileHandler();
 
         #endregion
 
@@ -31,7 +35,8 @@ namespace LunaClient.Systems.Mod
         {
             base.OnDisabled();
             ModControl = true;
-            FailText = "";
+            ForbiddenFilesFound.Clear();
+            MandatoryFilesNotFound.Clear();
             DllList.Clear();
             AllowedParts.Clear();
             ModControlData = null;
@@ -66,29 +71,30 @@ namespace LunaClient.Systems.Mod
             }
         }
 
-        public void GenerateModControlFile()
+        public void GenerateModControlFile(bool appendSha)
         {
             var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LunaCommon.Properties.Resources.LMPModControl);
 
-            var extraParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name)).Select(p=> p.name);
+            var extraParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name)).Select(p => p.name);
             modFile.AllowedParts.AddRange(extraParts);
 
             var gameDataDir = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData");
 
-            var relativeModDirectories = Directory.GetDirectories(gameDataDir)
-                .Select(d => d.Substring(d.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).ToLower())
-                .Where(d => !d.StartsWith("squad", StringComparison.OrdinalIgnoreCase)
-                            && !d.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase));
-            
-            foreach (var modDirectory in relativeModDirectories)
+            foreach (var modDirectory in Directory.GetDirectories(gameDataDir))
             {
-                var filesInModFolder = Directory.GetFiles(CommonUtil.CombinePaths(gameDataDir, modDirectory), "*.dll", SearchOption.AllDirectories);
+                var relPathFolder = modDirectory.Substring(modDirectory.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).Replace("\\", "/");
+                if (relPathFolder.StartsWith("squad", StringComparison.OrdinalIgnoreCase) || relPathFolder.StartsWith("lunamultiplayer", StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                var filesInModFolder = Directory.GetFiles(modDirectory, "*.dll", SearchOption.AllDirectories);
                 foreach (var file in filesInModFolder)
                 {
-                    var relativeFileName = file.Substring(file.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).Replace(@"\", "/");
+                    var relativeFilePath = file.Substring(file.ToLower().IndexOf("gamedata", StringComparison.Ordinal) + 9).Replace("\\", "/");
                     modFile.MandatoryPlugins.Add(new MandatoryDllFile
                     {
-                        FilePath = relativeFileName
+                        FilePath = relativeFilePath,
+                        Sha = appendSha ? Common.CalculateSha256FileHash(file) : string.Empty,
+                        Text = $"{Path.GetFileNameWithoutExtension(file)}. Version: {FileVersionInfo.GetVersionInfo(file).FileVersion}"
                     });
                 }
             }

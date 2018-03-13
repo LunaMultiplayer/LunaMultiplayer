@@ -112,7 +112,9 @@ namespace LunaClient.Windows.Options
             }
             GUILayout.Space(10);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
-                ModSystem.Singleton.GenerateModControlFile();
+                ModSystem.Singleton.GenerateModControlFile(false);
+            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl + " + SHA"))
+                ModSystem.Singleton.GenerateModControlFile(true);
             UniverseConverterWindow.Singleton.Display = GUILayout.Toggle(UniverseConverterWindow.Singleton.Display, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
             GUILayout.BeginHorizontal();
