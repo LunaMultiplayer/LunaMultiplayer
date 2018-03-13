@@ -46,10 +46,10 @@ Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-comp
 ---
 ### Servers:
 
-|                  Release servers                  |                  Nightly servers                 |
-| ------------------------------------------------  | ------------------------------------------------ |
-|  [Release](http://dagger.ole32.com:8701/servers)  |  [Nightly](http://dagger.ole32.com:8751/servers) |
+Check how many servers are up and running either in [Release](../../wiki/How-to-get-the-latest-version-of-LMP) or in [Nightly](../../wiki/How-to-get-nightly-builds) versions
 
+| [Release servers](http://dagger.ole32.com:8701/servers) | [Nightly servers](http://dagger.ole32.com:8751/servers) |
+| ------------------------------------------------------  | ------------------------------------------------------- |
 ---
 
 ### Status:
