@@ -6,7 +6,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web.UI;
 using uhttpsharp;
-using uhttpsharp.Headers;
 
 namespace LMP.MasterServer.Http
 {
@@ -14,7 +13,7 @@ namespace LMP.MasterServer.Http
     {
         public Task Handle(IHttpContext context, Func<Task> next)
         {
-            context.Response = HttpResponse.CreateWithMessage(HttpResponseCode.Ok, GetServerList(), context.Request.Headers.KeepAliveConnection());
+            context.Response = new HttpResponse(HttpResponseCode.Ok, GetServerList(), false);
             return Task.Factory.GetCompleted();
         }
 
@@ -39,6 +38,9 @@ namespace LMP.MasterServer.Http
         private static void RenderHead(HtmlTextWriter writer)
         {
             writer.RenderBeginTag(HtmlTextWriterTag.Head);
+            writer.RenderBeginTag(HtmlTextWriterTag.Title);
+            writer.Write("Luna Multiplayer servers");
+            writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Style);
             writer.Write(Properties.Resources.style);
             writer.RenderEndTag();
@@ -49,9 +51,7 @@ namespace LMP.MasterServer.Http
         {
             writer.RenderBeginTag(HtmlTextWriterTag.P);
             writer.RenderBeginTag(HtmlTextWriterTag.Small);
-            writer.Write("LMP - ");
-
-
+            writer.Write("Luna Multiplayer - ");
             writer.AddAttribute(HtmlTextWriterAttribute.Href, "https://github.com/LunaMultiplayer/LunaMultiplayer");
             writer.RenderBeginTag(HtmlTextWriterTag.A);
             writer.Write("Github repo");
