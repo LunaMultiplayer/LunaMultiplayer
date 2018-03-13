@@ -11,7 +11,7 @@ namespace LMP.Tests
         [TestMethod]
         public void TestConsecutiveWritingToFile()
         {
-            var filePath = Path.GetTempPath() + "TestFile.tmp";
+            var filePath = Path.Combine(Path.GetTempPath(), "TestFile.tmp");
 
             var task1 = new Thread(() => FileHandler.WriteToFile(filePath, "TASK1"));
             var task2 = new Thread(() => FileHandler.WriteToFile(filePath, "TASK2"));
