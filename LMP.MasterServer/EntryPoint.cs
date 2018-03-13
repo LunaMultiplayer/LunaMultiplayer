@@ -16,6 +16,8 @@ namespace LMP.MasterServer
     /// </summary>
     public static class EntryPoint
     {
+        private static bool IsNightly { get; set; }
+
         public static void Stop()
         {
             Lidgren.MasterServer.RunServer = false;
@@ -24,12 +26,13 @@ namespace LMP.MasterServer
 
         public static void MainEntryPoint(string[] args)
         {
+            IsNightly = args.Any(a => a.Contains("nightly"));
             if (Common.PlatformIsWindows())
                 ConsoleUtil.DisableConsoleQuickEdit();
 
             Console.Title = $"LMP MasterServer {LmpVersioning.CurrentVersion}";
 
-            if (args.Any(a => a.Contains("nightly")))
+            if (IsNightly)
                 Console.Title += " NIGHTLY";
 
             Console.OutputEncoding = Encoding.Unicode;
@@ -45,6 +48,8 @@ namespace LMP.MasterServer
             if (!ParseHttpServerPort(commandLineArguments)) return;
 
             ConsoleLogger.Log(LogLevels.Normal, $"Starting MasterServer at port: {Lidgren.MasterServer.Port}");
+            if (IsNightly)
+                ConsoleLogger.Log(LogLevels.Normal, "Will download NIGHTLY versions!");
             ConsoleLogger.Log(LogLevels.Normal, $"Listening for GET requests at port: {LunaHttpServer.Port}");
 
             if (CheckPort())
