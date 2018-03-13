@@ -12,7 +12,7 @@ namespace ClientUpdater
             Console.WriteLine("This program will download the latest UNSTABLE version and replace your current LMPClient");
 
             if (!File.Exists($@"{Directory.GetCurrentDirectory()}\KSP.exe"))
-                Console.WriteLine("Please drop LMP Updater in the main KSP folder next to KSP.exe!");
+                Console.WriteLine("Please drop \"Client LMP Updater\" in the main KSP folder next to KSP.exe!");
             else
             {
                 Downloader.DownloadAndReplaceFiles(ProductToDownload.Client);

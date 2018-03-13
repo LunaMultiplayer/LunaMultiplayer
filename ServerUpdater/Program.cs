@@ -12,7 +12,7 @@ namespace ServerUpdater
             Console.WriteLine("This program will download the latest UNSTABLE version and replace your current LMPServer");
 
             if (!File.Exists($@"{Directory.GetCurrentDirectory()}\Server.exe"))
-                Console.WriteLine("Please drop LMP Updater in the main KSP folder next to Server.exe!");
+                Console.WriteLine("Please drop \"Server LMP Updater\" in the LMP server folder next to Server.exe!");
             else
             {
                 Downloader.DownloadAndReplaceFiles(ProductToDownload.Server);
