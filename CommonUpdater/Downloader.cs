@@ -64,7 +64,7 @@ namespace CommonUpdater
             foreach (var dirPath in Directory.GetDirectories(Path.Combine(FolderToDecompress, productFolderName), "*", SearchOption.AllDirectories))
             {
                 var destFolder = dirPath.Replace(Path.Combine(FolderToDecompress, productFolderName), Directory.GetCurrentDirectory());
-                Console.WriteLine($"Creatind dest folder: {destFolder}");
+                Console.WriteLine($"Creating dest folder: {destFolder}");
                 Directory.CreateDirectory(destFolder);
             }
 
