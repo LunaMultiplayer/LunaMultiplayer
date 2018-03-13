@@ -3,7 +3,7 @@ using System.Collections.Generic;
 // ReSharper disable All
 
 #pragma warning disable IDE1006
-namespace Updater.Structures
+namespace CommonUpdater.Structures
 {
     public class NuGetFeed
     {
