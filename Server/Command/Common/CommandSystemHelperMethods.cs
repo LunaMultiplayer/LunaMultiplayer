@@ -11,5 +11,14 @@
             if (splittedCommand.Length > 1)
                 param2 = splittedCommand[1];
         }
+
+        public static void SplitCommandParamArray(string command, out string[] parameters)
+        {
+            parameters = null;
+            var paramArray = command.Split(' ');
+            if (paramArray.Length > 0)
+                if (!string.IsNullOrEmpty(paramArray[0]))
+                    parameters = paramArray;
+        }
     }
 }

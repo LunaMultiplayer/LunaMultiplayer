@@ -29,11 +29,12 @@ namespace Server.Command
             RegisterCommand("admin", new AdminCommands().HandleCommand, "Sets a player as admin/removes admin from the player");
             RegisterCommand("whitelist", new WhitelistCommands().HandleCommand, "Change the server whitelist");
             RegisterCommand("help", new DisplayHelpCommand().Execute, "Displays this help");
-            RegisterCommand("say", new SayCommand().Execute, "Broadcasts a message to Clients");
+            RegisterCommand("say", new SayCommand().Execute, "Broadcasts a message to clients");
             RegisterCommand("dekessler", new DekesslerCommand().Execute, "Clears out debris from the server");
-            RegisterCommand("nukeksc", new NukeCommand().Execute, "Clears ALL vessels from KSC and the Runway");
-            RegisterCommand("listclients", new ListClientsCommand().Execute, "Lists connected Clients");
-            RegisterCommand("countclients", new CountClientsCommand().Execute, "Counts connected Clients");
+            RegisterCommand("nukeksc", new NukeCommand().Execute, "Clears ALL vessels from KSC and the runway");
+            RegisterCommand("clearvessels", new ClearVesselsCommand().Execute, "Clears ALL SPECIFIED vessels from universe");
+            RegisterCommand("listclients", new ListClientsCommand().Execute, "Lists connected clients");
+            RegisterCommand("countclients", new CountClientsCommand().Execute, "Counts connected clients");
             RegisterCommand("connectionstats", new ConnectionStatsCommand().Execute, "Displays network traffic usage");
         }
 
