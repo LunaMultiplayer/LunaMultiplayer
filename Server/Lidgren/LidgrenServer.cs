@@ -20,6 +20,11 @@ namespace Server.Lidgren
 
         public static void SetupLidgrenServer()
         {
+            ServerContext.Config.Port = GeneralSettings.SettingsStore.Port;
+            ServerContext.Config.MaximumConnections = GeneralSettings.SettingsStore.MaxPlayers;
+            ServerContext.Config.PingInterval = (float) TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.HearbeatMsInterval).TotalSeconds;
+            ServerContext.Config.ConnectionTimeout = (float) TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds;
+            
             if (Common.PortIsInUse(ServerContext.Config.Port))
             {
                 throw new HandledException($"Port {ServerContext.Config.Port} is already in use");
