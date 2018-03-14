@@ -41,6 +41,7 @@ using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
+using LunaClient.Systems.Bug;
 
 namespace LunaClient.Systems.Network
 {
@@ -315,6 +316,7 @@ namespace LunaClient.Systems.Network
                         FacilitySystem.Singleton.Enabled = true;
                         FlagPlantSystem.Singleton.Enabled = true;
                         VesselEvaSystem.Singleton.Enabled = true;
+                        BugSystem.Singleton.Enabled = true;
                         PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
                         StatusSystem.Singleton.MessageSender.SendOwnStatus();
                         NetworkSimpleMessageSender.SendMotdRequest();
