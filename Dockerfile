@@ -1,7 +1,7 @@
 FROM eclipse/dotnet_core
 ENV DIRPATH $LUNA_HOME
 ENV LUNA_HOME LMPServer
-ENV LMP_URL https://github.com/4669842/Docker-LunaMultiplayer/releases/download/0.0.0.1/Updater.tar.gz
+ENV LMP_URL https://github.com/LunaMultiplayer/LunaMultiplayerUpdater/releases/download/1.0.0/LunaMultiplayerUpdater-Release.zip
 ENV LMP_EXE Server.exe
 ENV LMP_UPDATER ServerUpdater.exe
 WORKDIR $LUNA_HOME
