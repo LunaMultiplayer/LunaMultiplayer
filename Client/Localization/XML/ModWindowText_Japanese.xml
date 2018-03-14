@@ -4,6 +4,7 @@
   <Failed>Failed mod validation</Failed>
   <Close>Close</Close>
   <MandatoryModsNotFound>Mandatory mods not found:</MandatoryModsNotFound>
+  <MissingExpansions>Missing expansions:</MissingExpansions>
   <MandatoryModsDifferentShaFound>Mandatory with different SHA found:</MandatoryModsDifferentShaFound>
   <Link>Link</Link>
   <ForbiddenFilesFound>Forbidden mods not found:</ForbiddenFilesFound>

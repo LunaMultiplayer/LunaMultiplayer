@@ -1,3 +1,4 @@
+using Expansions;
 using LunaClient.Localization;
 using LunaClient.Utilities;
 using LunaCommon;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace LunaClient.Systems.Mod
 {
@@ -15,15 +17,21 @@ namespace LunaClient.Systems.Mod
     {
         #region Fields & properties
 
-        public bool ModControl { get; set; } = true;
         public Dictionary<string, string> DllList { get; } = new Dictionary<string, string>();
-        public List<string> AllowedParts { get; set; } = new List<string>();
+        public bool ModControl { get; set; } = true;
+
         public ModControlStructure ModControlData { get; set; }
+        public List<string> AllowedParts { get; set; } = new List<string>();
+
+        public List<string> MissingExpansions { get; } = new List<string>();
         public List<ForbiddenDllFile> ForbiddenFilesFound { get; } = new List<ForbiddenDllFile>();
         public List<string> NonListedFilesFound { get; } = new List<string>();
         public List<MandatoryDllFile> MandatoryFilesNotFound { get; } = new List<MandatoryDllFile>();
         public List<MandatoryDllFile> MandatoryFilesDifferentSha { get; } = new List<MandatoryDllFile>();
+
         public ModFileHandler ModFileHandler { get; } = new ModFileHandler();
+
+        private static readonly FieldInfo ExpansionsInfo = typeof(ExpansionsLoader).GetField("expansionsInfo", BindingFlags.NonPublic | BindingFlags.Static);
 
         #endregion
 
@@ -35,10 +43,14 @@ namespace LunaClient.Systems.Mod
         {
             base.OnDisabled();
             ModControl = true;
-            ForbiddenFilesFound.Clear();
-            MandatoryFilesNotFound.Clear();
-            DllList.Clear();
+
             AllowedParts.Clear();
+            MissingExpansions.Clear();
+            ForbiddenFilesFound.Clear();
+            NonListedFilesFound.Clear();
+            MandatoryFilesNotFound.Clear();
+            MandatoryFilesDifferentSha.Clear();
+
             ModControlData = null;
         }
 
@@ -74,6 +86,8 @@ namespace LunaClient.Systems.Mod
         public void GenerateModControlFile(bool appendSha)
         {
             var modFile = LunaXmlSerializer.ReadXmlFromString<ModControlStructure>(LunaCommon.Properties.Resources.LMPModControl);
+
+            modFile.RequiredExpansions = GetInstalledExpansions();
 
             var extraParts = PartLoader.LoadedPartsList.Where(p => !modFile.AllowedParts.Contains(p.name)).Select(p => p.name);
             modFile.AllowedParts.AddRange(extraParts);
@@ -135,6 +149,21 @@ namespace LunaClient.Systems.Mod
             }
 
             return bannedParts.Distinct();
+        }
+
+        public List<string> GetInstalledExpansions()
+        {
+            var expansionsInfo = ExpansionsInfo?.GetValue(ExpansionsLoader.Instance);
+            if (expansionsInfo != null)
+            {
+                var type = expansionsInfo.GetType();
+                if (type.GetProperty("Keys")?.GetValue(expansionsInfo, null) is ICollection<string> keys)
+                {
+                    return keys.ToList();
+                }
+            }
+
+            return null;
         }
 
         #endregion

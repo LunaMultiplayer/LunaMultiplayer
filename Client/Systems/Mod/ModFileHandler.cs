@@ -24,7 +24,7 @@ namespace LunaClient.Systems.Mod
             SaveCurrentModConfigurationFile();
 
             SetAllPathsToLowercase(modFileData);
-            if (!CheckFiles(modFileData))
+            if (!CheckFilesAndExpansions(modFileData))
             {
                 LunaLog.LogError("[LMP]: Mod check failed!");
                 LunaLog.LogError(Sb.ToString());
@@ -52,9 +52,18 @@ namespace LunaClient.Systems.Mod
             LunaXmlSerializer.WriteToXmlFile(System.ModControlData, tempModFilePath);
         }
 
-        private static bool CheckFiles(ModControlStructure modInfo)
+        private static bool CheckFilesAndExpansions(ModControlStructure modInfo)
         {
             var checkOk = true;
+
+            var currentExpansions = System.GetInstalledExpansions();
+            var missingExpansions = modInfo.RequiredExpansions.Except(currentExpansions).ToArray();
+            if (missingExpansions.Any())
+            {
+                Sb.AppendLine($"Missing {string.Join(", ", missingExpansions)} expansion/s!");
+                System.MissingExpansions.AddRange(missingExpansions);
+                checkOk = false;
+            }
 
             foreach (var file in System.DllList)
             {

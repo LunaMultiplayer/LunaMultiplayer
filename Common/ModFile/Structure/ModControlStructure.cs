@@ -19,6 +19,7 @@ namespace LunaCommon.ModFile.Structure
     public class ModControlStructure
     {
         public bool AllowNonListedPlugins { get; set; } = true;
+        public List<string> RequiredExpansions { get; set; } = new List<string>();
         public List<MandatoryDllFile> MandatoryPlugins { get; set; } = new List<MandatoryDllFile>();
         public List<ForbiddenDllFile> ForbiddenPlugins { get; set; } = new List<ForbiddenDllFile>();
         public List<string> AllowedParts { get; set; } = new List<string>();

@@ -13,6 +13,19 @@ namespace LunaClient.Windows.Mod
             GUI.DragWindow(MoveRect);
             GUILayout.Space(10);
 
+            if (ModSystem.Singleton.MissingExpansions.Any())
+            {
+                GUILayout.Label(LocalizationContainer.ModWindowText.MissingExpansions, LabelStyle);
+                ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
+                foreach (var expansion in ModSystem.Singleton.MissingExpansions)
+                {
+                    GUILayout.Label(expansion, LabelStyle);
+                }
+
+                GUILayout.EndScrollView();
+                GUILayout.Space(10);
+            }
+
             if (ModSystem.Singleton.MandatoryFilesNotFound.Any())
             {
                 GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryModsNotFound, LabelStyle);
