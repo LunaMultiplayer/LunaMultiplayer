@@ -39,8 +39,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LiteDB, Version=4.0.0.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\LiteDB.4.0.0\lib\net40\LiteDB.dll</HintPath>
+    <Reference Include="LiteDB, Version=4.1.2.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\LiteDB.4.1.2\lib\net40\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
@@ -185,7 +185,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -195,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="packages.config" />
     <None Include="Resources\Kerbals\Valentina Kerman.txt" />
     <None Include="Resources\Kerbals\Jebediah Kerman.txt" />
     <None Include="Resources\Kerbals\Bob Kerman.txt" />
@@ -209,4 +209,7 @@
     <None Include="Resources\Scenario\CommNetScenario.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>del "$(TargetDir)LiteDB.xml"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
