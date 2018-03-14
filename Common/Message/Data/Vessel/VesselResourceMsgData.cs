@@ -55,7 +55,7 @@ namespace LunaCommon.Message.Data.Vessel
             var arraySize = 0;
             for (var i = 0; i < ResourcesCount; i++)
             {
-                arraySize += Resources[i].GetByteCount();
+                arraySize += Resources[i]?.GetByteCount() ?? 0;
             }
 
             return base.InternalGetMessageSize() + sizeof(int) + arraySize;
