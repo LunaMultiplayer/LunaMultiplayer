@@ -30,7 +30,6 @@ namespace LunaClient.Systems.SettingsSys
         public bool InterpolationEnabled { get; set; } = false;
         public bool CloseBtnInConnectionWindow { get; set; } = true;
         public int MaxGroupsPerPlayer { get; set; } = 1;
-        public bool CollidersEnabled { get; set; }
 
 #if DEBUG
 
