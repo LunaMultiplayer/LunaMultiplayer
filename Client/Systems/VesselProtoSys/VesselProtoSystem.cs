@@ -93,7 +93,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// </summary>
         public bool CheckVessel(Vessel vessel, bool displayDialog)
         {
-            if (vessel == null) return true;
+            if (vessel == null || vessel.isEVA) return true;
 
             if (ModSystem.Singleton.ModControl)
             {
