@@ -19,5 +19,6 @@
         public string GenerateUniverse { get; set; } = "Generate Universe from saved game";
         public string Toolbar { get; set; } = "Toolbar:";
         public string Close { get; set; } = "Close";
+        public string Colliders { get; set; } = "Colliders enabled";
     }
 }

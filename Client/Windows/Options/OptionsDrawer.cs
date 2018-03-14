@@ -4,6 +4,7 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Toolbar;
+using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Windows.Status;
 using LunaClient.Windows.UniverseConverter;
 using LunaCommon.Enums;
@@ -94,6 +95,13 @@ namespace LunaClient.Windows.Options
             if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
             {
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
+                SettingsSystem.SaveSettings();
+            }
+            var enableColliders = GUILayout.Toggle(SettingsSystem.CurrentSettings.CollidersEnabled, LocalizationContainer.OptionsWindowText.Colliders, ButtonStyle);
+            if (enableColliders != SettingsSystem.CurrentSettings.CollidersEnabled)
+            {
+                SettingsSystem.CurrentSettings.CollidersEnabled = enableColliders;
+                VesselImmortalSystem.Singleton.ChangedColliderSettings();
                 SettingsSystem.SaveSettings();
             }
             var closeBtnInConnectionWindow = GUILayout.Toggle(SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow, LocalizationContainer.OptionsWindowText.ShowClose, ButtonStyle);
