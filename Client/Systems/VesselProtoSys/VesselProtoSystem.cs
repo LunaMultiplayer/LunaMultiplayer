@@ -91,15 +91,15 @@ namespace LunaClient.Systems.VesselProtoSys
         /// <summary>
         /// Checks the vessel for invalid parts
         /// </summary>
-        public bool CheckVessel(Vessel vessel, bool displayDialog)
+        public bool CheckVessel(Vessel vessel)
         {
             if (vessel == null || vessel.isEVA || vessel.vesselType == VesselType.Flag) return true;
 
             if (ModSystem.Singleton.ModControl)
             {
-                var bannedParts = string.Join(Environment.NewLine, ModSystem.Singleton.GetBannedPartsFromVessel(vessel).ToArray());
+                var bannedParts = string.Join(Environment.NewLine, ModSystem.Singleton.GetBannedPartsFromVessel(vessel.protoVessel).ToArray());
 
-                if (!string.IsNullOrEmpty(bannedParts) && displayDialog)
+                if (!string.IsNullOrEmpty(bannedParts))
                 {
                     LunaLog.LogError($"Vessel {vessel.id}-{vessel.vesselName} Contains the following banned parts: {bannedParts}");
                     BannedPartsWindow.Singleton.DisplayBannedPartsDialog(vessel, bannedParts);

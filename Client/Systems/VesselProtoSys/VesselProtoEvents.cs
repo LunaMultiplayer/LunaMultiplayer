@@ -20,7 +20,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel != null)
             {
-                if (!System.CheckVessel(FlightGlobals.ActiveVessel, true))
+                if (!System.CheckVessel(FlightGlobals.ActiveVessel))
                 {
                     VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel.id);
                     VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel.id);

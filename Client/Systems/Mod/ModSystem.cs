@@ -143,13 +143,14 @@ namespace LunaClient.Systems.Mod
                 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
-        public IEnumerable<string> GetBannedPartsFromVessel(Vessel vessel)
+        public IEnumerable<string> GetBannedPartsFromVessel(ProtoVessel protoVessel)
         {
+            //Iterate in the PROTOVESSEL parts and not in the vessel parts as the part names in the vessel are fucked
             var bannedParts = new List<string>();
-            foreach (var part in vessel.parts)
+            foreach (var protoPart in protoVessel.protoPartSnapshots)
             {
-                if (!ModControlData.AllowedParts.Contains(part.name))
-                    bannedParts.Add(part.name);
+                if (!ModControlData.AllowedParts.Contains(protoPart.partName))
+                    bannedParts.Add(protoPart.partName);
             }
 
             return bannedParts.Distinct();
