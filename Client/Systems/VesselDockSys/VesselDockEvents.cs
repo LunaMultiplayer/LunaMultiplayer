@@ -7,6 +7,7 @@ using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselDockSys
@@ -14,10 +15,15 @@ namespace LunaClient.Systems.VesselDockSys
     public class VesselDockEvents : SubSystem<VesselDockSystem>
     {
         /// <summary>
-        /// Called when 2 parts couple and we can remove the weak vessel
+        /// This dictioanry stores the docking events
+        /// </summary>
+        private static Dictionary<Guid, VesselDockStructure> VesselDockings { get; } = new Dictionary<Guid, VesselDockStructure>();
+
+        /// <summary>
+        /// Called when 2 parts couple
         /// </summary>
         /// <param name="partAction"></param>
-        public void OnPartCoupleComplete(GameEvents.FromToAction<Part, Part> partAction)
+        public void OnPartCouple(GameEvents.FromToAction<Part, Part> partAction)
         {
             if (!VesselCommon.IsSpectating)
             {
@@ -26,7 +32,9 @@ namespace LunaClient.Systems.VesselDockSys
                     var dock = new VesselDockStructure(partAction.from.vessel.id, partAction.to.vessel.id);
                     if (dock.StructureIsOk())
                     {
-                        HandleDocking(dock, false);
+                        //We add it to the event so the event is handled AFTER all the docking event in ksp is over and we can
+                        //safely remove the weak vessel from the game and save the updated dominant vessel.
+                        VesselDockings.Add(dock.DominantVesselId, dock);
                     }
                 }
             }
@@ -52,7 +60,7 @@ namespace LunaClient.Systems.VesselDockSys
             }
         }
 
-        public void OnPartUndockComplete(Part data)
+        public void OnPartUndock(Part data)
         {
             if (VesselCommon.IsSpectating)
             {
@@ -60,7 +68,20 @@ namespace LunaClient.Systems.VesselDockSys
                 data.vessel.MakeActive();
             }
         }
-        
+
+        /// <summary>
+        /// This event is called AFTER all the docking event is over, so the final 
+        /// vessel is merged and we can safely remove the minor vessel
+        /// </summary>
+        public void OnVesselWasModified(Vessel data)
+        {
+            if (VesselDockings.ContainsKey(data.id))
+            {
+                HandleDocking(VesselDockings[data.id], false);
+                VesselDockings.Remove(data.id);
+            }
+        }
+
         /// <summary>
         /// This method is called after the docking is over and there 
         /// should be only 1 vessel in the screen (the final one)
@@ -81,7 +102,7 @@ namespace LunaClient.Systems.VesselDockSys
 
                     LunaLog.Log($"[LMP]: Crewboard detected! We own the kerbal {dock.WeakVesselId}");
                     VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
-                    
+
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
                 }
@@ -117,7 +138,7 @@ namespace LunaClient.Systems.VesselDockSys
 
                     if (dock.DominantVessel == null)
                         dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
-                    
+
                     //Switch to the dominant vessel, but before that save the dominant vessel proto.
                     //We save it as in case the dominant player didn't detected the dock he will send us a
                     //NOT docked protovessel and that would remove the weak vessel because we are going to be an
