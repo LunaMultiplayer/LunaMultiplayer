@@ -208,7 +208,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             try
             {
-                if ((DateTime.UtcNow - LastReloadCheck).TotalMilliseconds > 1500 && ProtoSystemBasicReady && !VesselCommon.ActiveVesselIsInSafetyBubble())
+                if ((DateTime.UtcNow - LastReloadCheck).TotalMilliseconds > 1500 && ProtoSystemBasicReady)
                 {
                     VesselsToRefresh.Clear();
 

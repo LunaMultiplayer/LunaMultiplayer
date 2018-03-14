@@ -43,12 +43,7 @@ namespace LunaClient.VesselUtilities
             //Ignore updates to our own vessel if we aren't spectating
             return !IsSpectating && FlightGlobals.ActiveVessel?.id == vesselId;
         }
-
-        public static bool ActiveVesselIsInSafetyBubble()
-        {
-            return IsInSafetyBubble(FlightGlobals.ActiveVessel);
-        }
-
+        
         private static bool _isSpectating;
         public static bool IsSpectating
         {
