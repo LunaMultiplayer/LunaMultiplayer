@@ -32,9 +32,16 @@ namespace LunaClient.Systems.VesselDockSys
                     var dock = new VesselDockStructure(partAction.from.vessel.id, partAction.to.vessel.id);
                     if (dock.StructureIsOk())
                     {
-                        //We add it to the event so the event is handled AFTER all the docking event in ksp is over and we can
-                        //safely remove the weak vessel from the game and save the updated dominant vessel.
-                        VesselDockings.Add(dock.DominantVesselId, dock);
+                        if (partAction.from.Modules.Contains("KerbalSeat") || partAction.to.Modules.Contains("KerbalSeat"))
+                        {
+                            HandleExternalSeatBoard(dock);
+                        }
+                        else
+                        {
+                            //We add it to the event so the event is handled AFTER all the docking event in ksp is over and we can
+                            //safely remove the weak vessel from the game and save the updated dominant vessel.
+                            VesselDockings.Add(dock.DominantVesselId, dock);
+                        }
                     }
                 }
             }
@@ -81,6 +88,44 @@ namespace LunaClient.Systems.VesselDockSys
                 VesselDockings.Remove(data.id);
             }
         }
+
+        /// <summary>
+        /// Here we handle the "dock" when a kerbal goes into an external seat
+        /// </summary>
+        private static void HandleExternalSeatBoard(VesselDockStructure dock)
+        {
+            var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
+
+            //Kerbal must never be the dominant
+            var temp = dock.DominantVesselId;
+            dock.DominantVesselId = dock.WeakVesselId;
+            dock.WeakVesselId = temp;
+
+            LunaLog.Log($"[LMP]: Crewboard to an external seat detected! We own the kerbal {dock.WeakVesselId}");
+            VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+
+            dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
+            System.MessageSender.SendDockInformation(dock, currentSubspaceId);
+            MainSystem.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock));
+        }
+
+        /// <summary>
+        /// The vessel has changed as it has less crew now so send the definition
+        /// </summary>
+        public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
+        {
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
+        }
+
+        /// <summary>
+        /// The vessel has changed as it has less crew now so send the definition
+        /// </summary>
+        public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
+        {
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
+        }
+
+        #region Private
 
         /// <summary>
         /// This method is called after the docking is over and there 
@@ -166,7 +211,7 @@ namespace LunaClient.Systems.VesselDockSys
         /// Here we wait until we fully switched to the dominant vessel and THEN we send the vessel dock information.
         /// We wait 5 seconds before sending the data to give time to the dominant vessel to detect the dock
         /// </summary>
-        private static IEnumerator WaitUntilWeSwitchedThenSendDockInfo(VesselDockStructure dockInfo)
+        private static IEnumerator WaitUntilWeSwitchedThenSendDockInfo(VesselDockStructure dockInfo, int secondsToWait = 5)
         {
             var start = DateTime.Now;
             var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
@@ -184,7 +229,7 @@ namespace LunaClient.Systems.VesselDockSys
                  * to undock properly as he will think that he is the weak vessel.
                  */
 
-                yield return new WaitForSeconds(5);
+                yield return new WaitForSeconds(secondsToWait);
 
                 FlightGlobals.ActiveVessel.BackupVessel();
                 LunaLog.Log($"[LMP]: Sending dock info to the server! Final dominant vessel parts {FlightGlobals.ActiveVessel.protoVessel.protoPartSnapshots.Count}");
@@ -193,20 +238,6 @@ namespace LunaClient.Systems.VesselDockSys
             }
         }
 
-        /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition
-        /// </summary>
-        public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
-        {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
-        }
-
-        /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition
-        /// </summary>
-        public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
-        {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
-        }
+        #endregion
     }
 }
