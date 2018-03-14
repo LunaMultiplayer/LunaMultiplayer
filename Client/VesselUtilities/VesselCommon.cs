@@ -267,7 +267,7 @@ namespace LunaClient.VesselUtilities
             return LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                 .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id)
                 .Select(vi => FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id == vi.VesselId))
-                .Where(v => v != null);
+                .Where(v => v != null && v.id != Guid.Empty);
         }
 
         /// <summary>
@@ -280,7 +280,7 @@ namespace LunaClient.VesselUtilities
             return LockSystem.LockQuery.GetAllUnloadedUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
                 .Where(l => l.VesselId != FlightGlobals.ActiveVessel?.id)
                 .Select(vi => FlightGlobals.FindVessel(vi.VesselId))
-                .Where(v => v != null);
+                .Where(v => v != null && v.id != Guid.Empty);
         }
 
         /// <summary>
