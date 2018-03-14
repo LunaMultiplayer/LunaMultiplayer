@@ -122,30 +122,15 @@ namespace LunaClient.Systems.VesselImmortalSys
                 if (part.attachJoint != null)
                     part.attachJoint?.SetUnbreakable(immortal, part.rigidAttachment);
 
-                if(part.collider != null)
-                    part.collider.enabled = SettingsSystem.CurrentSettings.CollidersEnabled || !immortal;
+                //Do not remove the colliders as then you can't dock
+                //if(part.collider != null)
+                //    part.collider.enabled = SettingsSystem.CurrentSettings.CollidersEnabled || !immortal;
 
                 part.gTolerance = immortal ? double.MaxValue : 50;
                 part.maxPressure = immortal ? double.MaxValue : 4000;
 
                 //Do not set this as then you can't click on parts
                 //part.SetDetectCollisions(!immortal);
-            }
-        }
-
-        #endregion
-
-        #region Public methods
-
-        /// <summary>
-        /// Call this method when changing the collider settings. It will reset the colliders if we are already in a running game
-        /// </summary>
-        public void ChangedColliderSettings()
-        {
-            if (Enabled)
-            {
-                Enabled = false;
-                Enabled = true;
             }
         }
 
