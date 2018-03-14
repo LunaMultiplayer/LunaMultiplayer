@@ -37,7 +37,7 @@ namespace LunaClient.Systems.Bug
         {
             foreach (var launchSite in PSystemSetup.Instance.StockLaunchSites)
             {
-                Body.SetValue(launchSite, FlightGlobals.Bodies[0]);
+                Body?.SetValue(launchSite, FlightGlobals.Bodies[0]);
             }
         }
     }
