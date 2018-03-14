@@ -95,6 +95,41 @@ namespace LunaClient.Windows.Mod
                 GUILayout.Space(10);
             }
 
+            if (ModSystem.Singleton.MandatoryPartsNotFound.Any())
+            {
+                GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryPartsNotFound, LabelStyle);
+                ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
+                foreach (var part in ModSystem.Singleton.MandatoryPartsNotFound)
+                {
+                    GUILayout.Label(part.PartName, LabelStyle);
+                    if (!string.IsNullOrEmpty(part.Text))
+                        GUILayout.Label(part.Text, LabelStyle);
+                    if (!string.IsNullOrEmpty(part.Link))
+                    {
+                        if (GUILayout.Button(LocalizationContainer.ModWindowText.Link))
+                            Application.OpenURL(part.Link);
+                    }
+                }
+
+                GUILayout.EndScrollView();
+                GUILayout.Space(10);
+            }
+
+            if (ModSystem.Singleton.ForbiddenPartsFound.Any())
+            {
+                GUILayout.Label(LocalizationContainer.ModWindowText.ForbiddenPartsFound, LabelStyle);
+                ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
+                foreach (var part in ModSystem.Singleton.ForbiddenPartsFound)
+                {
+                    GUILayout.Label(part.PartName, LabelStyle);
+                    if (!string.IsNullOrEmpty(part.Text))
+                        GUILayout.Label(part.Text, LabelStyle);
+                }
+
+                GUILayout.EndScrollView();
+                GUILayout.Space(10);
+            }
+
             if (GUILayout.Button(LocalizationContainer.ModWindowText.Close, ButtonStyle))
                 Display = false;
             GUILayout.EndVertical();

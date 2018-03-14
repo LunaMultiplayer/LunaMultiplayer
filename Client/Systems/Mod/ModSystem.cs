@@ -25,9 +25,11 @@ namespace LunaClient.Systems.Mod
 
         public List<string> MissingExpansions { get; } = new List<string>();
         public List<ForbiddenDllFile> ForbiddenFilesFound { get; } = new List<ForbiddenDllFile>();
+        public List<ForbiddenPart> ForbiddenPartsFound { get; } = new List<ForbiddenPart>();
         public List<string> NonListedFilesFound { get; } = new List<string>();
         public List<MandatoryDllFile> MandatoryFilesNotFound { get; } = new List<MandatoryDllFile>();
         public List<MandatoryDllFile> MandatoryFilesDifferentSha { get; } = new List<MandatoryDllFile>();
+        public List<MandatoryPart> MandatoryPartsNotFound { get; } = new List<MandatoryPart>();
 
         public ModFileHandler ModFileHandler { get; } = new ModFileHandler();
 
@@ -47,9 +49,11 @@ namespace LunaClient.Systems.Mod
             AllowedParts.Clear();
             MissingExpansions.Clear();
             ForbiddenFilesFound.Clear();
+            ForbiddenPartsFound.Clear();
             NonListedFilesFound.Clear();
             MandatoryFilesNotFound.Clear();
             MandatoryFilesDifferentSha.Clear();
+            MandatoryPartsNotFound.Clear();
 
             ModControlData = null;
         }

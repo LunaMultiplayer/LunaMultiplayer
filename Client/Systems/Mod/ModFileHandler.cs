@@ -75,6 +75,16 @@ namespace LunaClient.Systems.Mod
                 checkOk &= CheckMandatoryFile(requiredEntry);
             }
 
+            foreach (var part in PartLoader.LoadedPartsList.Select(p=> p.name))
+            {
+                checkOk &= CheckExistingPart(modInfo, part);
+            }
+
+            foreach (var requiredEntry in modInfo.MandatoryParts)
+            {
+                checkOk &= CheckMandatoryPart(requiredEntry);
+            }
+
             return checkOk;
         }
 
@@ -112,6 +122,33 @@ namespace LunaClient.Systems.Mod
             {
                 Sb.AppendLine($"Required file {item.FilePath} does not match hash {item.Sha}!");
                 System.MandatoryFilesDifferentSha.Add(item);
+
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool CheckExistingPart(ModControlStructure modInfo, string partName)
+        {
+            var forbiddenPart = modInfo.ForbiddenParts.FirstOrDefault(f => f.PartName == partName);
+            if (forbiddenPart != null)
+            {
+                Sb.AppendLine($"Banned part {partName} exists on client!");
+                System.ForbiddenPartsFound.Add(forbiddenPart);
+                return false;
+            }
+
+            return true;
+        }
+
+        private static bool CheckMandatoryPart(MandatoryPart requiredPart)
+        {
+            var partExists = PartLoader.LoadedPartsList.Any(p => p.name == requiredPart.PartName);
+            if (!partExists)
+            {
+                Sb.AppendLine($"Required part {requiredPart.PartName} is missing!");
+                System.MandatoryPartsNotFound.Add(requiredPart);
 
                 return false;
             }
