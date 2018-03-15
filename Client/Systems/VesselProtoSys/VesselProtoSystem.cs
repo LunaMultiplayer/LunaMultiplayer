@@ -98,14 +98,12 @@ namespace LunaClient.Systems.VesselProtoSys
             if (ModSystem.Singleton.ModControl)
             {
                 var bannedParts = ModSystem.Singleton.GetBannedPartsFromVessel(vessel.protoVessel).ToArray();
-
                 if (bannedParts.Any())
                 {
                     LunaLog.LogError($"Vessel {vessel.id}-{vessel.vesselName} Contains the following banned parts: {string.Join(", ", bannedParts)}");
                     BannedPartsWindow.Singleton.DisplayBannedPartsDialog(vessel, bannedParts);
+                    return false;
                 }
-
-                return !bannedParts.Any();
             }
 
             return true;
