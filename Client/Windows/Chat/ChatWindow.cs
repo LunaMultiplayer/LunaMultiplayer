@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.Chat;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -102,7 +103,7 @@ namespace LunaClient.Windows.Chat
             base.OnGui();
             if (SafeDisplay)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect, DrawContent, "LunaMultiplayer Chat", WindowStyle));
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.ChatWindowText.Title, WindowStyle));
             }
             CheckWindowLock();
         }

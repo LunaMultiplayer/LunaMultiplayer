@@ -9,7 +9,6 @@
   <Remove>Eliminar</Remove>
   <Options>Opciones</Options>
   <Servers>Servidores</Servers>
-  <Close>Cerrar</Close>
   <Name>Nombre:</Name>
   <Address>Direccion IP:</Address>
   <Port>Puerto:</Port>

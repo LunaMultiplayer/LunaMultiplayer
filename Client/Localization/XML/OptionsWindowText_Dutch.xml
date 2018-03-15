@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>LunaMultiplayer - Options</Language>
   <Language>Taal:</Language>
   <Color>Speler kleur:</Color>
   <Red>R:</Red>
@@ -7,13 +8,9 @@
   <Blue>B:</Blue>
   <Random>Willekeurig</Random>
   <Set>Pas toe</Set>
-  <SetChatKey>Verander chat sleutel. Huidige:</SetChatKey>
-  <SettingChatKey>Chat key aan het toepassen (klik om te annuleren)...</SettingChatKey>
   <ResetDisclaimer>Reset disclaimer</ResetDisclaimer>
   <Interpolation>Zet interpolatie aan</Interpolation>
-  <ShowClose>Toon "Sloot" knop in connectie venste</ShowClose>
   <GenerateLmpModControl>Genereer een server LMPModControl.xml</GenerateLmpModControl>
   <GenerateUniverse>Genereer universum van opgeslagen game</GenerateUniverse>
-  <Toolbar>Werkbalk:</Toolbar>
   <Close>Sluit</Close>
 </OptionsWindowText>

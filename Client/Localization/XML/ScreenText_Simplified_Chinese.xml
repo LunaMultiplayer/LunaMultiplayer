@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Global>#公共:</Global>
   <CraftUploaded>载具上传成功!</CraftUploaded>
   <CraftSaved>载具已保存!</CraftSaved>
   <ModFileGenerated>LMPModControl.xml文件已经生成与您的KSP根文件夹</ModFileGenerated>

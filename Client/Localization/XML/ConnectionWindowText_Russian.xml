@@ -9,7 +9,6 @@
   <Remove>Удалить</Remove>
   <Options>Настройки</Options>
   <Servers>Сервера</Servers>
-  <Close>Закрыть</Close>
   <Name>Имя:</Name>
   <Address>Адрес:</Address>
   <Port>Порт:</Port>

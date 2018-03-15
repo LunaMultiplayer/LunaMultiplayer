@@ -1,6 +1,5 @@
 <?xml version="1.0"?>
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Global>#Global:</Global>
   <CraftUploaded>Fahrzeug hochgeladen!</CraftUploaded>
   <CraftSaved>Fahrzeug gespeichert!</CraftSaved>
   <ModFileGenerated>LMPModControl.xml Datei wurde in deinem KSP Ordner generiert</ModFileGenerated>

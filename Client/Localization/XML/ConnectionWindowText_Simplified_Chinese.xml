@@ -9,7 +9,6 @@
   <Remove>删除</Remove>
   <Options>选项</Options>
   <Servers>服务器</Servers>
-  <Close>关闭</Close>
   <Name>名称:</Name>
   <Address>地址:</Address>
   <Port>端口:</Port>
