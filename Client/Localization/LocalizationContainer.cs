@@ -75,11 +75,18 @@ namespace LunaClient.Localization
 
         private static void LoadWindowTexts<T>(object lang, ref T classToReplace) where T : class, new()
         {
-            var filePath = CommonUtil.CombinePaths(LocalizationFolder, $"{classToReplace.GetType().Name}_{lang}.xml");
-            if (!File.Exists(filePath))
-                LunaXmlSerializer.WriteToXmlFile(new T(), filePath);
+            try
+            {
+                var filePath = CommonUtil.CombinePaths(LocalizationFolder, $"{classToReplace.GetType().Name}_{lang}.xml");
+                if (!File.Exists(filePath))
+                    LunaXmlSerializer.WriteToXmlFile(new T(), filePath);
 
-            classToReplace = LunaXmlSerializer.ReadXmlFromPath<T>(filePath);
+                classToReplace = LunaXmlSerializer.ReadXmlFromPath<T>(filePath);
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"Error reading {classToReplace.GetType().Name}_{lang}.xml Details: {e}");
+            }
         }
 
         #endregion
