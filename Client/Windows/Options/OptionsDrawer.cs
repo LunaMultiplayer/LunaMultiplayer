@@ -23,7 +23,7 @@ namespace LunaClient.Windows.Options
                 TempColor = SettingsSystem.CurrentSettings.PlayerColor;
             }
             //Player color
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(BoxStyle);
             GUI.DragWindow(MoveRect);
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Language);
