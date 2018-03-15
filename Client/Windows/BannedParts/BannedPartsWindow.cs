@@ -11,7 +11,7 @@ namespace LunaClient.Windows.BannedParts
         private const float WindowHeight = 300;
         private const float WindowWidth = 400;
 
-        private static string BannedParts { get; set; }
+        private static string[] BannedParts { get; set; } = new string[0];
         private static string VesselName { get; set; }
         private static Guid VesselId { get; set; }
 
@@ -44,7 +44,7 @@ namespace LunaClient.Windows.BannedParts
             ScrollPos = new Vector2();
         }
 
-        public void DisplayBannedPartsDialog(Vessel vessel, string bannedParts)
+        public void DisplayBannedPartsDialog(Vessel vessel, string[] bannedParts)
         {
             if (!Display)
             {

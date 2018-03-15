@@ -9,11 +9,18 @@ namespace LunaClient.Windows.BannedParts
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            GUILayout.Label($"{VesselName} ({VesselId}) {LocalizationContainer.BannedPartsWindowText.Text}", LabelStyle);
+            GUILayout.Label($"{VesselName} ({VesselId}) {LocalizationContainer.BannedPartsWindowText.Text}", BoldLabelStyle);
             GUILayout.Space(5);
+
+            GUILayout.BeginVertical(BoxStyle);
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
-            GUILayout.Label(BannedParts, LabelStyle);
+            foreach (var bannedPart in BannedParts)
+            {
+                GUILayout.Label(bannedPart, LabelStyle);
+            }
             GUILayout.EndScrollView();
+            GUILayout.EndVertical();
+
             if (GUILayout.Button(LocalizationContainer.BannedPartsWindowText.Close, ButtonStyle))
                 Display = false;
             GUILayout.EndVertical();

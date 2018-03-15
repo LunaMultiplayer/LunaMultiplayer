@@ -110,30 +110,34 @@ namespace LunaClient.Windows.Connection
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.CustomServers);
             if (SettingsSystem.CurrentSettings.Servers.Count == 0)
                 GUILayout.Label(LocalizationContainer.ConnectionWindowText.NoServers);
-
-            ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5),
-                GUILayout.Height(WindowHeight - 100));
-
-            for (var serverPos = 0; serverPos < SettingsSystem.CurrentSettings.Servers.Count; serverPos++)
+            else
             {
-                var thisSelected = GUILayout.Toggle(serverPos == SelectedSafe,
-                    SettingsSystem.CurrentSettings.Servers[serverPos].Name, ButtonStyle);
-                if (Selected == SelectedSafe)
-                    if (thisSelected)
-                    {
-                        if (Selected != serverPos)
+                GUILayout.BeginVertical(BoxStyle);
+                ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5),
+                    GUILayout.Height(WindowHeight - 100));
+
+                for (var serverPos = 0; serverPos < SettingsSystem.CurrentSettings.Servers.Count; serverPos++)
+                {
+                    var thisSelected = GUILayout.Toggle(serverPos == SelectedSafe,
+                        SettingsSystem.CurrentSettings.Servers[serverPos].Name, ButtonStyle);
+                    if (Selected == SelectedSafe)
+                        if (thisSelected)
                         {
-                            Selected = serverPos;
+                            if (Selected != serverPos)
+                            {
+                                Selected = serverPos;
+                                AddingServer = false;
+                            }
+                        }
+                        else if (Selected == serverPos)
+                        {
+                            Selected = -1;
                             AddingServer = false;
                         }
-                    }
-                    else if (Selected == serverPos)
-                    {
-                        Selected = -1;
-                        AddingServer = false;
-                    }
+                }
+                GUILayout.EndScrollView();
+                GUILayout.EndVertical();
             }
-            GUILayout.EndScrollView();
 
             //Draw Status Message
             GUILayout.Label(Status, StatusStyle);

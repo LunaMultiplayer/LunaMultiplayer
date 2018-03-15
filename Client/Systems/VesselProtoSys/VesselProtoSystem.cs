@@ -97,15 +97,15 @@ namespace LunaClient.Systems.VesselProtoSys
 
             if (ModSystem.Singleton.ModControl)
             {
-                var bannedParts = string.Join(Environment.NewLine, ModSystem.Singleton.GetBannedPartsFromVessel(vessel.protoVessel).ToArray());
+                var bannedParts = ModSystem.Singleton.GetBannedPartsFromVessel(vessel.protoVessel).ToArray();
 
-                if (!string.IsNullOrEmpty(bannedParts))
+                if (bannedParts.Any())
                 {
-                    LunaLog.LogError($"Vessel {vessel.id}-{vessel.vesselName} Contains the following banned parts: {bannedParts}");
+                    LunaLog.LogError($"Vessel {vessel.id}-{vessel.vesselName} Contains the following banned parts: {string.Join(", ", bannedParts)}");
                     BannedPartsWindow.Singleton.DisplayBannedPartsDialog(vessel, bannedParts);
                 }
 
-                return string.IsNullOrEmpty(bannedParts);
+                return bannedParts.Any();
             }
 
             return true;
