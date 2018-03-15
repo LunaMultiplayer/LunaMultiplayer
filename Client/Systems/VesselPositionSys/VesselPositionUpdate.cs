@@ -208,16 +208,20 @@ namespace LunaClient.Systems.VesselPositionSys
                  * Doing it in this way we avoid the vessel going inside kerbin
                  */
 
-                //Vessel.mainBody.GetLatLonAlt(Vessel.vesselTransform.position, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
-                //Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
-                //Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
-
-                //Fall back to the old positioning method that jitters at high speed :(
-
-                Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
-                Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
-                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+                if (SettingsSystem.CurrentSettings.PreciseSurfacePositioning)
+                {
+                    Vessel.mainBody.GetLatLonAlt(Vessel.vesselTransform.position, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+                    Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                    Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+                }
+                else
+                {                
+                    //Fall back to the old positioning method that jitters at high speed :(
+                    Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                    Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                    Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                    Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+                }
             }
 
             foreach (var part in Vessel.Parts)
