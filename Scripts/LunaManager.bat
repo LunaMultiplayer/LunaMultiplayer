@@ -61,8 +61,8 @@ ECHO 2.  Play Kerbal Space Program
 ECHO Q.	 Quit the Manager
 ECHO -------------------------------------
 ECHO  Invalid choices will default to installing
-ECHO  the client files as I want to keep autonomous. 
-ECHO  This script requires to be in your KSP installation.
+ECHO  the update to the KSP directory. %LUNAUPDATER%
+ECHO  requires to be in your KSP installation.
 ECHO -------------------------------------
 ECHO ==========PRESS 'Q' TO QUIT==========
 ECHO.
