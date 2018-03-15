@@ -475,6 +475,12 @@ namespace LunaClient
 
             if (commands.Any())
             {
+                if (commands.IndexOf("-debug") >= 0)
+                {
+                    NetworkMain.Config.ConnectionTimeout = float.MaxValue;
+                    NetworkMain.RandomizeBadConnectionValues();
+                }
+
                 var logFileIndex = commands.IndexOf("-logFile") + 1;
                 if (logFileIndex > 0 && commands.Length > logFileIndex)
                 {

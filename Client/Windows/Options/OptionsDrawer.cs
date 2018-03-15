@@ -159,7 +159,7 @@ namespace LunaClient.Windows.Options
                     {
                         if (NetworkMain.Config.ConnectionTimeout >= float.MaxValue - 1)
                             NetworkMain.Config.ConnectionTimeout = 15;
-                        
+
                         var value = GUILayout.TextArea(NetworkMain.Config.ConnectionTimeout.ToString(CultureInfo.InvariantCulture), 32, TextAreaStyle);
                         if (float.TryParse(value, out var parsedResult))
                         {
@@ -178,8 +178,16 @@ namespace LunaClient.Windows.Options
             ShowBadNetworkSimulationFields = GUILayout.Toggle(ShowBadNetworkSimulationFields, "Bad network simulation", ButtonStyle);
             if (ShowBadNetworkSimulationFields)
             {
+                if (MainSystem.NetworkState <= ClientState.Disconnected)
+                {
+                    GUILayout.BeginHorizontal();
+                    if (GUILayout.Button("Random", ButtonStyle)) NetworkMain.RandomizeBadConnectionValues();
+                    if (GUILayout.Button("Reset", ButtonStyle)) NetworkMain.ResetBadConnectionValues();
+                    GUILayout.EndHorizontal();
+                }
+
                 GUILayout.Label($"NTP time offset: {LunaTime.SimulatedMsTimeOffset:F1}ms");
-                LunaTime.SimulatedMsTimeOffset = (float) Math.Round(GUILayout.HorizontalScrollbar(LunaTime.SimulatedMsTimeOffset, 0, -2500, 2500), 3);
+                LunaTime.SimulatedMsTimeOffset = (float)Math.Round(GUILayout.HorizontalScrollbar(LunaTime.SimulatedMsTimeOffset, 0, -2500, 2500), 3);
                 if (MainSystem.NetworkState > ClientState.Disconnected)
                 {
                     GUILayout.Label("Cannot change values while connected");
@@ -187,16 +195,16 @@ namespace LunaClient.Windows.Options
 
                 GUILayout.Label($"Packet loss: {NetworkMain.Config.SimulatedLoss * 100:F1}%");
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
-                    NetworkMain.Config.SimulatedLoss = (float) Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedLoss, 0, 0, 1), 3);
+                    NetworkMain.Config.SimulatedLoss = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedLoss, 0, 0, 1), 3);
                 GUILayout.Label($"Packet duplication: {NetworkMain.Config.SimulatedDuplicatesChance * 100:F1}%");
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
-                    NetworkMain.Config.SimulatedDuplicatesChance = (float) Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedDuplicatesChance, 0, 0, 1), 3);
+                    NetworkMain.Config.SimulatedDuplicatesChance = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedDuplicatesChance, 0, 0, 1), 3);
                 GUILayout.Label($"Max random latency: {NetworkMain.Config.SimulatedRandomLatency * 1000:F1} ms");
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
-                    NetworkMain.Config.SimulatedRandomLatency = (float) Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedRandomLatency, 0, 0, 3), 4);
+                    NetworkMain.Config.SimulatedRandomLatency = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedRandomLatency, 0, 0, 3), 4);
                 GUILayout.Label($"Min latency: {NetworkMain.Config.SimulatedMinimumLatency * 1000:F1} ms");
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
-                    NetworkMain.Config.SimulatedMinimumLatency = (float) Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedMinimumLatency, 0, 0, 3),4);
+                    NetworkMain.Config.SimulatedMinimumLatency = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedMinimumLatency, 0, 0, 3), 4);
             }
         }
     }

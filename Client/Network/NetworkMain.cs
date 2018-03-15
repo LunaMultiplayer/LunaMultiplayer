@@ -3,6 +3,7 @@ using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message;
 using LunaCommon.Message.Interface;
+using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -36,6 +37,26 @@ namespace LunaClient.Network
         {
             LunaLog.Log($"[LMP]: Clearing {InputLockManager.lockStack.Count} control locks");
             InputLockManager.ClearControlLocks();
+        }
+
+        public static void RandomizeBadConnectionValues()
+        {
+            var rnd = new Random();
+
+            LunaTime.SimulatedMsTimeOffset = rnd.Next(-500, 500); //Between -500 and 500 ms
+            Config.SimulatedMinimumLatency = (float)rnd.Next(50, 250)/1000; //Between 50 and 250 ms
+            Config.SimulatedRandomLatency = (float)rnd.Next(10, 250) / 1000; //Between 10 and 250 ms
+            Config.SimulatedDuplicatesChance = (float)rnd.Next(10, 50)/ 1000; //Between 1 and 5%
+            Config.SimulatedLoss = (float)rnd.Next(10, 30) / 1000; //Between 1 and 3%
+        }
+
+        public static void ResetBadConnectionValues()
+        {
+            LunaTime.SimulatedMsTimeOffset = 0;
+            Config.SimulatedMinimumLatency = 0;
+            Config.SimulatedRandomLatency = 0;
+            Config.SimulatedDuplicatesChance = 0;
+            Config.SimulatedLoss = 0;
         }
 
         public static void ResetConnectionStaticsAndQueues()
