@@ -34,11 +34,24 @@ namespace Server.System
 
         public static void RemoveSubspace(int oldSubspace)
         {
-            //We never remove the latest subspace or the only subspace from the server!
-            if (WarpContext.Subspaces.Count == 1 || oldSubspace == WarpContext.LatestSubspace)
+            //If there's only 1 subspace do not remove it!
+            if (WarpContext.Subspaces.Count == 1)
                 return;
 
-            WarpContext.Subspaces.TryRemove(oldSubspace, out var _);
+            //We are in the latest subspace and we NEVER remove it!
+            if (oldSubspace == WarpContext.LatestSubspace)
+            {
+                //Get old subspaces that are empty (except this one) and remove them (cleanup)
+                var emptySubspaces = GetEmptySubspaces().Where(s => s != oldSubspace);
+                foreach (var emptySubspace in emptySubspaces)
+                {
+                    WarpContext.Subspaces.TryRemove(emptySubspace, out var _);
+                }
+            }
+            else
+            {
+                WarpContext.Subspaces.TryRemove(oldSubspace, out var _);
+            }
         }
 
         #region Private methods
@@ -105,6 +118,14 @@ namespace Server.System
         public static int[] GetFutureSubspaces(int subspace)
         {
             return WarpContext.Subspaces.Where(s => s.Key != subspace && WarpContext.Subspaces.TryGetValue(subspace, out var time) && s.Value > time).Select(s => s.Key).ToArray();
+        }
+
+        /// <summary>
+        /// Returns the empty subspaces. Caution as here the latest subspace can be included!
+        /// </summary>
+        public static int[] GetEmptySubspaces()
+        {
+            return WarpContext.Subspaces.ToArray().Where(s => !ServerContext.Clients.Any(c => c.Value.Subspace == s.Key)).Select(s => s.Key).ToArray();
         }
 
         #endregion
