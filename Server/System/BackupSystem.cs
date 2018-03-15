@@ -10,9 +10,9 @@ namespace Server.System
     {
         public static async void PerformBackups(CancellationToken token)
         {
-            LunaLog.Debug("Performing backups to files...");
             while (ServerContext.ServerRunning)
             {
+                LunaLog.Debug("Performing backups...");
                 VesselStoreSystem.BackupVessels();
                 WarpSystem.SaveSubspacesToFile();
                 try
