@@ -26,12 +26,10 @@ namespace Server.System
             content += $"#This file can only be edited if the server is stopped.{Environment.NewLine}";
             content += $"#Each variable is defined as: subspaceId:server_time_difference_in_seconds.{Environment.NewLine}";
             content += $"#It must always contain at least 1 subspace wich will be the most advanced in the future{Environment.NewLine}";
-            FileHandler.WriteToFile(SubspaceFile, content);
 
-            foreach (var subspace in subspaces)
-            {
-                FileHandler.AppendToFile(SubspaceFile, $"{subspace.Key}:{subspace.Value}{Environment.NewLine}");
-            }
+            content = subspaces.Aggregate(content, (current, subspace) => current + $"{subspace.Key}:{subspace.Value}{Environment.NewLine}");
+
+            FileHandler.WriteToFile(SubspaceFile, content);
         }
 
         public static void RemoveSubspace(int oldSubspace)

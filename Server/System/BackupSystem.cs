@@ -14,6 +14,7 @@ namespace Server.System
             while (ServerContext.ServerRunning)
             {
                 VesselStoreSystem.BackupVessels();
+                WarpSystem.SaveSubspacesToFile();
                 try
                 {
                     await Task.Delay(GeneralSettings.SettingsStore.VesselsBackupIntervalMs, token);
@@ -26,6 +27,7 @@ namespace Server.System
 
             //Do a last backup before quitting
             VesselStoreSystem.BackupVessels();
+            WarpSystem.SaveSubspacesToFile();
         }
     }
 }

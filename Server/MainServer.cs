@@ -115,7 +115,6 @@ namespace Server
 
                 QuitEvent.WaitOne();
 
-                WarpSystem.SaveSubspacesToFile();
                 LmpPluginHandler.FireOnServerStop();
 
                 LunaLog.Normal("So long and thanks for all the fish!");
