@@ -1,32 +1,36 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message.Base;
-using LunaCommon.Message.Types;
-using System;
 
 namespace LunaCommon.Message.Data.Chat
 {
-    public abstract class ChatBaseMsgData : MessageData
+    public class ChatMsgData : MessageData
     {
         /// <inheritdoc />
-        internal ChatBaseMsgData() { }
-        public override ushort SubType => (ushort)(int)ChatMessageType;
-        public virtual ChatMessageType ChatMessageType => throw new NotImplementedException();
+        internal ChatMsgData() { }
 
         public string From;
+        public string Text;
+        public bool Relay;
+
+        public override string ClassName { get; } = nameof(ChatMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(From);
+            lidgrenMsg.Write(Text);
+            lidgrenMsg.Write(Relay);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             From = lidgrenMsg.ReadString();
+            Text = lidgrenMsg.ReadString();
+            Relay = lidgrenMsg.ReadBoolean();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return From.GetByteCount();
+            return From.GetByteCount() + Text.GetByteCount() + sizeof(bool);
         }
     }
 }

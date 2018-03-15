@@ -69,9 +69,7 @@ namespace LMP.Tests
         [TestMethod]
         public void TestSerializeDeserializeChatChannelMsg()
         {
-            var msgData = Factory.CreateNewMessageData<ChatChannelMsgData>();
-            msgData.Channel = "C";
-            msgData.SendToAll = true;
+            var msgData = Factory.CreateNewMessageData<ChatMsgData>();
             msgData.Text = "T";
 
             var msg = Factory.CreateNew<ChatCliMsg>(msgData);

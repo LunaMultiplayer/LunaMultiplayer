@@ -24,7 +24,6 @@ namespace Server.Command
         {
             //Register the server Commands
             RegisterCommand("kick", new KickCommand().Execute, "Kicks a player from the server");
-            RegisterCommand("pm", new PmCommand().Execute, "Sends a message to a player");
             RegisterCommand("ban", new BanCommands().HandleCommand, "Bans someone from the server");
             RegisterCommand("admin", new AdminCommands().HandleCommand, "Sets a player as admin/removes admin from the player");
             RegisterCommand("whitelist", new WhitelistCommands().HandleCommand, "Change the server whitelist");

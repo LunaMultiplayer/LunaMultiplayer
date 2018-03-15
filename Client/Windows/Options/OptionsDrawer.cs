@@ -65,25 +65,6 @@ namespace LunaClient.Windows.Options
             }
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
-            //Key bindings
-            var chatDescription = $"{LocalizationContainer.OptionsWindowText.SetChatKey} {SettingsSystem.CurrentSettings.ChatKey}";
-            if (SettingChat)
-            {
-                chatDescription = LocalizationContainer.OptionsWindowText.SettingChatKey;
-                if (Event.current.isKey)
-                    if (Event.current.keyCode != KeyCode.Escape)
-                    {
-                        SettingsSystem.CurrentSettings.ChatKey = Event.current.keyCode;
-                        SettingsSystem.SaveSettings();
-                        SettingChat = false;
-                    }
-                    else
-                    {
-                        SettingChat = false;
-                    }
-            }
-            if (GUILayout.Button(chatDescription))
-                SettingChat = !SettingChat;
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.ResetDisclaimer))
             {
                 SettingsSystem.CurrentSettings.DisclaimerAccepted = false;

@@ -28,16 +28,14 @@
         ScenariosSynced = 21,
         SyncingCraftlibrary = 22,
         CraftlibrarySynced = 23,
-        SyncingChat = 24,
-        ChatSynced = 25,
-        SyncingLocks = 26,
-        LocksSynced = 27,
-        SyncingAdmins = 28,
-        AdminsSynced = 29,
-        SyncingGroups = 30,
-        GroupsSynced = 31,
+        SyncingLocks = 24,
+        LocksSynced = 25,
+        SyncingAdmins = 26,
+        AdminsSynced = 27,
+        SyncingGroups = 28,
+        GroupsSynced = 29,
 
-        Starting = 34,
-        Running = 35
+        Starting = 35,
+        Running = 36
     }
 }

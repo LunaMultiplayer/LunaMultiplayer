@@ -1,14 +1,12 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Chat;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
-using System.Reflection;
 using UnityEngine;
 
 namespace LunaClient.Windows.Chat
 {
-    public partial class ChatWindow : SystemWindow<ChatWindow, ChatSystem>
+    public partial class ChatWindow : Window<ChatWindow>
     {
         #region Fields
 
@@ -21,22 +19,28 @@ namespace LunaClient.Windows.Chat
         }
 
         public string ChatWindowLock { get; set; } = "LMP_Chat_Window_Lock";
-        public bool IgnoreChatInput { get; set; }
+
         public float WindowHeight { get; set; } = 300;
         public float WindowWidth { get; set; } = 400;
-        protected int PreviousTextId { get; set; } = 0;
 
         #region Layout
 
         protected static GUILayoutOption[] WindowLayoutOptions { get; set; }
-        protected static GUILayoutOption[] SmallSizeOption { get; set; }
 
-        protected static Vector2 PlayerScrollPos { get; set; }
-        public Vector2 ChatScrollPos;
+        private Vector2 _chatScrollPos;
+
+        private Texture2D ResizeIcon { get; set; }
+
+        #endregion
+        
+        private bool _resizingWindow = false;
 
         #endregion
 
-        #endregion
+        public void ScrollToBottom()
+        {
+            _chatScrollPos.y = float.PositiveInfinity;
+        }
 
         public override void SetStyles()
         {
@@ -49,19 +53,18 @@ namespace LunaClient.Windows.Chat
             WindowLayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
             WindowLayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
             WindowLayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
-
-            SmallSizeOption = new GUILayoutOption[1];
-            SmallSizeOption[0] = GUILayout.Width(WindowWidth * .25f);
             
-            ChatScrollPos = new Vector2(0, 0);
+            _chatScrollPos = new Vector2(0, 0);
             HighlightStyle = new GUIStyle(GUI.skin.button)
             {
                 normal = { textColor = Color.red },
                 active = { textColor = Color.red },
                 hover = { textColor = Color.red }
             };
-        }
 
+            ResizeIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "resize.png"), 16, 16);
+        }
+        
         public override void RemoveWindowLock()
         {
             if (IsWindowLocked)
@@ -75,13 +78,22 @@ namespace LunaClient.Windows.Chat
         {
             Display &= MainSystem.NetworkState >= ClientState.Running;
             SafeDisplay = Display;
-            IgnoreChatInput = false;
-            if (System.ChatButtonHighlighted && Display)
-                System.ChatButtonHighlighted = false;
-            if (System.ChatLocked && !Display)
+            
+            if (Display)
             {
-                System.ChatLocked = false;
-                InputLockManager.RemoveControlLock(System.LmpChatLock);
+                if (ChatSystem.Singleton.NewMessageReceived)
+                    ChatSystem.Singleton.NewMessageReceived = false;
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    _resizingWindow = false;
+                }
+
+                if (_resizingWindow)
+                {
+                    WindowRect.width = Input.mousePosition.x - WindowRect.x + 10;
+                    WindowRect.height = Screen.height - Input.mousePosition.y - WindowRect.y + 10;
+                }
             }
         }
 
@@ -90,25 +102,14 @@ namespace LunaClient.Windows.Chat
             base.OnGui();
             if (SafeDisplay)
             {
-                var pressedChatShortcutKey = Event.current.type == EventType.KeyDown &&
-                                             Event.current.keyCode == SettingsSystem.CurrentSettings.ChatKey;
-                if (pressedChatShortcutKey)
-                {
-                    IgnoreChatInput = true;
-                    System.SelectTextBox = true;
-                }
-                WindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiplayer Chat", WindowStyle, WindowLayoutOptions));
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect, DrawContent, "LunaMultiplayer Chat", WindowStyle));
             }
             CheckWindowLock();
         }
 
-
         public void SizeChanged()
         {
             Initialized = false;
-            System.PrintToSelectedChannel($"New window size is: {WindowWidth}x{WindowHeight}");
         }
 
         private void CheckWindowLock()

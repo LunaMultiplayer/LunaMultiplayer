@@ -18,7 +18,6 @@ namespace LunaClient.Systems.SettingsSys
         public int HearbeatMsInterval { get; set; } = 2000;
         public bool DisclaimerAccepted { get; set; } = false;
         public Color PlayerColor { get; set; } = PlayerColorSystem.GenerateRandomColor();
-        public KeyCode ChatKey { get; set; } = KeyCode.BackQuote;
         public string SelectedFlag { get; set; } = "Squad/Flags/default";
         public List<ServerEntry> Servers { get; set; } = new List<ServerEntry>();
         public string PrivateKey { get; set; }

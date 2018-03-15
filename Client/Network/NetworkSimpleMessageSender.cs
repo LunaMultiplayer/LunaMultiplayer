@@ -72,14 +72,6 @@ namespace LunaClient.Network
             SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<CraftLibraryCliMsg>(msgData)));
         }
 
-        public static void SendChatRequest()
-        {
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatListRequestMsgData>();
-            msgData.From = SettingsSystem.CurrentSettings.PlayerName;
-
-            SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<ChatCliMsg>(msgData)));
-        }
-
         public static void SendAdminsRequest()
         {
             SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<AdminCliMsg, AdminListRequestMsgData>()));

@@ -2,7 +2,6 @@
 {
     public class ScreenText
     {
-        public string Global { get; set; } = "#Global:";
         public string CraftUploaded { get; set; } = "Craft uploaded!";
         public string CraftSaved { get; set; } = "Craft saved!";
         public string ModFileGenerated { get; set; } = "LMPModControl.xml file generated in your KSP folder";

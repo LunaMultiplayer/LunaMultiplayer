@@ -236,26 +236,15 @@ namespace LunaClient.Systems.Network
                 case ClientState.CraftlibrarySynced:
                     MainSystem.Singleton.Status = "Craft library synced";
                     ChatSystem.Singleton.Enabled = true;
-                    MainSystem.NetworkState = ClientState.SyncingChat;
-                    NetworkSimpleMessageSender.SendChatRequest();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.SyncingChat:
-                    MainSystem.Singleton.Status = "Syncing chat";
-                    if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.CraftlibrarySynced;
-                    break;
-                case ClientState.ChatSynced:
-                    MainSystem.Singleton.Status = "Chat synced";
-                    LockSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingLocks;
+                    LockSystem.Singleton.Enabled = true;
                     LockSystem.Singleton.MessageSender.SendLocksRequest();
                     _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.SyncingLocks:
                     MainSystem.Singleton.Status = "Syncing locks";
                     if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.ChatSynced;
+                        MainSystem.NetworkState = ClientState.CraftlibrarySynced;
                     break;
                 case ClientState.LocksSynced:
                     MainSystem.Singleton.Status = "Locks synced";

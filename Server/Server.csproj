@@ -80,7 +80,6 @@
     <Compile Include="Command\Command\ListClientsCommand.cs" />
     <Compile Include="Command\Command\ClearVesselsCommand.cs" />
     <Compile Include="Command\Command\NukeCommand.cs" />
-    <Compile Include="Command\Command\PmCommand.cs" />
     <Compile Include="Command\Command\SayCommand.cs" />
     <Compile Include="Command\Command\WhitelistAddCommand.cs" />
     <Compile Include="Command\Command\WhitelistRemoveCommand.cs" />
@@ -142,8 +141,6 @@
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
     <Compile Include="System\AdminSystemSender.cs" />
-    <Compile Include="System\ChatSystem.cs" />
-    <Compile Include="System\ChatSystemReceiver.cs" />
     <Compile Include="System\FileHandler.cs" />
     <Compile Include="System\FlagSystem.cs" />
     <Compile Include="System\GroupSystem.cs" />

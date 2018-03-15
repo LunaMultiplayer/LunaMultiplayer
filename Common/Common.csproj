@@ -107,15 +107,7 @@
     <Compile Include="Message\Data\Admin\AdminListReplyMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminListRequestMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminRemoveMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatBaseMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatChannelMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatConsoleMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatJoinMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatLeaveMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatListMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatListRequestMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatPrivateMsgData.cs" />
-    <Compile Include="Message\Data\Chat\PlayerChatChannels.cs" />
+    <Compile Include="Message\Data\Chat\ChatMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColor.cs" />
     <Compile Include="Message\Data\Color\PlayerColorBaseMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorReplyMsgData.cs" />
@@ -237,7 +229,6 @@
     <Compile Include="Message\Server\VesselSrvMsg.cs" />
     <Compile Include="Message\Server\WarpSrvMsg.cs" />
     <Compile Include="Message\Types\AdminMessageType.cs" />
-    <Compile Include="Message\Types\ChatMessageType.cs" />
     <Compile Include="Message\Types\CraftMessageType.cs" />
     <Compile Include="Message\Types\FacilityMessageType.cs" />
     <Compile Include="Message\Types\FlagMessageType.cs" />

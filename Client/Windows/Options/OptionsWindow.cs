@@ -89,7 +89,6 @@ namespace LunaClient.Windows.Options
         private const float WindowWidth = 300;
         protected Color TempColor = new Color(1f, 1f, 1f, 1f);
         
-        protected bool SettingChat { get; set; }
         protected GUIStyle TempColorLabelStyle { get; set; }
         protected bool ShowBadNetworkSimulationFields { get; set; }
         protected bool ShowAdvancedNetworkFields { get; set; }

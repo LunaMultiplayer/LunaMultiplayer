@@ -10,8 +10,6 @@
         public string Blue { get; set; } = "B:";
         public string Random { get; set; } = "Random";
         public string Set { get; set; } = "Set";
-        public string SetChatKey { get; set; } = "Set chat key. Current:";
-        public string SettingChatKey { get; set; } = "Setting chat key (click to cancel)...";
         public string ResetDisclaimer { get; set; } = "Reset disclaimer";
         public string Interpolation { get; set; } = "Enable interpolation";
         public string PreciseSurfacePositioning { get; set; } = "Enable precise surface positioning";

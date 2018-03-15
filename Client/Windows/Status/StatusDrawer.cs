@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems;
-using LunaClient.Systems.Chat;
+﻿using LunaClient.Systems.Chat;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
@@ -32,7 +31,7 @@ namespace LunaClient.Windows.Status
             GUILayout.FlexibleSpace();
 
             var chatButtonStyle = ButtonStyle;
-            if (ChatSystem.Singleton.ChatButtonHighlighted)
+            if (ChatSystem.Singleton.NewMessageReceived)
                 chatButtonStyle = HighlightStyle;
             if (!SettingsSystem.ServerSettings.DropControlOnVesselSwitching)
             {

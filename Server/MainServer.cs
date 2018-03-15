@@ -82,7 +82,6 @@ namespace Server
                 VesselStoreSystem.LoadExistingVessels();
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
-                ChatSystem.Reset();
 
                 LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
 

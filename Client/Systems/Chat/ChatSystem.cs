@@ -1,10 +1,8 @@
 using LunaClient.Base;
-using LunaClient.Base.Interface;
-using LunaClient.Network;
-using LunaClient.Systems.Chat.Command;
 using LunaClient.Systems.SettingsSys;
-using LunaCommon.Message.Data.Chat;
+using LunaClient.Windows.Chat;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace LunaClient.Systems.Chat
@@ -13,64 +11,17 @@ namespace LunaClient.Systems.Chat
     {
         #region Fields
 
-        public bool ChatButtonHighlighted { get; set; }
-        public bool LeaveEventHandled { get; set; } = true;
+        public bool NewMessageReceived { get; set; }
         public bool SendEventHandled { get; set; } = true;
 
         //State tracking
-        public Dictionary<string, ChatCommand> RegisteredChatCommands { get; } = new Dictionary<string, ChatCommand>();
-        public Dictionary<string, List<string>> ChannelMessages { get; } = new Dictionary<string, List<string>>();
-        public Dictionary<string, List<string>> PrivateMessages { get; } = new Dictionary<string, List<string>>();
-        public List<string> ConsoleMessages { get; } = new List<string>();
-        public Dictionary<string, List<string>> PlayerChannels { get; } = new Dictionary<string, List<string>>();
-        public List<string> JoinedChannels { get; } = new List<string>();
-        public List<string> JoinedPmChannels { get; } = new List<string>();
-        public List<string> HighlightChannel { get; } = new List<string>();
-        public List<string> HighlightPm { get; } = new List<string>();
-
-        public string SelectedChannel { get; set; }
-        public string SelectedPmChannel { get; set; }
-        public bool ChatLocked { get; set; }
-        public bool SelectTextBox { get; set; }
-        public string SendText { get; set; } = "";
-
-        //const
-        public string LmpChatLock { get; } = "LMP_ChatLock";
+        public List<string> ChatMessages { get; } = new List<string>();
 
         #endregion
 
         #region Properties
-        public ChatQueuer Queuer { get; } = new ChatQueuer();
-        public ChatEvents ChatEventHandler { get; } = new ChatEvents();
-        public override IInputHandler InputHandler { get; } = new ChatInputHandler();
 
-        #endregion
-
-        #region Constructor
-
-        public ChatSystem()
-        {
-            RegisterChatCommand("help", HelpCommand.DisplayHelp, "Displays this help");
-            RegisterChatCommand("join", JoinCommand.JoinChannel, "Joins a new chat Channel");
-            RegisterChatCommand("query", QueryCommand.StartQuery, "Starts a query");
-            RegisterChatCommand("leave", LeaveCommand.LeaveChannel, "Leaves the current Channel");
-            RegisterChatCommand("part", LeaveCommand.LeaveChannel, "Leaves the current Channel");
-            RegisterChatCommand("motd", MotdCommand.ServerMotd, "Gets the current Message of the Day");
-            RegisterChatCommand("resize", ResizeCommand.ResizeChat, "Resized the chat window");
-            RegisterChatCommand("version", VersionCommand.DisplayVersion, "Displays the current version of LMP");
-        }
-
-        #endregion
-
-        #region Commands
-
-        private static HelpCommand HelpCommand { get; } = new HelpCommand();
-        private static JoinCommand JoinCommand { get; } = new JoinCommand();
-        private static LeaveCommand LeaveCommand { get; } = new LeaveCommand();
-        private static MotdCommand MotdCommand { get; } = new MotdCommand();
-        private static QueryCommand QueryCommand { get; } = new QueryCommand();
-        private static ResizeCommand ResizeCommand { get; } = new ResizeCommand();
-        private static VersionCommand VersionCommand { get; } = new VersionCommand();
+        public ConcurrentQueue<Tuple<string,string>> NewChatMessages { get; private set; } = new ConcurrentQueue<Tuple<string, string>>();
 
         #endregion
 
@@ -83,52 +34,43 @@ namespace LunaClient.Systems.Chat
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, HandleChatEvents));
+            SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, ProcessReceivedMessages));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
 
-            RegisteredChatCommands.Clear();
-            ChatButtonHighlighted = false;
-            LeaveEventHandled = true;
+            NewMessageReceived = false;
             SendEventHandled = true;
 
-            RegisteredChatCommands.Clear();
-            ChannelMessages.Clear();
-            PrivateMessages.Clear();
-            ConsoleMessages.Clear();
-            PlayerChannels.Clear();
-            JoinedChannels.Clear();
-            JoinedPmChannels.Clear();
-            HighlightChannel.Clear();
-            HighlightPm.Clear();
-
-            SelectedChannel = null;
-            SelectedPmChannel = null;
-
-            SelectTextBox = false;
-            SendText = "";
-
-            Queuer.Clear();
-
-            if (ChatLocked)
-            {
-                InputLockManager.RemoveControlLock(LmpChatLock);
-                ChatLocked = false;
-            }
+            ChatMessages.Clear();
+            NewChatMessages = new ConcurrentQueue<Tuple<string, string>>();
         }
 
         #endregion
 
         #region Update methods
 
-        private void HandleChatEvents()
+        private void ProcessReceivedMessages()
         {
             if (Enabled)
             {
-                ChatEventHandler.HandleChatEvents();
+                while (NewChatMessages.TryDequeue(out var chatMsg))
+                {
+                    NewMessageReceived = true;
+
+                    if (!ChatWindow.Singleton.Display)
+                    {
+                        ScreenMessages.PostScreenMessage($"{chatMsg.Item1}: {chatMsg.Item2}", 5f, ScreenMessageStyle.UPPER_LEFT);
+                    }
+                    else
+                    {
+                        ChatWindow.Singleton.ScrollToBottom();
+                    }
+
+                    ChatMessages.Add($"{chatMsg.Item1}: {chatMsg.Item2}");
+                }
             }
         }
 
@@ -136,37 +78,14 @@ namespace LunaClient.Systems.Chat
 
         #region Public
 
-        public void PrintToSelectedChannel(string text)
+        public void PrintToChat(string text)
         {
-            if (SelectedChannel == null && SelectedPmChannel == null)
-                Queuer.QueueChannelMessage(SettingsSystem.CurrentSettings.PlayerName, "", text);
-            if (SelectedChannel != null && SelectedChannel != SettingsSystem.ServerSettings.ConsoleIdentifier)
-                Queuer.QueueChannelMessage(SettingsSystem.CurrentSettings.PlayerName, SelectedChannel, text);
-            if (SelectedChannel == SettingsSystem.ServerSettings.ConsoleIdentifier)
-                Queuer.QueueSystemMessage(text);
-            if (SelectedPmChannel != null)
-                Queuer.QueuePrivateMessage(SettingsSystem.CurrentSettings.PlayerName, SelectedPmChannel, text);
+            NewChatMessages.Enqueue(new Tuple<string, string>(SettingsSystem.ServerSettings.ConsoleIdentifier, text));
         }
 
         public void PmMessageServer(string message)
         {
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ChatPrivateMsgData>();
-            msgData.From = SettingsSystem.CurrentSettings.PlayerName;
-            msgData.Text = message;
-            msgData.To = SettingsSystem.ServerSettings.ConsoleIdentifier;
-
-            MessageSender.SendMessage(msgData);
-        }
-
-        #endregion
-
-        #region Private
-
-        private void RegisterChatCommand(string command, Action<string> func, string description)
-        {
-            var cmd = new ChatCommand(command, func, description);
-            if (!RegisteredChatCommands.ContainsKey(command))
-                RegisteredChatCommands.Add(command, cmd);
+            MessageSender.SendChatMsg(message, false);
         }
 
         #endregion
