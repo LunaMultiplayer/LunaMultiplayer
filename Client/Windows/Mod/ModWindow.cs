@@ -7,7 +7,7 @@ namespace LunaClient.Windows.Mod
 {
     public partial class ModWindow : Window<ModWindow>
     {
-        private const float WindowHeight = 400;
+        private const float WindowHeight = 600;
         private const float WindowWidth = 600;
 
         private static Vector2 _missingExpansionsScrollPos;
