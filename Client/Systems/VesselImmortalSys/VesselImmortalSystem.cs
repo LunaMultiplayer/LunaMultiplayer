@@ -129,6 +129,9 @@ namespace LunaClient.Systems.VesselImmortalSys
                 part.gTolerance = immortal ? double.MaxValue : 50;
                 part.maxPressure = immortal ? double.MaxValue : 4000;
 
+                if(part.collisionEnhancer != null)
+                    part.collisionEnhancer.OnTerrainPunchThrough = immortal ? CollisionEnhancerBehaviour.DO_NOTHING : CollisionEnhancerBehaviour.EXPLODE;
+
                 //Do not set this as then you can't click on parts
                 //part.SetDetectCollisions(!immortal);
             }
