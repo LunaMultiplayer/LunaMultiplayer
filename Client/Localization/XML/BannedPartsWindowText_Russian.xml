@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ChatWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>LunaMultiplayer - Banned parts</Title>
-  <Text>contains the following banned parts and cannot be launched</Text>
+  <Title>LunaMultiplayer - Запрещенные части</Title>
+  <Text>содержит эти части и не может быть запущен</Text>
   <Close>Close</Close>
 </ChatWindowText>
