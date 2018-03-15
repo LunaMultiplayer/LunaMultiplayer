@@ -74,6 +74,8 @@ namespace LunaClient.Windows.Systems
 
         private bool Group { get; set; }
 
+        private bool ShareProgress { get; set; }
+
         private bool Kerbal { get; set; }
 
         private bool Lock { get; set; }

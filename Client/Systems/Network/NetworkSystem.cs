@@ -19,6 +19,7 @@ using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareProgress;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselDockSys;
@@ -315,6 +316,10 @@ namespace LunaClient.Systems.Network
                         FlagPlantSystem.Singleton.Enabled = true;
                         VesselEvaSystem.Singleton.Enabled = true;
                         BugSystem.Singleton.Enabled = true;
+                        if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
+                        {
+                            ShareProgressSystem.Singleton.Enabled = SettingsSystem.ServerSettings.ShareProgress;
+                        }
                         PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
                         StatusSystem.Singleton.MessageSender.SendOwnStatus();
                         NetworkSimpleMessageSender.SendMotdRequest();

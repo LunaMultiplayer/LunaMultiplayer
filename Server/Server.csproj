@@ -116,6 +116,7 @@
     <Compile Include="Message\Reader\PlayerStatusMsgReader.cs" />
     <Compile Include="Message\Reader\ScenarioDataMsgReader.cs" />
     <Compile Include="Message\Reader\SettingsMsgReader.cs" />
+    <Compile Include="Message\Reader\ShareProgressMsgReader.cs" />
     <Compile Include="Message\Reader\VesselMsgReader.cs" />
     <Compile Include="Message\Reader\WarpControlMsgReader.cs" />
     <Compile Include="System\BackupSystem.cs" />
@@ -154,6 +155,7 @@
     <Compile Include="System\ModDataSystemSender.cs" />
     <Compile Include="System\ModFileSystem.cs" />
     <Compile Include="System\ScenarioSystem.cs" />
+    <Compile Include="System\ShareProgressSystem.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselDataUpdater.cs" />
     <Compile Include="System\VesselRelay\VesselRelayItem.cs" />

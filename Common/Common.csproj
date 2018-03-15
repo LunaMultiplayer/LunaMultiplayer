@@ -61,8 +61,10 @@
     <Compile Include="Enums\ServerMessageType.cs" />
     <Compile Include="Enums\TerrainQuality.cs" />
     <Compile Include="Enums\WarpMode.cs" />
+    <Compile Include="Locks\LockQueryContract.cs" />
     <Compile Include="Message\Base\StringUtil.cs" />
     <Compile Include="Message\Base\GuidUtil.cs" />
+    <Compile Include="Message\Client\ShareProgressCliMsg.cs" />
     <Compile Include="Message\Data\Flag\FlagInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Message\Data\Groups\Group.cs" />
@@ -187,6 +189,13 @@
     <Compile Include="Message\Data\Settings\SetingsReplyMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ContractInfo.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressBaseMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressContractMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressFundsMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressReputationMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressScienceMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressTechnologyMsgData.cs" />
     <Compile Include="Message\Data\Vessel\ActionGroup.cs" />
     <Compile Include="Message\Data\Vessel\VesselEvaMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselInfo.cs" />
@@ -234,6 +243,7 @@
     <Compile Include="Message\Server\PlayerStatusSrvMsg.cs" />
     <Compile Include="Message\Server\ScenarioSrvMsg.cs" />
     <Compile Include="Message\Server\SetingsSrvMsg.cs" />
+    <Compile Include="Message\Server\ShareProgressSrvMsg.cs" />
     <Compile Include="Message\Server\VesselSrvMsg.cs" />
     <Compile Include="Message\Server\WarpSrvMsg.cs" />
     <Compile Include="Message\Types\AdminMessageType.cs" />
@@ -252,6 +262,7 @@
     <Compile Include="Message\Types\PlayerStatusMessageType.cs" />
     <Compile Include="Message\Types\ScenarioMessageType.cs" />
     <Compile Include="Message\Types\SettingsMessageType.cs" />
+    <Compile Include="Message\Types\ShareProgressMessageType.cs" />
     <Compile Include="Message\Types\SyncTimeMessageType.cs" />
     <Compile Include="Message\Types\VesselChangeType.cs" />
     <Compile Include="Message\Types\VesselMessageType.cs" />

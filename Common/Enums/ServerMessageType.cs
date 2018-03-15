@@ -19,6 +19,7 @@
         Admin = 15,
         PlayerConnection = 16,
         Groups = 17,
-        Facility = 18
+        Facility = 18,
+        ShareProgress = 19,
     }
 }
