@@ -1,7 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
-using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.Toolbar;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using UnityEngine;
@@ -47,7 +45,6 @@ namespace LunaClient.Windows.Options
 
             TempColor = new Color();
             TempColorLabelStyle = new GUIStyle(GUI.skin.label);
-            UpdateToolbarString();
         }
 
         public override void RemoveWindowLock()
@@ -87,25 +84,6 @@ namespace LunaClient.Windows.Options
                 RemoveWindowLock();
         }
 
-        protected void UpdateToolbarString()
-        {
-            switch (SettingsSystem.CurrentSettings.ToolbarType)
-            {
-                case LmpToolbarType.Disabled:
-                    ToolbarMode = "Disabled";
-                    break;
-                case LmpToolbarType.ForceStock:
-                    ToolbarMode = "Stock";
-                    break;
-                case LmpToolbarType.BlizzyIfInstalled:
-                    ToolbarMode = "Blizzy if installed";
-                    break;
-                case LmpToolbarType.BothIfInstalled:
-                    ToolbarMode = "Both if installed";
-                    break;
-            }
-        }
-
         #region Fields
 
         #region Public
@@ -117,8 +95,7 @@ namespace LunaClient.Windows.Options
         private const float WindowHeight = 400;
         private const float WindowWidth = 300;
         protected Color TempColor = new Color(1f, 1f, 1f, 1f);
-
-        protected string ToolbarMode { get; set; }
+        
         protected bool SettingChat { get; set; }
         protected GUIStyle TempColorLabelStyle { get; set; }
         protected bool ShowBadNetworkSimulationFields { get; set; }

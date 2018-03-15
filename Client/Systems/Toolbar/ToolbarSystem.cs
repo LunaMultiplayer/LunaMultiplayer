@@ -1,133 +1,47 @@
-﻿using KSP.UI.Screens;
-using LunaClient.Systems.SettingsSys;
-using UnityEngine;
+﻿using LunaClient.Systems.SettingsSys;
+using LunaClient.Utilities;
 
 namespace LunaClient.Systems.Toolbar
 {
     public class ToolbarSystem : Base.System<ToolbarSystem>
     {
-        public void ToolbarChanged()
+        #region Constructor
+
+        /// <summary>
+        /// This system must be ALWAYS enabled so we set it as enabled on the constructor
+        /// </summary>
+        public ToolbarSystem()
         {
-            if (Enabled)
-            {
-                OnDisabled();
-                OnEnabled();
-            }
+            base.Enabled = true;
+            GameEvents.onGUIApplicationLauncherReady.Add(ToolbarEvents.EnableToolBar);
         }
+
+        #endregion
 
         #region Fields
 
-        private bool StockDelayRegister { get; set; }
-        private bool BlizzyRegistered { get; set; }
-        private bool StockRegistered { get; set; }
-        private Texture2D ButtonTexture { get; set; }
-        private ApplicationLauncherButton StockLmpButton { get; set; }
-        private IButton BlizzyButton { get; set; }
-
+        public ToolbarEvents ToolbarEvents { get; } = new ToolbarEvents();
+        
         #endregion
 
         #region Base overrides
 
         public override string SystemName { get; } = nameof(ToolbarSystem);
 
-        protected override void OnEnabled()
-        {
-            ButtonTexture = GameDatabase.Instance.GetTexture("LunaMultiplayer/Button/LMPButton", false);
-            if (SettingsSystem.CurrentSettings.ToolbarType == LmpToolbarType.Disabled)
-            {
-                //Nothing!
-            }
-            if (SettingsSystem.CurrentSettings.ToolbarType == LmpToolbarType.ForceStock)
-                EnableStockToolbar();
-            if (SettingsSystem.CurrentSettings.ToolbarType == LmpToolbarType.BlizzyIfInstalled)
-                if (ToolbarManager.ToolbarAvailable)
-                    EnableBlizzyToolbar();
-                else
-                    EnableStockToolbar();
-            if (SettingsSystem.CurrentSettings.ToolbarType == LmpToolbarType.BothIfInstalled)
-            {
-                if (ToolbarManager.ToolbarAvailable)
-                    EnableBlizzyToolbar();
-                EnableStockToolbar();
-            }
-        }
-
-        protected override void OnDisabled()
-        {
-            if (BlizzyRegistered)
-                DisableBlizzyToolbar();
-            if (StockRegistered)
-                DisableStockToolbar();
-        }
-
         #endregion
 
-        #region Private methods
+        #region Public methods
 
-        private void EnableBlizzyToolbar()
+        public void HandleButtonClick()
         {
-            BlizzyRegistered = true;
-            BlizzyButton = ToolbarManager.Instance.add("LunaMultiplayer", "GUIButton");
-            BlizzyButton.OnClick += OnBlizzyClick;
-            BlizzyButton.ToolTip = "Toggle LMP windows";
-            BlizzyButton.TexturePath = "LunaMultiplayer/Button/LMPButtonLow";
-            BlizzyButton.Visibility = new GameScenesVisibility(GameScenes.EDITOR, GameScenes.FLIGHT,
-                GameScenes.SPACECENTER, GameScenes.TRACKSTATION);
-            LunaLog.Log("[LMP]: Registered blizzy toolbar");
-        }
-
-        private void DisableBlizzyToolbar()
-        {
-            BlizzyRegistered = false;
-            BlizzyButton?.Destroy();
-            LunaLog.Log("[LMP]: Unregistered blizzy toolbar");
-        }
-
-        private void EnableStockToolbar()
-        {
-            StockRegistered = true;
-            if (ApplicationLauncher.Ready)
+            if (!SettingsSystem.CurrentSettings.DisclaimerAccepted)
             {
-                EnableStockForRealsies();
+                DisclaimerDialog.SpawnDialog();
             }
             else
             {
-                StockDelayRegister = true;
-                GameEvents.onGUIApplicationLauncherReady.Add(EnableStockForRealsies);
+                MainSystem.ToolbarShowGui = !MainSystem.ToolbarShowGui;
             }
-            LunaLog.Log("[LMP]: Registered stock toolbar");
-        }
-
-        private void EnableStockForRealsies()
-        {
-            if (StockDelayRegister)
-            {
-                StockDelayRegister = false;
-                GameEvents.onGUIApplicationLauncherReady.Remove(EnableStockForRealsies);
-            }
-            StockLmpButton = ApplicationLauncher.Instance.AddModApplication(HandleButtonClick, HandleButtonClick,
-                DoNothing, DoNothing, DoNothing, DoNothing, ApplicationLauncher.AppScenes.ALWAYS, ButtonTexture);
-        }
-
-        private void DisableStockToolbar()
-        {
-            StockRegistered = false;
-            if (StockDelayRegister)
-            {
-                StockDelayRegister = false;
-                GameEvents.onGUIApplicationLauncherReady.Remove(EnableStockForRealsies);
-            }
-            if (StockLmpButton != null)
-                ApplicationLauncher.Instance.RemoveModApplication(StockLmpButton);
-            LunaLog.Log("[LMP]: Unregistered stock toolbar");
-        }
-
-        private static void OnBlizzyClick(ClickEvent clickArgs) => HandleButtonClick();
-
-        private static void HandleButtonClick() => MainSystem.ToolbarShowGui = !MainSystem.ToolbarShowGui;
-
-        private static void DoNothing()
-        {
         }
 
         #endregion

@@ -10,7 +10,6 @@ using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
@@ -124,11 +123,11 @@ namespace LunaClient.Windows.Systems
             {
                 TimeSyncerSystem.Singleton.Enabled = GUILayout.Toggle(TimeSyncerSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
-            Toolbar = GUILayout.Toggle(Toolbar, "Toolbar system", ButtonStyle);
-            if (Toolbar)
-            {
-                ToolbarSystem.Singleton.Enabled = GUILayout.Toggle(ToolbarSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
-            }
+            //Toolbar = GUILayout.Toggle(Toolbar, "Toolbar system", ButtonStyle);
+            //if (Toolbar)
+            //{
+            //    ToolbarSystem.Singleton.Enabled = GUILayout.Toggle(ToolbarSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            //}
             VesselDock = GUILayout.Toggle(VesselDock, "Vessel dock", ButtonStyle);
             if (VesselDock)
             {

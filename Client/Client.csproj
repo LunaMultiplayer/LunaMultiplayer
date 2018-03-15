@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Systems\Bug\BugSystem.cs" />
     <Compile Include="Systems\Bug\BugEvents.cs" />
+    <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaMessageHandler.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaMessageSender.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaSystem.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsSystem.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateUpdate.cs" />
+    <Compile Include="Systems\VesselImmortalSys\VesselImmortalEvents.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\CustomizationsHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\PartSyncUpdateEntry.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageHandler.cs" />
@@ -227,7 +229,6 @@
     <Compile Include="Systems\SystemsHandler.cs" />
     <Compile Include="Systems\Scenario\ScenarioMessageHandler.cs" />
     <Compile Include="Systems\Status\StatusMessageHandler.cs" />
-    <Compile Include="Systems\Toolbar\ToolbarStructures.cs" />
     <Compile Include="Systems\Warp\WarpEntryDisplay.cs" />
     <Compile Include="Systems\Warp\WarpEvents.cs" />
     <Compile Include="Systems\Warp\WarpMessageHandler.cs" />
@@ -276,7 +277,6 @@
     <Compile Include="Systems\SettingsSys\SettingsSystem.cs" />
     <Compile Include="Systems\TimeSyncer\TimeSyncerSystem.cs" />
     <Compile Include="Systems\Toolbar\ToolbarSystem.cs" />
-    <Compile Include="Systems\Toolbar\ToolbarWrapper.cs" />
     <Compile Include="Utilities\UniverseConverter.cs" />
     <Compile Include="Windows\ServerList\ServerListDrawer.cs" />
     <Compile Include="Windows\ServerList\ServerListWindow.cs" />

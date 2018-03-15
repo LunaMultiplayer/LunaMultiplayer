@@ -3,7 +3,6 @@ using LunaClient.Network;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.Toolbar;
 using LunaClient.Windows.Status;
 using LunaClient.Windows.UniverseConverter;
 using LunaCommon.Enums;
@@ -102,12 +101,6 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.PreciseSurfacePositioning = preciseSurfacePositioning;
                 SettingsSystem.SaveSettings();
             }
-            var closeBtnInConnectionWindow = GUILayout.Toggle(SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow, LocalizationContainer.OptionsWindowText.ShowClose, ButtonStyle);
-            if (closeBtnInConnectionWindow != SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow)
-            {
-                SettingsSystem.CurrentSettings.CloseBtnInConnectionWindow = closeBtnInConnectionWindow;
-                SettingsSystem.SaveSettings();
-            }
             GUILayout.Space(10);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
                 ModSystem.Singleton.GenerateModControlFile(false);
@@ -115,20 +108,6 @@ namespace LunaClient.Windows.Options
                 ModSystem.Singleton.GenerateModControlFile(true);
             UniverseConverterWindow.Singleton.Display = GUILayout.Toggle(UniverseConverterWindow.Singleton.Display, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.OptionsWindowText.Toolbar, SmallOption);
-            if (GUILayout.Button(ToolbarMode, ButtonStyle))
-            {
-                var newSetting = (int)SettingsSystem.CurrentSettings.ToolbarType + 1;
-                //Overflow to 0
-                if (!Enum.IsDefined(typeof(LmpToolbarType), newSetting))
-                    newSetting = 0;
-                SettingsSystem.CurrentSettings.ToolbarType = (LmpToolbarType)newSetting;
-                SettingsSystem.SaveSettings();
-                UpdateToolbarString();
-                ToolbarSystem.Singleton.ToolbarChanged();
-            }
-            GUILayout.EndHorizontal();
 #if DEBUG
             DrawAdvancedDebugOptions();
 #endif

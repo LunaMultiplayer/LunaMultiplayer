@@ -11,8 +11,7 @@ namespace LunaClient.Windows.Connection
         #region Fields
 
         #region Public
-
-        public static bool Closed { get; set; } = false;
+        
         public static bool ConnectEventHandled { get; set; } = true;
         public static bool DisconnectEventHandled { get; set; } = true;
         public static bool AddEventHandled { get; set; } = true;
@@ -48,7 +47,7 @@ namespace LunaClient.Windows.Connection
 
         #region Base overrides
 
-        public override bool Display => !Closed && MainSystem.ToolbarShowGui && HighLogic.LoadedScene == GameScenes.MAINMENU && SettingsSystem.CurrentSettings.DisclaimerAccepted;
+        public override bool Display => MainSystem.ToolbarShowGui && HighLogic.LoadedScene == GameScenes.MAINMENU && SettingsSystem.CurrentSettings.DisclaimerAccepted;
 
         public override void SetStyles()
         {

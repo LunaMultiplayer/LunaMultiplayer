@@ -3,6 +3,7 @@ using LunaClient.Localization;
 using LunaClient.Network;
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.Asteroid;
+using LunaClient.Systems.Bug;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Facility;
@@ -20,7 +21,6 @@ using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselEvaSys;
 using LunaClient.Systems.VesselFairingsSys;
@@ -41,7 +41,6 @@ using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
-using LunaClient.Systems.Bug;
 
 namespace LunaClient.Systems.Network
 {
@@ -312,7 +311,6 @@ namespace LunaClient.Systems.Network
                         VesselFairingsSystem.Singleton.Enabled = true;
                         KscSceneSystem.Singleton.Enabled = true;
                         AsteroidSystem.Singleton.Enabled = true;
-                        ToolbarSystem.Singleton.Enabled = true;
                         FacilitySystem.Singleton.Enabled = true;
                         FlagPlantSystem.Singleton.Enabled = true;
                         VesselEvaSystem.Singleton.Enabled = true;

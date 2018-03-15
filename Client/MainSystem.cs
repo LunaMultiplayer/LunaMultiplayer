@@ -11,7 +11,6 @@ using LunaClient.Systems.Network;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
-using LunaClient.Systems.Toolbar;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaClient.Windows;
@@ -115,7 +114,6 @@ namespace LunaClient
                     if (HighLogic.LoadedScene == GameScenes.MAINMENU)
                     {
                         NetworkConnection.Disconnect("Quit to main menu");
-                        ToolbarSystem.Singleton.Enabled = false; //Always disable toolbar in main menu
                     }
 
                     // save every GeeASL from each body in FlightGlobals

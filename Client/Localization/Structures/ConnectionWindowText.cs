@@ -11,7 +11,6 @@
         public string Remove { get; set; } = "Remove";
         public string Options { get; set; } = "Options";
         public string Servers { get; set; } = "Servers";
-        public string Close { get; set; } = "Close";
         public string Name { get; set; } = "Name:";
         public string Address { get; set; } = "Address:";
         public string Port { get; set; } = "Port:";

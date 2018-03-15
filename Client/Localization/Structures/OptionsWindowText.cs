@@ -15,10 +15,8 @@
         public string ResetDisclaimer { get; set; } = "Reset disclaimer";
         public string Interpolation { get; set; } = "Enable interpolation";
         public string PreciseSurfacePositioning { get; set; } = "Enable precise surface positioning";
-        public string ShowClose { get; set; } = "Show \"Close\" button in connection window";
         public string GenerateLmpModControl { get; set; } = "Generate a server LMPModControl.xml";
         public string GenerateUniverse { get; set; } = "Generate Universe from saved game";
-        public string Toolbar { get; set; } = "Toolbar:";
         public string Close { get; set; } = "Close";
     }
 }

@@ -1,6 +1,5 @@
 ﻿using LunaClient.Localization.Base;
 using LunaClient.Systems.PlayerColorSys;
-using LunaClient.Systems.Toolbar;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,7 +20,6 @@ namespace LunaClient.Systems.SettingsSys
         public Color PlayerColor { get; set; } = PlayerColorSystem.GenerateRandomColor();
         public KeyCode ChatKey { get; set; } = KeyCode.BackQuote;
         public string SelectedFlag { get; set; } = "Squad/Flags/default";
-        public LmpToolbarType ToolbarType { get; set; } = LmpToolbarType.BlizzyIfInstalled;
         public List<ServerEntry> Servers { get; set; } = new List<ServerEntry>();
         public string PrivateKey { get; set; }
         public string PublicKey { get; set; }
@@ -29,7 +27,6 @@ namespace LunaClient.Systems.SettingsSys
         public bool RevertEnabled { get; set; }
         public bool InterpolationEnabled { get; set; } = false;
         public bool PreciseSurfacePositioning { get; set; } = false;
-        public bool CloseBtnInConnectionWindow { get; set; } = true;
         public int MaxGroupsPerPlayer { get; set; } = 1;
 
 #if DEBUG
