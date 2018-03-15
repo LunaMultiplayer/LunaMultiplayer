@@ -5,8 +5,9 @@ ENV LMP_URL https://github.com/LunaMultiplayer/LunaMultiplayerUpdater/releases/d
 ENV LMP_EXE Server.exe
 ENV LMP_UPDATER ServerUpdater.exe
 WORKDIR $LUNA_HOME
+RUN apt-get update && apt-get install zip
 RUN sudo wget $LMP_URL \
-&& sudo tar -xvzf Updater.tar.gz \
+&& sudo unzip LunaMultiplayerUpdater-Release.zip \
 && sudo touch Server.exe && sudo mkdir -p $LUNA_HOME/logs  
 COPY . /${LUNA_HOME}
 VOLUME /${LUNA_HOME}
