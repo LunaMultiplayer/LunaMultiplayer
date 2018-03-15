@@ -77,6 +77,7 @@ namespace LunaClient.Base
         {
             if (!Initialized)
             {
+                InitializeStyles();
                 //We only set the styles once so we shouldn't worry so much about the memory footprint...
                 SetStyles();
                 Initialized = true;
@@ -93,7 +94,7 @@ namespace LunaClient.Base
         /// Define here the style and components of your window
         /// </summary>
         public abstract void SetStyles();
-
+        
         #endregion
     }
 }

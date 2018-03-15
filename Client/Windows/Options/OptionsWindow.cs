@@ -8,6 +8,8 @@ namespace LunaClient.Windows.Options
 {
     public partial class OptionsWindow : Window<OptionsWindow>
     {
+        private GUILayoutOption[] SmallOption = { GUILayout.Width(100), GUILayout.ExpandWidth(false) };
+
         public override void OnGui()
         {
             base.OnGui();
@@ -27,22 +29,13 @@ namespace LunaClient.Windows.Options
             WindowRect = new Rect(Screen.width / 2f - WindowWidth / 2f, Screen.height / 2f - WindowHeight / 2f, WindowWidth,
                 WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
-
-            WindowStyle = new GUIStyle(GUI.skin.window);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
-
+            
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.Width(WindowWidth);
             LayoutOptions[1] = GUILayout.Height(WindowHeight);
             LayoutOptions[2] = GUILayout.ExpandWidth(true);
             LayoutOptions[3] = GUILayout.ExpandHeight(true);
-
-            SmallOption = new GUILayoutOption[2];
-            SmallOption[0] = GUILayout.Width(100);
-            SmallOption[1] = GUILayout.ExpandWidth(false);
-
-            TextAreaStyle = new GUIStyle(GUI.skin.textArea);
-
+            
             TempColor = new Color();
             TempColorLabelStyle = new GUIStyle(GUI.skin.label);
         }

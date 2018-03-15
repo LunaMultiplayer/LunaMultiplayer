@@ -41,8 +41,6 @@ namespace LunaClient.Windows.ServerList
             WindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
             
-            WindowStyle = new GUIStyle(GUI.skin.window);
-
             BoxStyle = new GUIStyle(GUI.skin.box);
             var backgroundColor = new Color(0.145f, 0.165f, 0.198f, 0.8f);
             BoxStyle.normal.background = new Texture2D(1,1);
@@ -51,9 +49,7 @@ namespace LunaClient.Windows.ServerList
             BoxStyle.onNormal.background = new Texture2D(1, 1);
             BoxStyle.onNormal.background.SetPixel(0, 0, backgroundColor);
             BoxStyle.onNormal.background.Apply();
-
-            TextAreaStyle = new GUIStyle(GUI.skin.textArea);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
+            
             LabelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
 
             LayoutOptions = new GUILayoutOption[4];
@@ -64,8 +60,6 @@ namespace LunaClient.Windows.ServerList
 
             LabelOptions = new GUILayoutOption[1];
             LabelOptions[0] = GUILayout.Width(100);
-
-            ScrollStyle = new GUIStyle(GUI.skin.scrollView);
         }
 
         public override void OnGui()

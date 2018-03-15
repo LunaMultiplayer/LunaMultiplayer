@@ -53,13 +53,8 @@ namespace LunaClient.Windows.Connection
         {
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
-
-            WindowStyle = new GUIStyle(GUI.skin.window);
-            TextAreaStyle = new GUIStyle(GUI.skin.textArea);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
-            //ButtonStyle.fontSize = 10;
+            
             StatusStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.yellow } };
-            //StatusStyle.fontSize = 10;
 
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);

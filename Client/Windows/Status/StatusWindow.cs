@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.Systems;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -66,16 +65,13 @@ namespace LunaClient.Windows.Status
         {
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
-
-            WindowStyle = new GUIStyle(GUI.skin.window);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
+            
             HighlightStyle = new GUIStyle(GUI.skin.button)
             {
                 normal = { textColor = Color.red },
                 active = { textColor = Color.red },
                 hover = { textColor = Color.red }
             };
-            ScrollStyle = new GUIStyle(GUI.skin.scrollView);
             SubspaceStyle = new GUIStyle { normal = { background = new Texture2D(1, 1) } };
             SubspaceStyle.normal.background.SetPixel(0, 0, Color.black);
             SubspaceStyle.normal.background.Apply();

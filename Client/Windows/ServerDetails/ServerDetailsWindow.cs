@@ -25,11 +25,7 @@ namespace LunaClient.Windows.ServerDetails
             WindowRect = new Rect(Screen.width/4f - WindowWidth/2f, Screen.height/2f - WindowHeight/2f, WindowWidth,
                 WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
-
-            WindowStyle = new GUIStyle(GUI.skin.window);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
-            TextAreaStyle = new GUIStyle(GUI.skin.textArea);
-
+            
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.Width(WindowWidth);
             LayoutOptions[1] = GUILayout.Height(WindowHeight);

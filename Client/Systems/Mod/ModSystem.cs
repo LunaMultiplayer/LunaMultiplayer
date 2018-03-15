@@ -44,6 +44,17 @@ namespace LunaClient.Systems.Mod
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            Clear();
+        }
+
+        public override int ExecutionOrder => int.MinValue + 1;
+
+        #endregion
+
+        #region Public methods
+
+        public void Clear()
+        {
             ModControl = true;
 
             AllowedParts.Clear();
@@ -57,12 +68,6 @@ namespace LunaClient.Systems.Mod
 
             ModControlData = null;
         }
-
-        public override int ExecutionOrder => int.MinValue + 1;
-
-        #endregion
-
-        #region Public methods
 
         public void BuildDllFileList()
         {

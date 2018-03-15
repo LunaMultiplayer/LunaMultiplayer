@@ -64,12 +64,7 @@ namespace LunaClient.Windows.CraftLibrary
             LibraryLayoutOptions[1] = GUILayout.MaxWidth(LibraryWindowWidth);
             LibraryLayoutOptions[2] = GUILayout.MinHeight(LibraryWindowHeight);
             LibraryLayoutOptions[3] = GUILayout.MaxHeight(LibraryWindowHeight);
-
-            WindowStyle = new GUIStyle(GUI.skin.window);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
-            LabelStyle = new GUIStyle(GUI.skin.label);
-            ScrollStyle = new GUIStyle(GUI.skin.scrollView);
-
+            
             TextAreaOptions = new GUILayoutOption[2];
             TextAreaOptions[0] = GUILayout.ExpandWidth(false);
             TextAreaOptions[1] = GUILayout.ExpandWidth(false);

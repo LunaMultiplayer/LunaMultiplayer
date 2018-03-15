@@ -125,13 +125,8 @@ namespace LunaClient.Windows.Systems
             LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
 
-            WindowStyle = new GUIStyle(GUI.skin.window);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
-
             TextAreaOptions = new GUILayoutOption[1];
             TextAreaOptions[0] = GUILayout.ExpandWidth(true);
-
-            LabelStyle = new GUIStyle(GUI.skin.label);
         }
 
         public override void RemoveWindowLock()

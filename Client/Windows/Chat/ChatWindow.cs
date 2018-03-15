@@ -52,20 +52,14 @@ namespace LunaClient.Windows.Chat
 
             SmallSizeOption = new GUILayoutOption[1];
             SmallSizeOption[0] = GUILayout.Width(WindowWidth * .25f);
-
-            WindowStyle = new GUIStyle(GUI.skin.window);
-            ScrollStyle = new GUIStyle(GUI.skin.scrollView);
-
+            
             ChatScrollPos = new Vector2(0, 0);
-            LabelStyle = new GUIStyle(GUI.skin.label);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
             HighlightStyle = new GUIStyle(GUI.skin.button)
             {
                 normal = { textColor = Color.red },
                 active = { textColor = Color.red },
                 hover = { textColor = Color.red }
             };
-            TextAreaStyle = new GUIStyle(GUI.skin.textArea);
         }
 
         public override void RemoveWindowLock()
