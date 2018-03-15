@@ -20,10 +20,12 @@ namespace LunaClient.Systems.VesselImmortalSys
 
         private bool VesselImmortalSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
 
-        private static List<Vessel> OwnedVessels { get; } = new List<Vessel>();
-        private static List<Vessel> OtherPeopleVessels { get; } = new List<Vessel>();
+        public List<Vessel> OwnedVessels { get; } = new List<Vessel>();
+        public List<Vessel> OtherPeopleVessels { get; } = new List<Vessel>();
 
-        private static List<Guid> OwnedVesselIds { get; } = new List<Guid>();
+        public List<Guid> OwnedVesselIds { get; } = new List<Guid>();
+
+        public static VesselImmortalEvents VesselImmortalEvents { get; } = new VesselImmortalEvents();
 
         #endregion
 
@@ -34,6 +36,7 @@ namespace LunaClient.Systems.VesselImmortalSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            GameEvents.onVesselLoaded.Add(VesselImmortalEvents.VesselLoaded);
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, MakeOtherPlayerVesselsImmortal));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, UpdateOwnedAndOtherPeopleVesselList));
         }
@@ -50,6 +53,8 @@ namespace LunaClient.Systems.VesselImmortalSys
             {
                 SetVesselImmortalState(vessel, false);
             }
+
+            GameEvents.onVesselLoaded.Remove(VesselImmortalEvents.VesselLoaded);
         }
 
         #endregion
@@ -108,12 +113,12 @@ namespace LunaClient.Systems.VesselImmortalSys
 
         #endregion
 
-        #region Private methods
+        #region public methods
 
         /// <summary>
         /// Set all vessel parts to unbreakable or not (makes the vessel immortal or not)
         /// </summary>
-        private static void SetVesselImmortalState(Vessel vessel, bool immortal)
+        public void SetVesselImmortalState(Vessel vessel, bool immortal)
         {
             if (vessel == null) return;
 
@@ -128,6 +133,8 @@ namespace LunaClient.Systems.VesselImmortalSys
 
                 part.gTolerance = immortal ? double.MaxValue : 50;
                 part.maxPressure = immortal ? double.MaxValue : 4000;
+
+                part.crashTolerance = immortal ? float.MaxValue : 9f;
 
                 if(part.collisionEnhancer != null)
                     part.collisionEnhancer.OnTerrainPunchThrough = immortal ? CollisionEnhancerBehaviour.DO_NOTHING : CollisionEnhancerBehaviour.EXPLODE;
