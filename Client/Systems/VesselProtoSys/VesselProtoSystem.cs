@@ -105,7 +105,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     BannedPartsWindow.Singleton.DisplayBannedPartsDialog(vessel, bannedParts);
                 }
 
-                return bannedParts.Any();
+                return !bannedParts.Any();
             }
 
             return true;
