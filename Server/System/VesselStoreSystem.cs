@@ -1,12 +1,9 @@
 ﻿using LunaCommon.Xml;
 using Server.Context;
-using Server.Log;
-using Server.Settings;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.System
@@ -67,35 +64,12 @@ namespace Server.System
         }
 
         /// <summary>
-        /// This multithreaded function backups the vessels from the internal dictionary to a file at a specified interval
-        /// </summary>
-        public static async void BackupVesselsThread(CancellationToken token)
-        {
-            while (ServerContext.ServerRunning)
-            {
-                BackupVessels();
-                try
-                {
-                    await Task.Delay(GeneralSettings.SettingsStore.VesselsBackupIntervalMs, token);
-                }
-                catch (TaskCanceledException)
-                {
-                    break;
-                }
-            }
-
-            //Do a last backup before quitting
-            BackupVessels();
-        }
-
-        /// <summary>
         /// Actually performs the backup of the vessels to file
         /// </summary>
-        private static void BackupVessels()
+        public static void BackupVessels()
         {
             lock (BackupLock)
             {
-                LunaLog.Debug("Backing up vessels to the disk...");
                 var vesselsInXml = CurrentVesselsInXmlFormat.ToArray();
                 foreach (var vessel in vesselsInXml)
                 {

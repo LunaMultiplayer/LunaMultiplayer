@@ -95,7 +95,7 @@ namespace Server
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThread, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(() => new ClientMainThread().ThreadMain(), CancellationTokenSrc.Token));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(() => VesselStoreSystem.BackupVesselsThread(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
+                TaskContainer.Add(LongRunTaskFactory.StartNew(() => BackupSystem.PerformBackups(CancellationTokenSrc.Token), CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenServer.StartReceiveingMessages, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RefreshMasterServersList, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServer, CancellationTokenSrc.Token));

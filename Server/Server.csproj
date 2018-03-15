@@ -118,6 +118,7 @@
     <Compile Include="Message\Reader\SettingsMsgReader.cs" />
     <Compile Include="Message\Reader\VesselMsgReader.cs" />
     <Compile Include="Message\Reader\WarpControlMsgReader.cs" />
+    <Compile Include="System\BackupSystem.cs" />
     <Compile Include="System\CraftLibrarySystem.cs" />
     <Compile Include="System\HandshakeSystem.cs" />
     <Compile Include="System\HandshakeSystemValidator.cs" />
