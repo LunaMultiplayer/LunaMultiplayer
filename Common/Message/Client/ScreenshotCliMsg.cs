@@ -8,13 +8,13 @@ using System.Collections.Generic;
 
 namespace LunaCommon.Message.Client
 {
-    public class ScrenshotCliMsg : CliMsgBase<ScreenshotBaseMsgData>
+    public class ScreenshotCliMsg : CliMsgBase<ScreenshotBaseMsgData>
     {
         /// <inheritdoc />
-        internal ScrenshotCliMsg() { }
+        internal ScreenshotCliMsg() { }
 
         /// <inheritdoc />
-        public override string ClassName { get; } = nameof(ScrenshotCliMsg);
+        public override string ClassName { get; } = nameof(ScreenshotCliMsg);
 
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
