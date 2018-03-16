@@ -34,6 +34,11 @@ namespace LunaClient.Windows.Status
 
         private double LastStatusUpdate { get; set; }
 
+        private Texture2D ChatIcon { get; set; }
+        private Texture2D ChatRedIcon { get; set; }
+        private Texture2D CameraIcon { get; set; }
+
+        private Texture2D RocketIcon { get; set; }
 #if DEBUG
         private readonly string _title = $"LMP - Debug port: {CommonUtil.DebugPort}";
 #else
@@ -63,6 +68,11 @@ namespace LunaClient.Windows.Status
 
         public override void SetStyles()
         {
+            ChatIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "chatWhite.png"), 16, 16);
+            ChatRedIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "chatRed.png"), 16, 16);
+            CameraIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "camera.png"), 16, 16);
+            RocketIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "rocket.png"), 16, 16);
+
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
             

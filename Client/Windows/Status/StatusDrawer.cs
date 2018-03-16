@@ -1,8 +1,6 @@
-﻿using LunaClient.Systems.Chat;
-using LunaClient.Systems.PlayerColorSys;
+﻿using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
-using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Windows.Chat;
 using LunaClient.Windows.CraftLibrary;
@@ -28,22 +26,12 @@ namespace LunaClient.Windows.Status
 
             GUILayout.BeginHorizontal();
 
-            GUILayout.FlexibleSpace();
+            ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, ChatIcon, ButtonStyle);
+            CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, RocketIcon, ButtonStyle);
+            GUILayout.Toggle(false, CameraIcon, ButtonStyle);
 
-            var chatButtonStyle = ButtonStyle;
-            if (ChatSystem.Singleton.NewMessageReceived)
-                chatButtonStyle = HighlightStyle;
-            if (!SettingsSystem.ServerSettings.DropControlOnVesselSwitching)
-            {
-                if (GUILayout.Button(new GUIContent(StatusTexts.DropCtrlBtnTxt, StatusTexts.DropCtrlBtnTooltip), ButtonStyle))
-                {
-                    VesselLockSystem.Singleton.DropAllOtherVesselControlLocks();
-                }
-            }
-            ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, StatusTexts.ChatBtnTxt, chatButtonStyle);
-            CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, StatusTexts.CraftBtnTxt, ButtonStyle);
-            DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, StatusTexts.DebugBtnTxt, ButtonStyle);
 #if DEBUG
+            DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, StatusTexts.DebugBtnTxt, ButtonStyle);
             SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, StatusTexts.SystemsBtnTxt, ButtonStyle);
             LocksWindow.Singleton.Display = GUILayout.Toggle(LocksWindow.Singleton.Display, StatusTexts.LocksBtnTxt, ButtonStyle);
 #endif
@@ -55,35 +43,28 @@ namespace LunaClient.Windows.Status
             #region Players information
 
             ScrollPosition = GUILayout.BeginScrollView(ScrollPosition, ScrollStyle);
-
-            //Draw other subspaces
             for (var i = 0; i < SubspaceDisplay.Count; i++)
             {
+                GUILayout.BeginHorizontal(SubspaceStyle);
                 if (SubspaceDisplay[i].SubspaceId == -1)
                 {
-                    //Draw the warping players
-                    GUILayout.BeginHorizontal(SubspaceStyle);
                     GUILayout.Label(StatusTexts.WarpingLabelTxt);
-                    GUILayout.EndHorizontal();
                 }
                 else
                 {
-                    GUILayout.BeginHorizontal(SubspaceStyle);
                     GUILayout.Label(StatusTexts.GetTimeLabel(SubspaceDisplay[i]));
                     GUILayout.FlexibleSpace();
                     if (NotWarpingAndIsFutureSubspace(SubspaceDisplay[i].SubspaceId) && GUILayout.Button(StatusTexts.SyncBtnTxt, ButtonStyle))
                         WarpSystem.CurrentSubspace = SubspaceDisplay[i].SubspaceId;
-                    GUILayout.EndHorizontal();
                 }
-
-                for(var j = 0; j < SubspaceDisplay[i].Players.Count; j++)
+                GUILayout.EndHorizontal();
+                for (var j = 0; j < SubspaceDisplay[i].Players.Count; j++)
                 {
                     DrawPlayerEntry(SubspaceDisplay[i].Players[j] == SettingsSystem.CurrentSettings.PlayerName
                         ? StatusSystem.Singleton.MyPlayerStatus
                         : StatusSystem.Singleton.GetPlayerStatus(SubspaceDisplay[i].Players[j]));
                 }
             }
-
             GUILayout.EndScrollView();
 
             #endregion
