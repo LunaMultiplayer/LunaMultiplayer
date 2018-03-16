@@ -32,6 +32,7 @@ namespace LunaCommon.Message
             MessageDictionary.Add((uint)ServerMessageType.Mod, typeof(ModSrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.Groups, typeof(GroupSrvMsg));
             MessageDictionary.Add((uint)ServerMessageType.Facility, typeof(FacilitySrvMsg));
+            MessageDictionary.Add((uint)ServerMessageType.Screenshot, typeof(ScreenshotSrvMsg));
         }
     }
 }

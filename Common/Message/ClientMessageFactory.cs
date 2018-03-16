@@ -31,6 +31,7 @@ namespace LunaCommon.Message
             MessageDictionary.Add((uint)ClientMessageType.Admin, typeof(AdminCliMsg));
             MessageDictionary.Add((uint)ClientMessageType.Groups, typeof(GroupCliMsg));
             MessageDictionary.Add((uint)ClientMessageType.Facility, typeof(FacilityCliMsg));
+            MessageDictionary.Add((uint)ClientMessageType.Screenshot, typeof(ScreenshotCliMsg));
         }
     }
 }
