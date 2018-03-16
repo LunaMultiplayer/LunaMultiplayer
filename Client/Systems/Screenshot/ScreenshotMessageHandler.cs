@@ -3,6 +3,7 @@ using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.Screenshot;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Screenshot
@@ -19,6 +20,12 @@ namespace LunaClient.Systems.Screenshot
             {
                 case ScreenshotMessageType.ScreenshotData:
                     break;
+                case ScreenshotMessageType.FoldersReply:
+                    break;
+                case ScreenshotMessageType.ListReply:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

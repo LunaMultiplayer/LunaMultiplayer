@@ -17,8 +17,10 @@ namespace Server.Message.Reader
             {
                 case ScreenshotMessageType.ListRequest:
                     break;
-                case ScreenshotMessageType.Upload:
-                    ScreenshotSystem.SaveScreenshot(client, (ScreenshotUploadMsgData)data);
+                case ScreenshotMessageType.ScreenshotData:
+                    ScreenshotSystem.SaveScreenshot(client, (ScreenshotDataMsgData)data);
+                    break;
+                case ScreenshotMessageType.FoldersRequest:
                     break;
                 case ScreenshotMessageType.DownloadRequest:
                     break;

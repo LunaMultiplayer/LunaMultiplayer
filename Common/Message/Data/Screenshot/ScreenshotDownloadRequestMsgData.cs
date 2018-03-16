@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Screenshot
@@ -9,7 +10,8 @@ namespace LunaCommon.Message.Data.Screenshot
         internal ScreenshotDownloadRequestMsgData() { }
         public override ScreenshotMessageType ScreenshotMessageType => ScreenshotMessageType.DownloadRequest;
 
-        public int PhotoId;
+        public string FolderName;
+        public long PhotoId;
 
         public override string ClassName { get; } = nameof(ScreenshotDownloadRequestMsgData);
 
@@ -17,6 +19,7 @@ namespace LunaCommon.Message.Data.Screenshot
         {
             base.InternalSerialize(lidgrenMsg);
 
+            lidgrenMsg.Write(FolderName);
             lidgrenMsg.Write(PhotoId);
         }
 
@@ -24,12 +27,13 @@ namespace LunaCommon.Message.Data.Screenshot
         {
             base.InternalDeserialize(lidgrenMsg);
 
+            FolderName = lidgrenMsg.ReadString();
             PhotoId = lidgrenMsg.ReadInt32();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(int);
+            return base.InternalGetMessageSize() + FolderName.GetByteCount() + sizeof(long);
         }
     }
 }

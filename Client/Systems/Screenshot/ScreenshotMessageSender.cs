@@ -17,14 +17,14 @@ namespace LunaClient.Systems.Screenshot
 
         public void SendScreenshot(byte[] data)
         {
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ScreenshotUploadMsgData>();
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ScreenshotDataMsgData>();
 
-            msgData.NumBytes = data.Length;
+            msgData.Screenshot.NumBytes = data.Length;
 
-            if(msgData.Data.Length < msgData.NumBytes)
-                msgData.Data = new byte[msgData.NumBytes];
+            if(msgData.Screenshot.Data.Length < msgData.Screenshot.NumBytes)
+                msgData.Screenshot.Data = new byte[msgData.Screenshot.NumBytes];
 
-            Array.Copy(data, msgData.Data, msgData.NumBytes);
+            Array.Copy(data, msgData.Screenshot.Data, msgData.Screenshot.NumBytes);
 
             SendMessage(msgData);
         }

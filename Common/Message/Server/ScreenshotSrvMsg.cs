@@ -19,11 +19,13 @@ namespace LunaCommon.Message.Server
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
+            [(ushort)ScreenshotMessageType.FoldersReply] = typeof(ScreenshotFoldersReplyMsgData),
+            [(ushort)ScreenshotMessageType.ListReply] = typeof(ScreenshotListReplyMsgData),
             [(ushort)ScreenshotMessageType.ScreenshotData] = typeof(ScreenshotDataMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Screenshot;
         protected override int DefaultChannel => 20;
-        public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableUnordered;
+        public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }
 }

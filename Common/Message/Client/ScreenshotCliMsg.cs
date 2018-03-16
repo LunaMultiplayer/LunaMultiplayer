@@ -19,13 +19,14 @@ namespace LunaCommon.Message.Client
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
+            [(ushort)ScreenshotMessageType.FoldersRequest] = typeof(ScreenshotFoldersRequestMsgData),
             [(ushort)ScreenshotMessageType.ListRequest] = typeof(ScreenshotListRequestMsgData),
             [(ushort)ScreenshotMessageType.DownloadRequest] = typeof(ScreenshotDownloadRequestMsgData),
-            [(ushort)ScreenshotMessageType.Upload] = typeof(ScreenshotUploadMsgData),
+            [(ushort)ScreenshotMessageType.ScreenshotData] = typeof(ScreenshotDataMsgData),
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Screenshot;
         protected override int DefaultChannel => 19;
-        public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableUnordered;
+        public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }
 }

@@ -2,9 +2,12 @@
 {
     public enum ScreenshotMessageType
     {
-        ListRequest = 0,
-        Upload = 1,
-        DownloadRequest = 3,
-        ScreenshotData = 4,
+        FoldersRequest = 0,
+        FoldersReply = 1,
+        ListRequest = 2,
+        ListReply = 3,
+        
+        DownloadRequest = 5,
+        ScreenshotData = 6,
     }
 }
