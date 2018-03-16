@@ -71,6 +71,8 @@ namespace LunaClient.Network
 
                         message.Serialize(lidgrenMsg);
                         NetworkMain.ClientConnection.SendUnconnectedMessage(lidgrenMsg, masterServer);
+
+                        //Force send of packets
                         NetworkMain.ClientConnection.FlushSendQueue();
                     }
                 }
@@ -84,7 +86,8 @@ namespace LunaClient.Network
                         NetworkMain.ClientConnection.SendMessage(lidgrenMsg, message.NetDeliveryMethod, message.Channel);
                     }
                 }
-                
+
+                //Force send of packets
                 NetworkMain.ClientConnection.FlushSendQueue();
                 message.Recycle();
             }

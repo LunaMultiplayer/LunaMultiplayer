@@ -102,6 +102,8 @@ namespace Server.Lidgren
                     var outMsg = LidgrenServer.Server.CreateMessage(msg.GetMessageSize());
                     msg.Serialize(outMsg);
                     LidgrenServer.Server.SendUnconnectedMessage(outMsg, masterServer);
+
+                    //Force send of packets
                     LidgrenServer.Server.FlushSendQueue();
                 }
                 catch (Exception)

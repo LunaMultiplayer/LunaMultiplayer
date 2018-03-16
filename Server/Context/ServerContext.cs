@@ -33,8 +33,6 @@ namespace Server.Context
         // Configuration object
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
         {            
-            //Set it to false so lidgren doesn't wait until msg.size = MTU for sending
-            AutoFlushSendQueue = false,
             SendBufferSize = 1500000, //500kb
             ReceiveBufferSize = 1500000, //500kb
             DefaultOutgoingMessageCapacity = 500000, //500kb

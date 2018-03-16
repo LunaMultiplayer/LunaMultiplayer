@@ -25,7 +25,6 @@ namespace LunaClient.Network
             UseMessageRecycling = true,
             ReceiveBufferSize = 500000, //500Kb
             SendBufferSize = 500000, //500Kb
-            AutoFlushSendQueue = false,
             SuppressUnreliableUnorderedAcks = true, //We don't need ack for unreliable unordered!
             PingInterval = (float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.HearbeatMsInterval).TotalSeconds,
             ConnectionTimeout = 15
