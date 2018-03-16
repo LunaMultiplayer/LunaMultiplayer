@@ -29,7 +29,7 @@ namespace LunaClient.Windows.Status
         private static string _lastPlayerText = string.Empty;
         public static string GetPlayerText(PlayerStatus playerStatus)
         {
-            if (!_lastPlayerText.Contains(playerStatus.VesselText))
+            if (_lastPlayerText != playerStatus.VesselText)
                 _lastPlayerText = $"Pilot: {playerStatus.VesselText}";
 
             return _lastPlayerText;
