@@ -223,9 +223,11 @@ namespace LunaClient.Systems.VesselPositionSys
                     Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
                 }
             }
-
-            foreach (var part in Vessel.Parts)
-                part.ResumeVelocity();
+            else
+            {
+                foreach (var part in Vessel.Parts)
+                    part.ResumeVelocity();
+            }
 
             if (CurrentlySpectatingThisVessel)
             {
