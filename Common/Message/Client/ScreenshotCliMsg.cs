@@ -26,6 +26,6 @@ namespace LunaCommon.Message.Client
 
         public override ClientMessageType MessageType => ClientMessageType.Screenshot;
         protected override int DefaultChannel => 19;
-        public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
+        public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableUnordered;
     }
 }

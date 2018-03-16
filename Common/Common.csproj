@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
+    <Compile Include="CommonConstants.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="ConsoleUtil.cs" />
     <Compile Include="Enums\ClientMessageType.cs" />

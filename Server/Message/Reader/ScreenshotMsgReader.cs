@@ -3,6 +3,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Server.Client;
 using Server.Message.Reader.Base;
+using Server.System;
 using System;
 
 namespace Server.Message.Reader
@@ -17,6 +18,7 @@ namespace Server.Message.Reader
                 case ScreenshotMessageType.ListRequest:
                     break;
                 case ScreenshotMessageType.Upload:
+                    ScreenshotSystem.SaveScreenshot(client, (ScreenshotUploadMsgData)data);
                     break;
                 case ScreenshotMessageType.DownloadRequest:
                     break;
