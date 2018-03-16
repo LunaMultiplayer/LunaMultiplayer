@@ -29,9 +29,6 @@ namespace Server.Message.Reader
             msgData.SafetyBubbleDistance = GeneralSettings.SettingsStore.SafetyBubbleDistance;
             msgData.VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval;
             msgData.SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
-            msgData.DropControlOnVesselSwitching = GeneralSettings.SettingsStore.DropControlOnVesselSwitching;
-            msgData.DropControlOnExitFlight = GeneralSettings.SettingsStore.DropControlOnExitFlight;
-            msgData.DropControlOnExit = GeneralSettings.SettingsStore.DropControlOnExit;
             msgData.VesselPartsSyncMsInterval = GeneralSettings.SettingsStore.VesselPartsSyncMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;

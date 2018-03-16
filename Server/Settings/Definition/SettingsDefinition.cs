@@ -90,15 +90,6 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Connection timeout in Ms")]
         public int ConnectionMsTimeout { get; set; } = 30000;
 
-        [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player switch to another vessel.")]
-        public bool DropControlOnVesselSwitching { get; set; } = true;
-
-        [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player switch to track station, space center or VAB/SPH.")]
-        public bool DropControlOnExitFlight { get; set; } = true;
-
-        [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player disconnects.")]
-        public bool DropControlOnExit { get; set; } = true;
-
         [XmlComment(Value = "Interval in Ms at wich the client will send updates for his vessel when other players are nearby. " +
                      "Decrease it if your clients have good network connection and you plan to do dogfights")]
         public int VesselUpdatesSendMsInterval { get; set; } = 30;

@@ -59,9 +59,6 @@ namespace LunaCommon.Message.Data.Settings
         public bool PressurePartLimits;
         public float KerbalGToleranceMult;
         public bool AllowNegativeCurrency;
-        public bool DropControlOnVesselSwitching;
-        public bool DropControlOnExit;
-        public bool DropControlOnExitFlight;
         public string WarpMaster;
         public int VesselPartsSyncMsInterval;
         public bool ShowVesselsInThePast;
@@ -120,9 +117,6 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(PressurePartLimits);
             lidgrenMsg.Write(KerbalGToleranceMult);
             lidgrenMsg.Write(AllowNegativeCurrency);
-            lidgrenMsg.Write(DropControlOnVesselSwitching);
-            lidgrenMsg.Write(DropControlOnExit);
-            lidgrenMsg.Write(DropControlOnExitFlight);
             lidgrenMsg.Write(WarpMaster);
             lidgrenMsg.Write(VesselPartsSyncMsInterval);
             lidgrenMsg.Write(ShowVesselsInThePast);
@@ -180,9 +174,6 @@ namespace LunaCommon.Message.Data.Settings
             PressurePartLimits = lidgrenMsg.ReadBoolean();
             KerbalGToleranceMult = lidgrenMsg.ReadFloat();
             AllowNegativeCurrency = lidgrenMsg.ReadBoolean();
-            DropControlOnVesselSwitching = lidgrenMsg.ReadBoolean();
-            DropControlOnExit = lidgrenMsg.ReadBoolean();
-            DropControlOnExitFlight = lidgrenMsg.ReadBoolean();
             WarpMaster = lidgrenMsg.ReadString();
             VesselPartsSyncMsInterval = lidgrenMsg.ReadInt32();
             ShowVesselsInThePast = lidgrenMsg.ReadBoolean();
@@ -191,7 +182,7 @@ namespace LunaCommon.Message.Data.Settings
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) + 
-                sizeof(bool) * 25 + sizeof(int) * 4 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
+                sizeof(bool) * 22 + sizeof(int) * 4 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
         }
     }
 }

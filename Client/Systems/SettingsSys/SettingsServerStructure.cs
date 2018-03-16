@@ -19,9 +19,6 @@ namespace LunaClient.Systems.SettingsSys
         public float SafetyBubbleDistance { get; set; } = 100f;
         public int VesselUpdatesSendMsInterval { get; set; }
         public int SecondaryVesselUpdatesSendMsInterval { get; set; }
-        public bool DropControlOnVesselSwitching { get; set; }
-        public bool DropControlOnExit { get; set; }
-        public bool DropControlOnExitFlight { get; set; }
         public string WarpMaster { get; set; }
         public int VesselPartsSyncMsInterval { get; set; }
         public bool ShowVesselsInThePast { get; set; }

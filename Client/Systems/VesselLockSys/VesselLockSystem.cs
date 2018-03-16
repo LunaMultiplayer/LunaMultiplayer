@@ -168,16 +168,6 @@ namespace LunaClient.Systems.VesselLockSys
 
         #region Public methods
 
-        /// <summary>
-        /// Drop the control locks of other vessels except the active
-        /// </summary>
-        public void DropAllOtherVesselControlLocks()
-        {
-            var activeVesselId = FlightGlobals.ActiveVessel?.id;
-            if (activeVesselId.HasValue)
-                LockSystem.Singleton.ReleaseControlLocksExcept(activeVesselId.Value);
-        }
-
         public void StartSpectating(Guid spectatingVesselId)
         {
             //Lock all vessel controls
