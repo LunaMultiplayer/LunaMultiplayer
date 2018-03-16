@@ -197,7 +197,10 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, Planetarium.GetUniversalTime());
                 if (!vessel.LandedOrSplashed)
+                {
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
+                    vessel.orbitDriver?.updateFromParameters();
+                }
             }
         }
 
@@ -217,6 +220,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 if (vessel.orbit != null)
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
+                vessel.orbitDriver?.updateFromParameters();
             }
 
             vessel.UpdatePosVel();
