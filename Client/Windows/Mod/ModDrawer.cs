@@ -42,7 +42,7 @@ namespace LunaClient.Windows.Mod
                         GUILayout.Label(mod.Text, LabelStyle);
                     if (!string.IsNullOrEmpty(mod.Link))
                     {
-                        if (GUILayout.Button(LocalizationContainer.ModWindowText.Link))
+                        if (GUILayout.Button(LocalizationContainer.ModWindowText.Link, HyperlinkLabelStyle))
                             Application.OpenURL(mod.Link);
                     }
                 }
@@ -65,7 +65,7 @@ namespace LunaClient.Windows.Mod
                         GUILayout.Label(mod.Text, LabelStyle);
                     if (!string.IsNullOrEmpty(mod.Link))
                     {
-                        if (GUILayout.Button(LocalizationContainer.ModWindowText.Link))
+                        if (GUILayout.Button(LocalizationContainer.ModWindowText.Link, HyperlinkLabelStyle))
                             Application.OpenURL(mod.Link);
                     }
                 }
@@ -119,7 +119,7 @@ namespace LunaClient.Windows.Mod
                         GUILayout.Label(part.Text, LabelStyle);
                     if (!string.IsNullOrEmpty(part.Link))
                     {
-                        if (GUILayout.Button(LocalizationContainer.ModWindowText.Link))
+                        if (GUILayout.Button(LocalizationContainer.ModWindowText.Link, HyperlinkLabelStyle))
                             Application.OpenURL(part.Link);
                     }
                 }
