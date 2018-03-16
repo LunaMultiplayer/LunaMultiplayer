@@ -8,8 +8,10 @@ dagger.ole32.com:8750
 lunamultiplayer.com:8700
 #The Hellbox server
 185.5.251.218:8700
-#PictoCube Server
+#PictoCube server
 37.187.108.37:8700
+#PictoCube nightly server
+37.187.108.37:8710
 #Zarlo's server
 ms.lmp.pksky.xyz:8700
 #Spazer server
