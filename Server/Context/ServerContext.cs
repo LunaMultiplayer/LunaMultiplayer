@@ -25,7 +25,7 @@ namespace Server.Context
         public static int PlayerCount => ClientRetriever.GetActiveClientCount();
         public static string UniverseDirectory { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Universe");
         public static string ConfigDirectory { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config");
-        public static string Players { get; } = ClientRetriever.GetActivePlayerNames();
+        public static string Players => ClientRetriever.GetActivePlayerNames();
         public static int Day { get; set; }
         public static long LastPlayerActivity { get; set; }
         public static bool UsePassword => !string.IsNullOrEmpty(GeneralSettings.SettingsStore.Password);
