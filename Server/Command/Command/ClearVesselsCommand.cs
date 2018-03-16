@@ -5,16 +5,12 @@ using Server.Command.Command.Base;
 using Server.Context;
 using Server.Log;
 using Server.Server;
-using Server.Settings;
 using Server.System;
 using System;
 using System.Xml;
-
-using Server.Client;
-using Server.Command.Command.Base;
 using Server.Command.Common;
-using Server.Log;
-using Server.Server;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Command.Command
 {
@@ -148,19 +144,23 @@ namespace Server.Command.Command
                 var nodeVesselSituation = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='sit']");
                 var nodeVesselSplashed = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='splashed']");
                 var nodeVesselName = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='name']");
-                var nodeOrbName = document.SelectSingleNode("//Log");
+                var nodeOrbName = document.SelectSingleNode("//Log/Parameter[@name='0']");
+                //Filter the orb name
+                List<string> nodeOrbNameParams = nodeOrbName.InnerText.Split(',').ToList<string>();
+                nodeOrbNameParams.Reverse();
+                string stringOrbName = nodeOrbNameParams[0];
 
                 //Check if vessel matches search param
-                if (nodeVesselType == null) isVesselType = true;
+                if (nodeVesselType == null) isVesselType = false;
                 else if (vesselType == "*" || nodeVesselType.InnerText.ToLower() == vesselType.ToLower()) isVesselType = true;
-                if (nodeVesselSituation == null) isVesselSituation = true;
+                if (nodeVesselSituation == null) isVesselSituation = false;
                 else if(vesselSituation == "*" || nodeVesselSituation.InnerText.ToLower() == vesselSituation.ToLower()) isVesselSituation = true;
-                if (nodeVesselSplashed == null) isVesselSplashed = true;
+                if (nodeVesselSplashed == null) isVesselSplashed = false;
                 else if (vesselSplashed == "*" || nodeVesselSplashed.InnerText.ToLower() == vesselSplashed.ToLower()) isVesselSplashed = true;
-                if (nodeVesselName == null) isVesselName = true;
+                if (nodeVesselName == null) isVesselName = false;
                 else if (vesselName == "*" || nodeVesselName.InnerText.ToLower().Contains(vesselName.ToLower())) isVesselName = true;
-                if (nodeOrbName == null) isOrbName = true;
-                else if (orbName == "*" || nodeOrbName.InnerText.ToLower().Contains(orbName.ToLower())) isOrbName = true;
+                if (nodeOrbName == null) isOrbName = false;
+                else if (orbName == "*" || stringOrbName.ToLower().Contains(orbName.ToLower())) isOrbName = true;
 
                 //Check if all search params matched
                 if (isVesselType && isVesselSituation && isVesselSplashed && isVesselName && isOrbName)
