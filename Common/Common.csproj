@@ -63,6 +63,7 @@
     <Compile Include="Enums\WarpMode.cs" />
     <Compile Include="Message\Base\StringUtil.cs" />
     <Compile Include="Message\Base\GuidUtil.cs" />
+    <Compile Include="Message\Client\ScreenshotCliMsg.cs" />
     <Compile Include="Message\Data\Flag\FlagInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Message\Data\Groups\Group.cs" />
@@ -176,6 +177,11 @@
     <Compile Include="Message\Data\Scenario\ScenarioBaseMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioDataMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioRequestMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotBaseMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotDataMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotDownloadRequestMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotUploadMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotListRequestMsgData.cs" />
     <Compile Include="Message\Data\Settings\SetingsReplyMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
@@ -224,12 +230,14 @@
     <Compile Include="Message\Server\PlayerColorSrvMsg.cs" />
     <Compile Include="Message\Server\PlayerConnectionSrvMsg.cs" />
     <Compile Include="Message\Server\PlayerStatusSrvMsg.cs" />
+    <Compile Include="Message\Server\ScreenshotSrvMsg.cs" />
     <Compile Include="Message\Server\ScenarioSrvMsg.cs" />
     <Compile Include="Message\Server\SetingsSrvMsg.cs" />
     <Compile Include="Message\Server\VesselSrvMsg.cs" />
     <Compile Include="Message\Server\WarpSrvMsg.cs" />
     <Compile Include="Message\Types\AdminMessageType.cs" />
     <Compile Include="Message\Types\CraftMessageType.cs" />
+    <Compile Include="Message\Types\ScreenshotMessageType.cs" />
     <Compile Include="Message\Types\FacilityMessageType.cs" />
     <Compile Include="Message\Types\FlagMessageType.cs" />
     <Compile Include="Message\Types\GroupMessageType.cs" />

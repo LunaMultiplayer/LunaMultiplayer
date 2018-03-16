@@ -99,6 +99,7 @@
     <Compile Include="Log\LogThread.cs" />
     <Compile Include="Log\LunaLog.cs" />
     <Compile Include="MainServer.cs" />
+    <Compile Include="Message\Reader\ScreenshotMsgReader.cs" />
     <Compile Include="Message\Reader\FacilityMsgReader.cs" />
     <Compile Include="Message\Reader\AdminMsgReader.cs" />
     <Compile Include="Message\Reader\Base\ReaderBase.cs" />

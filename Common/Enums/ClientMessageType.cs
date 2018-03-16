@@ -18,6 +18,7 @@
         Mod = 14,
         Admin = 15,
         Groups = 16,
-        Facility = 17
+        Facility = 17,
+        Screenshot = 18,
     }
 }

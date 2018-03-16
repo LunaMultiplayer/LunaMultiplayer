@@ -83,6 +83,9 @@
     </Compile>
     <Compile Include="Systems\Bug\BugSystem.cs" />
     <Compile Include="Systems\Bug\BugEvents.cs" />
+    <Compile Include="Systems\Screenshot\ScreenshotMessageHandler.cs" />
+    <Compile Include="Systems\Screenshot\ScreenshotMessageSender.cs" />
+    <Compile Include="Systems\Screenshot\ScreenshotSystem.cs" />
     <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaMessageHandler.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaMessageSender.cs" />
