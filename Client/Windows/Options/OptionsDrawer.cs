@@ -15,7 +15,7 @@ namespace LunaClient.Windows.Options
 {
     public partial class OptionsWindow
     {
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             if (!LoadEventHandled)
             {

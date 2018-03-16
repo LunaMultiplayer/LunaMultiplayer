@@ -69,16 +69,15 @@ namespace LunaClient.Windows.Connection
         public override void OnGui()
         {
             base.OnGui();
-            
             if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6702 + MainSystem.WindowOffset, 
-                    WindowRect, DrawContent, _title, WindowStyle, LayoutOptions));
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect, DrawContent, _title, WindowStyle));
             }
         }
 
         public override void Update()
         {
+            base.Update();
             if (Display)
             {
                 Status = MainSystem.Singleton.Status;

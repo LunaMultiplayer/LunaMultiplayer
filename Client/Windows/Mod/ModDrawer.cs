@@ -7,7 +7,7 @@ namespace LunaClient.Windows.Mod
 {
     public partial class ModWindow
     {
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

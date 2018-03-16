@@ -44,6 +44,7 @@ namespace LunaClient.Windows.Locks
 
         public override void Update()
         {
+            base.Update();
             SafeDisplay = Display;
             if (!Display) return;
 

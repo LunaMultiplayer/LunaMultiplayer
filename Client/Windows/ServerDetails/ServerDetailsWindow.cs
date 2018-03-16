@@ -35,6 +35,7 @@ namespace LunaClient.Windows.ServerDetails
 
         public override void Update()
         {
+            base.Update();
             SafeDisplay = Display;
         }
     }

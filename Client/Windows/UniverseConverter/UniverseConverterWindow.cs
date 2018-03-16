@@ -36,6 +36,7 @@ namespace LunaClient.Windows.UniverseConverter
 
         public override void Update()
         {
+            base.Update();
             SafeDisplay = Display;
         }
     }

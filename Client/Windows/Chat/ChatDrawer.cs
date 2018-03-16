@@ -8,13 +8,8 @@ namespace LunaClient.Windows.Chat
     {
         private static string _chatInputText = string.Empty;
 
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
-            if (GUI.RepeatButton(new Rect(WindowRect.width - 18, 2, 16, 16), ResizeIcon))
-            {
-                _resizingWindow = true;
-            }
-
             var pressedEnter = Event.current.type == EventType.KeyDown && !Event.current.shift && Event.current.character == '\n';
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

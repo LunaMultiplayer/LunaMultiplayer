@@ -103,6 +103,7 @@ namespace LunaClient.Windows.Status
 
         public override void Update()
         {
+            base.Update();
             if (!Display) return;
 
             if (Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)

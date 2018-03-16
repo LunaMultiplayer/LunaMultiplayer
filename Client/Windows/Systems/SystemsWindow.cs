@@ -100,6 +100,7 @@ namespace LunaClient.Windows.Systems
 
         public override void Update()
         {
+            base.Update();
             SafeDisplay = Display;
         }
 

@@ -6,7 +6,7 @@ namespace LunaClient.Windows.CraftLibrary
 {
     public partial class CraftLibraryWindow
     {
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

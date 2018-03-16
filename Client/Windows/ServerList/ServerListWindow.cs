@@ -17,7 +17,7 @@ namespace LunaClient.Windows.ServerList
                    HighLogic.LoadedScene < GameScenes.SPACECENTER;
             set => _display = value;
         }
-
+        
         public IEnumerable<ServerInfo> DisplayedServers { get; set; } = NetworkServerList.Servers.Values;
         protected GUIStyle BigLabelStyle { get; set; }
         protected Vector2 VerticalScrollPosition { get; set; }
@@ -65,11 +65,9 @@ namespace LunaClient.Windows.ServerList
         public override void OnGui()
         {
             base.OnGui();
-
             if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect,
-                    DrawContent, "Server list", WindowStyle, LayoutOptions));
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle));
             }
         }
     }

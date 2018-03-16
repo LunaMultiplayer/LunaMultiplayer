@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using LunaClient.Utilities;
+using LunaClient.Windows;
+using UnityEngine;
 
 namespace LunaClient.Base
 {
@@ -22,9 +24,11 @@ namespace LunaClient.Base
         protected GUILayoutOption[] LabelOptions;
 
         protected Vector2 ScrollPos = new Vector2();
+        protected Texture2D ResizeIcon;
 
         public void InitializeStyles()
         {
+            ResizeIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "resize.png"), 16, 16);
             WindowStyle = new GUIStyle(GUI.skin.window);
             ButtonStyle = new GUIStyle(GUI.skin.button);
             LabelStyle = new GUIStyle(GUI.skin.label);

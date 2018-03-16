@@ -7,7 +7,7 @@ namespace LunaClient.Windows.ServerDetails
 {
     public partial class ServerDetailsWindow
     {
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

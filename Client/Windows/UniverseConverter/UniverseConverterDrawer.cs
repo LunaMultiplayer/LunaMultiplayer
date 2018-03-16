@@ -5,7 +5,7 @@ namespace LunaClient.Windows.UniverseConverter
 {
     public partial class UniverseConverterWindow
     {
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

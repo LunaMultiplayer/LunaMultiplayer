@@ -17,6 +17,7 @@ namespace LunaClient.Windows.BannedParts
 
         public override void Update()
         {
+            base.Update();
             SafeDisplay = Display;
         }
 

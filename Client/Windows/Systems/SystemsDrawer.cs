@@ -31,7 +31,7 @@ namespace LunaClient.Windows.Systems
 {
     public partial class SystemsWindow
     {
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

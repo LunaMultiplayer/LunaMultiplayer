@@ -19,7 +19,7 @@ namespace LunaClient.Windows.Status
     {
         private static readonly WarpSystem WarpSystem = WarpSystem.Singleton;
 
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

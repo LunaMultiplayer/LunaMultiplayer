@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base.Interface;
+using UnityEngine;
 
 namespace LunaClient.Base
 {
@@ -65,11 +66,19 @@ namespace LunaClient.Base
 
         public virtual void Update()
         {
-            //Implement your own code
-        }
+            if (Display && Resizable)
+            {
+                if (Input.GetMouseButtonUp(0))
+                {
+                    _resizingWindow = false;
+                }
 
-        public virtual void SafeUpdate()
-        {
+                if (_resizingWindow)
+                {
+                    WindowRect.width = Input.mousePosition.x - WindowRect.x + 10;
+                    WindowRect.height = Screen.height - Input.mousePosition.y - WindowRect.y + 10;
+                }
+            }
             //Implement your own code
         }
 
@@ -94,7 +103,25 @@ namespace LunaClient.Base
         /// Define here the style and components of your window
         /// </summary>
         public abstract void SetStyles();
-        
+
+        protected virtual bool Resizable { get; } = false;
+
+        private bool _resizingWindow = false;
+
+        protected void DrawContent(int windowId)
+        {
+            if (Resizable)
+            {
+                if (GUI.RepeatButton(new Rect(WindowRect.width - 18, 2, 16, 16), ResizeIcon))
+                {
+                    _resizingWindow = true;
+                }
+            }
+            DrawWindowContent(windowId);
+        }
+
+        public abstract void DrawWindowContent(int windowId);
+
         #endregion
     }
 }

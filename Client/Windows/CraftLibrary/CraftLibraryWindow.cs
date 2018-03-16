@@ -19,6 +19,7 @@ namespace LunaClient.Windows.CraftLibrary
 
         public override void Update()
         {
+            base.Update();
             SafeDisplay = Display;
         }
 

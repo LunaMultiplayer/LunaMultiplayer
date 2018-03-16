@@ -30,18 +30,13 @@ namespace LunaClient.Windows.Chat
 
         private Vector2 _chatScrollPos;
 
-        private Texture2D ResizeIcon { get; set; }
-
         #endregion
-        
-        private bool _resizingWindow = false;
 
         #endregion
 
-        public void ScrollToBottom()
-        {
-            _chatScrollPos.y = float.PositiveInfinity;
-        }
+        #region Base overrides
+
+        protected override bool Resizable => true;
 
         public override void SetStyles()
         {
@@ -62,8 +57,6 @@ namespace LunaClient.Windows.Chat
                 active = { textColor = Color.red },
                 hover = { textColor = Color.red }
             };
-
-            ResizeIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "resize.png"), 16, 16);
         }
         
         public override void RemoveWindowLock()
@@ -77,6 +70,7 @@ namespace LunaClient.Windows.Chat
 
         public override void Update()
         {
+            base.Update();
             Display &= MainSystem.NetworkState >= ClientState.Running;
             SafeDisplay = Display;
             
@@ -84,17 +78,6 @@ namespace LunaClient.Windows.Chat
             {
                 if (ChatSystem.Singleton.NewMessageReceived)
                     ChatSystem.Singleton.NewMessageReceived = false;
-
-                if (Input.GetMouseButtonUp(0))
-                {
-                    _resizingWindow = false;
-                }
-
-                if (_resizingWindow)
-                {
-                    WindowRect.width = Input.mousePosition.x - WindowRect.x + 10;
-                    WindowRect.height = Screen.height - Input.mousePosition.y - WindowRect.y + 10;
-                }
             }
         }
 
@@ -108,10 +91,18 @@ namespace LunaClient.Windows.Chat
             CheckWindowLock();
         }
 
-        public void SizeChanged()
+        #endregion
+
+        #region Public methods
+
+        public void ScrollToBottom()
         {
-            Initialized = false;
+            _chatScrollPos.y = float.PositiveInfinity;
         }
+
+        #endregion
+
+        #region Private methods
 
         private void CheckWindowLock()
         {
@@ -140,5 +131,7 @@ namespace LunaClient.Windows.Chat
             if (!SafeDisplay && IsWindowLocked)
                 RemoveWindowLock();
         }
+
+        #endregion
     }
 }

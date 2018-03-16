@@ -14,7 +14,7 @@ namespace LunaClient.Windows.ServerList
 
         private static readonly float[] HeaderGridSize = new float[11];
 
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
@@ -31,7 +31,7 @@ namespace LunaClient.Windows.ServerList
             }
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.Width(WindowWidth));
+            GUILayout.BeginHorizontal();
             DrawServersGrid();
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();

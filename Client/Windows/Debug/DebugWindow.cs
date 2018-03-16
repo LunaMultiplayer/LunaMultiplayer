@@ -28,6 +28,7 @@ namespace LunaClient.Windows.Debug
 
         public override void Update()
         {
+            base.Update();
             SafeDisplay = Display;
 
             if (Display && Time.realtimeSinceStartup - LastUpdateTime > DisplayUpdateInterval || DisplayFast)
