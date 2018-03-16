@@ -5,7 +5,7 @@
   <ModFileGenerated>Se ha generado el archivo LMPModControl.xml en tu carpeta de KSP</ModFileGenerated>
   <Disconected>¡Estás desconectado!</Disconected>
   <Spectating>Esta nave está siendo controlada por:</Spectating>
-  <SafetyBubble>¡¡Recuerda!! ¡¡Mientras estés en la zona de seguridad no verás las otras naves cercanas!!</SafetyBubble>
+  <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
   <CannotRecover>No puedes recuperar la nave puesto que no es tuya.</CannotRecover>
   <CannotTerminate>No puedes eliminar la nave puesto que no es tuya.</CannotTerminate>
   <SpectatingRemoved>La nave que estabas observando ha sido eliminada</SpectatingRemoved>

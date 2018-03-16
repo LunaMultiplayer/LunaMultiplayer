@@ -5,7 +5,7 @@
   <ModFileGenerated>LMPModControl.xml Datei wurde in deinem KSP Ordner generiert</ModFileGenerated>
   <Disconected>Deine Verbindung wurde getrennt!</Disconected>
   <Spectating>Dieses Fahrzeug wird kontrolliert von</Spectating>
-  <SafetyBubble>Bitte beachten!! Während du dich innerhalb der Sicherheitsblase befindest werden dir keine Fahrzeuge in der Nähe angezeigt!!</SafetyBubble>
+  <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
   <CannotRecover>Zurücksetzen des Fahrzeugs nicht möglich, das Fahrzeug gehört dir nicht.</CannotRecover>
   <CannotTerminate>Löschen des Fahrzeugs nicht möglich, das Fahrzeug gehört dir nicht.</CannotTerminate>
   <SpectatingRemoved>Das beobachtete Fahrzeug wurde gelöscht</SpectatingRemoved>

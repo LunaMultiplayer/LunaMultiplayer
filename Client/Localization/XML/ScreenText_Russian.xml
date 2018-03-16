@@ -5,7 +5,7 @@
   <ModFileGenerated>LMPModControl.xml создан в директории с KSP</ModFileGenerated>
   <Disconected>Вы были отключенны!</Disconected>
   <Spectating>Этот корабль управляется игроком</Spectating>
-  <SafetyBubble>Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!</SafetyBubble>
+  <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
   <CannotRecover>Невозможно вернуть корабль, он не ваш.</CannotRecover>
   <CannotTerminate>Невозможно уничтожить корабль, он не ваш.</CannotTerminate>
   <SpectatingRemoved>The vessel you were spectating was removed</SpectatingRemoved>

@@ -7,7 +7,7 @@
         public string ModFileGenerated { get; set; } = "LMPModControl.xml file generated in your KSP folder";
         public string Disconected { get; set; } = "You have been disconnected!";
         public string Spectating { get; set; } = "This vessel is being controlled by";
-        public string SafetyBubble { get; set; } = "Remember!! While you're inside the safety bubble you won't see vessels that are close to you!!";
+        public string SafetyBubble { get; set; } = "Remember!! While you're inside the safety bubble you won't be seen by other players!!";
         public string CannotRecover { get; set; } = "Cannot recover vessel, the vessel is not yours.";
         public string CannotTerminate { get; set; } = "Cannot terminate vessel, the vessel is not yours.";
         public string SpectatingRemoved { get; set; } = "The vessel you were spectating was removed";
