@@ -3,8 +3,10 @@ using LunaClient.Localization;
 using LunaClient.Utilities;
 using LunaCommon;
 using System;
+using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 
 namespace LunaClient.Systems.Screenshot
 {
@@ -13,7 +15,9 @@ namespace LunaClient.Systems.Screenshot
         #region Fields and properties
 
         private static DateTime _lastTakenScreenshot = DateTime.MinValue;
-        
+        public ConcurrentDictionary<string, ConcurrentDictionary<long, Texture2D>> MiniatureImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Texture2D>>();
+        public ConcurrentDictionary<string, ConcurrentDictionary<long, Texture2D>> DownloadedImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Texture2D>>();
+
         #endregion
 
         #region Base overrides
@@ -26,6 +30,13 @@ namespace LunaClient.Systems.Screenshot
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, CheckScreenshots));
+        }
+
+        protected override void OnDisabled()
+        {
+            base.OnDisabled();
+            MiniatureImages.Clear();
+            DownloadedImages.Clear();
         }
 
         #endregion
@@ -54,6 +65,5 @@ namespace LunaClient.Systems.Screenshot
                 }
             }
         }
-        
     }
 }

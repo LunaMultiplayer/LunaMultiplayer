@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.Screenshot
@@ -9,6 +10,7 @@ namespace LunaCommon.Message.Data.Screenshot
         internal ScreenshotListReplyMsgData() { }
         public override ScreenshotMessageType ScreenshotMessageType => ScreenshotMessageType.ListReply;
 
+        public string Folder;
         public int NumScreenshots;
         public ScreenshotInfo[] Screenshots = new ScreenshotInfo[0];
 
@@ -18,6 +20,7 @@ namespace LunaCommon.Message.Data.Screenshot
         {
             base.InternalSerialize(lidgrenMsg);
 
+            lidgrenMsg.Write(Folder);
             lidgrenMsg.Write(NumScreenshots);
             for (var i = 0; i < NumScreenshots; i++)
             {
@@ -29,6 +32,7 @@ namespace LunaCommon.Message.Data.Screenshot
         {
             base.InternalDeserialize(lidgrenMsg);
 
+            Folder = lidgrenMsg.ReadString();
             NumScreenshots = lidgrenMsg.ReadInt32();
 
             if (Screenshots.Length < NumScreenshots)
@@ -51,7 +55,7 @@ namespace LunaCommon.Message.Data.Screenshot
                 arraySize += Screenshots[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + Folder.GetByteCount() + sizeof(int) + arraySize;
         }
     }
 }

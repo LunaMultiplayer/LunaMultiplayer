@@ -65,6 +65,7 @@ namespace Server.System
         /// </summary>
         public static void SendScreenshotFolders(ClientStructure client)
         {
+            LunaLog.Normal($"Sending screenshot folders to: {client.PlayerName}");
             Task.Run(() =>
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotFoldersReplyMsgData>();
@@ -88,6 +89,7 @@ namespace Server.System
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotListReplyMsgData>();
                 foreach (var file in Directory.GetFiles(folder).Where(f => f.StartsWith(SmallFilePrefix)))
                 {
+                    var bitmap = new Bitmap(file);
                     var contents = File.ReadAllBytes(file);
                     if (long.TryParse(Path.GetFileNameWithoutExtension(file).Substring(SmallFilePrefix.Length), out var dateTaken))
                     {
@@ -95,7 +97,9 @@ namespace Server.System
                         {
                             Data = contents,
                             DateTaken = dateTaken,
-                            NumBytes = contents.Length
+                            NumBytes = contents.Length,
+                            Height = (ushort)bitmap.Height,
+                            Width = (ushort)bitmap.Width
                         });
                     }
                 }
@@ -103,6 +107,7 @@ namespace Server.System
                 msgData.Screenshots = screenshots.ToArray();
                 msgData.NumScreenshots = screenshots.Count;
 
+                LunaLog.Normal($"Sending {msgData.NumScreenshots} screnshots in folder {data.FolderName} to: {client.PlayerName}");
                 MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
             });
         }
@@ -117,11 +122,16 @@ namespace Server.System
                 var file = Path.Combine(ScreenshotFolder, data.FolderName, $"{data.PhotoId}.png");
                 if (File.Exists(file))
                 {
+                    var bitmap = new Bitmap(file);
+
                     var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotDataMsgData>();
                     msgData.Screenshot.DateTaken = data.PhotoId;
                     msgData.Screenshot.Data = File.ReadAllBytes(file);
                     msgData.Screenshot.NumBytes = msgData.Screenshot.Data.Length;
+                    msgData.Screenshot.Height = (ushort)bitmap.Height;
+                    msgData.Screenshot.Width = (ushort)bitmap.Width;
 
+                    LunaLog.Normal($"Sending screenshot: {data.PhotoId} to: {client.PlayerName}. Size: {msgData.Screenshot.NumBytes} bytes.");
                     MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
                 }
             });
