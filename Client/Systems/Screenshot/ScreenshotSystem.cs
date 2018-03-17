@@ -13,6 +13,7 @@ namespace LunaClient.Systems.Screenshot
     {
         #region Fields and properties
 
+        private static readonly string ScreenshotsFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Screenshots");
         private static DateTime _lastTakenScreenshot = DateTime.MinValue;
         public ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>> MiniatureImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>>();
         public ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>> DownloadedImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>>();
@@ -53,7 +54,7 @@ namespace LunaClient.Systems.Screenshot
                         var photo = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
                         if (photo != null)
                         {
-                            TaskFactory.StartNew(()=> MessageSender.SendScreenshot(File.ReadAllBytes(photo.FullName)));
+                            TaskFactory.StartNew(() => MessageSender.SendScreenshot(File.ReadAllBytes(photo.FullName)));
                             ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ScreenshotTaken, 20f, ScreenMessageStyle.UPPER_CENTER);
                         }
                     }, 0.3f);
@@ -62,6 +63,21 @@ namespace LunaClient.Systems.Screenshot
                 {
                     ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ScreenshotInterval, 20f, ScreenMessageStyle.UPPER_CENTER);
                 }
+            }
+        }
+
+        public void SaveImage(string folder, long dateTaken)
+        {
+            if (DownloadedImages.TryGetValue(folder, out var downloadedImages) && downloadedImages.TryGetValue(dateTaken, out var image))
+            {
+                var folderPath = CommonUtil.CombinePaths(ScreenshotsFolder, folder);
+                if (!Directory.Exists(folderPath))
+                    Directory.CreateDirectory(folderPath);
+
+                var filePath = CommonUtil.CombinePaths(folderPath, $"{dateTaken}.png");
+                File.WriteAllBytes(filePath, image.Data);
+
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ImageSaved, 20f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
     }

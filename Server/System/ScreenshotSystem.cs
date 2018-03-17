@@ -46,7 +46,7 @@ namespace Server.System
                     {
                         var fullPath = Path.Combine(playerFolder, fileName);
 
-                        LunaLog.Normal($"Saving screenshot from: {client.PlayerName}. Size: {data.Screenshot.NumBytes} bytes. Filename: {fileName}");
+                        LunaLog.Normal($"Saving screenshot {fileName} ({data.Screenshot.NumBytes} bytes) from: {client.PlayerName}.");
                         FileHandler.WriteToFile(fullPath, data.Screenshot.Data, data.Screenshot.NumBytes);
                         CreateMiniature(fullPath);
                     }
@@ -67,7 +67,6 @@ namespace Server.System
         /// </summary>
         public static void SendScreenshotFolders(ClientStructure client)
         {
-            LunaLog.Normal($"Sending screenshot folders to: {client.PlayerName}");
             Task.Run(() =>
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotFoldersReplyMsgData>();
@@ -75,6 +74,7 @@ namespace Server.System
                 msgData.NumFolders = msgData.Folders.Length;
 
                 MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
+                LunaLog.Debug($"Sending {msgData.NumFolders} screenshot folders to: {client.PlayerName}");
             });
         }
 
@@ -114,7 +114,7 @@ namespace Server.System
                 msgData.Screenshots = screenshots.ToArray();
                 msgData.NumScreenshots = screenshots.Count;
 
-                LunaLog.Normal($"Sending {msgData.NumScreenshots} screnshots in folder \"{folder}\" to: {client.PlayerName}");
+                LunaLog.Debug($"Sending {msgData.NumScreenshots} ({data.FolderName}) screenshots to: {client.PlayerName}");
                 MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
             });
         }
@@ -139,7 +139,7 @@ namespace Server.System
                     msgData.Screenshot.Width = (ushort)bitmap.Width;
                     msgData.Screenshot.FolderName = data.FolderName;
 
-                    LunaLog.Normal($"Sending screenshot: {data.PhotoId} to: {client.PlayerName}. Size: {msgData.Screenshot.NumBytes} bytes.");
+                    LunaLog.Debug($"Sending screenshot ({msgData.Screenshot.NumBytes} bytes): {data.PhotoId} to: {client.PlayerName}.");
                     MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
                 }
             });

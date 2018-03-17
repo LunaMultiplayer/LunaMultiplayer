@@ -4,6 +4,7 @@ namespace LunaClient.Systems.Screenshot
 {
     public class Screenshot
     {
+        public long DateTaken;
         public int Width;
         public int Height;
         public byte[] Data = new byte[0];
@@ -22,5 +23,7 @@ namespace LunaClient.Systems.Screenshot
                 return _texture;
             }
         }
+
+
     }
 }

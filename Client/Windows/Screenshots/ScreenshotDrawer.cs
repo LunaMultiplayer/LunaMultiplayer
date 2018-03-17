@@ -1,4 +1,6 @@
-﻿using UniLinq;
+﻿using LunaClient.Systems.Screenshot;
+using System;
+using UniLinq;
 using UnityEngine;
 
 namespace LunaClient.Windows.Screenshots
@@ -11,12 +13,25 @@ namespace LunaClient.Windows.Screenshots
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            //Draw the player buttons
+
+            DrawRefreshButton(() => System.MessageSender.RequestFolders(), () => Display = false);
+            GUILayout.Space(15);
+
             FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
             foreach (var folderName in System.MiniatureImages.Keys.ToArray())
                 DrawFolderButton(folderName);
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
+        }
+
+        private void DrawRefreshButton(Action refreshAction, Action closeAction)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button(RefreshIcon, ButtonStyle)) refreshAction.Invoke();
+            if (GUILayout.Button(CloseIcon, ButtonStyle)) closeAction.Invoke();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
         }
 
         private void DrawFolderButton(string folderName)
@@ -37,10 +52,16 @@ namespace LunaClient.Windows.Screenshots
 
         #endregion
 
+        #region Image library
+
         public void DrawLibraryContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
+
+            DrawRefreshButton(() => System.MessageSender.RequestMiniatures(SelectedFolder), ()=> SelectedFolder = null);
+            GUILayout.Space(15);
+
             LibraryScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
             if (System.MiniatureImages.TryGetValue(SelectedFolder, out var miniatures))
             {
@@ -58,11 +79,46 @@ namespace LunaClient.Windows.Screenshots
             GUILayout.EndVertical();
         }
 
-        private void DrawMiniature(LunaClient.Systems.Screenshot.Screenshot miniature)
+        private void DrawMiniature(Screenshot miniature)
         {
             GUILayout.FlexibleSpace();
-            GUILayout.Button(miniature.Texture, ButtonStyle, GUILayout.Width(miniature.Width), GUILayout.Height(miniature.Height));
+            if (GUILayout.Button(miniature.Texture, ButtonStyle, GUILayout.Width(miniature.Width), GUILayout.Height(miniature.Height)))
+            {
+                SelectedImage = miniature.DateTaken;
+                if(System.DownloadedImages.TryGetValue(SelectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(SelectedImage))
+                    System.MessageSender.RequestImage(SelectedFolder, SelectedImage);
+            }
             GUILayout.FlexibleSpace();
         }
+
+        #endregion
+
+        #region Image viewer
+
+        public void DrawImageContent(int windowId)
+        {
+            GUILayout.BeginVertical();
+            GUI.DragWindow(MoveRect);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Button(SaveIcon, ButtonStyle);
+            if (GUILayout.Button(CloseIcon, ButtonStyle))
+            {
+                SelectedImage = 0;
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.Space(15);
+
+            ImageScrollPos = GUILayout.BeginScrollView(ImageScrollPos, ScrollStyle);
+            if (System.DownloadedImages.TryGetValue(SelectedFolder, out var imagesDictionary) && imagesDictionary.TryGetValue(SelectedImage, out var screenShot))
+            {
+                GUILayout.Label(screenShot.Texture);
+            }
+            GUILayout.EndScrollView();
+
+            GUILayout.EndVertical();
+        }
+
+        #endregion
     }
 }

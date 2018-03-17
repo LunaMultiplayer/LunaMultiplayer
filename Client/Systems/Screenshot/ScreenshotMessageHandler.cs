@@ -20,7 +20,8 @@ namespace LunaClient.Systems.Screenshot
             {
                 case ScreenshotMessageType.ScreenshotData:
                     var screenshotMsg = (ScreenshotDataMsgData)msgData;
-                    var image = CreateImage(screenshotMsg.Screenshot.Width, screenshotMsg.Screenshot.Height, screenshotMsg.Screenshot.Data, screenshotMsg.Screenshot.NumBytes);
+                    var image = CreateImage(screenshotMsg.Screenshot.DateTaken, screenshotMsg.Screenshot.Width, screenshotMsg.Screenshot.Height, 
+                        screenshotMsg.Screenshot.Data, screenshotMsg.Screenshot.NumBytes);
 
                     if (System.DownloadedImages.TryGetValue(screenshotMsg.Screenshot.FolderName, out var folderImages))
                         folderImages.AddOrUpdate(screenshotMsg.Screenshot.DateTaken, image, (key, existingVal) => image);
@@ -39,7 +40,9 @@ namespace LunaClient.Systems.Screenshot
                     {
                         for (var i = 0; i < listMsg.NumScreenshots; i++)
                         {
-                            var miniImage = CreateImage(listMsg.Screenshots[i].Width, listMsg.Screenshots[i].Height, listMsg.Screenshots[i].Data, listMsg.Screenshots[i].NumBytes);
+                            var miniImage = CreateImage(listMsg.Screenshots[i].DateTaken, listMsg.Screenshots[i].Width, listMsg.Screenshots[i].Height, 
+                                listMsg.Screenshots[i].Data, listMsg.Screenshots[i].NumBytes);
+
                             folderMiniatureImages.AddOrUpdate(listMsg.Screenshots[i].DateTaken, miniImage, (key, existingVal) => miniImage);
                         }
                     }
@@ -49,9 +52,9 @@ namespace LunaClient.Systems.Screenshot
             }
         }
 
-        private static Screenshot CreateImage(int width, int height, byte[] data, int numBytes)
+        private static Screenshot CreateImage(long dateTaken, int width, int height, byte[] data, int numBytes)
         {
-            var image = new Screenshot {Width = width, Height = height, Data = new byte[numBytes]};
+            var image = new Screenshot { DateTaken = dateTaken, Width = width, Height = height, Data = new byte[numBytes] };
             Array.Copy(data, image.Data, numBytes);
             return image;
         }

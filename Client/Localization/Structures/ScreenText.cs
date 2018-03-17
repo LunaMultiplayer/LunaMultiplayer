@@ -16,5 +16,6 @@
         public string WaitingSubspace { get; set; } = "Cannot warp, waiting subspace id from the server";
         public string ScreenshotInterval { get; set; } = "Interval between screenshots is 30s. Cannot upload";
         public string ScreenshotTaken { get; set; } = "Screenshot uploaded!";
+        public string ImageSaved { get; set; } = "Image saved!";
     }
 }

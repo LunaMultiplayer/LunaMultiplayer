@@ -2,6 +2,7 @@
 using LunaClient.Systems.Screenshot;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using System;
 using UnityEngine;
 
 namespace LunaClient.Windows.Screenshots
@@ -14,17 +15,28 @@ namespace LunaClient.Windows.Screenshots
         protected const float FoldersWindowWidth = 200;
         protected const float LibraryWindowHeight = 600;
         protected const float LibraryWindowWidth = 600;
+        protected const float ImageWindowHeight = 762;
+        protected const float ImageWindowWidth = 1024;
 
         protected Rect FoldersWindowRect { get; set; }
         protected Rect LibraryWindowRect { get; set; }
+        protected Rect ImageWindowRect { get; set; }
 
         protected GUILayoutOption[] FoldersLayoutOptions { get; set; }
         protected GUILayoutOption[] LibraryLayoutOptions { get; set; }
+        protected GUILayoutOption[] ImageLayoutOptions { get; set; }
 
         protected Vector2 FoldersScrollPos { get; set; }
         protected Vector2 LibraryScrollPos { get; set; }
+        
+        protected Vector2 ImageScrollPos { get; set; }
 
         private string SelectedFolder { get; set; }
+        private long SelectedImage { get; set; } = 0;
+
+        private Texture2D RefreshIcon { get; set; }
+        private Texture2D SaveIcon { get; set; }
+        private Texture2D CloseIcon { get; set; }
 
         #endregion
 
@@ -63,16 +75,23 @@ namespace LunaClient.Windows.Screenshots
                     LibraryLayoutOptions));
             }
 
+            if (SafeDisplay && SelectedImage > 0 && System.DownloadedImages.TryGetValue(SelectedFolder, out var imagesDictionary) && imagesDictionary.ContainsKey(SelectedImage))
+            {
+                ImageWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6721 + MainSystem.WindowOffset,
+                    ImageWindowRect, DrawImageContent, $"{DateTime.FromBinary(SelectedImage).ToLongTimeString()}", WindowStyle,
+                    ImageLayoutOptions));
+            }
+
             CheckWindowLock();
         }
 
         public override void SetStyles()
         {
-            //Setup GUI stuff
-            //left 50, middle height
-            FoldersWindowRect = new Rect(50, Screen.height / 2f - FoldersWindowHeight / 2f, FoldersWindowWidth, FoldersWindowHeight);
-            //middle of the screen
+            CloseIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "close.png"), 16, 16);
+            SaveIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "save.png"), 16, 16);
+            RefreshIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "refresh.png"), 16, 16);
 
+            FoldersWindowRect = new Rect(50, Screen.height / 2f - FoldersWindowHeight / 2f, FoldersWindowWidth, FoldersWindowHeight);
             LibraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f, Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
@@ -87,10 +106,12 @@ namespace LunaClient.Windows.Screenshots
             LibraryLayoutOptions[1] = GUILayout.MaxWidth(LibraryWindowWidth);
             LibraryLayoutOptions[2] = GUILayout.MinHeight(LibraryWindowHeight);
             LibraryLayoutOptions[3] = GUILayout.MaxHeight(LibraryWindowHeight);
-            
-            TextAreaOptions = new GUILayoutOption[2];
-            TextAreaOptions[0] = GUILayout.ExpandWidth(false);
-            TextAreaOptions[1] = GUILayout.ExpandWidth(false);
+
+            ImageLayoutOptions = new GUILayoutOption[4];
+            ImageLayoutOptions[0] = GUILayout.MinWidth(ImageWindowWidth);
+            ImageLayoutOptions[1] = GUILayout.MaxWidth(ImageWindowWidth);
+            ImageLayoutOptions[2] = GUILayout.MinHeight(ImageWindowHeight);
+            ImageLayoutOptions[3] = GUILayout.MaxHeight(ImageWindowHeight);
         }
 
         public override void RemoveWindowLock()
