@@ -99,11 +99,13 @@ namespace Server.System
                             DateTaken = dateTaken,
                             NumBytes = contents.Length,
                             Height = (ushort)bitmap.Height,
-                            Width = (ushort)bitmap.Width
+                            Width = (ushort)bitmap.Width,
+                            FolderName = data.FolderName,
                         });
                     }
                 }
 
+                msgData.FolderName = data.FolderName;
                 msgData.Screenshots = screenshots.ToArray();
                 msgData.NumScreenshots = screenshots.Count;
 
@@ -130,6 +132,7 @@ namespace Server.System
                     msgData.Screenshot.NumBytes = msgData.Screenshot.Data.Length;
                     msgData.Screenshot.Height = (ushort)bitmap.Height;
                     msgData.Screenshot.Width = (ushort)bitmap.Width;
+                    msgData.Screenshot.FolderName = data.FolderName;
 
                     LunaLog.Normal($"Sending screenshot: {data.PhotoId} to: {client.PlayerName}. Size: {msgData.Screenshot.NumBytes} bytes.");
                     MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);

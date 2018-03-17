@@ -23,7 +23,7 @@ namespace LunaClient.Systems.Screenshot
                     var screenshotMsg = (ScreenshotDataMsgData)msgData;
                     var image = CreateImage(screenshotMsg.Screenshot.Width, screenshotMsg.Screenshot.Height, screenshotMsg.Screenshot.Data, screenshotMsg.Screenshot.NumBytes);
 
-                    if (System.DownloadedImages.TryGetValue(screenshotMsg.Screenshot.Folder, out var folderImages))
+                    if (System.DownloadedImages.TryGetValue(screenshotMsg.Screenshot.FolderName, out var folderImages))
                         folderImages.AddOrUpdate(screenshotMsg.Screenshot.DateTaken, image, (key, existingVal) => image);
                     break;
                 case ScreenshotMessageType.FoldersReply:
@@ -36,7 +36,7 @@ namespace LunaClient.Systems.Screenshot
                     break;
                 case ScreenshotMessageType.ListReply:
                     var listMsg = (ScreenshotListReplyMsgData)msgData;
-                    if (System.MiniatureImages.TryGetValue(listMsg.Folder, out var folderMiniatureImages))
+                    if (System.MiniatureImages.TryGetValue(listMsg.FolderName, out var folderMiniatureImages))
                     {
                         for (var i = 0; i < listMsg.NumScreenshots; i++)
                         {

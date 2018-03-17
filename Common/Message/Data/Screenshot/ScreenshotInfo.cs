@@ -5,7 +5,7 @@ namespace LunaCommon.Message.Data.Screenshot
 {
     public class ScreenshotInfo
     {
-        public string Folder;
+        public string FolderName;
         public long DateTaken;
 
         public int NumBytes;
@@ -15,7 +15,7 @@ namespace LunaCommon.Message.Data.Screenshot
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
-            lidgrenMsg.Write(Folder);
+            lidgrenMsg.Write(FolderName);
             lidgrenMsg.Write(DateTaken);
             lidgrenMsg.Write(Width);
             lidgrenMsg.Write(Height);
@@ -25,7 +25,7 @@ namespace LunaCommon.Message.Data.Screenshot
 
         public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
-            Folder = lidgrenMsg.ReadString();
+            FolderName = lidgrenMsg.ReadString();
             DateTaken = lidgrenMsg.ReadInt64();
 
             Width = lidgrenMsg.ReadUInt16();
@@ -40,7 +40,7 @@ namespace LunaCommon.Message.Data.Screenshot
 
         public int GetByteCount()
         {
-            return Folder.GetByteCount() + sizeof(long) + sizeof(ushort) * 2 + sizeof(int) + sizeof(byte) * NumBytes;
+            return FolderName.GetByteCount() + sizeof(long) + sizeof(ushort) * 2 + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }
