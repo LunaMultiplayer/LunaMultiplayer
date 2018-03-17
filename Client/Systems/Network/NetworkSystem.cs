@@ -104,6 +104,8 @@ namespace LunaClient.Systems.Network
             {
                 case ClientState.DisconnectRequested:
                 case ClientState.Disconnected:
+                    DisableAllSystems();
+                    break;
                 case ClientState.Connecting:
                     ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(NetworkUpdate), 0);
                     return;
@@ -236,7 +238,6 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.CraftlibrarySynced:
                     MainSystem.Singleton.Status = "Craft library synced";
-                    ChatSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingLocks;
                     LockSystem.Singleton.Enabled = true;
                     LockSystem.Singleton.MessageSender.SendLocksRequest();
@@ -284,6 +285,7 @@ namespace LunaClient.Systems.Network
                     LunaLog.Log("[LMP]: All systems up and running. Поехали!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
+                        ChatSystem.Singleton.Enabled = true;
                         TimeSyncerSystem.Singleton.Enabled = true;
                         MotdSystem.Singleton.Enabled = true;
                         VesselLockSystem.Singleton.Enabled = true;
@@ -326,6 +328,48 @@ namespace LunaClient.Systems.Network
                 //Control locks will bug out the space centre sceen, so remove them before starting.
                 NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
             }
+        }
+
+        private static void DisableAllSystems()
+        {
+            HandshakeSystem.Singleton.Enabled = false;
+            SettingsSystem.Singleton.Enabled = false;
+            KerbalSystem.Singleton.Enabled = false;
+            VesselProtoSystem.Singleton.Enabled = false;
+            VesselSyncSystem.Singleton.Enabled = false;
+            WarpSystem.Singleton.Enabled = false;
+            PlayerColorSystem.Singleton.Enabled = false;
+            FlagSystem.Singleton.Enabled = false;
+            StatusSystem.Singleton.Enabled = false;
+            PlayerConnectionSystem.Singleton.Enabled = false;
+            ScenarioSystem.Singleton.Enabled = false;
+            CraftLibrarySystem.Singleton.Enabled = false;
+            LockSystem.Singleton.Enabled = false;
+            AdminSystem.Singleton.Enabled = false;
+            GroupSystem.Singleton.Enabled = false;
+            ChatSystem.Singleton.Enabled = false;
+            TimeSyncerSystem.Singleton.Enabled = false;
+            MotdSystem.Singleton.Enabled = false;
+            VesselLockSystem.Singleton.Enabled = false;
+            VesselPositionSystem.Singleton.Enabled = false;
+            VesselFlightStateSystem.Singleton.Enabled = false;
+            VesselRemoveSystem.Singleton.Enabled = false;
+            VesselImmortalSystem.Singleton.Enabled = false;
+            VesselDockSystem.Singleton.Enabled = false;
+            VesselSwitcherSystem.Singleton.Enabled = false;
+            VesselPrecalcSystem.Singleton.Enabled = false;
+            VesselStateSystem.Singleton.Enabled = false;
+            VesselResourceSystem.Singleton.Enabled = false;
+            VesselUpdateSystem.Singleton.Enabled = false;
+            VesselPartModuleSyncSystem.Singleton.Enabled = false;
+            VesselFairingsSystem.Singleton.Enabled = false;
+            KscSceneSystem.Singleton.Enabled = false;
+            AsteroidSystem.Singleton.Enabled = false;
+            FacilitySystem.Singleton.Enabled = false;
+            FlagPlantSystem.Singleton.Enabled = false;
+            VesselEvaSystem.Singleton.Enabled = false;
+            ScreenshotSystem.Singleton.Enabled = false;
+            BugSystem.Singleton.Enabled = false;
         }
 
         #endregion
