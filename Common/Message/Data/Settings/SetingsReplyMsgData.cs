@@ -62,6 +62,7 @@ namespace LunaCommon.Message.Data.Settings
         public string WarpMaster;
         public int VesselPartsSyncMsInterval;
         public bool ShowVesselsInThePast;
+        public int MinScreenshotIntervalMs;
 
         public override string ClassName { get; } = nameof(SettingsReplyMsgData);
 
@@ -120,6 +121,7 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(WarpMaster);
             lidgrenMsg.Write(VesselPartsSyncMsInterval);
             lidgrenMsg.Write(ShowVesselsInThePast);
+            lidgrenMsg.Write(MinScreenshotIntervalMs);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -177,12 +179,13 @@ namespace LunaCommon.Message.Data.Settings
             WarpMaster = lidgrenMsg.ReadString();
             VesselPartsSyncMsInterval = lidgrenMsg.ReadInt32();
             ShowVesselsInThePast = lidgrenMsg.ReadBoolean();
+            MinScreenshotIntervalMs = lidgrenMsg.ReadInt32();
         }
 
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) + 
-                sizeof(bool) * 22 + sizeof(int) * 4 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
+                sizeof(bool) * 22 + sizeof(int) * 5 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
         }
     }
 }

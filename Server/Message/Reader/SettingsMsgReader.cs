@@ -32,6 +32,7 @@ namespace Server.Message.Reader
             msgData.VesselPartsSyncMsInterval = GeneralSettings.SettingsStore.VesselPartsSyncMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;
+            msgData.MinScreenshotIntervalMs = GeneralSettings.SettingsStore.MinScreenshotIntervalMs;
 
             if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom && GameplaySettings.SettingsStore != null)
             {

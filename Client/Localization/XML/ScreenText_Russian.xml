@@ -12,4 +12,7 @@
   <WarpDisabled>Невозможно ускорить время, функция не доступна</WarpDisabled>
   <NotWarpMaster>Невозможно ускорить время, у вас недостаточно привилегий!</NotWarpMaster>
   <WaitingSubspace>Невозможно ускорить время, ожидание subspace id от сервера</WaitingSubspace>
+  <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
+  <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

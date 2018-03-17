@@ -12,4 +12,7 @@
   <WarpDisabled>时间加速在本服务器被禁用，无法进行时间加速.</WarpDisabled>
   <NotWarpMaster>您不是时间加速主控，无法进行时间加速.</NotWarpMaster>
   <WaitingSubspace>正在等待来自服务器的子空间ID，无法进行时间加速.</WaitingSubspace>
+  <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
+  <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

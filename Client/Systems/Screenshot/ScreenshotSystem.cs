@@ -1,9 +1,10 @@
 using LunaClient.Base;
 using LunaClient.Localization;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
-using LunaCommon;
 using System;
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 
@@ -41,11 +42,14 @@ namespace LunaClient.Systems.Screenshot
 
         #endregion
 
+        /// <summary>
+        /// Checks and sends if we took a screenshot
+        /// </summary>
         public void CheckScreenshots()
         {
             if (GameSettings.TAKE_SCREENSHOT.GetKeyDown())
             {
-                if (DateTime.Now - _lastTakenScreenshot > TimeSpan.FromMilliseconds(CommonConstants.MinScreenshotMsInterval))
+                if (DateTime.Now - _lastTakenScreenshot > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinScreenshotIntervalMs))
                 {
                     _lastTakenScreenshot = DateTime.Now;
                     var path = CommonUtil.CombinePaths(MainSystem.KspPath, "Screenshots");
@@ -61,11 +65,17 @@ namespace LunaClient.Systems.Screenshot
                 }
                 else
                 {
-                    ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ScreenshotInterval, 20f, ScreenMessageStyle.UPPER_CENTER);
+                    var msg = LocalizationContainer.ScreenText.ScreenshotInterval.Replace("$1", TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinScreenshotIntervalMs).TotalSeconds
+                            .ToString(CultureInfo.InvariantCulture));
+
+                    ScreenMessages.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);
                 }
             }
         }
 
+        /// <summary>
+        /// Saves the requested image to disk
+        /// </summary>
         public void SaveImage(string folder, long dateTaken)
         {
             if (DownloadedImages.TryGetValue(folder, out var downloadedImages) && downloadedImages.TryGetValue(dateTaken, out var image))

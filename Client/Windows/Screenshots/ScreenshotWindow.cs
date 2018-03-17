@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.Screenshot;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -65,13 +66,13 @@ namespace LunaClient.Windows.Screenshots
             if (SafeDisplay)
             {
                 FoldersWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6719 + MainSystem.WindowOffset,
-                    FoldersWindowRect, DrawContent, "LunaMultiplayer - Folder Library", WindowStyle, FoldersLayoutOptions));
+                    FoldersWindowRect, DrawContent, LocalizationContainer.ScreenshotWindowText.Folders, WindowStyle, FoldersLayoutOptions));
             }
 
             if (SafeDisplay && !string.IsNullOrEmpty(SelectedFolder) && System.MiniatureImages.ContainsKey(SelectedFolder))
             {
                 LibraryWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6720 + MainSystem.WindowOffset,
-                    LibraryWindowRect, DrawLibraryContent, $"LunaMultiplayer - {SelectedFolder} Library", WindowStyle,
+                    LibraryWindowRect, DrawLibraryContent, $"{SelectedFolder} {LocalizationContainer.ScreenshotWindowText.Screenshots}", WindowStyle,
                     LibraryLayoutOptions));
             }
 

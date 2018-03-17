@@ -22,5 +22,6 @@ namespace LunaClient.Systems.SettingsSys
         public string WarpMaster { get; set; }
         public int VesselPartsSyncMsInterval { get; set; }
         public bool ShowVesselsInThePast { get; set; }
+        public int MinScreenshotIntervalMs { get; set; }
     }
 }

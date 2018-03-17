@@ -11,5 +11,8 @@
   <SpectatingRemoved>Le vaisseau que vous observiez a été supprimé.</SpectatingRemoved>
   <WarpDisabled>Warp impossible, le warp a été désactivé sur ce serveur.</WarpDisabled>
   <NotWarpMaster>Warp impossible, vous n'êtes pas le maître du warp.</NotWarpMaster>
-  <WaitingSubspace>Warp impossible, attente de l'ID de sous-espace du serveur.</WaitingSubspace> 
+  <WaitingSubspace>Warp impossible, attente de l'ID de sous-espace du serveur.</WaitingSubspace>
+  <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
+  <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

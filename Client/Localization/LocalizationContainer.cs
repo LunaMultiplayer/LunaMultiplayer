@@ -25,6 +25,7 @@ namespace LunaClient.Localization
         public static OutdatedDialogText OutdatedDialogText = new OutdatedDialogText();
         public static InstallDialogText InstallDialogText = new InstallDialogText();
         public static ServerDetailsWindowText ServerDetailsWindowText = new ServerDetailsWindowText();
+        public static ScreenshotWindowText ScreenshotWindowText = new ScreenshotWindowText();
         public static ScreenText ScreenText = new ScreenText();
 
         private static readonly string LocalizationFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Localization");
@@ -70,6 +71,7 @@ namespace LunaClient.Localization
             LoadWindowTexts(language, ref DisclaimerDialogText);
             LoadWindowTexts(language, ref OutdatedDialogText);
             LoadWindowTexts(language, ref InstallDialogText);
+            LoadWindowTexts(language, ref ScreenshotWindowText);
             LoadWindowTexts(language, ref ScreenText);
         }
 

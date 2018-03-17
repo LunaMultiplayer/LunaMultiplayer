@@ -81,6 +81,15 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Username of the player who control the warp if WarpMode is set to MASTER")]
         public string WarpMaster { get; set; } = "";
 
+        [XmlComment(Value = "Minimum interval between screenshots in milliseconds")]
+        public int MinScreenshotIntervalMs { get; set; } = 30000;
+
+        [XmlComment(Value = "Maximum screenshots kept per user")]
+        public int MaxScreenshotsPerUser { get; set; } = 30;
+
+        [XmlComment(Value = "Maximum screenshots folders kept")]
+        public int MaxScreenshotsFolders { get; set; } = 50;
+
         [XmlComment(Value = "Enable white-listing of users")]
         public bool Whitelisted { get; set; } = false;
 

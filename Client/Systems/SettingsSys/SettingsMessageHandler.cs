@@ -30,6 +30,7 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.ShowVesselsInThePast = msgData.ShowVesselsInThePast;
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
             SettingsSystem.ServerSettings.GameDifficulty = msgData.GameDifficulty;
+            SettingsSystem.ServerSettings.MinScreenshotIntervalMs = msgData.MinScreenshotIntervalMs;
 
             if (SettingsSystem.ServerSettings.GameDifficulty != GameDifficulty.Custom)
             {

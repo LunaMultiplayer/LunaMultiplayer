@@ -12,4 +12,7 @@
   <WarpDisabled>No puedes adelantar el tiempo. Esta opción esta desabilitada en el servidor</WarpDisabled>
   <NotWarpMaster>No puedes adelantar el tiempo. ¡No eres el jugador designado!</NotWarpMaster>
   <WaitingSubspace>No puedes adelantar el tiempo. Esperando un id de subspacio del servidor</WaitingSubspace>
+  <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
+  <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

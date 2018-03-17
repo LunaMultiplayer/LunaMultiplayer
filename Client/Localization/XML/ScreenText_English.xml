@@ -11,5 +11,8 @@
   <SpectatingRemoved>The vessel you were spectating was removed</SpectatingRemoved>
   <WarpDisabled>Cannot warp, warping is disabled on this server</WarpDisabled>
   <NotWarpMaster>Cannot warp, you are not the warp master!</NotWarpMaster>
-  <WaitingSubspace>Cannot warp, waiting subspace id from the server</WaitingSubspace>
+  <WaitingSubspace>Cannot warp, waiting subspace id from the server</WaitingSubspace>  
+  <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
+  <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

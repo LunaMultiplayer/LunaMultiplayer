@@ -12,4 +12,7 @@
   <WarpDisabled>Zeitraffer nicht möglich, Zeitraffer ist auf diesem Server deaktiviert</WarpDisabled>
   <NotWarpMaster>Zeitraffer nicht möglich, du bist nicht der Meister des Zeitraffers!</NotWarpMaster>
   <WaitingSubspace>Zeitraffer nicht möglich, warte auf Sub-Universum-ID vom Server</WaitingSubspace>
+  <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
+  <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>
