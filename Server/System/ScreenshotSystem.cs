@@ -62,29 +62,13 @@ namespace Server.System
                     LunaLog.Warning($"{client.PlayerName} is sending screenshots too fast!");
                     return;
                 }
-                
+
                 //Remove oldest screenshots if the player has too many
                 RemovePlayerOldestScreenshots(playerFolder);
 
                 //Checks if we are above the max folders limit
                 CheckMaxFolders();
             });
-        }
-
-        /// <summary>
-        /// Checks if we have too many player folders and if so, it deletes the oldest one
-        /// </summary>
-        public static void CheckMaxFolders()
-        {
-            while (Directory.GetDirectories(ScreenshotFolder).Length > GeneralSettings.SettingsStore.MaxScreenshotsFolders)
-            {
-                var oldestFolder = Directory.GetDirectories(ScreenshotFolder).Select(d => new DirectoryInfo(d)).OrderBy(d => d.LastWriteTime).FirstOrDefault();
-                if (oldestFolder != null)
-                {
-                    LunaLog.Debug($"Removing oldest screenshot folder {oldestFolder.Name}");
-                    Directory.Delete(oldestFolder.FullName, true);
-                }
-            }
         }
 
         /// <summary>
@@ -95,11 +79,12 @@ namespace Server.System
             Task.Run(() =>
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotFoldersReplyMsgData>();
-                msgData.Folders = Directory.GetDirectories(ScreenshotFolder).Select(d=> new DirectoryInfo(d).Name).ToArray();
+                msgData.Folders = Directory.GetDirectories(ScreenshotFolder).Select(d => new DirectoryInfo(d).Name).ToArray();
                 msgData.NumFolders = msgData.Folders.Length;
 
                 MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
-                LunaLog.Debug($"Sending {msgData.NumFolders} screenshot folders to: {client.PlayerName}");
+                if (msgData.NumFolders > 0)
+                    LunaLog.Debug($"Sending {msgData.NumFolders} screenshot folders to: {client.PlayerName}");
             });
         }
 
@@ -139,8 +124,9 @@ namespace Server.System
                 msgData.Screenshots = screenshots.ToArray();
                 msgData.NumScreenshots = screenshots.Count;
 
-                LunaLog.Debug($"Sending {msgData.NumScreenshots} ({data.FolderName}) screenshots to: {client.PlayerName}");
                 MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
+                if (msgData.NumScreenshots > 0)
+                    LunaLog.Debug($"Sending {msgData.NumScreenshots} ({data.FolderName}) screenshots to: {client.PlayerName}");
             });
         }
 
@@ -171,19 +157,36 @@ namespace Server.System
         }
 
         #region Private methods
-        
+
+        /// <summary>
+        /// Checks if we have too many player folders and if so, it deletes the oldest one
+        /// </summary>
+        private static void CheckMaxFolders()
+        {
+            while (Directory.GetDirectories(ScreenshotFolder).Length > GeneralSettings.SettingsStore.MaxScreenshotsFolders)
+            {
+                var oldestFolder = Directory.GetDirectories(ScreenshotFolder).Select(d => new DirectoryInfo(d)).OrderBy(d => d.LastWriteTime).FirstOrDefault();
+                if (oldestFolder != null)
+                {
+                    LunaLog.Debug($"Removing oldest screenshot folder {oldestFolder.Name}");
+                    Directory.Delete(oldestFolder.FullName, true);
+                }
+            }
+        }
+
         /// <summary>
         /// If the player has too many screenshots this method will remove the oldest ones
         /// </summary>
         private static void RemovePlayerOldestScreenshots(string playerFolder)
         {
-            while (Directory.GetFiles(playerFolder).Length > GeneralSettings.SettingsStore.MaxScreenshotsPerUser)
+            while (new DirectoryInfo(playerFolder).GetFiles().Where(f => !f.Name.StartsWith(SmallFilePrefix)).Count() > GeneralSettings.SettingsStore.MaxScreenshotsPerUser)
             {
-                var oldestScreenshot = new DirectoryInfo(playerFolder).GetFiles().OrderBy(f => f.LastWriteTime).FirstOrDefault();
+                var oldestScreenshot = new DirectoryInfo(playerFolder).GetFiles().Where(f => !f.Name.StartsWith(SmallFilePrefix)).OrderBy(f => f.LastWriteTime).FirstOrDefault();
                 if (oldestScreenshot != null)
                 {
                     LunaLog.Debug($"Deleting old screenshot {oldestScreenshot.FullName}");
                     File.Delete(oldestScreenshot.FullName);
+                    File.Delete(Path.Combine(ScreenshotFolder, playerFolder, SmallFilePrefix + oldestScreenshot.Name));
                 }
             }
         }

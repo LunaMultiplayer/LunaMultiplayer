@@ -86,7 +86,6 @@ namespace LunaClient.Systems.Screenshot
 
                 var filePath = CommonUtil.CombinePaths(folderPath, $"{dateTaken}.png");
                 File.WriteAllBytes(filePath, image.Data);
-
                 ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ImageSaved, 20f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
