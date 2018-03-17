@@ -163,12 +163,13 @@ namespace LunaClient.Windows.ServerList
             if (DisplayedServers == null || !DisplayedServers.Any())
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Space(WindowWidth * 0.35f);
+                GUILayout.FlexibleSpace();
                 GUILayout.BeginVertical();
-                GUILayout.Space(WindowHeight * 0.25f);
+                GUILayout.FlexibleSpace();
                 GUILayout.Label(LocalizationContainer.ServerListWindowText.NoServers, BigLabelStyle);
                 GUILayout.FlexibleSpace();
                 GUILayout.EndVertical();
+                GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
             }
             else
