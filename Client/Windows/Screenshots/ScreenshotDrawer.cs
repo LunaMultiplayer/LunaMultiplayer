@@ -67,17 +67,46 @@ namespace LunaClient.Windows.Screenshots
             LibraryScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
             if (System.MiniatureImages.TryGetValue(SelectedFolder, out var miniatures))
             {
-                var miniaturesList = miniatures.Values.ToArray();
+                var miniaturesList = miniatures.Values.OrderBy(m => m.DateTaken).ToArray();
+                if (!miniaturesList.Any())
+                {
+                    ShowWaitIcon();
+                }
                 for (var i = 0; i < miniaturesList.Length; i += 4)
                 {
                     GUILayout.BeginHorizontal();
-                    DrawMiniature(miniaturesList[i]);
-                    if (miniaturesList.Length > i + 1) DrawMiniature(miniaturesList[i + 1]);
-                    if (miniaturesList.Length > i + 2) DrawMiniature(miniaturesList[i + 2]);
-                    if (miniaturesList.Length > i + 3) DrawMiniature(miniaturesList[i + 3]);
+
                     GUILayout.FlexibleSpace();
+                    DrawMiniature(miniaturesList[i]);
+                    GUILayout.FlexibleSpace();
+
+                    if (miniaturesList.Length > i + 1)
+                    {
+                        GUILayout.FlexibleSpace();
+                        DrawMiniature(miniaturesList[i + 1]);
+                        GUILayout.FlexibleSpace();
+                    }
+
+                    if (miniaturesList.Length > i + 2)
+                    {
+                        GUILayout.FlexibleSpace();
+                        DrawMiniature(miniaturesList[i + 2]);
+                        GUILayout.FlexibleSpace();
+                    }
+
+                    if (miniaturesList.Length > i + 3)
+                    {
+                        GUILayout.FlexibleSpace();
+                        DrawMiniature(miniaturesList[i + 3]);
+                        GUILayout.FlexibleSpace();
+                    }
+
                     GUILayout.EndHorizontal();
                 }
+            }
+            else
+            {
+                ShowWaitIcon();
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
@@ -123,11 +152,28 @@ namespace LunaClient.Windows.Screenshots
             {
                 GUILayout.Label(screenShot.Texture);
             }
+            else
+            {
+                ShowWaitIcon();
+            }
             GUILayout.EndScrollView();
 
             GUILayout.EndVertical();
         }
 
         #endregion
+
+        private void ShowWaitIcon()
+        {
+            GUILayout.BeginVertical();
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(WaitIcon);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndVertical();
+        }
     }
 }

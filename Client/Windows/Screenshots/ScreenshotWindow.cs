@@ -38,6 +38,7 @@ namespace LunaClient.Windows.Screenshots
         private Texture2D RefreshIcon { get; set; }
         private Texture2D SaveIcon { get; set; }
         private Texture2D CloseIcon { get; set; }
+        private Texture2D WaitIcon { get; set; }
 
         #endregion
 
@@ -88,6 +89,7 @@ namespace LunaClient.Windows.Screenshots
 
         public override void SetStyles()
         {
+            WaitIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "waitBig.png"), 16, 16);
             CloseIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "close.png"), 16, 16);
             SaveIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "save.png"), 16, 16);
             RefreshIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "refresh.png"), 16, 16);

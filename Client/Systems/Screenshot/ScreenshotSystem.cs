@@ -59,7 +59,7 @@ namespace LunaClient.Systems.Screenshot
                         if (photo != null)
                         {
                             TaskFactory.StartNew(() => MessageSender.SendScreenshot(File.ReadAllBytes(photo.FullName)));
-                            ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ScreenshotTaken, 20f, ScreenMessageStyle.UPPER_CENTER);
+                            ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ScreenshotTaken, 10f, ScreenMessageStyle.UPPER_CENTER);
                         }
                     }, 0.3f);
                 }
