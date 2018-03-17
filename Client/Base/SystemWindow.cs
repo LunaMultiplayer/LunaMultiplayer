@@ -10,6 +10,15 @@ namespace LunaClient.Base
         where T : class, IWindow, new()
         where TS : class, ISystem
     {
+        private bool _display;
+
+        public override bool Display
+        {
+            get => _display && System.Enabled;
+            set => _display = value;
+        }
+
+
         private static TS _system;
 
         /// <summary>

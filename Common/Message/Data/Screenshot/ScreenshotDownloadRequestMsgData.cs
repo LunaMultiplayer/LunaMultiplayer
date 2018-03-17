@@ -11,7 +11,7 @@ namespace LunaCommon.Message.Data.Screenshot
         public override ScreenshotMessageType ScreenshotMessageType => ScreenshotMessageType.DownloadRequest;
 
         public string FolderName;
-        public long PhotoId;
+        public long DateTaken;
 
         public override string ClassName { get; } = nameof(ScreenshotDownloadRequestMsgData);
 
@@ -20,7 +20,7 @@ namespace LunaCommon.Message.Data.Screenshot
             base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(FolderName);
-            lidgrenMsg.Write(PhotoId);
+            lidgrenMsg.Write(DateTaken);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -28,7 +28,7 @@ namespace LunaCommon.Message.Data.Screenshot
             base.InternalDeserialize(lidgrenMsg);
 
             FolderName = lidgrenMsg.ReadString();
-            PhotoId = lidgrenMsg.ReadInt32();
+            DateTaken = lidgrenMsg.ReadInt64();
         }
 
         internal override int InternalGetMessageSize()

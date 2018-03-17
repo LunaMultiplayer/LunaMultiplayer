@@ -56,6 +56,8 @@ namespace LunaClient.Windows.Screenshots
 
         public void DrawLibraryContent(int windowId)
         {
+            if (string.IsNullOrEmpty(SelectedFolder)) return;
+
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
 
@@ -66,12 +68,13 @@ namespace LunaClient.Windows.Screenshots
             if (System.MiniatureImages.TryGetValue(SelectedFolder, out var miniatures))
             {
                 var miniaturesList = miniatures.Values.ToArray();
-                for (var i = 0; i < miniaturesList.Length; i += 3)
+                for (var i = 0; i < miniaturesList.Length; i += 4)
                 {
                     GUILayout.BeginHorizontal();
                     DrawMiniature(miniaturesList[i]);
                     if (miniaturesList.Length > i + 1) DrawMiniature(miniaturesList[i + 1]);
                     if (miniaturesList.Length > i + 2) DrawMiniature(miniaturesList[i + 2]);
+                    if (miniaturesList.Length > i + 3) DrawMiniature(miniaturesList[i + 3]);
                     GUILayout.EndHorizontal();
                 }
             }
@@ -81,7 +84,6 @@ namespace LunaClient.Windows.Screenshots
 
         private void DrawMiniature(Screenshot miniature)
         {
-            GUILayout.FlexibleSpace();
             if (GUILayout.Button(miniature.Texture, ButtonStyle, GUILayout.Width(miniature.Width), GUILayout.Height(miniature.Height)))
             {
                 SelectedImage = miniature.DateTaken;
@@ -97,11 +99,16 @@ namespace LunaClient.Windows.Screenshots
 
         public void DrawImageContent(int windowId)
         {
+            if (SelectedImage == 0) return;
+
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Button(SaveIcon, ButtonStyle);
+            if (GUILayout.Button(SaveIcon, ButtonStyle))
+            {
+                System.SaveImage(SelectedFolder, SelectedImage);
+            }
             if (GUILayout.Button(CloseIcon, ButtonStyle))
             {
                 SelectedImage = 0;

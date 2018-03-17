@@ -126,20 +126,20 @@ namespace Server.System
         {
             Task.Run(() =>
             {
-                var file = Path.Combine(ScreenshotFolder, data.FolderName, $"{data.PhotoId}.png");
+                var file = Path.Combine(ScreenshotFolder, data.FolderName, $"{data.DateTaken}.png");
                 if (File.Exists(file))
                 {
                     var bitmap = new Bitmap(file);
 
                     var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotDataMsgData>();
-                    msgData.Screenshot.DateTaken = data.PhotoId;
+                    msgData.Screenshot.DateTaken = data.DateTaken;
                     msgData.Screenshot.Data = File.ReadAllBytes(file);
                     msgData.Screenshot.NumBytes = msgData.Screenshot.Data.Length;
                     msgData.Screenshot.Height = (ushort)bitmap.Height;
                     msgData.Screenshot.Width = (ushort)bitmap.Width;
                     msgData.Screenshot.FolderName = data.FolderName;
 
-                    LunaLog.Debug($"Sending screenshot ({msgData.Screenshot.NumBytes} bytes): {data.PhotoId} to: {client.PlayerName}.");
+                    LunaLog.Debug($"Sending screenshot ({msgData.Screenshot.NumBytes} bytes): {data.DateTaken} to: {client.PlayerName}.");
                     MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
                 }
             });

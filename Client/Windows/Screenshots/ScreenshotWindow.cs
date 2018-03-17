@@ -43,13 +43,13 @@ namespace LunaClient.Windows.Screenshots
         private static bool _display;
         public override bool Display
         {
-            get => _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
+            get => base.Display && _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
                    HighLogic.LoadedScene >= GameScenes.SPACECENTER;
             set
             {
-                if (value && !_display)
+                if (value && !_display && System.MiniatureImages.Count == 0)
                     System.MessageSender.RequestFolders();
-                _display = value;
+                base.Display = _display = value;
             }
         }
 

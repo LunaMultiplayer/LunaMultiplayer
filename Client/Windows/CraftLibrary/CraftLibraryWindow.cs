@@ -12,9 +12,9 @@ namespace LunaClient.Windows.CraftLibrary
         private static bool _display;
         public override bool Display
         {
-            get => _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
+            get => base.Display && _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
                    HighLogic.LoadedScene >= GameScenes.SPACECENTER;
-            set => _display = value;
+            set => base.Display = _display = value;
         }
 
         public override void Update()

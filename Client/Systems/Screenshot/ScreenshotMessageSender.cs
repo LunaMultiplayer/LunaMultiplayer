@@ -56,11 +56,11 @@ namespace LunaClient.Systems.Screenshot
             SendMessage(msgData);
         }
 
-        public void RequestImage(string folderName, long photoId)
+        public void RequestImage(string folderName, long dateTaken)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ScreenshotDownloadRequestMsgData>();
             msgData.FolderName = folderName;
-            msgData.PhotoId = photoId;
+            msgData.DateTaken = dateTaken;
 
             SendMessage(msgData);
         }
