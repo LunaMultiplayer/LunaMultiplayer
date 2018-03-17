@@ -6,7 +6,6 @@ using System;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
-using UnityEngine;
 
 namespace LunaClient.Systems.Screenshot
 {
@@ -15,8 +14,8 @@ namespace LunaClient.Systems.Screenshot
         #region Fields and properties
 
         private static DateTime _lastTakenScreenshot = DateTime.MinValue;
-        public ConcurrentDictionary<string, ConcurrentDictionary<long, Texture2D>> MiniatureImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Texture2D>>();
-        public ConcurrentDictionary<string, ConcurrentDictionary<long, Texture2D>> DownloadedImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Texture2D>>();
+        public ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>> MiniatureImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>>();
+        public ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>> DownloadedImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>>();
 
         #endregion
 

@@ -1,6 +1,7 @@
 ﻿using LunaCommon;
 using LunaCommon.Message.Data.Screenshot;
 using LunaCommon.Message.Server;
+using LunaCommon.Time;
 using Server.Client;
 using Server.Context;
 using Server.Log;
@@ -39,6 +40,7 @@ namespace Server.System
                 var lastTime = LastUploadRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
                 if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(CommonConstants.MinScreenshotMsInterval))
                 {
+                    if (data.Screenshot.DateTaken == 0) data.Screenshot.DateTaken = LunaTime.UtcNow.ToBinary();
                     var fileName = $"{data.Screenshot.DateTaken}.png";
                     if (!File.Exists(fileName))
                     {
@@ -69,7 +71,7 @@ namespace Server.System
             Task.Run(() =>
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotFoldersReplyMsgData>();
-                msgData.Folders = Directory.GetDirectories(ScreenshotFolder);
+                msgData.Folders = Directory.GetDirectories(ScreenshotFolder).Select(d=> new DirectoryInfo(d).Name).ToArray();
                 msgData.NumFolders = msgData.Folders.Length;
 
                 MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
@@ -87,12 +89,15 @@ namespace Server.System
                 var folder = Path.Combine(ScreenshotFolder, data.FolderName);
 
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotListReplyMsgData>();
-                foreach (var file in Directory.GetFiles(folder).Where(f => f.StartsWith(SmallFilePrefix)))
+                foreach (var file in Directory.GetFiles(folder).Where(f => Path.GetFileNameWithoutExtension(f).StartsWith(SmallFilePrefix)))
                 {
-                    var bitmap = new Bitmap(file);
-                    var contents = File.ReadAllBytes(file);
                     if (long.TryParse(Path.GetFileNameWithoutExtension(file).Substring(SmallFilePrefix.Length), out var dateTaken))
                     {
+                        if (data.AlreadyOwnedPhotoIds.Contains(dateTaken))
+                            continue;
+
+                        var bitmap = new Bitmap(file);
+                        var contents = File.ReadAllBytes(file);
                         screenshots.Add(new ScreenshotInfo
                         {
                             Data = contents,
@@ -109,7 +114,7 @@ namespace Server.System
                 msgData.Screenshots = screenshots.ToArray();
                 msgData.NumScreenshots = screenshots.Count;
 
-                LunaLog.Normal($"Sending {msgData.NumScreenshots} screnshots in folder {data.FolderName} to: {client.PlayerName}");
+                LunaLog.Normal($"Sending {msgData.NumScreenshots} screnshots in folder \"{folder}\" to: {client.PlayerName}");
                 MessageQueuer.SendToClient<ScreenshotSrvMsg>(client, msgData);
             });
         }

@@ -5,7 +5,6 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
-using UnityEngine;
 
 namespace LunaClient.Systems.Screenshot
 {
@@ -30,8 +29,8 @@ namespace LunaClient.Systems.Screenshot
                     var foldersMsg = (ScreenshotFoldersReplyMsgData)msgData;
                     for (var i = 0; i < foldersMsg.NumFolders; i++)
                     {
-                        System.DownloadedImages.TryAdd(foldersMsg.Folders[i], new ConcurrentDictionary<long, Texture2D>());
-                        System.MiniatureImages.TryAdd(foldersMsg.Folders[i], new ConcurrentDictionary<long, Texture2D>());
+                        System.DownloadedImages.TryAdd(foldersMsg.Folders[i], new ConcurrentDictionary<long, Screenshot>());
+                        System.MiniatureImages.TryAdd(foldersMsg.Folders[i], new ConcurrentDictionary<long, Screenshot>());
                     }
                     break;
                 case ScreenshotMessageType.ListReply:
@@ -50,13 +49,10 @@ namespace LunaClient.Systems.Screenshot
             }
         }
 
-        private static Texture2D CreateImage(int width, int height, byte[] data, int numBytes)
+        private static Screenshot CreateImage(int width, int height, byte[] data, int numBytes)
         {
-            var image = new Texture2D(width, height);
-            var imgData = new byte[numBytes];
-
-            Array.Copy(data, imgData, numBytes);
-            image.LoadImage(data);
+            var image = new Screenshot {Width = width, Height = height, Data = new byte[numBytes]};
+            Array.Copy(data, image.Data, numBytes);
             return image;
         }
     }

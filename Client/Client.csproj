@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Systems\Bug\BugSystem.cs" />
     <Compile Include="Systems\Bug\BugEvents.cs" />
+    <Compile Include="Systems\Screenshot\Screenshot.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotMessageHandler.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotMessageSender.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotSystem.cs" />
@@ -154,6 +155,8 @@
     <Compile Include="Windows\Locks\VesselLockDisplay.cs" />
     <Compile Include="Windows\Locks\LocksDrawer.cs" />
     <Compile Include="Windows\Locks\LocksWindow.cs" />
+    <Compile Include="Windows\Screenshots\ScreenshotDrawer.cs" />
+    <Compile Include="Windows\Screenshots\ScreenshotWindow.cs" />
     <Compile Include="Windows\ServerDetails\ServerDetailsDrawer.cs" />
     <Compile Include="Windows\ServerDetails\ServerDetailsWindow.cs" />
     <Compile Include="Windows\Status\StatusTexts.cs" />

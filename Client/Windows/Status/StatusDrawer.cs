@@ -7,6 +7,7 @@ using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
 using LunaClient.Windows.Locks;
 using LunaClient.Windows.Options;
+using LunaClient.Windows.Screenshots;
 using LunaClient.Windows.Systems;
 using LunaCommon;
 using UnityEngine;
@@ -28,8 +29,7 @@ namespace LunaClient.Windows.Status
 
             ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, ChatIcon, ButtonStyle);
             CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, RocketIcon, ButtonStyle);
-            GUILayout.Toggle(false, CameraIcon, ButtonStyle);
-
+            ScreenshotsWindow.Singleton.Display = GUILayout.Toggle(ScreenshotsWindow.Singleton.Display, CameraIcon, ButtonStyle);
 #if DEBUG
             DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, StatusTexts.DebugBtnTxt, ButtonStyle);
             SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, StatusTexts.SystemsBtnTxt, ButtonStyle);
@@ -150,7 +150,7 @@ namespace LunaClient.Windows.Status
                    WarpSystem.Subspaces.ContainsKey(WarpSystem.CurrentSubspace) && WarpSystem.Subspaces.ContainsKey(subspaceId) &&
                    WarpSystem.Subspaces[WarpSystem.CurrentSubspace] < WarpSystem.Subspaces[subspaceId];
         }
-        
+
         private void DrawPlayerEntry(PlayerStatus playerStatus)
         {
             if (playerStatus == null)
