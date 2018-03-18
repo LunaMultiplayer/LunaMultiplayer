@@ -25,6 +25,7 @@
 
 *[Official website](http://lunamultiplayer.com)*
 
+*[Latest build updater](https://github.com/LunaMultiplayer/LunaMultiplayerUpdater)*
 
 ### Main features:
 
