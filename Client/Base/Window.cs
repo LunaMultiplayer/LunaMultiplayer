@@ -114,7 +114,7 @@ namespace LunaClient.Base
             DrawCloseButton(OnCloseButton, WindowRect);
             if (Resizable)
             {
-                if (GUI.RepeatButton(new Rect(WindowRect.width - 3, WindowRect.height - 3, 10, 10), ResizeIcon))
+                if (GUI.RepeatButton(new Rect(WindowRect.width - 15, WindowRect.height - 15, 10, 10), ResizeIcon, ResizeButtonStyle))
                 {
                     _resizingWindow = true;
                 }

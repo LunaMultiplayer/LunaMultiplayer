@@ -12,6 +12,7 @@ namespace LunaClient.Base
         protected GUIStyle WindowStyle;
         protected GUIStyle ButtonStyle;
         protected GUIStyle SmallButtonStyle;
+        protected GUIStyle ResizeButtonStyle;
         protected GUIStyle LabelStyle;
         protected GUIStyle HyperlinkLabelStyle;
         protected GUIStyle BoldLabelStyle;
@@ -43,6 +44,18 @@ namespace LunaClient.Base
             WindowStyle = new GUIStyle(GUI.skin.window);
             ButtonStyle = new GUIStyle(GUI.skin.button);
             SmallButtonStyle = new GUIStyle(GUI.skin.button) { padding = new RectOffset(0, 0, 0, 0) };
+            ResizeButtonStyle = new GUIStyle(GUI.skin.button) {
+                padding = new RectOffset(0, 0, 0, 0),
+                border = new RectOffset(0,0,0,0),
+                normal = new GUIStyleState {background = ResizeIcon},
+                active = new GUIStyleState { background = ResizeIcon },
+                focused = new GUIStyleState { background = ResizeIcon },
+                hover = new GUIStyleState { background = ResizeIcon },
+                onNormal = new GUIStyleState { background = ResizeIcon },
+                onActive = new GUIStyleState { background = ResizeIcon },
+                onFocused = new GUIStyleState { background = ResizeIcon },
+                onHover = new GUIStyleState { background = ResizeIcon },
+            };
             LabelStyle = new GUIStyle(GUI.skin.label);
             HyperlinkLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.blue } };
             BoldLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.red } };
