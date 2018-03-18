@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
@@ -45,7 +46,7 @@ namespace LunaClient.Windows.CraftLibrary
         {
             base.OnGui();
             if (SafeDisplay)
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset, WindowRect, DrawContent, "LunaMultiplayer - Craft Library", WindowStyle, LayoutOptions));
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.CraftLibraryWindowText.Title, WindowStyle, LayoutOptions));
             if (SafeDisplay && System.SelectedPlayer != null)
                 if (System.PlayersWithCrafts.Contains(System.SelectedPlayer) ||
                     System.SelectedPlayer == SettingsSystem.CurrentSettings.PlayerName)
