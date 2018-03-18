@@ -2,11 +2,43 @@
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace LunaCommon.Message.Base
 {
     public abstract class FactoryBase
     {
+        /// <summary>
+        /// In the constructor we run through this instance and get all the message that inherit BaseMsgType and add them to the dictionary
+        /// </summary>
+        protected FactoryBase()
+        {
+            var msgTypes = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => t.IsClass && t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == BaseMsgType).ToArray();
+
+            foreach (var msgType in msgTypes)
+            {
+                var constructor = msgType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, null);
+                if (constructor == null)
+                {
+                    throw new Exception($"Message type {msgType.FullName} must have an internal parameter-less constructor");
+                }
+
+                var instance = constructor.Invoke(null);
+                var typeProp = msgType.GetProperty("MessageType", BindingFlags.Public | BindingFlags.Instance);
+                if (typeProp == null)
+                {
+                    throw new Exception($"Message type {msgType.FullName} must implement the MessageType property (uint)");
+                }
+
+                var typeVal = typeProp.GetValue(instance, null);
+                MessageDictionary.Add((uint)(int)typeVal, msgType);
+            }
+        }
+
+        protected internal abstract Type BaseMsgType { get; }
+
         /// <summary>
         /// Call this method to deserialize a message
         /// </summary>
@@ -40,12 +72,12 @@ namespace LunaCommon.Message.Base
         /// <summary>
         /// Specify if this factory handle client or server messages
         /// </summary>
-        protected abstract Type HandledMessageTypes { get; }
+        protected internal abstract Type HandledMessageTypes { get; }
 
         /// <summary>
-        ///     Include here all the client/server messages so they can be handled
+        /// Include here all the client/server messages so they can be handled
         /// </summary>
-        protected Dictionary<uint, Type> MessageDictionary { get; } = new Dictionary<uint, Type>();
+        protected internal Dictionary<uint, Type> MessageDictionary { get; } = new Dictionary<uint, Type>();
 
         /// <summary>
         /// Method to retrieve a new message
