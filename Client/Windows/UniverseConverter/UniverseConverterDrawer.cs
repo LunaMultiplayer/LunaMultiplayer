@@ -14,9 +14,6 @@ namespace LunaClient.Windows.UniverseConverter
                 if (GUILayout.Button(saveFolder))
                     Utilities.UniverseConverter.GenerateUniverse(saveFolder);
             GUILayout.EndScrollView();
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button(LocalizationContainer.UniverseConverterWindowText.Close, ButtonStyle))
-                Display = false;
             GUILayout.EndVertical();
         }
     }

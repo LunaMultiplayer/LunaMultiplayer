@@ -47,6 +47,12 @@ namespace LunaClient.Windows.Status
 
         #endregion
 
+        protected override void OnCloseButton()
+        {
+            base.OnCloseButton();
+            MainSystem.ToolbarShowGui = false;
+        }
+
         public override void OnGui()
         {
             base.OnGui();

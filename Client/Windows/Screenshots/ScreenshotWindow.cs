@@ -19,7 +19,6 @@ namespace LunaClient.Windows.Screenshots
         protected const float ImageWindowHeight = 762;
         protected const float ImageWindowWidth = 1024;
 
-        protected Rect FoldersWindowRect { get; set; }
         protected Rect LibraryWindowRect { get; set; }
         protected Rect ImageWindowRect { get; set; }
 
@@ -34,12 +33,7 @@ namespace LunaClient.Windows.Screenshots
 
         private string SelectedFolder { get; set; }
         private long SelectedImage { get; set; } = 0;
-
-        private Texture2D RefreshIcon { get; set; }
-        private Texture2D SaveIcon { get; set; }
-        private Texture2D CloseIcon { get; set; }
-        private Texture2D WaitIcon { get; set; }
-
+        
         #endregion
 
         private static bool _display;
@@ -66,8 +60,8 @@ namespace LunaClient.Windows.Screenshots
             base.OnGui();
             if (SafeDisplay)
             {
-                FoldersWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6719 + MainSystem.WindowOffset,
-                    FoldersWindowRect, DrawContent, LocalizationContainer.ScreenshotWindowText.Folders, WindowStyle, FoldersLayoutOptions));
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6719 + MainSystem.WindowOffset,
+                    WindowRect, DrawContent, LocalizationContainer.ScreenshotWindowText.Folders, WindowStyle, FoldersLayoutOptions));
             }
 
             if (SafeDisplay && !string.IsNullOrEmpty(SelectedFolder) && System.MiniatureImages.ContainsKey(SelectedFolder))
@@ -89,12 +83,7 @@ namespace LunaClient.Windows.Screenshots
 
         public override void SetStyles()
         {
-            WaitIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "waitBig.png"), 16, 16);
-            CloseIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "close.png"), 16, 16);
-            SaveIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "save.png"), 16, 16);
-            RefreshIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "refresh.png"), 16, 16);
-
-            FoldersWindowRect = new Rect(50, Screen.height / 2f - FoldersWindowHeight / 2f, FoldersWindowWidth, FoldersWindowHeight);
+            WindowRect = new Rect(50, Screen.height / 2f - FoldersWindowHeight / 2f, FoldersWindowWidth, FoldersWindowHeight);
             LibraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f, Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
@@ -139,7 +128,7 @@ namespace LunaClient.Windows.Screenshots
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 
-                var shouldLock = FoldersWindowRect.Contains(mousePos) || LibraryWindowRect.Contains(mousePos);
+                var shouldLock = WindowRect.Contains(mousePos) || LibraryWindowRect.Contains(mousePos);
                 if (shouldLock && !IsWindowLocked)
                 {
                     InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, "LMP_ScreenshotLock");

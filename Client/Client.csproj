@@ -74,7 +74,6 @@
     <Compile Include="Localization\Structures\OutdatedDialogText.cs" />
     <Compile Include="Localization\Structures\ServerListWindowText.cs" />
     <Compile Include="Localization\Structures\StatusWindowText.cs" />
-    <Compile Include="Localization\Structures\UniverseConverterWindowText.cs" />
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -398,14 +397,6 @@
     <Content Include="Localization\XML\StatusWindowText_Russian.xml" />
     <Content Include="Localization\XML\StatusWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\StatusWindowText_Spanish.xml" />
-    <Content Include="Localization\XML\UniverseConverterWindowText_Dutch.xml" />
-    <Content Include="Localization\XML\UniverseConverterWindowText_English.xml" />
-    <Content Include="Localization\XML\UniverseConverterWindowText_French.xml" />
-    <Content Include="Localization\XML\UniverseConverterWindowText_German.xml" />
-    <Content Include="Localization\XML\UniverseConverterWindowText_Japanese.xml" />
-    <Content Include="Localization\XML\UniverseConverterWindowText_Russian.xml" />
-    <Content Include="Localization\XML\UniverseConverterWindowText_Simplified_Chinese.xml" />
-    <Content Include="Localization\XML\UniverseConverterWindowText_Spanish.xml" />
     <Content Include="ModuleStore\XML\PartsBehaviour.xml" />
     <Content Include="Resources\LMPButton.png" />
     <Content Include="Resources\LMPButtonLow.png" />

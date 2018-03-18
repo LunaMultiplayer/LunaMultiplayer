@@ -31,6 +31,9 @@ namespace LunaClient.Windows.CraftLibrary
 
         public void DrawLibraryContent(int windowId)
         {
+            //Always draw close button first
+            DrawCloseButton(() => System.SelectedPlayer = null, LibraryWindowRect);
+
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
             var newShowUpload = false;

@@ -39,15 +39,15 @@ namespace LunaClient.Windows.Options
             GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, TempColorLabelStyle);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.OptionsWindowText.Red, SmallOption);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Red, _smallOption);
             TempColor.r = GUILayout.HorizontalScrollbar(TempColor.r, 0, 0, 1);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.OptionsWindowText.Green, SmallOption);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Green, _smallOption);
             TempColor.g = GUILayout.HorizontalScrollbar(TempColor.g, 0, 0, 1);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.OptionsWindowText.Blue, SmallOption);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Blue, _smallOption);
             TempColor.b = GUILayout.HorizontalScrollbar(TempColor.b, 0, 0, 1);
             GUILayout.EndHorizontal();
             TempColorLabelStyle.active.textColor = TempColor;
@@ -93,8 +93,6 @@ namespace LunaClient.Windows.Options
             DrawAdvancedDebugOptions();
 #endif
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Close, ButtonStyle))
-                Display = false;
             GUILayout.EndVertical();
         }
 

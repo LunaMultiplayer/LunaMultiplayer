@@ -20,9 +20,6 @@ namespace LunaClient.Windows.BannedParts
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
-
-            if (GUILayout.Button(LocalizationContainer.BannedPartsWindowText.Close, ButtonStyle))
-                Display = false;
             GUILayout.EndVertical();
         }
     }

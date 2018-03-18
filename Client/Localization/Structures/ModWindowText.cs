@@ -3,7 +3,6 @@
     public class ModWindowText
     {
         public string Title { get; set; } = "LunaMultiplayer - Failed Mod Validation";
-        public string Close { get; set; } = "Close";
         public string MandatoryModsNotFound { get; set; } = "Mandatory mods not found:";
         public string MissingExpansions { get; set; } = "Missing expansions:";
         public string MandatoryModsDifferentShaFound { get; set; } = "Mandatory mods with different SHA found:";

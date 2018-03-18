@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base.Interface;
+using System;
 using UnityEngine;
 
 namespace LunaClient.Base
@@ -110,9 +111,10 @@ namespace LunaClient.Base
 
         protected void DrawContent(int windowId)
         {
+            DrawCloseButton(OnCloseButton, WindowRect);
             if (Resizable)
             {
-                if (GUI.RepeatButton(new Rect(WindowRect.width - 18, 2, 16, 16), ResizeIcon))
+                if (GUI.RepeatButton(new Rect(WindowRect.width - 3, WindowRect.height - 3, 10, 10), ResizeIcon))
                 {
                     _resizingWindow = true;
                 }
@@ -121,6 +123,17 @@ namespace LunaClient.Base
         }
 
         public abstract void DrawWindowContent(int windowId);
+
+        protected virtual void OnCloseButton()
+        {
+            Display = false;
+        }
+
+        protected void DrawCloseButton(Action closeAction, Rect rect)
+        {
+            if (GUI.Button(new Rect(rect.width - 15, 4, 10, 10), CloseIcon, SmallButtonStyle))
+                closeAction.Invoke();
+        }
 
         #endregion
     }

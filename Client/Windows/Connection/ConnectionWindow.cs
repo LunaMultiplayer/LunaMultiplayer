@@ -65,7 +65,13 @@ namespace LunaClient.Windows.Connection
             LabelOptions = new GUILayoutOption[1];
             LabelOptions[0] = GUILayout.Width(100);
         }
-        
+
+        protected override void OnCloseButton()
+        {
+            base.OnCloseButton();
+            MainSystem.ToolbarShowGui = false;
+        }
+
         public override void OnGui()
         {
             base.OnGui();

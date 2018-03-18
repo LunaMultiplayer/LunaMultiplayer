@@ -8,7 +8,7 @@ namespace LunaClient.Windows.Options
 {
     public partial class OptionsWindow : Window<OptionsWindow>
     {
-        private GUILayoutOption[] SmallOption = { GUILayout.Width(100), GUILayout.ExpandWidth(false) };
+        private readonly GUILayoutOption[] _smallOption = { GUILayout.Width(100), GUILayout.ExpandWidth(false) };
 
         public override void OnGui()
         {

@@ -13,8 +13,7 @@ namespace LunaClient.Windows.Screenshots
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-
-            DrawRefreshButton(() => System.MessageSender.RequestFolders(), () => Display = false);
+            DrawRefreshButton(() => System.MessageSender.RequestFolders());
             GUILayout.Space(15);
 
             FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
@@ -24,12 +23,11 @@ namespace LunaClient.Windows.Screenshots
             GUILayout.EndVertical();
         }
 
-        private void DrawRefreshButton(Action refreshAction, Action closeAction)
+        private void DrawRefreshButton(Action refreshAction)
         {
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             if (GUILayout.Button(RefreshIcon, ButtonStyle)) refreshAction.Invoke();
-            if (GUILayout.Button(CloseIcon, ButtonStyle)) closeAction.Invoke();
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }
@@ -55,11 +53,13 @@ namespace LunaClient.Windows.Screenshots
         #region Image library
 
         public void DrawLibraryContent(int windowId)
-        {
+        {            
+            //Always draw close button first
+            DrawCloseButton(()=> SelectedFolder = null, LibraryWindowRect);
+
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-
-            DrawRefreshButton(() => System.MessageSender.RequestMiniatures(SelectedFolder), ()=> SelectedFolder = null);
+            DrawRefreshButton(() => System.MessageSender.RequestMiniatures(SelectedFolder));
             GUILayout.Space(15);
 
             if (string.IsNullOrEmpty(SelectedFolder)) return;
@@ -121,13 +121,16 @@ namespace LunaClient.Windows.Screenshots
                     System.MessageSender.RequestImage(SelectedFolder, SelectedImage);
             }
         }
-
+        
         #endregion
 
         #region Image viewer
 
         public void DrawImageContent(int windowId)
-        {
+        {            
+            //Always draw close button first
+            DrawCloseButton(()=> SelectedImage = 0, ImageWindowRect);
+
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
 
@@ -160,7 +163,7 @@ namespace LunaClient.Windows.Screenshots
 
             GUILayout.EndVertical();
         }
-
+        
         #endregion
 
         private void ShowWaitIcon()

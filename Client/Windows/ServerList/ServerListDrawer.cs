@@ -21,9 +21,7 @@ namespace LunaClient.Windows.ServerList
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Close, ButtonStyle))
-                Display = false;
-            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Refresh, ButtonStyle))
+            if (GUILayout.Button(RefreshIcon, ButtonStyle))
             {
                 NetworkServerList.RequestServers();
                 Thread.Sleep(500);

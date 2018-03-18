@@ -9,6 +9,24 @@ namespace LunaClient.Windows.CraftLibrary
 {
     public partial class CraftLibraryWindow : SystemWindow<CraftLibraryWindow, CraftLibrarySystem>
     {
+        #region Fields
+
+        protected const float WindowHeight = 300;
+        protected const float WindowWidth = 200;
+        protected const float LibraryWindowHeight = 400;
+        protected const float LibraryWindowWidth = 300;
+
+        protected bool ShowUpload { get; set; }
+        
+        protected Rect LibraryWindowRect { get; set; }
+        
+        protected GUILayoutOption[] LibraryLayoutOptions { get; set; }
+
+        protected Vector2 PlayerScrollPos { get; set; }
+        protected Vector2 LibraryScrollPos { get; set; }
+
+        #endregion
+
         private static bool _display;
         public override bool Display
         {
@@ -27,9 +45,7 @@ namespace LunaClient.Windows.CraftLibrary
         {
             base.OnGui();
             if (SafeDisplay)
-                PlayerWindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset, PlayerWindowRect,
-                        DrawContent, "LunaMultiplayer - Craft Library", WindowStyle, PlayerLayoutOptions));
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset, WindowRect, DrawContent, "LunaMultiplayer - Craft Library", WindowStyle, LayoutOptions));
             if (SafeDisplay && System.SelectedPlayer != null)
                 if (System.PlayersWithCrafts.Contains(System.SelectedPlayer) ||
                     System.SelectedPlayer == SettingsSystem.CurrentSettings.PlayerName)
@@ -47,18 +63,17 @@ namespace LunaClient.Windows.CraftLibrary
         {
             //Setup GUI stuff
             //left 50, middle height
-            PlayerWindowRect = new Rect(50, Screen.height / 2f - PlayerWindowHeight / 2f, PlayerWindowWidth,
-                PlayerWindowHeight);
+            WindowRect = new Rect(50, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             //middle of the screen
             LibraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f,
                 Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
-            PlayerLayoutOptions = new GUILayoutOption[4];
-            PlayerLayoutOptions[0] = GUILayout.MinWidth(PlayerWindowWidth);
-            PlayerLayoutOptions[1] = GUILayout.MaxWidth(PlayerWindowWidth);
-            PlayerLayoutOptions[2] = GUILayout.MinHeight(PlayerWindowHeight);
-            PlayerLayoutOptions[3] = GUILayout.MaxHeight(PlayerWindowHeight);
+            LayoutOptions = new GUILayoutOption[4];
+            LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
+            LayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
+            LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
+            LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
 
             LibraryLayoutOptions = new GUILayoutOption[4];
             LibraryLayoutOptions[0] = GUILayout.MinWidth(LibraryWindowWidth);
@@ -93,7 +108,7 @@ namespace LunaClient.Windows.CraftLibrary
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 
-                var shouldLock = PlayerWindowRect.Contains(mousePos) || LibraryWindowRect.Contains(mousePos);
+                var shouldLock = WindowRect.Contains(mousePos) || LibraryWindowRect.Contains(mousePos);
 
                 if (shouldLock && !IsWindowLocked)
                 {
@@ -107,25 +122,5 @@ namespace LunaClient.Windows.CraftLibrary
             if (!SafeDisplay && IsWindowLocked)
                 RemoveWindowLock();
         }
-
-        #region Fields
-
-        protected const float PlayerWindowHeight = 300;
-        protected const float PlayerWindowWidth = 200;
-        protected const float LibraryWindowHeight = 400;
-        protected const float LibraryWindowWidth = 300;
-
-        protected bool ShowUpload { get; set; }
-
-        protected Rect PlayerWindowRect { get; set; }
-        protected Rect LibraryWindowRect { get; set; }
-
-        protected GUILayoutOption[] PlayerLayoutOptions { get; set; }
-        protected GUILayoutOption[] LibraryLayoutOptions { get; set; }
-
-        protected Vector2 PlayerScrollPos { get; set; }
-        protected Vector2 LibraryScrollPos { get; set; }
-
-        #endregion
     }
 }

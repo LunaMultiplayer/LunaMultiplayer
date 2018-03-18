@@ -12,5 +12,4 @@
   <Interpolation>Enable interpolation</Interpolation>
   <GenerateLmpModControl>Generate a server LMPModControl.xml</GenerateLmpModControl>
   <GenerateUniverse>Generate Universe from saved game</GenerateUniverse>
-  <Close>Close</Close>
 </OptionsWindowText>

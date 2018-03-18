@@ -2,8 +2,6 @@
 {
     public class ServerListWindowText
     {
-        public string Close { get; set; } = "Close";
-        public string Refresh { get; set; } = "Refresh";
         public string NoServers { get; set; } = "No servers!";
         public string Ping { get; set; } = "Ping";
         public string Players { get; set; } = "Players";

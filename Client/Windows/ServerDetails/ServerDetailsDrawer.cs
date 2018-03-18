@@ -27,11 +27,6 @@ namespace LunaClient.Windows.ServerDetails
                 ServerListWindow.Singleton.Display = false;
             }
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(LocalizationContainer.ServerDetailsWindowText.Close, ButtonStyle))
-            {
-                Display = false;
-            }
-            GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();

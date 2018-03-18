@@ -147,9 +147,6 @@ namespace LunaClient.Windows.Mod
             }
 
             GUILayout.EndScrollView();
-
-            if (GUILayout.Button(LocalizationContainer.ModWindowText.Close, ButtonStyle))
-                Display = false;
             GUILayout.EndVertical();
         }
     }
