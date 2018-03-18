@@ -195,6 +195,9 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.checkLanded();
             Vessel.checkSplashed();
 
+            //TODO: Check if this doesn't break anything
+            Vessel.orbitDriver.orbit.UpdateFromOrbitAtUT(Vessel.orbitDriver.orbit, Planetarium.GetUniversalTime(), Body);
+
             //Set the position of the vessel based on the orbital parameters
             Vessel.orbitDriver.updateFromParameters();
 
