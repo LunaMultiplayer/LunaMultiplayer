@@ -64,7 +64,7 @@ namespace LunaClient.Windows.Screenshots
 
             if (string.IsNullOrEmpty(SelectedFolder)) return;
 
-            LibraryScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
+            LibraryScrollPos = GUILayout.BeginScrollView(LibraryScrollPos, ScrollStyle);
             if (System.MiniatureImages.TryGetValue(SelectedFolder, out var miniatures))
             {
                 var miniaturesList = miniatures.Values.OrderBy(m => m.DateTaken).ToArray();

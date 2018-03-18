@@ -77,7 +77,7 @@ namespace LunaClient.Windows.Screenshots
                     LibraryLayoutOptions));
             }
 
-            if (SafeDisplay && SelectedImage > 0 && System.DownloadedImages.TryGetValue(SelectedFolder, out var imagesDictionary) && imagesDictionary.ContainsKey(SelectedImage))
+            if (SafeDisplay && SelectedImage > 0 && System.DownloadedImages.ContainsKey(SelectedFolder))
             {
                 ImageWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6721 + MainSystem.WindowOffset,
                     ImageWindowRect, DrawImageContent, $"{DateTime.FromBinary(SelectedImage).ToLongTimeString()}", WindowStyle,
