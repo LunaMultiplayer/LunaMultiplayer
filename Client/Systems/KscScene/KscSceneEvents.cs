@@ -19,7 +19,11 @@ namespace LunaClient.Systems.KscScene
         {
             System.SceneIsAstronautComplex = false;
             HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-            System.ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
+            CoroutineUtil.StartDelayedRoutine("AstronautComplexDespawn", () =>
+            {
+                if (KSCVesselMarkers.fetch != null)
+                    System.ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
+            }, 1.5f);
         }
 
         public void LevelLoaded(GameScenes data)
