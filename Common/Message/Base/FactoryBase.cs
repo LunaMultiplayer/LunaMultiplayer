@@ -10,6 +10,11 @@ namespace LunaCommon.Message.Base
     public abstract class FactoryBase
     {
         /// <summary>
+        /// This dictionary contain all the messages that this factory handle
+        /// </summary>
+        private readonly Dictionary<uint, Type> _messageDictionary = new Dictionary<uint, Type>();
+
+        /// <summary>
         /// In the constructor we run through this instance and get all the message that inherit BaseMsgType and add them to the dictionary
         /// </summary>
         protected FactoryBase()
@@ -33,10 +38,13 @@ namespace LunaCommon.Message.Base
                 }
 
                 var typeVal = typeProp.GetValue(instance, null);
-                MessageDictionary.Add((uint)(int)typeVal, msgType);
+                _messageDictionary.Add((uint)(int)typeVal, msgType);
             }
         }
 
+        /// <summary>
+        /// Specify here the base type of the messages that this factory handle
+        /// </summary>
         protected internal abstract Type BaseMsgType { get; }
 
         /// <summary>
@@ -73,11 +81,6 @@ namespace LunaCommon.Message.Base
         /// Specify if this factory handle client or server messages
         /// </summary>
         protected internal abstract Type HandledMessageTypes { get; }
-
-        /// <summary>
-        /// Include here all the client/server messages so they can be handled
-        /// </summary>
-        protected internal Dictionary<uint, Type> MessageDictionary { get; } = new Dictionary<uint, Type>();
 
         /// <summary>
         /// Method to retrieve a new message
@@ -124,9 +127,9 @@ namespace LunaCommon.Message.Base
         /// <param name="messageType">Message type</param>
         private IMessageBase GetMessageByType(ushort messageType)
         {
-            if (Enum.IsDefined(HandledMessageTypes, (int)messageType) && MessageDictionary.ContainsKey(messageType))
+            if (Enum.IsDefined(HandledMessageTypes, (int)messageType) && _messageDictionary.ContainsKey(messageType))
             {
-                var msg = MessageStore.GetMessage(MessageDictionary[messageType]);
+                var msg = MessageStore.GetMessage(_messageDictionary[messageType]);
                 return msg;
             }
             throw new Exception("Cannot deserialize this type of message!");
