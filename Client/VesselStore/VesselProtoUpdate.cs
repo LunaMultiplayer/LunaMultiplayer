@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems;
-using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
@@ -124,7 +123,7 @@ namespace LunaClient.VesselStore
                     return;
                 }
 
-                var newProto = VesselCommon.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
+                var newProto = VesselSerializer.CreateSafeProtoVesselFromConfigNode(_vesselNode, VesselId);
 
                 //In case there's a deserialization error skip it and keep the older proto
                 if (newProto != null)
