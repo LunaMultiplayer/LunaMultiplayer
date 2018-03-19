@@ -24,6 +24,8 @@ namespace LunaClient.Systems.CraftLibrary
 
         public List<CraftEntry> OwnCrafts { get; } = new List<CraftEntry>();
 
+        public ConcurrentQueue<string> DownloadedCraftsNotification { get; } = new ConcurrentQueue<string>();
+
         #endregion
 
         #region Base overrides
@@ -36,6 +38,14 @@ namespace LunaClient.Systems.CraftLibrary
         {
             base.OnEnabled();
             RefreshOwnCrafts();
+            MessageSender.SendRequestFoldersMsg();
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, NotifyDownloadedCrafts));
+        }
+
+        private void NotifyDownloadedCrafts()
+        {
+            while (DownloadedCraftsNotification.TryDequeue(out var message))
+                ScreenMessages.PostScreenMessage($"({message}) {LocalizationContainer.ScreenText.CraftSaved}", 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
         protected override void OnDisabled()
@@ -49,6 +59,9 @@ namespace LunaClient.Systems.CraftLibrary
 
         #region Public methods
 
+        /// <summary>
+        /// Refreshes the list of our own crafts
+        /// </summary>
         public void RefreshOwnCrafts()
         {
             var vabFolder = CommonUtil.CombinePaths(SaveFolder, "Ships", "Vab");
@@ -94,6 +107,9 @@ namespace LunaClient.Systems.CraftLibrary
             }
         }
 
+        /// <summary>
+        /// Saves a craft to the hard drive
+        /// </summary>
         public void SaveCraftToDisk(CraftEntry craft)
         {
             string folder;
@@ -115,9 +131,13 @@ namespace LunaClient.Systems.CraftLibrary
             var path = CommonUtil.CombinePaths(folder, $"{craft.CraftName}.craft");
             File.WriteAllBytes(path, craft.CraftData);
 
-            ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CraftSaved, 5f, ScreenMessageStyle.UPPER_CENTER);
+            //Add it to the queue notification as we are in another thread
+            DownloadedCraftsNotification.Enqueue(craft.CraftName);
         }
 
+        /// <summary>
+        /// Sends a craft to the server if possible
+        /// </summary>
         public void SendCraft(CraftEntry craft)
         {
             if (DateTime.Now - _lastRequest > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs))
@@ -135,6 +155,9 @@ namespace LunaClient.Systems.CraftLibrary
             }
         }
 
+        /// <summary>
+        /// Request a craft to the server if possible
+        /// </summary>
         public void RequestCraft(CraftBasicEntry craft)
         {
             if (DateTime.Now - _lastRequest > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs))

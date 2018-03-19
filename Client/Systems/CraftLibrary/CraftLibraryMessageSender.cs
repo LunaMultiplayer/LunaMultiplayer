@@ -32,13 +32,13 @@ namespace LunaClient.Systems.CraftLibrary
             SendMessage(msgData);
         }
 
-        public void RequestFolders()
+        public void SendRequestFoldersMsg()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryFoldersRequestMsgData>();
             SendMessage(msgData);
         }
 
-        public void RequestCraftList(string folderName)
+        public void SendRequestCraftListMsg(string folderName)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryListRequestMsgData>();
             msgData.FolderName = folderName;
@@ -56,7 +56,7 @@ namespace LunaClient.Systems.CraftLibrary
             SendMessage(msgData);
         }
 
-        public void DeleteCraft(CraftBasicEntry craft)
+        public void SendDeleteCraftMsg(CraftBasicEntry craft)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryDeleteRequestMsgData>();
             msgData.CraftToDelete.FolderName = craft.FolderName;

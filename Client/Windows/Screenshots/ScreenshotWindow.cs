@@ -49,6 +49,8 @@ namespace LunaClient.Windows.Screenshots
                    HighLogic.LoadedScene >= GameScenes.SPACECENTER;
             set
             {
+                if (!value) Reset();
+
                 if (value && !_display && System.MiniatureImages.Count == 0)
                     System.MessageSender.RequestFolders();
                 base.Display = _display = value;
@@ -161,6 +163,12 @@ namespace LunaClient.Windows.Screenshots
 
             if (!SafeDisplay && IsWindowLocked)
                 RemoveWindowLock();
+        }
+
+        private void Reset()
+        {
+            SelectedFolder = null;
+            SelectedImage = 0;
         }
     }
 }

@@ -30,6 +30,7 @@ namespace LunaClient.Systems.Screenshot
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            MessageSender.RequestFolders();
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, CheckScreenshots));
         }
 

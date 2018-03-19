@@ -54,8 +54,10 @@ namespace LunaClient.Windows.CraftLibrary
                    HighLogic.LoadedScene >= GameScenes.SPACECENTER;
             set
             {
+                if (!value) Reset();
+
                 if (value && !_display && System.CraftInfo.Count == 0)
-                    System.MessageSender.RequestFolders();
+                    System.MessageSender.SendRequestFoldersMsg();
                 base.Display = _display = value;
             }
         }
@@ -186,6 +188,12 @@ namespace LunaClient.Windows.CraftLibrary
 
             if (!SafeDisplay && IsWindowLocked)
                 RemoveWindowLock();
+        }
+        
+        private void Reset()
+        {
+            SelectedFolder = null;
+            DrawUploadScreen = false;
         }
     }
 }
