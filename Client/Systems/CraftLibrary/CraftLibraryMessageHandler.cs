@@ -41,6 +41,7 @@ namespace LunaClient.Systems.CraftLibrary
 
         private static void HandleCraftFolders(CraftLibraryFoldersReplyMsgData foldersMsg)
         {
+            System.CraftInfo.Clear();
             for (var i = 0; i < foldersMsg.NumFolders; i++)
             {
                 System.CraftInfo.TryAdd(foldersMsg.Folders[i], new ConcurrentDictionary<string, CraftBasicEntry>());
@@ -67,9 +68,14 @@ namespace LunaClient.Systems.CraftLibrary
 
         private static void DeleteCraft(CraftLibraryDeleteRequestMsgData deleteMsg)
         {
-            if (System.CraftInfo.TryGetValue(deleteMsg.CraftToDelete.FolderName, out var craftEntries))
+            if (System.CraftInfo.TryGetValue(deleteMsg.CraftToDelete.FolderName, out var folderCraftEntries))
             {
-                craftEntries.TryRemove(deleteMsg.CraftToDelete.CraftName, out _);
+                folderCraftEntries.TryRemove(deleteMsg.CraftToDelete.CraftName, out _);
+                //No crafts in this folder so remove it
+                if (folderCraftEntries.Count == 0)
+                {
+                    System.CraftInfo.TryRemove(deleteMsg.CraftToDelete.FolderName, out _);
+                }
             }
 
             if (System.CraftDownloaded.TryGetValue(deleteMsg.CraftToDelete.FolderName, out var downloadedCrafts))

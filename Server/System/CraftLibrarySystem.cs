@@ -105,7 +105,10 @@ namespace Server.System
             Task.Run(() =>
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryFoldersReplyMsgData>();
-                msgData.Folders = Directory.GetDirectories(CraftFolder).Select(d => new DirectoryInfo(d).Name).ToArray();
+                msgData.Folders = Directory.GetDirectories(CraftFolder)
+                    .Where(d=> Directory.GetFiles(d, "*.craft", SearchOption.AllDirectories).Length > 0)
+                    .Select(d => new DirectoryInfo(d).Name).ToArray();
+
                 msgData.NumFolders = msgData.Folders.Length;
 
                 MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
