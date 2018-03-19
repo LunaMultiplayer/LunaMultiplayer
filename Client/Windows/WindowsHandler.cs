@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using UnityEngine.Profiling;
 
 // ReSharper disable ForCanBeConvertedToForeach
@@ -33,7 +32,7 @@ namespace LunaClient.Windows
                 }
                 catch (Exception ex)
                 {
-                    LunaLog.LogError(string.Format("Exception loading types from assembly {0}: {1}", assembly.FullName, ex.Message));
+                    LunaLog.LogError($"Exception loading types from assembly {assembly.FullName}: {ex.Message}");
                 }
             }
 

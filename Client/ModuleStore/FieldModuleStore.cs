@@ -75,7 +75,7 @@ namespace LunaClient.ModuleStore
                 }
                 catch (Exception ex)
                 {
-                    LunaLog.LogError(string.Format("Exception loading types from assembly {0}: {1}", assembly.FullName, ex.Message));
+                    LunaLog.LogError($"Exception loading types from assembly {assembly.FullName}: {ex.Message}");
                 }
             }
 
