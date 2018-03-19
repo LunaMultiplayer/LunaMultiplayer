@@ -33,6 +33,7 @@ namespace Server.Message.Reader
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;
             msgData.MinScreenshotIntervalMs = GeneralSettings.SettingsStore.MinScreenshotIntervalMs;
+            msgData.MinCraftLibraryRequestIntervalMs = GeneralSettings.SettingsStore.MinCraftLibraryRequestIntervalMs;
 
             if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom && GameplaySettings.SettingsStore != null)
             {

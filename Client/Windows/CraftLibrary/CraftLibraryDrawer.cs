@@ -1,4 +1,5 @@
 ﻿using LunaClient.Systems.CraftLibrary;
+using LunaClient.Systems.SettingsSys;
 using System;
 using System.Linq;
 using UnityEngine;
@@ -95,11 +96,23 @@ namespace LunaClient.Windows.CraftLibrary
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label(craftBasicEntry.CraftName);
-            if (GUILayout.Button(SaveIcon, ButtonStyle))
+
+            if (craftBasicEntry.FolderName == SettingsSystem.CurrentSettings.PlayerName)
             {
-                if (System.CraftDownloaded.TryGetValue(SelectedFolder, out var downloadedCraft) && !downloadedCraft.ContainsKey(craftBasicEntry.CraftName))
-                    System.MessageSender.RequestCraft(craftBasicEntry);
+                if (GUILayout.Button(DeleteIcon, ButtonStyle))
+                {
+                    System.MessageSender.DeleteCraft(craftBasicEntry);
+                }
             }
+            else
+            {
+                if (GUILayout.Button(SaveIcon, ButtonStyle))
+                {
+                    if (System.CraftDownloaded.TryGetValue(SelectedFolder, out var downloadedCraft) && !downloadedCraft.ContainsKey(craftBasicEntry.CraftName))
+                        System.RequestCraft(craftBasicEntry);
+                }
+            }
+
             GUILayout.EndHorizontal();
         }
 
@@ -116,9 +129,7 @@ namespace LunaClient.Windows.CraftLibrary
             GUI.DragWindow(MoveRect);
             DrawRefreshButton(() => System.RefreshOwnCrafts());
             GUILayout.Space(15);
-
-            if (string.IsNullOrEmpty(SelectedFolder)) return;
-
+            
             UploadScrollPos = GUILayout.BeginScrollView(UploadScrollPos, ScrollStyle);
             for (var i = 0; i < System.OwnCrafts.Count; i += 4)
             {
@@ -135,7 +146,7 @@ namespace LunaClient.Windows.CraftLibrary
             GUILayout.Label(craftEntry.CraftName);
             if (GUILayout.Button(UploadIcon, ButtonStyle))
             {
-                System.MessageSender.SendCraft(craftEntry);
+                System.SendCraft(craftEntry);
             }
             GUILayout.EndHorizontal();
         }

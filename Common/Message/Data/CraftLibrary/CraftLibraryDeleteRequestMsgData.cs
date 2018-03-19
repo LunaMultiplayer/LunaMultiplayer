@@ -11,7 +11,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
 
         public CraftBasicInfo CraftToDelete = new CraftBasicInfo();
 
-        public override string ClassName { get; } = nameof(CraftLibraryDownloadRequestMsgData);
+        public override string ClassName { get; } = nameof(CraftLibraryDeleteRequestMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {

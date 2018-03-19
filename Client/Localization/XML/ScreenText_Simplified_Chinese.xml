@@ -13,6 +13,7 @@
   <NotWarpMaster>您不是时间加速主控，无法进行时间加速.</NotWarpMaster>
   <WaitingSubspace>正在等待来自服务器的子空间ID，无法进行时间加速.</WaitingSubspace>
   <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
   <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
   <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

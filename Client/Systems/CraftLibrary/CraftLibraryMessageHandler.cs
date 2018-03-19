@@ -93,6 +93,8 @@ namespace LunaClient.Systems.CraftLibrary
 
             if (System.CraftDownloaded.TryGetValue(craftMsg.Craft.FolderName, out var downloadedCrafts))
                 downloadedCrafts.AddOrUpdate(craftMsg.Craft.CraftName, craft, (key, existingVal) => craft);
+
+            System.SaveCraftToDisk(craft);
         }
     }
 }

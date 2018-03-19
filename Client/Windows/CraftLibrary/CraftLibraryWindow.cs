@@ -140,6 +140,12 @@ namespace LunaClient.Windows.CraftLibrary
             LibraryLayoutOptions[1] = GUILayout.MaxWidth(LibraryWindowWidth);
             LibraryLayoutOptions[2] = GUILayout.MinHeight(LibraryWindowHeight);
             LibraryLayoutOptions[3] = GUILayout.MaxHeight(LibraryWindowHeight);
+
+            UploadLayoutOptions = new GUILayoutOption[4];
+            UploadLayoutOptions[0] = GUILayout.MinWidth(UploadWindowWidth);
+            UploadLayoutOptions[1] = GUILayout.MaxWidth(UploadWindowWidth);
+            UploadLayoutOptions[2] = GUILayout.MinHeight(UploadWindowHeight);
+            UploadLayoutOptions[3] = GUILayout.MaxHeight(UploadWindowHeight);
         }
 
         public override void RemoveWindowLock()

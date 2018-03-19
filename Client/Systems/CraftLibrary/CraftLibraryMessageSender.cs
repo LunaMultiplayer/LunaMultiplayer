@@ -15,7 +15,7 @@ namespace LunaClient.Systems.CraftLibrary
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<CraftLibraryCliMsg>(msg)));
         }
 
-        public void SendCraft(CraftEntry craft)
+        public void SendCraftMsg(CraftEntry craft)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryDataMsgData>();
             msgData.Craft.FolderName = craft.FolderName;
@@ -24,7 +24,7 @@ namespace LunaClient.Systems.CraftLibrary
 
             msgData.Craft.NumBytes = craft.CraftNumBytes;
 
-            if (msgData.Craft.NumBytes < craft.CraftNumBytes)
+            if (msgData.Craft.Data.Length < craft.CraftNumBytes)
                 msgData.Craft.Data = new byte[craft.CraftNumBytes];
 
             Array.Copy(craft.CraftData, msgData.Craft.Data, craft.CraftNumBytes);
@@ -46,12 +46,22 @@ namespace LunaClient.Systems.CraftLibrary
             SendMessage(msgData);
         }
 
-        public void RequestCraft(CraftBasicEntry craft)
+        public void SendRequestCraftMsg(CraftBasicEntry craft)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryDownloadRequestMsgData>();
             msgData.CraftRequested.FolderName = craft.FolderName;
             msgData.CraftRequested.CraftName = craft.CraftName;
             msgData.CraftRequested.CraftType = craft.CraftType;
+
+            SendMessage(msgData);
+        }
+
+        public void DeleteCraft(CraftBasicEntry craft)
+        {
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryDeleteRequestMsgData>();
+            msgData.CraftToDelete.FolderName = craft.FolderName;
+            msgData.CraftToDelete.CraftName = craft.CraftName;
+            msgData.CraftToDelete.CraftType = craft.CraftType;
 
             SendMessage(msgData);
         }

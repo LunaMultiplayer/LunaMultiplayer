@@ -18,7 +18,7 @@ namespace Server.System
     public class CraftLibrarySystem
     {
         private static readonly string CraftFolder = Path.Combine(ServerContext.UniverseDirectory, "Crafts");
-        private static readonly ConcurrentDictionary<string, DateTime> LastUploadRequest = new ConcurrentDictionary<string, DateTime>();
+        private static readonly ConcurrentDictionary<string, DateTime> LastRequest = new ConcurrentDictionary<string, DateTime>();
 
         #region Public Methods
 
@@ -58,9 +58,10 @@ namespace Server.System
                     Directory.CreateDirectory(playerFolderType);
                 }
 
-                var lastTime = LastUploadRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
-                if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.MinCraftsIntervalMs))
+                var lastTime = LastRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
+                if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.MinCraftLibraryRequestIntervalMs))
                 {
+                    LastRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
                     var fileName = $"{data.Craft.CraftName}.craft";
                     var fullPath = Path.Combine(playerFolderType, fileName);
 
@@ -126,15 +127,18 @@ namespace Server.System
                 foreach (var craftType in Enum.GetNames(typeof(CraftType)))
                 {
                     var craftTypeFolder = Path.Combine(playerFolder, craftType);
-                    foreach (var file in Directory.GetFiles(craftTypeFolder))
+                    if (Directory.Exists(craftTypeFolder))
                     {
-                        var craftName = Path.GetFileNameWithoutExtension(file);
-                        crafts.Add(new CraftBasicInfo
+                        foreach (var file in Directory.GetFiles(craftTypeFolder))
                         {
-                            CraftName = craftName,
-                            CraftType = (CraftType)Enum.Parse(typeof(CraftType), craftType),
-                            FolderName = data.FolderName
-                        });
+                            var craftName = Path.GetFileNameWithoutExtension(file);
+                            crafts.Add(new CraftBasicInfo
+                            {
+                                CraftName = craftName,
+                                CraftType = (CraftType)Enum.Parse(typeof(CraftType), craftType),
+                                FolderName = data.FolderName
+                            });
+                        }
                     }
                 }
 
@@ -157,20 +161,29 @@ namespace Server.System
         {
             Task.Run(() =>
             {
-                var file = Path.Combine(CraftFolder, data.CraftRequested.FolderName, data.CraftRequested.CraftType.ToString(), 
-                    $"{data.CraftRequested.CraftName}.craft");
-
-                if (FileHandler.FileExists(file))
+                var lastTime = LastRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
+                if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.MinCraftLibraryRequestIntervalMs))
                 {
-                    var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryDataMsgData>();
-                    msgData.Craft.CraftType = data.CraftRequested.CraftType;
-                    msgData.Craft.Data = FileHandler.ReadFile(file);
-                    msgData.Craft.NumBytes = msgData.Craft.Data.Length;
-                    msgData.Craft.FolderName = data.CraftRequested.FolderName;
-                    msgData.Craft.CraftName = data.CraftRequested.CraftName;
+                    LastRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
+                    var file = Path.Combine(CraftFolder, data.CraftRequested.FolderName, data.CraftRequested.CraftType.ToString(),
+                        $"{data.CraftRequested.CraftName}.craft");
 
-                    LunaLog.Debug($"Sending craft ({msgData.Craft.NumBytes} bytes): {data.CraftRequested.CraftName} to: {client.PlayerName}.");
-                    MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
+                    if (FileHandler.FileExists(file))
+                    {
+                        var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryDataMsgData>();
+                        msgData.Craft.CraftType = data.CraftRequested.CraftType;
+                        msgData.Craft.Data = FileHandler.ReadFile(file);
+                        msgData.Craft.NumBytes = msgData.Craft.Data.Length;
+                        msgData.Craft.FolderName = data.CraftRequested.FolderName;
+                        msgData.Craft.CraftName = data.CraftRequested.CraftName;
+
+                        LunaLog.Debug($"Sending craft ({msgData.Craft.NumBytes} bytes): {data.CraftRequested.CraftName} to: {client.PlayerName}.");
+                        MessageQueuer.SendToClient<CraftLibrarySrvMsg>(client, msgData);
+                    }
+                }
+                else
+                {
+                    LunaLog.Warning($"{client.PlayerName} is requesting crafts too fast!");
                 }
             });
         }

@@ -13,6 +13,7 @@
   <NotWarpMaster>Warp impossible, vous n'êtes pas le maître du warp.</NotWarpMaster>
   <WaitingSubspace>Warp impossible, attente de l'ID de sous-espace du serveur.</WaitingSubspace>
   <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
   <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
   <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

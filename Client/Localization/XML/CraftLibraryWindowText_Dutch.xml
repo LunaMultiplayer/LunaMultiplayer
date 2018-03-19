@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <CraftLibraryWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>Craft Library</Title>
+  <Crafts>Crafts</Crafts>
   <Upload>Upload</Upload>
-  <Remove>Verwijder</Remove>
+  <Folders>Craft Library</Folders>
 </CraftLibraryWindowText>

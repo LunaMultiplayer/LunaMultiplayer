@@ -15,6 +15,7 @@
         public string NotWarpMaster { get; set; } = "Cannot warp, you are not the warp master!";
         public string WaitingSubspace { get; set; } = "Cannot warp, waiting subspace id from the server";
         public string ScreenshotInterval { get; set; } = "Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment";
+        public string CraftLibraryInterval { get; set; } = "Interval between craft library requests is $1 seconds. Cannot process the request at this moment";
         public string ScreenshotTaken { get; set; } = "Screenshot uploaded!";
         public string ImageSaved { get; set; } = "Image saved to GameData/LunaMultiplayer/Screenshots";
     }

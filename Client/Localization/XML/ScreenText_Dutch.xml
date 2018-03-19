@@ -13,6 +13,7 @@
   <NotWarpMaster>Kan niet warpen, je bent niet de warp master!</NotWarpMaster>
   <WaitingSubspace>Kan niet warpen, wachten op subspace id van de server</WaitingSubspace>
   <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+  <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
   <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
   <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

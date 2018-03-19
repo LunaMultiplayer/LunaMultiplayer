@@ -43,6 +43,7 @@ namespace Server.System
                 var lastTime = LastUploadRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
                 if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.MinScreenshotIntervalMs))
                 {
+                    LastUploadRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
                     if (data.Screenshot.DateTaken == 0) data.Screenshot.DateTaken = LunaTime.UtcNow.ToBinary();
                     var fileName = $"{data.Screenshot.DateTaken}.png";
                     if (!File.Exists(fileName))
