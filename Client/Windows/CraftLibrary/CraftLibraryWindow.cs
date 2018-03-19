@@ -3,6 +3,8 @@ using LunaClient.Localization;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Windows.CraftLibrary
@@ -15,17 +17,27 @@ namespace LunaClient.Windows.CraftLibrary
         protected const float FoldersWindowWidth = 200;
         protected const float LibraryWindowHeight = 300;
         protected const float LibraryWindowWidth = 400;
-        
+        protected const float UploadWindowHeight = 300;
+        protected const float UploadWindowWidth = 400;
+
         protected Rect LibraryWindowRect { get; set; }
+        protected Rect UploadWindowRect { get; set; }
 
         protected GUILayoutOption[] FoldersLayoutOptions { get; set; }
         protected GUILayoutOption[] LibraryLayoutOptions { get; set; }
+        protected GUILayoutOption[] UploadLayoutOptions { get; set; }
 
         protected Vector2 FoldersScrollPos { get; set; }
         protected Vector2 LibraryScrollPos { get; set; }
+        protected Vector2 UploadScrollPos { get; set; }
 
         private string SelectedFolder { get; set; }
+        private bool DrawUploadScreen { get; set; }
 
+        private static DateTime _lastGuiUpdateTime = DateTime.MinValue;
+        private static readonly List<string> Folders = new List<string>();
+        private static readonly List<CraftBasicEntry> Crafts = new List<CraftBasicEntry>();
+        private static readonly List<CraftEntry> OwnCrafts = new List<CraftEntry>();
         #endregion
 
         private static bool _display;
@@ -45,6 +57,19 @@ namespace LunaClient.Windows.CraftLibrary
         {
             base.Update();
             SafeDisplay = Display;
+            if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromSeconds(2.5f))
+            {
+                _lastGuiUpdateTime = DateTime.Now;
+
+                Folders.Clear();
+                Folders.AddRange(System.CraftInfo.Keys);
+
+                Crafts.Clear();
+                if (!string.IsNullOrEmpty(SelectedFolder) && System.CraftInfo.TryGetValue(SelectedFolder, out var craftsDictionary))
+                {
+                    Crafts.AddRange(craftsDictionary.Values);
+                }
+            }
         }
 
         public override void OnGui()
@@ -62,7 +87,14 @@ namespace LunaClient.Windows.CraftLibrary
                     LibraryWindowRect, DrawLibraryContent, $"{SelectedFolder} {LocalizationContainer.CraftLibraryWindowText.Crafts}", WindowStyle,
                     LibraryLayoutOptions));
             }
-            
+
+            if (SafeDisplay && DrawUploadScreen)
+            {
+                UploadWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6709 + MainSystem.WindowOffset,
+                    UploadWindowRect, DrawUploadScreenContent, LocalizationContainer.CraftLibraryWindowText.Upload, WindowStyle,
+                    UploadLayoutOptions));
+            }
+
             CheckWindowLock();
         }
         

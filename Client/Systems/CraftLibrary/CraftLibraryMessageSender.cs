@@ -5,6 +5,7 @@ using LunaCommon.Enums;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
+using System;
 
 namespace LunaClient.Systems.CraftLibrary
 {
@@ -15,9 +16,19 @@ namespace LunaClient.Systems.CraftLibrary
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<CraftLibraryCliMsg>(msg)));
         }
 
-        public void SendCraft(byte[] data)
+        public void SendCraft(string folderName, string craftName, CraftType craftType, byte[] data)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryDataMsgData>();
+            msgData.Craft.FolderName = folderName;
+            msgData.Craft.CraftName = craftName;
+            msgData.Craft.CraftType = craftType;
+
+            msgData.Craft.NumBytes = data.Length;
+
+            if (msgData.Craft.NumBytes < data.Length)
+                msgData.Craft.Data = new byte[data.Length];
+
+            Array.Copy(data, msgData.Craft.Data, data.Length);
 
             SendMessage(msgData);
         }

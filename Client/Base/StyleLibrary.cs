@@ -30,16 +30,22 @@ namespace LunaClient.Base
         protected Texture2D ResizeIcon;
         protected Texture2D CloseIcon;
         protected Texture2D RefreshIcon;
+        protected Texture2D UploadIcon;
+        protected Texture2D DeleteIcon;
         protected Texture2D SaveIcon;
         protected Texture2D WaitIcon;
+        protected Texture2D SmallWaitIcon;
 
         public void InitializeStyles()
         {
             ResizeIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "resize.png"), 16, 16);
             CloseIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "close_small.png"), 10, 10);
             RefreshIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "refresh.png"), 16, 16);
-            WaitIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "waitBig.png"), 16, 16);
+            UploadIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "upload.png"), 16, 16);
+            DeleteIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "delete.png"), 16, 16);
             SaveIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "save.png"), 16, 16);
+            WaitIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "waitBig.png"), 16, 16);
+            SmallWaitIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "waitSmall.png"), 16, 16);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
             ButtonStyle = new GUIStyle(GUI.skin.button);

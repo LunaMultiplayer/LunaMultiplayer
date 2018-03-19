@@ -260,8 +260,9 @@ namespace LunaClient
             //Chat window: 6704
             //Debug window: 6705
             //Mod windw: 6706
-            //Craft library window: 6707
-            //Craft upload window: 6708
+            //Craft folder window: 6707
+            //Craft library window: 6708
+            //Craft upload window: 6709
             //Screenshot window: 6710
             //Options window: 6711
             //Converter window: 6712

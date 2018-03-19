@@ -91,7 +91,7 @@ namespace LunaClient.Windows.Screenshots
             }
             else
             {
-                DrawWaitIcon();
+                DrawWaitIcon(false);
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
@@ -142,7 +142,7 @@ namespace LunaClient.Windows.Screenshots
             }
             else
             {
-                DrawWaitIcon();
+                DrawWaitIcon(false);
             }
             GUILayout.EndScrollView();
 

@@ -143,14 +143,15 @@ namespace LunaClient.Base
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
         }
-        
-        protected void DrawWaitIcon()
+
+        protected void DrawWaitIcon(bool small)
         {
             GUILayout.BeginVertical();
             GUILayout.FlexibleSpace();
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Label(WaitIcon);
+            if (small) GUILayout.Label(WaitIcon);
+            else GUILayout.Label(WaitIcon);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
             GUILayout.FlexibleSpace();

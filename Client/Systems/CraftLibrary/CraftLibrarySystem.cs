@@ -32,5 +32,10 @@ namespace LunaClient.Systems.CraftLibrary
         }
 
         #endregion
+
+        public void RefreshOwnCrafts()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
