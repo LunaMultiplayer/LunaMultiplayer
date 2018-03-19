@@ -399,7 +399,6 @@
     <Content Include="Localization\XML\StatusWindowText_Spanish.xml" />
     <Content Include="ModuleStore\XML\PartsBehaviour.xml" />
     <Content Include="Resources\LMPButton.png" />
-    <Content Include="Resources\LMPButtonLow.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
