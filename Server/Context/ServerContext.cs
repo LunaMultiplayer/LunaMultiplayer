@@ -1,7 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message;
 using Server.Client;
-using Server.Server;
 using Server.Settings;
 using System;
 using System.Collections.Concurrent;
@@ -45,7 +44,6 @@ namespace Server.Context
 
         public static async void Shutdown()
         {
-            MessageQueuer.SendConnectionEndToAll("Server is shutting down");
             await Task.Delay(1000);
             ServerStarting = false;
             ServerRunning = false;
