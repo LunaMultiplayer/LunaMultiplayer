@@ -16,7 +16,7 @@ namespace LunaClient.Windows.Screenshots
             GUILayout.Space(15);
 
             FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
-            foreach (var folderName in System.MiniatureImages.Keys.ToArray())
+            foreach (var folderName in Folders)
                 DrawFolderButton(folderName);
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
@@ -55,39 +55,34 @@ namespace LunaClient.Windows.Screenshots
             if (string.IsNullOrEmpty(SelectedFolder)) return;
 
             LibraryScrollPos = GUILayout.BeginScrollView(LibraryScrollPos, ScrollStyle);
-            if (System.MiniatureImages.TryGetValue(SelectedFolder, out var miniatures))
+            if (Miniatures.Any())
             {
-                var miniaturesList = miniatures.Values.OrderBy(m => m.DateTaken).ToArray();
-                if (!miniaturesList.Any())
-                {
-                    DrawWaitIcon();
-                }
-                for (var i = 0; i < miniaturesList.Length; i += 4)
+                for (var i = 0; i < Miniatures.Count; i += 4)
                 {
                     GUILayout.BeginHorizontal();
 
                     GUILayout.FlexibleSpace();
-                    DrawMiniature(miniaturesList[i]);
+                    DrawMiniature(Miniatures[i]);
                     GUILayout.FlexibleSpace();
 
-                    if (miniaturesList.Length > i + 1)
+                    if (Miniatures.Count > i + 1)
                     {
                         GUILayout.FlexibleSpace();
-                        DrawMiniature(miniaturesList[i + 1]);
+                        DrawMiniature(Miniatures[i + 1]);
                         GUILayout.FlexibleSpace();
                     }
 
-                    if (miniaturesList.Length > i + 2)
+                    if (Miniatures.Count > i + 2)
                     {
                         GUILayout.FlexibleSpace();
-                        DrawMiniature(miniaturesList[i + 2]);
+                        DrawMiniature(Miniatures[i + 2]);
                         GUILayout.FlexibleSpace();
                     }
 
-                    if (miniaturesList.Length > i + 3)
+                    if (Miniatures.Count > i + 3)
                     {
                         GUILayout.FlexibleSpace();
-                        DrawMiniature(miniaturesList[i + 3]);
+                        DrawMiniature(Miniatures[i + 3]);
                         GUILayout.FlexibleSpace();
                     }
 

@@ -4,6 +4,8 @@ using LunaClient.Systems.Screenshot;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
+using System.Collections.Generic;
+using UniLinq;
 using UnityEngine;
 
 namespace LunaClient.Windows.Screenshots
@@ -32,7 +34,10 @@ namespace LunaClient.Windows.Screenshots
 
         private string SelectedFolder { get; set; }
         private long SelectedImage { get; set; } = 0;
-        
+
+        private static DateTime _lastGuiUpdateTime = DateTime.MinValue;
+        private static readonly List<string> Folders = new List<string>();
+        private static readonly List<Screenshot> Miniatures = new List<Screenshot>();
         #endregion
 
         private static bool _display;
@@ -52,6 +57,19 @@ namespace LunaClient.Windows.Screenshots
         {
             base.Update();
             SafeDisplay = Display;
+            if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromSeconds(2.5f))
+            {
+                _lastGuiUpdateTime = DateTime.Now;
+
+                Folders.Clear();
+                Folders.AddRange(System.MiniatureImages.Keys);
+
+                Miniatures.Clear();
+                if (!string.IsNullOrEmpty(SelectedFolder) && System.MiniatureImages.TryGetValue(SelectedFolder, out var miniatures))
+                {
+                    Miniatures.AddRange(miniatures.Values.OrderBy(v => v.DateTaken));
+                }
+            }
         }
 
         public override void OnGui()
