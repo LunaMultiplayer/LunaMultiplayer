@@ -22,11 +22,18 @@ namespace LunaClient.Windows
             var windowsList = new List<IWindow>();
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                var systems = assembly.GetTypes().Where(t => t.IsClass && typeof(IWindow).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
-                foreach (var sys in systems)
+                try
                 {
-                    if (sys.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is IWindow windowImplementation)
-                        windowsList.Add(windowImplementation);
+                    var systems = assembly.GetTypes().Where(t => t.IsClass && typeof(IWindow).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
+                    foreach (var sys in systems)
+                    {
+                        if (sys.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is IWindow windowImplementation)
+                            windowsList.Add(windowImplementation);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LunaLog.LogError(string.Format("Exception loading types from assembly {0}: {1}", assembly.FullName, ex.Message));
                 }
             }
 
