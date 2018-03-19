@@ -63,7 +63,7 @@ namespace Server.Client
         {
             while (ConnectionStatus == ConnectionStatus.Connected)
             {
-                if (SendMessageQueue.TryDequeue(out var message) && message != null)
+                while(SendMessageQueue.TryDequeue(out var message) && message != null)
                 {
                     try
                     {
@@ -77,16 +77,13 @@ namespace Server.Client
 
                     LmpPluginHandler.FireOnMessageSent(this, message);
                 }
-                else
+                try
                 {
-                    try
-                    {
-                        await Task.Delay(GeneralSettings.SettingsStore.SendReceiveThreadTickMs, token);
-                    }
-                    catch (TaskCanceledException)
-                    {
-                        break;
-                    }
+                    await Task.Delay(GeneralSettings.SettingsStore.SendReceiveThreadTickMs, token);
+                }
+                catch (TaskCanceledException)
+                {
+                    break;
                 }
             }
         }

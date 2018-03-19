@@ -1,12 +1,14 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message;
 using Server.Client;
+using Server.Server;
 using Server.Settings;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Server.Context
@@ -42,9 +44,10 @@ namespace Server.Context
         public static ServerMessageFactory ServerMessageFactory { get; } = new ServerMessageFactory();
         public static ClientMessageFactory ClientMessageFactory { get; } = new ClientMessageFactory();
 
-        public static async void Shutdown()
+        public static void Shutdown(string reason)
         {
-            await Task.Delay(1000);
+            MessageQueuer.SendConnectionEndToAll(reason);
+            Thread.Sleep(250);
             ServerStarting = false;
             ServerRunning = false;
         }

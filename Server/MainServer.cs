@@ -8,7 +8,6 @@ using Server.Exit;
 using Server.Lidgren;
 using Server.Log;
 using Server.Plugin;
-using Server.Server;
 using Server.Settings;
 using Server.System;
 using Server.System.VesselRelay;
@@ -165,9 +164,8 @@ namespace Server
         private static void Exit()
         {
             LunaLog.Normal("Exiting... Please wait until all threads are finished");
-            MessageQueuer.SendConnectionEndToAll("Server is shutting down");
-            Thread.Sleep(1000);
-            ServerContext.Shutdown();
+
+            ServerContext.Shutdown("Server is shutting down");
             CancellationTokenSrc.Cancel();
 
             Task.WaitAll(TaskContainer.ToArray());
@@ -182,19 +180,17 @@ namespace Server
         {
             //Perform Backups
             BackupSystem.PerformBackups(CancellationTokenSrc.Token);
-            Thread.Sleep(1000);
-            //Close old server
             LunaLog.Normal("Restarting...  Please wait until all threads are finished");
-            MessageQueuer.SendConnectionEndToAll("Server is restarting");
-            Thread.Sleep(1000);
-            ServerContext.Shutdown();
+
+            ServerContext.Shutdown("Server is restarting");
             CancellationTokenSrc.Cancel();
+
             Task.WaitAll(TaskContainer.ToArray());
             QuitEvent.Set();
+
             //Start new server
-            string serverExePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Server.exe";
-            ProcessStartInfo newProcLmpServer = new ProcessStartInfo();
-            newProcLmpServer.FileName = serverExePath;
+            var serverExePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Server.exe";
+            var newProcLmpServer = new ProcessStartInfo {FileName = serverExePath};
             Process.Start(newProcLmpServer);
         }
     }

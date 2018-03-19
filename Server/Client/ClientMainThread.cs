@@ -1,7 +1,3 @@
-using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using LunaCommon.Time;
 using Server.Command.Command;
 using Server.Context;
@@ -9,7 +5,9 @@ using Server.Lidgren;
 using Server.Log;
 using Server.Plugin;
 using Server.Settings;
-using Server.System;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Server.Client
 {
@@ -33,7 +31,7 @@ namespace Server.Client
             catch (Exception e)
             {
                 LunaLog.Error($"Fatal error thrown, exception: {e}");
-                ServerContext.Shutdown();
+                ServerContext.Shutdown("Fatal error server side");
             }
 
             try
