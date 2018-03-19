@@ -14,6 +14,8 @@ namespace LunaClient.Windows.CraftLibrary
     {
         #region Fields
 
+        private const float UpdateIntervalMs = 1500;
+
         protected const float FoldersWindowHeight = 300;
         protected const float FoldersWindowWidth = 200;
         protected const float LibraryWindowHeight = 300;
@@ -62,7 +64,8 @@ namespace LunaClient.Windows.CraftLibrary
         {
             base.Update();
             SafeDisplay = Display;
-            if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromSeconds(2.5f))
+            if (!Display) return;
+            if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromMilliseconds(UpdateIntervalMs))
             {
                 _lastGuiUpdateTime = DateTime.Now;
 

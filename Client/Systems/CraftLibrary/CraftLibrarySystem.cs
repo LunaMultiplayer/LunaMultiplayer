@@ -124,6 +124,7 @@ namespace LunaClient.Systems.CraftLibrary
             {
                 _lastRequest = DateTime.Now;
                 MessageSender.SendCraftMsg(craft);
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CraftUploaded, 10f, ScreenMessageStyle.UPPER_CENTER);
             }
             else
             {
@@ -140,6 +141,7 @@ namespace LunaClient.Systems.CraftLibrary
             {
                 _lastRequest = DateTime.Now;
                 MessageSender.SendRequestCraftMsg(craft);
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CraftSaved, 10f, ScreenMessageStyle.UPPER_CENTER);
             }
             else
             {

@@ -147,6 +147,7 @@ namespace LunaClient.Windows.CraftLibrary
             if (GUILayout.Button(UploadIcon, ButtonStyle))
             {
                 System.SendCraft(craftEntry);
+                DrawUploadScreen = false;
             }
             GUILayout.EndHorizontal();
         }
