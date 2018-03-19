@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
-using LunaCommon.Enums;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.CraftLibrary;
 using LunaCommon.Message.Interface;
@@ -16,19 +15,19 @@ namespace LunaClient.Systems.CraftLibrary
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<CraftLibraryCliMsg>(msg)));
         }
 
-        public void SendCraft(string folderName, string craftName, CraftType craftType, byte[] data)
+        public void SendCraft(CraftEntry craft)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryDataMsgData>();
-            msgData.Craft.FolderName = folderName;
-            msgData.Craft.CraftName = craftName;
-            msgData.Craft.CraftType = craftType;
+            msgData.Craft.FolderName = craft.FolderName;
+            msgData.Craft.CraftName = craft.CraftName;
+            msgData.Craft.CraftType = craft.CraftType;
 
-            msgData.Craft.NumBytes = data.Length;
+            msgData.Craft.NumBytes = craft.CraftNumBytes;
 
-            if (msgData.Craft.NumBytes < data.Length)
-                msgData.Craft.Data = new byte[data.Length];
+            if (msgData.Craft.NumBytes < craft.CraftNumBytes)
+                msgData.Craft.Data = new byte[craft.CraftNumBytes];
 
-            Array.Copy(data, msgData.Craft.Data, data.Length);
+            Array.Copy(craft.CraftData, msgData.Craft.Data, craft.CraftNumBytes);
 
             SendMessage(msgData);
         }
@@ -47,12 +46,12 @@ namespace LunaClient.Systems.CraftLibrary
             SendMessage(msgData);
         }
 
-        public void RequestCraft(string folderName, string craftName, CraftType craftType)
+        public void RequestCraft(CraftBasicEntry craft)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<CraftLibraryDownloadRequestMsgData>();
-            msgData.CraftRequested.FolderName = folderName;
-            msgData.CraftRequested.CraftName = craftName;
-            msgData.CraftRequested.CraftType = craftType;
+            msgData.CraftRequested.FolderName = craft.FolderName;
+            msgData.CraftRequested.CraftName = craft.CraftName;
+            msgData.CraftRequested.CraftType = craft.CraftType;
 
             SendMessage(msgData);
         }

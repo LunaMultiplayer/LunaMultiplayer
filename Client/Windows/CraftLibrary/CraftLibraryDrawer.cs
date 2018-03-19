@@ -98,7 +98,7 @@ namespace LunaClient.Windows.CraftLibrary
             if (GUILayout.Button(SaveIcon, ButtonStyle))
             {
                 if (System.CraftDownloaded.TryGetValue(SelectedFolder, out var downloadedCraft) && !downloadedCraft.ContainsKey(craftBasicEntry.CraftName))
-                    System.MessageSender.RequestCraft(SelectedFolder, craftBasicEntry.CraftName, craftBasicEntry.CraftType);
+                    System.MessageSender.RequestCraft(craftBasicEntry);
             }
             GUILayout.EndHorizontal();
         }
@@ -135,7 +135,7 @@ namespace LunaClient.Windows.CraftLibrary
             GUILayout.Label(craftEntry.CraftName);
             if (GUILayout.Button(UploadIcon, ButtonStyle))
             {
-                System.MessageSender.SendCraft(craftEntry.FolderName, craftEntry.CraftName, craftEntry.CraftType, craftEntry.CraftData);
+                System.MessageSender.SendCraft(craftEntry);
             }
             GUILayout.EndHorizontal();
         }
