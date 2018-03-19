@@ -99,17 +99,19 @@ namespace LunaClient.Windows.CraftLibrary
 
             if (craftBasicEntry.FolderName == SettingsSystem.CurrentSettings.PlayerName)
             {
-                if (GUILayout.Button(DeleteIcon, ButtonStyle, GUILayout.Width(50)))
+                if (GUILayout.Button(DeleteIcon, ButtonStyle, GUILayout.Width(35)))
                 {
                     System.MessageSender.SendDeleteCraftMsg(craftBasicEntry);
+                    SelectedFolder = null;
                 }
             }
             else
             {
-                if (GUILayout.Button(SaveIcon, ButtonStyle, GUILayout.Width(50)))
+                if (GUILayout.Button(SaveIcon, ButtonStyle, GUILayout.Width(35)))
                 {
                     if (System.CraftDownloaded.TryGetValue(SelectedFolder, out var downloadedCraft) && !downloadedCraft.ContainsKey(craftBasicEntry.CraftName))
                         System.RequestCraft(craftBasicEntry);
+                    SelectedFolder = null;
                 }
             }
 
@@ -144,7 +146,7 @@ namespace LunaClient.Windows.CraftLibrary
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label(craftEntry.CraftName);
-            if (GUILayout.Button(UploadIcon, ButtonStyle, GUILayout.Width(50)))
+            if (GUILayout.Button(UploadIcon, ButtonStyle, GUILayout.Width(35)))
             {
                 System.SendCraft(craftEntry);
                 DrawUploadScreen = false;

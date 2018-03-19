@@ -22,7 +22,7 @@ namespace LunaCommon.Message.Client
             [(ushort)CraftMessageType.FoldersRequest] = typeof(CraftLibraryFoldersRequestMsgData),
             [(ushort)CraftMessageType.ListRequest] = typeof(CraftLibraryListRequestMsgData),
             [(ushort)CraftMessageType.DownloadRequest] = typeof(CraftLibraryDownloadRequestMsgData),
-            [(ushort)CraftMessageType.DeleteRequest] = typeof(CraftLibraryDownloadRequestMsgData),
+            [(ushort)CraftMessageType.DeleteRequest] = typeof(CraftLibraryDeleteRequestMsgData),
             [(ushort)CraftMessageType.CraftData] = typeof(CraftLibraryDataMsgData)
         };
 
