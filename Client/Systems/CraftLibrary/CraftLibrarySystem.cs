@@ -2,6 +2,7 @@
 using LunaClient.Utilities;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.CraftLibrary
 {
@@ -15,6 +16,8 @@ namespace LunaClient.Systems.CraftLibrary
 
         public ConcurrentDictionary<string, ConcurrentDictionary<string, CraftBasicEntry>> CraftInfo { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<string, CraftBasicEntry>>();
         public ConcurrentDictionary<string, ConcurrentDictionary<string, CraftEntry>> CraftDownloaded { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<string, CraftEntry>>();
+
+        public List<CraftEntry> OwnCrafts { get; } = new List<CraftEntry>();
 
         #endregion
 

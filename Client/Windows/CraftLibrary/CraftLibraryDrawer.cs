@@ -59,16 +59,32 @@ namespace LunaClient.Windows.CraftLibrary
             if (string.IsNullOrEmpty(SelectedFolder)) return;
 
             LibraryScrollPos = GUILayout.BeginScrollView(LibraryScrollPos, ScrollStyle);
-            if (Crafts.Any())
+            if (SphCrafts.Any())
             {
-                for (var i = 0; i < Crafts.Count; i += 4)
+                GUILayout.Label("SPH", BoldLabelStyle);
+                for (var i = 0; i < SphCrafts.Count; i += 4)
                 {
-                    DrawCraftEntry(Crafts[i]);
+                    DrawCraftEntry(SphCrafts[i]);
                 }
+                GUILayout.Space(5);
             }
-            else
+            if (VabCrafts.Any())
             {
-                DrawWaitIcon(true);
+                GUILayout.Label("VAB", BoldLabelStyle);
+                for (var i = 0; i < VabCrafts.Count; i += 4)
+                {
+                    DrawCraftEntry(VabCrafts[i]);
+                }
+                GUILayout.Space(5);
+            }
+            if (SubAssemblyCrafts.Any())
+            {
+                GUILayout.Label("Subassembly", BoldLabelStyle);
+                for (var i = 0; i < SubAssemblyCrafts.Count; i += 4)
+                {
+                    DrawCraftEntry(SubAssemblyCrafts[i]);
+                }
+                GUILayout.Space(5);
             }
             GUILayout.EndScrollView();
 
@@ -77,11 +93,14 @@ namespace LunaClient.Windows.CraftLibrary
 
         private void DrawCraftEntry(CraftBasicEntry craftBasicEntry)
         {
-            if (GUILayout.Button(craftBasicEntry.CraftName, ButtonStyle))
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(craftBasicEntry.CraftName);
+            if (GUILayout.Button(SaveIcon, ButtonStyle))
             {
                 if (System.CraftDownloaded.TryGetValue(SelectedFolder, out var downloadedCraft) && !downloadedCraft.ContainsKey(craftBasicEntry.CraftName))
                     System.MessageSender.RequestCraft(SelectedFolder, craftBasicEntry.CraftName, craftBasicEntry.CraftType);
             }
+            GUILayout.EndHorizontal();
         }
 
         #endregion
@@ -101,9 +120,9 @@ namespace LunaClient.Windows.CraftLibrary
             if (string.IsNullOrEmpty(SelectedFolder)) return;
 
             UploadScrollPos = GUILayout.BeginScrollView(UploadScrollPos, ScrollStyle);
-            for (var i = 0; i < OwnCrafts.Count; i += 4)
+            for (var i = 0; i < System.OwnCrafts.Count; i += 4)
             {
-                DrawUploadCraftEntry(OwnCrafts[i]);
+                DrawUploadCraftEntry(System.OwnCrafts[i]);
             }
 
             GUILayout.EndScrollView();
@@ -112,10 +131,13 @@ namespace LunaClient.Windows.CraftLibrary
 
         private void DrawUploadCraftEntry(CraftEntry craftEntry)
         {
-            if (GUILayout.Button(craftEntry.CraftName, ButtonStyle))
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(craftEntry.CraftName);
+            if (GUILayout.Button(UploadIcon, ButtonStyle))
             {
                 System.MessageSender.SendCraft(craftEntry.FolderName, craftEntry.CraftName, craftEntry.CraftType, craftEntry.CraftData);
             }
+            GUILayout.EndHorizontal();
         }
 
         #endregion

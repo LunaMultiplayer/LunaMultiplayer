@@ -5,6 +5,7 @@ using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
+using UniLinq;
 using UnityEngine;
 
 namespace LunaClient.Windows.CraftLibrary
@@ -35,9 +36,13 @@ namespace LunaClient.Windows.CraftLibrary
         private bool DrawUploadScreen { get; set; }
 
         private static DateTime _lastGuiUpdateTime = DateTime.MinValue;
+
         private static readonly List<string> Folders = new List<string>();
-        private static readonly List<CraftBasicEntry> Crafts = new List<CraftBasicEntry>();
-        private static readonly List<CraftEntry> OwnCrafts = new List<CraftEntry>();
+
+        private static readonly List<CraftBasicEntry> VabCrafts = new List<CraftBasicEntry>();
+        private static readonly List<CraftBasicEntry> SphCrafts = new List<CraftBasicEntry>();
+        private static readonly List<CraftBasicEntry> SubAssemblyCrafts = new List<CraftBasicEntry>();
+
         #endregion
 
         private static bool _display;
@@ -64,10 +69,30 @@ namespace LunaClient.Windows.CraftLibrary
                 Folders.Clear();
                 Folders.AddRange(System.CraftInfo.Keys);
 
-                Crafts.Clear();
+                VabCrafts.Clear();
+                SphCrafts.Clear();
+                SubAssemblyCrafts.Clear();
+
                 if (!string.IsNullOrEmpty(SelectedFolder) && System.CraftInfo.TryGetValue(SelectedFolder, out var craftsDictionary))
                 {
-                    Crafts.AddRange(craftsDictionary.Values);
+                    var allValues = craftsDictionary.Values.GroupBy(v=> v.CraftType).ToArray();
+                    foreach (var groupedValues in allValues)
+                    {
+                        switch (groupedValues.Key)
+                        {
+                            case CraftType.Vab:
+                                VabCrafts.AddRange(groupedValues);
+                                break;
+                            case CraftType.Sph:
+                                SphCrafts.AddRange(groupedValues);
+                                break;
+                            case CraftType.Subassembly:
+                                SubAssemblyCrafts.AddRange(groupedValues);
+                                break;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    }
                 }
             }
         }
