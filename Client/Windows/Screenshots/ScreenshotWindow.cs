@@ -28,7 +28,6 @@ namespace LunaClient.Windows.Screenshots
 
         protected Vector2 FoldersScrollPos { get; set; }
         protected Vector2 LibraryScrollPos { get; set; }
-        
         protected Vector2 ImageScrollPos { get; set; }
 
         private string SelectedFolder { get; set; }

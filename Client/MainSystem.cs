@@ -1,4 +1,4 @@
-using CommNet;
+﻿using CommNet;
 using LunaClient.Localization;
 using LunaClient.ModuleStore;
 using LunaClient.Network;
@@ -499,7 +499,7 @@ namespace LunaClient
                             address = address.Substring("lmp://".Length)
                                 .Substring(0, address.LastIndexOf(":", StringComparison.Ordinal));
                             var portString = address.Substring(address.LastIndexOf(":", StringComparison.Ordinal) + 1);
-                            valid = Int32.TryParse(portString, out port);
+                            valid = int.TryParse(portString, out port);
                         }
                         else
                         {

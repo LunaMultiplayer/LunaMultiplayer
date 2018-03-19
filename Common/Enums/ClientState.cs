@@ -26,8 +26,6 @@
         PlayersSynced = 19,
         SyncingScenarios = 20,
         ScenariosSynced = 21,
-        SyncingCraftlibrary = 22,
-        CraftlibrarySynced = 23,
         SyncingLocks = 24,
         LocksSynced = 25,
         SyncingAdmins = 26,

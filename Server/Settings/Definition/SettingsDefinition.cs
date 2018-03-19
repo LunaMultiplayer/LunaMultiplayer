@@ -89,6 +89,15 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Maximum screenshots folders kept")]
         public int MaxScreenshotsFolders { get; set; } = 50;
+        
+        [XmlComment(Value = "Minimum interval between uploading crafts in milliseconds")]
+        public int MinCraftsIntervalMs { get; set; } = 5000;
+
+        [XmlComment(Value = "Maximum crafts kept per user per type (VAB,SPH and Subassembly)")]
+        public int MaxCraftsPerUser { get; set; } = 10;
+
+        [XmlComment(Value = "Maximum crafts folders kept")]
+        public int MaxCraftFolders { get; set; } = 50;
 
         [XmlComment(Value = "Enable white-listing of users")]
         public bool Whitelisted { get; set; } = false;

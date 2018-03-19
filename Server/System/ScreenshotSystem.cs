@@ -25,6 +25,8 @@ namespace Server.System
 
         private static readonly ConcurrentDictionary<string, DateTime> LastUploadRequest = new ConcurrentDictionary<string, DateTime>();
 
+        #region Public Methods
+
         /// <summary>
         /// Saves a received screenshot and creates the miniature
         /// </summary>
@@ -155,6 +157,8 @@ namespace Server.System
                 }
             });
         }
+
+        #endregion
 
         #region Private methods
 

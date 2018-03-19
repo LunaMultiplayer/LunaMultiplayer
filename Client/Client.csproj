@@ -83,7 +83,11 @@
     </Compile>
     <Compile Include="Systems\Bug\BugSystem.cs" />
     <Compile Include="Systems\Bug\BugEvents.cs" />
-    <Compile Include="Systems\Screenshot\Screenshot.cs" />
+    <Compile Include="Systems\CraftLibrary\CraftLibraryMessageHandler.cs" />
+    <Compile Include="Systems\CraftLibrary\CraftLibraryMessageSender.cs" />
+    <Compile Include="Systems\CraftLibrary\CraftLibraryStructures.cs" />
+    <Compile Include="Systems\CraftLibrary\CraftLibrarySystem.cs" />
+    <Compile Include="Systems\Screenshot\ScreenshotStructures.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotMessageHandler.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotMessageSender.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotSystem.cs" />
@@ -177,11 +181,6 @@
     <Compile Include="Systems\Chat\ChatSystem.cs" />
     <Compile Include="Systems\PlayerColorSys\PlayerColorMessageHandler.cs" />
     <Compile Include="Systems\PlayerColorSys\PlayerColorMessageSender.cs" />
-    <Compile Include="Systems\CraftLibrary\CraftLibraryEvents.cs" />
-    <Compile Include="Systems\CraftLibrary\CraftLibraryMessageHandler.cs" />
-    <Compile Include="Systems\CraftLibrary\CraftLibraryMessageSender.cs" />
-    <Compile Include="Systems\CraftLibrary\CraftLibraryStructures.cs" />
-    <Compile Include="Systems\CraftLibrary\CraftLibrarySystem.cs" />
     <Compile Include="Systems\Flag\FlagMessageSender.cs" />
     <Compile Include="Systems\Handshake\HandshakeMessageHandler.cs" />
     <Compile Include="Systems\Handshake\HandshakeMessageSender.cs" />

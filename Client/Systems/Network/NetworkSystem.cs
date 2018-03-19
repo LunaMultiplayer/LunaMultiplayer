@@ -52,10 +52,7 @@ namespace LunaClient.Systems.Network
         /// <summary>
         /// This system must be ALWAYS enabled so we set it as enabled on the constructor
         /// </summary>
-        public NetworkSystem()
-        {
-            base.Enabled = true;
-        }
+        public NetworkSystem() => base.Enabled = true;
 
         #endregion
 
@@ -226,18 +223,6 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.ScenariosSynced:
                     MainSystem.Singleton.Status = "Scenarios synced";
-                    CraftLibrarySystem.Singleton.Enabled = true;
-                    MainSystem.NetworkState = ClientState.SyncingCraftlibrary;
-                    NetworkSimpleMessageSender.SendCraftLibraryRequest();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.SyncingCraftlibrary:
-                    MainSystem.Singleton.Status = "Syncing craft library";
-                    if (ConnectionIsStuck(20000))
-                        MainSystem.NetworkState = ClientState.ScenariosSynced;
-                    break;
-                case ClientState.CraftlibrarySynced:
-                    MainSystem.Singleton.Status = "Craft library synced";
                     MainSystem.NetworkState = ClientState.SyncingLocks;
                     LockSystem.Singleton.Enabled = true;
                     LockSystem.Singleton.MessageSender.SendLocksRequest();
@@ -246,7 +231,7 @@ namespace LunaClient.Systems.Network
                 case ClientState.SyncingLocks:
                     MainSystem.Singleton.Status = "Syncing locks";
                     if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.CraftlibrarySynced;
+                        MainSystem.NetworkState = ClientState.ScenariosSynced;
                     break;
                 case ClientState.LocksSynced:
                     MainSystem.Singleton.Status = "Locks synced";
@@ -307,6 +292,7 @@ namespace LunaClient.Systems.Network
                         FlagPlantSystem.Singleton.Enabled = true;
                         VesselEvaSystem.Singleton.Enabled = true;
                         ScreenshotSystem.Singleton.Enabled = true;
+                        CraftLibrarySystem.Singleton.Enabled = true;
                         BugSystem.Singleton.Enabled = true;
                         PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
                         StatusSystem.Singleton.MessageSender.SendOwnStatus();

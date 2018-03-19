@@ -1,4 +1,4 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;

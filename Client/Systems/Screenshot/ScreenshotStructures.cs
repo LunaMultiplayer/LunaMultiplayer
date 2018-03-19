@@ -23,7 +23,5 @@ namespace LunaClient.Systems.Screenshot
                 return _texture;
             }
         }
-
-
     }
 }

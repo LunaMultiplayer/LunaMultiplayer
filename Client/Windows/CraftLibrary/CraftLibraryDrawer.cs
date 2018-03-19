@@ -1,109 +1,122 @@
-﻿using LunaClient.Localization;
+﻿using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.SettingsSys;
+using System.Linq;
 using UnityEngine;
 
 namespace LunaClient.Windows.CraftLibrary
 {
     public partial class CraftLibraryWindow
     {
+        #region Folders
+
         public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            //Draw the player buttons
-            PlayerScrollPos = GUILayout.BeginScrollView(PlayerScrollPos, ScrollStyle);
-            DrawPlayerButton(SettingsSystem.CurrentSettings.PlayerName);
-            foreach (var playerName in System.PlayersWithCrafts)
-                if (playerName != SettingsSystem.CurrentSettings.PlayerName)
-                    DrawPlayerButton(playerName);
+            DrawRefreshButton(() => System.MessageSender.RequestFolders());
+            DrawFolderButton(SettingsSystem.CurrentSettings.PlayerName);
+            GUILayout.Space(10);
+
+            FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
+            foreach (var folderName in System.CraftInfo.Keys.ToArray())
+            {
+                if (folderName != SettingsSystem.CurrentSettings.PlayerName)
+                    DrawFolderButton(folderName);
+            }
             GUILayout.EndScrollView();
+
             GUILayout.EndVertical();
         }
 
-        private void DrawPlayerButton(string playerName)
+        private void DrawFolderButton(string folderName)
         {
-            var buttonSelected = GUILayout.Toggle(System.SelectedPlayer == playerName, playerName, ButtonStyle);
-            if (buttonSelected && System.SelectedPlayer != playerName)
-                System.SelectedPlayer = playerName;
-            if (!buttonSelected && System.SelectedPlayer == playerName)
-                System.SelectedPlayer = null;
+            if (GUILayout.Toggle(SelectedFolder == folderName, folderName, ButtonStyle))
+            {
+                if (SelectedFolder != folderName)
+                {
+                    SelectedFolder = folderName;
+                    System.MessageSender.RequestCraftList(SelectedFolder);
+                }
+            }
+            else
+            {
+                if (SelectedFolder == folderName) SelectedFolder = null;
+            }
         }
+
+        #endregion
+
+        #region Craft list
 
         public void DrawLibraryContent(int windowId)
         {
             //Always draw close button first
-            DrawCloseButton(() => System.SelectedPlayer = null, LibraryWindowRect);
+            DrawCloseButton(() => SelectedFolder = null, LibraryWindowRect);
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            var newShowUpload = false;
-            if (System.SelectedPlayer == SettingsSystem.CurrentSettings.PlayerName)
-                newShowUpload = GUILayout.Toggle(ShowUpload, LocalizationContainer.CraftLibraryWindowText.Upload, ButtonStyle);
-            if (newShowUpload && !ShowUpload)
-                System.BuildUploadList();
-            ShowUpload = newShowUpload;
+            DrawRefreshButton(() => System.MessageSender.RequestCraftList(SelectedFolder));
+            GUILayout.Space(15);
+
+            if (string.IsNullOrEmpty(SelectedFolder)) return;
+
             LibraryScrollPos = GUILayout.BeginScrollView(LibraryScrollPos, ScrollStyle);
-            if (ShowUpload)
-                DrawUploadScreen();
+            if (System.CraftInfo.TryGetValue(SelectedFolder, out var miniatures))
+            {
+                var craftList = miniatures.Values.OrderBy(m => m.CraftType).ToArray();
+                if (!craftList.Any())
+                {
+                    DrawWaitIcon();
+                }
+                for (var i = 0; i < craftList.Length; i += 4)
+                {
+                    GUILayout.BeginHorizontal();
+
+                    GUILayout.FlexibleSpace();
+                    DrawCraftEntry(craftList[i]);
+                    GUILayout.FlexibleSpace();
+
+                    if (craftList.Length > i + 1)
+                    {
+                        GUILayout.FlexibleSpace();
+                        DrawCraftEntry(craftList[i + 1]);
+                        GUILayout.FlexibleSpace();
+                    }
+
+                    if (craftList.Length > i + 2)
+                    {
+                        GUILayout.FlexibleSpace();
+                        DrawCraftEntry(craftList[i + 2]);
+                        GUILayout.FlexibleSpace();
+                    }
+
+                    if (craftList.Length > i + 3)
+                    {
+                        GUILayout.FlexibleSpace();
+                        DrawCraftEntry(craftList[i + 3]);
+                        GUILayout.FlexibleSpace();
+                    }
+
+                    GUILayout.EndHorizontal();
+                }
+            }
             else
-                DrawDownloadScreen();
+            {
+                DrawWaitIcon();
+            }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
         }
 
-        private void DrawUploadScreen()
+        private void DrawCraftEntry(CraftBasicEntry craftBasicEntry)
         {
-            foreach (var entryType in System.UploadList)
+            if (GUILayout.Button(craftBasicEntry.CraftName, ButtonStyle))
             {
-                GUILayout.Label(entryType.Key.ToString(), LabelStyle);
-                foreach (var entryName in entryType.Value)
-                {
-                    if (System.PlayerList.ContainsKey(SettingsSystem.CurrentSettings.PlayerName) &&
-                        System.PlayerList[SettingsSystem.CurrentSettings.PlayerName].ContainsKey(entryType.Key) &&
-                        System.PlayerList[SettingsSystem.CurrentSettings.PlayerName][entryType.Key].Contains(entryName))
-                        GUI.enabled = false;
-                    if (GUILayout.Button(entryName, ButtonStyle))
-                    {
-                        System.UploadCraftType = entryType.Key;
-                        System.UploadCraftName = entryName;
-                    }
-                    GUI.enabled = true;
-                }
+                if (System.CraftDownloaded.TryGetValue(SelectedFolder, out var downloadedCraft) && !downloadedCraft.ContainsKey(craftBasicEntry.CraftName))
+                    System.MessageSender.RequestCraft(SelectedFolder, craftBasicEntry.CraftName, craftBasicEntry.CraftType);
             }
         }
 
-        private void DrawDownloadScreen()
-        {
-            if (System.PlayerList.ContainsKey(System.SelectedPlayer))
-                foreach (var entry in System.PlayerList[System.SelectedPlayer])
-                {
-                    GUILayout.Label(entry.Key.ToString(), LabelStyle);
-                    foreach (var craftName in entry.Value)
-                        if (System.SelectedPlayer == SettingsSystem.CurrentSettings.PlayerName)
-                        {
-                            //Also draw remove button on player screen
-                            GUILayout.BeginHorizontal();
-                            if (GUILayout.Button(craftName, ButtonStyle))
-                            {
-                                System.DownloadCraftType = entry.Key;
-                                System.DownloadCraftName = craftName;
-                            }
-                            if (GUILayout.Button(LocalizationContainer.CraftLibraryWindowText.Remove, ButtonStyle))
-                            {
-                                System.DeleteCraftType = entry.Key;
-                                System.DeleteCraftName = craftName;
-                            }
-                            GUILayout.EndHorizontal();
-                        }
-                        else
-                        {
-                            if (GUILayout.Button(craftName, ButtonStyle))
-                            {
-                                System.DownloadCraftType = entry.Key;
-                                System.DownloadCraftName = craftName;
-                            }
-                        }
-                }
-        }
+        #endregion
     }
 }

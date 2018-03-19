@@ -7,7 +7,7 @@
         ListRequest = 2,
         ListReply = 3,
         
-        DownloadRequest = 5,
-        ScreenshotData = 6,
+        DownloadRequest = 4,
+        ScreenshotData = 5,
     }
 }

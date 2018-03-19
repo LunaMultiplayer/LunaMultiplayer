@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.CraftLibrary
@@ -9,8 +10,9 @@ namespace LunaCommon.Message.Data.CraftLibrary
         internal CraftLibraryListReplyMsgData() { }
         public override CraftMessageType CraftMessageType => CraftMessageType.ListReply;
 
+        public string FolderName;
         public int PlayerCraftsCount;
-        public PlayerCrafts[] PlayerCrafts = new PlayerCrafts[0];
+        public CraftBasicInfo[] PlayerCrafts = new CraftBasicInfo[0];
 
         public override string ClassName { get; } = nameof(CraftLibraryListReplyMsgData);
 
@@ -18,6 +20,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
         {
             base.InternalSerialize(lidgrenMsg);
 
+            lidgrenMsg.Write(FolderName);
             lidgrenMsg.Write(PlayerCraftsCount);
             for (var i = 0; i < PlayerCraftsCount; i++)
             {
@@ -29,15 +32,16 @@ namespace LunaCommon.Message.Data.CraftLibrary
         {
             base.InternalDeserialize(lidgrenMsg);
 
+            FolderName = lidgrenMsg.ReadString();
             PlayerCraftsCount = lidgrenMsg.ReadInt32();
 
             if (PlayerCrafts.Length < PlayerCraftsCount)
-                PlayerCrafts = new PlayerCrafts[PlayerCraftsCount];
+                PlayerCrafts = new CraftBasicInfo[PlayerCraftsCount];
 
             for (var i = 0; i < PlayerCraftsCount; i++)
             {
                 if(PlayerCrafts[i] == null)
-                    PlayerCrafts[i] = new PlayerCrafts();
+                    PlayerCrafts[i] = new CraftBasicInfo();
 
                 PlayerCrafts[i].Deserialize(lidgrenMsg);
             }
@@ -51,7 +55,7 @@ namespace LunaCommon.Message.Data.CraftLibrary
                 arraySize += PlayerCrafts[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize() + sizeof(int) + arraySize;
+            return base.InternalGetMessageSize() + FolderName.GetByteCount() + sizeof(int) + arraySize;
         }
     }
 }

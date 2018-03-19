@@ -135,6 +135,28 @@ namespace LunaClient.Base
                 closeAction.Invoke();
         }
 
+        protected void DrawRefreshButton(Action refreshAction)
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button(RefreshIcon, ButtonStyle)) refreshAction.Invoke();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+        }
+        
+        protected void DrawWaitIcon()
+        {
+            GUILayout.BeginVertical();
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(WaitIcon);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndVertical();
+        }
+
         #endregion
     }
 }

@@ -1,5 +1,4 @@
 ﻿using LunaClient.Systems.Screenshot;
-using System;
 using UniLinq;
 using UnityEngine;
 
@@ -21,15 +20,6 @@ namespace LunaClient.Windows.Screenshots
                 DrawFolderButton(folderName);
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
-        }
-
-        private void DrawRefreshButton(Action refreshAction)
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button(RefreshIcon, ButtonStyle)) refreshAction.Invoke();
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
         }
 
         private void DrawFolderButton(string folderName)
@@ -70,7 +60,7 @@ namespace LunaClient.Windows.Screenshots
                 var miniaturesList = miniatures.Values.OrderBy(m => m.DateTaken).ToArray();
                 if (!miniaturesList.Any())
                 {
-                    ShowWaitIcon();
+                    DrawWaitIcon();
                 }
                 for (var i = 0; i < miniaturesList.Length; i += 4)
                 {
@@ -106,7 +96,7 @@ namespace LunaClient.Windows.Screenshots
             }
             else
             {
-                ShowWaitIcon();
+                DrawWaitIcon();
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
@@ -157,7 +147,7 @@ namespace LunaClient.Windows.Screenshots
             }
             else
             {
-                ShowWaitIcon();
+                DrawWaitIcon();
             }
             GUILayout.EndScrollView();
 
@@ -165,18 +155,5 @@ namespace LunaClient.Windows.Screenshots
         }
         
         #endregion
-
-        private void ShowWaitIcon()
-        {
-            GUILayout.BeginVertical();
-            GUILayout.FlexibleSpace();
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            GUILayout.Label(WaitIcon);
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-            GUILayout.FlexibleSpace();
-            GUILayout.EndVertical();
-        }
     }
 }

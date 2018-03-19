@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Systems.CraftLibrary;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using UnityEngine;
@@ -12,19 +11,20 @@ namespace LunaClient.Windows.CraftLibrary
     {
         #region Fields
 
-        protected const float WindowHeight = 300;
-        protected const float WindowWidth = 200;
-        protected const float LibraryWindowHeight = 400;
-        protected const float LibraryWindowWidth = 300;
-
-        protected bool ShowUpload { get; set; }
+        protected const float FoldersWindowHeight = 300;
+        protected const float FoldersWindowWidth = 200;
+        protected const float LibraryWindowHeight = 300;
+        protected const float LibraryWindowWidth = 400;
         
         protected Rect LibraryWindowRect { get; set; }
-        
+
+        protected GUILayoutOption[] FoldersLayoutOptions { get; set; }
         protected GUILayoutOption[] LibraryLayoutOptions { get; set; }
 
-        protected Vector2 PlayerScrollPos { get; set; }
+        protected Vector2 FoldersScrollPos { get; set; }
         protected Vector2 LibraryScrollPos { get; set; }
+
+        private string SelectedFolder { get; set; }
 
         #endregion
 
@@ -33,7 +33,12 @@ namespace LunaClient.Windows.CraftLibrary
         {
             get => base.Display && _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
                    HighLogic.LoadedScene >= GameScenes.SPACECENTER;
-            set => base.Display = _display = value;
+            set
+            {
+                if (value && !_display && System.CraftInfo.Count == 0)
+                    System.MessageSender.RequestFolders();
+                base.Display = _display = value;
+            }
         }
 
         public override void Update()
@@ -46,45 +51,38 @@ namespace LunaClient.Windows.CraftLibrary
         {
             base.OnGui();
             if (SafeDisplay)
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.CraftLibraryWindowText.Title, WindowStyle, LayoutOptions));
-            if (SafeDisplay && System.SelectedPlayer != null)
-                if (System.PlayersWithCrafts.Contains(System.SelectedPlayer) ||
-                    System.SelectedPlayer == SettingsSystem.CurrentSettings.PlayerName)
-                    LibraryWindowRect =
-                        LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6708 + MainSystem.WindowOffset,
-                            LibraryWindowRect, DrawLibraryContent,
-                            $"LunaMultiplayer - {System.SelectedPlayer} Craft Library", WindowStyle,
-                            LibraryLayoutOptions));
-                else
-                    System.SelectedPlayer = null;
+            {
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset,
+                    WindowRect, DrawContent, LocalizationContainer.CraftLibraryWindowText.Folders, WindowStyle, FoldersLayoutOptions));
+            }
+
+            if (SafeDisplay && !string.IsNullOrEmpty(SelectedFolder) && System.CraftInfo.ContainsKey(SelectedFolder))
+            {
+                LibraryWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6708 + MainSystem.WindowOffset,
+                    LibraryWindowRect, DrawLibraryContent, $"{SelectedFolder} {LocalizationContainer.CraftLibraryWindowText.Crafts}", WindowStyle,
+                    LibraryLayoutOptions));
+            }
+            
             CheckWindowLock();
         }
-
+        
         public override void SetStyles()
         {
-            //Setup GUI stuff
-            //left 50, middle height
-            WindowRect = new Rect(50, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
-            //middle of the screen
-            LibraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f,
-                Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
+            WindowRect = new Rect(50, Screen.height / 2f - FoldersWindowHeight / 2f, FoldersWindowWidth, FoldersWindowHeight);
+            LibraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f, Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
-            LayoutOptions = new GUILayoutOption[4];
-            LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
-            LayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
-            LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
-            LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
+            FoldersLayoutOptions = new GUILayoutOption[4];
+            FoldersLayoutOptions[0] = GUILayout.MinWidth(FoldersWindowWidth);
+            FoldersLayoutOptions[1] = GUILayout.MaxWidth(FoldersWindowWidth);
+            FoldersLayoutOptions[2] = GUILayout.MinHeight(FoldersWindowHeight);
+            FoldersLayoutOptions[3] = GUILayout.MaxHeight(FoldersWindowHeight);
 
             LibraryLayoutOptions = new GUILayoutOption[4];
             LibraryLayoutOptions[0] = GUILayout.MinWidth(LibraryWindowWidth);
             LibraryLayoutOptions[1] = GUILayout.MaxWidth(LibraryWindowWidth);
             LibraryLayoutOptions[2] = GUILayout.MinHeight(LibraryWindowHeight);
             LibraryLayoutOptions[3] = GUILayout.MaxHeight(LibraryWindowHeight);
-            
-            TextAreaOptions = new GUILayoutOption[2];
-            TextAreaOptions[0] = GUILayout.ExpandWidth(false);
-            TextAreaOptions[1] = GUILayout.ExpandWidth(false);
         }
 
         public override void RemoveWindowLock()
@@ -92,7 +90,7 @@ namespace LunaClient.Windows.CraftLibrary
             if (IsWindowLocked)
             {
                 IsWindowLocked = false;
-                InputLockManager.RemoveControlLock("LMP_CraftLock");
+                InputLockManager.RemoveControlLock("LMP_CraftLibraryLock");
             }
         }
 
@@ -113,7 +111,7 @@ namespace LunaClient.Windows.CraftLibrary
 
                 if (shouldLock && !IsWindowLocked)
                 {
-                    InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, "LMP_CraftLock");
+                    InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, "LMP_CraftLibraryLock");
                     IsWindowLocked = true;
                 }
                 if (!shouldLock && IsWindowLocked)

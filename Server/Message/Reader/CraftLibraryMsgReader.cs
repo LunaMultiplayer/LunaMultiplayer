@@ -10,28 +10,26 @@ namespace Server.Message.Reader
 {
     public class CraftLibraryMsgReader : ReaderBase
     {
-        private static readonly CraftLibrarySystem CraftLibraryHandler = new CraftLibrarySystem();
-
         public override void HandleMessage(ClientStructure client, IClientMessageBase message)
         {
             var data = (CraftLibraryBaseMsgData)message.Data;
-            if (data.PlayerName != client.PlayerName) return;
 
             switch (data.CraftMessageType)
             {
-                case CraftMessageType.UploadFile:
-                    CraftLibraryHandler.HandleUploadFileMessage(client, (CraftLibraryUploadMsgData)data);
-                    break;
-                case CraftMessageType.RequestFile:
-                    CraftLibraryHandler.HandleRequestFileMessage(client, (CraftLibraryRequestMsgData)data);
-                    break;
-                case CraftMessageType.DeleteFile:
-                    CraftLibraryHandler.HandleDeleteFileMessage(client, (CraftLibraryDeleteMsgData)data);
+                case CraftMessageType.FoldersRequest:
+                    CraftLibrarySystem.SendCraftFolders(client);
                     break;
                 case CraftMessageType.ListRequest:
-                    //We don't use this message anymore so we can recycle it
-                    message.Recycle();
-                    CraftLibrarySystem.SendCraftList(client);
+                    CraftLibrarySystem.SendCraftList(client, (CraftLibraryListRequestMsgData)data);
+                    break;
+                case CraftMessageType.DownloadRequest:
+                    CraftLibrarySystem.SendCraft(client, (CraftLibraryDownloadRequestMsgData)data);
+                    break;
+                case CraftMessageType.DeleteRequest:
+                    CraftLibrarySystem.DeleteCraft(client, (CraftLibraryDeleteRequestMsgData)data);
+                    break;
+                case CraftMessageType.CraftData:
+                    CraftLibrarySystem.SaveCraft(client, (CraftLibraryDataMsgData)data);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
