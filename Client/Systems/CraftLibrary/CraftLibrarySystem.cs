@@ -112,7 +112,7 @@ namespace LunaClient.Systems.CraftLibrary
                     throw new ArgumentOutOfRangeException();
             }
 
-            var path = CommonUtil.CombinePaths(folder, craft.CraftName, ".craft");
+            var path = CommonUtil.CombinePaths(folder, $"{craft.CraftName}.craft");
             File.WriteAllBytes(path, craft.CraftData);
 
             ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CraftSaved, 5f, ScreenMessageStyle.UPPER_CENTER);
