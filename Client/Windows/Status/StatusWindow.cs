@@ -50,6 +50,7 @@ namespace LunaClient.Windows.Status
         protected override void OnCloseButton()
         {
             base.OnCloseButton();
+            RemoveWindowLock();
             MainSystem.ToolbarShowGui = false;
         }
 
