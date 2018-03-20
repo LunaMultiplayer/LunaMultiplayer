@@ -15,10 +15,13 @@ namespace LunaClient.Windows.Screenshots
             DrawRefreshButton(() => System.MessageSender.RequestFolders());
             GUILayout.Space(15);
 
+            GUILayout.BeginVertical(BoxStyle);
             FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
             foreach (var folderName in System.MiniatureImages.Keys)
                 DrawFolderButton(folderName);
             GUILayout.EndScrollView();
+            GUILayout.EndVertical();
+
             GUILayout.EndVertical();
         }
 
@@ -54,6 +57,7 @@ namespace LunaClient.Windows.Screenshots
 
             if (string.IsNullOrEmpty(SelectedFolder)) return;
 
+            GUILayout.BeginVertical(BoxStyle);
             LibraryScrollPos = GUILayout.BeginScrollView(LibraryScrollPos, ScrollStyle);
             if (Miniatures.Any())
             {
@@ -95,6 +99,7 @@ namespace LunaClient.Windows.Screenshots
             }
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
+            GUILayout.EndVertical();
         }
 
         private void DrawMiniature(Screenshot miniature)
@@ -135,6 +140,7 @@ namespace LunaClient.Windows.Screenshots
 
             if (SelectedImage == 0) return;
 
+            GUILayout.BeginVertical(BoxStyle);
             ImageScrollPos = GUILayout.BeginScrollView(ImageScrollPos, ScrollStyle);
             if (System.DownloadedImages.TryGetValue(SelectedFolder, out var imagesDictionary) && imagesDictionary.TryGetValue(SelectedImage, out var screenShot))
             {
@@ -145,6 +151,7 @@ namespace LunaClient.Windows.Screenshots
                 DrawWaitIcon(false);
             }
             GUILayout.EndScrollView();
+            GUILayout.EndVertical();
 
             GUILayout.EndVertical();
         }

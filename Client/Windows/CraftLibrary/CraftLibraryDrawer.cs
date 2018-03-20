@@ -17,6 +17,7 @@ namespace LunaClient.Windows.CraftLibrary
             DrawRefreshAndUploadButton(() => System.MessageSender.SendRequestFoldersMsg(), ()=> DrawUploadScreen = true);
             GUILayout.Space(15);
 
+            GUILayout.BeginVertical(BoxStyle);
             FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
             if (!System.CraftInfo.Keys.Any()) SelectedFolder = null;
             else
@@ -27,6 +28,7 @@ namespace LunaClient.Windows.CraftLibrary
                 }
             }
             GUILayout.EndScrollView();
+            GUILayout.EndVertical();
 
             GUILayout.EndVertical();
         }
@@ -63,6 +65,7 @@ namespace LunaClient.Windows.CraftLibrary
 
             if (string.IsNullOrEmpty(SelectedFolder)) return;
 
+            GUILayout.BeginVertical(BoxStyle);
             LibraryScrollPos = GUILayout.BeginScrollView(LibraryScrollPos, ScrollStyle);
             if (SphCrafts.Any())
             {
@@ -92,6 +95,7 @@ namespace LunaClient.Windows.CraftLibrary
                 GUILayout.Space(5);
             }
             GUILayout.EndScrollView();
+            GUILayout.EndVertical();
 
             GUILayout.EndVertical();
         }
@@ -135,7 +139,8 @@ namespace LunaClient.Windows.CraftLibrary
             GUI.DragWindow(MoveRect);
             DrawRefreshButton(() => System.RefreshOwnCrafts());
             GUILayout.Space(15);
-            
+
+            GUILayout.BeginVertical(BoxStyle);
             UploadScrollPos = GUILayout.BeginScrollView(UploadScrollPos, ScrollStyle);
             for (var i = 0; i < System.OwnCrafts.Count; i += 4)
             {
@@ -143,6 +148,8 @@ namespace LunaClient.Windows.CraftLibrary
             }
 
             GUILayout.EndScrollView();
+            GUILayout.EndVertical();
+
             GUILayout.EndVertical();
         }
 
