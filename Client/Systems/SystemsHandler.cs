@@ -22,20 +22,19 @@ namespace LunaClient.Systems
         public static void FillUpSystemsList()
         {
             var systemsList = new List<ISystem>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            
+            var systems = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && typeof(ISystem).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
+            foreach (var system in systems)
             {
                 try
                 {
-                    var systems = assembly.GetTypes().Where(t => t.IsClass && typeof(ISystem).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
-                    foreach (var sys in systems)
-                    {
-                        if (sys.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is ISystem systemImplementation)
-                            systemsList.Add(systemImplementation);
-                    }
+                    if (system.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is ISystem systemImplementation)
+                        systemsList.Add(systemImplementation);
                 }
+
                 catch (Exception ex)
                 {
-                    LunaLog.LogError($"Exception loading types from assembly {assembly.FullName}: {ex.Message}");
+                    LunaLog.LogError($"Exception loading system type {system.FullName}: {ex.Message}");
                 }
             }
 
