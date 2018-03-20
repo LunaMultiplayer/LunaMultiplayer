@@ -23,7 +23,8 @@ namespace LunaClient.Utilities
                 return false;
             }
 
-            LogDetouring(source, destination);
+            if (!CheckDetouring(source, destination))
+                return false;
 
             if (IntPtr.Size == sizeof(long))
             {
@@ -36,8 +37,8 @@ namespace LunaClient.Utilities
             
             return true;
         }
-
-        private static void LogDetouring(MethodInfo source, MethodInfo destination)
+        
+        private static bool CheckDetouring(MethodInfo source, MethodInfo destination)
         {
             var sourceStr = source.DeclaringType?.FullName + "." + source.Name + " @ 0x" +
                             source.MethodHandle.GetFunctionPointer().ToString("X" + IntPtr.Size * 2);
@@ -47,15 +48,19 @@ namespace LunaClient.Utilities
 
             if (Detours.ContainsKey(sourceStr))
             {
-                LunaLog.LogWarning($"[Detour] Source method('{sourceStr}') is previously detoured to '{Detours[sourceStr]}'");
-                Detours[sourceStr] = destStr;
-            }
-            else
-            {
-                Detours.Add(sourceStr, destStr);
+                //Othwerise we are just detouring to the same method...
+                if (destStr != Detours[sourceStr])
+                {
+                    LunaLog.LogWarning($"[Detour] Source method('{sourceStr}') was previously detoured to '{Detours[sourceStr]}'");
+                }
+                
+                return false;
             }
 
+            Detours.Add(sourceStr, destStr);
             LunaLog.Log($"[Detour] Detouring '{sourceStr}' to '{destStr}'");
+
+            return true;
         }
 
         private static unsafe void Create32BitsDetour(MethodInfo source, MethodInfo destination)
