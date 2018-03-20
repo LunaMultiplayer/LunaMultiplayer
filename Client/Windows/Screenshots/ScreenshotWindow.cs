@@ -38,7 +38,6 @@ namespace LunaClient.Windows.Screenshots
         private long SelectedImage { get; set; } = 0;
 
         private static DateTime _lastGuiUpdateTime = DateTime.MinValue;
-        private static readonly List<string> Folders = new List<string>();
         private static readonly List<Screenshot> Miniatures = new List<Screenshot>();
         #endregion
 
@@ -66,10 +65,7 @@ namespace LunaClient.Windows.Screenshots
             if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromMilliseconds(UpdateIntervalMs))
             {
                 _lastGuiUpdateTime = DateTime.Now;
-
-                Folders.Clear();
-                Folders.AddRange(System.MiniatureImages.Keys);
-
+                
                 Miniatures.Clear();
                 if (!string.IsNullOrEmpty(SelectedFolder) && System.MiniatureImages.TryGetValue(SelectedFolder, out var miniatures))
                 {

@@ -39,8 +39,6 @@ namespace LunaClient.Windows.CraftLibrary
 
         private static DateTime _lastGuiUpdateTime = DateTime.MinValue;
 
-        private static readonly List<string> Folders = new List<string>();
-
         private static readonly List<CraftBasicEntry> VabCrafts = new List<CraftBasicEntry>();
         private static readonly List<CraftBasicEntry> SphCrafts = new List<CraftBasicEntry>();
         private static readonly List<CraftBasicEntry> SubAssemblyCrafts = new List<CraftBasicEntry>();
@@ -70,10 +68,7 @@ namespace LunaClient.Windows.CraftLibrary
             if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromMilliseconds(UpdateIntervalMs))
             {
                 _lastGuiUpdateTime = DateTime.Now;
-
-                Folders.Clear();
-                Folders.AddRange(System.CraftInfo.Keys);
-
+                
                 VabCrafts.Clear();
                 SphCrafts.Clear();
                 SubAssemblyCrafts.Clear();

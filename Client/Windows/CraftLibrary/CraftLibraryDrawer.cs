@@ -18,10 +18,10 @@ namespace LunaClient.Windows.CraftLibrary
             GUILayout.Space(15);
 
             FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
-            if (!Folders.Any()) SelectedFolder = null;
+            if (!System.CraftInfo.Keys.Any()) SelectedFolder = null;
             else
             {
-                foreach (var folderName in Folders.ToArray())
+                foreach (var folderName in System.CraftInfo.Keys)
                 {
                     DrawFolderButton(folderName);
                 }

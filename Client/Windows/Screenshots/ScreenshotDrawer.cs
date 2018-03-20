@@ -16,7 +16,7 @@ namespace LunaClient.Windows.Screenshots
             GUILayout.Space(15);
 
             FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
-            foreach (var folderName in Folders)
+            foreach (var folderName in System.MiniatureImages.Keys)
                 DrawFolderButton(folderName);
             GUILayout.EndScrollView();
             GUILayout.EndVertical();
