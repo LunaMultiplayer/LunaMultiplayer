@@ -3,6 +3,7 @@ using KSP.UI.Screens;
 using LunaClient.Systems.Lock;
 using LunaCommon.Enums;
 using System.Collections.Generic;
+// ReSharper disable All
 
 namespace LunaClient.Harmony
 {
@@ -15,12 +16,12 @@ namespace LunaClient.Harmony
     public class KscVesselMarkersSpawnVesselMarkersPatch
     {
         private static readonly List<KSCVesselMarker> MarkersToRemove = new List<KSCVesselMarker>();
-
+        
         [HarmonyPostfix]
         private static void FixVesselMarkers()
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
-            
+
             MarkersToRemove.Clear();
 
             var markers = Traverse.Create(KSCVesselMarkers.fetch).Field("markers").GetValue<List<KSCVesselMarker>>();

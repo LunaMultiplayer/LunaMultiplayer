@@ -62,6 +62,7 @@
     <Compile Include="Harmony\KscVesselMarkersSpawnVesselMarkersPatch.cs" />
     <Compile Include="Harmony\LaunchSiteClearTestPatch.cs" />
     <Compile Include="Harmony\ShipConstructionFindVesselsLandedAtPatch.cs" />
+    <Compile Include="Harmony\SpaceTrackingSetVesselPatch.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
     <Compile Include="Localization\Structures\ServerDetailsWindowText.cs" />
