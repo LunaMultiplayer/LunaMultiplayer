@@ -10,10 +10,7 @@ namespace LunaCommon.Locks
     {
         private LockStore LockStore { get; }
 
-        public LockQuery(LockStore lockStore)
-        {
-            LockStore = lockStore;
-        }
+        public LockQuery(LockStore lockStore) => LockStore = lockStore;
 
         /// <summary>
         /// Checks if the vessel based lock belongs to player
