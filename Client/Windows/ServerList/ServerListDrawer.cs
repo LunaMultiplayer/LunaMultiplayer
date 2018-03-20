@@ -186,7 +186,7 @@ namespace LunaClient.Windows.ServerList
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[2]));
-                    GUILayout.Label(new GUIContent($"{currentEntry.Ping}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[2]));
+                    GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[2]));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[3]));
