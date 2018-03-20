@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <CraftUploaded>Voertuig geüpload!</CraftUploaded>
-  <CraftSaved>Voertuig opgeslagen!</CraftSaved>
-  <ModFileGenerated>LMPModControl.xml file gegenereerd in jouw KSP folder</ModFileGenerated>
-  <Disconected>De connectie is verbroken!</Disconected>
-  <Spectating>Dit voertuig wordt bestuurd door</Spectating>
-  <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
-  <CannotRecover>Kan voertuig niet herstellen, het is niet van jou.</CannotRecover>
-  <CannotTerminate>Kan voertuig niet beëindigen, het is niet van jou.</CannotTerminate>
-  <SpectatingRemoved>Het voertuig dat je aan het spectaten was is verwijderd</SpectatingRemoved>
-  <WarpDisabled>Kan niet warpen, warpen is uitgeschakeld op deze server.</WarpDisabled>
-  <NotWarpMaster>Kan niet warpen, je bent niet de warp master!</NotWarpMaster>
-  <WaitingSubspace>Kan niet warpen, wachten op subspace id van de server</WaitingSubspace>
-  <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
-  <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
-  <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
-  <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <CraftUploaded>Voertuig geüpload!</CraftUploaded>
+    <CraftSaved>Voertuig opgeslagen!</CraftSaved>
+    <ModFileGenerated>LMPModControl.xml file gegenereerd in jouw KSP folder</ModFileGenerated>
+    <Disconected>De connectie is verbroken!</Disconected>
+    <Spectating>Dit voertuig wordt bestuurd door</Spectating>
+    <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
+    <CannotRecover>Kan voertuig niet herstellen, het is niet van jou.</CannotRecover>
+    <CannotTerminate>Kan voertuig niet beëindigen, het is niet van jou.</CannotTerminate>
+    <SpectatingRemoved>Het voertuig dat je aan het spectaten was is verwijderd</SpectatingRemoved>
+    <WarpDisabled>Kan niet warpen, warpen is uitgeschakeld op deze server.</WarpDisabled>
+    <NotWarpMaster>Kan niet warpen, je bent niet de warp master!</NotWarpMaster>
+    <WaitingSubspace>Kan niet warpen, wachten op subspace id van de server</WaitingSubspace>
+    <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
+    <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
+    <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
+    <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

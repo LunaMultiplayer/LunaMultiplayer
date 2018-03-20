@@ -23,7 +23,6 @@ namespace LunaClient.Localization
         public static DisclaimerDialogText DisclaimerDialogText = new DisclaimerDialogText();
         public static OutdatedDialogText OutdatedDialogText = new OutdatedDialogText();
         public static InstallDialogText InstallDialogText = new InstallDialogText();
-        public static ServerDetailsWindowText ServerDetailsWindowText = new ServerDetailsWindowText();
         public static ScreenshotWindowText ScreenshotWindowText = new ScreenshotWindowText();
         public static ScreenText ScreenText = new ScreenText();
 

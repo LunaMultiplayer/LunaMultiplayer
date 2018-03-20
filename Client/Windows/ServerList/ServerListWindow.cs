@@ -92,7 +92,7 @@ namespace LunaClient.Windows.ServerList
                 if (SelectedServerId != 0)
                 {
                     ServerDetailWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6715 + MainSystem.WindowOffset,
-                        ServerDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerDetailsWindowText.Title, WindowStyle, ServerDetailLayoutOptions));
+                        ServerDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerListWindowText.ServerDetailTitle, WindowStyle, ServerDetailLayoutOptions));
                 }
             }
         }

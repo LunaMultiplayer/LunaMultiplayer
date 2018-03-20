@@ -241,14 +241,14 @@ namespace LunaClient.Windows.ServerList
             GUI.DragWindow(MoveRect);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.ServerDetailsWindowText.Password, LabelOptions);
+            GUILayout.Label(LocalizationContainer.ServerListWindowText.Password, LabelOptions);
             NetworkServerList.Password = GUILayout.TextArea(NetworkServerList.Password, 30, TextAreaStyle, GUILayout.Width(200));
             GUILayout.EndHorizontal();
             GUILayout.Space(20);
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(LocalizationContainer.ServerDetailsWindowText.Connect, ButtonStyle))
+            if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Connect, ButtonStyle))
             {
                 NetworkServerList.IntroduceToServer(SelectedServerId);
                 SelectedServerId = 0;

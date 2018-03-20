@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <InstallDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>Instalación incorrecta detectada</Title>
-  <IncorrectInstall>LunaMultiPlayer no está instalado correctamente.</IncorrectInstall>
-  <CurrentLoc>Carpeta actual:</CurrentLoc>
-  <CorrectLoc>Carpeta correcta:</CorrectLoc>
+    <Title>Instalación incorrecta detectada</Title>
+    <IncorrectInstall>LunaMultiPlayer no está instalado correctamente.</IncorrectInstall>
+    <CurrentLoc>Carpeta actual:</CurrentLoc>
+    <CorrectLoc>Carpeta correcta:</CorrectLoc>
 </InstallDialogText>

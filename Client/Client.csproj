@@ -66,7 +66,6 @@
     <Compile Include="Harmony\SpaceTracking_SetVessel.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
-    <Compile Include="Localization\Structures\ServerDetailsWindowText.cs" />
     <Compile Include="ModuleStore\Structures\CustomFieldDefinition.cs" />
     <Compile Include="ModuleStore\Structures\CustomModuleDefinition.cs" />
     <Compile Include="ModuleStore\FieldModuleDefinition.cs" />

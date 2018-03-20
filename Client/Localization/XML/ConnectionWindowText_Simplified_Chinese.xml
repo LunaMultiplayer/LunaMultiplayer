@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <PlayerName>玩家名称:</PlayerName>
-  <Add>添加</Add>
-  <Edit>编辑</Edit>
-  <Cancel>取消</Cancel>
-  <Connect>连接</Connect>
-  <Disconnect>取消连接</Disconnect>
-  <Remove>删除</Remove>
-  <Options>选项</Options>
-  <Servers>服务器</Servers>
-  <Name>名称:</Name>
-  <Address>地址:</Address>
-  <Port>端口:</Port>
-  <Server>服务器</Server>
-  <CustomServers>自定义服务器:</CustomServers>
-  <NoServers>(无服务器 - 请先添加一个服务器)</NoServers>
+    <PlayerName>玩家名称:</PlayerName>
+    <Add>添加</Add>
+    <Edit>编辑</Edit>
+    <Cancel>取消</Cancel>
+    <Connect>连接</Connect>
+    <Disconnect>取消连接</Disconnect>
+    <Remove>删除</Remove>
+    <Options>选项</Options>
+    <Servers>服务器</Servers>
+    <Name>名称:</Name>
+    <Address>地址:</Address>
+    <Port>端口:</Port>
+    <Server>服务器</Server>
+    <CustomServers>自定义服务器:</CustomServers>
+    <NoServers>(无服务器 - 请先添加一个服务器)</NoServers>
 </ConnectionWindowText>

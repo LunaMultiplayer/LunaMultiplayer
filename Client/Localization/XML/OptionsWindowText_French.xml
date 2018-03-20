@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>LunaMultiplayer - Options</Title>
-  <Language>Langue :</Language>
-  <Color>Couleur du joueur :</Color>
-  <Red>R :</Red>
-  <Green>V :</Green>
-  <Blue>B :</Blue>
-  <Random>Aléatoire</Random>
-  <Set>Appliquer</Set>
-  <ResetDisclaimer>Réinitialiser les clauses d'utilisation</ResetDisclaimer>
-  <Interpolation>Activer l'interpolation</Interpolation>
-  <GenerateLmpModControl>Générer le fichier serveur "LMPModControl.xml"</GenerateLmpModControl>
-  <GenerateUniverse>Générer l'univers depuis une sauvegarde</GenerateUniverse>
+    <Title>LunaMultiplayer - Options</Title>
+    <Language>Langue :</Language>
+    <Color>Couleur du joueur :</Color>
+    <Red>R :</Red>
+    <Green>V :</Green>
+    <Blue>B :</Blue>
+    <Random>Aléatoire</Random>
+    <Set>Appliquer</Set>
+    <ResetDisclaimer>Réinitialiser les clauses d'utilisation</ResetDisclaimer>
+    <Interpolation>Activer l'interpolation</Interpolation>
+    <GenerateLmpModControl>Générer le fichier serveur "LMPModControl.xml"</GenerateLmpModControl>
+    <GenerateUniverse>Générer l'univers depuis une sauvegarde</GenerateUniverse>
 </OptionsWindowText>
