@@ -31,9 +31,7 @@ namespace LunaClient.Systems.Ping
         private static ConcurrentBag<string> PingQueue { get; } = new ConcurrentBag<string>();
 
         #endregion
-
-
-
+        
         #region Public methods
 
         public static void QueuePing(string endpoint)
