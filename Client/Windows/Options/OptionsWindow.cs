@@ -8,6 +8,25 @@ namespace LunaClient.Windows.Options
 {
     public partial class OptionsWindow : Window<OptionsWindow>
     {
+        #region Fields
+
+        #region Public
+
+        public bool LoadEventHandled { get; set; }
+
+        #endregion
+
+        private const float WindowHeight = 400;
+        private const float WindowWidth = 300;
+        protected Color TempColor = new Color(1f, 1f, 1f, 1f);
+
+        protected GUIStyle TempColorLabelStyle { get; set; }
+        protected bool ShowBadNetworkSimulationFields { get; set; }
+        protected bool ShowAdvancedNetworkFields { get; set; }
+        protected bool InfiniteTimeout { get; set; }
+
+        #endregion
+
         private readonly GUILayoutOption[] _smallOption = { GUILayout.Width(100), GUILayout.ExpandWidth(false) };
 
         public override void OnGui()
@@ -77,24 +96,5 @@ namespace LunaClient.Windows.Options
             if (!SafeDisplay && IsWindowLocked)
                 RemoveWindowLock();
         }
-
-        #region Fields
-
-        #region Public
-
-        public bool LoadEventHandled { get; set; }
-
-        #endregion
-
-        private const float WindowHeight = 400;
-        private const float WindowWidth = 300;
-        protected Color TempColor = new Color(1f, 1f, 1f, 1f);
-        
-        protected GUIStyle TempColorLabelStyle { get; set; }
-        protected bool ShowBadNetworkSimulationFields { get; set; }
-        protected bool ShowAdvancedNetworkFields { get; set; }
-        protected bool InfiniteTimeout { get; set; }
-
-        #endregion
     }
 }

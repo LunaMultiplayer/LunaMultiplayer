@@ -44,8 +44,7 @@ namespace LunaClient.Windows.Screenshots
         private static bool _display;
         public override bool Display
         {
-            get => base.Display && _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
-                   HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            get => base.Display && _display&& MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
             set
             {
                 if (!value) Reset();

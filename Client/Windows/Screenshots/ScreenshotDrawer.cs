@@ -131,10 +131,6 @@ namespace LunaClient.Windows.Screenshots
                 //Close after saving
                 SelectedImage = 0;
             }
-            if (GUILayout.Button(CloseIcon, ButtonStyle))
-            {
-                SelectedImage = 0;
-            }
             GUILayout.EndHorizontal();
             GUILayout.Space(15);
 
