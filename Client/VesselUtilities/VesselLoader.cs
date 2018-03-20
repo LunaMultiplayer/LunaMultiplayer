@@ -242,6 +242,9 @@ namespace LunaClient.VesselUtilities
                 if (spaceTracking != null)
                     BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
             }
+
+            KSCVesselMarkers.fetch?.RefreshMarkers();
+
             return true;
         }
 

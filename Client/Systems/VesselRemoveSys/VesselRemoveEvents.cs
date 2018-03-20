@@ -130,46 +130,5 @@ namespace LunaClient.Systems.VesselRemoveSys
                 }, 3);
             }
         }
-
-        /// <summary>
-        /// Triggered when requesting a scene change. If we are leaving flight send our protovessel one last time
-        /// </summary>
-        public void OnSceneRequested(GameScenes requestedScene)
-        {
-            if (requestedScene == GameScenes.FLIGHT) return;
-
-            DelayedClearVessels();
-        }
-
-        /// <summary>
-        /// Called when the scene changes
-        /// </summary>
-        public void OnSceneChanged(GameScenes data)
-        {
-            if (data == GameScenes.SPACECENTER)
-            {
-                //If we are going to space center clear all the vessels.
-                //This will avoid all the headaches of recovering vessels and so on with the KSCVesselMarkers.
-                //Those markers appear on the KSC when you return from flight but they are NEVER updated
-                //So if a vessel from another player was in the launchpad and you return to the KSC, even 
-                //if that player goes to orbit, you will see the marker on the launchpad. This means that you 
-                //won't be able to launch without recovering it and if that player release the control lock,
-                //you will be recovering a valid vessel that is already in space.
-                DelayedClearVessels();
-            }
-        }
-
-        /// <summary>
-        /// This coroutine removes the vessels when switching to the KSC. We delay the removal of the vessels so 
-        /// in case we recover a vessel while in flight we correctly recover the crew, funds etc
-        /// </summary>
-        private static void DelayedClearVessels()
-        {
-            CoroutineUtil.StartDelayedRoutine(nameof(DelayedClearVessels), () =>
-            {
-                FlightGlobals.Vessels.Clear();
-                HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-            }, 3);
-        }
     }
 }

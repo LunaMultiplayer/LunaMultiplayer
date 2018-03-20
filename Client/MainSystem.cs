@@ -1,4 +1,5 @@
 ﻿using CommNet;
+using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.ModuleStore;
 using LunaClient.Network;
@@ -232,6 +233,7 @@ namespace LunaClient
                 return;
             }
 
+            HarmonyPatcher.Awake();
             SetupDirectoriesIfNeeded();
             HandleCommandLineArgs();
 

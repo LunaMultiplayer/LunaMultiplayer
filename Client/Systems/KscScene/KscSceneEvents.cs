@@ -1,46 +1,19 @@
 ﻿using KSP.UI.Screens;
 using LunaClient.Base;
-using LunaClient.Utilities;
-using LunaClient.VesselStore;
-using System.Linq;
+using LunaCommon.Locks;
 
 namespace LunaClient.Systems.KscScene
 {
     public class KscSceneEvents: SubSystem<KscSceneSystem>
     {
-        public void AstronautComplexSpawn()
+        public void OnLockAcquire(LockDefinition lockdefinition)
         {
-            System.SceneIsAstronautComplex = true;
-            HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-            HighLogic.CurrentGame?.flightState?.protoVessels?.AddRange(VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.ProtoVessel));
+            KSCVesselMarkers.fetch?.RefreshMarkers();
         }
 
-        public void AstronautComplexDespawn()
+        public void OnLockRelease(LockDefinition lockdefinition)
         {
-            System.SceneIsAstronautComplex = false;
-            HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-            CoroutineUtil.StartDelayedRoutine("AstronautComplexDespawn", () =>
-            {
-                if (KSCVesselMarkers.fetch != null)
-                    System.ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
-            }, 1.5f);
-        }
-
-        public void LevelLoaded(GameScenes data)
-        {
-            if (data == GameScenes.SPACECENTER)
-            {
-                System.ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
-
-                //Delay it to have time to recover the vessel, crew and funds
-                CoroutineUtil.StartDelayedRoutine("ClearVesselsInKsc", () =>
-                {
-                    HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-
-                    if (KSCVesselMarkers.fetch != null)
-                        System.ClearVesselMarkers?.Invoke(KSCVesselMarkers.fetch, null);
-                }, 3);
-            }
+            KSCVesselMarkers.fetch?.RefreshMarkers();
         }
     }
 }

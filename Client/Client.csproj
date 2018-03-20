@@ -35,6 +35,9 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\External\Dependencies\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp">
       <HintPath>..\External\KSPLibraries\Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
@@ -51,10 +54,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\HarmonyPatcher.cs" />
     <Compile Include="Base\Interface\IInputHandler.cs" />
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="Harmony\KscVesselMarkersSpawnVesselMarkersPatch.cs" />
+    <Compile Include="Harmony\LaunchSiteClearTestPatch.cs" />
+    <Compile Include="Harmony\ShipConstructionFindVesselsLandedAtPatch.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
     <Compile Include="Localization\Structures\ServerDetailsWindowText.cs" />
@@ -88,6 +95,8 @@
     <Compile Include="Systems\CraftLibrary\CraftLibraryMessageSender.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibraryStructures.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibrarySystem.cs" />
+    <Compile Include="Systems\KscScene\KscSceneEvents.cs" />
+    <Compile Include="Systems\KscScene\KscSceneSystem.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotStructures.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotMessageHandler.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotMessageSender.cs" />
@@ -103,8 +112,6 @@
     <Compile Include="Systems\FlagPlant\FlagPlantEvents.cs" />
     <Compile Include="Systems\FlagPlant\FlagPlantSystem.cs" />
     <Compile Include="Systems\Flag\FlagEvents.cs" />
-    <Compile Include="Systems\KscScene\KscSceneEvents.cs" />
-    <Compile Include="Systems\KscScene\KscSceneSystem.cs" />
     <Compile Include="Systems\Groups\GroupMessageHandler.cs" />
     <Compile Include="Systems\Groups\GroupMessageSender.cs" />
     <Compile Include="Systems\Groups\GroupSystem.cs" />
