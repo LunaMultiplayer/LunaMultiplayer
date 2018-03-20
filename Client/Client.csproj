@@ -23,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <Prefer32Bit>false</Prefer32Bit>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
@@ -137,6 +138,7 @@
     <Compile Include="Systems\VesselSyncSys\VesselSyncMessageSender.cs" />
     <Compile Include="Systems\VesselSyncSys\VesselSyncSystem.cs" />
     <Compile Include="Utilities\CoroutineUtil.cs" />
+    <Compile Include="Utilities\Detourer.cs" />
     <Compile Include="VesselIgnore\VesselModulesToIgnore.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselToProtoRefresh.cs" />
