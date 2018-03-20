@@ -13,7 +13,7 @@ namespace LunaClient.Harmony
     [HarmonyPatch(typeof(ShipConstruction))]
     [HarmonyPatch("FindVesselsLandedAt")]
     [HarmonyPatch(new[] { typeof(FlightState), typeof(string) })]
-    public class ShipConstructionFindVesselsLandedAtPatch
+    public class ShipConstruction_FindVesselsLandedAt
     {
         private static readonly List<ProtoVessel> ProtoVesselsBackup = new List<ProtoVessel>();
 

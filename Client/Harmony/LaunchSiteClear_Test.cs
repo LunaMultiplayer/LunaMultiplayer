@@ -12,7 +12,7 @@ namespace LunaClient.Harmony
     /// </summary>
     [HarmonyPatch(typeof(LaunchSiteClear))]
     [HarmonyPatch("Test")]
-    public class LaunchSiteClearTestPatch
+    public class LaunchSiteClear_Test
     {
         [HarmonyPostfix]
         private static void PostFixTest(ref bool __result)

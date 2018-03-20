@@ -59,10 +59,10 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
-    <Compile Include="Harmony\KscVesselMarkersSpawnVesselMarkersPatch.cs" />
-    <Compile Include="Harmony\LaunchSiteClearTestPatch.cs" />
-    <Compile Include="Harmony\ShipConstructionFindVesselsLandedAtPatch.cs" />
-    <Compile Include="Harmony\SpaceTrackingSetVesselPatch.cs" />
+    <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
+    <Compile Include="Harmony\LaunchSiteClear_Test.cs" />
+    <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />
+    <Compile Include="Harmony\SpaceTracking_SetVessel.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
     <Compile Include="Localization\Structures\ServerDetailsWindowText.cs" />

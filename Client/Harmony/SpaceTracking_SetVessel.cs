@@ -14,7 +14,7 @@ namespace LunaClient.Harmony
     /// </summary>
     [HarmonyPatch(typeof(SpaceTracking))]
     [HarmonyPatch("SetVessel")]
-    public class SpaceTrackingSetVesselPatch
+    public class SpaceTracking_SetVessel
     {
         [HarmonyPostfix]
         private static void PostFixSetVessel(ref SpaceTracking __instance)
