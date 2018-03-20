@@ -41,6 +41,7 @@ namespace LunaClient.Utilities
         {
             var sourceStr = source.DeclaringType?.FullName + "." + source.Name + " @ 0x" +
                             source.MethodHandle.GetFunctionPointer().ToString("X" + IntPtr.Size * 2);
+
             var destStr = destination.DeclaringType?.FullName + "." + destination.Name + " @ 0x" +
                           destination.MethodHandle.GetFunctionPointer().ToString("X" + IntPtr.Size * 2);
 
@@ -65,7 +66,7 @@ namespace LunaClient.Utilities
             // Get function pointers
             var sourceBase = source.MethodHandle.GetFunctionPointer().ToInt32();
             var destinationBase = destination.MethodHandle.GetFunctionPointer().ToInt32();
-
+            
             // Native source address
             var pointerRawSource = (byte*) sourceBase;
 
