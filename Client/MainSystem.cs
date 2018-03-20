@@ -270,9 +270,9 @@ namespace LunaClient
             //Converter window: 6712
             //Disclaimer window: 6713
             //Servers window: 6714
-            //Systems window: 6715
-            //Locks window: 6716
-            //Server details: 6717
+            //Server details: 6715
+            //Systems window: 6716
+            //Locks window: 6717
             //Banned parts: 6718
             //Screenshot folder: 6719
             //Screenshot library: 6720

@@ -171,8 +171,6 @@
     <Compile Include="Windows\Locks\LocksWindow.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotDrawer.cs" />
     <Compile Include="Windows\Screenshots\ScreenshotWindow.cs" />
-    <Compile Include="Windows\ServerDetails\ServerDetailsDrawer.cs" />
-    <Compile Include="Windows\ServerDetails\ServerDetailsWindow.cs" />
     <Compile Include="Windows\Status\StatusTexts.cs" />
     <Compile Include="Base\RoutineDefinition.cs" />
     <Compile Include="Base\StyleLibrary.cs" />

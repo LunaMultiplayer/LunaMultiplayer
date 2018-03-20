@@ -21,6 +21,7 @@ namespace LunaClient.Base
         protected GUIStyle StatusStyle;
         protected GUIStyle HighlightStyle;
         protected GUIStyle BoxStyle;
+        protected GUIStyle BigLabelStyle;
 
         protected GUILayoutOption[] LayoutOptions;
         protected GUILayoutOption[] TextAreaOptions;
@@ -35,6 +36,7 @@ namespace LunaClient.Base
         protected Texture2D SaveIcon;
         protected Texture2D WaitIcon;
         protected Texture2D SmallWaitIcon;
+        protected Texture2D KeyIcon;
 
         public void InitializeStyles()
         {
@@ -46,6 +48,7 @@ namespace LunaClient.Base
             SaveIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "save.png"), 16, 16);
             WaitIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "waitBig.png"), 16, 16);
             SmallWaitIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "waitSmall.png"), 16, 16);
+            KeyIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "key.png"), 16, 16);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
             ButtonStyle = new GUIStyle(GUI.skin.button);
@@ -68,6 +71,11 @@ namespace LunaClient.Base
             ScrollStyle = new GUIStyle(GUI.skin.scrollView);
             TextAreaStyle = new GUIStyle(GUI.skin.textArea);
             BoxStyle = new GUIStyle(GUI.skin.box);
+            BigLabelStyle = new GUIStyle(GUI.skin.label)
+            {
+                fontSize = 80,
+                normal = { textColor = Color.red }
+            };
         }
     }
 }

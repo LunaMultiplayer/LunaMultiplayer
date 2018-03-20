@@ -1,15 +1,25 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Network;
 using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow : Window<ServerListWindow>
     {
+        private static readonly Dictionary<string, PropertyInfo> OrderByPropertyDictionary = new Dictionary<string, PropertyInfo>();
+
+        protected float WindowHeight = Screen.height * 0.95f;
+        protected float WindowWidth = Screen.width * 0.95f;
+        protected float ServerDetailWindowHeight = 50;
+        protected float ServerDetailWindowWidth = 350;
+
         private static bool _display;
         public override bool Display
         {
@@ -18,26 +28,31 @@ namespace LunaClient.Windows.ServerList
             set => _display = value;
         }
         
-        public IEnumerable<ServerInfo> DisplayedServers { get; set; } = NetworkServerList.Servers.Values;
-        protected GUIStyle BigLabelStyle { get; set; }
+        public List<ServerInfo> DisplayedServers { get; set; } = new List<ServerInfo>();
         protected Vector2 VerticalScrollPosition { get; set; }
         protected Vector2 HorizontalScrollPosition { get; set; }
 
-        protected float WindowHeight = Screen.height * 0.95f;
-        protected float WindowWidth = Screen.width * 0.95f;
+        protected Rect ServerDetailWindowRect { get; set; }
+        protected GUILayoutOption[] ServerDetailLayoutOptions { get; set; }
+        
+        private long SelectedServerId { get; set; }
+        private static string OrderBy { get; set; } = "Ping";
+        private static bool Ascending { get; set; } = true;
 
-        private Texture2D KeyIcon { get; set; }
+        #region Constructor
+
+        public ServerListWindow()
+        {
+            foreach (var property in typeof(ServerInfo).GetProperties())
+            {
+                OrderByPropertyDictionary.Add(property.Name, property);
+            }
+        }
+
+        #endregion
 
         public override void SetStyles()
         {
-            BigLabelStyle = new GUIStyle(GUI.skin.label)
-            {
-                fontSize = 80,
-                normal = { textColor = Color.red }
-            };
-
-            KeyIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "key.png"), 16, 16);
-
             WindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
             
@@ -58,6 +73,12 @@ namespace LunaClient.Windows.ServerList
             LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
 
+            ServerDetailLayoutOptions = new GUILayoutOption[4];
+            ServerDetailLayoutOptions[0] = GUILayout.MinWidth(ServerDetailWindowWidth);
+            ServerDetailLayoutOptions[1] = GUILayout.MaxWidth(ServerDetailWindowWidth);
+            ServerDetailLayoutOptions[2] = GUILayout.MinHeight(ServerDetailWindowHeight);
+            ServerDetailLayoutOptions[3] = GUILayout.MaxHeight(ServerDetailWindowHeight);
+
             LabelOptions = new GUILayoutOption[1];
             LabelOptions[0] = GUILayout.Width(100);
         }
@@ -67,7 +88,23 @@ namespace LunaClient.Windows.ServerList
             base.OnGui();
             if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle));
+                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle, LayoutOptions));
+                if (SelectedServerId != 0)
+                {
+                    ServerDetailWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6715 + MainSystem.WindowOffset,
+                        ServerDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerDetailsWindowText.Title, WindowStyle, ServerDetailLayoutOptions));
+                }
+            }
+        }
+
+        public override void Update()
+        {
+            base.Update();
+            if (Display)
+            {
+                DisplayedServers.Clear();
+                DisplayedServers.AddRange(Ascending ? NetworkServerList.Servers.Values.OrderBy(s => OrderByPropertyDictionary[OrderBy].GetValue(s, null)) : 
+                    NetworkServerList.Servers.Values.OrderByDescending(s =>OrderByPropertyDictionary[OrderBy].GetValue(s, null)));
             }
         }
     }

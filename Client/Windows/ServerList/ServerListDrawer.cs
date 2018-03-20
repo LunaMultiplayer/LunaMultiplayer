@@ -1,18 +1,16 @@
 ﻿using LunaClient.Localization;
 using LunaClient.Network;
-using LunaClient.Windows.ServerDetails;
 using LunaCommon.Enums;
 using System.Linq;
-using System.Threading;
 using UnityEngine;
 
 namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow
     {
-        private static bool Ascending { get; set; } = true;
-
         private static readonly float[] HeaderGridSize = new float[11];
+
+        #region Servers grid
 
         public override void DrawWindowContent(int windowId)
         {
@@ -24,8 +22,6 @@ namespace LunaClient.Windows.ServerList
             if (GUILayout.Button(RefreshIcon, ButtonStyle))
             {
                 NetworkServerList.RequestServers();
-                Thread.Sleep(500);
-                DisplayedServers = NetworkServerList.Servers.Values;
             }
             GUILayout.EndHorizontal();
 
@@ -64,8 +60,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(30));
             if (GUILayout.Button(KeyIcon, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Password) :
-                    DisplayedServers.OrderByDescending(s => s.Password);
+                OrderBy = "Password";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[1] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -73,8 +68,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Ping) :
-                    DisplayedServers.OrderByDescending(s => s.Ping);
+                OrderBy = "Ping";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[2] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -82,8 +76,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Players, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.PlayerCount) :
-                    DisplayedServers.OrderByDescending(s => s.PlayerCount);
+                OrderBy = "PlayerCount";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[3] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -91,8 +84,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.MaxPlayers, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.MaxPlayers) :
-                    DisplayedServers.OrderByDescending(s => s.MaxPlayers);
+                OrderBy = "MaxPlayers";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[4] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -100,8 +92,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Mode, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.GameMode) :
-                    DisplayedServers.OrderByDescending(s => s.GameMode);
+                OrderBy = "GameMode";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[5] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -109,8 +100,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(75));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.WarpMode, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.WarpMode) :
-                    DisplayedServers.OrderByDescending(s => s.WarpMode);
+                OrderBy = "WarpMode";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[6] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -118,8 +108,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Terrain, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.TerrainQuality) :
-                    DisplayedServers.OrderByDescending(s => s.TerrainQuality);
+                OrderBy = "TerrainQuality";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[7] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -127,8 +116,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Cheats, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Cheats) :
-                    DisplayedServers.OrderByDescending(s => s.Cheats);
+                OrderBy = "Cheats";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[8] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -136,8 +124,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(325));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Name, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.ServerName) :
-                    DisplayedServers.OrderByDescending(s => s.ServerName);
+                OrderBy = "ServerName";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -145,8 +132,7 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(550));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Description, ButtonStyle))
             {
-                DisplayedServers = Ascending ? DisplayedServers.OrderBy(s => s.Description) :
-                    DisplayedServers.OrderByDescending(s => s.Description);
+                OrderBy = "Description";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[10] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -182,8 +168,7 @@ namespace LunaClient.Windows.ServerList
                     {
                         if (currentEntry.Password)
                         {
-                            ServerDetailsWindow.Singleton.ServerId = currentEntry.Id;
-                            ServerDetailsWindow.Singleton.Display = true;
+                            SelectedServerId = currentEntry.Id;
                         }
                         else
                         {
@@ -242,5 +227,39 @@ namespace LunaClient.Windows.ServerList
             }
             GUILayout.EndHorizontal();
         }
+
+        #endregion
+
+        #region Server details dialog
+
+        public void DrawServerDetailsContent(int windowId)
+        {            
+            //Always draw close button first
+            DrawCloseButton(() => SelectedServerId = 0, ServerDetailWindowRect);
+
+            GUILayout.BeginVertical();
+            GUI.DragWindow(MoveRect);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(LocalizationContainer.ServerDetailsWindowText.Password, LabelOptions);
+            NetworkServerList.Password = GUILayout.TextArea(NetworkServerList.Password, 30, TextAreaStyle, GUILayout.Width(200));
+            GUILayout.EndHorizontal();
+            GUILayout.Space(20);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button(LocalizationContainer.ServerDetailsWindowText.Connect, ButtonStyle))
+            {
+                NetworkServerList.IntroduceToServer(SelectedServerId);
+                SelectedServerId = 0;
+                Display = false;
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
+        }
+
+        #endregion
     }
 }
