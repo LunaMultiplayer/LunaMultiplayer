@@ -1,6 +1,6 @@
 ﻿using KSP.UI.Screens;
 using LunaClient.Base;
-using LunaClient.Systems.Lock;
+using LunaClient.Events;
 
 namespace LunaClient.Systems.KscScene
 {
@@ -19,10 +19,18 @@ namespace LunaClient.Systems.KscScene
 
         protected override void OnEnabled()
         {
-            LockSystem.Singleton.RegisterAcquireHook(KscSceneEvents.OnLockAcquire);
-            LockSystem.Singleton.RegisterReleaseHook(KscSceneEvents.OnLockRelease);
+            LockEvent.onLockAcquire.Add(KscSceneEvents.OnLockAcquire);
+            LockEvent.onLockRelease.Add(KscSceneEvents.OnLockRelease);
             SetupRoutine(new RoutineDefinition(50, RoutineExecution.Update, CheckIfRefreshMarkersIsNeeded));
         }
+
+        protected override void OnDisabled()
+        {
+            LockEvent.onLockAcquire.Remove(KscSceneEvents.OnLockAcquire);
+            LockEvent.onLockRelease.Remove(KscSceneEvents.OnLockRelease);
+        }
+
+        #endregion
 
         private void CheckIfRefreshMarkersIsNeeded()
         {
@@ -32,13 +40,5 @@ namespace LunaClient.Systems.KscScene
                 TriggerMarkersRefresh = false;
             }
         }
-
-        protected override void OnDisabled()
-        {
-            LockSystem.Singleton.UnregisterAcquireHook(KscSceneEvents.OnLockAcquire);
-            LockSystem.Singleton.UnregisterReleaseHook(KscSceneEvents.OnLockRelease);
-        }
-
-        #endregion
     }
 }

@@ -1,4 +1,5 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using System.Collections.Generic;
@@ -29,8 +30,8 @@ namespace LunaClient.Systems.PlayerColorSys
             base.OnEnabled();
             GameEvents.onVesselCreate.Add(PlayerColorEvents.OnVesselCreated);
             GameEvents.OnMapEntered.Add(PlayerColorEvents.MapEntered);
-            LockSystem.Singleton.RegisterAcquireHook(PlayerColorEvents.OnLockAcquire);
-            LockSystem.Singleton.RegisterReleaseHook(PlayerColorEvents.OnLockRelease);
+            LockEvent.onLockAcquire.Add(PlayerColorEvents.OnLockAcquire);
+            LockEvent.onLockRelease.Add(PlayerColorEvents.OnLockRelease);
         }
 
         protected override void OnDisabled()
@@ -38,8 +39,8 @@ namespace LunaClient.Systems.PlayerColorSys
             base.OnDisabled();
             GameEvents.onVesselCreate.Remove(PlayerColorEvents.OnVesselCreated);
             GameEvents.OnMapEntered.Remove(PlayerColorEvents.MapEntered);
-            LockSystem.Singleton.UnregisterAcquireHook(PlayerColorEvents.OnLockAcquire);
-            LockSystem.Singleton.UnregisterReleaseHook(PlayerColorEvents.OnLockRelease);
+            LockEvent.onLockAcquire.Remove(PlayerColorEvents.OnLockAcquire);
+            LockEvent.onLockRelease.Remove(PlayerColorEvents.OnLockRelease);
             PlayerColors.Clear();
         }
 

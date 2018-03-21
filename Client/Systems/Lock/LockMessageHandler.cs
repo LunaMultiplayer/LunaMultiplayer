@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
 using LunaCommon.Locks;
@@ -44,7 +45,7 @@ namespace LunaClient.Systems.Lock
                         var data = (LockAcquireMsgData)msgData;
                         LockSystem.LockStore.AddOrUpdateLock(data.Lock);
 
-                        System.FireAcquireEvent(data.Lock);
+                        LockEvent.onLockAcquire.Fire(data.Lock);
                     }
                     break;
                 case LockMessageType.Release:
@@ -52,7 +53,7 @@ namespace LunaClient.Systems.Lock
                         var data = (LockReleaseMsgData)msgData;
                         LockSystem.LockStore.RemoveLock(data.Lock);
 
-                        System.FireReleaseEvent(data.Lock);
+                        LockEvent.onLockRelease.Fire(data.Lock);
                     }
                     break;
             }
