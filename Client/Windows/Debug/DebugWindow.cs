@@ -21,8 +21,8 @@ namespace LunaClient.Windows.Debug
         private static bool _display;
         public override bool Display
         {
-            get => _display && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
-            set => _display = value;
+            get => base.Display && _display && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => base.Display = _display = value;
         }
 
         public override void Update()

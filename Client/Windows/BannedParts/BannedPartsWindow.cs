@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Utilities;
+using LunaCommon.Enums;
 using System;
 using UnityEngine;
 
@@ -14,6 +15,13 @@ namespace LunaClient.Windows.BannedParts
         private static string[] BannedParts { get; set; } = new string[0];
         private static string VesselName { get; set; }
         private static Guid VesselId { get; set; }
+
+        private static bool _display;
+        public override bool Display
+        {
+            get => base.Display && _display && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => base.Display = _display = value;
+        }
 
         public override void Update()
         {

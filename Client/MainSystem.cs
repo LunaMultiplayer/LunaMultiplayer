@@ -278,10 +278,7 @@ namespace LunaClient
             //Screenshot library: 6720
             //Screenshot image: 6721
 
-            if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
-            {
-                WindowsHandler.OnGui();
-            }
+            WindowsHandler.OnGui();
         }
 
         public void OnExit()

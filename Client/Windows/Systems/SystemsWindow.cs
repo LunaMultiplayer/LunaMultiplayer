@@ -15,13 +15,8 @@ namespace LunaClient.Windows.Systems
         private static bool _display;
         public override bool Display
         {
-            get
-            {
-                if (!_display) return false;
-
-                return MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
-            } 
-            set => _display = value;
+            get => base.Display && _display && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => base.Display = _display = value;
         }
 
         private float WindowHeight { get; } = 400;

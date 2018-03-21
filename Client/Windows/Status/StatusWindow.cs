@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -13,7 +14,8 @@ namespace LunaClient.Windows.Status
 
         #region Public
 
-        public override bool Display => MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+        public override bool Display => SettingsSystem.CurrentSettings.DisclaimerAccepted && MainSystem.ToolbarShowGui && 
+                                        MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
         public List<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
         public bool DisconnectEventHandled { get; set; } = true;

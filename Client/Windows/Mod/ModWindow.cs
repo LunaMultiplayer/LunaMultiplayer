@@ -18,6 +18,13 @@ namespace LunaClient.Windows.Mod
         private static Vector2 _mandatoryPartsScrollPos;
         private static Vector2 _forbiddenPartsScrollPos;
 
+        private static bool _display;
+        public override bool Display
+        {
+            get => base.Display && _display && HighLogic.LoadedScene == GameScenes.MAINMENU;
+            set => base.Display = _display = value;
+        }
+
         public override void Update()
         {
             base.Update();

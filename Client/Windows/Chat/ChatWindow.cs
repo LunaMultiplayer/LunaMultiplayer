@@ -14,8 +14,8 @@ namespace LunaClient.Windows.Chat
         private static bool _display;
         public override bool Display
         {
-            get => _display && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
-            set => _display = value;
+            get => base.Display && _display && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => base.Display = _display = value;
         }
 
         public string ChatWindowLock { get; set; } = "LMP_Chat_Window_Lock";
