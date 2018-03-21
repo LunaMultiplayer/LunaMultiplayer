@@ -52,8 +52,8 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnEnabled();
 
-            TimingManager.UpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
-            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
                 RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
