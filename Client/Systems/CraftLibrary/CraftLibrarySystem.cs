@@ -64,46 +64,55 @@ namespace LunaClient.Systems.CraftLibrary
         /// </summary>
         public void RefreshOwnCrafts()
         {
-            var vabFolder = CommonUtil.CombinePaths(SaveFolder, "Ships", "Vab");
-            foreach (var file in Directory.GetFiles(vabFolder))
+            var vabFolder = CommonUtil.CombinePaths(SaveFolder, "Ships", "VAB");
+            if (Directory.Exists(vabFolder))
             {
-                var data = File.ReadAllBytes(file);
-                OwnCrafts.Add(new CraftEntry
+                foreach (var file in Directory.GetFiles(vabFolder))
                 {
-                    CraftName = Path.GetFileNameWithoutExtension(file),
-                    CraftType = CraftType.Vab,
-                    FolderName = SettingsSystem.CurrentSettings.PlayerName,
-                    CraftData = data,
-                    CraftNumBytes = data.Length
-                });
+                    var data = File.ReadAllBytes(file);
+                    OwnCrafts.Add(new CraftEntry
+                    {
+                        CraftName = Path.GetFileNameWithoutExtension(file),
+                        CraftType = CraftType.Vab,
+                        FolderName = SettingsSystem.CurrentSettings.PlayerName,
+                        CraftData = data,
+                        CraftNumBytes = data.Length
+                    });
+                }
             }
 
-            var sphFolder = CommonUtil.CombinePaths(SaveFolder, "Ships", "Sph");
-            foreach (var file in Directory.GetFiles(sphFolder))
+            var sphFolder = CommonUtil.CombinePaths(SaveFolder, "Ships", "SPH");
+            if (Directory.Exists(sphFolder))
             {
-                var data = File.ReadAllBytes(file);
-                OwnCrafts.Add(new CraftEntry
+                foreach (var file in Directory.GetFiles(sphFolder))
                 {
-                    CraftName = Path.GetFileNameWithoutExtension(file),
-                    CraftType = CraftType.Sph,
-                    FolderName = SettingsSystem.CurrentSettings.PlayerName,
-                    CraftData = data,
-                    CraftNumBytes = data.Length
-                });
+                    var data = File.ReadAllBytes(file);
+                    OwnCrafts.Add(new CraftEntry
+                    {
+                        CraftName = Path.GetFileNameWithoutExtension(file),
+                        CraftType = CraftType.Sph,
+                        FolderName = SettingsSystem.CurrentSettings.PlayerName,
+                        CraftData = data,
+                        CraftNumBytes = data.Length
+                    });
+                }
             }
 
             var subassemblyFolder = CommonUtil.CombinePaths(SaveFolder, "Subassemblies");
-            foreach (var file in Directory.GetFiles(subassemblyFolder))
+            if (Directory.Exists(subassemblyFolder))
             {
-                var data = File.ReadAllBytes(file);
-                OwnCrafts.Add(new CraftEntry
+                foreach (var file in Directory.GetFiles(subassemblyFolder))
                 {
-                    CraftName = Path.GetFileNameWithoutExtension(file),
-                    CraftType = CraftType.Subassembly,
-                    FolderName = SettingsSystem.CurrentSettings.PlayerName,
-                    CraftData = data,
-                    CraftNumBytes = data.Length
-                });
+                    var data = File.ReadAllBytes(file);
+                    OwnCrafts.Add(new CraftEntry
+                    {
+                        CraftName = Path.GetFileNameWithoutExtension(file),
+                        CraftType = CraftType.Subassembly,
+                        FolderName = SettingsSystem.CurrentSettings.PlayerName,
+                        CraftData = data,
+                        CraftNumBytes = data.Length
+                    });
+                }
             }
         }
 

@@ -58,8 +58,7 @@ namespace LunaClient
         public string Status { get; set; }
 
         public const int WindowOffset = 1664147604;
-
-        public bool ShowGui { get; set; } = true;
+        
         public static bool ToolbarShowGui { get; set; } = true;
         public static ServerEntry CommandLineServer { get; set; }
         public bool LmpSaveChecked { get; set; }
@@ -238,11 +237,6 @@ namespace LunaClient
             HandleCommandLineArgs();
 
             LunaLog.Log($"[LMP]: Debug port: {CommonUtil.DebugPort}");
-
-            //Register events needed to bootstrap the windows.
-            GameEvents.onHideUI.Add(() => { ShowGui = false; });
-            GameEvents.onShowUI.Add(() => { ShowGui = true; });
-
             NetworkMain.AwakeNetworkSystem();
 
             ModSystem.Singleton.BuildDllFileList();
