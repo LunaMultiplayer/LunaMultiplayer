@@ -2,7 +2,6 @@
 using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
-using LunaClient.Utilities;
 using LunaClient.VesselStore;
 using LunaCommon.Enums;
 using LunaCommon.Time;
@@ -28,8 +27,6 @@ namespace LunaClient.Windows.Debug
         public override void Update()
         {
             base.Update();
-            SafeDisplay = Display;
-
             if (Display && Time.realtimeSinceStartup - LastUpdateTime > DisplayUpdateInterval || DisplayFast)
             {
                 LastUpdateTime = Time.realtimeSinceStartup;
@@ -141,10 +138,10 @@ namespace LunaClient.Windows.Debug
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
-                WindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6705 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiplayer - Debug", WindowStyle, LayoutOptions));
+            if (Display)
+            {
+                WindowRect = FixWindowPos(GUILayout.Window(6705 + MainSystem.WindowOffset, WindowRect, DrawContent, "Debug", WindowStyle, LayoutOptions));
+            }
             CheckWindowLock();
         }
 
@@ -175,7 +172,7 @@ namespace LunaClient.Windows.Debug
 
         private void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -197,7 +194,7 @@ namespace LunaClient.Windows.Debug
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
 

@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Systems.CraftLibrary;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
@@ -62,8 +61,8 @@ namespace LunaClient.Windows.CraftLibrary
         public override void Update()
         {
             base.Update();
-            SafeDisplay = Display;
             if (!Display) return;
+
             if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromMilliseconds(UpdateIntervalMs))
             {
                 _lastGuiUpdateTime = DateTime.Now;
@@ -99,22 +98,22 @@ namespace LunaClient.Windows.CraftLibrary
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
+            if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset,
+                WindowRect = FixWindowPos(GUILayout.Window(6707 + MainSystem.WindowOffset,
                     WindowRect, DrawContent, LocalizationContainer.CraftLibraryWindowText.Folders, WindowStyle, FoldersLayoutOptions));
             }
 
-            if (SafeDisplay && !string.IsNullOrEmpty(SelectedFolder) && System.CraftInfo.ContainsKey(SelectedFolder))
+            if (Display && !string.IsNullOrEmpty(SelectedFolder) && System.CraftInfo.ContainsKey(SelectedFolder))
             {
-                LibraryWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6708 + MainSystem.WindowOffset,
+                LibraryWindowRect = FixWindowPos(GUILayout.Window(6708 + MainSystem.WindowOffset,
                     LibraryWindowRect, DrawLibraryContent, $"{SelectedFolder} {LocalizationContainer.CraftLibraryWindowText.Crafts}", WindowStyle,
                     LibraryLayoutOptions));
             }
 
-            if (SafeDisplay && DrawUploadScreen)
+            if (Display && DrawUploadScreen)
             {
-                UploadWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6709 + MainSystem.WindowOffset,
+                UploadWindowRect = FixWindowPos(GUILayout.Window(6709 + MainSystem.WindowOffset,
                     UploadWindowRect, DrawUploadScreenContent, LocalizationContainer.CraftLibraryWindowText.Upload, WindowStyle,
                     UploadLayoutOptions));
             }
@@ -158,7 +157,7 @@ namespace LunaClient.Windows.CraftLibrary
 
         public void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -180,7 +179,7 @@ namespace LunaClient.Windows.CraftLibrary
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
         

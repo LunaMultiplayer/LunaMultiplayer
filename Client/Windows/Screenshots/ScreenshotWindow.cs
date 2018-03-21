@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Systems.Screenshot;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
@@ -58,7 +57,6 @@ namespace LunaClient.Windows.Screenshots
         public override void Update()
         {
             base.Update();
-            SafeDisplay = Display;
             if (!Display) return;
 
             if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromMilliseconds(UpdateIntervalMs))
@@ -76,24 +74,22 @@ namespace LunaClient.Windows.Screenshots
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
+            if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6719 + MainSystem.WindowOffset,
+                WindowRect = FixWindowPos(GUILayout.Window(6719 + MainSystem.WindowOffset,
                     WindowRect, DrawContent, LocalizationContainer.ScreenshotWindowText.Folders, WindowStyle, FoldersLayoutOptions));
-            }
+                
+                if (!string.IsNullOrEmpty(SelectedFolder) && System.MiniatureImages.ContainsKey(SelectedFolder))
+                {
+                    LibraryWindowRect = FixWindowPos(GUILayout.Window(6720 + MainSystem.WindowOffset, LibraryWindowRect, 
+                        DrawLibraryContent, $"{SelectedFolder} {LocalizationContainer.ScreenshotWindowText.Screenshots}", WindowStyle, LibraryLayoutOptions));
+                }
 
-            if (SafeDisplay && !string.IsNullOrEmpty(SelectedFolder) && System.MiniatureImages.ContainsKey(SelectedFolder))
-            {
-                LibraryWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6720 + MainSystem.WindowOffset,
-                    LibraryWindowRect, DrawLibraryContent, $"{SelectedFolder} {LocalizationContainer.ScreenshotWindowText.Screenshots}", WindowStyle,
-                    LibraryLayoutOptions));
-            }
-
-            if (SafeDisplay && SelectedImage > 0 && System.DownloadedImages.ContainsKey(SelectedFolder))
-            {
-                ImageWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6721 + MainSystem.WindowOffset,
-                    ImageWindowRect, DrawImageContent, $"{DateTime.FromBinary(SelectedImage).ToLongTimeString()}", WindowStyle,
-                    ImageLayoutOptions));
+                if (SelectedImage > 0 && System.DownloadedImages.ContainsKey(SelectedFolder))
+                {
+                    ImageWindowRect = FixWindowPos(GUILayout.Window(6721 + MainSystem.WindowOffset, ImageWindowRect, 
+                        DrawImageContent, $"{DateTime.FromBinary(SelectedImage).ToLongTimeString()}", WindowStyle, ImageLayoutOptions));
+                }
             }
 
             CheckWindowLock();
@@ -135,7 +131,7 @@ namespace LunaClient.Windows.Screenshots
 
         public void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -156,7 +152,7 @@ namespace LunaClient.Windows.Screenshots
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
 

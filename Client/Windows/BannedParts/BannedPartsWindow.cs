@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 using UnityEngine;
@@ -23,25 +22,19 @@ namespace LunaClient.Windows.BannedParts
             set => base.Display = _display = value;
         }
 
-        public override void Update()
-        {
-            base.Update();
-            SafeDisplay = Display;
-        }
-
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
+            if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6718 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.BannedPartsWindowText.Title, WindowStyle, LayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6718 + MainSystem.WindowOffset, WindowRect, DrawContent, 
+                    LocalizationContainer.BannedPartsWindowText.Title, WindowStyle, LayoutOptions));
             }
         }
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width/2f - WindowWidth/2f, Screen.height/2f - WindowHeight/2f, WindowWidth,
-                WindowHeight);
+            WindowRect = new Rect(Screen.width/2f - WindowWidth/2f, Screen.height/2f - WindowHeight/2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
             
             LayoutOptions = new GUILayoutOption[4];

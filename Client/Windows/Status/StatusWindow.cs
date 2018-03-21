@@ -68,7 +68,7 @@ namespace LunaClient.Windows.Status
                 }
 
                 //Calculate the minimum size of the minimize window by drawing it off the screen
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6703 + MainSystem.WindowOffset, 
+                WindowRect = FixWindowPos(GUILayout.Window(6703 + MainSystem.WindowOffset, 
                     WindowRect, DrawContent, _title, WindowStyle, LayoutOptions));
             }
             CheckWindowLock();

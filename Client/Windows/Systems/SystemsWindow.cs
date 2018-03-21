@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using UnityEngine;
 
@@ -91,20 +90,14 @@ namespace LunaClient.Windows.Systems
         #endregion
 
         #endregion
-
-        public override void Update()
-        {
-            base.Update();
-            SafeDisplay = Display;
-        }
-
+        
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
-                WindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6716 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiplayer - Systems", WindowStyle, LayoutOptions));
+            if (Display)
+            {
+                WindowRect = FixWindowPos(GUILayout.Window(6716 + MainSystem.WindowOffset, WindowRect, DrawContent, "Systems", WindowStyle, LayoutOptions));
+            }
             CheckWindowLock();
         }
 
@@ -135,7 +128,7 @@ namespace LunaClient.Windows.Systems
 
         private void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -157,7 +150,7 @@ namespace LunaClient.Windows.Systems
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
     }

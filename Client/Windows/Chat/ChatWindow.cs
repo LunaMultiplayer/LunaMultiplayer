@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Systems.Chat;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using UnityEngine;
 
@@ -70,9 +69,6 @@ namespace LunaClient.Windows.Chat
         public override void Update()
         {
             base.Update();
-            Display &= MainSystem.NetworkState >= ClientState.Running;
-            SafeDisplay = Display;
-            
             if (Display)
             {
                 if (ChatSystem.Singleton.NewMessageReceived)
@@ -83,9 +79,10 @@ namespace LunaClient.Windows.Chat
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
+            if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.ChatWindowText.Title, WindowStyle));
+                WindowRect = FixWindowPos(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect, DrawContent, 
+                    LocalizationContainer.ChatWindowText.Title, WindowStyle));
             }
             CheckWindowLock();
         }
@@ -105,7 +102,7 @@ namespace LunaClient.Windows.Chat
 
         private void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -127,7 +124,7 @@ namespace LunaClient.Windows.Chat
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
 

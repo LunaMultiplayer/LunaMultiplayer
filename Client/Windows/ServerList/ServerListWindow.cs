@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Network;
-using LunaClient.Utilities;
 using LunaCommon;
 using LunaCommon.Enums;
 using System.Collections.Generic;
@@ -53,6 +52,7 @@ namespace LunaClient.Windows.ServerList
         public override void SetStyles()
         {
             WindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
+            ServerDetailWindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
             
             BoxStyle = new GUIStyle(GUI.skin.box);
@@ -87,10 +87,10 @@ namespace LunaClient.Windows.ServerList
             base.OnGui();
             if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle, LayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle, LayoutOptions));
                 if (SelectedServerId != 0)
                 {
-                    ServerDetailWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6715 + MainSystem.WindowOffset,
+                    ServerDetailWindowRect = FixWindowPos(GUILayout.Window(6715 + MainSystem.WindowOffset,
                         ServerDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerListWindowText.ServerDetailTitle, WindowStyle, ServerDetailLayoutOptions));
                 }
             }

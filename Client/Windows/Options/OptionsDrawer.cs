@@ -4,7 +4,6 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.Status;
-using LunaClient.Windows.UniverseConverter;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
@@ -82,7 +81,7 @@ namespace LunaClient.Windows.Options
                 ModSystem.Singleton.GenerateModControlFile(false);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl + " + SHA"))
                 ModSystem.Singleton.GenerateModControlFile(true);
-            UniverseConverterWindow.Singleton.Display = GUILayout.Toggle(UniverseConverterWindow.Singleton.Display, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
+            DisplayUniverseConverterDialog = GUILayout.Toggle(DisplayUniverseConverterDialog, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
 #if DEBUG
             DrawAdvancedDebugOptions();
@@ -166,5 +165,24 @@ namespace LunaClient.Windows.Options
                     NetworkMain.Config.SimulatedMinimumLatency = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedMinimumLatency, 0, 0, 3), 4);
             }
         }
+
+        #region UniverseConverter
+
+        private void DrawUniverseConverterDialog(int windowId)
+        {            
+            //Always draw close button first
+            DrawCloseButton(() => DisplayUniverseConverterDialog = false, UniverseConverterWindowRect);
+
+            GUILayout.BeginVertical();
+            GUI.DragWindow(MoveRect);
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
+            foreach (var saveFolder in Utilities.UniverseConverter.GetSavedNames())
+                if (GUILayout.Button(saveFolder))
+                    Utilities.UniverseConverter.GenerateUniverse(saveFolder);
+            GUILayout.EndScrollView();
+            GUILayout.EndVertical();
+        }
+
+        #endregion
     }
 }
