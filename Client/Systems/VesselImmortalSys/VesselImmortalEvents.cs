@@ -12,10 +12,12 @@ namespace LunaClient.Systems.VesselImmortalSys
         {
             if(vessel == null) return;
 
-            if (System.OtherPeopleVessels.Any(v => v?.id == vessel.id))
-            {
-                System.SetVesselImmortalState(vessel, true);
-            }
+            if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.id == vessel.id)
+                return;
+            if (System.OwnedVessels.Any(v => v?.id == vessel.id))
+                return;
+
+            System.SetVesselImmortalState(vessel, true);
         }
     }
 }
