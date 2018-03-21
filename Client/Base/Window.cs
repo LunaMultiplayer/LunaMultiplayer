@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base.Interface;
+using LunaClient.Systems.SettingsSys;
 using System;
 using UnityEngine;
 
@@ -23,7 +24,7 @@ namespace LunaClient.Base
         /// </summary>
         public virtual bool Display
         {
-            get => _display;
+            get => _display && SettingsSystem.CurrentSettings.DisclaimerAccepted;
             set
             {
                 if (!_display && value)

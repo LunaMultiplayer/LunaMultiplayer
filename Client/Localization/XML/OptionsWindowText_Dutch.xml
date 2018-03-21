@@ -8,7 +8,6 @@
     <Blue>B:</Blue>
     <Random>Willekeurig</Random>
     <Set>Pas toe</Set>
-    <ResetDisclaimer>Reset disclaimer</ResetDisclaimer>
     <Interpolation>Zet interpolatie aan</Interpolation>
     <GenerateLmpModControl>Genereer een server LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>Genereer universum van opgeslagen game</GenerateUniverse>

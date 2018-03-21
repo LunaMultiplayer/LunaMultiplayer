@@ -60,6 +60,10 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="Events\RevertEvent.cs" />
+    <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
+    <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
+    <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
     <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
     <Compile Include="Harmony\LaunchSiteClear_Test.cs" />
     <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />

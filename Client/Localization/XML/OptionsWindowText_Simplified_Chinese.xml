@@ -8,7 +8,6 @@
     <Blue>B:</Blue>
     <Random>随机</Random>
     <Set>设置</Set>
-    <ResetDisclaimer>重置免责声明状态</ResetDisclaimer>
     <Interpolation>启用插值</Interpolation>
     <GenerateLmpModControl>生成服务器MOD控制文件 LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>从已保存的存档中生成宇宙</GenerateUniverse>

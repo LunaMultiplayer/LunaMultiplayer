@@ -65,11 +65,6 @@ namespace LunaClient.Windows.Options
             }
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
-            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.ResetDisclaimer))
-            {
-                SettingsSystem.CurrentSettings.DisclaimerAccepted = false;
-                SettingsSystem.SaveSettings();
-            }
             var settingInterpolation = GUILayout.Toggle(SettingsSystem.CurrentSettings.InterpolationEnabled, LocalizationContainer.OptionsWindowText.Interpolation, ButtonStyle);
             if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
             {

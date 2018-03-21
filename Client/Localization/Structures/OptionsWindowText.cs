@@ -10,7 +10,6 @@
         public string Blue { get; set; } = "B:";
         public string Random { get; set; } = "Random";
         public string Set { get; set; } = "Set";
-        public string ResetDisclaimer { get; set; } = "Reset disclaimer";
         public string Interpolation { get; set; } = "Enable interpolation";
         public string PreciseSurfacePositioning { get; set; } = "Enable precise surface positioning";
         public string GenerateLmpModControl { get; set; } = "Generate a server LMPModControl.xml";

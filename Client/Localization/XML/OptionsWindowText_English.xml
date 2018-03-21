@@ -8,7 +8,6 @@
     <Blue>B:</Blue>
     <Random>Random</Random>
     <Set>Set</Set>
-    <ResetDisclaimer>Reset disclaimer</ResetDisclaimer>
     <Interpolation>Enable interpolation</Interpolation>
     <GenerateLmpModControl>Generate a server LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>Generate Universe from saved game</GenerateUniverse>
