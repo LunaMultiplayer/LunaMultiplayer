@@ -8,12 +8,14 @@ namespace LunaClient.Windows.BannedParts
 {
     public partial class BannedPartsWindow : Window<BannedPartsWindow>
     {
+        #region Fields
+        
         private const float WindowHeight = 300;
         private const float WindowWidth = 400;
 
-        private static string[] BannedParts { get; set; } = new string[0];
-        private static string VesselName { get; set; }
-        private static Guid VesselId { get; set; }
+        private static string[] _bannedParts = new string[0];
+        private static string _vesselName;
+        private static Guid _vesselId;
 
         private static bool _display;
         public override bool Display
@@ -21,6 +23,8 @@ namespace LunaClient.Windows.BannedParts
             get => base.Display && _display && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
             set => base.Display = _display = value;
         }
+
+        #endregion
 
         public override void OnGui()
         {
@@ -50,9 +54,9 @@ namespace LunaClient.Windows.BannedParts
         {
             if (!Display)
             {
-                VesselName = vessel.vesselName;
-                VesselId = vessel.id;
-                BannedParts = bannedParts;
+                _vesselName = vessel.vesselName;
+                _vesselId = vessel.id;
+                _bannedParts = bannedParts;
                 Display = true;
             }
         }

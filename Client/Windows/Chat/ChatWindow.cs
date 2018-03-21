@@ -17,18 +17,12 @@ namespace LunaClient.Windows.Chat
             set => base.Display = _display = value;
         }
 
-        public string ChatWindowLock { get; set; } = "LMP_Chat_Window_Lock";
+        private const string ChatWindowLock = "LMP_Chat_Window_Lock";
+        private const float WindowHeight = 300;
+        private const float WindowWidth = 400;
 
-        public float WindowHeight { get; set; } = 300;
-        public float WindowWidth { get; set; } = 400;
-
-        #region Layout
-
-        protected static GUILayoutOption[] WindowLayoutOptions { get; set; }
-
-        private Vector2 _chatScrollPos;
-
-        #endregion
+        private static GUILayoutOption[] _windowLayoutOptions;
+        private static Vector2 _chatScrollPos;
 
         #endregion
 
@@ -42,11 +36,11 @@ namespace LunaClient.Windows.Chat
             WindowRect = new Rect(Screen.width / 10, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
-            WindowLayoutOptions = new GUILayoutOption[4];
-            WindowLayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
-            WindowLayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
-            WindowLayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
-            WindowLayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
+            _windowLayoutOptions = new GUILayoutOption[4];
+            _windowLayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
+            _windowLayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
+            _windowLayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
+            _windowLayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
             
             _chatScrollPos = new Vector2(0, 0);
             HighlightStyle = new GUIStyle(GUI.skin.button)

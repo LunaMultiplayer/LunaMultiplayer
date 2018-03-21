@@ -18,74 +18,45 @@ namespace LunaClient.Windows.Systems
             set => base.Display = _display = value;
         }
 
-        private float WindowHeight { get; } = 400;
-        private float WindowWidth { get; } = 400;
+        private const float WindowHeight = 400;
+        private const float WindowWidth = 400;
         
         #region Vessel systems
 
-        private bool VesselDock { get; set; }
-
-        private bool VesselFlightState { get; set; }
-
-        private bool VesselImmortal { get; set; }
-
-        private bool VesselLock { get; set; }
-
-        private bool VesselPosition { get; set; }
-
-        private bool VesselUpdate { get; set; }
-
-        private bool VesselPartSync { get; set; }
-
-        private bool VesselResource { get; set; }
-
-        private bool VesselFairing { get; set; }
-
-        private bool VesselProto { get; set; }
-        
-        private bool VesselPrecalc { get; set; }
-
-        private bool VesselState { get; set; }
-
-        private bool VesselRemove { get; set; }
-
-        private bool VesselSwitcher { get; set; }
-
+        private static bool _vesselDock;
+        private static bool _vesselFlightState;
+        private static bool _vesselImmortal;
+        private static bool _vesselLock;
+        private static bool _vesselPosition;
+        private static bool _vesselUpdate;
+        private static bool _vesselPartSync;
+        private static bool _vesselResource;
+        private static bool _vesselFairing;
+        private static bool _vesselProto;
+        private static bool _vesselPrecalc;
+        private static bool _vesselState;
+        private static bool _vesselRemove;
+        private static bool _vesselSwitcher;
         #endregion
 
         #region Other systems
 
-        private bool Asteroid { get; set; }
-
-        private bool CraftLibrary { get; set; }
-
-        private bool Facility { get; set; }
-
-        private bool Flag { get; set; }
-
-        private bool KscScene { get; set; }
-
-        private bool Group { get; set; }
-
-        private bool Kerbal { get; set; }
-
-        private bool Lock { get; set; }
-
-        private bool ModS { get; set; }
-
-        private bool ModApi { get; set; }
-
-        private bool PlayerColor { get; set; }
-
-        private bool PlayerConnection { get; set; }
-
-        private bool Scenario { get; set; }
-
-        private bool TimeSyncer { get; set; }
-
-        private bool Toolbar { get; set; }
-
-        private bool Warp { get; set; }
+        private static bool _asteroid;
+        private static bool _craftLibrary;
+        private static bool _facility;
+        private static bool _flag;
+        private static bool _kscScene;
+        private static bool _group;
+        private static bool _kerbal;
+        private static bool _lock;
+        private static bool _modS;
+        private static bool _modApi;
+        private static bool _playerColor;
+        private static bool _playerConnection;
+        private static bool _scenario;
+        private static bool _timeSyncer;
+        private static bool _toolbar;
+        private static bool _warp;
 
         #endregion
 
@@ -103,8 +74,7 @@ namespace LunaClient.Windows.Systems
 
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width - (WindowWidth + 50), Screen.height / 2f - WindowHeight / 2f, WindowWidth,
-                WindowHeight);
+            WindowRect = new Rect(Screen.width - (WindowWidth + 50), Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
             LayoutOptions = new GUILayoutOption[4];

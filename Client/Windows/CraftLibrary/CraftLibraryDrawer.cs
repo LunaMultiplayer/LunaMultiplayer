@@ -14,12 +14,12 @@ namespace LunaClient.Windows.CraftLibrary
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            DrawRefreshAndUploadButton(() => System.MessageSender.SendRequestFoldersMsg(), ()=> DrawUploadScreen = true);
+            DrawRefreshAndUploadButton(() => System.MessageSender.SendRequestFoldersMsg(), ()=> _drawUploadScreen = true);
             GUILayout.Space(15);
 
             GUILayout.BeginVertical(BoxStyle);
-            FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
-            if (!System.CraftInfo.Keys.Any()) SelectedFolder = null;
+            _foldersScrollPos = GUILayout.BeginScrollView(_foldersScrollPos, ScrollStyle);
+            if (!System.CraftInfo.Keys.Any()) _selectedFolder = null;
             else
             {
                 foreach (var folderName in System.CraftInfo.Keys)
@@ -35,17 +35,17 @@ namespace LunaClient.Windows.CraftLibrary
 
         private void DrawFolderButton(string folderName)
         {
-            if (GUILayout.Toggle(SelectedFolder == folderName, folderName, ButtonStyle))
+            if (GUILayout.Toggle(_selectedFolder == folderName, folderName, ButtonStyle))
             {
-                if (SelectedFolder != folderName)
+                if (_selectedFolder != folderName)
                 {
-                    SelectedFolder = folderName;
-                    System.MessageSender.SendRequestCraftListMsg(SelectedFolder);
+                    _selectedFolder = folderName;
+                    System.MessageSender.SendRequestCraftListMsg(_selectedFolder);
                 }
             }
             else
             {
-                if (SelectedFolder == folderName) SelectedFolder = null;
+                if (_selectedFolder == folderName) _selectedFolder = null;
             }
         }
 
@@ -56,17 +56,17 @@ namespace LunaClient.Windows.CraftLibrary
         public void DrawLibraryContent(int windowId)
         {
             //Always draw close button first
-            DrawCloseButton(() => SelectedFolder = null, LibraryWindowRect);
+            DrawCloseButton(() => _selectedFolder = null, _libraryWindowRect);
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            DrawRefreshButton(() => System.MessageSender.SendRequestCraftListMsg(SelectedFolder));
+            DrawRefreshButton(() => System.MessageSender.SendRequestCraftListMsg(_selectedFolder));
             GUILayout.Space(15);
 
-            if (string.IsNullOrEmpty(SelectedFolder)) return;
+            if (string.IsNullOrEmpty(_selectedFolder)) return;
 
             GUILayout.BeginVertical(BoxStyle);
-            LibraryScrollPos = GUILayout.BeginScrollView(LibraryScrollPos, ScrollStyle);
+            _libraryScrollPos = GUILayout.BeginScrollView(_libraryScrollPos, ScrollStyle);
             if (SphCrafts.Any())
             {
                 GUILayout.Label("SPH", BoldLabelStyle);
@@ -110,16 +110,16 @@ namespace LunaClient.Windows.CraftLibrary
                 if (GUILayout.Button(DeleteIcon, ButtonStyle, GUILayout.Width(35)))
                 {
                     System.MessageSender.SendDeleteCraftMsg(craftBasicEntry);
-                    SelectedFolder = null;
+                    _selectedFolder = null;
                 }
             }
             else
             {
                 if (GUILayout.Button(SaveIcon, ButtonStyle, GUILayout.Width(35)))
                 {
-                    if (System.CraftDownloaded.TryGetValue(SelectedFolder, out var downloadedCraft) && !downloadedCraft.ContainsKey(craftBasicEntry.CraftName))
+                    if (System.CraftDownloaded.TryGetValue(_selectedFolder, out var downloadedCraft) && !downloadedCraft.ContainsKey(craftBasicEntry.CraftName))
                         System.RequestCraft(craftBasicEntry);
-                    SelectedFolder = null;
+                    _selectedFolder = null;
                 }
             }
 
@@ -133,7 +133,7 @@ namespace LunaClient.Windows.CraftLibrary
         public void DrawUploadScreenContent(int windowId)
         {
             //Always draw close button first
-            DrawCloseButton(() => DrawUploadScreen = false, UploadWindowRect);
+            DrawCloseButton(() => _drawUploadScreen = false, _uploadWindowRect);
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
@@ -141,7 +141,7 @@ namespace LunaClient.Windows.CraftLibrary
             GUILayout.Space(15);
 
             GUILayout.BeginVertical(BoxStyle);
-            UploadScrollPos = GUILayout.BeginScrollView(UploadScrollPos, ScrollStyle);
+            _uploadScrollPos = GUILayout.BeginScrollView(_uploadScrollPos, ScrollStyle);
             for (var i = 0; i < System.OwnCrafts.Count; i += 4)
             {
                 DrawUploadCraftEntry(System.OwnCrafts[i]);
@@ -160,7 +160,7 @@ namespace LunaClient.Windows.CraftLibrary
             if (GUILayout.Button(UploadIcon, ButtonStyle, GUILayout.Width(35)))
             {
                 System.SendCraft(craftEntry);
-                DrawUploadScreen = false;
+                _drawUploadScreen = false;
             }
             GUILayout.EndHorizontal();
         }

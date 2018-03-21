@@ -24,8 +24,8 @@ namespace LunaClient.Windows.Locks
             set => base.Display = _display = value;
         }
 
-        private float WindowHeight { get; } = 400;
-        private float WindowWidth { get; } = 400;
+        private const float WindowHeight = 400;
+        private const float WindowWidth = 400;
 
         private DateTime _lastUpdateTime = DateTime.MinValue;
 

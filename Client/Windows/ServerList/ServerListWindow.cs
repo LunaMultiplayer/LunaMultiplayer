@@ -12,6 +12,8 @@ namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow : Window<ServerListWindow>
     {
+        #region Fields
+
         private static readonly Dictionary<string, PropertyInfo> OrderByPropertyDictionary = new Dictionary<string, PropertyInfo>();
 
         protected float WindowHeight = Screen.height * 0.95f;
@@ -25,17 +27,18 @@ namespace LunaClient.Windows.ServerList
             get => base.Display && _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState == ClientState.Disconnected && HighLogic.LoadedScene == GameScenes.MAINMENU;
             set => base.Display = _display = value;
         }
-        
-        public List<ServerInfo> DisplayedServers { get; set; } = new List<ServerInfo>();
-        protected Vector2 VerticalScrollPosition { get; set; }
-        protected Vector2 HorizontalScrollPosition { get; set; }
 
-        protected Rect ServerDetailWindowRect { get; set; }
-        protected GUILayoutOption[] ServerDetailLayoutOptions { get; set; }
-        
-        private long SelectedServerId { get; set; }
-        private static string OrderBy { get; set; } = "Ping";
-        private static bool Ascending { get; set; } = true;
+        private static readonly List<ServerInfo> DisplayedServers = new List<ServerInfo>();
+        private static Vector2 _verticalScrollPosition;
+        private static Vector2 _horizontalScrollPosition;
+        private static Rect _serverDetailWindowRect;
+        private static GUILayoutOption[] _serverDetailLayoutOptions;
+
+        private static long _selectedServerId;
+        private static string _orderBy = "Ping";
+        private static bool _ascending = true;
+
+        #endregion
 
         #region Constructor
 
@@ -52,7 +55,7 @@ namespace LunaClient.Windows.ServerList
         public override void SetStyles()
         {
             WindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
-            ServerDetailWindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
+            _serverDetailWindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
             
             BoxStyle = new GUIStyle(GUI.skin.box);
@@ -72,11 +75,11 @@ namespace LunaClient.Windows.ServerList
             LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
 
-            ServerDetailLayoutOptions = new GUILayoutOption[4];
-            ServerDetailLayoutOptions[0] = GUILayout.MinWidth(ServerDetailWindowWidth);
-            ServerDetailLayoutOptions[1] = GUILayout.MaxWidth(ServerDetailWindowWidth);
-            ServerDetailLayoutOptions[2] = GUILayout.MinHeight(ServerDetailWindowHeight);
-            ServerDetailLayoutOptions[3] = GUILayout.MaxHeight(ServerDetailWindowHeight);
+            _serverDetailLayoutOptions = new GUILayoutOption[4];
+            _serverDetailLayoutOptions[0] = GUILayout.MinWidth(ServerDetailWindowWidth);
+            _serverDetailLayoutOptions[1] = GUILayout.MaxWidth(ServerDetailWindowWidth);
+            _serverDetailLayoutOptions[2] = GUILayout.MinHeight(ServerDetailWindowHeight);
+            _serverDetailLayoutOptions[3] = GUILayout.MaxHeight(ServerDetailWindowHeight);
 
             LabelOptions = new GUILayoutOption[1];
             LabelOptions[0] = GUILayout.Width(100);
@@ -88,10 +91,10 @@ namespace LunaClient.Windows.ServerList
             if (Display)
             {
                 WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle, LayoutOptions));
-                if (SelectedServerId != 0)
+                if (_selectedServerId != 0)
                 {
-                    ServerDetailWindowRect = FixWindowPos(GUILayout.Window(6715 + MainSystem.WindowOffset,
-                        ServerDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerListWindowText.ServerDetailTitle, WindowStyle, ServerDetailLayoutOptions));
+                    _serverDetailWindowRect = FixWindowPos(GUILayout.Window(6715 + MainSystem.WindowOffset,
+                        _serverDetailWindowRect, DrawServerDetailsContent, LocalizationContainer.ServerListWindowText.ServerDetailTitle, WindowStyle, _serverDetailLayoutOptions));
                 }
             }
         }
@@ -102,8 +105,8 @@ namespace LunaClient.Windows.ServerList
             if (Display)
             {
                 DisplayedServers.Clear();
-                DisplayedServers.AddRange(Ascending ? NetworkServerList.Servers.Values.OrderBy(s => OrderByPropertyDictionary[OrderBy].GetValue(s, null)) : 
-                    NetworkServerList.Servers.Values.OrderByDescending(s =>OrderByPropertyDictionary[OrderBy].GetValue(s, null)));
+                DisplayedServers.AddRange(_ascending ? NetworkServerList.Servers.Values.OrderBy(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)) : 
+                    NetworkServerList.Servers.Values.OrderByDescending(s =>OrderByPropertyDictionary[_orderBy].GetValue(s, null)));
             }
         }
     }
