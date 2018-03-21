@@ -65,12 +65,6 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
                 SettingsSystem.SaveSettings();
             }
-            var preciseSurfacePositioning = GUILayout.Toggle(SettingsSystem.CurrentSettings.PreciseSurfacePositioning, LocalizationContainer.OptionsWindowText.PreciseSurfacePositioning, ButtonStyle);
-            if (preciseSurfacePositioning != SettingsSystem.CurrentSettings.PreciseSurfacePositioning)
-            {
-                SettingsSystem.CurrentSettings.PreciseSurfacePositioning = preciseSurfacePositioning;
-                SettingsSystem.SaveSettings();
-            }
             GUILayout.Space(10);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
                 ModSystem.Singleton.GenerateModControlFile(false);

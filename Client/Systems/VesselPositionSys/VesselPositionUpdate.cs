@@ -200,27 +200,10 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (Vessel.LandedOrSplashed)
             {
-                /*
-                 * When calculating the position of a vessel in the ground the code gets tricky.... Specially when vessels have a high surface speed
-                 * If we called updateFromParameters and left then the orbital altitude will have a delay (because of the network) and the vessel might fall inside kerbin
-                 * To solve it, after updating the position based on a orbit, we get the current lat, lon, alt
-                 * Then we overwrite the ALTITUDE with what the player sent and we reposition again the vessel.
-                 * Doing it in this way we avoid the vessel going inside kerbin
-                 */
-
-                if (SettingsSystem.CurrentSettings.PreciseSurfacePositioning)
-                {
-                    Vessel.mainBody.GetLatLonAltOrbital(Vessel.orbitDriver.orbit.pos, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
-                    Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
-                }
-                else
-                {
-                    //Fall back to the old positioning method that jitters at high speed :(
-                    Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                    Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
-                    Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
-                    Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
-                }
+                Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
             else
             {

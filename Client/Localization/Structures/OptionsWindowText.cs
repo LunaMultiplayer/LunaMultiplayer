@@ -11,7 +11,6 @@
         public string Random { get; set; } = "Random";
         public string Set { get; set; } = "Set";
         public string Interpolation { get; set; } = "Enable interpolation";
-        public string PreciseSurfacePositioning { get; set; } = "Enable precise surface positioning";
         public string GenerateLmpModControl { get; set; } = "Generate a server LMPModControl.xml";
         public string GenerateUniverse { get; set; } = "Generate Universe from saved game";
     }
