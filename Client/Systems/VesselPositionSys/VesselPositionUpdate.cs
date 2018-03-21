@@ -214,6 +214,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (SettingsSystem.CurrentSettings.PreciseSurfacePositioning)
                 {
                     Vessel.mainBody.GetLatLonAltOrbital(Vessel.orbitDriver.orbit.pos, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+                    Vessel.altitude = Target.LatLonAlt[2];
                     Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
                 }
                 else
