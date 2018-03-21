@@ -25,6 +25,7 @@ namespace Server.Command
             //Register the server Commands
             RegisterCommand("admin", new AdminCommands().HandleCommand, "Sets a player as admin/removes admin from the player");
             RegisterCommand("ban", new BanCommands().HandleCommand, "Bans someone from the server");
+            RegisterCommand("changesettings", new ChangeSettingsCommand().Execute, "Changes the server settings");
             RegisterCommand("clearvessels", new ClearVesselsCommand().Execute, "Clears ALL SPECIFIED vessels from universe");
             RegisterCommand("connectionstats", new ConnectionStatsCommand().Execute, "Displays network traffic usage");
             RegisterCommand("countclients", new CountClientsCommand().Execute, "Counts connected clients");
