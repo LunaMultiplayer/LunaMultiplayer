@@ -73,6 +73,7 @@
     <Compile Include="Command\Command\Base\HandledCommand.cs" />
     <Compile Include="Command\Command\Base\SimpleCommand.cs" />
     <Compile Include="Command\Command\Base\WhitelistCommandBase.cs" />
+    <Compile Include="Command\Command\ChangeSettingsCommand.cs" />
     <Compile Include="Command\Command\RestartServerCommand.cs" />
     <Compile Include="Command\Command\ConnectionStatsCommand.cs" />
     <Compile Include="Command\Command\CountClientsCommand.cs" />
