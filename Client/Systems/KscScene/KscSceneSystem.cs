@@ -1,4 +1,5 @@
-﻿using LunaClient.Base;
+﻿using KSP.UI.Screens;
+using LunaClient.Base;
 using LunaClient.Systems.Lock;
 
 namespace LunaClient.Systems.KscScene
@@ -14,10 +15,22 @@ namespace LunaClient.Systems.KscScene
 
         public override string SystemName { get; } = nameof(KscSceneSystem);
 
+        public bool TriggerMarkersRefresh { get; set; }
+
         protected override void OnEnabled()
         {
             LockSystem.Singleton.RegisterAcquireHook(KscSceneEvents.OnLockAcquire);
             LockSystem.Singleton.RegisterReleaseHook(KscSceneEvents.OnLockRelease);
+            SetupRoutine(new RoutineDefinition(50, RoutineExecution.Update, CheckIfRefreshMarkersIsNeeded));
+        }
+
+        private void CheckIfRefreshMarkersIsNeeded()
+        {
+            if (TriggerMarkersRefresh)
+            {
+                KSCVesselMarkers.fetch?.RefreshMarkers();
+                TriggerMarkersRefresh = false;
+            }
         }
 
         protected override void OnDisabled()

@@ -1,5 +1,4 @@
-﻿using KSP.UI.Screens;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaCommon.Locks;
 
 namespace LunaClient.Systems.KscScene
@@ -8,12 +7,14 @@ namespace LunaClient.Systems.KscScene
     {
         public void OnLockAcquire(LockDefinition lockdefinition)
         {
-            KSCVesselMarkers.fetch?.RefreshMarkers();
+            //We don't trigger this directly as we are in another thread!
+            System.TriggerMarkersRefresh = true;
         }
 
         public void OnLockRelease(LockDefinition lockdefinition)
-        {
-            KSCVesselMarkers.fetch?.RefreshMarkers();
+        {            
+            //We don't trigger this directly as we are in another thread!
+            System.TriggerMarkersRefresh = true;
         }
     }
 }
