@@ -12,9 +12,7 @@ namespace LunaClient.Systems.VesselImmortalSys
         {
             if(vessel == null) return;
 
-            //Do it this way as vessel can become null later one
-            var vesselId = vessel.id;
-            if (System.OtherPeopleVessels.Any(v => v?.id == vesselId))
+            if (System.OtherPeopleVessels.Any(v => v?.id == vessel.id))
             {
                 System.SetVesselImmortalState(vessel, true);
             }
