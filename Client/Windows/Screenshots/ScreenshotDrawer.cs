@@ -120,6 +120,10 @@ namespace LunaClient.Windows.Screenshots
         {            
             //Always draw close button first
             DrawCloseButton(()=> _selectedImage = 0, _imageWindowRect);
+            if (GUI.RepeatButton(new Rect(_imageWindowRect.width - 15, _imageWindowRect.height - 15, 10, 10), ResizeIcon, ResizeButtonStyle))
+            {
+                ResizingWindow = true;
+            }
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
@@ -140,7 +144,7 @@ namespace LunaClient.Windows.Screenshots
             _imageScrollPos = GUILayout.BeginScrollView(_imageScrollPos, ScrollStyle);
             if (System.DownloadedImages.TryGetValue(_selectedFolder, out var imagesDictionary) && imagesDictionary.TryGetValue(_selectedImage, out var screenShot))
             {
-                GUILayout.Label(screenShot.Texture);
+                DrawImageCentered(screenShot);
             }
             else
             {
@@ -151,7 +155,20 @@ namespace LunaClient.Windows.Screenshots
 
             GUILayout.EndVertical();
         }
-        
+
+        private static void DrawImageCentered(Screenshot screenShot)
+        {
+            GUILayout.BeginVertical();
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(screenShot.Texture);
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndVertical();
+        }
+
         #endregion
     }
 }

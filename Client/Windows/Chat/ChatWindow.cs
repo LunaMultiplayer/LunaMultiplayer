@@ -20,8 +20,7 @@ namespace LunaClient.Windows.Chat
         private const string ChatWindowLock = "LMP_Chat_Window_Lock";
         private const float WindowHeight = 300;
         private const float WindowWidth = 400;
-
-        private static GUILayoutOption[] _windowLayoutOptions;
+        
         private static Vector2 _chatScrollPos;
 
         #endregion
@@ -35,12 +34,6 @@ namespace LunaClient.Windows.Chat
             // ReSharper disable once PossibleLossOfFraction
             WindowRect = new Rect(Screen.width / 10, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
-
-            _windowLayoutOptions = new GUILayoutOption[4];
-            _windowLayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
-            _windowLayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
-            _windowLayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
-            _windowLayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
             
             _chatScrollPos = new Vector2(0, 0);
             HighlightStyle = new GUIStyle(GUI.skin.button)

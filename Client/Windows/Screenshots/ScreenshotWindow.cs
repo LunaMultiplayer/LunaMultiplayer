@@ -27,7 +27,6 @@ namespace LunaClient.Windows.Screenshots
 
         private static GUILayoutOption[] _foldersLayoutOptions;
         private static GUILayoutOption[] _libraryLayoutOptions;
-        private static GUILayoutOption[] _imageLayoutOptions;
 
         private static Vector2 _foldersScrollPos;
         private static Vector2 _libraryScrollPos;
@@ -70,6 +69,17 @@ namespace LunaClient.Windows.Screenshots
                     Miniatures.AddRange(miniatures.Values.OrderBy(v => v.DateTaken));
                 }
             }
+
+            if (Input.GetMouseButtonUp(0))
+            {
+                ResizingWindow = false;
+            }
+
+            if (ResizingWindow)
+            {
+                _imageWindowRect.width = Input.mousePosition.x - _imageWindowRect.x + 10;
+                _imageWindowRect.height = Screen.height - Input.mousePosition.y - _imageWindowRect.y + 10;
+            }
         }
 
         public override void OnGui()
@@ -89,7 +99,7 @@ namespace LunaClient.Windows.Screenshots
                 if (_selectedImage > 0 && System.DownloadedImages.ContainsKey(_selectedFolder))
                 {
                     _imageWindowRect = FixWindowPos(GUILayout.Window(6721 + MainSystem.WindowOffset, _imageWindowRect, 
-                        DrawImageContent, $"{DateTime.FromBinary(_selectedImage).ToLongTimeString()}", WindowStyle, _imageLayoutOptions));
+                        DrawImageContent, $"{DateTime.FromBinary(_selectedImage).ToLongTimeString()}", WindowStyle));
                 }
             }
 
@@ -100,6 +110,8 @@ namespace LunaClient.Windows.Screenshots
         {
             WindowRect = new Rect(50, Screen.height / 2f - FoldersWindowHeight / 2f, FoldersWindowWidth, FoldersWindowHeight);
             _libraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f, Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
+            _imageWindowRect = new Rect(Screen.width / 2f - ImageWindowWidth, Screen.height / 2f - ImageWindowHeight / 2f, ImageWindowWidth, ImageWindowHeight);
+
             MoveRect = new Rect(0, 0, 10000, 20);
 
             _foldersLayoutOptions = new GUILayoutOption[4];
@@ -113,12 +125,6 @@ namespace LunaClient.Windows.Screenshots
             _libraryLayoutOptions[1] = GUILayout.MaxWidth(LibraryWindowWidth);
             _libraryLayoutOptions[2] = GUILayout.MinHeight(LibraryWindowHeight);
             _libraryLayoutOptions[3] = GUILayout.MaxHeight(LibraryWindowHeight);
-
-            _imageLayoutOptions = new GUILayoutOption[4];
-            _imageLayoutOptions[0] = GUILayout.MinWidth(ImageWindowWidth);
-            _imageLayoutOptions[1] = GUILayout.MaxWidth(ImageWindowWidth);
-            _imageLayoutOptions[2] = GUILayout.MinHeight(ImageWindowHeight);
-            _imageLayoutOptions[3] = GUILayout.MaxHeight(ImageWindowHeight);
         }
 
         public override void RemoveWindowLock()

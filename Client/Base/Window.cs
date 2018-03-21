@@ -71,10 +71,10 @@ namespace LunaClient.Base
             {
                 if (Input.GetMouseButtonUp(0))
                 {
-                    _resizingWindow = false;
+                    ResizingWindow = false;
                 }
 
-                if (_resizingWindow)
+                if (ResizingWindow)
                 {
                     WindowRect.width = Input.mousePosition.x - WindowRect.x + 10;
                     WindowRect.height = Screen.height - Input.mousePosition.y - WindowRect.y + 10;
@@ -107,7 +107,7 @@ namespace LunaClient.Base
 
         protected virtual bool Resizable { get; } = false;
 
-        private bool _resizingWindow = false;
+        protected bool ResizingWindow;
 
         protected void DrawContent(int windowId)
         {
@@ -116,7 +116,7 @@ namespace LunaClient.Base
             {
                 if (GUI.RepeatButton(new Rect(WindowRect.width - 15, WindowRect.height - 15, 10, 10), ResizeIcon, ResizeButtonStyle))
                 {
-                    _resizingWindow = true;
+                    ResizingWindow = true;
                 }
             }
             DrawWindowContent(windowId);
