@@ -17,11 +17,19 @@ namespace LunaClient.Windows.Connection
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.PlayerName, LabelOptions);
             var oldPlayerName = SettingsSystem.CurrentSettings.PlayerName;
-            SettingsSystem.CurrentSettings.PlayerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.PlayerName, 32, TextAreaStyle); // Max 32 characters
-            if (oldPlayerName != SettingsSystem.CurrentSettings.PlayerName)
+
+            if (MainSystem.NetworkState <= ClientState.Disconnected)
             {
-                SettingsSystem.CurrentSettings.PlayerName = SettingsSystem.CurrentSettings.PlayerName.Replace("\n", "");
-                RenameEventHandled = false;
+                SettingsSystem.CurrentSettings.PlayerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.PlayerName, 32, TextAreaStyle); // Max 32 characters
+                if (oldPlayerName != SettingsSystem.CurrentSettings.PlayerName)
+                {
+                    SettingsSystem.CurrentSettings.PlayerName = SettingsSystem.CurrentSettings.PlayerName.Replace("\n", "");
+                    RenameEventHandled = false;
+                }
+            }
+            else
+            {
+                GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName);
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
