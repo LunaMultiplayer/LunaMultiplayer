@@ -3,7 +3,6 @@ using LunaClient.Localization;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
 using UniLinq;
@@ -96,38 +95,44 @@ namespace LunaClient.Systems.VesselRemoveSys
         }
 
         /// <summary>
-        /// This event is called after a game is loaded. We use it to detect if the player has done a revert
+        /// Triggered when reverting back to the launchpad. The vessel id does NOT change
         /// </summary>
-        public void OnGameStatePostLoad(ConfigNode data)
+        public void OnRevertToLaunch()
         {
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
-                LunaLog.Log("[LMP]: Detected a revert!");
-                var vesselIdsToRemove = FlightGlobals.Vessels
-                    .Where(v => v.rootPart?.missionID == FlightGlobals.ActiveVessel.rootPart.missionID && v.id != FlightGlobals.ActiveVessel.id)
-                    .Select(v => v.id).Distinct();
+                LunaLog.Log("[LMP]: Detected a revert to launch!");
+                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, false);
+            }
+        }
 
-                //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
-                //vessel and remove them both from our game and server
-                foreach (var vesselIdToRemove in vesselIdsToRemove)
-                {
-                    System.MessageSender.SendVesselRemove(vesselIdToRemove);
-                    System.AddToKillList(vesselIdToRemove);
-                }
+        /// <summary>
+        /// Triggered when reverting back to the editor. The vessel id DOES change
+        /// </summary>
+        public void OnRevertToEditor(EditorFacility data)
+        {
+            if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
+            {
+                LunaLog.Log($"[LMP]: Detected a revert to editor! {data}");
+                System.AddToKillList(FlightGlobals.ActiveVessel.id);
+                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, true);
+            }
+        }
 
-                //Store it here so the delayed routine can access it!
-                var activeVesselId = FlightGlobals.ActiveVessel.id;
-
-                //Now tell the server to remove our old vessel
-                CoroutineUtil.StartDelayedRoutine("SendProperVesselRemoveMsg", () =>
-                {
-                    //We delay the send vessel remove to wait until the proper scene is loaded.
-                    //In case we revert to editor we must fully delete that vessel as when flying again we will get a new ID.
-                    //Otherwise we say to not keep it in the vessels remove list as perhaps we are reverting to flight and then our vessel id will stay the same. 
-                    //If we set the keepvesselinremovelist to true then the server will ignore every change we do to our vessel! 
-                    System.MessageSender.SendVesselRemove(activeVesselId, HighLogic.LoadedSceneIsEditor);
-                    if (HighLogic.LoadedSceneIsEditor) System.AddToKillList(activeVesselId);
-                }, 3);
+        private static void RemoveOldVesselAndItsDebris(Vessel vessel)
+        {            
+            //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
+            //vessel and remove them both from our game and server
+            var vesselIdsToRemove = FlightGlobals.Vessels
+                .Where(v => v.rootPart?.missionID == vessel.rootPart.missionID && v.id != vessel.id)
+                .Select(v => v.id).Distinct();
+            
+            foreach (var vesselIdToRemove in vesselIdsToRemove)
+            {
+                System.MessageSender.SendVesselRemove(vesselIdToRemove);
+                System.AddToKillList(vesselIdToRemove);
             }
         }
     }

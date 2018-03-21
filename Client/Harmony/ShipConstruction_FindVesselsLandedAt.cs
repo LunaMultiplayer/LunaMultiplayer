@@ -18,7 +18,7 @@ namespace LunaClient.Harmony
         private static readonly List<ProtoVessel> ProtoVesselsBackup = new List<ProtoVessel>();
 
         [HarmonyPostfix]
-        private static void PostFixFindVesselsLandedAt(ref List<ProtoVessel> __result)
+        private static void PostfixFindVesselsLandedAt(List<ProtoVessel> __result)
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
 

@@ -15,7 +15,7 @@ namespace LunaClient.Harmony
     public class LaunchSiteClear_Test
     {
         [HarmonyPostfix]
-        private static void PostFixTest(ref bool __result)
+        private static void PostfixTest(ref bool __result)
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
 

@@ -18,7 +18,7 @@ namespace LunaClient.Harmony
         private static readonly List<KSCVesselMarker> MarkersToRemove = new List<KSCVesselMarker>();
         
         [HarmonyPostfix]
-        private static void FixVesselMarkers()
+        private static void PostfixVesselMarkers()
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
 

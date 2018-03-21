@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselStore;
@@ -6,7 +7,6 @@ using LunaClient.VesselUtilities;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselRemoveSys
@@ -38,7 +38,11 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Add(VesselRemoveEvents.OnVesselWillDestroy);
-            GameEvents.onGameStatePostLoad.Add(VesselRemoveEvents.OnGameStatePostLoad);
+
+            RevertEvent.onRevertToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
+            RevertEvent.onRevertToPrelaunch.Add(VesselRemoveEvents.OnRevertToEditor);
+            RevertEvent.onReturnToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
+
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, KillPastSubspaceVessels));
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, RemoveQueuedVessels));
             SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, FlushRemovedVessels));
@@ -47,12 +51,14 @@ namespace LunaClient.Systems.VesselRemoveSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            VesselsToRemove = new ConcurrentQueue<Guid>();
-            RemovedVessels.Clear();
+            ClearSystem();
             GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Remove(VesselRemoveEvents.OnVesselWillDestroy);
-            GameEvents.onGameStatePostLoad.Remove(VesselRemoveEvents.OnGameStatePostLoad);
+
+            RevertEvent.onRevertToLaunch.Remove(VesselRemoveEvents.OnRevertToLaunch);
+            RevertEvent.onRevertToPrelaunch.Remove(VesselRemoveEvents.OnRevertToEditor);
+            RevertEvent.onReturnToEditor.Remove(VesselRemoveEvents.OnRevertToEditor);
         }
 
         #endregion

@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.VesselFlightStateSys;
-using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselStateSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Locks;
@@ -24,7 +23,6 @@ namespace LunaClient.Systems.Lock
             VesselCommon.IsSpectating = false;
 
             //We are going to another screen so clear up the systems
-            VesselRemoveSystem.Singleton.ClearSystem();
             VesselFlightStateSystem.Singleton.ClearSystem();
             VesselStateSystem.Singleton.ClearSystem();
         }

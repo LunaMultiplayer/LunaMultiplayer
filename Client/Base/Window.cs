@@ -23,7 +23,7 @@ namespace LunaClient.Base
         /// </summary>
         public virtual bool Display
         {
-            get => _display && MainSystem.ToolbarShowGui;
+            get => _display;
             set
             {
                 if (!_display && value)

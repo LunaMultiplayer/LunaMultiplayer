@@ -17,7 +17,7 @@ namespace LunaClient.Harmony
     public class SpaceTracking_SetVessel
     {
         [HarmonyPostfix]
-        private static void PostFixSetVessel(ref SpaceTracking __instance)
+        private static void PostfixSetVessel(SpaceTracking __instance)
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
 
