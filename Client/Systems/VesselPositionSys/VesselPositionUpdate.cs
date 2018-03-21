@@ -195,9 +195,6 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.checkLanded();
             Vessel.checkSplashed();
 
-            //TODO: Check if this doesn't break anything
-            Vessel.orbitDriver.orbit.UpdateFromOrbitAtUT(Vessel.orbitDriver.orbit, Planetarium.GetUniversalTime(), Body);
-
             //Set the position of the vessel based on the orbital parameters
             Vessel.orbitDriver.updateFromParameters();
 
@@ -213,12 +210,14 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 if (SettingsSystem.CurrentSettings.PreciseSurfacePositioning)
                 {
+                    Vessel.orbit.UpdateFromStateVectors(Vessel.orbit.pos, Vessel.orbit.vel, Body, Planetarium.GetUniversalTime());
+
                     Vessel.mainBody.GetLatLonAltOrbital(Vessel.orbitDriver.orbit.pos, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
                     Vessel.altitude = Target.LatLonAlt[2];
                     Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
                 }
                 else
-                {                
+                {
                     //Fall back to the old positioning method that jitters at high speed :(
                     Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
                     Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
