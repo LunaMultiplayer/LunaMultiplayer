@@ -16,7 +16,7 @@ namespace LunaClient.Windows.Screenshots
             GUILayout.Space(15);
 
             GUILayout.BeginVertical(BoxStyle);
-            FoldersScrollPos = GUILayout.BeginScrollView(FoldersScrollPos, ScrollStyle);
+            _foldersScrollPos = GUILayout.BeginScrollView(_foldersScrollPos, ScrollStyle);
             foreach (var folderName in System.MiniatureImages.Keys)
                 DrawFolderButton(folderName);
             GUILayout.EndScrollView();
@@ -27,17 +27,17 @@ namespace LunaClient.Windows.Screenshots
 
         private void DrawFolderButton(string folderName)
         {
-            if (GUILayout.Toggle(SelectedFolder == folderName, folderName, ButtonStyle))
+            if (GUILayout.Toggle(_selectedFolder == folderName, folderName, ButtonStyle))
             {
-                if (SelectedFolder != folderName)
+                if (_selectedFolder != folderName)
                 {
-                    SelectedFolder = folderName;
-                    System.MessageSender.RequestMiniatures(SelectedFolder);
+                    _selectedFolder = folderName;
+                    System.MessageSender.RequestMiniatures(_selectedFolder);
                 }
             }
             else
             {
-                if (SelectedFolder == folderName) SelectedFolder = null;
+                if (_selectedFolder == folderName) _selectedFolder = null;
             }
         }
 
@@ -48,17 +48,17 @@ namespace LunaClient.Windows.Screenshots
         public void DrawLibraryContent(int windowId)
         {            
             //Always draw close button first
-            DrawCloseButton(()=> SelectedFolder = null, LibraryWindowRect);
+            DrawCloseButton(()=> _selectedFolder = null, _libraryWindowRect);
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            DrawRefreshButton(() => System.MessageSender.RequestMiniatures(SelectedFolder));
+            DrawRefreshButton(() => System.MessageSender.RequestMiniatures(_selectedFolder));
             GUILayout.Space(15);
 
-            if (string.IsNullOrEmpty(SelectedFolder)) return;
+            if (string.IsNullOrEmpty(_selectedFolder)) return;
 
             GUILayout.BeginVertical(BoxStyle);
-            LibraryScrollPos = GUILayout.BeginScrollView(LibraryScrollPos, ScrollStyle);
+            _libraryScrollPos = GUILayout.BeginScrollView(_libraryScrollPos, ScrollStyle);
             if (Miniatures.Any())
             {
                 for (var i = 0; i < Miniatures.Count; i += 4)
@@ -106,9 +106,9 @@ namespace LunaClient.Windows.Screenshots
         {
             if (GUILayout.Button(miniature.Texture, ButtonStyle, GUILayout.Width(miniature.Width), GUILayout.Height(miniature.Height)))
             {
-                SelectedImage = miniature.DateTaken;
-                if(System.DownloadedImages.TryGetValue(SelectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(SelectedImage))
-                    System.MessageSender.RequestImage(SelectedFolder, SelectedImage);
+                _selectedImage = miniature.DateTaken;
+                if(System.DownloadedImages.TryGetValue(_selectedFolder, out var downloadedImages) && !downloadedImages.ContainsKey(_selectedImage))
+                    System.MessageSender.RequestImage(_selectedFolder, _selectedImage);
             }
         }
         
@@ -119,7 +119,7 @@ namespace LunaClient.Windows.Screenshots
         public void DrawImageContent(int windowId)
         {            
             //Always draw close button first
-            DrawCloseButton(()=> SelectedImage = 0, ImageWindowRect);
+            DrawCloseButton(()=> _selectedImage = 0, _imageWindowRect);
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
@@ -127,18 +127,18 @@ namespace LunaClient.Windows.Screenshots
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(SaveIcon, ButtonStyle))
             {
-                System.SaveImage(SelectedFolder, SelectedImage);
+                System.SaveImage(_selectedFolder, _selectedImage);
                 //Close after saving
-                SelectedImage = 0;
+                _selectedImage = 0;
             }
             GUILayout.EndHorizontal();
             GUILayout.Space(15);
 
-            if (SelectedImage == 0) return;
+            if (_selectedImage == 0) return;
 
             GUILayout.BeginVertical(BoxStyle);
-            ImageScrollPos = GUILayout.BeginScrollView(ImageScrollPos, ScrollStyle);
-            if (System.DownloadedImages.TryGetValue(SelectedFolder, out var imagesDictionary) && imagesDictionary.TryGetValue(SelectedImage, out var screenShot))
+            _imageScrollPos = GUILayout.BeginScrollView(_imageScrollPos, ScrollStyle);
+            if (System.DownloadedImages.TryGetValue(_selectedFolder, out var imagesDictionary) && imagesDictionary.TryGetValue(_selectedImage, out var screenShot))
             {
                 GUILayout.Label(screenShot.Texture);
             }

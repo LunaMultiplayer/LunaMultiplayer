@@ -11,27 +11,27 @@ namespace LunaClient.Windows.Debug
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            DisplayFast = GUILayout.Toggle(DisplayFast, "Fast debug update", ButtonStyle);
+            _displayFast = GUILayout.Toggle(_displayFast, "Fast debug update", ButtonStyle);
 
-            DisplayVectors = GUILayout.Toggle(DisplayVectors, "Display vessel vectors", ButtonStyle);
-            if (DisplayVectors)
-                GUILayout.Label(VectorText, LabelStyle);
+            _displayVectors = GUILayout.Toggle(_displayVectors, "Display vessel vectors", ButtonStyle);
+            if (_displayVectors)
+                GUILayout.Label(_vectorText, LabelStyle);
 
-            DisplayOrbit = GUILayout.Toggle(DisplayOrbit, "Display orbit info", ButtonStyle);
-            if (DisplayOrbit)
-                GUILayout.Label(OrbitText, LabelStyle);
+            _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display orbit info", ButtonStyle);
+            if (_displayOrbit)
+                GUILayout.Label(_orbitText, LabelStyle);
 
-            DisplayVesselStoreData = GUILayout.Toggle(DisplayVesselStoreData, "Display vessel store data", ButtonStyle);
-            if (DisplayVesselStoreData)
-                GUILayout.Label(VesselStoreText, LabelStyle);
+            _displayVesselStoreData = GUILayout.Toggle(_displayVesselStoreData, "Display vessel store data", ButtonStyle);
+            if (_displayVesselStoreData)
+                GUILayout.Label(_vesselStoreText, LabelStyle);
 
-            DisplayNtp = GUILayout.Toggle(DisplayNtp, "Display NTP/Subspace statistics", ButtonStyle);
-            if (DisplayNtp)
-                GUILayout.Label(NtpText, LabelStyle);
+            _displayNtp = GUILayout.Toggle(_displayNtp, "Display NTP/Subspace statistics", ButtonStyle);
+            if (_displayNtp)
+                GUILayout.Label(_ntpText, LabelStyle);
 
-            DisplayConnectionQueue = GUILayout.Toggle(DisplayConnectionQueue, "Display connection statistics", ButtonStyle);
-            if (DisplayConnectionQueue)
-                GUILayout.Label(ConnectionText, LabelStyle);
+            _displayConnectionQueue = GUILayout.Toggle(_displayConnectionQueue, "Display connection statistics", ButtonStyle);
+            if (_displayConnectionQueue)
+                GUILayout.Label(_connectionText, LabelStyle);
 
             if (GUILayout.Button("Reload all vessels", ButtonStyle))
             {

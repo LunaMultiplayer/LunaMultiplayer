@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Systems.CraftLibrary;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
@@ -16,26 +15,26 @@ namespace LunaClient.Windows.CraftLibrary
 
         private const float UpdateIntervalMs = 1500;
 
-        protected const float FoldersWindowHeight = 300;
-        protected const float FoldersWindowWidth = 200;
-        protected const float LibraryWindowHeight = 300;
-        protected const float LibraryWindowWidth = 400;
-        protected const float UploadWindowHeight = 300;
-        protected const float UploadWindowWidth = 400;
+        private const float FoldersWindowHeight = 300;
+        private const float FoldersWindowWidth = 200;
+        private const float LibraryWindowHeight = 300;
+        private const float LibraryWindowWidth = 400;
+        private const float UploadWindowHeight = 300;
+        private const float UploadWindowWidth = 400;
 
-        protected Rect LibraryWindowRect { get; set; }
-        protected Rect UploadWindowRect { get; set; }
+        private static Rect _libraryWindowRect;
+        private static Rect _uploadWindowRect;
 
-        protected GUILayoutOption[] FoldersLayoutOptions { get; set; }
-        protected GUILayoutOption[] LibraryLayoutOptions { get; set; }
-        protected GUILayoutOption[] UploadLayoutOptions { get; set; }
+        private static GUILayoutOption[] _foldersLayoutOptions;
+        private static GUILayoutOption[] _libraryLayoutOptions;
+        private static GUILayoutOption[] _uploadLayoutOptions;
 
-        protected Vector2 FoldersScrollPos { get; set; }
-        protected Vector2 LibraryScrollPos { get; set; }
-        protected Vector2 UploadScrollPos { get; set; }
+        private static Vector2 _foldersScrollPos;
+        private static Vector2 _libraryScrollPos;
+        private static Vector2 _uploadScrollPos;
 
-        private string SelectedFolder { get; set; }
-        private bool DrawUploadScreen { get; set; }
+        private static string _selectedFolder;
+        private static bool _drawUploadScreen;
 
         private static DateTime _lastGuiUpdateTime = DateTime.MinValue;
 
@@ -62,8 +61,8 @@ namespace LunaClient.Windows.CraftLibrary
         public override void Update()
         {
             base.Update();
-            SafeDisplay = Display;
             if (!Display) return;
+
             if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromMilliseconds(UpdateIntervalMs))
             {
                 _lastGuiUpdateTime = DateTime.Now;
@@ -72,7 +71,7 @@ namespace LunaClient.Windows.CraftLibrary
                 SphCrafts.Clear();
                 SubAssemblyCrafts.Clear();
 
-                if (!string.IsNullOrEmpty(SelectedFolder) && System.CraftInfo.TryGetValue(SelectedFolder, out var craftsDictionary))
+                if (!string.IsNullOrEmpty(_selectedFolder) && System.CraftInfo.TryGetValue(_selectedFolder, out var craftsDictionary))
                 {
                     var allValues = craftsDictionary.Values.GroupBy(v=> v.CraftType).ToArray();
                     foreach (var groupedValues in allValues)
@@ -99,24 +98,24 @@ namespace LunaClient.Windows.CraftLibrary
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
+            if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6707 + MainSystem.WindowOffset,
-                    WindowRect, DrawContent, LocalizationContainer.CraftLibraryWindowText.Folders, WindowStyle, FoldersLayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6707 + MainSystem.WindowOffset,
+                    WindowRect, DrawContent, LocalizationContainer.CraftLibraryWindowText.Folders, WindowStyle, _foldersLayoutOptions));
             }
 
-            if (SafeDisplay && !string.IsNullOrEmpty(SelectedFolder) && System.CraftInfo.ContainsKey(SelectedFolder))
+            if (Display && !string.IsNullOrEmpty(_selectedFolder) && System.CraftInfo.ContainsKey(_selectedFolder))
             {
-                LibraryWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6708 + MainSystem.WindowOffset,
-                    LibraryWindowRect, DrawLibraryContent, $"{SelectedFolder} {LocalizationContainer.CraftLibraryWindowText.Crafts}", WindowStyle,
-                    LibraryLayoutOptions));
+                _libraryWindowRect = FixWindowPos(GUILayout.Window(6708 + MainSystem.WindowOffset,
+                    _libraryWindowRect, DrawLibraryContent, $"{_selectedFolder} {LocalizationContainer.CraftLibraryWindowText.Crafts}", WindowStyle,
+                    _libraryLayoutOptions));
             }
 
-            if (SafeDisplay && DrawUploadScreen)
+            if (Display && _drawUploadScreen)
             {
-                UploadWindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6709 + MainSystem.WindowOffset,
-                    UploadWindowRect, DrawUploadScreenContent, LocalizationContainer.CraftLibraryWindowText.Upload, WindowStyle,
-                    UploadLayoutOptions));
+                _uploadWindowRect = FixWindowPos(GUILayout.Window(6709 + MainSystem.WindowOffset,
+                    _uploadWindowRect, DrawUploadScreenContent, LocalizationContainer.CraftLibraryWindowText.Upload, WindowStyle,
+                    _uploadLayoutOptions));
             }
 
             CheckWindowLock();
@@ -125,26 +124,26 @@ namespace LunaClient.Windows.CraftLibrary
         public override void SetStyles()
         {
             WindowRect = new Rect(50, Screen.height / 2f - FoldersWindowHeight / 2f, FoldersWindowWidth, FoldersWindowHeight);
-            LibraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f, Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
+            _libraryWindowRect = new Rect(Screen.width / 2f - LibraryWindowWidth / 2f, Screen.height / 2f - LibraryWindowHeight / 2f, LibraryWindowWidth, LibraryWindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
-            FoldersLayoutOptions = new GUILayoutOption[4];
-            FoldersLayoutOptions[0] = GUILayout.MinWidth(FoldersWindowWidth);
-            FoldersLayoutOptions[1] = GUILayout.MaxWidth(FoldersWindowWidth);
-            FoldersLayoutOptions[2] = GUILayout.MinHeight(FoldersWindowHeight);
-            FoldersLayoutOptions[3] = GUILayout.MaxHeight(FoldersWindowHeight);
+            _foldersLayoutOptions = new GUILayoutOption[4];
+            _foldersLayoutOptions[0] = GUILayout.MinWidth(FoldersWindowWidth);
+            _foldersLayoutOptions[1] = GUILayout.MaxWidth(FoldersWindowWidth);
+            _foldersLayoutOptions[2] = GUILayout.MinHeight(FoldersWindowHeight);
+            _foldersLayoutOptions[3] = GUILayout.MaxHeight(FoldersWindowHeight);
 
-            LibraryLayoutOptions = new GUILayoutOption[4];
-            LibraryLayoutOptions[0] = GUILayout.MinWidth(LibraryWindowWidth);
-            LibraryLayoutOptions[1] = GUILayout.MaxWidth(LibraryWindowWidth);
-            LibraryLayoutOptions[2] = GUILayout.MinHeight(LibraryWindowHeight);
-            LibraryLayoutOptions[3] = GUILayout.MaxHeight(LibraryWindowHeight);
+            _libraryLayoutOptions = new GUILayoutOption[4];
+            _libraryLayoutOptions[0] = GUILayout.MinWidth(LibraryWindowWidth);
+            _libraryLayoutOptions[1] = GUILayout.MaxWidth(LibraryWindowWidth);
+            _libraryLayoutOptions[2] = GUILayout.MinHeight(LibraryWindowHeight);
+            _libraryLayoutOptions[3] = GUILayout.MaxHeight(LibraryWindowHeight);
 
-            UploadLayoutOptions = new GUILayoutOption[4];
-            UploadLayoutOptions[0] = GUILayout.MinWidth(UploadWindowWidth);
-            UploadLayoutOptions[1] = GUILayout.MaxWidth(UploadWindowWidth);
-            UploadLayoutOptions[2] = GUILayout.MinHeight(UploadWindowHeight);
-            UploadLayoutOptions[3] = GUILayout.MaxHeight(UploadWindowHeight);
+            _uploadLayoutOptions = new GUILayoutOption[4];
+            _uploadLayoutOptions[0] = GUILayout.MinWidth(UploadWindowWidth);
+            _uploadLayoutOptions[1] = GUILayout.MaxWidth(UploadWindowWidth);
+            _uploadLayoutOptions[2] = GUILayout.MinHeight(UploadWindowHeight);
+            _uploadLayoutOptions[3] = GUILayout.MaxHeight(UploadWindowHeight);
         }
 
         public override void RemoveWindowLock()
@@ -158,7 +157,7 @@ namespace LunaClient.Windows.CraftLibrary
 
         public void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -169,7 +168,7 @@ namespace LunaClient.Windows.CraftLibrary
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 
-                var shouldLock = WindowRect.Contains(mousePos) || LibraryWindowRect.Contains(mousePos);
+                var shouldLock = WindowRect.Contains(mousePos) || _libraryWindowRect.Contains(mousePos);
 
                 if (shouldLock && !IsWindowLocked)
                 {
@@ -180,14 +179,14 @@ namespace LunaClient.Windows.CraftLibrary
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
         
         private void Reset()
         {
-            SelectedFolder = null;
-            DrawUploadScreen = false;
+            _selectedFolder = null;
+            _drawUploadScreen = false;
         }
     }
 }

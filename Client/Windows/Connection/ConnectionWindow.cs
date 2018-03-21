@@ -77,7 +77,7 @@ namespace LunaClient.Windows.Connection
             base.OnGui();
             if (Display)
             {
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect, DrawContent, _title, WindowStyle));
+                WindowRect = FixWindowPos(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect, DrawContent, _title, WindowStyle));
             }
         }
 

@@ -2,7 +2,6 @@
 using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
-using LunaClient.Utilities;
 using LunaClient.VesselStore;
 using LunaCommon.Enums;
 using LunaCommon.Time;
@@ -16,7 +15,28 @@ namespace LunaClient.Windows.Debug
 {
     public partial class DebugWindow : Window<DebugWindow>
     {
+        #region Fields
+
         private static readonly StringBuilder StringBuilder = new StringBuilder();
+        private static readonly List<Tuple<Guid, string>> VesselProtoStoreData = new List<Tuple<Guid, string>>();
+
+        private const float DisplayUpdateInterval = .2f;
+        private const float WindowHeight = 400;
+        private const float WindowWidth = 400;
+
+        private static bool _displayFast;
+        private static string _vectorText;
+        private static string _orbitText;
+        private static string _ntpText;
+        private static string _connectionText;
+        private static string _vesselStoreText;
+        private static float _lastUpdateTime;
+
+        private static bool _displayVectors;
+        private static bool _displayOrbit;
+        private static bool _displayNtp;
+        private static bool _displayConnectionQueue;
+        private static bool _displayVesselStoreData;
 
         private static bool _display;
         public override bool Display
@@ -25,17 +45,17 @@ namespace LunaClient.Windows.Debug
             set => base.Display = _display = value;
         }
 
+        #endregion
+
         public override void Update()
         {
             base.Update();
-            SafeDisplay = Display;
-
-            if (Display && Time.realtimeSinceStartup - LastUpdateTime > DisplayUpdateInterval || DisplayFast)
+            if (Display && Time.realtimeSinceStartup - _lastUpdateTime > DisplayUpdateInterval || _displayFast)
             {
-                LastUpdateTime = Time.realtimeSinceStartup;
+                _lastUpdateTime = Time.realtimeSinceStartup;
                 //Vector text
 
-                if (DisplayVectors)
+                if (_displayVectors)
                 {
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
                     {
@@ -58,16 +78,16 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.AppendLine($"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}");
                         StringBuilder.AppendLine($"World Pos: {(Vector3)ourVessel.GetWorldPos3D()}, |pos|: {ourVessel.GetWorldPos3D().magnitude}");
 
-                        VectorText = StringBuilder.ToString();
+                        _vectorText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
                     }
                     else
                     {
-                        VectorText = "You have to be in flight";
+                        _vectorText = "You have to be in flight";
                     }
                 }
 
-                if (DisplayOrbit)
+                if (_displayOrbit)
                 {
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.orbitDriver?.orbit != null)
                     {
@@ -81,16 +101,16 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.AppendLine($"Mean anomaly: {ourVessel.orbitDriver.orbit.meanAnomalyAtEpoch}");
                         StringBuilder.AppendLine($"Epoch: {ourVessel.orbitDriver.orbit.epoch}");
 
-                        OrbitText = StringBuilder.ToString();
+                        _orbitText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
                     }
                     else
                     {
-                        OrbitText = "You have to be in orbit";
+                        _orbitText = "You have to be in orbit";
                     }
                 }
 
-                if (DisplayNtp)
+                if (_displayNtp)
                 {
                     StringBuilder.AppendLine($"Server start time: {new DateTime(TimeSyncerSystem.ServerStartTime):yyyy-MM-dd HH-mm-ss.ffff}");
                     StringBuilder.AppendLine($"Warp rate: {Math.Round(Time.timeScale, 3)}x.");
@@ -100,11 +120,11 @@ namespace LunaClient.Windows.Debug
                     StringBuilder.AppendLine($"Current Error: {Math.Round(TimeSyncerSystem.CurrentErrorSec * 1000, 0)}ms.");
                     StringBuilder.AppendLine($"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT");
 
-                    NtpText = StringBuilder.ToString();
+                    _ntpText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }
 
-                if (DisplayConnectionQueue)
+                if (_displayConnectionQueue)
                 {
                     StringBuilder.AppendLine($"NTP time diference: {LunaTime.TimeDifference.TotalMilliseconds}ms.");
                     StringBuilder.AppendLine($"NTP + simulated time diference: {LunaTime.TimeDifference.TotalMilliseconds + LunaTime.SimulatedMsTimeOffset}ms.");
@@ -117,11 +137,11 @@ namespace LunaClient.Windows.Debug
                     StringBuilder.AppendLine($"Message data in cache: {NetworkStatistics.GetStatistics("MessageDataInCache")}.");
                     StringBuilder.AppendLine($"Sent bytes: {NetworkStatistics.GetStatistics("SentBytes")}.");
                     StringBuilder.AppendLine($"Received bytes: {NetworkStatistics.GetStatistics("ReceivedBytes")}.\n");
-                    ConnectionText = StringBuilder.ToString();
+                    _connectionText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }
 
-                if (DisplayVesselStoreData)
+                if (_displayVesselStoreData)
                 {
                     StringBuilder.Append("Num of vessels: ").Append(VesselsProtoStore.AllPlayerVessels.Count).AppendLine();
 
@@ -132,7 +152,7 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.Append(vessel.Item1).Append(" - ").AppendLine(vessel.Item2);
                     }
 
-                    VesselStoreText = StringBuilder.ToString();
+                    _vesselStoreText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }
             }
@@ -141,10 +161,10 @@ namespace LunaClient.Windows.Debug
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
-                WindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6705 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiplayer - Debug", WindowStyle, LayoutOptions));
+            if (Display)
+            {
+                WindowRect = FixWindowPos(GUILayout.Window(6705 + MainSystem.WindowOffset, WindowRect, DrawContent, "Debug", WindowStyle, LayoutOptions));
+            }
             CheckWindowLock();
         }
 
@@ -175,7 +195,7 @@ namespace LunaClient.Windows.Debug
 
         private void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -197,41 +217,8 @@ namespace LunaClient.Windows.Debug
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
-
-        #region Fields
-
-        #region Public
-
-        //private parts
-        public bool DisplayFast { get; set; }
-        public string VectorText { get; set; } = "";
-        public string OrbitText { get; set; } = "";
-        public string NtpText { get; set; } = "";
-        public string ConnectionText { get; set; } = "";
-        public string VesselStoreText { get; set; } = "";
-        public float LastUpdateTime { get; set; }
-        private float DisplayUpdateInterval { get; } = .2f;
-
-        private static readonly List<Tuple<Guid, string>> VesselProtoStoreData = new List<Tuple<Guid, string>>();
-
-        #endregion
-
-        private float WindowHeight { get; } = 400;
-        private float WindowWidth { get; } = 400;
-
-        protected bool DisplayVectors { get; set; }
-        protected bool DisplayOrbit { get; set; }
-        protected bool DisplayNtp { get; set; }
-        protected bool DisplayConnectionQueue { get; set; }
-        protected bool DisplayVesselStoreData { get; set; }
-
-        protected bool PackVessels { get; set; }
-        protected bool UnpackVessels { get; set; }
-        protected bool LoadVessels { get; set; }
-        protected bool UnloadVessels { get; set; }
-        #endregion
     }
 }
