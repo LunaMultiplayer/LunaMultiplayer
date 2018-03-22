@@ -148,6 +148,8 @@ namespace LunaClient.Systems.VesselRemoveSys
             {
                 if (vessel != null && VesselCommon.IsInSafetyBubble(vessel) && FlightGlobals.ActiveVessel?.id != vessel.id)
                 {
+                    LunaLog.Log($"[LMP]: Killing vessel {vessel.id} because it's inside safety bubble");
+
                     UnloadVesselFromGame(vessel);
                     KillGivenVessel(vessel);
                     UnloadVesselFromScenario(vessel);
