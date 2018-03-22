@@ -68,6 +68,8 @@
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
     <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
     <Compile Include="Harmony\LaunchSiteClear_Test.cs" />
+    <Compile Include="Harmony\KSCPauseMenu_QuickLoad.cs" />
+    <Compile Include="Harmony\QuickSaveLoad_QuickLoad.cs" />
     <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />
     <Compile Include="Harmony\SpaceTracking_SetVessel.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
