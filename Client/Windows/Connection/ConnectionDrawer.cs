@@ -146,6 +146,7 @@ namespace LunaClient.Windows.Connection
             if (newPlayerName != SettingsSystem.CurrentSettings.PlayerName)
             {
                 SettingsSystem.CurrentSettings.PlayerName = newPlayerName.Trim().Replace("\n", "");
+                SettingsSystem.SaveSettings();
             }
             GUI.enabled = true;
             GUILayout.EndHorizontal();
