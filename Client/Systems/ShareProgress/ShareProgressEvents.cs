@@ -168,6 +168,33 @@ namespace LunaClient.Systems.ShareProgress
             //This event is triggered to often (always if some speed or distance record changes).
             //LunaLog.Log("Progress achieved:" + progressNode.Id);
         }
+
+        public void RevertToEditor(EditorFacility editorFacility)
+        {
+            //Looks like the funds, science and reputation values are reverted after this event
+            //otherwise maybe it could be as simple as sending the current funds, science and reputation back to all other clients.
+            //if thats not the case we need some manual log of the transactions and revert from there...
+
+            LunaLog.Log("Reverted progress.");
+        }
+
+        public void RevertToLaunch()
+        {
+            //Looks like the funds, science and reputation values are reverted after this event
+            //otherwise maybe it could be as simple as sending the current funds, science and reputation back to all other clients.
+            //if thats not the case we need some manual log of the transactions and revert from there...
+
+            LunaLog.Log("Reverted progress.");
+        }
+
+        public void RevertToPreLaunch(EditorFacility editorFacility)
+        {
+            //Looks like the funds, science and reputation values are reverted after this event
+            //otherwise maybe it could be as simple as sending the current funds, science and reputation back to all other clients.
+            //if thats not the case we need some manual log of the transactions and revert from there...
+
+            LunaLog.Log("Reverted progress.");
+        }
         #endregion
 
         #region PrivateMethods

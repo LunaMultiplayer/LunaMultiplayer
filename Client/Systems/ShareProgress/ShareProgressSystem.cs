@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
@@ -52,6 +53,7 @@ namespace LunaClient.Systems.ShareProgress
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
             {
                 SubscribeToBasicEvents();
+                SubscribeToRevertEvents();
 
                 if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
                 {
@@ -71,6 +73,7 @@ namespace LunaClient.Systems.ShareProgress
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
             {
                 UnsubscribeFromBasicEvents();
+                UnsubscribeFromRevertEvents();
 
                 if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
                 {
@@ -179,6 +182,20 @@ namespace LunaClient.Systems.ShareProgress
             GameEvents.OnProgressReached.Remove(ShareProgressEvents.ProgressReached);
             GameEvents.OnProgressComplete.Remove(ShareProgressEvents.ProgressCompleted);
             GameEvents.OnProgressAchieved.Remove(ShareProgressEvents.ProgressAchieved);
+        }
+
+        private void SubscribeToRevertEvents()
+        {
+            RevertEvent.onReturnToEditor.Add(ShareProgressEvents.RevertToEditor);
+            RevertEvent.onRevertToLaunch.Add(ShareProgressEvents.RevertToLaunch);
+            RevertEvent.onRevertToPrelaunch.Add(ShareProgressEvents.RevertToPreLaunch);
+        }
+
+        private void UnsubscribeFromRevertEvents()
+        {
+            RevertEvent.onReturnToEditor.Remove(ShareProgressEvents.RevertToEditor);
+            RevertEvent.onRevertToLaunch.Remove(ShareProgressEvents.RevertToLaunch);
+            RevertEvent.onRevertToPrelaunch.Remove(ShareProgressEvents.RevertToPreLaunch);
         }
 
         private void TryGetContractLock()
