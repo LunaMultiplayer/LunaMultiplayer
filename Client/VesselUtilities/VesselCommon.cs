@@ -15,24 +15,16 @@ namespace LunaClient.VesselUtilities
     {
         #region Fields and Properties for positions
 
-        private const double LandingPadLatitude = -0.0971978130377757;
-        private const double LandingPadLongitude = 285.44237039111;
+        private const double LaunchpadLatitude = -0.0971978130377757;
+        private const double LaunchpadLongitude = 285.44237039111;
         private const double RunwayLatitude = -0.0486001121594686;
         private const double RunwayLongitude = 285.275552559723;
         private const double KscAltitude = 60;
 
         private static CelestialBody _kerbin;
-
-        private static CelestialBody Kerbin
-        {
-            get { return _kerbin ?? (_kerbin = FlightGlobals.Bodies.Find(b => b.bodyName == "Kerbin")); }
-        }
-
-        private static Vector3d LandingPadPosition =>
-            Kerbin.GetWorldSurfacePosition(LandingPadLatitude, LandingPadLongitude, KscAltitude);
-
-        private static Vector3d RunwayPosition =>
-            Kerbin.GetWorldSurfacePosition(RunwayLatitude, RunwayLongitude, KscAltitude);
+        private static CelestialBody Kerbin => _kerbin ?? (_kerbin = FlightGlobals.Bodies.Find(b => b.bodyName == "Kerbin"));
+        private static Vector3d LaunchpadPosition => Kerbin.GetWorldSurfacePosition(LaunchpadLatitude, LaunchpadLongitude, KscAltitude);
+        private static Vector3d RunwayPosition => Kerbin.GetWorldSurfacePosition(RunwayLatitude, RunwayLongitude, KscAltitude);
 
         #endregion
 
@@ -290,7 +282,7 @@ namespace LunaClient.VesselUtilities
                 owner = LockSystem.LockQuery.GetUpdateLockOwner(vesselId);
             }
 
-            return !String.IsNullOrEmpty(owner) && WarpSystem.Singleton.PlayerIsInPastSubspace(owner);
+            return !string.IsNullOrEmpty(owner) && WarpSystem.Singleton.PlayerIsInPastSubspace(owner);
         }
 
         /// <summary>
@@ -336,9 +328,10 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         public static bool IsInSafetyBubble(Vector3d position)
         {
-            var landingPadDistance = Vector3d.Distance(position, LandingPadPosition);
+            var launchpadDistance = Vector3d.Distance(position, LaunchpadPosition);
 
-            if (landingPadDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance) return true;
+            //Increase the launchpad threshold as the ships tend to get taller...
+            if (launchpadDistance < SettingsSystem.ServerSettings.SafetyBubbleDistance * 1.5f) return true;
 
             //We are far from the pad, let's see if happens the same in the runway...
             var runwayDistance = Vector3d.Distance(position, RunwayPosition);
@@ -353,16 +346,16 @@ namespace LunaClient.VesselUtilities
         {
             if (vesselNode.GetValue("landed") == "True" || vesselNode.GetValue("splashed") == "True")
             {
-                if (Double.TryParse(vesselNode.values.GetValue("lat"), out var latitude)
-                    && (Double.IsNaN(latitude) || Double.IsInfinity(latitude)))
+                if (double.TryParse(vesselNode.values.GetValue("lat"), out var latitude)
+                    && (double.IsNaN(latitude) || double.IsInfinity(latitude)))
                     return true;
 
-                if (Double.TryParse(vesselNode.values.GetValue("lon"), out var longitude)
-                    && (Double.IsNaN(longitude) || Double.IsInfinity(longitude)))
+                if (double.TryParse(vesselNode.values.GetValue("lon"), out var longitude)
+                    && (double.IsNaN(longitude) || double.IsInfinity(longitude)))
                     return true;
 
-                if (Double.TryParse(vesselNode.values.GetValue("alt"), out var altitude)
-                    && (Double.IsNaN(altitude) || Double.IsInfinity(altitude)))
+                if (double.TryParse(vesselNode.values.GetValue("alt"), out var altitude)
+                    && (double.IsNaN(altitude) || double.IsInfinity(altitude)))
                     return true;
             }
             else
@@ -374,7 +367,7 @@ namespace LunaClient.VesselUtilities
                         .All(v => v == "0");
 
                     return allValuesAre0 || orbitNode.values.DistinctNames().Select(v => orbitNode.GetValue(v))
-                               .Any(val => Double.TryParse(val, out var value) && (Double.IsNaN(value) || Double.IsInfinity(value)));
+                               .Any(val => double.TryParse(val, out var value) && (double.IsNaN(value) || double.IsInfinity(value)));
                 }
             }
 
@@ -392,7 +385,7 @@ namespace LunaClient.VesselUtilities
 
             var currentPos = FlightGlobals.Bodies[vessel.orbitSnapShot.ReferenceBodyIndex].GetWorldSurfacePosition(vessel.latitude, vessel.longitude, vessel.altitude);
 
-            var landingPadPosition = FlightGlobals.Bodies[vessel.orbitSnapShot.ReferenceBodyIndex].GetWorldSurfacePosition(LandingPadLatitude, LandingPadLongitude, KscAltitude);
+            var landingPadPosition = FlightGlobals.Bodies[vessel.orbitSnapShot.ReferenceBodyIndex].GetWorldSurfacePosition(LaunchpadLatitude, LaunchpadLongitude, KscAltitude);
             var landingPadDistance = Vector3d.Distance(currentPos, landingPadPosition);
 
             if (landingPadDistance < distance) return true;
