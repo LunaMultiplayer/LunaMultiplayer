@@ -14,7 +14,6 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaClient.Windows;
-using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaUpdater.Github;
@@ -302,6 +301,13 @@ namespace LunaClient
             NetworkState = ClientState.Disconnected;
         }
 
+        public void DisconnectFromGame()
+        {
+            ForceQuit = true;
+            NetworkConnection.Disconnect("Quit");
+            ScenarioSystem.Singleton.SendScenarioModules();
+        }
+
         #endregion
 
         #region Private methods
@@ -311,19 +317,11 @@ namespace LunaClient
             HighLogic.SaveFolder = "LunaMultiplayer";
             if (HighLogic.LoadedScene != GameScenes.MAINMENU)
                 HighLogic.LoadScene(GameScenes.MAINMENU);
-            //HighLogic.CurrentGame = null; This is no bueno
             BodiesGees.Clear();
         }
 
-        private void HandleWindowEvents()
+        private static void HandleWindowEvents()
         {
-            if (!StatusWindow.Singleton.DisconnectEventHandled)
-            {
-                StatusWindow.Singleton.DisconnectEventHandled = true;
-                ForceQuit = true;
-                NetworkConnection.Disconnect("Quit");
-                ScenarioSystem.Singleton.SendScenarioModules();
-            }
             if (CommandLineServer != null && HighLogic.LoadedScene == GameScenes.MAINMENU && Time.timeSinceLevelLoad > 1f)
             {
                 NetworkConnection.ConnectToServer(CommandLineServer.Address, CommandLineServer.Port, CommandLineServer.Password);

@@ -78,7 +78,7 @@ namespace LunaClient.Windows.Status
 #endif
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(StatusTexts.DisconnectBtnTxt, ButtonStyle))
-                DisconnectEventHandled = false;
+                MainSystem.Singleton.DisconnectFromGame();
             OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, StatusTexts.OptionsBtnTxt, ButtonStyle);
             GUILayout.EndHorizontal();
 

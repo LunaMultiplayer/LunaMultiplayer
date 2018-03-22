@@ -18,7 +18,6 @@ namespace LunaClient.Windows.Status
                                         MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
         public List<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
-        public bool DisconnectEventHandled { get; set; } = true;
         public bool ColorEventHandled { get; set; } = true;
 
         #endregion
