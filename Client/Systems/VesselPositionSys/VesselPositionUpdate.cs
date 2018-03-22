@@ -62,13 +62,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public bool InterpolationStarted { get; set; }
         public bool RestartRequested { get; set; }
-        public bool InterpolationFinished { get; set; }
         public float InterpolationDuration => (float)TimeSpan.FromTicks(Target.TimeStamp - TimeStamp).TotalSeconds;
 
         private float _lerpPercentage;
         public float LerpPercentage
         {
-            get => !SettingsSystem.CurrentSettings.InterpolationEnabled ? 1 : _lerpPercentage;
+            get => !SettingsSystem.CurrentSettings.InterpolationEnabled ? 1 : Mathf.Clamp01(_lerpPercentage);
             set => _lerpPercentage = value;
         }
 
@@ -88,7 +87,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
             LerpPercentage = 0;
             InterpolationStarted = false;
-            InterpolationFinished = false;
             _target = target;
         }
 
@@ -112,8 +110,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 VesselPositionSystem.VesselsToRemove.Enqueue(VesselId);
                 return;
             }
-
-            if (InterpolationFinished) return;
+            
             if (!InterpolationStarted)
             {
                 InterpolationStarted = true;
@@ -127,19 +124,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
             try
             {
-                if (LerpPercentage <= 1)
-                {
-                    if (Vessel.isEVA)
-                        ApplyInterpolationToEva(LerpPercentage);
-                    else
-                        ApplyInterpolations(LerpPercentage);
-
-                    LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
-                }
+                if (Vessel.isEVA)
+                    ApplyInterpolationToEva(LerpPercentage);
                 else
-                {
-                    InterpolationFinished = true;
-                }
+                    ApplyInterpolations(LerpPercentage);
+
+                LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
             }
             catch
             {
