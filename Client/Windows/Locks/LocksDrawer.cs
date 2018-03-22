@@ -4,7 +4,7 @@ namespace LunaClient.Windows.Locks
 {
     public partial class LocksWindow
     {
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);

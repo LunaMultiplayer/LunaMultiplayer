@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselStore;
@@ -6,7 +7,6 @@ using LunaClient.VesselUtilities;
 using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using UniLinq;
 
 namespace LunaClient.Systems.VesselRemoveSys
@@ -24,8 +24,6 @@ namespace LunaClient.Systems.VesselRemoveSys
         public ConcurrentQueue<Guid> VesselsToRemove { get; private set; } = new ConcurrentQueue<Guid>();
         public ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
 
-        private static readonly List<Vessel> DebrisInSafetyBubbleToRemove = new List<Vessel>();
-
         public Guid ManuallyKillingVesselId = Guid.Empty;
 
         #endregion
@@ -40,22 +38,27 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Add(VesselRemoveEvents.OnVesselWillDestroy);
-            GameEvents.onGameStatePostLoad.Add(VesselRemoveEvents.OnGameStatePostLoad);
+
+            RevertEvent.onRevertToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
+            RevertEvent.onRevertToPrelaunch.Add(VesselRemoveEvents.OnRevertToEditor);
+            RevertEvent.onReturnToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
+
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, KillPastSubspaceVessels));
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, RemoveQueuedVessels));
             SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, FlushRemovedVessels));
-            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, RemoveSafetyBubbleDebris));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            VesselsToRemove = new ConcurrentQueue<Guid>();
-            RemovedVessels.Clear();
+            ClearSystem();
             GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Remove(VesselRemoveEvents.OnVesselWillDestroy);
-            GameEvents.onGameStatePostLoad.Remove(VesselRemoveEvents.OnGameStatePostLoad);
+
+            RevertEvent.onRevertToLaunch.Remove(VesselRemoveEvents.OnRevertToLaunch);
+            RevertEvent.onRevertToPrelaunch.Remove(VesselRemoveEvents.OnRevertToEditor);
+            RevertEvent.onReturnToEditor.Remove(VesselRemoveEvents.OnRevertToEditor);
         }
 
         #endregion
@@ -130,31 +133,13 @@ namespace LunaClient.Systems.VesselRemoveSys
             UnloadVesselFromGame(killVessel);
             KillGivenVessel(killVessel);
             UnloadVesselFromScenario(killVessel);
+
+            //When vessel.Die() is called, KSP calls RefreshMarkers() so no need to call it ourselves
         }
 
         #endregion
 
         #region Update methods
-
-        /// <summary>
-        /// The debris that is on the safety bubble SHOULD NEVER be synced with the server and at the same time 
-        /// it won't exist for any other player so here we just remove it in a routine
-        /// </summary>
-        private void RemoveSafetyBubbleDebris()
-        {
-            if (!HighLogic.LoadedSceneIsFlight) return;
-
-            DebrisInSafetyBubbleToRemove.Clear();
-            DebrisInSafetyBubbleToRemove.AddRange(FlightGlobals.Vessels.Where(v => v != null && v.state == Vessel.State.INACTIVE && v.vesselType != VesselType.Flag &&
-                                                                                   v.id != FlightGlobals.ActiveVessel?.id && VesselCommon.IsInSafetyBubble(v)));
-            foreach (var vessel in DebrisInSafetyBubbleToRemove)
-            {
-                if (vessel == null) continue;
-
-                LunaLog.Log($"[LMP]: Vessel {vessel.id} name {vessel.vesselName} it's an inactive vessel inside the safety bubble.");
-                KillVessel(vessel.id);
-            }
-        }
 
         /// <summary>
         /// Flush vessels older than 20 seconds

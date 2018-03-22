@@ -19,6 +19,7 @@
         Admin = 15,
         Groups = 16,
         Facility = 17,
-        ShareProgress = 18
+        Screenshot = 18,
+        ShareProgress = 19,
     }
 }

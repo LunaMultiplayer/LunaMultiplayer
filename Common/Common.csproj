@@ -36,9 +36,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\External\KSPLibraries\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -65,6 +62,10 @@
     <Compile Include="Message\Base\StringUtil.cs" />
     <Compile Include="Message\Base\GuidUtil.cs" />
     <Compile Include="Message\Client\ShareProgressCliMsg.cs" />
+    <Compile Include="Message\Client\ScreenshotCliMsg.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftInfo.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftBasicInfo.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryDeleteRequestMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Message\Data\Groups\Group.cs" />
@@ -109,30 +110,19 @@
     <Compile Include="Message\Data\Admin\AdminListReplyMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminListRequestMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminRemoveMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatBaseMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatChannelMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatConsoleMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatJoinMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatLeaveMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatListMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatListRequestMsgData.cs" />
-    <Compile Include="Message\Data\Chat\ChatPrivateMsgData.cs" />
-    <Compile Include="Message\Data\Chat\PlayerChatChannels.cs" />
+    <Compile Include="Message\Data\Chat\ChatMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColor.cs" />
     <Compile Include="Message\Data\Color\PlayerColorBaseMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorReplyMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorRequestMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorSetMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryAddMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryDownloadRequestMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryBaseMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryDeleteMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryListReplyMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryListRequestMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryRequestMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryRespondMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryUploadMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftListInfo.cs" />
-    <Compile Include="Message\Data\CraftLibrary\PlayerCrafts.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryFoldersRequestMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryFoldersReplyMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryDataMsgData.cs" />
     <Compile Include="Message\Data\Facility\FacilityBaseMsgData.cs" />
     <Compile Include="Message\Data\Facility\FacilityCollapseMsgData.cs" />
     <Compile Include="Message\Data\Facility\FacilityRepairMsgData.cs" />
@@ -186,6 +176,14 @@
     <Compile Include="Message\Data\Scenario\ScenarioBaseMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioDataMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioRequestMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotInfo.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotBaseMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotDownloadRequestMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotFoldersReplyMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotFoldersRequestMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotListReplyMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotDataMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotListRequestMsgData.cs" />
     <Compile Include="Message\Data\Settings\SetingsReplyMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
@@ -241,14 +239,15 @@
     <Compile Include="Message\Server\PlayerColorSrvMsg.cs" />
     <Compile Include="Message\Server\PlayerConnectionSrvMsg.cs" />
     <Compile Include="Message\Server\PlayerStatusSrvMsg.cs" />
+    <Compile Include="Message\Server\ScreenshotSrvMsg.cs" />
     <Compile Include="Message\Server\ScenarioSrvMsg.cs" />
     <Compile Include="Message\Server\SetingsSrvMsg.cs" />
     <Compile Include="Message\Server\ShareProgressSrvMsg.cs" />
     <Compile Include="Message\Server\VesselSrvMsg.cs" />
     <Compile Include="Message\Server\WarpSrvMsg.cs" />
     <Compile Include="Message\Types\AdminMessageType.cs" />
-    <Compile Include="Message\Types\ChatMessageType.cs" />
     <Compile Include="Message\Types\CraftMessageType.cs" />
+    <Compile Include="Message\Types\ScreenshotMessageType.cs" />
     <Compile Include="Message\Types\FacilityMessageType.cs" />
     <Compile Include="Message\Types\FlagMessageType.cs" />
     <Compile Include="Message\Types\GroupMessageType.cs" />
@@ -304,9 +303,7 @@
       <Name>System.Threading</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Groups\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="ModFile\XML\LMPModControl.xml" />
   </ItemGroup>

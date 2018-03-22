@@ -28,37 +28,37 @@ namespace LunaClient.Systems.ShareProgress
         public bool IncomingTechnologyProcessing;
         public bool IncomingContractsProcessing;
 
-        private int defaultContractGenerateIterations;
+        private int _defaultContractGenerateIterations;
         
-        private double savedFunds;
-        private float savedScience;
-        private float savedReputation;
+        private double _savedFunds;
+        private float _savedScience;
+        private float _savedReputation;
 
         #region UnityMethods
         protected override void OnEnabled()
         {
             base.OnEnabled();
 
-            this.IncomingFundsProcessing = false;
-            this.IncomingScienceProcessing = false;
-            this.IncomingReputationProcessing = false;
-            this.IncomingTechnologyProcessing = false;
-            this.IncomingContractsProcessing = false;
-            this.defaultContractGenerateIterations = ContractSystem.generateContractIterations;
-            this.savedFunds = 0;
-            this.savedScience = 0;
-            this.savedReputation = 0;
+            IncomingFundsProcessing = false;
+            IncomingScienceProcessing = false;
+            IncomingReputationProcessing = false;
+            IncomingTechnologyProcessing = false;
+            IncomingContractsProcessing = false;
+            _defaultContractGenerateIterations = ContractSystem.generateContractIterations;
+            _savedFunds = 0;
+            _savedScience = 0;
+            _savedReputation = 0;
 
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
             {
-                this.SubscribeToBasicEvents();
+                SubscribeToBasicEvents();
 
                 if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
                 {
-                    this.TryGetContractLock();
-                    SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, this.TryGetContractLock));
+                    TryGetContractLock();
+                    SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetContractLock));
 
-                    this.SubscribeToContractEvents();
+                    SubscribeToContractEvents();
                 }
             }
         }
@@ -88,12 +88,12 @@ namespace LunaClient.Systems.ShareProgress
         {
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
             {
-                this.savedScience = ResearchAndDevelopment.Instance.Science;
+                _savedScience = ResearchAndDevelopment.Instance.Science;
 
                 if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
                 {
-                    this.savedFunds = Funding.Instance.Funds;
-                    this.savedReputation = Reputation.Instance.reputation;
+                    _savedFunds = Funding.Instance.Funds;
+                    _savedReputation = Reputation.Instance.reputation;
                 }
             }
         }
@@ -105,12 +105,12 @@ namespace LunaClient.Systems.ShareProgress
         {
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
             {
-                ResearchAndDevelopment.Instance.SetScience(this.savedScience, TransactionReasons.None);
+                ResearchAndDevelopment.Instance.SetScience(_savedScience, TransactionReasons.None);
 
                 if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
                 {
-                    Funding.Instance.SetFunds(this.savedFunds, TransactionReasons.None);
-                    Reputation.Instance.SetReputation(this.savedReputation, TransactionReasons.None);
+                    Funding.Instance.SetFunds(_savedFunds, TransactionReasons.None);
+                    Reputation.Instance.SetReputation(_savedReputation, TransactionReasons.None);
                 }
             }
         }
@@ -180,7 +180,7 @@ namespace LunaClient.Systems.ShareProgress
             }
             else
             {
-                ContractSystem.generateContractIterations = this.defaultContractGenerateIterations;
+                ContractSystem.generateContractIterations = _defaultContractGenerateIterations;
                 LunaLog.Log("You have the ContractLock and you will generate contracts.");
             }
         }

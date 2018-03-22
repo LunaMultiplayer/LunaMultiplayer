@@ -15,6 +15,8 @@ using Server.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -82,7 +84,6 @@ namespace Server
                 VesselStoreSystem.LoadExistingVessels();
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
-                ChatSystem.Reset();
 
                 LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
 
@@ -163,12 +164,34 @@ namespace Server
         private static void Exit()
         {
             LunaLog.Normal("Exiting... Please wait until all threads are finished");
-            ServerContext.Shutdown();
+
+            ServerContext.Shutdown("Server is shutting down");
             CancellationTokenSrc.Cancel();
 
             Task.WaitAll(TaskContainer.ToArray());
 
             QuitEvent.Set();
+        }
+
+        /// <summary>
+        /// Runs the restart logic
+        /// </summary>
+        public static void Restart()
+        {
+            //Perform Backups
+            BackupSystem.PerformBackups(CancellationTokenSrc.Token);
+            LunaLog.Normal("Restarting...  Please wait until all threads are finished");
+
+            ServerContext.Shutdown("Server is restarting");
+            CancellationTokenSrc.Cancel();
+
+            Task.WaitAll(TaskContainer.ToArray());
+            QuitEvent.Set();
+
+            //Start new server
+            var serverExePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Server.exe";
+            var newProcLmpServer = new ProcessStartInfo {FileName = serverExePath};
+            Process.Start(newProcLmpServer);
         }
     }
 }

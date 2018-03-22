@@ -27,12 +27,11 @@ namespace LunaClient.Systems.VesselProtoSys
         
         public VesselLoader VesselLoader { get; } = new VesselLoader();
 
-        public bool ProtoSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready &&
+        public bool ProtoSystemReady => ProtoSystemBasicReady && FlightGlobals.ready &&
             HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating;
 
         public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
-            HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null ||
-            HighLogic.LoadedScene == GameScenes.TRACKSTATION;
+            HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
         public VesselProtoEvents VesselProtoEvents { get; } = new VesselProtoEvents();
 
@@ -97,15 +96,13 @@ namespace LunaClient.Systems.VesselProtoSys
 
             if (ModSystem.Singleton.ModControl)
             {
-                var bannedParts = string.Join(Environment.NewLine, ModSystem.Singleton.GetBannedPartsFromVessel(vessel.protoVessel).ToArray());
-
-                if (!string.IsNullOrEmpty(bannedParts))
+                var bannedParts = ModSystem.Singleton.GetBannedPartsFromVessel(vessel.protoVessel).ToArray();
+                if (bannedParts.Any())
                 {
-                    LunaLog.LogError($"Vessel {vessel.id}-{vessel.vesselName} Contains the following banned parts: {bannedParts}");
+                    LunaLog.LogError($"Vessel {vessel.id}-{vessel.vesselName} Contains the following banned parts: {string.Join(", ", bannedParts)}");
                     BannedPartsWindow.Singleton.DisplayBannedPartsDialog(vessel, bannedParts);
+                    return false;
                 }
-
-                return string.IsNullOrEmpty(bannedParts);
             }
 
             return true;
@@ -182,8 +179,8 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
                             continue;
 
-                        //Only load vessels that are in safety bubble on the track station
-                        if (vesselProto.Value.IsInSafetyBubble && HighLogic.LoadedScene != GameScenes.TRACKSTATION)
+                        //Only load vessels that are in safety bubble when not in flight
+                        if (vesselProto.Value.IsInSafetyBubble && HighLogic.LoadedScene == GameScenes.FLIGHT)
                             continue;
 
                         LunaLog.Log($"[LMP]: Loading vessel {vesselProto.Key}");

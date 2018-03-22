@@ -2,19 +2,19 @@
 
 namespace LunaClient.Systems.CraftLibrary
 {
-    public class CraftChangeEntry
+    public class CraftBasicEntry
     {
-        public string PlayerName { get; set; }
+        public string FolderName { get; set; }
         public CraftType CraftType { get; set; }
         public string CraftName { get; set; }
     }
 
-    public class CraftResponseEntry
+    public class CraftEntry
     {
-        public string PlayerName { get; set; }
+        public string FolderName { get; set; }
         public CraftType CraftType { get; set; }
         public string CraftName { get; set; }
-        public byte[] CraftData { get; set; }
         public int CraftNumBytes { get; set; }
+        public byte[] CraftData { get; set; }
     }
 }

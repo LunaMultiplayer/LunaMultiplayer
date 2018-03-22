@@ -5,17 +5,21 @@ namespace LunaClient.Windows.BannedParts
 {
     public partial class BannedPartsWindow
     {
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            GUILayout.Label($"{VesselName} ({VesselId}) {LocalizationContainer.BannedPartsWindowText.Text}", LabelStyle);
+            GUILayout.Label($"{_vesselName} ({_vesselId}) {LocalizationContainer.BannedPartsWindowText.Text}", BoldLabelStyle);
             GUILayout.Space(5);
+
+            GUILayout.BeginVertical(BoxStyle);
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
-            GUILayout.Label(BannedParts, LabelStyle);
+            foreach (var bannedPart in _bannedParts)
+            {
+                GUILayout.Label(bannedPart, LabelStyle);
+            }
             GUILayout.EndScrollView();
-            if (GUILayout.Button(LocalizationContainer.BannedPartsWindowText.Close, ButtonStyle))
-                Display = false;
+            GUILayout.EndVertical();
             GUILayout.EndVertical();
         }
     }

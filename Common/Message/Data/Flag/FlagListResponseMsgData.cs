@@ -30,6 +30,10 @@ namespace LunaCommon.Message.Data.Flag
             base.InternalDeserialize(lidgrenMsg);
 
             FlagCount = lidgrenMsg.ReadInt32();
+
+            if (FlagFiles.Length < FlagCount)
+                FlagFiles = new FlagInfo[FlagCount];
+
             for (var i = 0; i < FlagCount; i++)
             {
                 if(FlagFiles[i] == null)

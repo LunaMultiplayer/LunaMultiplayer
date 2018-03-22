@@ -13,6 +13,7 @@ using LunaClient.Systems.Motd;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
+using LunaClient.Systems.Screenshot;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.ShareProgress;
 using LunaClient.Systems.Status;
@@ -206,6 +207,9 @@ namespace LunaClient.Network
                     break;
                 case ServerMessageType.ShareProgress:
                     ShareProgressSystem.Singleton.EnqueueMessage(msg);
+                    break;
+                case ServerMessageType.Screenshot:
+                    ScreenshotSystem.Singleton.EnqueueMessage(msg);
                     break;
                 default:
                     LunaLog.LogError($"[LMP]: Unhandled Message type {msg.MessageType}");

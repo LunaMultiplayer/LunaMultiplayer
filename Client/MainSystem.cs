@@ -1,4 +1,5 @@
-using CommNet;
+﻿using CommNet;
+using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.ModuleStore;
 using LunaClient.Network;
@@ -10,12 +11,9 @@ using LunaClient.Systems.ModApi;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.Status;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaClient.Windows;
-using LunaClient.Windows.Connection;
-using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
 using LunaUpdater.Github;
@@ -57,8 +55,7 @@ namespace LunaClient
         public string Status { get; set; }
 
         public const int WindowOffset = 1664147604;
-
-        public bool ShowGui { get; set; } = true;
+        
         public static bool ToolbarShowGui { get; set; } = true;
         public static ServerEntry CommandLineServer { get; set; }
         public bool LmpSaveChecked { get; set; }
@@ -232,15 +229,11 @@ namespace LunaClient
                 return;
             }
 
+            HarmonyPatcher.Awake();
             SetupDirectoriesIfNeeded();
             HandleCommandLineArgs();
 
             LunaLog.Log($"[LMP]: Debug port: {CommonUtil.DebugPort}");
-
-            //Register events needed to bootstrap the windows.
-            GameEvents.onHideUI.Add(() => { ShowGui = false; });
-            GameEvents.onShowUI.Add(() => { ShowGui = true; });
-
             NetworkMain.AwakeNetworkSystem();
 
             ModSystem.Singleton.BuildDllFileList();
@@ -260,22 +253,23 @@ namespace LunaClient
             //Chat window: 6704
             //Debug window: 6705
             //Mod windw: 6706
-            //Craft library window: 6707
-            //Craft upload window: 6708
+            //Craft folder window: 6707
+            //Craft library window: 6708
+            //Craft upload window: 6709
             //Screenshot window: 6710
             //Options window: 6711
             //Converter window: 6712
             //Disclaimer window: 6713
             //Servers window: 6714
-            //Systems window: 6715
-            //Locks window: 6716
-            //Server details: 6717
+            //Server details: 6715
+            //Systems window: 6716
+            //Locks window: 6717
             //Banned parts: 6718
+            //Screenshot folder: 6719
+            //Screenshot library: 6720
+            //Screenshot image: 6721
 
-            if (ShowGui && (ToolbarShowGui || HighLogic.LoadedScene == GameScenes.MAINMENU))
-            {
-                WindowsHandler.OnGui();
-            }
+            WindowsHandler.OnGui();
         }
 
         public void OnExit()
@@ -307,6 +301,13 @@ namespace LunaClient
             NetworkState = ClientState.Disconnected;
         }
 
+        public void DisconnectFromGame()
+        {
+            ForceQuit = true;
+            NetworkConnection.Disconnect("Quit");
+            ScenarioSystem.Singleton.SendScenarioModules();
+        }
+
         #endregion
 
         #region Private methods
@@ -316,72 +317,15 @@ namespace LunaClient
             HighLogic.SaveFolder = "LunaMultiplayer";
             if (HighLogic.LoadedScene != GameScenes.MAINMENU)
                 HighLogic.LoadScene(GameScenes.MAINMENU);
-            //HighLogic.CurrentGame = null; This is no bueno
             BodiesGees.Clear();
         }
 
-        private void HandleWindowEvents()
+        private static void HandleWindowEvents()
         {
-            if (!StatusWindow.Singleton.DisconnectEventHandled)
-            {
-                StatusWindow.Singleton.DisconnectEventHandled = true;
-                ForceQuit = true;
-                NetworkConnection.Disconnect("Quit");
-                ScenarioSystem.Singleton.SendScenarioModules(); // Send scenario modules before disconnecting
-            }
-            if (!ConnectionWindow.RenameEventHandled)
-            {
-                StatusSystem.Singleton.MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
-                ConnectionWindow.RenameEventHandled = true;
-                SettingsSystem.SaveSettings();
-            }
-            if (!ConnectionWindow.AddEventHandled)
-            {
-                SettingsSystem.CurrentSettings.Servers.Add(ConnectionWindow.AddEntry);
-                ConnectionWindow.AddEntry = null;
-                ConnectionWindow.AddingServer = false;
-                ConnectionWindow.AddEventHandled = true;
-                SettingsSystem.SaveSettings();
-            }
-            if (!ConnectionWindow.EditEventHandled)
-            {
-                SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Name = ConnectionWindow.EditEntry.Name;
-                SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Address = ConnectionWindow.EditEntry.Address;
-                SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Port = ConnectionWindow.EditEntry.Port;
-                SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Password = ConnectionWindow.EditEntry.Password;
-                ConnectionWindow.EditEntry = null;
-                ConnectionWindow.AddingServer = false;
-                ConnectionWindow.EditEventHandled = true;
-                SettingsSystem.SaveSettings();
-            }
-            if (!ConnectionWindow.RemoveEventHandled)
-            {
-                SettingsSystem.CurrentSettings.Servers.RemoveAt(ConnectionWindow.Selected);
-                ConnectionWindow.Selected = -1;
-                ConnectionWindow.RemoveEventHandled = true;
-                SettingsSystem.SaveSettings();
-            }
-            if (!ConnectionWindow.ConnectEventHandled)
-            {
-                ConnectionWindow.ConnectEventHandled = true;
-                NetworkConnection.ConnectToServer(
-                    SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Address,
-                    SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Port,
-                    SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Password);
-            }
-            if (CommandLineServer != null && HighLogic.LoadedScene == GameScenes.MAINMENU &&
-                Time.timeSinceLevelLoad > 1f)
+            if (CommandLineServer != null && HighLogic.LoadedScene == GameScenes.MAINMENU && Time.timeSinceLevelLoad > 1f)
             {
                 NetworkConnection.ConnectToServer(CommandLineServer.Address, CommandLineServer.Port, CommandLineServer.Password);
                 CommandLineServer = null;
-            }
-
-            if (!ConnectionWindow.DisconnectEventHandled)
-            {
-                ConnectionWindow.DisconnectEventHandled = true;
-                NetworkConnection.Disconnect(NetworkState <= ClientState.Starting
-                    ? "Cancelled connection to server"
-                    : "Quit");
             }
         }
 
@@ -496,7 +440,7 @@ namespace LunaClient
                             address = address.Substring("lmp://".Length)
                                 .Substring(0, address.LastIndexOf(":", StringComparison.Ordinal));
                             var portString = address.Substring(address.LastIndexOf(":", StringComparison.Ordinal) + 1);
-                            valid = Int32.TryParse(portString, out port);
+                            valid = int.TryParse(portString, out port);
                         }
                         else
                         {

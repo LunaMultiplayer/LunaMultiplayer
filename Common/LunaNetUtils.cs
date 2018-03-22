@@ -43,7 +43,7 @@ namespace LunaCommon
             var ni = GetNetworkInterface();
             if (ni == null)
             {
-                return null;
+                return IPAddress.Loopback;
             }
 
             var properties = ni.GetIPProperties();
@@ -55,7 +55,7 @@ namespace LunaCommon
                 }
             }
             
-            return null;
+            return IPAddress.Loopback;
         }
     }
 }

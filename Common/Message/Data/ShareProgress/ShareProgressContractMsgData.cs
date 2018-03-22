@@ -1,5 +1,4 @@
-﻿using Contracts;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Generic;
@@ -43,7 +42,7 @@ namespace LunaCommon.Message.Data.ShareProgress
                 Contracts = new ContractInfo[ContractCount];
             
             
-            for (int i = 0; i < ContractCount; i++)
+            for (var i = 0; i < ContractCount; i++)
             {
                 if (Contracts[i] == null)
                     Contracts[i] = new ContractInfo();

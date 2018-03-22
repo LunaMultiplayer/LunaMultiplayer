@@ -45,6 +45,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
@@ -72,6 +73,8 @@
     <Compile Include="Command\Command\Base\HandledCommand.cs" />
     <Compile Include="Command\Command\Base\SimpleCommand.cs" />
     <Compile Include="Command\Command\Base\WhitelistCommandBase.cs" />
+    <Compile Include="Command\Command\ChangeSettingsCommand.cs" />
+    <Compile Include="Command\Command\RestartServerCommand.cs" />
     <Compile Include="Command\Command\ConnectionStatsCommand.cs" />
     <Compile Include="Command\Command\CountClientsCommand.cs" />
     <Compile Include="Command\Command\DekesslerCommand.cs" />
@@ -80,7 +83,6 @@
     <Compile Include="Command\Command\ListClientsCommand.cs" />
     <Compile Include="Command\Command\ClearVesselsCommand.cs" />
     <Compile Include="Command\Command\NukeCommand.cs" />
-    <Compile Include="Command\Command\PmCommand.cs" />
     <Compile Include="Command\Command\SayCommand.cs" />
     <Compile Include="Command\Command\WhitelistAddCommand.cs" />
     <Compile Include="Command\Command\WhitelistRemoveCommand.cs" />
@@ -100,6 +102,7 @@
     <Compile Include="Log\LogThread.cs" />
     <Compile Include="Log\LunaLog.cs" />
     <Compile Include="MainServer.cs" />
+    <Compile Include="Message\Reader\ScreenshotMsgReader.cs" />
     <Compile Include="Message\Reader\FacilityMsgReader.cs" />
     <Compile Include="Message\Reader\AdminMsgReader.cs" />
     <Compile Include="Message\Reader\Base\ReaderBase.cs" />
@@ -143,8 +146,6 @@
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
     <Compile Include="System\AdminSystemSender.cs" />
-    <Compile Include="System\ChatSystem.cs" />
-    <Compile Include="System\ChatSystemReceiver.cs" />
     <Compile Include="System\FileHandler.cs" />
     <Compile Include="System\FlagSystem.cs" />
     <Compile Include="System\GroupSystem.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="System\ModFileSystem.cs" />
     <Compile Include="System\ScenarioSystem.cs" />
     <Compile Include="System\ShareProgressSystem.cs" />
+    <Compile Include="System\ScreenshotSystem.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselDataUpdater.cs" />
     <Compile Include="System\VesselRelay\VesselRelayItem.cs" />
@@ -212,7 +214,7 @@
     <None Include="Resources\Scenario\CommNetScenario.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(OS)' != 'Unix'">
     <PostBuildEvent>del "$(TargetDir)LiteDB.xml"</PostBuildEvent>
   </PropertyGroup>
 </Project>

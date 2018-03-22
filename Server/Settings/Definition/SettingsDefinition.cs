@@ -84,6 +84,24 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Username of the player who control the warp if WarpMode is set to MASTER")]
         public string WarpMaster { get; set; } = "";
 
+        [XmlComment(Value = "Minimum interval between screenshots in milliseconds")]
+        public int MinScreenshotIntervalMs { get; set; } = 30000;
+
+        [XmlComment(Value = "Maximum screenshots kept per user")]
+        public int MaxScreenshotsPerUser { get; set; } = 30;
+
+        [XmlComment(Value = "Maximum screenshots folders kept")]
+        public int MaxScreenshotsFolders { get; set; } = 50;
+        
+        [XmlComment(Value = "Minimum interval between uploading/requesting crafts in milliseconds")]
+        public int MinCraftLibraryRequestIntervalMs { get; set; } = 5000;
+
+        [XmlComment(Value = "Maximum crafts kept per user per type (VAB,SPH and Subassembly)")]
+        public int MaxCraftsPerUser { get; set; } = 10;
+
+        [XmlComment(Value = "Maximum crafts folders kept")]
+        public int MaxCraftFolders { get; set; } = 50;
+
         [XmlComment(Value = "Enable white-listing of users")]
         public bool Whitelisted { get; set; } = false;
 
@@ -92,15 +110,6 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Connection timeout in Ms")]
         public int ConnectionMsTimeout { get; set; } = 30000;
-
-        [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player switch to another vessel.")]
-        public bool DropControlOnVesselSwitching { get; set; } = true;
-
-        [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player switch to track station, space center or VAB/SPH.")]
-        public bool DropControlOnExitFlight { get; set; } = true;
-
-        [XmlComment(Value = "If this is set to true, vessels can be taken by anyone after a player disconnects.")]
-        public bool DropControlOnExit { get; set; } = true;
 
         [XmlComment(Value = "Interval in Ms at wich the client will send updates for his vessel when other players are nearby. " +
                      "Decrease it if your clients have good network connection and you plan to do dogfights")]

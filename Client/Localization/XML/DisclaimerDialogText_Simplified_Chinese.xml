@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <DisclaimerDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Text>Luna multiplayer (LMP)与主服务器以及您连接的任何服务器共享以下个人可识别信息。
+    <Text>
+Luna multiplayer (LMP)与主服务器以及您连接的任何服务器共享以下个人可识别信息。
 a) 您在连接时使用的玩家名称。
 b) 您的玩家令牌 （token） (一个用于认证的随机生成字符串).
 c) 您登录于服务器主机的IP。
@@ -9,9 +10,8 @@ LMP不会与除您要连接的服务器和主服务器以外的任何其他计�
 如需使用LMP, 您必须同意并授权使用以上信息。
 
 更多信息请查看KSP Addon Roles
-</Text>
-  <Title>LunaMultiPlayer - 免责声明</Title>
-  <Accept>同意</Accept>
-  <OpenUrl>KSP Addon rules</OpenUrl>
-  <Decline>拒绝</Decline>
+    </Text>
+    <Title>LunaMultiPlayer - 免责声明</Title>
+    <Accept>同意</Accept>
+    <Decline>拒绝</Decline>
 </DisclaimerDialogText>

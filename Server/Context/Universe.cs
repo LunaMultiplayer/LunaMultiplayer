@@ -34,6 +34,8 @@ namespace Server.Context
                 FileHandler.FolderCreate(ServerContext.UniverseDirectory);
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Crafts")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Crafts"));
+            if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Screenshots")))
+                FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Screenshots"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Flags")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Flags"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Groups")))

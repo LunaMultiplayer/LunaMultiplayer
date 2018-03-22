@@ -60,12 +60,11 @@ namespace LunaCommon.Message.Data.Settings
         public bool PressurePartLimits;
         public float KerbalGToleranceMult;
         public bool AllowNegativeCurrency;
-        public bool DropControlOnVesselSwitching;
-        public bool DropControlOnExit;
-        public bool DropControlOnExitFlight;
         public string WarpMaster;
         public int VesselPartsSyncMsInterval;
         public bool ShowVesselsInThePast;
+        public int MinScreenshotIntervalMs;
+        public int MinCraftLibraryRequestIntervalMs;
 
         public override string ClassName { get; } = nameof(SettingsReplyMsgData);
 
@@ -122,12 +121,11 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(PressurePartLimits);
             lidgrenMsg.Write(KerbalGToleranceMult);
             lidgrenMsg.Write(AllowNegativeCurrency);
-            lidgrenMsg.Write(DropControlOnVesselSwitching);
-            lidgrenMsg.Write(DropControlOnExit);
-            lidgrenMsg.Write(DropControlOnExitFlight);
             lidgrenMsg.Write(WarpMaster);
             lidgrenMsg.Write(VesselPartsSyncMsInterval);
             lidgrenMsg.Write(ShowVesselsInThePast);
+            lidgrenMsg.Write(MinScreenshotIntervalMs);
+            lidgrenMsg.Write(MinCraftLibraryRequestIntervalMs);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -183,18 +181,17 @@ namespace LunaCommon.Message.Data.Settings
             PressurePartLimits = lidgrenMsg.ReadBoolean();
             KerbalGToleranceMult = lidgrenMsg.ReadFloat();
             AllowNegativeCurrency = lidgrenMsg.ReadBoolean();
-            DropControlOnVesselSwitching = lidgrenMsg.ReadBoolean();
-            DropControlOnExit = lidgrenMsg.ReadBoolean();
-            DropControlOnExitFlight = lidgrenMsg.ReadBoolean();
             WarpMaster = lidgrenMsg.ReadString();
             VesselPartsSyncMsInterval = lidgrenMsg.ReadInt32();
             ShowVesselsInThePast = lidgrenMsg.ReadBoolean();
+            MinScreenshotIntervalMs = lidgrenMsg.ReadInt32();
+            MinCraftLibraryRequestIntervalMs = lidgrenMsg.ReadInt32();
         }
 
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) + 
-                sizeof(bool) * 25 + sizeof(int) * 4 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
+                sizeof(bool) * 22 + sizeof(int) * 6 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
         }
     }
 }

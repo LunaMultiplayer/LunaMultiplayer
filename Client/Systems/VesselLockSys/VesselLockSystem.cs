@@ -2,7 +2,6 @@
 using LunaClient.Localization;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Generic;
@@ -19,6 +18,9 @@ namespace LunaClient.Systems.VesselLockSys
         #region Fields & properties
 
         public const string SpectateLock = "LMP_Spectating";
+        public const ControlTypes BlockAllControls = ControlTypes.ALLBUTCAMERAS ^ ControlTypes.MAP ^ ControlTypes.PAUSE ^
+                                                     ControlTypes.APPLAUNCHER_BUTTONS ^ ControlTypes.VESSEL_SWITCHING ^ ControlTypes.GUI;
+
         private ScreenMessage _spectateMessage;
 
         private string GetVesselOwner => VesselCommon.IsSpectating ?
@@ -168,20 +170,10 @@ namespace LunaClient.Systems.VesselLockSys
 
         #region Public methods
 
-        /// <summary>
-        /// Drop the control locks of other vessels except the active
-        /// </summary>
-        public void DropAllOtherVesselControlLocks()
-        {
-            var activeVesselId = FlightGlobals.ActiveVessel?.id;
-            if (activeVesselId.HasValue)
-                LockSystem.Singleton.ReleaseControlLocksExcept(activeVesselId.Value);
-        }
-
         public void StartSpectating(Guid spectatingVesselId)
         {
             //Lock all vessel controls
-            InputLockManager.SetControlLock(LmpGuiUtil.BlockAllControls, SpectateLock);
+            InputLockManager.SetControlLock(BlockAllControls, SpectateLock);
 
             var currentSpectatorLock = LockSystem.LockQuery.GetSpectatorLock(SettingsSystem.CurrentSettings.PlayerName);
             if (FlightGlobals.ActiveVessel != null && currentSpectatorLock == null)

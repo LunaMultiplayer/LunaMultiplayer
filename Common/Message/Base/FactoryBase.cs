@@ -2,11 +2,51 @@
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 
 namespace LunaCommon.Message.Base
 {
     public abstract class FactoryBase
     {
+        /// <summary>
+        /// This dictionary contain all the messages that this factory handle
+        /// </summary>
+        private readonly Dictionary<uint, Type> _messageDictionary = new Dictionary<uint, Type>();
+
+        /// <summary>
+        /// In the constructor we run through this instance and get all the message that inherit BaseMsgType and add them to the dictionary
+        /// </summary>
+        protected FactoryBase()
+        {
+            var msgTypes = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(t => t.IsClass && t.BaseType != null && t.BaseType.IsGenericType && t.BaseType.GetGenericTypeDefinition() == BaseMsgType).ToArray();
+
+            foreach (var msgType in msgTypes)
+            {
+                var constructor = msgType.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, Type.EmptyTypes, null);
+                if (constructor == null)
+                {
+                    throw new Exception($"Message type {msgType.FullName} must have an internal parameter-less constructor");
+                }
+
+                var instance = constructor.Invoke(null);
+                var typeProp = msgType.GetProperty("MessageType", BindingFlags.Public | BindingFlags.Instance);
+                if (typeProp == null)
+                {
+                    throw new Exception($"Message type {msgType.FullName} must implement the MessageType property (uint)");
+                }
+
+                var typeVal = typeProp.GetValue(instance, null);
+                _messageDictionary.Add((uint)(int)typeVal, msgType);
+            }
+        }
+
+        /// <summary>
+        /// Specify here the base type of the messages that this factory handle
+        /// </summary>
+        protected internal abstract Type BaseMsgType { get; }
+
         /// <summary>
         /// Call this method to deserialize a message
         /// </summary>
@@ -40,12 +80,7 @@ namespace LunaCommon.Message.Base
         /// <summary>
         /// Specify if this factory handle client or server messages
         /// </summary>
-        protected abstract Type HandledMessageTypes { get; }
-
-        /// <summary>
-        ///     Include here all the client/server messages so they can be handled
-        /// </summary>
-        protected Dictionary<uint, Type> MessageDictionary { get; } = new Dictionary<uint, Type>();
+        protected internal abstract Type HandledMessageTypes { get; }
 
         /// <summary>
         /// Method to retrieve a new message
@@ -92,9 +127,9 @@ namespace LunaCommon.Message.Base
         /// <param name="messageType">Message type</param>
         private IMessageBase GetMessageByType(ushort messageType)
         {
-            if (Enum.IsDefined(HandledMessageTypes, (int)messageType) && MessageDictionary.ContainsKey(messageType))
+            if (Enum.IsDefined(HandledMessageTypes, (int)messageType) && _messageDictionary.ContainsKey(messageType))
             {
-                var msg = MessageStore.GetMessage(MessageDictionary[messageType]);
+                var msg = MessageStore.GetMessage(_messageDictionary[messageType]);
                 return msg;
             }
             throw new Exception("Cannot deserialize this type of message!");

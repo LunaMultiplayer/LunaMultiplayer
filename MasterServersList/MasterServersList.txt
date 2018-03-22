@@ -1,16 +1,18 @@
 #Here you specify the ips or hostnames of all the master servers followed by ":" and the port. 
 #Then each client will query them for the servers and each server will register against them
-#Dagger server
+#Dagger server. Get port: 8701
 dagger.ole32.com:8700
-#Dagger nightly server
+#Dagger nightly server. Get port: 8751
 dagger.ole32.com:8750
-#Robin server
+#Robin server. Get port: 8701
 lunamultiplayer.com:8700
-#The Hellbox server
+#The Hellbox server. Get port: 8701
 185.5.251.218:8700
-#PictoCube Server
+#PictoCube (Alfred) server. Get port: 8701
 37.187.108.37:8700
-#Zarlo's server
+#PictoCube (Alfred) nightly server. Get port: 8711
+37.187.108.37:8710
+#Zarlo's server. Get port: 8701
 ms.lmp.pksky.xyz:8700
-#Spazer server
+#Spazer server. Get port: 8701
 kerbalspace.spazer.net:8700

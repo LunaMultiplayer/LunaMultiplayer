@@ -519,7 +519,7 @@ namespace Server.System
             var fieldNode = document.SelectSingleNode(xpath);
             if (fieldNode != null) fieldNode.InnerText = "st_flight_deployed";
 
-            var moduleNode = document.SelectSingleNode(module);
+            var moduleNode = fieldNode.ParentNode;
             var fairingsSections = document.SelectNodes($"{module}/XSECTION");
             if (moduleNode != null && fairingsSections != null)
             {

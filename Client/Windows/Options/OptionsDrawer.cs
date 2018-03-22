@@ -4,7 +4,6 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.Status;
-using LunaClient.Windows.UniverseConverter;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
@@ -15,15 +14,10 @@ namespace LunaClient.Windows.Options
 {
     public partial class OptionsWindow
     {
-        public void DrawContent(int windowId)
+        public override void DrawWindowContent(int windowId)
         {
-            if (!LoadEventHandled)
-            {
-                LoadEventHandled = true;
-                TempColor = SettingsSystem.CurrentSettings.PlayerColor;
-            }
             //Player color
-            GUILayout.BeginVertical();
+            GUILayout.BeginVertical(BoxStyle);
             GUI.DragWindow(MoveRect);
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Language);
@@ -36,69 +30,39 @@ namespace LunaClient.Windows.Options
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.OptionsWindowText.Color);
-            GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, TempColorLabelStyle);
+            GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName, _tempColorLabelStyle);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.OptionsWindowText.Red, SmallOption);
-            TempColor.r = GUILayout.HorizontalScrollbar(TempColor.r, 0, 0, 1);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Red, _smallOption);
+            _tempColor.r = GUILayout.HorizontalScrollbar(_tempColor.r, 0, 0, 1);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.OptionsWindowText.Green, SmallOption);
-            TempColor.g = GUILayout.HorizontalScrollbar(TempColor.g, 0, 0, 1);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Green, _smallOption);
+            _tempColor.g = GUILayout.HorizontalScrollbar(_tempColor.g, 0, 0, 1);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.OptionsWindowText.Blue, SmallOption);
-            TempColor.b = GUILayout.HorizontalScrollbar(TempColor.b, 0, 0, 1);
+            GUILayout.Label(LocalizationContainer.OptionsWindowText.Blue, _smallOption);
+            _tempColor.b = GUILayout.HorizontalScrollbar(_tempColor.b, 0, 0, 1);
             GUILayout.EndHorizontal();
-            TempColorLabelStyle.active.textColor = TempColor;
-            TempColorLabelStyle.normal.textColor = TempColor;
+            _tempColorLabelStyle.active.textColor = _tempColor;
+            _tempColorLabelStyle.normal.textColor = _tempColor;
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Random, ButtonStyle))
-                TempColor = PlayerColorSystem.GenerateRandomColor();
+                _tempColor = PlayerColorSystem.GenerateRandomColor();
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Set, ButtonStyle))
             {
                 StatusWindow.Singleton.ColorEventHandled = false;
-                SettingsSystem.CurrentSettings.PlayerColor = TempColor;
+                SettingsSystem.CurrentSettings.PlayerColor = _tempColor;
                 SettingsSystem.SaveSettings();
                 if (MainSystem.NetworkState == ClientState.Running)
                     PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
             }
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
-            //Key bindings
-            var chatDescription = $"{LocalizationContainer.OptionsWindowText.SetChatKey} {SettingsSystem.CurrentSettings.ChatKey}";
-            if (SettingChat)
-            {
-                chatDescription = LocalizationContainer.OptionsWindowText.SettingChatKey;
-                if (Event.current.isKey)
-                    if (Event.current.keyCode != KeyCode.Escape)
-                    {
-                        SettingsSystem.CurrentSettings.ChatKey = Event.current.keyCode;
-                        SettingsSystem.SaveSettings();
-                        SettingChat = false;
-                    }
-                    else
-                    {
-                        SettingChat = false;
-                    }
-            }
-            if (GUILayout.Button(chatDescription))
-                SettingChat = !SettingChat;
-            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.ResetDisclaimer))
-            {
-                SettingsSystem.CurrentSettings.DisclaimerAccepted = false;
-                SettingsSystem.SaveSettings();
-            }
             var settingInterpolation = GUILayout.Toggle(SettingsSystem.CurrentSettings.InterpolationEnabled, LocalizationContainer.OptionsWindowText.Interpolation, ButtonStyle);
             if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
             {
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
-                SettingsSystem.SaveSettings();
-            }
-            var preciseSurfacePositioning = GUILayout.Toggle(SettingsSystem.CurrentSettings.PreciseSurfacePositioning, LocalizationContainer.OptionsWindowText.PreciseSurfacePositioning, ButtonStyle);
-            if (preciseSurfacePositioning != SettingsSystem.CurrentSettings.PreciseSurfacePositioning)
-            {
-                SettingsSystem.CurrentSettings.PreciseSurfacePositioning = preciseSurfacePositioning;
                 SettingsSystem.SaveSettings();
             }
             GUILayout.Space(10);
@@ -106,14 +70,12 @@ namespace LunaClient.Windows.Options
                 ModSystem.Singleton.GenerateModControlFile(false);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl + " + SHA"))
                 ModSystem.Singleton.GenerateModControlFile(true);
-            UniverseConverterWindow.Singleton.Display = GUILayout.Toggle(UniverseConverterWindow.Singleton.Display, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
+            _displayUniverseConverterDialog = GUILayout.Toggle(_displayUniverseConverterDialog, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
 #if DEBUG
             DrawAdvancedDebugOptions();
 #endif
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button(LocalizationContainer.OptionsWindowText.Close, ButtonStyle))
-                Display = false;
             GUILayout.EndVertical();
         }
 
@@ -123,8 +85,8 @@ namespace LunaClient.Windows.Options
                 ModSystem.Singleton.CheckCommonStockParts();
             GUILayout.Space(10);
 
-            ShowAdvancedNetworkFields = GUILayout.Toggle(ShowAdvancedNetworkFields, "Advanced network fields", ButtonStyle);
-            if (ShowAdvancedNetworkFields)
+            _showAdvancedNetworkFields = GUILayout.Toggle(_showAdvancedNetworkFields, "Advanced network fields", ButtonStyle);
+            if (_showAdvancedNetworkFields)
             {
                 if (MainSystem.NetworkState > ClientState.Disconnected)
                 {
@@ -132,15 +94,15 @@ namespace LunaClient.Windows.Options
                 }
 
                 GUILayout.Label($"MTU: {NetworkMain.Config.MaximumTransmissionUnit}");
-                GUILayout.Label(InfiniteTimeout
+                GUILayout.Label(_infiniteTimeout
                     ? "Timeout: Infinite"
                     : $"Timeout: {NetworkMain.Config.ConnectionTimeout}s. Minimum: {NetworkMain.Config.PingInterval}s");
 
                 GUILayout.BeginHorizontal();
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
-                    InfiniteTimeout = GUILayout.Toggle(InfiniteTimeout, "Infinite", "toggle");
-                    if (!InfiniteTimeout)
+                    _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "Infinite", "toggle");
+                    if (!_infiniteTimeout)
                     {
                         if (NetworkMain.Config.ConnectionTimeout >= float.MaxValue - 1)
                             NetworkMain.Config.ConnectionTimeout = 15;
@@ -160,8 +122,8 @@ namespace LunaClient.Windows.Options
                 GUILayout.EndHorizontal();
             }
 
-            ShowBadNetworkSimulationFields = GUILayout.Toggle(ShowBadNetworkSimulationFields, "Bad network simulation", ButtonStyle);
-            if (ShowBadNetworkSimulationFields)
+            _showBadNetworkSimulationFields = GUILayout.Toggle(_showBadNetworkSimulationFields, "Bad network simulation", ButtonStyle);
+            if (_showBadNetworkSimulationFields)
             {
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
@@ -192,5 +154,24 @@ namespace LunaClient.Windows.Options
                     NetworkMain.Config.SimulatedMinimumLatency = (float)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.SimulatedMinimumLatency, 0, 0, 3), 4);
             }
         }
+
+        #region UniverseConverter
+
+        private void DrawUniverseConverterDialog(int windowId)
+        {            
+            //Always draw close button first
+            DrawCloseButton(() => _displayUniverseConverterDialog = false, _universeConverterWindowRect);
+
+            GUILayout.BeginVertical();
+            GUI.DragWindow(MoveRect);
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
+            foreach (var saveFolder in Utilities.UniverseConverter.GetSavedNames())
+                if (GUILayout.Button(saveFolder))
+                    Utilities.UniverseConverter.GenerateUniverse(saveFolder);
+            GUILayout.EndScrollView();
+            GUILayout.EndVertical();
+        }
+
+        #endregion
     }
 }

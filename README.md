@@ -11,8 +11,8 @@
 
 <p align="center">
   <a href="../../releases"><img src="https://img.shields.io/github/release/lunamultiplayer/lunamultiplayer.svg" alt="Latest release" /></a>
-  <a href="../../releases"><img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" />
-  <a href="../../"><img src="https://img.shields.io/github/search/lunamultiplayer/lunamultiplayer/goto.svg" alt="Total hits" />
+  <a href="../../releases"><img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" /></a>
+  <a href="../../"><img src="https://img.shields.io/github/search/lunamultiplayer/lunamultiplayer/goto.svg" alt="Total hits" /></a>
 </p>
 
 ---
@@ -23,8 +23,7 @@
 
 *[Official KSP forum post](https://forum.kerbalspaceprogram.com/index.php?/topic/168271-131-luna-multiplayer-lmp-alpha/)*
 
-*[Official website](http://lunamultiplayer.com)*
-
+*[Latest build updater](https://github.com/LunaMultiplayer/LunaMultiplayerUpdater)*
 
 ### Main features:
 

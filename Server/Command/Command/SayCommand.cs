@@ -14,8 +14,7 @@ namespace Server.Command.Command
         {
             LunaLog.Normal($"Broadcasting {commandArgs}");
 
-            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ChatChannelMsgData>();
-            msgData.SendToAll = true;
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ChatMsgData>();
             msgData.From = GeneralSettings.SettingsStore.ConsoleIdentifier;
             msgData.Text = commandArgs;
 

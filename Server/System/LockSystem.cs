@@ -1,6 +1,5 @@
 using LunaCommon.Locks;
 using Server.Client;
-using Server.Settings;
 using System.Linq;
 
 namespace Server.System
@@ -23,7 +22,7 @@ namespace Server.System
 
             if (force || !LockQuery.LockExists(lockDef))
             {
-                if (GeneralSettings.SettingsStore.DropControlOnVesselSwitching && lockDef.Type == LockType.Control)
+                if (lockDef.Type == LockType.Control)
                 {
                     //If he acquired a control lock he probably switched vessels or smth like that and he can only have 1 control lock.
                     //So remove the other control locks just for safety...
@@ -55,9 +54,6 @@ namespace Server.System
 
             foreach (var lockToRemove in removeList)
             {
-                if (lockToRemove.Type == LockType.Control && !GeneralSettings.SettingsStore.DropControlOnExit)
-                    continue;
-
                 LockSystemSender.ReleaseAndSendLockReleaseMessage(client, lockToRemove);
             }
         }

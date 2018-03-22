@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <DisclaimerDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Text>Luna Multi Player (LMP) gibt folgende persönliche, identifizierbare Informationen an den Masterserver und jeden anderen Server auf dem du verbindest weiter.
+    <Text>
+Luna Multi Player (LMP) gibt folgende persönliche, identifizierbare Informationen an den Masterserver und jeden anderen Server auf dem du verbindest weiter.
 a) Dein Spielername mit dem du verbindest.
 b) Deine Spieleridentifikationsnummer (Eine zufällig generierte Zeichenfolge um dich zu authentifizieren).
 c) Deine IP-Adresse wird auf der Serverkonsole aufgezeichnet.
@@ -9,9 +10,8 @@ LMP kontaktiert keinen anderen Computer als den Server auf welchen du verbindest
 Um LMP nutzen zu können, musst du zustimmen, dass diese Informationen genutzt werden dürfen.
 
 Für weitere Informationen - werfe einen Blick auf die KSP-Erweiterungsregeln
-</Text>
-  <Title>LunaMultiplayer - Ausschlussklaussel</Title>
-  <Accept>Akzeptieren</Accept>
-  <OpenUrl>KSP-Erweiterungsregeln</OpenUrl>
-  <Decline>Ablehnen</Decline>
+    </Text>
+    <Title>LunaMultiplayer - Ausschlussklaussel</Title>
+    <Accept>Akzeptieren</Accept>
+    <Decline>Ablehnen</Decline>
 </DisclaimerDialogText>

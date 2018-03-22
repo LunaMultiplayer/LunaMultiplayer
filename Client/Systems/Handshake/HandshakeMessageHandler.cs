@@ -53,6 +53,7 @@ namespace LunaClient.Systems.Handshake
                 //If we handshook successfully, the mod data will be available to read.
                 if (reply == HandshakeReply.HandshookSuccessfully)
                 {
+                    ModSystem.Singleton.Clear();
                     ModSystem.Singleton.ModControl = data.ModControl;
                     if (ModSystem.Singleton.ModControl)
                         modFileData = data.ModFileData;

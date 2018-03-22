@@ -1,4 +1,5 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
@@ -17,10 +18,6 @@ namespace LunaClient.Systems.Lock
     {
         public static LockStore LockStore { get; } = new LockStore();
         public static LockQuery LockQuery { get; } = new LockQuery(LockStore);
-
-        public List<AcquireEvent> LockAcquireEvents { get; } = new List<AcquireEvent>();
-        public List<ReleaseEvent> LockReleaseEvents { get; } = new List<ReleaseEvent>();
-
         public LockEvents LockEvents { get; } = new LockEvents();
 
         #region Base overrides
@@ -37,91 +34,13 @@ namespace LunaClient.Systems.Lock
         {
             base.OnDisabled();
             LockStore.ClearAllLocks();
-            LockAcquireEvents.Clear();
-            LockReleaseEvents.Clear();
             GameEvents.onGameSceneLoadRequested.Remove(LockEvents.OnSceneRequested);
         }
 
         #endregion
 
         #region Public methods
-
-        #region Hooks
-
-        #region RegisterHook
-
-        public void RegisterAcquireHook(AcquireEvent methodObject)
-        {
-            LockAcquireEvents.Add(methodObject);
-        }
-
-        public void RegisterReleaseHook(ReleaseEvent methodObject)
-        {
-            LockReleaseEvents.Add(methodObject);
-        }
-
-        #endregion
-
-        #region UnregisterHook
-
-        public void UnregisterAcquireHook(AcquireEvent methodObject)
-        {
-            if (LockAcquireEvents.Contains(methodObject))
-                LockAcquireEvents.Remove(methodObject);
-        }
-
-        public void UnregisterReleaseHook(ReleaseEvent methodObject)
-        {
-            if (LockReleaseEvents.Contains(methodObject))
-                LockReleaseEvents.Remove(methodObject);
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Events
-
-        /// <summary>
-        /// This event is triggered when some player acquired a lock
-        /// It then calls all the methods specified in the delegate
-        /// </summary>
-        public void FireAcquireEvent(LockDefinition lockDefinition)
-        {
-            foreach (var methodObject in LockAcquireEvents)
-            {
-                try
-                {
-                    methodObject(lockDefinition);
-                }
-                catch (Exception e)
-                {
-                    LunaLog.LogError($"[LMP]: Error thrown in acquire lock event, exception {e}");
-                }
-            }
-        }
-
-        /// <summary>
-        /// This event is triggered when some player released a lock
-        /// It then calls all the methods specified in the delegate
-        /// </summary>
-        public void FireReleaseEvent(LockDefinition lockDefinition)
-        {
-            foreach (var methodObject in LockReleaseEvents)
-            {
-                try
-                {
-                    methodObject(lockDefinition);
-                }
-                catch (Exception e)
-                {
-                    LunaLog.LogError($"[LMP]: Error thrown in release lock event, exception {e}");
-                }
-            }
-        }
-
-        #endregion
-
+        
         #region AcquireLocks
 
         /// <summary>
@@ -203,7 +122,7 @@ namespace LunaClient.Systems.Lock
             msgData.Lock.CopyFrom(lockDefinition);
 
             LockStore.RemoveLock(lockDefinition);
-            FireReleaseEvent(lockDefinition);
+            LockEvent.onLockRelease.Fire(lockDefinition);
 
             MessageSender.SendMessage(msgData);
         }

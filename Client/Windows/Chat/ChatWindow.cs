@@ -1,73 +1,49 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.Chat;
-using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaCommon.Enums;
-using System.Reflection;
 using UnityEngine;
 
 namespace LunaClient.Windows.Chat
 {
-    public partial class ChatWindow : SystemWindow<ChatWindow, ChatSystem>
+    public partial class ChatWindow : Window<ChatWindow>
     {
         #region Fields
 
         private static bool _display;
         public override bool Display
         {
-            get => _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
-                   HighLogic.LoadedScene >= GameScenes.SPACECENTER;
-            set => _display = value;
+            get => base.Display && _display && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => base.Display = _display = value;
         }
 
-        public string ChatWindowLock { get; set; } = "LMP_Chat_Window_Lock";
-        public bool IgnoreChatInput { get; set; }
-        public float WindowHeight { get; set; } = 300;
-        public float WindowWidth { get; set; } = 400;
-        protected int PreviousTextId { get; set; } = 0;
-
-        #region Layout
-
-        protected static GUILayoutOption[] WindowLayoutOptions { get; set; }
-        protected static GUILayoutOption[] SmallSizeOption { get; set; }
-
-        protected static Vector2 PlayerScrollPos { get; set; }
-        public Vector2 ChatScrollPos;
+        private const string ChatWindowLock = "LMP_Chat_Window_Lock";
+        private const float WindowHeight = 300;
+        private const float WindowWidth = 400;
+        
+        private static Vector2 _chatScrollPos;
 
         #endregion
 
-        #endregion
+        #region Base overrides
+
+        protected override bool Resizable => true;
 
         public override void SetStyles()
         {
             // ReSharper disable once PossibleLossOfFraction
             WindowRect = new Rect(Screen.width / 10, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
-
-            WindowLayoutOptions = new GUILayoutOption[4];
-            WindowLayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
-            WindowLayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
-            WindowLayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
-            WindowLayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
-
-            SmallSizeOption = new GUILayoutOption[1];
-            SmallSizeOption[0] = GUILayout.Width(WindowWidth * .25f);
-
-            WindowStyle = new GUIStyle(GUI.skin.window);
-            ScrollStyle = new GUIStyle(GUI.skin.scrollView);
-
-            ChatScrollPos = new Vector2(0, 0);
-            LabelStyle = new GUIStyle(GUI.skin.label);
-            ButtonStyle = new GUIStyle(GUI.skin.button);
+            
+            _chatScrollPos = new Vector2(0, 0);
             HighlightStyle = new GUIStyle(GUI.skin.button)
             {
                 normal = { textColor = Color.red },
                 active = { textColor = Color.red },
                 hover = { textColor = Color.red }
             };
-            TextAreaStyle = new GUIStyle(GUI.skin.textArea);
         }
-
+        
         public override void RemoveWindowLock()
         {
             if (IsWindowLocked)
@@ -79,50 +55,41 @@ namespace LunaClient.Windows.Chat
 
         public override void Update()
         {
-            var ss = typeof(ChatSystem).GetField("Singleton",BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-            var val = ss?.GetValue(null) as ChatSystem;
-
-            Display &= MainSystem.NetworkState >= ClientState.Running;
-            SafeDisplay = Display;
-            IgnoreChatInput = false;
-            if (System.ChatButtonHighlighted && Display)
-                System.ChatButtonHighlighted = false;
-            if (System.ChatLocked && !Display)
+            base.Update();
+            if (Display)
             {
-                System.ChatLocked = false;
-                InputLockManager.RemoveControlLock(System.LmpChatLock);
+                if (ChatSystem.Singleton.NewMessageReceived)
+                    ChatSystem.Singleton.NewMessageReceived = false;
             }
         }
 
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
+            if (Display)
             {
-                var pressedChatShortcutKey = Event.current.type == EventType.KeyDown &&
-                                             Event.current.keyCode == SettingsSystem.CurrentSettings.ChatKey;
-                if (pressedChatShortcutKey)
-                {
-                    IgnoreChatInput = true;
-                    System.SelectTextBox = true;
-                }
-                WindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiplayer Chat", WindowStyle, WindowLayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6704 + MainSystem.WindowOffset, WindowRect, DrawContent, 
+                    LocalizationContainer.ChatWindowText.Title, WindowStyle));
             }
             CheckWindowLock();
         }
 
+        #endregion
 
-        public void SizeChanged()
+        #region Public methods
+
+        public void ScrollToBottom()
         {
-            Initialized = false;
-            System.PrintToSelectedChannel($"New window size is: {WindowWidth}x{WindowHeight}");
+            _chatScrollPos.y = float.PositiveInfinity;
         }
+
+        #endregion
+
+        #region Private methods
 
         private void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -144,8 +111,10 @@ namespace LunaClient.Windows.Chat
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
+
+        #endregion
     }
 }

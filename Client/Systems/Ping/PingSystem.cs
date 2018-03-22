@@ -11,16 +11,13 @@ namespace LunaClient.Systems.Ping
         #region Constructor
 
         /// <summary>
-        /// This system must be ALWAYS enabled so we set it as enabled on the constructor
+        /// We setup the routine in the constructor as this system is always enabled
         /// </summary>
-        public PingSystem()
-        {
-            //We setup the routine in the constructor as this system is always enabled
-            SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, PerformPings));
-        }
+        public PingSystem() => SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, PerformPings));
 
         #endregion
 
+        /// <inheritdoc />
         /// <summary>
         /// This system must be ALWAYS enabled!
         /// </summary>
@@ -34,9 +31,7 @@ namespace LunaClient.Systems.Ping
         private static ConcurrentBag<string> PingQueue { get; } = new ConcurrentBag<string>();
 
         #endregion
-
-
-
+        
         #region Public methods
 
         public static void QueuePing(string endpoint)
@@ -75,7 +70,8 @@ namespace LunaClient.Systems.Ping
 
             if (NetworkServerList.Servers.TryGetValue(endpoint, out var server))
             {
-                server.Ping = ping.isDone ? ping.time.ToString() : "∞";
+                server.Ping = ping.isDone ? ping.time : int.MaxValue;
+                server.DisplayedPing = ping.isDone ? ping.time.ToString() : "∞";
             }
         }
 

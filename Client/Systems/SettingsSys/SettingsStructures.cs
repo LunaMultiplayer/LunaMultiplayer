@@ -18,7 +18,6 @@ namespace LunaClient.Systems.SettingsSys
         public int HearbeatMsInterval { get; set; } = 2000;
         public bool DisclaimerAccepted { get; set; } = false;
         public Color PlayerColor { get; set; } = PlayerColorSystem.GenerateRandomColor();
-        public KeyCode ChatKey { get; set; } = KeyCode.BackQuote;
         public string SelectedFlag { get; set; } = "Squad/Flags/default";
         public List<ServerEntry> Servers { get; set; } = new List<ServerEntry>();
         public string PrivateKey { get; set; }
@@ -26,7 +25,6 @@ namespace LunaClient.Systems.SettingsSys
         public int InitialConnectionSyncTimeRequests { get; set; } = 10;
         public bool RevertEnabled { get; set; }
         public bool InterpolationEnabled { get; set; } = false;
-        public bool PreciseSurfacePositioning { get; set; } = false;
         public int MaxGroupsPerPlayer { get; set; } = 1;
 
 #if DEBUG
@@ -54,9 +52,9 @@ namespace LunaClient.Systems.SettingsSys
     [Serializable]
     public class ServerEntry
     {
-        public int Port;
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string Password { get; set; }
+        public int Port { get; set; } = 8800;
+        public string Name { get; set; } = "Local";
+        public string Address { get; set; } = "127.0.0.1";
+        public string Password { get; set; } = string.Empty;
     }
 }

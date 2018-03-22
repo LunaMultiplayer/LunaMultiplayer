@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using UnityEngine.Profiling;
 
 // ReSharper disable ForCanBeConvertedToForeach
@@ -20,13 +19,19 @@ namespace LunaClient.Windows
         public static void FillUpWindowsList()
         {
             var windowsList = new List<IWindow>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+
+            var windows = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && typeof(IWindow).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
+            foreach (var window in windows)
             {
-                var systems = assembly.GetTypes().Where(t => t.IsClass && typeof(IWindow).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
-                foreach (var sys in systems)
+                try
                 {
-                    if (sys.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is IWindow windowImplementation)
+                    if (window.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is IWindow windowImplementation)
                         windowsList.Add(windowImplementation);
+                }
+
+                catch (Exception ex)
+                {
+                    LunaLog.LogError($"Exception loading window type {window.FullName}: {ex.Message}");
                 }
             }
 

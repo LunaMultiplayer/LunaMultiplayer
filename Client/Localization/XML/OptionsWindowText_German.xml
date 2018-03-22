@@ -1,19 +1,14 @@
 <?xml version="1.0"?>
 <OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Language>Sprache:</Language>
-  <Color>Spielerfarbe:</Color>
-  <Red>R:</Red>
-  <Green>G:</Green>
-  <Blue>B:</Blue>
-  <Random>Zufällig</Random>
-  <Set>Festlegen</Set>
-  <SetChatKey>Lege die Taste zum Chatten fest. Momentan:</SetChatKey>
-  <SettingChatKey>Taste zum Chatten wird festgelegt (Klicken um Vorgang abzubrechen)...</SettingChatKey>
-  <ResetDisclaimer>Ausschlussklaussel zurücksetzen</ResetDisclaimer>
-  <Interpolation>Aktiviere Interpolation</Interpolation>
-  <ShowClose>Zeige den "Schließen" Button im Verbindungsfenster an</ShowClose>
-  <GenerateLmpModControl>Generiere die Server LMPModControl.xml-Datei</GenerateLmpModControl>
-  <GenerateUniverse>Generiere das Universum von einem gespeicherten Spielstand</GenerateUniverse>
-  <Toolbar>Werkzeugleiste:</Toolbar>
-  <Close>Schließen</Close>
+    <Title>LunaMultiplayer - Options</Title>
+    <Language>Sprache:</Language>
+    <Color>Spielerfarbe:</Color>
+    <Red>R:</Red>
+    <Green>G:</Green>
+    <Blue>B:</Blue>
+    <Random>Zufällig</Random>
+    <Set>Festlegen</Set>
+    <Interpolation>Aktiviere Interpolation</Interpolation>
+    <GenerateLmpModControl>Generiere die Server LMPModControl.xml-Datei</GenerateLmpModControl>
+    <GenerateUniverse>Generiere das Universum von einem gespeicherten Spielstand</GenerateUniverse>
 </OptionsWindowText>

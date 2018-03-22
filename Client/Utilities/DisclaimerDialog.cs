@@ -24,13 +24,6 @@ namespace LunaClient.Utilities
                                 }
                             ),
                             new DialogGUIFlexibleSpace(),
-                            new DialogGUIButton(LocalizationContainer.DisclaimerDialogText.OpenUrl,
-                                delegate
-                                {
-                                    Application.OpenURL("http://forum.kerbalspaceprogram.com/index.php?/topic/154851-add-on-posting-rules-march-8-2017/");
-                                }
-                                , false),
-                            new DialogGUIFlexibleSpace(),
                             new DialogGUIButton(LocalizationContainer.DisclaimerDialogText.Decline,
                                 delegate
                                 {

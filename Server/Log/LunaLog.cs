@@ -31,7 +31,6 @@ namespace Server.Log
                 if (sendToConsole)
                 {
                     Console.WriteLine(output);
-                    ChatSystem.SendConsoleMessageToAdmins(output);
                 }
 
                 FileHandler.AppendToFile(LogFilename, output + Environment.NewLine);

@@ -1,51 +1,30 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
-using System.Linq;
 
 namespace LunaClient.Systems.CraftLibrary
 {
     public class CraftLibrarySystem : MessageSystem<CraftLibrarySystem, CraftLibraryMessageSender, CraftLibraryMessageHandler>
     {
-        private CraftLibraryEvents CraftLibraryEventHandler { get; } = new CraftLibraryEvents();
+        #region Fields and properties
 
-        #region Fields
+        private static readonly string SaveFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "saves", "LunaMultiplayer");
 
-        //Public
-        public ConcurrentQueue<CraftChangeEntry> CraftAddQueue { get; private set; } = new ConcurrentQueue<CraftChangeEntry>();
-        public ConcurrentQueue<CraftChangeEntry> CraftDeleteQueue { get; private set; } = new ConcurrentQueue<CraftChangeEntry>();
-        public ConcurrentQueue<CraftResponseEntry> CraftResponseQueue { get; private set; } = new ConcurrentQueue<CraftResponseEntry>();
+        private static DateTime _lastRequest = DateTime.MinValue;
 
-        public string SelectedPlayer { get; set; }
-        public List<string> PlayersWithCrafts { get; } = new List<string>();
-        //Player -> Craft type -> Craft Name
-        public Dictionary<string, Dictionary<CraftType, List<string>>> PlayerList { get; } =
-            new Dictionary<string, Dictionary<CraftType, List<string>>>();
+        public ConcurrentDictionary<string, ConcurrentDictionary<string, CraftBasicEntry>> CraftInfo { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<string, CraftBasicEntry>>();
+        public ConcurrentDictionary<string, ConcurrentDictionary<string, CraftEntry>> CraftDownloaded { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<string, CraftEntry>>();
 
-        //Craft type -> Craft Name
-        public Dictionary<CraftType, IEnumerable<string>> UploadList { get; } = new Dictionary<CraftType, IEnumerable<string>>();
+        public List<CraftEntry> OwnCrafts { get; } = new List<CraftEntry>();
 
-        #region Paths
-
-        private static string SavePath { get; } = CommonUtil.CombinePaths(MainSystem.KspPath, "saves", "LunaMultiplayer");
-        public string VabPath { get; } = CommonUtil.CombinePaths(SavePath, "Ships", "VAB");
-        public string SphPath { get; } = CommonUtil.CombinePaths(SavePath, "Ships", "SPH");
-        public string SubassemblyPath { get; } = CommonUtil.CombinePaths(SavePath, "Subassemblies");
-
-        #endregion
-
-        //upload event
-        public CraftType UploadCraftType { get; set; }
-        public string UploadCraftName { get; set; }
-        //download event
-        public CraftType DownloadCraftType { get; set; }
-        public string DownloadCraftName { get; set; }
-        //delete event
-        public CraftType DeleteCraftType { get; set; }
-        public string DeleteCraftName { get; set; }
+        public ConcurrentQueue<string> DownloadedCraftsNotification { get; } = new ConcurrentQueue<string>();
 
         #endregion
 
@@ -58,71 +37,150 @@ namespace LunaClient.Systems.CraftLibrary
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            BuildUploadList();
-            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, HandleCraftLibraryEvents));
+            RefreshOwnCrafts();
+            MessageSender.SendRequestFoldersMsg();
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, NotifyDownloadedCrafts));
+        }
+
+        private void NotifyDownloadedCrafts()
+        {
+            while (DownloadedCraftsNotification.TryDequeue(out var message))
+                ScreenMessages.PostScreenMessage($"({message}) {LocalizationContainer.ScreenText.CraftSaved}", 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            CraftAddQueue = new ConcurrentQueue<CraftChangeEntry>();
-            CraftDeleteQueue = new ConcurrentQueue<CraftChangeEntry>();
-            CraftResponseQueue = new ConcurrentQueue<CraftResponseEntry>();
-            PlayersWithCrafts.Clear();
-            PlayerList.Clear();
-            UploadList.Clear();
-            SelectedPlayer = "";
-            UploadCraftType = CraftType.Vab;
-            UploadCraftName = "";
-            DownloadCraftType = CraftType.Vab;
-            DownloadCraftName = "";
-            DeleteCraftType = CraftType.Vab;
-            DeleteCraftName = "";
-        }
-
-        #endregion
-
-        #region Update methods
-
-        private void HandleCraftLibraryEvents()
-        {
-            if (Enabled)
-            {
-                CraftLibraryEventHandler.HandleCraftLibraryEvents();
-            }
+            CraftInfo.Clear();
+            CraftDownloaded.Clear();
         }
 
         #endregion
 
         #region Public methods
 
-        public void BuildUploadList()
+        /// <summary>
+        /// Refreshes the list of our own crafts
+        /// </summary>
+        public void RefreshOwnCrafts()
         {
-            UploadList.Clear();
-            if (Directory.Exists(VabPath))
-                UploadList.Add(CraftType.Vab,
-                    Directory.GetFiles(VabPath).Select(Path.GetFileNameWithoutExtension));
-            if (Directory.Exists(SphPath))
-                UploadList.Add(CraftType.Sph,
-                    Directory.GetFiles(SphPath).Select(Path.GetFileNameWithoutExtension));
-            if (Directory.Exists(VabPath))
-                UploadList.Add(CraftType.Subassembly,
-                    Directory.GetFiles(SubassemblyPath).Select(Path.GetFileNameWithoutExtension));
+            var vabFolder = CommonUtil.CombinePaths(SaveFolder, "Ships", "VAB");
+            if (Directory.Exists(vabFolder))
+            {
+                foreach (var file in Directory.GetFiles(vabFolder))
+                {
+                    var data = File.ReadAllBytes(file);
+                    OwnCrafts.Add(new CraftEntry
+                    {
+                        CraftName = Path.GetFileNameWithoutExtension(file),
+                        CraftType = CraftType.Vab,
+                        FolderName = SettingsSystem.CurrentSettings.PlayerName,
+                        CraftData = data,
+                        CraftNumBytes = data.Length
+                    });
+                }
+            }
+
+            var sphFolder = CommonUtil.CombinePaths(SaveFolder, "Ships", "SPH");
+            if (Directory.Exists(sphFolder))
+            {
+                foreach (var file in Directory.GetFiles(sphFolder))
+                {
+                    var data = File.ReadAllBytes(file);
+                    OwnCrafts.Add(new CraftEntry
+                    {
+                        CraftName = Path.GetFileNameWithoutExtension(file),
+                        CraftType = CraftType.Sph,
+                        FolderName = SettingsSystem.CurrentSettings.PlayerName,
+                        CraftData = data,
+                        CraftNumBytes = data.Length
+                    });
+                }
+            }
+
+            var subassemblyFolder = CommonUtil.CombinePaths(SaveFolder, "Subassemblies");
+            if (Directory.Exists(subassemblyFolder))
+            {
+                foreach (var file in Directory.GetFiles(subassemblyFolder))
+                {
+                    var data = File.ReadAllBytes(file);
+                    OwnCrafts.Add(new CraftEntry
+                    {
+                        CraftName = Path.GetFileNameWithoutExtension(file),
+                        CraftType = CraftType.Subassembly,
+                        FolderName = SettingsSystem.CurrentSettings.PlayerName,
+                        CraftData = data,
+                        CraftNumBytes = data.Length
+                    });
+                }
+            }
         }
 
-        public void QueueCraftAdd(CraftChangeEntry entry)
+        /// <summary>
+        /// Saves a craft to the hard drive
+        /// </summary>
+        public void SaveCraftToDisk(CraftEntry craft)
         {
-            CraftAddQueue.Enqueue(entry);
+            string folder;
+            switch (craft.CraftType)
+            {
+                case CraftType.Vab:
+                    folder = CommonUtil.CombinePaths(SaveFolder, "Ships", "Vab");
+                    break;
+                case CraftType.Sph:
+                    folder = CommonUtil.CombinePaths(SaveFolder, "Ships", "Sph");
+                    break;
+                case CraftType.Subassembly:
+                    folder = CommonUtil.CombinePaths(SaveFolder, "Subassemblies");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            var path = CommonUtil.CombinePaths(folder, $"{craft.CraftName}.craft");
+            File.WriteAllBytes(path, craft.CraftData);
+
+            //Add it to the queue notification as we are in another thread
+            DownloadedCraftsNotification.Enqueue(craft.CraftName);
         }
 
-        public void QueueCraftDelete(CraftChangeEntry entry)
+        /// <summary>
+        /// Sends a craft to the server if possible
+        /// </summary>
+        public void SendCraft(CraftEntry craft)
         {
-            CraftDeleteQueue.Enqueue(entry);
+            if (DateTime.Now - _lastRequest > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs))
+            {
+                _lastRequest = DateTime.Now;
+                MessageSender.SendCraftMsg(craft);
+                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CraftUploaded, 10f, ScreenMessageStyle.UPPER_CENTER);
+            }
+            else
+            {
+                var msg = LocalizationContainer.ScreenText.CraftLibraryInterval.Replace("$1", 
+                    TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs).TotalSeconds.ToString(CultureInfo.InvariantCulture));
+
+                ScreenMessages.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);
+            }
         }
 
-        public void QueueCraftResponse(CraftResponseEntry entry)
+        /// <summary>
+        /// Request a craft to the server if possible
+        /// </summary>
+        public void RequestCraft(CraftBasicEntry craft)
         {
-            CraftResponseQueue.Enqueue(entry);
+            if (DateTime.Now - _lastRequest > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs))
+            {
+                _lastRequest = DateTime.Now;
+                MessageSender.SendRequestCraftMsg(craft);
+            }
+            else
+            {
+                var msg = LocalizationContainer.ScreenText.CraftLibraryInterval.Replace("$1",
+                    TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs).TotalSeconds.ToString(CultureInfo.InvariantCulture));
+
+                ScreenMessages.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);
+            }
         }
 
         #endregion

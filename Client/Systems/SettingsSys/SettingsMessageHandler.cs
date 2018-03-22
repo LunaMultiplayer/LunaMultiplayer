@@ -27,13 +27,12 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.SafetyBubbleDistance = msgData.SafetyBubbleDistance;
             SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval = msgData.VesselUpdatesSendMsInterval;
             SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval = msgData.SecondaryVesselUpdatesSendMsInterval;
-            SettingsSystem.ServerSettings.DropControlOnVesselSwitching = msgData.DropControlOnVesselSwitching;
-            SettingsSystem.ServerSettings.DropControlOnExitFlight = msgData.DropControlOnExitFlight;
             SettingsSystem.ServerSettings.VesselPartsSyncMsInterval = msgData.VesselPartsSyncMsInterval;
             SettingsSystem.ServerSettings.ShowVesselsInThePast = msgData.ShowVesselsInThePast;
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
-            SettingsSystem.ServerSettings.DropControlOnExit = msgData.DropControlOnExit;
             SettingsSystem.ServerSettings.GameDifficulty = msgData.GameDifficulty;
+            SettingsSystem.ServerSettings.MinScreenshotIntervalMs = msgData.MinScreenshotIntervalMs;
+            SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs = msgData.MinScreenshotIntervalMs;
 
             if (SettingsSystem.ServerSettings.GameDifficulty != GameDifficulty.Custom)
             {

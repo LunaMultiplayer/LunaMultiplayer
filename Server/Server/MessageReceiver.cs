@@ -38,6 +38,7 @@ namespace Server.Server
             [ClientMessageType.Mod] = new ModDataMsgReader(),
             [ClientMessageType.Groups] = new GroupMsgReader(),
             [ClientMessageType.Facility] = new FacilityMsgReader(),
+            [ClientMessageType.Screenshot] = new ScreenshotMsgReader(),
             [ClientMessageType.ShareProgress] = new ShareProgressMsgReader(),
         };
 

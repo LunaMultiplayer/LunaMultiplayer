@@ -52,8 +52,8 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnEnabled();
 
-            TimingManager.UpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
-            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
+            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
                 RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
@@ -191,13 +191,16 @@ namespace LunaClient.Systems.VesselPositionSys
         /// Unloaded vessels don't update their lat/lon/alt and it's orbit params.
         /// As we have the unloadedupdate lock of that vessel we need to refresh those values manually
         /// </summary>
-        private static void UpdateUnloadedVesselValues(Vessel vessel)
+        public static void UpdateUnloadedVesselValues(Vessel vessel)
         {
             if (vessel.orbit != null)
             {
                 vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, Planetarium.GetUniversalTime());
                 if (!vessel.LandedOrSplashed)
+                {
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
+                    vessel.orbitDriver?.updateFromParameters();
+                }
             }
         }
 
@@ -205,7 +208,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// Secondary vessels (vessels that are loaded and we have the update lock) don't get their lat/lon/alt values updated by the game engine
         /// Here we manually update them so we send updateded lat/lon/alt values
         /// </summary>
-        private static void UpdateSecondaryVesselValues(Vessel vessel)
+        public static void UpdateSecondaryVesselValues(Vessel vessel)
         {
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)

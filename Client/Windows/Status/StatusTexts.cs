@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems;
-using LunaClient.Systems.Warp;
+﻿using LunaClient.Systems.Warp;
 using LunaCommon;
 
 namespace LunaClient.Windows.Status
@@ -10,10 +9,6 @@ namespace LunaClient.Windows.Status
     /// </summary>
     public class StatusTexts
     {
-        public const string DropCtrlBtnTooltip = "Drops control of the vessels that you are not controlling so other players can control them";
-        public const string DropCtrlBtnTxt = "DropCtrl";
-        public const string ChatBtnTxt = "Chat";
-        public const string CraftBtnTxt = "Craft";
         public const string DebugBtnTxt = "Debug";
         public const string SystemsBtnTxt = "Systems";
         public const string LocksBtnTxt = "Locks";
@@ -34,7 +29,7 @@ namespace LunaClient.Windows.Status
         private static string _lastPlayerText = string.Empty;
         public static string GetPlayerText(PlayerStatus playerStatus)
         {
-            if (!_lastPlayerText.Contains(playerStatus.VesselText))
+            if (_lastPlayerText != playerStatus.VesselText)
                 _lastPlayerText = $"Pilot: {playerStatus.VesselText}";
 
             return _lastPlayerText;

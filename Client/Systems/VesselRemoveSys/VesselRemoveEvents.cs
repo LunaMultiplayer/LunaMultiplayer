@@ -3,7 +3,6 @@ using LunaClient.Localization;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
 using UniLinq;
@@ -96,80 +95,45 @@ namespace LunaClient.Systems.VesselRemoveSys
         }
 
         /// <summary>
-        /// This event is called after a game is loaded. We use it to detect if the player has done a revert
+        /// Triggered when reverting back to the launchpad. The vessel id does NOT change
         /// </summary>
-        public void OnGameStatePostLoad(ConfigNode data)
+        public void OnRevertToLaunch()
         {
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
-                LunaLog.Log("[LMP]: Detected a revert!");
-                var vesselIdsToRemove = FlightGlobals.Vessels
-                    .Where(v => v.rootPart?.missionID == FlightGlobals.ActiveVessel.rootPart.missionID && v.id != FlightGlobals.ActiveVessel.id)
-                    .Select(v => v.id).Distinct();
-
-                //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
-                //vessel and remove them both from our game and server
-                foreach (var vesselIdToRemove in vesselIdsToRemove)
-                {
-                    System.MessageSender.SendVesselRemove(vesselIdToRemove);
-                    System.AddToKillList(vesselIdToRemove);
-                }
-
-                //Store it here so the delayed routine can access it!
-                var activeVesselId = FlightGlobals.ActiveVessel.id;
-
-                //Now tell the server to remove our old vessel
-                CoroutineUtil.StartDelayedRoutine("SendProperVesselRemoveMsg", () =>
-                {
-                    //We delay the send vessel remove to wait until the proper scene is loaded.
-                    //In case we revert to editor we must fully delete that vessel as when flying again we will get a new ID.
-                    //Otherwise we say to not keep it in the vessels remove list as perhaps we are reverting to flight and then our vessel id will stay the same. 
-                    //If we set the keepvesselinremovelist to true then the server will ignore every change we do to our vessel! 
-                    System.MessageSender.SendVesselRemove(activeVesselId, HighLogic.LoadedSceneIsEditor);
-                    if (HighLogic.LoadedSceneIsEditor) System.AddToKillList(activeVesselId);
-                }, 3);
+                LunaLog.Log("[LMP]: Detected a revert to launch!");
+                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, false);
             }
         }
 
         /// <summary>
-        /// Triggered when requesting a scene change. If we are leaving flight send our protovessel one last time
+        /// Triggered when reverting back to the editor. The vessel id DOES change
         /// </summary>
-        public void OnSceneRequested(GameScenes requestedScene)
+        public void OnRevertToEditor(EditorFacility data)
         {
-            if (requestedScene == GameScenes.FLIGHT) return;
-
-            DelayedClearVessels();
-        }
-
-        /// <summary>
-        /// Called when the scene changes
-        /// </summary>
-        public void OnSceneChanged(GameScenes data)
-        {
-            if (data == GameScenes.SPACECENTER)
+            if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
-                //If we are going to space center clear all the vessels.
-                //This will avoid all the headaches of recovering vessels and so on with the KSCVesselMarkers.
-                //Those markers appear on the KSC when you return from flight but they are NEVER updated
-                //So if a vessel from another player was in the launchpad and you return to the KSC, even 
-                //if that player goes to orbit, you will see the marker on the launchpad. This means that you 
-                //won't be able to launch without recovering it and if that player release the control lock,
-                //you will be recovering a valid vessel that is already in space.
-                DelayedClearVessels();
+                LunaLog.Log($"[LMP]: Detected a revert to editor! {data}");
+                System.AddToKillList(FlightGlobals.ActiveVessel.id);
+                RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
+                System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, true);
             }
         }
 
-        /// <summary>
-        /// This coroutine removes the vessels when switching to the KSC. We delay the removal of the vessels so 
-        /// in case we recover a vessel while in flight we correctly recover the crew, funds etc
-        /// </summary>
-        private static void DelayedClearVessels()
-        {
-            CoroutineUtil.StartDelayedRoutine(nameof(DelayedClearVessels), () =>
+        private static void RemoveOldVesselAndItsDebris(Vessel vessel)
+        {            
+            //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
+            //vessel and remove them both from our game and server
+            var vesselIdsToRemove = FlightGlobals.Vessels
+                .Where(v => v.rootPart?.missionID == vessel.rootPart.missionID && v.id != vessel.id)
+                .Select(v => v.id).Distinct();
+            
+            foreach (var vesselIdToRemove in vesselIdsToRemove)
             {
-                FlightGlobals.Vessels.Clear();
-                HighLogic.CurrentGame?.flightState?.protoVessels?.Clear();
-            }, 3);
+                System.MessageSender.SendVesselRemove(vesselIdToRemove);
+                System.AddToKillList(vesselIdToRemove);
+            }
         }
     }
 }

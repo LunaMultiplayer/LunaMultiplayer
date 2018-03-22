@@ -46,8 +46,6 @@ namespace Server.Client
                 LmpPluginHandler.FireOnClientDisconnect(client);
                 if (client.Authenticated)
                 {
-                    ChatSystem.RemovePlayer(client.PlayerName);
-
                     var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<PlayerConnectionLeaveMsgData>();
                     msgData.PlayerName = client.PlayerName;
 

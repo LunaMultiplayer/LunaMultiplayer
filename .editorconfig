@@ -1,0 +1,223 @@
+# EditorConfig is awesome:http://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Don't use tabs for indentation.
+[*]
+insert_final_newline = true
+end_of_line = crlf
+indent_style = space
+
+# Code files
+[*.{cs,csx,vb,vbx}]
+indent_size = 4
+insert_final_newline = true
+charset = utf-8-bom
+
+# XML files
+[*.{xml}]
+indent_size = 2
+indent_style = space
+
+# Xml project files
+[*.{csproj,vbproj,vcxproj,vcxproj.filters,proj,projitems,shproj}]
+indent_size = 2
+
+# Xml config files
+[*.{props,targets,ruleset,config,nuspec,resx,vsixmanifest,vsct}]
+indent_size = 2
+
+# JSON files
+[*.json]
+indent_size = 2
+
+# Appveyor yml files
+[{*.yml}]
+indent_style = space
+indent_size = 2
+
+####################################################################################################################
+
+# Dotnet code style settings:
+[*.{cs,vb}]
+
+# Naming conventions
+
+dotnet_naming_rule.everything_pascal_case.symbols				= everything
+dotnet_naming_symbols.everything.applicable_kinds				= *
+dotnet_naming_symbols.everything.applicable_accessibilities	= *
+
+dotnet_naming_rule.everything_pascal_case.style    = pascal_style
+dotnet_naming_style.pascal_style.capitalization	= pascal_case
+
+dotnet_naming_rule.everything_pascal_case.severity = error
+
+####################################################################################################################
+
+# Sort using and Import directives with System.* appearing first
+dotnet_sort_system_directives_first = false
+
+####################################################################################################################
+
+# "This." and "Me." qualifiers
+
+dotnet_style_qualification_for_field = false:error
+dotnet_style_qualification_for_property = false:error
+dotnet_style_qualification_for_method = false:error
+dotnet_style_qualification_for_event = false:error
+
+####################################################################################################################
+
+# Language keywords instead of framework type names for type references
+
+dotnet_style_predefined_type_for_locals_parameters_members = true:error
+dotnet_style_predefined_type_for_member_access = true:error
+
+####################################################################################################################
+
+# Modifier preferences
+
+dotnet_style_require_accessibility_modifiers = always
+csharp_preferred_modifier_order = public,private,protected,internal,static,extern,new,virtual,abstract,sealed,override,readonly,unsafe,volatile,async
+visual_basic_preferred_modifier_order = Partial, Default, Private, Protected, Public, Friend, NotOverridable, Overridable, MustOverride, Overloads, Overrides, MustInherit, NotInheritable, Static, Shared, Shadows, ReadOnly, WriteOnly, Dim, Const,WithEvents, Widening, Narrowing, Custom, Async
+
+####################################################################################################################
+
+# Expression-level preferences
+
+dotnet_style_object_initializer = true:error
+dotnet_style_collection_initializer = true:error
+dotnet_style_explicit_tuple_names = true:error
+dotnet_style_coalesce_expression = true:error
+dotnet_style_null_propagation = true:error
+dotnet_style_prefer_inferred_tuple_names = true:error
+dotnet_style_prefer_inferred_anonymous_type_member_names = true:error
+
+####################################################################################################################
+
+# Suggest more modern language features when available
+dotnet_style_object_initializer = true:suggestion
+dotnet_style_collection_initializer = true:suggestion
+dotnet_style_coalesce_expression = true:suggestion
+dotnet_style_null_propagation = true:suggestion
+dotnet_style_explicit_tuple_names = true:suggestion
+
+####################################################################################################################
+####################################################################################################################
+####################################################################################################################
+####################################################################################################################
+
+# CSharp code style settings:
+[*.cs]
+
+####################################################################################################################
+
+# Implicit and explicit types
+
+# Prefer var x = 5 over int x = 5;
+csharp_style_var_for_built_in_types = true:error
+# Prefer var obj = new Customer(); over Customer obj = new Customer();
+csharp_style_var_when_type_is_apparent = true:error
+# Prefer var f = this.Init(); over bool f = this.Init();
+csharp_style_var_elsewhere = true:error
+
+####################################################################################################################
+
+# Expression-bodied members
+
+# Prefer public int GetAge() => this.Age; over public int GetAge() { return this.Age; }
+csharp_style_expression_bodied_methods = true:none
+# Prefer public Customer(int age) => Age = age; over public Customer(int age) { Age = age; }
+csharp_style_expression_bodied_constructors = true:error
+# Same as above but with operators
+csharp_style_expression_bodied_operators = true:error
+
+# Prefer public int Age => _age; over public int Age { get { return _age; }}
+csharp_style_expression_bodied_properties = true:error
+# Prefer public T this[int i] => _value[i]; over public T this[int i] { get { return _values[i]; } }
+csharp_style_expression_bodied_indexers = true:error
+# Prefer public int Age { get => _age; set => _age = value; } over public int Age { get { return _age; } set { _age = value; } }
+csharp_style_expression_bodied_accessors = true:error
+
+####################################################################################################################
+
+# Pattern matching
+
+# Prefer if (o is int i) {...} over if (o is int) {var i = (int)o; ... }
+csharp_style_pattern_matching_over_is_with_cast_check = true:error
+# Prefer if (o is string s) {...} over var s = o as string; if (s != null) {...}
+csharp_style_pattern_matching_over_as_with_null_check = true:error
+
+####################################################################################################################
+
+# Inlined variable declarations
+
+# Prefer if (int.TryParse(value, out int i) {...} over int i; if (int.TryParse(value, out i) {...}
+csharp_style_inlined_variable_declaration = true:error
+
+####################################################################################################################
+
+# Expression level
+
+csharp_prefer_simple_default_expression = true:error
+csharp_style_deconstructed_variable_declaration = true:suggestion
+csharp_style_pattern_local_over_anonymous_function = true:suggestion
+
+####################################################################################################################
+
+# Null checking preferences
+
+# Prefer ?? over if (x == null)
+csharp_style_throw_expression = true:warning
+# Prefer x?.Whatever() over if (x == null)
+csharp_style_conditional_delegate_call = true:error
+
+####################################################################################################################
+
+# Code block preferences
+
+#Prefer if (test) this.Display(); over if (test) { this.Display(); }
+csharp_prefer_braces = false:suggestion
+
+####################################################################################################################
+####################################################################################################################
+
+# Newline settings
+
+csharp_new_line_before_open_brace = all
+csharp_new_line_before_else = true
+csharp_new_line_before_catch = true
+csharp_new_line_before_finally = true
+csharp_new_line_before_members_in_object_initializers = true
+csharp_new_line_before_members_in_anonymous_types = true
+csharp_new_line_between_query_expression_clauses = true
+
+####################################################################################################################
+
+# Indentation options
+
+csharp_indent_case_contents = true
+csharp_indent_switch_labels = true
+csharp_indent_labels= flush_left
+
+####################################################################################################################
+
+# Spacing Options
+
+csharp_space_after_cast = false
+csharp_space_after_keywords_in_control_flow_statements = true
+csharp_space_between_method_declaration_parameter_list_parentheses = false
+csharp_space_between_method_call_parameter_list_parentheses = false
+
+####################################################################################################################
+
+# Wrapping options
+
+csharp_preserve_single_line_statements = true
+csharp_preserve_single_line_blocks = true
+
+####################################################################################################################
+####################################################################################################################
+####################################################################################################################
+####################################################################################################################

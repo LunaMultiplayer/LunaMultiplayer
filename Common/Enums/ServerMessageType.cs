@@ -20,6 +20,7 @@
         PlayerConnection = 16,
         Groups = 17,
         Facility = 18,
-        ShareProgress = 19,
+        Screenshot = 19,
+        ShareProgress = 20,
     }
 }
