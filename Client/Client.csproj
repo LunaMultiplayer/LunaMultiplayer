@@ -61,6 +61,7 @@
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
     <Compile Include="Events\LockEvent.cs" />
+    <Compile Include="Events\ModApiEvent.cs" />
     <Compile Include="Events\RevertEvent.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
@@ -262,7 +263,6 @@
     <Compile Include="Systems\Flag\FlagStructures.cs" />
     <Compile Include="Systems\Lock\LockMessageHandler.cs" />
     <Compile Include="Systems\ModApi\ModApiMessageHandler.cs" />
-    <Compile Include="Systems\ModApi\ModApiStructures.cs" />
     <Compile Include="Systems\Mod\ModFileHandler.cs" />
     <Compile Include="Systems\Scenario\ScenarioStructures.cs" />
     <Compile Include="Systems\SettingsSys\SettingsReadSaveHandler.cs" />
