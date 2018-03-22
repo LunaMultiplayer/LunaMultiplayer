@@ -90,6 +90,24 @@ namespace LunaClient.Systems.VesselDockSys
         }
 
         /// <summary>
+        /// The vessel has changed as it has less crew now so send the definition
+        /// </summary>
+        public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
+        {
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
+        }
+
+        /// <summary>
+        /// The vessel has changed as it has less crew now so send the definition
+        /// </summary>
+        public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
+        {
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
+        }
+
+        #region Private
+
+        /// <summary>
         /// Here we handle the "dock" when a kerbal goes into an external seat
         /// </summary>
         private static void HandleExternalSeatBoard(VesselDockStructure dock)
@@ -109,23 +127,6 @@ namespace LunaClient.Systems.VesselDockSys
             MainSystem.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock));
         }
 
-        /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition
-        /// </summary>
-        public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
-        {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
-        }
-
-        /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition
-        /// </summary>
-        public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
-        {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
-        }
-
-        #region Private
 
         /// <summary>
         /// This method is called after the docking is over and there 
