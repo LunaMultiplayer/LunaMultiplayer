@@ -20,7 +20,7 @@ namespace LunaClient.Systems.VesselResourceSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, SendVesselResources));
+            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, SendVesselResources));
         }
 
         #endregion
