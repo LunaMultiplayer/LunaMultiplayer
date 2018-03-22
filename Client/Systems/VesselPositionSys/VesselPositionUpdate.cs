@@ -50,11 +50,8 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Vessel position information fields
 
         public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
-        public Vector3d TransformPos => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
-        public Vector3d OrbitPosVec => new Vector3d(OrbitPos[0], OrbitPos[1], OrbitPos[2]);
-        public Vector3d OrbitVelVec => new Vector3d(OrbitVel[0], OrbitVel[1], OrbitVel[2]);
 
         #endregion
 
@@ -180,8 +177,6 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.srfRelRotation = currentSurfaceRelRotation;
             Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
 
-            //Vessel.heightFromTerrain = Target.Height; //NO need to set the height from terrain, not even in flying
-
             Vessel.checkLanded();
             Vessel.checkSplashed();
 
@@ -212,10 +207,7 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ApplyInterpolations(float lerpPercentage)
         {
             ApplyOrbitInterpolation(lerpPercentage);
-
-            //TODO: Is terrainNormal really needed?
-            Vessel.terrainNormal = Vector3.Lerp(Normal, Target.Normal, lerpPercentage);
-
+            
             //Do not use CoM. It's not needed and it generate issues when you patch the protovessel with it as it generate weird commnet lines
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
             //Vessel.updateSituation() is called in the Vessel.LateUpdate(). Same applies for landed and splashed
@@ -297,18 +289,17 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ProcessRestart()
         {
             RestartRequested = false;
-            if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
-                return;
+
+            if(Vessel.loaded)
+                VesselPositionSystem.UpdateSecondaryVesselValues(Vessel);
+            else
+                VesselPositionSystem.UpdateUnloadedVesselValues(Vessel);
 
             SrfRelRotation[0] = Vessel.srfRelRotation.x;
             SrfRelRotation[1] = Vessel.srfRelRotation.y;
             SrfRelRotation[2] = Vessel.srfRelRotation.z;
             SrfRelRotation[3] = Vessel.srfRelRotation.w;
-
-            TransformPosition[0] = Vessel.ReferenceTransform.position.x;
-            TransformPosition[1] = Vessel.ReferenceTransform.position.y;
-            TransformPosition[2] = Vessel.ReferenceTransform.position.z;
-
+            
             Vector3d srfVel = Quaternion.Inverse(Body.bodyTransform.rotation) * Vessel.srf_velocity;
             Velocity[0] = srfVel.x;
             Velocity[1] = srfVel.y;
@@ -321,14 +312,6 @@ namespace LunaClient.Systems.VesselPositionSys
             NormalVector[0] = Vessel.terrainNormal.x;
             NormalVector[1] = Vessel.terrainNormal.y;
             NormalVector[2] = Vessel.terrainNormal.z;
-
-            OrbitPos[0] = Vessel.orbit.pos.x;
-            OrbitPos[1] = Vessel.orbit.pos.y;
-            OrbitPos[2] = Vessel.orbit.pos.z;
-
-            OrbitVel[0] = Vessel.orbit.vel.x;
-            OrbitVel[1] = Vessel.orbit.vel.y;
-            OrbitVel[2] = Vessel.orbit.vel.z;
 
             Orbit[0] = Vessel.orbit.inclination;
             Orbit[1] = Vessel.orbit.eccentricity;
