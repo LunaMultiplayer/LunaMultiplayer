@@ -63,6 +63,7 @@
     <Compile Include="Events\LockEvent.cs" />
     <Compile Include="Events\ModApiEvent.cs" />
     <Compile Include="Events\RevertEvent.cs" />
+    <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Harmony\KSCPauseMenu_QuickLoad.cs" />
     <Compile Include="Harmony\QuickSaveLoad_QuickLoad.cs" />
     <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />
+    <Compile Include="Harmony\SpaceTracking_FlyVessel.cs" />
     <Compile Include="Harmony\SpaceTracking_SetVessel.cs" />
     <Compile Include="Harmony\TimeWarp_setMode.cs" />
     <Compile Include="Harmony\TimeWarp_setRate.cs" />
@@ -135,6 +137,7 @@
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageHandler.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsSystem.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\FlightStateEvents.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateUpdate.cs" />
     <Compile Include="Systems\VesselImmortalSys\VesselImmortalEvents.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\CustomizationsHandler.cs" />
