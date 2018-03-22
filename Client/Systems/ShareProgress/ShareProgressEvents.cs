@@ -150,20 +150,26 @@ namespace LunaClient.Systems.ShareProgress
         {
             LunaLog.Log("Contract seen:" + contract.ContractGuid.ToString());
         }
-
-        public void ProgressReached(ProgressNode progressNode)
+        
+        public void MilestoneReached(ProgressNode progressNode)
         {
-            LunaLog.Log("Progress reached:" + progressNode.Id);
-            //TODO: send a message to all other clients and also change the state on that local ProgressNode.
-        }
+            if (System.IncomingMilestonesProcessing)
+                return;
 
-        public void ProgressCompleted(ProgressNode progressNode)
+            SendMilestoneUpdate(progressNode);
+            LunaLog.Log("Milestone reached:" + progressNode.Id);
+        }
+        
+        public void MilestoneCompleted(ProgressNode progressNode)
         {
-            LunaLog.Log("Progress completed:" + progressNode.Id);
-            //TODO: send a message to all other clients and also change the state on that local ProgressNode.
-        }
+            if (System.IncomingMilestonesProcessing)
+                return;
 
-        public void ProgressAchieved(ProgressNode progressNode)
+            SendMilestoneUpdate(progressNode);
+            LunaLog.Log("Milestone completed:" + progressNode.Id);
+        }
+        
+        public void MilestoneAchieved(ProgressNode progressNode)
         {
             //This event is triggered to often (always if some speed or distance record changes).
             //LunaLog.Log("Progress achieved:" + progressNode.Id);
@@ -239,6 +245,57 @@ namespace LunaClient.Systems.ShareProgress
             try
             {
                 contract.Save(configNode);
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Error while saving contract: {e}");
+                return null;
+            }
+
+            return configNode;
+        }
+
+        private void SendMilestoneUpdate(ProgressNode[] milestones)
+        {
+            //Convert the Contract's to ContractInfo's.
+            var milestoneInfos = new List<MilestoneInfo>();
+            foreach (var milestone in milestones)
+            {
+                var configNode = ConvertMilestoneToConfigNode(milestone);
+                if (configNode == null)
+                {
+                    break;
+                }
+
+                var data = ConfigNodeSerializer.Serialize(configNode);
+                var numBytes = data.Length;
+
+                milestoneInfos.Add(new MilestoneInfo()
+                {
+                    Id = milestone.Id,
+                    Data = data,
+                    NumBytes = numBytes
+                });
+            }
+
+            //Build the packet and send it.
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressMilestoneMsgData>();
+            msgData.Milestones = milestoneInfos.ToArray();
+            msgData.MilestoneCount = msgData.Milestones.Length;
+            System.MessageSender.SendMessage(msgData);
+        }
+
+        private void SendMilestoneUpdate(ProgressNode milestone)
+        {
+            SendMilestoneUpdate(new ProgressNode[] { milestone });
+        }
+
+        private ConfigNode ConvertMilestoneToConfigNode(ProgressNode milestone)
+        {
+            var configNode = new ConfigNode();
+            try
+            {
+                milestone.Save(configNode);
             }
             catch (Exception e)
             {

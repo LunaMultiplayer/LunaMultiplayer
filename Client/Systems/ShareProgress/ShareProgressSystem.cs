@@ -28,6 +28,7 @@ namespace LunaClient.Systems.ShareProgress
         public bool IncomingReputationProcessing;
         public bool IncomingTechnologyProcessing;
         public bool IncomingContractsProcessing;
+        public bool IncomingMilestonesProcessing;
 
         private int _defaultContractGenerateIterations;
         
@@ -45,6 +46,7 @@ namespace LunaClient.Systems.ShareProgress
             IncomingReputationProcessing = false;
             IncomingTechnologyProcessing = false;
             IncomingContractsProcessing = false;
+            IncomingMilestonesProcessing = false;
             _defaultContractGenerateIterations = ContractSystem.generateContractIterations;
             _savedFunds = 0;
             _savedScience = 0;
@@ -61,7 +63,7 @@ namespace LunaClient.Systems.ShareProgress
                     SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetContractLock));
 
                     SubscribeToContractEvents();
-                    SubscribeToProgressEvents();
+                    SubscribeToMilestoneEvents();
                 }
             }
         }
@@ -78,7 +80,7 @@ namespace LunaClient.Systems.ShareProgress
                 if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
                 {
                     UnsubscribeFromContractEvents();
-                    UnsubscribeFromProgressEvents();
+                    UnsubscribeFromMilestoneEvents();
                 }
             }
         }
@@ -170,18 +172,18 @@ namespace LunaClient.Systems.ShareProgress
             GameEvents.Contract.onSeen.Remove(ShareProgressEvents.ContractSeen);
         }
 
-        private void SubscribeToProgressEvents()
+        private void SubscribeToMilestoneEvents()
         {
-            GameEvents.OnProgressReached.Add(ShareProgressEvents.ProgressReached);
-            GameEvents.OnProgressComplete.Add(ShareProgressEvents.ProgressCompleted);
-            GameEvents.OnProgressAchieved.Add(ShareProgressEvents.ProgressAchieved);
+            GameEvents.OnProgressReached.Add(ShareProgressEvents.MilestoneReached);
+            GameEvents.OnProgressComplete.Add(ShareProgressEvents.MilestoneCompleted);
+            GameEvents.OnProgressAchieved.Add(ShareProgressEvents.MilestoneAchieved);
         }
 
-        private void UnsubscribeFromProgressEvents()
+        private void UnsubscribeFromMilestoneEvents()
         {
-            GameEvents.OnProgressReached.Remove(ShareProgressEvents.ProgressReached);
-            GameEvents.OnProgressComplete.Remove(ShareProgressEvents.ProgressCompleted);
-            GameEvents.OnProgressAchieved.Remove(ShareProgressEvents.ProgressAchieved);
+            GameEvents.OnProgressReached.Remove(ShareProgressEvents.MilestoneReached);
+            GameEvents.OnProgressComplete.Remove(ShareProgressEvents.MilestoneCompleted);
+            GameEvents.OnProgressAchieved.Remove(ShareProgressEvents.MilestoneAchieved);
         }
 
         private void SubscribeToRevertEvents()

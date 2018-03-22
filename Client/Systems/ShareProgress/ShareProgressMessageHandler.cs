@@ -68,9 +68,17 @@ namespace LunaClient.Systems.ShareProgress
                         }
                         break;
                     }
+                case ShareProgressMessageType.MilestoneUpdate:
+                    {
+                        var data = (ShareProgressMilestoneMsgData)msgData;
+                        if (data != null)
+                        {
+                            MilestoneUpdate(data);
+                        }
+                        break;
+                    }
             }
         }
-
         #region PrivateMethods
         private void FundsUpdate(ShareProgressFundsMsgData data)
         {
@@ -128,7 +136,7 @@ namespace LunaClient.Systems.ShareProgress
             {
                 var incomingContract = ConvertByteArrayToContract(cInfo.Data, cInfo.NumBytes);
                 if (incomingContract == null)
-                    break;
+                    continue;
 
                 var contractIndex = ContractSystem.Instance.Contracts.FindIndex(c => c.ContractGuid == cInfo.ContractGuid);
 
@@ -154,8 +162,63 @@ namespace LunaClient.Systems.ShareProgress
             GameEvents.Contract.onContractsListChanged.Fire();
         }
 
+        private void MilestoneUpdate(ShareProgressMilestoneMsgData data)
+        {
+            System.IncomingMilestonesProcessing = true;
+            System.IncomingFundsProcessing = true;
+            System.IncomingScienceProcessing = true;
+            System.IncomingReputationProcessing = true;
+            System.SaveBasicProgress(); //Save the current funds, science and reputation for restoring after the milestone changes were applied.
+
+            foreach (var mInfo in data.Milestones)
+            {
+                var incomingMilestone = ConvertByteArrayToMilestone(mInfo.Data, mInfo.NumBytes, mInfo.Id);
+                if (incomingMilestone == null)
+                    continue;
+
+                var milestoneIndex = -1;
+                for (var i = 0; i < ProgressTracking.Instance.achievementTree.Count; i++)
+                {
+                    if (ProgressTracking.Instance.achievementTree[i].Id == incomingMilestone.Id)
+                    {
+                        milestoneIndex = i;
+                        break;
+                    }
+                }
+
+                if (milestoneIndex != -1)
+                {
+                    //found the same milestone in the achievementTree
+                    if (!ProgressTracking.Instance.achievementTree[milestoneIndex].IsReached && incomingMilestone.IsReached)
+                    {
+                        ProgressTracking.Instance.achievementTree[milestoneIndex].Reach();
+                    }
+
+                    if (!ProgressTracking.Instance.achievementTree[milestoneIndex].IsComplete && incomingMilestone.IsComplete)
+                    {
+                        ProgressTracking.Instance.achievementTree[milestoneIndex].Complete();
+                    }
+                    LunaLog.Log("Milestone was updated: " + incomingMilestone.Id);
+                }
+                else
+                {
+                    //didn't found the same milestone in the achievmentTree
+                    ProgressTracking.Instance.achievementTree.AddNode(incomingMilestone);
+                    LunaLog.Log("Milestone was added: " + incomingMilestone.Id);
+                }
+            }
+
+
+            System.RestoreBasicProgress();  //Restore funds, science and reputation in case the milestone action changed some of that.
+            //Listen to the events again.
+            System.IncomingFundsProcessing = false;
+            System.IncomingScienceProcessing = false;
+            System.IncomingReputationProcessing = false;
+            System.IncomingMilestonesProcessing = false;
+        }
+
         /// <summary>
-        /// Convert a byte array to a ConfigNode and the to a Contract.
+        /// Convert a byte array to a ConfigNode and then to a Contract.
         /// If anything goes wrong it will return null.
         /// </summary>
         /// <param name="data">The byte array that represents the configNode</param>
@@ -195,6 +258,51 @@ namespace LunaClient.Systems.ShareProgress
             }
 
             return contract;
+        }
+
+        /// <summary>
+        /// Convert a byte array to a ConfigNode and then to a ProgressNode.
+        /// If anything goes wrong it will return null.
+        /// </summary>
+        /// <param name="data">The byte array that represents the configNode</param>
+        /// <param name="numBytes">The length of the byte array</param>
+        /// <param name="progressNodeId">The Id of the ProgressNode</param>
+        /// <returns></returns>
+        private ProgressNode ConvertByteArrayToMilestone(byte[] data, int numBytes, string progressNodeId)
+        {
+            ConfigNode node;
+            try
+            {
+                node = ConfigNodeSerializer.Deserialize(data, numBytes);
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Error while deserializing milestone configNode: {e}");
+                return null;
+            }
+
+            if (node == null)
+            {
+                LunaLog.LogError("[LMP]: Error, the milestone configNode was null.");
+                return null;
+            }
+
+            ProgressNode milestone;
+            try
+            {
+                var value = node.GetValue("type");
+                node.RemoveValues("type");
+                var contractType = ContractSystem.GetContractType(value);
+                milestone = new ProgressNode(progressNodeId, false);
+                milestone.Load(node);
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Error while deserializing milestone: {e}");
+                return null;
+            }
+
+            return milestone;
         }
 
         /// <summary>
@@ -238,7 +346,7 @@ namespace LunaClient.Systems.ShareProgress
                 //The incoming contract has the same state as the current one (so it doesn't have changed).
 
                 //Maybe update the parameters and trigger some parameter changed event or something simelar.
-
+                
                 //Or replace the complete contract and hope everything goes fine:
                 ContractSystem.Instance.Contracts[contractIndex].Unregister();
                 ContractSystem.Instance.Contracts[contractIndex] = incomingContract;

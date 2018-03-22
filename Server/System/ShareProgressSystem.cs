@@ -58,5 +58,18 @@ namespace Server.System
             //send the contract update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
         }
+
+        public static void MilestonesReceived(ClientStructure client, ShareProgressMilestoneMsgData data)
+        {
+            LunaLog.Debug("Milestone data received:");
+
+            foreach (var item in data.Milestones)
+            {
+                LunaLog.Debug(item.Id);
+            }
+
+            //send the contract update to all other clients
+            MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
+        }
     }
 }

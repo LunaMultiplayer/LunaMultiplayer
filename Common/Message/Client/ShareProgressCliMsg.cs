@@ -26,6 +26,7 @@ namespace LunaCommon.Message.Client
             [(ushort)ShareProgressMessageType.ReputationUpdate] = typeof(ShareProgressReputationMsgData),
             [(ushort)ShareProgressMessageType.TechnologyUpdate] = typeof(ShareProgressTechnologyMsgData),
             [(ushort)ShareProgressMessageType.ContractUpdate] = typeof(ShareProgressContractMsgData),
+            [(ushort)ShareProgressMessageType.MilestoneUpdate] = typeof(ShareProgressMilestoneMsgData),
         };
 
         public override ClientMessageType MessageType => ClientMessageType.ShareProgress;

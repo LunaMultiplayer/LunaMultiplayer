@@ -34,6 +34,9 @@ namespace Server.Message.Reader
                 case ShareProgressMessageType.ContractUpdate:
                     ShareProgressSystem.ContractsReceived(client, (ShareProgressContractMsgData)data);
                     break;
+                case ShareProgressMessageType.MilestoneUpdate:
+                    ShareProgressSystem.MilestonesReceived(client, (ShareProgressMilestoneMsgData)data);
+                    break;
             }
         }
     }
