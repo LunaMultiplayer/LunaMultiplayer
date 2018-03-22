@@ -3,7 +3,6 @@ using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
-using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Concurrent;
@@ -182,9 +181,6 @@ namespace LunaClient.Systems.Warp
                 DisplayMessage(LocalizationContainer.ScreenText.WaitingSubspace, 5f);
                 return false;
             }
-
-            if (VesselCommon.IsSpectating)
-                return false;
 
             return true;
         }
