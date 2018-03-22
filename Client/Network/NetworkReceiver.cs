@@ -15,6 +15,7 @@ using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.Screenshot;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareProgress;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselEvaSys;
@@ -203,6 +204,9 @@ namespace LunaClient.Network
                     break;
                 case ServerMessageType.Facility:
                     FacilitySystem.Singleton.EnqueueMessage(msg);
+                    break;
+                case ServerMessageType.ShareProgress:
+                    ShareProgressSystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.Screenshot:
                     ScreenshotSystem.Singleton.EnqueueMessage(msg);

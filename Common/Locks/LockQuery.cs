@@ -35,6 +35,8 @@ namespace LunaCommon.Locks
                     if (LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
                         return unloadedUpdateLock.Type == LockType.UnloadedUpdate && unloadedUpdateLock.VesselId == vesselId && unloadedUpdateLock.PlayerName == playerName;
                     break;
+                case LockType.Contract:
+                    return LockStore.ContractLock?.PlayerName == playerName;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -57,6 +59,8 @@ namespace LunaCommon.Locks
                     return LockStore.UpdateLocks.ContainsKey(vesselId);
                 case LockType.UnloadedUpdate:
                     return LockStore.UnloadedUpdateLocks.ContainsKey(vesselId);
+                case LockType.Contract:
+                    return LockStore.ContractLock != null;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -83,6 +87,8 @@ namespace LunaCommon.Locks
                     if (LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
                         return unloadedUpdateLock.PlayerName;
                     break;
+                case LockType.Contract:
+                    return LockStore.ContractLock?.PlayerName;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -143,6 +149,8 @@ namespace LunaCommon.Locks
                     return LockStore.ControlLocks.ContainsKey(lockDefinition.VesselId);
                 case LockType.Spectator:
                     return LockStore.SpectatorLocks.ContainsKey(lockDefinition.PlayerName);
+                case LockType.Contract:
+                    return LockStore.ContractLock != null;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -170,6 +178,8 @@ namespace LunaCommon.Locks
                 case LockType.Spectator:
                     LockStore.SpectatorLocks.TryGetValue(playerName, out existingLock);
                     break;
+                case LockType.Contract:
+                    return LockStore.ContractLock;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

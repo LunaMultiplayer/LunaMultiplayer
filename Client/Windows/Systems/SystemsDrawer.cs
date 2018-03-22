@@ -9,6 +9,7 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
+using LunaClient.Systems.ShareProgress;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFairingsSys;
@@ -80,6 +81,11 @@ namespace LunaClient.Windows.Systems
             if (_group)
             {
                 GroupSystem.Singleton.Enabled = GUILayout.Toggle(GroupSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _shareProgress = GUILayout.Toggle(_shareProgress, "Share progress system", ButtonStyle);
+            if (_shareProgress)
+            {
+                ShareProgressSystem.Singleton.Enabled = GUILayout.Toggle(ShareProgressSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             _kerbal = GUILayout.Toggle(_kerbal, "Kerbal system", ButtonStyle);
             if (_kerbal)

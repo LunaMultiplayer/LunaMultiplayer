@@ -21,5 +21,6 @@
         Groups = 17,
         Facility = 18,
         Screenshot = 19,
+        ShareProgress = 20,
     }
 }

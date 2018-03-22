@@ -57,6 +57,7 @@ namespace LunaClient.Windows.Systems
         private static bool _timeSyncer;
         private static bool _toolbar;
         private static bool _warp;
+        private static bool _shareProgress;
 
         #endregion
 

@@ -98,6 +98,10 @@
     </Compile>
     <Compile Include="Systems\Bug\BugSystem.cs" />
     <Compile Include="Systems\Bug\BugEvents.cs" />
+    <Compile Include="Systems\ShareProgress\ShareProgressEvents.cs" />
+    <Compile Include="Systems\ShareProgress\ShareProgressMessageHandler.cs" />
+    <Compile Include="Systems\ShareProgress\ShareProgressMessageSender.cs" />
+    <Compile Include="Systems\ShareProgress\ShareProgressSystem.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibraryMessageHandler.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibraryMessageSender.cs" />
     <Compile Include="Systems\CraftLibrary\CraftLibraryStructures.cs" />

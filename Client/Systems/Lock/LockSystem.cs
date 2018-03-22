@@ -93,11 +93,19 @@ namespace LunaClient.Systems.Lock
         }
 
         /// <summary>
-        /// Aquire the spectator lock on the given vessel
+        /// Aquire the asteroid lock for the current player
         /// </summary>
         public void AcquireAsteroidLock()
         {
             AcquireLock(new LockDefinition(LockType.Asteroid, SettingsSystem.CurrentSettings.PlayerName));
+        }
+
+        /// <summary>
+        /// Aquire the contract lock for the current player.
+        /// </summary>
+        public void AcquireContractLock()
+        {
+            AcquireLock(new LockDefinition(LockType.Contract, SettingsSystem.CurrentSettings.PlayerName));
         }
 
         #endregion
@@ -195,6 +203,10 @@ namespace LunaClient.Systems.Lock
                 case LockType.Spectator:
                     locksToRelease = LockQuery.SpectatorLockExists(SettingsSystem.CurrentSettings.PlayerName) ?
                         new[] { LockQuery.GetSpectatorLock(SettingsSystem.CurrentSettings.PlayerName) } : new LockDefinition[0];
+                    break;
+                case LockType.Contract:
+                    locksToRelease = LockQuery.ContractLockOwner() == playerName ?
+                        new[] { LockQuery.ContractLock() } : new LockDefinition[0];
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

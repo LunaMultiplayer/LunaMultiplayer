@@ -40,6 +40,16 @@ namespace LunaCommon.Locks
         internal ConcurrentDictionary<string, LockDefinition> SpectatorLocks { get; set; } = new ConcurrentDictionary<string, LockDefinition>();
 
         /// <summary>
+        /// Provides a lock around modifications to the ContractLock object to ensure both atomic changes to the ContractLock and a memory barrier for changes to the ContractLock
+        /// </summary>
+        private readonly object _contractSyncLock = new object();
+
+        /// <summary>
+        /// You can't have more than one user with the contract lock so it's a simple object
+        /// </summary>
+        internal LockDefinition ContractLock { get; set; }
+
+        /// <summary>
         /// Adds or replace the given lock to the storage
         /// </summary>
         public void AddOrUpdateLock(LockDefinition lockDefinition)
@@ -66,6 +76,15 @@ namespace LunaCommon.Locks
                     break;
                 case LockType.Spectator:
                     SpectatorLocks.AddOrUpdate(lockDefinition.PlayerName, lockDefinition, (key, existingVal) => lockDefinition);
+                    break;
+                case LockType.Contract:
+                    lock (_contractSyncLock)
+                    {
+                        if (ContractLock == null)
+                            ContractLock = new LockDefinition(LockType.Contract, lockDefinition.PlayerName);
+                        else
+                            ContractLock.PlayerName = lockDefinition.PlayerName;
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -97,6 +116,12 @@ namespace LunaCommon.Locks
                 case LockType.Spectator:
                     SpectatorLocks.TryRemove(lockDefinition.PlayerName, out _);
                     break;
+                case LockType.Contract:
+                    lock (_contractSyncLock)
+                    {
+                        ContractLock = null;
+                    }
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -126,6 +151,12 @@ namespace LunaCommon.Locks
                     break;
                 case LockType.Spectator:
                     SpectatorLocks.TryRemove(playerName, out _);
+                    break;
+                case LockType.Contract:
+                    lock (_contractSyncLock)
+                    {
+                        ContractLock = null;
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

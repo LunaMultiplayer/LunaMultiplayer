@@ -39,6 +39,11 @@ namespace LunaCommon.Locks
         /// The spectator lock specifies if a user is spectating a vessel or not.
         /// A vessel can have several spectators
         /// </summary>
-        Spectator
+        Spectator,
+
+        /// <summary>
+        /// The contract lock is owned by only 1 player and it defines who can generate new contracts.
+        /// </summary>
+        Contract
     }
 }
