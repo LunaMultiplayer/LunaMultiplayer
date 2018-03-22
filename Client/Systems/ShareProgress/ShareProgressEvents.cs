@@ -1,6 +1,8 @@
 ﻿using Contracts;
 using LunaClient.Base;
 using LunaClient.Network;
+using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Message.Data.ShareProgress;
 using System;
@@ -147,6 +149,24 @@ namespace LunaClient.Systems.ShareProgress
         public void ContractSeen(Contract contract)
         {
             LunaLog.Log("Contract seen:" + contract.ContractGuid.ToString());
+        }
+
+        public void ProgressReached(ProgressNode progressNode)
+        {
+            LunaLog.Log("Progress reached:" + progressNode.Id);
+            //TODO: send a message to all other clients and also change the state on that local ProgressNode.
+        }
+
+        public void ProgressCompleted(ProgressNode progressNode)
+        {
+            LunaLog.Log("Progress completed:" + progressNode.Id);
+            //TODO: send a message to all other clients and also change the state on that local ProgressNode.
+        }
+
+        public void ProgressAchieved(ProgressNode progressNode)
+        {
+            //This event is triggered to often (always if some speed or distance record changes).
+            //LunaLog.Log("Progress achieved:" + progressNode.Id);
         }
         #endregion
 

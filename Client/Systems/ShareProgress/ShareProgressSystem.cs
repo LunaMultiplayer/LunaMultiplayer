@@ -59,6 +59,7 @@ namespace LunaClient.Systems.ShareProgress
                     SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetContractLock));
 
                     SubscribeToContractEvents();
+                    SubscribeToProgressEvents();
                 }
             }
         }
@@ -74,6 +75,7 @@ namespace LunaClient.Systems.ShareProgress
                 if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
                 {
                     UnsubscribeFromContractEvents();
+                    UnsubscribeFromProgressEvents();
                 }
             }
         }
@@ -163,6 +165,20 @@ namespace LunaClient.Systems.ShareProgress
             GameEvents.Contract.onParameterChange.Remove(ShareProgressEvents.ContractParameterChanged);
             GameEvents.Contract.onRead.Remove(ShareProgressEvents.ContractRead);
             GameEvents.Contract.onSeen.Remove(ShareProgressEvents.ContractSeen);
+        }
+
+        private void SubscribeToProgressEvents()
+        {
+            GameEvents.OnProgressReached.Add(ShareProgressEvents.ProgressReached);
+            GameEvents.OnProgressComplete.Add(ShareProgressEvents.ProgressCompleted);
+            GameEvents.OnProgressAchieved.Add(ShareProgressEvents.ProgressAchieved);
+        }
+
+        private void UnsubscribeFromProgressEvents()
+        {
+            GameEvents.OnProgressReached.Remove(ShareProgressEvents.ProgressReached);
+            GameEvents.OnProgressComplete.Remove(ShareProgressEvents.ProgressCompleted);
+            GameEvents.OnProgressAchieved.Remove(ShareProgressEvents.ProgressAchieved);
         }
 
         private void TryGetContractLock()

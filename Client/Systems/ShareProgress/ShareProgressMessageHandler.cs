@@ -25,27 +25,47 @@ namespace LunaClient.Systems.ShareProgress
             {
                 case ShareProgressMessageType.FundsUpdate:
                     {
-                        FundsUpdate((ShareProgressFundsMsgData)msgData);
+                        var data = (ShareProgressFundsMsgData)msgData;
+                        if (data != null)
+                        {
+                            FundsUpdate(data);
+                        }
                         break;
                     }
                 case ShareProgressMessageType.ScienceUpdate:
                     {
-                        ScienceUpdate((ShareProgressScienceMsgData)msgData);
+                        var data = (ShareProgressScienceMsgData)msgData;
+                        if (data != null)
+                        {
+                            ScienceUpdate(data);
+                        }
                         break;
                     }
                 case ShareProgressMessageType.ReputationUpdate:
                     {
-                        ReputationUpdate((ShareProgressReputationMsgData)msgData);
+                        var data = (ShareProgressReputationMsgData)msgData;
+                        if (data != null)
+                        {
+                            ReputationUpdate(data);
+                        }
                         break;
                     }
                 case ShareProgressMessageType.TechnologyUpdate:
                     {
-                        TechnologyUpdate((ShareProgressTechnologyMsgData)msgData);
+                        var data = (ShareProgressTechnologyMsgData)msgData;
+                        if (data != null)
+                        {
+                            TechnologyUpdate(data);
+                        }
                         break;
                     }
                 case ShareProgressMessageType.ContractUpdate:
                     {
-                        ContractUpdate((ShareProgressContractMsgData)msgData);
+                        var data = (ShareProgressContractMsgData)msgData;
+                        if (data != null)
+                        {
+                            ContractUpdate(data);
+                        }
                         break;
                     }
             }
