@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
+using LunaClient.VesselUtilities;
 using LunaCommon.Time;
 using System;
 using UnityEngine;
@@ -54,6 +55,14 @@ namespace LunaClient.Systems.TimeSyncer
         /// If the time difference is greater than this, the game will set a new time as a global
         /// </summary>
         private const int MaxClockErrorMs = 15000;
+        /// <summary>
+        /// Limit at wich we won't fix the time with the GAME timescale when spectating
+        /// </summary>
+        private const int SpectatingPhisicsClockLimitMs = 2500;
+        /// <summary>
+        /// If the time difference is greater than this, the game will set a new time as a global when spectating
+        /// </summary>
+        private const int MaxSpectatingClockErrorMs = 2500;
 
         #endregion
 
@@ -116,7 +125,7 @@ namespace LunaClient.Systems.TimeSyncer
                 if (targetTime > 0)
                 {
                     var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
-                    if (Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < PhisicsClockLimitMs)
+                    if (Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < (VesselCommon.IsSpectating ? SpectatingPhisicsClockLimitMs : PhisicsClockLimitMs))
                     {
                         //Time error is not so big so we can fix it adjusting the physics time
                         SkewClock();
@@ -136,7 +145,8 @@ namespace LunaClient.Systems.TimeSyncer
             {
                 var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
                 var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
-                if (targetTime != 0 && Math.Abs(currentError) > MaxClockErrorMs)
+
+                if (targetTime > 0 && Math.Abs(currentError) > (VesselCommon.IsSpectating ? MaxSpectatingClockErrorMs : MaxClockErrorMs))
                 {
                     LunaLog.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
                     ClockHandler.StepClock(targetTime);
