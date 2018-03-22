@@ -154,17 +154,17 @@ namespace LunaClient.Systems.ShareProgress
         private void SendContractUpdate(Contract[] contracts)
         {
             //Convert the Contract's to ContractInfo's.
-            List<ContractInfo> contractInfos = new List<ContractInfo>();
-            foreach (Contract contract in contracts)
+            var contractInfos = new List<ContractInfo>();
+            foreach (var contract in contracts)
             {
-                ConfigNode configNode = this.ConvertContractToConfigNode(contract);
+                var configNode = ConvertContractToConfigNode(contract);
                 if (configNode == null)
                 {
                     break;
                 }
 
-                byte[] data = ConfigNodeSerializer.Serialize(configNode);
-                int numBytes = data.Length;
+                var data = ConfigNodeSerializer.Serialize(configNode);
+                var numBytes = data.Length;
 
                 contractInfos.Add(new ContractInfo()
                 {
@@ -183,12 +183,12 @@ namespace LunaClient.Systems.ShareProgress
 
         private void SendContractUpdate(Contract contract)
         {
-            this.SendContractUpdate(new Contract[] { contract });
+            SendContractUpdate(new Contract[] { contract });
         }
 
         private ConfigNode ConvertContractToConfigNode(Contract contract)
         {
-            ConfigNode configNode = new ConfigNode();
+            var configNode = new ConfigNode();
             try
             {
                 contract.Save(configNode);

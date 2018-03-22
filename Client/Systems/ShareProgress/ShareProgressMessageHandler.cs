@@ -25,27 +25,27 @@ namespace LunaClient.Systems.ShareProgress
             {
                 case ShareProgressMessageType.FundsUpdate:
                     {
-                        this.FundsUpdate((ShareProgressFundsMsgData)msgData);
+                        FundsUpdate((ShareProgressFundsMsgData)msgData);
                         break;
                     }
                 case ShareProgressMessageType.ScienceUpdate:
                     {
-                        this.ScienceUpdate((ShareProgressScienceMsgData)msgData);
+                        ScienceUpdate((ShareProgressScienceMsgData)msgData);
                         break;
                     }
                 case ShareProgressMessageType.ReputationUpdate:
                     {
-                        this.ReputationUpdate((ShareProgressReputationMsgData)msgData);
+                        ReputationUpdate((ShareProgressReputationMsgData)msgData);
                         break;
                     }
                 case ShareProgressMessageType.TechnologyUpdate:
                     {
-                        this.TechnologyUpdate((ShareProgressTechnologyMsgData)msgData);
+                        TechnologyUpdate((ShareProgressTechnologyMsgData)msgData);
                         break;
                     }
                 case ShareProgressMessageType.ContractUpdate:
                     {
-                        this.ContractUpdate((ShareProgressContractMsgData)msgData);
+                        ContractUpdate((ShareProgressContractMsgData)msgData);
                         break;
                     }
             }
@@ -79,8 +79,8 @@ namespace LunaClient.Systems.ShareProgress
         private void TechnologyUpdate(ShareProgressTechnologyMsgData data)
         {
             System.IncomingTechnologyProcessing = true;
-            ProtoTechNode[] nodes = AssetBase.RnDTechTree.GetTreeTechs();
-            foreach (ProtoTechNode n in nodes)
+            var nodes = AssetBase.RnDTechTree.GetTreeTechs();
+            foreach (var n in nodes)
             {
                 if (n.techID == data.TechID)
                 {
@@ -104,23 +104,23 @@ namespace LunaClient.Systems.ShareProgress
 
             LunaLog.Log("IncomingContractsProcessing=true");
 
-            foreach (ContractInfo cInfo in data.Contracts)
+            foreach (var cInfo in data.Contracts)
             {
-                Contract incomingContract = this.ConvertByteArrayToContract(cInfo.Data, cInfo.NumBytes);
+                var incomingContract = ConvertByteArrayToContract(cInfo.Data, cInfo.NumBytes);
                 if (incomingContract == null)
                     break;
 
-                int contractIndex = ContractSystem.Instance.Contracts.FindIndex(c => c.ContractGuid == cInfo.ContractGuid);
+                var contractIndex = ContractSystem.Instance.Contracts.FindIndex(c => c.ContractGuid == cInfo.ContractGuid);
 
                 if (contractIndex != -1)
                 {
                     //found the contract in the local ContractSystem
-                    this.UpdateContract(contractIndex, incomingContract);
+                    UpdateContract(contractIndex, incomingContract);
                 }
                 else
                 {
                     //There is no matching contract in the local ContractSystem
-                    this.AddContract(incomingContract);
+                    AddContract(incomingContract);
                 }
             }
             
@@ -163,9 +163,9 @@ namespace LunaClient.Systems.ShareProgress
             Contract contract;
             try
             {
-                string value = node.GetValue("type");
+                var value = node.GetValue("type");
                 node.RemoveValues("type");
-                Type contractType = ContractSystem.GetContractType(value);
+                var contractType = ContractSystem.GetContractType(value);
                 contract = Contract.Load((Contract)Activator.CreateInstance(contractType), node);
             }
             catch (Exception e)
@@ -240,7 +240,7 @@ namespace LunaClient.Systems.ShareProgress
             if (!incomingContract.IsFinished())
             {
                 ContractSystem.Instance.Contracts.Add(incomingContract);
-                int contractIndex = ContractSystem.Instance.Contracts.FindIndex(c => c.ContractGuid == incomingContract.ContractGuid);
+                var contractIndex = ContractSystem.Instance.Contracts.FindIndex(c => c.ContractGuid == incomingContract.ContractGuid);
                 
                 //Trigger the contract events manually because the incoming contract object has already the state that it should have.
                 ContractSystem.Instance.Contracts[contractIndex].OnStateChange.Fire(incomingContract.ContractState);
