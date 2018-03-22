@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaCommon.Enums;
 using System.Collections.Generic;
+
 // ReSharper disable All
 
 namespace LunaClient.Harmony
@@ -22,18 +23,7 @@ namespace LunaClient.Harmony
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
 
-            ProtoVesselsToRemove.Clear();
-
-            foreach (var pv in __result)
-            {
-                if (LockSystem.LockQuery.ControlLockExists(pv.vesselID))
-                    ProtoVesselsToRemove.Add(pv);
-            }
-
-            foreach (var pv in ProtoVesselsToRemove)
-            {
-                __result.Remove(pv);
-            }
+            __result.RemoveAll(pv => LockSystem.LockQuery.ControlLockExists(pv.vesselID));
         }
     }
 }
