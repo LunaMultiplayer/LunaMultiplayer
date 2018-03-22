@@ -38,6 +38,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Add(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Add(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Add(VesselRemoveEvents.OnVesselWillDestroy);
+            GameEvents.onLevelWasLoaded.Add(VesselRemoveEvents.LevelLoaded);
 
             RevertEvent.onRevertToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
             RevertEvent.onRevertToPrelaunch.Add(VesselRemoveEvents.OnRevertToEditor);
@@ -55,6 +56,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselRecovered.Remove(VesselRemoveEvents.OnVesselRecovered);
             GameEvents.onVesselTerminated.Remove(VesselRemoveEvents.OnVesselTerminated);
             GameEvents.onVesselWillDestroy.Remove(VesselRemoveEvents.OnVesselWillDestroy);
+            GameEvents.onLevelWasLoaded.Remove(VesselRemoveEvents.LevelLoaded);
 
             RevertEvent.onRevertToLaunch.Remove(VesselRemoveEvents.OnRevertToLaunch);
             RevertEvent.onRevertToPrelaunch.Remove(VesselRemoveEvents.OnRevertToEditor);
@@ -135,6 +137,22 @@ namespace LunaClient.Systems.VesselRemoveSys
             UnloadVesselFromScenario(killVessel);
 
             //When vessel.Die() is called, KSP calls RefreshMarkers() so no need to call it ourselves
+        }
+
+        /// <summary>
+        /// Removes the vessels that are inside the safety bubble
+        /// </summary>
+        public void RemoveVesselsInSafetyBubble()
+        {
+            foreach (var vessel in FlightGlobals.Vessels)
+            {
+                if (vessel != null && VesselCommon.IsInSafetyBubble(vessel) && FlightGlobals.ActiveVessel?.id != vessel.id)
+                {
+                    UnloadVesselFromGame(vessel);
+                    KillGivenVessel(vessel);
+                    UnloadVesselFromScenario(vessel);
+                }
+            }
         }
 
         #endregion

@@ -135,5 +135,15 @@ namespace LunaClient.Systems.VesselRemoveSys
                 System.AddToKillList(vesselIdToRemove);
             }
         }
+
+        /// <summary>
+        /// This method is called just when the game scene is loaded. 
+        /// We use this to detect when switching to flight and then remove the vessels that are inside the safety bubble
+        /// </summary>
+        public void LevelLoaded(GameScenes data)
+        {
+            if (data == GameScenes.FLIGHT)
+                System.RemoveVesselsInSafetyBubble();
+        }
     }
 }
