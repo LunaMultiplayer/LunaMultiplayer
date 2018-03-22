@@ -1,7 +1,9 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
+using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Concurrent;
@@ -158,6 +160,34 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Public methods
+
+        /// <summary>
+        /// Perform warp validations
+        /// </summary>
+        public bool WarpValidation()
+        {
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.None || SettingsSystem.ServerSettings.WarpMode == WarpMode.Master &&
+                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
+            {
+                DisplayMessage(SettingsSystem.ServerSettings.WarpMode == WarpMode.None ?
+                    LocalizationContainer.ScreenText.WarpDisabled :
+                    LocalizationContainer.ScreenText.NotWarpMaster, 5f);
+
+                return false;
+            }
+
+
+            if (WaitingSubspaceIdFromServer)
+            {
+                DisplayMessage(LocalizationContainer.ScreenText.WaitingSubspace, 5f);
+                return false;
+            }
+
+            if (VesselCommon.IsSpectating)
+                return false;
+
+            return true;
+        }
 
         /// <summary>
         /// Changes subspace if the given subspace is more advanced in time

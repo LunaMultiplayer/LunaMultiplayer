@@ -72,6 +72,8 @@
     <Compile Include="Harmony\QuickSaveLoad_QuickLoad.cs" />
     <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />
     <Compile Include="Harmony\SpaceTracking_SetVessel.cs" />
+    <Compile Include="Harmony\TimeWarp_setMode.cs" />
+    <Compile Include="Harmony\TimeWarp_setRate.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
     <Compile Include="ModuleStore\Structures\CustomFieldDefinition.cs" />

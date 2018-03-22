@@ -1,7 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.Localization;
-using LunaClient.Systems.SettingsSys;
-using LunaCommon.Enums;
 
 namespace LunaClient.Systems.Warp
 {
@@ -12,29 +9,8 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public void OnTimeWarpChanged()
         {
-            var resetWarp = SettingsSystem.ServerSettings.WarpMode == WarpMode.None ||
-                            SettingsSystem.ServerSettings.WarpMode == WarpMode.Master && SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName;
-
-            if (TimeWarp.CurrentRateIndex > 0)
+            if (TimeWarp.CurrentRateIndex > 0 && System.WarpValidation())
             {
-                if (resetWarp)
-                {
-                    System.DisplayMessage(SettingsSystem.ServerSettings.WarpMode == WarpMode.None ? 
-                        LocalizationContainer.ScreenText.WarpDisabled :
-                        LocalizationContainer.ScreenText.NotWarpMaster, 5f);
-
-                    TimeWarp.SetRate(0, true);
-                    return;
-                }
-
-                if (System.WaitingSubspaceIdFromServer)
-                {
-                    System.DisplayMessage(LocalizationContainer.ScreenText.WaitingSubspace, 5f);
-
-                    TimeWarp.SetRate(0, true);
-                    return;
-                }
-
                 if (System.CurrentSubspace != -1)
                 {
                     //We are warping so set the subspace to -1
