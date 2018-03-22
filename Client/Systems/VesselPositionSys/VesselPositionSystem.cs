@@ -52,7 +52,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnEnabled();
 
-            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
