@@ -11,11 +11,9 @@ using LunaClient.Systems.ModApi;
 using LunaClient.Systems.Network;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.Status;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaClient.Windows;
-using LunaClient.Windows.Connection;
 using LunaClient.Windows.Status;
 using LunaCommon;
 using LunaCommon.Enums;
@@ -324,61 +322,12 @@ namespace LunaClient
                 StatusWindow.Singleton.DisconnectEventHandled = true;
                 ForceQuit = true;
                 NetworkConnection.Disconnect("Quit");
-                ScenarioSystem.Singleton.SendScenarioModules(); // Send scenario modules before disconnecting
+                ScenarioSystem.Singleton.SendScenarioModules();
             }
-            if (!ConnectionWindow.RenameEventHandled)
-            {
-                StatusSystem.Singleton.MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
-                ConnectionWindow.RenameEventHandled = true;
-                SettingsSystem.SaveSettings();
-            }
-            if (!ConnectionWindow.AddEventHandled)
-            {
-                SettingsSystem.CurrentSettings.Servers.Add(ConnectionWindow.AddEntry);
-                ConnectionWindow.AddEntry = null;
-                ConnectionWindow.AddingServer = false;
-                ConnectionWindow.AddEventHandled = true;
-                SettingsSystem.SaveSettings();
-            }
-            if (!ConnectionWindow.EditEventHandled)
-            {
-                SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Name = ConnectionWindow.EditEntry.Name;
-                SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Address = ConnectionWindow.EditEntry.Address;
-                SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Port = ConnectionWindow.EditEntry.Port;
-                SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Password = ConnectionWindow.EditEntry.Password;
-                ConnectionWindow.EditEntry = null;
-                ConnectionWindow.AddingServer = false;
-                ConnectionWindow.EditEventHandled = true;
-                SettingsSystem.SaveSettings();
-            }
-            if (!ConnectionWindow.RemoveEventHandled)
-            {
-                SettingsSystem.CurrentSettings.Servers.RemoveAt(ConnectionWindow.Selected);
-                ConnectionWindow.Selected = -1;
-                ConnectionWindow.RemoveEventHandled = true;
-                SettingsSystem.SaveSettings();
-            }
-            if (!ConnectionWindow.ConnectEventHandled)
-            {
-                ConnectionWindow.ConnectEventHandled = true;
-                NetworkConnection.ConnectToServer(
-                    SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Address,
-                    SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Port,
-                    SettingsSystem.CurrentSettings.Servers[ConnectionWindow.Selected].Password);
-            }
-            if (CommandLineServer != null && HighLogic.LoadedScene == GameScenes.MAINMENU &&
-                Time.timeSinceLevelLoad > 1f)
+            if (CommandLineServer != null && HighLogic.LoadedScene == GameScenes.MAINMENU && Time.timeSinceLevelLoad > 1f)
             {
                 NetworkConnection.ConnectToServer(CommandLineServer.Address, CommandLineServer.Port, CommandLineServer.Password);
                 CommandLineServer = null;
-            }
-
-            if (!ConnectionWindow.DisconnectEventHandled)
-            {
-                ConnectionWindow.DisconnectEventHandled = true;
-                NetworkConnection.Disconnect(NetworkState <= ClientState.Starting
-                    ? "Cancelled connection to server"
-                    : "Quit");
             }
         }
 

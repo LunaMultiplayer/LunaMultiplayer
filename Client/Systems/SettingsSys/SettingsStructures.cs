@@ -52,9 +52,9 @@ namespace LunaClient.Systems.SettingsSys
     [Serializable]
     public class ServerEntry
     {
-        public int Port;
-        public string Name { get; set; }
-        public string Address { get; set; }
-        public string Password { get; set; }
+        public int Port { get; set; } = 8800;
+        public string Name { get; set; } = "Local";
+        public string Address { get; set; } = "127.0.0.1";
+        public string Password { get; set; } = string.Empty;
     }
 }

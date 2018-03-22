@@ -11,29 +11,21 @@ namespace LunaClient.Windows.Connection
         #region Fields
 
         #region Public
-        
-        public static bool ConnectEventHandled { get; set; } = true;
-        public static bool DisconnectEventHandled { get; set; } = true;
-        public static bool AddEventHandled { get; set; } = true;
-        public static bool EditEventHandled { get; set; } = true;
-        public static bool RemoveEventHandled { get; set; } = true;
-        public static bool RenameEventHandled { get; set; } = true;
-        public static bool AddingServer { get; set; }
-        public static bool AddingServerSafe { get; set; }
-        public static int Selected { get; set; } = -1;
-        public static ServerEntry AddEntry { get; set; } = null;
-        public static ServerEntry EditEntry { get; set; } = null;
-        public static int SelectedSafe { get; set; } = -1;
-        public static string Status { get; set; } = "";
+
+        private static int _selectedIndex;
+        private static int SelectedIndex
+        {
+            get
+            {
+                if (SettingsSystem.CurrentSettings.Servers.Count == 0)
+                    return -1;
+                return _selectedIndex;
+            }
+            set => _selectedIndex = value;
+        }
 
         #endregion
-
-        protected string ServerName { get; set; } = "Local";
-        protected string ServerAddress { get; set; } = "127.0.0.1";
-        protected string ServerPort { get; set; } = "8800";
-
-        protected string Password { get; set; } = "";
-
+        
         protected const float WindowHeight = 400;
         protected const float WindowWidth = 400;
 
@@ -80,18 +72,7 @@ namespace LunaClient.Windows.Connection
                 WindowRect = FixWindowPos(GUILayout.Window(6702 + MainSystem.WindowOffset, WindowRect, DrawContent, _title, WindowStyle));
             }
         }
-
-        public override void Update()
-        {
-            base.Update();
-            if (Display)
-            {
-                Status = MainSystem.Singleton.Status;
-                SelectedSafe = Selected;
-                AddingServerSafe = AddingServer;
-            }
-        }
-
+        
         #endregion
     }
 }

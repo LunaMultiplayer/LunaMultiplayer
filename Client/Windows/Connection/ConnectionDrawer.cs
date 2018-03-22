@@ -1,4 +1,5 @@
 ﻿using LunaClient.Localization;
+using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.ServerList;
@@ -13,143 +14,141 @@ namespace LunaClient.Windows.Connection
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            GUILayout.Space(20);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(LocalizationContainer.ConnectionWindowText.PlayerName, LabelOptions);
-            var oldPlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            GUILayout.Space(10);
 
+            DrawPlayerNameSection();
+            DrawTopButtons();
+            DrawCustomServers();
+            
+            GUILayout.Label(MainSystem.Singleton.Status, StatusStyle);
+            GUILayout.EndVertical();
+        }
+
+        private void DrawCustomServers()
+        {
+            GUILayout.Label(LocalizationContainer.ConnectionWindowText.CustomServers);
+            GUILayout.BeginVertical(BoxStyle);
+
+            ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5),
+                GUILayout.Height(WindowHeight - 100));
+            for (var serverPos = 0; serverPos < SettingsSystem.CurrentSettings.Servers.Count; serverPos++)
+            {
+                GUILayout.BeginHorizontal();
+                var selected = GUILayout.Toggle(SelectedIndex == serverPos,
+                    SettingsSystem.CurrentSettings.Servers[serverPos].Name, ButtonStyle);
+                if (GUILayout.Button(DeleteIcon, ButtonStyle, GUILayout.Width(35)))
+                {
+                    SettingsSystem.CurrentSettings.Servers.RemoveAt(SelectedIndex);
+                }
+                else
+                {
+                    GUILayout.EndHorizontal();
+                    if (selected)
+                    {
+                        DrawServerEntry(serverPos);
+                    }
+                }
+            }
+
+            GUILayout.EndScrollView();
+            GUILayout.Space(15);
+            if (GUILayout.Button(PlusIcon, ButtonStyle))
+            {
+                SettingsSystem.CurrentSettings.Servers.Add(new ServerEntry());
+                SettingsSystem.SaveSettings();
+            }
+
+            GUILayout.EndVertical();
+        }
+
+        private void DrawServerEntry(int serverPos)
+        {
+            SelectedIndex = serverPos;
+            GUILayout.BeginVertical(BoxStyle);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(LocalizationContainer.ConnectionWindowText.Name, LabelOptions);
+            var newServerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Name, TextAreaStyle);
+            if (newServerName != SettingsSystem.CurrentSettings.Servers[serverPos].Name)
+            {
+                SettingsSystem.CurrentSettings.Servers[serverPos].Name = newServerName;
+                SettingsSystem.SaveSettings();
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(LocalizationContainer.ConnectionWindowText.Address, LabelOptions);
+            var newAddress = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Address, TextAreaStyle);
+            if (newAddress != SettingsSystem.CurrentSettings.Servers[serverPos].Address)
+            {
+                SettingsSystem.CurrentSettings.Servers[serverPos].Address = newAddress;
+                SettingsSystem.SaveSettings();
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(LocalizationContainer.ConnectionWindowText.Port, LabelOptions);
+            var port = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Port.ToString(), TextAreaStyle);
+            if (int.TryParse(port, out var parsedPort))
+            {
+                if (parsedPort != SettingsSystem.CurrentSettings.Servers[serverPos].Port)
+                {
+                    SettingsSystem.CurrentSettings.Servers[serverPos].Port = parsedPort;
+                    SettingsSystem.SaveSettings();
+                }
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(LocalizationContainer.ConnectionWindowText.Password, LabelOptions);
+            var newPassword = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Password, TextAreaStyle);
+            if (newPassword != SettingsSystem.CurrentSettings.Servers[serverPos].Password)
+            {
+                SettingsSystem.CurrentSettings.Servers[serverPos].Password = newPassword;
+                SettingsSystem.SaveSettings();
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
+
+        private void DrawTopButtons()
+        {
+            GUILayout.BeginHorizontal();
             if (MainSystem.NetworkState <= ClientState.Disconnected)
             {
-                SettingsSystem.CurrentSettings.PlayerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.PlayerName, 32, TextAreaStyle); // Max 32 characters
-                if (oldPlayerName != SettingsSystem.CurrentSettings.PlayerName)
+                GUI.enabled = SelectedIndex >= 0;
+                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Connect, ButtonStyle))
                 {
-                    SettingsSystem.CurrentSettings.PlayerName = SettingsSystem.CurrentSettings.PlayerName.Replace("\n", "");
-                    RenameEventHandled = false;
+                    NetworkConnection.ConnectToServer(
+                        SettingsSystem.CurrentSettings.Servers[SelectedIndex].Address,
+                        SettingsSystem.CurrentSettings.Servers[SelectedIndex].Port,
+                        SettingsSystem.CurrentSettings.Servers[SelectedIndex].Password);
                 }
             }
             else
             {
-                GUILayout.Label(SettingsSystem.CurrentSettings.PlayerName);
-            }
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            //Draw add button
-            var addMode = SelectedSafe == -1 ? LocalizationContainer.ConnectionWindowText.Add : LocalizationContainer.ConnectionWindowText.Edit;
-            var buttonAddMode = addMode;
-            if (AddingServer)
-                buttonAddMode = LocalizationContainer.ConnectionWindowText.Cancel;
-            AddingServer = GUILayout.Toggle(AddingServer, buttonAddMode, ButtonStyle);
-            if (AddingServer && !AddingServerSafe && Selected != -1)
-            {
-                //Load the existing server settings
-                ServerName = SettingsSystem.CurrentSettings.Servers[Selected].Name;
-                ServerAddress = SettingsSystem.CurrentSettings.Servers[Selected].Address;
-                ServerPort = SettingsSystem.CurrentSettings.Servers[Selected].Port.ToString();
-                Password = SettingsSystem.CurrentSettings.Servers[Selected].Password;
+                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Disconnect, ButtonStyle))
+                {
+                    NetworkConnection.Disconnect("Cancelled connection to server");
+                }
             }
 
-            //Draw connect button
-            if (MainSystem.NetworkState == ClientState.Disconnected)
-            {
-                GUI.enabled = SelectedSafe != -1;
-                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Connect, ButtonStyle))
-                    ConnectEventHandled = false;
-            }
-            else if (MainSystem.NetworkState > ClientState.Disconnected)
-            {
-                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Disconnect, ButtonStyle))
-                    DisconnectEventHandled = false;
-            }
-            //Draw remove button
-            if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Remove, ButtonStyle))
-                if (RemoveEventHandled)
-                    RemoveEventHandled = false;
             GUI.enabled = true;
-            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, LocalizationContainer.ConnectionWindowText.Options, ButtonStyle);
+            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display,
+                LocalizationContainer.ConnectionWindowText.Options, ButtonStyle);
             if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Servers, ButtonStyle))
                 ServerListWindow.Singleton.Display = true;
             GUILayout.EndHorizontal();
-            if (AddingServerSafe)
+        }
+
+        private void DrawPlayerNameSection()
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(LocalizationContainer.ConnectionWindowText.PlayerName, LabelOptions);
+            GUI.enabled = MainSystem.NetworkState <= ClientState.Disconnected;
+            var newPlayerName = GUILayout.TextArea(SettingsSystem.CurrentSettings.PlayerName, 32, TextAreaStyle); // Max 32 characters
+            if (newPlayerName != SettingsSystem.CurrentSettings.PlayerName)
             {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(LocalizationContainer.ConnectionWindowText.Name, LabelOptions);
-                ServerName = GUILayout.TextArea(ServerName, TextAreaStyle);
-                GUILayout.EndHorizontal();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(LocalizationContainer.ConnectionWindowText.Address, LabelOptions);
-                ServerAddress = GUILayout.TextArea(ServerAddress, TextAreaStyle).Trim();
-                GUILayout.EndHorizontal();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(LocalizationContainer.ConnectionWindowText.Port, LabelOptions);
-                ServerPort = GUILayout.TextArea(ServerPort, TextAreaStyle).Trim();
-                GUILayout.EndHorizontal();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(LocalizationContainer.ConnectionWindowText.Password, LabelOptions);
-                Password = GUILayout.TextArea(Password, TextAreaStyle).Trim();
-                GUILayout.EndHorizontal();
-                if (GUILayout.Button($"{addMode} {LocalizationContainer.ConnectionWindowText.Server}", ButtonStyle))
-                    if (AddEventHandled)
-                        if (Selected == -1)
-                        {
-                            AddEntry = new ServerEntry
-                            {
-                                Name = ServerName,
-                                Address = ServerAddress,
-                                Port = 8800,
-                                Password = Password
-                            };
-                            int.TryParse(ServerPort, out AddEntry.Port);
-                            AddEventHandled = false;
-                        }
-                        else
-                        {
-                            EditEntry = new ServerEntry
-                            {
-                                Name = ServerName,
-                                Address = ServerAddress,
-                                Port = 8800,
-                                Password = Password
-                            };
-                            int.TryParse(ServerPort, out EditEntry.Port);
-                            EditEventHandled = false;
-                        }
+                SettingsSystem.CurrentSettings.PlayerName = newPlayerName.Trim().Replace("\n", "");
             }
-
-            GUILayout.Label(LocalizationContainer.ConnectionWindowText.CustomServers);
-            if (SettingsSystem.CurrentSettings.Servers.Count == 0)
-                GUILayout.Label(LocalizationContainer.ConnectionWindowText.NoServers);
-            else
-            {
-                GUILayout.BeginVertical(BoxStyle);
-                ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5),
-                    GUILayout.Height(WindowHeight - 100));
-
-                for (var serverPos = 0; serverPos < SettingsSystem.CurrentSettings.Servers.Count; serverPos++)
-                {
-                    var thisSelected = GUILayout.Toggle(serverPos == SelectedSafe,
-                        SettingsSystem.CurrentSettings.Servers[serverPos].Name, ButtonStyle);
-                    if (Selected == SelectedSafe)
-                        if (thisSelected)
-                        {
-                            if (Selected != serverPos)
-                            {
-                                Selected = serverPos;
-                                AddingServer = false;
-                            }
-                        }
-                        else if (Selected == serverPos)
-                        {
-                            Selected = -1;
-                            AddingServer = false;
-                        }
-                }
-                GUILayout.EndScrollView();
-                GUILayout.EndVertical();
-            }
-
-            //Draw Status Message
-            GUILayout.Label(Status, StatusStyle);
-            GUILayout.EndVertical();
+            GUI.enabled = true;
+            GUILayout.EndHorizontal();
         }
     }
 }
