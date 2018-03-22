@@ -26,7 +26,7 @@ namespace LunaClient.Harmony
 
             foreach (var pv in __result)
             {
-                if (!LockSystem.LockQuery.ControlLockExists(pv.vesselID))
+                if (LockSystem.LockQuery.ControlLockExists(pv.vesselID))
                     ProtoVesselsToRemove.Add(pv);
             }
 
