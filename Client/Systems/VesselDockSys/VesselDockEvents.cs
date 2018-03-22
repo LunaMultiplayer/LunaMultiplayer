@@ -67,12 +67,20 @@ namespace LunaClient.Systems.VesselDockSys
             }
         }
 
-        public void OnPartUndock(Part data)
+        public void OnPartUndock(Part part)
         {
+            var isEvaPart = part.FindModuleImplementing<KerbalEVA>() != null;
+            if (isEvaPart) //This is the case when a kerbal gets out of a external command seat
+            {
+                var vessel = part.vessel;
+                vessel.parts.Remove(part);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
+            }
+
             if (VesselCommon.IsSpectating)
             {
-                FlightCamera.SetTarget(data.vessel);
-                data.vessel.MakeActive();
+                FlightCamera.SetTarget(part.vessel);
+                part.vessel.MakeActive();
             }
         }
 
