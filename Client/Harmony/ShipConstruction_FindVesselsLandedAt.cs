@@ -15,19 +15,24 @@ namespace LunaClient.Harmony
     [HarmonyPatch(new[] { typeof(FlightState), typeof(string) })]
     public class ShipConstruction_FindVesselsLandedAt
     {
-        private static readonly List<ProtoVessel> ProtoVesselsBackup = new List<ProtoVessel>();
+        private static readonly List<ProtoVessel> ProtoVesselsToRemove = new List<ProtoVessel>();
 
         [HarmonyPostfix]
         private static void PostfixFindVesselsLandedAt(List<ProtoVessel> __result)
         {
             if (MainSystem.NetworkState < ClientState.Connected) return;
 
-            __result.Clear();
+            ProtoVesselsToRemove.Clear();
 
-            foreach (var pv in HighLogic.CurrentGame.flightState.protoVessels)
+            foreach (var pv in __result)
             {
                 if (!LockSystem.LockQuery.ControlLockExists(pv.vesselID))
-                    __result.Add(pv);
+                    ProtoVesselsToRemove.Add(pv);
+            }
+
+            foreach (var pv in ProtoVesselsToRemove)
+            {
+                __result.Remove(pv);
             }
         }
     }
