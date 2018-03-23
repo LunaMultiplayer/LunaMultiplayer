@@ -1,12 +1,4 @@
-﻿using LunaClient.Base;
-using LunaClient.Systems.Lock;
-using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.VesselUtilities;
-using System;
-using System.Collections.Generic;
-using UniLinq;
-using UnityEngine;
+﻿using LunaClient.Events;
 
 namespace LunaClient.Systems.VesselImmortalSys
 {
@@ -17,14 +9,7 @@ namespace LunaClient.Systems.VesselImmortalSys
     public class VesselImmortalSystem : Base.System<VesselImmortalSystem>
     {
         #region Fields & properties
-
-        private bool VesselImmortalSystemReady => Enabled && HighLogic.LoadedSceneIsFlight && FlightGlobals.ready && Time.timeSinceLevelLoad > 1f;
-
-        public List<Vessel> OwnedVessels { get; } = new List<Vessel>();
-        public List<Vessel> OtherPeopleVessels { get; } = new List<Vessel>();
-
-        public List<Guid> OwnedVesselIds { get; } = new List<Guid>();
-
+        
         public static VesselImmortalEvents VesselImmortalEvents { get; } = new VesselImmortalEvents();
 
         #endregion
@@ -37,82 +22,22 @@ namespace LunaClient.Systems.VesselImmortalSys
         {
             base.OnEnabled();
             GameEvents.onVesselLoaded.Add(VesselImmortalEvents.VesselLoaded);
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, MakeOtherPlayerVesselsImmortal));
-            SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, UpdateOwnedAndOtherPeopleVesselList));
+            SpectateEvent.onStartSpectating.Add(VesselImmortalEvents.StartSpectating);
+            SpectateEvent.onFinishedSpectating.Add(VesselImmortalEvents.FinishSpectating);
+            LockEvent.onLockAcquireUnityThread.Add(VesselImmortalEvents.OnLockAcquire);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-
-            OwnedVessels.Clear();
-            OtherPeopleVessels.Clear();
-
-            //In case we disable this system, set all the vessels back as mortal...
-            foreach (var vessel in FlightGlobals.Vessels)
-            {
-                SetVesselImmortalState(vessel, false);
-            }
-
             GameEvents.onVesselLoaded.Remove(VesselImmortalEvents.VesselLoaded);
+            SpectateEvent.onStartSpectating.Remove(VesselImmortalEvents.StartSpectating);
+            SpectateEvent.onFinishedSpectating.Remove(VesselImmortalEvents.FinishSpectating);
+            LockEvent.onLockAcquireUnityThread.Remove(VesselImmortalEvents.OnLockAcquire);
         }
 
         #endregion
-
-        #region Update methods
         
-        /// <summary>
-        /// Updates the list of our vessels and other peoples vessel.
-        /// We do this in another routine to improve performance
-        /// </summary>
-        private void UpdateOwnedAndOtherPeopleVesselList()
-        {
-            if (Enabled && VesselImmortalSystemReady)
-            {
-                OwnedVesselIds.Clear();
-                OwnedVesselIds.AddRange(LockSystem.LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName)
-                    .Select(l => l.VesselId)
-                    .Union(LockSystem.LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName)
-                    .Select(l => l.VesselId))
-                    .Where(v=> !VesselRemoveSystem.Singleton.VesselWillBeKilled(v)));
-
-                OwnedVessels.Clear();
-                OwnedVessels.AddRange(OwnedVesselIds.Select(FlightGlobals.FindVessel));
-
-                OtherPeopleVessels.Clear();
-                OtherPeopleVessels.AddRange(LockSystem.LockQuery.GetAllControlLocks()
-                    .Union(LockSystem.LockQuery.GetAllUpdateLocks())
-                    .Select(l => l.VesselId)
-                    .Except(OwnedVesselIds)
-                    .Where(v => !VesselRemoveSystem.Singleton.VesselWillBeKilled(v))
-                    .Select(FlightGlobals.FindVessel));
-            }
-        }
-
-        /// <summary>
-        /// Make the other player vessels inmortal
-        /// </summary>
-        private void MakeOtherPlayerVesselsImmortal()
-        {
-            if (Enabled && VesselImmortalSystemReady)
-            {
-                foreach (var vessel in OwnedVessels.Where(v => v != null))
-                {
-                    SetVesselImmortalState(vessel, false);
-                }
-
-                foreach (var vessel in OtherPeopleVessels.Where(v => v != null))
-                {
-                    SetVesselImmortalState(vessel, true);
-                }
-
-                //If we are spectating set our own vessel as immortal
-                SetVesselImmortalState(FlightGlobals.ActiveVessel, VesselCommon.IsSpectating);
-            }
-        }
-
-        #endregion
-
         #region public methods
 
         /// <summary>
@@ -120,7 +45,7 @@ namespace LunaClient.Systems.VesselImmortalSys
         /// </summary>
         public void SetVesselImmortalState(Vessel vessel, bool immortal)
         {
-            if (vessel == null) return;
+            if (vessel == null || !vessel.loaded) return;
 
             foreach (var part in vessel.Parts)
             {
@@ -141,6 +66,15 @@ namespace LunaClient.Systems.VesselImmortalSys
 
                 //Do not set this as then you can't click on parts
                 //part.SetDetectCollisions(!immortal);
+            }
+
+            if (immortal)
+            {
+                ImmortalEvent.onVesselImmortal.Fire(vessel);
+            }
+            else
+            {
+                ImmortalEvent.onVesselMortal.Fire(vessel);
             }
         }
 
