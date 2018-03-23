@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <PlayerName>Имя Игрока:</PlayerName>
-    <Connect>Подключиться</Connect>
-    <Disconnect>Отключиться</Disconnect>
-    <Options>Настройки</Options>
-    <Servers>Сервера</Servers>
     <Name>Имя:</Name>
     <Address>Адрес:</Address>
     <Port>Порт:</Port>

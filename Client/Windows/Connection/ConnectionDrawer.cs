@@ -112,7 +112,7 @@ namespace LunaClient.Windows.Connection
             if (MainSystem.NetworkState <= ClientState.Disconnected)
             {
                 GUI.enabled = SelectedIndex >= 0;
-                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Connect, ButtonStyle))
+                if (GUILayout.Button(ConnectBigIcon, ButtonStyle))
                 {
                     NetworkConnection.ConnectToServer(
                         SettingsSystem.CurrentSettings.Servers[SelectedIndex].Address,
@@ -122,17 +122,15 @@ namespace LunaClient.Windows.Connection
             }
             else
             {
-                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Disconnect, ButtonStyle))
+                if (GUILayout.Button(DisconnectBigIcon, ButtonStyle))
                 {
                     NetworkConnection.Disconnect("Cancelled connection to server");
                 }
             }
 
             GUI.enabled = true;
-            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display,
-                LocalizationContainer.ConnectionWindowText.Options, ButtonStyle);
-            if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Servers, ButtonStyle))
-                ServerListWindow.Singleton.Display = true;
+            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, SettingsBigIcon, ButtonStyle);
+            ServerListWindow.Singleton.Display = GUILayout.Toggle(ServerListWindow.Singleton.Display, ServerBigIcon, ButtonStyle);
             GUILayout.EndHorizontal();
         }
 

@@ -50,7 +50,7 @@ namespace LunaClient.Windows.Status
                 {
                     GUILayout.Label(StatusTexts.GetTimeLabel(SubspaceDisplay[i]));
                     GUILayout.FlexibleSpace();
-                    if (NotWarpingAndIsFutureSubspace(SubspaceDisplay[i].SubspaceId) && GUILayout.Button(StatusTexts.SyncBtnTxt, ButtonStyle))
+                    if (NotWarpingAndIsFutureSubspace(SubspaceDisplay[i].SubspaceId) && GUILayout.Button(SyncIcon, ButtonStyle))
                         WarpSystem.CurrentSubspace = SubspaceDisplay[i].SubspaceId;
                 }
                 GUILayout.EndHorizontal();
@@ -68,9 +68,9 @@ namespace LunaClient.Windows.Status
             DrawDebugSection();
 #endif
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(StatusTexts.DisconnectBtnTxt, ButtonStyle))
+            if (GUILayout.Button(DisconnectIcon, ButtonStyle))
                 MainSystem.Singleton.DisconnectFromGame();
-            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, StatusTexts.OptionsBtnTxt, ButtonStyle);
+            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, SettingsIcon, ButtonStyle);
             GUILayout.EndHorizontal();
 
             GUILayout.EndVertical();

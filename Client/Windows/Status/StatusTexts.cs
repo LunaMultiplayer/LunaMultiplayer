@@ -13,8 +13,6 @@ namespace LunaClient.Windows.Status
         public const string SystemsBtnTxt = "Systems";
         public const string LocksBtnTxt = "Locks";
         public const string WarpingLabelTxt = "WARPING";
-        public const string SyncBtnTxt = "Sync";
-        public const string DisconnectBtnTxt = "Disconnect";
         public const string Debug1BtnTxt = "D1";
         public const string Debug2BtnTxt = "D2";
         public const string Debug3BtnTxt = "D3";
@@ -24,7 +22,6 @@ namespace LunaClient.Windows.Status
         public const string Debug7BtnTxt = "D7";
         public const string Debug8BtnTxt = "D8";
         public const string Debug9BtnTxt = "D9";
-        public const string OptionsBtnTxt = "Options";
 
         private static string _lastPlayerText = string.Empty;
         public static string GetPlayerText(PlayerStatus playerStatus)

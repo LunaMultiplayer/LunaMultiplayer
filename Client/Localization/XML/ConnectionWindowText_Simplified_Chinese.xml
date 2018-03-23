@@ -1,10 +1,6 @@
 <?xml version="1.0"?>
 <ConnectionWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <PlayerName>玩家名称:</PlayerName>
-    <Connect>连接</Connect>
-    <Disconnect>取消连接</Disconnect>
-    <Options>选项</Options>
-    <Servers>服务器</Servers>
     <Name>名称:</Name>
     <Address>地址:</Address>
     <Port>端口:</Port>
