@@ -38,6 +38,10 @@ namespace LunaClient.Windows.ServerList
         private static string _orderBy = "Ping";
         private static bool _ascending = true;
 
+        private static GUIStyle HeaderServerLine;
+        private static GUIStyle EvenServerLine;
+        private static GUIStyle OddServerLine;
+        
         #endregion
 
         #region Constructor
@@ -57,16 +61,31 @@ namespace LunaClient.Windows.ServerList
             WindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             _serverDetailWindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
+
+            HeaderServerLine = new GUIStyle();
+            HeaderServerLine.normal.background = new Texture2D(1, 1);
+            HeaderServerLine.normal.background.SetPixel(0, 0, new Color(0.04f, 0.04f, 0.04f, 0.9f));
+            HeaderServerLine.normal.background.Apply();
+            HeaderServerLine.onNormal.background = new Texture2D(1, 1);
+            HeaderServerLine.onNormal.background.SetPixel(0, 0, new Color(0.04f, 0.04f, 0.04f, 0.9f));
+            HeaderServerLine.onNormal.background.Apply();
+
+            EvenServerLine = new GUIStyle();
+            EvenServerLine.normal.background = new Texture2D(1, 1);
+            EvenServerLine.normal.background.SetPixel(0, 0, new Color(0.120f, 0.120f, 0.150f, 0.9f));
+            EvenServerLine.normal.background.Apply();
+            EvenServerLine.onNormal.background = new Texture2D(1, 1);
+            EvenServerLine.onNormal.background.SetPixel(0, 0, new Color(0.120f, 0.120f, 0.150f, 0.9f));
+            EvenServerLine.onNormal.background.Apply();
             
-            BoxStyle = new GUIStyle(GUI.skin.box);
-            var backgroundColor = new Color(0.145f, 0.165f, 0.198f, 0.8f);
-            BoxStyle.normal.background = new Texture2D(1,1);
-            BoxStyle.normal.background.SetPixel(0, 0, backgroundColor);
-            BoxStyle.normal.background.Apply();
-            BoxStyle.onNormal.background = new Texture2D(1, 1);
-            BoxStyle.onNormal.background.SetPixel(0, 0, backgroundColor);
-            BoxStyle.onNormal.background.Apply();
-            
+            OddServerLine = new GUIStyle();
+            OddServerLine.normal.background = new Texture2D(1, 1);
+            OddServerLine.normal.background.SetPixel(0, 0, new Color(0.180f, 0.180f, 0.220f, 0.9f));
+            OddServerLine.normal.background.Apply();
+            OddServerLine.onNormal.background = new Texture2D(1, 1);
+            OddServerLine.onNormal.background.SetPixel(0, 0, new Color(0.180f, 0.180f, 0.220f, 0.9f));
+            OddServerLine.onNormal.background.Apply();
+
             LabelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
 
             LayoutOptions = new GUILayoutOption[4];

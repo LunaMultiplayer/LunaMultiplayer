@@ -1,5 +1,6 @@
 ﻿using LunaClient.Localization;
 using LunaClient.Network;
+using LunaCommon;
 using LunaCommon.Enums;
 using System.Linq;
 using UnityEngine;
@@ -18,8 +19,7 @@ namespace LunaClient.Windows.ServerList
             GUI.DragWindow(MoveRect);
 
             GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button(RefreshIcon, ButtonStyle))
+            if (GUILayout.Button(RefreshBigIcon, ButtonStyle))
             {
                 NetworkServerList.RequestServers();
             }
@@ -47,7 +47,7 @@ namespace LunaClient.Windows.ServerList
 
         private void DrawGridHeader()
         {
-            GUILayout.BeginHorizontal(GUI.skin.box);
+            GUILayout.BeginHorizontal(HeaderServerLine);
 
             GUILayout.BeginHorizontal(GUILayout.Width(25));
             if (GUILayout.Button(_ascending ? "▲" : "▼", ButtonStyle))
@@ -142,7 +142,7 @@ namespace LunaClient.Windows.ServerList
 
         private void DrawServerList()
         {
-            GUILayout.BeginHorizontal(BoxStyle);
+            GUILayout.BeginHorizontal();
 
             if (DisplayedServers == null || !DisplayedServers.Any())
             {
@@ -159,72 +159,82 @@ namespace LunaClient.Windows.ServerList
             else
             {
                 GUILayout.BeginVertical();
-                foreach (var currentEntry in DisplayedServers)
+
+                for (var i = 0; i < DisplayedServers.Count; i++)
                 {
-                    GUILayout.BeginHorizontal();
+                    var currentEntry = DisplayedServers[i];
 
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[0]));
-                    if (GUILayout.Button("▶", ButtonStyle))
-                    {
-                        if (currentEntry.Password)
-                        {
-                            _selectedServerId = currentEntry.Id;
-                        }
-                        else
-                        {
-                            NetworkServerList.IntroduceToServer(currentEntry.Id);
-                            Display = false;
-                        }
-                    }
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[1]));
-                    if (currentEntry.Password)
-                        GUILayout.Label(new GUIContent(KeyIcon, "Password"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[1]));
-                    else
-                        GUILayout.Label("", GUILayout.MinWidth(HeaderGridSize[1]));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[2]));
-                    GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[2]));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[3]));
-                    GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[3]));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[4]));
-                    GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[4]));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[5]));
-                    GUILayout.Label(new GUIContent($"{(GameMode)currentEntry.GameMode}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[5]));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[6]));
-                    GUILayout.Label(new GUIContent($"{(WarpMode)currentEntry.WarpMode}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[6]));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[7]));
-                    GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[7]));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[8]));
-                    GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[8]));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(325));
-                    GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[9]));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal(GUILayout.MinWidth(550));
-                    GUILayout.Label(new GUIContent($"{currentEntry.Description}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[10]));
-                    GUILayout.EndHorizontal();
-
+                    GUILayout.BeginHorizontal(i % 2 != 0 ? OddServerLine : EvenServerLine);
+                    DrawServerEntry(currentEntry);
                     GUILayout.EndHorizontal();
                 }
                 GUILayout.EndVertical();
             }
+            GUILayout.EndHorizontal();
+        }
+
+        private void DrawServerEntry(ServerInfo currentEntry)
+        {
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[0]));
+            if (GUILayout.Button("▶", ButtonStyle))
+            {
+                if (currentEntry.Password)
+                {
+                    _selectedServerId = currentEntry.Id;
+                }
+                else
+                {
+                    NetworkServerList.IntroduceToServer(currentEntry.Id);
+                    Display = false;
+                }
+            }
+
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[1]));
+            if (currentEntry.Password)
+                GUILayout.Label(new GUIContent(KeyIcon, "Password"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[1]));
+            else
+                GUILayout.Label("", GUILayout.MinWidth(HeaderGridSize[1]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[2]));
+            GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[2]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[3]));
+            GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[3]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[4]));
+            GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[4]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[5]));
+            GUILayout.Label(new GUIContent($"{(GameMode) currentEntry.GameMode}"), LabelStyle,
+                GUILayout.MinWidth(HeaderGridSize[5]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[6]));
+            GUILayout.Label(new GUIContent($"{(WarpMode) currentEntry.WarpMode}"), LabelStyle,
+                GUILayout.MinWidth(HeaderGridSize[6]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[7]));
+            GUILayout.Label(new GUIContent($"{(TerrainQuality) currentEntry.TerrainQuality}"), LabelStyle,
+                GUILayout.MinWidth(HeaderGridSize[7]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[8]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[8]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(325));
+            GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[9]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(550));
+            GUILayout.Label(new GUIContent($"{currentEntry.Description}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[10]));
             GUILayout.EndHorizontal();
         }
 
