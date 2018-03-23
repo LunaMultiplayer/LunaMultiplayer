@@ -85,7 +85,6 @@
     <Compile Include="Message\Base\MessageData.cs" />
     <Compile Include="Message\Base\MessageStore.cs" />
     <Compile Include="Message\ClientMessageFactory.cs" />
-    <Compile Include="Message\Client\AdminCliMsg.cs" />
     <Compile Include="Message\Client\Base\CliMsgBase.cs" />
     <Compile Include="Message\Client\ChatCliMsg.cs" />
     <Compile Include="Message\Client\CraftLibraryCliMsg.cs" />
@@ -103,11 +102,6 @@
     <Compile Include="Message\Client\SettingsCliMsg.cs" />
     <Compile Include="Message\Client\VesselCliMsg.cs" />
     <Compile Include="Message\Client\WarpCliMsg.cs" />
-    <Compile Include="Message\Data\Admin\AdminAddMsgData.cs" />
-    <Compile Include="Message\Data\Admin\AdminBaseMsgData.cs" />
-    <Compile Include="Message\Data\Admin\AdminListReplyMsgData.cs" />
-    <Compile Include="Message\Data\Admin\AdminListRequestMsgData.cs" />
-    <Compile Include="Message\Data\Admin\AdminRemoveMsgData.cs" />
     <Compile Include="Message\Data\Chat\ChatMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColor.cs" />
     <Compile Include="Message\Data\Color\PlayerColorBaseMsgData.cs" />
@@ -215,7 +209,6 @@
     <Compile Include="Message\MasterServer\Base\MstSrvMsgBase.cs" />
     <Compile Include="Message\MasterServer\MainMstSrvMsg.cs" />
     <Compile Include="Message\ServerMessageFactory.cs" />
-    <Compile Include="Message\Server\AdminSrvMsg.cs" />
     <Compile Include="Message\Server\Base\SrvMsgBase.cs" />
     <Compile Include="Message\Server\ChatSrvMsg.cs" />
     <Compile Include="Message\Server\CraftLibrarySrvMsg.cs" />

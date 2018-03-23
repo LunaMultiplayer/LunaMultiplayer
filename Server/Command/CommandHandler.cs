@@ -1,21 +1,18 @@
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
-using Server.Command.CombinedCommand;
+﻿using Server.Command.CombinedCommand;
 using Server.Command.Command;
 using Server.Context;
 using Server.Log;
 using Server.Settings;
+using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Server.Command
 {
     public class CommandHandler
     {
-        static CommandHandler()
-        {
-            RegisterCommands();
-        }
+        static CommandHandler() => RegisterCommands();
 
         public static readonly ConcurrentDictionary<string, CommandDefinition> Commands =
             new ConcurrentDictionary<string, CommandDefinition>();
@@ -23,7 +20,6 @@ namespace Server.Command
         private static void RegisterCommands()
         {
             //Register the server Commands
-            RegisterCommand("admin", new AdminCommands().HandleCommand, "Sets a player as admin/removes admin from the player");
             RegisterCommand("ban", new BanCommands().HandleCommand, "Bans someone from the server");
             RegisterCommand("changesettings", new ChangeSettingsCommand().Execute, "Changes the server settings");
             RegisterCommand("clearvessels", new ClearVesselsCommand().Execute, "Clears ALL SPECIFIED vessels from universe");

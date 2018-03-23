@@ -63,6 +63,7 @@
     <Compile Include="Events\ImmortalEvent.cs" />
     <Compile Include="Events\LockEvent.cs" />
     <Compile Include="Events\ModApiEvent.cs" />
+    <Compile Include="Events\NetworkEvent.cs" />
     <Compile Include="Events\RevertEvent.cs" />
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
@@ -196,8 +197,6 @@
     <Compile Include="Network\NetworkMain.cs" />
     <Compile Include="Network\NetworkStatistics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Systems\Admin\AdminMessageHandler.cs" />
-    <Compile Include="Systems\Admin\AdminMessageSender.cs" />
     <Compile Include="Systems\Chat\ChatMessageHandler.cs" />
     <Compile Include="Systems\Chat\ChatMessageSender.cs" />
     <Compile Include="Systems\Chat\ChatSystem.cs" />
@@ -254,7 +253,6 @@
     <Compile Include="Utilities\CommonUtil.cs" />
     <Compile Include="Utilities\CompatibilityChecker.cs" />
     <Compile Include="Utilities\ConfigNodeSerializer.cs" />
-    <Compile Include="Systems\Admin\AdminSystem.cs" />
     <Compile Include="Systems\Asteroid\AsteroidEvents.cs" />
     <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
     <Compile Include="Base\Interface\ISystem.cs" />

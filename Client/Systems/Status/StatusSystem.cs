@@ -1,4 +1,4 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
@@ -37,6 +37,7 @@ namespace LunaClient.Systems.Status
         {
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckPlayerStatus));
+            MessageSender.SendOwnStatus();
         }
 
         protected override void OnDisabled()

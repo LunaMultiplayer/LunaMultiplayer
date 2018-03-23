@@ -28,6 +28,8 @@ namespace LunaClient.Systems.PlayerColorSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            MessageSender.SendPlayerColorToServer();
+
             GameEvents.onVesselCreate.Add(PlayerColorEvents.OnVesselCreated);
             GameEvents.OnMapEntered.Add(PlayerColorEvents.MapEntered);
             LockEvent.onLockAcquireUnityThread.Add(PlayerColorEvents.OnLockAcquire);

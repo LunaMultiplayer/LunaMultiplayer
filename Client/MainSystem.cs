@@ -1,5 +1,6 @@
 ﻿using CommNet;
 using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.ModuleStore;
 using LunaClient.Network;
@@ -44,9 +45,9 @@ namespace LunaClient
                 if (value == ClientState.Disconnected)
                 {
                     NetworkMain.ResetNetworkSystem();
-                    SystemsHandler.KillAllSystems();
                 }
                 _networkState = value;
+                NetworkEvent.onNetworkStatusChanged.Fire(value);
             }
         }
 

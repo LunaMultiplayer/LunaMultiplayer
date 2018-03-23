@@ -10,6 +10,7 @@ namespace LunaClient.Systems.Ping
     {
         #region Constructor
 
+        /// <inheritdoc />
         /// <summary>
         /// We setup the routine in the constructor as this system is always enabled
         /// </summary>
@@ -17,21 +18,16 @@ namespace LunaClient.Systems.Ping
 
         #endregion
 
-        /// <inheritdoc />
-        /// <summary>
-        /// This system must be ALWAYS enabled!
-        /// </summary>
-        public override bool Enabled => true;
-
-        public override string SystemName { get; } = nameof(PingSystem);
-
         #region Fields & properties
 
-        private const float PingTimeoutinSec = 7.5f;
+        private const float PingTimeoutInSec = 7.5f;
+
         private static ConcurrentBag<string> PingQueue { get; } = new ConcurrentBag<string>();
+        protected override bool AlwaysEnabled => true;
+        public override string SystemName { get; } = nameof(PingSystem);
 
         #endregion
-        
+
         #region Public methods
 
         public static void QueuePing(string endpoint)
@@ -66,7 +62,7 @@ namespace LunaClient.Systems.Ping
             {
                 elapsedSecs++;
                 yield return new WaitForSeconds(1f);
-            } while (!ping.isDone && elapsedSecs < PingTimeoutinSec);
+            } while (!ping.isDone && elapsedSecs < PingTimeoutInSec);
 
             if (NetworkServerList.Servers.TryGetValue(endpoint, out var server))
             {

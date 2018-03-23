@@ -1,43 +1,18 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Network;
-using LunaClient.Systems.Admin;
-using LunaClient.Systems.Asteroid;
-using LunaClient.Systems.Bug;
-using LunaClient.Systems.Chat;
-using LunaClient.Systems.CraftLibrary;
-using LunaClient.Systems.Facility;
 using LunaClient.Systems.Flag;
-using LunaClient.Systems.FlagPlant;
-using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
 using LunaClient.Systems.KerbalSys;
-using LunaClient.Systems.KscScene;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Motd;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
-using LunaClient.Systems.Screenshot;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
-using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.VesselDockSys;
-using LunaClient.Systems.VesselEvaSys;
-using LunaClient.Systems.VesselFairingsSys;
-using LunaClient.Systems.VesselFlightStateSys;
-using LunaClient.Systems.VesselImmortalSys;
-using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselPartModuleSyncSys;
-using LunaClient.Systems.VesselPositionSys;
-using LunaClient.Systems.VesselPrecalcSys;
 using LunaClient.Systems.VesselProtoSys;
-using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselResourceSys;
-using LunaClient.Systems.VesselStateSys;
-using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.VesselSyncSys;
-using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -47,48 +22,28 @@ namespace LunaClient.Systems.Network
 {
     public class NetworkSystem : System<NetworkSystem>
     {
-        #region Constructor
-
-        /// <summary>
-        /// This system must be ALWAYS enabled so we set it as enabled on the constructor
-        /// </summary>
-        public NetworkSystem() => base.Enabled = true;
-
-        #endregion
-
         #region Disconnect message
 
         public static bool DisplayDisconnectMessage { get; set; }
 
         #endregion
 
-        public override string SystemName { get; } = nameof(NetworkSystem);
+        #region Constructor
 
-        private static bool _enabled = true;
-
-        /// <summary>
-        /// This system must be ALWAYS enabled!
-        /// </summary>
-        public override bool Enabled
+        public NetworkSystem()
         {
-            get => _enabled;
-            set
-            {
-                base.Enabled |= value;
-                _enabled |= value;
-            }
-        }
-
-        #region Base overrides
-
-        protected override void OnEnabled()
-        {
-            base.OnEnabled();
-
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, NetworkUpdate));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ShowDisconnectMessage));
         }
 
+        #endregion
+
+        #region Base overrides
+
+        public override string SystemName { get; } = nameof(NetworkSystem);
+
+        protected override bool AlwaysEnabled => true;
+        
         public override int ExecutionOrder => int.MinValue;
 
         #endregion
@@ -101,7 +56,6 @@ namespace LunaClient.Systems.Network
             {
                 case ClientState.DisconnectRequested:
                 case ClientState.Disconnected:
-                    DisableAllSystems();
                     break;
                 case ClientState.Connecting:
                     ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(NetworkUpdate), 0);
@@ -234,31 +188,7 @@ namespace LunaClient.Systems.Network
                         MainSystem.NetworkState = ClientState.ScenariosSynced;
                     break;
                 case ClientState.LocksSynced:
-                    MainSystem.Singleton.Status = "Locks synced";
-                    AdminSystem.Singleton.Enabled = true;
-                    MainSystem.NetworkState = ClientState.SyncingAdmins;
-                    NetworkSimpleMessageSender.SendAdminsRequest();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.SyncingAdmins:
-                    MainSystem.Singleton.Status = "Syncing admins";
-                    if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.LocksSynced;
-                    break;
-                case ClientState.AdminsSynced:
-                    MainSystem.Singleton.Status = "Admins synced";
-                    GroupSystem.Singleton.Enabled = true;
-                    MainSystem.NetworkState = ClientState.SyncingGroups;
-                    NetworkSimpleMessageSender.SendGroupListRequest();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.SyncingGroups:
-                    MainSystem.Singleton.Status = "Syncing groups";
-                    if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.AdminsSynced;
-                    break;
-                case ClientState.GroupsSynced:
-                    MainSystem.Singleton.Status = "Groups synced";
+                    MainSystem.Singleton.Status = "Starting";
                     MainSystem.Singleton.StartGame = true;
                     MainSystem.NetworkState = ClientState.Starting;
                     break;
@@ -270,34 +200,6 @@ namespace LunaClient.Systems.Network
                     LunaLog.Log("[LMP]: All systems up and running. Поехали!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
-                        ChatSystem.Singleton.Enabled = true;
-                        TimeSyncerSystem.Singleton.Enabled = true;
-                        MotdSystem.Singleton.Enabled = true;
-                        VesselLockSystem.Singleton.Enabled = true;
-                        VesselPositionSystem.Singleton.Enabled = true;
-                        VesselFlightStateSystem.Singleton.Enabled = true;
-                        VesselRemoveSystem.Singleton.Enabled = true;
-                        VesselImmortalSystem.Singleton.Enabled = true;
-                        VesselDockSystem.Singleton.Enabled = true;
-                        VesselSwitcherSystem.Singleton.Enabled = true;
-                        VesselPrecalcSystem.Singleton.Enabled = true;
-                        VesselStateSystem.Singleton.Enabled = true;
-                        VesselResourceSystem.Singleton.Enabled = true;
-                        VesselUpdateSystem.Singleton.Enabled = true;
-                        VesselPartModuleSyncSystem.Singleton.Enabled = true;
-                        VesselFairingsSystem.Singleton.Enabled = true;
-                        KscSceneSystem.Singleton.Enabled = true;
-                        AsteroidSystem.Singleton.Enabled = true;
-                        FacilitySystem.Singleton.Enabled = true;
-                        FlagPlantSystem.Singleton.Enabled = true;
-                        VesselEvaSystem.Singleton.Enabled = true;
-                        ScreenshotSystem.Singleton.Enabled = true;
-                        CraftLibrarySystem.Singleton.Enabled = true;
-                        BugSystem.Singleton.Enabled = true;
-                        PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
-                        StatusSystem.Singleton.MessageSender.SendOwnStatus();
-                        NetworkSimpleMessageSender.SendMotdRequest();
-
                         MainSystem.NetworkState = ClientState.Running;
                     }
                     break;
@@ -314,48 +216,6 @@ namespace LunaClient.Systems.Network
                 //Control locks will bug out the space centre sceen, so remove them before starting.
                 NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
             }
-        }
-
-        private static void DisableAllSystems()
-        {
-            HandshakeSystem.Singleton.Enabled = false;
-            SettingsSystem.Singleton.Enabled = false;
-            KerbalSystem.Singleton.Enabled = false;
-            VesselProtoSystem.Singleton.Enabled = false;
-            VesselSyncSystem.Singleton.Enabled = false;
-            WarpSystem.Singleton.Enabled = false;
-            PlayerColorSystem.Singleton.Enabled = false;
-            FlagSystem.Singleton.Enabled = false;
-            StatusSystem.Singleton.Enabled = false;
-            PlayerConnectionSystem.Singleton.Enabled = false;
-            ScenarioSystem.Singleton.Enabled = false;
-            CraftLibrarySystem.Singleton.Enabled = false;
-            LockSystem.Singleton.Enabled = false;
-            AdminSystem.Singleton.Enabled = false;
-            GroupSystem.Singleton.Enabled = false;
-            ChatSystem.Singleton.Enabled = false;
-            TimeSyncerSystem.Singleton.Enabled = false;
-            MotdSystem.Singleton.Enabled = false;
-            VesselLockSystem.Singleton.Enabled = false;
-            VesselPositionSystem.Singleton.Enabled = false;
-            VesselFlightStateSystem.Singleton.Enabled = false;
-            VesselRemoveSystem.Singleton.Enabled = false;
-            VesselImmortalSystem.Singleton.Enabled = false;
-            VesselDockSystem.Singleton.Enabled = false;
-            VesselSwitcherSystem.Singleton.Enabled = false;
-            VesselPrecalcSystem.Singleton.Enabled = false;
-            VesselStateSystem.Singleton.Enabled = false;
-            VesselResourceSystem.Singleton.Enabled = false;
-            VesselUpdateSystem.Singleton.Enabled = false;
-            VesselPartModuleSyncSystem.Singleton.Enabled = false;
-            VesselFairingsSystem.Singleton.Enabled = false;
-            KscSceneSystem.Singleton.Enabled = false;
-            AsteroidSystem.Singleton.Enabled = false;
-            FacilitySystem.Singleton.Enabled = false;
-            FlagPlantSystem.Singleton.Enabled = false;
-            VesselEvaSystem.Singleton.Enabled = false;
-            ScreenshotSystem.Singleton.Enabled = false;
-            BugSystem.Singleton.Enabled = false;
         }
 
         #endregion

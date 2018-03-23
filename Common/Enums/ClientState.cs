@@ -28,10 +28,6 @@
         ScenariosSynced = 21,
         SyncingLocks = 24,
         LocksSynced = 25,
-        SyncingAdmins = 26,
-        AdminsSynced = 27,
-        SyncingGroups = 28,
-        GroupsSynced = 29,
 
         Starting = 35,
         Running = 36

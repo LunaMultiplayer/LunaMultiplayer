@@ -8,5 +8,11 @@ namespace LunaClient.Systems.Motd
         public bool DisplayMotd { get; set; }
 
         public override string SystemName { get; } = nameof(MotdSystem);
+
+        protected override void OnEnabled()
+        {
+            base.OnEnabled();
+            MessageSender.SendMotdRequest();
+        }
     }
 }
