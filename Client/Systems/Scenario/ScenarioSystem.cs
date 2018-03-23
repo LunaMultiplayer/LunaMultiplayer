@@ -1,4 +1,4 @@
-using FinePrint.Utilities;
+﻿using FinePrint.Utilities;
 using LunaClient.Base;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.SettingsSys;
@@ -163,21 +163,7 @@ namespace LunaClient.Systems.Scenario
                 }
             }
         }
-
-        public void UpgradeTheAstronautComplexSoTheGameDoesntBugOut()
-        {
-            var sm = HighLogic.CurrentGame.scenarios.Find(psm => psm.moduleName == "ScenarioUpgradeableFacilities");
-            if (sm != null &&
-                ScenarioUpgradeableFacilities.protoUpgradeables.ContainsKey("SpaceCenter/AstronautComplex"))
-            {
-                foreach (var uf in ScenarioUpgradeableFacilities.protoUpgradeables["SpaceCenter/AstronautComplex"].facilityRefs)
-                {
-                    LunaLog.Log("[LMP]: Setting astronaut complex to max level");
-                    uf.SetLevel(uf.MaxLevel);
-                }
-            }
-        }
-
+        
         #endregion
 
         #region Private methods

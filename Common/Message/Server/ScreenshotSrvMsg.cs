@@ -22,6 +22,7 @@ namespace LunaCommon.Message.Server
             [(ushort)ScreenshotMessageType.FoldersReply] = typeof(ScreenshotFoldersReplyMsgData),
             [(ushort)ScreenshotMessageType.ListReply] = typeof(ScreenshotListReplyMsgData),
             [(ushort)ScreenshotMessageType.ScreenshotData] = typeof(ScreenshotDataMsgData),
+            [(ushort)ScreenshotMessageType.Notification] = typeof(ScreenshotNotificationMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Screenshot;

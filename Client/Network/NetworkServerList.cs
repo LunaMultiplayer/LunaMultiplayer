@@ -34,7 +34,7 @@ namespace LunaClient.Network
             }
         }
 
-        public static ConcurrentDictionary<string, ServerInfo> Servers { get; } = new ConcurrentDictionary<string, ServerInfo>();
+        public static ConcurrentDictionary<long, ServerInfo> Servers { get; } = new ConcurrentDictionary<long, ServerInfo>();
         private static readonly Random Random = new Random();
         
         /// <summary>
@@ -65,7 +65,7 @@ namespace LunaClient.Network
                     if (data.ServerVersion != LmpVersioning.CurrentVersion)
                         return;
 
-                    if (!Servers.ContainsKey(data.ExternalEndpoint))
+                    if (!Servers.ContainsKey(data.Id))
                     {
                         var server = new ServerInfo
                         {
@@ -89,8 +89,8 @@ namespace LunaClient.Network
                             ServerVersion = data.ServerVersion
                         };
 
-                        if (Servers.TryAdd(data.ExternalEndpoint, server))
-                            PingSystem.QueuePing(data.ExternalEndpoint);
+                        if (Servers.TryAdd(data.Id, server))
+                            PingSystem.QueuePing(data.Id);
                     }
                 }
             }
@@ -103,27 +103,47 @@ namespace LunaClient.Network
         /// <summary>
         /// Send a request to the master server to introduce us and do the nat punchtrough to the selected server
         /// </summary>
-        public static void IntroduceToServer(long currentEntryId)
+        public static void IntroduceToServer(long serverId)
         {
-            try
+            if (Servers.TryGetValue(serverId, out var serverInfo))
             {
-                var token = RandomString(10);
-                var ownEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(), NetworkMain.Config.Port);
+                var serverEndpoint = Common.CreateEndpointFromString(serverInfo.ExternalEndpoint);
+                if (ServerIsInLocalLan(serverEndpoint))
+                {
+                    LunaLog.Log("Server is in LAN. Skipping NAT punch");
+                    NetworkConnection.ConnectToServer(serverEndpoint.Address.ToString(), serverEndpoint.Port, Password);
+                }
+                else
+                {
+                    try
+                    {
+                        var token = RandomString(10);
+                        var ownEndpoint = new IPEndPoint(LunaNetUtils.GetMyAddress(), NetworkMain.Config.Port);
 
-                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
-                msgData.Id = currentEntryId;
-                msgData.Token = token;
-                msgData.InternalEndpoint = Common.StringFromEndpoint(ownEndpoint);
+                        var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<MsIntroductionMsgData>();
+                        msgData.Id = serverId;
+                        msgData.Token = token;
+                        msgData.InternalEndpoint = Common.StringFromEndpoint(ownEndpoint);
 
-                var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
+                        var introduceMsg = NetworkMain.MstSrvMsgFactory.CreateNew<MainMstSrvMsg>(msgData);
 
-                LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {token}");
-                NetworkSender.QueueOutgoingMessage(introduceMsg);
+                        LunaLog.Log($"[LMP]: Sending NAT introduction to server. Token: {token}");
+                        NetworkSender.QueueOutgoingMessage(introduceMsg);
+                    }
+                    catch (Exception e)
+                    {
+                        LunaLog.LogError($"[LMP]: Error connecting to server: {e}");
+                    }
+                }
             }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error connecting to server: {e}");
-            }
+        }
+
+        /// <summary>
+        /// Returns true if the server is running in a local LAN
+        /// </summary>
+        private static bool ServerIsInLocalLan(IPEndPoint serverEndPoint)
+        {
+            return LunaNetUtils.GetOwnExternalIpAddress() == serverEndPoint.Address.ToString();
         }
 
         /// <summary>

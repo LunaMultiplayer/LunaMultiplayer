@@ -47,6 +47,10 @@ namespace LunaClient.Systems.Screenshot
                         }
                     }
                     break;
+                case ScreenshotMessageType.Notification:
+                    var notificationMsg = (ScreenshotNotificationMsgData)msgData;
+                    System.FoldersWithNewContent.Add(notificationMsg.FolderName);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -99,7 +99,7 @@ namespace LunaClient.Windows.Screenshots
                 if (_selectedImage > 0 && System.DownloadedImages.ContainsKey(_selectedFolder))
                 {
                     _imageWindowRect = FixWindowPos(GUILayout.Window(6721 + MainSystem.WindowOffset, _imageWindowRect, 
-                        DrawImageContent, $"{DateTime.FromBinary(_selectedImage).ToLongTimeString()}", WindowStyle));
+                        DrawImageContent, $"{DateTime.FromBinary(_selectedImage):yyyy/MM/dd HH:mm:ss} UTC", WindowStyle));
                 }
             }
 

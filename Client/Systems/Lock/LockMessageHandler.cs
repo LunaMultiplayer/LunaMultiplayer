@@ -46,6 +46,7 @@ namespace LunaClient.Systems.Lock
                         LockSystem.LockStore.AddOrUpdateLock(data.Lock);
 
                         LockEvent.onLockAcquire.Fire(data.Lock);
+                        System.AcquiredLocks.Enqueue(data.Lock);
                     }
                     break;
                 case LockMessageType.Release:
@@ -54,6 +55,7 @@ namespace LunaClient.Systems.Lock
                         LockSystem.LockStore.RemoveLock(data.Lock);
 
                         LockEvent.onLockRelease.Fire(data.Lock);
+                        System.ReleasedLocks.Enqueue(data.Lock);
                     }
                     break;
             }

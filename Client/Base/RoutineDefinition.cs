@@ -42,13 +42,10 @@ namespace LunaClient.Base
         /// Select here if the routine must run in update or in fixed update
         /// </summary>
         public RoutineExecution Execution { get; set; }
-        
+
         #region Constructors
 
-        private RoutineDefinition()
-        {
-            _stopwatch.Start();
-        }
+        private RoutineDefinition() => _stopwatch.Start();
 
         /// <summary>
         /// Create a routine definition. Set the interval to 0 if you want to execute it on every update/fixed update

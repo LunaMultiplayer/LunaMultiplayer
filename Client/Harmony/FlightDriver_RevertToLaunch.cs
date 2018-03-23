@@ -12,7 +12,7 @@ namespace LunaClient.Harmony
     public class FlightDriver_RevertToLaunch
     {
         [HarmonyPrefix]
-        private static void PostfixRevertToLaunch()
+        private static void PrefixRevertToLaunch()
         {
             RevertEvent.onRevertToLaunch.Fire();
         }

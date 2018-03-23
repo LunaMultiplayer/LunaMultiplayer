@@ -290,11 +290,6 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             RestartRequested = false;
 
-            if(Vessel.loaded)
-                VesselPositionSystem.UpdateSecondaryVesselValues(Vessel);
-            else
-                VesselPositionSystem.UpdateUnloadedVesselValues(Vessel);
-
             SrfRelRotation[0] = Vessel.srfRelRotation.x;
             SrfRelRotation[1] = Vessel.srfRelRotation.y;
             SrfRelRotation[2] = Vessel.srfRelRotation.z;

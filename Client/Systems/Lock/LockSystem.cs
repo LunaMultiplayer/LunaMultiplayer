@@ -5,6 +5,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
 using LunaCommon.Message.Data.Lock;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -20,6 +21,9 @@ namespace LunaClient.Systems.Lock
         public static LockQuery LockQuery { get; } = new LockQuery(LockStore);
         public LockEvents LockEvents { get; } = new LockEvents();
 
+        public ConcurrentQueue<LockDefinition> AcquiredLocks = new ConcurrentQueue<LockDefinition>();
+        public ConcurrentQueue<LockDefinition> ReleasedLocks = new ConcurrentQueue<LockDefinition>();
+
         #region Base overrides
 
         public override string SystemName { get; } = nameof(LockSystem);
@@ -28,6 +32,7 @@ namespace LunaClient.Systems.Lock
         {
             base.OnEnabled();
             GameEvents.onGameSceneLoadRequested.Add(LockEvents.OnSceneRequested);
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, TriggerEvents));
         }
 
         protected override void OnDisabled()
@@ -38,6 +43,15 @@ namespace LunaClient.Systems.Lock
         }
 
         #endregion
+
+        private void TriggerEvents()
+        {
+            while(AcquiredLocks.TryDequeue(out var lockDef))
+                LockEvent.onLockAcquireUnityThread.Fire(lockDef);
+
+            while (ReleasedLocks.TryDequeue(out var lockDef))
+                LockEvent.onLockReleaseUnityThread.Fire(lockDef);
+        }
 
         #region Public methods
         

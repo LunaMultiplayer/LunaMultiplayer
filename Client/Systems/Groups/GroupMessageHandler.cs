@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaCommon.Enums;
 using LunaCommon.Message.Data.Groups;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
@@ -26,7 +25,6 @@ namespace LunaClient.Systems.Groups
                         {
                             System.Groups.TryAdd(data.Groups[i].Name, data.Groups[i]);
                         }
-                        MainSystem.NetworkState = ClientState.GroupsSynced;
                         break;
                     }
                 case GroupMessageType.RemoveGroup:

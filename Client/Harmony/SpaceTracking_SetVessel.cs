@@ -9,8 +9,8 @@ using LunaCommon.Enums;
 namespace LunaClient.Harmony
 {
     /// <summary>
-    /// This harmony patch is intended to fix the recover button in space tracking
-    /// If the tracked vessel is controlled we lock the recover button
+    /// This harmony patch is intended to fix the recover/terminate buttons in space tracking
+    /// If the tracked vessel is controlled we lock the recover/terminate button
     /// </summary>
     [HarmonyPatch(typeof(SpaceTracking))]
     [HarmonyPatch("SetVessel")]
@@ -25,11 +25,15 @@ namespace LunaClient.Harmony
             {
                 if (!LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(__instance.SelectedVessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 {
+                    if (__instance.SelectedVessel.situation == Vessel.Situations.PRELAUNCH) __instance.FlyButton.Lock();
+                    else __instance.FlyButton.Unlock();
+
                     __instance.DeleteButton.Lock();
                     __instance.RecoverButton.Lock();
                 }
                 else
                 {
+                    __instance.FlyButton.Unlock();
                     __instance.DeleteButton.Unlock();
                     __instance.RecoverButton.Unlock();
                 }

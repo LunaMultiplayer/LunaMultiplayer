@@ -15,14 +15,9 @@ namespace LMP.MasterServer.Structure
 
         public Server(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
-            if (IsLocalIpAddress(externalEndpoint.Address))
-            {
-                ExternalEndpoint = new IPEndPoint(IPAddress.Parse(Helper.GetOwnIpAddress()), externalEndpoint.Port);
-            }
-            else
-            {
-                ExternalEndpoint = externalEndpoint;
-            }
+            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ? new IPEndPoint(IPAddress.Parse(LunaNetUtils.GetOwnExternalIpAddress()), externalEndpoint.Port) : 
+                externalEndpoint;
+
             InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);
             LastRegisterTime = LunaTime.UtcNow.Ticks;
             Info = new ServerInfo

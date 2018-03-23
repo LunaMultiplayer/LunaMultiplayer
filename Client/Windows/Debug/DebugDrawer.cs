@@ -1,7 +1,4 @@
-﻿using LunaClient.VesselStore;
-using LunaClient.VesselUtilities;
-using UniLinq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LunaClient.Windows.Debug
 {
@@ -32,46 +29,6 @@ namespace LunaClient.Windows.Debug
             _displayConnectionQueue = GUILayout.Toggle(_displayConnectionQueue, "Display connection statistics", ButtonStyle);
             if (_displayConnectionQueue)
                 GUILayout.Label(_connectionText, LabelStyle);
-
-            if (GUILayout.Button("Reload all vessels", ButtonStyle))
-            {
-                var protos = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.ProtoVessel);
-                foreach (var proto in protos)
-                {
-                    if (FlightGlobals.ActiveVessel?.id == proto.vesselID) continue;
-                    VesselLoader.ReloadVessel(proto);
-                }
-            }
-            
-            if (GUILayout.Button("Pack all vessels", ButtonStyle))
-            {
-                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                foreach (var vessel in vessels)
-                {
-                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.vesselRanges = DebugUtils.PackRanges;
-                }
-            }
-            
-            if (GUILayout.Button("Unpack all vessels", ButtonStyle))
-            {
-                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                foreach (var vessel in vessels)
-                {
-                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.vesselRanges = DebugUtils.UnPackRanges;
-                }
-            }
-
-            if (GUILayout.Button("Reset ranges", ButtonStyle))
-            {
-                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                foreach (var vessel in vessels)
-                {
-                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
-                }
-            }
 
             GUILayout.EndVertical();
         }

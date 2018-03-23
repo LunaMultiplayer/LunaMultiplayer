@@ -1,5 +1,6 @@
 ﻿using CommNet;
 using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.ModuleStore;
 using LunaClient.Network;
@@ -44,9 +45,9 @@ namespace LunaClient
                 if (value == ClientState.Disconnected)
                 {
                     NetworkMain.ResetNetworkSystem();
-                    SystemsHandler.KillAllSystems();
                 }
                 _networkState = value;
+                NetworkEvent.onNetworkStatusChanged.Fire(value);
             }
         }
 
@@ -268,6 +269,7 @@ namespace LunaClient
             //Screenshot folder: 6719
             //Screenshot library: 6720
             //Screenshot image: 6721
+            //Tools window: 6722
 
             WindowsHandler.OnGui();
         }

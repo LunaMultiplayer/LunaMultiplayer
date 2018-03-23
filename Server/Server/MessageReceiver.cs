@@ -21,7 +21,6 @@ namespace Server.Server
         private static readonly Dictionary<ClientMessageType, ReaderBase> HandlerDictionary = new Dictionary
             <ClientMessageType, ReaderBase>
         {
-            [ClientMessageType.Admin] = new AdminMsgReader(),
             [ClientMessageType.Handshake] = new HandshakeMsgReader(),
             [ClientMessageType.Chat] = new ChatMsgReader(),
             [ClientMessageType.PlayerStatus] = new PlayerStatusMsgReader(),

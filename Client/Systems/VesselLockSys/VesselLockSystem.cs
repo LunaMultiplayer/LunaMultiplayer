@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
@@ -184,6 +185,7 @@ namespace LunaClient.Systems.VesselLockSys
 
             //Disable "EVA" button
             HighLogic.CurrentGame.Parameters.Flight.CanEVA = false;
+            SpectateEvent.onStartSpectating.Fire();
         }
 
         public void StopSpectating()
@@ -194,6 +196,7 @@ namespace LunaClient.Systems.VesselLockSys
 
             if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters != null && HighLogic.CurrentGame.Parameters.Flight != null)
                 HighLogic.CurrentGame.Parameters.Flight.CanEVA = true;
+            SpectateEvent.onFinishedSpectating.Fire();
         }
 
         #endregion

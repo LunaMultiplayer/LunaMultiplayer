@@ -1,4 +1,4 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
@@ -11,11 +11,7 @@ namespace LunaClient.Systems.Status
     {
         #region Fields
 
-        public PlayerStatus MyPlayerStatus { get; } = new PlayerStatus
-        {
-            PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-            StatusText = "Syncing"
-        };
+        public PlayerStatus MyPlayerStatus { get; } = new PlayerStatus();
 
         public ConcurrentDictionary<string, PlayerStatus> PlayerStatusList { get; } = new ConcurrentDictionary<string, PlayerStatus>();
 
@@ -36,7 +32,11 @@ namespace LunaClient.Systems.Status
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            MyPlayerStatus.StatusText = "Syncing";
+
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckPlayerStatus));
+            MessageSender.SendOwnStatus();
         }
 
         protected override void OnDisabled()
@@ -57,6 +57,9 @@ namespace LunaClient.Systems.Status
 
         public PlayerStatus GetPlayerStatus(string playerName)
         {
+            if (playerName == SettingsSystem.CurrentSettings.PlayerName)
+                return MyPlayerStatus;
+
             return PlayerStatusList.ContainsKey(playerName) ? PlayerStatusList[playerName] : null;
         }
 

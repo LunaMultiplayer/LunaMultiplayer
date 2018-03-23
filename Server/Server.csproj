@@ -57,14 +57,11 @@
     <Compile Include="Client\ClientMainThread.cs" />
     <Compile Include="Client\ClientRetriever.cs" />
     <Compile Include="Client\ClientStructure.cs" />
-    <Compile Include="Command\CombinedCommand\AdminCommands.cs" />
     <Compile Include="Command\CombinedCommand\BanCommands.cs" />
     <Compile Include="Command\CombinedCommand\Base\CombinedCommandBase.cs" />
     <Compile Include="Command\CombinedCommand\WhitelistCommands.cs" />
     <Compile Include="Command\CommandDefinition.cs" />
     <Compile Include="Command\CommandHandler.cs" />
-    <Compile Include="Command\Command\AdminAddCommand.cs" />
-    <Compile Include="Command\Command\AdminRemoveCommand.cs" />
     <Compile Include="Command\Command\AdminShowCommand.cs" />
     <Compile Include="Command\Command\BanIpCommand.cs" />
     <Compile Include="Command\Command\BanKeyCommand.cs" />
@@ -104,7 +101,6 @@
     <Compile Include="MainServer.cs" />
     <Compile Include="Message\Reader\ScreenshotMsgReader.cs" />
     <Compile Include="Message\Reader\FacilityMsgReader.cs" />
-    <Compile Include="Message\Reader\AdminMsgReader.cs" />
     <Compile Include="Message\Reader\Base\ReaderBase.cs" />
     <Compile Include="Message\Reader\ChatMsgReader.cs" />
     <Compile Include="Message\Reader\CraftLibraryMsgReader.cs" />
@@ -145,7 +141,6 @@
     <Compile Include="Settings\GameplaySettings.cs" />
     <Compile Include="Settings\GeneralSettings.cs" />
     <Compile Include="Settings\SettingsBase.cs" />
-    <Compile Include="System\AdminSystemSender.cs" />
     <Compile Include="System\FileHandler.cs" />
     <Compile Include="System\FlagSystem.cs" />
     <Compile Include="System\GroupSystem.cs" />

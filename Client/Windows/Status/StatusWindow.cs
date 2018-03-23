@@ -17,7 +17,6 @@ namespace LunaClient.Windows.Status
         public override bool Display => SettingsSystem.CurrentSettings.DisclaimerAccepted && MainSystem.ToolbarShowGui && 
                                         MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
-        public List<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
         public bool ColorEventHandled { get; set; } = true;
 
         #endregion
@@ -34,10 +33,7 @@ namespace LunaClient.Windows.Status
 
         private static double _lastStatusUpdate;
 
-        private static Texture2D _chatIcon;
-        private static Texture2D _chatRedIcon;
-        private static Texture2D _cameraIcon;
-        private static Texture2D _rocketIcon;
+        private static readonly List<SubspaceDisplayEntry> SubspaceDisplay = new List<SubspaceDisplayEntry>();
 
 #if DEBUG
         private static readonly string Title = $"LMP - Debug port: {CommonUtil.DebugPort}";
@@ -75,11 +71,6 @@ namespace LunaClient.Windows.Status
 
         public override void SetStyles()
         {
-            _chatIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "chatWhite.png"), 16, 16);
-            _chatRedIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "chatRed.png"), 16, 16);
-            _cameraIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "camera.png"), 16, 16);
-            _rocketIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "rocket.png"), 16, 16);
-
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
             
@@ -114,8 +105,6 @@ namespace LunaClient.Windows.Status
             _stateTextStyle.fontStyle = FontStyle.Normal;
             _stateTextStyle.fontSize = 12;
             _stateTextStyle.stretchWidth = true;
-
-            SubspaceDisplay = new List<SubspaceDisplayEntry>();
         }
 
         public override void Update()
@@ -125,8 +114,9 @@ namespace LunaClient.Windows.Status
 
             if (Time.realtimeSinceStartup - _lastStatusUpdate > UpdateStatusInterval)
             {
+                SubspaceDisplay.Clear();
                 _lastStatusUpdate = Time.realtimeSinceStartup;
-                SubspaceDisplay = WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries();
+                SubspaceDisplay.AddRange(WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries());
             }
         }
 

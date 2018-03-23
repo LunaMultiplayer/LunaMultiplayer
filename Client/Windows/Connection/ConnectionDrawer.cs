@@ -29,6 +29,13 @@ namespace LunaClient.Windows.Connection
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.CustomServers);
             GUILayout.BeginVertical(BoxStyle);
 
+            if (GUILayout.Button(PlusIcon, ButtonStyle))
+            {
+                SettingsSystem.CurrentSettings.Servers.Insert(0, new ServerEntry());
+                SettingsSystem.SaveSettings();
+            }
+            GUILayout.Space(15);
+
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5),
                 GUILayout.Height(WindowHeight - 100));
             for (var serverPos = 0; serverPos < SettingsSystem.CurrentSettings.Servers.Count; serverPos++)
@@ -49,15 +56,7 @@ namespace LunaClient.Windows.Connection
                     }
                 }
             }
-
             GUILayout.EndScrollView();
-            GUILayout.Space(15);
-            if (GUILayout.Button(PlusIcon, ButtonStyle))
-            {
-                SettingsSystem.CurrentSettings.Servers.Add(new ServerEntry());
-                SettingsSystem.SaveSettings();
-            }
-
             GUILayout.EndVertical();
         }
 
@@ -112,8 +111,8 @@ namespace LunaClient.Windows.Connection
             GUILayout.BeginHorizontal();
             if (MainSystem.NetworkState <= ClientState.Disconnected)
             {
-                GUI.enabled = SelectedIndex >= 0;
-                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Connect, ButtonStyle))
+                GUI.enabled = SettingsSystem.CurrentSettings.Servers.Count > SelectedIndex && SelectedIndex >= 0;
+                if (GUILayout.Button(ConnectBigIcon, ButtonStyle))
                 {
                     NetworkConnection.ConnectToServer(
                         SettingsSystem.CurrentSettings.Servers[SelectedIndex].Address,
@@ -123,17 +122,15 @@ namespace LunaClient.Windows.Connection
             }
             else
             {
-                if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Disconnect, ButtonStyle))
+                if (GUILayout.Button(DisconnectBigIcon, ButtonStyle))
                 {
                     NetworkConnection.Disconnect("Cancelled connection to server");
                 }
             }
 
             GUI.enabled = true;
-            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display,
-                LocalizationContainer.ConnectionWindowText.Options, ButtonStyle);
-            if (GUILayout.Button(LocalizationContainer.ConnectionWindowText.Servers, ButtonStyle))
-                ServerListWindow.Singleton.Display = true;
+            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, SettingsBigIcon, ButtonStyle);
+            ServerListWindow.Singleton.Display = GUILayout.Toggle(ServerListWindow.Singleton.Display, ServerBigIcon, ButtonStyle);
             GUILayout.EndHorizontal();
         }
 
@@ -146,6 +143,7 @@ namespace LunaClient.Windows.Connection
             if (newPlayerName != SettingsSystem.CurrentSettings.PlayerName)
             {
                 SettingsSystem.CurrentSettings.PlayerName = newPlayerName.Trim().Replace("\n", "");
+                SettingsSystem.SaveSettings();
             }
             GUI.enabled = true;
             GUILayout.EndHorizontal();

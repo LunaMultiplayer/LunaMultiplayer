@@ -7,36 +7,6 @@ namespace LunaClient.Systems.ModApi
 {
     public class ModApiSystem : MessageSystem<ModApiSystem, ModApiMessageSender, ModApiMessageHandler>
     {
-        #region Fields & properties
-
-        private static bool _enabled = true;
-
-        /// <summary>
-        /// This system must be ALWAYS enabled!
-        /// </summary>
-        public override bool Enabled
-        {
-            get => _enabled;
-            set
-            {
-                base.Enabled |= value;
-                _enabled |= value;
-            }
-        }
-
-        internal readonly object EventLock = new object();
-
-        #endregion
-
-        #region Constructor
-
-        /// <summary>
-        /// This system must be ALWAYS enabled so we set it as enabled on the constructor
-        /// </summary>
-        public ModApiSystem() => base.Enabled = true;
-
-        #endregion
-
         #region Base overrides
 
         public override string SystemName { get; } = nameof(ModApiSystem);

@@ -100,16 +100,5 @@ namespace LunaClient.Systems
                 }
             }
         }
-
-        /// <summary>
-        /// Set all systems as disabled
-        /// </summary>
-        public static void KillAllSystems()
-        {
-            for (var i = 0; i < _systems.Length; i++)
-            {
-                _systems[i].Enabled = false;
-            }
-        }
     }
 }

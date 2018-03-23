@@ -12,7 +12,7 @@ namespace LunaClient.Harmony
     public class FlightDriver_ReturnToEditor
     {
         [HarmonyPrefix]
-        private static void PostfixReturnToEditor(EditorFacility facility)
+        private static void PrefixReturnToEditor(EditorFacility facility)
         {
             RevertEvent.onReturnToEditor.Fire(facility);
         }

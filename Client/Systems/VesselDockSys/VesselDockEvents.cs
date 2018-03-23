@@ -67,12 +67,20 @@ namespace LunaClient.Systems.VesselDockSys
             }
         }
 
-        public void OnPartUndock(Part data)
+        public void OnPartUndock(Part part)
         {
+            var isEvaPart = part.FindModuleImplementing<KerbalEVA>() != null;
+            if (isEvaPart) //This is the case when a kerbal gets out of a external command seat
+            {
+                var vessel = part.vessel;
+                vessel.parts.Remove(part);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
+            }
+
             if (VesselCommon.IsSpectating)
             {
-                FlightCamera.SetTarget(data.vessel);
-                data.vessel.MakeActive();
+                FlightCamera.SetTarget(part.vessel);
+                part.vessel.MakeActive();
             }
         }
 
@@ -88,6 +96,24 @@ namespace LunaClient.Systems.VesselDockSys
                 VesselDockings.Remove(data.id);
             }
         }
+
+        /// <summary>
+        /// The vessel has changed as it has less crew now so send the definition
+        /// </summary>
+        public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
+        {
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
+        }
+
+        /// <summary>
+        /// The vessel has changed as it has less crew now so send the definition
+        /// </summary>
+        public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
+        {
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
+        }
+
+        #region Private
 
         /// <summary>
         /// Here we handle the "dock" when a kerbal goes into an external seat
@@ -109,23 +135,6 @@ namespace LunaClient.Systems.VesselDockSys
             MainSystem.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock));
         }
 
-        /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition
-        /// </summary>
-        public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
-        {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
-        }
-
-        /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition
-        /// </summary>
-        public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
-        {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
-        }
-
-        #region Private
 
         /// <summary>
         /// This method is called after the docking is over and there 

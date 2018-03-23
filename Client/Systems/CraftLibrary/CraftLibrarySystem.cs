@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 
 namespace LunaClient.Systems.CraftLibrary
 {
@@ -25,6 +26,8 @@ namespace LunaClient.Systems.CraftLibrary
         public List<CraftEntry> OwnCrafts { get; } = new List<CraftEntry>();
 
         public ConcurrentQueue<string> DownloadedCraftsNotification { get; } = new ConcurrentQueue<string>();
+        public List<string> FoldersWithNewContent { get; } = new List<string>();
+        public bool NewContent => FoldersWithNewContent.Any();
 
         #endregion
 
@@ -184,5 +187,18 @@ namespace LunaClient.Systems.CraftLibrary
         }
 
         #endregion
+
+        public void RequestCraftListIfNeeded(string selectedFolder)
+        {
+            if (FoldersWithNewContent.Contains(selectedFolder))
+            {
+                FoldersWithNewContent.Remove(selectedFolder);
+                MessageSender.SendRequestCraftListMsg(selectedFolder);
+                return;
+            }
+
+            if (CraftInfo.GetOrAdd(selectedFolder, new ConcurrentDictionary<string, CraftBasicEntry>()).Count == 0)
+                MessageSender.SendRequestCraftListMsg(selectedFolder);
+        }
     }
 }

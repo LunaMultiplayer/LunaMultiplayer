@@ -39,11 +39,8 @@ namespace LunaClient.Systems.VesselRemoveSys
 
                 KerbalSystem.Singleton.ProcessKerbalsInVessel(dyingVessel);
 
-                var killingOwnVessel = FlightGlobals.ActiveVessel?.id == dyingVessel.id;
-
-                //If we are killing our own vessel there's the possibility that the player hits "revert" so in this case
-                //DO NOT keep it in the remove list
-                System.MessageSender.SendVesselRemove(dyingVessel.id, !killingOwnVessel);
+                //If we are killing our own vessel there's the possibility that the player hits "revert" so in this case DO NOT keep it in the remove list
+                System.MessageSender.SendVesselRemove(dyingVessel.id, false);
 
                 //Vessel is dead so remove the locks after 1500ms to get the debris locks if any
                 LockSystem.Singleton.ReleaseAllVesselLocks(dyingVessel.id, 1500);

@@ -75,13 +75,14 @@ namespace Server.System
                         deleteMsg.CraftToDelete.CraftName = data.Craft.CraftName;
                         deleteMsg.CraftToDelete.FolderName = data.Craft.FolderName;
 
-                        MessageQueuer.SendToAllClients<CraftLibrarySrvMsg>(data);
+                        MessageQueuer.SendToAllClients<CraftLibrarySrvMsg>(deleteMsg);
                     }
                     else
                     {
                         LunaLog.Normal($"Saving craft {data.Craft.CraftName} ({data.Craft.NumBytes} bytes) from: {client.PlayerName}.");
                         FileHandler.WriteToFile(fullPath, data.Craft.Data, data.Craft.NumBytes);
                     }
+                    SendNotification(client.PlayerName);
                 }
                 else
                 {
@@ -194,6 +195,17 @@ namespace Server.System
         #endregion
 
         #region Private methods
+
+        /// <summary>
+        /// Sends a notification of new craft to all players
+        /// </summary>
+        private static void SendNotification(string folderName)
+        {
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryNotificationMsgData>();
+            msgData.FolderName = folderName;
+
+            MessageQueuer.SendToAllClients<CraftLibrarySrvMsg>(msgData);
+        }
 
         /// <summary>
         /// Checks if we have too many player folders and if so, it deletes the oldest one

@@ -25,7 +25,7 @@ namespace LunaClient.Systems.PlayerColorSys
         /// </summary>
         public void OnLockAcquire(LockDefinition lockDefinition)
         {
-            if (System.Enabled && lockDefinition.Type == LockType.Control)
+            if (lockDefinition.Type == LockType.Control)
                 UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
         }
 
@@ -34,20 +34,8 @@ namespace LunaClient.Systems.PlayerColorSys
         /// </summary>
         public void OnLockRelease(LockDefinition lockDefinition)
         {
-            if (System.Enabled && lockDefinition.Type == LockType.Control)
+            if (lockDefinition.Type == LockType.Control)
                 UpdateVesselColorsFromLockVesselId(lockDefinition.VesselId);
-        }
-
-        /// <summary>
-        /// Find the vessel using the lock name
-        /// </summary>
-        private void UpdateVesselColorsFromLockVesselId(Guid vesselId)
-        {
-            var vessel = FlightGlobals.FindVessel(vesselId);
-            if (vessel != null)
-            {
-                System.SetVesselOrbitColor(vessel);
-            }
         }
         
         /// <summary>
@@ -56,6 +44,18 @@ namespace LunaClient.Systems.PlayerColorSys
         public void MapEntered()
         {
             foreach (var vessel in FlightGlobals.Vessels.Where(v=> v.orbitDriver?.Renderer != null))
+            {
+                System.SetVesselOrbitColor(vessel);
+            }
+        }
+
+        /// <summary>
+        /// Find the vessel using the lock name
+        /// </summary>
+        private static void UpdateVesselColorsFromLockVesselId(Guid vesselId)
+        {
+            var vessel = FlightGlobals.FindVessel(vesselId);
+            if (vessel != null)
             {
                 System.SetVesselOrbitColor(vessel);
             }

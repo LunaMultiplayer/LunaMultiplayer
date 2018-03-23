@@ -4,6 +4,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -18,6 +19,8 @@ namespace LunaClient.Systems.Screenshot
         private static DateTime _lastTakenScreenshot = DateTime.MinValue;
         public ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>> MiniatureImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>>();
         public ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>> DownloadedImages { get; } = new ConcurrentDictionary<string, ConcurrentDictionary<long, Screenshot>>();
+        public List<string> FoldersWithNewContent { get; } = new List<string>();
+        public bool NewContent => FoldersWithNewContent.Any();
 
         #endregion
 
@@ -39,6 +42,7 @@ namespace LunaClient.Systems.Screenshot
             base.OnDisabled();
             MiniatureImages.Clear();
             DownloadedImages.Clear();
+            FoldersWithNewContent.Clear();
         }
 
         #endregion
@@ -89,6 +93,22 @@ namespace LunaClient.Systems.Screenshot
                 File.WriteAllBytes(filePath, image.Data);
                 ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ImageSaved, 20f, ScreenMessageStyle.UPPER_CENTER);
             }
+        }
+
+        /// <summary>
+        /// Requests the miniatures if the folder is empty or there are new screenshots
+        /// </summary>
+        public void RequestMiniaturesIfNeeded(string selectedFolder)
+        {
+            if (FoldersWithNewContent.Contains(selectedFolder))
+            {
+                FoldersWithNewContent.Remove(selectedFolder);
+                MessageSender.RequestMiniatures(selectedFolder);
+                return;
+            }
+
+            if (MiniatureImages.GetOrAdd(selectedFolder, new ConcurrentDictionary<long, Screenshot>()).Count == 0)
+                MessageSender.RequestMiniatures(selectedFolder);
         }
     }
 }

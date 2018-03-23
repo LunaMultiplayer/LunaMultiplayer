@@ -2,7 +2,7 @@
 {
     public class ChatWindowText
     {
-        public string Title { get; set; } = "LunaMultiplayer Chat";
+        public string Title { get; set; } = "Chat";
         public string Send { get; set; } = "Send";
     }
 }

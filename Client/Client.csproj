@@ -60,16 +60,25 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="Events\ImmortalEvent.cs" />
     <Compile Include="Events\LockEvent.cs" />
     <Compile Include="Events\ModApiEvent.cs" />
+    <Compile Include="Events\NetworkEvent.cs" />
     <Compile Include="Events\RevertEvent.cs" />
+    <Compile Include="Events\SpectateEvent.cs" />
+    <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
     <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
     <Compile Include="Harmony\LaunchSiteClear_Test.cs" />
+    <Compile Include="Harmony\KSCPauseMenu_QuickLoad.cs" />
+    <Compile Include="Harmony\QuickSaveLoad_QuickLoad.cs" />
     <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />
+    <Compile Include="Harmony\SpaceTracking_FlyVessel.cs" />
     <Compile Include="Harmony\SpaceTracking_SetVessel.cs" />
+    <Compile Include="Harmony\TimeWarp_setMode.cs" />
+    <Compile Include="Harmony\TimeWarp_setRate.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
     <Compile Include="ModuleStore\Structures\CustomFieldDefinition.cs" />
@@ -112,6 +121,7 @@
     <Compile Include="Systems\Screenshot\ScreenshotMessageHandler.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotMessageSender.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotSystem.cs" />
+    <Compile Include="Systems\TimeSyncer\TimerSyncerEvents.cs" />
     <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaMessageHandler.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaMessageSender.cs" />
@@ -135,6 +145,7 @@
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageHandler.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsSystem.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\FlightStateEvents.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateUpdate.cs" />
     <Compile Include="Systems\VesselImmortalSys\VesselImmortalEvents.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\CustomizationsHandler.cs" />
@@ -175,7 +186,7 @@
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
     <Compile Include="Windows\BannedParts\BannedPartsDrawer.cs" />
     <Compile Include="Windows\BannedParts\BannedPartsWindow.cs" />
-    <Compile Include="Windows\Debug\DebugUtils.cs" />
+    <Compile Include="Windows\Tools\ToolsUtils.cs" />
     <Compile Include="Windows\Locks\VesselLockDisplay.cs" />
     <Compile Include="Windows\Locks\LocksDrawer.cs" />
     <Compile Include="Windows\Locks\LocksWindow.cs" />
@@ -192,8 +203,6 @@
     <Compile Include="Network\NetworkMain.cs" />
     <Compile Include="Network\NetworkStatistics.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Systems\Admin\AdminMessageHandler.cs" />
-    <Compile Include="Systems\Admin\AdminMessageSender.cs" />
     <Compile Include="Systems\Chat\ChatMessageHandler.cs" />
     <Compile Include="Systems\Chat\ChatMessageSender.cs" />
     <Compile Include="Systems\Chat\ChatSystem.cs" />
@@ -250,7 +259,6 @@
     <Compile Include="Utilities\CommonUtil.cs" />
     <Compile Include="Utilities\CompatibilityChecker.cs" />
     <Compile Include="Utilities\ConfigNodeSerializer.cs" />
-    <Compile Include="Systems\Admin\AdminSystem.cs" />
     <Compile Include="Systems\Asteroid\AsteroidEvents.cs" />
     <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
     <Compile Include="Base\Interface\ISystem.cs" />
@@ -301,6 +309,8 @@
     <Compile Include="Windows\Options\OptionsWindow.cs" />
     <Compile Include="Windows\Status\StatusDrawer.cs" />
     <Compile Include="Windows\Status\StatusWindow.cs" />
+    <Compile Include="Windows\Tools\ToolsDrawer.cs" />
+    <Compile Include="Windows\Tools\ToolsWindow.cs" />
     <Compile Include="Windows\WindowUtil.cs" />
     <Compile Include="Windows\WindowsHandler.cs" />
   </ItemGroup>

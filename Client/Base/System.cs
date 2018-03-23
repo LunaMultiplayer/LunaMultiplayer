@@ -1,4 +1,6 @@
 ﻿using LunaClient.Base.Interface;
+using LunaClient.Events;
+using LunaCommon.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +48,32 @@ namespace LunaClient.Base
         private List<RoutineDefinition> LateUpdateRoutines { get; } = new List<RoutineDefinition>();
 
         #endregion
+
+        /// <summary>
+        /// We subscribe for the network event changes on the constructor
+        /// </summary>
+        protected System() => NetworkEvent.onNetworkStatusChanged.Add(NetworkEventHandler);
+
+        /// <summary>
+        /// Handle here what happens to your system when the network status changes. By default it will be disabled if we disconnect and enable just before starting
+        /// </summary>
+        protected virtual void NetworkEventHandler(ClientState data)
+        {
+            if (data <= ClientState.Disconnected)
+            {
+                Enabled = false;
+            }
+
+            if (data == ClientState.Running)
+            {
+                Enabled = true;
+            }
+        }
+
+        /// <summary>
+        /// Return true if your system needs to be always enabled
+        /// </summary>
+        protected virtual bool AlwaysEnabled { get; } = false;
 
         /// <summary>
         /// Setups a routine that will be executed. You should normally call this method from the OnEnabled
@@ -115,19 +143,22 @@ namespace LunaClient.Base
         /// </summary>
         public virtual bool Enabled
         {
-            get => _enabled;
+            get => AlwaysEnabled || _enabled;
             set
             {
-                if (!_enabled && value)
+                if (!AlwaysEnabled)
                 {
-                    _enabled = true;
-                    OnEnabled();
-                }
-                else if (_enabled && !value)
-                {
-                    _enabled = false;
-                    OnDisabled();
-                    RemoveRoutines();
+                    if (!_enabled && value)
+                    {
+                        _enabled = true;
+                        OnEnabled();
+                    }
+                    else if (_enabled && !value)
+                    {
+                        _enabled = false;
+                        OnDisabled();
+                        RemoveRoutines();
+                    }
                 }
             }
         }
