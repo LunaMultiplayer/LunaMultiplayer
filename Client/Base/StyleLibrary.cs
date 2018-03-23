@@ -55,7 +55,7 @@ namespace LunaClient.Base
 
             WindowStyle = new GUIStyle(GUI.skin.window);
             ButtonStyle = new GUIStyle(GUI.skin.button);
-            RedFontButtonStyle = new GUIStyle(GUI.skin.button) { normal = new GUIStyleState { textColor = Color.red } };
+            RedFontButtonStyle = new GUIStyle(GUI.skin.button) { normal = { textColor = Color.red }, active = { textColor = Color.red }, hover = { textColor = Color.red } };
             SmallButtonStyle = new GUIStyle(GUI.skin.button) { padding = new RectOffset(0, 0, 0, 0) };
             ResizeButtonStyle = new GUIStyle(GUI.skin.button) {
                 padding = new RectOffset(0, 0, 0, 0),

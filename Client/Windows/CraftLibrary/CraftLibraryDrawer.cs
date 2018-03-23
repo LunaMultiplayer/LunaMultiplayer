@@ -35,7 +35,7 @@ namespace LunaClient.Windows.CraftLibrary
 
         private void DrawFolderButton(string folderName)
         {
-            if (GUILayout.Toggle(_selectedFolder == folderName, folderName, ButtonStyle))
+            if (GUILayout.Toggle(_selectedFolder == folderName, folderName, GetFolderStyle(folderName)))
             {
                 if (_selectedFolder != folderName)
                 {
@@ -47,6 +47,11 @@ namespace LunaClient.Windows.CraftLibrary
             {
                 if (_selectedFolder == folderName) _selectedFolder = null;
             }
+        }
+
+        private GUIStyle GetFolderStyle(string folderName)
+        {
+            return System.FoldersWithNewContent.Contains(folderName) ? RedFontButtonStyle : ButtonStyle;
         }
 
         #endregion
