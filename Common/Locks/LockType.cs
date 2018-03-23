@@ -12,19 +12,10 @@ namespace LunaCommon.Locks
         Asteroid,
 
         /// <summary>
-        /// The control lock specifies who controls a given vessel. 
-        /// A user can have several control locks depending on the settings.
+        /// The spectator lock specifies if a user is spectating a vessel or not.
+        /// A vessel can have several spectators
         /// </summary>
-        Control,
-
-        /// <summary>
-        /// The update lock specifies who updates the position and definition of a given vessel. 
-        /// A user can have several update locks. 
-        /// If you are controlling a vessel you also get the update lock.
-        /// If you are in LOADING distance of a vessel that nobody controls and nobody already has the update lock you get it
-        /// If you own the update lock you also own the "UnloadedUpdate" lock
-        /// </summary>
-        Update,
+        Spectator,
 
         /// <summary>
         /// The update lock specifies who updates the position and definition of a given vessel. 
@@ -36,9 +27,18 @@ namespace LunaCommon.Locks
         UnloadedUpdate,
 
         /// <summary>
-        /// The spectator lock specifies if a user is spectating a vessel or not.
-        /// A vessel can have several spectators
+        /// The update lock specifies who updates the position and definition of a given vessel. 
+        /// A user can have several update locks. 
+        /// If you are controlling a vessel you also get the update lock.
+        /// If you are in LOADING distance of a vessel that nobody controls and nobody already has the update lock you get it
+        /// If you own the update lock you also own the "UnloadedUpdate" lock
         /// </summary>
-        Spectator
+        Update,
+
+        /// <summary>
+        /// The control lock specifies who controls a given vessel. 
+        /// A user can have several control locks depending on the settings.
+        /// </summary>
+        Control,
     }
 }
