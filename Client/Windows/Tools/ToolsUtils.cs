@@ -1,6 +1,6 @@
-﻿namespace LunaClient.Windows.Debug
+﻿namespace LunaClient.Windows.Tools
 {
-    public class DebugUtils
+    public class ToolsUtils
     {
         public static VesselRanges PackRanges { get; } = new VesselRanges
         {

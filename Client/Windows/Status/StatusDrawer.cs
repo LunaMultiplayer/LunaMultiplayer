@@ -12,6 +12,7 @@ using LunaClient.Windows.Locks;
 using LunaClient.Windows.Options;
 using LunaClient.Windows.Screenshots;
 using LunaClient.Windows.Systems;
+using LunaClient.Windows.Tools;
 using LunaCommon;
 using UnityEngine;
 
@@ -83,7 +84,7 @@ namespace LunaClient.Windows.Status
                    WarpSystem.Subspaces[WarpSystem.CurrentSubspace] < WarpSystem.Subspaces[subspaceId];
         }
 
-        private void DrawPlayerEntry(PlayerStatus playerStatus)
+        private static void DrawPlayerEntry(PlayerStatus playerStatus)
         {
             if (playerStatus == null)
                 return;
@@ -117,6 +118,7 @@ namespace LunaClient.Windows.Status
             DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, StatusTexts.DebugBtnTxt, ButtonStyle);
             SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, StatusTexts.SystemsBtnTxt, ButtonStyle);
             LocksWindow.Singleton.Display = GUILayout.Toggle(LocksWindow.Singleton.Display, StatusTexts.LocksBtnTxt, ButtonStyle);
+            ToolsWindow.Singleton.Display = GUILayout.Toggle(ToolsWindow.Singleton.Display, StatusTexts.ToolsBtnTxt, ButtonStyle);
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             DrawDebugSwitches();
