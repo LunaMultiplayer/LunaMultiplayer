@@ -29,9 +29,9 @@ namespace LunaClient.Windows.Status
             #region Horizontal toolbar
 
             GUILayout.BeginHorizontal();
-            ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, ChatSystem.Singleton.NewMessageReceived ? _chatRedIcon : _chatIcon, ButtonStyle);
-            CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, CraftLibrarySystem.Singleton.NewContent ? _rocketRedIcon : _rocketIcon, ButtonStyle);
-            ScreenshotsWindow.Singleton.Display = GUILayout.Toggle(ScreenshotsWindow.Singleton.Display, ScreenshotSystem.Singleton.NewContent ? _cameraRedIcon : _cameraIcon, ButtonStyle);
+            ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, ChatSystem.Singleton.NewMessageReceived ? ChatRedIcon : ChatIcon, ButtonStyle);
+            CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, CraftLibrarySystem.Singleton.NewContent ? RocketRedIcon : RocketIcon, ButtonStyle);
+            ScreenshotsWindow.Singleton.Display = GUILayout.Toggle(ScreenshotsWindow.Singleton.Display, ScreenshotSystem.Singleton.NewContent ? CameraRedIcon : CameraIcon, ButtonStyle);
             GUILayout.EndHorizontal();
 
             #endregion
