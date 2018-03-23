@@ -2,6 +2,7 @@
 using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems.Lock;
+using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Message.Data.ShareProgress;
@@ -130,9 +131,16 @@ namespace LunaClient.Systems.ShareProgress
 
         public void ContractOffered(Contract contract)
         {
-            //This should be only called on the client with the contract lock, because he has the generationCount != 0.
             LunaLog.Log("Contract offered: " + contract.ContractGuid + " - " + contract.Title);
-            SendContractUpdate(contract);
+
+            //This should be only called on the client with the contract lock, because he has the generationCount != 0.
+            if (LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
+            {
+                SendContractUpdate(contract);
+
+                //Also store the current contracts on the server so new players will see this contract too.
+                ScenarioSystem.Singleton.SendScenarioModules();
+            }
         }
 
         public void ContractParameterChanged(Contract contract, ContractParameter contractParameter)
