@@ -1,4 +1,5 @@
-﻿using LunaClient.VesselStore;
+﻿using LunaClient.Systems.TimeSyncer;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using UniLinq;
 using UnityEngine;
@@ -32,6 +33,11 @@ namespace LunaClient.Windows.Debug
             _displayConnectionQueue = GUILayout.Toggle(_displayConnectionQueue, "Display connection statistics", ButtonStyle);
             if (_displayConnectionQueue)
                 GUILayout.Label(_connectionText, LabelStyle);
+
+            if (GUILayout.Button("Force time sync", ButtonStyle))
+            {
+                TimeSyncerSystem.Singleton.ForceTimeSync();
+            }
 
             if (GUILayout.Button("Reload all vessels", ButtonStyle))
             {

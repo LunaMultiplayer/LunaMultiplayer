@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
@@ -18,6 +19,8 @@ namespace LunaClient.Systems.TimeSyncer
         #region Fields & properties
 
         #region Public
+
+        public TimerSyncerEvents TimerSyncerEvents { get; } = new TimerSyncerEvents();
 
         public static long ServerStartTime { get; set; }
 
@@ -69,7 +72,7 @@ namespace LunaClient.Systems.TimeSyncer
         #region Private
 
         private static bool CurrentlyWarping => WarpSystem.Singleton.CurrentSubspace == -1;
-        
+
         private static bool CanSyncTime
         {
             get
@@ -97,6 +100,7 @@ namespace LunaClient.Systems.TimeSyncer
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            SpectateEvent.onStartSpectating.Add(TimerSyncerEvents.OnStartSpectating);
             SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, SyncTimeScale));
             SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, SyncTime));
         }
@@ -104,6 +108,7 @@ namespace LunaClient.Systems.TimeSyncer
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            SpectateEvent.onStartSpectating.Remove(TimerSyncerEvents.OnStartSpectating);
             ServerStartTime = 0;
         }
 
@@ -151,6 +156,25 @@ namespace LunaClient.Systems.TimeSyncer
                     LunaLog.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
                     ClockHandler.StepClock(targetTime);
                 }
+            }
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Forces a time sync against the server time
+        /// </summary>
+        public void ForceTimeSync()
+        {
+            if (Enabled && !CurrentlyWarping && CanSyncTime && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
+            {
+                var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
+                var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
+
+                LunaLog.LogWarning($"FORCING a time sync from: {Planetarium.GetUniversalTime()} to: {targetTime}. Error:{currentError}");
+                ClockHandler.StepClock(targetTime);
             }
         }
 
