@@ -30,8 +30,8 @@ namespace LunaClient.Systems.PlayerColorSys
             base.OnEnabled();
             GameEvents.onVesselCreate.Add(PlayerColorEvents.OnVesselCreated);
             GameEvents.OnMapEntered.Add(PlayerColorEvents.MapEntered);
-            LockEvent.onLockAcquire.Add(PlayerColorEvents.OnLockAcquire);
-            LockEvent.onLockRelease.Add(PlayerColorEvents.OnLockRelease);
+            LockEvent.onLockAcquireUnityThread.Add(PlayerColorEvents.OnLockAcquire);
+            LockEvent.onLockReleaseUnityThread.Add(PlayerColorEvents.OnLockRelease);
         }
 
         protected override void OnDisabled()
@@ -39,8 +39,8 @@ namespace LunaClient.Systems.PlayerColorSys
             base.OnDisabled();
             GameEvents.onVesselCreate.Remove(PlayerColorEvents.OnVesselCreated);
             GameEvents.OnMapEntered.Remove(PlayerColorEvents.MapEntered);
-            LockEvent.onLockAcquire.Remove(PlayerColorEvents.OnLockAcquire);
-            LockEvent.onLockRelease.Remove(PlayerColorEvents.OnLockRelease);
+            LockEvent.onLockAcquireUnityThread.Remove(PlayerColorEvents.OnLockAcquire);
+            LockEvent.onLockReleaseUnityThread.Remove(PlayerColorEvents.OnLockRelease);
             PlayerColors.Clear();
         }
 
@@ -53,11 +53,8 @@ namespace LunaClient.Systems.PlayerColorSys
         /// </summary>
         public void SetVesselOrbitColor(Vessel colorVessel)
         {
-            if (Enabled)
-            {
-                var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
-                SetOrbitColor(colorVessel, vesselOwner == null ? DefaultColor : GetPlayerColor(vesselOwner));
-            }
+            var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
+            SetOrbitColor(colorVessel, vesselOwner == null ? DefaultColor : GetPlayerColor(vesselOwner));
         }
 
         public static Color GenerateRandomColor()
