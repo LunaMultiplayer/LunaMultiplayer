@@ -5,7 +5,7 @@ namespace LunaClient.Events
 {
     public class SpectateEvent
     {
-        public static EventVoid onStartSpectating = new EventVoid("onStartSpectating");
-        public static EventVoid onFinishedSpectating = new EventVoid("onFinishedSpectating");
+        public static EventVoid onStartSpectating { get; } = new EventVoid("onStartSpectating");
+        public static EventVoid onFinishedSpectating { get; } = new EventVoid("onFinishedSpectating");
     }
 }

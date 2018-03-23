@@ -5,6 +5,6 @@ namespace LunaClient.Events
 {
     public class ModApiEvent
     {
-        public static EventData<string, byte[]> onModMessageReceived = new EventData<string, byte[]>("onModMessageReceived");
+        public static EventData<string, byte[]> onModMessageReceived { get; } = new EventData<string, byte[]>("onModMessageReceived");
     }
 }

@@ -6,9 +6,9 @@ namespace LunaClient.Events
 {
     public static class LockEvent
     {
-        public static EventData<LockDefinition> onLockAcquire = new EventData<LockDefinition>("onLockAcquire");
-        public static EventData<LockDefinition> onLockRelease = new EventData<LockDefinition>("onLockRelease");
-        public static EventData<LockDefinition> onLockAcquireUnityThread = new EventData<LockDefinition>("onLockAcquireUnityThread");
-        public static EventData<LockDefinition> onLockReleaseUnityThread = new EventData<LockDefinition>("onLockReleaseUnityThread");
+        public static EventData<LockDefinition> onLockAcquire { get; } = new EventData<LockDefinition>("onLockAcquire");
+        public static EventData<LockDefinition> onLockRelease { get; } = new EventData<LockDefinition>("onLockRelease");
+        public static EventData<LockDefinition> onLockAcquireUnityThread { get; } = new EventData<LockDefinition>("onLockAcquireUnityThread");
+        public static EventData<LockDefinition> onLockReleaseUnityThread { get; } = new EventData<LockDefinition>("onLockReleaseUnityThread");
     }
 }
