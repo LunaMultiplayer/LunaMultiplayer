@@ -38,9 +38,9 @@ namespace LunaClient.Windows.ServerList
         private static string _orderBy = "Ping";
         private static bool _ascending = true;
 
-        private static GUIStyle HeaderServerLine;
-        private static GUIStyle EvenServerLine;
-        private static GUIStyle OddServerLine;
+        private static GUIStyle _headerServerLine;
+        private static GUIStyle _evenServerLine;
+        private static GUIStyle _oddServerLine;
         
         #endregion
 
@@ -62,29 +62,29 @@ namespace LunaClient.Windows.ServerList
             _serverDetailWindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
 
-            HeaderServerLine = new GUIStyle();
-            HeaderServerLine.normal.background = new Texture2D(1, 1);
-            HeaderServerLine.normal.background.SetPixel(0, 0, new Color(0.04f, 0.04f, 0.04f, 0.9f));
-            HeaderServerLine.normal.background.Apply();
-            HeaderServerLine.onNormal.background = new Texture2D(1, 1);
-            HeaderServerLine.onNormal.background.SetPixel(0, 0, new Color(0.04f, 0.04f, 0.04f, 0.9f));
-            HeaderServerLine.onNormal.background.Apply();
+            _headerServerLine = new GUIStyle();
+            _headerServerLine.normal.background = new Texture2D(1, 1);
+            _headerServerLine.normal.background.SetPixel(0, 0, new Color(0.04f, 0.04f, 0.04f, 0.9f));
+            _headerServerLine.normal.background.Apply();
+            _headerServerLine.onNormal.background = new Texture2D(1, 1);
+            _headerServerLine.onNormal.background.SetPixel(0, 0, new Color(0.04f, 0.04f, 0.04f, 0.9f));
+            _headerServerLine.onNormal.background.Apply();
 
-            EvenServerLine = new GUIStyle();
-            EvenServerLine.normal.background = new Texture2D(1, 1);
-            EvenServerLine.normal.background.SetPixel(0, 0, new Color(0.120f, 0.120f, 0.150f, 0.9f));
-            EvenServerLine.normal.background.Apply();
-            EvenServerLine.onNormal.background = new Texture2D(1, 1);
-            EvenServerLine.onNormal.background.SetPixel(0, 0, new Color(0.120f, 0.120f, 0.150f, 0.9f));
-            EvenServerLine.onNormal.background.Apply();
+            _evenServerLine = new GUIStyle();
+            _evenServerLine.normal.background = new Texture2D(1, 1);
+            _evenServerLine.normal.background.SetPixel(0, 0, new Color(0.120f, 0.120f, 0.150f, 0.9f));
+            _evenServerLine.normal.background.Apply();
+            _evenServerLine.onNormal.background = new Texture2D(1, 1);
+            _evenServerLine.onNormal.background.SetPixel(0, 0, new Color(0.120f, 0.120f, 0.150f, 0.9f));
+            _evenServerLine.onNormal.background.Apply();
             
-            OddServerLine = new GUIStyle();
-            OddServerLine.normal.background = new Texture2D(1, 1);
-            OddServerLine.normal.background.SetPixel(0, 0, new Color(0.180f, 0.180f, 0.220f, 0.9f));
-            OddServerLine.normal.background.Apply();
-            OddServerLine.onNormal.background = new Texture2D(1, 1);
-            OddServerLine.onNormal.background.SetPixel(0, 0, new Color(0.180f, 0.180f, 0.220f, 0.9f));
-            OddServerLine.onNormal.background.Apply();
+            _oddServerLine = new GUIStyle();
+            _oddServerLine.normal.background = new Texture2D(1, 1);
+            _oddServerLine.normal.background.SetPixel(0, 0, new Color(0.180f, 0.180f, 0.220f, 0.9f));
+            _oddServerLine.normal.background.Apply();
+            _oddServerLine.onNormal.background = new Texture2D(1, 1);
+            _oddServerLine.onNormal.background.SetPixel(0, 0, new Color(0.180f, 0.180f, 0.220f, 0.9f));
+            _oddServerLine.onNormal.background.Apply();
 
             LabelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
 

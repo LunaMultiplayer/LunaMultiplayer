@@ -47,7 +47,7 @@ namespace LunaClient.Windows.ServerList
 
         private void DrawGridHeader()
         {
-            GUILayout.BeginHorizontal(HeaderServerLine);
+            GUILayout.BeginHorizontal(_headerServerLine);
 
             GUILayout.BeginHorizontal(GUILayout.Width(25));
             if (GUILayout.Button(_ascending ? "▲" : "▼", ButtonStyle))
@@ -164,7 +164,7 @@ namespace LunaClient.Windows.ServerList
                 {
                     var currentEntry = DisplayedServers[i];
 
-                    GUILayout.BeginHorizontal(i % 2 != 0 ? OddServerLine : EvenServerLine);
+                    GUILayout.BeginHorizontal(i % 2 != 0 ? _oddServerLine : _evenServerLine);
                     DrawServerEntry(currentEntry);
                     GUILayout.EndHorizontal();
                 }
