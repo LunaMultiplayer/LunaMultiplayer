@@ -17,7 +17,6 @@ namespace LunaClient.Windows.Status
         public override bool Display => SettingsSystem.CurrentSettings.DisclaimerAccepted && MainSystem.ToolbarShowGui && 
                                         MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
-        public List<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
         public bool ColorEventHandled { get; set; } = true;
 
         #endregion
@@ -33,6 +32,8 @@ namespace LunaClient.Windows.Status
         private const float UpdateStatusInterval = .5f;
 
         private static double _lastStatusUpdate;
+
+        private static readonly List<SubspaceDisplayEntry> SubspaceDisplay = new List<SubspaceDisplayEntry>();
 
 #if DEBUG
         private static readonly string Title = $"LMP - Debug port: {CommonUtil.DebugPort}";
@@ -104,8 +105,6 @@ namespace LunaClient.Windows.Status
             _stateTextStyle.fontStyle = FontStyle.Normal;
             _stateTextStyle.fontSize = 12;
             _stateTextStyle.stretchWidth = true;
-
-            SubspaceDisplay = new List<SubspaceDisplayEntry>();
         }
 
         public override void Update()
@@ -115,8 +114,9 @@ namespace LunaClient.Windows.Status
 
             if (Time.realtimeSinceStartup - _lastStatusUpdate > UpdateStatusInterval)
             {
+                SubspaceDisplay.Clear();
                 _lastStatusUpdate = Time.realtimeSinceStartup;
-                SubspaceDisplay = WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries();
+                SubspaceDisplay.AddRange(WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries());
             }
         }
 

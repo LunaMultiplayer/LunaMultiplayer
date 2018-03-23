@@ -6,6 +6,7 @@ using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using UniLinq;
 
@@ -57,6 +58,7 @@ namespace LunaClient.Systems.Warp
         public bool WaitingSubspaceIdFromServer { get; set; }
         public bool SyncedToLastSubspace { get; set; }
         private static DateTime StoppedWarpingTimeStamp { get; set; }
+        public List<SubspaceDisplayEntry> SubspaceEntries { get; } = new List<SubspaceDisplayEntry>();
 
         #endregion
 
@@ -73,6 +75,7 @@ namespace LunaClient.Systems.Warp
             GameEvents.onLevelWasLoadedGUIReady.Remove(WarpEvents.OnSceneChanged);
             ClientSubspaceList.Clear();
             Subspaces.Clear();
+            SubspaceEntries.Clear();
             _currentSubspace = int.MinValue;
             SkipSubspaceProcess = false;
             WaitingSubspaceIdFromServer = false;

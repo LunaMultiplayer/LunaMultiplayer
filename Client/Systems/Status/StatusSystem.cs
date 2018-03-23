@@ -11,11 +11,7 @@ namespace LunaClient.Systems.Status
     {
         #region Fields
 
-        public PlayerStatus MyPlayerStatus { get; } = new PlayerStatus
-        {
-            PlayerName = SettingsSystem.CurrentSettings.PlayerName,
-            StatusText = "Syncing"
-        };
+        public PlayerStatus MyPlayerStatus { get; } = new PlayerStatus();
 
         public ConcurrentDictionary<string, PlayerStatus> PlayerStatusList { get; } = new ConcurrentDictionary<string, PlayerStatus>();
 
@@ -36,6 +32,9 @@ namespace LunaClient.Systems.Status
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
+            MyPlayerStatus.StatusText = "Syncing";
+
             SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckPlayerStatus));
             MessageSender.SendOwnStatus();
         }
