@@ -5,7 +5,6 @@ using LunaClient.Systems.Flag;
 using LunaClient.Systems.Handshake;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.Motd;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
@@ -201,20 +200,13 @@ namespace LunaClient.Systems.Network
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
                         MainSystem.NetworkState = ClientState.Running;
+                        NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
                     }
                     break;
                 case ClientState.Running:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
-            }
-            if (MotdSystem.Singleton.DisplayMotd && HighLogic.LoadedScene != GameScenes.LOADING)
-            {
-                MotdSystem.Singleton.DisplayMotd = false;
-                ScenarioSystem.Singleton.UpgradeTheAstronautComplexSoTheGameDoesntBugOut();
-                ScreenMessages.PostScreenMessage(MotdSystem.Singleton.ServerMotd, 10f, ScreenMessageStyle.UPPER_CENTER);
-                //Control locks will bug out the space centre sceen, so remove them before starting.
-                NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
             }
         }
 

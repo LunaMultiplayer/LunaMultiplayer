@@ -11,6 +11,9 @@ namespace LunaClient.Systems.Handshake
 
         public byte[] Challenge = new byte[1024];
 
+        protected override bool AlwaysEnabled => true;
+        protected override bool ProcessMessagesInUnityThread => false;
+
         public void SendHandshakeChallengeResponse()
         {
             try
