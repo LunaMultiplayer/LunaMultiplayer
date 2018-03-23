@@ -37,7 +37,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Arguments.cs" />
-    <Compile Include="Helper.cs" />
     <Compile Include="Http\ExceptionHandler.cs" />
     <Compile Include="Http\HttpException.cs" />
     <Compile Include="Http\LunaHttpServer.cs" />

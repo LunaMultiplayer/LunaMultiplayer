@@ -94,7 +94,7 @@ namespace LMP.MasterServer.Lidgren
         private static void CheckMasterServerListed()
         {
             var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-            var ownEndpoint = $"{Helper.GetOwnIpAddress()}:{Port}";
+            var ownEndpoint = $"{LunaNetUtils.GetOwnExternalIpAddress()}:{Port}";
 
             if(!servers.Contains(ownEndpoint))
             {
