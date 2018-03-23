@@ -29,6 +29,14 @@ namespace LunaClient.Base
         protected GUILayoutOption[] LabelOptions;
 
         protected Vector2 ScrollPos = new Vector2();
+        protected Texture2D SettingsIcon;
+        protected Texture2D ServerIcon;
+        protected Texture2D SystemIcon;
+        protected Texture2D ConnectIcon;
+        protected Texture2D DebugIcon;
+        protected Texture2D DisconnectIcon;
+        protected Texture2D LockIcon;
+
         protected Texture2D ResizeIcon;
         protected Texture2D CloseIcon;
         protected Texture2D RefreshIcon;
@@ -42,6 +50,13 @@ namespace LunaClient.Base
 
         public void InitializeStyles()
         {
+            SettingsIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "settings.png"), 16, 16);
+            ServerIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "server.png"), 10, 10);
+            SystemIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "system.png"), 16, 16);
+            ConnectIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "connect.png"), 16, 16);
+            DebugIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "debug.png"), 16, 16);
+            DisconnectIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "disconnect.png"), 16, 16);
+            LockIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "lock.png"), 16, 16);
             ResizeIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "resize.png"), 16, 16);
             CloseIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "close_small.png"), 10, 10);
             RefreshIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "refresh.png"), 16, 16);

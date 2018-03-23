@@ -29,6 +29,13 @@ namespace LunaClient.Windows.Connection
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.CustomServers);
             GUILayout.BeginVertical(BoxStyle);
 
+            if (GUILayout.Button(PlusIcon, ButtonStyle))
+            {
+                SettingsSystem.CurrentSettings.Servers.Insert(0, new ServerEntry());
+                SettingsSystem.SaveSettings();
+            }
+            GUILayout.Space(15);
+
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, GUILayout.Width(WindowWidth - 5),
                 GUILayout.Height(WindowHeight - 100));
             for (var serverPos = 0; serverPos < SettingsSystem.CurrentSettings.Servers.Count; serverPos++)
@@ -49,15 +56,7 @@ namespace LunaClient.Windows.Connection
                     }
                 }
             }
-
             GUILayout.EndScrollView();
-            GUILayout.Space(15);
-            if (GUILayout.Button(PlusIcon, ButtonStyle))
-            {
-                SettingsSystem.CurrentSettings.Servers.Add(new ServerEntry());
-                SettingsSystem.SaveSettings();
-            }
-
             GUILayout.EndVertical();
         }
 
