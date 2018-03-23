@@ -40,7 +40,7 @@ namespace LunaClient.Windows.CraftLibrary
                 if (_selectedFolder != folderName)
                 {
                     _selectedFolder = folderName;
-                    System.MessageSender.SendRequestCraftListMsg(_selectedFolder);
+                    System.RequestCraftListIfNeeded(_selectedFolder);
                 }
             }
             else

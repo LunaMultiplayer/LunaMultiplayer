@@ -1,5 +1,7 @@
 ﻿using LunaClient.Systems.Chat;
+using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.PlayerColorSys;
+using LunaClient.Systems.Screenshot;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.Warp;
@@ -27,16 +29,9 @@ namespace LunaClient.Windows.Status
             #region Horizontal toolbar
 
             GUILayout.BeginHorizontal();
-            
             ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, ChatSystem.Singleton.NewMessageReceived ? _chatRedIcon : _chatIcon, ButtonStyle);
-            CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, _rocketIcon, ButtonStyle);
-            ScreenshotsWindow.Singleton.Display = GUILayout.Toggle(ScreenshotsWindow.Singleton.Display, _cameraIcon, ButtonStyle);
-#if DEBUG
-            DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, StatusTexts.DebugBtnTxt, ButtonStyle);
-            SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, StatusTexts.SystemsBtnTxt, ButtonStyle);
-            LocksWindow.Singleton.Display = GUILayout.Toggle(LocksWindow.Singleton.Display, StatusTexts.LocksBtnTxt, ButtonStyle);
-#endif
-
+            CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, CraftLibrarySystem.Singleton.NewContent ? _rocketRedIcon : _rocketIcon, ButtonStyle);
+            ScreenshotsWindow.Singleton.Display = GUILayout.Toggle(ScreenshotsWindow.Singleton.Display, ScreenshotSystem.Singleton.NewContent ? _cameraRedIcon : _cameraIcon, ButtonStyle);
             GUILayout.EndHorizontal();
 
             #endregion
@@ -61,9 +56,7 @@ namespace LunaClient.Windows.Status
                 GUILayout.EndHorizontal();
                 for (var j = 0; j < SubspaceDisplay[i].Players.Count; j++)
                 {
-                    DrawPlayerEntry(SubspaceDisplay[i].Players[j] == SettingsSystem.CurrentSettings.PlayerName
-                        ? StatusSystem.Singleton.MyPlayerStatus
-                        : StatusSystem.Singleton.GetPlayerStatus(SubspaceDisplay[i].Players[j]));
+                    DrawPlayerEntry(StatusSystem.Singleton.GetPlayerStatus(SubspaceDisplay[i].Players[j]));
                 }
             }
             GUILayout.EndScrollView();
@@ -72,9 +65,7 @@ namespace LunaClient.Windows.Status
 
             GUILayout.FlexibleSpace();
 #if DEBUG
-            GUILayout.BeginHorizontal();
-            DrawDebugSwitches();
-            GUILayout.EndHorizontal();
+            DrawDebugSection();
 #endif
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(StatusTexts.DisconnectBtnTxt, ButtonStyle))
@@ -85,9 +76,22 @@ namespace LunaClient.Windows.Status
             GUILayout.EndVertical();
         }
 
+        private void DrawDebugSection()
+        {
+            GUILayout.BeginVertical();
+            GUILayout.BeginHorizontal();
+            DebugWindow.Singleton.Display = GUILayout.Toggle(DebugWindow.Singleton.Display, StatusTexts.DebugBtnTxt, ButtonStyle);
+            SystemsWindow.Singleton.Display = GUILayout.Toggle(SystemsWindow.Singleton.Display, StatusTexts.SystemsBtnTxt, ButtonStyle);
+            LocksWindow.Singleton.Display = GUILayout.Toggle(LocksWindow.Singleton.Display, StatusTexts.LocksBtnTxt, ButtonStyle);
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            DrawDebugSwitches();
+            GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
+        }
+
         private void DrawDebugSwitches()
         {
-#if DEBUG
             var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, StatusTexts.Debug1BtnTxt, ButtonStyle);
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
             {
@@ -142,7 +146,6 @@ namespace LunaClient.Windows.Status
                 SettingsSystem.CurrentSettings.Debug9 = d9;
                 SettingsSystem.SaveSettings();
             }
-#endif
         }
 
         private static bool NotWarpingAndIsFutureSubspace(int subspaceId)

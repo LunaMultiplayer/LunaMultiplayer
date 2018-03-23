@@ -23,6 +23,7 @@ namespace LunaCommon.Message.Server
             [(ushort)CraftMessageType.ListReply] = typeof(CraftLibraryListReplyMsgData),
             [(ushort)CraftMessageType.DeleteRequest] = typeof(CraftLibraryDeleteRequestMsgData),
             [(ushort)CraftMessageType.CraftData] = typeof(CraftLibraryDataMsgData),
+            [(ushort)CraftMessageType.Notification] = typeof(CraftLibraryNotificationMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.CraftLibrary;

@@ -37,7 +37,9 @@ namespace LunaClient.Windows.Status
         private static Texture2D _chatIcon;
         private static Texture2D _chatRedIcon;
         private static Texture2D _cameraIcon;
+        private static Texture2D _cameraRedIcon;
         private static Texture2D _rocketIcon;
+        private static Texture2D _rocketRedIcon;
 
 #if DEBUG
         private static readonly string Title = $"LMP - Debug port: {CommonUtil.DebugPort}";
@@ -78,7 +80,9 @@ namespace LunaClient.Windows.Status
             _chatIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "chatWhite.png"), 16, 16);
             _chatRedIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "chatRed.png"), 16, 16);
             _cameraIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "camera.png"), 16, 16);
+            _cameraRedIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "cameraRed.png"), 16, 16);
             _rocketIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "rocket.png"), 16, 16);
+            _rocketRedIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "rocketRed.png"), 16, 16);
 
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);

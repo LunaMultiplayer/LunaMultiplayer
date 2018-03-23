@@ -9,6 +9,7 @@
 
         DownloadRequest = 4,
         DeleteRequest = 5,
-        CraftData = 6
+        CraftData = 6,
+        Notification = 7
     }
 }

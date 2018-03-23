@@ -9,5 +9,6 @@
         
         DownloadRequest = 4,
         ScreenshotData = 5,
+        Notification = 6
     }
 }

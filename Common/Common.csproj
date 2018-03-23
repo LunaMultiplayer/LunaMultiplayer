@@ -63,6 +63,7 @@
     <Compile Include="Message\Client\ScreenshotCliMsg.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftInfo.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftBasicInfo.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryNotificationMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryDeleteRequestMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
@@ -168,6 +169,7 @@
     <Compile Include="Message\Data\Scenario\ScenarioBaseMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioDataMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioRequestMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotNotificationMsgData.cs" />
     <Compile Include="Message\Data\Screenshot\ScreenshotInfo.cs" />
     <Compile Include="Message\Data\Screenshot\ScreenshotBaseMsgData.cs" />
     <Compile Include="Message\Data\Screenshot\ScreenshotDownloadRequestMsgData.cs" />

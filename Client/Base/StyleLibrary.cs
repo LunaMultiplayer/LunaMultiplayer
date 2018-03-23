@@ -11,6 +11,7 @@ namespace LunaClient.Base
 
         protected GUIStyle WindowStyle;
         protected GUIStyle ButtonStyle;
+        protected GUIStyle RedFontButtonStyle;
         protected GUIStyle SmallButtonStyle;
         protected GUIStyle ResizeButtonStyle;
         protected GUIStyle LabelStyle;
@@ -54,6 +55,7 @@ namespace LunaClient.Base
 
             WindowStyle = new GUIStyle(GUI.skin.window);
             ButtonStyle = new GUIStyle(GUI.skin.button);
+            RedFontButtonStyle = new GUIStyle(GUI.skin.button) { normal = new GUIStyleState { textColor = Color.red } };
             SmallButtonStyle = new GUIStyle(GUI.skin.button) { padding = new RectOffset(0, 0, 0, 0) };
             ResizeButtonStyle = new GUIStyle(GUI.skin.button) {
                 padding = new RectOffset(0, 0, 0, 0),

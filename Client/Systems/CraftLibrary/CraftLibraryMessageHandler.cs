@@ -34,6 +34,10 @@ namespace LunaClient.Systems.CraftLibrary
                     var craftMsg = (CraftLibraryDataMsgData)msgData;
                     SaveNewCraft(craftMsg);
                     break;
+                case CraftMessageType.Notification:
+                    var notificationMsg = (CraftLibraryNotificationMsgData)msgData;
+                    System.FoldersWithNewContent.Add(notificationMsg.FolderName);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

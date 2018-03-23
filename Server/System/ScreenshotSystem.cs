@@ -53,6 +53,7 @@ namespace Server.System
                         LunaLog.Normal($"Saving screenshot {fileName} ({data.Screenshot.NumBytes} bytes) from: {client.PlayerName}.");
                         FileHandler.WriteToFile(fullPath, data.Screenshot.Data, data.Screenshot.NumBytes);
                         CreateMiniature(fullPath);
+                        SendNotificationToOtherPlayers(client);
                     }
                     else
                     {
@@ -162,6 +163,17 @@ namespace Server.System
         #endregion
 
         #region Private methods
+
+        /// <summary>
+        /// Sends a notification of new screenshot to other players
+        /// </summary>
+        private static void SendNotificationToOtherPlayers(ClientStructure client)
+        {
+            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<ScreenshotNotificationMsgData>();
+            msgData.FolderName = client.PlayerName;
+
+            MessageQueuer.RelayMessage<ScreenshotSrvMsg>(client, msgData);
+        }
 
         /// <summary>
         /// Checks if we have too many player folders and if so, it deletes the oldest one

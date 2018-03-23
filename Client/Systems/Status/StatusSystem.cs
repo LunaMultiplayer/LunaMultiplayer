@@ -58,6 +58,9 @@ namespace LunaClient.Systems.Status
 
         public PlayerStatus GetPlayerStatus(string playerName)
         {
+            if (playerName == SettingsSystem.CurrentSettings.PlayerName)
+                return MyPlayerStatus;
+
             return PlayerStatusList.ContainsKey(playerName) ? PlayerStatusList[playerName] : null;
         }
 
