@@ -82,7 +82,7 @@ namespace Server.System
                         LunaLog.Normal($"Saving craft {data.Craft.CraftName} ({data.Craft.NumBytes} bytes) from: {client.PlayerName}.");
                         FileHandler.WriteToFile(fullPath, data.Craft.Data, data.Craft.NumBytes);
                     }
-                    SendNotificationToOtherPlayers(client);
+                    SendNotification(client.PlayerName);
                 }
                 else
                 {
@@ -197,14 +197,14 @@ namespace Server.System
         #region Private methods
 
         /// <summary>
-        /// Sends a notification of new craft to other players
+        /// Sends a notification of new craft to all players
         /// </summary>
-        private static void SendNotificationToOtherPlayers(ClientStructure client)
+        private static void SendNotification(string folderName)
         {
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<CraftLibraryNotificationMsgData>();
-            msgData.FolderName = client.PlayerName;
+            msgData.FolderName = folderName;
 
-            MessageQueuer.RelayMessage<CraftLibrarySrvMsg>(client, msgData);
+            MessageQueuer.SendToAllClients<CraftLibrarySrvMsg>(msgData);
         }
 
         /// <summary>
