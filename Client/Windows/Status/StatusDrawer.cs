@@ -2,6 +2,7 @@
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.Screenshot;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.Warp;
 using LunaClient.Windows.Chat;
@@ -75,6 +76,40 @@ namespace LunaClient.Windows.Status
             GUILayout.EndVertical();
         }
 
+        private static bool NotWarpingAndIsFutureSubspace(int subspaceId)
+        {
+            return !WarpSystem.CurrentlyWarping && WarpSystem.CurrentSubspace != subspaceId &&
+                   WarpSystem.Subspaces.ContainsKey(WarpSystem.CurrentSubspace) && WarpSystem.Subspaces.ContainsKey(subspaceId) &&
+                   WarpSystem.Subspaces[WarpSystem.CurrentSubspace] < WarpSystem.Subspaces[subspaceId];
+        }
+
+        private void DrawPlayerEntry(PlayerStatus playerStatus)
+        {
+            if (playerStatus == null)
+                return;
+            GUILayout.BeginHorizontal();
+            if (!_playerNameStyle.ContainsKey(playerStatus.PlayerName))
+            {
+                _playerNameStyle[playerStatus.PlayerName] = new GUIStyle(GUI.skin.label)
+                {
+                    normal = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
+                    hover = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
+                    active = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
+                    fontStyle = FontStyle.Bold,
+                    stretchWidth = true,
+                    wordWrap = false
+                };
+            }
+            GUILayout.Label(playerStatus.PlayerName, _playerNameStyle[playerStatus.PlayerName]);
+            GUILayout.FlexibleSpace();
+            GUILayout.Label(playerStatus.StatusText, _stateTextStyle);
+            GUILayout.Label(string.IsNullOrEmpty(playerStatus.VesselText) ? string.Empty : StatusTexts.GetPlayerText(playerStatus), _vesselNameStyle);
+            GUILayout.EndHorizontal();
+        }
+
+        #region Debug Section
+
+#if DEBUG
         private void DrawDebugSection()
         {
             GUILayout.BeginVertical();
@@ -91,7 +126,7 @@ namespace LunaClient.Windows.Status
 
         private void DrawDebugSwitches()
         {
-#if DEBUG
+
             var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, StatusTexts.Debug1BtnTxt, ButtonStyle);
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
             {
@@ -146,38 +181,10 @@ namespace LunaClient.Windows.Status
                 SettingsSystem.CurrentSettings.Debug9 = d9;
                 SettingsSystem.SaveSettings();
             }
+
+    }
 #endif
-        }
 
-        private static bool NotWarpingAndIsFutureSubspace(int subspaceId)
-        {
-            return !WarpSystem.CurrentlyWarping && WarpSystem.CurrentSubspace != subspaceId &&
-                   WarpSystem.Subspaces.ContainsKey(WarpSystem.CurrentSubspace) && WarpSystem.Subspaces.ContainsKey(subspaceId) &&
-                   WarpSystem.Subspaces[WarpSystem.CurrentSubspace] < WarpSystem.Subspaces[subspaceId];
-        }
-
-        private void DrawPlayerEntry(PlayerStatus playerStatus)
-        {
-            if (playerStatus == null)
-                return;
-            GUILayout.BeginHorizontal();
-            if (!_playerNameStyle.ContainsKey(playerStatus.PlayerName))
-            {
-                _playerNameStyle[playerStatus.PlayerName] = new GUIStyle(GUI.skin.label)
-                {
-                    normal = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
-                    hover = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
-                    active = { textColor = PlayerColorSystem.Singleton.GetPlayerColor(playerStatus.PlayerName) },
-                    fontStyle = FontStyle.Bold,
-                    stretchWidth = true,
-                    wordWrap = false
-                };
-            }
-            GUILayout.Label(playerStatus.PlayerName, _playerNameStyle[playerStatus.PlayerName]);
-            GUILayout.FlexibleSpace();
-            GUILayout.Label(playerStatus.StatusText, _stateTextStyle);
-            GUILayout.Label(string.IsNullOrEmpty(playerStatus.VesselText) ? string.Empty : StatusTexts.GetPlayerText(playerStatus), _vesselNameStyle);
-            GUILayout.EndHorizontal();
-        }
+        #endregion
     }
 }
