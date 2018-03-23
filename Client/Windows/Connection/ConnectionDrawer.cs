@@ -111,7 +111,7 @@ namespace LunaClient.Windows.Connection
             GUILayout.BeginHorizontal();
             if (MainSystem.NetworkState <= ClientState.Disconnected)
             {
-                GUI.enabled = SelectedIndex >= 0;
+                GUI.enabled = SelectedIndex >= 0 && SettingsSystem.CurrentSettings.Servers.Count > SelectedIndex;
                 if (GUILayout.Button(ConnectBigIcon, ButtonStyle))
                 {
                     NetworkConnection.ConnectToServer(
