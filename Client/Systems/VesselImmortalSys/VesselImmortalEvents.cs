@@ -31,7 +31,6 @@ namespace LunaClient.Systems.VesselImmortalSys
             if(lockDefinition.Type < LockType.Update) return;
 
             var vessel = FlightGlobals.FindVessel(lockDefinition.VesselId);
-            if (!vessel.loaded) return;
 
             System.SetVesselImmortalState(vessel, lockDefinition.PlayerName != SettingsSystem.CurrentSettings.PlayerName);
         }
