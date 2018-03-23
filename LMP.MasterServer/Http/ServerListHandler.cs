@@ -27,6 +27,12 @@ namespace LMP.MasterServer.Http
                 RenderHead(writer);
 
                 writer.RenderBeginTag(HtmlTextWriterTag.H1); writer.Write($"Luna Multiplayer servers - Version: {LmpVersioning.CurrentVersion}"); writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.H3);
+                writer.Write($"Servers: {servers.Length}");
+                writer.WriteBreak();
+                writer.Write($"Players: {servers.Sum(s => s.PlayerCount)}");
+                writer.RenderEndTag();
+                
 
                 RenderServersTable(writer, servers);
                 RenderFooter(writer);
