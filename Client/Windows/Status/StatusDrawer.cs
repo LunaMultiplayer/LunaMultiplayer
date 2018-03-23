@@ -2,7 +2,6 @@
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.Screenshot;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.Warp;
 using LunaClient.Windows.Chat;
@@ -92,6 +91,7 @@ namespace LunaClient.Windows.Status
 
         private void DrawDebugSwitches()
         {
+#if DEBUG
             var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, StatusTexts.Debug1BtnTxt, ButtonStyle);
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
             {
@@ -146,6 +146,7 @@ namespace LunaClient.Windows.Status
                 SettingsSystem.CurrentSettings.Debug9 = d9;
                 SettingsSystem.SaveSettings();
             }
+#endif
         }
 
         private static bool NotWarpingAndIsFutureSubspace(int subspaceId)
