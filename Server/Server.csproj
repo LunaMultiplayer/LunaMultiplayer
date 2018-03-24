@@ -151,8 +151,13 @@
     <Compile Include="System\ModDataSystemSender.cs" />
     <Compile Include="System\ModFileSystem.cs" />
     <Compile Include="System\ScenarioSystem.cs" />
-    <Compile Include="System\ShareProgressSystem.cs" />
+    <Compile Include="System\ShareAchievementsSystem.cs" />
+    <Compile Include="System\ShareContractsSystem.cs" />
+    <Compile Include="System\ShareFundsSystem.cs" />
     <Compile Include="System\ScreenshotSystem.cs" />
+    <Compile Include="System\ShareReputationSystem.cs" />
+    <Compile Include="System\ShareScienceSystem.cs" />
+    <Compile Include="System\ShareTechnologySystem.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselDataUpdater.cs" />
     <Compile Include="System\VesselRelay\VesselRelayItem.cs" />

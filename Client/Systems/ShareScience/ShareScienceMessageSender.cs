@@ -1,16 +1,16 @@
-﻿using LunaClient.Base;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Interface;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace LunaClient.Systems.ShareProgress
+namespace LunaClient.Systems.ShareScience
 {
-    public class ShareProgressMessageSender : SubSystem<ShareProgressSystem>, IMessageSender
+    public class ShareScienceMessageSender : SubSystem<ShareScienceSystem>, IMessageSender
     {
         public void SendMessage(IMessageData msg)
         {

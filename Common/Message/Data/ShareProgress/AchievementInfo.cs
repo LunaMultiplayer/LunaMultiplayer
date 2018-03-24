@@ -8,9 +8,9 @@ using System.Text;
 namespace LunaCommon.Message.Data.ShareProgress
 {
     /// <summary>
-    /// Wrapper for transmitting the ksp ProgressNode objects (for the milestones).
+    /// Wrapper for transmitting the ksp ProgressNode objects (for the achievements).
     /// </summary>
-    public class MilestoneInfo
+    public class AchievementInfo
     {
         public string Id;
         public int NumBytes;

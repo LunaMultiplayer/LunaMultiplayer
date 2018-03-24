@@ -9,7 +9,12 @@ using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
-using LunaClient.Systems.ShareProgress;
+using LunaClient.Systems.ShareAchievements;
+using LunaClient.Systems.ShareContracts;
+using LunaClient.Systems.ShareFunds;
+using LunaClient.Systems.ShareReputation;
+using LunaClient.Systems.ShareScience;
+using LunaClient.Systems.ShareTechnology;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFairingsSys;
@@ -81,11 +86,6 @@ namespace LunaClient.Windows.Systems
             if (_group)
             {
                 GroupSystem.Singleton.Enabled = GUILayout.Toggle(GroupSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
-            }
-            _shareProgress = GUILayout.Toggle(_shareProgress, "Share progress system", ButtonStyle);
-            if (_shareProgress)
-            {
-                ShareProgressSystem.Singleton.Enabled = GUILayout.Toggle(ShareProgressSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             _kerbal = GUILayout.Toggle(_kerbal, "Kerbal system", ButtonStyle);
             if (_kerbal)
@@ -209,6 +209,36 @@ namespace LunaClient.Windows.Systems
             {
                 //This system should never be toggled
                 WarpSystem.Singleton.Enabled = GUILayout.Toggle(WarpSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _shareFunds = GUILayout.Toggle(_shareFunds, "Share Funds system", ButtonStyle);
+            if (_shareFunds)
+            {
+                ShareFundsSystem.Singleton.Enabled = GUILayout.Toggle(ShareFundsSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _shareScience = GUILayout.Toggle(_shareScience, "Share Science system", ButtonStyle);
+            if (_shareScience)
+            {
+                ShareScienceSystem.Singleton.Enabled = GUILayout.Toggle(ShareScienceSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _shareReputation = GUILayout.Toggle(_shareReputation, "Share Reputation system", ButtonStyle);
+            if (_shareReputation)
+            {
+                ShareReputationSystem.Singleton.Enabled = GUILayout.Toggle(ShareReputationSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _shareTechnology = GUILayout.Toggle(_shareTechnology, "Share Technology system", ButtonStyle);
+            if (_shareTechnology)
+            {
+                ShareTechnologySystem.Singleton.Enabled = GUILayout.Toggle(ShareTechnologySystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _shareContracts = GUILayout.Toggle(_shareContracts, "Share Contract system", ButtonStyle);
+            if (_shareContracts)
+            {
+                ShareContractsSystem.Singleton.Enabled = GUILayout.Toggle(ShareContractsSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _shareAchievements = GUILayout.Toggle(_shareAchievements, "Share Achievements system", ButtonStyle);
+            if (_shareAchievements)
+            {
+                ShareAchievementsSystem.Singleton.Enabled = GUILayout.Toggle(ShareAchievementsSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
         }
     }

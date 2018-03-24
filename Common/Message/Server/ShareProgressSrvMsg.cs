@@ -25,8 +25,8 @@ namespace LunaCommon.Message.Server
             [(ushort)ShareProgressMessageType.ScienceUpdate] = typeof(ShareProgressScienceMsgData),
             [(ushort)ShareProgressMessageType.ReputationUpdate] = typeof(ShareProgressReputationMsgData),
             [(ushort)ShareProgressMessageType.TechnologyUpdate] = typeof(ShareProgressTechnologyMsgData),
-            [(ushort)ShareProgressMessageType.ContractUpdate] = typeof(ShareProgressContractMsgData),
-            [(ushort)ShareProgressMessageType.MilestoneUpdate] = typeof(ShareProgressMilestoneMsgData),
+            [(ushort)ShareProgressMessageType.ContractsUpdate] = typeof(ShareProgressContractsMsgData),
+            [(ushort)ShareProgressMessageType.AchievementsUpdate] = typeof(ShareProgressAchievementsMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.ShareProgress;

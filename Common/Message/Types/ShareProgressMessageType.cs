@@ -11,7 +11,7 @@ namespace LunaCommon.Message.Types
         ScienceUpdate = 1,
         ReputationUpdate = 2,
         TechnologyUpdate = 3,
-        ContractUpdate = 4,
-        MilestoneUpdate = 5,
+        ContractsUpdate = 4,
+        AchievementsUpdate = 5,
     }
 }

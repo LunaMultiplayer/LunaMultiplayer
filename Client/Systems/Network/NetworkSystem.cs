@@ -9,7 +9,6 @@ using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.ShareProgress;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselSyncSys;

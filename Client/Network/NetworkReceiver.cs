@@ -14,7 +14,6 @@ using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.Screenshot;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.ShareProgress;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselEvaSys;
@@ -34,6 +33,13 @@ using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
 using System.Threading;
+using LunaClient.Systems.ShareAchievements;
+using LunaClient.Systems.ShareContracts;
+using LunaClient.Systems.ShareFunds;
+using LunaClient.Systems.ShareReputation;
+using LunaClient.Systems.ShareScience;
+using LunaClient.Systems.ShareTechnology;
+using LunaCommon.Message.Data.ShareProgress;
 
 namespace LunaClient.Network
 {
@@ -202,7 +208,27 @@ namespace LunaClient.Network
                     FacilitySystem.Singleton.EnqueueMessage(msg);
                     break;
                 case ServerMessageType.ShareProgress:
-                    ShareProgressSystem.Singleton.EnqueueMessage(msg);
+                    switch (((ShareProgressBaseMsgData)msg.Data).ShareProgressMessageType)
+                    {
+                        case ShareProgressMessageType.FundsUpdate:
+                            ShareFundsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.ScienceUpdate:
+                            ShareScienceSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.ReputationUpdate:
+                            ShareReputationSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.TechnologyUpdate:
+                            ShareTechnologySystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.ContractsUpdate:
+                            ShareContractsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.AchievementsUpdate:
+                            ShareAchievementsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                    }
                     break;
                 case ServerMessageType.Screenshot:
                     ScreenshotSystem.Singleton.EnqueueMessage(msg);

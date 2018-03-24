@@ -184,11 +184,11 @@
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ContractInfo.cs" />
-    <Compile Include="Message\Data\ShareProgress\MilestoneInfo.cs" />
+    <Compile Include="Message\Data\ShareProgress\AchievementInfo.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressBaseMsgData.cs" />
-    <Compile Include="Message\Data\ShareProgress\ShareProgressContractMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressContractsMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressFundsMsgData.cs" />
-    <Compile Include="Message\Data\ShareProgress\ShareProgressMilestoneMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressAchievementsMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressReputationMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressScienceMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressTechnologyMsgData.cs" />

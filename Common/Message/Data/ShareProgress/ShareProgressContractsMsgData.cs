@@ -10,16 +10,16 @@ namespace LunaCommon.Message.Data.ShareProgress
     /// <summary>
     /// Data packet for sending contracts between clients.
     /// </summary>
-    public class ShareProgressContractMsgData : ShareProgressBaseMsgData
+    public class ShareProgressContractsMsgData : ShareProgressBaseMsgData
     {
         /// <inheritdoc />
-        internal ShareProgressContractMsgData() { }
-        public override ShareProgressMessageType ShareProgressMessageType => ShareProgressMessageType.ContractUpdate;
+        internal ShareProgressContractsMsgData() { }
+        public override ShareProgressMessageType ShareProgressMessageType => ShareProgressMessageType.ContractsUpdate;
 
         public int ContractCount;
         public ContractInfo[] Contracts = new ContractInfo[0];
 
-        public override string ClassName { get; } = nameof(ShareProgressContractMsgData);
+        public override string ClassName { get; } = nameof(ShareProgressContractsMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {

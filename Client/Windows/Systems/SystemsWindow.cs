@@ -57,12 +57,17 @@ namespace LunaClient.Windows.Systems
         private static bool _timeSyncer;
         private static bool _toolbar;
         private static bool _warp;
-        private static bool _shareProgress;
+        private static bool _shareFunds;
+        private static bool _shareScience;
+        private static bool _shareReputation;
+        private static bool _shareTechnology;
+        private static bool _shareContracts;
+        private static bool _shareAchievements;
 
         #endregion
 
         #endregion
-        
+
         public override void OnGui()
         {
             base.OnGui();
