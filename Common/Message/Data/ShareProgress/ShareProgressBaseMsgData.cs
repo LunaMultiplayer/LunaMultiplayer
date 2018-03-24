@@ -15,21 +15,19 @@ namespace LunaCommon.Message.Data.ShareProgress
         public override ushort SubType => (ushort)(int)ShareProgressMessageType;
         public virtual ShareProgressMessageType ShareProgressMessageType => throw new NotImplementedException();
 
-        public string ObjectId;
-
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            lidgrenMsg.Write(ObjectId);
+            //Nothing to implement here
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            ObjectId = lidgrenMsg.ReadString();
+            //Nothing to implement here
         }
 
         internal override int InternalGetMessageSize()
         {
-            return ObjectId.GetByteCount();
+            return 0;
         }
     }
 }

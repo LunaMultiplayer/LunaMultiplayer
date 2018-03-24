@@ -13,13 +13,12 @@ using System.Text;
 
 namespace LunaClient.Systems.ShareProgress
 {
-    class ShareProgressEvents : SubSystem<ShareProgressSystem>
+    public class ShareProgressEvents : SubSystem<ShareProgressSystem>
     {
         #region EventHandling
         public void FundsChanged(double value, TransactionReasons reason)
         {
-            if (System.IncomingFundsProcessing)
-                return;
+            if (System.IncomingFundsProcessing) return;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressFundsMsgData>();
             msgData.Funds = value;
@@ -30,8 +29,7 @@ namespace LunaClient.Systems.ShareProgress
 
         public void ScienceChanged(float value, TransactionReasons reason)
         {
-            if (System.IncomingScienceProcessing)
-                return;
+            if (System.IncomingScienceProcessing) return;
             
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressScienceMsgData>();
             msgData.Science = value;
@@ -42,8 +40,7 @@ namespace LunaClient.Systems.ShareProgress
 
         public void ReputationChanged(float value, TransactionReasons reason)
         {
-            if (System.IncomingReputationProcessing)
-                return;
+            if (System.IncomingReputationProcessing) return;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressReputationMsgData>();
             msgData.Reputation = value;
@@ -54,22 +51,17 @@ namespace LunaClient.Systems.ShareProgress
 
         public void TechnologyResearched(GameEvents.HostTargetAction<RDTech, RDTech.OperationResult> data)
         {
-            if (System.IncomingTechnologyProcessing)
-                return;
+            if (System.IncomingTechnologyProcessing || (data.target != RDTech.OperationResult.Successful)) return;
 
-            if (data.target == RDTech.OperationResult.Successful)
-            {
-                var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressTechnologyMsgData>();
-                msgData.TechID = data.host.techID;
-                LunaLog.Log("Technology unlocked: " + msgData.TechID);
-                System.MessageSender.SendMessage(msgData);
-            }
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressTechnologyMsgData>();
+            msgData.TechId = data.host.techID;
+            LunaLog.Log("Technology unlocked: " + msgData.TechId);
+            System.MessageSender.SendMessage(msgData);
         }
 
         public void ContractAccepted(Contract contract)
         {
-            if (System.IncomingContractsProcessing)
-                return;
+            if (System.IncomingContractsProcessing) return;
 
             SendContractUpdate(contract);
             LunaLog.Log("Contract accepted: " + contract.ContractGuid);
@@ -77,8 +69,7 @@ namespace LunaClient.Systems.ShareProgress
 
         public void ContractCancelled(Contract contract)
         {
-            if (System.IncomingContractsProcessing)
-                return;
+            if (System.IncomingContractsProcessing) return;
 
             SendContractUpdate(contract);
             LunaLog.Log("Contract cancelled: " + contract.ContractGuid);
@@ -86,8 +77,7 @@ namespace LunaClient.Systems.ShareProgress
 
         public void ContractCompleted(Contract contract)
         {
-            if (System.IncomingContractsProcessing)
-                return;
+            if (System.IncomingContractsProcessing) return;
 
             SendContractUpdate(contract);
             LunaLog.Log("Contract completed: " + contract.ContractGuid);
@@ -105,8 +95,7 @@ namespace LunaClient.Systems.ShareProgress
 
         public void ContractDeclined(Contract contract)
         {
-            if (System.IncomingContractsProcessing)
-                return;
+            if (System.IncomingContractsProcessing) return;
 
             SendContractUpdate(contract);
             LunaLog.Log("Contract declined: " + contract.ContractGuid);
@@ -114,8 +103,7 @@ namespace LunaClient.Systems.ShareProgress
 
         public void ContractFailed(Contract contract)
         {
-            if (System.IncomingContractsProcessing)
-                return;
+            if (System.IncomingContractsProcessing) return;
 
             SendContractUpdate(contract);
             LunaLog.Log("Contract failed: " + contract.ContractGuid);
@@ -132,15 +120,14 @@ namespace LunaClient.Systems.ShareProgress
         public void ContractOffered(Contract contract)
         {
             LunaLog.Log("Contract offered: " + contract.ContractGuid + " - " + contract.Title);
+            
+            if (!LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName)) return;
 
             //This should be only called on the client with the contract lock, because he has the generationCount != 0.
-            if (LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
-            {
-                SendContractUpdate(contract);
+            SendContractUpdate(contract);
 
-                //Also store the current contracts on the server so new players will see this contract too.
-                ScenarioSystem.Singleton.SendScenarioModules();
-            }
+            //Also store the current contracts on the server so new players will see this contract too.
+            ScenarioSystem.Singleton.SendScenarioModules();
         }
 
         public void ContractParameterChanged(Contract contract, ContractParameter contractParameter)
@@ -161,8 +148,7 @@ namespace LunaClient.Systems.ShareProgress
         
         public void MilestoneReached(ProgressNode progressNode)
         {
-            if (System.IncomingMilestonesProcessing)
-                return;
+            if (System.IncomingMilestonesProcessing) return;
 
             SendMilestoneUpdate(progressNode);
             LunaLog.Log("Milestone reached:" + progressNode.Id);
@@ -170,8 +156,7 @@ namespace LunaClient.Systems.ShareProgress
         
         public void MilestoneCompleted(ProgressNode progressNode)
         {
-            if (System.IncomingMilestonesProcessing)
-                return;
+            if (System.IncomingMilestonesProcessing) return;
 
             SendMilestoneUpdate(progressNode);
             LunaLog.Log("Milestone completed:" + progressNode.Id);
@@ -212,17 +197,14 @@ namespace LunaClient.Systems.ShareProgress
         #endregion
 
         #region PrivateMethods
-        private void SendContractUpdate(Contract[] contracts)
+        private static void SendContractUpdate(Contract[] contracts)
         {
             //Convert the Contract's to ContractInfo's.
             var contractInfos = new List<ContractInfo>();
             foreach (var contract in contracts)
             {
                 var configNode = ConvertContractToConfigNode(contract);
-                if (configNode == null)
-                {
-                    break;
-                }
+                if (configNode == null) break;
 
                 var data = ConfigNodeSerializer.Serialize(configNode);
                 var numBytes = data.Length;
@@ -237,17 +219,22 @@ namespace LunaClient.Systems.ShareProgress
 
             //Build the packet and send it.
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressContractMsgData>();
+            if (msgData == null)
+            {
+                LunaLog.Log("MESSAGE DATA IS NULL: LINE 221");
+            }
+
             msgData.Contracts = contractInfos.ToArray();
             msgData.ContractCount = msgData.Contracts.Length;
             System.MessageSender.SendMessage(msgData);
         }
 
-        private void SendContractUpdate(Contract contract)
+        private static void SendContractUpdate(Contract contract)
         {
             SendContractUpdate(new Contract[] { contract });
         }
 
-        private ConfigNode ConvertContractToConfigNode(Contract contract)
+        private static ConfigNode ConvertContractToConfigNode(Contract contract)
         {
             var configNode = new ConfigNode();
             try
@@ -263,17 +250,14 @@ namespace LunaClient.Systems.ShareProgress
             return configNode;
         }
 
-        private void SendMilestoneUpdate(ProgressNode[] milestones)
+        private static void SendMilestoneUpdate(ProgressNode[] milestones)
         {
             //Convert the Contract's to ContractInfo's.
             var milestoneInfos = new List<MilestoneInfo>();
             foreach (var milestone in milestones)
             {
                 var configNode = ConvertMilestoneToConfigNode(milestone);
-                if (configNode == null)
-                {
-                    break;
-                }
+                if (configNode == null) break;
 
                 var data = ConfigNodeSerializer.Serialize(configNode);
                 var numBytes = data.Length;
@@ -293,12 +277,12 @@ namespace LunaClient.Systems.ShareProgress
             System.MessageSender.SendMessage(msgData);
         }
 
-        private void SendMilestoneUpdate(ProgressNode milestone)
+        private static void SendMilestoneUpdate(ProgressNode milestone)
         {
             SendMilestoneUpdate(new ProgressNode[] { milestone });
         }
 
-        private ConfigNode ConvertMilestoneToConfigNode(ProgressNode milestone)
+        private static ConfigNode ConvertMilestoneToConfigNode(ProgressNode milestone)
         {
             var configNode = new ConfigNode();
             try

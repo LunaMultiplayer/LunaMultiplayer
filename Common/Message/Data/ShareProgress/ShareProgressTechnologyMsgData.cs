@@ -17,7 +17,7 @@ namespace LunaCommon.Message.Data.ShareProgress
         internal ShareProgressTechnologyMsgData() { }
         public override ShareProgressMessageType ShareProgressMessageType => ShareProgressMessageType.TechnologyUpdate;
 
-        public string TechID;
+        public string TechId;
 
         public override string ClassName { get; } = nameof(ShareProgressTechnologyMsgData);
 
@@ -25,19 +25,19 @@ namespace LunaCommon.Message.Data.ShareProgress
         {
             base.InternalSerialize(lidgrenMsg);
             
-            lidgrenMsg.Write(TechID);
+            lidgrenMsg.Write(TechId);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             base.InternalDeserialize(lidgrenMsg);
             
-            TechID = lidgrenMsg.ReadString();
+            TechId = lidgrenMsg.ReadString();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + TechID.GetByteCount();
+            return base.InternalGetMessageSize() + TechId.GetByteCount();
         }
     }
 }

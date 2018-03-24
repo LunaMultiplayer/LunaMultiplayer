@@ -17,7 +17,7 @@ namespace LunaClient.Systems.ShareProgress
     /// A system for synchronizing progress between the clients
     /// (funds, science, reputation, technology, contracts)
     /// </summary>
-    class ShareProgressSystem : MessageSystem<ShareProgressSystem, ShareProgressMessageSender, ShareProgressMessageHandler>
+    public class ShareProgressSystem : MessageSystem<ShareProgressSystem, ShareProgressMessageSender, ShareProgressMessageHandler>
     {
         public override string SystemName { get; } = nameof(ShareProgressSystem);
 
@@ -65,37 +65,33 @@ namespace LunaClient.Systems.ShareProgress
             _savedScience = 0;
             _savedReputation = 0;
 
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
-            {
-                SubscribeToBasicEvents();
-                SubscribeToRevertEvents();
+            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
 
-                if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
-                {
-                    TryGetContractLock();
-                    SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetContractLock));
+            SubscribeToBasicEvents();
+            SubscribeToRevertEvents();
 
-                    SubscribeToContractEvents();
-                    SubscribeToMilestoneEvents();
-                }
-            }
+            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
+
+            TryGetContractLock();
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetContractLock));
+
+            SubscribeToContractEvents();
+            SubscribeToMilestoneEvents();
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
 
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
-            {
-                UnsubscribeFromBasicEvents();
-                UnsubscribeFromRevertEvents();
+            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
 
-                if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
-                {
-                    UnsubscribeFromContractEvents();
-                    UnsubscribeFromMilestoneEvents();
-                }
-            }
+            UnsubscribeFromBasicEvents();
+            UnsubscribeFromRevertEvents();
+
+            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
+
+            UnsubscribeFromContractEvents();
+            UnsubscribeFromMilestoneEvents();
         }
         #endregion
 
@@ -106,16 +102,14 @@ namespace LunaClient.Systems.ShareProgress
         /// </summary>
         public void SaveBasicProgress()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
-            {
-                _savedScience = ResearchAndDevelopment.Instance.Science;
+            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
 
-                if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
-                {
-                    _savedFunds = Funding.Instance.Funds;
-                    _savedReputation = Reputation.Instance.reputation;
-                }
-            }
+            _savedScience = ResearchAndDevelopment.Instance.Science;
+
+            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
+
+            _savedFunds = Funding.Instance.Funds;
+            _savedReputation = Reputation.Instance.reputation;
         }
 
         /// <summary>
@@ -123,16 +117,14 @@ namespace LunaClient.Systems.ShareProgress
         /// </summary>
         public void RestoreBasicProgress()
         {
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Sandbox)
-            {
-                ResearchAndDevelopment.Instance.SetScience(_savedScience, TransactionReasons.None);
+            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
 
-                if (SettingsSystem.ServerSettings.GameMode == GameMode.Career)
-                {
-                    Funding.Instance.SetFunds(_savedFunds, TransactionReasons.None);
-                    Reputation.Instance.SetReputation(_savedReputation, TransactionReasons.None);
-                }
-            }
+            ResearchAndDevelopment.Instance.SetScience(_savedScience, TransactionReasons.None);
+
+            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
+
+            Funding.Instance.SetFunds(_savedFunds, TransactionReasons.None);
+            Reputation.Instance.SetReputation(_savedReputation, TransactionReasons.None);
         }
         #endregion
 

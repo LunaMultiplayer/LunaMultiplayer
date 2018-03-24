@@ -40,7 +40,7 @@ namespace Server.System
 
         public static void TechnologyReceived(ClientStructure client, ShareProgressTechnologyMsgData data)
         {
-            LunaLog.Debug("Technology unlocked: " + data.TechID);
+            LunaLog.Debug("Technology unlocked: " + data.TechId);
 
             //send the technology update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);

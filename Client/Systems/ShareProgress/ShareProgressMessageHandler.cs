@@ -14,7 +14,7 @@ using System.Text;
 
 namespace LunaClient.Systems.ShareProgress
 {
-    class ShareProgressMessageHandler : SubSystem<ShareProgressSystem>, IMessageHandler
+    public class ShareProgressMessageHandler : SubSystem<ShareProgressSystem>, IMessageHandler
     {
         public ConcurrentQueue<IServerMessageBase> IncomingMessages { get; set; } = new ConcurrentQueue<IServerMessageBase>();
 
@@ -25,8 +25,7 @@ namespace LunaClient.Systems.ShareProgress
             {
                 case ShareProgressMessageType.FundsUpdate:
                     {
-                        var data = (ShareProgressFundsMsgData)msgData;
-                        if (data != null)
+                        if (msgData is ShareProgressFundsMsgData data)
                         {
                             FundsUpdate(data);
                         }
@@ -34,8 +33,7 @@ namespace LunaClient.Systems.ShareProgress
                     }
                 case ShareProgressMessageType.ScienceUpdate:
                     {
-                        var data = (ShareProgressScienceMsgData)msgData;
-                        if (data != null)
+                        if (msgData is ShareProgressScienceMsgData data)
                         {
                             ScienceUpdate(data);
                         }
@@ -43,8 +41,7 @@ namespace LunaClient.Systems.ShareProgress
                     }
                 case ShareProgressMessageType.ReputationUpdate:
                     {
-                        var data = (ShareProgressReputationMsgData)msgData;
-                        if (data != null)
+                        if (msgData is ShareProgressReputationMsgData data)
                         {
                             ReputationUpdate(data);
                         }
@@ -52,8 +49,7 @@ namespace LunaClient.Systems.ShareProgress
                     }
                 case ShareProgressMessageType.TechnologyUpdate:
                     {
-                        var data = (ShareProgressTechnologyMsgData)msgData;
-                        if (data != null)
+                        if (msgData is ShareProgressTechnologyMsgData data)
                         {
                             TechnologyUpdate(data);
                         }
@@ -61,8 +57,7 @@ namespace LunaClient.Systems.ShareProgress
                     }
                 case ShareProgressMessageType.ContractUpdate:
                     {
-                        var data = (ShareProgressContractMsgData)msgData;
-                        if (data != null)
+                        if (msgData is ShareProgressContractMsgData data)
                         {
                             ContractUpdate(data);
                         }
@@ -70,8 +65,7 @@ namespace LunaClient.Systems.ShareProgress
                     }
                 case ShareProgressMessageType.MilestoneUpdate:
                     {
-                        var data = (ShareProgressMilestoneMsgData)msgData;
-                        if (data != null)
+                        if (msgData is ShareProgressMilestoneMsgData data)
                         {
                             MilestoneUpdate(data);
                         }
@@ -79,8 +73,9 @@ namespace LunaClient.Systems.ShareProgress
                     }
             }
         }
+
         #region PrivateMethods
-        private void FundsUpdate(ShareProgressFundsMsgData data)
+        private static void FundsUpdate(ShareProgressFundsMsgData data)
         {
             System.IncomingFundsProcessing = true;
             Funding.Instance.SetFunds(data.Funds, TransactionReasons.None);
@@ -88,7 +83,7 @@ namespace LunaClient.Systems.ShareProgress
             LunaLog.Log("FundsUpdate received - funds changed to: " + data.Funds);
         }
 
-        private void ScienceUpdate(ShareProgressScienceMsgData data)
+        private static void ScienceUpdate(ShareProgressScienceMsgData data)
         {
             System.IncomingScienceProcessing = true;
             ResearchAndDevelopment.Instance.SetScience(data.Science, TransactionReasons.None);
@@ -96,7 +91,7 @@ namespace LunaClient.Systems.ShareProgress
             LunaLog.Log("ScienceUpdate received - science changed to: " + data.Science);
         }
 
-        private void ReputationUpdate(ShareProgressReputationMsgData data)
+        private static void ReputationUpdate(ShareProgressReputationMsgData data)
         {
             System.IncomingReputationProcessing = true;
             Reputation.Instance.SetReputation(data.Reputation, TransactionReasons.None);
@@ -104,24 +99,22 @@ namespace LunaClient.Systems.ShareProgress
             LunaLog.Log("ReputationUpdate received - reputation changed to: " + data.Reputation);
         }
 
-        private void TechnologyUpdate(ShareProgressTechnologyMsgData data)
+        private static void TechnologyUpdate(ShareProgressTechnologyMsgData data)
         {
             System.IncomingTechnologyProcessing = true;
             var nodes = AssetBase.RnDTechTree.GetTreeTechs();
             foreach (var n in nodes)
             {
-                if (n.techID == data.TechID)
-                {
+                if (n.techID == data.TechId)
                     ResearchAndDevelopment.Instance.UnlockProtoTechNode(n);
-                }
             }
 
             ResearchAndDevelopment.RefreshTechTreeUI();
             System.IncomingTechnologyProcessing = false;
-            LunaLog.Log("TechnologyUpdate received - technology unlocked: " + data.TechID);
+            LunaLog.Log("TechnologyUpdate received - technology unlocked: " + data.TechId);
         }
 
-        private void ContractUpdate(ShareProgressContractMsgData data)
+        private static void ContractUpdate(ShareProgressContractMsgData data)
         {
             //Don't listen to these events for the time this message is processing.
             System.IncomingContractsProcessing = true;  
@@ -135,8 +128,7 @@ namespace LunaClient.Systems.ShareProgress
             foreach (var cInfo in data.Contracts)
             {
                 var incomingContract = ConvertByteArrayToContract(cInfo.Data, cInfo.NumBytes);
-                if (incomingContract == null)
-                    continue;
+                if (incomingContract == null) continue;
 
                 var contractIndex = ContractSystem.Instance.Contracts.FindIndex(c => c.ContractGuid == cInfo.ContractGuid);
 
@@ -162,7 +154,7 @@ namespace LunaClient.Systems.ShareProgress
             GameEvents.Contract.onContractsListChanged.Fire();
         }
 
-        private void MilestoneUpdate(ShareProgressMilestoneMsgData data)
+        private static void MilestoneUpdate(ShareProgressMilestoneMsgData data)
         {
             System.IncomingMilestonesProcessing = true;
             System.IncomingFundsProcessing = true;
@@ -173,31 +165,25 @@ namespace LunaClient.Systems.ShareProgress
             foreach (var mInfo in data.Milestones)
             {
                 var incomingMilestone = ConvertByteArrayToMilestone(mInfo.Data, mInfo.NumBytes, mInfo.Id);
-                if (incomingMilestone == null)
-                    continue;
+                if (incomingMilestone == null) continue;
 
                 var milestoneIndex = -1;
                 for (var i = 0; i < ProgressTracking.Instance.achievementTree.Count; i++)
                 {
-                    if (ProgressTracking.Instance.achievementTree[i].Id == incomingMilestone.Id)
-                    {
-                        milestoneIndex = i;
-                        break;
-                    }
+                    if (ProgressTracking.Instance.achievementTree[i].Id != incomingMilestone.Id) continue;
+                    milestoneIndex = i;
+                    break;
                 }
 
                 if (milestoneIndex != -1)
                 {
                     //found the same milestone in the achievementTree
                     if (!ProgressTracking.Instance.achievementTree[milestoneIndex].IsReached && incomingMilestone.IsReached)
-                    {
                         ProgressTracking.Instance.achievementTree[milestoneIndex].Reach();
-                    }
 
                     if (!ProgressTracking.Instance.achievementTree[milestoneIndex].IsComplete && incomingMilestone.IsComplete)
-                    {
                         ProgressTracking.Instance.achievementTree[milestoneIndex].Complete();
-                    }
+
                     LunaLog.Log("Milestone was updated: " + incomingMilestone.Id);
                 }
                 else
@@ -207,7 +193,6 @@ namespace LunaClient.Systems.ShareProgress
                     LunaLog.Log("Milestone was added: " + incomingMilestone.Id);
                 }
             }
-
 
             System.RestoreBasicProgress();  //Restore funds, science and reputation in case the milestone action changed some of that.
             //Listen to the events again.
@@ -224,7 +209,7 @@ namespace LunaClient.Systems.ShareProgress
         /// <param name="data">The byte array that represents the configNode</param>
         /// <param name="numBytes">The length of the byte array</param>
         /// <returns></returns>
-        private Contract ConvertByteArrayToContract(byte[] data, int numBytes)
+        private static Contract ConvertByteArrayToContract(byte[] data, int numBytes)
         {
             ConfigNode node;
             try
@@ -268,7 +253,7 @@ namespace LunaClient.Systems.ShareProgress
         /// <param name="numBytes">The length of the byte array</param>
         /// <param name="progressNodeId">The Id of the ProgressNode</param>
         /// <returns></returns>
-        private ProgressNode ConvertByteArrayToMilestone(byte[] data, int numBytes, string progressNodeId)
+        private static ProgressNode ConvertByteArrayToMilestone(byte[] data, int numBytes, string progressNodeId)
         {
             ConfigNode node;
             try
@@ -311,7 +296,7 @@ namespace LunaClient.Systems.ShareProgress
         /// </summary>
         /// <param name="contractIndex">Index in ContractSystem.Instance.Contracts</param>
         /// <param name="incomingContract">Wanted contract</param>
-        private void UpdateContract(int contractIndex, Contract incomingContract)
+        private static void UpdateContract(int contractIndex, Contract incomingContract)
         {
             if (ContractSystem.Instance.Contracts[contractIndex].ContractState != incomingContract.ContractState)
             {
@@ -363,7 +348,7 @@ namespace LunaClient.Systems.ShareProgress
         /// Adds a contract to the local ContractSystem.
         /// </summary>
         /// <param name="incomingContract"></param>
-        private void AddContract(Contract incomingContract)
+        private static void AddContract(Contract incomingContract)
         {
             if (!incomingContract.IsFinished())
             {
@@ -405,7 +390,10 @@ namespace LunaClient.Systems.ShareProgress
             else
             {
                 incomingContract.Unregister();
-                if (incomingContract.ContractState == Contract.State.Completed || incomingContract.ContractState == Contract.State.DeadlineExpired || incomingContract.ContractState == Contract.State.Failed || incomingContract.ContractState == Contract.State.Cancelled)
+                if (incomingContract.ContractState == Contract.State.Completed ||
+                    incomingContract.ContractState == Contract.State.DeadlineExpired ||
+                    incomingContract.ContractState == Contract.State.Failed ||
+                    incomingContract.ContractState == Contract.State.Cancelled)
                 {
                     ContractSystem.Instance.ContractsFinished.Add(incomingContract);
                 }

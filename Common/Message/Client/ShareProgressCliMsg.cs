@@ -31,7 +31,7 @@ namespace LunaCommon.Message.Client
 
         public override ClientMessageType MessageType => ClientMessageType.ShareProgress;
 
-        protected override int DefaultChannel => 18;
+        protected override int DefaultChannel => 20;
 
         public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }

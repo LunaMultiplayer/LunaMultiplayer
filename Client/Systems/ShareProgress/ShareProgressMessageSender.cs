@@ -10,7 +10,7 @@ using System.Text;
 
 namespace LunaClient.Systems.ShareProgress
 {
-    class ShareProgressMessageSender : SubSystem<ShareProgressSystem>, IMessageSender
+    public class ShareProgressMessageSender : SubSystem<ShareProgressSystem>, IMessageSender
     {
         public void SendMessage(IMessageData msg)
         {

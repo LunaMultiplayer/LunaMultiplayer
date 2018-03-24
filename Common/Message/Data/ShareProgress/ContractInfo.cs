@@ -18,14 +18,14 @@ namespace LunaCommon.Message.Data.ShareProgress
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
-            lidgrenMsg.Write(ContractGuid.ToString());
+            GuidUtil.Serialize(ContractGuid, lidgrenMsg);
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
 
         public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
-            ContractGuid = new Guid(lidgrenMsg.ReadString());
+            ContractGuid = GuidUtil.Deserialize(lidgrenMsg);
 
             NumBytes = lidgrenMsg.ReadInt32();
             if (Data.Length < NumBytes)
@@ -36,7 +36,7 @@ namespace LunaCommon.Message.Data.ShareProgress
 
         public int GetByteCount()
         {
-            return ContractGuid.ToString().GetByteCount() + sizeof(int) + sizeof(byte) * NumBytes;
+            return GuidUtil.GetByteSize() + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }
