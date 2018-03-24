@@ -22,6 +22,19 @@ namespace LunaClient.Systems.ShareProgress
         public override string SystemName { get; } = nameof(ShareProgressSystem);
 
         private ShareProgressEvents ShareProgressEvents { get; } = new ShareProgressEvents();
+        
+        protected override void NetworkEventHandler(ClientState data)
+        {
+            if (data <= ClientState.Disconnected)
+            {
+                Enabled = false;
+            }
+
+            if (data == ClientState.Running && SettingsSystem.ServerSettings.ShareProgress && (SettingsSystem.ServerSettings.GameMode == GameMode.Science || SettingsSystem.ServerSettings.GameMode == GameMode.Career) )
+            {
+                Enabled = true;
+            }
+        }
 
         public bool IncomingFundsProcessing;
         public bool IncomingScienceProcessing;
