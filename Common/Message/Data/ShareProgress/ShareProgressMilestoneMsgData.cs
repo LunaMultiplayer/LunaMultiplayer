@@ -19,7 +19,7 @@ namespace LunaCommon.Message.Data.ShareProgress
         public int MilestoneCount;
         public MilestoneInfo[] Milestones = new MilestoneInfo[0];
 
-        public override string ClassName { get; } = nameof(ShareProgressContractMsgData);
+        public override string ClassName { get; } = nameof(ShareProgressMilestoneMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
