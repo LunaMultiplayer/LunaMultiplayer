@@ -43,7 +43,10 @@ namespace LunaClient.Systems.VesselPositionSys
         public float[] SrfRelRotation { get; set; } = new float[4];
 
         public float HeightFromTerrain;
-        public long TimeStamp;
+
+        public long SentTimeStamp { get; set; }
+        public long ReceiveTimeStamp { get; set; }
+        public double GameTimeStamp { get; set; }
 
         #endregion
 
@@ -59,7 +62,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public bool InterpolationStarted { get; set; }
         public bool RestartRequested { get; set; }
-        public float InterpolationDuration => (float)TimeSpan.FromTicks(Target.TimeStamp - TimeStamp).TotalSeconds;
+        public float InterpolationDuration => (float)TimeSpan.FromTicks(Target.SentTimeStamp - SentTimeStamp).TotalSeconds;
 
         private float _lerpPercentage;
         public float LerpPercentage
@@ -93,7 +96,9 @@ namespace LunaClient.Systems.VesselPositionSys
         public void Restart(VesselPositionUpdate target)
         {
             RestartRequested = true;
-            TimeStamp = Target?.TimeStamp ?? TimeStamp;
+            SentTimeStamp = Target?.SentTimeStamp ?? SentTimeStamp;
+            ReceiveTimeStamp = Target?.ReceiveTimeStamp ?? ReceiveTimeStamp;
+            GameTimeStamp = Target?.GameTimeStamp ?? GameTimeStamp;
             ResetFields(target);
         }
 
