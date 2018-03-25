@@ -27,11 +27,17 @@ namespace LunaClient.Systems.ShareContracts
 
             if (msgData is ShareProgressContractsMsgData data)
             {
-                ContractUpdate(data);
+                var contractInfos = new ContractInfo[data.ContractCount];
+                Array.Copy(data.Contracts, contractInfos, data.ContractCount); //create a copy of the contracts array so it will not change in the future.
+                LunaLog.Log("Queue ContractsUpdate.");
+                System.QueueAction(() =>
+                {
+                    ContractUpdate(contractInfos);
+                });
             }
         }
 
-        private static void ContractUpdate(ShareProgressContractsMsgData data)
+        private static void ContractUpdate(ContractInfo[] contractInfos)
         {
             //Don't listen to these events for the time this message is processing.
             System.StartIgnoringEvents();
@@ -39,7 +45,7 @@ namespace LunaClient.Systems.ShareContracts
             ShareScienceSystem.Singleton.StartIgnoringEvents();
             ShareReputationSystem.Singleton.StartIgnoringEvents();
 
-            foreach (var cInfo in data.Contracts)
+            foreach (var cInfo in contractInfos)
             {
                 var incomingContract = ConvertByteArrayToContract(cInfo.Data, cInfo.NumBytes);
                 if (incomingContract == null) continue;
@@ -63,8 +69,8 @@ namespace LunaClient.Systems.ShareContracts
             ShareFundsSystem.Singleton.StopIgnoringEvents(true);
             ShareScienceSystem.Singleton.StopIgnoringEvents(true);
             ShareReputationSystem.Singleton.StopIgnoringEvents(true);
-            System.StopIgnoringEvents();
             GameEvents.Contract.onContractsListChanged.Fire();
+            System.StopIgnoringEvents();
         }
 
         /// <summary>

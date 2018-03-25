@@ -6,18 +6,19 @@ using Contracts;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareAchievements;
+using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareContracts
 {
-    public class ShareContractsSystem : MessageSystem<ShareContractsSystem, ShareContractsMessageSender, ShareContractsMessageHandler>
+    public class ShareContractsSystem : ShareProgressBaseSystem<ShareContractsSystem, ShareContractsMessageSender, ShareContractsMessageHandler>
     {
         public override string SystemName { get; } = nameof(ShareContractsSystem);
 
         private ShareContractsEvents ShareContractsEvents { get; } = new ShareContractsEvents();
-        public bool IgnoreEvents { get; set; }
-        private int _defaultContractGenerateIterations;
 
+        private int _defaultContractGenerateIterations;
 
         protected override void NetworkEventHandler(ClientState data)
         {
@@ -37,8 +38,7 @@ namespace LunaClient.Systems.ShareContracts
         protected override void OnEnabled()
         {
             base.OnEnabled();
-
-            IgnoreEvents = false;
+            
             _defaultContractGenerateIterations = ContractSystem.generateContractIterations;
 
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
@@ -80,14 +80,25 @@ namespace LunaClient.Systems.ShareContracts
             GameEvents.Contract.onSeen.Remove(ShareContractsEvents.ContractSeen);
         }
 
-        public void StartIgnoringEvents()
+        protected override bool ActionDependencyReady()
         {
-            IgnoreEvents = true;
+            return (
+                ContractSystem.Instance != null &&
+                Funding.Instance != null &&
+                ResearchAndDevelopment.Instance != null &&
+                Reputation.Instance != null &&
+                ShareAchievementsSystem.Singleton.ActionQueueCount == 0 //We need to wait for all the achievements to be processed before we process the contracts. Otherwise it will cause bugs.
+            );
         }
 
-        public void StopIgnoringEvents()
+        public override void SaveState()
         {
-            IgnoreEvents = false;
+            //We don't need this.
+        }
+
+        public override void RestoreState()
+        {
+            //We don't need this.
         }
 
         private void TryGetContractLock()

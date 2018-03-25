@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareAchievements
 {
-    public class ShareAchievementsSystem : MessageSystem<ShareAchievementsSystem, ShareAchievementsMessageSender, ShareAchievementsMessageHandler>
+    public class ShareAchievementsSystem : ShareProgressBaseSystem<ShareAchievementsSystem, ShareAchievementsMessageSender, ShareAchievementsMessageHandler>
     {
         public override string SystemName { get; } = nameof(ShareAchievementsSystem);
 
         private ShareAchievementsEvents ShareAchievementsEvents { get; } = new ShareAchievementsEvents();
-        public bool IgnoreEvents { get; set; }
 
         protected override void NetworkEventHandler(ClientState data)
         {
@@ -52,14 +52,24 @@ namespace LunaClient.Systems.ShareAchievements
             GameEvents.OnProgressAchieved.Remove(ShareAchievementsEvents.AchievementAchieved);
         }
 
-        public void StartIgnoringEvents()
+        protected override bool ActionDependencyReady()
         {
-            IgnoreEvents = true;
+            return (
+                ProgressTracking.Instance != null &&
+                Funding.Instance != null &&
+                ResearchAndDevelopment.Instance != null &&
+                Reputation.Instance != null
+            );
         }
 
-        public void StopIgnoringEvents()
+        public override void SaveState()
         {
-            IgnoreEvents = false;
+            //We don't need this.
+        }
+
+        public override void RestoreState()
+        {
+            //We don't need this.
         }
     }
 }

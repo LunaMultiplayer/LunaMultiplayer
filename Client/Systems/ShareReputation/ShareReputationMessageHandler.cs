@@ -22,16 +22,21 @@ namespace LunaClient.Systems.ShareReputation
 
             if (msgData is ShareProgressReputationMsgData data)
             {
-                ReputationUpdate(data);
+                var reputation = data.Reputation; //create a copy of the reputation value so it will not change in the future.
+                LunaLog.Log("Queue ReputationUpdate with: " + reputation);
+                System.QueueAction(() =>
+                {
+                    ReputationUpdate(reputation);
+                });
             }
         }
 
-        private static void ReputationUpdate(ShareProgressReputationMsgData data)
+        private static void ReputationUpdate(float reputation)
         {
             System.StartIgnoringEvents();
-            Reputation.Instance.SetReputation(data.Reputation, TransactionReasons.None);
+            Reputation.Instance.SetReputation(reputation, TransactionReasons.None);
             System.StopIgnoringEvents();
-            LunaLog.Log("ReputationUpdate received - reputation changed to: " + data.Reputation);
+            LunaLog.Log("ReputationUpdate received - reputation changed to: " + reputation);
         }
     }
 }

@@ -27,18 +27,24 @@ namespace LunaClient.Systems.ShareAchievements
 
             if (msgData is ShareProgressAchievementsMsgData data)
             {
-                AchievementUpdate(data);
+                var achievementInfos = new AchievementInfo[data.AchievementsCount];
+                Array.Copy(data.Achievements, achievementInfos, data.AchievementsCount); //create a copy of the achievements array so it will not change in the future.
+                LunaLog.Log("Queue AchievementsUpdate.");
+                System.QueueAction(() =>
+                {
+                    AchievementUpdate(achievementInfos);
+                });
             }
         }
 
-        private static void AchievementUpdate(ShareProgressAchievementsMsgData data)
+        private static void AchievementUpdate(AchievementInfo[] achievementInfos)
         {
             System.StartIgnoringEvents();
             ShareFundsSystem.Singleton.StartIgnoringEvents();
             ShareScienceSystem.Singleton.StartIgnoringEvents();
             ShareReputationSystem.Singleton.StartIgnoringEvents();
 
-            foreach (var mInfo in data.Achievements)
+            foreach (var mInfo in achievementInfos)
             {
                 var incomingAchievement = ConvertByteArrayToAchievement(mInfo.Data, mInfo.NumBytes, mInfo.Id);
                 if (incomingAchievement == null) continue;

@@ -4,16 +4,16 @@ using System.Linq;
 using System.Text;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareTechnology
 {
-    public class ShareTechnologySystem : MessageSystem<ShareTechnologySystem, ShareTechnologyMessageSender, ShareTechnologyMessageHandler>
+    public class ShareTechnologySystem : ShareProgressBaseSystem<ShareTechnologySystem, ShareTechnologyMessageSender, ShareTechnologyMessageHandler>
     {
         public override string SystemName { get; } = nameof(ShareTechnologySystem);
 
         private ShareTechnologyEvents ShareTechnologyEvents { get; } = new ShareTechnologyEvents();
-        public bool IgnoreEvents { get; set; }
 
         protected override void NetworkEventHandler(ClientState data)
         {
@@ -34,8 +34,6 @@ namespace LunaClient.Systems.ShareTechnology
         {
             base.OnEnabled();
 
-            IgnoreEvents = false;
-
             if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
 
             GameEvents.OnTechnologyResearched.Add(ShareTechnologyEvents.TechnologyResearched);
@@ -50,14 +48,19 @@ namespace LunaClient.Systems.ShareTechnology
             GameEvents.OnTechnologyResearched.Remove(ShareTechnologyEvents.TechnologyResearched);
         }
 
-        public void StartIgnoringEvents()
+        protected override bool ActionDependencyReady()
         {
-            IgnoreEvents = true;
+            return (ResearchAndDevelopment.Instance != null);
         }
 
-        public void StopIgnoringEvents()
+        public override void SaveState()
         {
-            IgnoreEvents = false;
+            //We don't need this.
+        }
+
+        public override void RestoreState()
+        {
+            //We don't need this.
         }
     }
 }

@@ -22,23 +22,28 @@ namespace LunaClient.Systems.ShareTechnology
 
             if (msgData is ShareProgressTechnologyMsgData data)
             {
-                TechnologyUpdate(data);
+                var techId = data.TechId; //create a copy of the techId value so it will not change in the future.
+                LunaLog.Log("Queue TechnologyUpdate with: " + techId);
+                System.QueueAction(() =>
+                {
+                    TechnologyUpdate(techId);
+                });
             }
         }
 
-        private static void TechnologyUpdate(ShareProgressTechnologyMsgData data)
+        private static void TechnologyUpdate(string techId)
         {
             System.StartIgnoringEvents();
             var nodes = AssetBase.RnDTechTree.GetTreeTechs();
             foreach (var n in nodes)
             {
-                if (n.techID == data.TechId)
+                if (n.techID == techId)
                     ResearchAndDevelopment.Instance.UnlockProtoTechNode(n);
             }
 
             ResearchAndDevelopment.RefreshTechTreeUI();
             System.StopIgnoringEvents();
-            LunaLog.Log("TechnologyUpdate received - technology unlocked: " + data.TechId);
+            LunaLog.Log("TechnologyUpdate received - technology unlocked: " + techId);
         }
     }
 }

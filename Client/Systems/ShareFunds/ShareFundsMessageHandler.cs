@@ -22,16 +22,21 @@ namespace LunaClient.Systems.ShareFunds
             
             if (msgData is ShareProgressFundsMsgData data)
             {
-                FundsUpdate(data);
+                var funds = data.Funds; //create a copy of the funds value so it will not change in the future.
+                LunaLog.Log("Queue FundsUpdate with: " + funds);
+                System.QueueAction(() =>
+                {
+                    FundsUpdate(funds);
+                });
             }
         }
 
-        private static void FundsUpdate(ShareProgressFundsMsgData data)
+        private static void FundsUpdate(double funds)
         {
             System.StartIgnoringEvents();
-            Funding.Instance.SetFunds(data.Funds, TransactionReasons.None);
+            Funding.Instance.SetFunds(funds, TransactionReasons.None);
             System.StopIgnoringEvents();
-            LunaLog.Log("FundsUpdate received - funds changed to: " + data.Funds);
+            LunaLog.Log("FundsUpdate received - funds changed to: " + funds);
         }
     }
 }

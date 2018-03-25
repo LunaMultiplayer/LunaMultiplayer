@@ -4,17 +4,18 @@ using System.Linq;
 using System.Text;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareProgress;
 using LunaClient.Systems.ShareScience;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareReputation
 {
-    public class ShareReputationSystem : MessageSystem<ShareReputationSystem, ShareReputationMessageSender, ShareReputationMessageHandler>
+    public class ShareReputationSystem : ShareProgressBaseSystem<ShareReputationSystem, ShareReputationMessageSender, ShareReputationMessageHandler>
     {
         public override string SystemName { get; } = nameof(ShareReputationSystem);
 
         private ShareReputationEvents ShareReputationEvents { get; } = new ShareReputationEvents();
-        public bool IgnoreEvents { get; set; }
+
         private float _lastReputation;
 
         protected override void NetworkEventHandler(ClientState data)
@@ -35,8 +36,7 @@ namespace LunaClient.Systems.ShareReputation
         protected override void OnEnabled()
         {
             base.OnEnabled();
-
-            IgnoreEvents = false;
+            
             _lastReputation = 0;
 
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
@@ -53,20 +53,19 @@ namespace LunaClient.Systems.ShareReputation
             GameEvents.OnReputationChanged.Remove(ShareReputationEvents.ReputationChanged);
         }
 
-        public void StartIgnoringEvents()
+        protected override bool ActionDependencyReady()
         {
-            if (Reputation.Instance != null)
-                _lastReputation = Reputation.Instance.reputation;
-
-            IgnoreEvents = true;
+            return (Reputation.Instance != null);
         }
 
-        public void StopIgnoringEvents(bool restoreOldValue = false)
+        public override void SaveState()
         {
-            if (restoreOldValue && Reputation.Instance != null)
-                Reputation.Instance.SetReputation(_lastReputation, TransactionReasons.None);
+            _lastReputation = Reputation.Instance.reputation;
+        }
 
-            IgnoreEvents = false;
+        public override void RestoreState()
+        {
+            Reputation.Instance.SetReputation(_lastReputation, TransactionReasons.None);
         }
     }
 }

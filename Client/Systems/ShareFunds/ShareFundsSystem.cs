@@ -1,19 +1,21 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareFunds
 {
-    public class ShareFundsSystem : MessageSystem<ShareFundsSystem, ShareFundsMessageSender, ShareFundsMessageHandler>
+    public class ShareFundsSystem : ShareProgressBaseSystem<ShareFundsSystem, ShareFundsMessageSender, ShareFundsMessageHandler>
     {
         public override string SystemName { get; } = nameof(ShareFundsSystem);
 
         private ShareFundsEvents ShareFundsEvents { get; } = new ShareFundsEvents();
-        public bool IgnoreEvents { get; set; }
+
         private double _lastFunds;
 
         protected override void NetworkEventHandler(ClientState data)
@@ -35,7 +37,6 @@ namespace LunaClient.Systems.ShareFunds
         {
             base.OnEnabled();
 
-            IgnoreEvents = false;
             _lastFunds = 0;
 
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
@@ -52,20 +53,19 @@ namespace LunaClient.Systems.ShareFunds
             GameEvents.OnFundsChanged.Remove(ShareFundsEvents.FundsChanged);
         }
 
-        public void StartIgnoringEvents()
+        protected override bool ActionDependencyReady()
         {
-            if (Funding.Instance != null)
-                _lastFunds = Funding.Instance.Funds;
-
-            IgnoreEvents = true;
+            return (Funding.Instance != null);
         }
 
-        public void StopIgnoringEvents(bool restoreOldValue = false)
+        public override void SaveState()
         {
-            if (restoreOldValue && Reputation.Instance != null)
-                Funding.Instance.SetFunds(_lastFunds, TransactionReasons.None);
+            _lastFunds = Funding.Instance.Funds;
+        }
 
-            IgnoreEvents = false;
+        public override void RestoreState()
+        {
+            Funding.Instance.SetFunds(_lastFunds, TransactionReasons.None);
         }
     }
 }

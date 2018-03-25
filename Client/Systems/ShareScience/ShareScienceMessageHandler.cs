@@ -22,16 +22,21 @@ namespace LunaClient.Systems.ShareScience
 
             if (msgData is ShareProgressScienceMsgData data)
             {
-                ScienceUpdate(data);
+                var science = data.Science; //create a copy of the science value so it will not change in the future.
+                LunaLog.Log("Queue ScienceUpdate with: " + science);
+                System.QueueAction(() =>
+                {
+                    ScienceUpdate(science);
+                });
             }
         }
 
-        private static void ScienceUpdate(ShareProgressScienceMsgData data)
+        private static void ScienceUpdate(float science)
         {
             System.StartIgnoringEvents();
-            ResearchAndDevelopment.Instance.SetScience(data.Science, TransactionReasons.None);
+            ResearchAndDevelopment.Instance.SetScience(science, TransactionReasons.None);
             System.StopIgnoringEvents();
-            LunaLog.Log("ScienceUpdate received - science changed to: " + data.Science);
+            LunaLog.Log("ScienceUpdate received - science changed to: " + science);
         }
     }
 }

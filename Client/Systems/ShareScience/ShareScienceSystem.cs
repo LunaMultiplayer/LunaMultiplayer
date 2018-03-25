@@ -4,16 +4,17 @@ using System.Linq;
 using System.Text;
 using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareScience
 {
-    public class ShareScienceSystem : MessageSystem<ShareScienceSystem, ShareScienceMessageSender, ShareScienceMessageHandler>
+    public class ShareScienceSystem : ShareProgressBaseSystem<ShareScienceSystem, ShareScienceMessageSender, ShareScienceMessageHandler>
     {
         public override string SystemName { get; } = nameof(ShareScienceSystem);
 
         private ShareScienceEvents ShareScienceEvents { get; } = new ShareScienceEvents();
-        public bool IgnoreEvents { get; set; }
+
         private float _lastScience;
 
         protected override void NetworkEventHandler(ClientState data)
@@ -34,8 +35,7 @@ namespace LunaClient.Systems.ShareScience
         protected override void OnEnabled()
         {
             base.OnEnabled();
-
-            IgnoreEvents = false;
+            
             _lastScience = 0;
 
             if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
@@ -52,20 +52,19 @@ namespace LunaClient.Systems.ShareScience
             GameEvents.OnScienceChanged.Remove(ShareScienceEvents.ScienceChanged);
         }
 
-        public void StartIgnoringEvents()
+        protected override bool ActionDependencyReady()
         {
-            if (ResearchAndDevelopment.Instance != null)
-                _lastScience = ResearchAndDevelopment.Instance.Science;
-
-            IgnoreEvents = true;
+            return (ResearchAndDevelopment.Instance != null);
         }
 
-        public void StopIgnoringEvents(bool restoreOldValue = false)
+        public override void SaveState()
         {
-            if (restoreOldValue && ResearchAndDevelopment.Instance != null)
-                ResearchAndDevelopment.Instance.SetScience(_lastScience, TransactionReasons.None);
+            _lastScience = ResearchAndDevelopment.Instance.Science;
+        }
 
-            IgnoreEvents = false;
+        public override void RestoreState()
+        {
+            ResearchAndDevelopment.Instance.SetScience(_lastScience, TransactionReasons.None);
         }
     }
 }
