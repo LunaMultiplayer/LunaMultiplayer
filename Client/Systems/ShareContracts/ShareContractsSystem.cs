@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Contracts;
 using LunaClient.Base;
+using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
 
@@ -14,6 +16,8 @@ namespace LunaClient.Systems.ShareContracts
 
         private ShareContractsEvents ShareContractsEvents { get; } = new ShareContractsEvents();
         public bool IgnoreEvents { get; set; }
+        private int _defaultContractGenerateIterations;
+
 
         protected override void NetworkEventHandler(ClientState data)
         {
@@ -35,8 +39,12 @@ namespace LunaClient.Systems.ShareContracts
             base.OnEnabled();
 
             IgnoreEvents = false;
+            _defaultContractGenerateIterations = ContractSystem.generateContractIterations;
 
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
+
+            TryGetContractLock();
+            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetContractLock));
 
             GameEvents.Contract.onAccepted.Add(ShareContractsEvents.ContractAccepted);
             GameEvents.Contract.onCancelled.Add(ShareContractsEvents.ContractCancelled);
@@ -80,6 +88,26 @@ namespace LunaClient.Systems.ShareContracts
         public void StopIgnoringEvents()
         {
             IgnoreEvents = false;
+        }
+
+        private void TryGetContractLock()
+        {
+            if (!LockSystem.LockQuery.ContractLockExists())
+            {
+                LockSystem.Singleton.AcquireContractLock();
+            }
+
+            //Update the ContractSystem generation depending on if the current player has the lock or not.
+            if (!LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
+            {
+                ContractSystem.generateContractIterations = 0;
+                LunaLog.Log("You have no ContractLock and are not allowed to generate contracts.");
+            }
+            else
+            {
+                ContractSystem.generateContractIterations = _defaultContractGenerateIterations;
+                LunaLog.Log("You have the ContractLock and you will generate contracts.");
+            }
         }
     }
 }
