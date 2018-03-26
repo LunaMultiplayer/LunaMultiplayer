@@ -118,6 +118,11 @@
     <Compile Include="Message\Reader\ShareProgressMsgReader.cs" />
     <Compile Include="Message\Reader\VesselMsgReader.cs" />
     <Compile Include="Message\Reader\WarpControlMsgReader.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="System\BackupSystem.cs" />
     <Compile Include="System\CraftLibrarySystem.cs" />
     <Compile Include="System\HandshakeSystem.cs" />
@@ -127,11 +132,6 @@
     <Compile Include="Plugin\LmpPlugin.cs" />
     <Compile Include="Plugin\LmpPluginHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Server\MessageQueuer.cs" />
     <Compile Include="Server\MessageReceiver.cs" />
     <Compile Include="Settings\DebugSettings.cs" />
@@ -200,27 +200,27 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
-    <Content Include="Resources\Scenario\ContractSystem.txt" />
-    <Content Include="Resources\Scenario\Funding.txt" />
-    <Content Include="Resources\Scenario\Reputation.txt" />
-    <Content Include="Resources\Scenario\ResearchAndDevelopment.txt" />
-    <Content Include="Resources\Scenario\ScenarioContractEvents.txt" />
-    <Content Include="Resources\Scenario\ScenarioNewGameIntro.txt" />
-    <Content Include="Resources\Scenario\ScenarioUpgradeableFacilities.txt" />
-    <Content Include="Resources\Scenario\StrategySystem.txt" />
+    <Content Include="Resources\Scenario\CommNetScenario.xml" />
+    <Content Include="Resources\Scenario\ContractSystem.xml" />
+    <Content Include="Resources\Scenario\Funding.xml" />
+    <Content Include="Resources\Scenario\PartUpgradeManager.xml" />
+    <Content Include="Resources\Scenario\ProgressTracking.xml" />
+    <Content Include="Resources\Scenario\Reputation.xml" />
+    <Content Include="Resources\Scenario\ResearchAndDevelopment.xml" />
+    <Content Include="Resources\Scenario\ResourceScenario.xml" />
+    <Content Include="Resources\Scenario\ScenarioAchievements.xml" />
+    <Content Include="Resources\Scenario\ScenarioContractEvents.xml" />
+    <Content Include="Resources\Scenario\ScenarioDestructibles.xml" />
+    <Content Include="Resources\Scenario\ScenarioNewGameIntro.xml" />
+    <Content Include="Resources\Scenario\ScenarioUpgradeableFacilities.xml" />
+    <Content Include="Resources\Scenario\SentinelScenario.xml" />
+    <Content Include="Resources\Scenario\StrategySystem.xml" />
+    <Content Include="Resources\Scenario\VesselRecovery.xml" />
     <None Include="packages.config" />
     <None Include="Resources\Kerbals\Valentina Kerman.txt" />
     <None Include="Resources\Kerbals\Jebediah Kerman.txt" />
     <None Include="Resources\Kerbals\Bob Kerman.txt" />
     <None Include="Resources\Kerbals\Bill Kerman.txt" />
-    <None Include="Resources\Scenario\VesselRecovery.txt" />
-    <None Include="Resources\Scenario\SentinelScenario.txt" />
-    <None Include="Resources\Scenario\ScenarioDestructibles.txt" />
-    <None Include="Resources\Scenario\ScenarioAchievements.txt" />
-    <None Include="Resources\Scenario\ResourceScenario.txt" />
-    <None Include="Resources\Scenario\ProgressTracking.txt" />
-    <None Include="Resources\Scenario\PartUpgradeManager.txt" />
-    <None Include="Resources\Scenario\CommNetScenario.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition="'$(OS)' != 'Unix'">

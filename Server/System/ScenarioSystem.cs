@@ -1,6 +1,7 @@
 ﻿using LunaCommon.Enums;
 using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Server;
+using LunaCommon.Xml;
 using Server.Client;
 using Server.Context;
 using Server.Log;
@@ -21,42 +22,48 @@ namespace Server.System
         {
             LunaLog.Normal("Creating default scenario files...");
 
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "CommNetScenario.txt"), Resources.CommNetScenario);
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "PartUpgradeManager.txt"), Resources.PartUpgradeManager);
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ProgressTracking.txt"), Resources.ProgressTracking);
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ResourceScenario.txt"), Resources.ResourceScenario);
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioAchievements.txt"), Resources.ScenarioAchievements);
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioDestructibles.txt"), Resources.ScenarioDestructibles);
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioNewGameIntro.txt"), Resources.ScenarioNewGameIntro);
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "SentinelScenario.txt"), Resources.SentinelScenario);
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "VesselRecovery.txt"), Resources.VesselRecovery);
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "CommNetScenario.xml"), Resources.CommNetScenario);
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "PartUpgradeManager.xml"), Resources.PartUpgradeManager);
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ProgressTracking.xml"), Resources.ProgressTracking);
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ResourceScenario.xml"), Resources.ResourceScenario);
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioAchievements.xml"), Resources.ScenarioAchievements);
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioDestructibles.xml"), Resources.ScenarioDestructibles);
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioNewGameIntro.xml"), Resources.ScenarioNewGameIntro);
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "SentinelScenario.xml"), Resources.SentinelScenario);
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "VesselRecovery.xml"), Resources.VesselRecovery);
             
             if (GeneralSettings.SettingsStore.GameMode != GameMode.Sandbox)
             {
-                FileHandler.CreateFile(Path.Combine(ScenarioPath, "ResearchAndDevelopment.txt"), Resources.ResearchAndDevelopment);
+                FileHandler.CreateFile(Path.Combine(ScenarioPath, "ResearchAndDevelopment.xml"), Resources.ResearchAndDevelopment);
             }
             else
             {
-                FileHandler.FileDelete(Path.Combine(ScenarioPath, "ResearchAndDevelopment.txt"));
+                FileHandler.FileDelete(Path.Combine(ScenarioPath, "ResearchAndDevelopment.xml"));
             }
 
             if (GeneralSettings.SettingsStore.GameMode == GameMode.Career)
             {
-                FileHandler.CreateFile(Path.Combine(ScenarioPath, "ContractSystem.txt"), Resources.ContractSystem);
-                FileHandler.CreateFile(Path.Combine(ScenarioPath, "Funding.txt"), Resources.Funding);
-                FileHandler.CreateFile(Path.Combine(ScenarioPath, "Reputation.txt"), Resources.Reputation);
-                FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioContractEvents.txt"), Resources.ScenarioContractEvents);
-                FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioUpgradeableFacilities.txt"), Resources.ScenarioUpgradeableFacilities);
-                FileHandler.CreateFile(Path.Combine(ScenarioPath, "StrategySystem.txt"), Resources.StrategySystem);
+                FileHandler.CreateFile(Path.Combine(ScenarioPath, "ContractSystem.xml"), Resources.ContractSystem);
+                FileHandler.CreateFile(Path.Combine(ScenarioPath, "Funding.xml"), Resources.Funding);
+                FileHandler.CreateFile(Path.Combine(ScenarioPath, "Reputation.xml"), Resources.Reputation);
+                FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioContractEvents.xml"), Resources.ScenarioContractEvents);
+                FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioUpgradeableFacilities.xml"), Resources.ScenarioUpgradeableFacilities);
+                FileHandler.CreateFile(Path.Combine(ScenarioPath, "StrategySystem.xml"), Resources.StrategySystem);
             }
             else
             {
-                FileHandler.FileDelete(Path.Combine(ScenarioPath, "ContractSystem.txt"));
-                FileHandler.FileDelete(Path.Combine(ScenarioPath, "Funding.txt"));
-                FileHandler.FileDelete(Path.Combine(ScenarioPath, "Reputation.txt"));
-                FileHandler.FileDelete(Path.Combine(ScenarioPath, "ScenarioContractEvents.txt"));
-                FileHandler.FileDelete(Path.Combine(ScenarioPath, "ScenarioUpgradeableFacilities.txt"));
-                FileHandler.FileDelete(Path.Combine(ScenarioPath, "StrategySystem.txt"));
+                FileHandler.FileDelete(Path.Combine(ScenarioPath, "ContractSystem.xml"));
+                FileHandler.FileDelete(Path.Combine(ScenarioPath, "Funding.xml"));
+                FileHandler.FileDelete(Path.Combine(ScenarioPath, "Reputation.xml"));
+                FileHandler.FileDelete(Path.Combine(ScenarioPath, "ScenarioContractEvents.xml"));
+                FileHandler.FileDelete(Path.Combine(ScenarioPath, "ScenarioUpgradeableFacilities.xml"));
+                FileHandler.FileDelete(Path.Combine(ScenarioPath, "StrategySystem.xml"));
+            }
+
+            foreach (var file in Directory.GetFiles(ScenarioPath))
+            {
+                var asXml = ConfigNodeXmlParser.ConvertToXml(file);
+                File.WriteAllText(Path.Combine(ScenarioPath, Path.GetFileNameWithoutExtension(file) + ".xml"), asXml);
             }
         }
 
@@ -87,7 +94,7 @@ namespace Server.System
             LunaLog.Debug($"Saving {data.ScenarioCount} scenario modules from {client.PlayerName}");
             for (var i = 0; i < data.ScenarioCount; i++)
             {
-                var path = Path.Combine(ServerContext.UniverseDirectory, "Scenarios", $"{data.ScenariosData[i].Module}.txt");
+                var path = Path.Combine(ServerContext.UniverseDirectory, "Scenarios", $"{data.ScenariosData[i].Module}.xml");
                 FileHandler.WriteToFile(path, data.ScenariosData[i].Data, data.ScenariosData[i].NumBytes);
             }
         }
