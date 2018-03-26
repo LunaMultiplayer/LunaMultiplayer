@@ -10,10 +10,11 @@ namespace Server.System
     {
         public static void FundsReceived(ClientStructure client, ShareProgressFundsMsgData data)
         {
-            LunaLog.Debug("Funds received: " + data.Funds + " - reason: " + data.Reason);
+            LunaLog.Debug($"Funds received: {data.Funds} Reason: {data.Reason}");
 
             //send the funds update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
+            ScenarioDataUpdater.WriteFundsDataToFile(data.Funds);
         }
     }
 }

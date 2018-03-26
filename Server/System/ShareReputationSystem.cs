@@ -10,10 +10,11 @@ namespace Server.System
     {
         public static void ReputationReceived(ClientStructure client, ShareProgressReputationMsgData data)
         {
-            LunaLog.Debug("Reputation received: " + data.Reputation + " - reason: " + data.Reason);
+            LunaLog.Debug($"Reputation received: {data.Reputation} Reason: {data.Reason}");
 
             //send the reputation update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
+            ScenarioDataUpdater.WriteReputationDataToFile(data.Reputation);
         }
     }
 }
