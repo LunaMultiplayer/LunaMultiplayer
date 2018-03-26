@@ -199,6 +199,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <Content Include="Resources\Scenario\ContractSystem.txt" />
+    <Content Include="Resources\Scenario\Funding.txt" />
+    <Content Include="Resources\Scenario\Reputation.txt" />
+    <Content Include="Resources\Scenario\ResearchAndDevelopment.txt" />
+    <Content Include="Resources\Scenario\ScenarioContractEvents.txt" />
+    <Content Include="Resources\Scenario\ScenarioNewGameIntro.txt" />
+    <Content Include="Resources\Scenario\ScenarioUpgradeableFacilities.txt" />
+    <Content Include="Resources\Scenario\StrategySystem.txt" />
     <None Include="packages.config" />
     <None Include="Resources\Kerbals\Valentina Kerman.txt" />
     <None Include="Resources\Kerbals\Jebediah Kerman.txt" />

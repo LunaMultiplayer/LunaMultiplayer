@@ -1,0 +1,3 @@
+name = Reputation
+scene = 7, 8, 5, 6
+rep = 0

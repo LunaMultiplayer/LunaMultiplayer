@@ -138,6 +138,56 @@ namespace Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to name = ContractSystem
+        ///scene = 7, 8, 5, 6
+        ///update = 32.382846599999645
+        ///version = 1.4.1
+        ///WEIGHTS
+        ///{
+        ///	TourismContract = 30
+        ///	SurveyContract = 30
+        ///	StationContract = 30
+        ///	SentinelContract = 30
+        ///	SatelliteContract = 30
+        ///	ISRUContract = 30
+        ///	ExplorationContract = 30
+        ///	BaseContract = 30
+        ///	ARMContract = 30
+        ///	RecoverAsset = 30
+        ///	PlantFlag = 30
+        ///	PartTest = 30
+        ///	GrandTour = 30
+        ///	CollectScience = 30
+        ///	Eeloo = 30
+        ///	Dres = 30
+        ///	Pol = 30
+        ///	Gilly = 30
+        ///	Tylo = 30
+        ///	Bop = 30
+        ///	Vall = 30
+        ///	Laythe = 30
+        ///	Jool = 30
+        ///	Ike = [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ContractSystem {
+            get {
+                return ResourceManager.GetString("ContractSystem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = Funding
+        ///scene = 7, 8, 5, 6
+        ///funds = 25000
+        ///.
+        /// </summary>
+        internal static string Funding {
+            get {
+                return ResourceManager.GetString("Funding", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to name = Jebediah Kerman
         ///gender = Male
         ///type = Crew
@@ -205,6 +255,43 @@ namespace Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to name = Reputation
+        ///scene = 7, 8, 5, 6
+        ///rep = 0
+        ///.
+        /// </summary>
+        internal static string Reputation {
+            get {
+                return ResourceManager.GetString("Reputation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = ResearchAndDevelopment
+        ///scene = 7, 8, 5, 6
+        ///sci = 0
+        ///Tech
+        ///{
+        ///	id = start
+        ///	state = Available
+        ///	cost = 0
+        ///	part = basicFin
+        ///	part = mk1pod
+        ///	part = solidBooster.sm
+        ///	part = GooExperiment
+        ///	part = trussPiece1x
+        ///	part = parachuteSingle
+        ///	part = kv1Pod
+        ///}
+        ///.
+        /// </summary>
+        internal static string ResearchAndDevelopment {
+            get {
+                return ResourceManager.GetString("ResearchAndDevelopment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to name = ResourceScenario
         ///scene = 7, 8, 5, 6
         ///RESOURCE_SETTINGS
@@ -228,6 +315,18 @@ namespace Server.Properties {
         internal static string ScenarioAchievements {
             get {
                 return ResourceManager.GetString("ScenarioAchievements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = ScenarioContractEvents
+        ///scene = 7, 8, 5
+        ///id = 1753010116
+        ///.
+        /// </summary>
+        internal static string ScenarioContractEvents {
+            get {
+                return ResourceManager.GetString("ScenarioContractEvents", resourceCulture);
             }
         }
         
@@ -267,6 +366,71 @@ namespace Server.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to name = ScenarioNewGameIntro
+        ///scene = 5, 6, 8
+        ///kscComplete = True
+        ///editorComplete = False
+        ///tsComplete = False
+        ///.
+        /// </summary>
+        internal static string ScenarioNewGameIntro {
+            get {
+                return ResourceManager.GetString("ScenarioNewGameIntro", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = ScenarioUpgradeableFacilities
+        ///scene = 5, 6, 7, 8
+        ///SpaceCenter/LaunchPad
+        ///{
+        ///	lvl = 0
+        ///}
+        ///SpaceCenter/Runway
+        ///{
+        ///	lvl = 0
+        ///}
+        ///SpaceCenter/VehicleAssemblyBuilding
+        ///{
+        ///	lvl = 0
+        ///}
+        ///SpaceCenter/SpaceplaneHangar
+        ///{
+        ///	lvl = 0
+        ///}
+        ///SpaceCenter/TrackingStation
+        ///{
+        ///	lvl = 0
+        ///}
+        ///SpaceCenter/AstronautComplex
+        ///{
+        ///	lvl = 0
+        ///}
+        ///SpaceCenter/MissionControl
+        ///{
+        ///	lvl = 0
+        ///}
+        ///SpaceCenter/ResearchAndDevelopment
+        ///{
+        ///	lvl = 0
+        ///}
+        ///SpaceCenter/Administration
+        ///{
+        ///	lvl = 0
+        ///}
+        ///SpaceCenter/FlagPole
+        ///{
+        ///	lvl = 0
+        ///}
+        ///.
+        /// </summary>
+        internal static string ScenarioUpgradeableFacilities {
+            get {
+                return ResourceManager.GetString("ScenarioUpgradeableFacilities", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to name = SentinelScenario
         ///scene = 7, 8, 5
         ///NextSpawnTime = 13500.261279369333
@@ -275,6 +439,20 @@ namespace Server.Properties {
         internal static string SentinelScenario {
             get {
                 return ResourceManager.GetString("SentinelScenario", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to name = StrategySystem
+        ///scene = 7, 8, 5, 6
+        ///STRATEGIES
+        ///{
+        ///}
+        ///.
+        /// </summary>
+        internal static string StrategySystem {
+            get {
+                return ResourceManager.GetString("StrategySystem", resourceCulture);
             }
         }
         

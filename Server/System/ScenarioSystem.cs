@@ -1,10 +1,12 @@
-﻿using LunaCommon.Message.Data.Scenario;
+﻿using LunaCommon.Enums;
+using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Context;
 using Server.Log;
 using Server.Properties;
 using Server.Server;
+using Server.Settings;
 using System.IO;
 using System.Linq;
 
@@ -23,8 +25,24 @@ namespace Server.System
             FileHandler.WriteToFile(Path.Combine(ScenarioPath, "ResourceScenario.txt"), Resources.ResourceScenario);
             FileHandler.WriteToFile(Path.Combine(ScenarioPath, "ScenarioAchievements.txt"), Resources.ScenarioAchievements);
             FileHandler.WriteToFile(Path.Combine(ScenarioPath, "ScenarioDestructibles.txt"), Resources.ScenarioDestructibles);
+            FileHandler.WriteToFile(Path.Combine(ScenarioPath, "ScenarioNewGameIntro.txt"), Resources.ScenarioNewGameIntro);
             FileHandler.WriteToFile(Path.Combine(ScenarioPath, "SentinelScenario.txt"), Resources.SentinelScenario);
             FileHandler.WriteToFile(Path.Combine(ScenarioPath, "VesselRecovery.txt"), Resources.VesselRecovery);
+            
+            if (GeneralSettings.SettingsStore.GameMode != GameMode.Sandbox)
+            {
+                FileHandler.WriteToFile(Path.Combine(ScenarioPath, "ResearchAndDevelopment.txt"), Resources.ResearchAndDevelopment);
+            }
+
+            if (GeneralSettings.SettingsStore.GameMode == GameMode.Career)
+            {
+                FileHandler.WriteToFile(Path.Combine(ScenarioPath, "ContractSystem.txt"), Resources.ContractSystem);
+                FileHandler.WriteToFile(Path.Combine(ScenarioPath, "Funding.txt"), Resources.Funding);
+                FileHandler.WriteToFile(Path.Combine(ScenarioPath, "Reputation.txt"), Resources.Reputation);
+                FileHandler.WriteToFile(Path.Combine(ScenarioPath, "ScenarioContractEvents.txt"), Resources.ScenarioContractEvents);
+                FileHandler.WriteToFile(Path.Combine(ScenarioPath, "ScenarioUpgradeableFacilities.txt"), Resources.ScenarioUpgradeableFacilities);
+                FileHandler.WriteToFile(Path.Combine(ScenarioPath, "StrategySystem.txt"), Resources.StrategySystem);
+            }
         }
 
         public static void SendScenarioModules(ClientStructure client)
