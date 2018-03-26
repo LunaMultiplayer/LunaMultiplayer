@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-16"?>
-<LMPConfigNodeToXML />
+<LMPConfigNodeToXML>
+  <Parameter name="name">ProgressTracking</Parameter>
+  <Parameter name="scene">7, 8, 5</Parameter>
+  <Progress />
+</LMPConfigNodeToXML>

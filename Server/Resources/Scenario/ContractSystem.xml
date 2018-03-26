@@ -1,2 +1,130 @@
 <?xml version="1.0" encoding="utf-16"?>
-<LMPConfigNodeToXML />
+<LMPConfigNodeToXML>
+  <Parameter name="name">ContractSystem</Parameter>
+  <Parameter name="scene">7, 8, 5, 6</Parameter>
+  <Parameter name="update">289.27143330003452</Parameter>
+  <Parameter name="version">1.4.1</Parameter>
+  <WEIGHTS>
+    <Parameter name="TourismContract">30</Parameter>
+    <Parameter name="SurveyContract">30</Parameter>
+    <Parameter name="StationContract">30</Parameter>
+    <Parameter name="SentinelContract">30</Parameter>
+    <Parameter name="SatelliteContract">30</Parameter>
+    <Parameter name="ISRUContract">30</Parameter>
+    <Parameter name="ExplorationContract">30</Parameter>
+    <Parameter name="BaseContract">30</Parameter>
+    <Parameter name="ARMContract">30</Parameter>
+    <Parameter name="RecoverAsset">30</Parameter>
+    <Parameter name="PlantFlag">30</Parameter>
+    <Parameter name="PartTest">30</Parameter>
+    <Parameter name="GrandTour">30</Parameter>
+    <Parameter name="CollectScience">30</Parameter>
+    <Parameter name="Eeloo">30</Parameter>
+    <Parameter name="Dres">30</Parameter>
+    <Parameter name="Pol">30</Parameter>
+    <Parameter name="Gilly">30</Parameter>
+    <Parameter name="Tylo">30</Parameter>
+    <Parameter name="Bop">30</Parameter>
+    <Parameter name="Vall">30</Parameter>
+    <Parameter name="Laythe">30</Parameter>
+    <Parameter name="Jool">30</Parameter>
+    <Parameter name="Ike">30</Parameter>
+    <Parameter name="Duna">30</Parameter>
+    <Parameter name="Eve">30</Parameter>
+    <Parameter name="Moho">30</Parameter>
+    <Parameter name="Minmus">30</Parameter>
+    <Parameter name="Mun">30</Parameter>
+    <Parameter name="Kerbin">30</Parameter>
+    <Parameter name="Sun">30</Parameter>
+  </WEIGHTS>
+  <CONTRACTS>
+    <CONTRACT>
+      <Parameter name="guid">fb38d7b7-167e-41d9-8e5d-341685444d19</Parameter>
+      <Parameter name="type">ExplorationContract</Parameter>
+      <Parameter name="prestige">0</Parameter>
+      <Parameter name="seed">1061221040</Parameter>
+      <Parameter name="state">Offered</Parameter>
+      <Parameter name="viewed">Unseen</Parameter>
+      <Parameter name="agent">Kerbin World-Firsts Record-Keeping Society</Parameter>
+      <Parameter name="deadlineType">None</Parameter>
+      <Parameter name="expiryType">Floating</Parameter>
+      <Parameter name="ignoresWeight">True</Parameter>
+      <Parameter name="values">108000,0,1120,2080,1120,1,1,0,108129.2114333,0,0,0</Parameter>
+      <Parameter name="targetBody">1</Parameter>
+      <Parameter name="bodyRatio">0</Parameter>
+      <PARAM>
+        <Parameter name="name">ProgressTrackingParameter</Parameter>
+        <Parameter name="state">Incomplete</Parameter>
+        <Parameter name="values">3200,0,1,1,0</Parameter>
+        <Parameter name="targetBody">1</Parameter>
+        <Parameter name="targetType">FIRSTLAUNCH</Parameter>
+      </PARAM>
+    </CONTRACT>
+    <CONTRACT>
+      <Parameter name="guid">52c4848a-c151-40dd-babb-b7cd124531a7</Parameter>
+      <Parameter name="type">ExplorationContract</Parameter>
+      <Parameter name="prestige">0</Parameter>
+      <Parameter name="seed">1061221045</Parameter>
+      <Parameter name="state">Offered</Parameter>
+      <Parameter name="viewed">Unseen</Parameter>
+      <Parameter name="agent">Kerbin World-Firsts Record-Keeping Society</Parameter>
+      <Parameter name="deadlineType">None</Parameter>
+      <Parameter name="expiryType">Floating</Parameter>
+      <Parameter name="ignoresWeight">True</Parameter>
+      <Parameter name="values">43200,0,2240,4160,2240,1,2,0,43329.2114333,0,0,0</Parameter>
+      <Parameter name="targetBody">1</Parameter>
+      <Parameter name="bodyRatio">0</Parameter>
+      <PARAM>
+        <Parameter name="name">ProgressTrackingParameter</Parameter>
+        <Parameter name="state">Incomplete</Parameter>
+        <Parameter name="values">6400,0,1,2,0</Parameter>
+        <Parameter name="targetBody">1</Parameter>
+        <Parameter name="targetType">SCIENCE</Parameter>
+      </PARAM>
+    </CONTRACT>
+    <CONTRACT>
+      <Parameter name="guid">4490ab1c-580e-490c-994e-963c88e20763</Parameter>
+      <Parameter name="type">ExplorationContract</Parameter>
+      <Parameter name="prestige">1</Parameter>
+      <Parameter name="seed">1061221053</Parameter>
+      <Parameter name="state">Offered</Parameter>
+      <Parameter name="viewed">Unseen</Parameter>
+      <Parameter name="agent">Kerbin World-Firsts Record-Keeping Society</Parameter>
+      <Parameter name="deadlineType">None</Parameter>
+      <Parameter name="expiryType">Floating</Parameter>
+      <Parameter name="ignoresWeight">True</Parameter>
+      <Parameter name="values">64800,0,11200,20800,11200,4,8,0,64929.2114333,0,0,0</Parameter>
+      <Parameter name="targetBody">1</Parameter>
+      <Parameter name="bodyRatio">0</Parameter>
+      <PARAM>
+        <Parameter name="name">ProgressTrackingParameter</Parameter>
+        <Parameter name="state">Incomplete</Parameter>
+        <Parameter name="values">32000,0,4,8,0</Parameter>
+        <Parameter name="targetBody">1</Parameter>
+        <Parameter name="targetType">REACHSPACE</Parameter>
+      </PARAM>
+    </CONTRACT>
+    <CONTRACT>
+      <Parameter name="guid">455cb6b8-d302-468b-9c08-6d95c5f05aeb</Parameter>
+      <Parameter name="type">ExplorationContract</Parameter>
+      <Parameter name="prestige">2</Parameter>
+      <Parameter name="seed">1061221069</Parameter>
+      <Parameter name="state">Offered</Parameter>
+      <Parameter name="viewed">Unseen</Parameter>
+      <Parameter name="agent">Kerbin World-Firsts Record-Keeping Society</Parameter>
+      <Parameter name="deadlineType">None</Parameter>
+      <Parameter name="expiryType">Floating</Parameter>
+      <Parameter name="ignoresWeight">True</Parameter>
+      <Parameter name="values">64800,0,16800,31200,16800,6,10,0,64929.2114333,0,0,0</Parameter>
+      <Parameter name="targetBody">1</Parameter>
+      <Parameter name="bodyRatio">0</Parameter>
+      <PARAM>
+        <Parameter name="name">ProgressTrackingParameter</Parameter>
+        <Parameter name="state">Incomplete</Parameter>
+        <Parameter name="values">48000,0,6,10,0</Parameter>
+        <Parameter name="targetBody">1</Parameter>
+        <Parameter name="targetType">ORBIT</Parameter>
+      </PARAM>
+    </CONTRACT>
+  </CONTRACTS>
+</LMPConfigNodeToXML>
