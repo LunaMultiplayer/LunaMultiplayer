@@ -1,9 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace LunaCommon.Message.Data.ShareProgress
 {
