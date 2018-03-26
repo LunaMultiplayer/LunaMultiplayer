@@ -1,5 +1,4 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
 
 namespace LunaCommon.Message.Data.ShareProgress
@@ -13,27 +12,25 @@ namespace LunaCommon.Message.Data.ShareProgress
         internal ShareProgressTechnologyMsgData() { }
         public override ShareProgressMessageType ShareProgressMessageType => ShareProgressMessageType.TechnologyUpdate;
 
-        public string TechId;
+        public TechNodeInfo TechNode = new TechNodeInfo();
 
         public override string ClassName { get; } = nameof(ShareProgressTechnologyMsgData);
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);
-            
-            lidgrenMsg.Write(TechId);
+            TechNode.Serialize(lidgrenMsg);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             base.InternalDeserialize(lidgrenMsg);
-            
-            TechId = lidgrenMsg.ReadString();
+            TechNode.Deserialize(lidgrenMsg);
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + TechId.GetByteCount();
+            return base.InternalGetMessageSize() + TechNode.GetByteCount();
         }
     }
 }

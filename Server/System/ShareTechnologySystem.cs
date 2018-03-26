@@ -10,10 +10,11 @@ namespace Server.System
     {
         public static void TechnologyReceived(ClientStructure client, ShareProgressTechnologyMsgData data)
         {
-            LunaLog.Debug("Technology unlocked: " + data.TechId);
+            LunaLog.Debug($"Technology unlocked: {data.TechNode.Id}");
 
-            //send the technology update to all other clients
+            //Send the technology update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
+            ScenarioDataUpdater.WriteTechnologyDataToFile(data);
         }
     }
 }

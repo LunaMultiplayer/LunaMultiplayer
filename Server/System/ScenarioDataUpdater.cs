@@ -1,7 +1,9 @@
-﻿using LunaCommon.Xml;
+﻿using LunaCommon.Message.Data.ShareProgress;
+using LunaCommon.Xml;
 using Server.Utilities;
 using System.Collections.Concurrent;
 using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -135,6 +137,60 @@ namespace Server.System
 
             var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='rep']");
             if (node != null) node.InnerText = reputationPoints.ToString(CultureInfo.InvariantCulture);
+
+            return document.ToIndentedString();
+        }
+
+        #endregion
+
+        #region Technology
+
+        /// <summary>
+        /// We received a technology message so update the scenario file accordingly
+        /// </summary>
+        public static void WriteTechnologyDataToFile(ShareProgressTechnologyMsgData techMsg)
+        {
+            Task.Run(() =>
+            {
+                lock (Semaphore.GetOrAdd("ResearchAndDevelopment", new object()))
+                {
+                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("ResearchAndDevelopment", out var xmlData)) return;
+
+                    var updatedText = UpdateScenarioWithTechnologyData(xmlData, techMsg.TechNode);
+                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("ResearchAndDevelopment", updatedText, xmlData);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Patches the scenario file with reputation data
+        /// </summary>
+        /// <returns></returns>
+        private static string UpdateScenarioWithTechnologyData(string scenarioData, TechNodeInfo techNode)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(scenarioData);
+
+            var configNodeData = Encoding.UTF8.GetString(techNode.Data);
+
+            var newTechNodeXml = ConfigNodeXmlParser.ConvertToXml(configNodeData);
+            var newNodeDoc = new XmlDocument();
+            newNodeDoc.LoadXml(newTechNodeXml);
+            
+            var parentNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
+            if (parentNode != null)
+            {
+                var lastTechNode = document.SelectSingleNode($"(/{ConfigNodeXmlParser.StartElement}/Tech)[last()]");
+                if (lastTechNode != null)
+                {
+                    var newTechXmlNode = newNodeDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/Tech");
+                    if (newTechXmlNode != null)
+                    {
+                        var importNode = document.ImportNode(newTechXmlNode, true);
+                        parentNode.AppendChild(importNode);
+                    }
+                }
+            }
 
             return document.ToIndentedString();
         }

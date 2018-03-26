@@ -9,7 +9,7 @@ namespace LunaClient.Systems.ShareTechnology
             if (System.IgnoreEvents || data.target != RDTech.OperationResult.Successful) return;
 
             LunaLog.Log($"Relaying unlocked tech: {data.host.techID}");
-            System.MessageSender.SendTechnologyMessage(data.host.techID);
+            System.MessageSender.SendTechnologyMessage(data.host);
         }
     }
 }
