@@ -34,15 +34,5 @@ namespace LunaClient.Systems.ShareAchievements
             GameEvents.OnProgressComplete.Remove(ShareAchievementsEvents.AchievementCompleted);
             GameEvents.OnProgressAchieved.Remove(ShareAchievementsEvents.AchievementAchieved);
         }
-
-        public override void SaveState()
-        {
-            //We don't need this.
-        }
-
-        public override void RestoreState()
-        {
-            //We don't need this.
-        }
     }
 }

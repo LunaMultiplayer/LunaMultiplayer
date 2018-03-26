@@ -11,7 +11,7 @@ namespace LunaClient.Systems.ShareAchievements
             if (System.IgnoreEvents) return;
 
             System.MessageSender.SendAchievementsMessage(progressNode);
-            LunaLog.Log($"Achievement reached:{progressNode.Id}");
+            LunaLog.Log($"Achievement reached: {progressNode.Id}");
         }
 
         public void AchievementCompleted(ProgressNode progressNode)
@@ -19,7 +19,7 @@ namespace LunaClient.Systems.ShareAchievements
             if (System.IgnoreEvents) return;
 
             System.MessageSender.SendAchievementsMessage(progressNode);
-            LunaLog.Log($"Achievement completed:{progressNode.Id}");
+            LunaLog.Log($"Achievement completed: {progressNode.Id}");
         }
 
         public void AchievementAchieved(ProgressNode progressNode)
