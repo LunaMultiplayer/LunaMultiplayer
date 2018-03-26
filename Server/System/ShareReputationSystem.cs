@@ -14,6 +14,7 @@ namespace Server.System
 
             //send the reputation update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
+            ScenarioDataUpdater.WriteReputationDataToFile(data.Reputation);
         }
     }
 }
