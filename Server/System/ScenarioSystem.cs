@@ -94,8 +94,8 @@ namespace Server.System
             LunaLog.Debug($"Saving {data.ScenarioCount} scenario modules from {client.PlayerName}");
             for (var i = 0; i < data.ScenarioCount; i++)
             {
-                var path = Path.Combine(ServerContext.UniverseDirectory, "Scenarios", $"{data.ScenariosData[i].Module}.xml");
-                FileHandler.WriteToFile(path, data.ScenariosData[i].Data, data.ScenariosData[i].NumBytes);
+                var scenarioAsConfigNode = Encoding.UTF8.GetString(data.ScenariosData[i].Data);
+                ScenarioDataUpdater.RawConfigNodeInsertOrUpdate(data.ScenariosData[i].Module, scenarioAsConfigNode);
             }
         }
     }

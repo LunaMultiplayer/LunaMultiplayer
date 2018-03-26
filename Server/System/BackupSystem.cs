@@ -15,9 +15,10 @@ namespace Server.System
                 LunaLog.Debug("Performing backups...");
                 VesselStoreSystem.BackupVessels();
                 WarpSystem.SaveSubspacesToFile();
+                ScenarioStoreSystem.BackupScenarios();
                 try
                 {
-                    await Task.Delay(GeneralSettings.SettingsStore.VesselsBackupIntervalMs, token);
+                    await Task.Delay(GeneralSettings.SettingsStore.BackupIntervalMs, token);
                 }
                 catch (TaskCanceledException)
                 {
@@ -28,6 +29,7 @@ namespace Server.System
             //Do a last backup before quitting
             VesselStoreSystem.BackupVessels();
             WarpSystem.SaveSubspacesToFile();
+            ScenarioStoreSystem.BackupScenarios();
         }
     }
 }
