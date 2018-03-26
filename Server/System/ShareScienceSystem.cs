@@ -10,7 +10,7 @@ namespace Server.System
     {
         public static void ScienceReceived(ClientStructure client, ShareProgressScienceMsgData data)
         {
-            LunaLog.Debug("Science received: " + data.Science + " - reason: " + data.Reason);
+            LunaLog.Debug($"Science received: {data.Science} Reason: {data.Reason}");
 
             //send the science update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
