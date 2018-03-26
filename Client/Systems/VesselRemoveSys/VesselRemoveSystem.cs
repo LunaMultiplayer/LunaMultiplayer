@@ -259,7 +259,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 ManuallyKillingVesselId = killVessel.id;
 
                 //CAUTION!!!!! This method will call our event "VesselRemoveEvents.OnVesselWillDestroy" Check the method to see what can happen!
-                killVessel?.Die();
+                killVessel.Die();
             }
             catch (Exception killException)
             {
