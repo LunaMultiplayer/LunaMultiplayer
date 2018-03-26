@@ -150,6 +150,7 @@
     <Compile Include="System\LockSystemSender.cs" />
     <Compile Include="System\ModDataSystemSender.cs" />
     <Compile Include="System\ModFileSystem.cs" />
+    <Compile Include="System\ScenarioStoreSystem.cs" />
     <Compile Include="System\ScenarioSystem.cs" />
     <Compile Include="System\ShareAchievementsSystem.cs" />
     <Compile Include="System\ShareContractsSystem.cs" />

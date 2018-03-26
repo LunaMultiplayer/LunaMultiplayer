@@ -61,7 +61,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe file overwriting method
+        /// Thread safe file overwriting method
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <param name="text">Text to insert</param>
@@ -70,6 +70,22 @@ namespace Server.System
             lock (GetLockSemaphore(path))
             {
                 File.WriteAllText(path, text);
+            }
+        }
+
+        /// <summary>
+        /// Thread safe file creating method. It won't create the file if it already exists!
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <param name="text">Text to insert</param>
+        public static void CreateFile(string path, string text)
+        {
+            if (!FileExists(path))
+            {
+                lock (GetLockSemaphore(path))
+                {
+                    File.WriteAllText(path, text);
+                }
             }
         }
 

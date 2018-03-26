@@ -82,6 +82,8 @@ namespace Server
                 Universe.CheckUniverse();
                 LoadSettingsAndGroups();
                 VesselStoreSystem.LoadExistingVessels();
+                ScenarioSystem.GenerateDefaultScenarios();
+                ScenarioStoreSystem.LoadExistingScenarios();
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
 
