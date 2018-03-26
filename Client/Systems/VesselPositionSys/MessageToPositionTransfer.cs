@@ -17,7 +17,9 @@ namespace LunaClient.Systems.VesselPositionSys
                 VesselId = msgData.VesselId,
                 BodyIndex = msgData.BodyIndex,
                 HeightFromTerrain = msgData.HeightFromTerrain,
-                TimeStamp = msgData.TimeStamp
+                SentTimeStamp = msgData.TimeStamp,
+                ReceiveTimeStamp = msgData.ReceiveTime,
+                GameTimeStamp = msgData.GameTime
             };
 
             Array.Copy(msgData.SrfRelRotation, upd.SrfRelRotation, 4);
@@ -39,7 +41,9 @@ namespace LunaClient.Systems.VesselPositionSys
             update.VesselId = msgData.VesselId;
             update.BodyIndex = msgData.BodyIndex;
             update.HeightFromTerrain = msgData.HeightFromTerrain;
-            update.TimeStamp = msgData.TimeStamp;
+            update.SentTimeStamp = msgData.TimeStamp;
+            update.ReceiveTimeStamp = msgData.ReceiveTime;
+            update.GameTimeStamp = msgData.GameTime;
 
             Array.Copy(msgData.SrfRelRotation, update.SrfRelRotation, 4);
             Array.Copy(msgData.TransformPosition, update.TransformPosition, 3);
@@ -58,7 +62,9 @@ namespace LunaClient.Systems.VesselPositionSys
             updateToUpdate.VesselId = update.VesselId;
             updateToUpdate.BodyIndex = update.BodyIndex;
             updateToUpdate.HeightFromTerrain = update.HeightFromTerrain;
-            updateToUpdate.TimeStamp = update.TimeStamp;
+            updateToUpdate.SentTimeStamp = update.SentTimeStamp;
+            updateToUpdate.ReceiveTimeStamp = update.ReceiveTimeStamp;
+            updateToUpdate.GameTimeStamp = update.GameTimeStamp;
 
             Array.Copy(update.SrfRelRotation, updateToUpdate.SrfRelRotation, 4);
             Array.Copy(update.TransformPosition, updateToUpdate.TransformPosition, 3);
@@ -93,7 +99,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 msgData.HeightFromTerrain = vessel.heightFromTerrain;
                 msgData.TimeStamp = LunaTime.UtcNow.Ticks;
-                
+                msgData.GameTime = Planetarium.GetUniversalTime();
+
                 return msgData;
             }
             catch (Exception e)
