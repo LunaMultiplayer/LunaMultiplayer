@@ -14,6 +14,7 @@ namespace Server.System
 
             //send the science update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
+            ScenarioDataUpdater.WriteScienceDataToFile(data.Science);
         }
     }
 }
