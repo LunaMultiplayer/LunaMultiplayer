@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Contracts;
+﻿using Contracts;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.ShareFunds;
@@ -13,6 +8,8 @@ using LunaClient.Utilities;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.ShareContracts
 {
@@ -77,9 +74,6 @@ namespace LunaClient.Systems.ShareContracts
         /// Convert a byte array to a ConfigNode and then to a Contract.
         /// If anything goes wrong it will return null.
         /// </summary>
-        /// <param name="data">The byte array that represents the configNode</param>
-        /// <param name="numBytes">The length of the byte array</param>
-        /// <returns></returns>
         private static Contract ConvertByteArrayToContract(byte[] data, int numBytes)
         {
             ConfigNode node;
@@ -120,8 +114,6 @@ namespace LunaClient.Systems.ShareContracts
         /// Updates the local contract at given index in the ContractSystem.Instance.Contracts list
         /// with the given incomingContract data.
         /// </summary>
-        /// <param name="contractIndex">Index in ContractSystem.Instance.Contracts</param>
-        /// <param name="incomingContract">Wanted contract</param>
         private static void UpdateContract(int contractIndex, Contract incomingContract)
         {
             if (ContractSystem.Instance.Contracts[contractIndex].ContractState != incomingContract.ContractState)
@@ -167,13 +159,12 @@ namespace LunaClient.Systems.ShareContracts
                 }
             }
 
-            LunaLog.Log("ContractsUpdate received - contract state changed on: " + incomingContract.ContractGuid.ToString() + " - " + incomingContract.Title);
+            LunaLog.Log($"ContractsUpdate received - contract state changed on: {incomingContract.ContractGuid} - {incomingContract.Title}");
         }
 
         /// <summary>
         /// Adds a contract to the local ContractSystem.
         /// </summary>
-        /// <param name="incomingContract"></param>
         private static void AddContract(Contract incomingContract)
         {
             if (!incomingContract.IsFinished())
@@ -225,8 +216,7 @@ namespace LunaClient.Systems.ShareContracts
                 }
             }
 
-            LunaLog.Log("New contract added: " + incomingContract.ContractGuid + " - " + incomingContract.Title);
+            LunaLog.Log($"New contract added: {incomingContract.ContractGuid} - {incomingContract.Title}");
         }
-
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Contracts;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.ShareFunds;
 using LunaClient.Systems.ShareReputation;
@@ -13,6 +7,8 @@ using LunaClient.Utilities;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.ShareAchievements
 {
@@ -66,13 +62,13 @@ namespace LunaClient.Systems.ShareAchievements
                     if (!ProgressTracking.Instance.achievementTree[achievementIndex].IsComplete && incomingAchievement.IsComplete)
                         ProgressTracking.Instance.achievementTree[achievementIndex].Complete();
 
-                    LunaLog.Log("Achievement was updated: " + incomingAchievement.Id);
+                    LunaLog.Log($"Achievement was updated: {incomingAchievement.Id}");
                 }
                 else
                 {
                     //didn't found the same achievement in the achievmentTree
                     ProgressTracking.Instance.achievementTree.AddNode(incomingAchievement);
-                    LunaLog.Log("Achievement was added: " + incomingAchievement.Id);
+                    LunaLog.Log($"Achievement was added: {incomingAchievement.Id}");
                 }
             }
 

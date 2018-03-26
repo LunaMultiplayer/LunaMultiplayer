@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaClient.Base;
-using LunaClient.Network;
-using LunaCommon.Message.Data.ShareProgress;
+﻿using LunaClient.Base;
 
 namespace LunaClient.Systems.ShareReputation
 {
@@ -14,11 +8,8 @@ namespace LunaClient.Systems.ShareReputation
         {
             if (System.IgnoreEvents) return;
 
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressReputationMsgData>();
-            msgData.Reputation = reputation;
-            msgData.Reason = reason.ToString();
-            System.MessageSender.SendMessage(msgData);
-            LunaLog.Log("Reputation changed to: " + reputation + " with reason: " + reason.ToString());
+            LunaLog.Log($"Reputation changed to: {reputation} reason: {reason}");
+            System.MessageSender.SendReputationMsg(reputation, reason.ToString());
         }
     }
 }

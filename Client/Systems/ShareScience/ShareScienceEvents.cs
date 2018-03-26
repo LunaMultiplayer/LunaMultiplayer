@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaClient.Base;
-using LunaClient.Network;
-using LunaCommon.Message.Data.ShareProgress;
+﻿using LunaClient.Base;
 
 namespace LunaClient.Systems.ShareScience
 {
@@ -14,11 +8,7 @@ namespace LunaClient.Systems.ShareScience
         {
             if (System.IgnoreEvents) return;
 
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressScienceMsgData>();
-            msgData.Science = science;
-            msgData.Reason = reason.ToString();
-            System.MessageSender.SendMessage(msgData);
-            LunaLog.Log("Science changed to: " + science + " with reason: " + reason.ToString());
+            System.MessageSender.SendScienceMessage(science, reason.ToString());
         }
     }
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaClient.Base;
-using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
@@ -15,26 +10,14 @@ namespace LunaClient.Systems.ShareAchievements
 
         private ShareAchievementsEvents ShareAchievementsEvents { get; } = new ShareAchievementsEvents();
 
-        protected override void NetworkEventHandler(ClientState data)
-        {
-            if (data <= ClientState.Disconnected)
-            {
-                Enabled = false;
-            }
-
-            if (data == ClientState.Running && SettingsSystem.ServerSettings.ShareProgress &&
-                (SettingsSystem.ServerSettings.GameMode == GameMode.Science ||
-                 SettingsSystem.ServerSettings.GameMode == GameMode.Career))
-            {
-                Enabled = true;
-            }
-        }
+        protected override bool ShareSystemReady => ProgressTracking.Instance != null && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
+                                                    Reputation.Instance != null;
 
         protected override void OnEnabled()
         {
-            base.OnEnabled();
-
             if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
+
+            base.OnEnabled();
 
             GameEvents.OnProgressReached.Add(ShareAchievementsEvents.AchievementReached);
             GameEvents.OnProgressComplete.Add(ShareAchievementsEvents.AchievementCompleted);
@@ -43,23 +26,13 @@ namespace LunaClient.Systems.ShareAchievements
 
         protected override void OnDisabled()
         {
-            base.OnDisabled();
-
             if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
+
+            base.OnDisabled();
 
             GameEvents.OnProgressReached.Remove(ShareAchievementsEvents.AchievementReached);
             GameEvents.OnProgressComplete.Remove(ShareAchievementsEvents.AchievementCompleted);
             GameEvents.OnProgressAchieved.Remove(ShareAchievementsEvents.AchievementAchieved);
-        }
-
-        protected override bool ActionDependencyReady()
-        {
-            return (
-                ProgressTracking.Instance != null &&
-                Funding.Instance != null &&
-                ResearchAndDevelopment.Instance != null &&
-                Reputation.Instance != null
-            );
         }
 
         public override void SaveState()

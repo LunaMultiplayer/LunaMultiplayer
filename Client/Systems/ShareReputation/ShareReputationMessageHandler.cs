@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.ShareReputation
 {
@@ -23,7 +19,7 @@ namespace LunaClient.Systems.ShareReputation
             if (msgData is ShareProgressReputationMsgData data)
             {
                 var reputation = data.Reputation; //create a copy of the reputation value so it will not change in the future.
-                LunaLog.Log("Queue ReputationUpdate with: " + reputation);
+                LunaLog.Log($"Queue ReputationUpdate with: {reputation}");
                 System.QueueAction(() =>
                 {
                     ReputationUpdate(reputation);
@@ -36,7 +32,7 @@ namespace LunaClient.Systems.ShareReputation
             System.StartIgnoringEvents();
             Reputation.Instance.SetReputation(reputation, TransactionReasons.None);
             System.StopIgnoringEvents();
-            LunaLog.Log("ReputationUpdate received - reputation changed to: " + reputation);
+            LunaLog.Log($"ReputationUpdate received - reputation changed to: {reputation}");
         }
     }
 }

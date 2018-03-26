@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Contracts;
+﻿using Contracts;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
@@ -20,31 +16,19 @@ namespace LunaClient.Systems.ShareContracts
 
         private int _defaultContractGenerateIterations;
 
-        protected override void NetworkEventHandler(ClientState data)
-        {
-            if (data <= ClientState.Disconnected)
-            {
-                Enabled = false;
-            }
-
-            if (data == ClientState.Running && SettingsSystem.ServerSettings.ShareProgress &&
-                (SettingsSystem.ServerSettings.GameMode == GameMode.Science ||
-                 SettingsSystem.ServerSettings.GameMode == GameMode.Career))
-            {
-                Enabled = true;
-            }
-        }
+        //We need to wait for all the achievements to be processed before we process the contracts. Otherwise it will cause bugs.
+        protected override bool ShareSystemReady => ContractSystem.Instance != null && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
+                                                    Reputation.Instance != null && ShareAchievementsSystem.Singleton.ActionQueueCount == 0;
 
         protected override void OnEnabled()
         {
+            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
+
             base.OnEnabled();
             
             _defaultContractGenerateIterations = ContractSystem.generateContractIterations;
 
-            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
-
-            TryGetContractLock();
-            SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetContractLock));
+            SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, TryGetContractLock));
 
             GameEvents.Contract.onAccepted.Add(ShareContractsEvents.ContractAccepted);
             GameEvents.Contract.onCancelled.Add(ShareContractsEvents.ContractCancelled);
@@ -62,9 +46,9 @@ namespace LunaClient.Systems.ShareContracts
 
         protected override void OnDisabled()
         {
-            base.OnDisabled();
-
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
+
+            base.OnDisabled();
 
             GameEvents.Contract.onAccepted.Remove(ShareContractsEvents.ContractAccepted);
             GameEvents.Contract.onCancelled.Remove(ShareContractsEvents.ContractCancelled);
@@ -78,27 +62,6 @@ namespace LunaClient.Systems.ShareContracts
             GameEvents.Contract.onParameterChange.Remove(ShareContractsEvents.ContractParameterChanged);
             GameEvents.Contract.onRead.Remove(ShareContractsEvents.ContractRead);
             GameEvents.Contract.onSeen.Remove(ShareContractsEvents.ContractSeen);
-        }
-
-        protected override bool ActionDependencyReady()
-        {
-            return (
-                ContractSystem.Instance != null &&
-                Funding.Instance != null &&
-                ResearchAndDevelopment.Instance != null &&
-                Reputation.Instance != null &&
-                ShareAchievementsSystem.Singleton.ActionQueueCount == 0 //We need to wait for all the achievements to be processed before we process the contracts. Otherwise it will cause bugs.
-            );
-        }
-
-        public override void SaveState()
-        {
-            //We don't need this.
-        }
-
-        public override void RestoreState()
-        {
-            //We don't need this.
         }
 
         private void TryGetContractLock()

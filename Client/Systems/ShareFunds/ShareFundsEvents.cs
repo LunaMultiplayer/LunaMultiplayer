@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaClient.Base;
-using LunaClient.Network;
-using LunaCommon.Message.Data.ShareProgress;
+﻿using LunaClient.Base;
 
 namespace LunaClient.Systems.ShareFunds
 {
@@ -14,11 +8,8 @@ namespace LunaClient.Systems.ShareFunds
         {
             if (System.IgnoreEvents) return;
 
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressFundsMsgData>();
-            msgData.Funds = funds;
-            msgData.Reason = reason.ToString();
-            System.MessageSender.SendMessage(msgData);
-            LunaLog.Log("Funds changed to: " + funds + " with reason: " + reason.ToString());
+            LunaLog.Log($"Funds changed to: {funds} reason: {reason}");
+            System.MessageSender.SendFundsMessage(funds, reason.ToString());
         }
     }
 }

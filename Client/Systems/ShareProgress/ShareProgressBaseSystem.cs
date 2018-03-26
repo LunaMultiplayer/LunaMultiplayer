@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Systems.SettingsSys;
+using System;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.ShareProgress
 {
@@ -20,6 +18,8 @@ namespace LunaClient.Systems.ShareProgress
 
         protected override void OnEnabled()
         {
+            if (!SettingsSystem.ServerSettings.ShareProgress) return;
+
             base.OnEnabled();
 
             IgnoreEvents = false;
@@ -29,25 +29,29 @@ namespace LunaClient.Systems.ShareProgress
         }
 
         /// <summary>
-        /// Returns true if the action queue can run.
-        /// For example check if some variable is null like Funding.Instance.
+        /// Returns true if the system is in a ready state to be run
         /// </summary>
-        /// <returns></returns>
-        protected abstract bool ActionDependencyReady();
+        protected abstract bool ShareSystemReady { get; }
 
         /// <summary>
         /// Saves the current state of the variables that this system is tracking.
         /// </summary>
-        public abstract void SaveState();
+        public virtual void SaveState()
+        {
+            //Implement your own stuff
+        }
 
         /// <summary>
         /// Restores the state of variables this system is tracking from the last save.
         /// </summary>
-        public abstract void RestoreState();
+        public virtual void RestoreState()
+        {
+            //Implement your own stuff
+        }
 
         /// <summary>
         /// Start ignoring the incoming ksp events.
-        /// Only call this if you are sure ActionDependenyReady() returns true.
+        /// Only call this if you are sure ShareSystemReady() returns true.
         /// For example in an QueueAction().
         /// </summary>
         public void StartIgnoringEvents()
@@ -58,7 +62,7 @@ namespace LunaClient.Systems.ShareProgress
 
         /// <summary>
         /// Stop ignoring the incoming ksp events.
-        /// Only call this if you are sure ActionDependenyReady() returns true.
+        /// Only call this if you are sure ShareSystemReady() returns true.
         /// For example in an QueueAction().
         /// </summary>
         public void StopIgnoringEvents(bool restoreOldValue = false)
@@ -86,7 +90,7 @@ namespace LunaClient.Systems.ShareProgress
         /// </summary>
         private void RunQueue()
         {
-            while (_actionQueue.Count > 0 && ActionDependencyReady())
+            while (_actionQueue.Count > 0 && ShareSystemReady)
             {
                 var action = _actionQueue.Dequeue();
                 action?.Invoke();

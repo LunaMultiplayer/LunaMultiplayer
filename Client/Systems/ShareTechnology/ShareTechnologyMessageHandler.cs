@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.ShareTechnology
 {
@@ -23,7 +19,7 @@ namespace LunaClient.Systems.ShareTechnology
             if (msgData is ShareProgressTechnologyMsgData data)
             {
                 var techId = data.TechId; //create a copy of the techId value so it will not change in the future.
-                LunaLog.Log("Queue TechnologyUpdate with: " + techId);
+                LunaLog.Log($"Queue TechnologyUpdate with: {techId}");
                 System.QueueAction(() =>
                 {
                     TechnologyUpdate(techId);
@@ -43,7 +39,7 @@ namespace LunaClient.Systems.ShareTechnology
 
             ResearchAndDevelopment.RefreshTechTreeUI();
             System.StopIgnoringEvents();
-            LunaLog.Log("TechnologyUpdate received - technology unlocked: " + techId);
+            LunaLog.Log($"TechnologyUpdate received - technology unlocked: {techId}");
         }
     }
 }

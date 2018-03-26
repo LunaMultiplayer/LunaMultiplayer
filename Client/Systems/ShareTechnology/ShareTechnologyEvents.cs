@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaClient.Base;
-using LunaClient.Network;
-using LunaCommon.Message.Data.ShareProgress;
+﻿using LunaClient.Base;
 
 namespace LunaClient.Systems.ShareTechnology
 {
@@ -14,10 +8,8 @@ namespace LunaClient.Systems.ShareTechnology
         {
             if (System.IgnoreEvents || data.target != RDTech.OperationResult.Successful) return;
 
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressTechnologyMsgData>();
-            msgData.TechId = data.host.techID;
-            LunaLog.Log("Technology unlocked: " + msgData.TechId);
-            System.MessageSender.SendMessage(msgData);
+            LunaLog.Log($"Relaying unlocked tech: {data.host.techID}");
+            System.MessageSender.SendTechnologyMessage(data.host.techID);
         }
     }
 }

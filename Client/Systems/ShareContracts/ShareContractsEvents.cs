@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Contracts;
+﻿using Contracts;
 using LunaClient.Base;
-using LunaClient.Network;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
-using LunaCommon.Message.Data.ShareProgress;
 
 namespace LunaClient.Systems.ShareContracts
 {
@@ -20,24 +13,24 @@ namespace LunaClient.Systems.ShareContracts
         {
             if (System.IgnoreEvents) return;
 
-            SendContractUpdate(contract);
-            LunaLog.Log("Contract accepted: " + contract.ContractGuid);
+            System.MessageSender.SendContractMessage(contract);
+            LunaLog.Log($"Contract accepted: {contract.ContractGuid}");
         }
 
         public void ContractCancelled(Contract contract)
         {
             if (System.IgnoreEvents) return;
 
-            SendContractUpdate(contract);
-            LunaLog.Log("Contract cancelled: " + contract.ContractGuid);
+            System.MessageSender.SendContractMessage(contract);
+            LunaLog.Log($"Contract cancelled: {contract.ContractGuid}");
         }
 
         public void ContractCompleted(Contract contract)
         {
             if (System.IgnoreEvents) return;
 
-            SendContractUpdate(contract);
-            LunaLog.Log("Contract completed: " + contract.ContractGuid);
+            System.MessageSender.SendContractMessage(contract);
+            LunaLog.Log($"Contract completed: {contract.ContractGuid}");
         }
 
         public void ContractsListChanged()
@@ -54,16 +47,16 @@ namespace LunaClient.Systems.ShareContracts
         {
             if (System.IgnoreEvents) return;
 
-            SendContractUpdate(contract);
-            LunaLog.Log("Contract declined: " + contract.ContractGuid);
+            System.MessageSender.SendContractMessage(contract);
+            LunaLog.Log($"Contract declined: {contract.ContractGuid}");
         }
 
         public void ContractFailed(Contract contract)
         {
             if (System.IgnoreEvents) return;
 
-            SendContractUpdate(contract);
-            LunaLog.Log("Contract failed: " + contract.ContractGuid);
+            System.MessageSender.SendContractMessage(contract);
+            LunaLog.Log($"Contract failed: {contract.ContractGuid}");
         }
 
         public void ContractFinished(Contract contract)
@@ -76,12 +69,12 @@ namespace LunaClient.Systems.ShareContracts
 
         public void ContractOffered(Contract contract)
         {
-            LunaLog.Log("Contract offered: " + contract.ContractGuid + " - " + contract.Title);
+            LunaLog.Log($"Contract offered: {contract.ContractGuid} - {contract.Title}");
 
             if (!LockSystem.LockQuery.ContractLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName)) return;
 
             //This should be only called on the client with the contract lock, because he has the generationCount != 0.
-            SendContractUpdate(contract);
+            System.MessageSender.SendContractMessage(contract);
 
             //Also store the current contracts on the server so new players will see this contract too.
             ScenarioSystem.Singleton.SendScenarioModules();
@@ -89,68 +82,18 @@ namespace LunaClient.Systems.ShareContracts
 
         public void ContractParameterChanged(Contract contract, ContractParameter contractParameter)
         {
-            SendContractUpdate(contract);
-            LunaLog.Log("Contract parameter changed on:" + contract.ContractGuid.ToString());
+            System.MessageSender.SendContractMessage(contract);
+            LunaLog.Log($"Contract parameter changed on:{contract.ContractGuid}");
         }
 
         public void ContractRead(Contract contract)
         {
-            LunaLog.Log("Contract read:" + contract.ContractGuid.ToString());
+            LunaLog.Log($"Contract read:{contract.ContractGuid}");
         }
 
         public void ContractSeen(Contract contract)
         {
-            LunaLog.Log("Contract seen:" + contract.ContractGuid.ToString());
-        }
-        #endregion
-
-        #region PrivateMethods
-        private static void SendContractUpdate(Contract[] contracts)
-        {
-            //Convert the Contract's to ContractInfo's.
-            var contractInfos = new List<ContractInfo>();
-            foreach (var contract in contracts)
-            {
-                var configNode = ConvertContractToConfigNode(contract);
-                if (configNode == null) break;
-
-                var data = ConfigNodeSerializer.Serialize(configNode);
-                var numBytes = data.Length;
-
-                contractInfos.Add(new ContractInfo()
-                {
-                    ContractGuid = contract.ContractGuid,
-                    Data = data,
-                    NumBytes = numBytes
-                });
-            }
-
-            //Build the packet and send it.
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressContractsMsgData>();
-            msgData.Contracts = contractInfos.ToArray();
-            msgData.ContractCount = msgData.Contracts.Length;
-            System.MessageSender.SendMessage(msgData);
-        }
-
-        private static void SendContractUpdate(Contract contract)
-        {
-            SendContractUpdate(new Contract[] { contract });
-        }
-
-        private static ConfigNode ConvertContractToConfigNode(Contract contract)
-        {
-            var configNode = new ConfigNode();
-            try
-            {
-                contract.Save(configNode);
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error while saving contract: {e}");
-                return null;
-            }
-
-            return configNode;
+            LunaLog.Log($"Contract seen:{contract.ContractGuid}");
         }
         #endregion
     }

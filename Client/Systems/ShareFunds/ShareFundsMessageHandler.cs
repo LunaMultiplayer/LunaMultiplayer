@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.ShareFunds
 {
@@ -23,7 +19,7 @@ namespace LunaClient.Systems.ShareFunds
             if (msgData is ShareProgressFundsMsgData data)
             {
                 var funds = data.Funds; //create a copy of the funds value so it will not change in the future.
-                LunaLog.Log("Queue FundsUpdate with: " + funds);
+                LunaLog.Log($"Queue FundsUpdate with: {funds}");
                 System.QueueAction(() =>
                 {
                     FundsUpdate(funds);
@@ -36,7 +32,7 @@ namespace LunaClient.Systems.ShareFunds
             System.StartIgnoringEvents();
             Funding.Instance.SetFunds(funds, TransactionReasons.None);
             System.StopIgnoringEvents();
-            LunaLog.Log("FundsUpdate received - funds changed to: " + funds);
+            LunaLog.Log($"FundsUpdate received - funds changed to: {funds}");
         }
     }
 }
