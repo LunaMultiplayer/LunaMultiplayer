@@ -17,7 +17,7 @@ namespace LunaClient.Systems.ShareContracts
         private int _defaultContractGenerateIterations;
 
         //We need to wait for all the achievements to be processed before we process the contracts. Otherwise it will cause bugs.
-        protected override bool ShareSystemReady => ContractSystem.Instance != null && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
+        protected override bool ShareSystemReady => ContractSystem.Instance != null && ContractSystem.Instance.Contracts.Count != 0 && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
                                                     Reputation.Instance != null && ShareAchievementsSystem.Singleton.ActionQueueCount == 0;
 
         protected override void OnEnabled()
@@ -27,6 +27,7 @@ namespace LunaClient.Systems.ShareContracts
             base.OnEnabled();
             
             _defaultContractGenerateIterations = ContractSystem.generateContractIterations;
+            ContractSystem.generateContractIterations = 0;
 
             SetupRoutine(new RoutineDefinition(5000, RoutineExecution.Update, TryGetContractLock));
             SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, SetContractGenerationBasedOnLock));
