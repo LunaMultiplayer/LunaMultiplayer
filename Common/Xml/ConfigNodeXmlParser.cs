@@ -9,6 +9,7 @@ namespace LunaCommon.Xml
     public static class ConfigNodeXmlParser
     {
         public const string StartElement = "LMPConfigNodeToXML";
+        public const string ParentNode = "Node";
         public const string ValueNode = "Parameter";
         public const string AttributeName = "name";
 
@@ -16,7 +17,7 @@ namespace LunaCommon.Xml
         {
             using (var reader = new StringReader(configNode))
             using (var writer = new StringWriter())
-            using (var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings() { Indent = true, CheckCharacters = false }))
+            using (var xmlWriter = XmlWriter.Create(writer, new XmlWriterSettings { Indent = true, CheckCharacters = false }))
             {
                 xmlWriter.WriteStartElement(StartElement);
                 var previous = string.Empty;
@@ -30,7 +31,8 @@ namespace LunaCommon.Xml
                     }
                     else if (line.Contains("{") && line.Trim().Length == 1)
                     {
-                        xmlWriter.WriteStartElement(previous.Trim());
+                        xmlWriter.WriteStartElement(ParentNode);
+                        xmlWriter.WriteAttributeString(AttributeName, previous.Trim());
                     }
                     else if (line.Contains("}") && line.Trim().Length == 1)
                     {

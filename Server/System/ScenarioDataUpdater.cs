@@ -180,15 +180,11 @@ namespace Server.System
             var parentNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
             if (parentNode != null)
             {
-                var lastTechNode = document.SelectSingleNode($"(/{ConfigNodeXmlParser.StartElement}/Tech)[last()]");
-                if (lastTechNode != null)
+                var newTechXmlNode = newNodeDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='Tech']");
+                if (newTechXmlNode != null)
                 {
-                    var newTechXmlNode = newNodeDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/Tech");
-                    if (newTechXmlNode != null)
-                    {
-                        var importNode = document.ImportNode(newTechXmlNode, true);
-                        parentNode.AppendChild(importNode);
-                    }
+                    var importNode = document.ImportNode(newTechXmlNode, true);
+                    parentNode.AppendChild(importNode);
                 }
             }
 
