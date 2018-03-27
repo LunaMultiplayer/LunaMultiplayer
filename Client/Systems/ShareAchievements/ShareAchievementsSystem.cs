@@ -15,7 +15,9 @@ namespace LunaClient.Systems.ShareAchievements
 
         protected override void OnEnabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
+            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
+            //We don't need to synchronize achievements in science mode because they have no effect and are not shown to the user.
+            //They will only appear in the debug console.
 
             base.OnEnabled();
 
