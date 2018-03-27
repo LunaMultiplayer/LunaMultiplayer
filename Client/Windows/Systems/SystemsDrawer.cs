@@ -14,6 +14,7 @@ using LunaClient.Systems.ShareContracts;
 using LunaClient.Systems.ShareFunds;
 using LunaClient.Systems.ShareReputation;
 using LunaClient.Systems.ShareScience;
+using LunaClient.Systems.ShareStrategy;
 using LunaClient.Systems.ShareTechnology;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselDockSys;
@@ -239,6 +240,11 @@ namespace LunaClient.Windows.Systems
             if (_shareAchievements)
             {
                 ShareAchievementsSystem.Singleton.Enabled = GUILayout.Toggle(ShareAchievementsSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _shareStrategy = GUILayout.Toggle(_shareStrategy, "Share Strategy system", ButtonStyle);
+            if (_shareStrategy)
+            {
+                ShareStrategySystem.Singleton.Enabled = GUILayout.Toggle(ShareStrategySystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
         }
     }

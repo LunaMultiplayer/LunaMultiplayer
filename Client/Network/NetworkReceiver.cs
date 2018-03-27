@@ -38,6 +38,7 @@ using LunaClient.Systems.ShareContracts;
 using LunaClient.Systems.ShareFunds;
 using LunaClient.Systems.ShareReputation;
 using LunaClient.Systems.ShareScience;
+using LunaClient.Systems.ShareStrategy;
 using LunaClient.Systems.ShareTechnology;
 using LunaCommon.Message.Data.ShareProgress;
 
@@ -227,6 +228,9 @@ namespace LunaClient.Network
                             break;
                         case ShareProgressMessageType.AchievementsUpdate:
                             ShareAchievementsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.StrategyUpdate:
+                            ShareStrategySystem.Singleton.EnqueueMessage(msg);
                             break;
                     }
                     break;

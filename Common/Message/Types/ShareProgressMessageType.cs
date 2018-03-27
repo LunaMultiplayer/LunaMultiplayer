@@ -8,5 +8,6 @@
         TechnologyUpdate = 3,
         ContractsUpdate = 4,
         AchievementsUpdate = 5,
+        StrategyUpdate = 6,
     }
 }

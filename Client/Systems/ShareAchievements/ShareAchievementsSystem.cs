@@ -28,7 +28,7 @@ namespace LunaClient.Systems.ShareAchievements
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox) return;
+            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
 
             base.OnDisabled();
 

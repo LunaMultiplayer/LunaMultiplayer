@@ -142,6 +142,10 @@
     <Compile Include="Systems\ShareScience\ShareScienceMessageHandler.cs" />
     <Compile Include="Systems\ShareScience\ShareScienceMessageSender.cs" />
     <Compile Include="Systems\ShareScience\ShareScienceSystem.cs" />
+    <Compile Include="Systems\ShareStrategy\ShareStrategyEvents.cs" />
+    <Compile Include="Systems\ShareStrategy\ShareStrategyMessageHandler.cs" />
+    <Compile Include="Systems\ShareStrategy\ShareStrategyMessageSender.cs" />
+    <Compile Include="Systems\ShareStrategy\ShareStrategySystem.cs" />
     <Compile Include="Systems\ShareTechnology\ShareTechnologyEvents.cs" />
     <Compile Include="Systems\ShareTechnology\ShareTechnologyMessageHandler.cs" />
     <Compile Include="Systems\ShareTechnology\ShareTechnologyMessageSender.cs" />
