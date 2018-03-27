@@ -57,7 +57,6 @@ namespace Server.System
         /// <summary>
         /// Patches the scenario file with funds data
         /// </summary>
-        /// <returns></returns>
         private static string UpdateScenarioWithFundsData(string scenarioData, double funds)
         {
             var document = new XmlDocument();
@@ -93,7 +92,6 @@ namespace Server.System
         /// <summary>
         /// Patches the scenario file with science data
         /// </summary>
-        /// <returns></returns>
         private static string UpdateScenarioWithScienceData(string scenarioData, float sciencePoints)
         {
             var document = new XmlDocument();
@@ -129,7 +127,6 @@ namespace Server.System
         /// <summary>
         /// Patches the scenario file with reputation data
         /// </summary>
-        /// <returns></returns>
         private static string UpdateScenarioWithReputationData(string scenarioData, float reputationPoints)
         {
             var document = new XmlDocument();
@@ -165,7 +162,6 @@ namespace Server.System
         /// <summary>
         /// Patches the scenario file with reputation data
         /// </summary>
-        /// <returns></returns>
         private static string UpdateScenarioWithTechnologyData(string scenarioData, TechNodeInfo techNode)
         {
             var document = new XmlDocument();
@@ -176,7 +172,7 @@ namespace Server.System
             var newTechNodeXml = ConfigNodeXmlParser.ConvertToXml(configNodeData);
             var newNodeDoc = new XmlDocument();
             newNodeDoc.LoadXml(newTechNodeXml);
-            
+
             var parentNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
             if (parentNode != null)
             {
@@ -187,6 +183,70 @@ namespace Server.System
                     parentNode.AppendChild(importNode);
                 }
             }
+
+            return document.ToIndentedString();
+        }
+
+        #endregion
+
+        #region Contracts
+
+        /// <summary>
+        /// We received a technology message so update the scenario file accordingly
+        /// </summary>
+        public static void WriteContractDataToFile(ShareProgressContractsMsgData techMsg)
+        {
+            Task.Run(() =>
+            {
+                lock (Semaphore.GetOrAdd("ContractSystem", new object()))
+                {
+                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("ContractSystem", out var xmlData)) return;
+
+                    var updatedText = UpdateScenarioWithContractData(xmlData, techMsg.Contracts);
+                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("ContractSystem", updatedText, xmlData);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Patches the scenario file with reputation data
+        /// </summary>
+        private static string UpdateScenarioWithContractData(string scenarioData, ContractInfo[] contracts)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(scenarioData);
+
+            return document.ToIndentedString();
+        }
+
+        #endregion
+
+        #region Achievements
+
+        /// <summary>
+        /// We received a achievement message so update the scenario file accordingly
+        /// </summary>
+        public static void WriteAchievementDataToFile(ShareProgressAchievementsMsgData techMsg)
+        {
+            Task.Run(() =>
+            {
+                lock (Semaphore.GetOrAdd("ScenarioAchievements", new object()))
+                {
+                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("ScenarioAchievements", out var xmlData)) return;
+
+                    var updatedText = UpdateScenarioWithAchievementData(xmlData, techMsg.Achievements);
+                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("ScenarioAchievements", updatedText, xmlData);
+                }
+            });
+        }
+
+        /// <summary>
+        /// Patches the scenario file with achievement data
+        /// </summary>
+        private static string UpdateScenarioWithAchievementData(string scenarioData, AchievementInfo[] achievements)
+        {
+            var document = new XmlDocument();
+            document.LoadXml(scenarioData);
 
             return document.ToIndentedString();
         }

@@ -19,6 +19,7 @@ namespace Server.System
 
             //send the contract update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
+            ScenarioDataUpdater.WriteContractDataToFile(data);
         }
     }
 }

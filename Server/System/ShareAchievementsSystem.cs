@@ -19,6 +19,7 @@ namespace Server.System
 
             //send the achievements update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
+            ScenarioDataUpdater.WriteAchievementDataToFile(data);
         }
     }
 }
