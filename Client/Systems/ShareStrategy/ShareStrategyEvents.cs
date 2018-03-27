@@ -16,6 +16,7 @@ namespace LunaClient.Systems.ShareStrategy
         public void StrategyDeactivated(Strategy strategy)
         {
             if (System.IgnoreEvents) return;
+
             LunaLog.Log($"Relaying strategy deactivation: {strategy.Title} - with factor: {strategy.Factor}");
             System.MessageSender.SendStrategyMessage(strategy);
         }
