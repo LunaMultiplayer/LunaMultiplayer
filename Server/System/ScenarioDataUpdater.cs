@@ -168,10 +168,9 @@ namespace Server.System
             document.LoadXml(scenarioData);
 
             var configNodeData = Encoding.UTF8.GetString(techNode.Data);
-
-            var newTechNodeXml = ConfigNodeXmlParser.ConvertToXml(configNodeData);
+            
             var newNodeDoc = new XmlDocument();
-            newNodeDoc.LoadXml(newTechNodeXml);
+            newNodeDoc.LoadXml(ConfigNodeXmlParser.ConvertToXml(configNodeData));
 
             var parentNode = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
             if (parentNode != null)
@@ -216,7 +215,47 @@ namespace Server.System
             var document = new XmlDocument();
             document.LoadXml(scenarioData);
 
+            var contractsList = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CONTRACTS']");
+            var contractNode = contractsList?.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']");
+            if (contractNode != null)
+            {
+                var emptyContractNode = contractNode.Clone();
+                emptyContractNode.InnerXml = string.Empty;
+
+                foreach (var contract in contracts)
+                {
+                    var receivedContract = SerializeReceivedContractToXml(contract);
+
+                    var existingContract = contractsList.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']/" +
+                                                                     $@"{ConfigNodeXmlParser.ValueNode}[@name='guid' and text()=""{contract.ContractGuid}""]/" +
+                                                                     $"parent::{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']");
+                    if (existingContract != null)
+                    {
+                        existingContract.InnerXml = string.Empty;
+                        foreach (var child in receivedContract.ChildNodes)
+                            existingContract.AppendChild((XmlNode)child);
+                    }
+                    else
+                    {
+                        var newContractNode = emptyContractNode.Clone();
+
+                        foreach (var child in receivedContract.ChildNodes)
+                            newContractNode.AppendChild((XmlNode)child);
+
+                        contractsList.AppendChild(newContractNode);
+                    }
+                }
+            }
+
             return document.ToIndentedString();
+
+            XmlNode SerializeReceivedContractToXml(ContractInfo contract)
+            {
+                var newContractDoc = new XmlDocument();
+                newContractDoc.LoadXml(ConfigNodeXmlParser.ConvertToXml(Encoding.UTF8.GetString(contract.Data)));
+                var newContractXmlNode = newContractDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
+                return document.ImportNode(newContractXmlNode, true);
+            }
         }
 
         #endregion
