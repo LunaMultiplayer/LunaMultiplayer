@@ -17,6 +17,11 @@ namespace LunaCommon.Locks
         Asteroid,
 
         /// <summary>
+        /// The kerbal lock specifies if a user is the owner of a kerbal.
+        /// </summary>
+        Kerbal,
+
+        /// <summary>
         /// The spectator lock specifies if a user is spectating a vessel or not.
         /// A vessel can have several spectators
         /// </summary>

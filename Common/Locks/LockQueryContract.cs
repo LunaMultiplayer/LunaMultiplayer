@@ -12,7 +12,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public bool ContractLockExists()
         {
-            return LockExists(LockType.Contract, Guid.Empty);
+            return LockExists(LockType.Contract, Guid.Empty, string.Empty);
         }
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public bool ContractLockBelongsToPlayer(string playerName)
         {
-            return LockBelongsToPlayer(LockType.Contract, Guid.Empty, playerName);
+            return LockBelongsToPlayer(LockType.Contract, Guid.Empty, string.Empty, playerName);
         }
 
         /// <summary>
@@ -28,7 +28,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public string ContractLockOwner()
         {
-            return GetLockOwner(LockType.Contract, Guid.Empty);
+            return GetLockOwner(LockType.Contract, Guid.Empty, string.Empty);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public LockDefinition ContractLock()
         {
-            return GetLock(LockType.Contract, string.Empty, Guid.Empty);
+            return GetLock(LockType.Contract, string.Empty, Guid.Empty, string.Empty);
         }
     }
 }

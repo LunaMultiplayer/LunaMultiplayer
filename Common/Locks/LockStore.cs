@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Threading.Tasks;
 
 namespace LunaCommon.Locks
 {
@@ -13,6 +12,16 @@ namespace LunaCommon.Locks
         /// Provides a lock around modifications to the AsteroidLock object to ensure both atomic changes to the AsteroidLock and a memory barrier for changes to the AsteroidLock
         /// </summary>
         private readonly object _asteroidSyncLock = new object();
+
+        /// <summary>
+        /// Provides a lock around modifications to the ContractLock object to ensure both atomic changes to the ContractLock and a memory barrier for changes to the ContractLock
+        /// </summary>
+        private readonly object _contractSyncLock = new object();
+
+        /// <summary>
+        /// You can't have more than one user with the contract lock so it's a simple object
+        /// </summary>
+        internal LockDefinition ContractLock { get; set; }
 
         /// <summary>
         /// You can't have more than one user with the asteroid lock so it's a simple object
@@ -35,19 +44,14 @@ namespace LunaCommon.Locks
         internal ConcurrentDictionary<Guid, LockDefinition> ControlLocks { get; set; } = new ConcurrentDictionary<Guid, LockDefinition>();
 
         /// <summary>
+        /// Several users can have several kerbal locks but a kerbal can only have 1 lock
+        /// </summary>
+        internal ConcurrentDictionary<string, LockDefinition> KerbalLocks { get; set; } = new ConcurrentDictionary<string, LockDefinition>();
+
+        /// <summary>
         /// Several vessels can have several spectators locks but a user can only have 1 spectator lock
         /// </summary>
         internal ConcurrentDictionary<string, LockDefinition> SpectatorLocks { get; set; } = new ConcurrentDictionary<string, LockDefinition>();
-
-        /// <summary>
-        /// Provides a lock around modifications to the ContractLock object to ensure both atomic changes to the ContractLock and a memory barrier for changes to the ContractLock
-        /// </summary>
-        private readonly object _contractSyncLock = new object();
-
-        /// <summary>
-        /// You can't have more than one user with the contract lock so it's a simple object
-        /// </summary>
-        internal LockDefinition ContractLock { get; set; }
 
         /// <summary>
         /// Adds or replace the given lock to the storage
@@ -65,6 +69,9 @@ namespace LunaCommon.Locks
                             AsteroidLock.PlayerName = lockDefinition.PlayerName;
                     }
                        break;
+                case LockType.Kerbal:
+                    KerbalLocks.AddOrUpdate(lockDefinition.KerbalName, lockDefinition, (key, existingVal) => lockDefinition);
+                    break;
                 case LockType.Update:
                     UpdateLocks.AddOrUpdate(lockDefinition.VesselId, lockDefinition, (key, existingVal) => lockDefinition);
                     break;
@@ -104,6 +111,9 @@ namespace LunaCommon.Locks
                         AsteroidLock = null;
                     }
                     break;
+                case LockType.Kerbal:
+                    KerbalLocks.TryRemove(lockDefinition.KerbalName, out _);
+                    break;
                 case LockType.UnloadedUpdate:
                     UnloadedUpdateLocks.TryRemove(lockDefinition.VesselId, out _);
                     break;
@@ -130,7 +140,7 @@ namespace LunaCommon.Locks
         /// <summary>
         /// Removes given lock from storage
         /// </summary>
-        public void RemoveLock(LockType lockType, string playerName, Guid vesselId)
+        public void RemoveLock(LockType lockType, string playerName, Guid vesselId, string kerbalName)
         {
             switch (lockType)
             {
@@ -139,6 +149,9 @@ namespace LunaCommon.Locks
                     {
                         AsteroidLock = null;
                     }
+                    break;
+                case LockType.Kerbal:
+                    KerbalLocks.TryRemove(kerbalName, out _);
                     break;
                 case LockType.UnloadedUpdate:
                     UnloadedUpdateLocks.TryRemove(vesselId, out _);
@@ -168,19 +181,19 @@ namespace LunaCommon.Locks
         /// </summary>
         public void ClearAllLocks()
         {
-            new Task(() =>
+            lock (_asteroidSyncLock)
             {
-                lock (_asteroidSyncLock)
-                {
-                    AsteroidLock = null;
-                }
-                UpdateLocks.Clear();
-                ControlLocks.Clear();
-                SpectatorLocks.Clear();
-                UnloadedUpdateLocks.Clear();
-            }).Start(TaskScheduler.Current);
+                AsteroidLock = null;
+            }
+            lock (_contractSyncLock)
+            {
+                ContractLock = null;
+            }
+            UpdateLocks.Clear();
+            KerbalLocks.Clear();
+            ControlLocks.Clear();
+            SpectatorLocks.Clear();
+            UnloadedUpdateLocks.Clear();
         }
-
-
     }
 }

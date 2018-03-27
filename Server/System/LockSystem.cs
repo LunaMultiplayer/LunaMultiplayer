@@ -1,4 +1,4 @@
-using LunaCommon.Locks;
+﻿using LunaCommon.Locks;
 using Server.Client;
 using System.Linq;
 
@@ -14,7 +14,7 @@ namespace Server.System
             repeatedAcquire = false;
 
             //Player tried to acquire a lock that he already owns
-            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.PlayerName))
+            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.KerbalName, lockDef.PlayerName))
             {
                 repeatedAcquire = true;
                 return true;
@@ -39,7 +39,7 @@ namespace Server.System
 
         public static bool ReleaseLock(LockDefinition lockDef)
         {
-            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.PlayerName))
+            if (LockQuery.LockBelongsToPlayer(lockDef.Type, lockDef.VesselId, lockDef.KerbalName, lockDef.PlayerName))
             {
                 LockStore.RemoveLock(lockDef);
                 return true;
