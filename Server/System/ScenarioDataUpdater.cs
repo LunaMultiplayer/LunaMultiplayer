@@ -216,19 +216,16 @@ namespace Server.System
             document.LoadXml(scenarioData);
 
             var contractsList = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CONTRACTS']");
-            var contractNode = contractsList?.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']");
-            if (contractNode != null)
+            if (contractsList != null)
             {
-                var emptyContractNode = contractNode.Clone();
-                emptyContractNode.InnerXml = string.Empty;
-
                 foreach (var contract in contracts)
                 {
-                    var receivedContract = SerializeReceivedContractToXml(contract);
+                    var receivedContract = DeserializeAndImportNode(contract.Data, document);
+                    if (receivedContract == null) continue;
 
                     var existingContract = contractsList.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']/" +
-                                                                     $@"{ConfigNodeXmlParser.ValueNode}[@name='guid' and text()=""{contract.ContractGuid}""]/" +
-                                                                     $"parent::{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']");
+                                                                          $@"{ConfigNodeXmlParser.ValueNode}[@name='guid' and text()=""{contract.ContractGuid}""]/" +
+                                                                          $"parent::{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']");
                     if (existingContract != null)
                     {
                         existingContract.InnerXml = string.Empty;
@@ -237,7 +234,7 @@ namespace Server.System
                     }
                     else
                     {
-                        var newContractNode = emptyContractNode.Clone();
+                        var newContractNode = ConfigNodeXmlParser.CreateXmlNode("CONTRACT", document);
 
                         foreach (var child in receivedContract.ChildNodes)
                             newContractNode.AppendChild((XmlNode)child);
@@ -248,14 +245,6 @@ namespace Server.System
             }
 
             return document.ToIndentedString();
-
-            XmlNode SerializeReceivedContractToXml(ContractInfo contract)
-            {
-                var newContractDoc = new XmlDocument();
-                newContractDoc.LoadXml(ConfigNodeXmlParser.ConvertToXml(Encoding.UTF8.GetString(contract.Data)));
-                var newContractXmlNode = newContractDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
-                return document.ImportNode(newContractXmlNode, true);
-            }
         }
 
         #endregion
@@ -269,12 +258,12 @@ namespace Server.System
         {
             Task.Run(() =>
             {
-                lock (Semaphore.GetOrAdd("ScenarioAchievements", new object()))
+                lock (Semaphore.GetOrAdd("ProgressTracking", new object()))
                 {
-                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("ScenarioAchievements", out var xmlData)) return;
+                    if (!ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryGetValue("ProgressTracking", out var xmlData)) return;
 
                     var updatedText = UpdateScenarioWithAchievementData(xmlData, techMsg.Achievements);
-                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("ScenarioAchievements", updatedText, xmlData);
+                    ScenarioStoreSystem.CurrentScenariosInXmlFormat.TryUpdate("ProgressTracking", updatedText, xmlData);
                 }
             });
         }
@@ -287,9 +276,45 @@ namespace Server.System
             var document = new XmlDocument();
             document.LoadXml(scenarioData);
 
+            var progressList = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='Progress']");
+            if (progressList != null)
+            {
+                foreach (var achievement in achievements)
+                {
+                    var receivedAchievementXmlNode = DeserializeAndImportNode(achievement.Data, document);
+                    if (receivedAchievementXmlNode == null) continue;
+
+                    var existingAchievement = progressList.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='{achievement.Id}']");
+                    if (existingAchievement != null)
+                    {
+                        existingAchievement.InnerXml = string.Empty;
+                        foreach (var child in receivedAchievementXmlNode.ChildNodes)
+                            existingAchievement.AppendChild((XmlNode)child);
+                    }
+                    else
+                    {
+                        var newAchievement = ConfigNodeXmlParser.CreateXmlNode(achievement.Id, document);
+                        foreach (var child in receivedAchievementXmlNode.ChildNodes)
+                            newAchievement.AppendChild((XmlNode)child);
+
+                        progressList.AppendChild(newAchievement);
+                    }
+
+                }
+            }
+
             return document.ToIndentedString();
         }
 
         #endregion
+
+        private static XmlNode DeserializeAndImportNode(byte[] data, XmlDocument docToImportTo)
+        {
+            var auxDoc = new XmlDocument();
+            auxDoc.LoadXml(ConfigNodeXmlParser.ConvertToXml(Encoding.UTF8.GetString(data)));
+            var newXmlNode = auxDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
+
+            return newXmlNode == null ? null : docToImportTo.ImportNode(newXmlNode, true);
+        }
     }
 }

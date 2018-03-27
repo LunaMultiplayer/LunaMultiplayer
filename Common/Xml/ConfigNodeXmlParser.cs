@@ -90,6 +90,20 @@ namespace LunaCommon.Xml
             }
         }
 
+        public static XmlNode CreateXmlNode(string nodeName, XmlDocument document)
+        {
+            var newXmlNode = document.CreateElement(ParentNode);
+            newXmlNode.SetAttribute(AttributeName, nodeName);
+            return newXmlNode;
+        }
+
+        public static XmlNode CreateXmlParameter(string parameterName, XmlDocument document)
+        {
+            var newXmlNode = document.CreateElement(ValueNode);
+            newXmlNode.SetAttribute(AttributeName, parameterName);
+            return newXmlNode;
+        }
+
         private static string GetDepthTabs(int depth)
         {
             var tabs = string.Empty;

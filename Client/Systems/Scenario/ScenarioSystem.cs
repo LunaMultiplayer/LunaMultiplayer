@@ -318,7 +318,8 @@ namespace LunaClient.Systems.Scenario
             //Blacklist asteroid module from every game mode
             //We hijack this and enable / disable it if we need to.
             //Do not send kerbnet custom waypoints aswell. they fuck it up sometimes
-            if (string.IsNullOrEmpty(scenarioName) || scenarioName == "ScenarioDiscoverableObjects" || scenarioName == "ScenarioCustomWaypoints") return false;
+            if (string.IsNullOrEmpty(scenarioName) || scenarioName == "ScenarioDiscoverableObjects" 
+                || scenarioName == "ScenarioCustomWaypoints" || scenarioName == "ScenarioNewGameIntro") return false;
 
             if (!AllScenarioTypesInAssemblies.Any()) LoadScenarioTypes(); //Load type dictionary on first use
 
