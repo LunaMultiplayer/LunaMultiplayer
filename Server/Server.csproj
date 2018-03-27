@@ -152,6 +152,8 @@
     <Compile Include="System\ModFileSystem.cs" />
     <Compile Include="System\Scenario\ScenarioAchievementsDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioContractsDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioDestructiblesDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioFacilityLevelDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioTechnologyDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioReputationDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioScienceDataUpdater.cs" />

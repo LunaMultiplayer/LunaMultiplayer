@@ -6,6 +6,7 @@ using Server.Client;
 using Server.Log;
 using Server.Message.Reader.Base;
 using Server.Server;
+using Server.System.Scenario;
 using System;
 
 namespace Server.Message.Reader
@@ -20,12 +21,15 @@ namespace Server.Message.Reader
                 case FacilityMessageType.Upgrade:
                     var upgradeMsg = (FacilityUpgradeMsgData)message.Data;
                     LunaLog.Normal($"{client.PlayerName} UPGRADED facility {upgradeMsg.ObjectId} to level: {upgradeMsg.Level}");
+                    ScenarioDataUpdater.WriteFacilityLevelDataToFile(data.ObjectId, upgradeMsg.Level);
                     break;
                 case FacilityMessageType.Repair:
                     LunaLog.Normal($"{client.PlayerName} REPAIRED facility {data.ObjectId}");
+                    ScenarioDataUpdater.WriteRepairedDestroyedDataToFile(data.ObjectId, true);
                     break;
                 case FacilityMessageType.Collapse:
                     LunaLog.Normal($"{client.PlayerName} DESTROYED facility {data.ObjectId}");
+                    ScenarioDataUpdater.WriteRepairedDestroyedDataToFile(data.ObjectId, false);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
