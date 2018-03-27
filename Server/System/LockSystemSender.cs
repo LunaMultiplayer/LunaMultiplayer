@@ -65,7 +65,7 @@ namespace Server.System
         /// </summary>
         private static void SendStoredLockData(ClientStructure client, LockDefinition lockDefinition)
         {
-            var storedLockDef = LockSystem.LockQuery.GetLock(lockDefinition.Type, lockDefinition.PlayerName, lockDefinition.VesselId);
+            var storedLockDef = LockSystem.LockQuery.GetLock(lockDefinition.Type, lockDefinition.PlayerName, lockDefinition.VesselId, lockDefinition.KerbalName);
             if (storedLockDef != null)
             {
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<LockAcquireMsgData>();

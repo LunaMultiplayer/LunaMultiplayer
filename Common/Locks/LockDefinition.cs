@@ -1,6 +1,7 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message.Base;
 using System;
+using System.Collections.Generic;
 
 namespace LunaCommon.Locks
 {
@@ -12,7 +13,12 @@ namespace LunaCommon.Locks
         public string PlayerName { get; internal set; }
 
         /// <summary>
-        /// Vessel id assigned to the lock. Can be null for an asteroid lock
+        /// Kerbal name assigned to the lock. Can be null unless lock type is kerbal
+        /// </summary>
+        public string KerbalName { get; internal set; }
+
+        /// <summary>
+        /// Vessel id assigned to the lock. Can be Guid.Empty for an asteroid lock
         /// </summary>
         public Guid VesselId { get; internal set; }
 
@@ -49,12 +55,15 @@ namespace LunaCommon.Locks
 
         public override string ToString()
         {
-            return VesselId != Guid.Empty ? $"{Type} - {VesselId}" : $"{Type}";
+            return VesselId != Guid.Empty ? $"{Type} - {VesselId}" : 
+                !string.IsNullOrEmpty(KerbalName) ? $"{Type} - {KerbalName}" :
+                $"{Type}";
         }
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             lidgrenMsg.Write(PlayerName);
+            lidgrenMsg.Write(KerbalName);
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write((int)Type);
         }
@@ -62,19 +71,21 @@ namespace LunaCommon.Locks
         public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
             PlayerName = lidgrenMsg.ReadString();
+            KerbalName = lidgrenMsg.ReadString();
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
             Type = (LockType)lidgrenMsg.ReadInt32();
         }
 
         public int GetByteCount()
         {
-            return PlayerName.GetByteCount() + GuidUtil.GetByteSize() + sizeof(LockType);
+            return PlayerName.GetByteCount() + KerbalName.GetByteCount() + GuidUtil.GetByteSize() + sizeof(LockType);
         }
 
         public void CopyFrom(LockDefinition lockDefinition)
         {
             PlayerName = lockDefinition.PlayerName.Clone() as string;
             Type = lockDefinition.Type;
+            KerbalName = lockDefinition.KerbalName;
             VesselId = lockDefinition.VesselId;
         }
 
@@ -85,7 +96,7 @@ namespace LunaCommon.Locks
             if (other == null)
                 return false;
 
-            return PlayerName == other.PlayerName && VesselId == other.VesselId && Type == other.Type;
+            return PlayerName == other.PlayerName && VesselId == other.VesselId && Type == other.Type && KerbalName == other.KerbalName;
         }
 
         public override bool Equals(object obj)
@@ -99,13 +110,12 @@ namespace LunaCommon.Locks
 
         public override int GetHashCode()
         {
-            unchecked
-            {
-                var hashCode = (PlayerName != null ? StringComparer.InvariantCulture.GetHashCode(PlayerName) : 0);
-                hashCode = (hashCode * 397) ^ VesselId.GetHashCode();
-                hashCode = (hashCode * 397) ^ (int) Type;
-                return hashCode;
-            }
+            var hashCode = -423896247;
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(PlayerName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(KerbalName);
+            hashCode = hashCode * -1521134295 + EqualityComparer<Guid>.Default.GetHashCode(VesselId);
+            hashCode = hashCode * -1521134295 + Type.GetHashCode();
+            return hashCode;
         }
 
         public static bool operator == (LockDefinition lock1, LockDefinition lock2)
