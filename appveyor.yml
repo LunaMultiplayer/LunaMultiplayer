@@ -109,9 +109,9 @@ notifications:
    on_build_failure: true
    on_build_status_changed: true
 #Old webhook for discord...
- - provider: Webhook 
-   url: https://skyhook.glitch.me/api/webhooks/428098094928756737/u2FRiQ-zKyEozSTCUX2DVbqZfCaXR6r3BhX6UCvLYBqbxzvcQDeo9mRdw1HXYR_9Ckua/appveyor
-   content_type: application/json
-   on_build_success: true
-   on_build_failure: false
-   on_build_status_changed: false
+# - provider: Webhook 
+#   url: https://skyhook.glitch.me/api/webhooks/428098094928756737/u2FRiQ-zKyEozSTCUX2DVbqZfCaXR6r3BhX6UCvLYBqbxzvcQDeo9mRdw1HXYR_9Ckua/appveyor
+#   content_type: application/json
+#   on_build_success: true
+#   on_build_failure: false
+#   on_build_status_changed: false
