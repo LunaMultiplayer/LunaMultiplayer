@@ -10,17 +10,17 @@ namespace LunaCommon.Locks
         /// <summary>
         /// Player who owns the lock. It should never be null
         /// </summary>
-        public string PlayerName { get; internal set; }
+        public string PlayerName { get; internal set; } = string.Empty;
 
         /// <summary>
         /// Kerbal name assigned to the lock. Can be null unless lock type is kerbal
         /// </summary>
-        public string KerbalName { get; internal set; }
+        public string KerbalName { get; internal set; } = string.Empty;
 
         /// <summary>
         /// Vessel id assigned to the lock. Can be Guid.Empty for an asteroid lock
         /// </summary>
-        public Guid VesselId { get; internal set; }
+        public Guid VesselId { get; internal set; } = Guid.Empty;
 
         /// <summary>
         /// The type of the lock. It should never be null
@@ -51,6 +51,18 @@ namespace LunaCommon.Locks
             Type = type;
             PlayerName = playerName;
             VesselId = vesselId;
+        }
+
+        /// <summary>
+        /// Kerbal constructor
+        /// </summary>
+        public LockDefinition(LockType type, string playerName, string kerbalName)
+        {
+            if (Type != LockType.Kerbal) throw new Exception("This constructor is only for kerbal type!");
+
+            Type = type;
+            PlayerName = playerName;
+            KerbalName = kerbalName;
         }
 
         public override string ToString()

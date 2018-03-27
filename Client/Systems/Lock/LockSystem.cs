@@ -150,6 +150,14 @@ namespace LunaClient.Systems.Lock
         }
 
         /// <summary>
+        /// Release the given kerbal lock
+        /// </summary>
+        public void ReleaseKerbalLock(string kerbalName)
+        {
+            ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName));
+        }
+
+        /// <summary>
         /// Release the spectator lock
         /// </summary>
         public void ReleaseSpectatorLock()
@@ -193,6 +201,17 @@ namespace LunaClient.Systems.Lock
         }
 
         /// <summary>
+        /// Releases all the player locks
+        /// </summary>
+        public void ReleaseAllPlayerLocks()
+        {
+            foreach (var lockToRelease in LockQuery.GetAllPlayerLocks(SettingsSystem.CurrentSettings.PlayerName))
+            {
+                ReleaseLock(lockToRelease);
+            }
+        }
+
+        /// <summary>
         /// Release all the locks you have based by type
         /// </summary>
         public void ReleasePlayerLocks(LockType type)
@@ -207,6 +226,9 @@ namespace LunaClient.Systems.Lock
                     break;
                 case LockType.Control:
                     locksToRelease = LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName);
+                    break;
+                case LockType.Kerbal:
+                    locksToRelease = LockQuery.GetAllKerbalLocks(SettingsSystem.CurrentSettings.PlayerName);
                     break;
                 case LockType.Update:
                     locksToRelease = LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName);
