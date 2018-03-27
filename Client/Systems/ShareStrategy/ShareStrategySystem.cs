@@ -12,6 +12,9 @@ namespace LunaClient.Systems.ShareStrategy
 
         private ShareStrategyEvents ShareStrategiesEvents { get; } = new ShareStrategyEvents();
 
+        //BailoutGrand - Exchange funds for reputation; researchIPsellout - Exchange funds for science;
+        public readonly string[] OneTimeStrategies = new string[] { "BailoutGrant", "researchIPsellout" };
+
         protected override bool ShareSystemReady => StrategySystem.Instance != null && StrategySystem.Instance.Strategies.Count != 0 && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
                                                     Reputation.Instance != null;
 

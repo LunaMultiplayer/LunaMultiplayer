@@ -20,9 +20,7 @@ namespace LunaClient.Systems.ShareStrategy
         public void SendStrategyMessage(Strategy strategy)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ShareProgressStrategyMsgData>();
-            msgData.Strategy.Title = strategy.Title;
-            msgData.Strategy.Factor = strategy.Factor;
-            msgData.Strategy.IsActive = strategy.IsActive;
+            msgData.Strategy.Name = strategy.Config.Name;
 
             var configNode = ConvertStrategyToConfigNode(strategy);
             if (configNode == null) return;
@@ -45,6 +43,7 @@ namespace LunaClient.Systems.ShareStrategy
             try
             {
                 strategy.Save(configNode);
+                configNode.AddValue("isActive", strategy.IsActive); //Add isActive to the node because normaly it is not saved.
             }
             catch (Exception e)
             {
