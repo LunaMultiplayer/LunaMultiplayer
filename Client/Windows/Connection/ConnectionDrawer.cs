@@ -46,6 +46,7 @@ namespace LunaClient.Windows.Connection
                 if (GUILayout.Button(DeleteIcon, ButtonStyle, GUILayout.Width(35)))
                 {
                     SettingsSystem.CurrentSettings.Servers.RemoveAt(SelectedIndex);
+                    SettingsSystem.SaveSettings();
                 }
                 else
                 {
