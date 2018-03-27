@@ -38,7 +38,7 @@ namespace Server.System.Scenario
             {
                 foreach (var achievement in achievements)
                 {
-                    var receivedAchievementXmlNode = DeserializeAndImportNode(achievement.Data, document);
+                    var receivedAchievementXmlNode = DeserializeAndImportNode(achievement.Data, achievement.NumBytes, document);
                     if (receivedAchievementXmlNode == null) continue;
 
                     var existingAchievement = progressList.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='{achievement.Id}']");

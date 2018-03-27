@@ -34,7 +34,7 @@ namespace Server.System.Scenario
             var document = new XmlDocument();
             document.LoadXml(scenarioData);
 
-            var configNodeData = Encoding.UTF8.GetString(techNode.Data);
+            var configNodeData = Encoding.UTF8.GetString(techNode.Data, 0, techNode.NumBytes);
 
             var newNodeDoc = new XmlDocument();
             newNodeDoc.LoadXml(ConfigNodeXmlParser.ConvertToXml(configNodeData));

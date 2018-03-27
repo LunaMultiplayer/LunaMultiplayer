@@ -32,11 +32,10 @@ namespace Server.System.Scenario
             });
         }
         
-
-        private static XmlNode DeserializeAndImportNode(byte[] data, XmlDocument docToImportTo)
+        private static XmlNode DeserializeAndImportNode(byte[] data, int numBytes, XmlDocument docToImportTo)
         {
             var auxDoc = new XmlDocument();
-            auxDoc.LoadXml(ConfigNodeXmlParser.ConvertToXml(Encoding.UTF8.GetString(data)));
+            auxDoc.LoadXml(ConfigNodeXmlParser.ConvertToXml(Encoding.UTF8.GetString(data, 0, numBytes)));
             var newXmlNode = auxDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}");
 
             return newXmlNode == null ? null : docToImportTo.ImportNode(newXmlNode, true);

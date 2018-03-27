@@ -38,7 +38,7 @@ namespace Server.System.Scenario
             {
                 foreach (var contract in contracts)
                 {
-                    var receivedContract = DeserializeAndImportNode(contract.Data, document);
+                    var receivedContract = DeserializeAndImportNode(contract.Data, contract.NumBytes, document);
                     if (receivedContract == null) continue;
 
                     var existingContract = contractsList.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']/" +
