@@ -58,6 +58,7 @@
     <Compile Include="Enums\ServerMessageType.cs" />
     <Compile Include="Enums\TerrainQuality.cs" />
     <Compile Include="Enums\WarpMode.cs" />
+    <Compile Include="IgnoredScenarios.cs" />
     <Compile Include="Locks\LockQueryContract.cs" />
     <Compile Include="Message\Base\StringUtil.cs" />
     <Compile Include="Message\Base\GuidUtil.cs" />

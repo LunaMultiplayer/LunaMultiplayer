@@ -221,7 +221,6 @@
     <Content Include="Resources\Scenario\ScenarioAchievements.xml" />
     <Content Include="Resources\Scenario\ScenarioContractEvents.xml" />
     <Content Include="Resources\Scenario\ScenarioDestructibles.xml" />
-    <Content Include="Resources\Scenario\ScenarioNewGameIntro.xml" />
     <Content Include="Resources\Scenario\ScenarioUpgradeableFacilities.xml" />
     <Content Include="Resources\Scenario\SentinelScenario.xml" />
     <Content Include="Resources\Scenario\StrategySystem.xml" />

@@ -138,7 +138,17 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;ContractSystem&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5, 6&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;update&quot;&gt;209.7130991000256&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;version&quot;&gt;1.4.1&lt;/Parameter&gt;
+        ///  &lt;Node name=&quot;WEIGHTS&quot;&gt;
+        ///    &lt;Parameter name=&quot;TourismContract&quot;&gt;30&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;SurveyContract&quot;&gt;30&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;StationContract&quot;&gt;30&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;SentinelContract&quot;&gt;30&lt;/Parameter&gt;
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ContractSystem {
             get {
@@ -148,7 +158,11 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;Funding&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5, 6&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;funds&quot;&gt;25000&lt;/Parameter&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string Funding {
             get {
@@ -191,7 +205,14 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;PartUpgradeManager&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;6, 5, 7&lt;/Parameter&gt;
+        ///  &lt;Node name=&quot;UPGRADES&quot;&gt;
+        ///    &lt;Node name=&quot;Unlocks&quot; /&gt;
+        ///    &lt;Node name=&quot;Enableds&quot; /&gt;
+        ///  &lt;/Node&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string PartUpgradeManager {
             get {
@@ -201,7 +222,11 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;ProgressTracking&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5&lt;/Parameter&gt;
+        ///  &lt;Node name=&quot;Progress&quot; /&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string ProgressTracking {
             get {
@@ -211,7 +236,11 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;Reputation&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5, 6&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;rep&quot;&gt;0&lt;/Parameter&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string Reputation {
             get {
@@ -221,7 +250,17 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;ResearchAndDevelopment&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5, 6&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;sci&quot;&gt;0&lt;/Parameter&gt;
+        ///  &lt;Node name=&quot;Tech&quot;&gt;
+        ///    &lt;Parameter name=&quot;id&quot;&gt;start&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;state&quot;&gt;Available&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;cost&quot;&gt;0&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;part&quot;&gt;basicFin&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;part&quot;&gt;mk1pod&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;part&quot;&gt;solidBooster.sm&lt;/ [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ResearchAndDevelopment {
             get {
@@ -231,7 +270,14 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;ResourceScenario&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5, 6, 21&lt;/Parameter&gt;
+        ///  &lt;Node name=&quot;RESOURCE_SETTINGS&quot;&gt;
+        ///    &lt;Parameter name=&quot;GameSeed&quot;&gt;162051528&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;MaxDeltaTime&quot;&gt;21600&lt;/Parameter&gt;
+        ///  &lt;/Node&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string ResourceScenario {
             get {
@@ -241,7 +287,10 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;ScenarioAchievements&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5, 6&lt;/Parameter&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string ScenarioAchievements {
             get {
@@ -251,7 +300,11 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;ScenarioContractEvents&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;id&quot;&gt;1765692878&lt;/Parameter&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string ScenarioContractEvents {
             get {
@@ -261,7 +314,17 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;ScenarioDestructibles&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;5, 7, 6, 8&lt;/Parameter&gt;
+        ///  &lt;Node name=&quot;SpaceCenter/Administration/Facility/mainBuilding&quot;&gt;
+        ///    &lt;Parameter name=&quot;intact&quot;&gt;True&lt;/Parameter&gt;
+        ///  &lt;/Node&gt;
+        ///  &lt;Node name=&quot;SpaceCenter/AstronautComplex/Facility/building&quot;&gt;
+        ///    &lt;Parameter name=&quot;intact&quot;&gt;True&lt;/Parameter&gt;
+        ///  &lt;/Node&gt;
+        ///  &lt;Node name=&quot;SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_cylTank&quot;&gt;
+        ///    &lt;Paramete [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ScenarioDestructibles {
             get {
@@ -271,17 +334,20 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
-        /// </summary>
-        internal static string ScenarioNewGameIntro {
-            get {
-                return ResourceManager.GetString("ScenarioNewGameIntro", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;ScenarioUpgradeableFacilities&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;5, 6, 7, 8&lt;/Parameter&gt;
+        ///  &lt;Node name=&quot;SpaceCenter/LaunchPad&quot;&gt;
+        ///    &lt;Parameter name=&quot;lvl&quot;&gt;0&lt;/Parameter&gt;
+        ///  &lt;/Node&gt;
+        ///  &lt;Node name=&quot;SpaceCenter/Runway&quot;&gt;
+        ///    &lt;Parameter name=&quot;lvl&quot;&gt;0&lt;/Parameter&gt;
+        ///  &lt;/Node&gt;
+        ///  &lt;Node name=&quot;SpaceCenter/VehicleAssemblyBuilding&quot;&gt;
+        ///    &lt;Parameter name=&quot;lvl&quot;&gt;0&lt;/Parameter&gt;
+        ///  &lt;/Node&gt;
+        ///  &lt;Node name=&quot;SpaceCenter/SpaceplaneHangar&quot;&gt;
+        ///  [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string ScenarioUpgradeableFacilities {
             get {
@@ -291,7 +357,11 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;SentinelScenario&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;NextSpawnTime&quot;&gt;26612.162481160907&lt;/Parameter&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string SentinelScenario {
             get {
@@ -301,7 +371,11 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;StrategySystem&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5, 6&lt;/Parameter&gt;
+        ///  &lt;Node name=&quot;STRATEGIES&quot; /&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string StrategySystem {
             get {
@@ -344,7 +418,10 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///  &lt;Parameter name=&quot;name&quot;&gt;VesselRecovery&lt;/Parameter&gt;
+        ///  &lt;Parameter name=&quot;scene&quot;&gt;5, 7, 8, 6&lt;/Parameter&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;.
         /// </summary>
         internal static string VesselRecovery {
             get {

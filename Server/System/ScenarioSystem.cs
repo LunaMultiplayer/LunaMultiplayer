@@ -28,7 +28,6 @@ namespace Server.System
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "ResourceScenario.xml"), Resources.ResourceScenario);
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioAchievements.xml"), Resources.ScenarioAchievements);
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioDestructibles.xml"), Resources.ScenarioDestructibles);
-            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioNewGameIntro.xml"), Resources.ScenarioNewGameIntro);
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "SentinelScenario.xml"), Resources.SentinelScenario);
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "VesselRecovery.xml"), Resources.VesselRecovery);
             

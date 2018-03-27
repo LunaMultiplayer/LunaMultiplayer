@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-16"?>
-<LMPConfigNodeToXML>
-  <Parameter name="name">ScenarioNewGameIntro</Parameter>
-  <Parameter name="scene">5, 6, 8</Parameter>
-  <Parameter name="kscComplete">False</Parameter>
-  <Parameter name="editorComplete">False</Parameter>
-  <Parameter name="tsComplete">False</Parameter>
-</LMPConfigNodeToXML>
