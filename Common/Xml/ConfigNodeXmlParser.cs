@@ -69,7 +69,8 @@ namespace LunaCommon.Xml
                                 }
                                 else
                                 {
-                                    writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + xmlReader.Name);
+                                    var nodeName = xmlReader.GetAttribute(AttributeName);
+                                    writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + nodeName);
                                     writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + "{");
                                     if (xmlReader.IsEmptyElement)
                                         writer.WriteLine(GetDepthTabs(xmlReader.Depth - 1) + "}");
