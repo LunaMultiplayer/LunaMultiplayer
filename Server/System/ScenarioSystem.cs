@@ -7,6 +7,7 @@ using Server.Log;
 using Server.Properties;
 using Server.Server;
 using Server.Settings;
+using Server.System.Scenario;
 using System.IO;
 using System.Linq;
 using System.Text;

@@ -3,6 +3,7 @@ using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Log;
 using Server.Server;
+using Server.System.Scenario;
 
 namespace Server.System
 {

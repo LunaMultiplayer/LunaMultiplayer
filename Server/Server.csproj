@@ -150,7 +150,13 @@
     <Compile Include="System\LockSystemSender.cs" />
     <Compile Include="System\ModDataSystemSender.cs" />
     <Compile Include="System\ModFileSystem.cs" />
-    <Compile Include="System\ScenarioDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioAchievementsDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioContractsDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioTechnologyDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioReputationDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioScienceDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioFundsDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioBaseDataUpdater.cs" />
     <Compile Include="System\ScenarioStoreSystem.cs" />
     <Compile Include="System\ScenarioSystem.cs" />
     <Compile Include="System\ShareAchievementsSystem.cs" />
