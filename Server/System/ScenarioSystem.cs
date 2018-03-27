@@ -1,7 +1,6 @@
 ﻿using LunaCommon.Enums;
 using LunaCommon.Message.Data.Scenario;
 using LunaCommon.Message.Server;
-using LunaCommon.Xml;
 using Server.Client;
 using Server.Context;
 using Server.Log;
@@ -59,19 +58,14 @@ namespace Server.System
                 FileHandler.FileDelete(Path.Combine(ScenarioPath, "ScenarioUpgradeableFacilities.xml"));
                 FileHandler.FileDelete(Path.Combine(ScenarioPath, "StrategySystem.xml"));
             }
-
-            foreach (var file in Directory.GetFiles(ScenarioPath))
-            {
-                var asXml = ConfigNodeXmlParser.ConvertToXml(file);
-                File.WriteAllText(Path.Combine(ScenarioPath, Path.GetFileNameWithoutExtension(file) + ".xml"), asXml);
-            }
         }
 
         public static void SendScenarioModules(ClientStructure client)
         {
             var scenarioDataArray = ScenarioStoreSystem.CurrentScenariosInXmlFormat.Keys.Select(s =>
             {
-                var serializedData = Encoding.UTF8.GetBytes(ScenarioStoreSystem.GetScenarioInConfigNodeFormat(s));
+                var scenarioConfigNode = ScenarioStoreSystem.GetScenarioInConfigNodeFormat(s);
+                var serializedData = Encoding.UTF8.GetBytes(scenarioConfigNode);
                 return new ScenarioInfo
                 {
                     Data = serializedData,
