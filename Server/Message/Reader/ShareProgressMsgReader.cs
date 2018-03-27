@@ -32,6 +32,9 @@ namespace Server.Message.Reader
                 case ShareProgressMessageType.AchievementsUpdate:
                     ShareAchievementsSystem.AchievementsReceived(client, (ShareProgressAchievementsMsgData)data);
                     break;
+                case ShareProgressMessageType.StrategyUpdate:
+                    ShareStrategySystem.StrategyReceived(client, (ShareProgressStrategyMsgData)data);
+                    break;
             }
         }
     }

@@ -159,6 +159,7 @@
     <Compile Include="System\ScreenshotSystem.cs" />
     <Compile Include="System\ShareReputationSystem.cs" />
     <Compile Include="System\ShareScienceSystem.cs" />
+    <Compile Include="System\ShareStrategySystem.cs" />
     <Compile Include="System\ShareTechnologySystem.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselDataUpdater.cs" />

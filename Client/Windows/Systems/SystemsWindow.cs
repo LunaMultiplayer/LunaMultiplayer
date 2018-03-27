@@ -63,6 +63,7 @@ namespace LunaClient.Windows.Systems
         private static bool _shareTechnology;
         private static bool _shareContracts;
         private static bool _shareAchievements;
+        private static bool _shareStrategy;
 
         #endregion
 
