@@ -167,6 +167,10 @@ namespace LunaClient.Systems.VesselPositionSys
             foreach (var keyVal in CurrentVesselUpdate)
             {
                 keyVal.Value.SetTarget(null);
+                if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
+                {
+                    TargetVesselUpdateQueue[keyVal.Key] = new FixedSizedConcurrentQueue<VesselPositionUpdate>(MaxQueuedUpdates);
+                }
             }
         }
 
