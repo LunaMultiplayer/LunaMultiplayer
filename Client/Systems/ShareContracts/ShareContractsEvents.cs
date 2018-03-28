@@ -1,7 +1,6 @@
 ﻿using Contracts;
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 
 namespace LunaClient.Systems.ShareContracts
@@ -75,9 +74,6 @@ namespace LunaClient.Systems.ShareContracts
 
             //This should be only called on the client with the contract lock, because he has the generationCount != 0.
             System.MessageSender.SendContractMessage(contract);
-
-            //Also store the current contracts on the server so new players will see this contract too.
-            ScenarioSystem.Singleton.SendScenarioModules();
         }
 
         public void ContractParameterChanged(Contract contract, ContractParameter contractParameter)

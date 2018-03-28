@@ -46,17 +46,12 @@ namespace Server.System.Scenario
                                                                           $"parent::{ConfigNodeXmlParser.ParentNode}[@name='CONTRACT']");
                     if (existingContract != null)
                     {
-                        existingContract.InnerXml = string.Empty;
-                        foreach (var child in receivedContract.ChildNodes)
-                            existingContract.AppendChild((XmlNode)child);
+                        existingContract.InnerXml = receivedContract.InnerXml;  //Replace the existing contract values with the received ones.
                     }
                     else
                     {
                         var newContractNode = ConfigNodeXmlParser.CreateXmlNode("CONTRACT", document);
-
-                        foreach (var child in receivedContract.ChildNodes)
-                            newContractNode.AppendChild((XmlNode)child);
-
+                        newContractNode.InnerXml = receivedContract.InnerXml;
                         contractsList.AppendChild(newContractNode);
                     }
                 }
