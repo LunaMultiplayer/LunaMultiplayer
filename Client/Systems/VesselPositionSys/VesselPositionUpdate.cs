@@ -56,6 +56,8 @@ namespace LunaClient.Systems.VesselPositionSys
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
 
+        public Vector3d Transform => new Vector3d(TransformPosition[0], TransformPosition[1], TransformPosition[2]);
+
         #endregion
 
         #region Interpolation fields
@@ -112,7 +114,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 VesselPositionSystem.VesselsToRemove.Enqueue(VesselId);
                 return;
             }
-            
+
             if (!InterpolationStarted)
             {
                 InterpolationStarted = true;
@@ -193,7 +195,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
                 Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
                 Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
-                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+                Vessel.SetPosition(Vector3d.Lerp(Transform, Target.Transform, lerpPercentage));
             }
             else
             {
@@ -212,7 +214,7 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ApplyInterpolations(float lerpPercentage)
         {
             ApplyOrbitInterpolation(lerpPercentage);
-            
+
             //Do not use CoM. It's not needed and it generate issues when you patch the protovessel with it as it generate weird commnet lines
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
             //Vessel.updateSituation() is called in the Vessel.LateUpdate(). Same applies for landed and splashed
@@ -295,11 +297,15 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             RestartRequested = false;
 
+            TransformPosition[0] = Vessel.ReferenceTransform.position.x;
+            TransformPosition[1] = Vessel.ReferenceTransform.position.y;
+            TransformPosition[2] = Vessel.ReferenceTransform.position.z;
+
             SrfRelRotation[0] = Vessel.srfRelRotation.x;
             SrfRelRotation[1] = Vessel.srfRelRotation.y;
             SrfRelRotation[2] = Vessel.srfRelRotation.z;
             SrfRelRotation[3] = Vessel.srfRelRotation.w;
-            
+
             Vector3d srfVel = Quaternion.Inverse(Body.bodyTransform.rotation) * Vessel.srf_velocity;
             Velocity[0] = srfVel.x;
             Velocity[1] = srfVel.y;
