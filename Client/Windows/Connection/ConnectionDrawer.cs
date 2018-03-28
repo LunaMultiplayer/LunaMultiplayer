@@ -97,7 +97,7 @@ namespace LunaClient.Windows.Connection
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.ConnectionWindowText.Password, LabelOptions);
-            var newPassword = GUILayout.TextArea(SettingsSystem.CurrentSettings.Servers[serverPos].Password, TextAreaStyle);
+            var newPassword = GUILayout.PasswordField(SettingsSystem.CurrentSettings.Servers[serverPos].Password, '*', 30, TextAreaStyle);
             if (newPassword != SettingsSystem.CurrentSettings.Servers[serverPos].Password)
             {
                 SettingsSystem.CurrentSettings.Servers[serverPos].Password = newPassword;

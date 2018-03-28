@@ -252,7 +252,7 @@ namespace LunaClient.Windows.ServerList
 
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.ServerListWindowText.Password, LabelOptions);
-            NetworkServerList.Password = GUILayout.TextArea(NetworkServerList.Password, 30, TextAreaStyle, GUILayout.Width(200));
+            NetworkServerList.Password = GUILayout.PasswordField(NetworkServerList.Password, '*', 30, TextAreaStyle, GUILayout.Width(200));
             GUILayout.EndHorizontal();
             GUILayout.Space(20);
 
