@@ -60,9 +60,6 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Specify the game Type. Values: Sandbox, Career, Science")]
         public GameMode GameMode { get; set; } = GameMode.Sandbox;
 
-        [XmlComment(Value = "Experimental! Only for Career / Science GameMode. It synchronizes the player progression like funds / science / reputation / technology live to other players (like a coop mode).")]
-        public bool ShareProgress { get; set; } = false;
-
         [XmlComment(Value = "Enable mod control. WARNING: Only consider turning off mod control for private servers. " +
                             "The game will constantly complain about missing parts if there are missing mods. " +
                             "Read this wiki page: https://github.com/LunaMultiplayer/LunaMultiplayer/wiki/Mod-file to understand how it works")]

@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaClient.Systems.SettingsSys;
 using System;
 using System.Collections.Generic;
 
@@ -18,8 +17,6 @@ namespace LunaClient.Systems.ShareProgress
 
         protected override void OnEnabled()
         {
-            if (!SettingsSystem.ServerSettings.ShareProgress) return;
-
             base.OnEnabled();
 
             IgnoreEvents = false;

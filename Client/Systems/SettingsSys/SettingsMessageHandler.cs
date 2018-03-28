@@ -18,7 +18,6 @@ namespace LunaClient.Systems.SettingsSys
 
             SettingsSystem.ServerSettings.WarpMode = msgData.WarpMode;
             SettingsSystem.ServerSettings.GameMode = msgData.GameMode;
-            SettingsSystem.ServerSettings.ShareProgress = msgData.ShareProgress;
             SettingsSystem.ServerSettings.TerrainQuality = msgData.TerrainQuality;
             SettingsSystem.ServerSettings.AllowCheats = msgData.AllowCheats;
             SettingsSystem.ServerSettings.AllowSackKerbals = msgData.AllowSackKerbals;

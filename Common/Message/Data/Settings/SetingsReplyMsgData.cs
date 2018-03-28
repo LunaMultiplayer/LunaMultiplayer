@@ -13,7 +13,6 @@ namespace LunaCommon.Message.Data.Settings
 
         public WarpMode WarpMode;
         public GameMode GameMode;
-        public bool ShareProgress;
         public TerrainQuality TerrainQuality;
         public bool AllowCheats;
         public bool AllowSackKerbals;
@@ -74,7 +73,6 @@ namespace LunaCommon.Message.Data.Settings
 
             lidgrenMsg.Write((int)WarpMode);
             lidgrenMsg.Write((int)GameMode);
-            lidgrenMsg.Write(ShareProgress);
             lidgrenMsg.Write((int)TerrainQuality);
             lidgrenMsg.Write(AllowCheats);
             lidgrenMsg.Write(AllowSackKerbals);
@@ -134,7 +132,6 @@ namespace LunaCommon.Message.Data.Settings
 
             WarpMode = (WarpMode)lidgrenMsg.ReadInt32();
             GameMode = (GameMode)lidgrenMsg.ReadInt32();
-            ShareProgress = lidgrenMsg.ReadBoolean();
             TerrainQuality = (TerrainQuality)lidgrenMsg.ReadInt32();
             AllowCheats = lidgrenMsg.ReadBoolean();
             AllowSackKerbals = lidgrenMsg.ReadBoolean();
@@ -191,7 +188,7 @@ namespace LunaCommon.Message.Data.Settings
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) + 
-                sizeof(bool) * 22 + sizeof(int) * 6 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
+                sizeof(bool) * 21 + sizeof(int) * 6 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
         }
     }
 }

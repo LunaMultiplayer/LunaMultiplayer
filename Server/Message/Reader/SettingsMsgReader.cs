@@ -20,7 +20,6 @@ namespace Server.Message.Reader
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<SettingsReplyMsgData>();
             msgData.WarpMode = GeneralSettings.SettingsStore.WarpMode;
             msgData.GameMode = GeneralSettings.SettingsStore.GameMode;
-            msgData.ShareProgress = GeneralSettings.SettingsStore.ShareProgress;
             msgData.TerrainQuality = GeneralSettings.SettingsStore.TerrainQuality;
             msgData.AllowCheats = GeneralSettings.SettingsStore.Cheats;
             msgData.AllowSackKerbals = GeneralSettings.SettingsStore.AllowSackKerbals;
