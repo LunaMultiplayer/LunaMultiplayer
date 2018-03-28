@@ -43,7 +43,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 System.MessageSender.SendVesselRemove(dyingVessel.id, false);
 
                 //Vessel is dead so remove the locks after 1500ms to get the debris locks if any
-                LockSystem.Singleton.ReleaseAllVesselLocks(dyingVessel.id, 1500);
+                LockSystem.Singleton.ReleaseAllVesselLocks(dyingVessel.GetVesselCrew().Select(c=> c.name), dyingVessel.id, 1500);
             }
         }
 
@@ -67,7 +67,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
 
             //Vessel is recovered so remove the locks
-            LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.vesselID);
+            LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c=> c.name), recoveredVessel.vesselID);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
 
             //Vessel is terminated so remove locks            
-            LockSystem.Singleton.ReleaseAllVesselLocks(terminatedVessel.vesselID);
+            LockSystem.Singleton.ReleaseAllVesselLocks(terminatedVessel.GetVesselCrew().Select(c => c.name), terminatedVessel.vesselID);
         }
 
         /// <summary>

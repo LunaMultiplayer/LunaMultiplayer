@@ -212,7 +212,10 @@ namespace LunaClient.Systems.VesselLockSys
             if (vessel == null) return;
 
             if (!LockSystem.LockQuery.ControlLockExists(vessel.id))
+            {
                 LockSystem.Singleton.AcquireControlLock(vessel.id);
+                LockSystem.Singleton.AcquireKerbalLock(vessel);
+            }
         }
 
         /// <summary>

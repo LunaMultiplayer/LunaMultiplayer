@@ -81,6 +81,27 @@ namespace LunaClient.Systems.Lock
         }
 
         /// <summary>
+        /// Aquire the kerbal lock on the given kerbal
+        /// </summary>
+        public void AcquireKerbalLock(string kerbalName, bool force = false)
+        {
+            if (!LockQuery.KerbalLockBelongsToPlayer(kerbalName, SettingsSystem.CurrentSettings.PlayerName))
+                AcquireLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName), force);
+        }
+
+        /// <summary>
+        /// Aquire the kerbal lock on the given vessel
+        /// </summary>
+        public void AcquireKerbalLock(Vessel vessel, bool force = false)
+        {
+            foreach (var kerbal in vessel.GetVesselCrew())
+            {
+                if (!LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
+                    AcquireLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbal.name), force);
+            }
+        }
+
+        /// <summary>
         /// Aquire the update lock on the given vessel
         /// </summary>
         public void AcquireUpdateLock(Guid vesselId, bool force = false)
@@ -130,7 +151,7 @@ namespace LunaClient.Systems.Lock
         /// Release the specified lock by sending a message to the server.
         /// </summary>
         /// <param name="lockDefinition">The definition of the lock to release</param>
-        public void ReleaseLock(LockDefinition lockDefinition)
+        private void ReleaseLock(LockDefinition lockDefinition)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockReleaseMsgData>();
             msgData.Lock.CopyFrom(lockDefinition);
@@ -169,19 +190,25 @@ namespace LunaClient.Systems.Lock
         /// <summary>
         /// Release all the locks (update and control) of a vessel
         /// </summary>
-        public void ReleaseAllVesselLocks(Guid vesselId, int msDelay = 0)
+        public void ReleaseAllVesselLocks(IEnumerable<string> crewNames, Guid vesselId, int msDelay = 0)
         {
             TaskFactory.StartNew(() =>
             {
                 if (msDelay > 0)
                     Thread.Sleep(msDelay);
 
+
                 if (LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName,vesselId));
+                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId));
                 if (LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                     ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
                 if (LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName,vesselId));
+                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+                foreach (var kerbal in crewNames)
+                {
+                    if (LockQuery.KerbalLockBelongsToPlayer(kerbal, SettingsSystem.CurrentSettings.PlayerName))
+                        ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbal));
+                }
             });
         }
 

@@ -1,8 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.VesselUtilities;
-using System;
 
 namespace LunaClient.Systems.KerbalSys
 {
@@ -25,11 +23,12 @@ namespace LunaClient.Systems.KerbalSys
                 var crew = FlightDriver.newShipManifest;
                 if (crew == null) return;
 
-                foreach (var protoCrew in crew?.GetAllCrew(false))
+                foreach (var protoCrew in crew.GetAllCrew(false))
                 {
                     //Always set the kerbals in a vessel as assigned
                     System.SetKerbalStatusWithoutTriggeringEvent(protoCrew, ProtoCrewMember.RosterStatus.Assigned);
                     System.MessageSender.SendKerbal(protoCrew);
+                    LockSystem.Singleton.AcquireKerbalLock(protoCrew.name, true);
                 }
             }
         }
@@ -39,25 +38,17 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void StatusChange(ProtoCrewMember kerbal, ProtoCrewMember.RosterStatus previousStatus, ProtoCrewMember.RosterStatus newStatus)
         {
-            //Revert kerbal status in case we are setting it as dead/missing in KSC
-            if(HighLogic.LoadedScene == GameScenes.SPACECENTER && newStatus > ProtoCrewMember.RosterStatus.Assigned)
-                System.SetKerbalStatusWithoutTriggeringEvent(kerbal, previousStatus);
-
             if (previousStatus != newStatus)
             {
-                var vesselId = System.FindVesselForKerbal(kerbal);
-
-                if (vesselId == Guid.Empty) return;
-
-                if (vesselId == VesselLoader.ReloadingVesselId || LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
+                if (!LockSystem.LockQuery.CanEditKerbal(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
                 {
-                    System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
-                    System.MessageSender.SendKerbal(kerbal);
-                }
-                else
-                {
+                    ScreenMessages.PostScreenMessage("This kerbal does not belongs you", 5f, ScreenMessageStyle.UPPER_CENTER);
                     System.SetKerbalStatusWithoutTriggeringEvent(kerbal, previousStatus);
+                    return;
                 }
+
+                System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
+                System.MessageSender.SendKerbal(kerbal);
             }
         }
 
@@ -69,6 +60,13 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (previousType != newType)
             {
+                if (!LockSystem.LockQuery.CanEditKerbal(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
+                {
+                    ScreenMessages.PostScreenMessage("This kerbal does not belongs you", 5f, ScreenMessageStyle.UPPER_CENTER);
+                    System.SetKerbalTypeWithoutTriggeringEvent(kerbal, ProtoCrewMember.KerbalType.Crew);
+                    return;
+                }
+
                 if (previousType == ProtoCrewMember.KerbalType.Crew && newType == ProtoCrewMember.KerbalType.Applicant && !SettingsSystem.ServerSettings.AllowSackKerbals)
                 {
                     //This means that we sacked the crew and we are not allowed to do it

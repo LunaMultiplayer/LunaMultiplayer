@@ -216,5 +216,13 @@ namespace LunaCommon.Locks
         {
             return !ControlLockExists(vesselId) || ControlLockBelongsToPlayer(vesselId, playerName);
         }
+
+        /// <summary>
+        /// Check if player can edit the kerbal
+        /// </summary>
+        public bool CanEditKerbal(string kerbalName, string playerName)
+        {
+            return !KerbalLockExists(kerbalName) || KerbalLockBelongsToPlayer(kerbalName, playerName);
+        }
     }
 }
