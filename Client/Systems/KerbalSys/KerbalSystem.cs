@@ -1,12 +1,8 @@
 ﻿using KSP.UI;
 using KSP.UI.Screens;
 using LunaClient.Base;
-using LunaClient.VesselStore;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Reflection;
-using UniLinq;
 using Object = UnityEngine.Object;
 
 namespace LunaClient.Systems.KerbalSys
@@ -49,9 +45,7 @@ namespace LunaClient.Systems.KerbalSys
         private static readonly MethodInfo InitiateGui = typeof(AstronautComplex).GetMethod("InitiateGUI",BindingFlags.NonPublic | BindingFlags.Instance);
 
         #endregion
-
-        private static List<ProtoVessel> AllVessels = new List<ProtoVessel>();
-
+        
         #endregion
 
         #region Base overrides
@@ -85,42 +79,6 @@ namespace LunaClient.Systems.KerbalSys
         #endregion
 
         #region Public
-
-        public Guid FindVesselForKerbal(ProtoCrewMember kerbal)
-        {
-            if (kerbal.seat?.vessel != null)
-                return kerbal.seat.vessel.id;
-
-            if (kerbal.KerbalRef?.InVessel != null)
-                return kerbal.KerbalRef.InVessel.id;
-
-            if (FlightGlobals.ActiveVessel != null)
-            {
-                var crew = FlightGlobals.ActiveVessel.GetVesselCrew();
-                for (var j = 0; j < crew.Count; j++)
-                {
-                    if (crew[j].name == kerbal.name)
-                        return FlightGlobals.ActiveVessel.id;
-                }
-            }
-
-            AllVessels.Clear();
-            AllVessels.AddRange(VesselsProtoStore.AllPlayerVessels.Values.Select(v=> v.ProtoVessel));
-            
-            for (var i = 0; i < AllVessels.Count; i++)
-            {
-                if(AllVessels[i] == null) continue;
-
-                var crew = AllVessels[i].GetVesselCrew();
-                for (var j = 0; j < crew.Count; j++)
-                {
-                    if (crew[j].name == kerbal.name)
-                        return AllVessels[i].vesselID;
-                }
-            }
-
-            return Guid.Empty;
-        }
 
         /// <summary>
         /// Load all the received kerbals from the server into the game
