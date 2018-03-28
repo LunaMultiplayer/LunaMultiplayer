@@ -43,16 +43,14 @@ namespace Server.System.Scenario
 
                     var existingAchievement = progressList.SelectSingleNode($"{ConfigNodeXmlParser.ParentNode}[@name='{achievement.Id}']");
                     if (existingAchievement != null)
-                    {
-                        existingAchievement.InnerXml = string.Empty;
-                        foreach (var child in receivedAchievementXmlNode.ChildNodes)
-                            existingAchievement.AppendChild((XmlNode)child);
+                    {                        
+                        //Replace the existing contract values with the received one
+                        existingAchievement.InnerXml = receivedAchievementXmlNode.InnerXml;
                     }
                     else
                     {
                         var newAchievement = ConfigNodeXmlParser.CreateXmlNode(achievement.Id, document);
-                        foreach (var child in receivedAchievementXmlNode.ChildNodes)
-                            newAchievement.AppendChild((XmlNode)child);
+                        newAchievement.InnerXml = receivedAchievementXmlNode.InnerXml;
 
                         progressList.AppendChild(newAchievement);
                     }
