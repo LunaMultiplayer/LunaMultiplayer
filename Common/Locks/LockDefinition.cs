@@ -58,7 +58,7 @@ namespace LunaCommon.Locks
         /// </summary>
         public LockDefinition(LockType type, string playerName, string kerbalName)
         {
-            if (Type != LockType.Kerbal) throw new Exception("This constructor is only for kerbal type!");
+            if (type != LockType.Kerbal) throw new Exception("This constructor is only for kerbal type!");
 
             Type = type;
             PlayerName = playerName;
