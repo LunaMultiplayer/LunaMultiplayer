@@ -82,6 +82,8 @@
     <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />
     <Compile Include="Harmony\SpaceTracking_FlyVessel.cs" />
     <Compile Include="Harmony\SpaceTracking_SetVessel.cs" />
+    <Compile Include="Harmony\Strategy_CanBeActivated.cs" />
+    <Compile Include="Harmony\Strategy_CanBeDeactivated.cs" />
     <Compile Include="Harmony\Strategy_Deactivate.cs" />
     <Compile Include="Harmony\Strategy_Activate.cs" />
     <Compile Include="Harmony\VesselPrecalculate_Update.cs" />
