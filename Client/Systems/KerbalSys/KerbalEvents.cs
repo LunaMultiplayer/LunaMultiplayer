@@ -25,6 +25,8 @@ namespace LunaClient.Systems.KerbalSys
 
                 foreach (var protoCrew in crew.GetAllCrew(false))
                 {
+                    if (protoCrew == null) continue;
+
                     //Always set the kerbals in a vessel as assigned
                     System.SetKerbalStatusWithoutTriggeringEvent(protoCrew, ProtoCrewMember.RosterStatus.Assigned);
                     System.MessageSender.SendKerbal(protoCrew);
