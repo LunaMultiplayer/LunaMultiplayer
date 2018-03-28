@@ -114,8 +114,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="Systems\Bug\BugSystem.cs" />
-    <Compile Include="Systems\Bug\BugEvents.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsEvents.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageHandler.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageSender.cs" />
