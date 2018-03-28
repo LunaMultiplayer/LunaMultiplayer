@@ -68,6 +68,7 @@
     <Compile Include="Events\RevertEvent.cs" />
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Events\StrategyEvent.cs" />
+    <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
