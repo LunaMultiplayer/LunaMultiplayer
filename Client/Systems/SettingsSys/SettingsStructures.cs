@@ -26,6 +26,7 @@ namespace LunaClient.Systems.SettingsSys
         public bool RevertEnabled { get; set; }
         public bool InterpolationEnabled { get; set; } = false;
         public int MaxGroupsPerPlayer { get; set; } = 1;
+        public bool OverrideIntegrator { get; set; }
 
 #if DEBUG
 

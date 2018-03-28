@@ -65,6 +65,12 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
                 SettingsSystem.SaveSettings();
             }
+            var settingIntegrator = GUILayout.Toggle(SettingsSystem.CurrentSettings.OverrideIntegrator, "Override flight integrator", ButtonStyle);
+            if (settingIntegrator != SettingsSystem.CurrentSettings.OverrideIntegrator)
+            {
+                SettingsSystem.CurrentSettings.OverrideIntegrator = settingIntegrator;
+                SettingsSystem.SaveSettings();
+            }
             GUILayout.Space(10);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
                 ModSystem.Singleton.GenerateModControlFile(false);
