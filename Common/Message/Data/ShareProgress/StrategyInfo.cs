@@ -12,9 +12,7 @@ namespace LunaCommon.Message.Data.ShareProgress
     /// </summary>
     public class StrategyInfo
     {
-        public string Title;
-        public float Factor;
-        public bool IsActive;
+        public string Name;
         public int NumBytes;
         public byte[] Data = new byte[0];
 
@@ -29,7 +27,7 @@ namespace LunaCommon.Message.Data.ShareProgress
         /// <param name="copyFrom"></param>
         public StrategyInfo(StrategyInfo copyFrom)
         {
-            Title = copyFrom.Title;
+            Name = copyFrom.Name;
             NumBytes = copyFrom.NumBytes;
             if (Data.Length < NumBytes)
                 Data = new byte[NumBytes];
@@ -39,18 +37,14 @@ namespace LunaCommon.Message.Data.ShareProgress
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
-            lidgrenMsg.Write(Title);
-            lidgrenMsg.Write(Factor);
-            lidgrenMsg.Write(IsActive);
+            lidgrenMsg.Write(Name);
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
 
         public void Deserialize(NetIncomingMessage lidgrenMsg)
         {
-            Title = lidgrenMsg.ReadString();
-            Factor = lidgrenMsg.ReadFloat();
-            IsActive = lidgrenMsg.ReadBoolean();
+            Name = lidgrenMsg.ReadString();
 
             NumBytes = lidgrenMsg.ReadInt32();
             if (Data.Length < NumBytes)
@@ -61,7 +55,7 @@ namespace LunaCommon.Message.Data.ShareProgress
 
         public int GetByteCount()
         {
-            return Title.GetByteCount() + sizeof(float) + sizeof(bool) + sizeof(int) + sizeof(byte) * NumBytes;
+            return Name.GetByteCount() + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }

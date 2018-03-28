@@ -5,7 +5,6 @@ using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System.Collections.Concurrent;
-using Contracts;
 using LunaClient.Systems.ShareFunds;
 using LunaClient.Systems.ShareReputation;
 using LunaClient.Systems.ShareScience;
@@ -26,7 +25,7 @@ namespace LunaClient.Systems.ShareStrategy
             if (msgData is ShareProgressStrategyMsgData data)
             {
                 var strategy = new StrategyInfo(data.Strategy); //create a copy of the strategyInfo object so it will not change in the future.
-                LunaLog.Log($"Queue StrategyUpdate with: {strategy.Title}");
+                LunaLog.Log($"Queue StrategyUpdate with: {strategy.Name}");
                 System.QueueAction(() =>
                 {
                     StrategyUpdate(strategy);
@@ -36,9 +35,10 @@ namespace LunaClient.Systems.ShareStrategy
 
         private static void StrategyUpdate(StrategyInfo strategyInfo)
         {
-            //TODO: This is not working correctly because the strategy.Load() method is not working as excpected.
-            //var incomingStrategy = ConvertByteArrayToStrategy(strategyInfo.Data, strategyInfo.NumBytes);
-            //if (incomingStrategy == null) return;
+            var incomingStrategyNode = ConvertByteArrayToConfigNode(strategyInfo.Data, strategyInfo.NumBytes);
+            if (incomingStrategyNode == null) return;
+            var incomingStrategyFactor = float.Parse(incomingStrategyNode.GetValue("factor"));
+            var incomingStrategyIsActive = bool.Parse(incomingStrategyNode.GetValue("isActive"));
 
             //Don't listen to these events for the time this message is processing.
             System.StartIgnoringEvents();
@@ -46,25 +46,25 @@ namespace LunaClient.Systems.ShareStrategy
             ShareScienceSystem.Singleton.StartIgnoringEvents();
             ShareReputationSystem.Singleton.StartIgnoringEvents();
 
-            var strategyIndex = StrategySystem.Instance.Strategies.FindIndex(strat => strat.Title == strategyInfo.Title);
+            var strategyIndex = StrategySystem.Instance.Strategies.FindIndex(s => s.Config.Name == strategyInfo.Name);
             if (strategyIndex != -1)
             {
-                if (strategyInfo.IsActive)
+                if (incomingStrategyIsActive)
                 {
-                    StrategySystem.Instance.Strategies[strategyIndex].Factor = strategyInfo.Factor;
-                    StrategySystem.Instance.Strategies[strategyIndex].Activate();
-                    LunaLog.Log($"StrategyUpdate received - strategy activated: {strategyInfo.Title}  - with factor: {strategyInfo.Factor}");
+                    StrategySystem.Instance.Strategies[strategyIndex].Factor = incomingStrategyFactor;
+                    StrategySystem.Instance.Strategies[strategyIndex].Activate();   //could somehow throw an exception if the player was not yet in the strategy building.
+                    LunaLog.Log($"StrategyUpdate received - strategy activated: {strategyInfo.Name}  - with factor: {incomingStrategyFactor}");
                 }
                 else
                 {
-                    StrategySystem.Instance.Strategies[strategyIndex].Factor = strategyInfo.Factor;
-                    StrategySystem.Instance.Strategies[strategyIndex].Deactivate();
-                    LunaLog.Log($"StrategyUpdate received - strategy deactivated: {strategyInfo.Title}  - with factor: {strategyInfo.Factor}");
+                    StrategySystem.Instance.Strategies[strategyIndex].Factor = incomingStrategyFactor;
+                    StrategySystem.Instance.Strategies[strategyIndex].Deactivate(); //could somehow throw an exception if the player was not yet in the strategy building.
+                    LunaLog.Log($"StrategyUpdate received - strategy deactivated: {strategyInfo.Name}  - with factor: {incomingStrategyFactor}");
                 }
             }
 
             //TODO: Refresh the strategy building ui.
-
+            
             // Listen to the events again.
             //Restore funds, science and reputation in case the contract action changed some of that.
             ShareFundsSystem.Singleton.StopIgnoringEvents(true);
@@ -75,10 +75,10 @@ namespace LunaClient.Systems.ShareStrategy
         }
 
         /// <summary>
-        /// Convert a byte array to a ConfigNode and then to a Strategy.
+        /// Convert a byte array to a ConfigNode.
         /// If anything goes wrong it will return null.
         /// </summary>
-        private static Strategy ConvertByteArrayToStrategy(byte[] data, int numBytes)
+        private static ConfigNode ConvertByteArrayToConfigNode(byte[] data, int numBytes)
         {
             ConfigNode node;
             try
@@ -97,19 +97,13 @@ namespace LunaClient.Systems.ShareStrategy
                 return null;
             }
 
-            Strategy strategy;
-            try
+            if (!node.HasValue("isActive"))
             {
-                strategy = new Strategy();
-                strategy.Load(node);
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error while deserializing strategy: {e}");
+                LunaLog.LogError("[LMP]: Error, the strategy configNode is invalid (isActive missing).");
                 return null;
             }
 
-            return strategy;
+            return node;
         }
     }
 }

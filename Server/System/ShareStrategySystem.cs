@@ -15,7 +15,7 @@ namespace Server.System
     {
         public static void StrategyReceived(ClientStructure client, ShareProgressStrategyMsgData data)
         {
-            LunaLog.Debug($"strategy changed: {data.Strategy.Title}");
+            LunaLog.Debug($"strategy changed: {data.Strategy.Name}");
 
             //Send the strategy update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
