@@ -221,9 +221,6 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.checkLanded();
             Vessel.checkSplashed();
 
-            //Set the position of the vessel based on the orbital parameters
-            Vessel.orbitDriver.updateFromParameters();
-
             if (Vessel.LandedOrSplashed)
             {
                 Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
@@ -231,11 +228,12 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
-            else
-            {
-                foreach (var part in Vessel.Parts)
-                    part.ResumeVelocity();
-            }
+
+            //Set the position of the vessel based on the orbital parameters
+            Vessel.orbitDriver.updateFromParameters();
+            
+            foreach (var part in Vessel.Parts)
+                part.ResumeVelocity();
 
             if (CurrentlySpectatingThisVessel)
             {
