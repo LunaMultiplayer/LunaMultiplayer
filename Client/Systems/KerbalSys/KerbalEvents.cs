@@ -42,7 +42,6 @@ namespace LunaClient.Systems.KerbalSys
             {
                 if (!LockSystem.LockQuery.CanEditKerbal(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
                 {
-                    ScreenMessages.PostScreenMessage("This kerbal does not belongs you", 5f, ScreenMessageStyle.UPPER_CENTER);
                     System.SetKerbalStatusWithoutTriggeringEvent(kerbal, previousStatus);
                     return;
                 }
