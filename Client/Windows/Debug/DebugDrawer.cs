@@ -22,6 +22,10 @@ namespace LunaClient.Windows.Debug
             if (_displayVesselStoreData)
                 GUILayout.Label(_vesselStoreText, LabelStyle);
 
+            _displayInterpolationData = GUILayout.Toggle(_displayInterpolationData, "Display interpolation statistics", ButtonStyle);
+            if (_displayInterpolationData)
+                GUILayout.Label(_interpolationText, LabelStyle);
+
             _displayNtp = GUILayout.Toggle(_displayNtp, "Display NTP/Subspace statistics", ButtonStyle);
             if (_displayNtp)
                 GUILayout.Label(_ntpText, LabelStyle);

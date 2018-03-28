@@ -1,6 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
 using LunaCommon.Enums;
@@ -30,6 +32,7 @@ namespace LunaClient.Windows.Debug
         private static string _ntpText;
         private static string _connectionText;
         private static string _vesselStoreText;
+        private static string _interpolationText;
         private static float _lastUpdateTime;
 
         private static bool _displayVectors;
@@ -37,6 +40,7 @@ namespace LunaClient.Windows.Debug
         private static bool _displayNtp;
         private static bool _displayConnectionQueue;
         private static bool _displayVesselStoreData;
+        private static bool _displayInterpolationData;
 
         private static bool _display;
         public override bool Display
@@ -153,6 +157,25 @@ namespace LunaClient.Windows.Debug
                     }
 
                     _vesselStoreText = StringBuilder.ToString();
+                    StringBuilder.Length = 0;
+                }
+
+                if (_displayInterpolationData)
+                {
+                    if (SettingsSystem.CurrentSettings.InterpolationEnabled)
+                    {
+                        StringBuilder.Append("Max queue length: ").AppendLine(VesselPositionSystem.MaxQueuedUpdates.ToString());
+                        foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
+                        {
+                            StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
+                        }
+                    }
+                    else
+                    {
+                        StringBuilder.AppendLine("You need to have interpolation enabled to display data about this system");
+                    }
+
+                    _interpolationText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }
             }

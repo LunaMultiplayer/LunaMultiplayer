@@ -3,6 +3,7 @@ using LunaClient.Network;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Windows.Status;
 using LunaCommon.Enums;
 using LunaCommon.Time;
@@ -64,6 +65,7 @@ namespace LunaClient.Windows.Options
             {
                 SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
                 SettingsSystem.SaveSettings();
+                VesselPositionSystem.Singleton.SwitchPositioningSystem();
             }
             var settingIntegrator = GUILayout.Toggle(SettingsSystem.CurrentSettings.OverrideIntegrator, "Override flight integrator", ButtonStyle);
             if (settingIntegrator != SettingsSystem.CurrentSettings.OverrideIntegrator)

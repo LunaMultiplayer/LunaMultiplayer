@@ -13,6 +13,8 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
+        public const int MaxQueuedUpdates = 5;
+
         #region Fields & properties
 
         private static float LastVesselUpdatesSentTime { get; set; }
@@ -34,6 +36,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public static ConcurrentDictionary<Guid, VesselPositionUpdate> TargetVesselUpdate { get; } =
             new ConcurrentDictionary<Guid, VesselPositionUpdate>();
+
+        public static ConcurrentDictionary<Guid, FixedSizedConcurrentQueue<VesselPositionUpdate>> TargetVesselUpdateQueue { get; } =
+            new ConcurrentDictionary<Guid, FixedSizedConcurrentQueue<VesselPositionUpdate>>();
 
         public static Queue<Guid> VesselsToRemove { get; } = new Queue<Guid>();
 
@@ -65,6 +70,8 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
+            TargetVesselUpdate.Clear();
+            TargetVesselUpdateQueue.Clear();
 
             TimingManager.UpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
@@ -79,7 +86,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (!VesselCommon.DoVesselChecks(keyVal.Key))
                     RemoveVesselFromSystem(keyVal.Key);
 
-                keyVal.Value.ApplyVesselUpdate();
+                if(SettingsSystem.CurrentSettings.InterpolationEnabled)
+                    keyVal.Value.ApplyInterpolatedVesselUpdate();
+                else
+                    keyVal.Value.ApplyVesselUpdate();
             }
 
             while (VesselsToRemove.Count > 0)
@@ -87,6 +97,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 var vesselToRemove = VesselsToRemove.Dequeue();
                 TargetVesselUpdate.TryRemove(vesselToRemove, out _);
                 CurrentVesselUpdate.TryRemove(vesselToRemove, out _);
+                TargetVesselUpdateQueue.TryRemove(vesselToRemove, out _);
             }
         }
 
@@ -150,6 +161,14 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Public methods
+
+        public void SwitchPositioningSystem()
+        {
+            foreach (var keyVal in CurrentVesselUpdate)
+            {
+                keyVal.Value.SetTarget(null);
+            }
+        }
 
         /// <summary>
         /// Gets the latest received position of a vessel
