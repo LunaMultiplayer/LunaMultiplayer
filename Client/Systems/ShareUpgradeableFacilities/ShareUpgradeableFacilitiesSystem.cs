@@ -19,7 +19,7 @@ namespace LunaClient.Systems.ShareUpgradeableFacilities
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
 
             base.OnEnabled();
-            GameEvents.OnKSCFacilityUpgraded.Add(ShareUpgradeableFacilitiesEvents.FacilityUpgraded);
+            GameEvents.OnKSCFacilityUpgrading.Add(ShareUpgradeableFacilitiesEvents.FacilityUpgraded);
         }
 
         protected override void OnDisabled()
@@ -27,7 +27,7 @@ namespace LunaClient.Systems.ShareUpgradeableFacilities
             if (SettingsSystem.ServerSettings.GameMode != GameMode.Career) return;
 
             base.OnDisabled();
-            GameEvents.OnKSCFacilityUpgraded.Remove(ShareUpgradeableFacilitiesEvents.FacilityUpgraded);
+            GameEvents.OnKSCFacilityUpgrading.Remove(ShareUpgradeableFacilitiesEvents.FacilityUpgraded);
         }
     }
 }
