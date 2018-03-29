@@ -155,6 +155,10 @@
     <Compile Include="Systems\ShareTechnology\ShareTechnologyMessageHandler.cs" />
     <Compile Include="Systems\ShareTechnology\ShareTechnologyMessageSender.cs" />
     <Compile Include="Systems\ShareTechnology\ShareTechnologySystem.cs" />
+    <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesEvents.cs" />
+    <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesMessageHandler.cs" />
+    <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesMessageSender.cs" />
+    <Compile Include="Systems\ShareUpgradeableFacilities\ShareUpgradeableFacilitiesSystem.cs" />
     <Compile Include="Systems\TimeSyncer\TimerSyncerEvents.cs" />
     <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaMessageHandler.cs" />

@@ -18,11 +18,6 @@ namespace Server.Message.Reader
             var data = (FacilityBaseMsgData)message.Data;
             switch (data.FacilityMessageType)
             {
-                case FacilityMessageType.Upgrade:
-                    var upgradeMsg = (FacilityUpgradeMsgData)message.Data;
-                    LunaLog.Normal($"{client.PlayerName} UPGRADED facility {upgradeMsg.ObjectId} to level: {upgradeMsg.Level}");
-                    ScenarioDataUpdater.WriteFacilityLevelDataToFile(data.ObjectId, upgradeMsg.Level);
-                    break;
                 case FacilityMessageType.Repair:
                     LunaLog.Normal($"{client.PlayerName} REPAIRED facility {data.ObjectId}");
                     ScenarioDataUpdater.WriteRepairedDestroyedDataToFile(data.ObjectId, true);

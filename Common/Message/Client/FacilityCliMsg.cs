@@ -21,7 +21,6 @@ namespace LunaCommon.Message.Client
         {
             [(ushort)FacilityMessageType.Collapse] = typeof(FacilityCollapseMsgData),
             [(ushort)FacilityMessageType.Repair] = typeof(FacilityRepairMsgData),
-            [(ushort)FacilityMessageType.Upgrade] = typeof(FacilityUpgradeMsgData),
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Facility;

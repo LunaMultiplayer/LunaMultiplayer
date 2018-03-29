@@ -3,10 +3,8 @@ using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.Facility;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
-using System;
 using System.Collections.Concurrent;
 using System.Linq;
-using Upgradeables;
 using Object = UnityEngine.Object;
 
 namespace LunaClient.Systems.Facility
@@ -19,34 +17,18 @@ namespace LunaClient.Systems.Facility
         {
             if (!(msg.Data is FacilityBaseMsgData msgData)) return;
 
-            switch (msgData.FacilityMessageType)
+            var destructibleFacility = Object.FindObjectsOfType<DestructibleBuilding>().FirstOrDefault(o => o.id == msgData.ObjectId);
+            if (destructibleFacility != null)
             {
-                case FacilityMessageType.Upgrade:
-                    var upgradeMsg = (FacilityUpgradeMsgData)msgData;
-                    var upgrFacility = Object.FindObjectsOfType<UpgradeableFacility>().FirstOrDefault(o => o.id == upgradeMsg.ObjectId);
-                    if (upgrFacility != null)
-                    {
-                        System.UpgradeFacilityWithoutSendingMessage(upgrFacility, upgradeMsg.Level);
-                    }
-                    break;
-                case FacilityMessageType.Repair:
-                case FacilityMessageType.Collapse:
-                    var destructibleFacility = Object.FindObjectsOfType<DestructibleBuilding>().FirstOrDefault(o => o.id == msgData.ObjectId);
-                    if (destructibleFacility != null)
-                    {
-                        switch (msgData.FacilityMessageType)
-                        {
-                            case FacilityMessageType.Repair:
-                                System.RepairFacilityWithoutSendingMessage(destructibleFacility);
-                                break;
-                            case FacilityMessageType.Collapse:
-                                System.CollapseFacilityWithoutSendingMessage(destructibleFacility);
-                                break;
-                        }
-                    }
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                switch (msgData.FacilityMessageType)
+                {
+                    case FacilityMessageType.Repair:
+                        System.RepairFacilityWithoutSendingMessage(destructibleFacility);
+                        break;
+                    case FacilityMessageType.Collapse:
+                        System.CollapseFacilityWithoutSendingMessage(destructibleFacility);
+                        break;
+                }
             }
         }
     }

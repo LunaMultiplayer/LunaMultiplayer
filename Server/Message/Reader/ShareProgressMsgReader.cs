@@ -1,8 +1,8 @@
 ﻿using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
+using LunaCommon.Message.Types;
 using Server.Client;
 using Server.Message.Reader.Base;
-using LunaCommon.Message.Types;
 using Server.System;
 
 namespace Server.Message.Reader
@@ -34,6 +34,9 @@ namespace Server.Message.Reader
                     break;
                 case ShareProgressMessageType.StrategyUpdate:
                     ShareStrategySystem.StrategyReceived(client, (ShareProgressStrategyMsgData)data);
+                    break;
+                case ShareProgressMessageType.FacilityUpgrade:
+                    ShareUpgradeableFacilitiesSystem.UpgradeReceived(client, (ShareProgressFacilityUpgradeMsgData)data);
                     break;
             }
         }

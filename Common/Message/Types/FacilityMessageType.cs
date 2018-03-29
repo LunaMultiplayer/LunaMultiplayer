@@ -2,8 +2,7 @@
 {
     public enum FacilityMessageType
     {
-        Upgrade = 0,
-        Repair = 1,
-        Collapse = 2,
+        Repair = 0,
+        Collapse = 1,
     }
 }

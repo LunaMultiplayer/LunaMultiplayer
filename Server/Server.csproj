@@ -166,6 +166,7 @@
     <Compile Include="System\ShareFundsSystem.cs" />
     <Compile Include="System\ScreenshotSystem.cs" />
     <Compile Include="System\ShareReputationSystem.cs" />
+    <Compile Include="System\ShareUpgradeableFacilitiesSystem.cs" />
     <Compile Include="System\ShareScienceSystem.cs" />
     <Compile Include="System\ShareStrategySystem.cs" />
     <Compile Include="System\ShareTechnologySystem.cs" />

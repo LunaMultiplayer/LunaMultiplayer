@@ -1,7 +1,6 @@
-﻿using System.Linq;
-using LunaClient.Base;
-using Smooth.Algebraics;
+﻿using LunaClient.Base;
 using Strategies;
+using System.Linq;
 
 namespace LunaClient.Systems.ShareStrategy
 {

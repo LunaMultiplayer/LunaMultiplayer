@@ -13,16 +13,7 @@ namespace LunaClient.Systems.Facility
         {
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<FacilityCliMsg>(msg)));
         }
-
-        public void SendFacilityUpgradeMsg(string objectId, int level)
-        {
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<FacilityUpgradeMsgData>();
-            msgData.Level = level;
-            msgData.ObjectId = objectId;
-
-            SendMessage(msgData);
-        }
-
+        
         public void SendFacilityCollapseMsg(string objectId)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<FacilityCollapseMsgData>();

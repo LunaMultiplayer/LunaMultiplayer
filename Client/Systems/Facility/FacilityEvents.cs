@@ -1,20 +1,11 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Scenario;
 using LunaClient.VesselUtilities;
-using Upgradeables;
 
 namespace LunaClient.Systems.Facility
 {
     public class FacilityEvents : SubSystem<FacilitySystem>
     {
-        public void FacilityUpgraded(UpgradeableFacility building, int level)
-        {
-            if (System.BuildingIdToIgnore == building.id) return;
-
-            System.MessageSender.SendFacilityUpgradeMsg(building.id, level);
-            ScenarioSystem.Singleton.SendScenarioModules();
-        }
-
         public void FacilityRepaired(DestructibleBuilding building)
         {
             if (System.BuildingIdToIgnore == building.id) return;
