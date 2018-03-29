@@ -14,6 +14,14 @@ using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.Screenshot;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareAchievements;
+using LunaClient.Systems.ShareContracts;
+using LunaClient.Systems.ShareFunds;
+using LunaClient.Systems.ShareReputation;
+using LunaClient.Systems.ShareScience;
+using LunaClient.Systems.ShareStrategy;
+using LunaClient.Systems.ShareTechnology;
+using LunaClient.Systems.ShareUpgradeableFacilities;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselEvaSys;
@@ -27,20 +35,13 @@ using LunaClient.Systems.VesselResourceSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaCommon.Enums;
+using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using LunaCommon.Time;
 using System;
 using System.Threading;
-using LunaClient.Systems.ShareAchievements;
-using LunaClient.Systems.ShareContracts;
-using LunaClient.Systems.ShareFunds;
-using LunaClient.Systems.ShareReputation;
-using LunaClient.Systems.ShareScience;
-using LunaClient.Systems.ShareStrategy;
-using LunaClient.Systems.ShareTechnology;
-using LunaCommon.Message.Data.ShareProgress;
 
 namespace LunaClient.Network
 {
@@ -231,6 +232,9 @@ namespace LunaClient.Network
                             break;
                         case ShareProgressMessageType.StrategyUpdate:
                             ShareStrategySystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.FacilityUpgrade:
+                            ShareUpgradeableFacilitiesSystem.Singleton.EnqueueMessage(msg);
                             break;
                     }
                     break;
