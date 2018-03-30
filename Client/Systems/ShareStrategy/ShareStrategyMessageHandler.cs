@@ -1,15 +1,16 @@
-﻿using System;
+﻿using KSP.UI.Screens;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaCommon.Message.Data.ShareProgress;
-using LunaCommon.Message.Interface;
-using LunaCommon.Message.Types;
-using System.Collections.Concurrent;
 using LunaClient.Systems.ShareFunds;
 using LunaClient.Systems.ShareReputation;
 using LunaClient.Systems.ShareScience;
 using LunaClient.Utilities;
+using LunaCommon.Message.Data.ShareProgress;
+using LunaCommon.Message.Interface;
+using LunaCommon.Message.Types;
 using Strategies;
+using System;
+using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.ShareStrategy
 {
@@ -63,10 +64,9 @@ namespace LunaClient.Systems.ShareStrategy
                 }
             }
 
-            //TODO: Refresh the strategy building ui.
-            
-            // Listen to the events again.
-            //Restore funds, science and reputation in case the contract action changed some of that.
+            Administration.Instance?.RedrawPanels();
+
+            //Listen to the events again. Restore funds, science and reputation in case the contract action changed some of that.
             ShareFundsSystem.Singleton.StopIgnoringEvents(true);
             ShareScienceSystem.Singleton.StopIgnoringEvents(true);
             ShareReputationSystem.Singleton.StopIgnoringEvents(true);
