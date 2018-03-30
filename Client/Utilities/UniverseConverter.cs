@@ -1,5 +1,6 @@
-using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems.SettingsSys;
 using LunaCommon;
+using LunaCommon.Xml;
 using System.Collections.Generic;
 using System.IO;
 
@@ -73,21 +74,29 @@ namespace LunaClient.Utilities
 
             var vesselNodes = flightState.GetNodes("VESSEL");
             if (vesselNodes != null)
+            {
                 foreach (var cn in vesselNodes)
                 {
                     var vesselId = Common.ConvertConfigStringToGuidString(cn.GetValue("pid"));
                     LunaLog.Log($"[LMP]: Saving vessel {vesselId}, Name: {cn.GetValue("Name")}");
-                    cn.Save(CommonUtil.CombinePaths(vesselFolder, $"{vesselId}.txt"));
+                    var xmlData = ConfigNodeXmlParser.ConvertToXml(cn.ToString());
+                    File.WriteAllText(CommonUtil.CombinePaths(vesselFolder, $"{vesselId}.xml"), xmlData);
                 }
+            }
+
             //Save scenario data
             var scenarioNodes = gameData.GetNodes("SCENARIO");
             if (scenarioNodes != null)
+            {
                 foreach (var cn in scenarioNodes)
                 {
                     var scenarioName = cn.GetValue("Name");
                     LunaLog.Log($"[LMP]: Saving scenario: {scenarioName}");
-                    cn.Save(CommonUtil.CombinePaths(playerScenarioFolder, $"{scenarioName}.txt"));
+                    var xmlData = ConfigNodeXmlParser.ConvertToXml(cn.ToString());
+                    File.WriteAllText(CommonUtil.CombinePaths(vesselFolder, $"{scenarioName}.xml"), xmlData);
                 }
+            }
+
             //Save kerbal data
             var kerbalNodes = gameData.GetNode("ROSTER").GetNodes("CREW");
             if (kerbalNodes != null)
