@@ -3,6 +3,7 @@ using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Log;
 using Server.Server;
+using Server.System.Scenario;
 
 namespace Server.System
 {
@@ -14,6 +15,7 @@ namespace Server.System
 
             //Send the strategy update to all other clients
             MessageQueuer.RelayMessage<ShareProgressSrvMsg>(client, data);
+            ScenarioDataUpdater.WriteStrategyDataToFile(data.Strategy);
         }
     }
 }
