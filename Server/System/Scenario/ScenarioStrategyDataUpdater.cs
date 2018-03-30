@@ -44,7 +44,7 @@ namespace Server.System.Scenario
                                                                            $"parent::{ConfigNodeXmlParser.ParentNode}[@name='STRATEGY']");
                     if (existingStrategy != null)
                     {
-                        //Replace the existing contract values with the received one
+                        //Replace the existing stragegy value with the received one
                         existingStrategy.InnerXml = receivedStrategy.InnerXml;
                     }
                     else
