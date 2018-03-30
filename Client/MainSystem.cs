@@ -122,6 +122,12 @@ namespace LunaClient
                     //handle use of cheats
                     if (!SettingsSystem.ServerSettings.AllowCheats)
                     {
+                        CheatOptions.NonStrictAttachmentOrientation = false;
+                        CheatOptions.BiomesVisible = false;
+                        CheatOptions.AllowPartClipping = false;
+                        CheatOptions.IgnoreMaxTemperature = false;
+                        CheatOptions.UnbreakableJoints = false;
+                        CheatOptions.InfiniteElectricity = false;
                         CheatOptions.InfinitePropellant = false;
                         CheatOptions.NoCrashDamage = false;
 
