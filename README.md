@@ -43,6 +43,7 @@
 - Every network message is cached in order to reduce the garbage collector spikes
 - Based on tasks instead of threads.
 - [QuickLZ](http://www.quicklz.com) for fast compression
+- Supports career and science modes
 
 Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-compile-LMP), [run](../../wiki/How-to-play-with-LMP.) or [debug](../../wiki/Debugging-in-Visual-studio) LMP
 
