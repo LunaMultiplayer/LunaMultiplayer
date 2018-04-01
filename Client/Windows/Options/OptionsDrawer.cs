@@ -67,12 +67,6 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.SaveSettings();
                 VesselPositionSystem.Singleton.SwitchPositioningSystem();
             }
-            var settingIntegrator = GUILayout.Toggle(SettingsSystem.CurrentSettings.OverrideIntegrator, "Override flight integrator", ButtonStyle);
-            if (settingIntegrator != SettingsSystem.CurrentSettings.OverrideIntegrator)
-            {
-                SettingsSystem.CurrentSettings.OverrideIntegrator = settingIntegrator;
-                SettingsSystem.SaveSettings();
-            }
             GUILayout.Space(10);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
                 ModSystem.Singleton.GenerateModControlFile(false);
@@ -89,6 +83,12 @@ namespace LunaClient.Windows.Options
 
         private void DrawAdvancedDebugOptions()
         {
+            var settingIntegrator = GUILayout.Toggle(SettingsSystem.CurrentSettings.OverrideIntegrator, "Override flight integrator", ButtonStyle);
+            if (settingIntegrator != SettingsSystem.CurrentSettings.OverrideIntegrator)
+            {
+                SettingsSystem.CurrentSettings.OverrideIntegrator = settingIntegrator;
+                SettingsSystem.SaveSettings();
+            }
             if (GUILayout.Button("Check Common.dll stock parts"))
                 ModSystem.Singleton.CheckCommonStockParts();
             GUILayout.Space(10);
