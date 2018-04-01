@@ -84,6 +84,23 @@
         </Fields>
     </CustomModuleDefinition>
     <CustomModuleDefinition>
+        <ModuleName>FXModuleAnimateThrottle</ModuleName>
+        <Fields>
+            <!--Current throttle of an engine. Probably its related with the exhaust smoke but it changes way too much for syncing it-->
+            <CustomFieldDefinition>
+                <FieldName>animState</FieldName>
+                <Ignore>false</Ignore>
+                <IgnoreSpectating>false</IgnoreSpectating>
+                <Interval>3000</Interval>
+                <SetValueInModule>false</SetValueInModule>
+                <CallLoad>true</CallLoad>
+                <CallOnAwake>true</CallOnAwake>
+                <CallOnLoad>true</CallOnLoad>
+                <CallOnStart>true</CallOnStart>
+            </CustomFieldDefinition>
+        </Fields>
+    </CustomModuleDefinition>
+    <CustomModuleDefinition>
         <ModuleName>ModuleReactionWheel</ModuleName>
         <Fields>
             <!--This is just the string that says "Reaction wheels: Running" or "Reaction wheels: Idle" We don't need it at all-->
