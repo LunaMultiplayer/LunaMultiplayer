@@ -113,8 +113,9 @@ namespace LunaClient.Systems.VesselRemoveSys
             {
                 LunaLog.Log($"[LMP]: Detected a revert to editor! {data}");
                 RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
-                System.AddToKillList(FlightGlobals.ActiveVessel.id);
                 System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, true);
+                
+                System.KillVessel(FlightGlobals.ActiveVessel.id, false);
             }
         }
 

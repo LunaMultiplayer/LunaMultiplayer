@@ -91,35 +91,11 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             return VesselsToRemove.Contains(vesselId) || RemovedVessels.ContainsKey(vesselId);
         }
-
-        /// <summary>
-        /// Unloads a vessel from the game in 1 frame. Caution with this method as it can generate issues!
-        /// Specially if you receive a message for a vessel and that vessel is not found as you called this method
-        /// </summary>
-        private void UnloadVessel(Vessel killVessel)
-        {
-            if (killVessel == null || !FlightGlobals.Vessels.Contains(killVessel))
-            {
-                return;
-            }
-            
-            UnloadVesselFromGame(killVessel);
-            KillGivenVessel(killVessel);
-            UnloadVesselFromScenario(killVessel);
-        }
-
-        /// <summary>
-        /// Unloads a vessel from the game in 1 frame.
-        /// </summary>
-        public void UnloadVessel(Guid vesselId)
-        {
-            UnloadVessel(FlightGlobals.FindVessel(vesselId));
-        }
-
+        
         /// <summary>
         /// Kills and unloads a vessel.
         /// </summary>
-        public void KillVessel(Guid vesselId)
+        public void KillVessel(Guid vesselId, bool switchVessel = true)
         {
             //ALWAYS remove it from the proto store as this dictionary is maintained even if we are in the KSC
             //This means that while in KSC if we receive a vessel remove msg, our FlightGlobals.Vessels will be empty
@@ -131,8 +107,14 @@ namespace LunaClient.Systems.VesselRemoveSys
                 return;
 
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}");
-            SwitchVesselIfSpectating(killVessel);
-            UnloadVessel(killVessel);
+            if (switchVessel)
+            {
+                SwitchVesselIfSpectating(killVessel);
+            }
+
+            UnloadVesselFromGame(killVessel);
+            KillGivenVessel(killVessel);
+            UnloadVesselFromScenario(killVessel);
 
             //When vessel.Die() is called, KSP calls RefreshMarkers() so no need to call it ourselves
         }
