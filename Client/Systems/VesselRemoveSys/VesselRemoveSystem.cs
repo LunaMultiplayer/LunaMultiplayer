@@ -45,7 +45,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             RevertEvent.onReturnedToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, KillPastSubspaceVessels));
-            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, RemoveQueuedVessels));
+            SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, RemoveQueuedVessels));
             SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, FlushRemovedVessels));
         }
 
@@ -132,9 +132,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}");
             SwitchVesselIfSpectating(killVessel);
-            UnloadVesselFromGame(killVessel);
-            KillGivenVessel(killVessel);
-            UnloadVesselFromScenario(killVessel);
+            UnloadVessel(killVessel);
 
             //When vessel.Die() is called, KSP calls RefreshMarkers() so no need to call it ourselves
         }
