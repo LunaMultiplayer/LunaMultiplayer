@@ -542,7 +542,7 @@ namespace Server.System
 
             var module = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='name' and text()=""kerbalEVA""]/" +
                          $"following-sibling::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/{ConfigNodeXmlParser.ValueNode}" +
-                         @"[@name='name' and text()=""KerbalEVA""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/";
+                         $@"[@name='name' and text()=""KerbalEVA""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']";
 
             var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='state']";
 
