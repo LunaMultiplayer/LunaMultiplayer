@@ -112,14 +112,16 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
                 LunaLog.Log($"[LMP]: Detected a revert to editor! {data}");
-                System.AddToKillList(FlightGlobals.ActiveVessel.id);
                 RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
+                System.AddToKillList(FlightGlobals.ActiveVessel.id);
                 System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, true);
             }
         }
 
         private static void RemoveOldVesselAndItsDebris(Vessel vessel)
-        {            
+        {
+            if (vessel == null) return;
+
             //We detected a revert, now pick all the vessel parts (debris) that came from our main active 
             //vessel and remove them both from our game and server
             var vesselIdsToRemove = FlightGlobals.Vessels
@@ -128,8 +130,8 @@ namespace LunaClient.Systems.VesselRemoveSys
             
             foreach (var vesselIdToRemove in vesselIdsToRemove)
             {
-                System.MessageSender.SendVesselRemove(vesselIdToRemove);
                 System.AddToKillList(vesselIdToRemove);
+                System.MessageSender.SendVesselRemove(vesselIdToRemove);
             }
         }
 
