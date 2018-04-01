@@ -10,7 +10,7 @@ namespace LunaClient.Harmony
     /// </summary>
     [HarmonyPatch(typeof(TimeWarp))]
     [HarmonyPatch("setMode")]
-    public class TimeWarp_SetMode
+    public class TimeWarp_setMode
     {
         [HarmonyPrefix]
         private static bool PrefixSetMode()

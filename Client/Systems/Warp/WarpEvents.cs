@@ -10,9 +10,9 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public void OnTimeWarpChanged()
         {
-            if (TimeWarp.CurrentRateIndex > 0 && System.WarpValidation())
+            if (TimeWarp.CurrentRateIndex > 0)
             {
-                if (VesselCommon.IsSpectating)
+                if (!System.WarpValidation() || VesselCommon.IsSpectating)
                     TimeWarp.SetRate(0, true);
 
                 if (System.CurrentSubspace != -1)
