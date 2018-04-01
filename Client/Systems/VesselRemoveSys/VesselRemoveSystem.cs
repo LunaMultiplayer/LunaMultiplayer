@@ -40,12 +40,12 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselWillDestroy.Add(VesselRemoveEvents.OnVesselWillDestroy);
             GameEvents.onLevelWasLoaded.Add(VesselRemoveEvents.LevelLoaded);
 
-            RevertEvent.onRevertToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
-            RevertEvent.onRevertToPrelaunch.Add(VesselRemoveEvents.OnRevertToEditor);
-            RevertEvent.onReturnToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
+            RevertEvent.onRevertedToLaunch.Add(VesselRemoveEvents.OnRevertToLaunch);
+            RevertEvent.onRevertedToPrelaunch.Add(VesselRemoveEvents.OnRevertToEditor);
+            RevertEvent.onReturnedToEditor.Add(VesselRemoveEvents.OnRevertToEditor);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, KillPastSubspaceVessels));
-            SetupRoutine(new RoutineDefinition(500, RoutineExecution.Update, RemoveQueuedVessels));
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, RemoveQueuedVessels));
             SetupRoutine(new RoutineDefinition(20000, RoutineExecution.Update, FlushRemovedVessels));
         }
 
@@ -58,9 +58,9 @@ namespace LunaClient.Systems.VesselRemoveSys
             GameEvents.onVesselWillDestroy.Remove(VesselRemoveEvents.OnVesselWillDestroy);
             GameEvents.onLevelWasLoaded.Remove(VesselRemoveEvents.LevelLoaded);
 
-            RevertEvent.onRevertToLaunch.Remove(VesselRemoveEvents.OnRevertToLaunch);
-            RevertEvent.onRevertToPrelaunch.Remove(VesselRemoveEvents.OnRevertToEditor);
-            RevertEvent.onReturnToEditor.Remove(VesselRemoveEvents.OnRevertToEditor);
+            RevertEvent.onRevertedToLaunch.Remove(VesselRemoveEvents.OnRevertToLaunch);
+            RevertEvent.onRevertedToPrelaunch.Remove(VesselRemoveEvents.OnRevertToEditor);
+            RevertEvent.onReturnedToEditor.Remove(VesselRemoveEvents.OnRevertToEditor);
         }
 
         #endregion

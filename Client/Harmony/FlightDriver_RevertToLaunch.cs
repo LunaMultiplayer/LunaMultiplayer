@@ -14,7 +14,13 @@ namespace LunaClient.Harmony
         [HarmonyPrefix]
         private static void PrefixRevertToLaunch()
         {
-            RevertEvent.onRevertToLaunch.Fire();
+            RevertEvent.onRevertingToLaunch.Fire();
+        }
+
+        [HarmonyPostfix]
+        private static void PostfixRevertToLaunch()
+        {
+            RevertEvent.onRevertedToLaunch.Fire();
         }
     }
 }
