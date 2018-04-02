@@ -11,7 +11,7 @@ namespace LunaClient.Systems.Admin
     {
         public void SendMessage(IMessageData msg)
         {
-            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<HandshakeCliMsg>(msg)));
+            TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<AdminCliMsg>(msg)));
         }
 
         public void SendBanPlayerMsg(string playerName)
