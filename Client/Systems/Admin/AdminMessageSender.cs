@@ -19,6 +19,7 @@ namespace LunaClient.Systems.Admin
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<AdminBanMsgData>();
             msgData.AdminPassword = System.AdminPassword;
             msgData.PlayerName = playerName;
+            msgData.Reason = reason;
 
             SendMessage(msgData);
         }
@@ -28,6 +29,7 @@ namespace LunaClient.Systems.Admin
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<AdminKickMsgData>();
             msgData.AdminPassword = System.AdminPassword;
             msgData.PlayerName = playerName;
+            msgData.Reason = reason;
 
             SendMessage(msgData);
         }
