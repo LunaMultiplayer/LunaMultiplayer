@@ -15,6 +15,7 @@ namespace LunaClient.Windows.Admin
             GUI.DragWindow(MoveRect);
 
             GUILayout.BeginHorizontal();
+            GUILayout.Label(LocalizationContainer.AdminWindowText.Password, LabelStyle);
             AdminSystem.Singleton.AdminPassword = GUILayout.PasswordField(AdminSystem.Singleton.AdminPassword, '*', 30, TextAreaStyle); // Max 32 characters
             GUILayout.EndHorizontal();
             GUILayout.Space(5);
@@ -44,7 +45,7 @@ namespace LunaClient.Windows.Admin
         private void DrawPlayerLine(string playerName)
         {
             GUILayout.BeginHorizontal();
-            GUILayout.Label(playerName);
+            GUILayout.Label(playerName, LabelStyle);
             if (GUILayout.Button(BanIcon, ButtonStyle))
             {
                 SpawnDialog(LocalizationContainer.AdminWindowText.BanConfirmDialogTitle, LocalizationContainer.AdminWindowText.BanText,
