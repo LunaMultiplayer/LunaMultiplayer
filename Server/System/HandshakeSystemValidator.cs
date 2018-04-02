@@ -1,6 +1,6 @@
 ﻿using LunaCommon.Enums;
 using Server.Client;
-using Server.Command.CombinedCommand;
+using Server.Command.Command;
 using Server.Settings;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -41,7 +41,7 @@ namespace Server.System
 
         private bool CheckPlayerIsBanned(ClientStructure client, string uniqueId)
         {
-            if (BanCommands.RetrieveBannedPlayers().Contains(uniqueId))
+            if (BanPlayerCommand.GetBannedPlayers().Contains(uniqueId))
             {
                 Reason = "Banned";
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.PlayerBanned, Reason);
