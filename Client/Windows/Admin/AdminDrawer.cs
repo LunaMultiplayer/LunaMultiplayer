@@ -88,14 +88,14 @@ namespace LunaClient.Windows.Admin
             {
                 if (GUILayout.Button(BanBigIcon, ButtonStyle, GUILayout.Width(255)))
                 {
-                    AdminSystem.Singleton.MessageSender.SendBanPlayerMsg(_selectedPlayer);
+                    AdminSystem.Singleton.MessageSender.SendBanPlayerMsg(_selectedPlayer, _reason);
                 }
             }
             else
             {
                 if (GUILayout.Button(KickBigIcon, ButtonStyle, GUILayout.Width(255)))
                 {
-                    AdminSystem.Singleton.MessageSender.SendKickPlayerMsg(_selectedPlayer);
+                    AdminSystem.Singleton.MessageSender.SendKickPlayerMsg(_selectedPlayer, _reason);
                 }
             }
             GUILayout.FlexibleSpace();

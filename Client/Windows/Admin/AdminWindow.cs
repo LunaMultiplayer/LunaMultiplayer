@@ -21,7 +21,7 @@ namespace LunaClient.Windows.Admin
 
         private static string _selectedPlayer;
         private static bool _banMode;
-        private static string _reason;
+        private static string _reason = string.Empty;
 
         private static bool _display;
         public override bool Display

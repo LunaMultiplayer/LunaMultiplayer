@@ -11,6 +11,7 @@ namespace LunaCommon.Message.Data.Admin
         public override AdminMessageType AdminMessageType => AdminMessageType.Kick;
 
         public string PlayerName;
+        public string Reason;
 
         public override string ClassName { get; } = nameof(AdminKickMsgData);
 
@@ -18,17 +19,19 @@ namespace LunaCommon.Message.Data.Admin
         {
             base.InternalSerialize(lidgrenMsg);
             lidgrenMsg.Write(PlayerName);
+            lidgrenMsg.Write(Reason);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             base.InternalDeserialize(lidgrenMsg);
             PlayerName = lidgrenMsg.ReadString();
+            Reason = lidgrenMsg.ReadString();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + PlayerName.GetByteCount();
+            return base.InternalGetMessageSize() + PlayerName.GetByteCount() + Reason.GetByteCount();
         }
     }
 }

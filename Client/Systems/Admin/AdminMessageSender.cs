@@ -14,7 +14,7 @@ namespace LunaClient.Systems.Admin
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<AdminCliMsg>(msg)));
         }
 
-        public void SendBanPlayerMsg(string playerName)
+        public void SendBanPlayerMsg(string playerName, string reason)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<AdminBanMsgData>();
             msgData.AdminPassword = System.AdminPassword;
@@ -23,7 +23,7 @@ namespace LunaClient.Systems.Admin
             SendMessage(msgData);
         }
 
-        public void SendKickPlayerMsg(string playerName)
+        public void SendKickPlayerMsg(string playerName, string reason)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<AdminKickMsgData>();
             msgData.AdminPassword = System.AdminPassword;
