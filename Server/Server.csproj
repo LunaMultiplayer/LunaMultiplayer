@@ -57,16 +57,11 @@
     <Compile Include="Client\ClientMainThread.cs" />
     <Compile Include="Client\ClientRetriever.cs" />
     <Compile Include="Client\ClientStructure.cs" />
-    <Compile Include="Command\CombinedCommand\BanCommands.cs" />
-    <Compile Include="Command\CombinedCommand\Base\CombinedCommandBase.cs" />
     <Compile Include="Command\CommandDefinition.cs" />
     <Compile Include="Command\CommandHandler.cs" />
-    <Compile Include="Command\Command\AdminShowCommand.cs" />
     <Compile Include="Command\Command\BanPlayerCommand.cs" />
-    <Compile Include="Command\Command\Base\AdminCommandBase.cs" />
     <Compile Include="Command\Command\Base\HandledCommand.cs" />
     <Compile Include="Command\Command\Base\SimpleCommand.cs" />
-    <Compile Include="Command\Command\Base\WhitelistCommandBase.cs" />
     <Compile Include="Command\Command\ChangeSettingsCommand.cs" />
     <Compile Include="Command\Command\RestartServerCommand.cs" />
     <Compile Include="Command\Command\ConnectionStatsCommand.cs" />
@@ -78,9 +73,6 @@
     <Compile Include="Command\Command\ClearVesselsCommand.cs" />
     <Compile Include="Command\Command\NukeCommand.cs" />
     <Compile Include="Command\Command\SayCommand.cs" />
-    <Compile Include="Command\Command\WhitelistAddCommand.cs" />
-    <Compile Include="Command\Command\WhitelistRemoveCommand.cs" />
-    <Compile Include="Command\Command\WhitelistShowCommand.cs" />
     <Compile Include="Command\Common\CommandSystemHelperMethods.cs" />
     <Compile Include="Context\Constants.cs" />
     <Compile Include="Context\ServerContext.cs" />
@@ -96,6 +88,7 @@
     <Compile Include="Log\LogThread.cs" />
     <Compile Include="Log\LunaLog.cs" />
     <Compile Include="MainServer.cs" />
+    <Compile Include="Message\Reader\AdminMsgReader.cs" />
     <Compile Include="Message\Reader\ScreenshotMsgReader.cs" />
     <Compile Include="Message\Reader\FacilityMsgReader.cs" />
     <Compile Include="Message\Reader\Base\ReaderBase.cs" />
