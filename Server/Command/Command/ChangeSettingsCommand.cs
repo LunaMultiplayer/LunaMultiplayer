@@ -1,17 +1,17 @@
 ﻿using Server.Command.Command.Base;
-using System;
-using System.Xml;
 using Server.Command.Common;
+using Server.Log;
+using System;
 using System.IO;
 using System.Reflection;
-using Server.Log;
+using System.Xml;
 
 namespace Server.Command.Command
 {
     public class ChangeSettingsCommand : SimpleCommand
     {
         //Executes the ChangeSettingsCommand
-        public override void Execute(string commandArgs)
+        public override bool Execute(string commandArgs)
         {
             //Set messages
             var msgUsage = Environment.NewLine
@@ -40,32 +40,30 @@ namespace Server.Command.Command
             if (parameters == null)
             {
                 LunaLog.Error(Environment.NewLine + "Syntax error. No parameters found." + msgUsage + msgDescription);
-                return;
+                return false;
             }
             if (parameters.Length != 3)
             {
                 LunaLog.Error(Environment.NewLine + "Syntax error. Wrong number of parameters." + msgUsage + msgDescription);
-                return;
+                return false;
             }
             if (parameters[0] == "")
             {
                 LunaLog.Error(Environment.NewLine + "Syntax error. First parameter not found." + msgUsage + msgDescription);
-                return;
+                return false;
             }
             if (parameters[1] == "")
             {
                 LunaLog.Error(Environment.NewLine + "Syntax error. Second parameter not found." + msgUsage + msgDescription);
-                return;
+                return false;
             }
             if (parameters[2] == "")
             {
                 LunaLog.Error(Environment.NewLine + "Syntax error. Third parameter not found." + msgUsage + msgDescription);
-                return;
+                return false;
             }
 
             //Get param values
-            var paramCount = 0;
-            paramCount = parameters.Length;
             var settingsFile = parameters[0];
             var settingsFileName = "Settings.xml";
             var settingName = parameters[1];
@@ -88,7 +86,7 @@ namespace Server.Command.Command
             else
             {
                 LunaLog.Error(Environment.NewLine + "Syntax error. First parameter (settingsFile) wrong use." + Environment.NewLine + msgSettingFileInfo + msgUsage + msgDescription);
-                return;
+                return false;
             }
 
             //Define settings xml path
@@ -111,8 +109,10 @@ namespace Server.Command.Command
             finally
             {
                 //Close and Dispose streamReader if not already done
-                if (streamReader != null) CloseDisposeStreamReader(streamReader);
+                CloseDisposeStreamReader(streamReader);
             }
+
+            return true;
         }
 
         //Changes selected server option

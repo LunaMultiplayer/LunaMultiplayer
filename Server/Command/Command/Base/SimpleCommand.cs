@@ -2,6 +2,6 @@
 {
     public abstract class SimpleCommand
     {
-        public abstract void Execute(string commandArgs);
+        public abstract bool Execute(string commandArgs);
     }
 }

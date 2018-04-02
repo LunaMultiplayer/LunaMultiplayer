@@ -10,7 +10,7 @@ namespace Server.Command.Command
 {
     public class SayCommand : SimpleCommand
     {
-        public override void Execute(string commandArgs)
+        public override bool Execute(string commandArgs)
         {
             LunaLog.Normal($"Broadcasting {commandArgs}");
 
@@ -19,6 +19,8 @@ namespace Server.Command.Command
             msgData.Text = commandArgs;
 
             MessageQueuer.SendToAllClients<ChatSrvMsg>(msgData);
+
+            return true;
         }
     }
 }

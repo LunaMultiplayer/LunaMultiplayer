@@ -6,9 +6,10 @@ namespace Server.Command.Command
 {
     public class CountClientsCommand : SimpleCommand
     {
-        public override void Execute(string commandArgs)
+        public override bool Execute(string commandArgs)
         {
             LunaLog.Normal($"Online Players: {ServerContext.PlayerCount}");
+            return true;
         }
     }
 }

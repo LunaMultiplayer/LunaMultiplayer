@@ -1,5 +1,4 @@
-﻿using Server.Command.CombinedCommand;
-using Server.Command.Command;
+﻿using Server.Command.Command;
 using Server.Context;
 using Server.Log;
 using Server.Settings;
@@ -20,7 +19,7 @@ namespace Server.Command
         private static void RegisterCommands()
         {
             //Register the server Commands
-            RegisterCommand("ban", new BanCommands().HandleCommand, "Bans someone from the server");
+            RegisterCommand("ban", new BanPlayerCommand().Execute, "Bans someone from the server");
             RegisterCommand("changesettings", new ChangeSettingsCommand().Execute, "Changes the server settings");
             RegisterCommand("clearvessels", new ClearVesselsCommand().Execute, "Clears ALL SPECIFIED vessels from universe");
             RegisterCommand("connectionstats", new ConnectionStatsCommand().Execute, "Displays network traffic usage");
@@ -97,7 +96,7 @@ namespace Server.Command
                     LunaLog.Normal($"Unknown server command: {commandPart}");
         }
 
-        private static void RegisterCommand(string command, Action<string> func, string description)
+        private static void RegisterCommand(string command, Func<string, bool> func, string description)
         {
             var cmd = new CommandDefinition(command, func, description);
             if (!Commands.ContainsKey(command))

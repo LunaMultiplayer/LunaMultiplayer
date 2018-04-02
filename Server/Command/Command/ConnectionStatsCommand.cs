@@ -7,7 +7,7 @@ namespace Server.Command.Command
 {
     public class ConnectionStatsCommand : SimpleCommand
     {
-        public override void Execute(string commandArgs)
+        public override bool Execute(string commandArgs)
         {
             //Do some shit here.
             long bytesSentTotal = 0;
@@ -22,6 +22,8 @@ namespace Server.Command.Command
                     $"Player '{client.PlayerName}', sent: {client.BytesSent}, received: {client.BytesReceived}");
             }
             LunaLog.Normal($"Server sent: {bytesSentTotal}, received: {bytesReceivedTotal}");
+
+            return true;
         }
     }
 }
