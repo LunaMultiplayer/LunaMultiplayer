@@ -49,6 +49,7 @@ namespace LunaClient.Windows.Admin
         {
             GUILayout.BeginHorizontal();
             GUILayout.Label(playerName, LabelStyle);
+            GUILayout.FlexibleSpace();
             if (GUILayout.Button(BanIcon, ButtonStyle))
             {
                 _selectedPlayer = playerName;
@@ -61,6 +62,8 @@ namespace LunaClient.Windows.Admin
             }
             GUILayout.EndHorizontal();
         }
+
+        #region Confirmation Dialog
 
         public void DrawConfirmationDialog(int windowId)
         {
@@ -100,5 +103,7 @@ namespace LunaClient.Windows.Admin
 
             GUILayout.EndVertical();
         }
+
+        #endregion
     }
 }
