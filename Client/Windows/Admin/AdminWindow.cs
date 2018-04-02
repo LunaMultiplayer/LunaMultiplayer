@@ -46,6 +46,7 @@ namespace LunaClient.Windows.Admin
             }
             else
             {
+                _reason = string.Empty;
                 _selectedPlayer = null;
             }
         }

@@ -68,7 +68,7 @@ namespace LunaClient.Windows.Admin
         public void DrawConfirmationDialog(int windowId)
         {
             //Always draw close button first
-            DrawCloseButton(() => _selectedPlayer = null, _confirmationWindowRect);
+            DrawCloseButton(() => { _selectedPlayer = null; _reason = string.Empty; }, _confirmationWindowRect);
 
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
@@ -89,6 +89,8 @@ namespace LunaClient.Windows.Admin
                 if (GUILayout.Button(BanBigIcon, ButtonStyle, GUILayout.Width(255)))
                 {
                     AdminSystem.Singleton.MessageSender.SendBanPlayerMsg(_selectedPlayer, _reason);
+                    _selectedPlayer = null;
+                    _reason = string.Empty;
                 }
             }
             else
@@ -96,6 +98,8 @@ namespace LunaClient.Windows.Admin
                 if (GUILayout.Button(KickBigIcon, ButtonStyle, GUILayout.Width(255)))
                 {
                     AdminSystem.Singleton.MessageSender.SendKickPlayerMsg(_selectedPlayer, _reason);
+                    _selectedPlayer = null;
+                    _reason = string.Empty;
                 }
             }
             GUILayout.FlexibleSpace();
