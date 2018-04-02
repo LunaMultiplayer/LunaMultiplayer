@@ -153,7 +153,7 @@ namespace LunaClient.Systems.VesselLockSys
                 {
                     if (_spectateMessage != null)
                         _spectateMessage.duration = 0f;
-                    _spectateMessage = ScreenMessages.PostScreenMessage(SpectatingMessage, 1000 * 2, ScreenMessageStyle.UPPER_CENTER);
+                    _spectateMessage = LunaScreenMsg.PostScreenMessage(SpectatingMessage, 1000 * 2, ScreenMessageStyle.UPPER_CENTER);
                 }
                 else
                 {

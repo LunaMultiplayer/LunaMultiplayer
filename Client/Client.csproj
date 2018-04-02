@@ -94,6 +94,7 @@
     <Compile Include="Harmony\TimeWarp_SetRate.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
+    <Compile Include="LunaScreenMsg.cs" />
     <Compile Include="ModuleStore\Structures\CustomFieldDefinition.cs" />
     <Compile Include="ModuleStore\Structures\CustomModuleDefinition.cs" />
     <Compile Include="ModuleStore\FieldModuleDefinition.cs" />

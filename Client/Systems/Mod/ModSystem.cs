@@ -1,4 +1,4 @@
-using Expansions;
+﻿using Expansions;
 using LunaClient.Localization;
 using LunaClient.Utilities;
 using LunaCommon;
@@ -123,7 +123,7 @@ namespace LunaClient.Systems.Mod
             }
 
             LunaXmlSerializer.WriteToXmlFile(modFile, CommonUtil.CombinePaths(MainSystem.KspPath, "LMPModControl.xml"));
-            ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ModFileGenerated, 5f, ScreenMessageStyle.UPPER_CENTER);
+            LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.ModFileGenerated, 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
         public void CheckCommonStockParts()
@@ -141,7 +141,7 @@ namespace LunaClient.Systems.Mod
 
             LunaLog.Log("[LMP]: Missing parts end");
 
-            ScreenMessages.PostScreenMessage(
+            LunaScreenMsg.PostScreenMessage(
                 missingPartsCount > 0
                     ? $"{missingPartsCount} missing part(s) from Common.dll printed to debug log ({PartLoader.LoadedPartsList.Count} total)"
                     : $"No missing parts out of from Common.dll ({PartLoader.LoadedPartsList.Count} total)",

@@ -247,7 +247,7 @@ namespace LunaClient.Systems.Warp
         {
             if (WarpMessage != null)
                 WarpMessage.duration = 0f;
-            WarpMessage = ScreenMessages.PostScreenMessage(messageText, messageDuration, ScreenMessageStyle.UPPER_CENTER);
+            WarpMessage = LunaScreenMsg.PostScreenMessage(messageText, messageDuration, ScreenMessageStyle.UPPER_CENTER);
         }
 
         public void RemovePlayer(string playerName)

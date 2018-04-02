@@ -35,7 +35,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
                 }, 5f);
 
-                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

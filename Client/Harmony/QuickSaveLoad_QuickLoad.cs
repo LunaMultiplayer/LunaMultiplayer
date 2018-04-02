@@ -16,7 +16,7 @@ namespace LunaClient.Harmony
         {
             if (MainSystem.NetworkState < ClientState.Connected) return true;
 
-            ScreenMessages.PostScreenMessage("Cannot quickload in LMP!", 5f, ScreenMessageStyle.UPPER_CENTER);
+            LunaScreenMsg.PostScreenMessage("Cannot quickload in LMP!", 5f, ScreenMessageStyle.UPPER_CENTER);
 
             return false;
         }

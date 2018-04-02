@@ -78,7 +78,7 @@ namespace LunaClient.VesselUtilities
                     if (pps.partInfo == null)
                     {
                         LunaLog.LogWarning($"WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the MISSING PART '{pps.partName}'. Skipping load.");
-                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing {pps.partName}", 10f, ScreenMessageStyle.UPPER_CENTER);
+                        LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing {pps.partName}", 10f, ScreenMessageStyle.UPPER_CENTER);
 
                         return null;
                     }
@@ -90,7 +90,7 @@ namespace LunaClient.VesselUtilities
                         LunaLog.LogWarning(msg);
                         ChatSystem.Singleton.PmMessageServer(msg);
 
-                        ScreenMessages.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing resource {missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
+                        LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing resource {missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
                         return null;
                     }
                 }

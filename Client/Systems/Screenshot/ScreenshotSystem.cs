@@ -64,7 +64,7 @@ namespace LunaClient.Systems.Screenshot
                         if (photo != null)
                         {
                             TaskFactory.StartNew(() => MessageSender.SendScreenshot(File.ReadAllBytes(photo.FullName)));
-                            ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ScreenshotTaken, 10f, ScreenMessageStyle.UPPER_CENTER);
+                            LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.ScreenshotTaken, 10f, ScreenMessageStyle.UPPER_CENTER);
                         }
                     }, 0.3f);
                 }
@@ -73,7 +73,7 @@ namespace LunaClient.Systems.Screenshot
                     var msg = LocalizationContainer.ScreenText.ScreenshotInterval.Replace("$1", TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinScreenshotIntervalMs).TotalSeconds
                             .ToString(CultureInfo.InvariantCulture));
 
-                    ScreenMessages.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);
+                    LunaScreenMsg.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);
                 }
             }
         }
@@ -91,7 +91,7 @@ namespace LunaClient.Systems.Screenshot
 
                 var filePath = CommonUtil.CombinePaths(folderPath, $"{dateTaken}.png");
                 File.WriteAllBytes(filePath, image.Data);
-                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.ImageSaved, 20f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.ImageSaved, 20f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

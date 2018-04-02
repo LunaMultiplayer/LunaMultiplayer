@@ -281,7 +281,7 @@ namespace LunaClient.Systems.Scenario
             if (scenarioEntry.ScenarioNode.GetValue("scene") == string.Empty)
             {
                 var nodeName = scenarioEntry.ScenarioModule;
-                ScreenMessages.PostScreenMessage($"{nodeName} is badly behaved!");
+                LunaScreenMsg.PostScreenMessage($"{nodeName} is badly behaved!", 3, ScreenMessageStyle.UPPER_CENTER);
                 LunaLog.Log($"[LMP]: {nodeName} is badly behaved!");
                 scenarioEntry.ScenarioNode.SetValue("scene", "7, 8, 5, 6, 9");
             }

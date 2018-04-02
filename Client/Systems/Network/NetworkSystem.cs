@@ -234,7 +234,7 @@ namespace LunaClient.Systems.Network
 
             if (DisplayDisconnectMessage)
             {
-                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.Disconected, 2f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.Disconected, 2f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

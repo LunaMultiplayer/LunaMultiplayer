@@ -18,7 +18,7 @@ namespace LunaClient.Systems.Motd
             if (!string.IsNullOrEmpty(msgData.MessageOfTheDay))
             {
                 ChatSystem.Singleton.PrintToChat(msgData.MessageOfTheDay);
-                ScreenMessages.PostScreenMessage(msgData.MessageOfTheDay, 30f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage(msgData.MessageOfTheDay, 30f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
     }

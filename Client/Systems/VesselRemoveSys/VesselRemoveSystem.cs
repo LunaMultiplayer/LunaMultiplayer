@@ -205,7 +205,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 else
                     HighLogic.LoadScene(GameScenes.SPACECENTER);
 
-                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.SpectatingRemoved, 10f);
+                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.SpectatingRemoved, 10f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

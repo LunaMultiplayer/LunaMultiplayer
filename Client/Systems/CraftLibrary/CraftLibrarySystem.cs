@@ -48,7 +48,7 @@ namespace LunaClient.Systems.CraftLibrary
         private void NotifyDownloadedCrafts()
         {
             while (DownloadedCraftsNotification.TryDequeue(out var message))
-                ScreenMessages.PostScreenMessage($"({message}) {LocalizationContainer.ScreenText.CraftSaved}", 5f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage($"({message}) {LocalizationContainer.ScreenText.CraftSaved}", 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
         protected override void OnDisabled()
@@ -156,14 +156,14 @@ namespace LunaClient.Systems.CraftLibrary
             {
                 _lastRequest = DateTime.Now;
                 MessageSender.SendCraftMsg(craft);
-                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.CraftUploaded, 10f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.CraftUploaded, 10f, ScreenMessageStyle.UPPER_CENTER);
             }
             else
             {
                 var msg = LocalizationContainer.ScreenText.CraftLibraryInterval.Replace("$1", 
                     TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs).TotalSeconds.ToString(CultureInfo.InvariantCulture));
 
-                ScreenMessages.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 
@@ -182,7 +182,7 @@ namespace LunaClient.Systems.CraftLibrary
                 var msg = LocalizationContainer.ScreenText.CraftLibraryInterval.Replace("$1",
                     TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs).TotalSeconds.ToString(CultureInfo.InvariantCulture));
 
-                ScreenMessages.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage(msg, 20f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

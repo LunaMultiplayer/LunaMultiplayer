@@ -20,7 +20,7 @@ namespace LunaClient.Utilities
             if (!Directory.Exists(saveFolder))
             {
                 LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', Save directory doesn't exist");
-                ScreenMessages.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', Save directory doesn't exist", 5f,
+                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', Save directory doesn't exist", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
@@ -29,7 +29,7 @@ namespace LunaClient.Utilities
             if (!File.Exists(persistentFile))
             {
                 LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', persistent.sfs doesn't exist");
-                ScreenMessages.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', persistent.sfs doesn't exist", 5f,
+                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', persistent.sfs doesn't exist", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
@@ -49,7 +49,7 @@ namespace LunaClient.Utilities
             if (persistentData == null)
             {
                 LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load persistent data");
-                ScreenMessages.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load persistent data", 5f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load persistent data", 5f, ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace LunaClient.Utilities
             if (gameData == null)
             {
                 LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load game data");
-                ScreenMessages.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load game data", 5f,
+                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load game data", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
@@ -67,7 +67,7 @@ namespace LunaClient.Utilities
             if (flightState == null)
             {
                 LunaLog.Log($"[LMP]: Failed to generate a LMP universe for '{saveName}', failed to load flight state data");
-                ScreenMessages.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load flight state data", 5f,
+                LunaScreenMsg.PostScreenMessage($"Failed to generate a LMP universe for '{saveName}', failed to load flight state data", 5f,
                     ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
@@ -110,7 +110,7 @@ namespace LunaClient.Utilities
                 }
             }
             LunaLog.Log($"[LMP]: Generated KSP_folder/Universe from {saveName}");
-            ScreenMessages.PostScreenMessage($"Generated KSP_folder/Universe from {saveName}", 5f,
+            LunaScreenMsg.PostScreenMessage($"Generated KSP_folder/Universe from {saveName}", 5f,
                 ScreenMessageStyle.UPPER_CENTER);
         }
 

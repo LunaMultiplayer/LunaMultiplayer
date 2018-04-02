@@ -80,6 +80,7 @@ namespace LunaClient
         public void Update()
         {
             LunaLog.ProcessLogMessages();
+            LunaScreenMsg.ProcessScreenMessages();
 
             if (!Enabled) return;
 

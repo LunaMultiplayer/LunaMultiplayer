@@ -17,6 +17,8 @@ namespace LunaClient.Network
     {
         public static string Password { get; set; } = string.Empty;
 
+        private static string LastIntroductionToken { get; set; }
+
         private static readonly List<IPEndPoint> PrivMasterServers = new List<IPEndPoint>();
         public static List<IPEndPoint> MasterServers
         {
@@ -154,8 +156,12 @@ namespace LunaClient.Network
             try
             {
                 var token = msg.ReadString();
-                LunaLog.Log($"[LMP]: Nat introduction success to {msg.SenderEndPoint} token is: {token}");
-                NetworkConnection.ConnectToServer(msg.SenderEndPoint.Address.ToString(), msg.SenderEndPoint.Port, Password);
+                if (LastIntroductionToken != token)
+                {
+                    LastIntroductionToken = token;
+                    LunaLog.Log($"[LMP]: Nat introduction success to {msg.SenderEndPoint} token is: {token}");
+                    NetworkConnection.ConnectToServer(msg.SenderEndPoint.Address.ToString(), msg.SenderEndPoint.Port, Password);
+                }
             }
             catch (Exception e)
             {
