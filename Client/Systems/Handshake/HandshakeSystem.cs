@@ -6,8 +6,6 @@ namespace LunaClient.Systems.Handshake
     {
         public override string SystemName { get; } = nameof(HandshakeSystem);
 
-        public byte[] Challenge = new byte[1024];
-
         protected override bool AlwaysEnabled => true;
         protected override bool ProcessMessagesInUnityThread => false;
     }

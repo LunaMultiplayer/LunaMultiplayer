@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using LunaClient.Systems.Admin;
 using LunaClient.Systems.Chat;
 using LunaClient.Systems.CraftLibrary;
 using LunaClient.Systems.Facility;
@@ -126,6 +127,9 @@ namespace LunaClient.Network
         {
             switch (msg.MessageType)
             {
+                case ServerMessageType.Admin:
+                    AdminSystem.Singleton.EnqueueMessage(msg);
+                    break;
                 case ServerMessageType.Handshake:
                     HandshakeSystem.Singleton.EnqueueMessage(msg);
                     break;
