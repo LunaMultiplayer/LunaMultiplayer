@@ -1,7 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Admin;
-using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Server.Base;
 using LunaCommon.Message.Types;
 using System;
@@ -9,7 +8,7 @@ using System.Collections.Generic;
 
 namespace LunaCommon.Message.Server
 {
-    public class AdminSrvMsg : SrvMsgBase<ChatMsgData>
+    public class AdminSrvMsg : SrvMsgBase<AdminBaseMsgData>
     {
         /// <inheritdoc />
         internal AdminSrvMsg() { }
