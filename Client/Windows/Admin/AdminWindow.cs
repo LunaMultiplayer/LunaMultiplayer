@@ -13,6 +13,15 @@ namespace LunaClient.Windows.Admin
         
         private const float WindowHeight = 300;
         private const float WindowWidth = 400;
+        private const float ConfirmationWindowHeight = 50;
+        private const float ConfirmationWindowWidth = 350;
+
+        private static Rect _confirmationWindowRect;
+        private static GUILayoutOption[] _confirmationLayoutOptions;
+
+        private static string _selectedPlayer;
+        private static bool _banMode;
+        private static string _reason;
 
         private static bool _display;
         public override bool Display
@@ -29,6 +38,15 @@ namespace LunaClient.Windows.Admin
             if (Display)
             {
                 WindowRect = FixWindowPos(GUILayout.Window(6723 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.AdminWindowText.Title, WindowStyle, LayoutOptions));
+                if (!string.IsNullOrEmpty(_selectedPlayer))
+                {
+                    _confirmationWindowRect = FixWindowPos(GUILayout.Window(6724 + MainSystem.WindowOffset,
+                        _confirmationWindowRect, DrawConfirmationDialog, LocalizationContainer.AdminWindowText.ConfirmDialogTitle, WindowStyle, _confirmationLayoutOptions));
+                }
+            }
+            else
+            {
+                _selectedPlayer = null;
             }
         }
 
@@ -42,6 +60,12 @@ namespace LunaClient.Windows.Admin
             LayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
             LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
+
+            _confirmationLayoutOptions = new GUILayoutOption[4];
+            _confirmationLayoutOptions[0] = GUILayout.MinWidth(ConfirmationWindowWidth);
+            _confirmationLayoutOptions[1] = GUILayout.MaxWidth(ConfirmationWindowWidth);
+            _confirmationLayoutOptions[2] = GUILayout.MinHeight(ConfirmationWindowHeight);
+            _confirmationLayoutOptions[3] = GUILayout.MaxHeight(ConfirmationWindowHeight);
 
             ScrollPos = new Vector2();
         }

@@ -2,7 +2,6 @@
 using LunaClient.Systems.Admin;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
-using System;
 using UnityEngine;
 
 namespace LunaClient.Windows.Admin
@@ -52,41 +51,54 @@ namespace LunaClient.Windows.Admin
             GUILayout.Label(playerName, LabelStyle);
             if (GUILayout.Button(BanIcon, ButtonStyle))
             {
-                SpawnDialog(LocalizationContainer.AdminWindowText.BanConfirmDialogTitle, LocalizationContainer.AdminWindowText.BanText,
-                    () => AdminSystem.Singleton.MessageSender.SendBanPlayerMsg(playerName));
+                _selectedPlayer = playerName;
+                _banMode = true;
             }
             if (GUILayout.Button(KickIcon, ButtonStyle))
             {
-                SpawnDialog(LocalizationContainer.AdminWindowText.KickConfirmDialogTitle, LocalizationContainer.AdminWindowText.KickText,
-                    () => AdminSystem.Singleton.MessageSender.SendKickPlayerMsg(playerName));
+                _selectedPlayer = playerName;
+                _banMode = false;
             }
             GUILayout.EndHorizontal();
         }
 
-        private void SpawnDialog(string title, string text, Action confirmAction)
+        public void DrawConfirmationDialog(int windowId)
         {
-            PopupDialog.SpawnPopupDialog(
-                new MultiOptionDialog("ConfirmDialog", text, title,
-                    HighLogic.UISkin,
-                    new Rect(.5f, .5f, 425f, 150f),
-                    new DialogGUIFlexibleSpace(),
-                    new DialogGUIVerticalLayout(
-                        new DialogGUIHorizontalLayout(
-                            new DialogGUIButton("YES",
-                                confirmAction.Invoke
-                            ),
-                            new DialogGUIFlexibleSpace(),
-                            new DialogGUIButton("NO",
-                                delegate
-                                {
-                                }
-                            )
-                        )
-                    )
-                ),
-                true,
-                HighLogic.UISkin
-            );
+            //Always draw close button first
+            DrawCloseButton(() => _selectedPlayer = null, _confirmationWindowRect);
+
+            GUILayout.BeginVertical();
+            GUI.DragWindow(MoveRect);
+
+            GUILayout.Label(_banMode ? LocalizationContainer.AdminWindowText.BanText : LocalizationContainer.AdminWindowText.KickText, LabelOptions);
+            GUILayout.Space(20);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(LocalizationContainer.AdminWindowText.Reason, LabelOptions);
+            _reason = GUILayout.TextField(_reason, 255, TextAreaStyle, GUILayout.Width(255));
+            GUILayout.EndHorizontal();
+            GUILayout.Space(20);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            if (_banMode)
+            {
+                if (GUILayout.Button(BanBigIcon, ButtonStyle, GUILayout.Width(255)))
+                {
+                    AdminSystem.Singleton.MessageSender.SendBanPlayerMsg(_selectedPlayer);
+                }
+            }
+            else
+            {
+                if (GUILayout.Button(KickBigIcon, ButtonStyle, GUILayout.Width(255)))
+                {
+                    AdminSystem.Singleton.MessageSender.SendKickPlayerMsg(_selectedPlayer);
+                }
+            }
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+
+            GUILayout.EndVertical();
         }
     }
 }

@@ -61,7 +61,9 @@ namespace LunaClient.Base
         protected Texture2D RocketRedIcon;
         protected Texture2D AdminIcon;
         protected Texture2D KickIcon;
+        protected Texture2D KickBigIcon;
         protected Texture2D BanIcon;
+        protected Texture2D BanBigIcon;
         protected Texture2D DekesslerIcon;
         protected Texture2D NukeIcon;
         protected Texture2D DekesslerBigIcon;
@@ -100,7 +102,9 @@ namespace LunaClient.Base
             RocketRedIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "rocketRed.png"), 16, 16);
             AdminIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "admin.png"), 16, 16);
             KickIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "kick.png"), 16, 16);
+            KickBigIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "kickBig.png"), 32, 32);
             BanIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "ban.png"), 16, 16);
+            BanBigIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "banBig.png"), 32, 32);
             DekesslerIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "dekessler.png"), 16, 16);
             NukeIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "nuke.png"), 16, 16);
             DekesslerBigIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "dekesslerBig.png"), 32, 32);
