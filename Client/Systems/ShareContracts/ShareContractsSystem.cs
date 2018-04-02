@@ -18,7 +18,7 @@ namespace LunaClient.Systems.ShareContracts
 
         //We need to wait for all the achievements to be processed before we process the contracts. Otherwise it will cause bugs.
         protected override bool ShareSystemReady => ContractSystem.Instance != null && ContractSystem.Instance.Contracts.Count != 0 && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
-                                                    Reputation.Instance != null && ShareAchievementsSystem.Singleton.ActionQueueCount == 0;
+                                                    Reputation.Instance != null && ProgressTracking.Instance != null && ShareAchievementsSystem.Singleton.ActionQueueCount == 0;
 
         protected override void OnEnabled()
         {
