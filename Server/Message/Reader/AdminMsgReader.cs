@@ -21,30 +21,40 @@ namespace Server.Message.Reader
             var messageData = (AdminBaseMsgData)message.Data;
             if (!string.IsNullOrEmpty(GeneralSettings.SettingsStore.AdminPassword) && GeneralSettings.SettingsStore.AdminPassword == messageData.AdminPassword)
             {
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<AdminReplyMsgData>();
                 switch (messageData.AdminMessageType)
                 {
                     case AdminMessageType.Ban:
-                        CommandHandler.Commands["ban"].Func(((AdminBanMsgData)message.Data).PlayerName);
+                        LunaLog.Debug($"{client.PlayerName}: Requested a ban against {((AdminBanMsgData)message.Data).PlayerName}");
+                        msgData.Response = CommandHandler.Commands["ban"].Func(((AdminBanMsgData)message.Data).PlayerName) ? AdminResponse.Ok : AdminResponse.Error;
                         break;
                     case AdminMessageType.Kick:
-                        CommandHandler.Commands["kick"].Func(((AdminKickMsgData)message.Data).PlayerName);
+                        LunaLog.Debug($"{client.PlayerName}: Requested a kick against {((AdminKickMsgData)message.Data).PlayerName}");
+                        msgData.Response = CommandHandler.Commands["kick"].Func(((AdminKickMsgData)message.Data).PlayerName) ? AdminResponse.Ok : AdminResponse.Error;
                         break;
                     case AdminMessageType.Dekessler:
+                        LunaLog.Debug($"{client.PlayerName}: Requested a dekessler");
                         CommandHandler.Commands["dekessler"].Func(null);
+                        msgData.Response = AdminResponse.Ok;
                         break;
                     case AdminMessageType.Nuke:
+                        LunaLog.Debug($"{client.PlayerName}: Requested a nuke");
                         CommandHandler.Commands["nukeksc"].Func(null);
+                        msgData.Response = AdminResponse.Ok;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+                MessageQueuer.SendToClient<AdminSrvMsg>(client, msgData);
             }
+            else
+            {
+                LunaLog.Warning($"{client.PlayerName}: Tried to run an admin command with an invalid password");
 
-            LunaLog.Warning($"{client.PlayerName}: Tried to run an admin command with an invalid password");
-
-            var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<AdminReplyMsgData>();
-            msgData.Response = AdminResponse.InvalidPassword;
-            MessageQueuer.SendToClient<SetingsSrvMsg>(client, msgData);
+                var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<AdminReplyMsgData>();
+                msgData.Response = AdminResponse.InvalidPassword;
+                MessageQueuer.SendToClient<AdminSrvMsg>(client, msgData);
+            }
         }
     }
 }
