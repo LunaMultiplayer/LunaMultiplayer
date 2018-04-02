@@ -21,7 +21,7 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Password for the server. Leave it empty if you want to make a public server. Max 30 chars")]
         public string Password { get; set; } = "";
 
-        [XmlComment(Value = "AdminPassword for the server. Leave it empty if you want to allow administration client side. Max 30 chars")]
+        [XmlComment(Value = "Admin password for the server. Leave it empty if you want to allow administration client side. Max 30 chars")]
         public string AdminPassword { get; set; } = "";
 
         [XmlComment(Value = "Specify the server's MOTD (message of the day). 255 chars max")]
