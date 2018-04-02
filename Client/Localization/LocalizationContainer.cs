@@ -59,6 +59,8 @@ namespace LunaClient.Localization
                 Directory.CreateDirectory(LocalizationFolder);
             }
 
+            LoadWindowTexts(language, ref AdminWindowText);
+            LoadWindowTexts(language, ref BannedPartsWindowText);
             LoadWindowTexts(language, ref ChatWindowText);
             LoadWindowTexts(language, ref ConnectionWindowText);
             LoadWindowTexts(language, ref CraftLibraryWindowText);
