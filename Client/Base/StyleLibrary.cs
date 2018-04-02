@@ -59,6 +59,13 @@ namespace LunaClient.Base
         protected Texture2D CameraRedIcon;
         protected Texture2D RocketIcon;
         protected Texture2D RocketRedIcon;
+        protected Texture2D AdminIcon;
+        protected Texture2D KickIcon;
+        protected Texture2D BanIcon;
+        protected Texture2D DekesslerIcon;
+        protected Texture2D NukeIcon;
+        protected Texture2D DekesslerBigIcon;
+        protected Texture2D NukeBigIcon;
 
         public void InitializeStyles()
         {
@@ -91,6 +98,13 @@ namespace LunaClient.Base
             CameraRedIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "cameraRed.png"), 16, 16);
             RocketIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "rocket.png"), 16, 16);
             RocketRedIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "rocketRed.png"), 16, 16);
+            AdminIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "admin.png"), 16, 16);
+            KickIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "kick.png"), 16, 16);
+            BanIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "ban.png"), 16, 16);
+            DekesslerIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "dekessler.png"), 16, 16);
+            NukeIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "nuke.png"), 16, 16);
+            DekesslerBigIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "dekesslerBig.png"), 32, 32);
+            NukeBigIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "nukeBig.png"), 32, 32);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
             ButtonStyle = new GUIStyle(GUI.skin.button);

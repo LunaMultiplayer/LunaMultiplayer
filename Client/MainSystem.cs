@@ -277,6 +277,7 @@ namespace LunaClient
             //Screenshot library: 6720
             //Screenshot image: 6721
             //Tools window: 6722
+            //Admin window: 6723
 
             WindowsHandler.OnGui();
         }

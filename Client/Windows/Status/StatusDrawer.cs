@@ -5,6 +5,7 @@ using LunaClient.Systems.Screenshot;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.Warp;
+using LunaClient.Windows.Admin;
 using LunaClient.Windows.Chat;
 using LunaClient.Windows.CraftLibrary;
 using LunaClient.Windows.Debug;
@@ -33,6 +34,10 @@ namespace LunaClient.Windows.Status
             ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, ChatSystem.Singleton.NewMessageReceived ? ChatRedIcon : ChatIcon, ButtonStyle);
             CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, CraftLibrarySystem.Singleton.NewContent ? RocketRedIcon : RocketIcon, ButtonStyle);
             ScreenshotsWindow.Singleton.Display = GUILayout.Toggle(ScreenshotsWindow.Singleton.Display, ScreenshotSystem.Singleton.NewContent ? CameraRedIcon : CameraIcon, ButtonStyle);
+            if (SettingsSystem.ServerSettings.AllowAdmin)
+            {
+                AdminWindow.Singleton.Display = GUILayout.Toggle(AdminWindow.Singleton.Display, AdminIcon, ButtonStyle);
+            }
             GUILayout.EndHorizontal();
 
             #endregion

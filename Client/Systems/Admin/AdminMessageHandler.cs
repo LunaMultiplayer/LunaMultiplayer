@@ -19,7 +19,7 @@ namespace LunaClient.Systems.Admin
             switch (msgData.AdminMessageType)
             {
                 case AdminMessageType.Reply:
-                    System.LastCommandResponse = ((AdminReplyMsgData)msgData).Response;
+                    LunaScreenMsg.PostScreenMessage($"Admin command reply: {((AdminReplyMsgData)msgData).Response}", 5f, ScreenMessageStyle.UPPER_RIGHT);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

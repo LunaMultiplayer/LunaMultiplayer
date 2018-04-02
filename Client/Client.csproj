@@ -92,6 +92,7 @@
     <Compile Include="Harmony\VesselPrecalculate_MainPhysics.cs" />
     <Compile Include="Harmony\TimeWarp_setMode.cs" />
     <Compile Include="Harmony\TimeWarp_SetRate.cs" />
+    <Compile Include="Localization\Structures\AdminWindowText.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
     <Compile Include="LunaScreenMsg.cs" />
@@ -228,6 +229,8 @@
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
+    <Compile Include="Windows\Admin\AdminDrawer.cs" />
+    <Compile Include="Windows\Admin\AdminWindow.cs" />
     <Compile Include="Windows\BannedParts\BannedPartsDrawer.cs" />
     <Compile Include="Windows\BannedParts\BannedPartsWindow.cs" />
     <Compile Include="Windows\Tools\ToolsUtils.cs" />

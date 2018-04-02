@@ -12,6 +12,7 @@ namespace LunaClient.Localization
     {
         public static Languages CurrentLanguage { get; set; } = Languages.English;
 
+        public static AdminWindowText AdminWindowText = new AdminWindowText();
         public static BannedPartsWindowText BannedPartsWindowText = new BannedPartsWindowText();
         public static ChatWindowText ChatWindowText = new ChatWindowText();
         public static ConnectionWindowText ConnectionWindowText = new ConnectionWindowText();
