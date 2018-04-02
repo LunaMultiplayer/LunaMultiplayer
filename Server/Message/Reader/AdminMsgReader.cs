@@ -25,12 +25,14 @@ namespace Server.Message.Reader
                 switch (messageData.AdminMessageType)
                 {
                     case AdminMessageType.Ban:
-                        LunaLog.Debug($"{client.PlayerName}: Requested a ban against {((AdminBanMsgData)message.Data).PlayerName}");
-                        msgData.Response = CommandHandler.Commands["ban"].Func(((AdminBanMsgData)message.Data).PlayerName) ? AdminResponse.Ok : AdminResponse.Error;
+                        var banMsg = (AdminBanMsgData)message.Data;
+                        LunaLog.Debug($"{client.PlayerName}: Requested a ban against {banMsg.PlayerName}. Reason: {banMsg.Reason}");
+                        msgData.Response = CommandHandler.Commands["ban"].Func($"{banMsg.PlayerName} {banMsg.Reason}") ? AdminResponse.Ok : AdminResponse.Error;
                         break;
                     case AdminMessageType.Kick:
-                        LunaLog.Debug($"{client.PlayerName}: Requested a kick against {((AdminKickMsgData)message.Data).PlayerName}");
-                        msgData.Response = CommandHandler.Commands["kick"].Func(((AdminKickMsgData)message.Data).PlayerName) ? AdminResponse.Ok : AdminResponse.Error;
+                        var kickMsg = (AdminKickMsgData)message.Data;
+                        LunaLog.Debug($"{client.PlayerName}: Requested a kick against {kickMsg.PlayerName}. Reason: {kickMsg.Reason}");
+                        msgData.Response = CommandHandler.Commands["kick"].Func($"{kickMsg.PlayerName} {kickMsg.Reason}") ? AdminResponse.Ok : AdminResponse.Error;
                         break;
                     case AdminMessageType.Dekessler:
                         LunaLog.Debug($"{client.PlayerName}: Requested a dekessler");
