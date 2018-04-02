@@ -19,7 +19,6 @@ namespace LunaCommon.Message.Server
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)HandshakeMessageType.Challenge] = typeof(HandshakeChallengeMsgData),
             [(ushort)HandshakeMessageType.Reply] = typeof(HandshakeReplyMsgData)
         };
 

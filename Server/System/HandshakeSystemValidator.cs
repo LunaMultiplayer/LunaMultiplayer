@@ -1,12 +1,8 @@
 ﻿using LunaCommon.Enums;
 using Server.Client;
 using Server.Command.CombinedCommand;
-using Server.Context;
-using Server.Log;
 using Server.Settings;
-using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace Server.System
@@ -18,9 +14,17 @@ namespace Server.System
             if (username.Length > GeneralSettings.SettingsStore.MaxUsernameLength)
             {
                 Reason = $"Username too long. Max chars: {GeneralSettings.SettingsStore.MaxUsernameLength}";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.ServerFull, Reason);
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidPlayername, Reason);
                 return false;
             }
+
+            if (username.Length <= 0)
+            {
+                Reason = "Username too short. Min chars: 1";
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidPlayername, Reason);
+                return false;
+            }
+
             return true;
         }
 
@@ -35,22 +39,9 @@ namespace Server.System
             return true;
         }
 
-        private bool CheckWhitelist(ClientStructure client, string playerName)
+        private bool CheckPlayerIsBanned(ClientStructure client, string uniqueId)
         {
-            if (GeneralSettings.SettingsStore.Whitelisted && !WhitelistCommands.Retrieve().Contains(playerName))
-            {
-                Reason = "Not on whitelist";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.NotWhitelisted, Reason);
-                return false;
-            }
-            return true;
-        }
-
-        private bool CheckPlayerIsBanned(ClientStructure client, string playerName, string ipAddress, string publicKey)
-        {
-            if (BanCommands.RetrieveBannedUsernames().Contains(playerName) ||
-                BanCommands.RetrieveBannedIps().Contains(ipAddress) ||
-                BanCommands.RetrieveBannedKeys().Contains(publicKey))
+            if (BanCommands.RetrieveBannedPlayers().Contains(uniqueId))
             {
                 Reason = "Banned";
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.PlayerBanned, Reason);
@@ -64,7 +55,7 @@ namespace Server.System
             if (playerName == "Initial" || playerName == GeneralSettings.SettingsStore.ConsoleIdentifier)
             {
                 Reason = "Using reserved name";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.ReservedName, Reason);
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidPlayername, Reason);
                 return false;
             }
             return true;
@@ -75,8 +66,8 @@ namespace Server.System
             var existingClient = ClientRetriever.GetClientByName(playerName);
             if (existingClient != null)
             {
-                Reason = "Username already connected";
-                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.AlreadyConnected, Reason);
+                Reason = "Username already taken";
+                HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidPlayername, Reason);
                 return false;
             }
             return true;
@@ -87,52 +78,9 @@ namespace Server.System
             var regex = new Regex(@"^[-_a-zA-Z0-9]+$"); // Regex to only allow alphanumeric, dashes and underscore
             if (!regex.IsMatch(playerName))
             {
-                Reason = "Invalid username characters";
+                Reason = "Invalid username characters (only A-Z, a-z, numbers, - and _)";
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidPlayername, Reason);
                 return false;
-            }
-            return true;
-        }
-
-        private bool CheckKey(ClientStructure client, string playerName, string playerPublicKey, byte[] playerChallangeSignature)
-        {
-            //Check the client matches any database entry
-            var storedPlayerFile = Path.Combine(ServerContext.UniverseDirectory, "Players", $"{playerName}.txt");
-            if (FileHandler.FileExists(storedPlayerFile))
-            {
-                var storedPlayerPublicKey = FileHandler.ReadFileText(storedPlayerFile);
-                if (playerPublicKey != storedPlayerPublicKey)
-                {
-                    Reason = "Invalid key. Username was already taken and used in the past";
-                    HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidKey, Reason);
-                    return false;
-                }
-                using (var rsa = new RSACryptoServiceProvider(1024))
-                {
-                    rsa.PersistKeyInCsp = false;
-                    rsa.FromXmlString(playerPublicKey);
-                    var result = rsa.VerifyData(client.Challenge, CryptoConfig.CreateFromName("SHA256"), playerChallangeSignature);
-                    if (!result)
-                    {
-                        Reason = "Public/priv key mismatch";
-                        HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidKey, Reason);
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                try
-                {
-                    FileHandler.WriteToFile(storedPlayerFile, playerPublicKey);
-                    LunaLog.Debug($"Client {playerName} registered!");
-                }
-                catch
-                {
-                    Reason = "Invalid username";
-                    HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.InvalidPlayername, Reason);
-                    return false;
-                }
             }
             return true;
         }

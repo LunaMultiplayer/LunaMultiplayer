@@ -98,10 +98,7 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Maximum crafts folders kept")]
         public int MaxCraftFolders { get; set; } = 50;
-
-        [XmlComment(Value = "Enable white-listing of users")]
-        public bool Whitelisted { get; set; } = false;
-
+        
         [XmlComment(Value = "Heartbeat interval in Ms")]
         public int HearbeatMsInterval { get; set; } = 1000;
 

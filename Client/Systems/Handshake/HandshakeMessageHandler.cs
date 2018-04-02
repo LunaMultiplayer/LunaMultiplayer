@@ -3,7 +3,6 @@ using LunaClient.Base.Interface;
 using LunaClient.Network;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.TimeSyncer;
-using LunaCommon;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
@@ -24,10 +23,6 @@ namespace LunaClient.Systems.Handshake
 
             switch (msgData.HandshakeMessageType)
             {
-                case HandshakeMessageType.Challenge:
-                    Array.Copy(((HandshakeChallengeMsgData)msgData).Challenge, System.Challenge, 1024);
-                    MainSystem.NetworkState = ClientState.HandshakeChallengeReceived;
-                    break;
                 case HandshakeMessageType.Reply:
                     HandleHandshakeReplyReceivedMessage((HandshakeReplyMsgData)msgData);
                     break;
@@ -41,52 +36,33 @@ namespace LunaClient.Systems.Handshake
         public void HandleHandshakeReplyReceivedMessage(HandshakeReplyMsgData data)
         {
             TimeSyncerSystem.ServerStartTime = data.ServerStartTime;
-
-            HandshakeReply reply;
-            string reason;
-            var modFileData = "";
-            try
+            
+            switch (data.Response)
             {
-                reply = data.Response;
-                reason = data.Reason;
-
-                //If we handshook successfully, the mod data will be available to read.
-                if (reply == HandshakeReply.HandshookSuccessfully)
-                {
+                case HandshakeReply.HandshookSuccessfully:
                     ModSystem.Singleton.Clear();
                     ModSystem.Singleton.ModControl = data.ModControl;
                     if (ModSystem.Singleton.ModControl)
-                        modFileData = data.ModFileData;
-                }
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"[LMP]: Error handling HANDSHAKE_REPLY Message, exception: {e}");
-                reply = HandshakeReply.MalformedHandshake;
-                reason = "Incompatible HANDSHAKE_REPLY Message";
-            }
-
-            switch (reply)
-            {
-                case HandshakeReply.HandshookSuccessfully:
-                    if (ModSystem.Singleton.ModFileHandler.ParseModFile(ModFileParser.ReadModFileFromString(modFileData)))
                     {
-                        LunaLog.Log("[LMP]: Handshake successful");
-                        MainSystem.NetworkState = ClientState.Authenticated;
+                        if (ModSystem.Singleton.ModFileHandler.ParseModFile(ModFileParser.ReadModFileFromString(data.ModFileData)))
+                        {
+                            LunaLog.Log("[LMP]: Handshake successful");
+                            MainSystem.NetworkState = ClientState.Handshaked;
+                        }
+                        else
+                        {
+                            LunaLog.LogError("[LMP]: Failed to pass mod validation");
+                            NetworkConnection.Disconnect("[LMP]: Failed mod validation");
+                        }
                     }
                     else
                     {
-                        LunaLog.LogError("[LMP]: Failed to pass mod validation");
-                        NetworkConnection.Disconnect("[LMP]: Failed mod validation");
+                        LunaLog.Log("[LMP]: Handshake successful");
+                        MainSystem.NetworkState = ClientState.Handshaked;
                     }
                     break;
                 default:
-                    var disconnectReason = $"Handshake failure: {reason}";
-                    //If it's a protocol mismatch, append the client/server version.
-                    if (reply == HandshakeReply.ProtocolMismatch)
-                    {
-                        disconnectReason += $"\nClient: {LmpVersioning.CurrentVersion}, Server: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}";
-                    }
+                    var disconnectReason = $"Handshake failure: {data.Reason}";
                     LunaLog.Log(disconnectReason);
                     NetworkConnection.Disconnect(disconnectReason);
                     break;

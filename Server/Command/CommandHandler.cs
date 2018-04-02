@@ -32,7 +32,6 @@ namespace Server.Command
             RegisterCommand("nukeksc", new NukeCommand().Execute, "Clears ALL vessels from KSC and the runway");
             RegisterCommand("restartserver", new RestartServerCommand().Execute, "Restarts the server");
             RegisterCommand("say", new SayCommand().Execute, "Broadcasts a message to clients");
-            RegisterCommand("whitelist", new WhitelistCommands().HandleCommand, "Change the server whitelist");
         }
 
         /// <summary>

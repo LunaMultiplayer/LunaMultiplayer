@@ -59,12 +59,9 @@
     <Compile Include="Client\ClientStructure.cs" />
     <Compile Include="Command\CombinedCommand\BanCommands.cs" />
     <Compile Include="Command\CombinedCommand\Base\CombinedCommandBase.cs" />
-    <Compile Include="Command\CombinedCommand\WhitelistCommands.cs" />
     <Compile Include="Command\CommandDefinition.cs" />
     <Compile Include="Command\CommandHandler.cs" />
     <Compile Include="Command\Command\AdminShowCommand.cs" />
-    <Compile Include="Command\Command\BanIpCommand.cs" />
-    <Compile Include="Command\Command\BanKeyCommand.cs" />
     <Compile Include="Command\Command\BanPlayerCommand.cs" />
     <Compile Include="Command\Command\Base\AdminCommandBase.cs" />
     <Compile Include="Command\Command\Base\HandledCommand.cs" />

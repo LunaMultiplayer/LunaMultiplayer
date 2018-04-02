@@ -20,8 +20,6 @@ namespace LunaClient.Systems.SettingsSys
         public Color PlayerColor { get; set; } = PlayerColorSystem.GenerateRandomColor();
         public string SelectedFlag { get; set; } = "Squad/Flags/default";
         public List<ServerEntry> Servers { get; set; } = new List<ServerEntry>();
-        public string PrivateKey { get; set; }
-        public string PublicKey { get; set; }
         public int InitialConnectionSyncTimeRequests { get; set; } = 10;
         public bool RevertEnabled { get; set; }
         public bool InterpolationEnabled { get; set; } = false;

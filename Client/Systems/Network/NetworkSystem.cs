@@ -63,26 +63,15 @@ namespace LunaClient.Systems.Network
                     HandshakeSystem.Singleton.Enabled = true;
                     MainSystem.Singleton.Status = "Connected";
                     MainSystem.NetworkState = ClientState.Handshaking;
-                    NetworkSimpleMessageSender.SendHandshakeRequest();
+                    HandshakeSystem.Singleton.MessageSender.SendHandshakeRequest();
                     _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.Handshaking:
-                    MainSystem.Singleton.Status = "Waiting for handshake challenge";
+                    MainSystem.Singleton.Status = "Waiting for handshake response";
                     if (ConnectionIsStuck())
                         MainSystem.NetworkState = ClientState.Connected;
                     break;
-                case ClientState.HandshakeChallengeReceived:
-                    MainSystem.Singleton.Status = "Challenge received, authenticating";
-                    MainSystem.NetworkState = ClientState.Authenticating;
-                    HandshakeSystem.Singleton.SendHandshakeChallengeResponse();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.Authenticating:
-                    MainSystem.Singleton.Status = "Connection successful, authenticating";
-                    if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.HandshakeChallengeReceived;
-                    break;
-                case ClientState.Authenticated:
+                case ClientState.Handshaked:
                     MainSystem.Singleton.Status = "Handshaking successful";
                     SettingsSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingSettings;
@@ -93,7 +82,7 @@ namespace LunaClient.Systems.Network
                 case ClientState.SyncingSettings:
                     MainSystem.Singleton.Status = "Syncing settings";
                     if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.Authenticated;
+                        MainSystem.NetworkState = ClientState.Handshaked;
                     break;
                 case ClientState.SettingsSynced:
                     MainSystem.Singleton.Status = "Settings synced";

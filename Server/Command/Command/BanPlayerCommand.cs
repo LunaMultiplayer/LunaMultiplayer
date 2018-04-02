@@ -21,14 +21,19 @@ namespace Server.Command.Command
                 var player = ClientRetriever.GetClientByName(playerName);
 
                 if (player != null)
+                {
                     MessageQueuer.SendConnectionEnd(player, $"You were banned from the server: {reason}");
-
-                Add(playerName);
-                LunaLog.Normal($"Player '{playerName}' was banned from the server: {reason}");
+                    Add(player.UniqueIdentifier);
+                    LunaLog.Normal($"Player '{playerName}' was banned from the server: {reason}");
+                }
+                else
+                {
+                    LunaLog.Normal($"Player '{playerName}' not found");
+                }
             }
             else
             {
-                LunaLog.Normal($"Player: {playerName} not found");
+                LunaLog.Normal("Undefined function. Usage: /ban [username] [reason]");
             }
         }
     }

@@ -1,6 +1,6 @@
-﻿using System.Linq;
+﻿using Server.Context;
+using System.Linq;
 using System.Net;
-using Server.Context;
 
 namespace Server.Client
 {
@@ -40,11 +40,6 @@ namespace Server.Client
         public static ClientStructure GetClientByIp(IPAddress ipAddress)
         {
             return GetAuthenticatedClients().FirstOrDefault(testClient => Equals(testClient.Endpoint.Address, ipAddress));
-        }
-
-        public static ClientStructure GetClientByPublicKey(string publicKey)
-        {
-            return GetAuthenticatedClients().FirstOrDefault(testClient => testClient.PublicKey == publicKey);
         }
     }
 }

@@ -3,7 +3,6 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Color;
 using LunaCommon.Message.Data.Flag;
 using LunaCommon.Message.Data.Groups;
-using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Data.Kerbal;
 using LunaCommon.Message.Data.PlayerStatus;
 using LunaCommon.Message.Data.Scenario;
@@ -14,11 +13,6 @@ namespace LunaClient.Network
 {
     public class NetworkSimpleMessageSender
     {
-        public static void SendHandshakeRequest()
-        {
-            NetworkSender.OutgoingMessages.Enqueue(NetworkMain.CliMsgFactory.CreateNew<HandshakeCliMsg, HandshakeRequestMsgData>());
-        }
-
         public static void SendKerbalsRequest()
         {
             SystemBase.TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(NetworkMain.CliMsgFactory.CreateNew<KerbalCliMsg, KerbalsRequestMsgData>()));

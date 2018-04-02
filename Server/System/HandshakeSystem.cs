@@ -7,7 +7,6 @@ using Server.Context;
 using Server.Log;
 using Server.Plugin;
 using Server.Server;
-using System;
 
 namespace Server.System
 {
@@ -15,39 +14,35 @@ namespace Server.System
     {
         private string Reason { get; set; }
 
-        public void HandleHandshakeResponse(ClientStructure client, HandshakeResponseMsgData data)
+        public void HandleHandshakeRequest(ClientStructure client, HandshakeRequestMsgData data)
         {
             var valid = CheckServerFull(client);
             valid &= valid && CheckUsernameLength(client, data.PlayerName);
             valid &= valid && CheckUsernameCharacters(client, data.PlayerName);
-            valid &= valid && CheckWhitelist(client, data.PlayerName);
             valid &= valid && CheckPlayerIsAlreadyConnected(client, data.PlayerName);
             valid &= valid && CheckUsernameIsReserved(client, data.PlayerName);
-            valid &= valid && CheckPlayerIsBanned(client, data.PlayerName, client.Endpoint.Address.ToString(), data.PublicKey);
-            valid &= valid && CheckKey(client, data.PlayerName, data.PublicKey, data.ChallengeSignature);
+            valid &= valid && CheckPlayerIsBanned(client, data.UniqueIdentifier);
 
             if (!valid)
             {
-                LunaLog.Normal($"Client {data.PlayerName} failed to handshake: {Reason}. Disconnecting");
+                LunaLog.Normal($"Client {data.PlayerName} ({data.UniqueIdentifier}) failed to handshake: {Reason}. Disconnecting");
                 client.DisconnectClient = true;
                 ClientConnectionHandler.DisconnectClient(client, Reason);
             }
             else
             {
                 client.PlayerName = data.PlayerName;
-                client.PublicKey = data.PublicKey;
-                client.Id = Guid.NewGuid();
+                client.UniqueIdentifier = data.UniqueIdentifier;
                 client.Authenticated = true;
 
                 LmpPluginHandler.FireOnClientAuthenticated(client);
 
-                LunaLog.Normal($"Client {data.PlayerName} handshook successfully, Version: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}");
+                LunaLog.Normal($"Client {data.PlayerName} ({data.UniqueIdentifier}) handshake successfully, Version: {data.MajorVersion}.{data.MinorVersion}.{data.BuildVersion}");
 
                 HandshakeSystemSender.SendHandshakeReply(client, HandshakeReply.HandshookSuccessfully, "success");
 
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<PlayerConnectionJoinMsgData>();
                 msgData.PlayerName = client.PlayerName;
-
                 MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
 
                 LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ClientRetriever.GetClients().Length}");

@@ -7,9 +7,7 @@
         Connecting = 1,
         Connected = 2,
         Handshaking = 3,
-        HandshakeChallengeReceived = 4,
-        Authenticating = 5,
-        Authenticated = 6,
+        Handshaked = 6,
 
         SyncingSettings = 7,
         SettingsSynced = 8,

@@ -135,10 +135,8 @@
     <Compile Include="Message\Data\Groups\GroupRemoveMsgData.cs" />
     <Compile Include="Message\Data\Groups\GroupUpdateMsgData.cs" />
     <Compile Include="Message\Data\Handshake\HandshakeBaseMsgData.cs" />
-    <Compile Include="Message\Data\Handshake\HandshakeChallengeMsgData.cs" />
     <Compile Include="Message\Data\Handshake\HandshakeReplyMsgData.cs" />
     <Compile Include="Message\Data\Handshake\HandshakeRequestMsgData.cs" />
-    <Compile Include="Message\Data\Handshake\HandshakeResponseMsgData.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalBaseMsgData.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalInfo.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalProtoMsgData.cs" />
