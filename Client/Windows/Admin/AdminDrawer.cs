@@ -16,9 +16,11 @@ namespace LunaClient.Windows.Admin
 
             GUILayout.BeginHorizontal();
             GUILayout.Label(LocalizationContainer.AdminWindowText.Password, LabelStyle);
-            AdminSystem.Singleton.AdminPassword = GUILayout.PasswordField(AdminSystem.Singleton.AdminPassword, '*', 30, TextAreaStyle); // Max 32 characters
+            AdminSystem.Singleton.AdminPassword = GUILayout.PasswordField(AdminSystem.Singleton.AdminPassword, '*', 30, TextAreaStyle, GUILayout.Width(200)); // Max 32 characters
             GUILayout.EndHorizontal();
             GUILayout.Space(5);
+
+            GUI.enabled = !string.IsNullOrEmpty(AdminSystem.Singleton.AdminPassword);
 
             ScrollPos = GUILayout.BeginScrollView(ScrollPos, ScrollStyle);
             foreach (var player in StatusSystem.Singleton.PlayerStatusList.Keys)
@@ -38,6 +40,8 @@ namespace LunaClient.Windows.Admin
             {
                 AdminSystem.Singleton.MessageSender.SendNukeMsg();
             }
+
+            GUI.enabled = true;
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
         }
