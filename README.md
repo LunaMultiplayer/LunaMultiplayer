@@ -22,7 +22,7 @@
 ---
 
 <p align="center">
-  <a href="../../releases/latest"><img src="../master/External/downloadIcon.png" alt="Download"/></a>
+  <a href="../../releases/latest"><img src="../master/External/downloadIcon.png" alt="Download" height="85" width="300"/></a>
 </p>
 
 ---
