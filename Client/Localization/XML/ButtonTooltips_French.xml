@@ -2,9 +2,9 @@
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SettingsIcon>Paramètres</SettingsIcon>
   <ServerIcon>Serveurs</ServerIcon>
-  <ConnectIcon>Connecter</ConnectIcon>
-  <DisconnectIcon>Déconnecter</DisconnectIcon>
-  <SyncIcon>Warper à</SyncIcon>
+  <ConnectIcon>Se connecter</ConnectIcon>
+  <DisconnectIcon>Se déconnecter</DisconnectIcon>
+  <SyncIcon>Warper</SyncIcon>
   <CloseIcon>Fermer</CloseIcon>
   <RefreshIcon>Rafraîchir</RefreshIcon>
   <UploadIcon>Partager</UploadIcon>
