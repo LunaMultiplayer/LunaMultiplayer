@@ -54,7 +54,7 @@ namespace LunaCommon
         /// </summary>
         public static double LerpRadAnglePi(double from, double to, float t)
         {
-            var angle = LerpDegAngle(from, to, t);
+            var angle = LerpRadAngle(from, to, t);
             if (angle > Math.PI)
                 return angle - 2 * Math.PI;
             return angle;
