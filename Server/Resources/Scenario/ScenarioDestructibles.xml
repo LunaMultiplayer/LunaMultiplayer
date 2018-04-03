@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-16"?>
+<LMPConfigNodeToXML>
+  <Parameter name="name">ScenarioDestructibles</Parameter>
+  <Parameter name="scene">5, 7, 6, 8</Parameter>
+  <Node name="SpaceCenter/Administration/Facility/mainBuilding">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/AstronautComplex/Facility/building">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_cylTank">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_launchPad">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_sphereTank">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/LaunchPad/Facility/LaunchPadMedium/ksp_pad_waterTower">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/LaunchPad/Facility/LaunchPadMedium/KSCFlagPoleLaunchPad">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/MissionControl/Facility/building">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/ksp_pad_cylTank">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/SmallLab">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/CentralBuilding">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/MainBuilding">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/CornerLab">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/WindTunnel">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/Observatory">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/SideLab">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/model_runway_new_v43/runway_light_SE">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/model_runway_new_v43/runway_light_NE">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/model_runway_new_v43/runway_light_NW">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/model_runway_new_v43/runway_light_SW">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/End09">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/End27">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/Section1">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/Section2">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/Section3">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Runway/Facility/Section4">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/SpaceplaneHangar/Facility/Tank">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/SpaceplaneHangar/Facility/ksp_pad_cylTank">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/SpaceplaneHangar/Facility/ksp_pad_waterTower">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/SpaceplaneHangar/Facility/mainBuilding">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/TrackingStation/Facility/dish_array/dish_south">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/TrackingStation/Facility/dish_array/dish_north">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/TrackingStation/Facility/dish_array/dish_east">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/TrackingStation/Facility/MainBuilding">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/VehicleAssemblyBuilding/Facility/ksp_pad_cylTank">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/VehicleAssemblyBuilding/Facility/Tank">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/VehicleAssemblyBuilding/Facility/mainBuilding">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/VehicleAssemblyBuilding/Facility/PodMemorial">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/FlagPole/Facility">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/VehicleAssemblyBuilding/Facility/VAB2">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/TrackingStation/Facility/building">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/TrackingStation/Facility/OuterDish">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/SpaceplaneHangar/Facility/Building">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/mainBuilding">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/ResearchAndDevelopment/Facility/ForeverAlone">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/MissionControl/Facility/mainBuilding">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/LaunchPad/Facility/Flag">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/AstronautComplex/Facility/mainBuilding">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+  <Node name="SpaceCenter/Administration/Facility/Building">
+    <Parameter name="intact">True</Parameter>
+  </Node>
+</LMPConfigNodeToXML>

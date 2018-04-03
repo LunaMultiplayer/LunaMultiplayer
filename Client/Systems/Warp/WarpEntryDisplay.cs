@@ -11,8 +11,6 @@ namespace LunaClient.Systems.Warp
     /// </summary>
     public class WarpEntryDisplay : SubSystem<WarpSystem>
     {
-        private static readonly List<SubspaceDisplayEntry> SubspaceEntries = new List<SubspaceDisplayEntry>();
-
         /// <summary>
         /// Get the list of player and subspaces depending on the warp mode
         /// </summary>
@@ -24,7 +22,7 @@ namespace LunaClient.Systems.Warp
             else
                 FillSubspaceDisplayEntriesNoneSubspace();
 
-            return SubspaceEntries;
+            return System.SubspaceEntries;
         }
 
         #region private methods
@@ -34,15 +32,15 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private static void FillSubspaceDisplayEntriesNoneSubspace()
         {
-            if (SubspaceEntries.Count != 1 || System.ClientSubspaceList.Keys.Count != SubspaceEntries[0].Players.Count)
+            if (System.SubspaceEntries.Count != 1 || System.ClientSubspaceList.Keys.Count != System.SubspaceEntries[0].Players.Count)
             {
-                SubspaceEntries.Clear();
+                System.SubspaceEntries.Clear();
 
                 var allPlayers = new List<string> { SettingsSystem.CurrentSettings.PlayerName };
                 allPlayers.AddRange(System.ClientSubspaceList.Keys);
                 allPlayers.Sort(PlayerSorter);
 
-                SubspaceEntries.Add(new SubspaceDisplayEntry
+                System.SubspaceEntries.Add(new SubspaceDisplayEntry
                 {
                     Players = allPlayers,
                     SubspaceId = 0,
@@ -59,7 +57,7 @@ namespace LunaClient.Systems.Warp
             //Redo the list only if the subspaces have changed.
             if (PlayersInSubspacesHaveChanged())
             {
-                SubspaceEntries.Clear();
+                System.SubspaceEntries.Clear();
                 var groupedPlayers = System.ClientSubspaceList.GroupBy(s => s.Value);
                 foreach (var subspace in groupedPlayers)
                 {
@@ -74,17 +72,17 @@ namespace LunaClient.Systems.Warp
                     {
                         if (subspace.Select(v => v.Key).Contains(SettingsSystem.CurrentSettings.PlayerName))
                         {
-                            SubspaceEntries.Insert(0, newSubspaceDisplay);
+                            System.SubspaceEntries.Insert(0, newSubspaceDisplay);
                         }
                         else
                         {
                             newSubspaceDisplay.Players.Insert(0, SettingsSystem.CurrentSettings.PlayerName);
-                            SubspaceEntries.Insert(0, newSubspaceDisplay);
+                            System.SubspaceEntries.Insert(0, newSubspaceDisplay);
                         }
                     }
                     else
                     {
-                        SubspaceEntries.Add(newSubspaceDisplay);
+                        System.SubspaceEntries.Add(newSubspaceDisplay);
                     }
                 }
             }
@@ -93,17 +91,17 @@ namespace LunaClient.Systems.Warp
         private static bool PlayersInSubspacesHaveChanged()
         {
             //We add 1 as subspace always contain the -1 subspace
-            if (SubspaceEntries.Count + 1 != System.Subspaces.Count)
+            if (System.SubspaceEntries.Count + 1 != System.Subspaces.Count)
                 return true;
-            if (SubspaceEntries.Sum(s => s.Players.Count) != System.ClientSubspaceList.Keys.Count)
+            if (System.SubspaceEntries.Sum(s => s.Players.Count) != System.ClientSubspaceList.Keys.Count)
                 return true;
 
-            for (var i = 0; i < SubspaceEntries.Count; i++)
+            for (var i = 0; i < System.SubspaceEntries.Count; i++)
             {
-                for (var j = 0; j < SubspaceEntries[i].Players.Count; j++)
+                for (var j = 0; j < System.SubspaceEntries[i].Players.Count; j++)
                 {
-                    var player = SubspaceEntries[i].Players[j];
-                    var expectedSubspace = SubspaceEntries[i].SubspaceId;
+                    var player = System.SubspaceEntries[i].Players[j];
+                    var expectedSubspace = System.SubspaceEntries[i].SubspaceId;
                     if (!System.ClientSubspaceList.TryGetValue(player, out var realSubspace) || realSubspace != expectedSubspace)
                         return true;
                 }

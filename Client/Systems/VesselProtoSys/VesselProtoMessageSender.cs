@@ -37,15 +37,15 @@ namespace LunaClient.Systems.VesselProtoSys
 
         public void SendVesselMessage(Vessel vessel, bool force)
         {
-            if (vessel == null || VesselCommon.IsSpectating || vessel.state == Vessel.State.DEAD)
+            if (vessel == null || VesselCommon.IsSpectating || vessel.state == Vessel.State.DEAD || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
                 return;
-            
+
             var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
 
             if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
                 SendVesselMessage(vessel.BackupVessel());
 
-            if(!VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
+            if (!VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
                 VesselsProtoStore.AddVesselToDictionary(vessel);
         }
 

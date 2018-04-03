@@ -6,12 +6,10 @@ namespace Server.Command.Command
 {
     public class ListClientsCommand : SimpleCommand
     {
-        public override void Execute(string commandArgs)
+        public override bool Execute(string commandArgs)
         {
-            if (ServerContext.Players != "")
-                LunaLog.Normal($"Online Players: {ServerContext.Players}");
-            else
-                LunaLog.Normal("No Clients connected");
+            LunaLog.Normal(ServerContext.Players != "" ? $"Online Players: {ServerContext.Players}" : "No Clients connected");
+            return true;
         }
     }
 }

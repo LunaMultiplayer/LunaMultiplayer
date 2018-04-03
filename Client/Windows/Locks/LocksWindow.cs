@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using LunaClient.Utilities;
 using LunaClient.VesselStore;
 using LunaCommon.Enums;
 using System;
@@ -21,18 +20,12 @@ namespace LunaClient.Windows.Locks
         private static bool _display;
         public override bool Display
         {
-            get
-            {
-                if (!_display) return false;
-
-                return MainSystem.NetworkState >= ClientState.Running && MainSystem.ToolbarShowGui &&
-                    HighLogic.LoadedScene >= GameScenes.SPACECENTER;
-            }
-            set => _display = value;
+            get => base.Display && _display && MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+            set => base.Display = _display = value;
         }
 
-        private float WindowHeight { get; } = 400;
-        private float WindowWidth { get; } = 400;
+        private const float WindowHeight = 400;
+        private const float WindowWidth = 400;
 
         private DateTime _lastUpdateTime = DateTime.MinValue;
 
@@ -45,10 +38,7 @@ namespace LunaClient.Windows.Locks
         public override void Update()
         {
             base.Update();
-            SafeDisplay = Display;
-            if (!Display) return;
-
-            if (DateTime.Now - _lastUpdateTime > TimeSpan.FromSeconds(3))
+            if (Display && DateTime.Now - _lastUpdateTime > TimeSpan.FromSeconds(3))
             {
                 _lastUpdateTime = DateTime.Now;
 
@@ -91,10 +81,10 @@ namespace LunaClient.Windows.Locks
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
-                WindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6716 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, "LunaMultiplayer - Locks", WindowStyle, LayoutOptions));
+            if (Display)
+            {
+                WindowRect = FixWindowPos(GUILayout.Window(6717 + MainSystem.WindowOffset, WindowRect, DrawContent, "Locks", WindowStyle, LayoutOptions));
+            }
             CheckWindowLock();
         }
 
@@ -125,7 +115,7 @@ namespace LunaClient.Windows.Locks
 
         private void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -147,7 +137,7 @@ namespace LunaClient.Windows.Locks
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
     }

@@ -1,10 +1,12 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Threading;
 using UniLinq;
 
@@ -56,6 +58,7 @@ namespace LunaClient.Systems.Warp
         public bool WaitingSubspaceIdFromServer { get; set; }
         public bool SyncedToLastSubspace { get; set; }
         private static DateTime StoppedWarpingTimeStamp { get; set; }
+        public List<SubspaceDisplayEntry> SubspaceEntries { get; } = new List<SubspaceDisplayEntry>();
 
         #endregion
 
@@ -72,6 +75,7 @@ namespace LunaClient.Systems.Warp
             GameEvents.onLevelWasLoadedGUIReady.Remove(WarpEvents.OnSceneChanged);
             ClientSubspaceList.Clear();
             Subspaces.Clear();
+            SubspaceEntries.Clear();
             _currentSubspace = int.MinValue;
             SkipSubspaceProcess = false;
             WaitingSubspaceIdFromServer = false;
@@ -160,6 +164,31 @@ namespace LunaClient.Systems.Warp
         #region Public methods
 
         /// <summary>
+        /// Perform warp validations
+        /// </summary>
+        public bool WarpValidation()
+        {
+            if (SettingsSystem.ServerSettings.WarpMode == WarpMode.None || SettingsSystem.ServerSettings.WarpMode == WarpMode.Master &&
+                SettingsSystem.ServerSettings.WarpMaster != SettingsSystem.CurrentSettings.PlayerName)
+            {
+                DisplayMessage(SettingsSystem.ServerSettings.WarpMode == WarpMode.None ?
+                    LocalizationContainer.ScreenText.WarpDisabled :
+                    LocalizationContainer.ScreenText.NotWarpMaster, 5f);
+
+                return false;
+            }
+
+
+            if (WaitingSubspaceIdFromServer)
+            {
+                DisplayMessage(LocalizationContainer.ScreenText.WaitingSubspace, 5f);
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Changes subspace if the given subspace is more advanced in time
         /// </summary>
         public void WarpIfSubspaceIsMoreAdvanced(int newSubspace)
@@ -218,7 +247,7 @@ namespace LunaClient.Systems.Warp
         {
             if (WarpMessage != null)
                 WarpMessage.duration = 0f;
-            WarpMessage = ScreenMessages.PostScreenMessage(messageText, messageDuration, ScreenMessageStyle.UPPER_CENTER);
+            WarpMessage = LunaScreenMsg.PostScreenMessage(messageText, messageDuration, ScreenMessageStyle.UPPER_CENTER);
         }
 
         public void RemovePlayer(string playerName)

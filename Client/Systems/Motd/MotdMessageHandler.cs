@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Chat;
-using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Data.Motd;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -18,9 +17,8 @@ namespace LunaClient.Systems.Motd
 
             if (!string.IsNullOrEmpty(msgData.MessageOfTheDay))
             {
-                System.DisplayMotd = true;
-                System.ServerMotd = msgData.MessageOfTheDay;
                 ChatSystem.Singleton.PrintToChat(msgData.MessageOfTheDay);
+                LunaScreenMsg.PostScreenMessage(msgData.MessageOfTheDay, 30f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
     }

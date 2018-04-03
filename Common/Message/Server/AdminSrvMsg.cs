@@ -16,18 +16,13 @@ namespace LunaCommon.Message.Server
         /// <inheritdoc />
         public override string ClassName { get; } = nameof(AdminSrvMsg);
 
-        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
-            [(ushort)AdminMessageType.ListReply] = typeof(AdminListReplyMsgData),
-            [(ushort)AdminMessageType.Add] = typeof(AdminAddMsgData),
-            [(ushort)AdminMessageType.Remove] = typeof(AdminRemoveMsgData)
+            [(ushort)AdminMessageType.Reply] = typeof(AdminReplyMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.Admin;
         protected override int DefaultChannel => 16;
-
-        //Must arrive but only the latest is important
         public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }
 }

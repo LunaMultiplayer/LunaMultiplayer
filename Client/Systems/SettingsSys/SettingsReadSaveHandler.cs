@@ -1,9 +1,6 @@
-using LunaClient.Utilities;
+﻿using LunaClient.Utilities;
 using LunaCommon.Xml;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
 
 namespace LunaClient.Systems.SettingsSys
 {
@@ -62,37 +59,9 @@ namespace LunaClient.Systems.SettingsSys
         private static void CreateDefaultSettingsFile()
         {
             var defaultSettings = new SettingStructure();
-
-            var newKey = GenerateNewKeypair();
-            defaultSettings.PrivateKey = newKey.Key;
-            defaultSettings.PublicKey = newKey.Value;
-
             LunaXmlSerializer.WriteToXmlFile(defaultSettings, SettingsFilePath);
         }
-
-        private static KeyValuePair<string, string> GenerateNewKeypair()
-        {
-            using (var rsa = new RSACryptoServiceProvider(1024))
-            {
-                try
-                {
-                    var privateKey = rsa.ToXmlString(true);
-                    var publicKey = rsa.ToXmlString(false);
-                    return new KeyValuePair<string, string>(privateKey, publicKey);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Error generating RSA key: {e}");
-                }
-                finally
-                {
-                    //Don't save the key in the machine store.
-                    rsa.PersistKeyInCsp = false;
-                }
-            }
-            return new KeyValuePair<string, string>("", "");
-        }
-
+        
         private static void RestoreBackupIfNoSettings()
         {
             if (File.Exists(BackupSettingsFilePath) && !File.Exists(SettingsFilePath))

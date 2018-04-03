@@ -147,7 +147,9 @@ namespace Server.Lidgren
             client.BytesSent += outmsg.LengthBytes;
             
             var sendResult = Server.SendMessage(outmsg, client.Connection, message.NetDeliveryMethod, message.Channel);
-            Server.FlushSendQueue(); //Manually force to send the msg
+
+            //Force send of packets
+            Server.FlushSendQueue();
         }
 
         public static void ShutdownLidgrenServer()

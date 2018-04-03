@@ -7,9 +7,7 @@
         Connecting = 1,
         Connected = 2,
         Handshaking = 3,
-        HandshakeChallengeReceived = 4,
-        Authenticating = 5,
-        Authenticated = 6,
+        Handshaked = 6,
 
         SyncingSettings = 7,
         SettingsSynced = 8,
@@ -26,14 +24,8 @@
         PlayersSynced = 19,
         SyncingScenarios = 20,
         ScenariosSynced = 21,
-        SyncingCraftlibrary = 22,
-        CraftlibrarySynced = 23,
         SyncingLocks = 24,
         LocksSynced = 25,
-        SyncingAdmins = 26,
-        AdminsSynced = 27,
-        SyncingGroups = 28,
-        GroupsSynced = 29,
 
         Starting = 35,
         Running = 36

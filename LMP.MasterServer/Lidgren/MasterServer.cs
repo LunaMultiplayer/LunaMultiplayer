@@ -31,7 +31,6 @@ namespace LMP.MasterServer.Lidgren
         {
             var config = new NetPeerConfiguration("masterserver")
             {
-                AutoFlushSendQueue = false, //Set it to false so lidgren doesn't wait until msg.size = MTU for sending
                 Port = Port,
                 SuppressUnreliableUnorderedAcks = true,
                 PingInterval = 500,
@@ -95,7 +94,7 @@ namespace LMP.MasterServer.Lidgren
         private static void CheckMasterServerListed()
         {
             var servers = MasterServerRetriever.RetrieveWorkingMasterServersEndpoints();
-            var ownEndpoint = $"{Helper.GetOwnIpAddress()}:{Port}";
+            var ownEndpoint = $"{LunaNetUtils.GetOwnExternalIpAddress()}:{Port}";
 
             if(!servers.Contains(ownEndpoint))
             {
@@ -178,6 +177,8 @@ namespace LMP.MasterServer.Lidgren
 
                 msg.Serialize(outMsg);
                 peer.SendUnconnectedMessage(outMsg, netMsg.SenderEndPoint);
+
+                //Force send of packets
                 peer.FlushSendQueue();
             }
         }

@@ -1,4 +1,5 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using System.Collections.Generic;
@@ -27,10 +28,12 @@ namespace LunaClient.Systems.PlayerColorSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            MessageSender.SendPlayerColorToServer();
+
             GameEvents.onVesselCreate.Add(PlayerColorEvents.OnVesselCreated);
             GameEvents.OnMapEntered.Add(PlayerColorEvents.MapEntered);
-            LockSystem.Singleton.RegisterAcquireHook(PlayerColorEvents.OnLockAcquire);
-            LockSystem.Singleton.RegisterReleaseHook(PlayerColorEvents.OnLockRelease);
+            LockEvent.onLockAcquireUnityThread.Add(PlayerColorEvents.OnLockAcquire);
+            LockEvent.onLockReleaseUnityThread.Add(PlayerColorEvents.OnLockRelease);
         }
 
         protected override void OnDisabled()
@@ -38,8 +41,8 @@ namespace LunaClient.Systems.PlayerColorSys
             base.OnDisabled();
             GameEvents.onVesselCreate.Remove(PlayerColorEvents.OnVesselCreated);
             GameEvents.OnMapEntered.Remove(PlayerColorEvents.MapEntered);
-            LockSystem.Singleton.UnregisterAcquireHook(PlayerColorEvents.OnLockAcquire);
-            LockSystem.Singleton.UnregisterReleaseHook(PlayerColorEvents.OnLockRelease);
+            LockEvent.onLockAcquireUnityThread.Remove(PlayerColorEvents.OnLockAcquire);
+            LockEvent.onLockReleaseUnityThread.Remove(PlayerColorEvents.OnLockRelease);
             PlayerColors.Clear();
         }
 
@@ -52,11 +55,8 @@ namespace LunaClient.Systems.PlayerColorSys
         /// </summary>
         public void SetVesselOrbitColor(Vessel colorVessel)
         {
-            if (Enabled)
-            {
-                var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
-                SetOrbitColor(colorVessel, vesselOwner == null ? DefaultColor : GetPlayerColor(vesselOwner));
-            }
+            var vesselOwner = LockSystem.LockQuery.GetControlLockOwner(colorVessel.id);
+            SetOrbitColor(colorVessel, vesselOwner == null ? DefaultColor : GetPlayerColor(vesselOwner));
         }
 
         public static Color GenerateRandomColor()

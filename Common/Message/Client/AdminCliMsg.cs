@@ -16,16 +16,16 @@ namespace LunaCommon.Message.Client
         /// <inheritdoc />
         public override string ClassName { get; } = nameof(AdminCliMsg);
 
-        /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
-        {        
-            [(ushort)AdminMessageType.ListRequest] = typeof(AdminListRequestMsgData)
+        {
+            [(ushort)AdminMessageType.Ban] = typeof(AdminBanMsgData),
+            [(ushort)AdminMessageType.Kick] = typeof(AdminKickMsgData),
+            [(ushort)AdminMessageType.Dekessler] = typeof(AdminDekesslerMsgData),
+            [(ushort)AdminMessageType.Nuke] = typeof(AdminNukeMsgData),
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Admin;
-
         protected override int DefaultChannel => 16;
-
         public override NetDeliveryMethod NetDeliveryMethod => NetDeliveryMethod.ReliableOrdered;
     }
 }

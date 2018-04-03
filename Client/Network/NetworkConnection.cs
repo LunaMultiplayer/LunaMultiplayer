@@ -90,6 +90,8 @@ namespace LunaClient.Network
                     outmsg.Write(serverPassword);
                     
                     NetworkMain.ClientConnection.Connect(endpoint, outmsg);
+
+                    //Force send of packets
                     NetworkMain.ClientConnection.FlushSendQueue();
 
                     var connectionTrials = 0;

@@ -1,7 +1,4 @@
-﻿using LunaClient.VesselStore;
-using LunaClient.VesselUtilities;
-using UniLinq;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace LunaClient.Windows.Debug
 {
@@ -11,67 +8,31 @@ namespace LunaClient.Windows.Debug
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            DisplayFast = GUILayout.Toggle(DisplayFast, "Fast debug update", ButtonStyle);
+            _displayFast = GUILayout.Toggle(_displayFast, "Fast debug update", ButtonStyle);
 
-            DisplayVectors = GUILayout.Toggle(DisplayVectors, "Display vessel vectors", ButtonStyle);
-            if (DisplayVectors)
-                GUILayout.Label(VectorText, LabelStyle);
+            _displayVectors = GUILayout.Toggle(_displayVectors, "Display vessel vectors", ButtonStyle);
+            if (_displayVectors)
+                GUILayout.Label(_vectorText, LabelStyle);
 
-            DisplayOrbit = GUILayout.Toggle(DisplayOrbit, "Display orbit info", ButtonStyle);
-            if (DisplayOrbit)
-                GUILayout.Label(OrbitText, LabelStyle);
+            _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display orbit info", ButtonStyle);
+            if (_displayOrbit)
+                GUILayout.Label(_orbitText, LabelStyle);
 
-            DisplayVesselStoreData = GUILayout.Toggle(DisplayVesselStoreData, "Display vessel store data", ButtonStyle);
-            if (DisplayVesselStoreData)
-                GUILayout.Label(VesselStoreText, LabelStyle);
+            _displayVesselStoreData = GUILayout.Toggle(_displayVesselStoreData, "Display vessel store data", ButtonStyle);
+            if (_displayVesselStoreData)
+                GUILayout.Label(_vesselStoreText, LabelStyle);
 
-            DisplayNtp = GUILayout.Toggle(DisplayNtp, "Display NTP/Subspace statistics", ButtonStyle);
-            if (DisplayNtp)
-                GUILayout.Label(NtpText, LabelStyle);
+            _displayInterpolationData = GUILayout.Toggle(_displayInterpolationData, "Display interpolation statistics", ButtonStyle);
+            if (_displayInterpolationData)
+                GUILayout.Label(_interpolationText, LabelStyle);
 
-            DisplayConnectionQueue = GUILayout.Toggle(DisplayConnectionQueue, "Display connection statistics", ButtonStyle);
-            if (DisplayConnectionQueue)
-                GUILayout.Label(ConnectionText, LabelStyle);
+            _displayNtp = GUILayout.Toggle(_displayNtp, "Display NTP/Subspace statistics", ButtonStyle);
+            if (_displayNtp)
+                GUILayout.Label(_ntpText, LabelStyle);
 
-            if (GUILayout.Button("Reload all vessels", ButtonStyle))
-            {
-                var protos = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.ProtoVessel);
-                foreach (var proto in protos)
-                {
-                    if (FlightGlobals.ActiveVessel?.id == proto.vesselID) continue;
-                    VesselLoader.ReloadVessel(proto);
-                }
-            }
-            
-            if (GUILayout.Button("Pack all vessels", ButtonStyle))
-            {
-                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                foreach (var vessel in vessels)
-                {
-                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.vesselRanges = DebugUtils.PackRanges;
-                }
-            }
-            
-            if (GUILayout.Button("Unpack all vessels", ButtonStyle))
-            {
-                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                foreach (var vessel in vessels)
-                {
-                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.vesselRanges = DebugUtils.UnPackRanges;
-                }
-            }
-
-            if (GUILayout.Button("Reset ranges", ButtonStyle))
-            {
-                var vessels = VesselsProtoStore.AllPlayerVessels.Values.Select(v => v.Vessel).Where(v => v != null);
-                foreach (var vessel in vessels)
-                {
-                    if (FlightGlobals.ActiveVessel?.id == vessel.id) continue;
-                    vessel.vesselRanges = PhysicsGlobals.Instance.VesselRangesDefault;
-                }
-            }
+            _displayConnectionQueue = GUILayout.Toggle(_displayConnectionQueue, "Display connection statistics", ButtonStyle);
+            if (_displayConnectionQueue)
+                GUILayout.Label(_connectionText, LabelStyle);
 
             GUILayout.EndVertical();
         }

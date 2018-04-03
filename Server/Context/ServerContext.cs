@@ -8,7 +8,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
-using System.Threading.Tasks;
+using System.Threading;
 
 namespace Server.Context
 {
@@ -33,8 +33,6 @@ namespace Server.Context
         // Configuration object
         public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
         {            
-            //Set it to false so lidgren doesn't wait until msg.size = MTU for sending
-            AutoFlushSendQueue = false,
             SendBufferSize = 1500000, //500kb
             ReceiveBufferSize = 1500000, //500kb
             DefaultOutgoingMessageCapacity = 500000, //500kb
@@ -45,10 +43,10 @@ namespace Server.Context
         public static ServerMessageFactory ServerMessageFactory { get; } = new ServerMessageFactory();
         public static ClientMessageFactory ClientMessageFactory { get; } = new ClientMessageFactory();
 
-        public static async void Shutdown()
+        public static void Shutdown(string reason)
         {
-            MessageQueuer.SendConnectionEndToAll("Server is shutting down");
-            await Task.Delay(1000);
+            MessageQueuer.SendConnectionEndToAll(reason);
+            Thread.Sleep(250);
             ServerStarting = false;
             ServerRunning = false;
         }

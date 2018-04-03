@@ -1,4 +1,4 @@
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using LunaCommon.Xml;
 using Server.Command.Command.Base;
@@ -28,9 +28,10 @@ namespace Server.Command.Command
             }
         }
 
-        public override void Execute(string commandArgs)
+        public override bool Execute(string commandArgs)
         {
             RunNuke();
+            return true;
         }
 
         private static void RunNuke()

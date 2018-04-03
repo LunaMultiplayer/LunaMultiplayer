@@ -8,7 +8,7 @@ namespace Server.Command.Command
 {
     public class KickCommand : SimpleCommand
     {
-        public override void Execute(string commandArgs)
+        public override bool Execute(string commandArgs)
         {
             CommandSystemHelperMethods.SplitCommand(commandArgs, out var playerName, out var reason);
             reason = string.IsNullOrEmpty(reason) ? "No reason specified" : reason;
@@ -20,16 +20,17 @@ namespace Server.Command.Command
                 {
                     LunaLog.Normal($"Kicking {playerName} from the server");
                     MessageQueuer.SendConnectionEnd(player, $"Kicked from the server: {reason}");
+                    return true;
                 }
-                else
-                {
-                    LunaLog.Normal($"Player: {playerName} not found");
-                }
+
+                LunaLog.Normal($"Player: {playerName} not found");
             }
             else
             {
                 LunaLog.Error("Syntax error. Usage: /kick playername [reason]");
             }
+
+            return false;
         }
     }
 }

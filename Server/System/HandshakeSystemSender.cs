@@ -20,7 +20,6 @@ namespace Server.System
             {
                 msgData.ModControl = GeneralSettings.SettingsStore.ModControl;
                 msgData.ServerStartTime = ServerContext.StartTime;
-                msgData.PlayerId = client.Id;
 
                 if (GeneralSettings.SettingsStore.ModControl)
                 {

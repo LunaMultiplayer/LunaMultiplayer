@@ -12,6 +12,7 @@ namespace LunaClient.Systems.SettingsSys
         public GameMode GameMode { get; set; }
         public TerrainQuality TerrainQuality { get; set; }
         public bool AllowCheats { get; set; }
+        public bool AllowAdmin { get; set; }
         public bool AllowSackKerbals { get; set; }
         public int MaxNumberOfAsteroids { get; set; }
         public string ConsoleIdentifier { get; set; } = "";
@@ -22,5 +23,8 @@ namespace LunaClient.Systems.SettingsSys
         public string WarpMaster { get; set; }
         public int VesselPartsSyncMsInterval { get; set; }
         public bool ShowVesselsInThePast { get; set; }
+        public int MinScreenshotIntervalMs { get; set; }
+
+        public int MinCraftLibraryRequestIntervalMs { get; set; }
     }
 }

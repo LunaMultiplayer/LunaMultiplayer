@@ -1,4 +1,4 @@
-using FinePrint.Utilities;
+﻿using FinePrint.Utilities;
 using LunaClient.Base;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.SettingsSys;
@@ -163,21 +163,7 @@ namespace LunaClient.Systems.Scenario
                 }
             }
         }
-
-        public void UpgradeTheAstronautComplexSoTheGameDoesntBugOut()
-        {
-            var sm = HighLogic.CurrentGame.scenarios.Find(psm => psm.moduleName == "ScenarioUpgradeableFacilities");
-            if (sm != null &&
-                ScenarioUpgradeableFacilities.protoUpgradeables.ContainsKey("SpaceCenter/AstronautComplex"))
-            {
-                foreach (var uf in ScenarioUpgradeableFacilities.protoUpgradeables["SpaceCenter/AstronautComplex"].facilityRefs)
-                {
-                    LunaLog.Log("[LMP]: Setting astronaut complex to max level");
-                    uf.SetLevel(uf.MaxLevel);
-                }
-            }
-        }
-
+        
         #endregion
 
         #region Private methods
@@ -295,7 +281,7 @@ namespace LunaClient.Systems.Scenario
             if (scenarioEntry.ScenarioNode.GetValue("scene") == string.Empty)
             {
                 var nodeName = scenarioEntry.ScenarioModule;
-                ScreenMessages.PostScreenMessage($"{nodeName} is badly behaved!");
+                LunaScreenMsg.PostScreenMessage($"{nodeName} is badly behaved!", 3, ScreenMessageStyle.UPPER_CENTER);
                 LunaLog.Log($"[LMP]: {nodeName} is badly behaved!");
                 scenarioEntry.ScenarioNode.SetValue("scene", "7, 8, 5, 6, 9");
             }
@@ -329,10 +315,7 @@ namespace LunaClient.Systems.Scenario
 
         private bool IsScenarioModuleAllowed(string scenarioName)
         {
-            //Blacklist asteroid module from every game mode
-            //We hijack this and enable / disable it if we need to.
-            //Do not send kerbnet custom waypoints aswell. they fuck it up sometimes
-            if (string.IsNullOrEmpty(scenarioName) || scenarioName == "ScenarioDiscoverableObjects" || scenarioName == "ScenarioCustomWaypoints") return false;
+            if (string.IsNullOrEmpty(scenarioName) || IgnoredScenarios.Names.Contains(scenarioName)) return false;
 
             if (!AllScenarioTypesInAssemblies.Any()) LoadScenarioTypes(); //Load type dictionary on first use
 

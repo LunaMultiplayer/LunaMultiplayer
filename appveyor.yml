@@ -6,7 +6,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 0.3.29.{build}
+version: 0.5.37.{build}
 image: Visual Studio 2017
 
 #---------------------------------#
@@ -14,7 +14,7 @@ image: Visual Studio 2017
 #---------------------------------#
 
 environment:
-  smallversion: 0.3.29
+  smallversion: 0.5.37
   ZIPPASSWORD:
     secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=
 assembly_info:
@@ -40,17 +40,17 @@ build:
   verbosity: minimal
 after_build:
 #Client post build commands
- - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
- - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
- - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Localization"
- - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\PartSync"
- - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Icons"
+ - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Button"
+ - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Plugins"
+ - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Localization"
+ - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\PartSync"
+ - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Icons"
  - ps: copy "$env:appveyor_build_folder\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Resources\*.png" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Button"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Plugins"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Localization\XML\*.xml" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Localization"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\ModuleStore\XML\*.xml" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\PartSync"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Resources\Icons\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiPlayer\Icons"
+ - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Resources\*.png" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Button"
+ - ps: xcopy /s/y "$env:appveyor_build_folder\Client\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Plugins"
+ - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Localization\XML\*.xml" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Localization"
+ - ps: xcopy /s/y "$env:appveyor_build_folder\Client\ModuleStore\XML\*.xml" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\PartSync"
+ - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Resources\Icons\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Icons"
 #Master server post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
  - ps: xcopy /s/y "$env:appveyor_build_folder\MasterServer\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
@@ -78,7 +78,7 @@ deploy:
    tag: $(smallversion)-Draft
    release: Luna Multi Player $(smallversion)-Draft
    description: 'Build $(appveyor_build_version)'
-   artifact: LunaMultiPlayer-$(configuration).zip
+   artifact: LunaMultiplayer-$(configuration).zip
    auth_token:
     secure: zWJqDvz3LjR2J358JIJKICwghW/DWRzs73KWb3KApTLOreA4c8DN1tos+O3qBMR7
    draft: true
@@ -110,8 +110,8 @@ notifications:
    on_build_status_changed: true
 #Old webhook for discord...
 # - provider: Webhook 
-#   url: https://skyhook.glitch.me/api/webhooks/385378686481727498/O8urCLjjAVW1zDi6MOhsI_TUe8iohTJJoLVtLfkVUuOQdT-b-Q9Ebyk7Xpxyw4RuVu5r/appveyor
+#   url: https://skyhook.glitch.me/api/webhooks/428098094928756737/u2FRiQ-zKyEozSTCUX2DVbqZfCaXR6r3BhX6UCvLYBqbxzvcQDeo9mRdw1HXYR_9Ckua/appveyor
 #   content_type: application/json
 #   on_build_success: true
-#   on_build_failure: true
-#   on_build_status_changed: true
+#   on_build_failure: false
+#   on_build_status_changed: false

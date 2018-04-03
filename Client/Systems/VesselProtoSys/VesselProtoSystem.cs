@@ -27,12 +27,11 @@ namespace LunaClient.Systems.VesselProtoSys
         
         public VesselLoader VesselLoader { get; } = new VesselLoader();
 
-        public bool ProtoSystemReady => Enabled && Time.timeSinceLevelLoad > 1f && FlightGlobals.ready &&
+        public bool ProtoSystemReady => ProtoSystemBasicReady && FlightGlobals.ready &&
             HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating;
 
         public bool ProtoSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
-            HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null ||
-            HighLogic.LoadedScene == GameScenes.TRACKSTATION;
+            HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
         public VesselProtoEvents VesselProtoEvents { get; } = new VesselProtoEvents();
 
@@ -61,6 +60,7 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onFlightReady.Add(VesselProtoEvents.FlightReady);
             GameEvents.onPartDie.Add(VesselProtoEvents.OnPartDie);
             GameEvents.onGameSceneLoadRequested.Add(VesselProtoEvents.OnSceneRequested);
+            GameEvents.onVesselPartCountChanged.Add(VesselProtoEvents.VesselPartCountChangedinSpectatingVessel);
             GameEvents.onVesselPartCountChanged.Add(VesselProtoEvents.VesselPartCountChanged);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
@@ -78,8 +78,9 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onFlightReady.Remove(VesselProtoEvents.FlightReady);
             GameEvents.onPartDie.Remove(VesselProtoEvents.OnPartDie);
             GameEvents.onGameSceneLoadRequested.Remove(VesselProtoEvents.OnSceneRequested);
+            GameEvents.onVesselPartCountChanged.Remove(VesselProtoEvents.VesselPartCountChangedinSpectatingVessel);
             GameEvents.onVesselPartCountChanged.Remove(VesselProtoEvents.VesselPartCountChanged);
-            
+
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();
         }
@@ -180,8 +181,8 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
                             continue;
 
-                        //Only load vessels that are in safety bubble on the track station
-                        if (vesselProto.Value.IsInSafetyBubble && HighLogic.LoadedScene != GameScenes.TRACKSTATION)
+                        //Only load vessels that are in safety bubble when not in flight
+                        if (vesselProto.Value.IsInSafetyBubble && HighLogic.LoadedScene == GameScenes.FLIGHT)
                             continue;
 
                         LunaLog.Log($"[LMP]: Loading vessel {vesselProto.Key}");

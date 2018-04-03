@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-16"?>
+<LMPConfigNodeToXML>
+  <Parameter name="name">ResearchAndDevelopment</Parameter>
+  <Parameter name="scene">7, 8, 5, 6</Parameter>
+  <Parameter name="sci">0</Parameter>
+  <Node name="Tech">
+    <Parameter name="id">start</Parameter>
+    <Parameter name="state">Available</Parameter>
+    <Parameter name="cost">0</Parameter>
+    <Parameter name="part">basicFin</Parameter>
+    <Parameter name="part">mk1pod</Parameter>
+    <Parameter name="part">solidBooster.sm</Parameter>
+    <Parameter name="part">GooExperiment</Parameter>
+    <Parameter name="part">trussPiece1x</Parameter>
+    <Parameter name="part">parachuteSingle</Parameter>
+  </Node>
+</LMPConfigNodeToXML>

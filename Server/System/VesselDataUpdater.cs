@@ -294,7 +294,7 @@ namespace Server.System
             var document = new XmlDocument();
             document.LoadXml(vesselData);
 
-            var xpath = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='name']";
+            var xpath = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='name']";
             var parts = document.SelectNodes(xpath);
 
             return parts?.Cast<XmlNode>().Select(n => n.InnerText).Distinct();
@@ -333,21 +333,21 @@ namespace Server.System
                              $"{msgData.SrfRelRotation[2].ToString(CultureInfo.InvariantCulture)}," +
                              $"{msgData.SrfRelRotation[3].ToString(CultureInfo.InvariantCulture)}";
             
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='INC']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='INC']");
             if (node != null) node.InnerText = msgData.Orbit[0].ToString(CultureInfo.InvariantCulture);
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='ECC']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='ECC']");
             if (node != null) node.InnerText = msgData.Orbit[1].ToString(CultureInfo.InvariantCulture);
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='SMA']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='SMA']");
             if (node != null) node.InnerText = msgData.Orbit[2].ToString(CultureInfo.InvariantCulture);
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='LAN']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='LAN']");
             if (node != null) node.InnerText = msgData.Orbit[3].ToString(CultureInfo.InvariantCulture);
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='LPE']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='LPE']");
             if (node != null) node.InnerText = msgData.Orbit[4].ToString(CultureInfo.InvariantCulture);
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='MNA']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='MNA']");
             if (node != null) node.InnerText = msgData.Orbit[5].ToString(CultureInfo.InvariantCulture);
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='EPH']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='EPH']");
             if (node != null) node.InnerText = msgData.Orbit[6].ToString(CultureInfo.InvariantCulture);
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ORBIT/{ConfigNodeXmlParser.ValueNode}[@name='REF']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ORBIT']/{ConfigNodeXmlParser.ValueNode}[@name='REF']");
             if (node != null) node.InnerText = msgData.Orbit[7].ToString(CultureInfo.InvariantCulture);
 
             return document.ToIndentedString();
@@ -361,25 +361,25 @@ namespace Server.System
             var document = new XmlDocument();
             document.LoadXml(vesselData);
 
-            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/CTRLSTATE/{ConfigNodeXmlParser.ValueNode}[@name='pitch']");
+            var node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='pitch']");
             if (node != null) node.InnerText = msgData.Pitch.ToString(CultureInfo.InvariantCulture);
 
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/CTRLSTATE/{ConfigNodeXmlParser.ValueNode}[@name='yaw']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='yaw']");
             if (node != null) node.InnerText = msgData.Yaw.ToString(CultureInfo.InvariantCulture);
 
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/CTRLSTATE/{ConfigNodeXmlParser.ValueNode}[@name='roll']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='roll']");
             if (node != null) node.InnerText = msgData.Roll.ToString(CultureInfo.InvariantCulture);
 
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/CTRLSTATE/{ConfigNodeXmlParser.ValueNode}[@name='trimPitch']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='trimPitch']");
             if (node != null) node.InnerText = msgData.PitchTrim.ToString(CultureInfo.InvariantCulture);
 
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/CTRLSTATE/{ConfigNodeXmlParser.ValueNode}[@name='trimYaw']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='trimYaw']");
             if (node != null) node.InnerText = msgData.YawTrim.ToString(CultureInfo.InvariantCulture);
 
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/CTRLSTATE/{ConfigNodeXmlParser.ValueNode}[@name='trimRoll']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='trimRoll']");
             if (node != null) node.InnerText = msgData.RollTrim.ToString(CultureInfo.InvariantCulture);
 
-            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/CTRLSTATE/{ConfigNodeXmlParser.ValueNode}[@name='mainThrottle']");
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='CTRLSTATE']/{ConfigNodeXmlParser.ValueNode}[@name='mainThrottle']");
             if (node != null) node.InnerText = msgData.MainThrottle.ToString(CultureInfo.InvariantCulture);
 
             return document.ToIndentedString();
@@ -449,7 +449,7 @@ namespace Server.System
 
             foreach (var actionGroup in msgData.ActionGroups)
             {
-                node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/ACTIONGROUPS/{ConfigNodeXmlParser.ValueNode}[@name='{actionGroup.ActionGroupName}']");
+                node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='ACTIONGROUPS']/{ConfigNodeXmlParser.ValueNode}[@name='{actionGroup.ActionGroupName}']");
                 if (node != null) node.InnerText = $"{actionGroup.State.ToString(CultureInfo.InvariantCulture)}, {actionGroup.Time.ToString(CultureInfo.InvariantCulture)}";
             }
 
@@ -466,16 +466,16 @@ namespace Server.System
 
             foreach (var resourceInfo in msgData.Resources)
             {
-                var xpath = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{resourceInfo.PartFlightId}""]/" +
+                var xpath = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{resourceInfo.PartFlightId}""]/" +
                     $"following-sibling::RESOURCE/{ConfigNodeXmlParser.ValueNode}" +
                     $@"[@name='name' and text()=""{resourceInfo.ResourceName}""]/parent::RESOURCE";
 
                 var resourceNode = document.SelectSingleNode(xpath);
 
-                var amountNode = resourceNode?.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/PART/RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='amount']");
+                var amountNode = resourceNode?.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ParentNode}[@name='RESOURCE']/{ConfigNodeXmlParser.ValueNode}[@name='amount']");
                 if (amountNode != null) amountNode.InnerText = resourceInfo.Amount.ToString(CultureInfo.InvariantCulture);
 
-                var flowNode = resourceNode?.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/PART/RESOURCE/{ConfigNodeXmlParser.ValueNode}[@name='flowState']");
+                var flowNode = resourceNode?.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ParentNode}[@name='RESOURCE']/{ConfigNodeXmlParser.ValueNode}[@name='flowState']");
                 if (flowNode != null) flowNode.InnerText = resourceInfo.FlowState.ToString(CultureInfo.InvariantCulture);
             }
 
@@ -490,9 +490,9 @@ namespace Server.System
             var document = new XmlDocument();
             document.LoadXml(vesselData);
 
-            var module = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
-                         $"following-sibling::MODULE/{ConfigNodeXmlParser.ValueNode}" +
-                         $@"[@name='name' and text()=""{msgData.ModuleName}""]/parent::MODULE/";
+            var module = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
+                         $"following-sibling::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/{ConfigNodeXmlParser.ValueNode}" +
+                         $@"[@name='name' and text()=""{msgData.ModuleName}""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/";
 
             var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='{msgData.FieldName}']";
 
@@ -510,9 +510,9 @@ namespace Server.System
             var document = new XmlDocument();
             document.LoadXml(vesselData);
 
-            var module = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
-                         $"following-sibling::MODULE/{ConfigNodeXmlParser.ValueNode}" +
-                         @"[@name='name' and text()=""ModuleProceduralFairing""]/parent::MODULE/";
+            var module = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='uid' and text()=""{msgData.PartFlightId}""]/" +
+                         $"following-sibling::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/{ConfigNodeXmlParser.ValueNode}" +
+                         @"[@name='name' and text()=""ModuleProceduralFairing""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/";
 
             var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='fsm']";
 
@@ -520,7 +520,7 @@ namespace Server.System
             if (fieldNode != null) fieldNode.InnerText = "st_flight_deployed";
 
             var moduleNode = fieldNode.ParentNode;
-            var fairingsSections = document.SelectNodes($"{module}/XSECTION");
+            var fairingsSections = document.SelectNodes($"{module}/{ConfigNodeXmlParser.ParentNode}[@name='XSECTION']");
             if (moduleNode != null && fairingsSections != null)
             {
                 for (var i = 0; i < fairingsSections.Count; i++)
@@ -540,9 +540,9 @@ namespace Server.System
             var document = new XmlDocument();
             document.LoadXml(vesselData);
 
-            var module = $@"/{ConfigNodeXmlParser.StartElement}/PART/{ConfigNodeXmlParser.ValueNode}[@name='name' and text()=""kerbalEVA""]/" +
-                         $"following-sibling::MODULE/{ConfigNodeXmlParser.ValueNode}" +
-                         @"[@name='name' and text()=""KerbalEVA""]/parent::MODULE/";
+            var module = $@"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='PART']/{ConfigNodeXmlParser.ValueNode}[@name='name' and text()=""kerbalEVA""]/" +
+                         $"following-sibling::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']/{ConfigNodeXmlParser.ValueNode}" +
+                         $@"[@name='name' and text()=""KerbalEVA""]/parent::{ConfigNodeXmlParser.ParentNode}[@name='MODULE']";
 
             var xpath = $"{module}/{ConfigNodeXmlParser.ValueNode}[@name='state']";
 

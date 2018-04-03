@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -13,39 +14,41 @@ namespace LunaClient.Windows.Status
 
         #region Public
 
-        public override bool Display => MainSystem.ToolbarShowGui && MainSystem.NetworkState >= ClientState.Running &&
-                                        HighLogic.LoadedScene >= GameScenes.SPACECENTER;
+        public override bool Display => SettingsSystem.CurrentSettings.DisclaimerAccepted && MainSystem.ToolbarShowGui && 
+                                        MainSystem.NetworkState >= ClientState.Running && HighLogic.LoadedScene >= GameScenes.SPACECENTER;
 
-        public List<SubspaceDisplayEntry> SubspaceDisplay { get; set; }
-        public bool DisconnectEventHandled { get; set; } = true;
         public bool ColorEventHandled { get; set; } = true;
 
         #endregion
-        
-        protected Vector2 ScrollPosition { get; set; }
-        protected GUIStyle SubspaceStyle { get; set; }
-        protected Dictionary<string, GUIStyle> PlayerNameStyle { get; set; }
-        protected GUIStyle VesselNameStyle { get; set; }
-        protected GUIStyle StateTextStyle { get; set; }
 
-        protected const float WindowHeight = 400;
-        protected const float WindowWidth = 300;
+        private static Vector2 _scrollPosition;
+        private static GUIStyle _subspaceStyle;
+        private static Dictionary<string, GUIStyle> _playerNameStyle;
+        private static GUIStyle _vesselNameStyle;
+        private static GUIStyle _stateTextStyle;
+
+        private const float WindowHeight = 400;
+        private const float WindowWidth = 300;
         private const float UpdateStatusInterval = .5f;
 
-        private double LastStatusUpdate { get; set; }
+        private static double _lastStatusUpdate;
 
-        private Texture2D ChatIcon { get; set; }
-        private Texture2D ChatRedIcon { get; set; }
-        private Texture2D CameraIcon { get; set; }
+        private static readonly List<SubspaceDisplayEntry> SubspaceDisplay = new List<SubspaceDisplayEntry>();
 
-        private Texture2D RocketIcon { get; set; }
 #if DEBUG
-        private readonly string _title = $"LMP - Debug port: {CommonUtil.DebugPort}";
+        private static readonly string Title = $"LMP - Debug port: {CommonUtil.DebugPort}";
 #else
-        private readonly string _title = $"LMP - Luna Multiplayer";
+        private static readonly string Title = $"LMP - Luna Multiplayer";
 #endif
 
         #endregion
+
+        protected override void OnCloseButton()
+        {
+            base.OnCloseButton();
+            RemoveWindowLock();
+            MainSystem.ToolbarShowGui = false;
+        }
 
         public override void OnGui()
         {
@@ -55,24 +58,19 @@ namespace LunaClient.Windows.Status
             {
                 if (!ColorEventHandled)
                 {
-                    PlayerNameStyle = new Dictionary<string, GUIStyle>();
+                    _playerNameStyle = new Dictionary<string, GUIStyle>();
                     ColorEventHandled = true;
                 }
 
                 //Calculate the minimum size of the minimize window by drawing it off the screen
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6703 + MainSystem.WindowOffset, 
-                    WindowRect, DrawContent, _title, WindowStyle, LayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6703 + MainSystem.WindowOffset, 
+                    WindowRect, DrawContent, Title, WindowStyle, LayoutOptions));
             }
             CheckWindowLock();
         }
 
         public override void SetStyles()
         {
-            ChatIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "chatWhite.png"), 16, 16);
-            ChatRedIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "chatRed.png"), 16, 16);
-            CameraIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "camera.png"), 16, 16);
-            RocketIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "rocket.png"), 16, 16);
-
             WindowRect = new Rect(Screen.width * 0.9f - WindowWidth, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
             MoveRect = new Rect(0, 0, 10000, 20);
             
@@ -82,9 +80,9 @@ namespace LunaClient.Windows.Status
                 active = { textColor = Color.red },
                 hover = { textColor = Color.red }
             };
-            SubspaceStyle = new GUIStyle { normal = { background = new Texture2D(1, 1) } };
-            SubspaceStyle.normal.background.SetPixel(0, 0, Color.black);
-            SubspaceStyle.normal.background.Apply();
+            _subspaceStyle = new GUIStyle { normal = { background = new Texture2D(1, 1) } };
+            _subspaceStyle.normal.background.SetPixel(0, 0, Color.black);
+            _subspaceStyle.normal.background.Apply();
 
             LayoutOptions = new GUILayoutOption[4];
             LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
@@ -92,23 +90,21 @@ namespace LunaClient.Windows.Status
             LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
             
-            PlayerNameStyle = new Dictionary<string, GUIStyle>();
+            _playerNameStyle = new Dictionary<string, GUIStyle>();
 
-            VesselNameStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.white } };
-            VesselNameStyle.hover.textColor = VesselNameStyle.normal.textColor;
-            VesselNameStyle.active.textColor = VesselNameStyle.normal.textColor;
-            VesselNameStyle.fontStyle = FontStyle.Normal;
-            VesselNameStyle.fontSize = 12;
-            VesselNameStyle.stretchWidth = true;
+            _vesselNameStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.white } };
+            _vesselNameStyle.hover.textColor = _vesselNameStyle.normal.textColor;
+            _vesselNameStyle.active.textColor = _vesselNameStyle.normal.textColor;
+            _vesselNameStyle.fontStyle = FontStyle.Normal;
+            _vesselNameStyle.fontSize = 12;
+            _vesselNameStyle.stretchWidth = true;
 
-            StateTextStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = new Color(0.75f, 0.75f, 0.75f) } };
-            StateTextStyle.hover.textColor = StateTextStyle.normal.textColor;
-            StateTextStyle.active.textColor = StateTextStyle.normal.textColor;
-            StateTextStyle.fontStyle = FontStyle.Normal;
-            StateTextStyle.fontSize = 12;
-            StateTextStyle.stretchWidth = true;
-
-            SubspaceDisplay = new List<SubspaceDisplayEntry>();
+            _stateTextStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = new Color(0.75f, 0.75f, 0.75f) } };
+            _stateTextStyle.hover.textColor = _stateTextStyle.normal.textColor;
+            _stateTextStyle.active.textColor = _stateTextStyle.normal.textColor;
+            _stateTextStyle.fontStyle = FontStyle.Normal;
+            _stateTextStyle.fontSize = 12;
+            _stateTextStyle.stretchWidth = true;
         }
 
         public override void Update()
@@ -116,10 +112,11 @@ namespace LunaClient.Windows.Status
             base.Update();
             if (!Display) return;
 
-            if (Time.realtimeSinceStartup - LastStatusUpdate > UpdateStatusInterval)
+            if (Time.realtimeSinceStartup - _lastStatusUpdate > UpdateStatusInterval)
             {
-                LastStatusUpdate = Time.realtimeSinceStartup;
-                SubspaceDisplay = WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries();
+                SubspaceDisplay.Clear();
+                _lastStatusUpdate = Time.realtimeSinceStartup;
+                SubspaceDisplay.AddRange(WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries());
             }
         }
 

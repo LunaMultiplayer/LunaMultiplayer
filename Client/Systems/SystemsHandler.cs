@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 using UnityEngine.Profiling;
 
 // ReSharper disable ForCanBeConvertedToForeach
@@ -23,13 +22,19 @@ namespace LunaClient.Systems
         public static void FillUpSystemsList()
         {
             var systemsList = new List<ISystem>();
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            
+            var systems = Assembly.GetExecutingAssembly().GetTypes().Where(t => t.IsClass && typeof(ISystem).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
+            foreach (var system in systems)
             {
-                var systems = assembly.GetTypes().Where(t => t.IsClass && typeof(ISystem).IsAssignableFrom(t) && !t.IsAbstract).ToArray();
-                foreach (var sys in systems)
+                try
                 {
-                    if (sys.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is ISystem systemImplementation)
+                    if (system.GetProperty("Singleton", BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)?.GetValue(null, null) is ISystem systemImplementation)
                         systemsList.Add(systemImplementation);
+                }
+
+                catch (Exception ex)
+                {
+                    LunaLog.LogError($"Exception loading system type {system.FullName}: {ex.Message}");
                 }
             }
 
@@ -93,17 +98,6 @@ namespace LunaClient.Systems
                 {
                     MainSystem.Singleton.HandleException(e, "SystemHandler-Update");
                 }
-            }
-        }
-
-        /// <summary>
-        /// Set all systems as disabled
-        /// </summary>
-        public static void KillAllSystems()
-        {
-            for (var i = 0; i < _systems.Length; i++)
-            {
-                _systems[i].Enabled = false;
             }
         }
     }

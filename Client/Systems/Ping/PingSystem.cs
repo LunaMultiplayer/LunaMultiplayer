@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
+using System;
 using System.Collections;
 using System.Collections.Concurrent;
 using UnityEngine;
@@ -10,38 +11,29 @@ namespace LunaClient.Systems.Ping
     {
         #region Constructor
 
+        /// <inheritdoc />
         /// <summary>
-        /// This system must be ALWAYS enabled so we set it as enabled on the constructor
+        /// We setup the routine in the constructor as this system is always enabled
         /// </summary>
-        public PingSystem()
-        {
-            //We setup the routine in the constructor as this system is always enabled
-            SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, PerformPings));
-        }
+        public PingSystem() => SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, PerformPings));
 
         #endregion
-
-        /// <summary>
-        /// This system must be ALWAYS enabled!
-        /// </summary>
-        public override bool Enabled => true;
-
-        public override string SystemName { get; } = nameof(PingSystem);
 
         #region Fields & properties
 
-        private const float PingTimeoutinSec = 7.5f;
-        private static ConcurrentBag<string> PingQueue { get; } = new ConcurrentBag<string>();
+        private const float PingTimeoutInSec = 7.5f;
+
+        private static ConcurrentBag<long> PingQueue { get; } = new ConcurrentBag<long>();
+        protected override bool AlwaysEnabled => true;
+        public override string SystemName { get; } = nameof(PingSystem);
 
         #endregion
 
-
-
         #region Public methods
 
-        public static void QueuePing(string endpoint)
+        public static void QueuePing(long id)
         {
-            PingQueue.Add(endpoint);
+            PingQueue.Add(id);
         }
         
         #endregion
@@ -50,9 +42,9 @@ namespace LunaClient.Systems.Ping
 
         private static void PerformPings()
         {
-            while (PingQueue.TryTake(out var endpoint))
+            while (PingQueue.TryTake(out var serverId))
             {
-                MainSystem.Singleton.StartCoroutine(PingUpdate(endpoint));
+                MainSystem.Singleton.StartCoroutine(PingUpdate(serverId));
             }
         }
 
@@ -60,22 +52,26 @@ namespace LunaClient.Systems.Ping
 
         #region Private methods
         
-        private static IEnumerator PingUpdate(string endpoint)
+        private static IEnumerator PingUpdate(long serverId)
         {
-            var host = endpoint.Substring(0, endpoint.LastIndexOf(":"));
-            var ping = new UnityEngine.Ping(host);
-
-            var elapsedSecs = 0;
-
-            do
+            if (NetworkServerList.Servers.TryGetValue(serverId, out var serverInfo))
             {
-                elapsedSecs++;
-                yield return new WaitForSeconds(1f);
-            } while (!ping.isDone && elapsedSecs < PingTimeoutinSec);
+                var host = serverInfo.ExternalEndpoint.Substring(0, serverInfo.ExternalEndpoint.LastIndexOf(":", StringComparison.InvariantCulture));
+                var ping = new UnityEngine.Ping(host);
 
-            if (NetworkServerList.Servers.TryGetValue(endpoint, out var server))
-            {
-                server.Ping = ping.isDone ? ping.time.ToString() : "∞";
+                var elapsedSecs = 0;
+
+                do
+                {
+                    elapsedSecs++;
+                    yield return new WaitForSeconds(1f);
+                } while (!ping.isDone && elapsedSecs < PingTimeoutInSec);
+
+                if (NetworkServerList.Servers.TryGetValue(serverId, out var server))
+                {
+                    server.Ping = ping.isDone ? ping.time : int.MaxValue;
+                    server.DisplayedPing = ping.isDone ? ping.time.ToString() : "∞";
+                }
             }
         }
 

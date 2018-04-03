@@ -2,12 +2,14 @@
 {
     public enum CraftMessageType
     {
-        ListRequest = 0,
-        ListReply = 1,
-        RequestFile = 2,
-        RespondFile = 3,
-        UploadFile = 4,
-        AddFile = 5,
-        DeleteFile = 6
+        FoldersRequest = 0,
+        FoldersReply = 1,
+        ListRequest = 2,
+        ListReply = 3,
+
+        DownloadRequest = 4,
+        DeleteRequest = 5,
+        CraftData = 6,
+        Notification = 7
     }
 }

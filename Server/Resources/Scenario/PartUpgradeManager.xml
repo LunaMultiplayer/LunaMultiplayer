@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-16"?>
+<LMPConfigNodeToXML>
+  <Parameter name="name">PartUpgradeManager</Parameter>
+  <Parameter name="scene">6, 5, 7</Parameter>
+  <Node name="UPGRADES">
+    <Node name="Unlocks" />
+    <Node name="Enableds" />
+  </Node>
+</LMPConfigNodeToXML>

@@ -11,20 +11,22 @@ namespace LunaCommon.Message.Data.Admin
         internal AdminBaseMsgData() { }
         public override ushort SubType => (ushort)(int)AdminMessageType;
         public virtual AdminMessageType AdminMessageType => throw new NotImplementedException();
+        
+        public string AdminPassword;
 
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            //Nothing to implement here
+            lidgrenMsg.Write(AdminPassword);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            //Nothing to implement here
+            AdminPassword = lidgrenMsg.ReadString();
         }
-        
+
         internal override int InternalGetMessageSize()
         {
-            return 0;
+            return AdminPassword.GetByteCount();
         }
     }
 }

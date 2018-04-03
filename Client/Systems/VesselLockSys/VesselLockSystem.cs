@@ -1,8 +1,8 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Generic;
@@ -19,6 +19,9 @@ namespace LunaClient.Systems.VesselLockSys
         #region Fields & properties
 
         public const string SpectateLock = "LMP_Spectating";
+        public const ControlTypes BlockAllControls = ControlTypes.ALLBUTCAMERAS ^ ControlTypes.MAP ^ ControlTypes.PAUSE ^
+                                                     ControlTypes.APPLAUNCHER_BUTTONS ^ ControlTypes.VESSEL_SWITCHING ^ ControlTypes.GUI;
+
         private ScreenMessage _spectateMessage;
 
         private string GetVesselOwner => VesselCommon.IsSpectating ?
@@ -150,7 +153,7 @@ namespace LunaClient.Systems.VesselLockSys
                 {
                     if (_spectateMessage != null)
                         _spectateMessage.duration = 0f;
-                    _spectateMessage = ScreenMessages.PostScreenMessage(SpectatingMessage, 1000 * 2, ScreenMessageStyle.UPPER_CENTER);
+                    _spectateMessage = LunaScreenMsg.PostScreenMessage(SpectatingMessage, 1000 * 2, ScreenMessageStyle.UPPER_CENTER);
                 }
                 else
                 {
@@ -171,7 +174,7 @@ namespace LunaClient.Systems.VesselLockSys
         public void StartSpectating(Guid spectatingVesselId)
         {
             //Lock all vessel controls
-            InputLockManager.SetControlLock(LmpGuiUtil.BlockAllControls, SpectateLock);
+            InputLockManager.SetControlLock(BlockAllControls, SpectateLock);
 
             var currentSpectatorLock = LockSystem.LockQuery.GetSpectatorLock(SettingsSystem.CurrentSettings.PlayerName);
             if (FlightGlobals.ActiveVessel != null && currentSpectatorLock == null)
@@ -182,6 +185,7 @@ namespace LunaClient.Systems.VesselLockSys
 
             //Disable "EVA" button
             HighLogic.CurrentGame.Parameters.Flight.CanEVA = false;
+            SpectateEvent.onStartSpectating.Fire();
         }
 
         public void StopSpectating()
@@ -192,6 +196,7 @@ namespace LunaClient.Systems.VesselLockSys
 
             if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters != null && HighLogic.CurrentGame.Parameters.Flight != null)
                 HighLogic.CurrentGame.Parameters.Flight.CanEVA = true;
+            SpectateEvent.onFinishedSpectating.Fire();
         }
 
         #endregion
@@ -207,7 +212,10 @@ namespace LunaClient.Systems.VesselLockSys
             if (vessel == null) return;
 
             if (!LockSystem.LockQuery.ControlLockExists(vessel.id))
+            {
                 LockSystem.Singleton.AcquireControlLock(vessel.id);
+                LockSystem.Singleton.AcquireKerbalLock(vessel);
+            }
         }
 
         /// <summary>

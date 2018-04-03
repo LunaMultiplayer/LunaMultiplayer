@@ -1,6 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
-using LunaClient.Utilities;
+using LunaClient.Systems.SettingsSys;
 using LunaCommon.Enums;
 using UnityEngine;
 
@@ -8,27 +8,67 @@ namespace LunaClient.Windows.Options
 {
     public partial class OptionsWindow : Window<OptionsWindow>
     {
-        private GUILayoutOption[] SmallOption = { GUILayout.Width(100), GUILayout.ExpandWidth(false) };
+        #region Fields
+        
+        private const float WindowHeight = 400;
+        private const float WindowWidth = 300;
+        private const float UniverseConverterWindowHeight = 300;
+        private const float UniverseConverterWindowWidth = 200;
+
+        private static Color _tempColor = new Color(1f, 1f, 1f, 1f);
+
+        private static GUIStyle _tempColorLabelStyle;
+        private static bool _showBadNetworkSimulationFields;
+        private static bool _showAdvancedNetworkFields;
+        private static bool _infiniteTimeout;
+
+        private static Rect _universeConverterWindowRect;
+        private static GUILayoutOption[] _universeConverterLayoutOptions;
+
+        private static bool _displayUniverseConverterDialog;
+
+        private static bool _display;
+        public override bool Display
+        {
+            get => base.Display && _display;
+            set
+            {
+                if (!_display && value)
+                {
+                    _tempColor = SettingsSystem.CurrentSettings.PlayerColor;
+                }
+
+                base.Display = _display = value;
+            }
+        }
+
+        #endregion
+
+        private readonly GUILayoutOption[] _smallOption = { GUILayout.Width(100), GUILayout.ExpandWidth(false) };
 
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
-                WindowRect = LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6711 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, LocalizationContainer.OptionsWindowText.Title, WindowStyle, LayoutOptions));
+            if (Display)
+            {
+                WindowRect = FixWindowPos(GUILayout.Window(6711 + MainSystem.WindowOffset, WindowRect, DrawContent, 
+                    LocalizationContainer.OptionsWindowText.Title, WindowStyle, LayoutOptions));
+
+                if (_displayUniverseConverterDialog)
+                {
+                    _universeConverterWindowRect = FixWindowPos(GUILayout.Window(6712 + MainSystem.WindowOffset,
+                        _universeConverterWindowRect, DrawUniverseConverterDialog, "Universe converter", WindowStyle, _universeConverterLayoutOptions));
+                }
+            }
+
             CheckWindowLock();
         }
-
-        public override void Update()
-        {
-            base.Update();
-            SafeDisplay = Display;
-        }
-
+        
         public override void SetStyles()
         {
-            WindowRect = new Rect(Screen.width / 2f - WindowWidth / 2f, Screen.height / 2f - WindowHeight / 2f, WindowWidth,
-                WindowHeight);
+            WindowRect = new Rect(Screen.width / 2f - WindowWidth / 2f, Screen.height / 2f - WindowHeight / 2f, WindowWidth, WindowHeight);
+            _universeConverterWindowRect = new Rect(Screen.width * 0.025f, Screen.height * 0.025f, WindowWidth, WindowHeight);
+
             MoveRect = new Rect(0, 0, 10000, 20);
             
             LayoutOptions = new GUILayoutOption[4];
@@ -36,9 +76,15 @@ namespace LunaClient.Windows.Options
             LayoutOptions[1] = GUILayout.Height(WindowHeight);
             LayoutOptions[2] = GUILayout.ExpandWidth(true);
             LayoutOptions[3] = GUILayout.ExpandHeight(true);
-            
-            TempColor = new Color();
-            TempColorLabelStyle = new GUIStyle(GUI.skin.label);
+
+            _universeConverterLayoutOptions = new GUILayoutOption[4];
+            _universeConverterLayoutOptions[0] = GUILayout.Width(UniverseConverterWindowWidth);
+            _universeConverterLayoutOptions[1] = GUILayout.Height(UniverseConverterWindowHeight);
+            _universeConverterLayoutOptions[2] = GUILayout.ExpandWidth(true);
+            _universeConverterLayoutOptions[3] = GUILayout.ExpandHeight(true);
+
+            _tempColor = new Color();
+            _tempColorLabelStyle = new GUIStyle(GUI.skin.label);
         }
 
         public override void RemoveWindowLock()
@@ -52,7 +98,7 @@ namespace LunaClient.Windows.Options
 
         private void CheckWindowLock()
         {
-            if (SafeDisplay)
+            if (Display)
             {
                 if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
                 {
@@ -74,27 +120,8 @@ namespace LunaClient.Windows.Options
                     RemoveWindowLock();
             }
 
-            if (!SafeDisplay && IsWindowLocked)
+            if (!Display && IsWindowLocked)
                 RemoveWindowLock();
         }
-
-        #region Fields
-
-        #region Public
-
-        public bool LoadEventHandled { get; set; }
-
-        #endregion
-
-        private const float WindowHeight = 400;
-        private const float WindowWidth = 300;
-        protected Color TempColor = new Color(1f, 1f, 1f, 1f);
-        
-        protected GUIStyle TempColorLabelStyle { get; set; }
-        protected bool ShowBadNetworkSimulationFields { get; set; }
-        protected bool ShowAdvancedNetworkFields { get; set; }
-        protected bool InfiniteTimeout { get; set; }
-
-        #endregion
     }
 }

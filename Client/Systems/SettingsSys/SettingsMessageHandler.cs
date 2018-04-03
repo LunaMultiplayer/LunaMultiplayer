@@ -20,6 +20,7 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.GameMode = msgData.GameMode;
             SettingsSystem.ServerSettings.TerrainQuality = msgData.TerrainQuality;
             SettingsSystem.ServerSettings.AllowCheats = msgData.AllowCheats;
+            SettingsSystem.ServerSettings.AllowAdmin = msgData.AllowAdmin;
             SettingsSystem.ServerSettings.AllowSackKerbals = msgData.AllowSackKerbals;
             SettingsSystem.ServerSettings.MaxNumberOfAsteroids = msgData.MaxNumberOfAsteroids;
             SettingsSystem.ServerSettings.ConsoleIdentifier = msgData.ConsoleIdentifier;
@@ -30,6 +31,8 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.ShowVesselsInThePast = msgData.ShowVesselsInThePast;
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
             SettingsSystem.ServerSettings.GameDifficulty = msgData.GameDifficulty;
+            SettingsSystem.ServerSettings.MinScreenshotIntervalMs = msgData.MinScreenshotIntervalMs;
+            SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs = msgData.MinScreenshotIntervalMs;
 
             if (SettingsSystem.ServerSettings.GameDifficulty != GameDifficulty.Custom)
             {

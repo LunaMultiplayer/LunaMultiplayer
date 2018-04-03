@@ -5,10 +5,10 @@ namespace Server.Command
     public class CommandDefinition
     {
         public string Description;
-        public Action<string> Func;
+        public Func<string, bool> Func;
         public string Name;
 
-        public CommandDefinition(string name, Action<string> func, string description)
+        public CommandDefinition(string name, Func<string, bool> func, string description)
         {
             Name = name;
             Func = func;

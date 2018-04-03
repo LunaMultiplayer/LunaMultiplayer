@@ -18,8 +18,11 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Description of the server. Max 200 char")]
         public string Description { get; set; } = "Luna Server Description";
 
-        [XmlComment(Value = "Password for the server. Leave it empty if you want to make a public server")]
+        [XmlComment(Value = "Password for the server. Leave it empty if you want to make a public server. Max 30 chars")]
         public string Password { get; set; } = "";
+
+        [XmlComment(Value = "Admin password for the server. Leave it empty if you want to allow administration client side. Max 30 chars")]
+        public string AdminPassword { get; set; } = "";
 
         [XmlComment(Value = "Specify the server's MOTD (message of the day). 255 chars max")]
         public string ServerMotd { get; set; } = "Welcome, %Name%!";
@@ -81,9 +84,24 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Username of the player who control the warp if WarpMode is set to MASTER")]
         public string WarpMaster { get; set; } = "";
 
-        [XmlComment(Value = "Enable white-listing of users")]
-        public bool Whitelisted { get; set; } = false;
+        [XmlComment(Value = "Minimum interval between screenshots in milliseconds")]
+        public int MinScreenshotIntervalMs { get; set; } = 30000;
 
+        [XmlComment(Value = "Maximum screenshots kept per user")]
+        public int MaxScreenshotsPerUser { get; set; } = 30;
+
+        [XmlComment(Value = "Maximum screenshots folders kept")]
+        public int MaxScreenshotsFolders { get; set; } = 50;
+        
+        [XmlComment(Value = "Minimum interval between uploading/requesting crafts in milliseconds")]
+        public int MinCraftLibraryRequestIntervalMs { get; set; } = 5000;
+
+        [XmlComment(Value = "Maximum crafts kept per user per type (VAB,SPH and Subassembly)")]
+        public int MaxCraftsPerUser { get; set; } = 10;
+
+        [XmlComment(Value = "Maximum crafts folders kept")]
+        public int MaxCraftFolders { get; set; } = 50;
+        
         [XmlComment(Value = "Heartbeat interval in Ms")]
         public int HearbeatMsInterval { get; set; } = 1000;
 
@@ -106,18 +124,6 @@ namespace Server.Settings.Definition
                             "Values: Dictionary, DataBase")]
         public RelaySystemMode RelaySystemMode { get; set; } = RelaySystemMode.Dictionary;
 
-        [XmlComment(Value = "How often the server will relay position updates between players that are in different planets")]
-        public int FarDistanceUpdateIntervalMs { get; set; } = 500; // 2FPS
-
-        [XmlComment(Value = "How often the server will relay position updates between players that are in the same planet but with a distance >25km")]
-        public int MediumDistanceUpdateIntervalMs { get; set; } = 250; //4 FPS
-
-        [XmlComment(Value = "How often the server will relay position updates between players that are <25km from each other")]
-        public int CloseDistanceUpdateIntervalMs { get; set; } = 33; //30 FPS
-
-        [XmlComment(Value = "Distance in meters to differentiate between CloseDistanceUpdateIntervalMs and MediumDistanceUpdateIntervalMs")]
-        public int CloseDistanceInMeters { get; set; } = 25000;
-
         [XmlComment(Value = "Send/Receive tick clock")]
         public int SendReceiveThreadTickMs { get; set; } = 5;
 
@@ -128,12 +134,12 @@ namespace Server.Settings.Definition
         public LogLevels LogLevel { get; set; } = LogLevels.Debug;
 
         [XmlComment(Value = "Specify the amount of days a log file should be considered as expired and deleted. 0 = Disabled")]
-        public double ExpireLogs { get; set; } = 0;
+        public double ExpireLogs { get; set; } = 14;
 
         [XmlComment(Value = "Use UTC instead of system time in the log.")]
         public bool UseUtcTimeInLog { get; set; } = false;
 
-        [XmlComment(Value = "Interval in ms at wich vessels will be written to the Universe/Vessels folder")]
-        public int VesselsBackupIntervalMs { get; set; } = 30000;
+        [XmlComment(Value = "Interval in ms at wich internal LMP structures will be backed up to a file")]
+        public int BackupIntervalMs { get; set; } = 30000;
     }
 }

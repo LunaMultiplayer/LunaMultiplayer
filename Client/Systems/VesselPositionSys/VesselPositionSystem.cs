@@ -13,6 +13,8 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
+        public const int MaxQueuedUpdates = 5;
+
         #region Fields & properties
 
         private static float LastVesselUpdatesSentTime { get; set; }
@@ -35,6 +37,9 @@ namespace LunaClient.Systems.VesselPositionSys
         public static ConcurrentDictionary<Guid, VesselPositionUpdate> TargetVesselUpdate { get; } =
             new ConcurrentDictionary<Guid, VesselPositionUpdate>();
 
+        public static ConcurrentDictionary<Guid, FixedSizedConcurrentQueue<VesselPositionUpdate>> TargetVesselUpdateQueue { get; } =
+            new ConcurrentDictionary<Guid, FixedSizedConcurrentQueue<VesselPositionUpdate>>();
+
         public static Queue<Guid> VesselsToRemove { get; } = new Queue<Guid>();
 
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
@@ -52,8 +57,8 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnEnabled();
 
-            TimingManager.UpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
-            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
                 RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
@@ -65,6 +70,8 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
+            TargetVesselUpdate.Clear();
+            TargetVesselUpdateQueue.Clear();
 
             TimingManager.UpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
@@ -79,7 +86,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (!VesselCommon.DoVesselChecks(keyVal.Key))
                     RemoveVesselFromSystem(keyVal.Key);
 
-                keyVal.Value.ApplyVesselUpdate();
+                if(SettingsSystem.CurrentSettings.InterpolationEnabled)
+                    keyVal.Value.ApplyInterpolatedVesselUpdate();
+                else
+                    keyVal.Value.ApplyVesselUpdate();
             }
 
             while (VesselsToRemove.Count > 0)
@@ -87,6 +97,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 var vesselToRemove = VesselsToRemove.Dequeue();
                 TargetVesselUpdate.TryRemove(vesselToRemove, out _);
                 CurrentVesselUpdate.TryRemove(vesselToRemove, out _);
+                TargetVesselUpdateQueue.TryRemove(vesselToRemove, out _);
             }
         }
 
@@ -151,6 +162,18 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Public methods
 
+        public void SwitchPositioningSystem()
+        {
+            foreach (var keyVal in CurrentVesselUpdate)
+            {
+                keyVal.Value.SetTarget(null);
+                if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
+                {
+                    TargetVesselUpdateQueue[keyVal.Key] = new FixedSizedConcurrentQueue<VesselPositionUpdate>(MaxQueuedUpdates);
+                }
+            }
+        }
+
         /// <summary>
         /// Gets the latest received position of a vessel
         /// </summary>
@@ -191,7 +214,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// Unloaded vessels don't update their lat/lon/alt and it's orbit params.
         /// As we have the unloadedupdate lock of that vessel we need to refresh those values manually
         /// </summary>
-        private static void UpdateUnloadedVesselValues(Vessel vessel)
+        public static void UpdateUnloadedVesselValues(Vessel vessel)
         {
             if (vessel.orbit != null)
             {
@@ -208,7 +231,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// Secondary vessels (vessels that are loaded and we have the update lock) don't get their lat/lon/alt values updated by the game engine
         /// Here we manually update them so we send updateded lat/lon/alt values
         /// </summary>
-        private static void UpdateSecondaryVesselValues(Vessel vessel)
+        public static void UpdateSecondaryVesselValues(Vessel vessel)
         {
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)
@@ -220,7 +243,6 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 if (vessel.orbit != null)
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
-                vessel.orbitDriver?.updateFromParameters();
             }
 
             vessel.UpdatePosVel();

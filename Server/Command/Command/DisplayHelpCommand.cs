@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using Server.Command.Command.Base;
+﻿using Server.Command.Command.Base;
 using Server.Log;
+using System.Collections.Generic;
 
 namespace Server.Command.Command
 {
     public class DisplayHelpCommand : SimpleCommand
     {
-        public override void Execute(string commandArgs)
+        public override bool Execute(string commandArgs)
         {
             var commands = new List<CommandDefinition>();
             var longestName = 0;
@@ -18,6 +18,8 @@ namespace Server.Command.Command
             }
             foreach (var cmd in commands)
                 LunaLog.Normal($"{cmd.Name.PadRight(longestName)} - {cmd.Description}");
+
+            return true;
         }
     }
 }

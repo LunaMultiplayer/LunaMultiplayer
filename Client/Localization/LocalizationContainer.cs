@@ -12,6 +12,7 @@ namespace LunaClient.Localization
     {
         public static Languages CurrentLanguage { get; set; } = Languages.English;
 
+        public static AdminWindowText AdminWindowText = new AdminWindowText();
         public static BannedPartsWindowText BannedPartsWindowText = new BannedPartsWindowText();
         public static ChatWindowText ChatWindowText = new ChatWindowText();
         public static ConnectionWindowText ConnectionWindowText = new ConnectionWindowText();
@@ -20,12 +21,12 @@ namespace LunaClient.Localization
         public static OptionsWindowText OptionsWindowText = new OptionsWindowText();
         public static ServerListWindowText ServerListWindowText = new ServerListWindowText();
         public static StatusWindowText StatusWindowText = new StatusWindowText();
-        public static UniverseConverterWindowText UniverseConverterWindowText = new UniverseConverterWindowText();
         public static DisclaimerDialogText DisclaimerDialogText = new DisclaimerDialogText();
         public static OutdatedDialogText OutdatedDialogText = new OutdatedDialogText();
         public static InstallDialogText InstallDialogText = new InstallDialogText();
-        public static ServerDetailsWindowText ServerDetailsWindowText = new ServerDetailsWindowText();
+        public static ScreenshotWindowText ScreenshotWindowText = new ScreenshotWindowText();
         public static ScreenText ScreenText = new ScreenText();
+        public static ButtonTooltips ButtonTooltips = new ButtonTooltips();
 
         private static readonly string LocalizationFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Localization");
 
@@ -59,6 +60,8 @@ namespace LunaClient.Localization
                 Directory.CreateDirectory(LocalizationFolder);
             }
 
+            LoadWindowTexts(language, ref AdminWindowText);
+            LoadWindowTexts(language, ref BannedPartsWindowText);
             LoadWindowTexts(language, ref ChatWindowText);
             LoadWindowTexts(language, ref ConnectionWindowText);
             LoadWindowTexts(language, ref CraftLibraryWindowText);
@@ -66,11 +69,12 @@ namespace LunaClient.Localization
             LoadWindowTexts(language, ref OptionsWindowText);
             LoadWindowTexts(language, ref ServerListWindowText);
             LoadWindowTexts(language, ref StatusWindowText);
-            LoadWindowTexts(language, ref UniverseConverterWindowText);
             LoadWindowTexts(language, ref DisclaimerDialogText);
             LoadWindowTexts(language, ref OutdatedDialogText);
             LoadWindowTexts(language, ref InstallDialogText);
+            LoadWindowTexts(language, ref ScreenshotWindowText);
             LoadWindowTexts(language, ref ScreenText);
+            LoadWindowTexts(language, ref ButtonTooltips);
         }
 
         private static void LoadWindowTexts<T>(object lang, ref T classToReplace) where T : class, new()

@@ -1,43 +1,17 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Network;
-using LunaClient.Systems.Admin;
-using LunaClient.Systems.Asteroid;
-using LunaClient.Systems.Bug;
-using LunaClient.Systems.Chat;
-using LunaClient.Systems.CraftLibrary;
-using LunaClient.Systems.Facility;
 using LunaClient.Systems.Flag;
-using LunaClient.Systems.FlagPlant;
-using LunaClient.Systems.Groups;
 using LunaClient.Systems.Handshake;
 using LunaClient.Systems.KerbalSys;
-using LunaClient.Systems.KscScene;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.Motd;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
-using LunaClient.Systems.Screenshot;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
-using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.VesselDockSys;
-using LunaClient.Systems.VesselEvaSys;
-using LunaClient.Systems.VesselFairingsSys;
-using LunaClient.Systems.VesselFlightStateSys;
-using LunaClient.Systems.VesselImmortalSys;
-using LunaClient.Systems.VesselLockSys;
-using LunaClient.Systems.VesselPartModuleSyncSys;
-using LunaClient.Systems.VesselPositionSys;
-using LunaClient.Systems.VesselPrecalcSys;
 using LunaClient.Systems.VesselProtoSys;
-using LunaClient.Systems.VesselRemoveSys;
-using LunaClient.Systems.VesselResourceSys;
-using LunaClient.Systems.VesselStateSys;
-using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.VesselSyncSys;
-using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
@@ -47,51 +21,28 @@ namespace LunaClient.Systems.Network
 {
     public class NetworkSystem : System<NetworkSystem>
     {
-        #region Constructor
-
-        /// <summary>
-        /// This system must be ALWAYS enabled so we set it as enabled on the constructor
-        /// </summary>
-        public NetworkSystem()
-        {
-            base.Enabled = true;
-        }
-
-        #endregion
-
         #region Disconnect message
 
         public static bool DisplayDisconnectMessage { get; set; }
 
         #endregion
 
-        public override string SystemName { get; } = nameof(NetworkSystem);
+        #region Constructor
 
-        private static bool _enabled = true;
-
-        /// <summary>
-        /// This system must be ALWAYS enabled!
-        /// </summary>
-        public override bool Enabled
+        public NetworkSystem()
         {
-            get => _enabled;
-            set
-            {
-                base.Enabled |= value;
-                _enabled |= value;
-            }
-        }
-
-        #region Base overrides
-
-        protected override void OnEnabled()
-        {
-            base.OnEnabled();
-
             SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, NetworkUpdate));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, ShowDisconnectMessage));
         }
 
+        #endregion
+
+        #region Base overrides
+
+        public override string SystemName { get; } = nameof(NetworkSystem);
+
+        protected override bool AlwaysEnabled => true;
+        
         public override int ExecutionOrder => int.MinValue;
 
         #endregion
@@ -104,6 +55,7 @@ namespace LunaClient.Systems.Network
             {
                 case ClientState.DisconnectRequested:
                 case ClientState.Disconnected:
+                    break;
                 case ClientState.Connecting:
                     ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(NetworkUpdate), 0);
                     return;
@@ -111,26 +63,15 @@ namespace LunaClient.Systems.Network
                     HandshakeSystem.Singleton.Enabled = true;
                     MainSystem.Singleton.Status = "Connected";
                     MainSystem.NetworkState = ClientState.Handshaking;
-                    NetworkSimpleMessageSender.SendHandshakeRequest();
+                    HandshakeSystem.Singleton.MessageSender.SendHandshakeRequest();
                     _lastStateTime = DateTime.Now;
                     break;
                 case ClientState.Handshaking:
-                    MainSystem.Singleton.Status = "Waiting for handshake challenge";
+                    MainSystem.Singleton.Status = "Waiting for handshake response";
                     if (ConnectionIsStuck())
                         MainSystem.NetworkState = ClientState.Connected;
                     break;
-                case ClientState.HandshakeChallengeReceived:
-                    MainSystem.Singleton.Status = "Challenge received, authenticating";
-                    MainSystem.NetworkState = ClientState.Authenticating;
-                    HandshakeSystem.Singleton.SendHandshakeChallengeResponse();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.Authenticating:
-                    MainSystem.Singleton.Status = "Connection successful, authenticating";
-                    if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.HandshakeChallengeReceived;
-                    break;
-                case ClientState.Authenticated:
+                case ClientState.Handshaked:
                     MainSystem.Singleton.Status = "Handshaking successful";
                     SettingsSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingSettings;
@@ -141,7 +82,7 @@ namespace LunaClient.Systems.Network
                 case ClientState.SyncingSettings:
                     MainSystem.Singleton.Status = "Syncing settings";
                     if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.Authenticated;
+                        MainSystem.NetworkState = ClientState.Handshaked;
                     break;
                 case ClientState.SettingsSynced:
                     MainSystem.Singleton.Status = "Settings synced";
@@ -224,19 +165,6 @@ namespace LunaClient.Systems.Network
                     break;
                 case ClientState.ScenariosSynced:
                     MainSystem.Singleton.Status = "Scenarios synced";
-                    CraftLibrarySystem.Singleton.Enabled = true;
-                    MainSystem.NetworkState = ClientState.SyncingCraftlibrary;
-                    NetworkSimpleMessageSender.SendCraftLibraryRequest();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.SyncingCraftlibrary:
-                    MainSystem.Singleton.Status = "Syncing craft library";
-                    if (ConnectionIsStuck(20000))
-                        MainSystem.NetworkState = ClientState.ScenariosSynced;
-                    break;
-                case ClientState.CraftlibrarySynced:
-                    MainSystem.Singleton.Status = "Craft library synced";
-                    ChatSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingLocks;
                     LockSystem.Singleton.Enabled = true;
                     LockSystem.Singleton.MessageSender.SendLocksRequest();
@@ -245,34 +173,10 @@ namespace LunaClient.Systems.Network
                 case ClientState.SyncingLocks:
                     MainSystem.Singleton.Status = "Syncing locks";
                     if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.CraftlibrarySynced;
+                        MainSystem.NetworkState = ClientState.ScenariosSynced;
                     break;
                 case ClientState.LocksSynced:
-                    MainSystem.Singleton.Status = "Locks synced";
-                    AdminSystem.Singleton.Enabled = true;
-                    MainSystem.NetworkState = ClientState.SyncingAdmins;
-                    NetworkSimpleMessageSender.SendAdminsRequest();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.SyncingAdmins:
-                    MainSystem.Singleton.Status = "Syncing admins";
-                    if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.LocksSynced;
-                    break;
-                case ClientState.AdminsSynced:
-                    MainSystem.Singleton.Status = "Admins synced";
-                    GroupSystem.Singleton.Enabled = true;
-                    MainSystem.NetworkState = ClientState.SyncingGroups;
-                    NetworkSimpleMessageSender.SendGroupListRequest();
-                    _lastStateTime = DateTime.Now;
-                    break;
-                case ClientState.SyncingGroups:
-                    MainSystem.Singleton.Status = "Syncing groups";
-                    if (ConnectionIsStuck())
-                        MainSystem.NetworkState = ClientState.AdminsSynced;
-                    break;
-                case ClientState.GroupsSynced:
-                    MainSystem.Singleton.Status = "Groups synced";
+                    MainSystem.Singleton.Status = "Starting";
                     MainSystem.Singleton.StartGame = true;
                     MainSystem.NetworkState = ClientState.Starting;
                     break;
@@ -284,47 +188,14 @@ namespace LunaClient.Systems.Network
                     LunaLog.Log("[LMP]: All systems up and running. Поехали!");
                     if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
                     {
-                        TimeSyncerSystem.Singleton.Enabled = true;
-                        MotdSystem.Singleton.Enabled = true;
-                        VesselLockSystem.Singleton.Enabled = true;
-                        VesselPositionSystem.Singleton.Enabled = true;
-                        VesselFlightStateSystem.Singleton.Enabled = true;
-                        VesselRemoveSystem.Singleton.Enabled = true;
-                        VesselImmortalSystem.Singleton.Enabled = true;
-                        VesselDockSystem.Singleton.Enabled = true;
-                        VesselSwitcherSystem.Singleton.Enabled = true;
-                        VesselPrecalcSystem.Singleton.Enabled = true;
-                        VesselStateSystem.Singleton.Enabled = true;
-                        VesselResourceSystem.Singleton.Enabled = true;
-                        VesselUpdateSystem.Singleton.Enabled = true;
-                        VesselPartModuleSyncSystem.Singleton.Enabled = true;
-                        VesselFairingsSystem.Singleton.Enabled = true;
-                        KscSceneSystem.Singleton.Enabled = true;
-                        AsteroidSystem.Singleton.Enabled = true;
-                        FacilitySystem.Singleton.Enabled = true;
-                        FlagPlantSystem.Singleton.Enabled = true;
-                        VesselEvaSystem.Singleton.Enabled = true;
-                        ScreenshotSystem.Singleton.Enabled = true;
-                        BugSystem.Singleton.Enabled = true;
-                        PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
-                        StatusSystem.Singleton.MessageSender.SendOwnStatus();
-                        NetworkSimpleMessageSender.SendMotdRequest();
-
                         MainSystem.NetworkState = ClientState.Running;
+                        NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
                     }
                     break;
                 case ClientState.Running:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
-            }
-            if (MotdSystem.Singleton.DisplayMotd && HighLogic.LoadedScene != GameScenes.LOADING)
-            {
-                MotdSystem.Singleton.DisplayMotd = false;
-                ScenarioSystem.Singleton.UpgradeTheAstronautComplexSoTheGameDoesntBugOut();
-                ScreenMessages.PostScreenMessage(MotdSystem.Singleton.ServerMotd, 10f, ScreenMessageStyle.UPPER_CENTER);
-                //Control locks will bug out the space centre sceen, so remove them before starting.
-                NetworkMain.DeleteAllTheControlLocksSoTheSpaceCentreBugGoesAway();
             }
         }
 
@@ -352,7 +223,7 @@ namespace LunaClient.Systems.Network
 
             if (DisplayDisconnectMessage)
             {
-                ScreenMessages.PostScreenMessage(LocalizationContainer.ScreenText.Disconected, 2f, ScreenMessageStyle.UPPER_CENTER);
+                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.Disconected, 2f, ScreenMessageStyle.UPPER_CENTER);
             }
         }
 

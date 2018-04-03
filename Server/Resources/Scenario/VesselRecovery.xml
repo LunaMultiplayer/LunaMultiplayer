@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-16"?>
+<LMPConfigNodeToXML>
+  <Parameter name="name">VesselRecovery</Parameter>
+  <Parameter name="scene">5, 7, 8, 6</Parameter>
+</LMPConfigNodeToXML>

@@ -15,6 +15,14 @@ using LunaClient.Systems.PlayerConnection;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.Screenshot;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.ShareAchievements;
+using LunaClient.Systems.ShareContracts;
+using LunaClient.Systems.ShareFunds;
+using LunaClient.Systems.ShareReputation;
+using LunaClient.Systems.ShareScience;
+using LunaClient.Systems.ShareStrategy;
+using LunaClient.Systems.ShareTechnology;
+using LunaClient.Systems.ShareUpgradeableFacilities;
 using LunaClient.Systems.Status;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselEvaSys;
@@ -28,6 +36,7 @@ using LunaClient.Systems.VesselResourceSys;
 using LunaClient.Systems.VesselUpdateSys;
 using LunaClient.Systems.Warp;
 using LunaCommon.Enums;
+using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
@@ -118,6 +127,9 @@ namespace LunaClient.Network
         {
             switch (msg.MessageType)
             {
+                case ServerMessageType.Admin:
+                    AdminSystem.Singleton.EnqueueMessage(msg);
+                    break;
                 case ServerMessageType.Handshake:
                     HandshakeSystem.Singleton.EnqueueMessage(msg);
                     break;
@@ -189,9 +201,6 @@ namespace LunaClient.Network
                 case ServerMessageType.Warp:
                     WarpSystem.Singleton.EnqueueMessage(msg);
                     break;
-                case ServerMessageType.Admin:
-                    AdminSystem.Singleton.EnqueueMessage(msg);
-                    break;
                 case ServerMessageType.Lock:
                     LockSystem.Singleton.EnqueueMessage(msg);
                     break;
@@ -203,6 +212,35 @@ namespace LunaClient.Network
                     break;
                 case ServerMessageType.Facility:
                     FacilitySystem.Singleton.EnqueueMessage(msg);
+                    break;
+                case ServerMessageType.ShareProgress:
+                    switch (((ShareProgressBaseMsgData)msg.Data).ShareProgressMessageType)
+                    {
+                        case ShareProgressMessageType.FundsUpdate:
+                            ShareFundsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.ScienceUpdate:
+                            ShareScienceSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.ReputationUpdate:
+                            ShareReputationSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.TechnologyUpdate:
+                            ShareTechnologySystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.ContractsUpdate:
+                            ShareContractsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.AchievementsUpdate:
+                            ShareAchievementsSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.StrategyUpdate:
+                            ShareStrategySystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.FacilityUpgrade:
+                            ShareUpgradeableFacilitiesSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                    }
                     break;
                 case ServerMessageType.Screenshot:
                     ScreenshotSystem.Singleton.EnqueueMessage(msg);

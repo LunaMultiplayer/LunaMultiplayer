@@ -1,4 +1,4 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Windows.Chat;
 using System;
@@ -62,7 +62,7 @@ namespace LunaClient.Systems.Chat
 
                     if (!ChatWindow.Singleton.Display)
                     {
-                        ScreenMessages.PostScreenMessage($"{chatMsg.Item1}: {chatMsg.Item2}", 5f, ScreenMessageStyle.UPPER_LEFT);
+                        LunaScreenMsg.PostScreenMessage($"{chatMsg.Item1}: {chatMsg.Item2}", 5f, ScreenMessageStyle.UPPER_LEFT);
                     }
                     else
                     {

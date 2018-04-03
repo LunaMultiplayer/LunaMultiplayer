@@ -1,7 +1,6 @@
 ﻿using System;
 using LunaCommon.Time;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Threading;
 
 namespace LMP.Tests
 {

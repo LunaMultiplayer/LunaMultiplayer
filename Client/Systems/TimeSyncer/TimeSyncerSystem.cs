@@ -1,6 +1,8 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
+using LunaClient.VesselUtilities;
 using LunaCommon.Time;
 using System;
 using UnityEngine;
@@ -17,6 +19,8 @@ namespace LunaClient.Systems.TimeSyncer
         #region Fields & properties
 
         #region Public
+
+        public TimerSyncerEvents TimerSyncerEvents { get; } = new TimerSyncerEvents();
 
         public static long ServerStartTime { get; set; }
 
@@ -45,22 +49,30 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Max speed that the game can go. If you put this number too high the game will lag a lot.
         /// </summary>
-        private const float MaxPhisicsClockRate = 1.15f;
+        private const float MaxPhisicsClockRate = 1.20f;
         /// <summary>
         /// Limit at wich we won't fix the time with the GAME timescale
         /// </summary>
-        private const int PhisicsClockLimitMs = 20000;
+        private const int PhisicsClockLimitMs = 15000;
         /// <summary>
         /// If the time difference is greater than this, the game will set a new time as a global
         /// </summary>
-        private const int MaxClockErrorMs = 20000;
+        private const int MaxClockErrorMs = 15000;
+        /// <summary>
+        /// Limit at wich we won't fix the time with the GAME timescale when spectating
+        /// </summary>
+        private const int SpectatingPhisicsClockLimitMs = 2500;
+        /// <summary>
+        /// If the time difference is greater than this, the game will set a new time as a global when spectating
+        /// </summary>
+        private const int MaxSpectatingClockErrorMs = 2500;
 
         #endregion
 
         #region Private
 
         private static bool CurrentlyWarping => WarpSystem.Singleton.CurrentSubspace == -1;
-        
+
         private static bool CanSyncTime
         {
             get
@@ -88,6 +100,7 @@ namespace LunaClient.Systems.TimeSyncer
         protected override void OnEnabled()
         {
             base.OnEnabled();
+            SpectateEvent.onStartSpectating.Add(TimerSyncerEvents.OnStartSpectating);
             SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, SyncTimeScale));
             SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, SyncTime));
         }
@@ -95,6 +108,7 @@ namespace LunaClient.Systems.TimeSyncer
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            SpectateEvent.onStartSpectating.Remove(TimerSyncerEvents.OnStartSpectating);
             ServerStartTime = 0;
         }
 
@@ -116,7 +130,7 @@ namespace LunaClient.Systems.TimeSyncer
                 if (targetTime > 0)
                 {
                     var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
-                    if (Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < PhisicsClockLimitMs)
+                    if (Math.Abs(currentError) > MaxPhisicsClockMsError && Math.Abs(currentError) < (VesselCommon.IsSpectating ? SpectatingPhisicsClockLimitMs : PhisicsClockLimitMs))
                     {
                         //Time error is not so big so we can fix it adjusting the physics time
                         SkewClock();
@@ -136,11 +150,31 @@ namespace LunaClient.Systems.TimeSyncer
             {
                 var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
                 var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
-                if (targetTime != 0 && Math.Abs(currentError) > MaxClockErrorMs)
+
+                if (targetTime > 0 && Math.Abs(currentError) > (VesselCommon.IsSpectating ? MaxSpectatingClockErrorMs : MaxClockErrorMs))
                 {
                     LunaLog.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
                     ClockHandler.StepClock(targetTime);
                 }
+            }
+        }
+
+        #endregion
+
+        #region Public methods
+
+        /// <summary>
+        /// Forces a time sync against the server time
+        /// </summary>
+        public void ForceTimeSync()
+        {
+            if (Enabled && !CurrentlyWarping && CanSyncTime && !WarpSystem.Singleton.WaitingSubspaceIdFromServer)
+            {
+                var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
+                var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
+
+                LunaLog.LogWarning($"FORCING a time sync from: {Planetarium.GetUniversalTime()} to: {targetTime}. Error:{currentError}");
+                ClockHandler.StepClock(targetTime);
             }
         }
 

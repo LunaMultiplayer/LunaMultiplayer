@@ -53,6 +53,8 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         public static bool ReloadVessel(ProtoVessel vesselProto)
         {
+            if (vesselProto == null) return false;
+
             LunaLog.Log($"Reloading vessel {vesselProto.vesselID}");
             ReloadingVesselId = vesselProto.vesselID;
             try
@@ -65,7 +67,7 @@ namespace LunaClient.VesselUtilities
 
                 //If targeted, unloading the vessel will cause the target to be lost.  We'll have to reset it later.
                 //Bear in mind that UnloadVessel will trigger VesselRemoveEvents.OnVesselWillDestroy!! So be sure to set ReloadingVesselId correctly
-                VesselRemoveSystem.Singleton.UnloadVessel(vesselProto.vesselID);
+                VesselRemoveSystem.Singleton.KillVessel(vesselProto.vesselID, false);
                 if (LoadVesselImpl(vesselProto))
                 {
                     //Case when the target is the vessel we are changing
@@ -242,6 +244,9 @@ namespace LunaClient.VesselUtilities
                 if (spaceTracking != null)
                     BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
             }
+
+            KSCVesselMarkers.fetch?.RefreshMarkers();
+
             return true;
         }
 

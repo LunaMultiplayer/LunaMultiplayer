@@ -22,10 +22,7 @@ namespace Server.Command.Command.Base
 
         #region Protected methods
 
-        protected HandledCommand()
-        {
-            Load();
-        }
+        protected HandledCommand() => Load();
 
         protected void Load()
         {

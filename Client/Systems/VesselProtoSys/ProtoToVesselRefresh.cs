@@ -78,9 +78,9 @@ namespace LunaClient.Systems.VesselProtoSys
                 //Part can be null if the vessel is unloaded.  In this case, no need to kill it as it's already gone from the game.
                 if (protoPartsToRemove[i].partRef != null)
                 {
-                    if (protoPartsToRemove[i].partRef.FindModuleImplementing<ModuleDecouple>() != null)
-                        protoPartsToRemove[i].partRef.decouple();
-                    else
+                    //if (protoPartsToRemove[i].partRef.FindModuleImplementing<ModuleDecouple>() != null)
+                    //    protoPartsToRemove[i].partRef.decouple();
+                    //else
                         protoPartsToRemove[i].partRef.Die();
                 }
 

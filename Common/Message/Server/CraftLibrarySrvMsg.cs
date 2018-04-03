@@ -19,12 +19,11 @@ namespace LunaCommon.Message.Server
         /// <inheritdoc />
         protected override Dictionary<ushort, Type> SubTypeDictionary { get; } = new Dictionary<ushort, Type>
         {
+            [(ushort)CraftMessageType.FoldersReply] = typeof(CraftLibraryFoldersReplyMsgData),
             [(ushort)CraftMessageType.ListReply] = typeof(CraftLibraryListReplyMsgData),
-            [(ushort)CraftMessageType.RequestFile] = typeof(CraftLibraryRequestMsgData),
-            [(ushort)CraftMessageType.RespondFile] = typeof(CraftLibraryRespondMsgData),
-            [(ushort)CraftMessageType.UploadFile] = typeof(CraftLibraryUploadMsgData),
-            [(ushort)CraftMessageType.AddFile] = typeof(CraftLibraryAddMsgData),
-            [(ushort)CraftMessageType.DeleteFile] = typeof(CraftLibraryDeleteMsgData)
+            [(ushort)CraftMessageType.DeleteRequest] = typeof(CraftLibraryDeleteRequestMsgData),
+            [(ushort)CraftMessageType.CraftData] = typeof(CraftLibraryDataMsgData),
+            [(ushort)CraftMessageType.Notification] = typeof(CraftLibraryNotificationMsgData),
         };
 
         public override ServerMessageType MessageType => ServerMessageType.CraftLibrary;

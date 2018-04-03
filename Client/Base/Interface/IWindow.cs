@@ -7,5 +7,6 @@
         void OnGui();
         void RemoveWindowLock();
         void SetStyles();
+        void AfterGui();
     }
 }

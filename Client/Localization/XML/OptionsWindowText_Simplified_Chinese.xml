@@ -1,16 +1,14 @@
 <?xml version="1.0"?>
 <OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>LunaMultiplayer - Options</Title>
-  <Language>语言:</Language>
-  <Color>玩家颜色:</Color>
-  <Red>R:</Red>
-  <Green>G:</Green>
-  <Blue>B:</Blue>
-  <Random>随机</Random>
-  <Set>设置</Set>
-  <ResetDisclaimer>重置免责声明状态</ResetDisclaimer>
-  <Interpolation>启用插值</Interpolation>
-  <GenerateLmpModControl>生成服务器MOD控制文件 LMPModControl.xml</GenerateLmpModControl>
-  <GenerateUniverse>从已保存的存档中生成宇宙</GenerateUniverse>
-  <Close>关闭</Close>
+    <Title>Options</Title>
+    <Language>语言:</Language>
+    <Color>玩家颜色:</Color>
+    <Red>R:</Red>
+    <Green>G:</Green>
+    <Blue>B:</Blue>
+    <Random>随机</Random>
+    <Set>设置</Set>
+    <Interpolation>启用插值</Interpolation>
+    <GenerateLmpModControl>生成服务器MOD控制文件 LMPModControl.xml</GenerateLmpModControl>
+    <GenerateUniverse>从已保存的存档中生成宇宙</GenerateUniverse>
 </OptionsWindowText>

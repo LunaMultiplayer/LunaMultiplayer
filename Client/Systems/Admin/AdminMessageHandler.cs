@@ -1,9 +1,9 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
-using LunaCommon.Enums;
 using LunaCommon.Message.Data.Admin;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
+using System;
 using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Admin
@@ -18,26 +18,11 @@ namespace LunaClient.Systems.Admin
 
             switch (msgData.AdminMessageType)
             {
-                case AdminMessageType.ListReply:
-                    {
-                        var data = (AdminListReplyMsgData)msgData;
-                        for (var i = 0; i < data.AdminsNum; i++)
-                            System.RegisterServerAdmin(data.Admins[i]);
-                        MainSystem.NetworkState = ClientState.AdminsSynced;
-                    }
+                case AdminMessageType.Reply:
+                    LunaScreenMsg.PostScreenMessage($"Admin command reply: {((AdminReplyMsgData)msgData).Response}", 5f, ScreenMessageStyle.UPPER_RIGHT);
                     break;
-                case AdminMessageType.Add:
-                    {
-                        var data = (AdminAddMsgData)msgData;
-                        System.RegisterServerAdmin(data.PlayerName);
-                    }
-                    break;
-                case AdminMessageType.Remove:
-                    {
-                        var data = (AdminRemoveMsgData)msgData;
-                        System.UnregisterServerAdmin(data.PlayerName);
-                    }
-                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }

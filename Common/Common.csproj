@@ -36,9 +36,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\External\KSPLibraries\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -48,9 +45,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Common.cs" />
-    <Compile Include="CommonConstants.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="ConsoleUtil.cs" />
+    <Compile Include="Enums\AdminResponse.cs" />
     <Compile Include="Enums\ClientMessageType.cs" />
     <Compile Include="Enums\ClientState.cs" />
     <Compile Include="Enums\ConnectionStatus.cs" />
@@ -62,9 +59,25 @@
     <Compile Include="Enums\ServerMessageType.cs" />
     <Compile Include="Enums\TerrainQuality.cs" />
     <Compile Include="Enums\WarpMode.cs" />
+    <Compile Include="IgnoredScenarios.cs" />
+    <Compile Include="Locks\LockQueryContract.cs" />
+    <Compile Include="Locks\LockQueryKerbal.cs" />
     <Compile Include="Message\Base\StringUtil.cs" />
     <Compile Include="Message\Base\GuidUtil.cs" />
+    <Compile Include="Message\Client\AdminCliMsg.cs" />
+    <Compile Include="Message\Client\ShareProgressCliMsg.cs" />
     <Compile Include="Message\Client\ScreenshotCliMsg.cs" />
+    <Compile Include="Message\Data\Admin\AdminBanKickMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminDekesslerMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminNukeMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminKickMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminBaseMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminBanMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminResponseMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftInfo.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftBasicInfo.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryNotificationMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryDeleteRequestMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagInfo.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Message\Data\Groups\Group.cs" />
@@ -86,11 +99,10 @@
     <Compile Include="Message\Base\MessageData.cs" />
     <Compile Include="Message\Base\MessageStore.cs" />
     <Compile Include="Message\ClientMessageFactory.cs" />
-    <Compile Include="Message\Client\AdminCliMsg.cs" />
     <Compile Include="Message\Client\Base\CliMsgBase.cs" />
     <Compile Include="Message\Client\ChatCliMsg.cs" />
     <Compile Include="Message\Client\CraftLibraryCliMsg.cs" />
-    <Compile Include="Message\Client\FacilitySrvMsg.cs" />
+    <Compile Include="Message\Client\FacilityCliMsg.cs" />
     <Compile Include="Message\Client\FlagCliMsg.cs" />
     <Compile Include="Message\Client\GroupCliMsg.cs" />
     <Compile Include="Message\Client\HandshakeCliMsg.cs" />
@@ -104,31 +116,22 @@
     <Compile Include="Message\Client\SettingsCliMsg.cs" />
     <Compile Include="Message\Client\VesselCliMsg.cs" />
     <Compile Include="Message\Client\WarpCliMsg.cs" />
-    <Compile Include="Message\Data\Admin\AdminAddMsgData.cs" />
-    <Compile Include="Message\Data\Admin\AdminBaseMsgData.cs" />
-    <Compile Include="Message\Data\Admin\AdminListReplyMsgData.cs" />
-    <Compile Include="Message\Data\Admin\AdminListRequestMsgData.cs" />
-    <Compile Include="Message\Data\Admin\AdminRemoveMsgData.cs" />
     <Compile Include="Message\Data\Chat\ChatMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColor.cs" />
     <Compile Include="Message\Data\Color\PlayerColorBaseMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorReplyMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorRequestMsgData.cs" />
     <Compile Include="Message\Data\Color\PlayerColorSetMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryAddMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryDownloadRequestMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryBaseMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryDeleteMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryListReplyMsgData.cs" />
     <Compile Include="Message\Data\CraftLibrary\CraftLibraryListRequestMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryRequestMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryRespondMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftLibraryUploadMsgData.cs" />
-    <Compile Include="Message\Data\CraftLibrary\CraftListInfo.cs" />
-    <Compile Include="Message\Data\CraftLibrary\PlayerCrafts.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryFoldersRequestMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryFoldersReplyMsgData.cs" />
+    <Compile Include="Message\Data\CraftLibrary\CraftLibraryDataMsgData.cs" />
     <Compile Include="Message\Data\Facility\FacilityBaseMsgData.cs" />
     <Compile Include="Message\Data\Facility\FacilityCollapseMsgData.cs" />
     <Compile Include="Message\Data\Facility\FacilityRepairMsgData.cs" />
-    <Compile Include="Message\Data\Facility\FacilityUpgradeMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagBaseMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagDataMsgData.cs" />
     <Compile Include="Message\Data\Flag\FlagDeleteMsgData.cs" />
@@ -141,10 +144,8 @@
     <Compile Include="Message\Data\Groups\GroupRemoveMsgData.cs" />
     <Compile Include="Message\Data\Groups\GroupUpdateMsgData.cs" />
     <Compile Include="Message\Data\Handshake\HandshakeBaseMsgData.cs" />
-    <Compile Include="Message\Data\Handshake\HandshakeChallengeMsgData.cs" />
     <Compile Include="Message\Data\Handshake\HandshakeReplyMsgData.cs" />
     <Compile Include="Message\Data\Handshake\HandshakeRequestMsgData.cs" />
-    <Compile Include="Message\Data\Handshake\HandshakeResponseMsgData.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalBaseMsgData.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalInfo.cs" />
     <Compile Include="Message\Data\Kerbal\KerbalProtoMsgData.cs" />
@@ -178,14 +179,31 @@
     <Compile Include="Message\Data\Scenario\ScenarioBaseMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioDataMsgData.cs" />
     <Compile Include="Message\Data\Scenario\ScenarioRequestMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotNotificationMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotInfo.cs" />
     <Compile Include="Message\Data\Screenshot\ScreenshotBaseMsgData.cs" />
-    <Compile Include="Message\Data\Screenshot\ScreenshotDataMsgData.cs" />
     <Compile Include="Message\Data\Screenshot\ScreenshotDownloadRequestMsgData.cs" />
-    <Compile Include="Message\Data\Screenshot\ScreenshotUploadMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotFoldersReplyMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotFoldersRequestMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotListReplyMsgData.cs" />
+    <Compile Include="Message\Data\Screenshot\ScreenshotDataMsgData.cs" />
     <Compile Include="Message\Data\Screenshot\ScreenshotListRequestMsgData.cs" />
     <Compile Include="Message\Data\Settings\SetingsReplyMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsBaseMsgData.cs" />
     <Compile Include="Message\Data\Settings\SettingsRequestCliMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ContractInfo.cs" />
+    <Compile Include="Message\Data\ShareProgress\AchievementInfo.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressBaseMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressContractsMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressFundsMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressAchievementsMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressReputationMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressScienceMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressStrategyMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressFacilityUpgradeMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressTechnologyMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\StrategyInfo.cs" />
+    <Compile Include="Message\Data\ShareProgress\TechNodeInfo.cs" />
     <Compile Include="Message\Data\Vessel\ActionGroup.cs" />
     <Compile Include="Message\Data\Vessel\VesselEvaMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselInfo.cs" />
@@ -216,8 +234,8 @@
     <Compile Include="Message\MasterServer\Base\MstSrvMsgBase.cs" />
     <Compile Include="Message\MasterServer\MainMstSrvMsg.cs" />
     <Compile Include="Message\ServerMessageFactory.cs" />
-    <Compile Include="Message\Server\AdminSrvMsg.cs" />
     <Compile Include="Message\Server\Base\SrvMsgBase.cs" />
+    <Compile Include="Message\Server\AdminSrvMsg.cs" />
     <Compile Include="Message\Server\ChatSrvMsg.cs" />
     <Compile Include="Message\Server\CraftLibrarySrvMsg.cs" />
     <Compile Include="Message\Server\FacilitySrvMsg.cs" />
@@ -234,6 +252,7 @@
     <Compile Include="Message\Server\ScreenshotSrvMsg.cs" />
     <Compile Include="Message\Server\ScenarioSrvMsg.cs" />
     <Compile Include="Message\Server\SetingsSrvMsg.cs" />
+    <Compile Include="Message\Server\ShareProgressSrvMsg.cs" />
     <Compile Include="Message\Server\VesselSrvMsg.cs" />
     <Compile Include="Message\Server\WarpSrvMsg.cs" />
     <Compile Include="Message\Types\AdminMessageType.cs" />
@@ -252,6 +271,7 @@
     <Compile Include="Message\Types\PlayerStatusMessageType.cs" />
     <Compile Include="Message\Types\ScenarioMessageType.cs" />
     <Compile Include="Message\Types\SettingsMessageType.cs" />
+    <Compile Include="Message\Types\ShareProgressMessageType.cs" />
     <Compile Include="Message\Types\SyncTimeMessageType.cs" />
     <Compile Include="Message\Types\VesselChangeType.cs" />
     <Compile Include="Message\Types\VesselMessageType.cs" />
@@ -293,9 +313,7 @@
       <Name>System.Threading</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Groups\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="ModFile\XML\LMPModControl.xml" />
   </ItemGroup>

@@ -1,8 +1,10 @@
 ﻿using LunaClient.Base;
-using Upgradeables;
 
 namespace LunaClient.Systems.Facility
 {
+    /// <summary>
+    /// This system syncs when you destroy/repair a facility to other players
+    /// </summary>
     public class FacilitySystem : MessageSystem<FacilitySystem, FacilityMessageSender, FacilityMessageHandler>
     {
         #region Fields & Properties
@@ -19,7 +21,6 @@ namespace LunaClient.Systems.Facility
 
         protected override void OnEnabled()
         {
-            GameEvents.OnKSCFacilityUpgraded.Add(FacilityEvents.FacilityUpgraded);
             GameEvents.OnKSCStructureRepaired.Add(FacilityEvents.FacilityRepaired);
             GameEvents.OnKSCStructureCollapsing.Add(FacilityEvents.FacilityCollapsing);
             base.OnEnabled();
@@ -27,7 +28,6 @@ namespace LunaClient.Systems.Facility
 
         protected override void OnDisabled()
         {
-            GameEvents.OnKSCFacilityUpgraded.Remove(FacilityEvents.FacilityUpgraded);
             GameEvents.OnKSCStructureRepaired.Remove(FacilityEvents.FacilityRepaired);
             GameEvents.OnKSCStructureCollapsing.Remove(FacilityEvents.FacilityCollapsing);
             base.OnDisabled();
@@ -36,19 +36,6 @@ namespace LunaClient.Systems.Facility
         #endregion
 
         #region Public Methods
-
-        /// <summary>
-        /// If we call facility.SetLevel() then we woud trigger the KSP event and send a message to the server. 
-        /// Therefore we add the id to the ignore field so the event FacilityUpgraded doesn't send a network message
-        /// </summary>
-        public void UpgradeFacilityWithoutSendingMessage(UpgradeableFacility facility, int level)
-        {
-            if (facility == null || facility.FacilityLevel == level) return;
-
-            BuildingIdToIgnore = facility.id;
-            facility.setLevel(level);
-            BuildingIdToIgnore = string.Empty;
-        }
 
         /// <summary>
         /// If we call building.Repair() then we woud trigger the KSP event and send a message to the server.         

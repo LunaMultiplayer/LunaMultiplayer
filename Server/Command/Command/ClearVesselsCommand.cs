@@ -1,39 +1,34 @@
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using LunaCommon.Xml;
 using Server.Command.Command.Base;
+using Server.Command.Common;
 using Server.Context;
 using Server.Log;
 using Server.Server;
-using Server.Settings;
 using Server.System;
 using System;
+using System.Linq;
 using System.Xml;
-
-using Server.Client;
-using Server.Command.Command.Base;
-using Server.Command.Common;
-using Server.Log;
-using Server.Server;
 
 namespace Server.Command.Command
 {
     public class ClearVesselsCommand : SimpleCommand
     {
         //Executes the ClearVesselsCommand
-        public override void Execute(string commandArgs)
+        public override bool Execute(string commandArgs)
         {
             //Get param array from command
             CommandSystemHelperMethods.SplitCommandParamArray(commandArgs, out var parameters);
 
             //Declare variables
-            int paramCount = 5;
+            var paramCount = 5;
 
-            string msgUsage = Environment.NewLine
+            var msgUsage = Environment.NewLine
                             + Environment.NewLine + "Usage:"
                             + Environment.NewLine + "/clearvessels vesselType vesselSituation vesselSplashed vesselName orbName";
 
-            string msgDescription = Environment.NewLine
+            var msgDescription = Environment.NewLine
                                + Environment.NewLine + "Description:"
                                + Environment.NewLine + "You can use * on a search param to accept all possible values."
                                + Environment.NewLine + "Using * for all params like in the following example"
@@ -52,11 +47,11 @@ namespace Server.Command.Command
                                + Environment.NewLine + "name containing the word aeris."
                                + Environment.NewLine + "/clearvessels plane orbiting * aeris kerbin";
 
-            string vesselType = "";
-            string vesselSituation = "";
-            string vesselSplashed = "";
-            string vesselName = "";
-            string orbName = "";
+            var vesselType = "";
+            var vesselSituation = "";
+            var vesselSplashed = "";
+            var vesselName = "";
+            var orbName = "";
 
             try
             {
@@ -82,13 +77,17 @@ namespace Server.Command.Command
                 }
                 else
                 {
-                    LunaLog.Error(Environment.NewLine + "Syntax error. Wrong number of parameters." + msgUsage + msgDescription);
+                    LunaLog.Error($"{Environment.NewLine}Syntax error. Wrong number of parameters.{msgUsage}{msgDescription}");
+                    return false;
                 }
             }
             catch (Exception)
             {
-                LunaLog.Error(Environment.NewLine + "Syntax error." + msgUsage + msgDescription);
+                LunaLog.Error($"{Environment.NewLine}Syntax error.{msgUsage}{msgDescription}");
+                return false;
             }
+
+            return true;
         }
 
         //Removes all matching vessels
@@ -137,30 +136,34 @@ namespace Server.Command.Command
                 document.LoadXml(vesselData);
 
                 //Declare Search-Match-Booleans
-                bool isVesselType = false;
-                bool isVesselSituation = false;
-                bool isVesselSplashed = false;
-                bool isVesselName = false;
-                bool isOrbName = false;
+                var isVesselType = false;
+                var isVesselSituation = false;
+                var isVesselSplashed = false;
+                var isVesselName = false;
+                var isOrbName = false;
 
                 //Get XML-Nodes
                 var nodeVesselType = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='type']");
                 var nodeVesselSituation = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='sit']");
                 var nodeVesselSplashed = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='splashed']");
                 var nodeVesselName = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='name']");
-                var nodeOrbName = document.SelectSingleNode("//Log");
+                var nodeOrbName = document.SelectSingleNode("//Log/Parameter[@name='0']");
+                //Filter the orb name
+                var nodeOrbNameParams = nodeOrbName.InnerText.Split(',').ToList<string>();
+                nodeOrbNameParams.Reverse();
+                var stringOrbName = nodeOrbNameParams[0];
 
                 //Check if vessel matches search param
-                if (nodeVesselType == null) isVesselType = true;
+                if (nodeVesselType == null) isVesselType = false;
                 else if (vesselType == "*" || nodeVesselType.InnerText.ToLower() == vesselType.ToLower()) isVesselType = true;
-                if (nodeVesselSituation == null) isVesselSituation = true;
+                if (nodeVesselSituation == null) isVesselSituation = false;
                 else if(vesselSituation == "*" || nodeVesselSituation.InnerText.ToLower() == vesselSituation.ToLower()) isVesselSituation = true;
-                if (nodeVesselSplashed == null) isVesselSplashed = true;
+                if (nodeVesselSplashed == null) isVesselSplashed = false;
                 else if (vesselSplashed == "*" || nodeVesselSplashed.InnerText.ToLower() == vesselSplashed.ToLower()) isVesselSplashed = true;
-                if (nodeVesselName == null) isVesselName = true;
+                if (nodeVesselName == null) isVesselName = false;
                 else if (vesselName == "*" || nodeVesselName.InnerText.ToLower().Contains(vesselName.ToLower())) isVesselName = true;
-                if (nodeOrbName == null) isOrbName = true;
-                else if (orbName == "*" || nodeOrbName.InnerText.ToLower().Contains(orbName.ToLower())) isOrbName = true;
+                if (nodeOrbName == null) isOrbName = false;
+                else if (orbName == "*" || stringOrbName.ToLower().Contains(orbName.ToLower())) isOrbName = true;
 
                 //Check if all search params matched
                 if (isVesselType && isVesselSituation && isVesselSplashed && isVesselName && isOrbName)

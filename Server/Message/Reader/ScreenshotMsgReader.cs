@@ -15,12 +15,17 @@ namespace Server.Message.Reader
             var data = (ScreenshotBaseMsgData)message.Data;
             switch (data.ScreenshotMessageType)
             {
-                case ScreenshotMessageType.ListRequest:
+                case ScreenshotMessageType.FoldersRequest:
+                    ScreenshotSystem.SendScreenshotFolders(client);
                     break;
-                case ScreenshotMessageType.Upload:
-                    ScreenshotSystem.SaveScreenshot(client, (ScreenshotUploadMsgData)data);
+                case ScreenshotMessageType.ListRequest:
+                    ScreenshotSystem.SendScreenshotList(client, (ScreenshotListRequestMsgData)data);
+                    break;
+                case ScreenshotMessageType.ScreenshotData:
+                    ScreenshotSystem.SaveScreenshot(client, (ScreenshotDataMsgData)data);
                     break;
                 case ScreenshotMessageType.DownloadRequest:
+                    ScreenshotSystem.SendScreenshot(client, (ScreenshotDownloadRequestMsgData)data);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

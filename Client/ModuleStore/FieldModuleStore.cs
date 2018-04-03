@@ -57,18 +57,25 @@ namespace LunaClient.ModuleStore
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
-                foreach (var partModule in partModules)
+                try
                 {
-                    var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
-                        .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant)).ToArray();
-                    
-                    if (persistentFields.Any())
+                    var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
+                    foreach (var partModule in partModules)
                     {
-                        ModuleFieldsDictionary.Add(partModule.Name, new FieldModuleDefinition(partModule, persistentFields));
-                    }
+                        var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                            .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant)).ToArray();
 
-                    InheritanceTypeChain.Add(partModule.Name, GetInheritChain(partModule));
+                        if (persistentFields.Any())
+                        {
+                            ModuleFieldsDictionary.Add(partModule.Name, new FieldModuleDefinition(partModule, persistentFields));
+                        }
+
+                        InheritanceTypeChain.Add(partModule.Name, GetInheritChain(partModule));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    LunaLog.LogError($"Exception loading types from assembly {assembly.FullName}: {ex.Message}");
                 }
             }
 

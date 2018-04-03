@@ -16,7 +16,7 @@ namespace LunaClient.Windows.Chat
 
             DrawChatMessageBox();
             DrawTextInput(pressedEnter);
-
+            GUILayout.Space(5);
             GUILayout.EndVertical();
         }
 

@@ -1,53 +1,17 @@
-using LunaClient.Base;
-using LunaClient.Systems.SettingsSys;
-using System.Collections.Generic;
+﻿using LunaClient.Base;
 
 namespace LunaClient.Systems.Admin
 {
     public class AdminSystem : MessageSystem<AdminSystem, AdminMessageSender, AdminMessageHandler>
     {
-        #region Fields
-
-        private List<string> ServerAdmins { get; } = new List<string>();
-
-        #endregion
-
-        #region Base overrides
+        public string AdminPassword { get; set; } = string.Empty;
 
         public override string SystemName { get; } = nameof(AdminSystem);
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            ServerAdmins.Clear();
+            AdminPassword = string.Empty;
         }
-
-        #endregion
-
-        #region Public methods
-
-        public bool IsCurrentPlayerAdmin()
-        {
-            return IsAdmin(SettingsSystem.CurrentSettings.PlayerName);
-        }
-
-        public bool IsAdmin(string playerName)
-        {
-            return ServerAdmins.Contains(playerName);
-        }
-
-        public void RegisterServerAdmin(string adminName)
-        {
-            if (!ServerAdmins.Contains(adminName))
-                ServerAdmins.Add(adminName);
-        }
-
-        public void UnregisterServerAdmin(string adminName)
-        {
-            if (ServerAdmins.Contains(adminName))
-                ServerAdmins.Remove(adminName);
-        }
-
-        #endregion
     }
 }

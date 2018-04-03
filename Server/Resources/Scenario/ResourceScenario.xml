@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-16"?>
+<LMPConfigNodeToXML>
+  <Parameter name="name">ResourceScenario</Parameter>
+  <Parameter name="scene">7, 8, 5, 6, 21</Parameter>
+  <Node name="RESOURCE_SETTINGS">
+    <Parameter name="GameSeed">162051528</Parameter>
+    <Parameter name="MaxDeltaTime">21600</Parameter>
+  </Node>
+</LMPConfigNodeToXML>

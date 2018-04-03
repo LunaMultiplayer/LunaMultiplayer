@@ -2,9 +2,10 @@
 {
     public enum AdminMessageType
     {
-        ListRequest = 0,
-        ListReply = 1,
-        Add = 2,
-        Remove = 3
+        Reply,
+        Ban,
+        Kick,
+        Dekessler,
+        Nuke
     }
 }

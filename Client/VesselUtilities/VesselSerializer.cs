@@ -1,10 +1,16 @@
-﻿using LunaClient.Utilities;
+﻿using LunaClient.Systems.Chat;
+using LunaClient.Systems.Mod;
+using LunaClient.Utilities;
 using System;
+using System.Linq;
 
 namespace LunaClient.VesselUtilities
 {
     public class VesselSerializer
     {
+        /// <summary>
+        /// Deserialize a byte array into a protovessel
+        /// </summary>
         public static ProtoVessel DeserializeVessel(byte[] data, int numBytes)
         {
             try
@@ -12,7 +18,7 @@ namespace LunaClient.VesselUtilities
                 var vesselNode = ConfigNodeSerializer.Deserialize(data, numBytes);
                 var configGuid = vesselNode?.GetValue("pid");
 
-                return VesselCommon.CreateSafeProtoVesselFromConfigNode(vesselNode, new Guid(configGuid));
+                return CreateSafeProtoVesselFromConfigNode(vesselNode, new Guid(configGuid));
             }
             catch (Exception e)
             {
@@ -21,6 +27,9 @@ namespace LunaClient.VesselUtilities
             }
         }
 
+        /// <summary>
+        /// Serialize a protovessel into a byte array
+        /// </summary>
         public static byte[] SerializeVessel(ProtoVessel protoVessel)
         {
             return PreSerializationChecks(protoVessel, out var configNode) ? ConfigNodeSerializer.Serialize(configNode) : new byte[0];
@@ -38,6 +47,59 @@ namespace LunaClient.VesselUtilities
             else
             {
                 numBytes = 0;
+            }
+        }
+
+        /// <summary>
+        /// Creates a protovessel from a ConfigNode
+        /// </summary>
+        public static ProtoVessel CreateSafeProtoVesselFromConfigNode(ConfigNode inputNode, Guid protoVesselId)
+        {
+            try
+            {
+                //Cannot create a protovessel if HighLogic.CurrentGame is null as we don't have a CrewRoster
+                //and the protopartsnapshot constructor needs it
+                if (HighLogic.CurrentGame == null)
+                    return null;
+
+                //Cannot reuse the Protovessel to save memory garbage as it does not have any clear method :(
+                var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
+                foreach (var pps in pv.protoPartSnapshots)
+                {
+                    if (ModSystem.Singleton.ModControl && !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
+                    {
+                        var msg = $"Protovessel {protoVesselId} ({pv.vesselName}) contains the BANNED PART '{pps.partName}'. Skipping load.";
+                        LunaLog.LogWarning(msg);
+                        ChatSystem.Singleton.PmMessageServer(msg);
+
+                        return null;
+                    }
+
+                    if (pps.partInfo == null)
+                    {
+                        LunaLog.LogWarning($"WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the MISSING PART '{pps.partName}'. Skipping load.");
+                        LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing {pps.partName}", 10f, ScreenMessageStyle.UPPER_CENTER);
+
+                        return null;
+                    }
+
+                    var missingeResource = pps.resources.FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
+                    if (missingeResource != null)
+                    {
+                        var msg = $"WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the MISSING RESOURCE '{missingeResource.resourceName}'. Skipping load.";
+                        LunaLog.LogWarning(msg);
+                        ChatSystem.Singleton.PmMessageServer(msg);
+
+                        LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing resource {missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
+                        return null;
+                    }
+                }
+                return pv;
+            }
+            catch (Exception e)
+            {
+                LunaLog.LogError($"[LMP]: Damaged vessel {protoVesselId}, exception: {e}");
+                return null;
             }
         }
 

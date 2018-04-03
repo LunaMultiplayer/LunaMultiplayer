@@ -32,25 +32,27 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, current);
                 VesselPositionSystem.TargetVesselUpdate.TryAdd(vesselId, target);
+                VesselPositionSystem.TargetVesselUpdateQueue.TryAdd(vesselId, new FixedSizedConcurrentQueue<VesselPositionUpdate>(VesselPositionSystem.MaxQueuedUpdates));
 
-                current.ResetFields(target);
+                current.SetTarget(target);
             }
             else
             {
-                if (VesselPositionSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate))
-                {                    
-                    //Overwrite the TARGET data with the data we've received in the message
-                    MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
-
-                    if (SettingsSystem.CurrentSettings.InterpolationEnabled)
+                if (SettingsSystem.CurrentSettings.InterpolationEnabled)
+                {
+                    if (VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(vesselId, out var queue))
                     {
-                        //Here we set the start position to the current VESSEL position in order to LERP correctly
-                        existingPositionUpdate.Restart(existingTargetPositionUpdate);
+                        queue.Enqueue(MessageToPositionTransfer.CreateFromMessage(msg));
                     }
-                    else
-                    {
+                }
+                else
+                {
+                    if (VesselPositionSystem.TargetVesselUpdate.TryGetValue(vesselId, out var existingTargetPositionUpdate))
+                    {                    
+                        //Overwrite the TARGET data with the data we've received in the message
+                        MessageToPositionTransfer.UpdateFromMessage(msg, existingTargetPositionUpdate);
                         //Here we just set the interpolation as not started
-                        existingPositionUpdate.ResetFields(existingTargetPositionUpdate);
+                        existingPositionUpdate.SetTarget(existingTargetPositionUpdate);
                     }
                 }
             }

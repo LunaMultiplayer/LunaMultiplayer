@@ -24,5 +24,13 @@ namespace LunaClient.Utilities
             return obj is IConvertible convertible ? convertible.ToString(CultureInfo.InvariantCulture)
                 : (obj as IFormattable)?.ToString(null, CultureInfo.InvariantCulture) ?? obj.ToString();
         }
+
+        public static string PrintOrbitData(this Orbit orbit)
+        {
+            return $"{orbit.inclination.ToString(CultureInfo.InvariantCulture)};{orbit.eccentricity.ToString(CultureInfo.InvariantCulture)};" +
+                $"{orbit.semiMajorAxis.ToString(CultureInfo.InvariantCulture)};{orbit.LAN.ToString(CultureInfo.InvariantCulture)};" +
+                $"{orbit.argumentOfPeriapsis.ToString(CultureInfo.InvariantCulture)};{orbit.meanAnomalyAtEpoch.ToString(CultureInfo.InvariantCulture)};" +
+                $"{orbit.epoch.ToString(CultureInfo.InvariantCulture)}";
+        }
     }
 }

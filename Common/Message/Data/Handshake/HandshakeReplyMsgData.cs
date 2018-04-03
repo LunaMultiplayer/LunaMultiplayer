@@ -16,7 +16,6 @@ namespace LunaCommon.Message.Data.Handshake
         public string Reason;
         public bool ModControl;
         public long ServerStartTime;
-        public Guid  PlayerId;
         public string ModFileData;
         
         public override string ClassName { get; } = nameof(HandshakeReplyMsgData);
@@ -32,9 +31,6 @@ namespace LunaCommon.Message.Data.Handshake
             lidgrenMsg.WritePadBits();
 
             lidgrenMsg.Write(ServerStartTime);
-
-            GuidUtil.Serialize(PlayerId, lidgrenMsg);
-
             lidgrenMsg.Write(ModFileData);
         }
 
@@ -49,8 +45,6 @@ namespace LunaCommon.Message.Data.Handshake
             lidgrenMsg.SkipPadBits();
 
             ServerStartTime = lidgrenMsg.ReadInt64();
-            
-            PlayerId = GuidUtil.Deserialize(lidgrenMsg);
 
             ModFileData = lidgrenMsg.ReadString();
         }
@@ -58,7 +52,7 @@ namespace LunaCommon.Message.Data.Handshake
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(HandshakeReply) + Reason.GetByteCount() + sizeof(byte) //We write pad bits so it's size of byte
-                + sizeof(long) + GuidUtil.GetByteSize() + ModFileData.GetByteCount();
+                + sizeof(long) + ModFileData.GetByteCount();
         }
     }
 }

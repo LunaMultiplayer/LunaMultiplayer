@@ -1,21 +1,17 @@
+﻿using Server.Command.Command;
+using Server.Context;
+using Server.Log;
+using Server.Settings;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using Server.Command.CombinedCommand;
-using Server.Command.Command;
-using Server.Context;
-using Server.Log;
-using Server.Settings;
 
 namespace Server.Command
 {
     public class CommandHandler
     {
-        static CommandHandler()
-        {
-            RegisterCommands();
-        }
+        static CommandHandler() => RegisterCommands();
 
         public static readonly ConcurrentDictionary<string, CommandDefinition> Commands =
             new ConcurrentDictionary<string, CommandDefinition>();
@@ -23,18 +19,18 @@ namespace Server.Command
         private static void RegisterCommands()
         {
             //Register the server Commands
-            RegisterCommand("kick", new KickCommand().Execute, "Kicks a player from the server");
-            RegisterCommand("ban", new BanCommands().HandleCommand, "Bans someone from the server");
-            RegisterCommand("admin", new AdminCommands().HandleCommand, "Sets a player as admin/removes admin from the player");
-            RegisterCommand("whitelist", new WhitelistCommands().HandleCommand, "Change the server whitelist");
-            RegisterCommand("help", new DisplayHelpCommand().Execute, "Displays this help");
-            RegisterCommand("say", new SayCommand().Execute, "Broadcasts a message to clients");
-            RegisterCommand("dekessler", new DekesslerCommand().Execute, "Clears out debris from the server");
-            RegisterCommand("nukeksc", new NukeCommand().Execute, "Clears ALL vessels from KSC and the runway");
+            RegisterCommand("ban", new BanPlayerCommand().Execute, "Bans someone from the server");
+            RegisterCommand("changesettings", new ChangeSettingsCommand().Execute, "Changes the server settings");
             RegisterCommand("clearvessels", new ClearVesselsCommand().Execute, "Clears ALL SPECIFIED vessels from universe");
-            RegisterCommand("listclients", new ListClientsCommand().Execute, "Lists connected clients");
-            RegisterCommand("countclients", new CountClientsCommand().Execute, "Counts connected clients");
             RegisterCommand("connectionstats", new ConnectionStatsCommand().Execute, "Displays network traffic usage");
+            RegisterCommand("countclients", new CountClientsCommand().Execute, "Counts connected clients");
+            RegisterCommand("dekessler", new DekesslerCommand().Execute, "Clears out debris from the server");
+            RegisterCommand("help", new DisplayHelpCommand().Execute, "Displays this help");
+            RegisterCommand("kick", new KickCommand().Execute, "Kicks a player from the server");
+            RegisterCommand("listclients", new ListClientsCommand().Execute, "Lists connected clients");
+            RegisterCommand("nukeksc", new NukeCommand().Execute, "Clears ALL vessels from KSC and the runway");
+            RegisterCommand("restartserver", new RestartServerCommand().Execute, "Restarts the server");
+            RegisterCommand("say", new SayCommand().Execute, "Broadcasts a message to clients");
         }
 
         /// <summary>
@@ -100,7 +96,7 @@ namespace Server.Command
                     LunaLog.Normal($"Unknown server command: {commandPart}");
         }
 
-        private static void RegisterCommand(string command, Action<string> func, string description)
+        private static void RegisterCommand(string command, Func<string, bool> func, string description)
         {
             var cmd = new CommandDefinition(command, func, description);
             if (!Commands.ContainsKey(command))

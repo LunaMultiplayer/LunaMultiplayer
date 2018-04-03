@@ -10,15 +10,12 @@ namespace LunaCommon.Locks
     {
         private LockStore LockStore { get; }
 
-        public LockQuery(LockStore lockStore)
-        {
-            LockStore = lockStore;
-        }
+        public LockQuery(LockStore lockStore) => LockStore = lockStore;
 
         /// <summary>
         /// Checks if the vessel based lock belongs to player
         /// </summary>
-        public bool LockBelongsToPlayer(LockType type, Guid vesselId, string playerName)
+        public bool LockBelongsToPlayer(LockType type, Guid vesselId, string kerbalName, string playerName)
         {
             switch (type)
             {
@@ -26,6 +23,10 @@ namespace LunaCommon.Locks
                     return SpectatorLockExists(playerName);
                 case LockType.Asteroid:
                     return LockStore.AsteroidLock?.PlayerName == playerName;
+                case LockType.Kerbal:
+                    if (LockStore.KerbalLocks.TryGetValue(kerbalName, out var kerbalLock))
+                        return kerbalLock.Type == LockType.Kerbal && kerbalLock.KerbalName == kerbalName && kerbalLock.PlayerName == playerName;
+                    break;
                 case LockType.Control:
                     if (LockStore.ControlLocks.TryGetValue(vesselId, out var controlLock))
                         return controlLock.Type == LockType.Control && controlLock.VesselId == vesselId && controlLock.PlayerName == playerName;
@@ -38,6 +39,8 @@ namespace LunaCommon.Locks
                     if (LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
                         return unloadedUpdateLock.Type == LockType.UnloadedUpdate && unloadedUpdateLock.VesselId == vesselId && unloadedUpdateLock.PlayerName == playerName;
                     break;
+                case LockType.Contract:
+                    return LockStore.ContractLock?.PlayerName == playerName;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -48,18 +51,22 @@ namespace LunaCommon.Locks
         /// <summary>
         /// Checks if the vessel based lock exists
         /// </summary>
-        public bool LockExists(LockType type, Guid vesselId)
+        public bool LockExists(LockType type, Guid vesselId, string kerbalName)
         {
             switch (type)
             {
                 case LockType.Asteroid:
                     return LockStore.AsteroidLock != null;
+                case LockType.Kerbal:
+                    return LockStore.KerbalLocks.ContainsKey(kerbalName);
                 case LockType.Control:
                     return LockStore.ControlLocks.ContainsKey(vesselId);
                 case LockType.Update:
                     return LockStore.UpdateLocks.ContainsKey(vesselId);
                 case LockType.UnloadedUpdate:
                     return LockStore.UnloadedUpdateLocks.ContainsKey(vesselId);
+                case LockType.Contract:
+                    return LockStore.ContractLock != null;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -68,12 +75,16 @@ namespace LunaCommon.Locks
         /// <summary>
         /// Get the vessel based lock owner
         /// </summary>
-        private string GetLockOwner(LockType type, Guid vesselId)
+        private string GetLockOwner(LockType type, Guid vesselId, string kerbalName)
         {
             switch (type)
             {
                 case LockType.Asteroid:
                     return LockStore.AsteroidLock?.PlayerName;
+                case LockType.Kerbal:
+                    if (LockStore.KerbalLocks.TryGetValue(kerbalName, out var kerbalLock))
+                        return kerbalLock.PlayerName;
+                    break;
                 case LockType.Control:
                     if (LockStore.ControlLocks.TryGetValue(vesselId, out var controlLock))
                         return controlLock.PlayerName;
@@ -86,6 +97,8 @@ namespace LunaCommon.Locks
                     if (LockStore.UnloadedUpdateLocks.TryGetValue(vesselId, out var unloadedUpdateLock))
                         return unloadedUpdateLock.PlayerName;
                     break;
+                case LockType.Contract:
+                    return LockStore.ContractLock?.PlayerName;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);
             }
@@ -99,6 +112,7 @@ namespace LunaCommon.Locks
         public IEnumerable<LockDefinition> GetAllPlayerLocks(string playerName)
         {
             var locks = new List<LockDefinition>();
+            locks.AddRange(GetAllKerbalLocks(playerName));
             locks.AddRange(GetAllControlLocks(playerName));
             locks.AddRange(GetAllUpdateLocks(playerName));
             locks.AddRange(GetAllUnloadedUpdateLocks(playerName));
@@ -109,6 +123,9 @@ namespace LunaCommon.Locks
             if (AsteroidLockBelongsToPlayer(playerName))
                 locks.Add(LockStore.AsteroidLock);
 
+            if (ContractLockBelongsToPlayer(playerName))
+                locks.Add(LockStore.ContractLock);
+
             return locks;
         }
 
@@ -118,6 +135,7 @@ namespace LunaCommon.Locks
         public IEnumerable<LockDefinition> GetAllLocks()
         {
             var locks = new List<LockDefinition>();
+            locks.AddRange(GetAllKerbalLocks());
             locks.AddRange(GetAllControlLocks());
             locks.AddRange(GetAllUpdateLocks());
             locks.AddRange(GetAllUnloadedUpdateLocks());
@@ -125,6 +143,9 @@ namespace LunaCommon.Locks
 
             if (LockStore.AsteroidLock != null)
                 locks.Add(LockStore.AsteroidLock);
+
+            if (LockStore.ContractLock != null)
+                locks.Add(LockStore.ContractLock);
 
             return locks;
         }
@@ -146,6 +167,10 @@ namespace LunaCommon.Locks
                     return LockStore.ControlLocks.ContainsKey(lockDefinition.VesselId);
                 case LockType.Spectator:
                     return LockStore.SpectatorLocks.ContainsKey(lockDefinition.PlayerName);
+                case LockType.Kerbal:
+                    return LockStore.SpectatorLocks.ContainsKey(lockDefinition.KerbalName);
+                case LockType.Contract:
+                    return LockStore.ContractLock != null;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -154,7 +179,7 @@ namespace LunaCommon.Locks
         /// <summary>
         /// Retrieves a lock from the dictioanry based on the given lock
         /// </summary>
-        public LockDefinition GetLock(LockType lockType, string playerName, Guid vesselId)
+        public LockDefinition GetLock(LockType lockType, string playerName, Guid vesselId, string kerbalName)
         {
             LockDefinition existingLock;
             switch (lockType)
@@ -170,9 +195,14 @@ namespace LunaCommon.Locks
                 case LockType.Control:
                     LockStore.ControlLocks.TryGetValue(vesselId, out existingLock);
                     break;
+                case LockType.Kerbal:
+                    LockStore.KerbalLocks.TryGetValue(kerbalName, out existingLock);
+                    break;
                 case LockType.Spectator:
                     LockStore.SpectatorLocks.TryGetValue(playerName, out existingLock);
                     break;
+                case LockType.Contract:
+                    return LockStore.ContractLock;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -185,6 +215,14 @@ namespace LunaCommon.Locks
         public bool CanRecoverOrTerminateTheVessel(Guid vesselId, string playerName)
         {
             return !ControlLockExists(vesselId) || ControlLockBelongsToPlayer(vesselId, playerName);
+        }
+
+        /// <summary>
+        /// Check if player can edit the kerbal
+        /// </summary>
+        public bool CanEditKerbal(string kerbalName, string playerName)
+        {
+            return !KerbalLockExists(kerbalName) || KerbalLockBelongsToPlayer(kerbalName, playerName);
         }
     }
 }

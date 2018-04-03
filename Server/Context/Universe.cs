@@ -50,10 +50,7 @@ namespace Server.Context
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Relay")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Relay"));
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Scenarios")))
-            {
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Scenarios"));
-                ScenarioSystem.GenerateDefaultScenarios();
-            }
             if (!FileHandler.FolderExists(Path.Combine(ServerContext.UniverseDirectory, "Vessels")))
                 FileHandler.FolderCreate(Path.Combine(ServerContext.UniverseDirectory, "Vessels"));
         }

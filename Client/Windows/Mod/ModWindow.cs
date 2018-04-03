@@ -1,6 +1,5 @@
 ﻿using LunaClient.Base;
 using LunaClient.Localization;
-using LunaClient.Utilities;
 using UnityEngine;
 
 namespace LunaClient.Windows.Mod
@@ -18,19 +17,21 @@ namespace LunaClient.Windows.Mod
         private static Vector2 _mandatoryPartsScrollPos;
         private static Vector2 _forbiddenPartsScrollPos;
 
-        public override void Update()
+        private static bool _display;
+        public override bool Display
         {
-            base.Update();
-            SafeDisplay = Display;
+            get => base.Display && _display && HighLogic.LoadedScene == GameScenes.MAINMENU;
+            set => base.Display = _display = value;
         }
-
+        
         public override void OnGui()
         {
             base.OnGui();
-            if (SafeDisplay)
-                WindowRect =
-                    LmpGuiUtil.PreventOffscreenWindow(GUILayout.Window(6706 + MainSystem.WindowOffset, WindowRect,
-                        DrawContent, LocalizationContainer.ModWindowText.Title, WindowStyle, LayoutOptions));
+            if (Display)
+            {
+                WindowRect = FixWindowPos(GUILayout.Window(6706 + MainSystem.WindowOffset, WindowRect, DrawContent,
+                    LocalizationContainer.ModWindowText.Title, WindowStyle, LayoutOptions));
+            }
         }
 
         public override void SetStyles()

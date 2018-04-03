@@ -1,9 +1,11 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Network;
 using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
 using LunaCommon.Message.Data.Lock;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -17,11 +19,10 @@ namespace LunaClient.Systems.Lock
     {
         public static LockStore LockStore { get; } = new LockStore();
         public static LockQuery LockQuery { get; } = new LockQuery(LockStore);
-
-        public List<AcquireEvent> LockAcquireEvents { get; } = new List<AcquireEvent>();
-        public List<ReleaseEvent> LockReleaseEvents { get; } = new List<ReleaseEvent>();
-
         public LockEvents LockEvents { get; } = new LockEvents();
+
+        public ConcurrentQueue<LockDefinition> AcquiredLocks = new ConcurrentQueue<LockDefinition>();
+        public ConcurrentQueue<LockDefinition> ReleasedLocks = new ConcurrentQueue<LockDefinition>();
 
         #region Base overrides
 
@@ -31,97 +32,29 @@ namespace LunaClient.Systems.Lock
         {
             base.OnEnabled();
             GameEvents.onGameSceneLoadRequested.Add(LockEvents.OnSceneRequested);
+            SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, TriggerEvents));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             LockStore.ClearAllLocks();
-            LockAcquireEvents.Clear();
-            LockReleaseEvents.Clear();
             GameEvents.onGameSceneLoadRequested.Remove(LockEvents.OnSceneRequested);
         }
 
         #endregion
 
+        private void TriggerEvents()
+        {
+            while(AcquiredLocks.TryDequeue(out var lockDef))
+                LockEvent.onLockAcquireUnityThread.Fire(lockDef);
+
+            while (ReleasedLocks.TryDequeue(out var lockDef))
+                LockEvent.onLockReleaseUnityThread.Fire(lockDef);
+        }
+
         #region Public methods
-
-        #region Hooks
-
-        #region RegisterHook
-
-        public void RegisterAcquireHook(AcquireEvent methodObject)
-        {
-            LockAcquireEvents.Add(methodObject);
-        }
-
-        public void RegisterReleaseHook(ReleaseEvent methodObject)
-        {
-            LockReleaseEvents.Add(methodObject);
-        }
-
-        #endregion
-
-        #region UnregisterHook
-
-        public void UnregisterAcquireHook(AcquireEvent methodObject)
-        {
-            if (LockAcquireEvents.Contains(methodObject))
-                LockAcquireEvents.Remove(methodObject);
-        }
-
-        public void UnregisterReleaseHook(ReleaseEvent methodObject)
-        {
-            if (LockReleaseEvents.Contains(methodObject))
-                LockReleaseEvents.Remove(methodObject);
-        }
-
-        #endregion
-
-        #endregion
-
-        #region Events
-
-        /// <summary>
-        /// This event is triggered when some player acquired a lock
-        /// It then calls all the methods specified in the delegate
-        /// </summary>
-        public void FireAcquireEvent(LockDefinition lockDefinition)
-        {
-            foreach (var methodObject in LockAcquireEvents)
-            {
-                try
-                {
-                    methodObject(lockDefinition);
-                }
-                catch (Exception e)
-                {
-                    LunaLog.LogError($"[LMP]: Error thrown in acquire lock event, exception {e}");
-                }
-            }
-        }
-
-        /// <summary>
-        /// This event is triggered when some player released a lock
-        /// It then calls all the methods specified in the delegate
-        /// </summary>
-        public void FireReleaseEvent(LockDefinition lockDefinition)
-        {
-            foreach (var methodObject in LockReleaseEvents)
-            {
-                try
-                {
-                    methodObject(lockDefinition);
-                }
-                catch (Exception e)
-                {
-                    LunaLog.LogError($"[LMP]: Error thrown in release lock event, exception {e}");
-                }
-            }
-        }
-
-        #endregion
-
+        
         #region AcquireLocks
 
         /// <summary>
@@ -145,6 +78,27 @@ namespace LunaClient.Systems.Lock
         {
             if (!LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                 AcquireLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId), force);
+        }
+
+        /// <summary>
+        /// Aquire the kerbal lock on the given kerbal
+        /// </summary>
+        public void AcquireKerbalLock(string kerbalName, bool force = false)
+        {
+            if (!LockQuery.KerbalLockBelongsToPlayer(kerbalName, SettingsSystem.CurrentSettings.PlayerName))
+                AcquireLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName), force);
+        }
+
+        /// <summary>
+        /// Aquire the kerbal lock on the given vessel
+        /// </summary>
+        public void AcquireKerbalLock(Vessel vessel, bool force = false)
+        {
+            foreach (var kerbal in vessel.GetVesselCrew())
+            {
+                if (!LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
+                    AcquireLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbal.name), force);
+            }
         }
 
         /// <summary>
@@ -174,11 +128,19 @@ namespace LunaClient.Systems.Lock
         }
 
         /// <summary>
-        /// Aquire the spectator lock on the given vessel
+        /// Aquire the asteroid lock for the current player
         /// </summary>
         public void AcquireAsteroidLock()
         {
             AcquireLock(new LockDefinition(LockType.Asteroid, SettingsSystem.CurrentSettings.PlayerName));
+        }
+
+        /// <summary>
+        /// Aquire the contract lock for the current player.
+        /// </summary>
+        public void AcquireContractLock()
+        {
+            AcquireLock(new LockDefinition(LockType.Contract, SettingsSystem.CurrentSettings.PlayerName));
         }
 
         #endregion
@@ -189,13 +151,13 @@ namespace LunaClient.Systems.Lock
         /// Release the specified lock by sending a message to the server.
         /// </summary>
         /// <param name="lockDefinition">The definition of the lock to release</param>
-        public void ReleaseLock(LockDefinition lockDefinition)
+        private void ReleaseLock(LockDefinition lockDefinition)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<LockReleaseMsgData>();
             msgData.Lock.CopyFrom(lockDefinition);
 
             LockStore.RemoveLock(lockDefinition);
-            FireReleaseEvent(lockDefinition);
+            LockEvent.onLockRelease.Fire(lockDefinition);
 
             MessageSender.SendMessage(msgData);
         }
@@ -206,6 +168,14 @@ namespace LunaClient.Systems.Lock
         public void ReleaseUpdateLock(Guid vesselId)
         {
             ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+        }
+
+        /// <summary>
+        /// Release the given kerbal lock
+        /// </summary>
+        public void ReleaseKerbalLock(string kerbalName)
+        {
+            ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbalName));
         }
 
         /// <summary>
@@ -220,19 +190,25 @@ namespace LunaClient.Systems.Lock
         /// <summary>
         /// Release all the locks (update and control) of a vessel
         /// </summary>
-        public void ReleaseAllVesselLocks(Guid vesselId, int msDelay = 0)
+        public void ReleaseAllVesselLocks(IEnumerable<string> crewNames, Guid vesselId, int msDelay = 0)
         {
             TaskFactory.StartNew(() =>
             {
                 if (msDelay > 0)
                     Thread.Sleep(msDelay);
 
+
                 if (LockQuery.UnloadedUpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName,vesselId));
+                    ReleaseLock(new LockDefinition(LockType.UnloadedUpdate, SettingsSystem.CurrentSettings.PlayerName, vesselId));
                 if (LockQuery.UpdateLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
                     ReleaseLock(new LockDefinition(LockType.Update, SettingsSystem.CurrentSettings.PlayerName, vesselId));
                 if (LockQuery.ControlLockBelongsToPlayer(vesselId, SettingsSystem.CurrentSettings.PlayerName))
-                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName,vesselId));
+                    ReleaseLock(new LockDefinition(LockType.Control, SettingsSystem.CurrentSettings.PlayerName, vesselId));
+                foreach (var kerbal in crewNames)
+                {
+                    if (LockQuery.KerbalLockBelongsToPlayer(kerbal, SettingsSystem.CurrentSettings.PlayerName))
+                        ReleaseLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbal));
+                }
             });
         }
 
@@ -252,6 +228,17 @@ namespace LunaClient.Systems.Lock
         }
 
         /// <summary>
+        /// Releases all the player locks
+        /// </summary>
+        public void ReleaseAllPlayerLocks()
+        {
+            foreach (var lockToRelease in LockQuery.GetAllPlayerLocks(SettingsSystem.CurrentSettings.PlayerName))
+            {
+                ReleaseLock(lockToRelease);
+            }
+        }
+
+        /// <summary>
         /// Release all the locks you have based by type
         /// </summary>
         public void ReleasePlayerLocks(LockType type)
@@ -267,6 +254,9 @@ namespace LunaClient.Systems.Lock
                 case LockType.Control:
                     locksToRelease = LockQuery.GetAllControlLocks(SettingsSystem.CurrentSettings.PlayerName);
                     break;
+                case LockType.Kerbal:
+                    locksToRelease = LockQuery.GetAllKerbalLocks(SettingsSystem.CurrentSettings.PlayerName);
+                    break;
                 case LockType.Update:
                     locksToRelease = LockQuery.GetAllUpdateLocks(SettingsSystem.CurrentSettings.PlayerName);
                     break;
@@ -276,6 +266,10 @@ namespace LunaClient.Systems.Lock
                 case LockType.Spectator:
                     locksToRelease = LockQuery.SpectatorLockExists(SettingsSystem.CurrentSettings.PlayerName) ?
                         new[] { LockQuery.GetSpectatorLock(SettingsSystem.CurrentSettings.PlayerName) } : new LockDefinition[0];
+                    break;
+                case LockType.Contract:
+                    locksToRelease = LockQuery.ContractLockOwner() == playerName ?
+                        new[] { LockQuery.ContractLock() } : new LockDefinition[0];
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), type, null);

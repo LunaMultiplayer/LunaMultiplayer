@@ -5,6 +5,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
+using UnityEngine;
 
 namespace LunaClient.Systems.Handshake
 {
@@ -15,13 +16,11 @@ namespace LunaClient.Systems.Handshake
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<HandshakeCliMsg>(msg)));
         }
 
-        public void SendHandshakeResponse(byte[] signature)
+        public void SendHandshakeRequest()
         {
-            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<HandshakeResponseMsgData>();
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<HandshakeRequestMsgData>();
             msgData.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
-            msgData.NumBytes = signature.Length;
-            msgData.ChallengeSignature = signature;
-            msgData.PublicKey = SettingsSystem.CurrentSettings.PublicKey;
+            msgData.UniqueIdentifier = SystemInfo.deviceUniqueIdentifier;
 
             SendMessage(msgData);
         }

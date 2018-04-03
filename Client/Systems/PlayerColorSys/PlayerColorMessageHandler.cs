@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Systems.Lock;
-using LunaClient.Windows;
 using LunaClient.Windows.Status;
 using LunaCommon.Enums;
 using LunaCommon.Message.Data.Color;
