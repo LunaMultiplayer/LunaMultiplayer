@@ -193,7 +193,7 @@ namespace LunaClient.Windows.ServerList
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[1]));
             if (currentEntry.Password)
-                GUILayout.Label(new GUIContent(KeyIcon, "Password"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[1]));
+                GUILayout.Label(KeyIcon, LabelStyle, GUILayout.MinWidth(HeaderGridSize[1]));
             else
                 GUILayout.Label("", GUILayout.MinWidth(HeaderGridSize[1]));
             GUILayout.EndHorizontal();

@@ -95,6 +95,11 @@ namespace LunaClient.Base
             //Implement your own code
         }
 
+        public virtual void AfterGui()
+        {
+            if (DisplayTooltips && !string.IsNullOrEmpty(Tooltip)) GUI.Label(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, Tooltip.Length * 10, 20), Tooltip);
+        }
+
         public virtual void RemoveWindowLock()
         {
             //Implement your own code
@@ -106,9 +111,10 @@ namespace LunaClient.Base
         public abstract void SetStyles();
 
         protected virtual bool Resizable { get; } = false;
+        protected virtual bool DisplayTooltips { get; } = false;
+        protected string Tooltip { get; set; } = string.Empty;
 
         protected bool ResizingWindow;
-
         protected void DrawContent(int windowId)
         {
             DrawCloseButton(OnCloseButton, WindowRect);
@@ -120,13 +126,19 @@ namespace LunaClient.Base
                 }
             }
             DrawWindowContent(windowId);
+            SetTooltip();
         }
-
+        
         public abstract void DrawWindowContent(int windowId);
 
         protected virtual void OnCloseButton()
         {
             Display = false;
+        }
+
+        protected void SetTooltip()
+        {
+            if (Event.current.type == EventType.Repaint) Tooltip = GUI.tooltip;
         }
 
         protected void DrawCloseButton(Action closeAction, Rect rect)

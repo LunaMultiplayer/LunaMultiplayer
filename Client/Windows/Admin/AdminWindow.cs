@@ -30,6 +30,8 @@ namespace LunaClient.Windows.Admin
             set => base.Display = _display = value;
         }
 
+        protected override bool DisplayTooltips => true;
+
         #endregion
 
         public override void OnGui()
