@@ -22,7 +22,6 @@ namespace Server.Client
             LmpPluginHandler.FireOnClientConnect(newClientObject);
 
             ServerContext.Clients.TryAdd(newClientObject.Endpoint, newClientObject);
-            VesselUpdateRelaySystem.AddPlayer(newClientObject);
             LunaLog.Debug($"Online Players: {ServerContext.PlayerCount}, connected: {ServerContext.Clients.Count}");
         }
 
@@ -30,8 +29,6 @@ namespace Server.Client
         {
             if (!string.IsNullOrEmpty(reason))
                 LunaLog.Debug($"{client.PlayerName} sent Connection end message, reason: {reason}");
-
-            VesselUpdateRelaySystem.RemovePlayer(client);
 
             //Remove Clients from list
             if (ServerContext.Clients.ContainsKey(client.Endpoint))

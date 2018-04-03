@@ -104,9 +104,6 @@ namespace Server
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServer, CancellationTokenSrc.Token));
 
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VesselRelaySystem.RelayOldVesselMessages, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToFarPlayers, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToMediumDistancePlayers, CancellationTokenSrc.Token));
-                TaskContainer.Add(LongRunTaskFactory.StartNew(VesselUpdateRelaySystem.RelayToClosePlayers, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersion, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsg, CancellationTokenSrc.Token));
 

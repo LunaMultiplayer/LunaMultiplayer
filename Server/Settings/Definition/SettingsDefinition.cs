@@ -124,18 +124,6 @@ namespace Server.Settings.Definition
                             "Values: Dictionary, DataBase")]
         public RelaySystemMode RelaySystemMode { get; set; } = RelaySystemMode.Dictionary;
 
-        [XmlComment(Value = "How often the server will relay position updates between players that are in different planets")]
-        public int FarDistanceUpdateIntervalMs { get; set; } = 500; // 2FPS
-
-        [XmlComment(Value = "How often the server will relay position updates between players that are in the same planet but with a distance >25km")]
-        public int MediumDistanceUpdateIntervalMs { get; set; } = 250; //4 FPS
-
-        [XmlComment(Value = "How often the server will relay position updates between players that are <25km from each other")]
-        public int CloseDistanceUpdateIntervalMs { get; set; } = 33; //30 FPS
-
-        [XmlComment(Value = "Distance in meters to differentiate between CloseDistanceUpdateIntervalMs and MediumDistanceUpdateIntervalMs")]
-        public int CloseDistanceInMeters { get; set; } = 25000;
-
         [XmlComment(Value = "Send/Receive tick clock")]
         public int SendReceiveThreadTickMs { get; set; } = 5;
 
@@ -146,7 +134,7 @@ namespace Server.Settings.Definition
         public LogLevels LogLevel { get; set; } = LogLevels.Debug;
 
         [XmlComment(Value = "Specify the amount of days a log file should be considered as expired and deleted. 0 = Disabled")]
-        public double ExpireLogs { get; set; } = 0;
+        public double ExpireLogs { get; set; } = 14;
 
         [XmlComment(Value = "Use UTC instead of system time in the log.")]
         public bool UseUtcTimeInLog { get; set; } = false;
