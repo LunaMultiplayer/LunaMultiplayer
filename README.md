@@ -29,19 +29,21 @@
 
 ### Main features:
 
-- Clean and optimized code, based on systems and windows which makes it easier to read and modify.
-- Multi threaded (as much as Unity allows)
-- Settings saved as XML.
-- Time synced between clients and the server using [NTP](https://en.wikipedia.org/wiki/Network_Time_Protocol) protocol.
-- [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) based using the [Lidgren](https://github.com/lidgren/lidgren-network-gen3) library for reliable UDP message handling.
-- Uses interpolation so the vessels shouldn't jump from one place to another.
-- [Nat-punchtrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
-- Servers are displayed within the mod.
-- Better creation of network messages so they are easier to modify and serialize.
-- Every network message is cached in order to reduce the garbage collector spikes
-- Based on tasks instead of threads.
-- [QuickLZ](http://www.quicklz.com) for fast compression
-- Supports career and science modes
+- [x] Clean and optimized code, based on systems and windows which makes it easier to read and modify.
+- [x] Multi threaded.
+- [x] Settings saved as XML.
+- [x] Time synced between clients and the server using [NTP](https://en.wikipedia.org/wiki/Network_Time_Protocol) protocol.
+- [x] [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) based using the [Lidgren](https://github.com/lidgren/lidgren-network-gen3) library for reliable UDP message handling.
+- [ ] Use [interpolation](http://www.gabrielgambetta.com/entity-interpolation.html) so the vessels won't jump when there are bad network conditions.
+- [x] Multilanguage.
+- [x] [Nat-punchtrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
+- [x] Servers are displayed within the mod.
+- [x] Better creation of network messages so they are easier to modify and serialize.
+- [x] Every network message is cached in order to reduce the garbage collector spikes.
+- [x] Based on tasks instead of threads.
+- [ ] [QuickLZ](http://www.quicklz.com) for fast compression.
+- [x] Supports career and science modes.
+- [ ] Support for groups/companies inside career and science modes.
 
 Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-compile-LMP), [run](../../wiki/How-to-play-with-LMP.) or [debug](../../wiki/Debugging-in-Visual-studio) LMP
 
