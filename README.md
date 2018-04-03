@@ -34,7 +34,7 @@
 - [x] Settings saved as XML.
 - [x] Time synced between clients and the server using [NTP](https://en.wikipedia.org/wiki/Network_Time_Protocol) protocol.
 - [x] [UDP](https://en.wikipedia.org/wiki/User_Datagram_Protocol) based using the [Lidgren](https://github.com/lidgren/lidgren-network-gen3) library for reliable UDP message handling.
-- [ ] Uses interpolation so the vessels shouldn't jump from one place to another.
+- [ ] Use interpolation so the vessels won't jump when there are bad network conditions.
 - [x] Multilanguage.
 - [x] [Nat-punchtrough](../../wiki/Master-server) feature so a server doesn't need to open ports on it's router.
 - [x] Servers are displayed within the mod.
