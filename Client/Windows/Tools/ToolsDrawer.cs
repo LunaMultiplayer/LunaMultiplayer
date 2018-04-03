@@ -12,6 +12,12 @@ namespace LunaClient.Windows.Tools
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
+            var newVal = GUILayout.Toggle(_saveCurrentOrbitData, "Save orbit data to file", ButtonStyle);
+            if (newVal != _saveCurrentOrbitData)
+            {
+                _saveCurrentOrbitData = newVal;
+                if (newVal) CreateNewOrbitDataFile();
+            }
             if (GUILayout.Button("Force time sync", ButtonStyle))
             {
                 TimeSyncerSystem.Singleton.ForceTimeSync();
