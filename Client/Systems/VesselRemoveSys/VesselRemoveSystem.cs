@@ -124,7 +124,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void RemoveVesselsInSafetyBubble()
         {
-            foreach (var vessel in FlightGlobals.Vessels)
+            foreach (var vessel in FlightGlobals.Vessels.ToArray())
             {
                 if (vessel != null && VesselCommon.IsInSafetyBubble(vessel) && FlightGlobals.ActiveVessel?.id != vessel.id)
                 {
