@@ -21,6 +21,12 @@
 
 ---
 
+<p align="center">
+  <a href="../../releases/latest"><img src="../master/External/downloadIcon.png" alt="Download"/></a>
+</p>
+
+---
+
 # Luna Multiplayer Mod (LMP)
 
 *Multiplayer mod for [Kerbal Space Program (KSP)](https://kerbalspaceprogram.com)*
