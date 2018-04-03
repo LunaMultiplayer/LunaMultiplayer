@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-16"?>
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SettingsIcon>Settings</SettingsIcon>
-  <ServerIcon>Servers</ServerIcon>
-  <ConnectIcon>Connect</ConnectIcon>
-  <DisconnectIcon>Disconnect</DisconnectIcon>
-  <SyncIcon>Warp to</SyncIcon>
-  <CloseIcon>Close</CloseIcon>
-  <RefreshIcon>Refresh</RefreshIcon>
-  <UploadIcon>Upload</UploadIcon>
-  <DeleteIcon>Delete</DeleteIcon>
-  <PlusIcon>Add</PlusIcon>
-  <SaveIcon>Save</SaveIcon>
-  <KeyIcon>Password</KeyIcon>
+  <SettingsIcon>Optionen</SettingsIcon>
+  <ServerIcon>Server</ServerIcon>
+  <ConnectIcon>Verbinden</ConnectIcon>
+  <DisconnectIcon>Verbindung trennen</DisconnectIcon>
+  <SyncIcon>Zeitsprung zu</SyncIcon>
+  <CloseIcon>Schließen</CloseIcon>
+  <RefreshIcon>Neuladen</RefreshIcon>
+  <UploadIcon>Hochladen</UploadIcon>
+  <DeleteIcon>Löschen</DeleteIcon>
+  <PlusIcon>Hinzufügen</PlusIcon>
+  <SaveIcon>Speichern</SaveIcon>
+  <KeyIcon>Passwort</KeyIcon>
   <ChatIcon>Chat</ChatIcon>
   <CameraIcon>Screenshots</CameraIcon>
-  <RocketIcon>Vessels</RocketIcon>
+  <RocketIcon>Fahrzeuge</RocketIcon>
   <AdminIcon>Admin</AdminIcon>
-  <KickIcon>Kick</KickIcon>
-  <BanIcon>Ban</BanIcon>
-  <DekesslerIcon>Dekessler</DekesslerIcon>
-  <NukeIcon>Nuke KSC</NukeIcon>
+  <KickIcon>Kicken</KickIcon>
+  <BanIcon>Bannen</BanIcon>
+  <DekesslerIcon>Dekessler (löscht alle Debris)</DekesslerIcon>
+  <NukeIcon>Nuke KSC (löscht alle Fahrzeuge am KSC)</NukeIcon>
 </ButtonTooltips>
