@@ -12,7 +12,7 @@ namespace LunaClient.Systems.ShareReputation
 
         private float _lastReputation;
 
-        protected override bool ShareSystemReady => Reputation.Instance != null;
+        protected override bool ShareSystemReady => Reputation.Instance != null && ProgressTracking.Instance != null;
 
         protected override void OnEnabled()
         {
