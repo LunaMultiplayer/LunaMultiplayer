@@ -4,19 +4,17 @@
 </p>
 
 <p align="center">
-  <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal"/></a>
-  <a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
-  <a href="../../wiki"><img src="https://img.shields.io/badge/documentation-Wiki-4BC51D.svg" alt="Documentation" /></a>
+    <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal"/></a>
+    <a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
+    <a href="../../releases"><img src="https://img.shields.io/github/release/lunamultiplayer/lunamultiplayer.svg" alt="Latest release" /></a>
+    <a href="../../releases"><img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" /></a>
 </p>
 
-<p align="center">
-  <a href="../../releases"><img src="https://img.shields.io/github/release/lunamultiplayer/lunamultiplayer.svg" alt="Latest release" /></a>
-  <a href="../../releases"><img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" /></a>
-  <a href="../../"><img src="https://img.shields.io/github/search/lunamultiplayer/lunamultiplayer/goto.svg" alt="Total hits" /></a>
-</p>
+---
 
 <p align="center">
-  <a href="../../releases"><img src="https://img.shields.io/github/commits-since/lunamultiplayer/lunamultiplayer/latest.svg" alt="Github commits (since latest release" /></a>
+  <a href="../../releases/latest"><img src="../master/External/downloadIcon.png" alt="Download" height="85" width="300"/></a>
+  <a href="../../wiki"><img src="../master/External/documentationIcon.png" alt="Documentation" height="85" width="353"/></a>
 </p>
 
 ---
@@ -58,9 +56,9 @@ Check how many servers are up and running either in [Release](../../wiki/How-to-
 
 ### Status:
 
-|   Branch   |   Build  |   Tests  |  Last commit  |   Activity    |
-| ---------- | -------- | -------- | ------------- | ------------- |
-| **master** |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![GitHub last commit](https://img.shields.io/github/last-commit/lunamultiplayer/lunamultiplayer/master.svg)](../../commits/master) | [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/lunamultiplayer/lunamultiplayer.svg)](../../commits/master) 
+|   Branch   |   Build  |   Tests  |  Last commit  |   Activity    |    Commits    |
+| ---------- | -------- | -------- | ------------- | ------------- | ------------- |
+| **master** |[![AppVeyor](https://img.shields.io/appveyor/ci/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master) | [![AppVeyor Tests](https://img.shields.io/appveyor/tests/gavazquez/lunamultiplayer/master.svg?logo=appveyor)](https://ci.appveyor.com/project/gavazquez/lunamultiplayer/branch/master/tests) | [![Last commit](https://img.shields.io/github/last-commit/lunamultiplayer/lunamultiplayer/master.svg)](../../commits/master) | [![Commit activity](https://img.shields.io/github/commit-activity/y/lunamultiplayer/lunamultiplayer.svg)](../../commits/master) | [![Commits since release](https://img.shields.io/github/commits-since/lunamultiplayer/lunamultiplayer/latest.svg)](../../commits/master)
 
 ---
 
