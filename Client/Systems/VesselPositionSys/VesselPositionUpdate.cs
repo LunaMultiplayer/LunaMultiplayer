@@ -1,4 +1,6 @@
-﻿using LunaClient.VesselUtilities;
+﻿using LunaClient.Systems.SettingsSys;
+using LunaClient.VesselUtilities;
+using LunaCommon;
 using System;
 using UnityEngine;
 
@@ -59,9 +61,9 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Interpolation fields
-        
+
         public bool InterpolationFinished => LerpPercentage >= 1;
-        public float InterpolationDuration => (float)TimeSpan.FromTicks(Target.ReceiveTimeStamp - ReceiveTimeStamp).TotalSeconds;
+        public float InterpolationDuration => (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
 
         private float _lerpPercentage = 1;
         public float LerpPercentage
@@ -121,7 +123,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 else
                 {
                     LunaLog.LogWarning("No updates in queue!");
-                    return;
                 }
             }
 
@@ -223,15 +224,15 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (Vessel.LandedOrSplashed)
             {
-                Vessel.latitude = Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                Vessel.longitude = Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
-                Vessel.altitude = Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
+                Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
 
             //Set the position of the vessel based on the orbital parameters
             Vessel.orbitDriver.updateFromParameters();
-            
+
             foreach (var part in Vessel.Parts)
                 part.ResumeVelocity();
 
@@ -290,17 +291,20 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyOrbitInterpolation(float lerpPercentage)
         {
-            //Avoid lerping longitude of ascending node / arg of periapsis values when the inclination / eccentricity is close to 0 as it generate rounding errors!
-            if (Math.Abs(Orbit[0]) < 0.001 || Math.Abs(Orbit[1]) < 0.001)
-                lerpPercentage = 1;
-
-            var inclination = LerpAngle(Orbit[0], Target.Orbit[0], lerpPercentage);
-            var eccentricity = Lerp(Orbit[1], Target.Orbit[1], lerpPercentage);
-            var semiMajorAxis = Lerp(Orbit[2], Target.Orbit[2], lerpPercentage);
-            var lan = LerpAngle(Orbit[3], Target.Orbit[3], lerpPercentage);
-            var argPeriapsis = LerpAngle(Orbit[4], Target.Orbit[4], lerpPercentage);
-            var meanAnomalyEpoch = LerpAngle(Orbit[5], Target.Orbit[5], lerpPercentage);
-            var epoch = Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
+            //Inclination must be a deg value between -180 and 180
+            var inclination = LunaMath.LerpDegAngle180(Orbit[0], Target.Orbit[0], lerpPercentage);
+            //Ecc must be a positive number from 0 to X
+            var eccentricity = LunaMath.Lerp(Orbit[1], Target.Orbit[1], lerpPercentage);
+            //Sma must be a positive number
+            var semiMajorAxis = LunaMath.Lerp(Orbit[2], Target.Orbit[2], lerpPercentage);
+            //LAN must be a deg value between 0 and 360
+            var lan = LunaMath.LerpDegAngle(Orbit[3], Target.Orbit[3], lerpPercentage);
+            //Arg of periapsis (LPE) must be a deg value between 0 and 360
+            var argPeriapsis = LunaMath.LerpDegAngle(Orbit[4], Target.Orbit[4], lerpPercentage);
+            //MNA must be a rad between -pi and pi
+            var meanAnomalyEpoch = LunaMath.LerpRadAnglePi(Orbit[5], Target.Orbit[5], lerpPercentage);
+            //Epoch is just the game time
+            var epoch = LunaMath.Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
 
             //Do not set the body explicitely!! Don't do ---> Vessel.orbitDriver.referenceBody = Body;
             Vessel.orbitDriver.orbit.SetOrbit
@@ -362,29 +366,6 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         #region Helper methods
-
-        /// <summary>
-        /// Custom lerp as Unity does not have a lerp for double values
-        /// </summary>
-        private static double Lerp(double from, double to, float t)
-        {
-            return from * (1 - t) + to * t;
-        }
-
-        private static double LerpAngle(double from, double to, float t)
-        {
-            var single = Repeat(to - from, 360);
-            if (single > 180f)
-            {
-                single -= 360f;
-            }
-            return from + single * t;
-        }
-
-        private static double Repeat(double t, double length)
-        {
-            return t - Math.Floor(t / length) * length;
-        }
 
         private static CelestialBody GetBody(int bodyIndex)
         {

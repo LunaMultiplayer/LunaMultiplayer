@@ -62,6 +62,7 @@
     <Compile Include="IgnoredScenarios.cs" />
     <Compile Include="Locks\LockQueryContract.cs" />
     <Compile Include="Locks\LockQueryKerbal.cs" />
+    <Compile Include="LunaMath.cs" />
     <Compile Include="Message\Base\StringUtil.cs" />
     <Compile Include="Message\Base\GuidUtil.cs" />
     <Compile Include="Message\Client\AdminCliMsg.cs" />
