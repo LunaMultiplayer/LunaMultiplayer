@@ -13,9 +13,33 @@ namespace LunaCommon
         }
 
         /// <summary>
+        /// Lerps an angle in degrees and wraps around the value specified
+        /// </summary>
+        public static double LerpAngleDeg(double from, double to, float t, double wrapAngle)
+        {
+            var retval = from + Repeat(to - from, 360) * t;
+            if (retval > wrapAngle)
+            {
+                retval -= 360f;
+            }
+            return retval;
+        }
+
+        /// <summary>
+        /// Lerps an angle between -180 and 180
+        /// </summary>
+        public static double LerpAngleDeg180(double from, double to, float t)
+        {
+            var angle = LerpAngleDeg(from, to, t);
+            if (angle > 180)
+                return angle - 360;
+            return angle;
+        }
+
+        /// <summary>
         /// Lerps an angle between 0 and 360
         /// </summary>
-        public static double LerpDegAngle(double from, double to, float t)
+        public static double LerpAngleDeg(double from, double to, float t)
         {
             var single = Repeat(to - from, 360);
             if (single > 180f)
@@ -26,20 +50,22 @@ namespace LunaCommon
         }
 
         /// <summary>
-        /// Lerps an angle between -180 and 180
+        /// Lerps an angle in rad and wraps around the value specified
         /// </summary>
-        public static double LerpDegAngle180(double from, double to, float t)
+        public static double LerpAngleRad(double from, double to, float t, double wrapAngle)
         {
-            var angle = LerpDegAngle(from, to, t);
-            if (angle > 180)
-                return angle - 360;
-            return angle;
+            var retval = from + Repeat(to - from, 2 * Math.PI) * t;
+            if (retval > wrapAngle)
+            {
+                retval -= 2 * Math.PI;
+            }
+            return retval;
         }
 
         /// <summary>
         /// Lerps an angle between 0 and 2*pi
         /// </summary>
-        public static double LerpRadAngle(double from, double to, float t)
+        public static double LerpAngleRad(double from, double to, float t)
         {
             var single = Repeat(to - from, 2 * Math.PI);
             if (single > Math.PI)
@@ -49,31 +75,12 @@ namespace LunaCommon
             return from + single * t;
         }
 
-        /// <summary>
-        /// Lerps an angle between -pi and pi
-        /// </summary>
-        public static double LerpRadAnglePi(double from, double to, float t)
+        public static double LerpAngleRadPi(double from, double to, float t)
         {
-            var angle = LerpRadAngle(from, to, t);
+            var angle = LerpAngleRad(from, to, t);
             if (angle > Math.PI)
                 return angle - 2 * Math.PI;
             return angle;
-        }
-
-        /// <summary>
-        /// Transform radians to deg
-        /// </summary>
-        public static double RadToDeg(double angle)
-        {
-            return angle * (180.0 / Math.PI);
-        }
-
-        /// <summary>
-        /// Transform deg to rad
-        /// </summary>
-        public static double DegToRad(double angle)
-        {
-            return Math.PI * angle / 180.0;
         }
 
         /// <summary>

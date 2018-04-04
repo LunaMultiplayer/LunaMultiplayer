@@ -292,17 +292,17 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ApplyOrbitInterpolation(float lerpPercentage)
         {
             //Inclination must be a deg value between -180 and 180
-            var inclination = LunaMath.LerpDegAngle180(Orbit[0], Target.Orbit[0], lerpPercentage);
-            //Ecc must be a positive number from 0 to X
+            var inclination = LunaMath.LerpAngleDeg(Orbit[0], Target.Orbit[0], lerpPercentage, 180);
+            //Ecc must be a positive number > 0
             var eccentricity = LunaMath.Lerp(Orbit[1], Target.Orbit[1], lerpPercentage);
-            //Sma must be a positive number
+            //Sma must be a positive/negative number
             var semiMajorAxis = LunaMath.Lerp(Orbit[2], Target.Orbit[2], lerpPercentage);
             //LAN must be a deg value between 0 and 360
-            var lan = LunaMath.LerpDegAngle(Orbit[3], Target.Orbit[3], lerpPercentage);
+            var lan = LunaMath.LerpAngleDeg(Orbit[3], Target.Orbit[3], lerpPercentage);
             //Arg of periapsis (LPE) must be a deg value between 0 and 360
-            var argPeriapsis = LunaMath.LerpDegAngle(Orbit[4], Target.Orbit[4], lerpPercentage);
+            var argPeriapsis = LunaMath.LerpAngleDeg(Orbit[4], Target.Orbit[4], lerpPercentage);
             //MNA must be a rad between -pi and pi
-            var meanAnomalyEpoch = LunaMath.LerpRadAnglePi(Orbit[5], Target.Orbit[5], lerpPercentage);
+            var meanAnomalyEpoch = LunaMath.LerpAngleRad(Orbit[5], Target.Orbit[5], lerpPercentage, Math.PI);
             //Epoch is just the game time
             var epoch = LunaMath.Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
 
