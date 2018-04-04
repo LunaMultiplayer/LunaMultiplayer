@@ -1,4 +1,5 @@
-﻿using Lidgren.Network;
+﻿using System;
+using Lidgren.Network;
 using LunaCommon.Message.Base;
 
 namespace LunaCommon.Message.Data.ShareProgress
@@ -11,6 +12,25 @@ namespace LunaCommon.Message.Data.ShareProgress
         public string Id;
         public int NumBytes;
         public byte[] Data = new byte[0];
+
+        public AchievementInfo()
+        {
+            
+        }
+
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        /// <param name="copyFrom"></param>
+        public AchievementInfo(AchievementInfo copyFrom)
+        {
+            Id = string.Copy(copyFrom.Id);
+            NumBytes = copyFrom.NumBytes;
+            if (Data.Length < NumBytes)
+                Data = new byte[NumBytes];
+
+            Array.Copy(copyFrom.Data, Data, NumBytes);
+        }
 
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {

@@ -10,6 +10,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
+using LunaClient.Systems.ShareCareer;
 
 namespace LunaClient.Systems.ShareContracts
 {
@@ -24,14 +25,25 @@ namespace LunaClient.Systems.ShareContracts
 
             if (msgData is ShareProgressContractsMsgData data)
             {
-                var contractInfos = new ContractInfo[data.ContractCount];
-                Array.Copy(data.Contracts, contractInfos, data.ContractCount); //create a copy of the contracts array so it will not change in the future.
+                var contractInfos = CopyContracts(data.Contracts); //create a deep copy of the contracts array so it will not change in the future.
+
                 LunaLog.Log("Queue ContractsUpdate.");
-                System.QueueAction(() =>
+                ShareCareerSystem.Singleton.QueueAction(() =>
                 {
                     ContractUpdate(contractInfos);
                 });
             }
+        }
+
+        private static ContractInfo[] CopyContracts(ContractInfo[] contracts)
+        {
+            var newContracts = new ContractInfo[contracts.Length];
+            for (var i = 0; i < contracts.Length; i++)
+            {
+                newContracts[i] = new ContractInfo(contracts[i]);
+            }
+
+            return newContracts;
         }
 
         private static void ContractUpdate(ContractInfo[] contractInfos)

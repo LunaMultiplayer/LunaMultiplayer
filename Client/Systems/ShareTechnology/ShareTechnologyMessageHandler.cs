@@ -1,4 +1,5 @@
-﻿using LunaClient.Base;
+﻿using System;
+using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
@@ -18,7 +19,7 @@ namespace LunaClient.Systems.ShareTechnology
 
             if (msgData is ShareProgressTechnologyMsgData data)
             {
-                var techId = data.TechNode.Id; //create a copy of the techId value so it will not change in the future.
+                var techId = string.Copy(data.TechNode.Id); //create a copy of the techId value so it will not change in the future.
                 LunaLog.Log($"Queue TechnologyUpdate with: {techId}");
                 System.QueueAction(() =>
                 {
