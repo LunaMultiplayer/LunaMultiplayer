@@ -9,6 +9,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System;
 using System.Collections.Concurrent;
+using LunaClient.Systems.ShareCareer;
 
 namespace LunaClient.Systems.ShareAchievements
 {
@@ -23,14 +24,25 @@ namespace LunaClient.Systems.ShareAchievements
 
             if (msgData is ShareProgressAchievementsMsgData data)
             {
-                var achievementInfos = new AchievementInfo[data.AchievementsCount];
-                Array.Copy(data.Achievements, achievementInfos, data.AchievementsCount); //create a copy of the achievements array so it will not change in the future.
-                LunaLog.Log("Queue AchievementsUpdate.");
-                System.QueueAction(() =>
+                var achievementInfos = CopyAchievements(data.Achievements); //create a deep copy of the achievements array so it will not change in the future.
+
+                LunaLog.Log($"Queue AchievementsUpdate");
+                ShareCareerSystem.Singleton.QueueAction(() =>
                 {
                     AchievementUpdate(achievementInfos);
                 });
             }
+        }
+
+        private static AchievementInfo[] CopyAchievements(AchievementInfo[] achievements)
+        {
+            var newAchievements = new AchievementInfo[achievements.Length];
+            for (var i = 0; i < achievements.Length; i++)
+            {
+                newAchievements[i] = new AchievementInfo(achievements[i]);
+            }
+
+            return newAchievements;
         }
 
         private static void AchievementUpdate(AchievementInfo[] achievementInfos)

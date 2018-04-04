@@ -24,7 +24,7 @@ namespace LunaCommon.Message.Data.ShareProgress
         /// <param name="copyFrom"></param>
         public StrategyInfo(StrategyInfo copyFrom)
         {
-            Name = copyFrom.Name;
+            Name = string.Copy(copyFrom.Name);
             NumBytes = copyFrom.NumBytes;
             if (Data.Length < NumBytes)
                 Data = new byte[NumBytes];
