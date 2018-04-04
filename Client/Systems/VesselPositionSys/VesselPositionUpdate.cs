@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaClient.VesselUtilities;
+﻿using LunaClient.VesselUtilities;
 using LunaCommon;
 using System;
 using UnityEngine;
@@ -292,19 +291,19 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ApplyOrbitInterpolation(float lerpPercentage)
         {
             //Inclination must be a positive degreee value between 0 and 180 (defines the Z axis of the orbit)
-            var inclination = SettingsSystem.CurrentSettings.Debug1 ? Math.Abs(LunaMath.LerpAngleDeg(Orbit[0], Target.Orbit[0], lerpPercentage, 180)) : Target.Orbit[0];
+            var inclination = Math.Abs(LunaMath.LerpAngleDeg(Orbit[0], Target.Orbit[0], lerpPercentage, 180));
             //Ecc must be a positive number > 0
-            var eccentricity = SettingsSystem.CurrentSettings.Debug2 ? Math.Abs(LunaMath.Lerp(Orbit[1], Target.Orbit[1], lerpPercentage)) : Target.Orbit[1];
+            var eccentricity = Math.Abs(LunaMath.Lerp(Orbit[1], Target.Orbit[1], lerpPercentage));
             //Sma can be any number
-            var semiMajorAxis = SettingsSystem.CurrentSettings.Debug3 ? LunaMath.Lerp(Orbit[2], Target.Orbit[2], lerpPercentage) : Target.Orbit[2];
+            var semiMajorAxis = LunaMath.Lerp(Orbit[2], Target.Orbit[2], lerpPercentage);
             //Long ascendin node (LAN) must be a positive deg value between 0 and 360 (defines the Y axis of the orbit)
-            var lan = SettingsSystem.CurrentSettings.Debug4 ? Math.Abs(LunaMath.LerpAngleDeg(Orbit[3], Target.Orbit[3], lerpPercentage)) : Target.Orbit[3];
+            var lan = Math.Abs(LunaMath.LerpAngleDeg(Orbit[3], Target.Orbit[3], lerpPercentage));
             //Arg of periapsis (LPE) must be a positive deg value between 0 and 360 (defines the X axis of the orbit)
-            var argPeriapsis = SettingsSystem.CurrentSettings.Debug5 ? Math.Abs(LunaMath.LerpAngleDeg(Orbit[4], Target.Orbit[4], lerpPercentage)) : Target.Orbit[4];
+            var argPeriapsis = Math.Abs(LunaMath.LerpAngleDeg(Orbit[4], Target.Orbit[4], lerpPercentage));
             //MNA must be a rad between -pi and pi (defines position of vessel in the orbit)
-            var meanAnomalyEpoch = SettingsSystem.CurrentSettings.Debug6 ? LunaMath.LerpAngleRad(Orbit[5], Target.Orbit[5], lerpPercentage, Math.PI) : Target.Orbit[5];
+            var meanAnomalyEpoch = LunaMath.LerpAngleRad(Orbit[5], Target.Orbit[5], lerpPercentage, Math.PI);
             //Epoch is just the game time
-            var epoch = SettingsSystem.CurrentSettings.Debug7 ? LunaMath.Lerp(Orbit[6], Target.Orbit[6], lerpPercentage) : Target.Orbit[6];
+            var epoch = LunaMath.Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
 
             //Do not set the body explicitely!! Don't do ---> Vessel.orbitDriver.referenceBody = Body;
             Vessel.orbitDriver.orbit.SetOrbit
