@@ -17,22 +17,12 @@ namespace LunaCommon
         /// </summary>
         public static double LerpAngleDeg(double from, double to, float t, double wrapAngle)
         {
-            var retval = from + Repeat(to - from, 360) * t;
-            if (retval > wrapAngle)
-            {
-                retval -= 360f;
-            }
-            return retval;
-        }
-
-        /// <summary>
-        /// Lerps an angle between -180 and 180
-        /// </summary>
-        public static double LerpAngleDeg180(double from, double to, float t)
-        {
             var angle = LerpAngleDeg(from, to, t);
-            if (angle > 180)
+            if (angle > wrapAngle)
                 return angle - 360;
+            if (angle < -wrapAngle)
+                return angle + 360;
+
             return angle;
         }
 
@@ -54,12 +44,13 @@ namespace LunaCommon
         /// </summary>
         public static double LerpAngleRad(double from, double to, float t, double wrapAngle)
         {
-            var retval = from + Repeat(to - from, 2 * Math.PI) * t;
-            if (retval > wrapAngle)
-            {
-                retval -= 2 * Math.PI;
-            }
-            return retval;
+            var angle = LerpAngleRad(from, to, t);
+            if (angle > wrapAngle)
+                return angle - 2 * Math.PI;
+            if (angle < -wrapAngle)
+                return angle + 2 * Math.PI;
+
+            return angle;
         }
 
         /// <summary>
@@ -73,14 +64,6 @@ namespace LunaCommon
                 single -= 2 * Math.PI;
             }
             return from + single * t;
-        }
-
-        public static double LerpAngleRadPi(double from, double to, float t)
-        {
-            var angle = LerpAngleRad(from, to, t);
-            if (angle > Math.PI)
-                return angle - 2 * Math.PI;
-            return angle;
         }
 
         /// <summary>
