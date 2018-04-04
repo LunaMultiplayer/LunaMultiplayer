@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-16"?>
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SettingsIcon>Settings</SettingsIcon>
-  <ServerIcon>Servers</ServerIcon>
-  <ConnectIcon>Connect</ConnectIcon>
-  <DisconnectIcon>Disconnect</DisconnectIcon>
+  <SettingsIcon>Настройки</SettingsIcon>
+  <ServerIcon>Сервера</ServerIcon>
+  <ConnectIcon>Подключиться</ConnectIcon>
+  <DisconnectIcon>Отключиться</DisconnectIcon>
   <SyncIcon>Warp to</SyncIcon>
-  <CloseIcon>Close</CloseIcon>
-  <RefreshIcon>Refresh</RefreshIcon>
-  <UploadIcon>Upload</UploadIcon>
-  <DeleteIcon>Delete</DeleteIcon>
-  <PlusIcon>Add</PlusIcon>
-  <SaveIcon>Save</SaveIcon>
+  <CloseIcon>Закрыть</CloseIcon>
+  <RefreshIcon>Обновить</RefreshIcon>
+  <UploadIcon>Загрузить</UploadIcon>
+  <DeleteIcon>Удалить</DeleteIcon>
+  <PlusIcon>Добавить</PlusIcon>
+  <SaveIcon>Сохранить</SaveIcon>
   <KeyIcon>Password</KeyIcon>
-  <ChatIcon>Chat</ChatIcon>
-  <CameraIcon>Screenshots</CameraIcon>
-  <RocketIcon>Vessels</RocketIcon>
-  <AdminIcon>Admin</AdminIcon>
-  <KickIcon>Kick</KickIcon>
-  <BanIcon>Ban</BanIcon>
-  <DekesslerIcon>Dekessler</DekesslerIcon>
-  <NukeIcon>Nuke KSC</NukeIcon>
+  <ChatIcon>Чат</ChatIcon>
+  <CameraIcon>Криншоты</CameraIcon>
+  <RocketIcon>Корабли</RocketIcon>
+  <AdminIcon>Администрирование</AdminIcon>
+  <KickIcon>Выгнать</KickIcon>
+  <BanIcon>Заблокировать</BanIcon>
+  <DekesslerIcon>Удалить муссор</DekesslerIcon>
+  <NukeIcon>Очистить KSC</NukeIcon>
 </ButtonTooltips>

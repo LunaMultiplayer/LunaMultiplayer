@@ -5,15 +5,15 @@
     <ModFileGenerated>Le fichier LMPModControl.xml a été généré dans votre dossier KSP.</ModFileGenerated>
     <Disconected>Vous avez été déconnecté !</Disconected>
     <Spectating>Ce vaisseau est controllé par</Spectating>
-    <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
+    <SafetyBubble>Rappel !! Vous n'êtes pas visible par les autres joueurs tant que vous restez dans la zone de sécurité !!</SafetyBubble>
     <CannotRecover>Impossible de récupérer ce vaisseau, il ne vous appartient pas.</CannotRecover>
     <CannotTerminate>Impossible de supprimer ce vaisseau, il ne vous appartient pas.</CannotTerminate>
     <SpectatingRemoved>Le vaisseau que vous observiez a été supprimé.</SpectatingRemoved>
     <WarpDisabled>Warp impossible, le warp a été désactivé sur ce serveur.</WarpDisabled>
     <NotWarpMaster>Warp impossible, vous n'êtes pas le maître du warp.</NotWarpMaster>
     <WaitingSubspace>Warp impossible, attente de l'ID de sous-espace du serveur.</WaitingSubspace>
-    <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
-    <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
-    <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
-    <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <ScreenshotInterval>Intervalle entre les captures d'écran : $1 secondes. Partage momentanément indisponible.</ScreenshotInterval>
+    <CraftLibraryInterval>Intervalle entre les requêtes d'accès à la bibliothèque de crafts : $1 secondes. Action momentanément indisponible.</CraftLibraryInterval>
+    <ScreenshotTaken>Capture d'écran partagée !</ScreenshotTaken>
+    <ImageSaved>Image sauvegardée dans GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>
