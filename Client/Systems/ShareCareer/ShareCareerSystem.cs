@@ -10,7 +10,6 @@ using LunaClient.Systems.ShareContracts;
 using LunaClient.Systems.ShareProgress;
 using LunaClient.Systems.ShareReputation;
 using LunaCommon.Enums;
-using UnityEngine;
 
 namespace LunaClient.Systems.ShareCareer
 {
@@ -29,8 +28,7 @@ namespace LunaClient.Systems.ShareCareer
         //Dependencies to run the queue
         protected bool ShareSystemReady => ContractSystem.Instance != null && ContractSystem.Instance.Contracts.Count != 0 &&
                                            Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
-                                           Reputation.Instance != null && ProgressTracking.Instance != null &&
-                                           Time.timeSinceLevelLoad > 1f;
+                                           Reputation.Instance != null && ProgressTracking.Instance != null;
 
         protected override void OnEnabled()
         {

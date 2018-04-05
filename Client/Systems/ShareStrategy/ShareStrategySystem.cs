@@ -3,7 +3,6 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 using Strategies;
-using UnityEngine;
 
 namespace LunaClient.Systems.ShareStrategy
 {
@@ -17,7 +16,7 @@ namespace LunaClient.Systems.ShareStrategy
         public readonly string[] OneTimeStrategies = new string[] { "BailoutGrant", "researchIPsellout" };
 
         protected override bool ShareSystemReady => StrategySystem.Instance != null && StrategySystem.Instance.Strategies.Count != 0 && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
-                                                    Reputation.Instance != null && Time.timeSinceLevelLoad > 1f;
+                                                    Reputation.Instance != null;
 
         protected override void OnEnabled()
         {
