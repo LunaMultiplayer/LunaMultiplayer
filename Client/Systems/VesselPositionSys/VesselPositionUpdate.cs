@@ -291,7 +291,8 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ApplyOrbitInterpolation(float lerpPercentage)
         {
             //Inclination must be a positive degreee value between 0 and 180 (defines the Z axis of the orbit)
-            var inclination = Math.Abs(LunaMath.LerpAngleDeg(Orbit[0], Target.Orbit[0], lerpPercentage, 180));
+            var inclination = LerpInclination(Orbit[0], Target.Orbit[0], Orbit[3], Target.Orbit[3], Orbit[4], Target.Orbit[4], lerpPercentage);
+
             //Ecc must be a positive number > 0
             var eccentricity = Math.Abs(LunaMath.Lerp(Orbit[1], Target.Orbit[1], lerpPercentage));
             //Sma can be any number
@@ -300,11 +301,11 @@ namespace LunaClient.Systems.VesselPositionSys
             var lan = Math.Abs(LunaMath.LerpAngleDeg(Orbit[3], Target.Orbit[3], lerpPercentage));
             //Arg of periapsis (LPE) must be a positive deg value between 0 and 360 (defines the X axis of the orbit)
             var argPeriapsis = Math.Abs(LunaMath.LerpAngleDeg(Orbit[4], Target.Orbit[4], lerpPercentage));
-            
+
             //MNA must be a rad between -pi and pi (defines position of vessel in the orbit)
             //CAUTION! sometimes on escape orbits the MNA take strange values!
             var meanAnomalyEpoch = eccentricity >= 1 ? LunaMath.Lerp(Orbit[5], Target.Orbit[5], lerpPercentage) : LunaMath.LerpAngleRad(Orbit[5], Target.Orbit[5], lerpPercentage, Math.PI);
-            
+
             //Epoch is just the game time
             var epoch = LunaMath.Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
 
@@ -326,6 +327,18 @@ namespace LunaClient.Systems.VesselPositionSys
             //Vessel.orbitDriver.orbit.vel = Vector3d.Lerp(OrbitVelVec, Target.OrbitVelVec, lerpPercentage);
 
             //Vessel.orbitDriver.orbit.UpdateFromStateVectors(Vessel.orbitDriver.orbit.pos, Vessel.orbitDriver.orbit.vel, Body, Planetarium.GetUniversalTime());
+        }
+
+        private static double LerpInclination(double fromInc, double toInc, double fromLan, double toLan, double fromAop, double toAop, float t)
+        {
+            const double errbnd = 0.05;
+
+            var anglediff = Math.Abs(fromLan - toLan) + Math.Abs(fromAop - toAop);
+
+            if (anglediff > (1 - errbnd) * 360 && anglediff < (1 + errbnd) * 360)
+                return Math.Abs(LunaMath.LerpAngleDeg(-1 * fromInc, toInc, t, 180));
+
+            return LunaMath.LerpAngleDeg(fromInc, toInc, t, 180);
         }
 
         /// <summary>
