@@ -19,9 +19,11 @@ namespace LunaCommon
         {
             var angle = LerpAngleDeg(from, to, t);
             if (angle > wrapAngle)
-                return angle - 360;
-            if (angle < -wrapAngle)
-                return angle + 360;
+                angle -= 360;
+            if (angle <= -wrapAngle)
+                angle += 360;
+            if (angle <= wrapAngle - 360)
+                angle += 360;
 
             return angle;
         }
@@ -46,9 +48,11 @@ namespace LunaCommon
         {
             var angle = LerpAngleRad(from, to, t);
             if (angle > wrapAngle)
-                return angle - 2 * Math.PI;
-            if (angle < -wrapAngle)
-                return angle + 2 * Math.PI;
+                angle -= 2 * Math.PI;
+            if (angle <= -wrapAngle)
+                angle += 2 * Math.PI;
+            if (angle <= wrapAngle - 2 * Math.PI)
+                angle += 2 * Math.PI;
 
             return angle;
         }
