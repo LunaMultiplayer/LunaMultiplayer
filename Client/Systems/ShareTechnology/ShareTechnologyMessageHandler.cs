@@ -1,5 +1,4 @@
-﻿using System;
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;

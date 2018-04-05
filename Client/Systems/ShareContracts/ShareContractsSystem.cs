@@ -2,9 +2,7 @@
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.ShareAchievements;
 using LunaClient.Systems.ShareProgress;
-using LunaClient.Systems.ShareReputation;
 using LunaCommon.Enums;
 
 namespace LunaClient.Systems.ShareContracts

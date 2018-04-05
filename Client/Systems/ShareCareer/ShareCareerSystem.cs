@@ -13,7 +13,7 @@ namespace LunaClient.Systems.ShareCareer
     /// The Systems ShareContracts, ShareAchievements and ShareReputation will use this queue instead of their own
     /// to keep the right order of execution.
     /// </summary>
-    public class ShareCareerSystem : Base.System<ShareCareerSystem>
+    public class ShareCareerSystem : System<ShareCareerSystem>
     {
         public override string SystemName { get; } = nameof(ShareCareerSystem);
 
