@@ -300,8 +300,11 @@ namespace LunaClient.Systems.VesselPositionSys
             var lan = Math.Abs(LunaMath.LerpAngleDeg(Orbit[3], Target.Orbit[3], lerpPercentage));
             //Arg of periapsis (LPE) must be a positive deg value between 0 and 360 (defines the X axis of the orbit)
             var argPeriapsis = Math.Abs(LunaMath.LerpAngleDeg(Orbit[4], Target.Orbit[4], lerpPercentage));
+            
             //MNA must be a rad between -pi and pi (defines position of vessel in the orbit)
-            var meanAnomalyEpoch = LunaMath.LerpAngleRad(Orbit[5], Target.Orbit[5], lerpPercentage, Math.PI);
+            //CAUTION! sometimes on escape orbits the MNA take strange values!
+            var meanAnomalyEpoch = eccentricity >= 1 ? LunaMath.Lerp(Orbit[5], Target.Orbit[5], lerpPercentage) : LunaMath.LerpAngleRad(Orbit[5], Target.Orbit[5], lerpPercentage, Math.PI);
+            
             //Epoch is just the game time
             var epoch = LunaMath.Lerp(Orbit[6], Target.Orbit[6], lerpPercentage);
 
