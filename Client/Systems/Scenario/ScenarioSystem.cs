@@ -17,8 +17,26 @@ namespace LunaClient.Systems.Scenario
 
         private ConcurrentDictionary<string, string> CheckData { get; } = new ConcurrentDictionary<string, string>();
         public ConcurrentQueue<ScenarioEntry> ScenarioQueue { get; private set; } = new ConcurrentQueue<ScenarioEntry>();
-        private ConcurrentDictionary<string, Type> AllScenarioTypesInAssemblies { get; } = new ConcurrentDictionary<string, Type>();
-        
+
+        private static readonly ConcurrentDictionary<string, Type> _allScenarioTypesInAssemblies = new ConcurrentDictionary<string, Type>();
+        private static ConcurrentDictionary<string, Type> AllScenarioTypesInAssemblies
+        {
+            get
+            {
+                if (!_allScenarioTypesInAssemblies.Any())
+                {
+                    var scenarioTypes = AssemblyLoader.loadedAssemblies
+                        .SelectMany(a => a.assembly.GetTypes())
+                        .Where(s => s.IsSubclassOf(typeof(ScenarioModule)) && !AllScenarioTypesInAssemblies.ContainsKey(s.Name));
+
+                    foreach (var scenarioType in scenarioTypes)
+                        _allScenarioTypesInAssemblies.TryAdd(scenarioType.Name, scenarioType);
+                }
+
+                return _allScenarioTypesInAssemblies;
+            }
+        }
+
         private static List<string> ScenarioName { get; } = new List<string>();
         private static List<byte[]> ScenarioData { get; } = new List<byte[]>();
         #endregion
@@ -95,6 +113,9 @@ namespace LunaClient.Systems.Scenario
             {
                 var scenarioType = scenarioModule.GetType().Name;
 
+                if(IgnoredScenarios.IgnoreSend.Contains(scenarioType))
+                    continue;
+
                 if (!IsScenarioModuleAllowed(scenarioType))
                     continue;
 
@@ -152,7 +173,7 @@ namespace LunaClient.Systems.Scenario
                 CheckForBlankSceneSoTheGameDoesntBugOut(scenarioEntry);
 
                 var psm = new ProtoScenarioModule(scenarioEntry.ScenarioNode);
-                if (IsScenarioModuleAllowed(psm.moduleName))
+                if (IsScenarioModuleAllowed(psm.moduleName) && !IgnoredScenarios.IgnoreReceive.Contains(psm.moduleName))
                 {
                     LunaLog.Log($"[LMP]: Loading {psm.moduleName} scenario data");
                     HighLogic.CurrentGame.scenarios.Add(psm);
@@ -300,24 +321,10 @@ namespace LunaClient.Systems.Scenario
             }
             return false;
         }
-
-        private void LoadScenarioTypes()
-        {
-            AllScenarioTypesInAssemblies.Clear();
-
-            var scenarioTypes = AssemblyLoader.loadedAssemblies
-                .SelectMany(a => a.assembly.GetTypes())
-                .Where(s => s.IsSubclassOf(typeof(ScenarioModule)) && !AllScenarioTypesInAssemblies.ContainsKey(s.Name));
-
-            foreach (var scenarioType in scenarioTypes)
-                AllScenarioTypesInAssemblies.TryAdd(scenarioType.Name, scenarioType);
-        }
-
+        
         private bool IsScenarioModuleAllowed(string scenarioName)
         {
-            if (string.IsNullOrEmpty(scenarioName) || IgnoredScenarios.Names.Contains(scenarioName)) return false;
-
-            if (!AllScenarioTypesInAssemblies.Any()) LoadScenarioTypes(); //Load type dictionary on first use
+            if (string.IsNullOrEmpty(scenarioName)) return false;
 
             if (!AllScenarioTypesInAssemblies.ContainsKey(scenarioName)) return false; //Module missing
 

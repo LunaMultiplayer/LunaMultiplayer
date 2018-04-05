@@ -4,16 +4,17 @@ namespace LunaCommon
 {
     public class IgnoredScenarios
     {
-        /// <summary>
-        /// No need to send the ScenarioNewGameIntro as that is for tutorials.
-        /// Asteorids are handled in a different way so ignore them
-        /// CustomWaypoints are useless and not shared between clients
-        /// </summary>
-        public static List<string> Names = new List<string>
+        public static List<string> IgnoreReceive { get; }= new List<string>
         {
-            "ScenarioNewGameIntro",
-            "ScenarioDiscoverableObjects",
-            "ScenarioCustomWaypoints",
+            "ScenarioDiscoverableObjects", //Asteroids have their own system
+            "ScenarioCustomWaypoints", //Don't sync this
+        };
+
+        public static List<string> IgnoreSend { get; } = new List<string>
+        {
+            "ScenarioNewGameIntro", //Do not send this scenario as it just contains true/false in case we accepted the tutorial
+            "ScenarioDiscoverableObjects", //Asteroids have their own system
+            "ScenarioCustomWaypoints",//Don't sync this
             "ContractSystem", //This scenario has his own handling system
             "Funding",//This scenario has his own handling system
             "ProgressTracking",//This scenario has his own handling system
