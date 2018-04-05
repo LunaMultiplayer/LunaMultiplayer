@@ -27,7 +27,7 @@ namespace LunaClient.Systems.Scenario
                 {
                     var scenarioTypes = AssemblyLoader.loadedAssemblies
                         .SelectMany(a => a.assembly.GetTypes())
-                        .Where(s => s.IsSubclassOf(typeof(ScenarioModule)) && !AllScenarioTypesInAssemblies.ContainsKey(s.Name));
+                        .Where(s => s.IsSubclassOf(typeof(ScenarioModule)) && !_allScenarioTypesInAssemblies.ContainsKey(s.Name));
 
                     foreach (var scenarioType in scenarioTypes)
                         _allScenarioTypesInAssemblies.TryAdd(scenarioType.Name, scenarioType);
