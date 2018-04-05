@@ -30,7 +30,8 @@ namespace Server.System
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioDestructibles.xml"), Resources.ScenarioDestructibles);
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "SentinelScenario.xml"), Resources.SentinelScenario);
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "VesselRecovery.xml"), Resources.VesselRecovery);
-            
+            FileHandler.CreateFile(Path.Combine(ScenarioPath, "ScenarioNewGameIntro.xml"), Resources.ScenarioNewGameIntro);
+
             if (GeneralSettings.SettingsStore.GameMode != GameMode.Sandbox)
             {
                 FileHandler.CreateFile(Path.Combine(ScenarioPath, "ResearchAndDevelopment.xml"), Resources.ResearchAndDevelopment);
