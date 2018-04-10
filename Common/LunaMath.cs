@@ -29,6 +29,22 @@ namespace LunaCommon
         }
 
         /// <summary>
+        /// Lerps an angle in degrees and wraps around the value specified. Returns a value between 0 and wrapAngle
+        /// </summary>
+        public static double LerpAngleDegAbs(double from, double to, float t, double wrapAngle)
+        {
+            var angle = LerpAngleDeg(from, to, t, wrapAngle);
+
+            while (angle < 0)
+                angle += wrapAngle;
+
+            while (angle > wrapAngle)
+                angle -= wrapAngle;
+
+            return angle;
+        }
+
+        /// <summary>
         /// Lerps an angle between 0 and 360
         /// </summary>
         public static double LerpAngleDeg(double from, double to, float t)
@@ -38,7 +54,24 @@ namespace LunaCommon
             {
                 single -= 360f;
             }
+
             return from + single * t;
+        }
+
+        /// <summary>
+        /// Lerps an angle between 0 and 360. Returns a value between 0 and 360
+        /// </summary>
+        public static double LerpAngleDegAbs(double from, double to, float t)
+        {
+            var value = LerpAngleDeg(from, to, t);
+
+            while (value < 0)
+                value += 360;
+
+            while (value > 360)
+                value -= 360;
+
+            return value;
         }
 
         /// <summary>
