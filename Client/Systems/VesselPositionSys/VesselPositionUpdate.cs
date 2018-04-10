@@ -322,10 +322,10 @@ namespace LunaClient.Systems.VesselPositionSys
             var epoch = SettingsSystem.CurrentSettings.InterpolationEnabled ? LunaMath.Lerp(Orbit[6], Target.Orbit[6], lerpPercentage):
                 Target.Orbit[6];
 
-            if (SettingsSystem.CurrentSettings.Debug9)
-            {
-                LunaLog.Log($"Inc = {Orbit[0]};{Target.Orbit[0]};{inclination} || Lan: {Orbit[3]};{Target.Orbit[3]};{lan} || Arg: {Orbit[4]};{Target.Orbit[4]};{argPeriapsis}");
-            }
+            //if (SettingsSystem.CurrentSettings.Debug9)
+            //{
+            //    LunaLog.Log($"Inc = {Orbit[0]};{Target.Orbit[0]};{inclination} || Lan: {Orbit[3]};{Target.Orbit[3]};{lan} || Arg: {Orbit[4]};{Target.Orbit[4]};{argPeriapsis}");
+            //}
 
             //Do not set the body explicitely!! Don't do ---> Vessel.orbitDriver.referenceBody = Body;
             Vessel.orbitDriver.orbit.SetOrbit
@@ -347,8 +347,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             var anglediff = Math.Abs(fromLan - toLan) + Math.Abs(fromAop - toAop);
 
-            if (SettingsSystem.CurrentSettings.Debug1)
-                if (anglediff > (1 - errbnd) * 360 && anglediff < (1 + errbnd) * 360)
+            if (anglediff > (1 - errbnd) * 360 && anglediff < (1 + errbnd) * 360)
                 return Math.Abs(LunaMath.LerpAngleDeg(-1 * fromInc, toInc, t, 180));
 
             return LunaMath.LerpAngleDegAbs(fromInc, toInc, t, 180);
