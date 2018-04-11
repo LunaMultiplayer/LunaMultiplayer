@@ -49,10 +49,10 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
             
             //The vessel is NEW as it's not in the store. It might be a debris...
-            var rootPartOrFirstPart = data.rootPart ?? data.parts.FirstOrDefault();
-            if (rootPartOrFirstPart != null)
+            var rootPartOrFirstPartFlightId = data.rootPart?.flightID ?? data.parts.FirstOrDefault()?.flightID ?? data.protoVessel?.protoPartSnapshots?.FirstOrDefault()?.flightID ?? 0;
+            if (rootPartOrFirstPartFlightId != 0)
             {
-                var originalVessel = VesselsProtoStore.GetVesselByPartId(rootPartOrFirstPart.flightID);
+                var originalVessel = VesselsProtoStore.GetVesselByPartId(rootPartOrFirstPartFlightId);
                 if (originalVessel == null)
                 {
                     //We didn't find an original vessel so it's probably a totally new vessel that spawned...
