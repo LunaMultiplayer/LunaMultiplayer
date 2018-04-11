@@ -31,7 +31,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
                         return;
-                    
+
                     System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
                 }, 5f);
 
@@ -47,7 +47,11 @@ namespace LunaClient.Systems.VesselProtoSys
             //We just created a vessel that exists in the store so we can just ignore this
             if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.id))
                 return;
-            
+
+            //This happens when vessel crashes
+            if (string.IsNullOrEmpty(data.name))
+                return;
+
             //The vessel is NEW as it's not in the store. It might be a debris...
             var rootPartOrFirstPartFlightId = data.rootPart?.flightID ?? data.parts.FirstOrDefault()?.flightID ?? data.protoVessel?.protoPartSnapshots?.FirstOrDefault()?.flightID ?? 0;
             if (rootPartOrFirstPartFlightId != 0)
@@ -92,7 +96,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
             }
         }
-        
+
         /// <summary>
         /// Event called when a part is dead and removed from the game
         /// </summary>
