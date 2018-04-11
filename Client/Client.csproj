@@ -72,6 +72,7 @@
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
+    <Compile Include="Harmony\DiscoverableObjectsUtil_SpawnAsteroid.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
@@ -308,7 +309,6 @@
     <Compile Include="Utilities\CommonUtil.cs" />
     <Compile Include="Utilities\CompatibilityChecker.cs" />
     <Compile Include="Utilities\ConfigNodeSerializer.cs" />
-    <Compile Include="Systems\Asteroid\AsteroidEvents.cs" />
     <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
     <Compile Include="Base\Interface\ISystem.cs" />
     <Compile Include="Base\System.cs" />
