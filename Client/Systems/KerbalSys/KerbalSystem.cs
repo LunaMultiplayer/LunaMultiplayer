@@ -217,8 +217,7 @@ namespace LunaClient.Systems.KerbalSys
                 LunaLog.LogError("[LMP]: protoName is blank!");
                 return;
             }
-
-            protoCrew.type = ProtoCrewMember.KerbalType.Crew;
+            
             if (!HighLogic.CurrentGame.CrewRoster.Exists(protoCrew.name))
             {
                 HighLogic.CurrentGame.CrewRoster.AddCrewMember(protoCrew);
