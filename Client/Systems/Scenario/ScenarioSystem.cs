@@ -1,6 +1,4 @@
-﻿using FinePrint.Utilities;
-using LunaClient.Base;
-using LunaClient.Systems.KerbalSys;
+﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon;
@@ -162,16 +160,6 @@ namespace LunaClient.Systems.Scenario
         {
             while (ScenarioQueue.TryDequeue(out var scenarioEntry))
             {
-                if (scenarioEntry.ScenarioModule == "ContractSystem")
-                {
-                    SpawnStrandedKerbalsForRescueMissions(scenarioEntry.ScenarioNode);
-                    CreateMissingTourists(scenarioEntry.ScenarioNode);
-                }
-                if (scenarioEntry.ScenarioModule == "ProgressTracking")
-                    CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(scenarioEntry.ScenarioNode);
-
-                CheckForBlankSceneSoTheGameDoesntBugOut(scenarioEntry);
-
                 var psm = new ProtoScenarioModule(scenarioEntry.ScenarioNode);
                 if (IsScenarioModuleAllowed(psm.moduleName) && !IgnoredScenarios.IgnoreReceive.Contains(psm.moduleName))
                 {
@@ -188,126 +176,7 @@ namespace LunaClient.Systems.Scenario
         #endregion
 
         #region Private methods
-
-        private static void CreateMissingTourists(ConfigNode contractSystemNode)
-        {
-            var contractsNode = contractSystemNode.GetNode("CONTRACTS");
-
-            var kerbalNames = contractsNode.GetNodes("CONTRACT")
-                .Where(c => c.GetValue("type") == "TourismContract" && c.GetValue("state") == "Active")
-                .SelectMany(c => c.GetNodes("PARAM"))
-                .SelectMany(p => p.GetValues("kerbalName"));
-
-            foreach (var kerbalName in kerbalNames)
-            {
-                LunaLog.Log($"[LMP]: Spawning missing tourist ({kerbalName}) for active tourism contract");
-                var pcm = HighLogic.CurrentGame.CrewRoster.GetNewKerbal(ProtoCrewMember.KerbalType.Tourist);
-                pcm.ChangeName(kerbalName);
-            }
-        }
-
-        private static void SpawnStrandedKerbalsForRescueMissions(ConfigNode contractSystemNode)
-        {
-            var rescueContracts = contractSystemNode.GetNode("CONTRACTS").GetNodes("CONTRACT").Where(c => c.GetValue("type") == "RecoverAsset");
-            foreach (var contractNode in rescueContracts)
-            {
-                if (contractNode.GetValue("state") == "Offered")
-                {
-                    var kerbalName = contractNode.GetValue("kerbalName");
-                    if (!HighLogic.CurrentGame.CrewRoster.Exists(kerbalName))
-                    {
-                        LunaLog.Log($"[LMP]: Spawning missing kerbal ({kerbalName}) for offered KerbalRescue contract");
-                        var pcm = HighLogic.CurrentGame.CrewRoster.GetNewKerbal(ProtoCrewMember.KerbalType.Unowned);
-                        pcm.ChangeName(kerbalName);
-                    }
-                }
-                if (contractNode.GetValue("state") == "Active")
-                {
-                    var kerbalName = contractNode.GetValue("kerbalName");
-                    LunaLog.Log($"[LMP]: Spawning stranded kerbal ({kerbalName}) for active KerbalRescue contract");
-                    var bodyId = int.Parse(contractNode.GetValue("body"));
-                    if (!HighLogic.CurrentGame.CrewRoster.Exists(kerbalName))
-                        GenerateStrandedKerbal(bodyId, kerbalName);
-                }
-            }
-        }
-
-        private static void GenerateStrandedKerbal(int bodyId, string kerbalName)
-        {
-            //Add kerbal to crew roster.
-            LunaLog.Log($"[LMP]: Spawning missing kerbal, Name: {kerbalName}");
-
-            var pcm = HighLogic.CurrentGame.CrewRoster.GetNewKerbal(ProtoCrewMember.KerbalType.Unowned);
-            pcm.ChangeName(kerbalName);
-            pcm.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
-
-            //Create protovessel
-            var newPartId = ShipConstruction.GetUniqueFlightID(HighLogic.CurrentGame.flightState);
-            var contractBody = FlightGlobals.Bodies[bodyId];
-
-            //Atmo: 10km above atmo, to half the planets radius out.
-            //Non-atmo: 30km above ground, to half the planets radius out.
-            var minAltitude = CelestialUtilities.GetMinimumOrbitalDistance(contractBody, 1.1f);
-            var maxAltitude = minAltitude + contractBody.Radius * 0.5;
-
-            var strandedOrbit = Orbit.CreateRandomOrbitAround(FlightGlobals.Bodies[bodyId], minAltitude, maxAltitude);
-
-            var kerbalPartNode = new[] { ProtoVessel.CreatePartNode("kerbalEVA", newPartId, pcm) };
-
-            var protoVesselNode = ProtoVessel.CreateVesselNode(kerbalName, VesselType.EVA, strandedOrbit, 0,
-                kerbalPartNode);
-
-            //It's not supposed to be infinite, but you're crazy if you think I'm going to decipher the values field of the rescue node.
-            var discoveryNode = ProtoVessel.CreateDiscoveryNode(DiscoveryLevels.Unowned, UntrackedObjectClass.A,
-                double.PositiveInfinity,
-                double.PositiveInfinity);
-
-            var protoVessel = new ProtoVessel(protoVesselNode, HighLogic.CurrentGame)
-            {
-                discoveryInfo = discoveryNode
-            };
-
-            HighLogic.CurrentGame.flightState.protoVessels.Add(protoVessel);
-        }
-
-        private static void CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(ConfigNode progressTrackingNode)
-        {
-            foreach (var possibleNode in progressTrackingNode.nodes)
-                CreateMissingKerbalsInProgressTrackingSoTheGameDoesntBugOut(possibleNode as ConfigNode);
-
-            //The kerbals are kept in a ConfigNode named 'crew', with 'crews' as a comma space delimited array of names.
-            if (progressTrackingNode.name == "crew")
-            {
-                var kerbalNames = progressTrackingNode.GetValue("crews");
-                if (!string.IsNullOrEmpty(kerbalNames))
-                {
-                    var kerbalNamesSplit = kerbalNames.Split(new[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var kerbalName in kerbalNamesSplit.Where(k => !HighLogic.CurrentGame.CrewRoster.Exists(k)))
-                    {
-                        LunaLog.Log($"[LMP]: Generating missing kerbal from ProgressTracking: {kerbalName}");
-                        var pcm = CrewGenerator.RandomCrewMemberPrototype();
-                        pcm.ChangeName(kerbalName);
-                        HighLogic.CurrentGame.CrewRoster.AddCrewMember(pcm);
-
-                        //Also send it off to the server
-                        KerbalSystem.Singleton.MessageSender.SendKerbal(pcm);
-                    }
-                }
-            }
-        }
-
-        //If the scene field is blank, KSP will throw an error while starting the game, meaning players will be unable to join the server.
-        private static void CheckForBlankSceneSoTheGameDoesntBugOut(ScenarioEntry scenarioEntry)
-        {
-            if (scenarioEntry.ScenarioNode.GetValue("scene") == string.Empty)
-            {
-                var nodeName = scenarioEntry.ScenarioModule;
-                LunaScreenMsg.PostScreenMessage($"{nodeName} is badly behaved!", 3, ScreenMessageStyle.UPPER_CENTER);
-                LunaLog.Log($"[LMP]: {nodeName} is badly behaved!");
-                scenarioEntry.ScenarioNode.SetValue("scene", "7, 8, 5, 6, 9");
-            }
-        }
-
+        
         private static bool LoadModuleByGameMode(KSPScenarioType validScenario)
         {
             switch (HighLogic.CurrentGame.Mode)
@@ -322,7 +191,7 @@ namespace LunaClient.Systems.Scenario
             return false;
         }
         
-        private bool IsScenarioModuleAllowed(string scenarioName)
+        private static bool IsScenarioModuleAllowed(string scenarioName)
         {
             if (string.IsNullOrEmpty(scenarioName)) return false;
 
