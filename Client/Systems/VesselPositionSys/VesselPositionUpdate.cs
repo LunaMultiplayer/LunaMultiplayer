@@ -209,7 +209,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             var currentSurfaceRelRotation = Quaternion.Slerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
             var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
-
+            
             //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped.
             Vessel.SetWorldVelocity(curVelocity);
             Vessel.velocityD = curVelocity;
@@ -221,23 +221,23 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.checkLanded();
             Vessel.checkSplashed();
 
+            //Set the position of the vessel based on the orbital parameters
+            Vessel.orbitDriver.updateFromParameters();
+
             if (Vessel.LandedOrSplashed)
             {
-                Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
+                //This updates the Vessel.latitude, Vessel.lon, Vessel.alt
+                Vessel.UpdatePosVel();
+                    
                 Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
-
-            //Set the position of the vessel based on the orbital parameters
-            Vessel.orbitDriver.updateFromParameters();
 
             foreach (var part in Vessel.Parts)
                 part.ResumeVelocity();
 
             if (CurrentlySpectatingThisVessel)
             {
-                //Do not do this on every vessel as it create issues (the vessel goes inside earth)
                 Vessel.UpdatePosVel();
                 Vessel.precalc.CalculatePhysicsStats(); //This will update the localCom and other variables of the vessel
             }
