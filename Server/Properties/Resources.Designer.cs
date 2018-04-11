@@ -128,7 +128,11 @@ namespace Server.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
-        ///&lt;LMPConfigNodeToXML /&gt;.
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///    &lt;Parameter name=&quot;name&quot;&gt;CommNetScenario&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5, 6&lt;/Parameter&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;
+        ///.
         /// </summary>
         internal static string CommNetScenario {
             get {
@@ -329,6 +333,23 @@ namespace Server.Properties {
         internal static string ScenarioDestructibles {
             get {
                 return ResourceManager.GetString("ScenarioDestructibles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-16&quot;?&gt;
+        ///&lt;LMPConfigNodeToXML&gt;
+        ///    &lt;Parameter name=&quot;name&quot;&gt;ScenarioNewGameIntro&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;scene&quot;&gt;7, 8, 5, 6&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;kscComplete&quot;&gt;True&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;editorComplete&quot;&gt;True&lt;/Parameter&gt;
+        ///    &lt;Parameter name=&quot;tsComplete&quot;&gt;True&lt;/Parameter&gt;
+        ///&lt;/LMPConfigNodeToXML&gt;
+        ///.
+        /// </summary>
+        internal static string ScenarioNewGameIntro {
+            get {
+                return ResourceManager.GetString("ScenarioNewGameIntro", resourceCulture);
             }
         }
         

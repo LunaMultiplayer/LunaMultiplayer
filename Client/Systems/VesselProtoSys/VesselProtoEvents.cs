@@ -31,7 +31,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 {
                     if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
                         return;
-                    
+
                     System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
                 }, 5f);
 
@@ -47,33 +47,40 @@ namespace LunaClient.Systems.VesselProtoSys
             //We just created a vessel that exists in the store so we can just ignore this
             if (VesselsProtoStore.AllPlayerVessels.ContainsKey(data.id))
                 return;
-            
+
+            //This happens when vessel crashes
+            if (string.IsNullOrEmpty(data.name))
+                return;
+
             //The vessel is NEW as it's not in the store. It might be a debris...
-            var rootPartOrFirstPart = data.rootPart ?? data.parts.FirstOrDefault();
-            if (rootPartOrFirstPart != null)
+            var rootPartOrFirstPartFlightId = data.rootPart?.flightID ?? data.parts.FirstOrDefault()?.flightID ?? data.protoVessel?.protoPartSnapshots?.FirstOrDefault()?.flightID ?? 0;
+            if (rootPartOrFirstPartFlightId != 0)
             {
-                var originalVessel = VesselsProtoStore.GetVesselByPartId(rootPartOrFirstPart.flightID);
+                var originalVessel = VesselsProtoStore.GetVesselByPartId(rootPartOrFirstPartFlightId);
                 if (originalVessel == null)
                 {
                     //We didn't find an original vessel so it's probably a totally new vessel that spawned...
                     LunaLog.Log($"SENDING NEW vesselId {data.id} name {data.vesselName} (Original vessel NOT found)");
-                    LockSystem.Singleton.AcquireUpdateLock(data.id, true);
-                    return;
-                }
 
-                //The vessel even exists on the store so probably it's a vessel that has lost a part or smth like that...
-                if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
-                {
-                    LunaLog.Log($"SENDING NEW vesselId {data.id} name {data.vesselName} (Original vessel UPD lock is ours)");
-
-                    //We own the update lock of that vessel that originated that part so let's get that update lock as forced 
-                    //and send the definition with the main system routine
+                    System.MessageSender.SendVesselMessage(data, true);
                     LockSystem.Singleton.AcquireUpdateLock(data.id, true);
                 }
                 else
                 {
-                    LunaLog.Log($"REVERTING NEW vesselId {data.id} name {data.vesselName} (UPD lock is NOT ours)");
-                    VesselRemoveSystem.Singleton.AddToKillList(data.id);
+                    //The vessel even exists on the store so probably it's a vessel that has lost a part or smth like that...
+                    if (LockSystem.LockQuery.UpdateLockBelongsToPlayer(originalVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                    {
+                        //We own the update lock of that vessel that originated that part so let's get that update lock as forced and send the definition
+                        LunaLog.Log($"SENDING NEW vesselId {data.id} name {data.vesselName} (Original vessel UPD lock is ours)");
+
+                        System.MessageSender.SendVesselMessage(data, true);
+                        LockSystem.Singleton.AcquireUpdateLock(data.id, true);
+                    }
+                    else
+                    {
+                        LunaLog.Log($"REVERTING NEW vesselId {data.id} name {data.vesselName} (UPD lock is NOT ours)");
+                        VesselRemoveSystem.Singleton.AddToKillList(data.id);
+                    }
                 }
             }
         }
@@ -89,7 +96,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
             }
         }
-        
+
         /// <summary>
         /// Event called when a part is dead and removed from the game
         /// </summary>

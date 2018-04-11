@@ -10,8 +10,8 @@ namespace LunaClient.Systems.ShareAchievements
 
         private ShareAchievementsEvents ShareAchievementsEvents { get; } = new ShareAchievementsEvents();
 
-        protected override bool ShareSystemReady => ProgressTracking.Instance != null && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
-                                                    Reputation.Instance != null;
+        //This queue system is not used because we use one big queue in ShareCareerSystem for this system.
+        protected override bool ShareSystemReady => true;
 
         protected override void OnEnabled()
         {

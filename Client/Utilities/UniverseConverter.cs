@@ -1,8 +1,8 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaCommon;
+﻿using LunaCommon;
 using LunaCommon.Xml;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace LunaClient.Utilities
 {
@@ -39,8 +39,6 @@ namespace LunaClient.Utilities
             Directory.CreateDirectory(vesselFolder);
             var scenarioFolder = CommonUtil.CombinePaths(universeFolder, "Scenarios");
             Directory.CreateDirectory(scenarioFolder);
-            var playerScenarioFolder = CommonUtil.CombinePaths(scenarioFolder, SettingsSystem.CurrentSettings.PlayerName);
-            Directory.CreateDirectory(playerScenarioFolder);
             var kerbalFolder = CommonUtil.CombinePaths(universeFolder, "Kerbals");
             Directory.CreateDirectory(kerbalFolder);
 
@@ -78,8 +76,9 @@ namespace LunaClient.Utilities
                 foreach (var cn in vesselNodes)
                 {
                     var vesselId = Common.ConvertConfigStringToGuidString(cn.GetValue("pid"));
-                    LunaLog.Log($"[LMP]: Saving vessel {vesselId}, Name: {cn.GetValue("Name")}");
-                    var xmlData = ConfigNodeXmlParser.ConvertToXml(cn.ToString());
+                    LunaLog.Log($"[LMP]: Saving vessel {vesselId}, Name: {cn.GetValue("name")}");
+
+                    var xmlData = ConfigNodeXmlParser.ConvertToXml(Encoding.UTF8.GetString(ConfigNodeSerializer.Serialize(cn)));
                     File.WriteAllText(CommonUtil.CombinePaths(vesselFolder, $"{vesselId}.xml"), xmlData);
                 }
             }
@@ -90,28 +89,31 @@ namespace LunaClient.Utilities
             {
                 foreach (var cn in scenarioNodes)
                 {
-                    var scenarioName = cn.GetValue("Name");
+                    var scenarioName = cn.GetValue("name");
+                    if (string.IsNullOrEmpty(scenarioName)) continue;
+
                     LunaLog.Log($"[LMP]: Saving scenario: {scenarioName}");
-                    var xmlData = ConfigNodeXmlParser.ConvertToXml(cn.ToString());
-                    File.WriteAllText(CommonUtil.CombinePaths(vesselFolder, $"{scenarioName}.xml"), xmlData);
+
+                    var xmlData = ConfigNodeXmlParser.ConvertToXml(Encoding.UTF8.GetString(ConfigNodeSerializer.Serialize(cn)));
+                    File.WriteAllText(CommonUtil.CombinePaths(scenarioFolder, $"{scenarioName}.xml"), xmlData);
                 }
             }
 
             //Save kerbal data
-            var kerbalNodes = gameData.GetNode("ROSTER").GetNodes("CREW");
+            var kerbalNodes = gameData.GetNode("ROSTER").GetNodes("KERBAL");
             if (kerbalNodes != null)
             {
-                var kerbalIndex = 0;
                 foreach (var cn in kerbalNodes)
                 {
-                    LunaLog.Log($"[LMP]: Saving kerbal {kerbalIndex}, Name: {cn.GetValue("Name")}");
-                    cn.Save(CommonUtil.CombinePaths(kerbalFolder, $"{kerbalIndex}.txt"));
-                    kerbalIndex++;
+                    var kerbalName = cn.GetValue("name");
+                    LunaLog.Log($"[LMP]: Saving kerbal: {kerbalName}");
+
+                    cn.Save(CommonUtil.CombinePaths(kerbalFolder, $"{kerbalName}.txt"));
                 }
             }
+
             LunaLog.Log($"[LMP]: Generated KSP_folder/Universe from {saveName}");
-            LunaScreenMsg.PostScreenMessage($"Generated KSP_folder/Universe from {saveName}", 5f,
-                ScreenMessageStyle.UPPER_CENTER);
+            LunaScreenMsg.PostScreenMessage($"Generated KSP_folder/Universe from {saveName}", 5f, ScreenMessageStyle.UPPER_CENTER);
         }
 
         public static IEnumerable<string> GetSavedNames()

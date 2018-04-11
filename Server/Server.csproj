@@ -201,6 +201,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <Content Include="Resources\Scenario\ScenarioNewGameIntro.xml" />
     <Content Include="Resources\Scenario\CommNetScenario.xml" />
     <Content Include="Resources\Scenario\ContractSystem.xml" />
     <Content Include="Resources\Scenario\Funding.xml" />

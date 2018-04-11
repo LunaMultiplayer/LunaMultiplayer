@@ -2,7 +2,6 @@
 using LunaClient.Base;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.ShareAchievements;
 using LunaClient.Systems.ShareProgress;
 using LunaCommon.Enums;
 
@@ -16,9 +15,8 @@ namespace LunaClient.Systems.ShareContracts
 
         private int _defaultContractGenerateIterations;
 
-        //We need to wait for all the achievements to be processed before we process the contracts. Otherwise it will cause bugs.
-        protected override bool ShareSystemReady => ContractSystem.Instance != null && ContractSystem.Instance.Contracts.Count != 0 && Funding.Instance != null && ResearchAndDevelopment.Instance != null &&
-                                                    Reputation.Instance != null && ProgressTracking.Instance != null && ShareAchievementsSystem.Singleton.ActionQueueCount == 0;
+        //This queue system is not used because we use one big queue in ShareCareerSystem for this system.
+        protected override bool ShareSystemReady => true;
 
         protected override void OnEnabled()
         {

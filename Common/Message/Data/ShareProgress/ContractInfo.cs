@@ -13,6 +13,25 @@ namespace LunaCommon.Message.Data.ShareProgress
         public int NumBytes;
         public byte[] Data = new byte[0];
 
+        public ContractInfo()
+        {
+            
+        }
+
+        /// <summary>
+        /// Copy constructor.
+        /// </summary>
+        /// <param name="copyFrom"></param>
+        public ContractInfo(ContractInfo copyFrom)
+        {
+            ContractGuid = copyFrom.ContractGuid;
+            NumBytes = copyFrom.NumBytes;
+            if (Data.Length < NumBytes)
+                Data = new byte[NumBytes];
+
+            Array.Copy(copyFrom.Data, Data, NumBytes);
+        }
+
         public void Serialize(NetOutgoingMessage lidgrenMsg)
         {
             GuidUtil.Serialize(ContractGuid, lidgrenMsg);

@@ -4,6 +4,7 @@ using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System.Collections.Concurrent;
+using LunaClient.Systems.ShareCareer;
 
 namespace LunaClient.Systems.ShareReputation
 {
@@ -20,7 +21,7 @@ namespace LunaClient.Systems.ShareReputation
             {
                 var reputation = data.Reputation; //create a copy of the reputation value so it will not change in the future.
                 LunaLog.Log($"Queue ReputationUpdate with: {reputation}");
-                System.QueueAction(() =>
+                ShareCareerSystem.Singleton.QueueAction(() =>
                 {
                     ReputationUpdate(reputation);
                 });

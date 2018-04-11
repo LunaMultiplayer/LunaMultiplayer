@@ -72,6 +72,7 @@
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
     <Compile Include="Harmony\DestructibleBuilding_OnCollisionEnter.cs" />
+    <Compile Include="Harmony\DiscoverableObjectsUtil_SpawnAsteroid.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
@@ -91,7 +92,7 @@
     <Compile Include="Harmony\VesselPrecalculate_Update.cs" />
     <Compile Include="Harmony\VesselPrecalculate_MainPhysics.cs" />
     <Compile Include="Harmony\TimeWarp_setMode.cs" />
-    <Compile Include="Harmony\TimeWarp_SetRate.cs" />
+    <Compile Include="Harmony\TimeWarp_setRate.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ButtonTooltips.cs" />
@@ -128,6 +129,7 @@
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageHandler.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageSender.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsSystem.cs" />
+    <Compile Include="Systems\ShareCareer\ShareCareerSystem.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsEvents.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsMessageHandler.cs" />
     <Compile Include="Systems\ShareContracts\ShareContractsMessageSender.cs" />
@@ -307,7 +309,6 @@
     <Compile Include="Utilities\CommonUtil.cs" />
     <Compile Include="Utilities\CompatibilityChecker.cs" />
     <Compile Include="Utilities\ConfigNodeSerializer.cs" />
-    <Compile Include="Systems\Asteroid\AsteroidEvents.cs" />
     <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
     <Compile Include="Base\Interface\ISystem.cs" />
     <Compile Include="Base\System.cs" />

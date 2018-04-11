@@ -16,7 +16,6 @@ namespace Server.System
         
         public static void GenerateDefaultKerbals()
         {
-            LunaLog.Normal("Creating default kerbals...");
             FileHandler.CreateFile(Path.Combine(KerbalsPath, "Jebediah Kerman.txt"), Resources.Jebediah_Kerman);
             FileHandler.CreateFile(Path.Combine(KerbalsPath, "Bill Kerman.txt"), Resources.Bill_Kerman);
             FileHandler.CreateFile(Path.Combine(KerbalsPath, "Bob Kerman.txt"), Resources.Bob_Kerman);
