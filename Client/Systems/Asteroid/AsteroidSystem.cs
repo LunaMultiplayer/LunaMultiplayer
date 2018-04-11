@@ -1,6 +1,5 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Systems.Lock;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.Warp;
 using System.Collections.Generic;
@@ -13,23 +12,8 @@ namespace LunaClient.Systems.Asteroid
     {
         #region Fields
 
-        private ScenarioDiscoverableObjects _scenarioDiscoverableObjects;
-
-        public ScenarioDiscoverableObjects ScenarioController
-        {
-            get
-            {
-                if (_scenarioDiscoverableObjects == null)
-                    _scenarioDiscoverableObjects = Object.FindObjectsOfType<ScenarioDiscoverableObjects>().FirstOrDefault();
-
-                return _scenarioDiscoverableObjects;
-            }
-        }
-
-
         public List<string> ServerAsteroids { get; } = new List<string>();
         public Dictionary<string, string> ServerAsteroidTrackStatus { get; } = new Dictionary<string, string>();
-        private AsteroidEventHandler AsteroidEventHandler { get; } = new AsteroidEventHandler();
 
         public bool AsteroidSystemReady => Enabled && Time.timeSinceLevelLoad > 5f && HighLogic.LoadedScene >= GameScenes.FLIGHT;
 
@@ -42,19 +26,14 @@ namespace LunaClient.Systems.Asteroid
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onAsteroidSpawned.Add(AsteroidEventHandler.OnAsteroidSpawned);
-
-            SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, FixAsteroidIntervalAndSeed));
+            
             SetupRoutine(new RoutineDefinition(10000, RoutineExecution.Update, TryGetAsteroidLock));
-            SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, CheckAsteroidsToSpawn));
             SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, CheckAsteroidsStatus));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onAsteroidSpawned.Remove(AsteroidEventHandler.OnAsteroidSpawned);
-
             ServerAsteroids.Clear();
             ServerAsteroidTrackStatus.Clear();
         }
@@ -62,21 +41,7 @@ namespace LunaClient.Systems.Asteroid
         #endregion
 
         #region Update methods
-
-        /// <summary>
-        /// Here we try to fix the SQUAD error with the seed value and also we stop the automatic asteroid spawner
-        /// </summary>
-        private void FixAsteroidIntervalAndSeed()
-        {
-            if (!Enabled) return;
-
-            if (ScenarioController != null)
-            {
-                ScenarioController.spawnOddsAgainst = int.MaxValue;
-                ScenarioController.spawnInterval = float.MaxValue;
-            }
-        }
-
+        
         /// <summary>
         /// Try to acquire the asteroid-spawning lock if nobody else has it.
         /// </summary>
@@ -87,31 +52,7 @@ namespace LunaClient.Systems.Asteroid
             if (!LockSystem.LockQuery.AsteroidLockExists() && WarpSystem.Singleton.CurrentSubspace == 0)
                 LockSystem.Singleton.AcquireAsteroidLock();
         }
-
-        /// <summary>
-        /// This spawn the needed asteroids if we have the asteroid lock
-        /// </summary>
-        private void CheckAsteroidsToSpawn()
-        {
-            if (!Enabled || !AsteroidSystemReady) return;
-
-            if (LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
-            {
-                //We have the spawn lock so spawn some asteroids if there are less than expected
-                var currentAsteroidCount = GetAsteroidCount();
-                var asteroidsToSpawn = SettingsSystem.ServerSettings.MaxNumberOfAsteroids - currentAsteroidCount;
-
-                if (asteroidsToSpawn > 0)
-                {
-                    LunaLog.Log($"[LMP]: Spawning {asteroidsToSpawn} asteroids");
-                    for (var i = 0; i < asteroidsToSpawn; i++)
-                    {
-                        ScenarioController?.SpawnAsteroid();
-                    }
-                }
-            }
-        }
-
+        
         /// <summary>
         /// This routine handles the asteroid track status between clients
         /// </summary>
