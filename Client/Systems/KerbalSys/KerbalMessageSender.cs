@@ -32,13 +32,6 @@ namespace LunaClient.Systems.KerbalSys
 
             if (VesselCommon.IsSpectating) return;
 
-            if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
-            {
-                //Don't send tourists
-                LunaLog.Log($"[LMP]: Skipping sending of tourist: {pcm.name}");
-                return;
-            }
-
             ConfigNode.ClearData();
             pcm.Save(ConfigNode);
 
