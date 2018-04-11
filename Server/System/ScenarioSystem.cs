@@ -20,8 +20,6 @@ namespace Server.System
 
         public static void GenerateDefaultScenarios()
         {
-            LunaLog.Normal("Creating default scenario files...");
-
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "CommNetScenario.xml"), Resources.CommNetScenario);
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "PartUpgradeManager.xml"), Resources.PartUpgradeManager);
             FileHandler.CreateFile(Path.Combine(ScenarioPath, "ProgressTracking.xml"), Resources.ProgressTracking);

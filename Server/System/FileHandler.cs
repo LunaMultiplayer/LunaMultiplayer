@@ -82,6 +82,7 @@ namespace Server.System
         {
             if (!FileExists(path))
             {
+                LunaLog.Normal($"Creating file {Path.GetFileName(path)}");
                 lock (GetLockSemaphore(path))
                 {
                     File.WriteAllText(path, text);
