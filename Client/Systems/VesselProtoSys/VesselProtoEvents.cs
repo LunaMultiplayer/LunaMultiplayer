@@ -49,7 +49,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
 
             //This happens when vessel crashes
-            if (string.IsNullOrEmpty(data.name))
+            if (string.IsNullOrEmpty(data.vesselName))
                 return;
 
             //The vessel is NEW as it's not in the store. It might be a debris...
