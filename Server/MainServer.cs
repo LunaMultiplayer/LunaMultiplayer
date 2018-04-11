@@ -88,6 +88,8 @@ namespace Server
                 WarpSystem.Reset();
 
                 LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
+                LunaLog.Normal($"Server name: '{GeneralSettings.SettingsStore.ServerName}'...");
+                LunaLog.Normal($"Server location: '{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}'...");
 
                 ServerContext.ServerRunning = true;
                 LidgrenServer.SetupLidgrenServer();
