@@ -1,5 +1,4 @@
-﻿using LunaClient.Systems.SettingsSys;
-using LunaClient.VesselUtilities;
+﻿using LunaClient.VesselUtilities;
 using LunaCommon;
 using System;
 using UnityEngine;
@@ -291,68 +290,23 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyOrbitInterpolation(float lerpPercentage)
         {
-            //Inclination must be a positive degreee value between 0 and 180 (defines the Z axis of the orbit)
-            var inclination = SettingsSystem.CurrentSettings.InterpolationEnabled ? 
-                LerpInclination(Orbit[0], Target.Orbit[0], Orbit[3], Target.Orbit[3], Orbit[4], Target.Orbit[4], lerpPercentage)
-                : Target.Orbit[0];
-            
-            //Ecc must be a positive number > 0
-            var eccentricity = SettingsSystem.CurrentSettings.InterpolationEnabled ? Math.Abs(LunaMath.Lerp(Orbit[1], Target.Orbit[1], lerpPercentage)) : 
-                Target.Orbit[1];
+            var lerpTime = LunaMath.Lerp(GameTimeStamp, Target.GameTimeStamp, lerpPercentage);
 
-            //Sma can be any number
-            var semiMajorAxis = SettingsSystem.CurrentSettings.InterpolationEnabled ? LunaMath.Lerp(Orbit[2], Target.Orbit[2], lerpPercentage) :
-                Target.Orbit[2];
+            var currentOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
+            var targetOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Body);
 
-            //Long ascendin node (LAN) must be a positive deg value between 0 and 360 (defines the Y axis of the orbit)
-            var lan = SettingsSystem.CurrentSettings.InterpolationEnabled ? LunaMath.LerpAngleDegAbs(Orbit[3], Target.Orbit[3], lerpPercentage) :
-                Target.Orbit[3];
+            var targetPos = (targetOrbit.getTruePositionAtUT(lerpTime) - Body.getTruePositionAtUT(lerpTime)).xzy;
+            var currentPos = (currentOrbit.getTruePositionAtUT(lerpTime) - Body.getTruePositionAtUT(lerpTime)).xzy;
 
-            //Arg of periapsis (LPE) must be a positive deg value between 0 and 360 (defines the X axis of the orbit)
-            var argPeriapsis = SettingsSystem.CurrentSettings.InterpolationEnabled ? LunaMath.LerpAngleDegAbs(Orbit[4], Target.Orbit[4], lerpPercentage) :
-                Target.Orbit[4];
+            var targetVel = targetOrbit.getOrbitalVelocityAtUT(lerpTime) + targetOrbit.referenceBody.GetFrameVelAtUT(lerpTime) - Body.GetFrameVelAtUT(lerpTime);
+            var currentVel = currentOrbit.getOrbitalVelocityAtUT(lerpTime) + currentOrbit.referenceBody.GetFrameVelAtUT(lerpTime) - Body.GetFrameVelAtUT(lerpTime);
 
-            //MNA must be a rad between -pi and pi (defines position of vessel in the orbit)
-            //CAUTION! sometimes on escape orbits the MNA take strange values!
-            var meanAnomalyEpoch = SettingsSystem.CurrentSettings.InterpolationEnabled ? eccentricity >= 1 ? LunaMath.Lerp(Orbit[5], Target.Orbit[5], lerpPercentage) :
-                LunaMath.LerpAngleRad(Orbit[5], Target.Orbit[5], lerpPercentage, Math.PI) :
-                Target.Orbit[5];
+            var lerpedPos = Vector3d.Lerp(currentPos, targetPos, lerpPercentage);
+            var lerpedVel = Vector3d.Lerp(currentVel, targetVel, lerpPercentage);
 
-            //Epoch is just the game time
-            var epoch = SettingsSystem.CurrentSettings.InterpolationEnabled ? LunaMath.Lerp(Orbit[6], Target.Orbit[6], lerpPercentage):
-                Target.Orbit[6];
-
-            //if (SettingsSystem.CurrentSettings.Debug9)
-            //{
-            //    LunaLog.Log($"Inc = {Orbit[0]};{Target.Orbit[0]};{inclination} || Lan: {Orbit[3]};{Target.Orbit[3]};{lan} || Arg: {Orbit[4]};{Target.Orbit[4]};{argPeriapsis}");
-            //}
-
-            //Do not set the body explicitely!! Don't do ---> Vessel.orbitDriver.referenceBody = Body;
-            Vessel.orbitDriver.orbit.SetOrbit
-            (
-                inclination,
-                eccentricity,
-                semiMajorAxis,
-                lan,
-                argPeriapsis,
-                meanAnomalyEpoch,
-                epoch,
-                Body
-            );
+            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, Body, lerpTime);
         }
-
-        private static double LerpInclination(double fromInc, double toInc, double fromLan, double toLan, double fromAop, double toAop, float t)
-        {
-            var errbnd = 0.10;
-
-            var anglediff = Math.Abs(fromLan - toLan) + Math.Abs(fromAop - toAop);
-
-            if (anglediff > (1 - errbnd) * 360 && anglediff < (1 + errbnd) * 360)
-                return Math.Abs(LunaMath.LerpAngleDeg(-1 * fromInc, toInc, t, 180));
-
-            return LunaMath.LerpAngleDegAbs(fromInc, toInc, t, 180);
-        }
-
+        
         /// <summary>
         /// Here we apply the CURRENT vessel position to this update.
         /// </summary>
