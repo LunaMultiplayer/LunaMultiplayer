@@ -115,10 +115,10 @@ namespace LunaClient.Systems.VesselPositionSys
                         case 3:
                             break;
                         case 4:
-                            GameTimeStamp += InterpolationDuration * 0.15;
+                            GameTimeStamp += InterpolationDuration * 0.25;
                             break;
                         case 5:
-                            GameTimeStamp += InterpolationDuration * 0.50;
+                            GameTimeStamp += InterpolationDuration * 0.60;
                             break;
                     }
 
