@@ -47,7 +47,6 @@ namespace LunaCommon.Message.Data.Vessel
                 lidgrenMsg.Write(SrfRelRotation[i]);
 
             lidgrenMsg.Write(HeightFromTerrain);
-            lidgrenMsg.Write(TimeStamp);
             lidgrenMsg.Write(GameTime);
         }
 
@@ -74,7 +73,6 @@ namespace LunaCommon.Message.Data.Vessel
                 SrfRelRotation[i] = lidgrenMsg.ReadFloat();
 
             HeightFromTerrain = lidgrenMsg.ReadFloat();
-            TimeStamp = lidgrenMsg.ReadInt64();
             GameTime = lidgrenMsg.ReadDouble();
         }
         
