@@ -42,8 +42,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public float HeightFromTerrain { get; set; }
         public double GameTimeStamp { get; set; }
         public DateTime ReceiveTime { get; set; }
-        public bool UseInterpolations { get; set; }
-        
 
         #endregion
 
@@ -64,7 +62,7 @@ namespace LunaClient.Systems.VesselPositionSys
         private float _lerpPercentage = 1;
         public float LerpPercentage
         {
-            get => UseInterpolations ? Mathf.Clamp01(_lerpPercentage) : 1;
+            get => Mathf.Clamp01(_lerpPercentage);
             set => _lerpPercentage = value;
         }
 
@@ -132,7 +130,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 else
                 {
                     //No position to interpolate to so return
-                    if (UseInterpolations || Target == null) return;
+                    return;
                 }
             }
 
@@ -225,10 +223,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
-            if (UseInterpolations)
-                ApplyOrbitInterpolation(LerpPercentage);
-            else
-                ApplyOrbitWithoutInterpolation();
+            ApplyOrbitInterpolation();
 
             //Do not use CoM. It's not needed and it generate issues when you patch the protovessel with it as it generate weird commnet lines
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
@@ -274,7 +269,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
         }
 
-        private void ApplyOrbitInterpolation(float lerpPercentage)
+        private void ApplyOrbitInterpolation()
         {
             var lerpBody = LerpPercentage < 0.5 ? GetBody(BodyIndex) : GetBody(Target.BodyIndex);
             var lerpTime = Planetarium.GetUniversalTime();
@@ -285,8 +280,8 @@ namespace LunaClient.Systems.VesselPositionSys
             var currentVel = KspOrbit.getOrbitalVelocityAtUT(lerpTime) + KspOrbit.referenceBody.GetFrameVelAtUT(lerpTime) - Body.GetFrameVelAtUT(lerpTime);
             var targetVel = Target.KspOrbit.getOrbitalVelocityAtUT(lerpTime) + Target.KspOrbit.referenceBody.GetFrameVelAtUT(lerpTime) - Target.Body.GetFrameVelAtUT(lerpTime);
 
-            var lerpedPos = Vector3d.Lerp(currentPos, targetPos, lerpPercentage);
-            var lerpedVel = Vector3d.Lerp(currentVel, targetVel, lerpPercentage);
+            var lerpedPos = Vector3d.Lerp(currentPos, targetPos, LerpPercentage);
+            var lerpedVel = Vector3d.Lerp(currentVel, targetVel, LerpPercentage);
 
             Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpBody, lerpTime);
         }
