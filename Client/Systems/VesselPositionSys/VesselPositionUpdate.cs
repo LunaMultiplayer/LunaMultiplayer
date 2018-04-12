@@ -26,6 +26,8 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         public CelestialBody Body => GetBody(BodyIndex);
+        public CelestialBody LerpBody => LerpPercentage < 0.5 ? GetBody(BodyIndex) : GetBody(Target.BodyIndex);
+
         public VesselPositionUpdate Target { get; set; }
 
         private bool CurrentlySpectatingThisVessel => VesselCommon.IsSpectating && FlightGlobals.ActiveVessel.id == VesselId;
@@ -199,6 +201,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (Vessel.LandedOrSplashed)
             {
+                LerpBody.GetLatLonAlt(Vessel.vesselTransform.position, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
+
                 Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
                 Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
                 Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
@@ -271,7 +275,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyOrbitInterpolation()
         {
-            var lerpBody = LerpPercentage < 0.5 ? GetBody(BodyIndex) : GetBody(Target.BodyIndex);
             var lerpTime = Planetarium.GetUniversalTime();
 
             var currentPos = (KspOrbit.getTruePositionAtUT(lerpTime) - Body.getTruePositionAtUT(lerpTime)).xzy;
@@ -283,7 +286,7 @@ namespace LunaClient.Systems.VesselPositionSys
             var lerpedPos = Vector3d.Lerp(currentPos, targetPos, LerpPercentage);
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, LerpPercentage);
 
-            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpBody, lerpTime);
+            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, lerpTime);
         }
 
         private void ApplyOrbitWithoutInterpolation()
