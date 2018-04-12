@@ -49,7 +49,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 BodyIndex = msgData.BodyIndex,
                 HeightFromTerrain = msgData.HeightFromTerrain,
                 GameTimeStamp = msgData.GameTime,
-                ReceiveTime = LunaTime.UtcNow
+                ReceiveTime = LunaTime.UtcNow,
+                UseInterpolations = msgData.ActiveVessel
             };
 
             Array.Copy(msgData.SrfRelRotation, update.SrfRelRotation, 4);

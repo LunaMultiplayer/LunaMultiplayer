@@ -42,6 +42,8 @@ namespace LunaClient.Systems.VesselPositionSys
         public float HeightFromTerrain { get; set; }
         public double GameTimeStamp { get; set; }
         public DateTime ReceiveTime { get; set; }
+        public bool UseInterpolations { get; set; }
+        
 
         #endregion
 
@@ -62,7 +64,7 @@ namespace LunaClient.Systems.VesselPositionSys
         private float _lerpPercentage = 1;
         public float LerpPercentage
         {
-            get => Mathf.Clamp01(_lerpPercentage);
+            get => UseInterpolations ? Mathf.Clamp01(_lerpPercentage) : 1;
             set => _lerpPercentage = value;
         }
 
@@ -122,7 +124,6 @@ namespace LunaClient.Systems.VesselPositionSys
                             break;
                     }
 
-
                     Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
                         Target.Orbit[4], Target.Orbit[5], Planetarium.GetUniversalTime() + InterpolationDuration, Target.Body);
 
@@ -130,18 +131,14 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
                 else
                 {
-                    //No updates in queue so return!
-                    LunaLog.LogError("NO UPDATE");
-                    return;
+                    //No position to interpolate to so return
+                    if (UseInterpolations || Target == null) return;
                 }
             }
 
             try
             {
-                if (Vessel.isEVA)
-                    ApplyInterpolationToEva(LerpPercentage);
-                else
-                    ApplyInterpolations(LerpPercentage);
+                ApplyInterpolations();
             }
             catch
             {
@@ -183,10 +180,10 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Target.Orbit[7];
         }
 
-        private void ApplyInterpolationsToLoadedVessel(float lerpPercentage)
+        private void ApplyInterpolationsToLoadedVessel()
         {
-            var currentSurfaceRelRotation = Quaternion.Slerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
-            var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, lerpPercentage);
+            var currentSurfaceRelRotation = Quaternion.Slerp(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
+            var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, LerpPercentage);
 
             //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped.
             Vessel.SetWorldVelocity(curVelocity);
@@ -204,9 +201,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (Vessel.LandedOrSplashed)
             {
-                Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-                Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
-                Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+                Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
+                Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
+                Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
 
@@ -220,9 +217,18 @@ namespace LunaClient.Systems.VesselPositionSys
             }
         }
 
-        private void ApplyInterpolations(float lerpPercentage)
+        private void ApplyInterpolations()
         {
-            ApplyOrbitInterpolation(lerpPercentage);
+            if (Vessel.isEVA)
+            {
+                ApplyPositionsToEva();
+                return;
+            }
+
+            if (UseInterpolations)
+                ApplyOrbitInterpolation(LerpPercentage);
+            else
+                ApplyOrbitWithoutInterpolation();
 
             //Do not use CoM. It's not needed and it generate issues when you patch the protovessel with it as it generate weird commnet lines
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
@@ -243,21 +249,24 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
-                ApplyInterpolationsToLoadedVessel(lerpPercentage);
+                ApplyInterpolationsToLoadedVessel();
             }
         }
 
-        private void ApplyInterpolationToEva(float lerpPercentage)
+        /// <summary>
+        /// We don't interpolate kerbals in EVA... Too much work and they are very slow so no reason to do it
+        /// </summary>
+        private void ApplyPositionsToEva()
         {
-            Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], lerpPercentage);
-            Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], lerpPercentage);
-            Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], lerpPercentage);
+            Vessel.latitude = Target.LatLonAlt[0];
+            Vessel.longitude = Target.LatLonAlt[1];
+            Vessel.altitude = Target.LatLonAlt[2];
 
-            var currentSurfaceRelRotation = Quaternion.Lerp(SurfaceRelRotation, Target.SurfaceRelRotation, lerpPercentage);
-            Vessel.SetRotation((Quaternion)Body.rotation * currentSurfaceRelRotation, true);
+            var currentSurfaceRelRotation = Target.SurfaceRelRotation;
+            Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
-            ApplyOrbitInterpolation(lerpPercentage);
+            ApplyOrbitWithoutInterpolation();
             Vessel.orbitDriver.updateFromParameters();
 
             //We don't do the surface positioning as with vessels because kerbals don't walk at high speeds and with this code it will be enough ;)
@@ -280,6 +289,37 @@ namespace LunaClient.Systems.VesselPositionSys
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, lerpPercentage);
 
             Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, lerpBody, lerpTime);
+        }
+
+        private void ApplyOrbitWithoutInterpolation()
+        {
+            //Inclination must be a positive degreee value between 0 and 180
+            var inclination = Target.Orbit[0];
+            //Ecc must be a positive number > 0
+            var eccentricity = Target.Orbit[1];
+            //Sma can be any number
+            var semiMajorAxis = Target.Orbit[2];
+            //Long ascendin node (LAN) must be a positive deg value between 0 and 360 (defines the Y axis of the orbit)
+            var lan = Target.Orbit[3];
+            //Arg of periapsis (LPE) must be a positive deg value between 0 and 360 (defines the X axis of the orbit)
+            var argPeriapsis = Target.Orbit[4];
+            //MNA must be a rad between -pi and pi (defines position of vessel in the orbit) //CAUTION! sometimes on escape orbits the MNA take strange values!
+            var meanAnomalyEpoch = Target.Orbit[5];
+            //Epoch is just the game time
+            var epoch = Target.Orbit[6];
+
+            //Do not set the body explicitely!! Don't do ---> Vessel.orbitDriver.referenceBody = Body;
+            Vessel.orbitDriver.orbit.SetOrbit
+            (
+                inclination,
+                eccentricity,
+                semiMajorAxis,
+                lan,
+                argPeriapsis,
+                meanAnomalyEpoch,
+                epoch,
+                Target.Body
+            );
         }
 
         /// <summary>

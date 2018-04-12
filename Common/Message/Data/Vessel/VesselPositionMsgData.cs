@@ -14,6 +14,7 @@ namespace LunaCommon.Message.Data.Vessel
         //Avoid using reference types in this message as it can generate allocations and is sent VERY often.
         public Guid VesselId;
         public int BodyIndex;
+        public bool ActiveVessel;
         public double[] LatLonAlt = new double[3];
         public double[] NormalVector = new double[3];
         public double[] Velocity = new double[3];
@@ -30,6 +31,7 @@ namespace LunaCommon.Message.Data.Vessel
 
             GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(BodyIndex);
+            lidgrenMsg.Write(ActiveVessel);
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(LatLonAlt[i]);
@@ -56,7 +58,8 @@ namespace LunaCommon.Message.Data.Vessel
 
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
             BodyIndex = lidgrenMsg.ReadInt32();
-            
+            ActiveVessel = lidgrenMsg.ReadBoolean();
+
             for (var i = 0; i < 3; i++)
                 LatLonAlt[i] = lidgrenMsg.ReadDouble();
             
@@ -79,7 +82,7 @@ namespace LunaCommon.Message.Data.Vessel
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 3 + 
-                sizeof(float) * 4 * 1 + sizeof(float) + sizeof(double);
+                sizeof(float) * 4 * 1 + sizeof(float) + sizeof(double) + sizeof(bool);
         }
     }
 }

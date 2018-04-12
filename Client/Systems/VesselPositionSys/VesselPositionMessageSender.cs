@@ -64,6 +64,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 msgData.VesselId = vessel.id;
                 msgData.BodyIndex = vessel.mainBody.flightGlobalsIndex;
+                msgData.ActiveVessel = FlightGlobals.ActiveVessel?.id == vessel.id;
 
                 SetSrfRelRotation(vessel, msgData);
                 SetVelocity(vessel, msgData);

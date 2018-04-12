@@ -199,13 +199,6 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public static void UpdateSecondaryVesselValues(Vessel vessel)
         {
-            if(SettingsSystem.CurrentSettings.Debug1)
-                vessel.orbitDriver?.updateFromParameters();
-            if (SettingsSystem.CurrentSettings.Debug2)
-                vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, Planetarium.GetUniversalTime());
-            if (SettingsSystem.CurrentSettings.Debug3)
-                vessel.orbitDriver?.updateFromParameters();
-
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)
             {
