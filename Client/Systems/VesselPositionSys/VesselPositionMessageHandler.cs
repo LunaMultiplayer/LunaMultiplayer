@@ -4,6 +4,7 @@ using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
 
@@ -47,7 +48,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 VesselId = msgData.VesselId,
                 BodyIndex = msgData.BodyIndex,
                 HeightFromTerrain = msgData.HeightFromTerrain,
-                GameTimeStamp = msgData.GameTime
+                GameTimeStamp = msgData.GameTime,
+                ReceiveTime = LunaTime.UtcNow
             };
 
             Array.Copy(msgData.SrfRelRotation, update.SrfRelRotation, 4);

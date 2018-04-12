@@ -20,7 +20,6 @@ namespace LunaCommon.Message.Data.Vessel
         public double[] Orbit = new double[8];
         public float[] SrfRelRotation = new float[4];
         public float HeightFromTerrain;
-        public long TimeStamp;
         public double GameTime;
 
         public override string ClassName { get; } = nameof(VesselPositionMsgData);
@@ -82,7 +81,7 @@ namespace LunaCommon.Message.Data.Vessel
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 3 + 
-                sizeof(float) * 4 * 1 + sizeof(float) + sizeof(long) + sizeof(double);
+                sizeof(float) * 4 * 1 + sizeof(float) + sizeof(double);
         }
     }
 }

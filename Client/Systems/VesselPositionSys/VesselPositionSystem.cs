@@ -203,7 +203,9 @@ namespace LunaClient.Systems.VesselPositionSys
                 vessel.orbitDriver?.updateFromParameters();
             if (SettingsSystem.CurrentSettings.Debug2)
                 vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, Planetarium.GetUniversalTime());
-            
+            if (SettingsSystem.CurrentSettings.Debug3)
+                vessel.orbitDriver?.updateFromParameters();
+
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)
             {

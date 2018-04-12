@@ -41,6 +41,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public float[] SrfRelRotation { get; set; } = new float[4];
         public float HeightFromTerrain { get; set; }
         public double GameTimeStamp { get; set; }
+        public DateTime ReceiveTime { get; set; }
 
         #endregion
 
@@ -49,13 +50,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public Quaternion SurfaceRelRotation => new Quaternion(SrfRelRotation[0], SrfRelRotation[1], SrfRelRotation[2], SrfRelRotation[3]);
         public Vector3 Normal => new Vector3d(NormalVector[0], NormalVector[1], NormalVector[2]);
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
-
-        private Orbit _kspOrbit;
-        public Orbit KspOrbit
-        {
-            get => _kspOrbit ?? (_kspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body));
-            set => _kspOrbit = value;
-        }
+        public Orbit KspOrbit { get; set; }
 
         #endregion
 
@@ -107,17 +102,36 @@ namespace LunaClient.Systems.VesselPositionSys
 
                     Target = targetUpdate;
 
-                    if (VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Count <= 1)
-                        GameTimeStamp -= InterpolationDuration * 0.25;
+                    //This part increases the lerping time or decreasesit depending the amount of messages we have in the queue
+                    switch (VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Count)
+                    {
+                        case 0:
+                            GameTimeStamp -= InterpolationDuration * 0.75;
+                            break;
+                        case 1:
+                            GameTimeStamp -= InterpolationDuration * 0.25;
+                            break;
+                        case 2:
+                        case 3:
+                            break;
+                        case 4:
+                            GameTimeStamp += InterpolationDuration * 0.15;
+                            break;
+                        case 5:
+                            GameTimeStamp += InterpolationDuration * 0.50;
+                            break;
+                    }
 
-                    if (VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Count >= VesselPositionSystem.MaxQueuedUpdates)
-                        GameTimeStamp += InterpolationDuration * 0.25;
-                    
+
+                    Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
+                        Target.Orbit[4], Target.Orbit[5], Planetarium.GetUniversalTime() + InterpolationDuration, Target.Body);
+
                     UpdateProtoVesselValues();
                 }
                 else
                 {
                     //No updates in queue so return!
+                    LunaLog.LogError("NO UPDATE");
                     return;
                 }
             }
@@ -254,7 +268,7 @@ namespace LunaClient.Systems.VesselPositionSys
         private void ApplyOrbitInterpolation(float lerpPercentage)
         {
             var lerpBody = LerpPercentage < 0.5 ? GetBody(BodyIndex) : GetBody(Target.BodyIndex);
-            var lerpTime = LunaMath.Lerp(GameTimeStamp, Target.GameTimeStamp, lerpPercentage);
+            var lerpTime = Planetarium.GetUniversalTime();
 
             var currentPos = (KspOrbit.getTruePositionAtUT(lerpTime) - Body.getTruePositionAtUT(lerpTime)).xzy;
             var targetPos = (Target.KspOrbit.getTruePositionAtUT(lerpTime) - Target.Body.getTruePositionAtUT(lerpTime)).xzy;
@@ -302,7 +316,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Orbit[6] = Vessel.orbit.epoch;
             Orbit[7] = Vessel.orbit.referenceBody.flightGlobalsIndex;
 
-            KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
+            KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Planetarium.GetUniversalTime(), Body);
 
             HeightFromTerrain = Vessel.heightFromTerrain;
         }
