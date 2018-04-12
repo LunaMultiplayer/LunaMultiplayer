@@ -162,17 +162,10 @@ namespace LunaClient.Windows.Debug
 
                 if (_displayInterpolationData)
                 {
-                    if (SettingsSystem.CurrentSettings.InterpolationEnabled)
+                    StringBuilder.Append("Max queue length: ").AppendLine(VesselPositionSystem.MaxQueuedUpdates.ToString());
+                    foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
                     {
-                        StringBuilder.Append("Max queue length: ").AppendLine(VesselPositionSystem.MaxQueuedUpdates.ToString());
-                        foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
-                        {
-                            StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
-                        }
-                    }
-                    else
-                    {
-                        StringBuilder.AppendLine("You need to have interpolation enabled to display data about this system");
+                        StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
                     }
 
                     _interpolationText = StringBuilder.ToString();

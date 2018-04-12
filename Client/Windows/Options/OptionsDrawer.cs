@@ -60,14 +60,6 @@ namespace LunaClient.Windows.Options
             }
             GUILayout.EndHorizontal();
             GUILayout.Space(10);
-            var settingInterpolation = GUILayout.Toggle(SettingsSystem.CurrentSettings.InterpolationEnabled, LocalizationContainer.OptionsWindowText.Interpolation, ButtonStyle);
-            if (settingInterpolation != SettingsSystem.CurrentSettings.InterpolationEnabled)
-            {
-                SettingsSystem.CurrentSettings.InterpolationEnabled = settingInterpolation;
-                SettingsSystem.SaveSettings();
-                VesselPositionSystem.Singleton.SwitchPositioningSystem();
-            }
-            GUILayout.Space(10);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
                 ModSystem.Singleton.GenerateModControlFile(false);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl + " + SHA"))

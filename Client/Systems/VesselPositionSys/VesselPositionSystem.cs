@@ -33,10 +33,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public static ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } =
             new ConcurrentDictionary<Guid, VesselPositionUpdate>();
-
-        public static ConcurrentDictionary<Guid, VesselPositionUpdate> TargetVesselUpdate { get; } =
-            new ConcurrentDictionary<Guid, VesselPositionUpdate>();
-
+        
         public static ConcurrentDictionary<Guid, FixedSizedConcurrentQueue<VesselPositionUpdate>> TargetVesselUpdateQueue { get; } =
             new ConcurrentDictionary<Guid, FixedSizedConcurrentQueue<VesselPositionUpdate>>();
 
@@ -60,17 +57,14 @@ namespace LunaClient.Systems.VesselPositionSys
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
-                RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval,
-                RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             CurrentVesselUpdate.Clear();
-            TargetVesselUpdate.Clear();
             TargetVesselUpdateQueue.Clear();
 
             TimingManager.UpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
@@ -85,17 +79,13 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 if (!VesselCommon.DoVesselChecks(keyVal.Key))
                     RemoveVesselFromSystem(keyVal.Key);
-
-                if(SettingsSystem.CurrentSettings.InterpolationEnabled)
-                    keyVal.Value.ApplyInterpolatedVesselUpdate();
-                else
-                    keyVal.Value.ApplyVesselUpdate();
+                
+                keyVal.Value.ApplyInterpolatedVesselUpdate();
             }
 
             while (VesselsToRemove.Count > 0)
             {
                 var vesselToRemove = VesselsToRemove.Dequeue();
-                TargetVesselUpdate.TryRemove(vesselToRemove, out _);
                 CurrentVesselUpdate.TryRemove(vesselToRemove, out _);
                 TargetVesselUpdateQueue.TryRemove(vesselToRemove, out _);
             }
@@ -161,41 +151,17 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Public methods
-
-        public void SwitchPositioningSystem()
-        {
-            foreach (var keyVal in CurrentVesselUpdate)
-            {
-                keyVal.Value.SetTarget(null);
-                if (!SettingsSystem.CurrentSettings.InterpolationEnabled)
-                {
-                    TargetVesselUpdateQueue[keyVal.Key] = new FixedSizedConcurrentQueue<VesselPositionUpdate>(MaxQueuedUpdates);
-                }
-            }
-        }
-
+        
         /// <summary>
         /// Gets the latest received position of a vessel
         /// </summary>
         public double[] GetLatestVesselPosition(Guid vesselId)
         {
-            return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ?
-                vesselPosition.LatLonAlt :
-                CurrentVesselUpdate.TryGetValue(vesselId, out vesselPosition) ?
-                    vesselPosition.LatLonAlt :
-                    null;
-        }
-
-        /// <summary>
-        /// Gets the latest received ref body of a vessel
-        /// </summary>
-        public int GetLatestVesselRefBody(Guid vesselId)
-        {
-            return TargetVesselUpdate.TryGetValue(vesselId, out var vesselPosition) ?
-                vesselPosition.BodyIndex :
-                CurrentVesselUpdate.TryGetValue(vesselId, out vesselPosition) ?
-                    vesselPosition.BodyIndex :
-                    int.MinValue;
+            return TargetVesselUpdateQueue.TryGetValue(vesselId, out var vesselPositionQueue) ? 
+                vesselPositionQueue.TryPeek(out var vesselPos) ? vesselPos.LatLonAlt :
+                CurrentVesselUpdate.TryGetValue(vesselId, out vesselPos) ?
+                    vesselPos.LatLonAlt :
+                    null : null;
         }
 
         /// <summary>
@@ -233,6 +199,11 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public static void UpdateSecondaryVesselValues(Vessel vessel)
         {
+            if(SettingsSystem.CurrentSettings.Debug1)
+                vessel.orbitDriver?.updateFromParameters();
+            if (SettingsSystem.CurrentSettings.Debug2)
+                vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, Planetarium.GetUniversalTime());
+            
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)
             {

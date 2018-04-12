@@ -201,7 +201,6 @@
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageSender.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncSystem.cs" />
-    <Compile Include="Systems\VesselPositionSys\MessageToPositionTransfer.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
