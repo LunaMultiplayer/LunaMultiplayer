@@ -63,15 +63,19 @@ namespace LunaClient.Windows.Options
             var settingOrbitVectors = GUILayout.Toggle(SettingsSystem.CurrentSettings.UseVectorsForOrbits, "Use vectors for orbit positioning", ButtonStyle);
             if (settingOrbitVectors != SettingsSystem.CurrentSettings.UseVectorsForOrbits)
             {
+                if (!settingOrbitVectors)
+                    SettingsSystem.CurrentSettings.UseInterpolation = false;
                 SettingsSystem.CurrentSettings.UseVectorsForOrbits = settingOrbitVectors;
                 SettingsSystem.SaveSettings();
             }
+            GUI.enabled = SettingsSystem.CurrentSettings.UseVectorsForOrbits;
             var settingInterpolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.UseInterpolation, "Use interpolation", ButtonStyle);
-            if (settingOrbitVectors != SettingsSystem.CurrentSettings.UseInterpolation)
+            if (settingInterpolator != SettingsSystem.CurrentSettings.UseInterpolation)
             {
                 SettingsSystem.CurrentSettings.UseInterpolation = settingInterpolator;
                 SettingsSystem.SaveSettings();
             }
+            GUI.enabled = true;
             GUILayout.Space(10);
 
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
