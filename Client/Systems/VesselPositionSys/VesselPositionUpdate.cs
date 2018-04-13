@@ -131,8 +131,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
                 else
                 {
-                    //No position to interpolate to so return
-                    return;
+                    //No position to interpolate and no target at all so return (this happens when we start interpolating and we only received 1 packet
+                    if (Target == null) return;
                 }
             }
 
@@ -325,38 +325,55 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void ProcessRestart()
         {
-            BodyIndex = Vessel.mainBody.flightGlobalsIndex;
+            if (Target != null)
+            {
+                BodyIndex = Target.BodyIndex;
+                Array.Copy(Target.SrfRelRotation, SrfRelRotation, 4);
+                Array.Copy(Target.Velocity, Velocity, 3);
+                Array.Copy(Target.LatLonAlt, LatLonAlt, 3);
+                Array.Copy(Target.NormalVector, NormalVector, 3);
+                Array.Copy(Target.Orbit, Orbit, 8);
 
-            SrfRelRotation[0] = Vessel.srfRelRotation.x;
-            SrfRelRotation[1] = Vessel.srfRelRotation.y;
-            SrfRelRotation[2] = Vessel.srfRelRotation.z;
-            SrfRelRotation[3] = Vessel.srfRelRotation.w;
+                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Planetarium.GetUniversalTime(), Body);
 
-            Vector3d srfVel = Quaternion.Inverse(Body.bodyTransform.rotation) * Vessel.srf_velocity;
-            Velocity[0] = srfVel.x;
-            Velocity[1] = srfVel.y;
-            Velocity[2] = srfVel.z;
+                HeightFromTerrain = Target.HeightFromTerrain;
+            }
+            else
+            {
+                BodyIndex = Vessel.mainBody.flightGlobalsIndex;
 
-            LatLonAlt[0] = Vessel.latitude;
-            LatLonAlt[1] = Vessel.longitude;
-            LatLonAlt[2] = Vessel.altitude;
+                SrfRelRotation[0] = Vessel.srfRelRotation.x;
+                SrfRelRotation[1] = Vessel.srfRelRotation.y;
+                SrfRelRotation[2] = Vessel.srfRelRotation.z;
+                SrfRelRotation[3] = Vessel.srfRelRotation.w;
 
-            NormalVector[0] = Vessel.terrainNormal.x;
-            NormalVector[1] = Vessel.terrainNormal.y;
-            NormalVector[2] = Vessel.terrainNormal.z;
+                Vector3d srfVel = Quaternion.Inverse(Body.bodyTransform.rotation) * Vessel.srf_velocity;
+                Velocity[0] = srfVel.x;
+                Velocity[1] = srfVel.y;
+                Velocity[2] = srfVel.z;
 
-            Orbit[0] = Vessel.orbit.inclination;
-            Orbit[1] = Vessel.orbit.eccentricity;
-            Orbit[2] = Vessel.orbit.semiMajorAxis;
-            Orbit[3] = Vessel.orbit.LAN;
-            Orbit[4] = Vessel.orbit.argumentOfPeriapsis;
-            Orbit[5] = Vessel.orbit.meanAnomalyAtEpoch;
-            Orbit[6] = Vessel.orbit.epoch;
-            Orbit[7] = Vessel.orbit.referenceBody.flightGlobalsIndex;
+                LatLonAlt[0] = Vessel.latitude;
+                LatLonAlt[1] = Vessel.longitude;
+                LatLonAlt[2] = Vessel.altitude;
 
-            KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Planetarium.GetUniversalTime(), Body);
+                NormalVector[0] = Vessel.terrainNormal.x;
+                NormalVector[1] = Vessel.terrainNormal.y;
+                NormalVector[2] = Vessel.terrainNormal.z;
 
-            HeightFromTerrain = Vessel.heightFromTerrain;
+                Orbit[0] = Vessel.orbit.inclination;
+                Orbit[1] = Vessel.orbit.eccentricity;
+                Orbit[2] = Vessel.orbit.semiMajorAxis;
+                Orbit[3] = Vessel.orbit.LAN;
+                Orbit[4] = Vessel.orbit.argumentOfPeriapsis;
+                Orbit[5] = Vessel.orbit.meanAnomalyAtEpoch;
+                Orbit[6] = Vessel.orbit.epoch;
+                Orbit[7] = Vessel.orbit.referenceBody.flightGlobalsIndex;
+
+                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5],
+                    Planetarium.GetUniversalTime(), Body);
+
+                HeightFromTerrain = Vessel.heightFromTerrain;
+            }
         }
 
         #region Helper methods

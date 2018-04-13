@@ -199,12 +199,6 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public static void UpdateSecondaryVesselValues(Vessel vessel)
         {
-            var orbitPos = (vessel.orbit.getTruePositionAtUT(Planetarium.GetUniversalTime()) - vessel.mainBody.getTruePositionAtUT(Planetarium.GetUniversalTime())).xzy;
-            var orbitVel = vessel.orbit.getOrbitalVelocityAtUT(Planetarium.GetUniversalTime()) + vessel.orbit.referenceBody.GetFrameVelAtUT(Planetarium.GetUniversalTime()) -
-                           vessel.mainBody.GetFrameVelAtUT(Planetarium.GetUniversalTime());
-
-            //vessel.orbitDriver.orbit.UpdateFromStateVectors(orbitPos, orbitVel, vessel.mainBody, Planetarium.GetUniversalTime());
-
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)
             {
@@ -219,8 +213,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
             vessel.UpdatePosVel();
             vessel.precalc.CalculatePhysicsStats();
-
-            //vessel.orbitDriver.updateFromParameters();
         }
 
         #endregion
