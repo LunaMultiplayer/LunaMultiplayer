@@ -201,11 +201,10 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (Vessel.LandedOrSplashed)
             {
-                LerpBody.GetLatLonAlt(Vessel.vesselTransform.position, out Vessel.latitude, out Vessel.longitude, out Vessel.altitude);
-
                 Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
                 Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
                 Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
+
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
 
