@@ -124,6 +124,9 @@ namespace Server.Settings.Definition
                             "Values: Dictionary, DataBase")]
         public RelaySystemMode RelaySystemMode { get; set; } = RelaySystemMode.Dictionary;
 
+        [XmlComment(Value = "Interval for saving position updates so they are later sent to players in the past. Lower number => smoother movement but more memory required")]
+        public int RelaySaveIntervalMs { get; set; } = 1000;
+
         [XmlComment(Value = "Send/Receive tick clock")]
         public int SendReceiveThreadTickMs { get; set; } = 5;
 
