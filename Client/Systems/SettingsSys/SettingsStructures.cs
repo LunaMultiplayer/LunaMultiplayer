@@ -24,8 +24,8 @@ namespace LunaClient.Systems.SettingsSys
         public bool RevertEnabled { get; set; }
         public int MaxGroupsPerPlayer { get; set; } = 1;
         public bool OverrideIntegrator { get; set; }
-        public bool UseVectorsForOrbits { get; set; }
-        public bool UseInterpolation { get; set; }
+        public bool UseVectorsForOrbits { get; set; } = true;
+        public bool UseInterpolation { get; set; } = true;
 
 #if DEBUG
 
