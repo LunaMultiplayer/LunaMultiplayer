@@ -220,10 +220,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
-            if (SettingsSystem.CurrentSettings.UseVectorsForOrbits)
-                ApplyOrbitInterpolation();
-            else
-                ApplyOrbitWithoutInterpolation();
+            ApplyOrbitInterpolation();
 
             //Do not use CoM. It's not needed and it generate issues when you patch the protovessel with it as it generate weird commnet lines
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
@@ -261,7 +258,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
-            ApplyOrbitWithoutInterpolation();
+            ApplyOrbitInterpolation();
             Vessel.orbitDriver.updateFromParameters();
 
             //We don't do the surface positioning as with vessels because kerbals don't walk at high speeds and with this code it will be enough ;)
@@ -283,37 +280,6 @@ namespace LunaClient.Systems.VesselPositionSys
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, LerpPercentage);
 
             Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, lerpTime);
-        }
-
-        private void ApplyOrbitWithoutInterpolation()
-        {
-            //Inclination must be a positive degreee value between 0 and 180
-            var inclination = Target.Orbit[0];
-            //Ecc must be a positive number > 0
-            var eccentricity = Target.Orbit[1];
-            //Sma can be any number
-            var semiMajorAxis = Target.Orbit[2];
-            //Long ascendin node (LAN) must be a positive deg value between 0 and 360 (defines the Y axis of the orbit)
-            var lan = Target.Orbit[3];
-            //Arg of periapsis (LPE) must be a positive deg value between 0 and 360 (defines the X axis of the orbit)
-            var argPeriapsis = Target.Orbit[4];
-            //MNA must be a rad between -pi and pi (defines position of vessel in the orbit) //CAUTION! sometimes on escape orbits the MNA take strange values!
-            var meanAnomalyEpoch = Target.Orbit[5];
-            //Epoch is just the game time
-            var epoch = Target.Orbit[6];
-
-            //Do not set the body explicitely!! Don't do ---> Vessel.orbitDriver.referenceBody = Body;
-            Vessel.orbitDriver.orbit.SetOrbit
-            (
-                inclination,
-                eccentricity,
-                semiMajorAxis,
-                lan,
-                argPeriapsis,
-                meanAnomalyEpoch,
-                epoch,
-                Target.Body
-            );
         }
 
         /// <summary>
