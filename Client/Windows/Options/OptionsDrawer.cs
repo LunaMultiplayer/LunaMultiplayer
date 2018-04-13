@@ -3,7 +3,6 @@ using LunaClient.Network;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Windows.Status;
 using LunaCommon.Enums;
 using LunaCommon.Time;
@@ -59,7 +58,22 @@ namespace LunaClient.Windows.Options
                     PlayerColorSystem.Singleton.MessageSender.SendPlayerColorToServer();
             }
             GUILayout.EndHorizontal();
+
             GUILayout.Space(10);
+            var settingOrbitVectors = GUILayout.Toggle(SettingsSystem.CurrentSettings.UseVectorsForOrbits, "Use vectors for orbit positioning", ButtonStyle);
+            if (settingOrbitVectors != SettingsSystem.CurrentSettings.UseVectorsForOrbits)
+            {
+                SettingsSystem.CurrentSettings.UseVectorsForOrbits = settingOrbitVectors;
+                SettingsSystem.SaveSettings();
+            }
+            var settingInterpolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.UseInterpolation, "Use vectors for orbit positioning", ButtonStyle);
+            if (settingOrbitVectors != SettingsSystem.CurrentSettings.UseInterpolation)
+            {
+                SettingsSystem.CurrentSettings.UseInterpolation = settingInterpolator;
+                SettingsSystem.SaveSettings();
+            }
+            GUILayout.Space(10);
+
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
                 ModSystem.Singleton.GenerateModControlFile(false);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl + " + SHA"))

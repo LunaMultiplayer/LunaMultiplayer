@@ -64,7 +64,7 @@ namespace LunaClient.Systems.VesselPositionSys
         private float _lerpPercentage = 1;
         public float LerpPercentage
         {
-            get => Mathf.Clamp01(_lerpPercentage);
+            get => SettingsSystem.CurrentSettings.UseInterpolation ? _lerpPercentage : 1;
             set => _lerpPercentage = value;
         }
 
@@ -73,7 +73,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Main method
-        
+
         /// <summary>
         /// Call this method to apply a vessel update using interpolation
         /// </summary>
@@ -85,56 +85,50 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
-            if (InterpolationFinished)
+            if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue[VesselId].TryDequeue(out var targetUpdate))
             {
-                if (VesselPositionSystem.TargetVesselUpdateQueue[VesselId].TryDequeue(out var targetUpdate))
+                ProcessRestart();
+                LerpPercentage = 0;
+
+                if (Target == null)
                 {
-                    ProcessRestart();
-                    LerpPercentage = 0;
-
-                    if (Target == null)
-                    {
-                        //We are in the first iteration of the interpolation (we just started to apply vessel updates)
-                        GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
-                    }
-                    else
-                    {
-                        GameTimeStamp = Target.GameTimeStamp;
-                    }
-
-                    Target = targetUpdate;
-
-                    //This part increases the lerping time or decreasesit depending the amount of messages we have in the queue
-                    switch (VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Count)
-                    {
-                        case 0:
-                            GameTimeStamp -= InterpolationDuration * 0.75;
-                            break;
-                        case 1:
-                            GameTimeStamp -= InterpolationDuration * 0.25;
-                            break;
-                        case 2:
-                        case 3:
-                            break;
-                        case 4:
-                            GameTimeStamp += InterpolationDuration * 0.25;
-                            break;
-                        case 5:
-                            GameTimeStamp += InterpolationDuration * 0.60;
-                            break;
-                    }
-
-                    Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
-                        Target.Orbit[4], Target.Orbit[5], Planetarium.GetUniversalTime() + InterpolationDuration, Target.Body);
-
-                    UpdateProtoVesselValues();
+                    //We are in the first iteration of the interpolation (we just started to apply vessel updates)
+                    GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
                 }
                 else
                 {
-                    //No position to interpolate and no target at all so return (this happens when we start interpolating and we only received 1 packet
-                    if (Target == null) return;
+                    GameTimeStamp = Target.GameTimeStamp;
                 }
+
+                Target = targetUpdate;
+
+                //This part increases the lerping time or decreasesit depending the amount of messages we have in the queue
+                switch (VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Count)
+                {
+                    case 0:
+                        GameTimeStamp -= InterpolationDuration * 0.75;
+                        break;
+                    case 1:
+                        GameTimeStamp -= InterpolationDuration * 0.25;
+                        break;
+                    case 2:
+                    case 3:
+                        break;
+                    case 4:
+                        GameTimeStamp += InterpolationDuration * 0.25;
+                        break;
+                    case 5:
+                        GameTimeStamp += InterpolationDuration * 0.60;
+                        break;
+                }
+
+                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
+                    Target.Orbit[4], Target.Orbit[5], Planetarium.GetUniversalTime() + InterpolationDuration, Target.Body);
+
+                UpdateProtoVesselValues();
             }
+
+            if (Target == null) return;
 
             try
             {
@@ -226,7 +220,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
-            ApplyOrbitInterpolation();
+            if (SettingsSystem.CurrentSettings.UseVectorsForOrbits)
+                ApplyOrbitInterpolation();
+            else
+                ApplyOrbitWithoutInterpolation();
 
             //Do not use CoM. It's not needed and it generate issues when you patch the protovessel with it as it generate weird commnet lines
             //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
@@ -333,8 +330,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 Array.Copy(Target.NormalVector, NormalVector, 3);
                 Array.Copy(Target.Orbit, Orbit, 8);
 
-                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Planetarium.GetUniversalTime(), Body);
-
                 HeightFromTerrain = Target.HeightFromTerrain;
             }
             else
@@ -368,11 +363,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 Orbit[6] = Vessel.orbit.epoch;
                 Orbit[7] = Vessel.orbit.referenceBody.flightGlobalsIndex;
 
-                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5],
-                    Planetarium.GetUniversalTime(), Body);
-
                 HeightFromTerrain = Vessel.heightFromTerrain;
             }
+
+            KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Planetarium.GetUniversalTime(), Body);
         }
 
         #region Helper methods
