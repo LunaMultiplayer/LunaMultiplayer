@@ -54,8 +54,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public Vector3d VelocityVector => new Vector3d(Velocity[0], Velocity[1], Velocity[2]);
         public Orbit KspOrbit { get; set; }
 
-        public double StartTime { get; set; }
-
         #endregion
 
         #region Interpolation fields
@@ -125,7 +123,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 }
 
                 Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
-                    Target.Orbit[4], Target.Orbit[5], Planetarium.GetUniversalTime() + InterpolationDuration, Target.Body);
+                    Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
 
                 UpdateProtoVesselValues();
             }
@@ -273,18 +271,18 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyOrbitInterpolation()
         {
-            var endTime = StartTime + InterpolationDuration;
+            var lerpTime = LunaMath.Lerp(Orbit[6], Target.Orbit[6], LerpPercentage);
 
-            var currentPos = KspOrbit.getRelativePositionAtUT(StartTime);
-            var targetPos = Target.KspOrbit.getRelativePositionAtUT(endTime);
+            var currentPos = KspOrbit.getRelativePositionAtUT(Orbit[6]);
+            var targetPos = Target.KspOrbit.getRelativePositionAtUT(Target.Orbit[6]);
 
-            var currentVel = KspOrbit.getOrbitalVelocityAtUT(StartTime) + KspOrbit.referenceBody.GetFrameVelAtUT(StartTime) - Body.GetFrameVelAtUT(StartTime);
-            var targetVel = Target.KspOrbit.getOrbitalVelocityAtUT(endTime) + Target.KspOrbit.referenceBody.GetFrameVelAtUT(endTime) - Target.Body.GetFrameVelAtUT(endTime);
+            var currentVel = KspOrbit.getOrbitalVelocityAtUT(Orbit[6]) + KspOrbit.referenceBody.GetFrameVelAtUT(Orbit[6]) - Body.GetFrameVelAtUT(Orbit[6]);
+            var targetVel = Target.KspOrbit.getOrbitalVelocityAtUT(Target.Orbit[6]) + Target.KspOrbit.referenceBody.GetFrameVelAtUT(Target.Orbit[6]) - Target.Body.GetFrameVelAtUT(Target.Orbit[6]);
 
             var lerpedPos = Vector3d.Lerp(currentPos, targetPos, LerpPercentage);
             var lerpedVel = Vector3d.Lerp(currentVel, targetVel, LerpPercentage);
 
-            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, Planetarium.GetUniversalTime());
+            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, lerpTime);
         }
 
         private void ApplyOrbitWithoutInterpolation()
@@ -368,8 +366,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 HeightFromTerrain = Vessel.heightFromTerrain;
             }
 
-            StartTime = Planetarium.GetUniversalTime();
-            KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Planetarium.GetUniversalTime(), Body);
+            KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
         }
 
         #region Helper methods
