@@ -1,4 +1,4 @@
-using LunaClient.Base;
+﻿using LunaClient.Base;
 using LunaClient.Network;
 using LunaCommon.Enums;
 using System.Text;
@@ -14,11 +14,8 @@ namespace LunaClient.Systems.SettingsSys
 
         public override string SystemName { get; } = nameof(SettingsSystem);
 
-        static SettingsSystem()
-        {
-            CurrentSettings = SettingsReadSaveHandler.ReadSettings();
-        }
-
+        static SettingsSystem() => CurrentSettings = SettingsReadSaveHandler.ReadSettings();
+        
         protected override void OnDisabled()
         {
             base.OnDisabled();

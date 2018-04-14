@@ -60,14 +60,12 @@
         {
             base.OnEnabled();
             GameEvents.onVesselPrecalcAssign.Add(VesselPrecalcEvents.OnVesselPrecalcAssign);
-            GameEvents.onVesselLoaded.Add(VesselPrecalcEvents.VesselLoaded);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
             GameEvents.onVesselPrecalcAssign.Remove(VesselPrecalcEvents.OnVesselPrecalcAssign);
-            GameEvents.onVesselLoaded.Remove(VesselPrecalcEvents.VesselLoaded);
         }
 
         #endregion

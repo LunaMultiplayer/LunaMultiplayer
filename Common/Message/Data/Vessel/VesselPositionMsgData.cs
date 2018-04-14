@@ -16,14 +16,10 @@ namespace LunaCommon.Message.Data.Vessel
         public int BodyIndex;
         public double[] LatLonAlt = new double[3];
         public double[] NormalVector = new double[3];
-        public double[] TransformPosition = new double[3];
         public double[] Velocity = new double[3];
-        public double[] OrbitPos = new double[3];
-        public double[] OrbitVel = new double[3];
         public double[] Orbit = new double[8];
         public float[] SrfRelRotation = new float[4];
         public float HeightFromTerrain;
-        public long TimeStamp;
         public double GameTime;
 
         public override string ClassName { get; } = nameof(VesselPositionMsgData);
@@ -42,16 +38,7 @@ namespace LunaCommon.Message.Data.Vessel
                 lidgrenMsg.Write(NormalVector[i]);
 
             for (var i = 0; i < 3; i++)
-                lidgrenMsg.Write(TransformPosition[i]);
-
-            for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(Velocity[i]);
-
-            for (var i = 0; i < 3; i++)
-                lidgrenMsg.Write(OrbitPos[i]);
-
-            for (var i = 0; i < 3; i++)
-                lidgrenMsg.Write(OrbitVel[i]);
 
             for (var i = 0; i < 8; i++)
                 lidgrenMsg.Write(Orbit[i]);
@@ -60,7 +47,6 @@ namespace LunaCommon.Message.Data.Vessel
                 lidgrenMsg.Write(SrfRelRotation[i]);
 
             lidgrenMsg.Write(HeightFromTerrain);
-            lidgrenMsg.Write(TimeStamp);
             lidgrenMsg.Write(GameTime);
         }
 
@@ -70,24 +56,15 @@ namespace LunaCommon.Message.Data.Vessel
 
             VesselId = GuidUtil.Deserialize(lidgrenMsg);
             BodyIndex = lidgrenMsg.ReadInt32();
-            
+
             for (var i = 0; i < 3; i++)
                 LatLonAlt[i] = lidgrenMsg.ReadDouble();
             
             for (var i = 0; i < 3; i++)
                 NormalVector[i] = lidgrenMsg.ReadDouble();
-
-            for (var i = 0; i < 3; i++)
-                TransformPosition[i] = lidgrenMsg.ReadDouble();
             
             for (var i = 0; i < 3; i++)
                 Velocity[i] = lidgrenMsg.ReadDouble();
-
-            for (var i = 0; i < 3; i++)
-                OrbitPos[i] = lidgrenMsg.ReadDouble();
-
-            for (var i = 0; i < 3; i++)
-                OrbitVel[i] = lidgrenMsg.ReadDouble();
 
             for (var i = 0; i < 8; i++)
                 Orbit[i] = lidgrenMsg.ReadDouble();
@@ -96,14 +73,13 @@ namespace LunaCommon.Message.Data.Vessel
                 SrfRelRotation[i] = lidgrenMsg.ReadFloat();
 
             HeightFromTerrain = lidgrenMsg.ReadFloat();
-            TimeStamp = lidgrenMsg.ReadInt64();
             GameTime = lidgrenMsg.ReadDouble();
         }
         
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 6 + 
-                sizeof(float) * 4 * 1 + sizeof(float) + sizeof(long) + sizeof(double);
+            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + sizeof(double) * 3 * 3 + 
+                sizeof(float) * 4 * 1 + sizeof(float) + sizeof(double);
         }
     }
 }

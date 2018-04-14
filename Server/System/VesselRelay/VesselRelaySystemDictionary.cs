@@ -40,6 +40,8 @@ namespace Server.System.VesselRelay
                     MessageQueuer.RelayMessageToSubspace<VesselSrvMsg>(client, msg, subspace);
             }
 
+            if (!VesselRelaySystem.ShouldStoreMessage(vesselId)) return;
+
             //In case the client is running in the future here we adjust the real sent time of the message
             msg.SentTime += WarpSystem.GetSubspaceTimeDifference(client.Subspace);
             foreach (var subspace in WarpSystem.GetPastSubspaces(client.Subspace))

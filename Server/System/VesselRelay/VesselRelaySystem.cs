@@ -3,6 +3,7 @@ using Server.Client;
 using Server.Enums;
 using Server.Settings;
 using System;
+using System.Collections.Concurrent;
 
 namespace Server.System.VesselRelay
 {
@@ -11,7 +12,25 @@ namespace Server.System.VesselRelay
     /// Based on a setting we either call the DatabaseRelaySystem or the DictionaryRelaySystem
     /// </summary>
     public static class VesselRelaySystem
-    {        
+    {
+        private static readonly ConcurrentDictionary<Guid, DateTime> TimeDictionary = new ConcurrentDictionary<Guid, DateTime>();
+
+        /// <summary>
+        /// Checks if we should save this vessel position message or not based on the RelaySaveIntervalMs setting
+        /// </summary>
+        /// <returns></returns>
+        public static bool ShouldStoreMessage(Guid vesselId)
+        {
+            var lastSavedTime = TimeDictionary.GetOrAdd(vesselId, DateTime.MinValue);
+            if (DateTime.Now - lastSavedTime > TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.RelaySaveIntervalMs))
+            {
+                TimeDictionary.TryUpdate(vesselId, DateTime.Now, lastSavedTime);
+                return true;
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// This method relays a message to the other clients in the same subspace.
         /// In case there are other players in OLDER subspaces it stores it in their queue for further processing
