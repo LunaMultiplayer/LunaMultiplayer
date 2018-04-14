@@ -80,6 +80,7 @@
     <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
     <Compile Include="Harmony\LaunchSiteClear_Test.cs" />
     <Compile Include="Harmony\KSCPauseMenu_QuickLoad.cs" />
+    <Compile Include="Harmony\Part_HandleCollision.cs" />
     <Compile Include="Harmony\QuickSaveLoad_QuickLoad.cs" />
     <Compile Include="Harmony\ProtoCrewMember_Die.cs" />
     <Compile Include="Harmony\ShipConstruction_FindVesselsLandedAt.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Harmony\VesselPrecalculate_MainPhysics.cs" />
     <Compile Include="Harmony\TimeWarp_setMode.cs" />
     <Compile Include="Harmony\TimeWarp_setRate.cs" />
+    <Compile Include="Harmony\Vessel_CheckKill.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ButtonTooltips.cs" />
@@ -227,7 +229,6 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\OutdatedVersionDialog.cs" />
-    <Compile Include="Systems\VesselPrecalcSys\LunaPrecalc.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
