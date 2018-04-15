@@ -1,4 +1,5 @@
 ﻿using CommNet;
+using KSP.UI.Screens;
 using LunaClient.Base;
 using LunaClient.Events;
 using LunaClient.Localization;
@@ -328,6 +329,12 @@ namespace LunaClient
             if (HighLogic.LoadedScene != GameScenes.MAINMENU)
                 HighLogic.LoadScene(GameScenes.MAINMENU);
             BodiesGees.Clear();
+
+            var craftBrowser = FindObjectOfType<CraftBrowserDialog>();
+            if (craftBrowser != null)
+            {
+                craftBrowser.Dismiss();
+            }
         }
 
         private static void HandleWindowEvents()
