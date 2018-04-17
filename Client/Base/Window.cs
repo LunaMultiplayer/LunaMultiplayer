@@ -97,7 +97,7 @@ namespace LunaClient.Base
 
         public virtual void AfterGui()
         {
-            if (DisplayTooltips && !string.IsNullOrEmpty(Tooltip)) GUI.Label(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, Tooltip.Length * 10, 20), Tooltip);
+            if (Display && DisplayTooltips && !string.IsNullOrEmpty(Tooltip)) GUI.Label(new Rect(Input.mousePosition.x, Screen.height - Input.mousePosition.y, Tooltip.Length * 10, 20), Tooltip);
         }
 
         public virtual void RemoveWindowLock()
