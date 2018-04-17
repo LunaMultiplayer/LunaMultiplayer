@@ -18,6 +18,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.ShareAchievements;
 using LunaClient.Systems.ShareContracts;
 using LunaClient.Systems.ShareFunds;
+using LunaClient.Systems.SharePurchaseParts;
 using LunaClient.Systems.ShareReputation;
 using LunaClient.Systems.ShareScience;
 using LunaClient.Systems.ShareStrategy;
@@ -239,6 +240,9 @@ namespace LunaClient.Network
                             break;
                         case ShareProgressMessageType.FacilityUpgrade:
                             ShareUpgradeableFacilitiesSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.PartPurchase:
+                            SharePurchasePartsSystem.Singleton.EnqueueMessage(msg);
                             break;
                     }
                     break;

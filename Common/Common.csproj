@@ -203,6 +203,7 @@
     <Compile Include="Message\Data\ShareProgress\ShareProgressStrategyMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressFacilityUpgradeMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressTechnologyMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressPartPurchaseMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\StrategyInfo.cs" />
     <Compile Include="Message\Data\ShareProgress\TechNodeInfo.cs" />
     <Compile Include="Message\Data\Vessel\ActionGroup.cs" />

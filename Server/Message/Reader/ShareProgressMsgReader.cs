@@ -38,6 +38,9 @@ namespace Server.Message.Reader
                 case ShareProgressMessageType.FacilityUpgrade:
                     ShareUpgradeableFacilitiesSystem.UpgradeReceived(client, (ShareProgressFacilityUpgradeMsgData)data);
                     break;
+                case ShareProgressMessageType.PartPurchase:
+                    SharePartPurchaseSystem.PurchaseReceived(client, (ShareProgressPartPurchaseMsgData)data);
+                    break;
             }
         }
     }

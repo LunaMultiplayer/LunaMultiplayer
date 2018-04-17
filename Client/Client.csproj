@@ -151,6 +151,10 @@
     <Compile Include="Systems\Screenshot\ScreenshotMessageSender.cs" />
     <Compile Include="Systems\Screenshot\ScreenshotSystem.cs" />
     <Compile Include="Systems\ShareProgress\ShareProgressBaseSystem.cs" />
+    <Compile Include="Systems\SharePurchaseParts\SharePurchasePartsEvents.cs" />
+    <Compile Include="Systems\SharePurchaseParts\SharePurchasePartsMessageHandler.cs" />
+    <Compile Include="Systems\SharePurchaseParts\SharePurchasePartsMessageSender.cs" />
+    <Compile Include="Systems\SharePurchaseParts\SharePurchasePartsSystem.cs" />
     <Compile Include="Systems\ShareReputation\ShareReputationEvents.cs" />
     <Compile Include="Systems\ShareReputation\ShareReputationMessageHandler.cs" />
     <Compile Include="Systems\ShareReputation\ShareReputationMessageSender.cs" />
