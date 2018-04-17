@@ -19,5 +19,10 @@ namespace uhttpsharp.Listeners
         {
             return new ClientSslDecorator(await _child.GetClient().ConfigureAwait(false), _certificate);
         }
+
+        public void Dispose()
+        {
+            _child?.Dispose();
+        }
     }
 }
