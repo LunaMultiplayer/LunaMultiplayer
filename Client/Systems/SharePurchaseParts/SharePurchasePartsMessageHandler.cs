@@ -23,7 +23,10 @@ namespace LunaClient.Systems.SharePurchaseParts
                 LunaLog.Log($"Queue PartPurchase with: {data.TechId} part {data.PartName}");
                 System.QueueAction(() =>
                 {
-                    PartPurchase(data.TechId, data.PartName);
+                    var techId = string.Copy(data.TechId);
+                    var partName = string.Copy(data.PartName);
+
+                    PartPurchase(techId, partName);
                 });
             }
         }
