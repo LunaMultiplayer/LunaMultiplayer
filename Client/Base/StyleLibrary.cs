@@ -148,7 +148,7 @@ namespace LunaClient.Base
                 LocalizationContainer.ButtonTooltips.DekesslerIcon);
             NukeBigIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "nukeBig.png"), 32, 32), 
                 LocalizationContainer.ButtonTooltips.NukeIcon);
-            RestartServerIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "restartserverBig.png"), 32, 32),
+            RestartServerIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "restartServerBig.png"), 32, 32),
                 LocalizationContainer.ButtonTooltips.RestartServerIcon);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
