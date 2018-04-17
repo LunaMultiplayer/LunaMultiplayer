@@ -48,6 +48,8 @@ namespace LunaClient.Systems.SharePurchaseParts
                 var identicalParts = partInfo.identicalParts.Split(',');
                 foreach (var part in identicalParts)
                 {
+                    if (string.IsNullOrEmpty(part)) continue;
+
                     var identicalPartInfo = PartLoader.getPartInfoByName(part.Replace('_', '.').Trim());
                     if (identicalPartInfo != null)
                     {
