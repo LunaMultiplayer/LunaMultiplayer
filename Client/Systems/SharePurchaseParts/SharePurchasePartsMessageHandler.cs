@@ -1,6 +1,7 @@
 ﻿using KSP.UI.Screens;
 using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Systems.ShareFunds;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
@@ -30,6 +31,7 @@ namespace LunaClient.Systems.SharePurchaseParts
         private static void PartPurchase(string techId, string partName)
         {
             System.StartIgnoringEvents();
+            ShareFundsSystem.Singleton.StartIgnoringEvents();
 
             var techState = ResearchAndDevelopment.Instance.GetTechState(techId);
             var partInfo = PartLoader.getPartInfoByName(partName);
@@ -62,6 +64,7 @@ namespace LunaClient.Systems.SharePurchaseParts
             EditorPartList.Instance?.Refresh();
 
             System.StopIgnoringEvents();
+            ShareFundsSystem.Singleton.StopIgnoringEvents();
             LunaLog.Log($"Part purchase received tech: {techId} part: {partName}");
         }
     }
