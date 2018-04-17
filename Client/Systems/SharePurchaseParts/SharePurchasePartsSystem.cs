@@ -14,7 +14,7 @@ namespace LunaClient.Systems.SharePurchaseParts
 
         protected override void OnEnabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) return;
+            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) return;
 
             base.OnEnabled();
             GameEvents.OnPartPurchased.Add(SharePurchasePartsEvents.PartPurchased);
@@ -22,7 +22,7 @@ namespace LunaClient.Systems.SharePurchaseParts
 
         protected override void OnDisabled()
         {
-            if (SettingsSystem.ServerSettings.GameMode == GameMode.Sandbox || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) return;
+            if (SettingsSystem.ServerSettings.GameMode != GameMode.Career || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) return;
 
             base.OnDisabled();
             GameEvents.OnPartPurchased.Remove(SharePurchasePartsEvents.PartPurchased);
