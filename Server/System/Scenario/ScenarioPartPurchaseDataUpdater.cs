@@ -26,7 +26,7 @@ namespace Server.System.Scenario
         }
 
         /// <summary>
-        /// Patches the scenario file with reputation data
+        /// Patches the scenario file with part purchase data
         /// </summary>
         private static string UpdateScenarioWithPartPurchaseData(string scenarioData, string techId, string partName)
         {
