@@ -49,5 +49,13 @@ namespace LunaClient.Systems.Admin
 
             SendMessage(msgData);
         }
+
+        public void SendServerRestartMsg()
+        {
+            var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<AdminRestartServerMsgData>();
+            msgData.AdminPassword = System.AdminPassword;
+
+            SendMessage(msgData);
+        }
     }
 }

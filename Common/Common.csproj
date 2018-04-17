@@ -70,6 +70,7 @@
     <Compile Include="Message\Client\ScreenshotCliMsg.cs" />
     <Compile Include="Message\Data\Admin\AdminBanKickMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminDekesslerMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminRestartServerMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminNukeMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminKickMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminBaseMsgData.cs" />
