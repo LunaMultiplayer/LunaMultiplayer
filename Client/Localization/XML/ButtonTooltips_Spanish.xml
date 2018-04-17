@@ -20,4 +20,5 @@
   <BanIcon>Ban</BanIcon>
   <DekesslerIcon>Dekessler</DekesslerIcon>
   <NukeIcon>Nuke KSC</NukeIcon>
+  <RestartServerIcon>Restart server</RestartServerIcon>
 </ButtonTooltips>

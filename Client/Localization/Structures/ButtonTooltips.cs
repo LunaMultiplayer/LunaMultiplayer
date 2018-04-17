@@ -21,6 +21,6 @@
         public string BanIcon { get; set; } = "Ban";
         public string DekesslerIcon { get; set; } = "Dekessler";
         public string NukeIcon { get; set; } = "Nuke KSC";
-        public string RestartServerIcon { get; set; } = "";
+        public string RestartServerIcon { get; set; } = "Restart server";
     }
 }
