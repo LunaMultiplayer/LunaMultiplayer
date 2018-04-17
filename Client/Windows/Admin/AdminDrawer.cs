@@ -3,7 +3,6 @@ using LunaClient.Systems.Admin;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Status;
 using UnityEngine;
-using System.Threading;
 
 namespace LunaClient.Windows.Admin
 {
@@ -42,11 +41,8 @@ namespace LunaClient.Windows.Admin
             }
             if (GUILayout.Button(RestartServerIcon, ButtonStyle))
             {
-                //Need to clear tooltip text because otherwise it would be still displayed in main menu after disconnect
-                //RestartServerIcon.tooltip = "";
-                //Close admin window so it doesn't show up after reconnect
-                //Singleton.OnCloseButton();
                 AdminSystem.Singleton.MessageSender.SendServerRestartMsg();
+                Display = false;
             }
 
             GUI.enabled = true;
