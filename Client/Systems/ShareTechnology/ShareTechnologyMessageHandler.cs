@@ -6,6 +6,7 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System.Collections.Concurrent;
 using System.Linq;
+using KSP.UI.Screens;
 
 namespace LunaClient.Systems.ShareTechnology
 {
@@ -21,32 +22,34 @@ namespace LunaClient.Systems.ShareTechnology
             if (msgData is ShareProgressTechnologyMsgData data)
             {
                 var tech = new TechNodeInfo(data.TechNode); //create a copy of the tech value so it will not change in the future.
-                LunaLog.Log($"Queue TechnologyUpdate with: {tech.Id}");
+                LunaLog.Log($"Queue TechnologyResearch with: {tech.Id}");
                 System.QueueAction(() =>
                 {
-                    TechnologyUpdate(tech);
+                    TechnologyResearch(tech);
                 });
             }
         }
 
-        private static void TechnologyUpdate(TechNodeInfo tech)
+        private static void TechnologyResearch(TechNodeInfo tech)
         {
             System.StartIgnoringEvents();
             var node = AssetBase.RnDTechTree.GetTreeTechs().ToList().Find(n => n.techID == tech.Id);
 
-            var configNode = ConfigNodeSerializer.Deserialize(tech.Data, tech.NumBytes).GetNode("Tech");
-            LunaLog.Log("The incoming technology config node looks like:");
-            for (var i = 0; i < configNode.CountValues; i++)
-            {
-                LunaLog.Log($"{configNode.values[i].name}: {configNode.values[i].value}");
-            }
-
             //Unlock the technology
             ResearchAndDevelopment.Instance.UnlockProtoTechNode(node);
 
+            //Refresh RD nodes in case we are in the RD screen
+            RDController.Instance?.partList?.Refresh();
+            RDController.Instance?.UpdatePanel();
+
+            //Refresh the tech tree
             ResearchAndDevelopment.RefreshTechTreeUI();
+
+            //Refresh the part list in case we are in the VAB/SPH
+            EditorPartList.Instance?.Refresh();
+
             System.StopIgnoringEvents();
-            LunaLog.Log($"TechnologyUpdate received - technology unlocked / bought: {tech.Id}");
+            LunaLog.Log($"TechnologyResearch received - technology researched: {tech.Id}");
         }
     }
 }

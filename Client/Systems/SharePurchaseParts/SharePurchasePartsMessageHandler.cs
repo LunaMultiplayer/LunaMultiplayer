@@ -66,9 +66,9 @@ namespace LunaClient.Systems.SharePurchaseParts
 
             //Refresh the part list in case we are in the VAB/SPH
             EditorPartList.Instance?.Refresh();
-
-            System.StopIgnoringEvents();
+            
             ShareFundsSystem.Singleton.StopIgnoringEvents();
+            System.StopIgnoringEvents();
             LunaLog.Log($"Part purchase received tech: {techId} part: {partName}");
         }
     }

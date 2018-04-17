@@ -10,7 +10,7 @@ namespace LunaClient.Systems.ShareTechnology
 
         private ShareTechnologyEvents ShareTechnologyEvents { get; } = new ShareTechnologyEvents();
 
-        protected override bool ShareSystemReady => ResearchAndDevelopment.Instance != null && Funding.Instance != null;
+        protected override bool ShareSystemReady => ResearchAndDevelopment.Instance != null;
 
         protected override void OnEnabled()
         {
