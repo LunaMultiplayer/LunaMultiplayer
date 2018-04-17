@@ -6,6 +6,7 @@
         Ban,
         Kick,
         Dekessler,
-        Nuke
+        Nuke,
+        RestartServer
     }
 }
