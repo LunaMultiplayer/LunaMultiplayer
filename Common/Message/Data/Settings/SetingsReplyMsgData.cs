@@ -24,7 +24,7 @@ namespace LunaCommon.Message.Data.Settings
         public int VesselUpdatesSendMsInterval;
         public int SecondaryVesselUpdatesSendMsInterval;
         public bool AllowStockVessels;
-        public bool CanQuickLoad;
+        public bool CanRevert;
         public bool AutoHireCrews;
         public bool BypassEntryPurchaseAfterResearch;
         public bool IndestructibleFacilities;
@@ -85,7 +85,7 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(VesselUpdatesSendMsInterval);
             lidgrenMsg.Write(SecondaryVesselUpdatesSendMsInterval);
             lidgrenMsg.Write(AllowStockVessels);
-            lidgrenMsg.Write(CanQuickLoad);
+            lidgrenMsg.Write(CanRevert);
             lidgrenMsg.Write(AutoHireCrews);
             lidgrenMsg.Write(BypassEntryPurchaseAfterResearch);
             lidgrenMsg.Write(IndestructibleFacilities);
@@ -145,7 +145,7 @@ namespace LunaCommon.Message.Data.Settings
             VesselUpdatesSendMsInterval = lidgrenMsg.ReadInt32();
             SecondaryVesselUpdatesSendMsInterval = lidgrenMsg.ReadInt32();
             AllowStockVessels = lidgrenMsg.ReadBoolean();
-            CanQuickLoad = lidgrenMsg.ReadBoolean();
+            CanRevert = lidgrenMsg.ReadBoolean();
             AutoHireCrews = lidgrenMsg.ReadBoolean();
             BypassEntryPurchaseAfterResearch = lidgrenMsg.ReadBoolean();
             IndestructibleFacilities = lidgrenMsg.ReadBoolean();

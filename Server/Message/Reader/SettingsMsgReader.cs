@@ -48,7 +48,7 @@ namespace Server.Message.Reader
                 msgData.ReentryHeatScale = GameplaySettings.SettingsStore.ReentryHeatScale;
                 msgData.ResourceAbundance = GameplaySettings.SettingsStore.ResourceAbundance;
                 msgData.FundsGainMultiplier = GameplaySettings.SettingsStore.FundsGainMultiplier;
-                msgData.CanQuickLoad = GameplaySettings.SettingsStore.CanQuickLoad;
+                msgData.CanRevert = GameplaySettings.SettingsStore.CanRevert;
                 msgData.RepLossDeclined = GameplaySettings.SettingsStore.RepLossDeclined;
                 msgData.FundsLossMultiplier = GameplaySettings.SettingsStore.FundsLossMultiplier;
                 msgData.RepGainMultiplier = GameplaySettings.SettingsStore.RepGainMultiplier;

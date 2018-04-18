@@ -71,9 +71,9 @@ namespace LunaClient.Systems.SettingsSys
                     },
                     Flight =
                     {
-                        CanQuickLoad = msgData.CanQuickLoad,
-                        CanRestart = msgData.CanQuickLoad,
-                        CanLeaveToEditor = msgData.CanQuickLoad
+                        CanQuickLoad = false, //Do not allow quickload, it's useless ina  multiplayer game
+                        CanRestart = msgData.CanRevert,
+                        CanLeaveToEditor = msgData.CanRevert
                     }
                 };
 
