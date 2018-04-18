@@ -1,6 +1,7 @@
 ﻿using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Xml;
 using Server.Utilities;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -45,8 +46,31 @@ namespace Server.System.Scenario
                 var newTechXmlNode = newNodeDoc.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='Tech']");
                 if (newTechXmlNode != null)
                 {
-                    var importNode = document.ImportNode(newTechXmlNode, true);
-                    parentNode.AppendChild(importNode);
+                    var existingNode = parentNode.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ParentNode}[@name='Tech']" +
+                                                                   $@"/{ConfigNodeXmlParser.ValueNode}[@name='id' and text()=""{techNode.Id}""]" +
+                                                                   $"/parent::{ConfigNodeXmlParser.ParentNode}[@name='Tech']");
+
+                    if (existingNode != null)
+                    {
+                        var parts = newTechXmlNode.SelectNodes($"{ConfigNodeXmlParser.ValueNode}[@name='part']");
+                        if (parts != null)
+                        {
+                            foreach (var part in parts.Cast<XmlNode>())
+                            {
+                                var existingPart = existingNode.SelectSingleNode($@"{ConfigNodeXmlParser.ValueNode}[@name='part' and text()=""{part.InnerText}""]");
+                                if (existingPart == null)
+                                {
+                                    var importNode = document.ImportNode(part, true);
+                                    existingNode.AppendChild(importNode);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var importNode = document.ImportNode(newTechXmlNode, true);
+                        parentNode.AppendChild(importNode);
+                    }
                 }
             }
 
