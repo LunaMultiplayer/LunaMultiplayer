@@ -9,7 +9,8 @@ namespace Server.Settings.Definition
     [Serializable]
     public class SettingsDefinition
     {
-        [XmlComment(Value = "The UDP port the server listens on. You don't need to open it in your router if RegisterWithMasterServer = true")]
+        [XmlComment(Value = "The UDP port the server listens on. You don't need to open it on your router if RegisterWithMasterServer = true. " +
+                            "If you want that players can connect against your server MANUALLY you will need to open it on your router")]
         public int Port { get; set; } = 8800;
 
         [XmlComment(Value = "Name of the server. Max 30 char")]
@@ -21,7 +22,7 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Password for the server. Leave it empty if you want to make a public server. Max 30 chars")]
         public string Password { get; set; } = "";
 
-        [XmlComment(Value = "Admin password for the server. Leave it empty if you want to allow administration client side. Max 30 chars")]
+        [XmlComment(Value = "Admin password for the server. Leave it empty if you don't want to allow server administration from KSP. Max 30 chars")]
         public string AdminPassword { get; set; } = "";
 
         [XmlComment(Value = "Specify the server's MOTD (message of the day). 255 chars max")]
@@ -71,8 +72,7 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "How many untracked asteroids to spawn into the universe. 0 = Disabled")]
         public int NumberOfAsteroids { get; set; } = 10;
 
-        [XmlComment(Value = "Terrain quality. All clients will need to have this setting in their KSP to avoid terrain differences" +
-                            "Values: Low, Default, High")]
+        [XmlComment(Value = "Terrain quality. All clients will need to have this setting in their KSP to avoid terrain differences. Values: Low, Default, High")]
         public TerrainQuality TerrainQuality { get; set; } = TerrainQuality.High;
 
         [XmlComment(Value = "Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
@@ -108,11 +108,12 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Connection timeout in Ms")]
         public int ConnectionMsTimeout { get; set; } = 30000;
 
-        [XmlComment(Value = "Interval in Ms at wich the client will send updates for his vessel when other players are nearby. " +
-                     "Decrease it if your clients have good network connection and you plan to do dogfights")]
-        public int VesselUpdatesSendMsInterval { get; set; } = 30;
+        [XmlComment(Value = "Interval in Ms at wich the client will send POSITION updates of his vessel when other players are NEARBY. " +
+                     "Decrease it if your clients have good network connection and you plan to do dogfights, although in that case consider using interpolation aswell")]
+        public int VesselUpdatesSendMsInterval { get; set; } = 80;
 
-        [XmlComment(Value = "Interval in Ms at wich the client will send updates for vessels that are uncontrolled but nearby him.")]
+        [XmlComment(Value = "Interval in Ms at wich the client will send POSITION updates for vessels that are uncontrolled and nearby him. " +
+                            "This interval is also applied used to send position updates of HIS OWN vessel when NOBODY is around")]
         public int SecondaryVesselUpdatesSendMsInterval { get; set; } = 500;
 
         [XmlComment(Value = "Interval in ms at wich users will check the controlled and close uncontrolled vessel and sync the parts that have changes " +
@@ -120,17 +121,17 @@ namespace Server.Settings.Definition
                             "Caution! Puting a very low value could make clients with slow computers to lag a lot!")]
         public int VesselPartsSyncMsInterval { get; set; } = 500;
 
-        [XmlComment(Value = "Relay system mode. Dictionary uses more RAM but it's faster. DataBase use disk space instead but it's slower" +
-                            "Values: Dictionary, DataBase")]
+        [XmlComment(Value = "Relay system mode. Dictionary uses more RAM but it's faster. DataBase use disk space instead but it's slower. Values: Dictionary, DataBase")]
         public RelaySystemMode RelaySystemMode { get; set; } = RelaySystemMode.Dictionary;
 
-        [XmlComment(Value = "Interval for saving position updates so they are later sent to players in the past. Lower number => smoother movement but more memory required")]
+        [XmlComment(Value = "Interval for saving POSITION updates IN THE SERVER so they are later sent to the OTHER players in the past. " +
+                            "Lower number => smoother movement but as you're saving more position updates, then more memory will be required")]
         public int RelaySaveIntervalMs { get; set; } = 1000;
 
-        [XmlComment(Value = "Send/Receive tick clock")]
+        [XmlComment(Value = "Send/Receive tick clock. Keep this value low but at least above 2ms to avoid extreme CPU usage.")]
         public int SendReceiveThreadTickMs { get; set; } = 5;
 
-        [XmlComment(Value = "Main thread polling in ms")]
+        [XmlComment(Value = "Main thread polling in ms. Keep this value low but at least above 2ms to avoid extreme CPU usage.")]
         public int MainTimeTick { get; set; } = 5;
         
         [XmlComment(Value = "Minimum log level. Values: Debug, Info, Chat, Error, Fatal")]
@@ -142,7 +143,7 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Use UTC instead of system time in the log.")]
         public bool UseUtcTimeInLog { get; set; } = false;
 
-        [XmlComment(Value = "Interval in ms at wich internal LMP structures will be backed up to a file")]
+        [XmlComment(Value = "Interval in ms at wich internal LMP structures (Subspaces, Vessels, Scenario files, ...) will be backed up to a file")]
         public int BackupIntervalMs { get; set; } = 30000;
     }
 }
