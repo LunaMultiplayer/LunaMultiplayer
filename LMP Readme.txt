@@ -15,5 +15,4 @@ Server side:
 
 --------------------
 
-Remember: CAREER or SCIENCE modes are NOT supported.
-Also, we cannot provide support for other mods in a multiplayer environment so if you have other mods besides LMP expect issues!
+Remember: We cannot provide support for other mods in a multiplayer environment so if you have other mods besides LMP expect issues!
