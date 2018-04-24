@@ -98,15 +98,15 @@ namespace LunaClient.ModuleStore
                     LunaLog.LogError($"Duplicate fields found in file: {file}. The module will be ignored");
                     continue;
                 }
+
                 moduleValues.Add(moduleDefinition);
             }
 
             CustomizedModuleFieldsBehaviours = moduleValues.ToDictionary(m => m.ModuleName, v => v);
-
         }
         
         /// <summary>
-        /// Rwturns the customization for a field. if it doesn't exist, it returns a default value
+        /// Returns the customization for a field. if it doesn't exist, it returns a default value
         /// </summary>
         public static FieldDefinition GetCustomFieldDefinition(string moduleName, string fieldName)
         {
