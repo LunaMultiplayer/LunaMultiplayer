@@ -15,7 +15,7 @@ namespace Server.Log
         public static void ExpireLogs()
         {
             //Check if the ExpireLogs setting is enabled and directory exists
-            if (GeneralSettings.SettingsStore.ExpireLogs > 0 && FileHandler.FolderExists(LogDirectory))
+            if (LogSettings.SettingsStore.ExpireLogs > 0 && FileHandler.FolderExists(LogDirectory))
                 foreach (var logFile in FileHandler.GetFilesInPath(LogDirectory))
                     RemoveExpiredLog(logFile);
         }
@@ -23,7 +23,7 @@ namespace Server.Log
         private static void RemoveExpiredLog(string logFile)
         {
             //If the file is older than a day, delete it
-            if (File.GetCreationTime(logFile).AddDays(GeneralSettings.SettingsStore.ExpireLogs) < LunaTime.Now)
+            if (File.GetCreationTime(logFile).AddDays(LogSettings.SettingsStore.ExpireLogs) < LunaTime.Now)
             {
                 LunaLog.Debug($"Deleting saved log '{logFile}', reason: Expired!");
                 try

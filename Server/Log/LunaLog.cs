@@ -22,9 +22,9 @@ namespace Server.Log
 
         private static void WriteLog(LogLevels level, string message, bool sendToConsole)
         {
-            if (level >= GeneralSettings.SettingsStore.LogLevel)
+            if (level >= LogSettings.SettingsStore.LogLevel)
             {
-                var output = GeneralSettings.SettingsStore.UseUtcTimeInLog
+                var output = LogSettings.SettingsStore.UseUtcTimeInLog
                     ? $"[{DateTime.UtcNow:HH:mm:ss}][{level}] : {message}"
                     : $"[{DateTime.Now:HH:mm:ss}][{level}] : {message}";
 

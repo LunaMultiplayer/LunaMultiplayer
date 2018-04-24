@@ -1,7 +1,6 @@
 ﻿using LunaCommon.Enums;
 using LunaCommon.Xml;
 using Server.Enums;
-using Server.Log;
 using System;
 
 namespace Server.Settings.Definition
@@ -111,15 +110,7 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Main thread polling in ms. Keep this value low but at least above 2ms to avoid extreme CPU usage.")]
         public int MainTimeTick { get; set; } = 5;
-        
-        [XmlComment(Value = "Minimum log level. Values: Debug, Info, Chat, Error, Fatal")]
-        public LogLevels LogLevel { get; set; } = LogLevels.Debug;
 
-        [XmlComment(Value = "Specify the amount of days a log file should be considered as expired and deleted. 0 = Disabled")]
-        public double ExpireLogs { get; set; } = 14;
-
-        [XmlComment(Value = "Use UTC instead of system time in the log.")]
-        public bool UseUtcTimeInLog { get; set; } = false;
 
         [XmlComment(Value = "Interval in ms at wich internal LMP structures (Subspaces, Vessels, Scenario files, ...) will be backed up to a file")]
         public int BackupIntervalMs { get; set; } = 30000;
