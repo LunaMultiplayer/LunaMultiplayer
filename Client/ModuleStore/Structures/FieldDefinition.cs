@@ -2,7 +2,7 @@
 
 namespace LunaClient.ModuleStore.Structures
 {
-    public class CustomFieldDefinition
+    public class FieldDefinition
     {
         [XmlComment(Value = "Name of the field that we are customizing")]
         public string FieldName { get; set; }

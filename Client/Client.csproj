@@ -100,8 +100,8 @@
     <Compile Include="Localization\Structures\ButtonTooltips.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
     <Compile Include="LunaScreenMsg.cs" />
-    <Compile Include="ModuleStore\Structures\CustomFieldDefinition.cs" />
-    <Compile Include="ModuleStore\Structures\CustomModuleDefinition.cs" />
+    <Compile Include="ModuleStore\Structures\FieldDefinition.cs" />
+    <Compile Include="ModuleStore\Structures\ModuleDefinition.cs" />
     <Compile Include="ModuleStore\FieldModuleDefinition.cs" />
     <Compile Include="ModuleStore\FieldModuleStore.cs" />
     <Compile Include="Localization\LocalizationContainer.cs" />
@@ -472,7 +472,18 @@
     <Content Include="Localization\XML\StatusWindowText_Russian.xml" />
     <Content Include="Localization\XML\StatusWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\StatusWindowText_Spanish.xml" />
-    <Content Include="ModuleStore\XML\PartsBehaviour.xml" />
+    <Content Include="ModuleStore\XML\FXModuleAnimateThrottle.xml" />
+    <Content Include="ModuleStore\XML\KerbalEVA.xml" />
+    <Content Include="ModuleStore\XML\ModuleCoreHeat.xml" />
+    <Content Include="ModuleStore\XML\ModuleDeployablePart.xml" />
+    <Content Include="ModuleStore\XML\ModuleDeployableSolarPanel.xml" />
+    <Content Include="ModuleStore\XML\ModuleEngines.xml" />
+    <Content Include="ModuleStore\XML\ModuleEvaChute.xml" />
+    <Content Include="ModuleStore\XML\ModuleReactionWheel.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelBase.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelBrakes.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelMotor.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelSuspension.xml" />
     <Content Include="Resources\LMPButton.png" />
   </ItemGroup>
   <ItemGroup>

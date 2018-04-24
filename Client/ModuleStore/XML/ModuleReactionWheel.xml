@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+        <!--This is just the string that says "Reaction wheels: Running" or "Reaction wheels: Idle" We don't need it at all-->
+        <FieldDefinition>
+            <FieldName>stateString</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+    </Fields>
+</ModuleDefinition>

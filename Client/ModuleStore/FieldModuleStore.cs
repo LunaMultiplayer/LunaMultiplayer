@@ -1,5 +1,4 @@
 ﻿using LunaClient.ModuleStore.Structures;
-using LunaClient.Properties;
 using LunaClient.Utilities;
 using LunaCommon.Xml;
 using System;
@@ -17,7 +16,7 @@ namespace LunaClient.ModuleStore
     /// </summary>
     public class FieldModuleStore
     {
-        private static readonly CustomFieldDefinition DefaultFieldDefinition = new CustomFieldDefinition
+        private static readonly FieldDefinition DefaultFieldDefinition = new FieldDefinition
         {
             FieldName = string.Empty,
             Ignore = false,
@@ -40,7 +39,7 @@ namespace LunaClient.ModuleStore
         /// <summary>
         /// Here we store our customized part module fields
         /// </summary>
-        public static Dictionary<string, CustomModuleDefinition> CustomizedModuleFieldsBehaviours = new Dictionary<string, CustomModuleDefinition>();
+        public static Dictionary<string, ModuleDefinition> CustomizedModuleFieldsBehaviours = new Dictionary<string, ModuleDefinition>();
 
         /// <summary>
         /// Here we store the inheritance chain of the types up to PartModule
@@ -83,53 +82,33 @@ namespace LunaClient.ModuleStore
         }
 
         /// <summary>
-        /// Reads the PartsBehaviour.xml
+        /// Reads the module customizations xml
         /// </summary>
         public static void ReadCustomizationXml()
         {
-            var filePath = CommonUtil.CombinePaths(CustomPartSyncFolder, "PartsBehaviour.xml");
-            if (!File.Exists(filePath))
-            {
-                File.WriteAllText(filePath, Resources.PartsBehaviour);
-            }
+            var moduleValues = new List<ModuleDefinition>();
 
-            List<CustomModuleDefinition> moduleValues;
-            try
+            foreach (var file in Directory.GetFiles(CustomPartSyncFolder, "*.xml"))
             {
-                moduleValues = LunaXmlSerializer.ReadXmlFromPath<List<CustomModuleDefinition>>(filePath);
-                if (moduleValues.Select(m => m.ModuleName).Distinct().Count() != moduleValues.Count)
+                var moduleDefinition = LunaXmlSerializer.ReadXmlFromPath<ModuleDefinition>(file);
+                moduleDefinition.ModuleName = Path.GetFileNameWithoutExtension(file);
+
+                if (moduleDefinition.Fields.Select(m => m.FieldName).Distinct().Count() != moduleDefinition.Fields.Count)
                 {
-                    LunaLog.LogError("Duplicate modules found in PartsBehaviour.xml. Loading default values");
-                    moduleValues = LoadDefaults();
+                    LunaLog.LogError($"Duplicate fields found in file: {file}. The module will be ignored");
+                    continue;
                 }
-                foreach (var moduleVal in moduleValues)
-                {
-                    if (moduleVal.Fields.Select(m => m.FieldName).Distinct().Count() != moduleVal.Fields.Count)
-                    {
-                        LunaLog.LogError($"Duplicate fields found in module {moduleVal.ModuleName} of PartsBehaviour.xml. Loading default values");
-                        moduleValues = LoadDefaults();
-                        break;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                LunaLog.LogError($"Error reading PartsBehaviour.xml. Loading default values. Details {e}");
-                moduleValues = LoadDefaults();
+                moduleValues.Add(moduleDefinition);
             }
 
             CustomizedModuleFieldsBehaviours = moduleValues.ToDictionary(m => m.ModuleName, v => v);
-        }
 
-        private static List<CustomModuleDefinition> LoadDefaults()
-        {
-            return LunaXmlSerializer.ReadXmlFromString<List<CustomModuleDefinition>>(Resources.PartsBehaviour);
         }
-
+        
         /// <summary>
         /// Rwturns the customization for a field. if it doesn't exist, it returns a default value
         /// </summary>
-        public static CustomFieldDefinition GetCustomFieldDefinition(string moduleName, string fieldName)
+        public static FieldDefinition GetCustomFieldDefinition(string moduleName, string fieldName)
         {
             return CustomizedModuleFieldsBehaviours.TryGetValue(moduleName, out var customization) ?
                 customization.Fields.FirstOrDefault(f => f.FieldName == fieldName) ?? DefaultFieldDefinition

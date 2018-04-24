@@ -59,24 +59,5 @@ namespace LunaClient.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot;?&gt;
-        ///&lt;ArrayOfCustomModuleDefinition xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot;&gt;
-        ///  &lt;CustomModuleDefinition&gt;
-        ///    &lt;ModuleName&gt;ModuleDeployablePart&lt;/ModuleName&gt;
-        ///    &lt;Fields&gt;
-        ///      &lt;CustomFieldDefinition&gt;
-        ///        &lt;FieldName&gt;currentRotation&lt;/FieldName&gt;
-        ///        &lt;IgnoreSend&gt;false&lt;/IgnoreSend&gt;
-        ///        &lt;IgnoreReceive&gt;false&lt;/IgnoreReceive&gt;
-        ///        &lt;IntervalCheckChangesMs&gt;5000&lt;/IntervalCheckChangesMs&gt;
-        ///        &lt;IntervalApplyChangesMs&gt;5000 [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string PartsBehaviour {
-            get {
-                return ResourceManager.GetString("PartsBehaviour", resourceCulture);
-            }
-        }
     }
 }
