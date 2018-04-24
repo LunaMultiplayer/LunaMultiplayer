@@ -67,7 +67,7 @@ namespace Server.Lidgren
                 msgData.ServerVersion = LmpVersioning.CurrentVersion;
                 msgData.VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval;
                 msgData.SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
-                msgData.WarpMode = (int)GeneralSettings.SettingsStore.WarpMode;
+                msgData.WarpMode = (int)WarpSettings.SettingsStore.WarpMode;
                 msgData.TerrainQuality = (int)GeneralSettings.SettingsStore.TerrainQuality;
 
                 msgData.Description = msgData.Description.Length > 200

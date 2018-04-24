@@ -18,7 +18,7 @@ namespace Server.Message.Reader
             message.Recycle();
 
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<SettingsReplyMsgData>();
-            msgData.WarpMode = GeneralSettings.SettingsStore.WarpMode;
+            msgData.WarpMode = WarpSettings.SettingsStore.WarpMode;
             msgData.GameMode = GeneralSettings.SettingsStore.GameMode;
             msgData.TerrainQuality = GeneralSettings.SettingsStore.TerrainQuality;
             msgData.AllowCheats = GeneralSettings.SettingsStore.Cheats;
@@ -32,7 +32,7 @@ namespace Server.Message.Reader
             msgData.SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
             msgData.VesselPartsSyncMsInterval = GeneralSettings.SettingsStore.VesselPartsSyncMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
-            msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;
+            msgData.WarpMaster = WarpSettings.SettingsStore.WarpMaster;
             msgData.MinScreenshotIntervalMs = ScreenshotSettings.SettingsStore.MinScreenshotIntervalMs;
             msgData.MinCraftLibraryRequestIntervalMs = CraftSettings.SettingsStore.MinCraftLibraryRequestIntervalMs;
 

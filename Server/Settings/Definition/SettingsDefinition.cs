@@ -8,8 +8,6 @@ namespace Server.Settings.Definition
     [Serializable]
     public class SettingsDefinition
     {
-
-
         [XmlComment(Value = "Name of the server. Max 30 char")]
         public string ServerName { get; set; } = "Luna Server";
 
@@ -68,14 +66,6 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
         public float SafetyBubbleDistance { get; set; } = 100.0f;
-        
-        [XmlComment(Value = "Specify the warp Type. Values: None, Subspace, Master")]
-        public WarpMode WarpMode { get; set; } = WarpMode.Subspace;
-
-        [XmlComment(Value = "Username of the player who control the warp if WarpMode is set to MASTER")]
-        public string WarpMaster { get; set; } = "";
-
-
 
 
         [XmlComment(Value = "Interval in Ms at wich the client will send POSITION updates of his vessel when other players are NEARBY. " +

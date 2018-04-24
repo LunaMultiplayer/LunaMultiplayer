@@ -77,7 +77,7 @@ namespace Server
                 //Set day for log change
                 ServerContext.Day = LunaTime.Now.Day;
 
-                LunaLog.Normal($"Starting Luna Server version: {LmpVersioning.CurrentVersion}");
+                LunaLog.Normal($"Luna Server version: {LmpVersioning.CurrentVersion} ({Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)})");
 
                 Universe.CheckUniverse();
                 LoadSettingsAndGroups();
@@ -87,9 +87,7 @@ namespace Server
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
 
-                LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {ConnectionSettings.SettingsStore.Port}... ");
-                LunaLog.Normal($"Server name: '{GeneralSettings.SettingsStore.ServerName}'...");
-                LunaLog.Normal($"Server location: '{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}'...");
+                LunaLog.Normal($"Starting '{GeneralSettings.SettingsStore.ServerName}' on Port {ConnectionSettings.SettingsStore.Port}... ");
 
                 ServerContext.ServerRunning = true;
                 LidgrenServer.SetupLidgrenServer();
