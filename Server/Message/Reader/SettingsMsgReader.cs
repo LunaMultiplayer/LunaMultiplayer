@@ -28,8 +28,8 @@ namespace Server.Message.Reader
             msgData.ConsoleIdentifier = GeneralSettings.SettingsStore.ConsoleIdentifier;
             msgData.GameDifficulty = GeneralSettings.SettingsStore.GameDifficulty;
             msgData.SafetyBubbleDistance = GeneralSettings.SettingsStore.SafetyBubbleDistance;
-            msgData.VesselUpdatesSendMsInterval = IntervalSettings.SettingsStore.VesselUpdatesSendMsInterval;
-            msgData.SecondaryVesselUpdatesSendMsInterval = IntervalSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
+            msgData.VesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.VesselPositionUpdatesMsInterval;
+            msgData.SecondaryVesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.SecondaryVesselPositionUpdatesMsInterval;
             msgData.VesselPartsSyncMsInterval = IntervalSettings.SettingsStore.VesselPartsSyncMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = WarpSettings.SettingsStore.WarpMaster;

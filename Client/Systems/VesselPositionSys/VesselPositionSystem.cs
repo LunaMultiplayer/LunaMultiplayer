@@ -18,7 +18,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Fields & properties
 
         private static float LastVesselUpdatesSentTime { get; set; }
-        private static int VesselUpdatesSendMsInterval => SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval;
+        private static int VesselUpdatesSendMsInterval => SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval;
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
             TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > VesselUpdatesSendMsInterval :
             TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > 100;
@@ -59,8 +59,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
             //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
         }
 
         protected override void OnDisabled()

@@ -93,7 +93,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (Target == null)
                 {
                     //We are in the first iteration of the interpolation (we just started to apply vessel updates)
-                    GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval).TotalSeconds;
+                    GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval).TotalSeconds;
                 }
                 else
                 {
