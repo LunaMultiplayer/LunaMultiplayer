@@ -66,35 +66,5 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Specify the minimum distance in which vessels can interact with eachother at the launch pad and runway")]
         public float SafetyBubbleDistance { get; set; } = 100.0f;
-
-
-        [XmlComment(Value = "Interval in Ms at wich the client will send POSITION updates of his vessel when other players are NEARBY. " +
-                     "Decrease it if your clients have good network connection and you plan to do dogfights, although in that case consider using interpolation aswell")]
-        public int VesselUpdatesSendMsInterval { get; set; } = 80;
-
-        [XmlComment(Value = "Interval in Ms at wich the client will send POSITION updates for vessels that are uncontrolled and nearby him. " +
-                            "This interval is also applied used to send position updates of HIS OWN vessel when NOBODY is around")]
-        public int SecondaryVesselUpdatesSendMsInterval { get; set; } = 500;
-
-        [XmlComment(Value = "Interval in ms at wich users will check the controlled and close uncontrolled vessel and sync the parts that have changes " +
-                            "(ladders that extend or shields that open) to the server. " +
-                            "Caution! Puting a very low value could make clients with slow computers to lag a lot!")]
-        public int VesselPartsSyncMsInterval { get; set; } = 500;
-
-        [XmlComment(Value = "Relay system mode. Dictionary uses more RAM but it's faster. DataBase use disk space instead but it's slower. Values: Dictionary, DataBase")]
-        public RelaySystemMode RelaySystemMode { get; set; } = RelaySystemMode.Dictionary;
-
-        [XmlComment(Value = "Interval for saving POSITION updates IN THE SERVER so they are later sent to the OTHER players in the past. " +
-                            "Lower number => smoother movement but as you're saving more position updates, then more memory will be required")]
-        public int RelaySaveIntervalMs { get; set; } = 1000;
-
-        [XmlComment(Value = "Send/Receive tick clock. Keep this value low but at least above 2ms to avoid extreme CPU usage.")]
-        public int SendReceiveThreadTickMs { get; set; } = 5;
-
-        [XmlComment(Value = "Main thread polling in ms. Keep this value low but at least above 2ms to avoid extreme CPU usage.")]
-        public int MainTimeTick { get; set; } = 5;
-
-        [XmlComment(Value = "Interval in ms at wich internal LMP structures (Subspaces, Vessels, Scenario files, ...) will be backed up to a file")]
-        public int BackupIntervalMs { get; set; } = 30000;
     }
 }

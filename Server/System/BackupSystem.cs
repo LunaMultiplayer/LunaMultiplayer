@@ -18,7 +18,7 @@ namespace Server.System
                 ScenarioStoreSystem.BackupScenarios();
                 try
                 {
-                    await Task.Delay(GeneralSettings.SettingsStore.BackupIntervalMs, token);
+                    await Task.Delay(IntervalSettings.SettingsStore.BackupIntervalMs, token);
                 }
                 catch (TaskCanceledException)
                 {

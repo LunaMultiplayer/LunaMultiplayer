@@ -116,7 +116,7 @@ namespace Server.Lidgren
                     }
                     else
                     {
-                        await Task.Delay(GeneralSettings.SettingsStore.SendReceiveThreadTickMs);
+                        await Task.Delay(IntervalSettings.SettingsStore.SendReceiveThreadTickMs);
                     }
                 }
             }

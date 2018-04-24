@@ -65,8 +65,8 @@ namespace Server.Lidgren
                 msgData.PlayerCount = ServerContext.Clients.Count;
                 msgData.ServerName = GeneralSettings.SettingsStore.ServerName;
                 msgData.ServerVersion = LmpVersioning.CurrentVersion;
-                msgData.VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval;
-                msgData.SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
+                msgData.VesselUpdatesSendMsInterval = IntervalSettings.SettingsStore.VesselUpdatesSendMsInterval;
+                msgData.SecondaryVesselUpdatesSendMsInterval = IntervalSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
                 msgData.WarpMode = (int)WarpSettings.SettingsStore.WarpMode;
                 msgData.TerrainQuality = (int)GeneralSettings.SettingsStore.TerrainQuality;
 

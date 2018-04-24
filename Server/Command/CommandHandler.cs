@@ -59,7 +59,7 @@ namespace Server.Command
                             Commands["say"].Func(input);
                         }
                     }
-                    await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
+                    await Task.Delay(IntervalSettings.SettingsStore.MainTimeTick);
                 }
             }
             catch (Exception e)

@@ -76,7 +76,7 @@ namespace Server.Client
                 }
                 try
                 {
-                    await Task.Delay(GeneralSettings.SettingsStore.SendReceiveThreadTickMs, token);
+                    await Task.Delay(IntervalSettings.SettingsStore.SendReceiveThreadTickMs, token);
                 }
                 catch (TaskCanceledException)
                 {

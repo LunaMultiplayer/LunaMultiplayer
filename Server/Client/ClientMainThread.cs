@@ -25,7 +25,7 @@ namespace Server.Client
 
                     LmpPluginHandler.FireOnUpdate(); //Run plugin update
 
-                    await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
+                    await Task.Delay(IntervalSettings.SettingsStore.MainTimeTick);
                 }
             }
             catch (Exception e)
@@ -48,7 +48,7 @@ namespace Server.Client
                     }
                     sendingMessages = ClientRetriever.GetAuthenticatedClients().Any(c => c.SendMessageQueue.Count > 0);
 
-                    await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
+                    await Task.Delay(IntervalSettings.SettingsStore.MainTimeTick);
                 }
                 LidgrenServer.ShutdownLidgrenServer();
             }

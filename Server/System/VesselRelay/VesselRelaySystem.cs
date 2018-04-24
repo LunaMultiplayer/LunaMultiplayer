@@ -22,7 +22,7 @@ namespace Server.System.VesselRelay
         public static bool ShouldStoreMessage(Guid vesselId)
         {
             var lastSavedTime = TimeDictionary.GetOrAdd(vesselId, DateTime.MinValue);
-            if (DateTime.Now - lastSavedTime > TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.RelaySaveIntervalMs))
+            if (DateTime.Now - lastSavedTime > TimeSpan.FromMilliseconds(RelaySettings.SettingsStore.RelaySaveIntervalMs))
             {
                 TimeDictionary.TryUpdate(vesselId, DateTime.Now, lastSavedTime);
                 return true;
@@ -37,7 +37,7 @@ namespace Server.System.VesselRelay
         /// </summary>
         public static void HandleVesselMessage(ClientStructure client, VesselBaseMsgData msg)
         {
-            switch (GeneralSettings.SettingsStore.RelaySystemMode)
+            switch (RelaySettings.SettingsStore.RelaySystemMode)
             {
                 case RelaySystemMode.Dictionary:
                     VesselRelaySystemDictionary.HandleVesselMessage(client, msg);
@@ -56,7 +56,7 @@ namespace Server.System.VesselRelay
         /// </summary>
         public static void CreateNewSubspace(int subspaceId)
         {
-            switch (GeneralSettings.SettingsStore.RelaySystemMode)
+            switch (RelaySettings.SettingsStore.RelaySystemMode)
             {
                 case RelaySystemMode.Dictionary:
                     VesselRelaySystemDictionary.CreateNewSubspace(subspaceId);
@@ -74,7 +74,7 @@ namespace Server.System.VesselRelay
         /// </summary>
         public static void RemoveSubspace(int subspaceId)
         {
-            switch (GeneralSettings.SettingsStore.RelaySystemMode)
+            switch (RelaySettings.SettingsStore.RelaySystemMode)
             {
                 case RelaySystemMode.Dictionary:
                     VesselRelaySystemDictionary.RemoveSubspace(subspaceId);
@@ -93,7 +93,7 @@ namespace Server.System.VesselRelay
         /// </summary>
         public static void RelayOldVesselMessages()
         {
-            switch (GeneralSettings.SettingsStore.RelaySystemMode)
+            switch (RelaySettings.SettingsStore.RelaySystemMode)
             {
                 case RelaySystemMode.Dictionary:
                     VesselRelaySystemDictionary.RelayOldVesselMessages();
