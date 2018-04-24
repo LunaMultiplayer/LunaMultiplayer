@@ -114,8 +114,12 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings\Base\ISettings.cs" />
+    <Compile Include="Settings\Definition\CraftSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\MasterServerSettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\ScreenshotSettingsDefinition.cs" />
     <Compile Include="Settings\SettingsHandler.cs" />
+    <Compile Include="Settings\Structures\ScreenshotSettings.cs" />
+    <Compile Include="Settings\Structures\CraftSettings.cs" />
     <Compile Include="Settings\Structures\MasterServerSettings.cs" />
     <Compile Include="System\BackupSystem.cs" />
     <Compile Include="System\CraftLibrarySystem.cs" />

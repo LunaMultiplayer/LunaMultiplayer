@@ -41,7 +41,7 @@ namespace Server.System
                 }
 
                 var lastTime = LastUploadRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
-                if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.MinScreenshotIntervalMs))
+                if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(ScreenshotSettings.SettingsStore.MinScreenshotIntervalMs))
                 {
                     LastUploadRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
                     if (data.Screenshot.DateTaken == 0) data.Screenshot.DateTaken = LunaTime.UtcNow.ToBinary();
@@ -180,7 +180,7 @@ namespace Server.System
         /// </summary>
         private static void CheckMaxFolders()
         {
-            while (Directory.GetDirectories(ScreenshotFolder).Length > GeneralSettings.SettingsStore.MaxScreenshotsFolders)
+            while (Directory.GetDirectories(ScreenshotFolder).Length > ScreenshotSettings.SettingsStore.MaxScreenshotsFolders)
             {
                 var oldestFolder = Directory.GetDirectories(ScreenshotFolder).Select(d => new DirectoryInfo(d)).OrderBy(d => d.LastWriteTime).FirstOrDefault();
                 if (oldestFolder != null)
@@ -196,7 +196,7 @@ namespace Server.System
         /// </summary>
         private static void RemovePlayerOldestScreenshots(string playerFolder)
         {
-            while (new DirectoryInfo(playerFolder).GetFiles().Where(f => !f.Name.StartsWith(SmallFilePrefix)).Count() > GeneralSettings.SettingsStore.MaxScreenshotsPerUser)
+            while (new DirectoryInfo(playerFolder).GetFiles().Where(f => !f.Name.StartsWith(SmallFilePrefix)).Count() > ScreenshotSettings.SettingsStore.MaxScreenshotsPerUser)
             {
                 var oldestScreenshot = new DirectoryInfo(playerFolder).GetFiles().Where(f => !f.Name.StartsWith(SmallFilePrefix)).OrderBy(f => f.LastWriteTime).FirstOrDefault();
                 if (oldestScreenshot != null)

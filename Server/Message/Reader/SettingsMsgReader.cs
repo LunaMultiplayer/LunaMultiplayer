@@ -34,8 +34,8 @@ namespace Server.Message.Reader
             msgData.VesselPartsSyncMsInterval = GeneralSettings.SettingsStore.VesselPartsSyncMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;
-            msgData.MinScreenshotIntervalMs = GeneralSettings.SettingsStore.MinScreenshotIntervalMs;
-            msgData.MinCraftLibraryRequestIntervalMs = GeneralSettings.SettingsStore.MinCraftLibraryRequestIntervalMs;
+            msgData.MinScreenshotIntervalMs = ScreenshotSettings.SettingsStore.MinScreenshotIntervalMs;
+            msgData.MinCraftLibraryRequestIntervalMs = CraftSettings.SettingsStore.MinCraftLibraryRequestIntervalMs;
 
             if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom && GameplaySettings.SettingsStore != null)
             {
