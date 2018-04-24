@@ -28,6 +28,7 @@ namespace Server.Settings.Base
             try
             {
                 SettingsStore = LunaXmlSerializer.ReadXmlFromPath(typeof(T), SettingsPath) as T;
+                Save(); //We call the save to add the new settings into the file
             }
             catch (Exception)
             {
