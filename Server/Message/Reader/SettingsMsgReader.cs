@@ -7,6 +7,7 @@ using Server.Context;
 using Server.Message.Reader.Base;
 using Server.Server;
 using Server.Settings;
+using Server.Settings.Structures;
 
 namespace Server.Message.Reader
 {

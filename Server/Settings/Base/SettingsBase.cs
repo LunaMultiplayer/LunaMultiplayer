@@ -5,15 +5,14 @@ using Server.System;
 using System;
 using System.IO;
 
-namespace Server.Settings
+namespace Server.Settings.Base
 {
-    public abstract class SettingsBase
+    public abstract class SettingsBase<T>: ISettings
+        where T : class, new()
     {
-        protected abstract string SettingsPath { get; }
-
-        protected abstract object SettingsHolder { get; set; }
-
-        protected abstract Type SettingsHolderType { get; }
+        protected abstract string Filename { get; }
+        private string SettingsPath => Path.Combine(ServerContext.ConfigDirectory, Filename);
+        public static T SettingsStore { get; private set; } = new T();
 
         protected SettingsBase()
         {
@@ -24,11 +23,11 @@ namespace Server.Settings
         public void Load()
         {
             if (!File.Exists(SettingsPath))
-                LunaXmlSerializer.WriteToXmlFile(Activator.CreateInstance(SettingsHolderType), SettingsPath);
+                LunaXmlSerializer.WriteToXmlFile(Activator.CreateInstance(typeof(T)), Path.Combine(ServerContext.ConfigDirectory, Filename));
 
             try
             {
-                SettingsHolder = LunaXmlSerializer.ReadXmlFromPath(SettingsHolderType, SettingsPath);
+                SettingsStore = LunaXmlSerializer.ReadXmlFromPath(typeof(T), SettingsPath) as T;
             }
             catch (Exception)
             {
@@ -38,7 +37,7 @@ namespace Server.Settings
 
         public void Save()
         {
-            LunaXmlSerializer.WriteToXmlFile(SettingsHolder, SettingsPath);
+            LunaXmlSerializer.WriteToXmlFile(SettingsStore, SettingsPath);
         }
     }
 }

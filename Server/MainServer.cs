@@ -1,5 +1,4 @@
 ﻿using LunaCommon;
-using LunaCommon.Enums;
 using LunaCommon.Time;
 using Server.Client;
 using Server.Command;
@@ -136,22 +135,13 @@ namespace Server
             LunaLog.Debug("Loading groups...");
             GroupSystem.LoadGroups();
             LunaLog.Debug("Loading settings...");
-            GeneralSettings.Singleton.Load();
-            if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
-            {
-                LunaLog.Debug("Loading gameplay settings...");
-                GameplaySettings.Singleton.Load();
-            }
+            SettingsHandler.LoadSettings();
 
             if (GeneralSettings.SettingsStore.ModControl)
             {
                 LunaLog.Debug("Loading mod control...");
                 ModFileSystem.LoadModFile();
             }
-#if DEBUG
-            DebugSettings.Singleton.Load();
-            LunaTime.SimulatedMsTimeOffset = DebugSettings.SettingsStore.SimulatedMsTimeOffset;
-#endif
         }
 
         /// <summary>

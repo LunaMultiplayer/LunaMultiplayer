@@ -113,8 +113,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Base\ISettings.cs" />
     <Compile Include="Settings\Definition\MasterServerSettingsDefinition.cs" />
-    <Compile Include="Settings\MasterServerSettings.cs" />
+    <Compile Include="Settings\SettingsHandler.cs" />
+    <Compile Include="Settings\Structures\MasterServerSettings.cs" />
     <Compile Include="System\BackupSystem.cs" />
     <Compile Include="System\CraftLibrarySystem.cs" />
     <Compile Include="System\HandshakeSystem.cs" />
@@ -126,13 +128,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\MessageQueuer.cs" />
     <Compile Include="Server\MessageReceiver.cs" />
-    <Compile Include="Settings\DebugSettings.cs" />
+    <Compile Include="Settings\Structures\DebugSettings.cs" />
     <Compile Include="Settings\Definition\GameplaySettingsDefinition.cs" />
     <Compile Include="Settings\Definition\DebugSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\SettingsDefinition.cs" />
-    <Compile Include="Settings\GameplaySettings.cs" />
-    <Compile Include="Settings\GeneralSettings.cs" />
-    <Compile Include="Settings\SettingsBase.cs" />
+    <Compile Include="Settings\Structures\GameplaySettings.cs" />
+    <Compile Include="Settings\Structures\GeneralSettings.cs" />
+    <Compile Include="Settings\Base\SettingsBase.cs" />
     <Compile Include="System\FileHandler.cs" />
     <Compile Include="System\FlagSystem.cs" />
     <Compile Include="System\GroupSystem.cs" />
