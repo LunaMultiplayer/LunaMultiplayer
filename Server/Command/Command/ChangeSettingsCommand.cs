@@ -10,8 +10,8 @@ namespace Server.Command.Command
 {
     public class ChangeSettingsCommand : SimpleCommand
     {
-        private static string Usage = "Usage: /changesettings settingsFile settingName newValue" +
-                                     $"Description: Parameter settingsFile can be settings, gameplaysettings or debugsettings" +
+        private static readonly string Usage = "Usage: /changesettings settingsFile settingName newValue" +
+                                     "Description: Parameter settingsFile can be settings, gameplaysettings or debugsettings" +
                                      $"{Environment.NewLine}Parameter settingName corresponds to the names inside the settings xml files." +
                                      $"{Environment.NewLine}Parameter settingName is case sensitive." +
                                      $"{Environment.NewLine}Parameter newValue is the new value." +
@@ -32,14 +32,13 @@ namespace Server.Command.Command
             var settingName = parameters[1];
             var newValue = parameters[2];
 
-            var settingsFileName = GetFileName(settingsFile);
-            if(string.IsNullOrEmpty(settingsFileName))
+            var settingsPath = GetSettingsFilePath(settingsFile);
+            if (string.IsNullOrEmpty(settingsPath))
             {
-                LunaLog.Error("Syntax error. First parameter (settingsFile) wrong use");
+                LunaLog.Error($"Syntax error. Could not find a settings file called '{settingsFile}'");
                 return false;
             }
 
-            var settingsPath = Path.Combine(ServerContext.ConfigDirectory, settingsFileName);
             try
             {
                 ChangeServerSettings(settingName, newValue, settingsPath);
@@ -56,52 +55,43 @@ namespace Server.Command.Command
         {
             if (parameters == null)
             {
-                LunaLog.Error($"Syntax error. No parameters found.{Usage}");
+                LunaLog.Error($"Syntax error. No parameters found. {Usage}");
                 return false;
             }
 
             if (parameters.Length != 3)
             {
-                LunaLog.Error($"Syntax error. Wrong number of parameters.{Usage}");
+                LunaLog.Error($"Syntax error. Wrong number of parameters. {Usage}");
                 return false;
             }
 
             if (string.IsNullOrEmpty(parameters[0]))
             {
-                LunaLog.Error($"Syntax error. First parameter not found.{Usage}");
+                LunaLog.Error($"Syntax error. First parameter not found. {Usage}");
                 return false;
             }
 
             if (string.IsNullOrEmpty(parameters[1]))
             {
-                LunaLog.Error($"Syntax error. Second parameter not found.{Usage}");
+                LunaLog.Error($"Syntax error. Second parameter not found. {Usage}");
                 return false;
             }
 
             if (string.IsNullOrEmpty(parameters[2]))
             {
-                LunaLog.Error($"Syntax error. Third parameter not found.{Usage}");
+                LunaLog.Error($"Syntax error. Third parameter not found. {Usage}");
                 return false;
             }
 
             return true;
         }
 
-        private static string GetFileName(string settingsFileParameter)
+        private static string GetSettingsFilePath(string settingsFile)
         {
-            if (settingsFileParameter.ToLower() == "settings")
+            foreach (var file in Directory.GetFiles(Path.Combine(ServerContext.ConfigDirectory)))
             {
-                return "Settings.xml";
-            }
-
-            if (settingsFileParameter.ToLower() == "gameplaysettings")
-            {
-                return "GameplaySettings.xml";
-            }
-
-            if (settingsFileParameter.ToLower() == "debugsettings")
-            {
-                return "DebugSettings.xml";
+                if (string.Equals(Path.GetFileNameWithoutExtension(file), settingsFile, StringComparison.InvariantCultureIgnoreCase))
+                    return file;
             }
 
             return null;
