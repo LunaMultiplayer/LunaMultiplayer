@@ -3,8 +3,8 @@ using Server.Settings.Definition;
 
 namespace Server.Settings.Structures
 {
-    public class GeneralSettings: SettingsBase<SettingsDefinition>
+    public class GeneralSettings: SettingsBase<GeneralSettingsDefinition>
     {
-        protected override string Filename => "Settings.xml";
+        protected override string Filename => "GeneralSettings.xml";
     }
 }

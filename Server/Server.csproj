@@ -145,7 +145,7 @@
     <Compile Include="Settings\Structures\DebugSettings.cs" />
     <Compile Include="Settings\Definition\GameplaySettingsDefinition.cs" />
     <Compile Include="Settings\Definition\DebugSettingsDefinition.cs" />
-    <Compile Include="Settings\Definition\SettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\GeneralSettingsDefinition.cs" />
     <Compile Include="Settings\Structures\GameplaySettings.cs" />
     <Compile Include="Settings\Structures\GeneralSettings.cs" />
     <Compile Include="Settings\Base\SettingsBase.cs" />

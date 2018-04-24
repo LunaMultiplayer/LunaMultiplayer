@@ -1,12 +1,11 @@
 ﻿using LunaCommon.Enums;
 using LunaCommon.Xml;
-using Server.Enums;
 using System;
 
 namespace Server.Settings.Definition
 {
     [Serializable]
-    public class SettingsDefinition
+    public class GeneralSettingsDefinition
     {
         [XmlComment(Value = "Name of the server. Max 30 char")]
         public string ServerName { get; set; } = "Luna Server";
