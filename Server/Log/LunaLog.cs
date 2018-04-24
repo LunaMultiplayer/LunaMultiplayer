@@ -1,7 +1,7 @@
+﻿using Server.Settings.Structures;
+using Server.System;
 using System;
 using System.IO;
-using Server.Settings;
-using Server.System;
 
 namespace Server.Log
 {

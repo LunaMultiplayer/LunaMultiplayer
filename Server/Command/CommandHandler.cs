@@ -1,7 +1,7 @@
 ﻿using Server.Command.Command;
 using Server.Context;
 using Server.Log;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;

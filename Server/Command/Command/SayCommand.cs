@@ -4,7 +4,7 @@ using Server.Command.Command.Base;
 using Server.Context;
 using Server.Log;
 using Server.Server;
-using Server.Settings;
+using Server.Settings.Structures;
 
 namespace Server.Command.Command
 {

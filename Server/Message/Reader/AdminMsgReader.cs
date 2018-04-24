@@ -9,7 +9,7 @@ using Server.Context;
 using Server.Log;
 using Server.Message.Reader.Base;
 using Server.Server;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 
 namespace Server.Message.Reader

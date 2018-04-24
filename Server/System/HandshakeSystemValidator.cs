@@ -1,7 +1,7 @@
 ﻿using LunaCommon.Enums;
 using Server.Client;
 using Server.Command.Command;
-using Server.Settings;
+using Server.Settings.Structures;
 using System.Linq;
 using System.Text.RegularExpressions;
 

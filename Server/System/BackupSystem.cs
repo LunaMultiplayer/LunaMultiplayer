@@ -1,6 +1,6 @@
 ﻿using Server.Context;
 using Server.Log;
-using Server.Settings;
+using Server.Settings.Structures;
 using System.Threading;
 using System.Threading.Tasks;
 

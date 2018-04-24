@@ -1,7 +1,7 @@
 ﻿using LunaCommon.Message.Data.Vessel;
 using Server.Client;
 using Server.Enums;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
 

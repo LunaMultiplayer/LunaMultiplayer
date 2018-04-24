@@ -5,7 +5,7 @@ using LunaCommon.Message.Interface;
 using Server.Context;
 using Server.Lidgren;
 using Server.Plugin;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
 using System.Net;

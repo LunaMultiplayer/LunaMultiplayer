@@ -1,10 +1,10 @@
-using LunaCommon.Time;
+﻿using LunaCommon.Time;
 using Server.Command.Command;
 using Server.Context;
 using Server.Lidgren;
 using Server.Log;
 using Server.Plugin;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
