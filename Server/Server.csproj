@@ -114,12 +114,14 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Settings\Base\ISettings.cs" />
+    <Compile Include="Settings\Definition\ConnectionSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\CraftSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\LogSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\MasterServerSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\ScreenshotSettingsDefinition.cs" />
     <Compile Include="Settings\SettingsHandler.cs" />
-    <Compile Include="Settings\Structures\GeneralSettings - Copy.cs" />
+    <Compile Include="Settings\Structures\ConnectionSettings.cs" />
+    <Compile Include="Settings\Structures\LogSettings.cs" />
     <Compile Include="Settings\Structures\ScreenshotSettings.cs" />
     <Compile Include="Settings\Structures\CraftSettings.cs" />
     <Compile Include="Settings\Structures\MasterServerSettings.cs" />

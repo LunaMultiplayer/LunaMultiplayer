@@ -8,6 +8,7 @@ using Server.Lidgren;
 using Server.Log;
 using Server.Plugin;
 using Server.Settings;
+using Server.Settings.Structures;
 using Server.System;
 using Server.System.VesselRelay;
 using Server.Utilities;
@@ -19,7 +20,6 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using Server.Settings.Structures;
 
 namespace Server
 {
@@ -87,7 +87,7 @@ namespace Server
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
 
-                LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
+                LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {ConnectionSettings.SettingsStore.Port}... ");
                 LunaLog.Normal($"Server name: '{GeneralSettings.SettingsStore.ServerName}'...");
                 LunaLog.Normal($"Server location: '{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}'...");
 

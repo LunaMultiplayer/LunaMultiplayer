@@ -8,9 +8,7 @@ namespace Server.Settings.Definition
     [Serializable]
     public class SettingsDefinition
     {
-        [XmlComment(Value = "The UDP port the server listens on. You don't need to open it on your router if RegisterWithMasterServer = true. " +
-                            "If you want that players can connect against your server MANUALLY you will need to open it on your router")]
-        public int Port { get; set; } = 8800;
+
 
         [XmlComment(Value = "Name of the server. Max 30 char")]
         public string ServerName { get; set; } = "Luna Server";
@@ -78,12 +76,7 @@ namespace Server.Settings.Definition
         public string WarpMaster { get; set; } = "";
 
 
-        
-        [XmlComment(Value = "Heartbeat interval in Ms")]
-        public int HearbeatMsInterval { get; set; } = 1000;
 
-        [XmlComment(Value = "Connection timeout in Ms")]
-        public int ConnectionMsTimeout { get; set; } = 30000;
 
         [XmlComment(Value = "Interval in Ms at wich the client will send POSITION updates of his vessel when other players are NEARBY. " +
                      "Decrease it if your clients have good network connection and you plan to do dogfights, although in that case consider using interpolation aswell")]
@@ -110,7 +103,6 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Main thread polling in ms. Keep this value low but at least above 2ms to avoid extreme CPU usage.")]
         public int MainTimeTick { get; set; } = 5;
-
 
         [XmlComment(Value = "Interval in ms at wich internal LMP structures (Subspaces, Vessels, Scenario files, ...) will be backed up to a file")]
         public int BackupIntervalMs { get; set; } = 30000;
