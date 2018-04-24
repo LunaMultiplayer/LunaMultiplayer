@@ -17,12 +17,12 @@ namespace Server.Lidgren
     {
         private static List<IPEndPoint> MasterServerEndpoints { get; } = new List<IPEndPoint>();
         
-        private static int MasterServerRegistrationMsInterval => GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval < 5000 ?
-            5000 : GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval;
+        private static int MasterServerRegistrationMsInterval => MasterServerSettings.SettingsStore.MasterServerRegistrationMsInterval < 5000 ?
+            5000 : MasterServerSettings.SettingsStore.MasterServerRegistrationMsInterval;
 
         public static async void RefreshMasterServersList()
         {
-            if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
+            if (!MasterServerSettings.SettingsStore.RegisterWithMasterServer) return;
 
             while (ServerContext.ServerRunning)
             {
@@ -39,7 +39,7 @@ namespace Server.Lidgren
 
         public static async void RegisterWithMasterServer()
         {
-            if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
+            if (!MasterServerSettings.SettingsStore.RegisterWithMasterServer) return;
 
             LunaLog.Normal("Registering with master servers...");
 

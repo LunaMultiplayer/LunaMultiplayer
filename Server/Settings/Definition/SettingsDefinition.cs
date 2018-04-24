@@ -34,12 +34,6 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Maximum length of a username.")]
         public int MaxUsernameLength { get; set; } = 15;
 
-        [XmlComment(Value = "Set to false if you don't want to appear on the server list")]
-        public bool RegisterWithMasterServer { get; set; } = true;
-
-        [XmlComment(Value = "Specify in miliseconds how often we will update the info with masterserver. Min value = 5000")]
-        public int MasterServerRegistrationMsInterval { get; set; } = 5000;
-
         [XmlComment(Value = "Specify in minutes how often /dekessler automatically runs. 0 = Disabled")]
         public float AutoDekessler { get; set; } = 0.5f;
 
