@@ -36,12 +36,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\Dependencies\DotNetZip.dll</HintPath>
+      <HintPath>..\External\Nuget\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
     <Reference Include="JsonFx, Version=2.0.1209.2802, Culture=neutral, PublicKeyToken=315052dd637f8a52, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\External\Dependencies\JsonFx.dll</HintPath>
+      <HintPath>..\External\Nuget\JsonFx.2.0.1209.2802\lib\net35\JsonFx.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization">
@@ -78,6 +76,7 @@
       <Link>.editorconfig</Link>
     </None>
     <None Include="app.manifest" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
