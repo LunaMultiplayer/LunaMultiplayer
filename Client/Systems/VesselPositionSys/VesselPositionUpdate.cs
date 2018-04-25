@@ -36,6 +36,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public Guid VesselId { get; set; }
         public int BodyIndex { get; set; }
+        public bool Landed { get; set; }
+        public bool Splashed { get; set; }
         public double[] LatLonAlt { get; set; } = new double[3];
         public double[] NormalVector { get; set; } = new double[3];
         public double[] Velocity { get; set; } = new double[3];
@@ -190,6 +192,9 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.checkLanded();
             Vessel.checkSplashed();
 
+            Vessel.Landed = LerpPercentage < 0.5 ? Landed : Target.Landed;
+            Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
+
             //Set the position of the vessel based on the orbital parameters
             Vessel.orbitDriver.updateFromParameters();
 
@@ -199,7 +204,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
                 Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
 
-                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude), SettingsSystem.CurrentSettings.Debug1);
             }
 
             foreach (var part in Vessel.Parts)
@@ -290,6 +295,9 @@ namespace LunaClient.Systems.VesselPositionSys
             if (Target != null)
             {
                 BodyIndex = Target.BodyIndex;
+                Landed = Target.Landed;
+                Splashed = Target.Splashed;
+
                 Array.Copy(Target.SrfRelRotation, SrfRelRotation, 4);
                 Array.Copy(Target.Velocity, Velocity, 3);
                 Array.Copy(Target.LatLonAlt, LatLonAlt, 3);
@@ -301,6 +309,8 @@ namespace LunaClient.Systems.VesselPositionSys
             else
             {
                 BodyIndex = Vessel.mainBody.flightGlobalsIndex;
+                Landed = Vessel.Landed;
+                Splashed = Vessel.Splashed;
 
                 SrfRelRotation[0] = Vessel.srfRelRotation.x;
                 SrfRelRotation[1] = Vessel.srfRelRotation.y;

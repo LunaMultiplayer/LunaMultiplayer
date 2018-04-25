@@ -200,6 +200,8 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public static void UpdateSecondaryVesselValues(Vessel vessel)
         {
+            vessel.UpdateLandedSplashed();
+
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)
             {

@@ -51,6 +51,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 VesselId = msgData.VesselId,
                 BodyIndex = msgData.BodyIndex,
                 HeightFromTerrain = msgData.HeightFromTerrain,
+                Landed = msgData.Landed,
+                Splashed = msgData.Splashed,
                 GameTimeStamp = msgData.GameTime,
                 ReceiveTime = LunaTime.UtcNow,
             };
