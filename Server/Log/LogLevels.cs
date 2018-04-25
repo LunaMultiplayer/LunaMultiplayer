@@ -2,6 +2,8 @@
 {
     public enum LogLevels
     {
+        VerboseNetworkDebug,
+        NetworkDebug,
         Debug,
         Info,
         Chat,

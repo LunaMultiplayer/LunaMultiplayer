@@ -10,6 +10,7 @@ using Server.Settings.Structures;
 using Server.Utilities;
 using System;
 using System.Threading.Tasks;
+using LogLevels = Server.Log.LogLevels;
 
 namespace Server.Lidgren
 {
@@ -33,9 +34,16 @@ namespace Server.Lidgren
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             ServerContext.Config.EnableMessageType(NetIncomingMessageType.NatIntroductionSuccess);
 
-#if DEBUG
-            ServerContext.Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
-            //ServerContext.Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            if (LogSettings.SettingsStore.LogLevel >= LogLevels.NetworkDebug)
+            {
+                ServerContext.Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
+            }
+
+            if (LogSettings.SettingsStore.LogLevel >= LogLevels.VerboseNetworkDebug)
+            {
+                ServerContext.Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
+            }
+
             if (DebugSettings.SettingsStore?.SimulatedLossChance < 100 && DebugSettings.SettingsStore?.SimulatedLossChance > 0)
             {
                 ServerContext.Config.SimulatedLoss = DebugSettings.SettingsStore.SimulatedLossChance / 100f;
@@ -44,10 +52,8 @@ namespace Server.Lidgren
             {
                 ServerContext.Config.SimulatedDuplicatesChance = DebugSettings.SettingsStore.SimulatedDuplicatesChance / 100f;
             }
-
             ServerContext.Config.SimulatedRandomLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore?.MaxSimulatedRandomLatencyMs ?? 0).TotalSeconds;
             ServerContext.Config.SimulatedMinimumLatency = (float)TimeSpan.FromMilliseconds(DebugSettings.SettingsStore?.MinSimulatedLatencyMs ?? 0).TotalSeconds;
-#endif
 
             Server = new NetServer(ServerContext.Config);
             Server.Start();
@@ -85,10 +91,12 @@ namespace Server.Lidgren
                             case NetIncomingMessageType.WarningMessage:
                                 LunaLog.Warning(msg.ReadString());
                                 break;
-                            case NetIncomingMessageType.ConnectionLatencyUpdated:
                             case NetIncomingMessageType.DebugMessage:
-                            case NetIncomingMessageType.VerboseDebugMessage:
                                 LunaLog.NetworkDebug(msg.ReadString());
+                                break;
+                            case NetIncomingMessageType.ConnectionLatencyUpdated:
+                            case NetIncomingMessageType.VerboseDebugMessage:
+                                LunaLog.NetworkVerboseDebug(msg.ReadString());
                                 break;
                             case NetIncomingMessageType.Error:
                                 LunaLog.Error(msg.ReadString());

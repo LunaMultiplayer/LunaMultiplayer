@@ -46,10 +46,17 @@ namespace Server.Log
             WriteLog(LogLevels.Info, message, false);
         }
 
+        public static void NetworkVerboseDebug(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            WriteLog(LogLevels.VerboseNetworkDebug, message, true);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
         public static void NetworkDebug(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            WriteLog(LogLevels.Debug, message, true);
+            WriteLog(LogLevels.NetworkDebug, message, true);
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 
