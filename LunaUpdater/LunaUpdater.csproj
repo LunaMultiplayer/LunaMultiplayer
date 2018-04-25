@@ -38,6 +38,9 @@
     <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
     </Reference>
+    <Reference Include="JsonFx">
+      <HintPath>..\External\Dependencies\JsonFx.dll</HintPath>
+    </Reference>
     <Reference Include="MarkerMetro.Unity.WinLegacy, Version=1.8.0.7, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\MarkerMetro.Unity.WinLegacy.1.8.0.7\lib\net35\MarkerMetro.Unity.WinLegacy.dll</HintPath>
     </Reference>
