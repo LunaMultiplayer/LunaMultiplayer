@@ -11,6 +11,7 @@ using Server.Settings;
 using Server.Settings.Structures;
 using Server.System;
 using Server.System.VesselRelay;
+using Server.Upnp;
 using Server.Utilities;
 using System;
 using System.Collections.Generic;
@@ -89,6 +90,7 @@ namespace Server
 
                 LunaLog.Normal($"Starting '{GeneralSettings.SettingsStore.ServerName}' on Port {ConnectionSettings.SettingsStore.Port}... ");
 
+                LmpPortMapper.OpenPort().Wait();
                 ServerContext.ServerRunning = true;
                 LidgrenServer.SetupLidgrenServer();
 
@@ -156,8 +158,9 @@ namespace Server
             LunaLog.Normal("Exiting... Please wait until all threads are finished");
 
             ServerContext.Shutdown("Server is shutting down");
-            CancellationTokenSrc.Cancel();
 
+            LmpPortMapper.RemoveOpenedPorts().Wait();
+            CancellationTokenSrc.Cancel();
             Task.WaitAll(TaskContainer.ToArray());
 
             QuitEvent.Set();

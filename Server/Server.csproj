@@ -194,6 +194,7 @@
     <Compile Include="System\WarpSystem.cs" />
     <Compile Include="System\WarpSystemReceiver.cs" />
     <Compile Include="System\WarpSystemSender.cs" />
+    <Compile Include="Upnp\LmpPortMapper.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\HandledException.cs" />
     <Compile Include="Utilities\InstancesChecker.cs" />
