@@ -39,7 +39,7 @@ namespace LMP.MasterServer.Lidgren
 
             config.EnableMessageType(NetIncomingMessageType.UnconnectedData);
 
-            var peer = new NetPeer(config);
+            var peer = new NetServer(config);
             peer.Start();
 
             CheckMasterServerListed();
