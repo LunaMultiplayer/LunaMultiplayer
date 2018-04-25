@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using LunaClient.Systems.Lock;
+using UnityEngine;
 
 namespace LunaClient.Windows.Locks
 {
@@ -30,7 +31,16 @@ namespace LunaClient.Windows.Locks
                 VesselLocks[i].Selected = GUILayout.Toggle(VesselLocks[i].Selected, VesselLocks[i].VesselId.ToString(), ButtonStyle);
                 if (VesselLocks[i].Selected)
                 {
+                    GUILayout.BeginHorizontal();
                     GUILayout.Label(CreateLockText(VesselLocks[i]), LabelStyle);
+                    if (VesselLocks[i].PlayerOwnsAnyLock())
+                    {
+                        if (GUILayout.Button("Release", ButtonStyle))
+                        {
+                            LockSystem.Singleton.ReleaseAllVesselLocks(null, VesselLocks[i].VesselId);
+                        }
+                    }
+                    GUILayout.EndHorizontal();
                 }
             }
         }

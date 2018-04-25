@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LunaClient.Systems.SettingsSys;
+using System;
 
 namespace LunaClient.Windows.Locks
 {
@@ -15,5 +16,11 @@ namespace LunaClient.Windows.Locks
         public string UpdateLockOwner { get; set; }
         public string UnloadedUpdateLockOwner { get; set; }
 
+        public bool PlayerOwnsAnyLock()
+        {
+            return ControlLockOwner == SettingsSystem.CurrentSettings.PlayerName ||
+                   UpdateLockOwner == SettingsSystem.CurrentSettings.PlayerName ||
+                   UnloadedUpdateLockOwner == SettingsSystem.CurrentSettings.PlayerName;
+        }
     }
 }
