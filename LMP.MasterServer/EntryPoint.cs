@@ -1,4 +1,5 @@
 ﻿using LMP.MasterServer.Http;
+using LMP.MasterServer.Upnp;
 using LunaCommon;
 using System;
 using System.Linq;
@@ -17,15 +18,17 @@ namespace LMP.MasterServer
     public static class EntryPoint
     {
         private static bool IsNightly { get; set; }
-
+        
         public static void Stop()
         {
             Lidgren.MasterServer.RunServer = false;
             LunaHttpServer.Server.Dispose();
+            MasterServerPortMapper.RemoveOpenedPorts().Wait();
         }
 
         public static void MainEntryPoint(string[] args)
         {
+            MasterServerPortMapper.UseUpnp = !args.Any(a => a.Contains("noupnp"));
             IsNightly = args.Any(a => a.Contains("nightly"));
             if (Common.PlatformIsWindows())
                 ConsoleUtil.DisableConsoleQuickEdit();
@@ -44,6 +47,7 @@ namespace LMP.MasterServer
                 return;
             }
 
+            MasterServerPortMapper.OpenPort().Wait();
             if (!ParseMasterServerPortNumber(commandLineArguments)) return;
             if (!ParseHttpServerPort(commandLineArguments)) return;
 
@@ -84,6 +88,7 @@ namespace LMP.MasterServer
             Console.WriteLine("/p:<port>                ... Start with the specified port (default port is 8700)");
             Console.WriteLine("/g:<port>                ... Reply to get petitions on the specified port (default is 8701)");
             Console.WriteLine("/nightly                 ... Keep this master server updated with last nightly version");
+            Console.WriteLine("/noupnp                  ... Disable upnp port forwarding");
             Console.WriteLine("");
         }
 
