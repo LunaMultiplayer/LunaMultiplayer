@@ -38,6 +38,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\Nuget\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(OS)' != 'Unix'">
     <Compile Include="FileHandlerTest.cs" />
@@ -59,10 +64,6 @@
     <ProjectReference Include="..\Server\Server.csproj">
       <Project>{fa6e9184-e243-49cc-94fa-ac557493b900}</Project>
       <Name>Server</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\TPL\System.Threading.csproj">
-      <Project>{dcb5d745-525c-46a1-bfc0-e12f87ab6165}</Project>
-      <Name>System.Threading</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

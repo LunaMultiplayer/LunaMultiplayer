@@ -4,6 +4,7 @@ using LunaClient.Windows.Chat;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Smooth.Algebraics;
 
 namespace LunaClient.Systems.Chat
 {

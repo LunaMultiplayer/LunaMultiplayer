@@ -1,12 +1,12 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
-using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
 using LunaCommon.Enums;
 using LunaCommon.Time;
+using Smooth.Algebraics;
 using System;
 using System.Collections.Generic;
 using System.Linq;
