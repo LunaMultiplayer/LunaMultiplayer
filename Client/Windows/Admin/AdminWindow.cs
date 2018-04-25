@@ -51,6 +51,8 @@ namespace LunaClient.Windows.Admin
                 _reason = string.Empty;
                 _selectedPlayer = null;
             }
+
+            CheckWindowLock();
         }
 
         public override void SetStyles()
@@ -71,6 +73,44 @@ namespace LunaClient.Windows.Admin
             _confirmationLayoutOptions[3] = GUILayout.MaxHeight(ConfirmationWindowHeight);
 
             ScrollPos = new Vector2();
+        }
+
+        public override void RemoveWindowLock()
+        {
+            if (IsWindowLocked)
+            {
+                IsWindowLocked = false;
+                InputLockManager.RemoveControlLock("LMP_AdminLock");
+            }
+        }
+
+        public void CheckWindowLock()
+        {
+            if (Display)
+            {
+                if (MainSystem.NetworkState < ClientState.Running || HighLogic.LoadedSceneIsFlight)
+                {
+                    RemoveWindowLock();
+                    return;
+                }
+
+                Vector2 mousePos = Input.mousePosition;
+                mousePos.y = Screen.height - mousePos.y;
+
+                var shouldLock = WindowRect.Contains(mousePos)
+                                 || !string.IsNullOrEmpty(_selectedPlayer) && _confirmationWindowRect.Contains(mousePos);
+
+                if (shouldLock && !IsWindowLocked)
+                {
+                    InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, "LMP_AdminLock");
+                    IsWindowLocked = true;
+                }
+                if (!shouldLock && IsWindowLocked)
+                    RemoveWindowLock();
+            }
+
+            if (!Display && IsWindowLocked)
+                RemoveWindowLock();
         }
     }
 }
