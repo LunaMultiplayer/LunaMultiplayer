@@ -166,7 +166,7 @@ namespace LunaClient.Windows.Screenshots
                 RemoveWindowLock();
         }
 
-        private void Reset()
+        private static void Reset()
         {
             _selectedFolder = null;
             _selectedImage = 0;

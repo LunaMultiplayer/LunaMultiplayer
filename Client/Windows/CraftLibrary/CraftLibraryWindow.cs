@@ -185,7 +185,7 @@ namespace LunaClient.Windows.CraftLibrary
                 RemoveWindowLock();
         }
         
-        private void Reset()
+        private static void Reset()
         {
             _selectedFolder = null;
             _drawUploadScreen = false;
