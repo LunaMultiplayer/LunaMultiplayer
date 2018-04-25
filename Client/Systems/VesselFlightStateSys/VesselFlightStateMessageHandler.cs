@@ -14,9 +14,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (!(msg.Data is VesselFlightStateMsgData msgData)) return;
 
-            //System is not ready nor in use so just skip the position message
-            if (!System.FlightStateSystemReady) return;
-
             if (System.FlightStatesDictionary.TryGetValue(msgData.VesselId, out var existingFlightState))
             {
                 existingFlightState.SetTarget(msgData);
