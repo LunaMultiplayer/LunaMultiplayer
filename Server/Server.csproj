@@ -43,6 +43,9 @@
       <HintPath>..\External\Nuget\LiteDB.4.1.2\lib\net40\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\Open.NAT.2.1.0.0\lib\net45\Open.Nat.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
