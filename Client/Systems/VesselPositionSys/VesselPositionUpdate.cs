@@ -189,9 +189,6 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.srfRelRotation = currentSurfaceRelRotation;
             Vessel.SetRotation((Quaternion)Body.rotation * currentSurfaceRelRotation, true);
 
-            Vessel.checkLanded();
-            Vessel.checkSplashed();
-
             Vessel.Landed = LerpPercentage < 0.5 ? Landed : Target.Landed;
             Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
 
@@ -204,7 +201,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
                 Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
 
-                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude), SettingsSystem.CurrentSettings.Debug1);
+                Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
 
             foreach (var part in Vessel.Parts)
