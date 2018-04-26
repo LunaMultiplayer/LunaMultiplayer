@@ -31,11 +31,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
+    </Reference>
     <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
       <HintPath>..\External\Nuget\Open.NAT.2.1.0.0\lib\net45\Open.Nat.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +59,7 @@
     </Compile>
     <Compile Include="Structure\Server.cs" />
     <Compile Include="Upnp\MasterServerPortMapper.cs" />
+    <Compile Include="Web\WebHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -75,20 +80,31 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
+    <Content Include="Http\Web\jquery-latest.js" />
+    <Content Include="Http\Web\jquery.metadata.js" />
+    <Content Include="Http\Web\jquery.tablesorter.js" />
+    <Content Include="Http\Web\jquery.tablesorter.min.js" />
+    <Content Include="Http\Web\lmp.js" />
     <Content Include="Http\Web\style.css" />
+    <Content Include="Web\favicon.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig">
       <Link>.editorconfig</Link>
     </None>
     <None Include="packages.config" />
+    <None Include="Web\css.zip" />
+    <None Include="Web\js.zip" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

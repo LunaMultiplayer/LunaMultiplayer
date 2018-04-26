@@ -61,13 +61,32 @@ namespace LMP.MasterServer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to body
-        ///{
-        ///}.
+        ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static string style {
+        internal static byte[] css {
             get {
-                return ResourceManager.GetString("style", resourceCulture);
+                object obj = ResourceManager.GetObject("css", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon favicon {
+            get {
+                object obj = ResourceManager.GetObject("favicon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] js {
+            get {
+                object obj = ResourceManager.GetObject("js", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

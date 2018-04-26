@@ -1,5 +1,6 @@
 ﻿using LMP.MasterServer.Http;
 using LMP.MasterServer.Upnp;
+using LMP.MasterServer.Web;
 using LunaCommon;
 using System;
 using System.Linq;
@@ -59,6 +60,7 @@ namespace LMP.MasterServer
             if (CheckPort())
             {
                 Lidgren.MasterServer.RunServer = true;
+                WebHandler.InitWebFiles();
                 LunaHttpServer.Start();
                 Task.Run(() => Lidgren.MasterServer.Start());
             }
