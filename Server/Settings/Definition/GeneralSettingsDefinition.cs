@@ -13,11 +13,11 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Description of the server. Max 200 char")]
         public string Description { get; set; } = "Luna Server Description";
 
-        [XmlComment(Value = "Website text to display (Discord, website, forum, etc). Max 15 char")]
+        [XmlComment(Value = "Website text to display (discord, website, forum, etc). Max 15 char")]
         public string WebsiteText { get; set; } = "LMP Github Repo";
 
-        [XmlComment(Value = "Website of the server. Max 60 char")]
-        public string Website { get; set; } = "http://www.lunamultiplayer.github.io";
+        [XmlComment(Value = "Actual website URL. Max 60 char")]
+        public string Website { get; set; } = "https://www.lunamultiplayer.github.io";
 
         [XmlComment(Value = "Password for the server. Leave it empty if you want to make a public server. Max 30 chars")]
         public string Password { get; set; } = "";
