@@ -176,6 +176,40 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.protoVessel.orbitSnapShot.ReferenceBodyIndex = (int)Target.Orbit[7];
         }
 
+        private void ApplyInterpolations()
+        {
+            if (Vessel.isEVA && Vessel.loaded)
+            {
+                ApplyPositionsToEva();
+                return;
+            }
+
+            ApplyOrbitInterpolation();
+
+            //Do not use CoM. It's not needed and it generate issues when you patch the protovessel with it as it generate weird commnet lines
+            //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
+            //Vessel.updateSituation() is called in the Vessel.LateUpdate(). Same applies for landed and splashed
+            Vessel.staticPressurekPa = FlightGlobals.getStaticPressure(Target.LatLonAlt[2], Body);
+            Vessel.heightFromTerrain = Target.HeightFromTerrain;
+
+            if (!Vessel.loaded)
+            {
+                //DO NOT lerp the latlonalt as otherwise if you are in orbit you will see landed vessels in the map view with weird jittering
+                Vessel.latitude = Target.LatLonAlt[0];
+                Vessel.longitude = Target.LatLonAlt[1];
+                Vessel.altitude = Target.LatLonAlt[2];
+                Vessel.orbitDriver.updateFromParameters();
+
+                if (Vessel.LandedOrSplashed)
+                    Vessel.SetPosition(Target.Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+            }
+            else
+            {
+                ApplyInterpolationsToLoadedVessel();
+            }
+        }
+
+
         private void ApplyInterpolationsToLoadedVessel()
         {
             var currentSurfaceRelRotation = Quaternion.Slerp(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
@@ -214,49 +248,19 @@ namespace LunaClient.Systems.VesselPositionSys
             }
         }
 
-        private void ApplyInterpolations()
-        {
-            if (Vessel.isEVA)
-            {
-                ApplyPositionsToEva();
-                return;
-            }
-
-            ApplyOrbitInterpolation();
-
-            //Do not use CoM. It's not needed and it generate issues when you patch the protovessel with it as it generate weird commnet lines
-            //It's important to set the static pressure as otherwise the vessel situation is not updated correctly when
-            //Vessel.updateSituation() is called in the Vessel.LateUpdate(). Same applies for landed and splashed
-            Vessel.staticPressurekPa = FlightGlobals.getStaticPressure(Target.LatLonAlt[2], Body);
-            Vessel.heightFromTerrain = Target.HeightFromTerrain;
-
-            if (!Vessel.loaded)
-            {
-                //DO NOT lerp the latlonalt as otherwise if you are in orbit you will see landed vessels in the map view with weird jittering
-                Vessel.latitude = Target.LatLonAlt[0];
-                Vessel.longitude = Target.LatLonAlt[1];
-                Vessel.altitude = Target.LatLonAlt[2];
-                Vessel.orbitDriver.updateFromParameters();
-
-                if (Vessel.LandedOrSplashed)
-                    Vessel.SetPosition(Target.Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
-            }
-            else
-            {
-                ApplyInterpolationsToLoadedVessel();
-            }
-        }
-
         /// <summary>
-        /// We don't interpolate kerbals in EVA... Too much work and they are very slow so no reason to do it
+        /// Kerbals positioning is quite messy....
         /// </summary>
         private void ApplyPositionsToEva()
         {
-            Vessel.latitude = Target.LatLonAlt[0];
-            Vessel.longitude = Target.LatLonAlt[1];
-            Vessel.altitude = Target.LatLonAlt[2];
+            Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
+            Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
+            Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
 
-            var currentSurfaceRelRotation = Target.SurfaceRelRotation;
+            Vessel.Landed = LerpPercentage < 0.5 ? Landed : Target.Landed;
+            Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
+
+            var currentSurfaceRelRotation = Quaternion.Slerp(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
             Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
@@ -264,7 +268,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.orbitDriver.updateFromParameters();
 
             //We don't do the surface positioning as with vessels because kerbals don't walk at high speeds and with this code it will be enough ;)
-            if (Vessel.situation < Vessel.Situations.FLYING)
+            if (Vessel.LandedOrSplashed || Vessel.situation <= Vessel.Situations.FLYING)
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
         }
 
