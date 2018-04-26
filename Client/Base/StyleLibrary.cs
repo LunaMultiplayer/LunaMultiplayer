@@ -169,7 +169,20 @@ namespace LunaClient.Base
                 onHover = new GUIStyleState { background = ResizeIcon },
             };
             LabelStyle = new GUIStyle(GUI.skin.label);
-            HyperlinkLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.blue } };
+            HyperlinkLabelStyle = new GUIStyle(GUI.skin.button)
+            {
+                fontStyle = FontStyle.Bold,
+                padding = new RectOffset(0, 0, 0, 0),
+                border = new RectOffset(0, 0, 0, 0),
+                normal = new GUIStyleState { textColor = Color.blue },
+                active = new GUIStyleState(),
+                focused = new GUIStyleState(),
+                hover = new GUIStyleState(),
+                onNormal = new GUIStyleState(),
+                onActive = new GUIStyleState(),
+                onFocused = new GUIStyleState(),
+                onHover = new GUIStyleState(),
+            };
             BoldLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.red } };
             ScrollStyle = new GUIStyle(GUI.skin.scrollView);
             TextAreaStyle = new GUIStyle(GUI.skin.textArea);

@@ -72,7 +72,7 @@ namespace Server.Lidgren
                 msgData.TerrainQuality = (int)GeneralSettings.SettingsStore.TerrainQuality;
 
                 msgData.Description = msgData.Description.Length > 200 ? msgData.Description.Substring(0, 200) : msgData.Description;
-                msgData.Website = msgData.Website.Length > 64 ? msgData.Website.Substring(0, 64) : msgData.Website;
+                msgData.Website = msgData.Website.Length > 60 ? msgData.Website.Substring(0, 60) : msgData.Website;
                 msgData.ServerName = msgData.ServerName.Length > 30 ? msgData.ServerName.Substring(0, 30) : msgData.ServerName;
 
                 lock (MasterServerEndpoints)

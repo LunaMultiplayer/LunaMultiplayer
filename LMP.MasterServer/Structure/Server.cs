@@ -45,7 +45,7 @@ namespace LMP.MasterServer.Structure
 
             Info.ServerName = Info.ServerName.Length > 30 ? Info.ServerName.Substring(0, 30) : Info.ServerName;
             Info.Description = Info.Description.Length > 200 ? Info.Description.Substring(0, 200) : Info.Description;
-            Info.Website = Info.Website.Length > 64 ? Info.Website.Substring(0, 64) : Info.Website;
+            Info.Website = Info.Website.Length > 60 ? Info.Website.Substring(0, 60) : Info.Website;
         }
 
         public static bool IsLocalIpAddress(IPAddress host)
