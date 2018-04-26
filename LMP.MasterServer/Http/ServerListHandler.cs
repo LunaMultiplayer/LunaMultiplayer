@@ -100,6 +100,7 @@ namespace LMP.MasterServer.Http
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Password");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Name");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Description");writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("URL"); writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Game Mode");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Players");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Max players"); writer.RenderEndTag();
@@ -117,6 +118,10 @@ namespace LMP.MasterServer.Http
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Password);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.ServerName);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Description);writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.Td);
+                writer.AddAttribute(HtmlTextWriterAttribute.Href, server.Website);
+                writer.RenderBeginTag(HtmlTextWriterTag.A);writer.Write("Website");writer.RenderEndTag();
+                writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write((GameMode)server.GameMode);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.PlayerCount);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.MaxPlayers);writer.RenderEndTag();
