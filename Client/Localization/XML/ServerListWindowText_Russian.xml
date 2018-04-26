@@ -10,6 +10,7 @@
     <Cheats>Читы</Cheats>
     <Name>Имя</Name>
     <Description>Описание</Description>
+    <Website>URL</Website>
     <ServerDetailTitle>Connect to server</ServerDetailTitle>
     <Password>Password</Password>
     <Connect>Connect</Connect>
