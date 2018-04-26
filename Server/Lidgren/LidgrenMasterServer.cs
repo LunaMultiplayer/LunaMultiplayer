@@ -56,6 +56,7 @@ namespace Server.Lidgren
                 msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
                 msgData.Description = GeneralSettings.SettingsStore.Description;
                 msgData.Website = GeneralSettings.SettingsStore.Website;
+                msgData.WebsiteText = GeneralSettings.SettingsStore.WebsiteText;
                 msgData.DropControlOnExit = GeneralSettings.SettingsStore.Cheats;
                 msgData.DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats;
                 msgData.DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats;
@@ -73,6 +74,7 @@ namespace Server.Lidgren
 
                 msgData.Description = msgData.Description.Length > 200 ? msgData.Description.Substring(0, 200) : msgData.Description;
                 msgData.Website = msgData.Website.Length > 60 ? msgData.Website.Substring(0, 60) : msgData.Website;
+                msgData.WebsiteText = msgData.WebsiteText.Length > 15 ? msgData.WebsiteText.Substring(0, 15) : msgData.WebsiteText;
                 msgData.ServerName = msgData.ServerName.Length > 30 ? msgData.ServerName.Substring(0, 30) : msgData.ServerName;
 
                 lock (MasterServerEndpoints)

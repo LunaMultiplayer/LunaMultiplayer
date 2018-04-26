@@ -39,7 +39,7 @@ namespace LunaClient.Windows.Connection
 
         #region Base overrides
 
-        public override bool Display => SettingsSystem.CurrentSettings.DisclaimerAccepted && MainSystem.ToolbarShowGui && HighLogic.LoadedScene == GameScenes.MAINMENU;
+        public override bool Display => SettingsSystem.CurrentSettings.DisclaimerAccepted && MainSystem.ToolbarShowGui;// && HighLogic.LoadedScene == GameScenes.MAINMENU;
 
         public override void SetStyles()
         {

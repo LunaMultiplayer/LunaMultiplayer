@@ -24,7 +24,7 @@ namespace LunaClient.Windows.ServerList
         private static bool _display;
         public override bool Display
         {
-            get => base.Display && _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState == ClientState.Disconnected && HighLogic.LoadedScene == GameScenes.MAINMENU;
+            get => base.Display && _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState == ClientState.Disconnected;// && HighLogic.LoadedScene == GameScenes.MAINMENU;
             set => base.Display = _display = value;
         }
 

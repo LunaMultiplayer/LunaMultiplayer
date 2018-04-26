@@ -121,18 +121,18 @@ namespace LunaClient.Windows.ServerList
             if (Event.current.type == EventType.Repaint) HeaderGridSize[8] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(325));
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(220));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Name, ButtonStyle))
             {
                 _orderBy = "ServerName";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width > 325 ? GUILayoutUtility.GetLastRect().width : 325;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width > 220 ? GUILayoutUtility.GetLastRect().width : 220;
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(150));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Website, ButtonStyle))
             {
-                _orderBy = "Website";
+                _orderBy = "WebsiteText";
             }
             if (Event.current.type == EventType.Repaint) HeaderGridSize[10] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
@@ -242,9 +242,9 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[10]));
-            if (string.IsNullOrEmpty(currentEntry.Website))
+            if (!string.IsNullOrEmpty(currentEntry.Website))
             {
-                if (GUILayout.Button(new GUIContent($"{currentEntry.Website}"), HyperlinkLabelStyle, GUILayout.MinWidth(HeaderGridSize[10])))
+                if (GUILayout.Button(new GUIContent(currentEntry.WebsiteText), HyperlinkLabelStyle, GUILayout.MinWidth(HeaderGridSize[10])))
                 {
                     Application.OpenURL(currentEntry.Website);
                 }
