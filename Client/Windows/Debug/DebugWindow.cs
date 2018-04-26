@@ -162,6 +162,11 @@ namespace LunaClient.Windows.Debug
 
                 if (_displayInterpolationData)
                 {
+                    foreach (var vessel in FlightGlobals.VesselsLoaded)
+                    {
+                        StringBuilder.AppendLine($"{vessel.id} : {vessel.ctrlState?.mainThrottle}");
+                    }
+
                     StringBuilder.Append("Max queue length: ").AppendLine(VesselPositionSystem.MaxQueuedUpdates.ToString());
                     foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
                     {

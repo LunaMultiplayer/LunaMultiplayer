@@ -13,6 +13,9 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "Description of the server. Max 200 char")]
         public string Description { get; set; } = "Luna Server Description";
 
+        [XmlComment(Value = "Website of the server. Max 64 char")]
+        public string Website { get; set; } = "http://lunamultiplayer.github.io";
+
         [XmlComment(Value = "Password for the server. Leave it empty if you want to make a public server. Max 30 chars")]
         public string Password { get; set; } = "";
 

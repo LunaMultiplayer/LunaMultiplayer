@@ -21,6 +21,7 @@ namespace LunaCommon.Message.Data.MasterServer
         public int PlayerCount;
         public string ServerName;
         public string Description;
+        public string Website;
         public int WarpMode;
         public int TerrainQuality;
         public int VesselPositionUpdatesMsInterval;
@@ -50,6 +51,7 @@ namespace LunaCommon.Message.Data.MasterServer
             lidgrenMsg.Write(PlayerCount);
             lidgrenMsg.Write(ServerName);
             lidgrenMsg.Write(Description);
+            lidgrenMsg.Write(Website);
             lidgrenMsg.Write(WarpMode);
             lidgrenMsg.Write(TerrainQuality);
             lidgrenMsg.Write(VesselPositionUpdatesMsInterval);
@@ -80,6 +82,7 @@ namespace LunaCommon.Message.Data.MasterServer
             PlayerCount = lidgrenMsg.ReadInt32();
             ServerName = lidgrenMsg.ReadString();
             Description = lidgrenMsg.ReadString();
+            Website = lidgrenMsg.ReadString();
             WarpMode = lidgrenMsg.ReadInt32();
             TerrainQuality = lidgrenMsg.ReadInt32();
             VesselPositionUpdatesMsInterval = lidgrenMsg.ReadInt32();
@@ -94,7 +97,7 @@ namespace LunaCommon.Message.Data.MasterServer
         {            
             //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
             return base.InternalGetMessageSize() + sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
-                sizeof(byte) + sizeof(int) * 7 + ServerName.GetByteCount() + Description.GetByteCount() + sizeof(bool) * 4;
+                sizeof(byte) + sizeof(int) * 7 + ServerName.GetByteCount() + Description.GetByteCount() + Website.GetByteCount() + sizeof(bool) * 4;
         }
     }
 }
