@@ -13,7 +13,7 @@ namespace LMP.MasterServer.Web
             {
                 var folder = Path.Combine(Directory.GetCurrentDirectory(), "css");
                 Directory.CreateDirectory(folder);
-                zipFile.ExtractAll(folder, ExtractExistingFileAction.OverwriteSilently);
+                zipFile.ExtractAll(folder, ExtractExistingFileAction.DoNotOverwrite);
             }
 
             using (var stream = new MemoryStream(Resources.js))
@@ -21,12 +21,15 @@ namespace LMP.MasterServer.Web
             {
                 var folder = Path.Combine(Directory.GetCurrentDirectory(), "js");
                 Directory.CreateDirectory(folder);
-                zipFile.ExtractAll(folder, ExtractExistingFileAction.OverwriteSilently);
+                zipFile.ExtractAll(folder, ExtractExistingFileAction.DoNotOverwrite);
             }
 
-            using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "favicon.ico"), FileMode.Create))
+            if (!File.Exists(Path.Combine(Directory.GetCurrentDirectory(), "favicon.ico")))
             {
-                Resources.favicon.Save(stream);
+                using (var stream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), "favicon.ico"), FileMode.Create))
+                {
+                    Resources.favicon.Save(stream);
+                }
             }
         }
     }
