@@ -41,9 +41,6 @@
     <Reference Include="JsonFx">
       <HintPath>..\External\Dependencies\JsonFx.dll</HintPath>
     </Reference>
-    <Reference Include="MarkerMetro.Unity.WinLegacy, Version=1.8.0.7, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\MarkerMetro.Unity.WinLegacy.1.8.0.7\lib\net35\MarkerMetro.Unity.WinLegacy.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Runtime.Serialization">
       <HintPath>..\External\Dependencies\System.Runtime.Serialization.dll</HintPath>
