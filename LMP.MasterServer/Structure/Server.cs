@@ -48,6 +48,11 @@ namespace LMP.MasterServer.Structure
             Info.Description = Info.Description.Length > 200 ? Info.Description.Substring(0, 200) : Info.Description;
             Info.Website = Info.Website.Length > 60 ? Info.Website.Substring(0, 60) : Info.Website;
             Info.WebsiteText = Info.WebsiteText.Length > 15 ? Info.WebsiteText.Substring(0, 15) : Info.WebsiteText;
+
+            if (!Info.Website.Contains("://"))
+            {
+                Info.Website = "http://" + Info.Website;
+            }
         }
 
         public static bool IsLocalIpAddress(IPAddress host)
