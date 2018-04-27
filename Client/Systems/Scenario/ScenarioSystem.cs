@@ -5,7 +5,6 @@ using LunaCommon;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Smooth.Algebraics;
 using UniLinq;
 
 namespace LunaClient.Systems.Scenario

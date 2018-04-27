@@ -38,8 +38,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Threading, Version=1.0.2856.102, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll</HintPath>
+    <Reference Include="System.Threading">
+      <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
@@ -88,6 +88,10 @@
   </Target>
   <Import Project="..\External\Nuget\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\External\Nuget\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets')" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(SolutionDir)External\Nuget\TaskParallelLibrary.1.0.2856.0\lib\Net35\System.Threading.dll" "$(TargetDir)\System.Threading.dll"</PostBuildEvent>
+    <PostBuildEvent>copy "$(SolutionDir)External\Dependencies\System.Threading.dll" "$(TargetDir)System.Threading.dll"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

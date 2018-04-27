@@ -1,8 +1,8 @@
-﻿using LunaClient.Base;
+﻿using System;
+using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaCommon.Message.Data.Chat;
 using LunaCommon.Message.Interface;
-using Smooth.Algebraics;
 using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.Chat
