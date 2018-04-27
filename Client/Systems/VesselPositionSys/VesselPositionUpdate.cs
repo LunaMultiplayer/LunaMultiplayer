@@ -61,7 +61,7 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Interpolation fields
 
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
-        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp), 0, (float)(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval * 1.5));
+        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp), 0, float.MaxValue);
 
         private float _lerpPercentage = 1;
         public float LerpPercentage
