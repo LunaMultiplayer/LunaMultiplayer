@@ -1,4 +1,4 @@
-[![Analytics](https://ga-beacon.appspot.com/UA-118326748-1/Home)](https://github.com/igrigorik/ga-beacon?pixel)
+[![Analytics](https://ga-beacon.appspot.com/UA-118326748-1/Home?pixel&useReferer)](https://github.com/igrigorik/ga-beacon)
 
 <p align="center">
     <img src="../master/External/logo.png" alt="Luna multiplayer logo"/>
