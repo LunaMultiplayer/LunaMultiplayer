@@ -230,7 +230,6 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
-    <Compile Include="Utilities\OutdatedVersionDialog.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
@@ -309,7 +308,6 @@
     <Compile Include="Systems\Warp\WarpStructures.cs" />
     <Compile Include="Utilities\ClockHandler.cs" />
     <Compile Include="Utilities\CommonUtil.cs" />
-    <Compile Include="Utilities\CompatibilityChecker.cs" />
     <Compile Include="Utilities\ConfigNodeSerializer.cs" />
     <Compile Include="Systems\Asteroid\AsteroidSystem.cs" />
     <Compile Include="Base\Interface\ISystem.cs" />
@@ -496,10 +494,6 @@
     <ProjectReference Include="..\LmpGlobal\LmpGlobal.csproj">
       <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
       <Name>LmpGlobal</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\LunaUpdater\LunaUpdater.csproj">
-      <Project>{35a57b77-236e-492c-b003-1f8fc2f544f3}</Project>
-      <Name>LunaUpdater</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

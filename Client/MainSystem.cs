@@ -18,7 +18,6 @@ using LunaClient.Utilities;
 using LunaClient.Windows;
 using LunaCommon;
 using LunaCommon.Enums;
-using LunaUpdater.Github;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -51,9 +50,7 @@ namespace LunaClient
                 NetworkEvent.onNetworkStatusChanged.Fire(value);
             }
         }
-
-        public static Version LatestVersion { get; set; }
-
+        
         public string Status { get; set; }
 
         public const int WindowOffset = 1664147604;
@@ -210,13 +207,6 @@ namespace LunaClient
                 Enabled = false;
                 DisclaimerDialog.SpawnDialog();
             }
-
-            LatestVersion = GithubUpdateChecker.GetLatestVersion();
-            if (new Version(LmpVersioning.CurrentVersion) < LatestVersion)
-            {
-                LunaLog.LogWarning($"[LMP]: Outdated version detected! Current: {LmpVersioning.CurrentVersion} Latest: {LatestVersion}");
-                OutdatedVersionDialog.SpawnDialog(LatestVersion.ToString(), LmpVersioning.CurrentVersion);
-            }
         }
 
         public void Awake()
@@ -232,7 +222,7 @@ namespace LunaClient
             LunaLog.Log($"[LMP]: KSP installed at: {KspPath}");
             LunaLog.Log($"[LMP]: LMP installed at: {Environment.CurrentDirectory}");
 
-            if (!CompatibilityChecker.IsCompatible() || !InstallChecker.IsCorrectlyInstalled())
+            if (!InstallChecker.IsCorrectlyInstalled())
             {
                 Enabled = false;
                 return;
