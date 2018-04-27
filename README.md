@@ -1,3 +1,5 @@
+[![Analytics](https://ga-beacon.appspot.com/UA-118326748-1/Home)](https://github.com/igrigorik/ga-beacon?pixel)
+
 <p align="center">
     <img src="../master/External/logo.png" alt="Luna multiplayer logo"/>
     <a href="https://www.youtube.com/watch?v=gf6xyLnpnoM"><img src="https://img.youtube.com/vi/gf6xyLnpnoM/0.jpg" alt="Video" height="187" width="250"/></a>
