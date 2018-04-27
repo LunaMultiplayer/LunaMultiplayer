@@ -10,9 +10,10 @@ namespace LMP.MasterServer.Upnp
     {
         public static bool UseUpnp { get; set; } = true;
 
+        private static readonly int RndId = new Random().Next(10000);
         private static readonly int LifetimeInSeconds = (int)TimeSpan.FromMinutes(1).TotalSeconds;
-        private static readonly Mapping MasterServerPortMapping = new Mapping(Protocol.Udp, Lidgren.MasterServer.Port, Lidgren.MasterServer.Port, LifetimeInSeconds, "LMP MasterServer");
-        private static readonly Mapping MasterServerWebPortMapping = new Mapping(Protocol.Tcp, LunaHttpServer.Port, LunaHttpServer.Port, LifetimeInSeconds, "LMP MasterServer WEB");
+        private static readonly Mapping MasterServerPortMapping = new Mapping(Protocol.Udp, Lidgren.MasterServer.Port, Lidgren.MasterServer.Port, LifetimeInSeconds, $"LMPMasterSrv {RndId}");
+        private static readonly Mapping MasterServerWebPortMapping = new Mapping(Protocol.Tcp, LunaHttpServer.Port, LunaHttpServer.Port, LifetimeInSeconds, $"LMPMasterSrvWeb {RndId}");
         private static readonly Lazy<NatDevice> Device = new Lazy<NatDevice>(DiscoverDevice);
 
         private static NatDevice DiscoverDevice()
