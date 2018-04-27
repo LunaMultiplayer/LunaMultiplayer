@@ -48,9 +48,9 @@ namespace LMP.MasterServer
                 return;
             }
 
-            MasterServerPortMapper.OpenPort().Wait();
             if (!ParseMasterServerPortNumber(commandLineArguments)) return;
             if (!ParseHttpServerPort(commandLineArguments)) return;
+            MasterServerPortMapper.OpenPort().Wait();
 
             ConsoleLogger.Log(LogLevels.Normal, $"Starting MasterServer at port: {Lidgren.MasterServer.Port}");
             if (IsNightly)

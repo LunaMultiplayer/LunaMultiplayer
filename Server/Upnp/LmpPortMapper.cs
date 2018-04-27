@@ -11,10 +11,10 @@ namespace Server.Upnp
 {
     public class LmpPortMapper
     {
-        private static readonly int RndId = new Random().Next(10000);
         private static readonly int LifetimeInSeconds = (int)TimeSpan.FromMinutes(5).TotalSeconds;
-        private static readonly Mapping LmpPortMapping = new Mapping(Protocol.Udp, ConnectionSettings.SettingsStore.Port, ConnectionSettings.SettingsStore.Port, LifetimeInSeconds, $"LMPServer {RndId}");
         private static readonly Lazy<NatDevice> Device = new Lazy<NatDevice>(DiscoverDevice);
+
+        private static Mapping LmpPortMapping => new Mapping(Protocol.Udp, ConnectionSettings.SettingsStore.Port, ConnectionSettings.SettingsStore.Port, LifetimeInSeconds, $"LMPServer {ConnectionSettings.SettingsStore.Port}");
 
         private static NatDevice DiscoverDevice()
         {

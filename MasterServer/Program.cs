@@ -49,6 +49,7 @@ namespace MasterServer
 
             Console.CancelKeyPress += (sender, eArgs) =>
             {
+                StopMasterServerDll();
                 QuitEvent.Set();
                 eArgs.Cancel = true;
             };
