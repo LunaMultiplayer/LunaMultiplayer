@@ -49,9 +49,14 @@ namespace LMP.MasterServer.Structure
             Info.Website = Info.Website.Length > 60 ? Info.Website.Substring(0, 60) : Info.Website;
             Info.WebsiteText = Info.WebsiteText.Length > 15 ? Info.WebsiteText.Substring(0, 15) : Info.WebsiteText;
 
-            if (!Info.Website.Contains("://"))
+            if (!string.IsNullOrEmpty(Info.Website) && !Info.Website.Contains("://"))
             {
                 Info.Website = "http://" + Info.Website;
+            }
+
+            if (string.IsNullOrEmpty(Info.WebsiteText) && !string.IsNullOrEmpty(Info.Website))
+            {
+                Info.WebsiteText = "URL";
             }
         }
 

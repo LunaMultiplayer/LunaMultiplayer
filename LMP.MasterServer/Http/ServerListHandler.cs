@@ -119,8 +119,11 @@ namespace LMP.MasterServer.Http
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.ServerName);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Description);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);
-                writer.AddAttribute(HtmlTextWriterAttribute.Href, server.Website);
-                writer.RenderBeginTag(HtmlTextWriterTag.A);writer.Write(server.WebsiteText);writer.RenderEndTag();
+                if (!string.IsNullOrEmpty(server.Website))
+                {
+                    writer.AddAttribute(HtmlTextWriterAttribute.Href, server.Website);
+                    writer.RenderBeginTag(HtmlTextWriterTag.A);writer.Write(server.WebsiteText);writer.RenderEndTag();
+                }
                 writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write((GameMode)server.GameMode);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.PlayerCount);writer.RenderEndTag();

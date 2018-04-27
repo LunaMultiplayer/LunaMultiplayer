@@ -244,7 +244,6 @@ namespace LunaClient.Windows.ServerList
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[10]));
             if (!string.IsNullOrEmpty(currentEntry.Website))
             {
-                currentEntry.WebsiteText = string.IsNullOrEmpty(currentEntry.WebsiteText) ? LocalizationContainer.ServerListWindowText.Website : currentEntry.WebsiteText;
                 if (GUILayout.Button(new GUIContent(currentEntry.WebsiteText), HyperlinkLabelStyle, GUILayout.MinWidth(HeaderGridSize[10])))
                 {
                     Application.OpenURL(currentEntry.Website);
