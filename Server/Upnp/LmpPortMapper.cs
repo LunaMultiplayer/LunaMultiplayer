@@ -25,13 +25,14 @@ namespace Server.Upnp
         /// <summary>
         /// Opens the port set in the settings using UPnP. With a lifetime of 10 minutes
         /// </summary>
-        public static async Task OpenPort()
+        public static async Task OpenPort(bool verbose = true)
         {
             if (ConnectionSettings.SettingsStore.Upnp)
             {
                 try
                 {
                     await Device.Value.CreatePortMapAsync(LmpPortMapping);
+                    if (verbose)
                     LunaLog.Debug($"UPnP active. Port: {ConnectionSettings.SettingsStore.Port} opened!");
                 }
                 catch (Exception)
@@ -50,7 +51,7 @@ namespace Server.Upnp
             {
                 while (ServerContext.ServerRunning)
                 {
-                    await OpenPort();
+                    await OpenPort(false);
                     await Task.Delay((int)TimeSpan.FromSeconds(60).TotalMilliseconds);
                 }
             }
