@@ -10,8 +10,9 @@ namespace LMP.MasterServer.Upnp
     {
         public static bool UseUpnp { get; set; } = true;
 
-        private static readonly Mapping MasterServerPortMapping = new Mapping(Protocol.Udp, Lidgren.MasterServer.Port, Lidgren.MasterServer.Port, "LMP MasterServer");
-        private static readonly Mapping MasterServerWebPortMapping = new Mapping(Protocol.Tcp, LunaHttpServer.Port, LunaHttpServer.Port, "LMP MasterServer WEB");
+        private static readonly int LifetimeInSeconds = (int)TimeSpan.FromMinutes(1).TotalSeconds;
+        private static readonly Mapping MasterServerPortMapping = new Mapping(Protocol.Udp, Lidgren.MasterServer.Port, Lidgren.MasterServer.Port, LifetimeInSeconds, "LMP MasterServer");
+        private static readonly Mapping MasterServerWebPortMapping = new Mapping(Protocol.Tcp, LunaHttpServer.Port, LunaHttpServer.Port, LifetimeInSeconds, "LMP MasterServer WEB");
         private static readonly Lazy<NatDevice> Device = new Lazy<NatDevice>(DiscoverDevice);
 
         private static NatDevice DiscoverDevice()
@@ -49,6 +50,18 @@ namespace LMP.MasterServer.Upnp
                 {
                     // ignored
                 }
+            }
+        }
+
+        /// <summary>
+        /// Refresh the UPnP port every 30 seconds
+        /// </summary>
+        public static async void RefreshUpnpPort()
+        {
+            while (Lidgren.MasterServer.RunServer)
+            {
+                await OpenPort();
+                await Task.Delay((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
             }
         }
     }

@@ -1,4 +1,5 @@
 ﻿using Open.Nat;
+using Server.Context;
 using Server.Log;
 using Server.Settings.Structures;
 using System;
@@ -10,7 +11,8 @@ namespace Server.Upnp
 {
     public class LmpPortMapper
     {
-        private static readonly Mapping LmpPortMapping = new Mapping(Protocol.Udp, ConnectionSettings.SettingsStore.Port, ConnectionSettings.SettingsStore.Port, "LMP Server");
+        private static readonly int LifetimeInSeconds = (int)TimeSpan.FromMinutes(5).TotalSeconds;
+        private static readonly Mapping LmpPortMapping = new Mapping(Protocol.Udp, ConnectionSettings.SettingsStore.Port, ConnectionSettings.SettingsStore.Port, LifetimeInSeconds, "LMP Server");
         private static readonly Lazy<NatDevice> Device = new Lazy<NatDevice>(DiscoverDevice);
 
         private static NatDevice DiscoverDevice()
@@ -19,6 +21,9 @@ namespace Server.Upnp
             return nat.DiscoverDeviceAsync(PortMapper.Upnp, new CancellationTokenSource(ConnectionSettings.SettingsStore.UpnpMsTimeout)).Result;
         }
 
+        /// <summary>
+        /// Opens the port set in the settings using UPnP. With a lifetime of 10 minutes
+        /// </summary>
         public static async Task OpenPort()
         {
             if (ConnectionSettings.SettingsStore.Upnp)
@@ -35,6 +40,21 @@ namespace Server.Upnp
             }
         }
 
+        /// <summary>
+        /// Refresh the UPnP port every 1 minute
+        /// </summary>
+        public static async void RefreshUpnpPort()
+        {
+            while (ServerContext.ServerRunning)
+            {
+                await OpenPort();
+                await Task.Delay((int)TimeSpan.FromSeconds(60).TotalMilliseconds);
+            }
+        }
+
+        /// <summary>
+        /// Closes the opened ports using UPnP
+        /// </summary>
         public static async Task RemoveOpenedPorts()
         {
             if (ConnectionSettings.SettingsStore.Upnp)
@@ -51,6 +71,9 @@ namespace Server.Upnp
             }
         }
 
+        /// <summary>
+        /// Gets external IP using UPnP
+        /// </summary>
         public static async Task<IPAddress> GetExternalIp()
         {
             return await Device.Value.GetExternalIPAsync();

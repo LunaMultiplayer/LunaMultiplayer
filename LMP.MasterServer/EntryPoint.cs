@@ -19,7 +19,7 @@ namespace LMP.MasterServer
     public static class EntryPoint
     {
         private static bool IsNightly { get; set; }
-        
+
         public static void Stop()
         {
             Lidgren.MasterServer.RunServer = false;
@@ -62,6 +62,7 @@ namespace LMP.MasterServer
                 Lidgren.MasterServer.RunServer = true;
                 WebHandler.InitWebFiles();
                 LunaHttpServer.Start();
+                Task.Run(() => MasterServerPortMapper.RefreshUpnpPort());
                 Task.Run(() => Lidgren.MasterServer.Start());
             }
         }
