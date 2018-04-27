@@ -79,7 +79,8 @@ There's also a test project in case you want to add tests to your code.
 
 ### Troubleshooting:
 
-Please visit [this page](../../wiki/Troubleshooting) in the wiki to solve the most common issues with LMP
+Please visit [this page](../../wiki/Troubleshooting) in the wiki to solve the most common issues with LMP 
+[![Analytics](https://ga-beacon.appspot.com/UA-118326748-1/Home?pixel&useReferer)](https://github.com/igrigorik/ga-beacon)
 
 ---
 
