@@ -59,10 +59,13 @@ namespace LMP.MasterServer.Upnp
         /// </summary>
         public static async void RefreshUpnpPort()
         {
-            while (Lidgren.MasterServer.RunServer)
+            if (UseUpnp)
             {
-                await OpenPort();
-                await Task.Delay((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
+                while (Lidgren.MasterServer.RunServer)
+                {
+                    await OpenPort();
+                    await Task.Delay((int)TimeSpan.FromSeconds(30).TotalMilliseconds);
+                }
             }
         }
     }

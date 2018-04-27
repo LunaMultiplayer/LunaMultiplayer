@@ -46,10 +46,13 @@ namespace Server.Upnp
         /// </summary>
         public static async void RefreshUpnpPort()
         {
-            while (ServerContext.ServerRunning)
+            if (ConnectionSettings.SettingsStore.Upnp)
             {
-                await OpenPort();
-                await Task.Delay((int)TimeSpan.FromSeconds(60).TotalMilliseconds);
+                while (ServerContext.ServerRunning)
+                {
+                    await OpenPort();
+                    await Task.Delay((int)TimeSpan.FromSeconds(60).TotalMilliseconds);
+                }
             }
         }
 
