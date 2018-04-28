@@ -101,11 +101,10 @@ namespace LMP.MasterServer.Http
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Name");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Description");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("URL"); writer.RenderEndTag();
-            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Game Mode");writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Game mode");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Players");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Max players"); writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Mod control");writer.RenderEndTag();
-            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Terrain quality");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Cheats");writer.RenderEndTag();
             writer.RenderEndTag();
             writer.RenderEndTag();
