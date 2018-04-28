@@ -10,6 +10,11 @@
     <a href="../../releases"><img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" /></a>
 </p>
 
+<p align="center">
+    <a href="https://forum.kerbalspaceprogram.com/index.php?/topic/168271-131-luna-multiplayer-lmp-alpha"><img src="https://img.shields.io/badge/KSP%20Forum-Post-4265f4.svg" alt="KSP forum post"/></a>
+    <a href="https://github.com/LunaMultiplayer/LunaMultiplayerUpdater"><img src="https://img.shields.io/badge/Automatic-Updater-4265f4.svg" alt="Latest build updater"/></a>
+</p>
+
 ---
 
 <p align="center">
@@ -22,10 +27,6 @@
 # Luna Multiplayer Mod (LMP)
 
 *Multiplayer mod for [Kerbal Space Program (KSP)](https://kerbalspaceprogram.com)*
-
-*[Official KSP forum post](https://forum.kerbalspaceprogram.com/index.php?/topic/168271-131-luna-multiplayer-lmp-alpha/)*
-
-*[Latest build updater](https://github.com/LunaMultiplayer/LunaMultiplayerUpdater)*
 
 ### Main features:
 
