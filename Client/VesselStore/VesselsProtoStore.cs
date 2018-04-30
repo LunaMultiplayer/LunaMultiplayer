@@ -74,7 +74,7 @@ namespace LunaClient.VesselStore
         /// <summary>
         /// Adds a vessel manually to the dictionary. Use this to add your own spawned vessels.
         /// </summary>
-        public static void AddVesselToDictionary(Vessel vessel)
+        public static void AddOrUpdateVesselToDictionary(Vessel vessel)
         {
             var ownVesselData = VesselSerializer.SerializeVessel(vessel.protoVessel);
             if (ownVesselData.Length > 0)

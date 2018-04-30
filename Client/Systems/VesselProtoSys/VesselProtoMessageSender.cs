@@ -46,7 +46,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 SendVesselMessage(vessel.BackupVessel());
 
             if (!VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
-                VesselsProtoStore.AddVesselToDictionary(vessel);
+                VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel);
         }
 
         #region Private methods
