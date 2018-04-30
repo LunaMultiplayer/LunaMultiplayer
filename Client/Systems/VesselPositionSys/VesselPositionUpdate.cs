@@ -46,6 +46,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public float HeightFromTerrain { get; set; }
         public double GameTimeStamp { get; set; }
         public DateTime ReceiveTime { get; set; }
+        public long UtcSentTime { get; set; }
 
         #endregion
 
@@ -60,8 +61,15 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Interpolation fields
 
+        //TODO: Remove this
+        public static bool UseGameTimeStamp = false;
+
+        private static float MaxInterpolationDuration => (float)TimeSpan
+            .FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval * 2).TotalSeconds;
+
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
-        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp), 0, float.MaxValue);
+        public float InterpolationDuration => UseGameTimeStamp ? Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp), 0, float.MaxValue) :
+            Mathf.Clamp((float)TimeSpan.FromTicks(Target.UtcSentTime - UtcSentTime).TotalSeconds, 0, MaxInterpolationDuration);
 
         private float _lerpPercentage = 1;
         public float LerpPercentage
@@ -69,6 +77,7 @@ namespace LunaClient.Systems.VesselPositionSys
             get => SettingsSystem.CurrentSettings.PositionInterpolation ? _lerpPercentage : 1;
             set => _lerpPercentage = Mathf.Clamp01(value);
         }
+
 
         #endregion
 
@@ -96,10 +105,12 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     //We are in the first iteration of the interpolation (we just started to apply vessel updates)
                     GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval).TotalSeconds;
+                    UtcSentTime = targetUpdate.UtcSentTime - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval).Ticks;
                 }
                 else
                 {
                     GameTimeStamp = Target.GameTimeStamp;
+                    UtcSentTime = Target.UtcSentTime;
                 }
 
                 Target = targetUpdate;
@@ -109,18 +120,22 @@ namespace LunaClient.Systems.VesselPositionSys
                 {
                     case 0:
                         GameTimeStamp -= InterpolationDuration * 0.75;
+                        UtcSentTime -= TimeSpan.FromSeconds(InterpolationDuration * 0.75).Ticks;
                         break;
                     case 1:
                         GameTimeStamp -= InterpolationDuration * 0.25;
+                        UtcSentTime -= TimeSpan.FromSeconds(InterpolationDuration * 0.25).Ticks;
                         break;
                     case 2:
                     case 3:
                         break;
                     case 4:
                         GameTimeStamp += InterpolationDuration * 0.25;
+                        UtcSentTime += TimeSpan.FromSeconds(InterpolationDuration * 0.25).Ticks;
                         break;
                     case 5:
                         GameTimeStamp += InterpolationDuration * 0.60;
+                        UtcSentTime += TimeSpan.FromSeconds(InterpolationDuration * 0.65).Ticks;
                         break;
                 }
 
