@@ -21,7 +21,7 @@ namespace LunaClient.Systems.VesselPositionSys
         private static int VesselUpdatesSendMsInterval => SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval;
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
             TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > VesselUpdatesSendMsInterval :
-            TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > 100;
+            TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval;
 
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
