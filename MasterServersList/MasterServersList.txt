@@ -2,15 +2,15 @@
 #Then each client will query them for the servers and each server will register against them
 #Dagger. List: http://dagger.ole32.com:8701/servers
 dagger.ole32.com:8700
-#Dagger nightly. List: http://dagger.ole32.com:8751/servers
+#Dagger nightly. List: http://dagger.ole32.com:8751
 dagger.ole32.com:8750
-#PictoCube (Alfred). List: http://37.187.108.37:8701/servers
+#PictoCube (Alfred). List: http://37.187.108.37:8701
 37.187.108.37:8700
-#PictoCube (Alfred) nightly. List: http://37.187.108.37:8711/servers
+#PictoCube (Alfred) nightly. List: http://37.187.108.37:8711
 37.187.108.37:8710
-#Zarlo's. List: http://ms.lmp.pksky.xyz:8701/servers
+#Zarlo's. List: http://ms.lmp.pksky.xyz:8701
 ms.lmp.pksky.xyz:8700
-#Spazer. List: http://kerbalspace.spazer.net:8701/servers
+#Spazer. List: http://kerbalspace.spazer.net:8701
 kerbalspace.spazer.net:8700
-#Robin. List: http://lunamultiplayer.com:8701/servers
+#Robin. List: http://lunamultiplayer.com:8701
 lunamultiplayer.com:8700
