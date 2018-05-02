@@ -56,6 +56,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 GameTimeStamp = msgData.GameTime,
                 UtcSentTime = msgData.UtcSentTime,
                 ReceiveTime = LunaTime.UtcNow,
+                HackingGravity = msgData.HackingGravity,
             };
 
             Array.Copy(msgData.SrfRelRotation, update.SrfRelRotation, 4);

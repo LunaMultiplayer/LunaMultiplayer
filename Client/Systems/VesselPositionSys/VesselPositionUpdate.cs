@@ -47,6 +47,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public double GameTimeStamp { get; set; }
         public DateTime ReceiveTime { get; set; }
         public long UtcSentTime { get; set; }
+        public bool HackingGravity { get; set; }
 
         #endregion
 
@@ -255,6 +256,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
             foreach (var part in Vessel.Parts)
                 part.ResumeVelocity();
+
+            if (HackingGravity)
+            {
+                if (Vessel.LandedOrSplashed || Vessel.situation <= Vessel.Situations.FLYING)
+                    Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+            }
 
             if (CurrentlySpectatingThisVessel)
             {

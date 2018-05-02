@@ -69,7 +69,7 @@ namespace LunaClient
         public static bool IsUnityThread => Thread.CurrentThread.ManagedThreadId == _mainThreadId;
 
         //Hack gravity fix.
-        private Dictionary<CelestialBody, double> BodiesGees { get; } = new Dictionary<CelestialBody, double>();
+        public static Dictionary<CelestialBody, double> BodiesGees { get; } = new Dictionary<CelestialBody, double>();
 
         #endregion
 

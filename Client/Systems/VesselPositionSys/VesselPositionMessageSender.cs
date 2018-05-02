@@ -5,8 +5,8 @@ using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using System;
 using LunaCommon.Time;
+using System;
 
 namespace LunaClient.Systems.VesselPositionSys
 {
@@ -77,6 +77,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 msgData.HeightFromTerrain = vessel.heightFromTerrain;
                 msgData.GameTime = Planetarium.GetUniversalTime();
                 msgData.UtcSentTime = LunaTime.UtcNow.Ticks;
+                msgData.HackingGravity = Math.Abs(MainSystem.BodiesGees[vessel.mainBody] - vessel.mainBody.GeeASL) > 0.0001;
 
                 return msgData;
             }

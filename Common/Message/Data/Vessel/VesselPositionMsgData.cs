@@ -24,6 +24,7 @@ namespace LunaCommon.Message.Data.Vessel
         public float HeightFromTerrain;
         public double GameTime;
         public long UtcSentTime;
+        public bool HackingGravity;
 
         public override string ClassName { get; } = nameof(VesselPositionMsgData);
 
@@ -54,6 +55,7 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(HeightFromTerrain);
             lidgrenMsg.Write(GameTime);
             lidgrenMsg.Write(UtcSentTime);
+            lidgrenMsg.Write(HackingGravity);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -83,12 +85,13 @@ namespace LunaCommon.Message.Data.Vessel
             HeightFromTerrain = lidgrenMsg.ReadFloat();
             GameTime = lidgrenMsg.ReadDouble();
             UtcSentTime = lidgrenMsg.ReadInt64();
+            HackingGravity = lidgrenMsg.ReadBoolean();
         }
         
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + sizeof(int) + sizeof(bool) * 2 + sizeof(double) * 3 * 3 + 
-                sizeof(float) * 4 * 1 + sizeof(float) + sizeof(double) + sizeof(long);
+                sizeof(float) * 4 * 1 + sizeof(float) + sizeof(double) + sizeof(long) + sizeof(bool);
         }
     }
 }
