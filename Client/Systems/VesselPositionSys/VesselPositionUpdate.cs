@@ -328,6 +328,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Array.Copy(Target.Orbit, Orbit, 8);
 
                 HeightFromTerrain = Target.HeightFromTerrain;
+                HackingGravity = Target.HackingGravity;
             }
             else
             {
