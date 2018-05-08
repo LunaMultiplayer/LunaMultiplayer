@@ -4,6 +4,6 @@
     <Name>Имя:</Name>
     <Address>Адрес:</Address>
     <Port>Порт:</Port>
-    <Password>Password:</Password>
+    <Password>Пароль:</Password>
     <CustomServers>Ваши сервера:</CustomServers>
 </ConnectionWindowText>
