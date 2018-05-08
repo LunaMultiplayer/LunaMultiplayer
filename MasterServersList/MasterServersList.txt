@@ -12,5 +12,3 @@ dagger.ole32.com:8750
 ms.lmp.pksky.xyz:8700
 #Spazer. List: http://kerbalspace.spazer.net:8701
 kerbalspace.spazer.net:8700
-#Robin. List: http://lunamultiplayer.com:8701
-lunamultiplayer.com:8700
