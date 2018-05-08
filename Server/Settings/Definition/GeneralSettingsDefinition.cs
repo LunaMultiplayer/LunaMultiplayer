@@ -17,7 +17,7 @@ namespace Server.Settings.Definition
         public string WebsiteText { get; set; } = "LMP";
 
         [XmlComment(Value = "Actual website URL. Can be left empty. Max 60 char")]
-        public string Website { get; set; } = "lunamultiplayer.github.io";
+        public string Website { get; set; } = "lunamultiplayer.com";
 
         [XmlComment(Value = "Password for the server. Leave it empty if you want to make a public server. Max 30 chars")]
         public string Password { get; set; } = "";
