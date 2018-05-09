@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <CraftUploaded>Veicolo caricato!</CraftUploaded>
+    <CraftSaved>Veicolo salvato!</CraftSaved>
+    <ModFileGenerated>Il file LMPModControl.xml è stato generato nella cartella di KSP</ModFileGenerated>
+    <Disconected>Sei stato disconnesso!</Disconected>
+    <Spectating>Questo veicolo è controllato da</Spectating>
+    <SafetyBubble>Ricorda!! Mentre sei dentro la bolla di sicurezza non sarai visto dagli altri giocatori!!</SafetyBubble>
+    <CannotRecover>Non è possibile recuperare il veicolo, il veicolo non è il tuo.</CannotRecover>
+    <CannotTerminate>Non è possibile terminare il veicolo, il veicolo non è il tuo.</CannotTerminate>
+    <SpectatingRemoved>Il veicolo che stavi osservando è stato rimosso</SpectatingRemoved>
+    <WarpDisabled>Non è possibile accelerare temporalmente, l'accelerazione temporale è disattivata in questo server</WarpDisabled>
+    <NotWarpMaster>Non è possibile accelerare temporalmente, non sei il Warp Master!</NotWarpMaster>
+    <WaitingSubspace>Non è possibile accelerare temporalmente, in attesa del Subspace Id dal server</WaitingSubspace>
+    <ScreenshotInterval>L'intervallo tra gli screenshot è di $1 secondi. Impossibile caricare lo screenshot in questo momento.</ScreenshotInterval>
+    <CraftLibraryInterval>L'intervallo tra le richieste della libreria dei veicoli è di $1 secondi. Impossibile elaborare la richiesta in questo momento.</CraftLibraryInterval>
+    <ScreenshotTaken>Screenshot caricato!</ScreenshotTaken>
+    <ImageSaved>Immagine salvata in GameData/LunaMultiplayer/Screenshots</ImageSaved>
+</ScreenText>

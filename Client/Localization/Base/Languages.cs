@@ -10,6 +10,7 @@ namespace LunaClient.Localization.Base
         German,
         Japanese,
         Simplified_Chinese,
-        Dutch
+        Dutch,
+        Italian
     }
 }
