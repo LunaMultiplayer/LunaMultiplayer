@@ -1,6 +1,6 @@
 ﻿using Server.Context;
 using Server.Log;
-using Server.Settings;
+using Server.Settings.Structures;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +18,7 @@ namespace Server.System
                 ScenarioStoreSystem.BackupScenarios();
                 try
                 {
-                    await Task.Delay(GeneralSettings.SettingsStore.BackupIntervalMs, token);
+                    await Task.Delay(IntervalSettings.SettingsStore.BackupIntervalMs, token);
                 }
                 catch (TaskCanceledException)
                 {

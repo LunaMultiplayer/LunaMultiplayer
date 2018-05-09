@@ -4,5 +4,6 @@
     <Name>Naam:</Name>
     <Address>Adres:</Address>
     <Port>Poort:</Port>
+    <Password>Password:</Password>
     <CustomServers>Eigengemaakte servers:</CustomServers>
 </ConnectionWindowText>

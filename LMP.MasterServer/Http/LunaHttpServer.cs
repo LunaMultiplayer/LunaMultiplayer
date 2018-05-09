@@ -20,9 +20,10 @@ namespace LMP.MasterServer.Http
 
             Server.Use(new ExceptionHandler());
             Server.Use(new CompressionHandler(DeflateCompressor.Default, GZipCompressor.Default));
+            Server.Use(new FileHandler());
             Server.Use(new HttpRouter()
-                .With(string.Empty, new RestHandler<ServerInfo>(new ServerInfoRestController(), JsonResponseProvider.Default))
-                .With("servers", new ServerListHandler()));
+                .With(string.Empty, new ServerListHandler())
+                .With("json", new RestHandler<ServerInfo>(new ServerInfoRestController(), JsonResponseProvider.Default)));
 
             Server.Start();
         }

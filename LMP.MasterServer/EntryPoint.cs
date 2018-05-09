@@ -1,4 +1,6 @@
 ﻿using LMP.MasterServer.Http;
+using LMP.MasterServer.Upnp;
+using LMP.MasterServer.Web;
 using LunaCommon;
 using System;
 using System.Linq;
@@ -22,10 +24,12 @@ namespace LMP.MasterServer
         {
             Lidgren.MasterServer.RunServer = false;
             LunaHttpServer.Server.Dispose();
+            MasterServerPortMapper.RemoveOpenedPorts().Wait();
         }
 
         public static void MainEntryPoint(string[] args)
         {
+            MasterServerPortMapper.UseUpnp = !args.Any(a => a.Contains("noupnp"));
             IsNightly = args.Any(a => a.Contains("nightly"));
             if (Common.PlatformIsWindows())
                 ConsoleUtil.DisableConsoleQuickEdit();
@@ -46,6 +50,7 @@ namespace LMP.MasterServer
 
             if (!ParseMasterServerPortNumber(commandLineArguments)) return;
             if (!ParseHttpServerPort(commandLineArguments)) return;
+            MasterServerPortMapper.OpenPort().Wait();
 
             ConsoleLogger.Log(LogLevels.Normal, $"Starting MasterServer at port: {Lidgren.MasterServer.Port}");
             if (IsNightly)
@@ -55,7 +60,9 @@ namespace LMP.MasterServer
             if (CheckPort())
             {
                 Lidgren.MasterServer.RunServer = true;
+                WebHandler.InitWebFiles();
                 LunaHttpServer.Start();
+                Task.Run(() => MasterServerPortMapper.RefreshUpnpPort());
                 Task.Run(() => Lidgren.MasterServer.Start());
             }
         }
@@ -84,6 +91,7 @@ namespace LMP.MasterServer
             Console.WriteLine("/p:<port>                ... Start with the specified port (default port is 8700)");
             Console.WriteLine("/g:<port>                ... Reply to get petitions on the specified port (default is 8701)");
             Console.WriteLine("/nightly                 ... Keep this master server updated with last nightly version");
+            Console.WriteLine("/noupnp                  ... Disable upnp port forwarding");
             Console.WriteLine("");
         }
 

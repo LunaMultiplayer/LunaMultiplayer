@@ -9,6 +9,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
+using Server.Settings.Structures;
 
 namespace Server.System
 {
@@ -203,7 +204,7 @@ namespace Server.System
                 {
                     var vesselAsXml = ConfigNodeXmlParser.ConvertToXml(vesselDataInConfigNodeFormat);
 
-                    if (Settings.GeneralSettings.SettingsStore.ModControl)
+                    if (GeneralSettings.SettingsStore.ModControl)
                     {
                         var vesselParts = GetPartNames(vesselAsXml);
                         if (vesselParts != null)

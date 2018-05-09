@@ -9,7 +9,7 @@ using Server.Context;
 using Server.Log;
 using Server.Message.Reader.Base;
 using Server.Server;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 
 namespace Server.Message.Reader
@@ -42,6 +42,11 @@ namespace Server.Message.Reader
                     case AdminMessageType.Nuke:
                         LunaLog.Debug($"{client.PlayerName}: Requested a nuke");
                         CommandHandler.Commands["nukeksc"].Func(null);
+                        msgData.Response = AdminResponse.Ok;
+                        break;
+                    case AdminMessageType.RestartServer:
+                        LunaLog.Debug($"{client.PlayerName}: Requested a server restart");
+                        CommandHandler.Commands["restartserver"].Func(null);
                         msgData.Response = AdminResponse.Ok;
                         break;
                     default:

@@ -38,6 +38,10 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Threading">
+      <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup Condition="'$(OS)' != 'Unix'">
     <Compile Include="FileHandlerTest.cs" />
@@ -60,12 +64,11 @@
       <Project>{fa6e9184-e243-49cc-94fa-ac557493b900}</Project>
       <Name>Server</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TPL\System.Threading.csproj">
-      <Project>{dcb5d745-525c-46a1-bfc0-e12f87ab6165}</Project>
-      <Name>System.Threading</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
@@ -84,4 +87,11 @@
     <Error Condition="!Exists('..\External\Nuget\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\External\Nuget\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets'))" />
   </Target>
   <Import Project="..\External\Nuget\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets" Condition="Exists('..\External\Nuget\MSTest.TestAdapter.1.2.0\build\net45\MSTest.TestAdapter.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(SolutionDir)External\Dependencies\System.Threading.dll" "$(TargetDir)System.Threading.dll"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>

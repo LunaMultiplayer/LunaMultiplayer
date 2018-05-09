@@ -25,8 +25,8 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.MaxNumberOfAsteroids = msgData.MaxNumberOfAsteroids;
             SettingsSystem.ServerSettings.ConsoleIdentifier = msgData.ConsoleIdentifier;
             SettingsSystem.ServerSettings.SafetyBubbleDistance = msgData.SafetyBubbleDistance;
-            SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval = msgData.VesselUpdatesSendMsInterval;
-            SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval = msgData.SecondaryVesselUpdatesSendMsInterval;
+            SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval = msgData.VesselPositionUpdatesMsInterval;
+            SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval = msgData.SecondaryVesselPositionUpdatesMsInterval;
             SettingsSystem.ServerSettings.VesselPartsSyncMsInterval = msgData.VesselPartsSyncMsInterval;
             SettingsSystem.ServerSettings.ShowVesselsInThePast = msgData.ShowVesselsInThePast;
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
@@ -71,9 +71,9 @@ namespace LunaClient.Systems.SettingsSys
                     },
                     Flight =
                     {
-                        CanQuickLoad = msgData.CanQuickLoad,
-                        CanRestart = msgData.CanQuickLoad,
-                        CanLeaveToEditor = msgData.CanQuickLoad
+                        CanQuickLoad = false, //Do not allow quickload, it's useless ina  multiplayer game
+                        CanRestart = msgData.CanRevert,
+                        CanLeaveToEditor = msgData.CanRevert
                     }
                 };
 

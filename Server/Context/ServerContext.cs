@@ -2,7 +2,7 @@
 using LunaCommon.Message;
 using Server.Client;
 using Server.Server;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics;

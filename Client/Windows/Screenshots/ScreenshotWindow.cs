@@ -149,7 +149,10 @@ namespace LunaClient.Windows.Screenshots
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 
-                var shouldLock = WindowRect.Contains(mousePos) || _libraryWindowRect.Contains(mousePos);
+                var shouldLock = WindowRect.Contains(mousePos) 
+                                 || !string.IsNullOrEmpty(_selectedFolder) && _libraryWindowRect.Contains(mousePos) 
+                                 || _selectedImage > 0 && _imageWindowRect.Contains(mousePos);
+
                 if (shouldLock && !IsWindowLocked)
                 {
                     InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, "LMP_ScreenshotLock");
@@ -163,7 +166,7 @@ namespace LunaClient.Windows.Screenshots
                 RemoveWindowLock();
         }
 
-        private void Reset()
+        private static void Reset()
         {
             _selectedFolder = null;
             _selectedImage = 0;

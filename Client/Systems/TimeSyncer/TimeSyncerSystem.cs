@@ -51,7 +51,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// </summary>
         private const float MaxPhisicsClockRate = 1.20f;
         /// <summary>
-        /// Limit at wich we won't fix the time with the GAME timescale
+        /// Limit at which we won't fix the time with the GAME timescale
         /// </summary>
         private const int PhisicsClockLimitMs = 15000;
         /// <summary>
@@ -59,7 +59,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// </summary>
         private const int MaxClockErrorMs = 15000;
         /// <summary>
-        /// Limit at wich we won't fix the time with the GAME timescale when spectating
+        /// Limit at which we won't fix the time with the GAME timescale when spectating
         /// </summary>
         private const int SpectatingPhisicsClockLimitMs = 2500;
         /// <summary>

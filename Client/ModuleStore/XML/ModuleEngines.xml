@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+        <!--Current throttle of an engine. It's synced with another system so we can ignore it-->
+        <FieldDefinition>
+            <FieldName>currentThrottle</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+        <FieldDefinition>
+            <FieldName>manuallyOverridden</FieldName>
+            <Ignore>false</Ignore>
+            <IgnoreSpectating>false</IgnoreSpectating>
+            <Interval>600000</Interval>
+            <SetValueInModule>false</SetValueInModule>
+            <CallLoad>true</CallLoad>
+            <CallOnAwake>true</CallOnAwake>
+            <CallOnLoad>true</CallOnLoad>
+            <CallOnStart>true</CallOnStart>
+        </FieldDefinition>
+    </Fields>
+</ModuleDefinition>

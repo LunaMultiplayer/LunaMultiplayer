@@ -4,5 +4,6 @@
     <Name>Name:</Name>
     <Address>Address:</Address>
     <Port>Port:</Port>
+    <Password>Password:</Password>
     <CustomServers>Custom servers:</CustomServers>
 </ConnectionWindowText>

@@ -12,6 +12,7 @@
         public string Cheats { get; set; } = "Cheats";
         public string Name { get; set; } = "Name";
         public string Description { get; set; } = "Description";
+        public string Website { get; set; } = "URL";
         public string ServerDetailTitle { get; set; } = "Connect to server";
         public string Password { get; set; } = "Password:";
         public string Connect { get; set; } = "Connect";

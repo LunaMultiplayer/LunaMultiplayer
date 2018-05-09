@@ -41,7 +41,9 @@ namespace LunaClient.Windows.ServerList
         private static GUIStyle _headerServerLine;
         private static GUIStyle _evenServerLine;
         private static GUIStyle _oddServerLine;
-        
+
+        protected override bool Resizable => true;
+
         #endregion
 
         #region Constructor
@@ -88,12 +90,6 @@ namespace LunaClient.Windows.ServerList
 
             LabelStyle = new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter };
 
-            LayoutOptions = new GUILayoutOption[4];
-            LayoutOptions[0] = GUILayout.MinWidth(WindowWidth);
-            LayoutOptions[1] = GUILayout.MaxWidth(WindowWidth);
-            LayoutOptions[2] = GUILayout.MinHeight(WindowHeight);
-            LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
-
             _serverDetailLayoutOptions = new GUILayoutOption[4];
             _serverDetailLayoutOptions[0] = GUILayout.MinWidth(ServerDetailWindowWidth);
             _serverDetailLayoutOptions[1] = GUILayout.MaxWidth(ServerDetailWindowWidth);
@@ -109,7 +105,7 @@ namespace LunaClient.Windows.ServerList
             base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle, LayoutOptions));
+                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle));
                 if (_selectedServerId != 0)
                 {
                     _serverDetailWindowRect = FixWindowPos(GUILayout.Window(6715 + MainSystem.WindowOffset,

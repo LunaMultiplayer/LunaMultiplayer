@@ -22,6 +22,8 @@ namespace LunaCommon.Message.Data.MasterServer
         public int PlayerCount;
         public string ServerName;
         public string Description;
+        public string Website;
+        public string WebsiteText;
         public int WarpMode;
         public int TerrainQuality;
         public int VesselUpdatesSendMsInterval;
@@ -47,6 +49,8 @@ namespace LunaCommon.Message.Data.MasterServer
             lidgrenMsg.Write(PlayerCount);
             lidgrenMsg.Write(ServerName);
             lidgrenMsg.Write(Description);
+            lidgrenMsg.Write(Website);
+            lidgrenMsg.Write(WebsiteText);
             lidgrenMsg.Write(WarpMode);
             lidgrenMsg.Write(TerrainQuality);
             lidgrenMsg.Write(VesselUpdatesSendMsInterval);
@@ -71,6 +75,8 @@ namespace LunaCommon.Message.Data.MasterServer
             PlayerCount = lidgrenMsg.ReadInt32();
             ServerName = lidgrenMsg.ReadString();
             Description = lidgrenMsg.ReadString();
+            Website = lidgrenMsg.ReadString();
+            WebsiteText = lidgrenMsg.ReadString();
             WarpMode = lidgrenMsg.ReadInt32();
             TerrainQuality = lidgrenMsg.ReadInt32();
             VesselUpdatesSendMsInterval = lidgrenMsg.ReadInt32();
@@ -83,7 +89,7 @@ namespace LunaCommon.Message.Data.MasterServer
         {
             return base.InternalGetMessageSize() + 
                 sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
-                ExternalEndpoint.GetByteCount() + ServerName.GetByteCount() + Description.GetByteCount() +
+                ExternalEndpoint.GetByteCount() + ServerName.GetByteCount() + Description.GetByteCount() + Website.GetByteCount() + WebsiteText.GetByteCount() +
                 sizeof(bool) * 6 + sizeof(int) * 6;
         }
     }

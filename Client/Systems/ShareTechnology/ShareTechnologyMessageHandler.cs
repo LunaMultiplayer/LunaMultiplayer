@@ -1,9 +1,12 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.Utilities;
 using LunaCommon.Message.Data.ShareProgress;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using System.Collections.Concurrent;
+using System.Linq;
+using KSP.UI.Screens;
 
 namespace LunaClient.Systems.ShareTechnology
 {
@@ -18,28 +21,35 @@ namespace LunaClient.Systems.ShareTechnology
 
             if (msgData is ShareProgressTechnologyMsgData data)
             {
-                var techId = string.Copy(data.TechNode.Id); //create a copy of the techId value so it will not change in the future.
-                LunaLog.Log($"Queue TechnologyUpdate with: {techId}");
+                var tech = new TechNodeInfo(data.TechNode); //create a copy of the tech value so it will not change in the future.
+                LunaLog.Log($"Queue TechnologyResearch with: {tech.Id}");
                 System.QueueAction(() =>
                 {
-                    TechnologyUpdate(techId);
+                    TechnologyResearch(tech);
                 });
             }
         }
 
-        private static void TechnologyUpdate(string techId)
+        private static void TechnologyResearch(TechNodeInfo tech)
         {
             System.StartIgnoringEvents();
-            var nodes = AssetBase.RnDTechTree.GetTreeTechs();
-            foreach (var n in nodes)
-            {
-                if (n.techID == techId)
-                    ResearchAndDevelopment.Instance.UnlockProtoTechNode(n);
-            }
+            var node = AssetBase.RnDTechTree.GetTreeTechs().ToList().Find(n => n.techID == tech.Id);
 
+            //Unlock the technology
+            ResearchAndDevelopment.Instance.UnlockProtoTechNode(node);
+
+            //Refresh RD nodes in case we are in the RD screen
+            RDController.Instance?.partList?.Refresh();
+            RDController.Instance?.UpdatePanel();
+
+            //Refresh the tech tree
             ResearchAndDevelopment.RefreshTechTreeUI();
+
+            //Refresh the part list in case we are in the VAB/SPH
+            EditorPartList.Instance?.Refresh();
+
             System.StopIgnoringEvents();
-            LunaLog.Log($"TechnologyUpdate received - technology unlocked: {techId}");
+            LunaLog.Log($"TechnologyResearch received - technology researched: {tech.Id}");
         }
     }
 }

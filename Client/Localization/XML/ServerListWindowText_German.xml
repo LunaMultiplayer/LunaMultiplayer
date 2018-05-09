@@ -10,6 +10,7 @@
     <Cheats>Cheats</Cheats>
     <Name>Name</Name>
     <Description>Beschreibung</Description>
+    <Website>URL</Website>
     <ServerDetailTitle>Connect to server</ServerDetailTitle>
     <Password>Password</Password>
     <Connect>Connect</Connect>

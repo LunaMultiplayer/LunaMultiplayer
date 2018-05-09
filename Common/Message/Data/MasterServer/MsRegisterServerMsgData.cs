@@ -21,10 +21,12 @@ namespace LunaCommon.Message.Data.MasterServer
         public int PlayerCount;
         public string ServerName;
         public string Description;
+        public string Website;
+        public string WebsiteText;
         public int WarpMode;
         public int TerrainQuality;
-        public int VesselUpdatesSendMsInterval;
-        public int SecondaryVesselUpdatesSendMsInterval;
+        public int VesselPositionUpdatesMsInterval;
+        public int SecondaryVesselPositionUpdatesMsInterval;
         public bool DropControlOnVesselSwitching;
         public bool DropControlOnExitFlight;
         public bool DropControlOnExit;
@@ -50,10 +52,12 @@ namespace LunaCommon.Message.Data.MasterServer
             lidgrenMsg.Write(PlayerCount);
             lidgrenMsg.Write(ServerName);
             lidgrenMsg.Write(Description);
+            lidgrenMsg.Write(Website);
+            lidgrenMsg.Write(WebsiteText);
             lidgrenMsg.Write(WarpMode);
             lidgrenMsg.Write(TerrainQuality);
-            lidgrenMsg.Write(VesselUpdatesSendMsInterval);
-            lidgrenMsg.Write(SecondaryVesselUpdatesSendMsInterval);
+            lidgrenMsg.Write(VesselPositionUpdatesMsInterval);
+            lidgrenMsg.Write(SecondaryVesselPositionUpdatesMsInterval);
 
             //4 bits = 1 byte, no need to pad bits here...
             lidgrenMsg.Write(DropControlOnVesselSwitching);
@@ -80,10 +84,12 @@ namespace LunaCommon.Message.Data.MasterServer
             PlayerCount = lidgrenMsg.ReadInt32();
             ServerName = lidgrenMsg.ReadString();
             Description = lidgrenMsg.ReadString();
+            Website = lidgrenMsg.ReadString();
+            WebsiteText = lidgrenMsg.ReadString();
             WarpMode = lidgrenMsg.ReadInt32();
             TerrainQuality = lidgrenMsg.ReadInt32();
-            VesselUpdatesSendMsInterval = lidgrenMsg.ReadInt32();
-            SecondaryVesselUpdatesSendMsInterval = lidgrenMsg.ReadInt32();
+            VesselPositionUpdatesMsInterval = lidgrenMsg.ReadInt32();
+            SecondaryVesselPositionUpdatesMsInterval = lidgrenMsg.ReadInt32();
             DropControlOnVesselSwitching = lidgrenMsg.ReadBoolean();
             DropControlOnExitFlight = lidgrenMsg.ReadBoolean();
             DropControlOnExit = lidgrenMsg.ReadBoolean();
@@ -94,7 +100,8 @@ namespace LunaCommon.Message.Data.MasterServer
         {            
             //We use sizeof(byte) instead of sizeof(bool) because we use the WritePadBits()
             return base.InternalGetMessageSize() + sizeof(long) + ServerVersion.GetByteCount() + InternalEndpoint.GetByteCount() +
-                sizeof(byte) + sizeof(int) * 7 + ServerName.GetByteCount() + Description.GetByteCount() + sizeof(bool) * 4;
+                sizeof(byte) + sizeof(int) * 7 + ServerName.GetByteCount() + Description.GetByteCount() + Website.GetByteCount() + 
+                   WebsiteText.GetByteCount() + sizeof(bool) * 4;
         }
     }
 }

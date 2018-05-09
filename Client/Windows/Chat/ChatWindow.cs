@@ -17,7 +17,6 @@ namespace LunaClient.Windows.Chat
             set => base.Display = _display = value;
         }
 
-        private const string ChatWindowLock = "LMP_Chat_Window_Lock";
         private const float WindowHeight = 300;
         private const float WindowWidth = 400;
         
@@ -49,7 +48,7 @@ namespace LunaClient.Windows.Chat
             if (IsWindowLocked)
             {
                 IsWindowLocked = false;
-                InputLockManager.RemoveControlLock(ChatWindowLock);
+                InputLockManager.RemoveControlLock("LMP_ChatLock");
             }
         }
 
@@ -104,7 +103,7 @@ namespace LunaClient.Windows.Chat
 
                 if (shouldLock && !IsWindowLocked)
                 {
-                    InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, ChatWindowLock);
+                    InputLockManager.SetControlLock(ControlTypes.ALLBUTCAMERAS, "LMP_ChatLock");
                     IsWindowLocked = true;
                 }
                 if (!shouldLock && IsWindowLocked)

@@ -105,11 +105,14 @@ namespace LunaClient.Systems.Asteroid
             return vessel?.parts != null && vessel.parts.Count == 1 && vessel.parts[0].partName == "PotatoRoid";
         }
 
-        public bool ProtoVesselIsAsteroid(ProtoVessel protoVessel)
+        private static bool ProtoVesselIsAsteroid(ProtoVessel protoVessel)
         {
-            return (protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast.")
-                || protoVessel.protoPartSnapshots != null && protoVessel.protoPartSnapshots.Count == 1 &&
-                   protoVessel.protoPartSnapshots[0].partName == "PotatoRoid";
+            if (protoVessel == null) return false;
+
+            if ((protoVessel.protoPartSnapshots == null || protoVessel.protoPartSnapshots.Count == 0) && protoVessel.vesselName.StartsWith("Ast."))
+                return true;
+
+            return protoVessel.protoPartSnapshots?[0].partName == "PotatoRoid";
         }
 
         public int GetAsteroidCount()

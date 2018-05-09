@@ -4,6 +4,7 @@ using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections;
@@ -67,15 +68,26 @@ namespace LunaClient.Systems.VesselDockSys
             }
         }
 
+        /// <summary>
+        /// Event triggered when a vessel undocks
+        /// </summary>
+        /// <param name="part"></param>
         public void OnPartUndock(Part part)
         {
+            var vessel = part.vessel;
+            if (vessel == null) return;
+
             var isEvaPart = part.FindModuleImplementing<KerbalEVA>() != null;
             if (isEvaPart) //This is the case when a kerbal gets out of a external command seat
             {
-                var vessel = part.vessel;
+                
                 vessel.parts.Remove(part);
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
             }
+
+            //Update the vessel in the proto store as it will have now less parts.
+            //If we don't do this it may be reloaded.
+            VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel);
 
             if (VesselCommon.IsSpectating)
             {

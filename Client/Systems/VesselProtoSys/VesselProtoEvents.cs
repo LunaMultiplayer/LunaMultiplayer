@@ -35,7 +35,11 @@ namespace LunaClient.Systems.VesselProtoSys
                     System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
                 }, 5f);
 
-                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
+                //Only show safety bubble text if safety bubble is active and player is spawning a new vessel
+                if (SettingsSystem.ServerSettings.SafetyBubbleDistance > 0 && FlightGlobals.ActiveVessel.vesselSpawning)
+                {
+                    LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.SafetyBubble, 10f, ScreenMessageStyle.UPPER_CENTER);
+                }
             }
         }
 

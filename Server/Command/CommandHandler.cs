@@ -1,7 +1,7 @@
 ﻿using Server.Command.Command;
 using Server.Context;
 using Server.Log;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -59,7 +59,7 @@ namespace Server.Command
                             Commands["say"].Func(input);
                         }
                     }
-                    await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
+                    await Task.Delay(IntervalSettings.SettingsStore.MainTimeTick);
                 }
             }
             catch (Exception e)

@@ -4,7 +4,7 @@ using LunaCommon.Message.MasterServer;
 using LunaCommon.Time;
 using Server.Context;
 using Server.Log;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,13 +16,13 @@ namespace Server.Lidgren
     public class LidgrenMasterServer
     {
         private static List<IPEndPoint> MasterServerEndpoints { get; } = new List<IPEndPoint>();
-        
-        private static int MasterServerRegistrationMsInterval => GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval < 5000 ?
-            5000 : GeneralSettings.SettingsStore.MasterServerRegistrationMsInterval;
+
+        private static int MasterServerRegistrationMsInterval => MasterServerSettings.SettingsStore.MasterServerRegistrationMsInterval < 5000 ?
+            5000 : MasterServerSettings.SettingsStore.MasterServerRegistrationMsInterval;
 
         public static async void RefreshMasterServersList()
         {
-            if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
+            if (!MasterServerSettings.SettingsStore.RegisterWithMasterServer) return;
 
             while (ServerContext.ServerRunning)
             {
@@ -39,7 +39,7 @@ namespace Server.Lidgren
 
         public static async void RegisterWithMasterServer()
         {
-            if (!GeneralSettings.SettingsStore.RegisterWithMasterServer) return;
+            if (!MasterServerSettings.SettingsStore.RegisterWithMasterServer) return;
 
             LunaLog.Normal("Registering with master servers...");
 
@@ -55,6 +55,8 @@ namespace Server.Lidgren
                 msgData.Cheats = GeneralSettings.SettingsStore.Cheats;
                 msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
                 msgData.Description = GeneralSettings.SettingsStore.Description;
+                msgData.Website = GeneralSettings.SettingsStore.Website;
+                msgData.WebsiteText = GeneralSettings.SettingsStore.WebsiteText;
                 msgData.DropControlOnExit = GeneralSettings.SettingsStore.Cheats;
                 msgData.DropControlOnExitFlight = GeneralSettings.SettingsStore.Cheats;
                 msgData.DropControlOnVesselSwitching = GeneralSettings.SettingsStore.Cheats;
@@ -65,18 +67,15 @@ namespace Server.Lidgren
                 msgData.PlayerCount = ServerContext.Clients.Count;
                 msgData.ServerName = GeneralSettings.SettingsStore.ServerName;
                 msgData.ServerVersion = LmpVersioning.CurrentVersion;
-                msgData.VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval;
-                msgData.SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
-                msgData.WarpMode = (int)GeneralSettings.SettingsStore.WarpMode;
+                msgData.VesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.VesselPositionUpdatesMsInterval;
+                msgData.SecondaryVesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.SecondaryVesselPositionUpdatesMsInterval;
+                msgData.WarpMode = (int)WarpSettings.SettingsStore.WarpMode;
                 msgData.TerrainQuality = (int)GeneralSettings.SettingsStore.TerrainQuality;
 
-                msgData.Description = msgData.Description.Length > 200
-                            ? msgData.Description.Substring(0, 200)
-                            : msgData.Description;
-
-                msgData.ServerName = msgData.ServerName.Length > 30
-                    ? msgData.ServerName.Substring(0, 30)
-                    : msgData.ServerName;
+                msgData.Description = msgData.Description.Length > 200 ? msgData.Description.Substring(0, 200) : msgData.Description;
+                msgData.Website = msgData.Website.Length > 60 ? msgData.Website.Substring(0, 60) : msgData.Website;
+                msgData.WebsiteText = msgData.WebsiteText.Length > 15 ? msgData.WebsiteText.Substring(0, 15) : msgData.WebsiteText;
+                msgData.ServerName = msgData.ServerName.Length > 30 ? msgData.ServerName.Substring(0, 30) : msgData.ServerName;
 
                 lock (MasterServerEndpoints)
                 {

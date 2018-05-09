@@ -1,10 +1,10 @@
-using LunaCommon.Time;
+﻿using LunaCommon.Time;
 using Server.Command.Command;
 using Server.Context;
 using Server.Lidgren;
 using Server.Log;
 using Server.Plugin;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,7 +25,7 @@ namespace Server.Client
 
                     LmpPluginHandler.FireOnUpdate(); //Run plugin update
 
-                    await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
+                    await Task.Delay(IntervalSettings.SettingsStore.MainTimeTick);
                 }
             }
             catch (Exception e)
@@ -48,7 +48,7 @@ namespace Server.Client
                     }
                     sendingMessages = ClientRetriever.GetAuthenticatedClients().Any(c => c.SendMessageQueue.Count > 0);
 
-                    await Task.Delay(GeneralSettings.SettingsStore.MainTimeTick);
+                    await Task.Delay(IntervalSettings.SettingsStore.MainTimeTick);
                 }
                 LidgrenServer.ShutdownLidgrenServer();
             }

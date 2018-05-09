@@ -68,6 +68,7 @@ namespace LunaClient.Base
         protected GUIContent NukeIcon;
         protected GUIContent DekesslerBigIcon;
         protected GUIContent NukeBigIcon;
+        protected GUIContent RestartServerIcon;
 
         public void InitializeStyles()
         {
@@ -147,6 +148,8 @@ namespace LunaClient.Base
                 LocalizationContainer.ButtonTooltips.DekesslerIcon);
             NukeBigIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "nukeBig.png"), 32, 32), 
                 LocalizationContainer.ButtonTooltips.NukeIcon);
+            RestartServerIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "restartServerBig.png"), 32, 32),
+                LocalizationContainer.ButtonTooltips.RestartServerIcon);
 
             WindowStyle = new GUIStyle(GUI.skin.window);
             ButtonStyle = new GUIStyle(GUI.skin.button);
@@ -166,7 +169,20 @@ namespace LunaClient.Base
                 onHover = new GUIStyleState { background = ResizeIcon },
             };
             LabelStyle = new GUIStyle(GUI.skin.label);
-            HyperlinkLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.blue } };
+            HyperlinkLabelStyle = new GUIStyle(GUI.skin.button)
+            {
+                fontStyle = FontStyle.Bold,
+                padding = new RectOffset(0, 0, 0, 0),
+                border = new RectOffset(0, 0, 0, 0),
+                normal = new GUIStyleState { textColor = Color.blue },
+                active = new GUIStyleState(),
+                focused = new GUIStyleState(),
+                hover = new GUIStyleState(),
+                onNormal = new GUIStyleState(),
+                onActive = new GUIStyleState(),
+                onFocused = new GUIStyleState(),
+                onHover = new GUIStyleState(),
+            };
             BoldLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.red } };
             ScrollStyle = new GUIStyle(GUI.skin.scrollView);
             TextAreaStyle = new GUIStyle(GUI.skin.textArea);

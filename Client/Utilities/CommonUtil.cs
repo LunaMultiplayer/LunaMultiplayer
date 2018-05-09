@@ -30,7 +30,7 @@ namespace LunaClient.Utilities
 
         /// <summary>
         /// This returns the port that you must attach to from Visual studio.
-        /// Only useful when you have several KSPinstances and you don't know wich one to attach
+        /// Only useful when you have several KSPinstances and you don't know which one to attach
         /// </summary>
         private static string GetDebugPort()
         {

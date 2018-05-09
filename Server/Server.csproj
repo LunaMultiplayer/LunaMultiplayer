@@ -43,6 +43,9 @@
       <HintPath>..\External\Nuget\LiteDB.4.1.2\lib\net40\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\Open.NAT.2.1.0.0\lib\net45\Open.Nat.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -113,6 +116,24 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Settings\Base\ISettings.cs" />
+    <Compile Include="Settings\Definition\ConnectionSettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\CraftSettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\IntervalSettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\LogSettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\MasterServerSettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\RelaySettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\ScreenshotSettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\WarpSettingsDefinition.cs" />
+    <Compile Include="Settings\SettingsHandler.cs" />
+    <Compile Include="Settings\Structures\ConnectionSettings.cs" />
+    <Compile Include="Settings\Structures\RelaySettings.cs" />
+    <Compile Include="Settings\Structures\IntervalSettings.cs" />
+    <Compile Include="Settings\Structures\LogSettings.cs" />
+    <Compile Include="Settings\Structures\WarpSettings.cs" />
+    <Compile Include="Settings\Structures\ScreenshotSettings.cs" />
+    <Compile Include="Settings\Structures\CraftSettings.cs" />
+    <Compile Include="Settings\Structures\MasterServerSettings.cs" />
     <Compile Include="System\BackupSystem.cs" />
     <Compile Include="System\CraftLibrarySystem.cs" />
     <Compile Include="System\HandshakeSystem.cs" />
@@ -124,13 +145,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Server\MessageQueuer.cs" />
     <Compile Include="Server\MessageReceiver.cs" />
-    <Compile Include="Settings\DebugSettings.cs" />
+    <Compile Include="Settings\Structures\DebugSettings.cs" />
     <Compile Include="Settings\Definition\GameplaySettingsDefinition.cs" />
     <Compile Include="Settings\Definition\DebugSettingsDefinition.cs" />
-    <Compile Include="Settings\Definition\SettingsDefinition.cs" />
-    <Compile Include="Settings\GameplaySettings.cs" />
-    <Compile Include="Settings\GeneralSettings.cs" />
-    <Compile Include="Settings\SettingsBase.cs" />
+    <Compile Include="Settings\Definition\GeneralSettingsDefinition.cs" />
+    <Compile Include="Settings\Structures\GameplaySettings.cs" />
+    <Compile Include="Settings\Structures\GeneralSettings.cs" />
+    <Compile Include="Settings\Base\SettingsBase.cs" />
     <Compile Include="System\FileHandler.cs" />
     <Compile Include="System\FlagSystem.cs" />
     <Compile Include="System\GroupSystem.cs" />
@@ -145,6 +166,7 @@
     <Compile Include="System\Scenario\ScenarioDestructiblesDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioFacilityLevelDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioStrategyDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioPartPurchaseDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioTechnologyDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioReputationDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioScienceDataUpdater.cs" />
@@ -156,6 +178,7 @@
     <Compile Include="System\ShareContractsSystem.cs" />
     <Compile Include="System\ShareFundsSystem.cs" />
     <Compile Include="System\ScreenshotSystem.cs" />
+    <Compile Include="System\SharePartPurchaseSystem.cs" />
     <Compile Include="System\ShareReputationSystem.cs" />
     <Compile Include="System\ShareUpgradeableFacilitiesSystem.cs" />
     <Compile Include="System\ShareScienceSystem.cs" />
@@ -171,6 +194,7 @@
     <Compile Include="System\WarpSystem.cs" />
     <Compile Include="System\WarpSystemReceiver.cs" />
     <Compile Include="System\WarpSystemSender.cs" />
+    <Compile Include="Upnp\LmpPortMapper.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\HandledException.cs" />
     <Compile Include="Utilities\InstancesChecker.cs" />
@@ -191,6 +215,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
+﻿using Server.Settings.Structures;
+using Server.System;
 using System;
 using System.IO;
-using Server.Settings;
-using Server.System;
 
 namespace Server.Log
 {
@@ -22,9 +22,9 @@ namespace Server.Log
 
         private static void WriteLog(LogLevels level, string message, bool sendToConsole)
         {
-            if (level >= GeneralSettings.SettingsStore.LogLevel)
+            if (level >= LogSettings.SettingsStore.LogLevel)
             {
-                var output = GeneralSettings.SettingsStore.UseUtcTimeInLog
+                var output = LogSettings.SettingsStore.UseUtcTimeInLog
                     ? $"[{DateTime.UtcNow:HH:mm:ss}][{level}] : {message}"
                     : $"[{DateTime.Now:HH:mm:ss}][{level}] : {message}";
 
@@ -46,10 +46,17 @@ namespace Server.Log
             WriteLog(LogLevels.Info, message, false);
         }
 
+        public static void NetworkVerboseDebug(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Blue;
+            WriteLog(LogLevels.VerboseNetworkDebug, message, true);
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
         public static void NetworkDebug(string message)
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            WriteLog(LogLevels.Debug, message, true);
+            WriteLog(LogLevels.NetworkDebug, message, true);
             Console.ForegroundColor = ConsoleColor.Gray;
         }
 

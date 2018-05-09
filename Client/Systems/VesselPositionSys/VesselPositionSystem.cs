@@ -18,18 +18,17 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Fields & properties
 
         private static float LastVesselUpdatesSentTime { get; set; }
-        private static int VesselUpdatesSendMsInterval => SettingsSystem.ServerSettings.VesselUpdatesSendMsInterval;
+        private static int VesselUpdatesSendMsInterval => SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval;
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
             TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > VesselUpdatesSendMsInterval :
-            TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > 100;
+            TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval;
 
-        public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 1f &&
+        public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
                                          FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
                                          FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
 
-        public bool PositionUpdateSystemBasicReady => Enabled && Time.timeSinceLevelLoad > 1f &&
-            PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
+        public bool PositionUpdateSystemBasicReady => Enabled && PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
         public static ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } =
             new ConcurrentDictionary<Guid, VesselPositionUpdate>();
@@ -57,8 +56,10 @@ namespace LunaClient.Systems.VesselPositionSys
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
             TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesSendMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
+            //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
+            //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
         }
 
         protected override void OnDisabled()
@@ -199,6 +200,8 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public static void UpdateSecondaryVesselValues(Vessel vessel)
         {
+            vessel.UpdateLandedSplashed();
+
             vessel.srfRelRotation = Quaternion.Inverse(vessel.mainBody.bodyTransform.rotation) * vessel.vesselTransform.rotation;
             if (vessel.LandedOrSplashed)
             {

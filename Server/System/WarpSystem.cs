@@ -25,7 +25,7 @@ namespace Server.System
             var content = $"#Incorrectly editing this file will cause weirdness. If there is any errors, the universe time will be reset.{Environment.NewLine}";
             content += $"#This file can only be edited if the server is stopped.{Environment.NewLine}";
             content += $"#Each variable is defined as: subspaceId:server_time_difference_in_seconds.{Environment.NewLine}";
-            content += $"#It must always contain at least 1 subspace wich will be the most advanced in the future{Environment.NewLine}";
+            content += $"#It must always contain at least 1 subspace which will be the most advanced in the future{Environment.NewLine}";
 
             content = subspaces.Aggregate(content, (current, subspace) => current + $"{subspace.Key}:{subspace.Value}{Environment.NewLine}");
 

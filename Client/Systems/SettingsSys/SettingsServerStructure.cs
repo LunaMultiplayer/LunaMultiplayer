@@ -18,8 +18,8 @@ namespace LunaClient.Systems.SettingsSys
         public string ConsoleIdentifier { get; set; } = "";
         public GameDifficulty GameDifficulty { get; set; }
         public float SafetyBubbleDistance { get; set; } = 100f;
-        public int VesselUpdatesSendMsInterval { get; set; }
-        public int SecondaryVesselUpdatesSendMsInterval { get; set; }
+        public int VesselPositionUpdatesMsInterval { get; set; }
+        public int SecondaryVesselPositionUpdatesMsInterval { get; set; }
         public string WarpMaster { get; set; }
         public int VesselPartsSyncMsInterval { get; set; }
         public bool ShowVesselsInThePast { get; set; }

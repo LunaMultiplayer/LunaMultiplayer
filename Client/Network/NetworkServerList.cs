@@ -75,6 +75,8 @@ namespace LunaClient.Network
                             InternalEndpoint = data.InternalEndpoint,
                             ExternalEndpoint = data.ExternalEndpoint,
                             Description = data.Description,
+                            Website = data.Website,
+                            WebsiteText = data.WebsiteText,
                             Password = data.Password,
                             Cheats = data.Cheats,
                             ServerName = data.ServerName,

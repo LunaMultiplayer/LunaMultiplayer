@@ -10,5 +10,6 @@
         AchievementsUpdate = 5,
         StrategyUpdate = 6,
         FacilityUpgrade = 7,
+        PartPurchase = 8,
     }
 }

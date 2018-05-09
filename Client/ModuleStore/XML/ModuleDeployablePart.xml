@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Fields>
+		<!--Rotation of deployable parts, like solar panels or radiators-->
+		<FieldDefinition>
+			<FieldName>currentRotation</FieldName>
+			<Ignore>false</Ignore>
+			<IgnoreSpectating>false</IgnoreSpectating>
+			<Interval>5000</Interval>
+			<SetValueInModule>false</SetValueInModule>
+			<CallLoad>true</CallLoad>
+			<CallOnAwake>true</CallOnAwake>
+			<CallOnLoad>true</CallOnLoad>
+			<CallOnStart>true</CallOnStart>
+		</FieldDefinition>
+		<FieldDefinition>
+			<FieldName>storedAnimationTime</FieldName>
+			<Ignore>false</Ignore>
+			<IgnoreSpectating>false</IgnoreSpectating>
+			<Interval>100</Interval>
+			<SetValueInModule>false</SetValueInModule>
+			<CallLoad>true</CallLoad>
+			<CallOnAwake>true</CallOnAwake>
+			<CallOnLoad>true</CallOnLoad>
+			<CallOnStart>true</CallOnStart>
+		</FieldDefinition>
+	</Fields>
+</ModuleDefinition>

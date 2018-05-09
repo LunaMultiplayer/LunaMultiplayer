@@ -225,6 +225,18 @@ namespace LunaClient.Systems.VesselFlightStateSys
                         st.headlight = interpolatedState.headlight;
                         st.killRot = interpolatedState.killRot;
                     }
+                    else
+                    {
+                        st.CopyFrom(value.GetInterpolatedValue(st));
+                    }
+                }
+            }
+            else
+            {
+                var vessel = FlightGlobals.FindVessel(id);
+                if (vessel!= null && !FlightGlobals.FindVessel(id).packed)
+                {
+                    AddVesselToSystem(vessel);
                 }
             }
         }

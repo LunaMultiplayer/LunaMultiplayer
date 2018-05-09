@@ -1,5 +1,4 @@
 ﻿using LunaCommon;
-using LunaCommon.Enums;
 using LunaCommon.Time;
 using Server.Client;
 using Server.Command;
@@ -9,8 +8,10 @@ using Server.Lidgren;
 using Server.Log;
 using Server.Plugin;
 using Server.Settings;
+using Server.Settings.Structures;
 using Server.System;
 using Server.System.VesselRelay;
+using Server.Upnp;
 using Server.Utilities;
 using System;
 using System.Collections.Generic;
@@ -77,7 +78,7 @@ namespace Server
                 //Set day for log change
                 ServerContext.Day = LunaTime.Now.Day;
 
-                LunaLog.Normal($"Starting Luna Server version: {LmpVersioning.CurrentVersion}");
+                LunaLog.Normal($"Luna Server version: {LmpVersioning.CurrentVersion} ({Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)})");
 
                 Universe.CheckUniverse();
                 LoadSettingsAndGroups();
@@ -87,16 +88,16 @@ namespace Server
                 LmpPluginHandler.LoadPlugins();
                 WarpSystem.Reset();
 
-                LunaLog.Normal($"Starting {GeneralSettings.SettingsStore.WarpMode} server on Port {GeneralSettings.SettingsStore.Port}... ");
-                LunaLog.Normal($"Server name: '{GeneralSettings.SettingsStore.ServerName}'...");
-                LunaLog.Normal($"Server location: '{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}'...");
+                LunaLog.Normal($"Starting '{GeneralSettings.SettingsStore.ServerName}' on Port {ConnectionSettings.SettingsStore.Port}... ");
 
+                LmpPortMapper.OpenPort().Wait();
                 ServerContext.ServerRunning = true;
                 LidgrenServer.SetupLidgrenServer();
 
                 //Do not add the command handler thread to the TaskContainer as it's a blocking task
                 LongRunTaskFactory.StartNew(() => new CommandHandler().ThreadMain(), CancellationTokenSrc.Token);
 
+                TaskContainer.Add(LongRunTaskFactory.StartNew(LmpPortMapper.RefreshUpnpPort, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThread, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(() => new ClientMainThread().ThreadMain(), CancellationTokenSrc.Token));
 
@@ -136,22 +137,13 @@ namespace Server
             LunaLog.Debug("Loading groups...");
             GroupSystem.LoadGroups();
             LunaLog.Debug("Loading settings...");
-            GeneralSettings.Singleton.Load();
-            if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom)
-            {
-                LunaLog.Debug("Loading gameplay settings...");
-                GameplaySettings.Singleton.Load();
-            }
+            SettingsHandler.LoadSettings();
 
             if (GeneralSettings.SettingsStore.ModControl)
             {
                 LunaLog.Debug("Loading mod control...");
                 ModFileSystem.LoadModFile();
             }
-#if DEBUG
-            DebugSettings.Singleton.Load();
-            LunaTime.SimulatedMsTimeOffset = DebugSettings.SettingsStore.SimulatedMsTimeOffset;
-#endif
         }
 
         /// <summary>
@@ -167,8 +159,9 @@ namespace Server
             LunaLog.Normal("Exiting... Please wait until all threads are finished");
 
             ServerContext.Shutdown("Server is shutting down");
-            CancellationTokenSrc.Cancel();
 
+            LmpPortMapper.RemoveOpenedPorts().Wait();
+            CancellationTokenSrc.Cancel();
             Task.WaitAll(TaskContainer.ToArray());
 
             QuitEvent.Set();

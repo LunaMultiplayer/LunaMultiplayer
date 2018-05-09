@@ -19,8 +19,18 @@ namespace LunaClient.Harmony
         {
             if (MainSystem.NetworkState < ClientState.Connected) return true;
 
-            return LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName) &&
-                   AsteroidSystem.Singleton.GetAsteroidCount() < SettingsSystem.ServerSettings.MaxNumberOfAsteroids;
+            var currentAsteroids = AsteroidSystem.Singleton.GetAsteroidCount();
+
+            if (!LockSystem.LockQuery.AsteroidLockBelongsToPlayer(SettingsSystem.CurrentSettings.PlayerName))
+                return false;
+
+            if (currentAsteroids >= SettingsSystem.ServerSettings.MaxNumberOfAsteroids)
+            {
+                LunaLog.Log($"We are not going to spawn asteroids. Current: {currentAsteroids}. Max allowed in server {SettingsSystem.ServerSettings.MaxNumberOfAsteroids}");
+                return false;
+            }
+
+            return true;
         }
     }
 }

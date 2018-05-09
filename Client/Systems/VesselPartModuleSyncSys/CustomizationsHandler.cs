@@ -14,7 +14,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
         private static readonly Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>> LastReceiveUpdatedDictionary =
             new Dictionary<Guid, Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>>();
 
-        public static CustomizationResult SkipModule(Guid vesselId, uint partFlightId, string moduleName, string fieldName, bool receive, out CustomFieldDefinition fieldCustomization)
+        public static CustomizationResult SkipModule(Guid vesselId, uint partFlightId, string moduleName, string fieldName, bool receive, out FieldDefinition fieldCustomization)
         {
             fieldCustomization = FieldModuleStore.GetCustomFieldDefinition(moduleName, fieldName);
             if (fieldCustomization.Ignore) return CustomizationResult.Ignore;

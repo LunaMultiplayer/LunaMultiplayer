@@ -22,6 +22,7 @@ namespace LunaCommon.Message.Client
             [(ushort)AdminMessageType.Kick] = typeof(AdminKickMsgData),
             [(ushort)AdminMessageType.Dekessler] = typeof(AdminDekesslerMsgData),
             [(ushort)AdminMessageType.Nuke] = typeof(AdminNukeMsgData),
+            [(ushort)AdminMessageType.RestartServer] = typeof(AdminRestartServerMsgData),
         };
 
         public override ClientMessageType MessageType => ClientMessageType.Admin;

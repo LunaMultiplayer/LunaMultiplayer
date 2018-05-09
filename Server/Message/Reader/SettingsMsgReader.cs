@@ -6,7 +6,7 @@ using Server.Client;
 using Server.Context;
 using Server.Message.Reader.Base;
 using Server.Server;
-using Server.Settings;
+using Server.Settings.Structures;
 
 namespace Server.Message.Reader
 {
@@ -18,7 +18,7 @@ namespace Server.Message.Reader
             message.Recycle();
 
             var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<SettingsReplyMsgData>();
-            msgData.WarpMode = GeneralSettings.SettingsStore.WarpMode;
+            msgData.WarpMode = WarpSettings.SettingsStore.WarpMode;
             msgData.GameMode = GeneralSettings.SettingsStore.GameMode;
             msgData.TerrainQuality = GeneralSettings.SettingsStore.TerrainQuality;
             msgData.AllowCheats = GeneralSettings.SettingsStore.Cheats;
@@ -28,13 +28,13 @@ namespace Server.Message.Reader
             msgData.ConsoleIdentifier = GeneralSettings.SettingsStore.ConsoleIdentifier;
             msgData.GameDifficulty = GeneralSettings.SettingsStore.GameDifficulty;
             msgData.SafetyBubbleDistance = GeneralSettings.SettingsStore.SafetyBubbleDistance;
-            msgData.VesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.VesselUpdatesSendMsInterval;
-            msgData.SecondaryVesselUpdatesSendMsInterval = GeneralSettings.SettingsStore.SecondaryVesselUpdatesSendMsInterval;
-            msgData.VesselPartsSyncMsInterval = GeneralSettings.SettingsStore.VesselPartsSyncMsInterval;
+            msgData.VesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.VesselPositionUpdatesMsInterval;
+            msgData.SecondaryVesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.SecondaryVesselPositionUpdatesMsInterval;
+            msgData.VesselPartsSyncMsInterval = IntervalSettings.SettingsStore.VesselPartsSyncMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
-            msgData.WarpMaster = GeneralSettings.SettingsStore.WarpMaster;
-            msgData.MinScreenshotIntervalMs = GeneralSettings.SettingsStore.MinScreenshotIntervalMs;
-            msgData.MinCraftLibraryRequestIntervalMs = GeneralSettings.SettingsStore.MinCraftLibraryRequestIntervalMs;
+            msgData.WarpMaster = WarpSettings.SettingsStore.WarpMaster;
+            msgData.MinScreenshotIntervalMs = ScreenshotSettings.SettingsStore.MinScreenshotIntervalMs;
+            msgData.MinCraftLibraryRequestIntervalMs = CraftSettings.SettingsStore.MinCraftLibraryRequestIntervalMs;
 
             if (GeneralSettings.SettingsStore.GameDifficulty == GameDifficulty.Custom && GameplaySettings.SettingsStore != null)
             {
@@ -48,7 +48,7 @@ namespace Server.Message.Reader
                 msgData.ReentryHeatScale = GameplaySettings.SettingsStore.ReentryHeatScale;
                 msgData.ResourceAbundance = GameplaySettings.SettingsStore.ResourceAbundance;
                 msgData.FundsGainMultiplier = GameplaySettings.SettingsStore.FundsGainMultiplier;
-                msgData.CanQuickLoad = GameplaySettings.SettingsStore.CanQuickLoad;
+                msgData.CanRevert = GameplaySettings.SettingsStore.CanRevert;
                 msgData.RepLossDeclined = GameplaySettings.SettingsStore.RepLossDeclined;
                 msgData.FundsLossMultiplier = GameplaySettings.SettingsStore.FundsLossMultiplier;
                 msgData.RepGainMultiplier = GameplaySettings.SettingsStore.RepGainMultiplier;

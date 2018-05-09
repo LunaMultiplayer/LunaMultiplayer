@@ -5,7 +5,7 @@ using Server.Client;
 using Server.Context;
 using Server.Log;
 using Server.Server;
-using Server.Settings;
+using Server.Settings.Structures;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -59,7 +59,7 @@ namespace Server.System
                 }
 
                 var lastTime = LastRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
-                if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.MinCraftLibraryRequestIntervalMs))
+                if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(CraftSettings.SettingsStore.MinCraftLibraryRequestIntervalMs))
                 {
                     LastRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
                     var fileName = $"{data.Craft.CraftName}.craft";
@@ -166,7 +166,7 @@ namespace Server.System
             Task.Run(() =>
             {
                 var lastTime = LastRequest.GetOrAdd(client.PlayerName, DateTime.MinValue);
-                if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(GeneralSettings.SettingsStore.MinCraftLibraryRequestIntervalMs))
+                if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(CraftSettings.SettingsStore.MinCraftLibraryRequestIntervalMs))
                 {
                     LastRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
                     var file = Path.Combine(CraftFolder, data.CraftRequested.FolderName, data.CraftRequested.CraftType.ToString(),
@@ -212,7 +212,7 @@ namespace Server.System
         /// </summary>
         private static void CheckMaxFolders()
         {
-            while (Directory.GetDirectories(CraftFolder).Length > GeneralSettings.SettingsStore.MaxCraftFolders)
+            while (Directory.GetDirectories(CraftFolder).Length > CraftSettings.SettingsStore.MaxCraftFolders)
             {
                 var oldestFolder = Directory.GetDirectories(CraftFolder).Select(d => new DirectoryInfo(d)).OrderBy(d => d.LastWriteTime).FirstOrDefault();
                 if (oldestFolder != null)
@@ -228,7 +228,7 @@ namespace Server.System
         /// </summary>
         private static void RemovePlayerOldestCrafts(string playerFolderType)
         {
-            while (new DirectoryInfo(playerFolderType).GetFiles().Length > GeneralSettings.SettingsStore.MaxCraftsPerUser)
+            while (new DirectoryInfo(playerFolderType).GetFiles().Length > CraftSettings.SettingsStore.MaxCraftsPerUser)
             {
                 var oldestCraft = new DirectoryInfo(playerFolderType).GetFiles().OrderBy(f => f.LastWriteTime).FirstOrDefault();
                 if (oldestCraft != null)

@@ -20,4 +20,5 @@
   <BanIcon>Заблокировать</BanIcon>
   <DekesslerIcon>Удалить муссор</DekesslerIcon>
   <NukeIcon>Очистить KSC</NukeIcon>
+  <RestartServerIcon>Restart server</RestartServerIcon>
 </ButtonTooltips>

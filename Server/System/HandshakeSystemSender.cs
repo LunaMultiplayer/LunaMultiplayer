@@ -4,7 +4,7 @@ using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Context;
 using Server.Server;
-using Server.Settings;
+using Server.Settings.Structures;
 
 namespace Server.System
 {

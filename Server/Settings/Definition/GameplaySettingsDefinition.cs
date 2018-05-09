@@ -1,5 +1,5 @@
-﻿using System;
-using LunaCommon.Xml;
+﻿using LunaCommon.Xml;
+using System;
 
 namespace Server.Settings.Definition
 {
@@ -15,9 +15,8 @@ namespace Server.Settings.Definition
         [XmlComment(Value = "No Entry Purchase Required on Research")]
         public bool BypassEntryPurchaseAfterResearch { get; set; } = true;
 
-        [XmlComment(Value = "Allow Quickloading and Reverting Flights\n" +
-                     "Note that if set to true and warp mode isn't SUBSPACE, it will have no effect")]
-        public bool CanQuickLoad { get; set; } = true;
+        [XmlComment(Value = "Allow Reverting")]
+        public bool CanRevert { get; set; } = true;
 
         [XmlComment(Value = "Enable Comm Network")]
         public bool CommNetwork { get; set; } = true;

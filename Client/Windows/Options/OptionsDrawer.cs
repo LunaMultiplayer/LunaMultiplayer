@@ -60,10 +60,10 @@ namespace LunaClient.Windows.Options
             GUILayout.EndHorizontal();
 
             GUILayout.Space(10);
-            var settingInterpolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.UseInterpolation, "Use interpolation", ButtonStyle);
-            if (settingInterpolator != SettingsSystem.CurrentSettings.UseInterpolation)
+            var settingInterpolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionInterpolation, "Use interpolation", ButtonStyle);
+            if (settingInterpolator != SettingsSystem.CurrentSettings.PositionInterpolation)
             {
-                SettingsSystem.CurrentSettings.UseInterpolation = settingInterpolator;
+                SettingsSystem.CurrentSettings.PositionInterpolation = settingInterpolator;
                 SettingsSystem.SaveSettings();
             }
             GUILayout.Space(10);

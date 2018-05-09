@@ -6,7 +6,12 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 0.7.38.{build}
+version: 0.8.42.{build}
+#Do not build if we change any of this files
+skip_commits:
+  files:
+    - '**/*.md'
+    - '**/*.editorconfig'
 image: Visual Studio 2017
 
 #---------------------------------#
@@ -14,7 +19,7 @@ image: Visual Studio 2017
 #---------------------------------#
 
 environment:
-  smallversion: 0.7.38
+  smallversion: 0.8.42
   ZIPPASSWORD:
     secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=
 assembly_info:
@@ -45,7 +50,8 @@ after_build:
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Localization"
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\PartSync"
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Icons"
- - ps: copy "$env:appveyor_build_folder\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt"
+ - ps: copy "$env:appveyor_build_folder\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" 
+ - ps: copy "$env:appveyor_build_folder\LunaMultiplayer.version" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Plugins\LunaMultiplayer.version"
  - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Resources\*.png" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Button"
  - ps: xcopy /s/y "$env:appveyor_build_folder\Client\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Plugins"
  - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Localization\XML\*.xml" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Localization"

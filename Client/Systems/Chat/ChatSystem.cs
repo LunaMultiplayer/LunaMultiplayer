@@ -21,7 +21,7 @@ namespace LunaClient.Systems.Chat
 
         #region Properties
 
-        public ConcurrentQueue<Tuple<string,string>> NewChatMessages { get; private set; } = new ConcurrentQueue<Tuple<string, string>>();
+        public ConcurrentQueue<Tuple<string, string>> NewChatMessages { get; private set; } = new ConcurrentQueue<Tuple<string, string>>();
 
         #endregion
 

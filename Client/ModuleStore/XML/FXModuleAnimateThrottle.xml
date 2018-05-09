@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+        <!--Current throttle of an engine. Probably its related with the exhaust smoke but it changes way too much for syncing it. It's synced with another system so we can ignore it-->
+        <FieldDefinition>
+            <FieldName>animState</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+    </Fields>
+</ModuleDefinition>

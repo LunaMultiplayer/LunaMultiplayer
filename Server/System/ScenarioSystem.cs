@@ -6,7 +6,7 @@ using Server.Context;
 using Server.Log;
 using Server.Properties;
 using Server.Server;
-using Server.Settings;
+using Server.Settings.Structures;
 using Server.System.Scenario;
 using System.IO;
 using System.Linq;
@@ -84,7 +84,7 @@ namespace Server.System
         public static void ParseReceivedScenarioData(ClientStructure client, ScenarioBaseMsgData messageData)
         {
             var data = (ScenarioDataMsgData)messageData;
-            LunaLog.Debug($"Saving {data.ScenarioCount} scenario modules ({string.Join(", ", data.ScenariosData.Select(s=> s.Module))}) from {client.PlayerName}");
+            LunaLog.Debug($"Saving {data.ScenarioCount} scenario modules from {client.PlayerName}");
             for (var i = 0; i < data.ScenarioCount; i++)
             {
                 var scenarioAsConfigNode = Encoding.UTF8.GetString(data.ScenariosData[i].Data, 0, data.ScenariosData[i].NumBytes);

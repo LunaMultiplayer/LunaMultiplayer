@@ -17,5 +17,10 @@ namespace uhttpsharp.Listeners
         {
             return new TcpClientAdapter(await _listener.AcceptTcpClientAsync().ConfigureAwait(false));
         }
+
+        public void Dispose()
+        {
+            _listener.Stop();
+        }
     }
 }

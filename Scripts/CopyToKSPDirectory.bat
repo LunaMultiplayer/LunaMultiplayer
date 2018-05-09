@@ -24,41 +24,38 @@ IF DEFINED KSPPATH2 (del "%KSPPATH2%\GameData\LunaMultiplayer\Plugins\*.*" /Q /F
 mkdir "%KSPPATH%\GameData\LunaMultiplayer\Button"
 IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiplayer\Button")
 
+del "%KSPPATH%\GameData\LunaMultiplayer\Button\*.*" /Q /F
+IF DEFINED KSPPATH2 (del "%KSPPATH2%\GameData\LunaMultiplayer\Button\*.*" /Q /F)
+
 mkdir "%KSPPATH%\GameData\LunaMultiplayer\Localization"
 IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiplayer\Localization")
+
+del "%KSPPATH%\GameData\LunaMultiplayer\Localization\*.*" /Q /F
+IF DEFINED KSPPATH2 (del "%KSPPATH2%\GameData\LunaMultiplayer\Localization\*.*" /Q /F)
 
 mkdir "%KSPPATH%\GameData\LunaMultiplayer\PartSync"
 IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiplayer\PartSync")
 
+del "%KSPPATH%\GameData\LunaMultiplayer\PartSync\*.*" /Q /F
+IF DEFINED KSPPATH2 (del "%KSPPATH2%\GameData\LunaMultiplayer\PartSync\*.*" /Q /F)
+
 mkdir "%KSPPATH%\GameData\LunaMultiplayer\Icons"
 IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiplayer\Icons")
 
+del "%KSPPATH%\GameData\LunaMultiplayer\Icons\*.*" /Q /F
+IF DEFINED KSPPATH2 (del "%KSPPATH2%\GameData\LunaMultiplayer\Icons\*.*" /Q /F)
+
 "%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaClient.dll"
-xcopy /Y "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaClient.*" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaClient.*" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
-
+"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LmpGlobal.dll"
+"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaCommon.dll"
 "%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaUpdater.dll"
-xcopy /Y "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaUpdater.*" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaUpdater.*" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
+"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\Lidgren.Network.dll"
 
-"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\LmpGlobal\bin\%SOLUTIONCONFIGURATION%\LmpGlobal.dll"
-xcopy /Y "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LmpGlobal.*" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\LmpGlobal\bin\%SOLUTIONCONFIGURATION%\LmpGlobal.*" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
+xcopy /Y "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
+IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
 
-"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\TPL\bin\%SOLUTIONCONFIGURATION%\*.dll"
-xcopy /Y "%~dp0..\TPL\bin\%SOLUTIONCONFIGURATION%\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\TPL\bin\%SOLUTIONCONFIGURATION%\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
-
-"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\\Common\bin\%SOLUTIONCONFIGURATION%\LunaCommon.dll"
-xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\LunaCommon.*" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\LunaCommon.*" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
-
-"%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\\Common\bin\%SOLUTIONCONFIGURATION%\Lidgren.Network.dll"
-xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\Lidgren.Network.*" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Common\bin\%SOLUTIONCONFIGURATION%\Lidgren.Network.*" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
-
-xcopy /Y "%~dp0..\External\Dependencies\*.dll" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\External\Dependencies\*.dll" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
+xcopy /Y "%~dp0..\External\Dependencies\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
+IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\External\Dependencies\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")
 
 xcopy /Y "%~dp0..\Client\Resources\*.png" "%KSPPATH%\GameData\LunaMultiplayer\Button"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\Resources\*.png" "%KSPPATH2%\GameData\LunaMultiplayer\Button")
@@ -71,3 +68,6 @@ IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\ModuleStore\XML\*.xml" "%KSPPATH2%
 
 xcopy /Y "%~dp0..\Client\Resources\Icons\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Icons"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\Resources\Icons\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Icons")
+
+xcopy /Y "%~dp0..\*.version" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
+IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\*.version" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")

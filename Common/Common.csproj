@@ -37,6 +37,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Threading">
+      <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -70,6 +73,7 @@
     <Compile Include="Message\Client\ScreenshotCliMsg.cs" />
     <Compile Include="Message\Data\Admin\AdminBanKickMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminDekesslerMsgData.cs" />
+    <Compile Include="Message\Data\Admin\AdminRestartServerMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminNukeMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminKickMsgData.cs" />
     <Compile Include="Message\Data\Admin\AdminBaseMsgData.cs" />
@@ -203,6 +207,7 @@
     <Compile Include="Message\Data\ShareProgress\ShareProgressStrategyMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressFacilityUpgradeMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressTechnologyMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressPartPurchaseMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\StrategyInfo.cs" />
     <Compile Include="Message\Data\ShareProgress\TechNodeInfo.cs" />
     <Compile Include="Message\Data\Vessel\ActionGroup.cs" />
@@ -309,12 +314,7 @@
       <Project>{92b4486c-6b60-4757-b6f0-50b844d1b2ba}</Project>
       <Name>LmpGlobal</Name>
     </ProjectReference>
-    <ProjectReference Include="..\TPL\System.Threading.csproj">
-      <Project>{dcb5d745-525c-46a1-bfc0-e12f87ab6165}</Project>
-      <Name>System.Threading</Name>
-    </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <Content Include="ModFile\XML\LMPModControl.xml" />
   </ItemGroup>
@@ -323,6 +323,11 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\.editorconfig">
+      <Link>.editorconfig</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -27,13 +27,13 @@ namespace LMP.MasterServer.Http
                 RenderHead(writer);
 
                 writer.RenderBeginTag(HtmlTextWriterTag.H1); writer.Write($"Luna Multiplayer servers - Version: {LmpVersioning.CurrentVersion}"); writer.RenderEndTag();
+
                 writer.RenderBeginTag(HtmlTextWriterTag.H3);
                 writer.Write($"Servers: {servers.Length}");
                 writer.WriteBreak();
                 writer.Write($"Players: {servers.Sum(s => s.PlayerCount)}");
                 writer.RenderEndTag();
                 
-
                 RenderServersTable(writer, servers);
                 RenderFooter(writer);
 
@@ -44,12 +44,33 @@ namespace LMP.MasterServer.Http
         private static void RenderHead(HtmlTextWriter writer)
         {
             writer.RenderBeginTag(HtmlTextWriterTag.Head);
+
             writer.RenderBeginTag(HtmlTextWriterTag.Title);
             writer.Write("Luna Multiplayer servers");
             writer.RenderEndTag();
-            writer.RenderBeginTag(HtmlTextWriterTag.Style);
-            writer.Write(Properties.Resources.style);
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Rel, "stylesheet");
+            writer.AddAttribute(HtmlTextWriterAttribute.Type, "text/css");
+            writer.AddAttribute(HtmlTextWriterAttribute.Href, "css/style.css");
+            writer.RenderBeginTag(HtmlTextWriterTag.Link);
             writer.RenderEndTag();
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Src, "js/jquery-latest.js");
+            writer.RenderBeginTag(HtmlTextWriterTag.Script);
+            writer.RenderEndTag();
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Src, "js/jquery.metadata.min.js");
+            writer.RenderBeginTag(HtmlTextWriterTag.Script);
+            writer.RenderEndTag();
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Src, "js/jquery.tablesorter.min.js");
+            writer.RenderBeginTag(HtmlTextWriterTag.Script);
+            writer.RenderEndTag();
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Src, "js/lmp.js");
+            writer.RenderBeginTag(HtmlTextWriterTag.Script);
+            writer.RenderEndTag();
+
             writer.RenderEndTag();
         }
 
@@ -69,21 +90,27 @@ namespace LMP.MasterServer.Http
 
         private static void RenderServersTable(HtmlTextWriter writer, ServerInfo[] servers)
         {
+            writer.AddAttribute(HtmlTextWriterAttribute.Id, "LmpTable");
+            writer.AddAttribute(HtmlTextWriterAttribute.Class, "tablesorter");
             writer.RenderBeginTag(HtmlTextWriterTag.Table);
-
+            
+            writer.RenderBeginTag("thead");
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Address");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Password");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Name");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Description");writer.RenderEndTag();
-            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Game Mode");writer.RenderEndTag();
-            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Players/Max");writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("URL"); writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Game mode");writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Players");writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Max players"); writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Mod control");writer.RenderEndTag();
-            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Terrain quality");writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Terrain quality"); writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Cheats");writer.RenderEndTag();
             writer.RenderEndTag();
+            writer.RenderEndTag();
 
-            // Loop over some strings.
+            writer.RenderBeginTag("tbody");
             foreach (var server in servers)
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Tr);
@@ -91,13 +118,22 @@ namespace LMP.MasterServer.Http
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Password);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.ServerName);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Description);writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.Td);
+                if (!string.IsNullOrEmpty(server.Website))
+                {
+                    writer.AddAttribute(HtmlTextWriterAttribute.Href, server.Website);
+                    writer.RenderBeginTag(HtmlTextWriterTag.A);writer.Write(server.WebsiteText);writer.RenderEndTag();
+                }
+                writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write((GameMode)server.GameMode);writer.RenderEndTag();
-                writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write($"{server.PlayerCount}/{server.MaxPlayers}");writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.PlayerCount);writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.MaxPlayers);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.ModControl);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write((TerrainQuality)server.TerrainQuality);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Cheats);writer.RenderEndTag();
                 writer.RenderEndTag();
             }
+            writer.RenderEndTag();
 
             writer.RenderEndTag();
         }

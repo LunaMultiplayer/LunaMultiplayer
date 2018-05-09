@@ -168,7 +168,9 @@ namespace LunaClient.Windows.CraftLibrary
                 Vector2 mousePos = Input.mousePosition;
                 mousePos.y = Screen.height - mousePos.y;
 
-                var shouldLock = WindowRect.Contains(mousePos) || _libraryWindowRect.Contains(mousePos);
+                var shouldLock = WindowRect.Contains(mousePos)
+                                 || !string.IsNullOrEmpty(_selectedFolder) && _libraryWindowRect.Contains(mousePos)
+                                 || _drawUploadScreen && _uploadWindowRect.Contains(mousePos);
 
                 if (shouldLock && !IsWindowLocked)
                 {
@@ -183,7 +185,7 @@ namespace LunaClient.Windows.CraftLibrary
                 RemoveWindowLock();
         }
         
-        private void Reset()
+        private static void Reset()
         {
             _selectedFolder = null;
             _drawUploadScreen = false;

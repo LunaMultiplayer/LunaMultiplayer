@@ -39,6 +39,11 @@ namespace LunaClient.Windows.Admin
             {
                 AdminSystem.Singleton.MessageSender.SendNukeMsg();
             }
+            if (GUILayout.Button(RestartServerIcon, ButtonStyle))
+            {
+                AdminSystem.Singleton.MessageSender.SendServerRestartMsg();
+                Display = false;
+            }
 
             GUI.enabled = true;
             GUILayout.EndHorizontal();

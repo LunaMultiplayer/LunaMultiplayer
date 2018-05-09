@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+        <!--Brakes on wheels-->
+        <FieldDefinition>
+            <FieldName>brakeInput</FieldName>
+            <Ignore>false</Ignore>
+            <IgnoreSpectating>false</IgnoreSpectating>
+            <Interval>250</Interval>
+            <SetValueInModule>false</SetValueInModule>
+            <CallLoad>true</CallLoad>
+            <CallOnAwake>true</CallOnAwake>
+            <CallOnLoad>true</CallOnLoad>
+            <CallOnStart>true</CallOnStart>
+        </FieldDefinition>
+    </Fields>
+</ModuleDefinition>

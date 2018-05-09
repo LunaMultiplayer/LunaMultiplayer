@@ -30,6 +30,8 @@ namespace LMP.MasterServer.Structure
                 ServerVersion = msg.ServerVersion,
                 ShowVesselsInThePast = msg.ShowVesselsInThePast,
                 Description = msg.Description,
+                Website = msg.Website,
+                WebsiteText = msg.WebsiteText,
                 DropControlOnExit = msg.DropControlOnExit,
                 DropControlOnExitFlight = msg.DropControlOnExitFlight,
                 DropControlOnVesselSwitching = msg.DropControlOnVesselSwitching,
@@ -44,6 +46,18 @@ namespace LMP.MasterServer.Structure
 
             Info.ServerName = Info.ServerName.Length > 30 ? Info.ServerName.Substring(0, 30) : Info.ServerName;
             Info.Description = Info.Description.Length > 200 ? Info.Description.Substring(0, 200) : Info.Description;
+            Info.Website = Info.Website.Length > 60 ? Info.Website.Substring(0, 60) : Info.Website;
+            Info.WebsiteText = Info.WebsiteText.Length > 15 ? Info.WebsiteText.Substring(0, 15) : Info.WebsiteText;
+
+            if (!string.IsNullOrEmpty(Info.Website) && !Info.Website.Contains("://"))
+            {
+                Info.Website = "http://" + Info.Website;
+            }
+
+            if (string.IsNullOrEmpty(Info.WebsiteText) && !string.IsNullOrEmpty(Info.Website))
+            {
+                Info.WebsiteText = "URL";
+            }
         }
 
         public static bool IsLocalIpAddress(IPAddress host)
