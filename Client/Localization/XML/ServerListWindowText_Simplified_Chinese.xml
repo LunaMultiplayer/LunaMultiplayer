@@ -10,8 +10,8 @@
     <Cheats>作弊</Cheats>
     <Name>名称</Name>
     <Description>简介</Description>
-    <Website>URL</Website>
-    <ServerDetailTitle>Connect to server</ServerDetailTitle>
-    <Password>Password</Password>
-    <Connect>Connect</Connect>
+    <Website>链接</Website>
+    <ServerDetailTitle>连接至服务器</ServerDetailTitle>
+    <Password>密码</Password>
+    <Connect>连接</Connect>
 </ServerListWindowText>

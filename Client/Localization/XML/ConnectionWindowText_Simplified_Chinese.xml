@@ -4,6 +4,6 @@
     <Name>名称:</Name>
     <Address>地址:</Address>
     <Port>端口:</Port>
-    <Password>Password:</Password>
+    <Password>密码：</Password>
     <CustomServers>自定义服务器:</CustomServers>
 </ConnectionWindowText>
