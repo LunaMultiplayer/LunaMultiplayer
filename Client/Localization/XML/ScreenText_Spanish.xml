@@ -5,15 +5,15 @@
     <ModFileGenerated>Se ha generado el archivo LMPModControl.xml en tu carpeta de KSP</ModFileGenerated>
     <Disconected>¡Estás desconectado!</Disconected>
     <Spectating>Esta nave está siendo controlada por:</Spectating>
-    <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
+    <SafetyBubble>¡¡Recuerda!! ¡¡Mientras estes en la burbuja de seguridad los otros jugadores no te verán!!</SafetyBubble>
     <CannotRecover>No puedes recuperar la nave puesto que no es tuya.</CannotRecover>
     <CannotTerminate>No puedes eliminar la nave puesto que no es tuya.</CannotTerminate>
     <SpectatingRemoved>La nave que estabas observando ha sido eliminada</SpectatingRemoved>
     <WarpDisabled>No puedes adelantar el tiempo. Esta opción esta desabilitada en el servidor</WarpDisabled>
     <NotWarpMaster>No puedes adelantar el tiempo. ¡No eres el jugador designado!</NotWarpMaster>
     <WaitingSubspace>No puedes adelantar el tiempo. Esperando un id de subspacio del servidor</WaitingSubspace>
-    <ScreenshotInterval>Interval between screenshots is $1 seconds. Cannot upload the screenshot at this moment</ScreenshotInterval>
-    <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
-    <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
-    <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <ScreenshotInterval>Intervalo entre fotos fijado a $1 segundos. No se puede subir la foto en este momento</ScreenshotInterval>
+    <CraftLibraryInterval>Intervalo entre peticiones fijado a $1 segundos. No se puede procesar la peticion en este momento</CraftLibraryInterval>
+    <ScreenshotTaken>¡Foto subida!</ScreenshotTaken>
+    <ImageSaved>Imagen guardada en GameData/LunaMultiplayer/Screenshots</ImageSaved>
 </ScreenText>

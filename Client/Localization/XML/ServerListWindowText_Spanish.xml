@@ -11,7 +11,7 @@
     <Name>Nombre</Name>
     <Description>Descripción</Description>
     <Website>URL</Website>
-    <ServerDetailTitle>Connect to server</ServerDetailTitle>
+    <ServerDetailTitle>Connectar al servidor</ServerDetailTitle>
     <Password>Password</Password>
-    <Connect>Connect</Connect>
+    <Connect>Connectar</Connect>
 </ServerListWindowText>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SettingsIcon>Settings</SettingsIcon>
+  <ServerIcon>Servers</ServerIcon>
+  <ConnectIcon>Connect</ConnectIcon>
+  <DisconnectIcon>Disconnect</DisconnectIcon>
+  <SyncIcon>Warp to</SyncIcon>
+  <CloseIcon>Close</CloseIcon>
+  <RefreshIcon>Refresh</RefreshIcon>
+  <UploadIcon>Upload</UploadIcon>
+  <DeleteIcon>Delete</DeleteIcon>
+  <PlusIcon>Add</PlusIcon>
+  <SaveIcon>Save</SaveIcon>
+  <KeyIcon>Password</KeyIcon>
+  <ChatIcon>Chat</ChatIcon>
+  <CameraIcon>Screenshots</CameraIcon>
+  <RocketIcon>Vessels</RocketIcon>
+  <AdminIcon>Admin</AdminIcon>
+  <KickIcon>Kick</KickIcon>
+  <BanIcon>Ban</BanIcon>
+  <DekesslerIcon>Dekessler</DekesslerIcon>
+  <NukeIcon>Nuke KSC</NukeIcon>
+  <RestartServerIcon>Restart server</RestartServerIcon>
+</ButtonTooltips>

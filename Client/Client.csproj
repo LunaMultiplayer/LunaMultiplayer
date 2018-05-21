@@ -373,6 +373,7 @@
     <Content Include="Localization\XML\AdminWindowText_Russian.xml" />
     <Content Include="Localization\XML\AdminWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\AdminWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\AdminWindowText_Swedish.xml" />
     <Content Include="Localization\XML\BannedPartsWindowText_Dutch.xml" />
     <Content Include="Localization\XML\BannedPartsWindowText_English.xml" />
     <Content Include="Localization\XML\BannedPartsWindowText_French.xml" />
@@ -382,6 +383,7 @@
     <Content Include="Localization\XML\BannedPartsWindowText_Russian.xml" />
     <Content Include="Localization\XML\BannedPartsWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\BannedPartsWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\BannedPartsWindowText_Swedish.xml" />
     <Content Include="Localization\XML\ButtonTooltips_Dutch.xml" />
     <Content Include="Localization\XML\ButtonTooltips_English.xml" />
     <Content Include="Localization\XML\ButtonTooltips_French.xml" />
@@ -391,6 +393,7 @@
     <Content Include="Localization\XML\ButtonTooltips_Russian.xml" />
     <Content Include="Localization\XML\ButtonTooltips_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\ButtonTooltips_Spanish.xml" />
+    <Content Include="Localization\XML\ButtonTooltips_Swedish.xml" />
     <Content Include="Localization\XML\ChatWindowText_Dutch.xml" />
     <Content Include="Localization\XML\ChatWindowText_English.xml" />
     <Content Include="Localization\XML\ChatWindowText_French.xml" />
@@ -400,6 +403,7 @@
     <Content Include="Localization\XML\ChatWindowText_Russian.xml" />
     <Content Include="Localization\XML\ChatWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\ChatWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\ChatWindowText_Swedish.xml" />
     <Content Include="Localization\XML\ConnectionWindowText_Dutch.xml" />
     <Content Include="Localization\XML\ConnectionWindowText_English.xml" />
     <Content Include="Localization\XML\ConnectionWindowText_French.xml" />
@@ -409,6 +413,7 @@
     <Content Include="Localization\XML\ConnectionWindowText_Russian.xml" />
     <Content Include="Localization\XML\ConnectionWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\ConnectionWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\ConnectionWindowText_Swedish.xml" />
     <Content Include="Localization\XML\CraftLibraryWindowText_Dutch.xml" />
     <Content Include="Localization\XML\CraftLibraryWindowText_English.xml" />
     <Content Include="Localization\XML\CraftLibraryWindowText_French.xml" />
@@ -418,6 +423,7 @@
     <Content Include="Localization\XML\CraftLibraryWindowText_Russian.xml" />
     <Content Include="Localization\XML\CraftLibraryWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\CraftLibraryWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\CraftLibraryWindowText_Swedish.xml" />
     <Content Include="Localization\XML\DisclaimerDialogText_Dutch.xml" />
     <Content Include="Localization\XML\DisclaimerDialogText_English.xml" />
     <Content Include="Localization\XML\DisclaimerDialogText_French.xml" />
@@ -427,6 +433,7 @@
     <Content Include="Localization\XML\DisclaimerDialogText_Russian.xml" />
     <Content Include="Localization\XML\DisclaimerDialogText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\DisclaimerDialogText_Spanish.xml" />
+    <Content Include="Localization\XML\DisclaimerDialogText_Swedish.xml" />
     <Content Include="Localization\XML\InstallDialogText_Dutch.xml" />
     <Content Include="Localization\XML\InstallDialogText_English.xml" />
     <Content Include="Localization\XML\InstallDialogText_French.xml" />
@@ -436,6 +443,7 @@
     <Content Include="Localization\XML\InstallDialogText_Russian.xml" />
     <Content Include="Localization\XML\InstallDialogText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\InstallDialogText_Spanish.xml" />
+    <Content Include="Localization\XML\InstallDialogText_Swedish.xml" />
     <Content Include="Localization\XML\ModWindowText_Dutch.xml" />
     <Content Include="Localization\XML\ModWindowText_English.xml" />
     <Content Include="Localization\XML\ModWindowText_French.xml" />
@@ -445,6 +453,7 @@
     <Content Include="Localization\XML\ModWindowText_Russian.xml" />
     <Content Include="Localization\XML\ModWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\ModWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\ModWindowText_Swedish.xml" />
     <Content Include="Localization\XML\OptionsWindowText_Dutch.xml" />
     <Content Include="Localization\XML\OptionsWindowText_English.xml" />
     <Content Include="Localization\XML\OptionsWindowText_French.xml" />
@@ -454,6 +463,7 @@
     <Content Include="Localization\XML\OptionsWindowText_Russian.xml" />
     <Content Include="Localization\XML\OptionsWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\OptionsWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\OptionsWindowText_Swedish.xml" />
     <Content Include="Localization\XML\OutdatedDialogText_Dutch.xml" />
     <Content Include="Localization\XML\OutdatedDialogText_English.xml" />
     <Content Include="Localization\XML\OutdatedDialogText_French.xml" />
@@ -463,6 +473,7 @@
     <Content Include="Localization\XML\OutdatedDialogText_Russian.xml" />
     <Content Include="Localization\XML\OutdatedDialogText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\OutdatedDialogText_Spanish.xml" />
+    <Content Include="Localization\XML\OutdatedDialogText_Swedish.xml" />
     <Content Include="Localization\XML\ScreenshotWindowText_Dutch.xml" />
     <Content Include="Localization\XML\ScreenshotWindowText_English.xml" />
     <Content Include="Localization\XML\ScreenshotWindowText_French.xml" />
@@ -472,6 +483,7 @@
     <Content Include="Localization\XML\ScreenshotWindowText_Russian.xml" />
     <Content Include="Localization\XML\ScreenshotWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\ScreenshotWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\ScreenshotWindowText_Swedish.xml" />
     <Content Include="Localization\XML\ScreenText_Dutch.xml" />
     <Content Include="Localization\XML\ScreenText_English.xml" />
     <Content Include="Localization\XML\ScreenText_French.xml" />
@@ -481,6 +493,7 @@
     <Content Include="Localization\XML\ScreenText_Russian.xml" />
     <Content Include="Localization\XML\ScreenText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\ScreenText_Spanish.xml" />
+    <Content Include="Localization\XML\ScreenText_Swedish.xml" />
     <Content Include="Localization\XML\ServerListWindowText_Dutch.xml" />
     <Content Include="Localization\XML\ServerListWindowText_English.xml" />
     <Content Include="Localization\XML\ServerListWindowText_French.xml" />
@@ -490,6 +503,7 @@
     <Content Include="Localization\XML\ServerListWindowText_Russian.xml" />
     <Content Include="Localization\XML\ServerListWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\ServerListWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\ServerListWindowText_Swedish.xml" />
     <Content Include="Localization\XML\StatusWindowText_Dutch.xml" />
     <Content Include="Localization\XML\StatusWindowText_English.xml" />
     <Content Include="Localization\XML\StatusWindowText_French.xml" />
@@ -499,6 +513,7 @@
     <Content Include="Localization\XML\StatusWindowText_Russian.xml" />
     <Content Include="Localization\XML\StatusWindowText_Simplified_Chinese.xml" />
     <Content Include="Localization\XML\StatusWindowText_Spanish.xml" />
+    <Content Include="Localization\XML\StatusWindowText_Swedish.xml" />
     <Content Include="ModuleStore\XML\FXModuleAnimateThrottle.xml" />
     <Content Include="ModuleStore\XML\KerbalEVA.xml" />
     <Content Include="ModuleStore\XML\ModuleCoreHeat.xml" />

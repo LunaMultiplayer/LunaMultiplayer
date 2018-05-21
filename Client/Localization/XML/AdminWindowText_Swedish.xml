@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-16"?>
+<AdminWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Administration</Title>
+  <Password>Server administratörs lösenord</Password>
+  <ConfirmDialogTitle>Bekräftelse</ConfirmDialogTitle>
+  <BanText>Vill du verkligen bannlysa den här spelaren?</BanText>
+  <KickText>Vill du verkligen sparka den här spelaren?</KickText>
+  <Reason>Anledning:</Reason>
+</AdminWindowText>

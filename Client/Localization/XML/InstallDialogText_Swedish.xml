@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<InstallDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>Inkorrect Installation Upptäckt</Title>
+    <IncorrectInstall>LunaMultiplayer är inte korrekt installerad.</IncorrectInstall>
+    <CurrentLoc>Nuvarande plats:</CurrentLoc>
+    <CorrectLoc>Korrekt Plats:</CorrectLoc>
+</InstallDialogText>
