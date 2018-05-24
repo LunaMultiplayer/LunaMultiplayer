@@ -40,10 +40,8 @@ namespace Server
         {
             try
             {
-                Console.Title = $"LMPServer {LmpVersioning.CurrentVersion}";
-#if DEBUG
-                Console.Title += " DEBUG";
-#endif
+                Console.Title = $"LMP {LmpVersioning.CurrentVersion}";
+
                 Console.OutputEncoding = Encoding.Unicode;
                 ServerContext.StartTime = LunaTime.UtcNow.Ticks;
 
@@ -144,6 +142,12 @@ namespace Server
                 LunaLog.Debug("Loading mod control...");
                 ModFileSystem.LoadModFile();
             }
+
+            Console.Title += $" ({GeneralSettings.SettingsStore.ServerName})";
+
+#if DEBUG
+            Console.Title += " DEBUG";
+#endif
         }
 
         /// <summary>
