@@ -78,7 +78,14 @@ namespace LMP.MasterServer.Http
         {
             writer.RenderBeginTag(HtmlTextWriterTag.P);
             writer.RenderBeginTag(HtmlTextWriterTag.Small);
-            writer.Write("Luna Multiplayer - ");
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Href, "http://www.lunamultiplayer.com/");
+            writer.RenderBeginTag(HtmlTextWriterTag.A);
+            writer.Write("Luna Multiplayer");
+            writer.RenderEndTag();
+
+            writer.Write(" - ");
+
             writer.AddAttribute(HtmlTextWriterAttribute.Href, "https://github.com/LunaMultiplayer/LunaMultiplayer");
             writer.RenderBeginTag(HtmlTextWriterTag.A);
             writer.Write("Github repo");
