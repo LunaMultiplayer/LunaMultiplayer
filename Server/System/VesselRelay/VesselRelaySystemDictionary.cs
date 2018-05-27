@@ -92,7 +92,7 @@ namespace Server.System.VesselRelay
                         //As we cloned a queue from a PAST subspace, we may have many messages 
                         //that are TOO OLD as we are in a future subspace. Therefore, we remove the old
                         //messages for this subspace
-                        var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspaceId);
+                        var subspaceTime = WarpSystem.GetSubspaceTime(subspaceId);
 
                         while (messageQueue.TryDequeue(out var relayItem))
                         {
@@ -129,7 +129,7 @@ namespace Server.System.VesselRelay
             {
                 foreach (var subspaceVessels in OldSubspaceVesselMessages.Where(m => !m.Value.IsEmpty))
                 {
-                    var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspaceVessels.Key);
+                    var subspaceTime = WarpSystem.GetSubspaceTime(subspaceVessels.Key);
 
                     foreach (var queue in subspaceVessels.Value)
                     {

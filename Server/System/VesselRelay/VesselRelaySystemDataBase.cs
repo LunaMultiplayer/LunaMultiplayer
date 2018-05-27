@@ -111,7 +111,7 @@ namespace Server.System.VesselRelay
                 //Now we are going to get all the messages from that PAST subspace and remove the ones that are too old for our new subspace.
                 //Te idea is that we are going to use a queue with a lot of messages that came from future and use for our new subspace
                 //But in that queue there might be messages that are too old so we can remove them to save space
-                var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspaceId);
+                var subspaceTime = WarpSystem.GetSubspaceTime(subspaceId);
                 var messageQueue = DbCollection.Find(v => v.SubspaceId == closestPastSubspace && v.Msg.SentTime < subspaceTime).ToList();
 
                 //Once we've got the queue clean of old messages we add it do the db 
@@ -144,7 +144,7 @@ namespace Server.System.VesselRelay
                 var messagesByGroup = DbCollection.FindAll().GroupBy(m => m.SubspaceId);
                 foreach (var subspace in messagesByGroup)
                 {
-                    var subspaceTime = WarpSystem.GetCurrentSubspaceTime(subspace.Key);
+                    var subspaceTime = WarpSystem.GetSubspaceTime(subspace.Key);
                     var msgToSend = subspace.Where(m => subspaceTime >= m.Msg.SentTime).ToList();
                     msgToSend.ForEach(m =>
                     {

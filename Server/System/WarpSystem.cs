@@ -94,9 +94,9 @@ namespace Server.System
         }
 
         /// <summary>
-        /// Returns the current time in ticks at the given subspace
+        /// Returns the time in ticks at the given subspace
         /// </summary>
-        public static long GetCurrentSubspaceTime(int subspace)
+        public static long GetSubspaceTime(int subspace)
         {
             return LunaTime.UtcNow.Ticks + GetSubspaceTimeDifference(subspace);
         }
