@@ -67,6 +67,8 @@ namespace LunaClient.Systems.CraftLibrary
         /// </summary>
         public void RefreshOwnCrafts()
         {
+            OwnCrafts.Clear();
+
             var vabFolder = CommonUtil.CombinePaths(SaveFolder, "Ships", "VAB");
             if (Directory.Exists(vabFolder))
             {
