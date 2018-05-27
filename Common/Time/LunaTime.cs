@@ -25,10 +25,7 @@ namespace LunaCommon.Time
         /// <summary>
         /// Static constructor where we create the time that syncs time with the time providers every 10 seconds
         /// </summary>
-        static LunaTime()
-        {
-            Timer = new Timer(_ => RefreshTimeDifference(), null, 0, TimeSyncIntervalMs);
-        }
+        static LunaTime() => Timer = new Timer(_ => RefreshTimeDifference(), null, 0, TimeSyncIntervalMs);
 
         /// <summary>
         /// Get correctly sync UTC time from internet
