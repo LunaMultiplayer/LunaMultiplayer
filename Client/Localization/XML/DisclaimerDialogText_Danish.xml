@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<DisclaimerDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Text>
+Luna Multi Player (LMP) deler følgende personlige oplysninger med master-serverene og enhver server, du opretter forbindelse til.
+a) Dit spiller navn du forbinder med.
+b) Din player token (En tilfældigt genereret linje tekst for at godkende dig).
+c) Din IP-adresse logges på serverkonsollen.
+
+LMP kontakter ikke andre computer end den server, du forbinder til og masterserveren.
+For at kunne bruge LMP skal du tillade det at bruge denne information
+
+For mere information - se KSP addon reglerne
+    </Text>
+    <Title>LunaMultiplayer - Ansvarsfraskrivelse</Title>
+    <Accept>Acceptere</Accept>
+    <Decline>Afvis </Decline>
+</DisclaimerDialogText>

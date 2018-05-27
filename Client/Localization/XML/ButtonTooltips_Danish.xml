@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SettingsIcon>Indstillinger</SettingsIcon>
+  <ServerIcon>Servers</ServerIcon>
+  <ConnectIcon>Tilslut</ConnectIcon>
+  <DisconnectIcon>Koble fra</DisconnectIcon>
+  <SyncIcon>Warp til</SyncIcon>
+  <CloseIcon>Luk</CloseIcon>
+  <RefreshIcon>Genopfrisk</RefreshIcon>
+  <UploadIcon>Upload</UploadIcon>
+  <DeleteIcon>Slet</DeleteIcon>
+  <PlusIcon>tilføj</PlusIcon>
+  <SaveIcon>gem</SaveIcon>
+  <KeyIcon>Kodeord</KeyIcon>
+  <ChatIcon>Chat</ChatIcon>
+  <CameraIcon>Skærmbilleder</CameraIcon>
+  <RocketIcon>Fartøjer</RocketIcon>
+  <AdminIcon>Administrator</AdminIcon>
+  <KickIcon>Smid ud</KickIcon>
+  <BanIcon>Bandlys</BanIcon>
+  <DekesslerIcon>Dekessler</DekesslerIcon>
+  <NukeIcon>Nuke KSC</NukeIcon>
+  <RestartServerIcon>Genstart server</RestartServerIcon>
+</ButtonTooltips>
