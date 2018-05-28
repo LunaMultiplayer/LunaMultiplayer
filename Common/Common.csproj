@@ -294,7 +294,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ServerInfo.cs" />
-    <Compile Include="Time\LunaTime.cs" />
+    <Compile Include="Time\LunaComputerTime.cs" />
+    <Compile Include="Time\LunaNetworkTime.cs" />
     <Compile Include="Time\TimeEnums.cs" />
     <Compile Include="Time\TimeRetriever.cs" />
     <Compile Include="Time\TimeRetrieverNist.cs" />

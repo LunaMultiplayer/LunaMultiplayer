@@ -27,7 +27,7 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Gets the server clock in seconds.
         /// </summary>
-        public static double ServerClockSec => TimeUtil.TicksToSeconds(LunaTime.UtcNow.Ticks - ServerStartTime);
+        public static double ServerClockSec => TimeUtil.TicksToSeconds(LunaNetworkTime.UtcNow.Ticks - ServerStartTime);
 
         /// <summary>
         /// Gets the current time error between the server time and the game time

@@ -98,7 +98,7 @@ namespace Server.System
         /// </summary>
         public static long GetSubspaceTime(int subspace)
         {
-            return LunaTime.UtcNow.Ticks + GetSubspaceTimeDifference(subspace);
+            return LunaNetworkTime.UtcNow.Ticks + GetSubspaceTimeDifference(subspace);
         }
 
         /// <summary>

@@ -13,7 +13,7 @@ namespace Server.Command.Command
             long bytesSentTotal = 0;
             long bytesReceivedTotal = 0;
             LunaLog.Normal("Connection stats:");
-            LunaLog.Normal($"Nist Time Difference: {LunaTime.TimeDifference.TotalMilliseconds} ms");
+            LunaLog.Normal($"Nist Time Difference: {LunaNetworkTime.TimeDifference.TotalMilliseconds} ms");
             foreach (var client in ClientRetriever.GetAuthenticatedClients())
             {
                 bytesSentTotal += client.BytesSent;

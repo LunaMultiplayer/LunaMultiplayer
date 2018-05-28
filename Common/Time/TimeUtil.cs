@@ -27,5 +27,16 @@ namespace LunaCommon.Time
         {
             return ticks / TimeSpan.TicksPerSecond;
         }
+
+        public static bool IsInInterval(ref DateTime lastRequest, int intervalInMs)
+        {
+            if (LunaComputerTime.UtcNow - lastRequest > TimeSpan.FromMilliseconds(intervalInMs))
+            {
+                lastRequest = DateTime.Now;
+                return true;
+            }
+
+            return false;
+        }
     }
 }

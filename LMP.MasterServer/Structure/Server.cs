@@ -19,7 +19,7 @@ namespace LMP.MasterServer.Structure
                 externalEndpoint;
 
             InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);
-            LastRegisterTime = LunaTime.UtcNow.Ticks;
+            LastRegisterTime = LunaNetworkTime.UtcNow.Ticks;
             Info = new ServerInfo
             {
                 Id = msg.Id,

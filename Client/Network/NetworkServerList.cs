@@ -57,7 +57,7 @@ namespace LunaClient.Network
         {
             try
             {
-                var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg, LunaTime.UtcNow.Ticks);
+                var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks);
                 
                 //Sometimes we receive other type of unconnected messages. 
                 //Therefore we assert that the received message data is of MsReplyServersMsgData

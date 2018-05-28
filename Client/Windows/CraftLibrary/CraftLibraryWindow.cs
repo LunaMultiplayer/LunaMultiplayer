@@ -2,6 +2,7 @@
 using LunaClient.Localization;
 using LunaClient.Systems.CraftLibrary;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using UniLinq;
@@ -13,7 +14,7 @@ namespace LunaClient.Windows.CraftLibrary
     {
         #region Fields
 
-        private const float UpdateIntervalMs = 1500;
+        private const int UpdateIntervalMs = 1500;
 
         private const float FoldersWindowHeight = 300;
         private const float FoldersWindowWidth = 200;
@@ -63,10 +64,8 @@ namespace LunaClient.Windows.CraftLibrary
             base.Update();
             if (!Display) return;
 
-            if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromMilliseconds(UpdateIntervalMs))
+            if (TimeUtil.IsInInterval(ref _lastGuiUpdateTime, UpdateIntervalMs))
             {
-                _lastGuiUpdateTime = DateTime.Now;
-                
                 VabCrafts.Clear();
                 SphCrafts.Clear();
                 SubAssemblyCrafts.Clear();

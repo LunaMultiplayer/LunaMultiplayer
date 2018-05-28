@@ -2,6 +2,7 @@
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
+using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -55,9 +56,8 @@ namespace LunaClient.Systems.Screenshot
         {
             if (GameSettings.TAKE_SCREENSHOT.GetKeyDown())
             {
-                if (DateTime.Now - _lastTakenScreenshot > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinScreenshotIntervalMs))
+                if (TimeUtil.IsInInterval(ref _lastTakenScreenshot, SettingsSystem.ServerSettings.MinScreenshotIntervalMs))
                 {
-                    _lastTakenScreenshot = DateTime.Now;
                     var path = CommonUtil.CombinePaths(MainSystem.KspPath, "Screenshots");
                     CoroutineUtil.StartDelayedRoutine(nameof(CheckScreenshots), () =>
                     {

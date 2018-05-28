@@ -6,6 +6,7 @@ using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
+using LunaCommon.Time;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -234,11 +235,11 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         private static IEnumerator WaitUntilWeSwitchedThenSendDockInfo(VesselDockStructure dockInfo, int secondsToWait = 5)
         {
-            var start = DateTime.Now;
+            var start = LunaComputerTime.UtcNow;
             var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
             var waitInterval = new WaitForSeconds(0.5f);
 
-            while (FlightGlobals.ActiveVessel?.id != dockInfo.DominantVesselId && DateTime.Now - start < TimeSpan.FromSeconds(30))
+            while (FlightGlobals.ActiveVessel?.id != dockInfo.DominantVesselId && LunaComputerTime.UtcNow - start < TimeSpan.FromSeconds(30))
             {
                 yield return waitInterval;
             }

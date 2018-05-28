@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 using System.IO;
 using UnityEngine;
@@ -97,10 +98,9 @@ namespace LunaClient.Windows.Tools
             base.Update();
             if (_saveCurrentOrbitData && FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.orbitDriver != null)
             {
-                if (DateTime.Now - _lastSavedOrbitDataTime > TimeSpan.FromMilliseconds(SaveOrbitDataMsInterval))
+                if (TimeUtil.IsInInterval(ref _lastSavedOrbitDataTime, SaveOrbitDataMsInterval))
                 {
-                    _lastSavedOrbitDataTime = DateTime.Now;
-                    File.AppendAllText(OrbitFilePath, $"{DateTime.Now:HH:mm:ss.ff};{FlightGlobals.ActiveVessel.orbit.PrintOrbitData()}");
+                    File.AppendAllText(OrbitFilePath, $"{LunaComputerTime.Now:HH:mm:ss.ff};{FlightGlobals.ActiveVessel.orbit.PrintOrbitData()}");
                     LunaScreenMsg.PostScreenMessage($"Saving Orbit info to file: {OrbitFilePath}", 1f, ScreenMessageStyle.UPPER_CENTER);
                 }
             }

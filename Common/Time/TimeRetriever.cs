@@ -18,6 +18,7 @@ namespace LunaCommon.Time
 
         /// <summary>
         /// Max requests are every 4 seconds, we use 5 for safety. Bear in mind that this check will only defend against several threads but on the SAME application
+        /// We don't use the LunaComputerTime as we need that this value is not affected by offsets
         /// </summary>
         internal static bool CanRequestTime(TimeProvider provider) => (DateTime.UtcNow - TimeProviderLastRequests[provider]).TotalSeconds > 5;
 
@@ -49,6 +50,7 @@ namespace LunaCommon.Time
                     throw new ArgumentOutOfRangeException(nameof(provider), provider, null);
             }
 
+            //We don't use the LunaComputerTime as we need that this value is not affected by offsets
             TimeProviderLastRequests[provider] = DateTime.UtcNow;
 
             return dateTime;

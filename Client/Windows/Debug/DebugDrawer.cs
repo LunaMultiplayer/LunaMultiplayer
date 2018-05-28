@@ -26,9 +26,13 @@ namespace LunaClient.Windows.Debug
             if (_displayInterpolationData)
                 GUILayout.Label(_interpolationText, LabelStyle);
 
-            _displayNtp = GUILayout.Toggle(_displayNtp, "Display NTP/Subspace statistics", ButtonStyle);
-            if (_displayNtp)
-                GUILayout.Label(_ntpText, LabelStyle);
+            _displaySubspace = GUILayout.Toggle(_displaySubspace, "Display subspace statistics", ButtonStyle);
+            if (_displaySubspace)
+                GUILayout.Label(_subspaceText, LabelStyle);
+
+            _displayTimes = GUILayout.Toggle(_displayTimes, "Display time clocks", ButtonStyle);
+            if (_displayTimes)
+                GUILayout.Label(_timeText, LabelStyle);
 
             _displayConnectionQueue = GUILayout.Toggle(_displayConnectionQueue, "Display connection statistics", ButtonStyle);
             if (_displayConnectionQueue)

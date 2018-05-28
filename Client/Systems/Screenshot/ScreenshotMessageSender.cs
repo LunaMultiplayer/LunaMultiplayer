@@ -21,7 +21,7 @@ namespace LunaClient.Systems.Screenshot
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<ScreenshotDataMsgData>();
 
-            msgData.Screenshot.DateTaken = LunaTime.UtcNow.ToBinary();
+            msgData.Screenshot.DateTaken = LunaNetworkTime.UtcNow.ToBinary();
             msgData.Screenshot.NumBytes = data.Length;
 
             if(msgData.Screenshot.Data.Length < msgData.Screenshot.NumBytes)

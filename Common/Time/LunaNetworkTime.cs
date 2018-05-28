@@ -6,7 +6,7 @@ namespace LunaCommon.Time
     /// <summary>
     /// Use this class to retrieve exact times
     /// </summary>
-    public class LunaTime
+    public class LunaNetworkTime
     {
         /// <summary>
         /// Get correctly sync local time from internet
@@ -25,12 +25,12 @@ namespace LunaCommon.Time
         /// <summary>
         /// Static constructor where we create the time that syncs time with the time providers every 10 seconds
         /// </summary>
-        static LunaTime() => Timer = new Timer(_ => RefreshTimeDifference(), null, 0, TimeSyncIntervalMs);
+        static LunaNetworkTime() => Timer = new Timer(_ => RefreshTimeDifference(), null, 0, TimeSyncIntervalMs);
 
         /// <summary>
         /// Get correctly sync UTC time from internet
         /// </summary>
-        public static DateTime UtcNow => DateTime.UtcNow - TimeDifference - TimeSpan.FromMilliseconds(SimulatedMsTimeOffset);
+        public static DateTime UtcNow => LunaComputerTime.UtcNow + TimeDifference.Negate() + TimeSpan.FromMilliseconds(SimulatedMsTimeOffset);
 
         /// <summary>
         /// Here we refresh the time difference between our OS clock and the time providers clock.
@@ -48,7 +48,7 @@ namespace LunaCommon.Time
                     {
                         var ntpTime = TimeRetriever.GetTime(TimeProvider.Google);
                         if (ntpTime != null)
-                            TimeDifference = DateTime.UtcNow - ntpTime.Value;
+                            TimeDifference = LunaComputerTime.UtcNow - ntpTime.Value;
                     }
                     catch (Exception)
                     {

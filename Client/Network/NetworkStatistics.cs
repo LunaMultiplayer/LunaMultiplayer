@@ -27,9 +27,9 @@ namespace LunaClient.Network
                 case "TimeOffset":
                     return TimeOffset;
                 case "LastSendTime":
-                    return (long)(LunaTime.UtcNow - LastSendTime).TotalMilliseconds;
+                    return (long)(LunaNetworkTime.UtcNow - LastSendTime).TotalMilliseconds;
                 case "LastReceiveTime":
-                    return (long)(LunaTime.UtcNow - LastReceiveTime).TotalMilliseconds;
+                    return (long)(LunaNetworkTime.UtcNow - LastReceiveTime).TotalMilliseconds;
                 case "MessagesInCache":
                     return MessageStore.GetMessageCount(null);
                 case "MessageDataInCache":

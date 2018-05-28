@@ -57,10 +57,10 @@ namespace LunaClient.Network
             if (NetworkMain.ClientConnection.Status == NetPeerStatus.NotRunning)
                 NetworkMain.ClientConnection.Start();
 
-            message.Data.SentTime = LunaTime.UtcNow.Ticks;
+            message.Data.SentTime = LunaNetworkTime.UtcNow.Ticks;
             try
             {
-                NetworkStatistics.LastSendTime = LunaTime.UtcNow;
+                NetworkStatistics.LastSendTime = LunaNetworkTime.Now;
 
                 if (message is IMasterServerMessageBase)
                 {

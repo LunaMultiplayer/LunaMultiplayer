@@ -90,6 +90,10 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.OverrideIntegrator = settingIntegrator;
                 SettingsSystem.SaveSettings();
             }
+
+            GUILayout.Label($"Computer clock offset (minutes): {LunaComputerTime.SimulatedMinutesTimeOffset:F1}");
+            LunaComputerTime.SimulatedMinutesTimeOffset = (float)Math.Round(GUILayout.HorizontalScrollbar(LunaComputerTime.SimulatedMinutesTimeOffset, 0, -15, 15), 3);
+
             if (GUILayout.Button("Check Common.dll stock parts"))
                 ModSystem.Singleton.CheckCommonStockParts();
             GUILayout.Space(10);
@@ -178,8 +182,8 @@ namespace LunaClient.Windows.Options
                     GUILayout.EndHorizontal();
                 }
 
-                GUILayout.Label($"NTP time offset: {LunaTime.SimulatedMsTimeOffset:F1}ms");
-                LunaTime.SimulatedMsTimeOffset = (float)Math.Round(GUILayout.HorizontalScrollbar(LunaTime.SimulatedMsTimeOffset, 0, -2500, 2500), 3);
+                GUILayout.Label($"NTP time offset: {LunaNetworkTime.SimulatedMsTimeOffset:F1}ms");
+                LunaNetworkTime.SimulatedMsTimeOffset = (float)Math.Round(GUILayout.HorizontalScrollbar(LunaNetworkTime.SimulatedMsTimeOffset, 0, -2500, 2500), 3);
                 if (MainSystem.NetworkState > ClientState.Disconnected)
                 {
                     GUILayout.Label("Cannot change values while connected");

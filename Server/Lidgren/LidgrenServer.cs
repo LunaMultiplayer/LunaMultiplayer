@@ -150,7 +150,7 @@ namespace Server.Lidgren
         {
             var outmsg = Server.CreateMessage(message.GetMessageSize());
 
-            message.Data.SentTime = LunaTime.UtcNow.Ticks;
+            message.Data.SentTime = LunaNetworkTime.UtcNow.Ticks;
             message.Serialize(outmsg);
 
             client.LastSendTime = ServerContext.ServerClock.ElapsedMilliseconds;

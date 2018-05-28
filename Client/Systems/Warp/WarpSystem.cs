@@ -4,6 +4,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace LunaClient.Systems.Warp
     public class WarpSystem : MessageSystem<WarpSystem, WarpMessageSender, WarpMessageHandler>
     {
         #region Fields & properties
+
+        private static DateTime _stoppedWarpingTimeStamp;
 
         public bool CurrentlyWarping => CurrentSubspace == -1;
 
@@ -57,7 +60,7 @@ namespace LunaClient.Systems.Warp
         public bool SkipSubspaceProcess { get; set; }
         public bool WaitingSubspaceIdFromServer { get; set; }
         public bool SyncedToLastSubspace { get; set; }
-        private static DateTime StoppedWarpingTimeStamp { get; set; }
+
         public List<SubspaceDisplayEntry> SubspaceEntries { get; } = new List<SubspaceDisplayEntry>();
 
         #endregion
@@ -111,10 +114,9 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private void CheckStuckAtWarp()
         {
-            if (CurrentSubspace == -1 && WaitingSubspaceIdFromServer && DateTime.Now - StoppedWarpingTimeStamp > TimeSpan.FromSeconds(15))
+            if (CurrentSubspace == -1 && WaitingSubspaceIdFromServer && TimeUtil.IsInInterval(ref _stoppedWarpingTimeStamp, 15000))
             {
                 //We've waited for 15 seconds to get a subspace Id and the server didn't assigned one to us so send our subspace again...
-                StoppedWarpingTimeStamp = DateTime.Now;
                 RequestNewSubspace();
             }
         }
@@ -280,7 +282,7 @@ namespace LunaClient.Systems.Warp
                 WaitingSubspaceIdFromServer = true;
                 Thread.Sleep(3000);
                 MessageSender.SendNewSubspace();
-                StoppedWarpingTimeStamp = DateTime.Now;
+                _stoppedWarpingTimeStamp = LunaComputerTime.UtcNow;
             });
         }
 

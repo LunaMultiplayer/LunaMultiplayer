@@ -79,7 +79,7 @@ namespace Server.Server
         {
             try
             {
-                return ServerContext.ClientMessageFactory.Deserialize(msg, LunaTime.UtcNow.Ticks) as IClientMessageBase;
+                return ServerContext.ClientMessageFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks) as IClientMessageBase;
             }
             catch (Exception e)
             {

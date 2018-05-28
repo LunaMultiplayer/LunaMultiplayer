@@ -42,7 +42,7 @@ namespace LunaClient.Network
         {
             var rnd = new Random();
 
-            LunaTime.SimulatedMsTimeOffset = rnd.Next(-500, 500); //Between -500 and 500 ms
+            LunaNetworkTime.SimulatedMsTimeOffset = rnd.Next(-500, 500); //Between -500 and 500 ms
             Config.SimulatedMinimumLatency = (float)rnd.Next(50, 250)/1000; //Between 50 and 250 ms
             Config.SimulatedRandomLatency = (float)rnd.Next(10, 250) / 1000; //Between 10 and 250 ms
             Config.SimulatedDuplicatesChance = (float)rnd.Next(10, 50)/ 1000; //Between 1 and 5%
@@ -51,7 +51,7 @@ namespace LunaClient.Network
 
         public static void ResetBadConnectionValues()
         {
-            LunaTime.SimulatedMsTimeOffset = 0;
+            LunaNetworkTime.SimulatedMsTimeOffset = 0;
             Config.SimulatedMinimumLatency = 0;
             Config.SimulatedRandomLatency = 0;
             Config.SimulatedDuplicatesChance = 0;

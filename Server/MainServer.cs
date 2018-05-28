@@ -43,7 +43,7 @@ namespace Server
                 Console.Title = $"LMP {LmpVersioning.CurrentVersion}";
 
                 Console.OutputEncoding = Encoding.Unicode;
-                ServerContext.StartTime = LunaTime.UtcNow.Ticks;
+                ServerContext.StartTime = LunaNetworkTime.UtcNow.Ticks;
 
                 if (!Common.PlatformIsWindows()) LunaLog.Warning("Remember! Quit the server by using Control+C so the vessels are saved to the hard drive!");
 
@@ -74,7 +74,7 @@ namespace Server
                 ServerContext.ServerStarting = true;
 
                 //Set day for log change
-                ServerContext.Day = LunaTime.Now.Day;
+                ServerContext.Day = LunaNetworkTime.Now.Day;
 
                 LunaLog.Normal($"Luna Server version: {LmpVersioning.CurrentVersion} ({Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)})");
 

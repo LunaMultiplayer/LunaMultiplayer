@@ -30,7 +30,7 @@ namespace LunaCommon
                     Console.ForegroundColor = ConsoleColor.Red;
                     break;
             }
-            Console.WriteLine($"{LunaTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - {msg}");
+            Console.WriteLine($"{LunaNetworkTime.Now.ToString("dd/MM/yyyy HH:mm:ss")} - {msg}");
             Console.ForegroundColor = ConsoleColor.Gray;
         }
     }

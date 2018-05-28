@@ -44,7 +44,7 @@ namespace Server.System
                 if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(ScreenshotSettings.SettingsStore.MinScreenshotIntervalMs))
                 {
                     LastUploadRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
-                    if (data.Screenshot.DateTaken == 0) data.Screenshot.DateTaken = LunaTime.UtcNow.ToBinary();
+                    if (data.Screenshot.DateTaken == 0) data.Screenshot.DateTaken = LunaNetworkTime.UtcNow.ToBinary();
                     var fileName = $"{data.Screenshot.DateTaken}.png";
                     if (!File.Exists(fileName))
                     {

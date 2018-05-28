@@ -2,6 +2,7 @@
 using LunaClient.Systems.Lock;
 using LunaClient.VesselStore;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,10 +39,8 @@ namespace LunaClient.Windows.Locks
         public override void Update()
         {
             base.Update();
-            if (Display && DateTime.Now - _lastUpdateTime > TimeSpan.FromSeconds(3))
+            if (Display && TimeUtil.IsInInterval(ref _lastUpdateTime, 3000))
             {
-                _lastUpdateTime = DateTime.Now;
-
                 var asteroidLock = LockSystem.LockQuery.AsteroidLock();
                 _asteroidLockOwner = asteroidLock?.PlayerName;
 

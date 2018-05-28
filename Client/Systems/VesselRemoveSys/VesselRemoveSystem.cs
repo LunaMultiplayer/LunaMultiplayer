@@ -147,7 +147,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         private void FlushRemovedVessels()
         {
             var vesselsToFlush = RemovedVessels
-                .Where(v => (LunaTime.Now - v.Value) > TimeSpan.FromSeconds(20))
+                .Where(v => (LunaNetworkTime.Now - v.Value) > TimeSpan.FromSeconds(20))
                 .Select(v => v.Key);
 
             foreach (var vesselId in vesselsToFlush)
@@ -166,7 +166,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 KillVessel(vesselId);
 
                 //Always add to the killed list even if it exists that vessel or not.
-                RemovedVessels.TryAdd(vesselId, LunaTime.Now);
+                RemovedVessels.TryAdd(vesselId, LunaNetworkTime.Now);
             }
         }
 

@@ -41,7 +41,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             msgData.Yaw = flightState.yaw;
             msgData.YawTrim = flightState.yawTrim;
             msgData.Z = flightState.Z;
-            msgData.TimeStamp = LunaTime.UtcNow.Ticks;
+            msgData.TimeStamp = LunaNetworkTime.UtcNow.Ticks;
 
             msgData.GameTime = Planetarium.GetUniversalTime();
 

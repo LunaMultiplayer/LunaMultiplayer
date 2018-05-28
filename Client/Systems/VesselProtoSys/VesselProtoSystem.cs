@@ -5,6 +5,7 @@ using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaClient.Windows.BannedParts;
+using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,8 @@ namespace LunaClient.Systems.VesselProtoSys
     public partial class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
         #region Fields & properties
+
+        private static DateTime _lastReloadCheck = LunaComputerTime.UtcNow;
 
         public static Guid CurrentlyUpdatingVesselId { get; set; } = Guid.Empty;
 
@@ -38,8 +41,6 @@ namespace LunaClient.Systems.VesselProtoSys
         public VesselRemoveSystem VesselRemoveSystem => VesselRemoveSystem.Singleton;
 
         public Queue<Vessel> FlagsToSend = new Queue<Vessel>();
-
-        private static DateTime LastReloadCheck { get; set; } = DateTime.UtcNow;
 
         private List<Guid> VesselsToRefresh { get; } = new List<Guid>();
 
@@ -207,7 +208,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             try
             {
-                if ((DateTime.UtcNow - LastReloadCheck).TotalMilliseconds > 1500 && ProtoSystemBasicReady)
+                if (TimeUtil.IsInInterval(ref _lastReloadCheck, 1500) && ProtoSystemBasicReady)
                 {
                     VesselsToRefresh.Clear();
 
@@ -236,8 +237,6 @@ namespace LunaClient.Systems.VesselProtoSys
                             CurrentlyUpdatingVesselId = Guid.Empty;
                         }
                     }
-
-                    LastReloadCheck = DateTime.UtcNow;
                 }
             }
             catch (Exception e)

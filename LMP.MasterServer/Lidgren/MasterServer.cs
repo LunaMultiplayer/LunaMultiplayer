@@ -82,7 +82,7 @@ namespace LMP.MasterServer.Lidgren
         {
             try
             {
-                var message = MasterServerMessageFactory.Deserialize(msg, LunaTime.UtcNow.Ticks) as IMasterServerMessageBase;
+                var message = MasterServerMessageFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks) as IMasterServerMessageBase;
                 return message;
             }
             catch (Exception)
@@ -208,7 +208,7 @@ namespace LMP.MasterServer.Lidgren
                 while (RunServer)
                 {
                     var serversIdsToRemove = ServerDictionary
-                        .Where(s => LunaTime.UtcNow.Ticks - s.Value.LastRegisterTime >
+                        .Where(s => LunaNetworkTime.UtcNow.Ticks - s.Value.LastRegisterTime >
                                     TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks)
                         .ToArray();
 

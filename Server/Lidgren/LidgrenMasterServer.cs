@@ -94,7 +94,7 @@ namespace Server.Lidgren
             Task.Run(() =>
             {
                 var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-                msg.Data.SentTime = LunaTime.UtcNow.Ticks;
+                msg.Data.SentTime = LunaNetworkTime.UtcNow.Ticks;
 
                 try
                 {
