@@ -8,7 +8,6 @@ using LunaClient.Windows.Status;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
-using System.Globalization;
 using UnityEngine;
 
 namespace LunaClient.Windows.Options
@@ -75,6 +74,8 @@ namespace LunaClient.Windows.Options
                 ModSystem.Singleton.GenerateModControlFile(true);
             _displayUniverseConverterDialog = GUILayout.Toggle(_displayUniverseConverterDialog, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
+
+            DrawNetworkSettings();
 #if DEBUG
             DrawAdvancedDebugOptions();
 #endif
@@ -82,20 +83,8 @@ namespace LunaClient.Windows.Options
             GUILayout.EndVertical();
         }
 
-        private void DrawAdvancedDebugOptions()
+        private void DrawNetworkSettings()
         {
-            GUILayout.Label("Advanced debug settings\n________________________________________");
-
-            if (GUILayout.Button("Check Common.dll stock parts"))
-                ModSystem.Singleton.CheckCommonStockParts();
-            var settingIntegrator = GUILayout.Toggle(SettingsSystem.CurrentSettings.OverrideIntegrator, "Override flight integrator", ButtonStyle);
-            if (settingIntegrator != SettingsSystem.CurrentSettings.OverrideIntegrator)
-            {
-                SettingsSystem.CurrentSettings.OverrideIntegrator = settingIntegrator;
-                SettingsSystem.SaveSettings();
-            }
-            GUILayout.Space(10);
-
             _showAdvancedNetworkFields = GUILayout.Toggle(_showAdvancedNetworkFields, "Network configuration", ButtonStyle);
             if (_showAdvancedNetworkFields)
             {
@@ -104,8 +93,7 @@ namespace LunaClient.Windows.Options
                     GUILayout.Label("Cannot change values while connected");
                 }
 
-                GUILayout.BeginHorizontal();
-                GUILayout.Label($"MTU (Max: {(ushort.MaxValue + 1) / 8}): {NetworkMain.Config.MaximumTransmissionUnit}");
+                GUILayout.Label($"MTU (Default: {NetPeerConfiguration.kDefaultMTU}): {NetworkMain.Config.MaximumTransmissionUnit}");
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
                     if (NetworkMain.ClientConnection.Status != NetPeerStatus.NotRunning)
@@ -116,59 +104,39 @@ namespace LunaClient.Windows.Options
                     }
                     else
                     {
-                        var value = GUILayout.TextArea(NetworkMain.Config.MaximumTransmissionUnit.ToString(CultureInfo.InvariantCulture), 32, TextAreaStyle);
-                        if (int.TryParse(value, out var parsedResult))
-                        {
-                            if (parsedResult != NetworkMain.Config.MaximumTransmissionUnit && parsedResult > 1 && parsedResult < (ushort.MaxValue + 1) / 8)
-                                NetworkMain.Config.MaximumTransmissionUnit = parsedResult;
-                        }
-
-                        if (GUILayout.Button("Default"))
-                        {
-                            NetworkMain.Config.MaximumTransmissionUnit = NetPeerConfiguration.kDefaultMTU;
-                        }
-                        GUILayout.EndHorizontal();
-
+                        NetworkMain.Config.MaximumTransmissionUnit = (int)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.MaximumTransmissionUnit, 0, 1, NetworkMain.MaxMtuSize));
                         NetworkMain.Config.AutoExpandMTU = GUILayout.Toggle(NetworkMain.Config.AutoExpandMTU, "Auto expand MTU");
                     }
                 }
-                else
-                {
-                    GUILayout.EndHorizontal();
-                }
 
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(_infiniteTimeout
-                    ? $"Timeout (Min: {NetworkMain.Config.PingInterval}): ∞"
-                    : $"Timeout (Min: {NetworkMain.Config.PingInterval}): {NetworkMain.Config.ConnectionTimeout}s");
+                GUILayout.Label(_infiniteTimeout ? "Timeout (Default: 15): ∞" : $"Timeout (Default: 15): {NetworkMain.Config.ConnectionTimeout}s");
 
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
-                    if (!_infiniteTimeout)
-                    {
-                        if (NetworkMain.Config.ConnectionTimeout >= float.MaxValue - 1)
-                            NetworkMain.Config.ConnectionTimeout = 15;
+                    GUI.enabled = !_infiniteTimeout;
+                    NetworkMain.Config.ConnectionTimeout = (int)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.ConnectionTimeout, 0, NetworkMain.Config.PingInterval, 120));
+                    GUI.enabled = true;
 
-                        var value = GUILayout.TextArea(NetworkMain.Config.ConnectionTimeout.ToString(CultureInfo.InvariantCulture), 32, TextAreaStyle);
-                        if (float.TryParse(value, out var parsedResult))
-                        {
-                            if (parsedResult >= NetworkMain.Config.PingInterval)
-                                NetworkMain.Config.ConnectionTimeout = parsedResult;
-                        }
-                    }
-                    else
-                    {
-                        NetworkMain.Config.ConnectionTimeout = float.MaxValue;
-                    }
-                    GUILayout.EndHorizontal();
                     _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "Infinite", "toggle");
-                }
-                else
-                {
-                    GUILayout.EndHorizontal();
+                    if (_infiniteTimeout) NetworkMain.Config.ConnectionTimeout = float.MaxValue;
                 }
             }
+        }
 
+        private void DrawAdvancedDebugOptions()
+        {
+            GUILayout.Label("Debug settings\n________________________________________");
+
+            if (GUILayout.Button("Check Common.dll stock parts"))
+                ModSystem.Singleton.CheckCommonStockParts();
+            var settingIntegrator = GUILayout.Toggle(SettingsSystem.CurrentSettings.OverrideIntegrator, "Override flight integrator", ButtonStyle);
+            if (settingIntegrator != SettingsSystem.CurrentSettings.OverrideIntegrator)
+            {
+                SettingsSystem.CurrentSettings.OverrideIntegrator = settingIntegrator;
+                SettingsSystem.SaveSettings();
+            }
+            GUILayout.Space(10);
+            
             _showBadNetworkSimulationFields = GUILayout.Toggle(_showBadNetworkSimulationFields, "Bad network simulation", ButtonStyle);
             if (_showBadNetworkSimulationFields)
             {

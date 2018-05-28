@@ -13,6 +13,7 @@ namespace LunaClient.Network
 {
     public class NetworkMain
     {
+        public const int MaxMtuSize = (ushort.MaxValue + 1) / 8 - 1;
         public static ClientMessageFactory CliMsgFactory { get; } = new ClientMessageFactory();
         public static ServerMessageFactory SrvMsgFactory { get; } = new ServerMessageFactory();
         public static MasterServerMessageFactory MstSrvMsgFactory { get; } = new MasterServerMessageFactory();
@@ -75,7 +76,6 @@ namespace LunaClient.Network
             Config.EnableMessageType(NetIncomingMessageType.DebugMessage);
             //Config.EnableMessageType(NetIncomingMessageType.VerboseDebugMessage);
 #endif
-            NetworkServerList.RequestServers();
         }
 
         public static void ResetNetworkSystem()
