@@ -32,7 +32,7 @@ namespace LunaCommon.Time
         {
             if (LunaComputerTime.UtcNow - lastRequest > TimeSpan.FromMilliseconds(intervalInMs))
             {
-                lastRequest = DateTime.Now;
+                lastRequest = DateTime.UtcNow;
                 return true;
             }
 
