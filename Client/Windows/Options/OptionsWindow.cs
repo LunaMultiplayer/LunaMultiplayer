@@ -20,6 +20,7 @@ namespace LunaClient.Windows.Options
         private static GUIStyle _tempColorLabelStyle;
         private static bool _showBadNetworkSimulationFields;
         private static bool _showAdvancedNetworkFields;
+        private static bool _showClockOffsetFields;
         private static bool _infiniteTimeout;
 
         private static Rect _universeConverterWindowRect;
