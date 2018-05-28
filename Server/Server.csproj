@@ -165,6 +165,7 @@
     <Compile Include="System\Scenario\ScenarioContractsDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioDestructiblesDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioFacilityLevelDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioScienceSubjectDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioStrategyDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioPartPurchaseDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioTechnologyDataUpdater.cs" />
@@ -180,6 +181,7 @@
     <Compile Include="System\ScreenshotSystem.cs" />
     <Compile Include="System\SharePartPurchaseSystem.cs" />
     <Compile Include="System\ShareReputationSystem.cs" />
+    <Compile Include="System\ShareScienceSubjectSystem.cs" />
     <Compile Include="System\ShareUpgradeableFacilitiesSystem.cs" />
     <Compile Include="System\ShareScienceSystem.cs" />
     <Compile Include="System\ShareStrategySystem.cs" />

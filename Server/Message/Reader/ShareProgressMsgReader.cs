@@ -20,6 +20,9 @@ namespace Server.Message.Reader
                 case ShareProgressMessageType.ScienceUpdate:
                     ShareScienceSystem.ScienceReceived(client, (ShareProgressScienceMsgData)data);
                     break;
+                case ShareProgressMessageType.ScienceSubjectUpdate:
+                    ShareScienceSubjectSystem.ScienceSubjectReceived(client, (ShareProgressScienceSubjectMsgData)data);
+                    break;
                 case ShareProgressMessageType.ReputationUpdate:
                     ShareReputationSystem.ReputationReceived(client, (ShareProgressReputationMsgData)data);
                     break;
