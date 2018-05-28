@@ -25,7 +25,7 @@ namespace Server.Log
             //If the file is older than a day, delete it
             if (File.GetCreationTime(logFile).AddDays(LogSettings.SettingsStore.ExpireLogs) < LunaTime.Now)
             {
-                LunaLog.Debug($"Deleting saved log '{logFile}', reason: Expired!");
+                LunaLog.Debug($"Deleting saved log '{Path.GetFileNameWithoutExtension(logFile)}', reason: Expired!");
                 try
                 {
                     FileHandler.FileDelete(logFile);
