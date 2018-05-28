@@ -11,6 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MasterServer", "MasterServe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{88E68F19-FEE3-4CA6-A371-7FC043D3C906}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		appveyor.yml = appveyor.yml
 		Scripts\CopyToKSPDirectory.bat = Scripts\CopyToKSPDirectory.bat
 		LMP Readme.txt = LMP Readme.txt

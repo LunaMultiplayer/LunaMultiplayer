@@ -89,9 +89,6 @@
     <Content Include="Web\favicon.ico" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
     <None Include="packages.config" />
     <None Include="Web\css.zip" />
     <None Include="Web\js.zip" />
