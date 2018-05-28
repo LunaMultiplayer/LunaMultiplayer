@@ -11,4 +11,5 @@
     <Interpolation>Включить интерполяцию</Interpolation>
     <GenerateLmpModControl>Сгенерировать LMPModControl.xml для сервера</GenerateLmpModControl>
     <GenerateUniverse>Сгенерировать вселенную из сохраненной игры</GenerateUniverse>
+    <NetworkSettings>NetworkSettings settings</NetworkSettings>
 </OptionsWindowText>

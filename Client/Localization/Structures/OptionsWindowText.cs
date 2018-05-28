@@ -13,5 +13,6 @@
         public string Interpolation { get; set; } = "Enable interpolation";
         public string GenerateLmpModControl { get; set; } = "Generate a server LMPModControl.xml";
         public string GenerateUniverse { get; set; } = "Generate Universe from saved game";
+        public string NetworkSettings { get; set; } = "Network settings";
     }
 }

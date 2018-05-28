@@ -85,7 +85,7 @@ namespace LunaClient.Windows.Options
 
         private void DrawNetworkSettings()
         {
-            _showAdvancedNetworkFields = GUILayout.Toggle(_showAdvancedNetworkFields, "Network configuration", ButtonStyle);
+            _showAdvancedNetworkFields = GUILayout.Toggle(_showAdvancedNetworkFields, LocalizationContainer.OptionsWindowText.NetworkSettings, ButtonStyle);
             if (_showAdvancedNetworkFields)
             {
                 if (MainSystem.NetworkState > ClientState.Disconnected)

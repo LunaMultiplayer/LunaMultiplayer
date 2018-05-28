@@ -11,4 +11,5 @@
     <Interpolation>Zet interpolatie aan</Interpolation>
     <GenerateLmpModControl>Genereer een server LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>Genereer universum van opgeslagen game</GenerateUniverse>
+    <NetworkSettings>NetworkSettings settings</NetworkSettings>
 </OptionsWindowText>

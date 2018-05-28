@@ -11,4 +11,5 @@
     <Interpolation>Aplicar interpolationes</Interpolation>
     <GenerateLmpModControl>Generar un LMPModControl.xml para servidor</GenerateLmpModControl>
     <GenerateUniverse>Generar un universo a partir de una partida guardada</GenerateUniverse>
+    <NetworkSettings>Opciones de red</NetworkSettings>
 </OptionsWindowText>

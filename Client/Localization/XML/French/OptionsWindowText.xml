@@ -11,4 +11,5 @@
     <Interpolation>Activer l'interpolation</Interpolation>
     <GenerateLmpModControl>Générer le fichier serveur "LMPModControl.xml"</GenerateLmpModControl>
     <GenerateUniverse>Générer l'univers depuis une sauvegarde</GenerateUniverse>
+    <NetworkSettings>NetworkSettings settings</NetworkSettings>
 </OptionsWindowText>

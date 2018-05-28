@@ -11,4 +11,5 @@
     <Interpolation>Aktiviere Interpolation</Interpolation>
     <GenerateLmpModControl>Generiere die Server LMPModControl.xml-Datei</GenerateLmpModControl>
     <GenerateUniverse>Generiere das Universum von einem gespeicherten Spielstand</GenerateUniverse>
+    <NetworkSettings>NetworkSettings settings</NetworkSettings>
 </OptionsWindowText>
