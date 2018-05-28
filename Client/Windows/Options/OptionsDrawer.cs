@@ -1,4 +1,5 @@
-﻿using LunaClient.Localization;
+﻿using Lidgren.Network;
+using LunaClient.Localization;
 using LunaClient.Network;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.PlayerColorSys;
@@ -101,15 +102,46 @@ namespace LunaClient.Windows.Options
                     GUILayout.Label("Cannot change values while connected");
                 }
 
-                GUILayout.Label($"MTU: {NetworkMain.Config.MaximumTransmissionUnit}");
-                GUILayout.Label(_infiniteTimeout
-                    ? "Timeout: Infinite"
-                    : $"Timeout: {NetworkMain.Config.ConnectionTimeout}s. Minimum: {NetworkMain.Config.PingInterval}s");
-
                 GUILayout.BeginHorizontal();
+                GUILayout.Label($"MTU (Max: {(ushort.MaxValue + 1) / 8}): {NetworkMain.Config.MaximumTransmissionUnit}");
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
-                    _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "Infinite", "toggle");
+                    if (NetworkMain.ClientConnection.Status != NetPeerStatus.NotRunning)
+                    {
+                        GUILayout.EndHorizontal();
+                        if (GUILayout.Button("Reset network"))
+                            NetworkMain.ResetNetworkSystem();
+                    }
+                    else
+                    {
+                        var value = GUILayout.TextArea(NetworkMain.Config.MaximumTransmissionUnit.ToString(CultureInfo.InvariantCulture), 32, TextAreaStyle);
+                        if (int.TryParse(value, out var parsedResult))
+                        {
+                            if (parsedResult != NetworkMain.Config.MaximumTransmissionUnit && parsedResult > 1 && parsedResult < (ushort.MaxValue + 1) / 8)
+                                NetworkMain.Config.MaximumTransmissionUnit = parsedResult;
+                        }
+
+                        if (GUILayout.Button("Default"))
+                        {
+                            NetworkMain.Config.MaximumTransmissionUnit = NetPeerConfiguration.kDefaultMTU;
+                        }
+                        GUILayout.EndHorizontal();
+
+                        NetworkMain.Config.AutoExpandMTU = GUILayout.Toggle(NetworkMain.Config.AutoExpandMTU, "Auto expand MTU");
+                    }
+                }
+                else
+                {
+                    GUILayout.EndHorizontal();
+                }
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(_infiniteTimeout
+                    ? $"Timeout (Min: {NetworkMain.Config.PingInterval}): ∞"
+                    : $"Timeout (Min: {NetworkMain.Config.PingInterval}): {NetworkMain.Config.ConnectionTimeout}s");
+
+                if (MainSystem.NetworkState <= ClientState.Disconnected)
+                {
                     if (!_infiniteTimeout)
                     {
                         if (NetworkMain.Config.ConnectionTimeout >= float.MaxValue - 1)
@@ -126,8 +158,13 @@ namespace LunaClient.Windows.Options
                     {
                         NetworkMain.Config.ConnectionTimeout = float.MaxValue;
                     }
+                    GUILayout.EndHorizontal();
+                    _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "Infinite", "toggle");
                 }
-                GUILayout.EndHorizontal();
+                else
+                {
+                    GUILayout.EndHorizontal();
+                }
             }
 
             _showBadNetworkSimulationFields = GUILayout.Toggle(_showBadNetworkSimulationFields, "Bad network simulation", ButtonStyle);

@@ -22,6 +22,8 @@ namespace Server.Lidgren
         public static void SetupLidgrenServer()
         {
             ServerContext.Config.Port = ConnectionSettings.SettingsStore.Port;
+            ServerContext.Config.AutoExpandMTU = ConnectionSettings.SettingsStore.AutoExpandMtu;
+            ServerContext.Config.MaximumTransmissionUnit = ConnectionSettings.SettingsStore.MaximumTransmissionUnit;
             ServerContext.Config.MaximumConnections = GeneralSettings.SettingsStore.MaxPlayers;
             ServerContext.Config.PingInterval = (float) TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.HearbeatMsInterval).TotalSeconds;
             ServerContext.Config.ConnectionTimeout = (float) TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds;

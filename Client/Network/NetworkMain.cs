@@ -20,7 +20,7 @@ namespace LunaClient.Network
         public static Task ReceiveThread { get; set; }
         public static Task SendThread { get; set; }
 
-        public static NetPeerConfiguration Config { get; } = new NetPeerConfiguration("LMP")
+        public static NetPeerConfiguration Config { get; set; } = new NetPeerConfiguration("LMP")
         {
             UseMessageRecycling = true,
             ReceiveBufferSize = 500000, //500Kb
@@ -88,8 +88,10 @@ namespace LunaClient.Network
                 Thread.Sleep(1000);
             }
 
+            //This will set the NetPeerConfiguration locked as FALSE and allow to change MTU and other advanced stuff
+            Config = Config.Clone();
+
             ClientConnection = new NetClient(Config);
-            ClientConnection.Start();
 
             if (SendThread != null && !SendThread.IsCompleted)
                 SendThread.Wait(1000);

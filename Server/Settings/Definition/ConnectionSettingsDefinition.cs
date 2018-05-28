@@ -1,5 +1,6 @@
 ﻿using LunaCommon.Xml;
 using System;
+using Lidgren.Network;
 
 namespace Server.Settings.Definition
 {
@@ -21,5 +22,11 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "UPnP timeout in ms for trying to open the ports")]
         public int UpnpMsTimeout { get; set; } = 5000;
+
+        [XmlComment(Value = "Maximum transmission unit (MTU) size in bytes")]
+        public int MaximumTransmissionUnit { get; set; } = NetPeerConfiguration.kDefaultMTU;
+
+        [XmlComment(Value = "Try to expand MTU size")]
+        public bool AutoExpandMtu { get; set; } = false;
     }
 }
