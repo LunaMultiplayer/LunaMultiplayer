@@ -191,6 +191,7 @@ namespace LunaClient
 
         public void Start()
         {
+            LocalizationContainer.LoadLanguages();
             LocalizationContainer.LoadLanguage(SettingsSystem.CurrentSettings.Language);
 
             SystemsHandler.FillUpSystemsList();
