@@ -32,6 +32,8 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
             SettingsSystem.ServerSettings.GameDifficulty = msgData.GameDifficulty;
             SettingsSystem.ServerSettings.MinScreenshotIntervalMs = msgData.MinScreenshotIntervalMs;
+            SettingsSystem.ServerSettings.MaxScreenshotWidth = msgData.MaxScreenshotWidth;
+            SettingsSystem.ServerSettings.MaxScreenshotHeight = msgData.MaxScreenshotHeight;
             SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs = msgData.MinScreenshotIntervalMs;
 
             if (SettingsSystem.ServerSettings.GameDifficulty != GameDifficulty.Custom)

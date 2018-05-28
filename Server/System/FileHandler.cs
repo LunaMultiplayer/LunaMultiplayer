@@ -77,17 +77,34 @@ namespace Server.System
         /// Thread safe file creating method. It won't create the file if it already exists!
         /// </summary>
         /// <param name="path">Path to the file</param>
+        /// <param name="data">Data to insert</param>
+        /// <param name="numBytes">Number of bytes to write</param>
+        public static void CreateFile(string path, byte[] data, int numBytes)
+        {
+            lock (GetLockSemaphore(path))
+            {
+                if (!FileExists(path))
+                {
+                    LunaLog.Normal($"Creating file {Path.GetFileName(path)}");
+
+                    using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
+                    {
+                        fs.Write(data, 0, numBytes);
+                    }
+                }
+            }
+        }
+    
+
+        /// <summary>
+        /// Thread safe file creating method. It won't create the file if it already exists!
+        /// </summary>
+        /// <param name="path">Path to the file</param>
         /// <param name="text">Text to insert</param>
         public static void CreateFile(string path, string text)
         {
-            if (!FileExists(path))
-            {
-                LunaLog.Normal($"Creating file {Path.GetFileName(path)}");
-                lock (GetLockSemaphore(path))
-                {
-                    File.WriteAllText(path, text);
-                }
-            }
+            var content = Encoding.UTF8.GetBytes(text);
+            CreateFile(path, content, content.Length);
         }
 
         /// <summary>

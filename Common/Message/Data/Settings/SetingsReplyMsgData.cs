@@ -64,6 +64,8 @@ namespace LunaCommon.Message.Data.Settings
         public int VesselPartsSyncMsInterval;
         public bool ShowVesselsInThePast;
         public int MinScreenshotIntervalMs;
+        public int MaxScreenshotWidth;
+        public int MaxScreenshotHeight;
         public int MinCraftLibraryRequestIntervalMs;
 
         public override string ClassName { get; } = nameof(SettingsReplyMsgData);
@@ -125,6 +127,8 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(VesselPartsSyncMsInterval);
             lidgrenMsg.Write(ShowVesselsInThePast);
             lidgrenMsg.Write(MinScreenshotIntervalMs);
+            lidgrenMsg.Write(MaxScreenshotWidth);
+            lidgrenMsg.Write(MaxScreenshotHeight);
             lidgrenMsg.Write(MinCraftLibraryRequestIntervalMs);
         }
 
@@ -185,13 +189,15 @@ namespace LunaCommon.Message.Data.Settings
             VesselPartsSyncMsInterval = lidgrenMsg.ReadInt32();
             ShowVesselsInThePast = lidgrenMsg.ReadBoolean();
             MinScreenshotIntervalMs = lidgrenMsg.ReadInt32();
+            MaxScreenshotWidth = lidgrenMsg.ReadInt32();
+            MaxScreenshotHeight = lidgrenMsg.ReadInt32();
             MinCraftLibraryRequestIntervalMs = lidgrenMsg.ReadInt32();
         }
 
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) + 
-                sizeof(bool) * 22 + sizeof(int) * 6 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
+                sizeof(bool) * 22 + sizeof(int) * 8 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
         }
     }
 }
