@@ -1,4 +1,5 @@
-﻿using LunaClient.Base;
+﻿using KSP.UI.Screens;
+using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
@@ -68,6 +69,9 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             //Vessel is recovered so remove the locks
             LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c=> c.name), recoveredVessel.vesselID);
+
+            //Refresh the markers as they sometimes get messy
+            KSCVesselMarkers.fetch?.RefreshMarkers();
         }
 
         /// <summary>
