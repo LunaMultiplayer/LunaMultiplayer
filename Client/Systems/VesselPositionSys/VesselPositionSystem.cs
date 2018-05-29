@@ -18,10 +18,10 @@ namespace LunaClient.Systems.VesselPositionSys
         #region Fields & properties
 
         private static float LastVesselUpdatesSentTime { get; set; }
-        private static int VesselUpdatesSendMsInterval => SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval;
+
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
-            TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > VesselUpdatesSendMsInterval :
-            TimeSpan.FromSeconds(Time.fixedTime - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval;
+            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval :
+            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval;
 
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
@@ -53,8 +53,10 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnEnabled();
 
-            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
-            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
+
+            //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
+            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
             //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
@@ -68,8 +70,8 @@ namespace LunaClient.Systems.VesselPositionSys
             CurrentVesselUpdate.Clear();
             TargetVesselUpdateQueue.Clear();
 
-            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
-            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
+            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
+            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
         }
 
         private void HandleVesselUpdates()
@@ -105,7 +107,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (PositionUpdateSystemReady && TimeToSendVesselUpdate && !VesselCommon.IsSpectating)
             {
                 MessageSender.SendVesselPositionUpdate(FlightGlobals.ActiveVessel);
-                LastVesselUpdatesSentTime = Time.fixedTime;
+                LastVesselUpdatesSentTime = Time.time;
             }
         }
 
