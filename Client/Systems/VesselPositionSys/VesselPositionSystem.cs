@@ -68,8 +68,8 @@ namespace LunaClient.Systems.VesselPositionSys
             CurrentVesselUpdate.Clear();
             TargetVesselUpdateQueue.Clear();
 
-            TimingManager.UpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
-            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, SendVesselPositionUpdates);
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, HandleVesselUpdates);
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
         }
 
         private void HandleVesselUpdates()
