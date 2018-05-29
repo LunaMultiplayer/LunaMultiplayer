@@ -23,7 +23,6 @@ namespace LunaClient.Localization
         public static ServerListWindowText ServerListWindowText = new ServerListWindowText();
         public static StatusWindowText StatusWindowText = new StatusWindowText();
         public static DisclaimerDialogText DisclaimerDialogText = new DisclaimerDialogText();
-        public static OutdatedDialogText OutdatedDialogText = new OutdatedDialogText();
         public static InstallDialogText InstallDialogText = new InstallDialogText();
         public static ScreenshotWindowText ScreenshotWindowText = new ScreenshotWindowText();
         public static ScreenText ScreenText = new ScreenText();
@@ -82,7 +81,6 @@ namespace LunaClient.Localization
             LoadWindowTexts(language, ref ServerListWindowText);
             LoadWindowTexts(language, ref StatusWindowText);
             LoadWindowTexts(language, ref DisclaimerDialogText);
-            LoadWindowTexts(language, ref OutdatedDialogText);
             LoadWindowTexts(language, ref InstallDialogText);
             LoadWindowTexts(language, ref ScreenshotWindowText);
             LoadWindowTexts(language, ref ScreenText);
