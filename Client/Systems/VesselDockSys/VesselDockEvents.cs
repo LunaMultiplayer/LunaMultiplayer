@@ -141,7 +141,7 @@ namespace LunaClient.Systems.VesselDockSys
             dock.WeakVesselId = temp;
 
             LunaLog.Log($"[LMP]: Crewboard to an external seat detected! We own the kerbal {dock.WeakVesselId}");
-            VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+            VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing kerbal as it boarded a vessel");
 
             dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
             System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -168,7 +168,7 @@ namespace LunaClient.Systems.VesselDockSys
                     dock.WeakVesselId = temp;
 
                     LunaLog.Log($"[LMP]: Crewboard detected! We own the kerbal {dock.WeakVesselId}");
-                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing kerbal (active) as it boarded a vessel");
 
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -176,7 +176,7 @@ namespace LunaClient.Systems.VesselDockSys
                 else
                 {
                     LunaLog.Log($"[LMP]: Docking detected! We own the dominant vessel {dock.DominantVesselId}");
-                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing weak vessel during a docking");
                     dock.DominantVessel = FlightGlobals.ActiveVessel;
 
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -193,7 +193,7 @@ namespace LunaClient.Systems.VesselDockSys
                     dock.WeakVesselId = temp;
 
                     LunaLog.Log($"[LMP]: Crewboard detected! We own the vessel {dock.DominantVesselId}");
-                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing kerbal as it boarded a vessel");
 
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -201,7 +201,7 @@ namespace LunaClient.Systems.VesselDockSys
                 else
                 {
                     LunaLog.Log($"[LMP]: Docking detected! We DON'T own the dominant vessel {dock.DominantVesselId}");
-                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing weak (active) vessel during a docking");
 
                     if (dock.DominantVessel == null)
                         dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);

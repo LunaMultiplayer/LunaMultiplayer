@@ -30,7 +30,7 @@ namespace LunaClient.Systems.VesselDockSys
             {
                 LunaLog.Log($"Docking NOT detected. We DON'T OWN the dominant vessel. Switching to {msgData.DominantVesselId}");
 
-                VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel.id);
+                VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel.id, "Killing weak (active) vessel during a docking that was not detected");
                 VesselSwitcherSystem.Singleton.SwitchToVessel(msgData.DominantVesselId);
 
                 WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
@@ -50,8 +50,8 @@ namespace LunaClient.Systems.VesselDockSys
                 if (FlightGlobals.FindVessel(msgData.WeakVesselId) != null)
                 {
                     LunaLog.Log($"Weak vessel {msgData.WeakVesselId} still exists in our game. Removing it now");
-                    VesselRemoveSystem.Singleton.AddToKillList(msgData.WeakVesselId);
-                    VesselRemoveSystem.Singleton.KillVessel(msgData.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(msgData.WeakVesselId, "Killing weak vessel during a docking that was not detected");
+                    VesselRemoveSystem.Singleton.KillVessel(msgData.WeakVesselId, "Weak vessel in a docking");
                 }
 
                 /* We own the dominant vessel and dind't detected the docking event so we need to reload our OWN vessel
@@ -69,7 +69,7 @@ namespace LunaClient.Systems.VesselDockSys
             }
 
             //Some other 2 players docked so just remove the weak vessel.
-            VesselRemoveSystem.Singleton.AddToKillList(msgData.WeakVesselId);
+            VesselRemoveSystem.Singleton.AddToKillList(msgData.WeakVesselId, "Killing weak vessel during a docking of 2 far players");
         }
     }
 }

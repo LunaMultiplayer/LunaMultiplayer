@@ -24,7 +24,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (VesselLoader.ReloadingVesselId == dyingVessel.id)
                 return;
 
-            //We are MANUALLY killing a vessel and it's NOT KSP who is calling this mehtod so ignore all the logic of below
+            //We are MANUALLY killing a vessel and it's NOT KSP who is calling this method so ignore all the logic of below
             if (System.ManuallyKillingVesselId == dyingVessel.id)
                 return;
 
@@ -35,7 +35,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 LunaLog.Log($"[LMP]: Removing vessel {dyingVessel.id}, Name: {dyingVessel.vesselName} from the server: {reason}");
 
                 //Add to the kill list so it's also removed from the store later on!
-                System.AddToKillList(dyingVessel.id);
+                System.AddToKillList(dyingVessel.id, "OnVesselWillDestroy - " + reason);
 
                 KerbalSystem.Singleton.ProcessKerbalsInVessel(dyingVessel);
 
@@ -115,7 +115,7 @@ namespace LunaClient.Systems.VesselRemoveSys
                 RemoveOldVesselAndItsDebris(FlightGlobals.ActiveVessel);
                 System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, true);
                 
-                System.KillVessel(FlightGlobals.ActiveVessel.id, false);
+                System.KillVessel(FlightGlobals.ActiveVessel.id, "Reverted to editor", false);
             }
         }
 
@@ -131,7 +131,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             
             foreach (var vesselIdToRemove in vesselIdsToRemove)
             {
-                System.AddToKillList(vesselIdToRemove);
+                System.AddToKillList(vesselIdToRemove, "Revert. Sub-vessel of the initial vessel");
                 System.MessageSender.SendVesselRemove(vesselIdToRemove);
             }
         }

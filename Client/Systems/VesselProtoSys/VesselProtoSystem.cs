@@ -139,7 +139,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 foreach (var vessel in FlightGlobals.Vessels.Where(v => !VesselsProtoStore.AllPlayerVessels.ContainsKey(v.id)))
                 {
-                    VesselRemoveSystem.Singleton.AddToKillList(vessel.id);
+                    VesselRemoveSystem.Singleton.AddToKillList(vessel.id, "Bad debris created while spectating");
                 }
             }
         }

@@ -22,8 +22,8 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (!System.CheckVessel(FlightGlobals.ActiveVessel))
                 {
-                    VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel.id);
-                    VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel.id);
+                    VesselRemoveSystem.Singleton.AddToKillList(FlightGlobals.ActiveVessel.id, "Vessel check not passed");
+                    VesselRemoveSystem.Singleton.KillVessel(FlightGlobals.ActiveVessel.id, "Vessel check not passed");
                     return;
                 }
 
@@ -83,7 +83,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     else
                     {
                         LunaLog.Log($"REVERTING NEW vesselId {data.id} name {data.vesselName} (UPD lock is NOT ours)");
-                        VesselRemoveSystem.Singleton.AddToKillList(data.id);
+                        VesselRemoveSystem.Singleton.AddToKillList(data.id, "Tried to create a new vessel when the update lock is not ours");
                     }
                 }
             }
