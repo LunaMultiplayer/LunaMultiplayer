@@ -1,4 +1,5 @@
-﻿using LunaCommon;
+﻿using LmpGlobal;
+using LunaCommon;
 using LunaCommon.Enums;
 using System;
 using System.IO;
@@ -79,14 +80,14 @@ namespace LMP.MasterServer.Http
             writer.RenderBeginTag(HtmlTextWriterTag.P);
             writer.RenderBeginTag(HtmlTextWriterTag.Small);
 
-            writer.AddAttribute(HtmlTextWriterAttribute.Href, "http://www.lunamultiplayer.com/");
+            writer.AddAttribute(HtmlTextWriterAttribute.Href, RepoConstants.OfficialWebsite);
             writer.RenderBeginTag(HtmlTextWriterTag.A);
             writer.Write("Luna Multiplayer");
             writer.RenderEndTag();
 
             writer.Write(" - ");
 
-            writer.AddAttribute(HtmlTextWriterAttribute.Href, "https://github.com/LunaMultiplayer/LunaMultiplayer");
+            writer.AddAttribute(HtmlTextWriterAttribute.Href, RepoConstants.RepoUrl);
             writer.RenderBeginTag(HtmlTextWriterTag.A);
             writer.Write("Github repo");
             writer.RenderEndTag();

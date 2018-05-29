@@ -28,7 +28,7 @@ namespace LunaClient.Windows.Update
 
             if (GUILayout.Button(DownloadBigIcon, ButtonStyle))
             {
-                Application.OpenURL(RepoConstants.RepoUrl);
+                Application.OpenURL(RepoConstants.LatestGithubReleaseUrl);
                 Display = false;
             }
 

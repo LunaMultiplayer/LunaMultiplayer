@@ -16,7 +16,7 @@ namespace LunaClient.Update
 
         public static IEnumerator CheckForUpdates()
         {
-            using (var www = new WWW(RepoConstants.LatestGithubReleaseUrl))
+            using (var www = new WWW(RepoConstants.ApiLatestGithubReleaseUrl))
             {
                 while (!www.isDone)
                 {
