@@ -2,9 +2,9 @@
 using LunaUpdater.Appveyor;
 using LunaUpdater.Github;
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +31,7 @@ namespace MasterServer
         private static readonly string DllPath = Path.Combine(Directory.GetCurrentDirectory(), DllFileName);
         private static readonly AppDomainSetup DomainSetup = new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory };
 
-        private static Version CurrentVersion => new Version(FileVersionInfo.GetVersionInfo(DllPath).FileVersion);
+        private static Version CurrentVersion => Assembly.GetExecutingAssembly().GetName().Version;
         private static AppDomain LmpDomain { get; set; }
         private static string[] Arguments { get; set; }
 

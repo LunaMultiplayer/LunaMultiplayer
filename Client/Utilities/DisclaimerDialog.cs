@@ -1,5 +1,6 @@
 ﻿using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Update;
 using UnityEngine;
 
 namespace LunaClient.Utilities
@@ -21,6 +22,7 @@ namespace LunaClient.Utilities
                                     SettingsSystem.CurrentSettings.DisclaimerAccepted = true;
                                     MainSystem.Singleton.Enabled = true;
                                     SettingsSystem.SaveSettings();
+                                    MainSystem.Singleton.StartCoroutine(UpdateHandler.CheckForUpdates());
                                 }
                             ),
                             new DialogGUIFlexibleSpace(),

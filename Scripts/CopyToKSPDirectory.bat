@@ -68,6 +68,3 @@ IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\ModuleStore\XML\*.xml" "%KSPPATH2%
 
 xcopy /Y "%~dp0..\Client\Resources\Icons\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Icons"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\Resources\Icons\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Icons")
-
-xcopy /Y "%~dp0..\*.version" "%KSPPATH%\GameData\LunaMultiplayer\Plugins"
-IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\*.version" "%KSPPATH2%\GameData\LunaMultiplayer\Plugins")

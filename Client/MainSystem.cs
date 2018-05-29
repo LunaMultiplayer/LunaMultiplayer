@@ -14,6 +14,7 @@ using LunaClient.Systems.Network;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
+using LunaClient.Update;
 using LunaClient.Utilities;
 using LunaClient.Windows;
 using LunaCommon;
@@ -208,6 +209,10 @@ namespace LunaClient
                 Enabled = false;
                 DisclaimerDialog.SpawnDialog();
             }
+            else
+            {
+                StartCoroutine(UpdateHandler.CheckForUpdates());
+            }
         }
 
         public void Awake()
@@ -270,6 +275,7 @@ namespace LunaClient
             //Screenshot image: 6721
             //Tools window: 6722
             //Admin window: 6723
+            //Update window: 6724
 
             WindowsHandler.OnGui();
         }

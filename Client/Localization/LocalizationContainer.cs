@@ -28,6 +28,7 @@ namespace LunaClient.Localization
         public static ScreenshotWindowText ScreenshotWindowText = new ScreenshotWindowText();
         public static ScreenText ScreenText = new ScreenText();
         public static ButtonTooltips ButtonTooltips = new ButtonTooltips();
+        public static UpdateWindowText UpdateWindowText = new UpdateWindowText();
 
         private static readonly string LocalizationFolder = CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Localization");
 
@@ -86,6 +87,7 @@ namespace LunaClient.Localization
             LoadWindowTexts(language, ref ScreenshotWindowText);
             LoadWindowTexts(language, ref ScreenText);
             LoadWindowTexts(language, ref ButtonTooltips);
+            LoadWindowTexts(language, ref UpdateWindowText);
         }
 
         private static void LoadWindowTexts<T>(string language, ref T classToReplace) where T : class, new()

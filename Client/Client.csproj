@@ -102,6 +102,7 @@
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
     <Compile Include="Localization\Structures\ButtonTooltips.cs" />
     <Compile Include="Localization\Structures\ScreenshotWindowText.cs" />
+    <Compile Include="Localization\Structures\UpdateWindowText.cs" />
     <Compile Include="LunaScreenMsg.cs" />
     <Compile Include="ModuleStore\Structures\FieldDefinition.cs" />
     <Compile Include="ModuleStore\Structures\ModuleDefinition.cs" />
@@ -220,8 +221,10 @@
     <Compile Include="Systems\VesselSyncSys\VesselSyncMessageHandler.cs" />
     <Compile Include="Systems\VesselSyncSys\VesselSyncMessageSender.cs" />
     <Compile Include="Systems\VesselSyncSys\VesselSyncSystem.cs" />
+    <Compile Include="Update\UpdateHandler.cs" />
     <Compile Include="Utilities\CoroutineUtil.cs" />
     <Compile Include="Utilities\Detourer.cs" />
+    <Compile Include="Utilities\Json.cs" />
     <Compile Include="VesselIgnore\VesselModulesToIgnore.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselToProtoRefresh.cs" />
@@ -363,6 +366,8 @@
     <Compile Include="Windows\Status\StatusWindow.cs" />
     <Compile Include="Windows\Tools\ToolsDrawer.cs" />
     <Compile Include="Windows\Tools\ToolsWindow.cs" />
+    <Compile Include="Windows\Update\UpdateDrawer.cs" />
+    <Compile Include="Windows\Update\UpdateWindow.cs" />
     <Compile Include="Windows\WindowUtil.cs" />
     <Compile Include="Windows\WindowsHandler.cs" />
   </ItemGroup>
