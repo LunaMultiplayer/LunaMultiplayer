@@ -24,7 +24,6 @@ namespace LunaClient.Systems.VesselDockSys
         /// <summary>
         /// Called when 2 parts couple
         /// </summary>
-        /// <param name="partAction"></param>
         public void OnPartCouple(GameEvents.FromToAction<Part, Part> partAction)
         {
             if (!VesselCommon.IsSpectating)
@@ -53,6 +52,9 @@ namespace LunaClient.Systems.VesselDockSys
             }
         }
 
+        /// <summary>
+        /// Event triggered when a kerbal boards a vessel
+        /// </summary>
         public void OnCrewBoard(GameEvents.FromToAction<Part, Part> partAction)
         {
             LunaLog.Log("[LMP]: Crew boarding detected!");
@@ -72,7 +74,6 @@ namespace LunaClient.Systems.VesselDockSys
         /// <summary>
         /// Event triggered when a vessel undocks
         /// </summary>
-        /// <param name="part"></param>
         public void OnPartUndock(Part part)
         {
             var vessel = part.vessel;
@@ -81,7 +82,6 @@ namespace LunaClient.Systems.VesselDockSys
             var isEvaPart = part.FindModuleImplementing<KerbalEVA>() != null;
             if (isEvaPart) //This is the case when a kerbal gets out of a external command seat
             {
-                
                 vessel.parts.Remove(part);
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
             }
@@ -95,6 +95,19 @@ namespace LunaClient.Systems.VesselDockSys
                 FlightCamera.SetTarget(part.vessel);
                 part.vessel.MakeActive();
             }
+        }
+
+        /// <summary>
+        /// Event called after the undocking is completed and we have the 2 final vessels
+        /// </summary>
+        public void OnVesselUndocking(Vessel vessel1, Vessel vessel2)
+        {
+            LunaLog.Log("[LMP]: Undock detected!");
+
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1, false);
+            VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel1);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2, false);
+            VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel2);
         }
 
         /// <summary>

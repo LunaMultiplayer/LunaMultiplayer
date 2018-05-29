@@ -106,12 +106,13 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// <summary>
         /// Kills and unloads a vessel.
         /// </summary>
-        public void KillVessel(Guid vesselId, string reason, bool switchVessel = true)
+        public void KillVessel(Guid vesselId, string reason, bool switchVessel = true, bool removeFromStore = true)
         {
             //ALWAYS remove it from the proto store as this dictionary is maintained even if we are in the KSC
             //This means that while in KSC if we receive a vessel remove msg, our FlightGlobals.Vessels will be empty
             //But our VesselsProtoStore probably contains that vessel that must be removed.
-            VesselsProtoStore.RemoveVessel(vesselId);
+            if (removeFromStore) //The exception is when reloading a vessel!
+                VesselsProtoStore.RemoveVessel(vesselId);
 
             var killVessel = FlightGlobals.FindVessel(vesselId);
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)

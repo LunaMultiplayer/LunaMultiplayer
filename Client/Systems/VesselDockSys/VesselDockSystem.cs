@@ -17,6 +17,7 @@ namespace LunaClient.Systems.VesselDockSys
             GameEvents.onCrewBoardVessel.Add(VesselDockEvents.OnCrewBoard);
             GameEvents.onCrewOnEva.Add(VesselDockEvents.OnCrewEva);
             GameEvents.onCrewTransferred.Add(VesselDockEvents.OnCrewTransfered);
+            GameEvents.onVesselsUndocking.Add(VesselDockEvents.OnVesselUndocking);
         }
 
         protected override void OnDisabled()
@@ -28,6 +29,7 @@ namespace LunaClient.Systems.VesselDockSys
             GameEvents.onCrewBoardVessel.Remove(VesselDockEvents.OnCrewBoard);
             GameEvents.onCrewOnEva.Remove(VesselDockEvents.OnCrewEva);
             GameEvents.onCrewTransferred.Remove(VesselDockEvents.OnCrewTransfered);
+            GameEvents.onVesselsUndocking.Remove(VesselDockEvents.OnVesselUndocking);
         }
     }
 }

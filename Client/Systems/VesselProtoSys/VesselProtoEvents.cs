@@ -56,6 +56,10 @@ namespace LunaClient.Systems.VesselProtoSys
             if (string.IsNullOrEmpty(data.vesselName))
                 return;
 
+            //We are reloading a vessel so we can ignore this
+            if (VesselLoader.ReloadingVesselId == data.id)
+                return;
+
             //The vessel is NEW as it's not in the store. It might be a debris...
             var rootPartOrFirstPartFlightId = data.rootPart?.flightID ?? data.parts.FirstOrDefault()?.flightID ?? data.protoVessel?.protoPartSnapshots?.FirstOrDefault()?.flightID ?? 0;
             if (rootPartOrFirstPartFlightId != 0)
