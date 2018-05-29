@@ -2,6 +2,7 @@
 {
     public class ServerListWindowText
     {
+        public string Title { get; set; } = "Server list";
         public string NoServers { get; set; } = "No servers!";
         public string Ping { get; set; } = "Ping";
         public string Players { get; set; } = "Players";

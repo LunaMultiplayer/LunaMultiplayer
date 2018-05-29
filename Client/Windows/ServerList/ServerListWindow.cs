@@ -110,7 +110,7 @@ namespace LunaClient.Windows.ServerList
             base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle));
+                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.ServerListWindowText.Title, WindowStyle));
                 if (_selectedServerId != 0)
                 {
                     _serverDetailWindowRect = FixWindowPos(GUILayout.Window(6715 + MainSystem.WindowOffset,
