@@ -64,6 +64,7 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="Events\ExperimentEvent.cs" />
     <Compile Include="Events\ImmortalEvent.cs" />
     <Compile Include="Events\LockEvent.cs" />
     <Compile Include="Events\ModApiEvent.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
+    <Compile Include="Harmony\ModuleScienceExperiment_ResetExperiment.cs" />
     <Compile Include="Harmony\OrbitDriver_UpdateOrbit.cs" />
     <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
     <Compile Include="Harmony\LaunchSiteClear_Test.cs" />

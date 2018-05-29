@@ -215,5 +215,17 @@ namespace LunaClient.Systems.VesselProtoSys
                 }
             }
         }
+
+        /// <summary>
+        /// Triggered when resetting a experiment. Science experiment is stored in the vessel so send the definition to the server
+        /// </summary>
+        public void ExperimentReset(Vessel data)
+        {
+            if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
+            {
+                LunaLog.Log("Detected a experiment reset. Sending vessel definition to the server");
+                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+            }
+        }
     }
 }

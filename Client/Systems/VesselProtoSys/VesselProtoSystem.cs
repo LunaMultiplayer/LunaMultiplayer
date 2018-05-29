@@ -9,6 +9,7 @@ using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LunaClient.Events;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -66,6 +67,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             GameEvents.OnTriggeredDataTransmission.Add(VesselProtoEvents.TriggeredDataTransmission);
             GameEvents.OnExperimentStored.Add(VesselProtoEvents.ExperimentStored);
+            ExperimentEvent.onExperimentReset.Add(VesselProtoEvents.ExperimentReset);
 
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
@@ -87,6 +89,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
             GameEvents.OnTriggeredDataTransmission.Remove(VesselProtoEvents.TriggeredDataTransmission);
             GameEvents.OnExperimentStored.Remove(VesselProtoEvents.ExperimentStored);
+            ExperimentEvent.onExperimentReset.Remove(VesselProtoEvents.ExperimentReset);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();
