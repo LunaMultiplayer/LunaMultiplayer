@@ -30,19 +30,22 @@ namespace LunaClient.Harmony
 
                     __instance.DeleteButton.Lock();
                     __instance.RecoverButton.Lock();
+
+                    return;
                 }
+
                 //Check if vessel is landed or splashed on kerbin. Otherwise lock the recover button.
-                else if (__instance.SelectedVessel.LandedOrSplashed == false || __instance.SelectedVessel.mainBody.bodyName.ToLower() != "kerbin")
+                if (__instance.SelectedVessel.IsRecoverable)
                 {
                     __instance.FlyButton.Unlock();
                     __instance.DeleteButton.Unlock();
-                    __instance.RecoverButton.Lock();
+                    __instance.RecoverButton.Unlock();
                 }
                 else
                 {
                     __instance.FlyButton.Unlock();
                     __instance.DeleteButton.Unlock();
-                    __instance.RecoverButton.Unlock();
+                    __instance.RecoverButton.Lock();
                 }
             }
         }
