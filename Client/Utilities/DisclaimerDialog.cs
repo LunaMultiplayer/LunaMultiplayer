@@ -49,7 +49,5 @@ namespace LunaClient.Utilities
                 HighLogic.UISkin
             );
         }
-
-
     }
 }

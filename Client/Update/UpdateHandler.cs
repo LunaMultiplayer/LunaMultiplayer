@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace LunaClient.Update
 {
-    public class UpdateHandler
+    public static class UpdateHandler
     {
         private static readonly WaitForSeconds Wait = new WaitForSeconds(0.1f);
         private static Version CurrentVersion => new Version(LmpVersioning.CurrentVersion);

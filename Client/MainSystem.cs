@@ -192,6 +192,7 @@ namespace LunaClient
 
         public void Start()
         {
+            CompatibilityHandler.CheckKspVersion();
             LocalizationContainer.LoadLanguages();
             LocalizationContainer.LoadLanguage(SettingsSystem.CurrentSettings.Language);
 
