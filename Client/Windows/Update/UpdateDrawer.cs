@@ -14,8 +14,8 @@ namespace LunaClient.Windows.Update
             GUILayout.Label(LocalizationContainer.UpdateWindowText.Text, BoldLabelStyle);
 
             GUILayout.BeginVertical(BoxStyle);
-            GUILayout.Label(LocalizationContainer.UpdateWindowText.CurrentVersion + CurrentVersion);
-            GUILayout.Label(LocalizationContainer.UpdateWindowText.LatestVersion + LatestVersion);
+            GUILayout.Label($"{LocalizationContainer.UpdateWindowText.CurrentVersion} {CurrentVersion}");
+            GUILayout.Label($"{LocalizationContainer.UpdateWindowText.LatestVersion} {LatestVersion}");
             GUILayout.EndVertical();
 
             GUILayout.Label(LocalizationContainer.UpdateWindowText.Changelog);
