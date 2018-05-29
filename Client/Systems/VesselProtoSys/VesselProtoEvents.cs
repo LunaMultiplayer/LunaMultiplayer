@@ -176,5 +176,23 @@ namespace LunaClient.Systems.VesselProtoSys
                     vesselProtoUpdate.VesselHasUpdate = true;
             }
         }
+
+        /// <summary>
+        /// Triggered when transmitting science. Science data is stored in the vessel so send it again to the server
+        /// </summary>
+        public void TriggeredDataTransmission(ScienceData data0, Vessel data1, bool data2)
+        {
+            if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
+                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+        }
+
+        /// <summary>
+        /// Triggered when storing science. Science data is stored in the vessel so send it again to the server
+        /// </summary>
+        public void ExperimentStored(ScienceData data)
+        {
+            if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
+                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+        }
     }
 }
