@@ -47,7 +47,7 @@
 - [ ] [QuickLZ](http://www.quicklz.com) for fast compression.
 - [ ] Support for groups/companies inside career and science modes.
 
-Please check the [wiki](../../wiki) to see how to [run](../../wiki/How-to-play-with-LMP), [build](../../wiki/How-to-compile-LMP) or [debug](../../wiki/Debugging-in-Visual-studio) LMP
+Please check the [wiki](../../wiki) to see how to [install](../../wiki/How-to-install-LMP), [play](../../wiki/How-to-play-with-LMP), [build](../../wiki/How-to-compile-LMP) or [debug](../../wiki/Debugging-in-Visual-studio) LMP among other things
 
 ---
 ### Servers:
