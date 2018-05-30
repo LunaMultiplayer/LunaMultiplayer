@@ -18,13 +18,13 @@ namespace LunaClient.Systems.VesselUpdateSys
         public void SendVesselUpdate(Vessel vessel)
         {
             if (vessel == null) return;
-
-            //TODO: Add vessel.distanceTraveled as that's a field of the protovessel aswell!
-
+            
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselUpdateMsgData>();
             msgData.VesselId = vessel.id;
             msgData.Name = vessel.vesselName;
             msgData.Type = vessel.vesselType.ToString();
+            msgData.DistanceTraveled = vessel.distanceTraveled;
+
             msgData.Situation = vessel.situation.ToString();
             msgData.Landed = vessel.Landed;
             msgData.LandedAt = vessel.landedAtLast;

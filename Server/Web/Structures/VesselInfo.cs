@@ -10,6 +10,7 @@ namespace Server.Web.Structures
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Type { get; set; }
+        public double DistanceTravelled { get; set; }
         public string Situation { get; set; }
         public double Lat { get; set; }
         public double Lon { get; set; }
@@ -37,6 +38,9 @@ namespace Server.Web.Structures
 
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='type']");
             if (node != null) Type = node.InnerText;
+            
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='distanceTraveled']");
+            if (node != null && double.TryParse(node.InnerText, NumberStyles.Any, CultureInfo.InvariantCulture, out var dist)) DistanceTravelled = dist;
 
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='sit']");
             if (node != null) Situation = node.InnerText;

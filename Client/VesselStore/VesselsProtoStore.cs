@@ -137,6 +137,7 @@ namespace LunaClient.VesselStore
 
                 vesselProtoUpd.ProtoVessel.vesselName = msgData.Name;
                 vesselProtoUpd.ProtoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), msgData.Type);
+                vesselProtoUpd.ProtoVessel.distanceTraveled = msgData.DistanceTraveled;
                 vesselProtoUpd.ProtoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
                 vesselProtoUpd.ProtoVessel.landed = msgData.Landed;
                 vesselProtoUpd.ProtoVessel.landedAt = msgData.LandedAt;

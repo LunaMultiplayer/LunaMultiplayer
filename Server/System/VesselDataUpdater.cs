@@ -1,6 +1,7 @@
 ﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Xml;
 using Server.Log;
+using Server.Settings.Structures;
 using Server.Utilities;
 using System;
 using System.Collections.Concurrent;
@@ -9,7 +10,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Xml;
-using Server.Settings.Structures;
 
 namespace Server.System
 {
@@ -399,6 +399,9 @@ namespace Server.System
 
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='type']");
             if (node != null) node.InnerText = msgData.Type;
+
+            node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='distanceTraveled']");
+            if (node != null) node.InnerText = msgData.DistanceTraveled.ToString(CultureInfo.InvariantCulture);
 
             node = document.SelectSingleNode($"/{ConfigNodeXmlParser.StartElement}/{ConfigNodeXmlParser.ValueNode}[@name='sit']");
             if (node != null) node.InnerText = msgData.Situation;

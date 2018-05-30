@@ -36,6 +36,7 @@ namespace LunaClient.Systems.VesselUpdateSys
         {
             vessel.protoVessel.vesselName = vessel.vesselName = msgData.Name;
             vessel.protoVessel.vesselType = vessel.vesselType = (VesselType) Enum.Parse(typeof(VesselType), msgData.Type);
+            vessel.protoVessel.distanceTraveled = vessel.distanceTraveled = msgData.DistanceTraveled;
 
             vessel.protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
             //Only change this value if vessel is loaded. When vessel is not loaded we reload it if the situation changes
@@ -108,6 +109,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             {
                 protoVessel.vesselName = msgData.Name;
                 protoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), msgData.Type);
+                protoVessel.distanceTraveled = msgData.DistanceTraveled;
                 protoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
                 protoVessel.landed = msgData.Landed;
                 protoVessel.landedAt = msgData.LandedAt;
