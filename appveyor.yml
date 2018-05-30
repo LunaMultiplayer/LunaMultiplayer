@@ -82,7 +82,7 @@ deploy:
  - provider: GitHub
    tag: $(smallversion)-Draft
    release: Luna Multi Player $(smallversion)-Draft
-   description: 'Revision $(appveyor_build_version)'
+   description: 'Build $(appveyor_build_version)'
    artifact: LunaMultiplayer-$(configuration).zip
    auth_token:
     secure: zWJqDvz3LjR2J358JIJKICwghW/DWRzs73KWb3KApTLOreA4c8DN1tos+O3qBMR7
