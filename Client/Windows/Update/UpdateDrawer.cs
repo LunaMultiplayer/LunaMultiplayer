@@ -12,7 +12,7 @@ namespace LunaClient.Windows.Update
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
 
-            GUILayout.Label(LocalizationContainer.UpdateWindowText.Text, BoldRedLabelStyle);
+            GUILayout.Label($"{LocalizationContainer.UpdateWindowText.Text}", LmpVersioning.IsCompatible(LatestVersion) ? BoldGreenLabelStyle : BoldRedLabelStyle);
 
             GUILayout.BeginVertical(BoxStyle);
             GUILayout.Label($"{LocalizationContainer.UpdateWindowText.CurrentVersion} {LmpVersioning.CurrentVersion}");
