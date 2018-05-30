@@ -74,7 +74,6 @@ namespace MasterServer
                 var uhttpSharpPath = Path.Combine(Directory.GetCurrentDirectory(), "uhttpsharp.dll");
                 AppDomain.CurrentDomain.Load(File.ReadAllBytes(uhttpSharpPath));
 
-                AppDomain.CurrentDomain.Load(File.ReadAllBytes(DllPath));
                 var assembly = AppDomain.CurrentDomain.Load(File.ReadAllBytes(DllPath));
                 var entryPoint = assembly.GetType("LMP.MasterServer.EntryPoint");
 
