@@ -6,7 +6,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 0.9.45.{build}
+version: 0.10.45.{build}
 #Do not build if we change any of this files
 skip_commits:
   files:
@@ -19,7 +19,7 @@ image: Visual Studio 2017
 #---------------------------------#
 
 environment:
-  smallversion: 0.9.45
+  smallversion: 0.10.45
   ZIPPASSWORD:
     secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=
 assembly_info:
