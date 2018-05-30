@@ -81,7 +81,7 @@ namespace LMP.MasterServer.Structure
                 PlayerCount = msg.PlayerCount,
                 ServerName = msg.ServerName,
                 WarpMode = msg.WarpMode,
-                TerrainQuality = msg.TerrainQuality
+                TerrainQuality = msg.TerrainQuality,
             };
 
             SetCountryFromEndpoint(Info, ExternalEndpoint);
@@ -101,7 +101,7 @@ namespace LMP.MasterServer.Structure
                 Info.WebsiteText = "URL";
             }
         }
-
+        
         private static async void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
         {
             using (var client = new HttpClient())

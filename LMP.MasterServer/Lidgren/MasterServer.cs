@@ -158,6 +158,7 @@ namespace LMP.MasterServer.Lidgren
                 msgData.Password = server.Info.Password;
                 msgData.Cheats = server.Info.Cheats;
                 msgData.Description = server.Info.Description;
+                msgData.Country = server.Info.Country;
                 msgData.Website = server.Info.Website;
                 msgData.WebsiteText = server.Info.WebsiteText;
                 msgData.DropControlOnExit = server.Info.DropControlOnExit;
