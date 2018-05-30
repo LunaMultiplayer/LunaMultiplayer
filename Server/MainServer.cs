@@ -13,6 +13,7 @@ using Server.System;
 using Server.System.VesselRelay;
 using Server.Upnp;
 using Server.Utilities;
+using Server.Web;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -88,12 +89,16 @@ namespace Server
 
                 LunaLog.Normal($"Starting '{GeneralSettings.SettingsStore.ServerName}' on Port {ConnectionSettings.SettingsStore.Port}... ");
 
-                LmpPortMapper.OpenPort().Wait();
+                LmpPortMapper.OpenLmpPort().Wait();
+                LmpPortMapper.OpenWebPort().Wait();
                 ServerContext.ServerRunning = true;
                 LidgrenServer.SetupLidgrenServer();
+                WebServer.StartWebServer();
 
                 //Do not add the command handler thread to the TaskContainer as it's a blocking task
                 LongRunTaskFactory.StartNew(() => new CommandHandler().ThreadMain(), CancellationTokenSrc.Token);
+                
+                TaskContainer.Add(LongRunTaskFactory.StartNew(WebServer.RefreshWebServerInformation, CancellationTokenSrc.Token));
 
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LmpPortMapper.RefreshUpnpPort, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThread, CancellationTokenSrc.Token));
@@ -164,7 +169,11 @@ namespace Server
 
             ServerContext.Shutdown("Server is shutting down");
 
-            LmpPortMapper.RemoveOpenedPorts().Wait();
+            WebServer.StopWebServer();
+
+            LmpPortMapper.CloseLmpPort().Wait();
+            LmpPortMapper.CloseWebPort().Wait();
+
             CancellationTokenSrc.Cancel();
             Task.WaitAll(TaskContainer.ToArray());
 
