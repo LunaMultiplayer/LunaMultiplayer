@@ -207,6 +207,7 @@
     <Compile Include="Web\Handlers\ExceptionHandler.cs" />
     <Compile Include="Web\Handlers\HttpException.cs" />
     <Compile Include="Web\Structures\CurrentState.cs" />
+    <Compile Include="Web\Structures\Settings\ServerWebsiteSettings.cs" />
     <Compile Include="Web\Structures\Settings\ServerConnectionSettings.cs" />
     <Compile Include="Web\Structures\Settings\ServerGameplaySettings.cs" />
     <Compile Include="Web\Structures\Settings\ServerDebugSettings.cs" />

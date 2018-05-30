@@ -16,6 +16,7 @@ namespace Server.Web.Structures
         public ServerDebugSettings ServerDebugSettings { get; } = new ServerDebugSettings();
         public ServerCraftSettings ServerCraftSettings { get; } = new ServerCraftSettings();
         public ServerConnectionSettings ServerConnectionSettings { get; } = new ServerConnectionSettings();
+        public ServerWebsiteSettings ServerWebsiteSettings { get; } = new ServerWebsiteSettings();
 
         public void Refresh()
         {
