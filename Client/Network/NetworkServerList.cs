@@ -64,7 +64,7 @@ namespace LunaClient.Network
                 if (msgDeserialized.Data is MsReplyServersMsgData data)
                 {
                     //Filter servers with diferent version
-                    if (data.ServerVersion != LmpVersioning.CurrentVersion)
+                    if (!LmpVersioning.IsCompatible(data.ServerVersion))
                         return;
 
                     if (!Servers.ContainsKey(data.Id))

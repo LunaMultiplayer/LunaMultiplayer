@@ -26,10 +26,17 @@ namespace Server.Utilities
         {
             while (ServerContext.ServerRunning)
             {
-                if (LatestVersion > new Version(LmpVersioning.CurrentVersion))
+                if (LatestVersion > LmpVersioning.CurrentVersion)
                 {
                     LunaLog.Warning($"There is a new version of LMP! Please download it! Current: {LmpVersioning.CurrentVersion} Latest: {LatestVersion}");
-                    LunaLog.Warning("You won't be listed in the master servers if you don't have the latest version!");
+                    if (LmpVersioning.IsCompatible(LatestVersion))
+                    {
+                        LunaLog.Debug("Your version is compatible with the latest version so you will still be listed in the master servers.");
+                    }
+                    else
+                    {
+                        LunaLog.Warning("Your version is NOT compatible with the latest version. You won't be listed in the master servers!");
+                    }
                 }
 
                 //Sleep for 30 seconds...

@@ -68,9 +68,7 @@ namespace LunaCommon.Message.Base
 
                 msg.SetData(data);
                 msg.Data.ReceiveTime = receiveTime;
-                msg.VersionMismatch = msg.Data.BuildVersion != LmpVersioning.BuildVersion ||
-                                      msg.Data.MinorVersion != LmpVersioning.MinorVersion || 
-                                      msg.Data.MajorVersion != LmpVersioning.MajorVersion;
+                msg.VersionMismatch = !LmpVersioning.IsCompatible(msg.Data.MajorVersion, msg.Data.MinorVersion, msg.Data.BuildVersion);
 
                 return msg;
             }

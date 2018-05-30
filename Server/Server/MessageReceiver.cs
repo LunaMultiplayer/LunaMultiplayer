@@ -60,7 +60,8 @@ namespace Server.Server
 
             if (message.VersionMismatch)
             {
-                MessageQueuer.SendConnectionEnd(client, $"Version mismatch. Your version does not match the server's version: {LmpVersioning.CurrentVersion}.");
+                MessageQueuer.SendConnectionEnd(client, $"Version mismatch: Your version ({message.Data.MajorVersion}.{message.Data.MinorVersion}.{message.Data.BuildVersion}) " +
+                                                        $"does not match the server's version: {LmpVersioning.CurrentVersion}.");
                 return;
             }
 

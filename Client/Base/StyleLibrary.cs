@@ -17,7 +17,8 @@ namespace LunaClient.Base
         protected GUIStyle ResizeButtonStyle;
         protected GUIStyle LabelStyle;
         protected GUIStyle HyperlinkLabelStyle;
-        protected GUIStyle BoldLabelStyle;
+        protected GUIStyle BoldRedLabelStyle;
+        protected GUIStyle BoldGreenLabelStyle;
         protected GUIStyle ScrollStyle;
         protected GUIStyle TextAreaStyle;
         protected GUIStyle StatusStyle;
@@ -186,7 +187,8 @@ namespace LunaClient.Base
                 onFocused = new GUIStyleState(),
                 onHover = new GUIStyleState(),
             };
-            BoldLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.red } };
+            BoldGreenLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.green } };
+            BoldRedLabelStyle = new GUIStyle(GUI.skin.label) { fontStyle = FontStyle.Bold, normal = new GUIStyleState { textColor = Color.red } };
             ScrollStyle = new GUIStyle(GUI.skin.scrollView);
             TextAreaStyle = new GUIStyle(GUI.skin.textArea);
             BoxStyle = new GUIStyle(GUI.skin.box);

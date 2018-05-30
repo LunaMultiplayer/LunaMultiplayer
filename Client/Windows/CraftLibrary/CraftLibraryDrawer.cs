@@ -74,7 +74,7 @@ namespace LunaClient.Windows.CraftLibrary
             _libraryScrollPos = GUILayout.BeginScrollView(_libraryScrollPos, ScrollStyle);
             if (SphCrafts.Any())
             {
-                GUILayout.Label("SPH", BoldLabelStyle);
+                GUILayout.Label("SPH", BoldRedLabelStyle);
                 for (var i = 0; i < SphCrafts.Count; i += 4)
                 {
                     DrawCraftEntry(SphCrafts[i]);
@@ -83,7 +83,7 @@ namespace LunaClient.Windows.CraftLibrary
             }
             if (VabCrafts.Any())
             {
-                GUILayout.Label("VAB", BoldLabelStyle);
+                GUILayout.Label("VAB", BoldRedLabelStyle);
                 for (var i = 0; i < VabCrafts.Count; i += 4)
                 {
                     DrawCraftEntry(VabCrafts[i]);
@@ -92,7 +92,7 @@ namespace LunaClient.Windows.CraftLibrary
             }
             if (SubAssemblyCrafts.Any())
             {
-                GUILayout.Label("Subassembly", BoldLabelStyle);
+                GUILayout.Label("Subassembly", BoldRedLabelStyle);
                 for (var i = 0; i < SubAssemblyCrafts.Count; i += 4)
                 {
                     DrawCraftEntry(SubAssemblyCrafts[i]);

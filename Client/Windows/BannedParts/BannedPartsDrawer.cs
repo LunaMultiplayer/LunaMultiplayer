@@ -9,7 +9,7 @@ namespace LunaClient.Windows.BannedParts
         {
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
-            GUILayout.Label($"{_vesselName} ({_vesselId}) {LocalizationContainer.BannedPartsWindowText.Text}", BoldLabelStyle);
+            GUILayout.Label($"{_vesselName} ({_vesselId}) {LocalizationContainer.BannedPartsWindowText.Text}", BoldRedLabelStyle);
             GUILayout.Space(5);
 
             GUILayout.BeginVertical(BoxStyle);

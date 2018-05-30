@@ -17,7 +17,7 @@ namespace LunaClient.Windows.Mod
 
             if (ModSystem.Singleton.MissingExpansions.Any())
             {
-                GUILayout.Label(LocalizationContainer.ModWindowText.MissingExpansions, BoldLabelStyle);
+                GUILayout.Label(LocalizationContainer.ModWindowText.MissingExpansions, BoldRedLabelStyle);
                 GUILayout.BeginHorizontal(BoxStyle);
                 _missingExpansionsScrollPos = GUILayout.BeginScrollView(_missingExpansionsScrollPos, ScrollStyle);
                 foreach (var expansion in ModSystem.Singleton.MissingExpansions)
@@ -32,7 +32,7 @@ namespace LunaClient.Windows.Mod
 
             if (ModSystem.Singleton.MandatoryFilesNotFound.Any())
             {
-                GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryModsNotFound, BoldLabelStyle);
+                GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryModsNotFound, BoldRedLabelStyle);
                 GUILayout.BeginHorizontal(BoxStyle);
                 _mandatoryFilesNotFoundScrollPos = GUILayout.BeginScrollView(_mandatoryFilesNotFoundScrollPos, ScrollStyle);
                 foreach (var mod in ModSystem.Singleton.MandatoryFilesNotFound)
@@ -54,7 +54,7 @@ namespace LunaClient.Windows.Mod
 
             if (ModSystem.Singleton.MandatoryFilesDifferentSha.Any())
             {
-                GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryModsDifferentShaFound, BoldLabelStyle);
+                GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryModsDifferentShaFound, BoldRedLabelStyle);
                 GUILayout.BeginHorizontal(BoxStyle);
                 _mandatoryFilesDifferentShaScrollPos = GUILayout.BeginScrollView(_mandatoryFilesDifferentShaScrollPos, ScrollStyle);
                 foreach (var mod in ModSystem.Singleton.MandatoryFilesDifferentSha)
@@ -77,7 +77,7 @@ namespace LunaClient.Windows.Mod
 
             if (ModSystem.Singleton.ForbiddenFilesFound.Any())
             {
-                GUILayout.Label(LocalizationContainer.ModWindowText.ForbiddenFilesFound, BoldLabelStyle);
+                GUILayout.Label(LocalizationContainer.ModWindowText.ForbiddenFilesFound, BoldRedLabelStyle);
                 GUILayout.BeginHorizontal(BoxStyle);
                 _forbiddenFilesScrollPos = GUILayout.BeginScrollView(_forbiddenFilesScrollPos, ScrollStyle);
                 foreach (var mod in ModSystem.Singleton.ForbiddenFilesFound)
@@ -94,7 +94,7 @@ namespace LunaClient.Windows.Mod
 
             if (ModSystem.Singleton.NonListedFilesFound.Any())
             {
-                GUILayout.Label(LocalizationContainer.ModWindowText.NonListedFilesFound, BoldLabelStyle);
+                GUILayout.Label(LocalizationContainer.ModWindowText.NonListedFilesFound, BoldRedLabelStyle);
                 GUILayout.BeginHorizontal(BoxStyle);
                 _nonListedFilesScrollPos = GUILayout.BeginScrollView(_nonListedFilesScrollPos, ScrollStyle);
                 foreach (var mod in ModSystem.Singleton.NonListedFilesFound)
@@ -109,7 +109,7 @@ namespace LunaClient.Windows.Mod
 
             if (ModSystem.Singleton.MandatoryPartsNotFound.Any())
             {
-                GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryPartsNotFound, BoldLabelStyle);
+                GUILayout.Label(LocalizationContainer.ModWindowText.MandatoryPartsNotFound, BoldRedLabelStyle);
                 GUILayout.BeginHorizontal(BoxStyle);
                 _mandatoryPartsScrollPos = GUILayout.BeginScrollView(_mandatoryPartsScrollPos, ScrollStyle);
                 foreach (var part in ModSystem.Singleton.MandatoryPartsNotFound)
@@ -131,7 +131,7 @@ namespace LunaClient.Windows.Mod
 
             if (ModSystem.Singleton.ForbiddenPartsFound.Any())
             {
-                GUILayout.Label(LocalizationContainer.ModWindowText.ForbiddenPartsFound, BoldLabelStyle);
+                GUILayout.Label(LocalizationContainer.ModWindowText.ForbiddenPartsFound, BoldRedLabelStyle);
                 GUILayout.BeginHorizontal(BoxStyle);
                 _forbiddenPartsScrollPos = GUILayout.BeginScrollView(_forbiddenPartsScrollPos, ScrollStyle);
                 foreach (var part in ModSystem.Singleton.ForbiddenPartsFound)

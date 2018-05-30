@@ -1,5 +1,6 @@
 ﻿using LmpGlobal;
 using LunaClient.Localization;
+using LunaCommon;
 using UnityEngine;
 
 namespace LunaClient.Windows.Update
@@ -11,11 +12,18 @@ namespace LunaClient.Windows.Update
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
 
-            GUILayout.Label(LocalizationContainer.UpdateWindowText.Text, BoldLabelStyle);
+            GUILayout.Label(LocalizationContainer.UpdateWindowText.Text, BoldRedLabelStyle);
 
             GUILayout.BeginVertical(BoxStyle);
-            GUILayout.Label($"{LocalizationContainer.UpdateWindowText.CurrentVersion} {CurrentVersion}");
+            GUILayout.Label($"{LocalizationContainer.UpdateWindowText.CurrentVersion} {LmpVersioning.CurrentVersion}");
             GUILayout.Label($"{LocalizationContainer.UpdateWindowText.LatestVersion} {LatestVersion}");
+            GUILayout.EndVertical();
+
+            GUILayout.BeginVertical(BoxStyle);
+            if (LmpVersioning.IsCompatible(LatestVersion))
+                GUILayout.Label($"{LocalizationContainer.UpdateWindowText.StillCompatible}", BoldGreenLabelStyle);
+            else
+                GUILayout.Label($"{LocalizationContainer.UpdateWindowText.NotCompatible}", BoldRedLabelStyle);
             GUILayout.EndVertical();
 
             GUILayout.Label(LocalizationContainer.UpdateWindowText.Changelog);

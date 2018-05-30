@@ -12,7 +12,6 @@ namespace LunaClient.Update
     public static class UpdateHandler
     {
         private static readonly WaitForSeconds Wait = new WaitForSeconds(0.1f);
-        private static Version CurrentVersion => new Version(LmpVersioning.CurrentVersion);
 
         public static IEnumerator CheckForUpdates()
         {
@@ -27,7 +26,7 @@ namespace LunaClient.Update
                     var data = Json.Deserialize(www.text) as Dictionary<string, object>;
                     var latestVersion = new Version(data["tag_name"].ToString());
                     LunaLog.Log($"Latest version: {latestVersion}");
-                    if (latestVersion > CurrentVersion)
+                    if (latestVersion > LmpVersioning.CurrentVersion)
                     {
                         using (var www2 = new WWW(data["url"].ToString()))
                         {
@@ -38,8 +37,7 @@ namespace LunaClient.Update
                             if (www2.error == null)
                             {
                                 var changelog = data["body"].ToString();
-                                UpdateWindow.CurrentVersion = CurrentVersion.ToString();
-                                UpdateWindow.LatestVersion = latestVersion.ToString();
+                                UpdateWindow.LatestVersion = latestVersion;
                                 UpdateWindow.Changelog = changelog;
 
                                 UpdateWindow.Singleton.Display = true;

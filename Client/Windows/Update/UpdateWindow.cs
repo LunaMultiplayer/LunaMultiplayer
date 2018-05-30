@@ -1,4 +1,5 @@
-﻿using LunaClient.Base;
+﻿using System;
+using LunaClient.Base;
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using UnityEngine;
@@ -12,8 +13,7 @@ namespace LunaClient.Windows.Update
     {
         #region Fields & properties
 
-        public static string CurrentVersion;
-        public static string LatestVersion;
+        public static Version LatestVersion;
         public static string Changelog;
 
         private static bool _display;
