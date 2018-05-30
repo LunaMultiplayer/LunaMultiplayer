@@ -14,8 +14,6 @@ namespace LunaClient.Utilities
             var compatible = KspVersion >= KspCompatible.MinKspVersion && KspVersion <= KspCompatible.MaxKspVersion;
             if (compatible) return;
 
-            var skin = UISkinManager.defaultSkin;
-
             PopupDialog.SpawnPopupDialog(
                 new MultiOptionDialog("CompatibilityWindow", string.Empty, LocalizationContainer.CompatibleDialogText.Title,
                     HighLogic.UISkin,
