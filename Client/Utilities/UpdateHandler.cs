@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using LmpGlobal;
+﻿using LmpGlobal;
 using LunaClient.Windows.Update;
 using LunaCommon;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace LunaClient.Utilities
@@ -22,7 +22,9 @@ namespace LunaClient.Utilities
                 }
                 if (www.error == null)
                 {
-                    var data = Json.Deserialize(www.text) as Dictionary<string, object>;
+                    if (!(Json.Deserialize(www.text) is Dictionary<string, object> data))
+                        yield break;
+
                     var latestVersion = new Version(data["tag_name"].ToString());
                     LunaLog.Log($"Latest version: {latestVersion}");
                     if (latestVersion > LmpVersioning.CurrentVersion)
