@@ -105,6 +105,7 @@ namespace LMP.MasterServer.Http
             writer.RenderBeginTag("thead");
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Address");writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Country"); writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Password");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Name");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Description");writer.RenderEndTag();
@@ -123,6 +124,7 @@ namespace LMP.MasterServer.Http
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Tr);
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.ExternalEndpoint);writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Country); writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Password);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.ServerName);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Description);writer.RenderEndTag();

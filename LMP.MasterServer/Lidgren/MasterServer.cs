@@ -197,7 +197,7 @@ namespace LMP.MasterServer.Lidgren
             else
             {
                 //Just update
-                ServerDictionary[msgData.Id] = new Server(msgData, netMsg.SenderEndPoint);
+                ServerDictionary[msgData.Id].Update(msgData);
             }
         }
 
