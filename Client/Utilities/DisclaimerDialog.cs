@@ -1,6 +1,5 @@
 ﻿using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Update;
 using UnityEngine;
 
 namespace LunaClient.Utilities

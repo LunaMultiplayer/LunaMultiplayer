@@ -1,13 +1,12 @@
-﻿using LmpGlobal;
-using LunaClient.Utilities;
-using LunaClient.Windows.Update;
-using LunaCommon;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using LmpGlobal;
+using LunaClient.Windows.Update;
+using LunaCommon;
 using UnityEngine;
 
-namespace LunaClient.Update
+namespace LunaClient.Utilities
 {
     public static class UpdateHandler
     {

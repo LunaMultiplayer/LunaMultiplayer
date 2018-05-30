@@ -14,7 +14,6 @@ using LunaClient.Systems.Network;
 using LunaClient.Systems.Scenario;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
-using LunaClient.Update;
 using LunaClient.Utilities;
 using LunaClient.Windows;
 using LunaCommon;
