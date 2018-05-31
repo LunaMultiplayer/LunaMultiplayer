@@ -1,4 +1,5 @@
 ﻿using LunaCommon.Message.Data.Vessel;
+using LunaCommon.Message.Types;
 using Server.Client;
 using Server.Enums;
 using Server.Settings.Structures;
@@ -16,19 +17,37 @@ namespace Server.System.VesselRelay
         private static readonly ConcurrentDictionary<Guid, DateTime> TimeDictionary = new ConcurrentDictionary<Guid, DateTime>();
 
         /// <summary>
-        /// Checks if we should save this vessel position message or not based on the RelaySaveIntervalMs setting
+        /// Checks if we should save this vessel message or not based on the RelaySaveIntervalMs and it's type setting
         /// </summary>
         /// <returns></returns>
-        public static bool ShouldStoreMessage(Guid vesselId)
+        public static bool ShouldStoreMessage(Guid vesselId, VesselMessageType messageType)
         {
-            var lastSavedTime = TimeDictionary.GetOrAdd(vesselId, DateTime.MinValue);
-            if (DateTime.Now - lastSavedTime > TimeSpan.FromMilliseconds(RelaySettings.SettingsStore.RelaySaveIntervalMs))
+            switch (messageType)
             {
-                TimeDictionary.TryUpdate(vesselId, DateTime.Now, lastSavedTime);
-                return true;
+                case VesselMessageType.PartSync:
+                    return false;
+                case VesselMessageType.Position:
+                case VesselMessageType.Flightstate:
+                    var lastSavedTime = TimeDictionary.GetOrAdd(vesselId, DateTime.MinValue);
+                    if (DateTime.Now - lastSavedTime > TimeSpan.FromMilliseconds(RelaySettings.SettingsStore.RelaySaveIntervalMs))
+                    {
+                        TimeDictionary.TryUpdate(vesselId, DateTime.Now, lastSavedTime);
+                        return true;
+                    }
+                    return false;
+                case VesselMessageType.Proto:
+                case VesselMessageType.Dock:
+                case VesselMessageType.Remove:
+                case VesselMessageType.Update:
+                case VesselMessageType.Resource:
+                case VesselMessageType.Sync:
+                case VesselMessageType.Fairing:
+                case VesselMessageType.Eva:
+                    return true;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(messageType), messageType, null);
             }
 
-            return false;
         }
 
         /// <summary>
