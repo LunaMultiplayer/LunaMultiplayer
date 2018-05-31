@@ -20,6 +20,7 @@ namespace LunaClient.Systems.VesselFairingsSys
             if (vessel == null) return;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselFairingMsgData>();
+            msgData.GameTime = Planetarium.GetUniversalTime();
             msgData.VesselId = vessel.id;
             msgData.PartFlightId = partFlightId;
 

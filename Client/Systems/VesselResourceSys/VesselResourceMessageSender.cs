@@ -23,6 +23,7 @@ namespace LunaClient.Systems.VesselResourceSys
             _resources.Clear();
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselResourceMsgData>();
+            msgData.GameTime = Planetarium.GetUniversalTime();
             msgData.VesselId = vessel.id;
             
             for (var i = 0; i < vessel.protoVessel.protoPartSnapshots.Count; i++)

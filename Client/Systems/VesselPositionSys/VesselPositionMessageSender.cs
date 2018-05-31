@@ -5,7 +5,6 @@ using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using LunaCommon.Time;
 using System;
 
 namespace LunaClient.Systems.VesselPositionSys
@@ -61,6 +60,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!OrbitParametersAreOk(vessel)) return null;
 
             var msgData = MessageFactory.CreateNewMessageData<VesselPositionMsgData>();
+            msgData.GameTime = Planetarium.GetUniversalTime();
             try
             {
                 msgData.VesselId = vessel.id;
@@ -75,7 +75,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 SetOrbit(vessel, msgData);
 
                 msgData.HeightFromTerrain = vessel.heightFromTerrain;
-                msgData.GameTime = Planetarium.GetUniversalTime();
                 msgData.HackingGravity = Math.Abs(MainSystem.BodiesGees[vessel.mainBody] - vessel.mainBody.GeeASL) > 0.0001;
 
                 return msgData;

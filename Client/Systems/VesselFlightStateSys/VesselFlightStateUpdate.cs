@@ -52,7 +52,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
 
             StartTimeStamp = EndTimeStamp;
-            EndTimeStamp = msgData.TimeStamp;
+            EndTimeStamp = msgData.SentTime;
         }
 
         private static FlightCtrlState GetFlightCtrlStateFromMsg(VesselFlightStateMsgData msgData)

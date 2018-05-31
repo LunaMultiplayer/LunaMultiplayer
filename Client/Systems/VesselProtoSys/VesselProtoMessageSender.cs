@@ -76,6 +76,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     VesselsProtoStore.RawUpdateVesselProtoData(VesselSerializedBytes, numBytes, protoVessel.vesselID);
 
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
+                    msgData.GameTime = Planetarium.GetUniversalTime();
                     FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
                 }
                 else

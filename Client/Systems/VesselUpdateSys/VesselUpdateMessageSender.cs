@@ -20,6 +20,7 @@ namespace LunaClient.Systems.VesselUpdateSys
             if (vessel == null) return;
             
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselUpdateMsgData>();
+            msgData.GameTime = Planetarium.GetUniversalTime();
             msgData.VesselId = vessel.id;
             msgData.Name = vessel.vesselName;
             msgData.Type = vessel.vesselType.ToString();

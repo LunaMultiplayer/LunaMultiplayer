@@ -23,6 +23,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             LunaLog.Log($"[LMP]: Removing {vesselId} from the server");
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselRemoveMsgData>();
+            msgData.GameTime = Planetarium.GetUniversalTime();
             msgData.VesselId = vesselId;
             msgData.AddToKillList = keepVesselInRemoveList;
 

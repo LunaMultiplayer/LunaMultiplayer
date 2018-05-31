@@ -20,6 +20,7 @@ namespace LunaClient.Systems.VesselSyncSys
         public void SendVesselsSyncMsg()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselSyncMsgData>();
+            msgData.GameTime = Planetarium.GetUniversalTime();
 
             var vesselIds = VesselsProtoStore.AllPlayerVessels.Keys.ToArray();
             msgData.VesselsCount = vesselIds.Length;

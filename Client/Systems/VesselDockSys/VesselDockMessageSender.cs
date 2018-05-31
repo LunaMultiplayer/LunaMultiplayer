@@ -46,6 +46,7 @@ namespace LunaClient.Systems.VesselDockSys
             if (dock == null) return;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselDockMsgData>();
+            msgData.GameTime = Planetarium.GetUniversalTime();
             msgData.WeakVesselId = dock.WeakVesselId;
             msgData.DominantVesselId = dock.DominantVesselId;
             msgData.FinalVesselData = vesselBytes;
