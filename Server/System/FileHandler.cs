@@ -1,4 +1,5 @@
-﻿using Server.Log;
+﻿using LunaCommon;
+using Server.Log;
 using Server.Utilities;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,9 @@ namespace Server.System
         {
             lock (GetLockSemaphore(path))
             {
-                if (ContentsAreEqual(data, numBytes, path)) return;
+                if (ContentChecker.ContentsAreEqual(data, numBytes, path))
+                    return;
+
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
                     fs.Write(data, 0, numBytes);
@@ -304,42 +307,6 @@ namespace Server.System
                 }
                 throw new HandledException($"Bad folder/file path ({path})");
             }
-        }
-        
-        /// <summary>
-        /// Checks if the file contents and the byte array are equal
-        /// </summary>
-        private static bool ContentsAreEqual(byte[] contents, int numBytes, string pathToFile)
-        {
-            const int bytesToRead = 1024 * sizeof(long);
-
-            if (!File.Exists(pathToFile))
-                return false;
-            
-            var fileInfo = new FileInfo(pathToFile);
-
-            if (numBytes != fileInfo.Length)
-                return false;
-
-            var iterations = (int)Math.Ceiling((double)numBytes / bytesToRead);
-
-            using (var contentStream = new MemoryStream(contents, 0, numBytes))
-            using (var fileStream = File.OpenRead(pathToFile))
-            {
-                var one = new byte[bytesToRead];
-                var two = new byte[bytesToRead];
-
-                for (var i = 0; i < iterations; i++)
-                {
-                    contentStream.Read(one, 0, bytesToRead);
-                    fileStream.Read(two, 0, bytesToRead);
-
-                    if (BitConverter.ToInt64(one, 0) != BitConverter.ToInt64(two, 0))
-                        return false;
-                }
-            }
-
-            return true;
         }
     }
 }

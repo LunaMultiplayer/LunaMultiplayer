@@ -50,6 +50,7 @@
     <Compile Include="Common.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="ConsoleUtil.cs" />
+    <Compile Include="ContentChecker.cs" />
     <Compile Include="Enums\AdminResponse.cs" />
     <Compile Include="Enums\ClientMessageType.cs" />
     <Compile Include="Enums\ClientState.cs" />

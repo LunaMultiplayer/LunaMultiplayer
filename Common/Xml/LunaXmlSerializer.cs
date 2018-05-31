@@ -74,7 +74,9 @@ namespace LunaCommon.Xml
 
         public static void WriteToXmlFile(object objectToSerialize, string path)
         {
-            File.WriteAllText(path, SerializeToXml(objectToSerialize));
+            var contents = SerializeToXml(objectToSerialize);
+            if (!ContentChecker.ContentsAreEqual(contents, path))
+                File.WriteAllText(path, contents);
         }
 
         public static string SerializeToXml(object objectToSerialize)
