@@ -9,7 +9,6 @@ using Server.Server;
 using Server.System;
 using Server.System.VesselRelay;
 using System;
-using System.Linq;
 
 namespace Server.Client
 {
@@ -49,9 +48,8 @@ namespace Server.Client
                     MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
                     LockSystem.ReleasePlayerLocks(client);
 
-                    if (!ServerContext.Clients.Any(c => c.Value.Subspace == client.Subspace))
+                    if (WarpSystem.RemoveSubspace(client.Subspace))
                     {
-                        WarpSystem.RemoveSubspace(client.Subspace);
                         VesselRelaySystem.RemoveSubspace(client.Subspace);
                     }
                 }

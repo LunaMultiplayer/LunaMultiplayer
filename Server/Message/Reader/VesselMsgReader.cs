@@ -38,7 +38,7 @@ namespace Server.Message.Reader
                     break;
                 case VesselMessageType.Position:
                     VesselRelaySystem.HandleVesselMessage(client, messageData);
-                    if (!GeneralSettings.SettingsStore.ShowVesselsInThePast || client.Subspace == WarpContext.LatestSubspace)
+                    if (!GeneralSettings.SettingsStore.ShowVesselsInThePast || client.Subspace == WarpContext.LatestSubspace.Id)
                         VesselDataUpdater.WritePositionDataToFile(messageData);
                     break;
                 case VesselMessageType.Flightstate:

@@ -8,7 +8,6 @@ using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Threading;
 using UniLinq;
 
 namespace LunaClient.Systems.Warp
@@ -117,6 +116,7 @@ namespace LunaClient.Systems.Warp
             if (CurrentSubspace == -1 && WaitingSubspaceIdFromServer && TimeUtil.IsInInterval(ref _stoppedWarpingTimeStamp, 15000))
             {
                 //We've waited for 15 seconds to get a subspace Id and the server didn't assigned one to us so send our subspace again...
+                LunaLog.LogError("Detected stuck at warping! Requesting subspace ID again!");
                 RequestNewSubspace();
             }
         }
@@ -126,7 +126,10 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         private void CheckWarpStopped()
         {
-            if (TimeWarp.CurrentRateIndex == 0 && CurrentSubspace == -1 && !WaitingSubspaceIdFromServer)
+            //Caution! When you use the "Warp to next morning" button and the warping is about to finish, 
+            //the TimeWarp.CurrentRateIndex will be 0 but you will still be warping!! 
+            //That's the reason why we check the TimeWarp.CurrentRate aswell!
+            if (TimeWarp.CurrentRateIndex == 0 && Math.Abs(TimeWarp.CurrentRate - 1) < 0.1f && CurrentSubspace == -1 && !WaitingSubspaceIdFromServer)
             {
                 RequestNewSubspace();
             }
@@ -237,7 +240,6 @@ namespace LunaClient.Systems.Warp
             return Subspaces.ContainsKey(subspace) ? TimeSyncerSystem.ServerClockSec + Subspaces[subspace] : 0d;
         }
 
-
         public int GetPlayerSubspace(string playerName)
         {
             if (ClientSubspaceList.ContainsKey(playerName))
@@ -273,17 +275,12 @@ namespace LunaClient.Systems.Warp
 
         /// <summary>
         /// Task that requests a new subspace to the server.
-        /// It has a sleep of 3 seconds to avoid errors like when you press "warp to next morning" or warp to a node
         /// </summary>
         private void RequestNewSubspace()
         {
-            TaskFactory.StartNew(() =>
-            {
-                WaitingSubspaceIdFromServer = true;
-                Thread.Sleep(3000);
-                MessageSender.SendNewSubspace();
-                _stoppedWarpingTimeStamp = LunaComputerTime.UtcNow;
-            });
+            WaitingSubspaceIdFromServer = true;
+            MessageSender.SendNewSubspace();
+            _stoppedWarpingTimeStamp = LunaComputerTime.UtcNow;
         }
 
         #endregion

@@ -14,7 +14,7 @@ namespace Server.System
             {
                 LunaLog.Debug("Performing backups...");
                 VesselStoreSystem.BackupVessels();
-                WarpSystem.SaveSubspacesToFile();
+                WarpSystem.SaveLatestSubspaceToFile();
                 ScenarioStoreSystem.BackupScenarios();
                 try
                 {
@@ -28,7 +28,7 @@ namespace Server.System
 
             //Do a last backup before quitting
             VesselStoreSystem.BackupVessels();
-            WarpSystem.SaveSubspacesToFile();
+            WarpSystem.SaveLatestSubspaceToFile();
             ScenarioStoreSystem.BackupScenarios();
         }
     }

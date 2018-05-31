@@ -24,7 +24,7 @@ namespace Server.Message.Reader
                     WarpReceiver.HandleChangeSubspace(client, (WarpChangeSubspaceMsgData)messageData);
                     break;
                 case WarpMessageType.SubspacesRequest:
-                    WarpSystemSender.SendAllSubspaces(client);
+                    WarpReceiver.HandleSubspaceRequest(client);
                     //We don't use this message anymore so we can recycle it
                     message.Recycle();
                     break;
