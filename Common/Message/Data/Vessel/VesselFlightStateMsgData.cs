@@ -1,7 +1,5 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
-using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -12,7 +10,6 @@ namespace LunaCommon.Message.Data.Vessel
         public override VesselMessageType VesselMessageType => VesselMessageType.Flightstate;
 
         //Avoid using reference types in this message as it can generate allocations and is sent VERY often.
-        public Guid VesselId;
         public float MainThrottle;
         public float WheelThrottleTrim;
         public float X;
@@ -38,7 +35,6 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
-            GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(MainThrottle);
             lidgrenMsg.Write(WheelThrottle);
             lidgrenMsg.Write(WheelThrottleTrim);
@@ -63,7 +59,6 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalDeserialize(lidgrenMsg);
 
-            VesselId = GuidUtil.Deserialize(lidgrenMsg);
             MainThrottle = lidgrenMsg.ReadFloat();
             WheelThrottle = lidgrenMsg.ReadFloat();
             WheelThrottleTrim = lidgrenMsg.ReadFloat();
@@ -86,8 +81,7 @@ namespace LunaCommon.Message.Data.Vessel
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() +
-                   GuidUtil.GetByteSize() + sizeof(float) * 14 + sizeof(bool) * 4;
+            return base.InternalGetMessageSize() + sizeof(float) * 14 + sizeof(bool) * 4;
         }
     }
 }

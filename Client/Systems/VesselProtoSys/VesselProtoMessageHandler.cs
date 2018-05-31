@@ -31,9 +31,9 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private static void HandleVesselProto(VesselProtoMsgData messageData)
         {
-            if (!VesselRemoveSystem.Singleton.VesselWillBeKilled(messageData.Vessel.VesselId) && messageData.Vessel.VesselId != Guid.Empty)
+            if (!VesselRemoveSystem.Singleton.VesselWillBeKilled(messageData.VesselId) && messageData.VesselId != Guid.Empty)
             {
-                VesselsProtoStore.HandleVesselProtoData(messageData.Vessel.Data, messageData.Vessel.NumBytes, messageData.Vessel.VesselId);
+                VesselsProtoStore.HandleVesselProtoData(messageData.Data, messageData.NumBytes, messageData.VesselId);
             }
         }
     }

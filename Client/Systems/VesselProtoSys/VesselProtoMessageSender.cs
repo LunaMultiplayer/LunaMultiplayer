@@ -92,13 +92,13 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private void FillAndSendProtoMessageData(Guid vesselId, VesselProtoMsgData msgData, byte[] vesselBytes, int numBytes)
         {
-            msgData.Vessel.VesselId = vesselId;
+            msgData.VesselId = vesselId;
 
-            if (msgData.Vessel.Data.Length < numBytes)
-                Array.Resize(ref msgData.Vessel.Data, numBytes);
+            if (msgData.Data.Length < numBytes)
+                Array.Resize(ref msgData.Data, numBytes);
 
-            Array.Copy(vesselBytes, 0, msgData.Vessel.Data, 0, numBytes);
-            msgData.Vessel.NumBytes = numBytes;
+            Array.Copy(vesselBytes, 0, msgData.Data, 0, numBytes);
+            msgData.NumBytes = numBytes;
 
             SendMessage(msgData);
         }

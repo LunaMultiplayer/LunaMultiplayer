@@ -1,7 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
-using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -11,7 +10,6 @@ namespace LunaCommon.Message.Data.Vessel
         internal VesselUpdateMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Update;
         
-        public Guid VesselId;
         public string Name;
         public string Type;
         public double DistanceTraveled;
@@ -40,7 +38,6 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
-            GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(Name);
             lidgrenMsg.Write(Type);
             lidgrenMsg.Write(DistanceTraveled);
@@ -70,7 +67,6 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalDeserialize(lidgrenMsg);
 
-            VesselId = GuidUtil.Deserialize(lidgrenMsg);
             Name = lidgrenMsg.ReadString();
             Type = lidgrenMsg.ReadString();
             DistanceTraveled = lidgrenMsg.ReadDouble();
@@ -109,7 +105,7 @@ namespace LunaCommon.Message.Data.Vessel
                 arraySize += ActionGroups[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() 
+            return base.InternalGetMessageSize() 
                 + sizeof(double) * 4 + sizeof(bool) * 5 + sizeof(uint) + sizeof(int)
                 + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount() 
                 + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() + AutoCleanReason.GetByteCount()

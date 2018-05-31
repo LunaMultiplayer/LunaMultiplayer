@@ -1,7 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
-using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -11,7 +10,6 @@ namespace LunaCommon.Message.Data.Vessel
         internal VesselEvaMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Eva;
         
-        public Guid VesselId;
         public string NewState;
         public string EventToRun;
         public float LastBoundStep;
@@ -22,7 +20,6 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
-            GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(NewState);
             lidgrenMsg.Write(EventToRun);
             lidgrenMsg.Write(LastBoundStep);
@@ -32,7 +29,6 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalDeserialize(lidgrenMsg);
 
-            VesselId = GuidUtil.Deserialize(lidgrenMsg);
             NewState = lidgrenMsg.ReadString();
             EventToRun = lidgrenMsg.ReadString();
             LastBoundStep = lidgrenMsg.ReadFloat();
@@ -40,7 +36,7 @@ namespace LunaCommon.Message.Data.Vessel
         
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() + NewState.GetByteCount() + EventToRun.GetByteCount() + sizeof(float);
+            return base.InternalGetMessageSize() + NewState.GetByteCount() + EventToRun.GetByteCount() + sizeof(float);
         }
     }
 }

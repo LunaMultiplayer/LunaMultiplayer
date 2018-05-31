@@ -8,6 +8,8 @@ namespace LunaCommon.Message.Base
 {
     public static class GuidUtil
     {
+        public static int ByteSize => 16;
+
         private static readonly ConcurrentBag<byte[]> ArrayPool = new ConcurrentBag<byte[]>();
 
         private static readonly FieldInfo _a = typeof(Guid).GetField("_a", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -61,7 +63,5 @@ namespace LunaCommon.Message.Base
 
             return guid;
         }
-
-        public static int GetByteSize() => 16;
     }
 }

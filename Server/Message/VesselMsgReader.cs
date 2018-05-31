@@ -94,20 +94,20 @@ namespace Server.Message
         {
             var msgData = (VesselProtoMsgData) message;
 
-            if (VesselContext.RemovedVessels.Contains(msgData.Vessel.VesselId)) return;
+            if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
 
-            if (msgData.Vessel.NumBytes == 0)
+            if (msgData.NumBytes == 0)
             {
-                LunaLog.Warning($"Received a vessel with 0 bytes ({msgData.Vessel.VesselId}) from {client.PlayerName}.");
+                LunaLog.Warning($"Received a vessel with 0 bytes ({msgData.VesselId}) from {client.PlayerName}.");
                 return;
             }
 
-            if (!VesselStoreSystem.VesselExists(msgData.Vessel.VesselId))
+            if (!VesselStoreSystem.VesselExists(msgData.VesselId))
             {
-                LunaLog.Debug($"Saving vessel {msgData.Vessel.VesselId} from {client.PlayerName}. Bytes: {msgData.Vessel.NumBytes}");
+                LunaLog.Debug($"Saving vessel {msgData.VesselId} from {client.PlayerName}. Bytes: {msgData.NumBytes}");
             }
 
-            VesselDataUpdater.RawConfigNodeInsertOrUpdate(msgData.Vessel.VesselId, Encoding.UTF8.GetString(msgData.Vessel.Data, 0, msgData.Vessel.NumBytes));
+            VesselDataUpdater.RawConfigNodeInsertOrUpdate(msgData.VesselId, Encoding.UTF8.GetString(msgData.Data, 0, msgData.NumBytes));
             MessageQueuer.RelayMessage<VesselSrvMsg>(client, msgData);
         }
 
@@ -155,9 +155,9 @@ namespace Server.Message
                 if (vesselData.Length > 0)
                 {
                     var protoMsg = ServerContext.ServerMessageFactory.CreateNewMessageData<VesselProtoMsgData>();
-                    protoMsg.Vessel.Data = Encoding.UTF8.GetBytes(vesselData);
-                    protoMsg.Vessel.NumBytes = vesselData.Length;
-                    protoMsg.Vessel.VesselId = vesselId;
+                    protoMsg.Data = Encoding.UTF8.GetBytes(vesselData);
+                    protoMsg.NumBytes = vesselData.Length;
+                    protoMsg.VesselId = vesselId;
 
                     MessageQueuer.SendToClient<VesselSrvMsg>(client, protoMsg);
                 }

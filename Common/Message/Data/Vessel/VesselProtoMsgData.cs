@@ -7,8 +7,8 @@ namespace LunaCommon.Message.Data.Vessel
     {
         internal VesselProtoMsgData() { }
 
-        public int SubspaceId;
-        public VesselInfo Vessel = new VesselInfo();
+        public int NumBytes;
+        public byte[] Data = new byte[0];
 
         public override VesselMessageType VesselMessageType => VesselMessageType.Proto;
 
@@ -18,21 +18,24 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
-            lidgrenMsg.Write(SubspaceId);
-            Vessel.Serialize(lidgrenMsg);
+            lidgrenMsg.Write(NumBytes);
+            lidgrenMsg.Write(Data, 0, NumBytes);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             base.InternalDeserialize(lidgrenMsg);
 
-            SubspaceId = lidgrenMsg.ReadInt32();
-            Vessel.Deserialize(lidgrenMsg);
+            NumBytes = lidgrenMsg.ReadInt32();
+            if (Data.Length < NumBytes)
+                Data = new byte[NumBytes];
+
+            lidgrenMsg.ReadBytes(Data, 0, NumBytes);
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(int) + Vessel.GetByteCount();
+            return base.InternalGetMessageSize() + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }

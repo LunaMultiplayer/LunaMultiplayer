@@ -8,6 +8,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
+using LunaCommon.Message.Data.Vessel;
 
 namespace Server.System.VesselRelay
 {
@@ -24,12 +25,12 @@ namespace Server.System.VesselRelay
         /// This method relays a message to the other clients in the same subspace.
         /// In case there are other players in OLDER subspaces it stores it in their queue for further processing
         /// </summary>
-        public static void HandleVesselMessage(ClientStructure client, dynamic msg)
+        public static void HandleVesselMessage(ClientStructure client, VesselBaseMsgData msg)
         {
             if (client.Subspace == -1) return;
 
-            var vesselId = (Guid)msg.VesselId;
-            var gameTime = (double)msg.GameTime;
+            var vesselId = msg.VesselId;
+            var gameTime = msg.GameTime;
 
             MessageQueuer.RelayMessageToSubspace<VesselSrvMsg>(client, msg);
 
