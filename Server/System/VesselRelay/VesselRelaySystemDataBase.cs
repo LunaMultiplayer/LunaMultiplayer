@@ -3,6 +3,7 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Context;
+using Server.Enums;
 using Server.Server;
 using Server.Settings.Structures;
 using System;
@@ -20,6 +21,7 @@ namespace Server.System.VesselRelay
     {
         #region Destructor
 
+        private static readonly Destructor Finalise = new Destructor();
         private sealed class Destructor
         {
             ~Destructor()
@@ -27,17 +29,14 @@ namespace Server.System.VesselRelay
                 DataBase.Dispose();
             }
         }
-
-        private static readonly Destructor Finalise = new Destructor();
-
+        
         #endregion
 
         #region VesselRelayDB Structure
 
         private class VesselRelayDbItem : VesselRelayItem
         {
-            public ObjectId Id = ObjectId.NewObjectId();
-
+            public readonly ObjectId Id = ObjectId.NewObjectId();
             public VesselRelayDbItem(int subspaceId, Guid vesselId, double gameTime, VesselBaseMsgData msg) : base(subspaceId, vesselId, gameTime, msg) { }
         }
 
@@ -77,7 +76,6 @@ namespace Server.System.VesselRelay
                 if (DbCollection.Exists(x => x.VesselId == vesselId && x.GameTime > gameTime))
                 {
                     DbCollection.Delete(x => x.VesselId == vesselId && x.GameTime > gameTime);
-                    DataBase.Shrink();
                 }
 
                 DbCollection.Insert(new VesselRelayDbItem(subspace, vesselId, gameTime, msg));
@@ -130,7 +128,6 @@ namespace Server.System.VesselRelay
         public static void RemoveSubspace(int subspaceId)
         {
             DbCollection.Delete(m => m.SubspaceId == subspaceId);
-            DataBase.Shrink();
         }
 
         /// <summary>
@@ -153,8 +150,20 @@ namespace Server.System.VesselRelay
                     });
                 }
 
-                DataBase.Shrink();
                 await Task.Delay(IntervalSettings.SettingsStore.SendReceiveThreadTickMs);
+            }
+        }
+
+        /// <summary>
+        /// Shrink the database to reduce the file size
+        /// </summary>
+        public static void ShrinkDatabase()
+        {
+            switch (RelaySettings.SettingsStore.RelaySystemMode)
+            {
+                case RelaySystemMode.Database:
+                    DataBase.Shrink();
+                    break;
             }
         }
     }
