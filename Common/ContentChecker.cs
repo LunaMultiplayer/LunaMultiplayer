@@ -10,7 +10,7 @@ namespace LunaCommon
     /// </summary>
     public static class ContentChecker
     {
-        private const int BytesToRead = 1024 * sizeof(long);
+        private const int BytesToRead = sizeof(long);
 
         /// <summary>
         /// Checks if the file contents and the string are equal
