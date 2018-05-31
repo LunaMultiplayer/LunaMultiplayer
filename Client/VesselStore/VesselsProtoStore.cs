@@ -1,5 +1,4 @@
-﻿using LunaClient.Base;
-using LunaClient.Systems.VesselEvaSys;
+﻿using LunaClient.Systems.VesselEvaSys;
 using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
@@ -24,17 +23,16 @@ namespace LunaClient.VesselStore
         /// </summary>
         public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId)
         {
-            SystemBase.TaskFactory.StartNew(() =>
+            //Do not do this logic in another thread as race conditions might appear as the byte[] 
+            //is a reference type and the message might have been recycled!
+            if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
             {
-                if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
-                {
-                    vesselUpdate.Update(vesselData, numBytes, vesselId);
-                }
-                else
-                {
-                    AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, numBytes, vesselId));
-                }
-            });
+                vesselUpdate.Update(vesselData, numBytes, vesselId);
+            }
+            else
+            {
+                AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, numBytes, vesselId));
+            }
         }
 
         /// <summary>
