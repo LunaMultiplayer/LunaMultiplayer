@@ -12,7 +12,7 @@ namespace LunaClient.Systems.SettingsSys
         public string PlayerName { get; set; } = "Player";
         public int ConnectionTries { get; set; } = 3;
         public int InitialConnectionMsTimeout { get; set; } = 5000;
-        public int SendReceiveMsInterval { get; set; } = 5;
+        public int SendReceiveMsInterval { get; set; } = 3;
         public int MsBetweenConnectionTries { get; set; } = 3000;
         public int HearbeatMsInterval { get; set; } = 2000;
         public bool DisclaimerAccepted { get; set; } = false;
