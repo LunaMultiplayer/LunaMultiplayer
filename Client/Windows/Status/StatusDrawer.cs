@@ -28,22 +28,46 @@ namespace LunaClient.Windows.Status
             GUILayout.BeginVertical();
             GUI.DragWindow(MoveRect);
 
-            #region Horizontal toolbar
+            DrawTopButtons();
+            DrawSubspaces();
+            GUILayout.FlexibleSpace();
+#if DEBUG
+            DrawDebugSection();
+#endif
+            DrawBottomButtons();
+            GUILayout.EndVertical();
+        }
 
+        private void DrawBottomButtons()
+        {
             GUILayout.BeginHorizontal();
-            ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display, ChatSystem.Singleton.NewMessageReceived ? ChatRedIcon : ChatIcon, ButtonStyle);
-            CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display, CraftLibrarySystem.Singleton.NewContent ? RocketRedIcon : RocketIcon, ButtonStyle);
-            ScreenshotsWindow.Singleton.Display = GUILayout.Toggle(ScreenshotsWindow.Singleton.Display, ScreenshotSystem.Singleton.NewContent ? CameraRedIcon : CameraIcon, ButtonStyle);
+            if (GUILayout.Button(DisconnectIcon, ButtonStyle))
+                MainSystem.Singleton.DisconnectFromGame();
+            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, SettingsIcon, ButtonStyle);
+            GUILayout.EndHorizontal();
+        }
+
+        private void DrawTopButtons()
+        {
+            GUILayout.BeginHorizontal();
+            ChatWindow.Singleton.Display = GUILayout.Toggle(ChatWindow.Singleton.Display,
+                ChatSystem.Singleton.NewMessageReceived ? ChatRedIcon : ChatIcon, ButtonStyle);
+            CraftLibraryWindow.Singleton.Display = GUILayout.Toggle(CraftLibraryWindow.Singleton.Display,
+                CraftLibrarySystem.Singleton.NewContent ? RocketRedIcon : RocketIcon, ButtonStyle);
+            ScreenshotsWindow.Singleton.Display = GUILayout.Toggle(ScreenshotsWindow.Singleton.Display,
+                ScreenshotSystem.Singleton.NewContent ? CameraRedIcon : CameraIcon, ButtonStyle);
             if (SettingsSystem.ServerSettings.AllowAdmin)
             {
                 AdminWindow.Singleton.Display = GUILayout.Toggle(AdminWindow.Singleton.Display, AdminIcon, ButtonStyle);
             }
+
             GUILayout.EndHorizontal();
+        }
 
-            #endregion
+        #region Subspace drawing 
 
-            #region Players information
-
+        private void DrawSubspaces()
+        {
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, ScrollStyle);
             for (var i = 0; i < SubspaceDisplay.Count; i++)
             {
@@ -59,27 +83,15 @@ namespace LunaClient.Windows.Status
                     if (NotWarpingAndIsFutureSubspace(SubspaceDisplay[i].SubspaceId) && GUILayout.Button(SyncIcon, ButtonStyle))
                         WarpSystem.CurrentSubspace = SubspaceDisplay[i].SubspaceId;
                 }
+
                 GUILayout.EndHorizontal();
                 for (var j = 0; j < SubspaceDisplay[i].Players.Count; j++)
                 {
                     DrawPlayerEntry(StatusSystem.Singleton.GetPlayerStatus(SubspaceDisplay[i].Players[j]));
                 }
             }
+
             GUILayout.EndScrollView();
-
-            #endregion
-
-            GUILayout.FlexibleSpace();
-#if DEBUG
-            DrawDebugSection();
-#endif
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button(DisconnectIcon, ButtonStyle))
-                MainSystem.Singleton.DisconnectFromGame();
-            OptionsWindow.Singleton.Display = GUILayout.Toggle(OptionsWindow.Singleton.Display, SettingsIcon, ButtonStyle);
-            GUILayout.EndHorizontal();
-
-            GUILayout.EndVertical();
         }
 
         private static bool NotWarpingAndIsFutureSubspace(int subspaceId)
@@ -113,9 +125,10 @@ namespace LunaClient.Windows.Status
             GUILayout.EndHorizontal();
         }
 
+        #endregion
+
         #region Debug Section
 
-#if DEBUG
         private void DrawDebugSection()
         {
             GUILayout.BeginVertical();
@@ -133,7 +146,6 @@ namespace LunaClient.Windows.Status
 
         private void DrawDebugSwitches()
         {
-
             var d1 = GUILayout.Toggle(SettingsSystem.CurrentSettings.Debug1, StatusTexts.Debug1BtnTxt, ButtonStyle);
             if (d1 != SettingsSystem.CurrentSettings.Debug1)
             {
@@ -190,7 +202,6 @@ namespace LunaClient.Windows.Status
             }
 
     }
-#endif
 
         #endregion
     }
