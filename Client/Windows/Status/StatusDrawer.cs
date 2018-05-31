@@ -71,6 +71,7 @@ namespace LunaClient.Windows.Status
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, ScrollStyle);
             for (var i = 0; i < SubspaceDisplay.Count; i++)
             {
+                GUILayout.BeginVertical(BoxStyle);
                 GUILayout.BeginHorizontal(_subspaceStyle);
                 if (SubspaceDisplay[i].SubspaceId == -1)
                 {
@@ -83,12 +84,13 @@ namespace LunaClient.Windows.Status
                     if (NotWarpingAndIsFutureSubspace(SubspaceDisplay[i].SubspaceId) && GUILayout.Button(SyncIcon, ButtonStyle))
                         WarpSystem.CurrentSubspace = SubspaceDisplay[i].SubspaceId;
                 }
-
                 GUILayout.EndHorizontal();
+
                 for (var j = 0; j < SubspaceDisplay[i].Players.Count; j++)
                 {
                     DrawPlayerEntry(StatusSystem.Singleton.GetPlayerStatus(SubspaceDisplay[i].Players[j]));
                 }
+                GUILayout.EndVertical();
             }
 
             GUILayout.EndScrollView();
