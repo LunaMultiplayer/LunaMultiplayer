@@ -69,9 +69,6 @@ namespace Server
                 //Start the server clock
                 ServerContext.ServerClock.Start();
 
-                //Set the last player activity time to server start
-                ServerContext.LastPlayerActivity = ServerContext.ServerClock.ElapsedMilliseconds;
-
                 ServerContext.ServerStarting = true;
 
                 //Set day for log change
