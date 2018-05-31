@@ -54,7 +54,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 Landed = msgData.Landed,
                 Splashed = msgData.Splashed,
                 GameTimeStamp = msgData.GameTime,
-                UtcSentTime = msgData.UtcSentTime,
+                UtcSentTime = msgData.SentTime,
                 ReceiveTime = LunaNetworkTime.UtcNow,
                 HackingGravity = msgData.HackingGravity,
             };

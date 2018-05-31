@@ -12,19 +12,21 @@ namespace LunaCommon.Message.Data.Vessel
         public override ushort SubType => (ushort)(int)VesselMessageType;
         public virtual VesselMessageType VesselMessageType => throw new NotImplementedException();
 
+        public double GameTime;
+
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
-            //Nothing to implement here
+            lidgrenMsg.Write(GameTime);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
-            //Nothing to implement here
+            GameTime = lidgrenMsg.ReadDouble();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return 0;
+            return sizeof(double);
         }
     }
 }
