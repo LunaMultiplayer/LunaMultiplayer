@@ -34,7 +34,7 @@ namespace Server.Client
         public string PlayerName { get; set; } = "Unknown";
         public PlayerStatus PlayerStatus { get; set; } = new PlayerStatus();
         public ConcurrentQueue<IServerMessageBase> SendMessageQueue { get; } = new ConcurrentQueue<IServerMessageBase>();
-        public int Subspace { get; set; } = int.MinValue;
+        public int Subspace { get; set; } = WarpContext.LatestSubspace;
         public float SubspaceRate { get; set; } = 1f;
 
         public Task SendThread { get; }
