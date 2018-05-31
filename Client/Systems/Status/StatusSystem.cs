@@ -68,7 +68,6 @@ namespace LunaClient.Systems.Status
             if (PlayerStatusList.ContainsKey(playerToRemove))
             {
                 PlayerStatusList.TryRemove(playerToRemove, out _);
-                LunaLog.Log($"[LMP]: Removed {playerToRemove} from Status list");
             }
         }
 
@@ -106,30 +105,31 @@ namespace LunaClient.Systems.Status
 
         private static string GetCurrentShipStatus()
         {
-            var bodyName = VesselCommon.IsInSafetyBubble(FlightGlobals.ActiveVessel) ? "safety bubble" : FlightGlobals.ActiveVessel.mainBody.bodyName;
+            if (VesselCommon.IsInSafetyBubble(FlightGlobals.ActiveVessel))
+                return "Inside safety bubble";
 
             switch (FlightGlobals.ActiveVessel.situation)
             {
                 case Vessel.Situations.DOCKED:
-                    return $"Docked above {bodyName}";
+                    return $"Docked above {FlightGlobals.ActiveVessel.mainBody.bodyName}";
                 case Vessel.Situations.ESCAPING:
                     if (FlightGlobals.ActiveVessel.orbit.timeToPe < 0)
-                        return $"Escaping {bodyName}";
-                    return $"Encountering {bodyName}";
+                        return $"Escaping {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                    return $"Encountering {FlightGlobals.ActiveVessel.mainBody.bodyName}";
                 case Vessel.Situations.FLYING:
-                    return $"Flying above {bodyName}";
+                    return $"Flying above {FlightGlobals.ActiveVessel.mainBody.bodyName}";
                 case Vessel.Situations.LANDED:
-                    return $"Landed on {bodyName}";
+                    return $"Landed on {FlightGlobals.ActiveVessel.mainBody.bodyName}";
                 case Vessel.Situations.ORBITING:
-                    return $"Orbiting {bodyName}";
+                    return $"Orbiting {FlightGlobals.ActiveVessel.mainBody.bodyName}";
                 case Vessel.Situations.PRELAUNCH:
-                    return $"Launching from {bodyName}";
+                    return $"Launching from {FlightGlobals.ActiveVessel.mainBody.bodyName}";
                 case Vessel.Situations.SPLASHED:
-                    return $"Splashed on {bodyName}";
+                    return $"Splashed on {FlightGlobals.ActiveVessel.mainBody.bodyName}";
                 case Vessel.Situations.SUB_ORBITAL:
                     if (FlightGlobals.ActiveVessel.verticalSpeed > 0)
-                        return $"Ascending from {bodyName}";
-                    return $"Descending to {bodyName}";
+                        return $"Ascending from {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                    return $"Descending to {FlightGlobals.ActiveVessel.mainBody.bodyName}";
                 default:
                     return "Error";
             }
