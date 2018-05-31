@@ -64,8 +64,6 @@ namespace Server.Client
                 {
                     LunaLog.Error($"Error closing client Connection: {e.Message}");
                 }
-
-                ServerContext.LastPlayerActivity = ServerContext.ServerClock.ElapsedMilliseconds;
             }
         }
     }
