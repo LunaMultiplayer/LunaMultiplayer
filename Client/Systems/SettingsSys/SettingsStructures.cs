@@ -25,8 +25,6 @@ namespace LunaClient.Systems.SettingsSys
         public bool OverrideIntegrator { get; set; }
         public bool PositionInterpolation { get; set; } = true;
 
-#if DEBUG
-
         /*
          * You can use this debug switches for testing purposes. 
          * For example do one part or the code or another in case the debugX is on/off
@@ -42,8 +40,6 @@ namespace LunaClient.Systems.SettingsSys
         public bool Debug7 { get; set; } = false;
         public bool Debug8 { get; set; } = false;
         public bool Debug9 { get; set; } = false;
-
-#endif
 
     }
 
