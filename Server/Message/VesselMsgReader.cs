@@ -1,20 +1,20 @@
-﻿using LunaCommon.Message.Data.Vessel;
+﻿using System;
+using System.Linq;
+using System.Text;
+using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
 using Server.Client;
 using Server.Context;
 using Server.Log;
-using Server.Message.Reader.Base;
+using Server.Message.Base;
 using Server.Server;
 using Server.Settings.Structures;
 using Server.System;
 using Server.System.VesselRelay;
-using System;
-using System.Linq;
-using System.Text;
 
-namespace Server.Message.Reader
+namespace Server.Message
 {
     public class VesselMsgReader : ReaderBase
     {

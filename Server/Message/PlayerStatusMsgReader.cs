@@ -1,14 +1,14 @@
-﻿using LunaCommon.Message.Data.PlayerStatus;
+﻿using System.Linq;
+using LunaCommon.Message.Data.PlayerStatus;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
 using Server.Client;
 using Server.Context;
-using Server.Message.Reader.Base;
+using Server.Message.Base;
 using Server.Server;
-using System.Linq;
 
-namespace Server.Message.Reader
+namespace Server.Message
 {
     public class PlayerStatusMsgReader : ReaderBase
     {

@@ -4,11 +4,11 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Context;
-using Server.Message.Reader.Base;
+using Server.Message.Base;
 using Server.Server;
 using Server.Settings.Structures;
 
-namespace Server.Message.Reader
+namespace Server.Message
 {
     public class SettingsMsgReader : ReaderBase
     {

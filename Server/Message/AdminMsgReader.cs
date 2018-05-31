@@ -1,4 +1,5 @@
-﻿using LunaCommon.Enums;
+﻿using System;
+using LunaCommon.Enums;
 using LunaCommon.Message.Data.Admin;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
@@ -7,12 +8,11 @@ using Server.Client;
 using Server.Command;
 using Server.Context;
 using Server.Log;
-using Server.Message.Reader.Base;
+using Server.Message.Base;
 using Server.Server;
 using Server.Settings.Structures;
-using System;
 
-namespace Server.Message.Reader
+namespace Server.Message
 {
     public class AdminMsgReader : ReaderBase
     {

@@ -1,12 +1,12 @@
-﻿using LunaCommon.Message.Data.Handshake;
+﻿using System;
+using LunaCommon.Message.Data.Handshake;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Server.Client;
-using Server.Message.Reader.Base;
+using Server.Message.Base;
 using Server.System;
-using System;
 
-namespace Server.Message.Reader
+namespace Server.Message
 {
     public class HandshakeMsgReader : ReaderBase
     {

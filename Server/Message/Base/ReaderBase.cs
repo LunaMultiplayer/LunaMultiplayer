@@ -1,7 +1,7 @@
 ﻿using LunaCommon.Message.Interface;
 using Server.Client;
 
-namespace Server.Message.Reader.Base
+namespace Server.Message.Base
 {
     public abstract class ReaderBase
     {

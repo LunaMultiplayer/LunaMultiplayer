@@ -3,10 +3,10 @@ using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Log;
-using Server.Message.Reader.Base;
+using Server.Message.Base;
 using Server.Server;
 
-namespace Server.Message.Reader
+namespace Server.Message
 {
     public class ChatMsgReader : ReaderBase
     {

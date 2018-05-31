@@ -6,11 +6,11 @@ using LunaCommon.Time;
 using Server.Client;
 using Server.Context;
 using Server.Log;
-using Server.Message.Reader;
-using Server.Message.Reader.Base;
 using Server.Plugin;
 using System;
 using System.Collections.Generic;
+using Server.Message;
+using Server.Message.Base;
 
 namespace Server.Server
 {

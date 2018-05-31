@@ -2,11 +2,11 @@
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using Server.Client;
-using Server.Message.Reader.Base;
+using Server.Message.Base;
 using Server.Plugin;
 using Server.Server;
 
-namespace Server.Message.Reader
+namespace Server.Message
 {
     public class ModDataMsgReader : ReaderBase
     {

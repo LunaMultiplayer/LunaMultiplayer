@@ -1,15 +1,15 @@
-﻿using LunaCommon.Message.Data.Facility;
+﻿using System;
+using LunaCommon.Message.Data.Facility;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
 using Server.Client;
 using Server.Log;
-using Server.Message.Reader.Base;
+using Server.Message.Base;
 using Server.Server;
 using Server.System.Scenario;
-using System;
 
-namespace Server.Message.Reader
+namespace Server.Message
 {
     public class FacilityMsgReader : ReaderBase
     {

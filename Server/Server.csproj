@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -96,26 +96,26 @@
     <Compile Include="Log\LogThread.cs" />
     <Compile Include="Log\LunaLog.cs" />
     <Compile Include="MainServer.cs" />
-    <Compile Include="Message\Reader\AdminMsgReader.cs" />
-    <Compile Include="Message\Reader\ScreenshotMsgReader.cs" />
-    <Compile Include="Message\Reader\FacilityMsgReader.cs" />
-    <Compile Include="Message\Reader\Base\ReaderBase.cs" />
-    <Compile Include="Message\Reader\ChatMsgReader.cs" />
-    <Compile Include="Message\Reader\CraftLibraryMsgReader.cs" />
-    <Compile Include="Message\Reader\FlagSyncMsgReader.cs" />
-    <Compile Include="Message\Reader\GroupMsgReader.cs" />
-    <Compile Include="Message\Reader\HandshakeMsgReader.cs" />
-    <Compile Include="Message\Reader\KerbalMsgReader.cs" />
-    <Compile Include="Message\Reader\LockSystemMsgReader.cs" />
-    <Compile Include="Message\Reader\ModDataMsgReader.cs" />
-    <Compile Include="Message\Reader\MotdMsgReader.cs" />
-    <Compile Include="Message\Reader\PlayerColorMsgReader.cs" />
-    <Compile Include="Message\Reader\PlayerStatusMsgReader.cs" />
-    <Compile Include="Message\Reader\ScenarioDataMsgReader.cs" />
-    <Compile Include="Message\Reader\SettingsMsgReader.cs" />
-    <Compile Include="Message\Reader\ShareProgressMsgReader.cs" />
-    <Compile Include="Message\Reader\VesselMsgReader.cs" />
-    <Compile Include="Message\Reader\WarpControlMsgReader.cs" />
+    <Compile Include="Message\AdminMsgReader.cs" />
+    <Compile Include="Message\ScreenshotMsgReader.cs" />
+    <Compile Include="Message\FacilityMsgReader.cs" />
+    <Compile Include="Message\Base\ReaderBase.cs" />
+    <Compile Include="Message\ChatMsgReader.cs" />
+    <Compile Include="Message\CraftLibraryMsgReader.cs" />
+    <Compile Include="Message\FlagSyncMsgReader.cs" />
+    <Compile Include="Message\GroupMsgReader.cs" />
+    <Compile Include="Message\HandshakeMsgReader.cs" />
+    <Compile Include="Message\KerbalMsgReader.cs" />
+    <Compile Include="Message\LockSystemMsgReader.cs" />
+    <Compile Include="Message\ModDataMsgReader.cs" />
+    <Compile Include="Message\MotdMsgReader.cs" />
+    <Compile Include="Message\PlayerColorMsgReader.cs" />
+    <Compile Include="Message\PlayerStatusMsgReader.cs" />
+    <Compile Include="Message\ScenarioDataMsgReader.cs" />
+    <Compile Include="Message\SettingsMsgReader.cs" />
+    <Compile Include="Message\ShareProgressMsgReader.cs" />
+    <Compile Include="Message\VesselMsgReader.cs" />
+    <Compile Include="Message\WarpControlMsgReader.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -2,10 +2,10 @@
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Types;
 using Server.Client;
-using Server.Message.Reader.Base;
+using Server.Message.Base;
 using Server.System;
 
-namespace Server.Message.Reader
+namespace Server.Message
 {
     public class ShareProgressMsgReader : ReaderBase
     {
