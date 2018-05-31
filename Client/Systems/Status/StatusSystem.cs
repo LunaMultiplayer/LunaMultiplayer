@@ -4,6 +4,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
 using LunaCommon;
 using System.Collections.Concurrent;
+using System.Text;
 
 namespace LunaClient.Systems.Status
 {
@@ -21,6 +22,8 @@ namespace LunaClient.Systems.Status
             MyPlayerStatus.VesselText != LastPlayerStatus.VesselText ||
             MyPlayerStatus.StatusText != LastPlayerStatus.StatusText;
 
+        private static readonly StringBuilder StrBuilder = new StringBuilder();
+
         #endregion
 
         #region Base overrides
@@ -33,9 +36,9 @@ namespace LunaClient.Systems.Status
         {
             base.OnEnabled();
             MyPlayerStatus.PlayerName = SettingsSystem.CurrentSettings.PlayerName;
-            MyPlayerStatus.StatusText = "Syncing";
+            MyPlayerStatus.StatusText = StatusTexts.Syncing;
 
-            SetupRoutine(new RoutineDefinition(2500, RoutineExecution.Update, CheckPlayerStatus));
+            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckPlayerStatus));
             MessageSender.SendOwnStatus();
         }
 
@@ -43,7 +46,7 @@ namespace LunaClient.Systems.Status
         {
             base.OnDisabled();
             PlayerStatusList.Clear();
-            MyPlayerStatus.StatusText = "Syncing";
+            MyPlayerStatus.StatusText = StatusTexts.Syncing;
         }
 
         #endregion
@@ -106,45 +109,43 @@ namespace LunaClient.Systems.Status
         private static string GetCurrentShipStatus()
         {
             if (VesselCommon.IsInSafetyBubble(FlightGlobals.ActiveVessel))
-                return "Inside safety bubble";
+                return StatusTexts.InsideSafetyBubble;
 
+            StrBuilder.Length = 0;
             switch (FlightGlobals.ActiveVessel.situation)
             {
                 case Vessel.Situations.DOCKED:
-                    return $"Docked above {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                    return StrBuilder.Append(StatusTexts.Docked).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
                 case Vessel.Situations.ESCAPING:
                     if (FlightGlobals.ActiveVessel.orbit.timeToPe < 0)
-                        return $"Escaping {FlightGlobals.ActiveVessel.mainBody.bodyName}";
-                    return $"Encountering {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                        return StrBuilder.Append(StatusTexts.Escaping).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
+                    return StrBuilder.Append(StatusTexts.Encountering).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
                 case Vessel.Situations.FLYING:
-                    return $"Flying above {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                    return StrBuilder.Append(StatusTexts.Flying).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
                 case Vessel.Situations.LANDED:
-                    return $"Landed on {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                    return StrBuilder.Append(StatusTexts.Landed).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
                 case Vessel.Situations.ORBITING:
-                    return $"Orbiting {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                    return StrBuilder.Append(StatusTexts.Orbiting).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
                 case Vessel.Situations.PRELAUNCH:
-                    return $"Launching from {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                    return StrBuilder.Append(StatusTexts.Launching).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
                 case Vessel.Situations.SPLASHED:
-                    return $"Splashed on {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                    return StrBuilder.Append(StatusTexts.Splashed).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
                 case Vessel.Situations.SUB_ORBITAL:
                     if (FlightGlobals.ActiveVessel.verticalSpeed > 0)
-                        return $"Ascending from {FlightGlobals.ActiveVessel.mainBody.bodyName}";
-                    return $"Descending to {FlightGlobals.ActiveVessel.mainBody.bodyName}";
+                        return StrBuilder.Append(StatusTexts.Ascending).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
+                    return StrBuilder.Append(StatusTexts.Descending).Append(' ').Append(FlightGlobals.ActiveVessel.mainBody.bodyName).ToString();
                 default:
-                    return "Error";
+                    return StatusTexts.Error;
             }
         }
 
-        private static string GetExpectatingShipStatus()
+        private static string GetSpectatingShipStatus()
         {
-            if (LockSystem.LockQuery.ControlLockExists(FlightGlobals.ActiveVessel.id))
-            {
-                return LockSystem.LockQuery.ControlLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName) ?
-                    "Waiting for vessel control" :
-                    $"Spectating {LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id)}";
-            }
+            if (LockSystem.LockQuery.ControlLockBelongsToPlayer(FlightGlobals.ActiveVessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                return StatusTexts.WaitingControl;
 
-            return "Spectating future updates";
+            StrBuilder.Length = 0;
+            return StrBuilder.Append(StatusTexts.Spectating).Append(' ').Append(LockSystem.LockQuery.GetControlLockOwner(FlightGlobals.ActiveVessel.id)).ToString();
         }
 
         private static string GetStatusText()
@@ -153,25 +154,25 @@ namespace LunaClient.Systems.Status
             {
                 case GameScenes.FLIGHT:
                     if (FlightGlobals.ActiveVessel != null)
-                        return !VesselCommon.IsSpectating ? GetCurrentShipStatus() : GetExpectatingShipStatus();
-                    return "Loading";
+                        return !VesselCommon.IsSpectating ? GetCurrentShipStatus() : GetSpectatingShipStatus();
+                    return StatusTexts.Loading;
                 case GameScenes.EDITOR:
                     switch (EditorDriver.editorFacility)
                     {
                         case EditorFacility.VAB:
-                            return "Building in VAB";
+                            return StatusTexts.BuildingVab;
                         case EditorFacility.SPH:
-                            return "Building in SPH";
+                            return StatusTexts.BuildingSph;
                     }
-                    return "Building";
+                    return StatusTexts.Building;
                 case GameScenes.SPACECENTER:
-                    return "At Space Center";
+                    return StatusTexts.SpaceCenter;
                 case GameScenes.TRACKSTATION:
-                    return "At Tracking Station";
+                    return StatusTexts.TrackStation;
                 case GameScenes.LOADING:
-                    return "Loading";
+                    return StatusTexts.Loading;
                 default:
-                    return "Other";
+                    return StatusTexts.Other;
             }
         }
 
