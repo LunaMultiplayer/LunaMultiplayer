@@ -41,7 +41,7 @@ namespace Server.Log
 
         #region Public methods
 
-        public static void WriteToLog(string message)
+        public static void Info(string message)
         {
             WriteLog(LogLevels.Info, message, false);
         }

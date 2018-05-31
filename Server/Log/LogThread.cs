@@ -1,7 +1,7 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using LunaCommon.Time;
+﻿using LunaCommon.Time;
 using Server.Context;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Server.Log
 {
@@ -28,7 +28,7 @@ namespace Server.Log
                     if (ServerContext.Day != LunaNetworkTime.Now.Day)
                     {
                         LunaLog.LogFilename = Path.Combine(LunaLog.LogFolder, $"lmpserver {LunaNetworkTime.Now:yyyy-MM-dd HH-mm-ss}.log");
-                        LunaLog.WriteToLog($"Continued from logfile {LunaNetworkTime.Now:yyyy-MM-dd HH-mm-ss}.log");
+                        LunaLog.Info($"Continued from logfile {LunaNetworkTime.Now:yyyy-MM-dd HH-mm-ss}.log");
                         ServerContext.Day = LunaNetworkTime.Now.Day;
                     }
                 }
