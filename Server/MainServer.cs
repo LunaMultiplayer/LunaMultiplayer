@@ -3,6 +3,7 @@ using LunaCommon.Time;
 using Server.Client;
 using Server.Command;
 using Server.Context;
+using Server.Events;
 using Server.Exit;
 using Server.Lidgren;
 using Server.Log;
@@ -163,14 +164,10 @@ namespace Server
         private static void Exit()
         {
             LunaLog.Normal("Exiting... Please wait until all threads are finished");
-
             ServerContext.Shutdown("Server is shutting down");
 
-            WebServer.StopWebServer();
-
-            LmpPortMapper.CloseLmpPort().Wait();
-            LmpPortMapper.CloseWebPort().Wait();
-
+            ExitEvent.Exit();
+            
             CancellationTokenSrc.Cancel();
             Task.WaitAll(TaskContainer.ToArray());
 

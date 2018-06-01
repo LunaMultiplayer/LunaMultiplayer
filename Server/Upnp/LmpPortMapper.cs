@@ -1,5 +1,6 @@
 ﻿using Open.Nat;
 using Server.Context;
+using Server.Events;
 using Server.Log;
 using Server.Settings.Structures;
 using System;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Server.Upnp
 {
-    public class LmpPortMapper
+    public static class LmpPortMapper
     {
         private static readonly int LifetimeInSeconds = (int)TimeSpan.FromMinutes(5).TotalSeconds;
         private static readonly Lazy<NatDevice> Device = new Lazy<NatDevice>(DiscoverDevice);
@@ -25,6 +26,12 @@ namespace Server.Upnp
             var nat = new NatDiscoverer();
             return nat.DiscoverDeviceAsync(PortMapper.Upnp, new CancellationTokenSource(ConnectionSettings.SettingsStore.UpnpMsTimeout)).Result;
         }
+
+        static LmpPortMapper() => ExitEvent.ServerClosing += () =>
+        {
+            CloseLmpPort().Wait();
+            CloseWebPort().Wait();
+        };
 
         /// <summary>
         /// Opens the port set in the settings using UPnP. With a lifetime of <see cref="LifetimeInSeconds"/> seconds

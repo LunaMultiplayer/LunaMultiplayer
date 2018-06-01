@@ -4,6 +4,7 @@ using LunaCommon.Message.Server;
 using Server.Client;
 using Server.Context;
 using Server.Enums;
+using Server.Events;
 using Server.Server;
 using Server.Settings.Structures;
 using System;
@@ -19,19 +20,6 @@ namespace Server.System.VesselRelay
     /// </summary>
     public static class VesselRelaySystemDataBase
     {
-        #region Destructor
-
-        private static readonly Destructor Finalise = new Destructor();
-        private sealed class Destructor
-        {
-            ~Destructor()
-            {
-                DataBase.Dispose();
-            }
-        }
-        
-        #endregion
-
         #region VesselRelayDB Structure
 
         private class VesselRelayDbItem : VesselRelayItem
@@ -45,6 +33,14 @@ namespace Server.System.VesselRelay
         private static readonly string DbFile = Path.Combine(ServerContext.UniverseDirectory, "Relay", "RelayDatabase.db");
         private static readonly LiteDatabase DataBase = new LiteDatabase(DbFile);
         private static LiteCollection<VesselRelayDbItem> DbCollection => DataBase.GetCollection<VesselRelayDbItem>();
+
+        static VesselRelaySystemDataBase() => ExitEvent.ServerClosing += Destructor;
+
+        private static void Destructor()
+        {
+            DataBase.Dispose();
+            FileHandler.FileDelete(DbFile);
+        }
 
         /// <summary>
         /// This method relays a message to the other clients in the same subspace.

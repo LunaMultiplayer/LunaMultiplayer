@@ -27,12 +27,6 @@ namespace Server.System
                     break;
                 }
             }
-
-            //Do a last backup before quitting
-            VesselStoreSystem.BackupVessels();
-            WarpSystem.SaveLatestSubspaceToFile();
-            ScenarioStoreSystem.BackupScenarios();
-            VesselRelaySystemDataBase.ShrinkDatabase();
         }
     }
 }

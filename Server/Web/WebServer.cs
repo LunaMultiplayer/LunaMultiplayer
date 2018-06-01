@@ -1,4 +1,5 @@
 ﻿using Server.Context;
+using Server.Events;
 using Server.Log;
 using Server.Settings.Structures;
 using Server.Web.Handlers;
@@ -18,10 +19,12 @@ namespace Server.Web
     /// <summary>
     /// This class controls the information shown in JSON format when you go to http://yourip:8900
     /// </summary>
-    public class WebServer
+    public static class WebServer
     {
         private static readonly HttpServer Server = new HttpServer(new HttpRequestProvider());
         public static readonly ServerInformation ServerInformation = new ServerInformation();
+
+        static WebServer() => ExitEvent.ServerClosing += StopWebServer;
 
         /// <summary>
         /// Starts the web server

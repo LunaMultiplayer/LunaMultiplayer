@@ -87,6 +87,7 @@
     <Compile Include="Context\Universe.cs" />
     <Compile Include="Context\WarpContext.cs" />
     <Compile Include="Enums\RelaySystemMode.cs" />
+    <Compile Include="Events\ExitEvent.cs" />
     <Compile Include="Exit\WinExitSignal.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Lidgren\LidgrenMasterServer.cs" />

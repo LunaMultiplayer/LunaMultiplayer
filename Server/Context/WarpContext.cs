@@ -1,4 +1,6 @@
-﻿using System.Collections.Concurrent;
+﻿using LunaCommon.Time;
+using System;
+using System.Collections.Concurrent;
 using System.Linq;
 
 namespace Server.Context
@@ -8,6 +10,7 @@ namespace Server.Context
         public int Id { get; set; }
         public double Time { get; set; }
         public string Creator { get; set; }
+        public DateTime CurrentUtcTime => new DateTime(LunaNetworkTime.UtcNow.Ticks + TimeSpan.FromSeconds(Time).Ticks);
 
         public override string ToString()
         {

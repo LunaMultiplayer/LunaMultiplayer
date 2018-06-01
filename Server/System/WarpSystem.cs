@@ -1,5 +1,6 @@
 ﻿using LunaCommon.Time;
 using Server.Context;
+using Server.Events;
 using Server.Log;
 using System;
 using System.Collections.Generic;
@@ -8,8 +9,10 @@ using System.Linq;
 
 namespace Server.System
 {
-    public class WarpSystem
+    public static class WarpSystem
     {
+        static WarpSystem() => ExitEvent.ServerClosing += SaveLatestSubspaceToFile;
+
         private static string SubspaceFile { get; } = Path.Combine(ServerContext.UniverseDirectory, "Subspace.txt");
 
         public static void Reset()
