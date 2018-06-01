@@ -60,7 +60,7 @@ namespace LunaClient.Systems.Warp
         public bool WaitingSubspaceIdFromServer { get; set; }
         public bool SyncedToLastSubspace { get; set; }
 
-        public List<SubspaceDisplayEntry> SubspaceEntries { get; } = new List<SubspaceDisplayEntry>();
+        public List<SubspaceDisplayEntry> SubspaceEntries { get; set; } = new List<SubspaceDisplayEntry>();
 
         #endregion
 

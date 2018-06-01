@@ -4,7 +4,6 @@ using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace LunaClient.Windows.Status
@@ -117,7 +116,7 @@ namespace LunaClient.Windows.Status
             {
                 _lastStatusUpdate = Time.realtimeSinceStartup;
                 SubspaceDisplay.Clear();
-                SubspaceDisplay.AddRange(WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries().OrderByDescending(v=> v.SubspaceTime));
+                SubspaceDisplay.AddRange(WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries());
             }
         }
 
