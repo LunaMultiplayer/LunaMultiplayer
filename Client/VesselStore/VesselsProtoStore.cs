@@ -15,13 +15,16 @@ namespace LunaClient.VesselStore
     /// </summary>
     public class VesselsProtoStore
     {
+        public static ConcurrentDictionary<Guid, double> VesselsSpawnTime { get; } =
+            new ConcurrentDictionary<Guid, double>();
+
         public static ConcurrentDictionary<Guid, VesselProtoUpdate> AllPlayerVessels { get; } =
             new ConcurrentDictionary<Guid, VesselProtoUpdate>();
 
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
         /// </summary>
-        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId)
+        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, double vesselSpawnTime = 0)
         {
             //Do not do this logic in another thread as race conditions might appear as the byte[] 
             //is a reference type and the message might have been recycled!
@@ -31,6 +34,7 @@ namespace LunaClient.VesselStore
             }
             else
             {
+                if (vesselSpawnTime > 0) VesselsSpawnTime.TryAdd(vesselId, vesselSpawnTime);
                 AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, numBytes, vesselId));
             }
         }

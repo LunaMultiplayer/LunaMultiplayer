@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -9,7 +10,6 @@ using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LunaClient.Events;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -189,6 +189,10 @@ namespace LunaClient.Systems.VesselProtoSys
                     foreach (var vesselProto in vesselsToLoad)
                     {
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
+                            continue;
+
+                        //If the vessel spawned later than the current time avoid loading it
+                        if (VesselsProtoStore.VesselsSpawnTime.TryGetValue(vesselProto.Key, out var spawnTime) && Planetarium.GetUniversalTime() < spawnTime)
                             continue;
 
                         //Only load vessels that are in safety bubble when not in flight

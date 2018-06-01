@@ -33,7 +33,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             if (!VesselRemoveSystem.Singleton.VesselWillBeKilled(messageData.VesselId) && messageData.VesselId != Guid.Empty)
             {
-                VesselsProtoStore.HandleVesselProtoData(messageData.Data, messageData.NumBytes, messageData.VesselId);
+                VesselsProtoStore.HandleVesselProtoData(messageData.Data, messageData.NumBytes, messageData.VesselId, messageData.GameTime);
             }
         }
     }
