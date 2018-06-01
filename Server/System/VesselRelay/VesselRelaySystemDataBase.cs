@@ -143,7 +143,7 @@ namespace Server.System.VesselRelay
                 foreach (var subspace in messagesByGroup)
                 {
                     var subspaceTime = WarpSystem.GetSubspaceTime(subspace.Key);
-                    var msgToSend = subspace.Where(m => subspaceTime >= m.Msg.SentTime).ToList();
+                    var msgToSend = subspace.Where(m => subspaceTime >= m.Msg?.SentTime).ToList();
                     msgToSend.ForEach(m =>
                     {
                         MessageQueuer.SendMessageToSubspace<VesselSrvMsg>(m.Msg, m.SubspaceId);
