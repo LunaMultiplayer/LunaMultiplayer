@@ -24,7 +24,12 @@ namespace Server.System.VesselRelay
 
         private class VesselRelayDbItem : VesselRelayItem
         {
-            public readonly ObjectId Id = ObjectId.NewObjectId();
+            public ObjectId Id { get; } = ObjectId.NewObjectId();
+
+            public VesselRelayDbItem()
+            {
+            }
+
             public VesselRelayDbItem(int subspaceId, Guid vesselId, double gameTime, VesselBaseMsgData msg) : base(subspaceId, vesselId, gameTime, msg) { }
         }
 

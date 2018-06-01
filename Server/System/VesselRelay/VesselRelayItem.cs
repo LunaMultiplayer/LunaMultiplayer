@@ -12,6 +12,11 @@ namespace Server.System.VesselRelay
 
         public VesselBaseMsgData Msg { get; }
 
+        public VesselRelayItem()
+        {
+
+        }
+
         public VesselRelayItem(int subspaceId, Guid vesselId, double gameTime, VesselBaseMsgData msg)
         {
             SubspaceId = subspaceId;
