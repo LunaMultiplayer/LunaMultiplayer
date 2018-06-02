@@ -24,7 +24,6 @@ namespace LunaClient.Windows.Status
         private static Vector2 _scrollPosition;
         private static GUIStyle _subspaceStyle;
         private static Dictionary<string, GUIStyle> _playerNameStyle;
-        private static GUIStyle _vesselNameStyle;
         private static GUIStyle _stateTextStyle;
 
         private const float WindowHeight = 400;
@@ -91,13 +90,6 @@ namespace LunaClient.Windows.Status
             LayoutOptions[3] = GUILayout.MaxHeight(WindowHeight);
             
             _playerNameStyle = new Dictionary<string, GUIStyle>();
-
-            _vesselNameStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.white } };
-            _vesselNameStyle.hover.textColor = _vesselNameStyle.normal.textColor;
-            _vesselNameStyle.active.textColor = _vesselNameStyle.normal.textColor;
-            _vesselNameStyle.fontStyle = FontStyle.Normal;
-            _vesselNameStyle.fontSize = 12;
-            _vesselNameStyle.stretchWidth = true;
 
             _stateTextStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = new Color(0.75f, 0.75f, 0.75f) } };
             _stateTextStyle.hover.textColor = _stateTextStyle.normal.textColor;

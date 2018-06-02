@@ -1,5 +1,4 @@
 ﻿using LunaClient.Systems.Warp;
-using LunaCommon;
 using System.Text;
 
 namespace LunaClient.Windows.Status
@@ -26,25 +25,19 @@ namespace LunaClient.Windows.Status
         public const string Debug8BtnTxt = "D8";
         public const string Debug9BtnTxt = "D9";
 
-        private const string TimePrefix = "T: ";
         private const string NegativeDeltaTimePrefix = " (-";
         private const string PositiveDeltaTimePrefix = " (+";
         private const string CloseDeltaTime = ")";
 
         private static readonly StringBuilder StringBuilder = new StringBuilder();
         
-        public static string GetPlayerText(PlayerStatus playerStatus)
-        {
-            return playerStatus.VesselText;
-        }
-
         public static string GetTimeLabel(SubspaceDisplayEntry currentEntry)
         {
             StringBuilder.Length = 0;
 
             var subspaceTime = WarpSystem.Singleton.GetSubspaceTime(currentEntry.SubspaceId);
 
-            StringBuilder.Append(TimePrefix).Append(KSPUtil.PrintDateCompact(subspaceTime, true, true));
+            StringBuilder.Append(KSPUtil.PrintDateCompact(subspaceTime, true, true));
 
             if (WarpSystem.Singleton.CurrentSubspace != currentEntry.SubspaceId)
                 AppendDeltaTime(subspaceTime);
