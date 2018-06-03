@@ -269,6 +269,7 @@ namespace LunaClient.Systems.Warp
         {
             TimeWarp.fetch.WarpTo(CurrentSubspaceTime);
             ClockHandler.StepClock(CurrentSubspaceTime);
+            WarpEvent.onTimeWarpStopped.Fire();
         }
 
         #endregion
