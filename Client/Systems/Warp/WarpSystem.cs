@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
@@ -131,6 +132,7 @@ namespace LunaClient.Systems.Warp
             //That's the reason why we check the TimeWarp.CurrentRate aswell!
             if (TimeWarp.CurrentRateIndex == 0 && Math.Abs(TimeWarp.CurrentRate - 1) < 0.1f && CurrentSubspace == -1 && !WaitingSubspaceIdFromServer)
             {
+                WarpEvent.onTimeWarpStopped.Fire();
                 RequestNewSubspace();
             }
         }

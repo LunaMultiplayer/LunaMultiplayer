@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.VesselUtilities;
 
 namespace LunaClient.Systems.Warp
@@ -18,6 +19,7 @@ namespace LunaClient.Systems.Warp
                 if (System.CurrentSubspace != -1)
                 {
                     //We are warping so set the subspace to -1
+                    WarpEvent.onTimeWarpStarted.Fire();
                     System.CurrentSubspace = -1;
                 }
             }

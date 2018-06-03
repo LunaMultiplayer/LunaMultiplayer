@@ -76,6 +76,7 @@
     <Compile Include="Events\RevertEvent.cs" />
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Events\StrategyEvent.cs" />
+    <Compile Include="Events\WarpEvent.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
