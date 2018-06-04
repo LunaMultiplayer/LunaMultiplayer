@@ -11,6 +11,7 @@ namespace LunaCommon.Message.Data.Vessel
 
         //Avoid using reference types in this message as it can generate allocations and is sent VERY often.
         public int BodyIndex;
+        public int SubspaceId;
         public bool Landed;
         public bool Splashed;
         public double[] LatLonAlt = new double[3];
@@ -28,6 +29,7 @@ namespace LunaCommon.Message.Data.Vessel
             base.InternalSerialize(lidgrenMsg);
 
             lidgrenMsg.Write(BodyIndex);
+            lidgrenMsg.Write(SubspaceId);
             lidgrenMsg.Write(Landed);
             lidgrenMsg.Write(Splashed);
 
@@ -55,6 +57,7 @@ namespace LunaCommon.Message.Data.Vessel
             base.InternalDeserialize(lidgrenMsg);
 
             BodyIndex = lidgrenMsg.ReadInt32();
+            SubspaceId = lidgrenMsg.ReadInt32();
             Landed = lidgrenMsg.ReadBoolean();
             Splashed = lidgrenMsg.ReadBoolean();
 
@@ -79,7 +82,7 @@ namespace LunaCommon.Message.Data.Vessel
         
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(int) + sizeof(bool) * 2 + sizeof(double) * 3 * 3 + 
+            return base.InternalGetMessageSize() + sizeof(int) * 2 + sizeof(bool) * 2 + sizeof(double) * 3 * 3 + 
                 sizeof(float) * 4 * 1 + sizeof(float) + sizeof(bool);
         }
     }
