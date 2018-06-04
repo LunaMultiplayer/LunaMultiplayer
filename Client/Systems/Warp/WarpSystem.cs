@@ -232,7 +232,7 @@ namespace LunaClient.Systems.Warp
         /// Gets the current time difference against the server time on the subspace that we are located
         /// </summary>
         /// <returns></returns>
-        public double CurrentSubspaceTimeDifference => Subspaces.ContainsKey(CurrentSubspace) ? Subspaces[CurrentSubspace] : 0;
+        public double CurrentSubspaceTimeDifference => Subspaces.TryGetValue(CurrentSubspace, out var time) ? time : 0;
 
         /// <summary>
         /// Returns the subspace time sent as parameter.
@@ -260,6 +260,19 @@ namespace LunaClient.Systems.Warp
         {
             if (ClientSubspaceList.ContainsKey(playerName))
                 ClientSubspaceList.TryRemove(playerName, out _);
+        }
+
+        /// <summary>
+        /// Returns true if given subspace is more advanced in time than our current subspace
+        /// </summary>
+        public bool SubspaceIdIsMoreAdvancedInTime(int subspaceId)
+        {
+            if (CurrentlyWarping || WaitingSubspaceIdFromServer || subspaceId == -1) return false;
+
+            if (Subspaces.TryGetValue(subspaceId, out var subspaceTime))
+                return CurrentSubspaceTimeDifference < subspaceTime;
+
+            return false;
         }
 
         /// <summary>
