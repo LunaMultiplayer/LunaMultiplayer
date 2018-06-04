@@ -62,6 +62,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\CachedConcurrentQueue.cs" />
     <Compile Include="Base\FixedSizedConcurrentQueue.cs" />
     <Compile Include="Base\HarmonyPatcher.cs" />
     <Compile Include="Base\Interface\IInputHandler.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageSender.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncSystem.cs" />
+    <Compile Include="Systems\VesselPositionSys\PositionUpdateQueue.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageHandler.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionMessageSender.cs" />
     <Compile Include="Systems\VesselPositionSys\VesselPositionSystem.cs" />
