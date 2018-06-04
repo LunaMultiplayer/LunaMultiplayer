@@ -98,7 +98,6 @@ namespace LunaClient.Windows.Options
                 {
                     if (NetworkMain.ClientConnection.Status != NetPeerStatus.NotRunning)
                     {
-                        GUILayout.EndHorizontal();
                         if (GUILayout.Button("Reset network"))
                             NetworkMain.ResetNetworkSystem();
                     }
