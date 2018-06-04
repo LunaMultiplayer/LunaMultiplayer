@@ -311,7 +311,7 @@ namespace LunaClient.VesselUtilities
         /// <summary>
         /// Returns whether the given vessel is in a starting safety bubble or not.
         /// </summary>
-        public static bool IsInSafetyBubble(Vessel vessel)
+        public static bool IsInSafetyBubble(Vessel vessel, bool useLatLonAltFromProto = true)
         {
             //If not at Kerbin or past ceiling we're definitely clear
             if (vessel == null || !vessel.mainBody.isHomeWorld)
@@ -320,8 +320,11 @@ namespace LunaClient.VesselUtilities
             if (vessel.situation >= Vessel.Situations.FLYING)
                 return false;
 
-            //Use the protovessel values as the normal vessel values can be affected by the position system and the situation of the vessel
-            return IsInSafetyBubble(vessel.protoVessel.latitude, vessel.protoVessel.longitude, vessel.protoVessel.altitude, vessel.mainBody);
+            if (useLatLonAltFromProto)
+                //Use the protovessel values as the normal vessel values can be affected by the position system and the situation of the vessel
+                return IsInSafetyBubble(vessel.protoVessel.latitude, vessel.protoVessel.longitude, vessel.protoVessel.altitude, vessel.mainBody);
+
+            return IsInSafetyBubble(vessel.latitude, vessel.longitude, vessel.altitude, vessel.mainBody);
         }
 
         /// <summary>
