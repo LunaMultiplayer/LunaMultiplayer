@@ -232,14 +232,22 @@ namespace LunaClient.Systems.Warp
         /// Gets the current time difference against the server time on the subspace that we are located
         /// </summary>
         /// <returns></returns>
-        public double CurrentSubspaceTimeDifference => Subspaces.TryGetValue(CurrentSubspace, out var time) ? time : 0;
+        public double CurrentSubspaceTimeDifference => GetSubspaceTime(CurrentSubspace);
 
         /// <summary>
         /// Returns the subspace time sent as parameter.
         /// </summary>
         public double GetSubspaceTime(int subspace)
         {
-            return Subspaces.ContainsKey(subspace) ? TimeSyncerSystem.ServerClockSec + Subspaces[subspace] : 0d;
+            return TimeSyncerSystem.ServerClockSec + GetSubspaceTimeDifference(subspace);
+        }
+
+        /// <summary>
+        /// Gets the current time difference against the server time on the subspace sent as parameter
+        /// </summary>
+        public double GetSubspaceTimeDifference(int subspace)
+        {
+            return Subspaces.TryGetValue(CurrentSubspace, out var time) ? time : 0;
         }
 
         public int GetPlayerSubspace(string playerName)
@@ -248,14 +256,7 @@ namespace LunaClient.Systems.Warp
                 return ClientSubspaceList[playerName];
             return 0;
         }
-
-        public void DisplayMessage(string messageText, float messageDuration)
-        {
-            if (WarpMessage != null)
-                WarpMessage.duration = 0f;
-            WarpMessage = LunaScreenMsg.PostScreenMessage(messageText, messageDuration, ScreenMessageStyle.UPPER_CENTER);
-        }
-
+        
         public void RemovePlayer(string playerName)
         {
             if (ClientSubspaceList.ContainsKey(playerName))
@@ -288,6 +289,13 @@ namespace LunaClient.Systems.Warp
         #endregion
 
         #region Private methods
+
+        private void DisplayMessage(string messageText, float messageDuration)
+        {
+            if (WarpMessage != null)
+                WarpMessage.duration = 0f;
+            WarpMessage = LunaScreenMsg.PostScreenMessage(messageText, messageDuration, ScreenMessageStyle.UPPER_CENTER);
+        }
 
         /// <summary>
         /// Task that requests a new subspace to the server.
