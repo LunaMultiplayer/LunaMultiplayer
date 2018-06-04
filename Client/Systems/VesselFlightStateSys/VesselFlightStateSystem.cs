@@ -135,7 +135,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
             else
             {
-                //This whill happen when you reload vessels, they will exist on the dictionary but their handler will not be assigned
+                //This will happen when you reload vessels, they will exist on the dictionary but their handler will not be assigned
                 if (vessel.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
                     vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
             }
