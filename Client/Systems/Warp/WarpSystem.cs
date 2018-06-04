@@ -267,7 +267,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public bool SubspaceIdIsMoreAdvancedInTime(int subspaceId)
         {
-            if (CurrentlyWarping || WaitingSubspaceIdFromServer || subspaceId == -1) return false;
+            if (CurrentlyWarping || WaitingSubspaceIdFromServer || CurrentSubspace == subspaceId || subspaceId == -1) return false;
 
             if (Subspaces.TryGetValue(subspaceId, out var subspaceTime))
                 return CurrentSubspaceTimeDifference < subspaceTime;
