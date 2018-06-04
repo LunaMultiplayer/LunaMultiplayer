@@ -6,7 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using UniLinq;
+using System.Linq;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselFlightStateSys
@@ -60,7 +60,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
             SpectateEvent.onStartSpectating.Add(FlightStateEvents.OnStartSpectating);
             SpectateEvent.onFinishedSpectating.Add(FlightStateEvents.OnFinishedSpectating);
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
-            SetupRoutine(new RoutineDefinition(1500, RoutineExecution.Update, ReasignCallbacks));
         }
 
         protected override void OnDisabled()
@@ -134,6 +133,12 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
                 vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
             }
+            else
+            {
+                //This whill happen when you reload vessels, they will exist on the dictionary but their handler will not be assigned
+                if (vessel.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
+                    vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
+            }
         }
 
         /// <summary>
@@ -143,36 +148,11 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (vesselToRemove == null) return;
 
-            try
-            {
-                vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+            TryRemoveCallback(vesselToRemove);
 
             if(FlyByWireDictionary.ContainsKey(vesselToRemove.id))
                 FlyByWireDictionary.Remove(vesselToRemove.id);
             FlightStatesDictionary.TryRemove(vesselToRemove.id, out _);
-        }
-        
-        /// <summary>
-        /// When vessels are reloaded we must assign the callback back to them
-        /// </summary>
-        private void ReasignCallbacks()
-        {
-            if (Enabled && FlightStateSystemReady)
-            {
-                var vesselsToReasign = FlyByWireDictionary.Keys
-                    .Select(FlightGlobals.FindVessel)
-                    .Where(v => v != null && !v.OnFlyByWire.GetInvocationList().Any(d => d.Method.Name == nameof(LunaOnVesselFlyByWire)));
-
-                foreach (var vessel in vesselsToReasign)
-                {
-                    vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
-                }
-            }
         }
 
         public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
@@ -202,7 +182,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// Here we copy the flight state we received and apply to the specific vessel.
         /// This method is called by ksp as it's a delegate. It's called on every FixedUpdate
         /// </summary>
-        public void LunaOnVesselFlyByWire(Guid id, FlightCtrlState st)
+        private void LunaOnVesselFlyByWire(Guid id, FlightCtrlState st)
         {
             if (!Enabled || !FlightStateSystemReady) return;
             
@@ -238,6 +218,18 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 {
                     AddVesselToSystem(vessel);
                 }
+            }
+        }
+        
+        private void TryRemoveCallback(Vessel vesselToRemove)
+        {
+            try
+            {
+                vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
+            }
+            catch (Exception)
+            {
+                // ignored
             }
         }
 
