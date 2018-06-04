@@ -223,7 +223,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         
         private void TryRemoveCallback(Vessel vesselToRemove)
         {
-            if (vesselToRemove.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
+            if (FlyByWireDictionary.ContainsKey(vesselToRemove.id) && vesselToRemove.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
                 vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
         }
 
