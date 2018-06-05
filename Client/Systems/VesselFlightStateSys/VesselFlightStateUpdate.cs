@@ -8,6 +8,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
 {
     public class VesselFlightStateUpdate
     {
+        private float MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
+            1 : float.MaxValue;
+
         #region Fields
 
         public VesselFlightStateUpdate Target { get; set; }
@@ -26,7 +29,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         public float ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
-        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, float.MaxValue);
+        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
         private float _lerpPercentage = 1;
         public float LerpPercentage
@@ -50,6 +53,15 @@ namespace LunaClient.Systems.VesselFlightStateSys
             SubspaceId = msgData.SubspaceId;
 
             CtrlState.CopyFrom(msgData);
+        }
+
+        public void CopyFrom(VesselFlightStateUpdate update)
+        {
+            VesselId = update.VesselId;
+            GameTimeStamp = update.GameTimeStamp;
+            SubspaceId = update.SubspaceId;
+
+            CtrlState.CopyFrom(update.CtrlState);
         }
 
         #endregion
@@ -83,9 +95,15 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 ProcessRestart();
                 LerpPercentage = 0;
 
-                VesselFlightStateSystem.TargetFlightStateQueue[VesselId].Recycle(Target);
-
-                Target = targetUpdate;
+                if (Target != null)
+                {
+                    Target.CopyFrom(targetUpdate);
+                    VesselFlightStateSystem.TargetFlightStateQueue[VesselId].Recycle(targetUpdate);
+                }
+                else
+                {
+                    Target = targetUpdate;
+                }
 
                 AdjustExtraInterpolationTimes();
 

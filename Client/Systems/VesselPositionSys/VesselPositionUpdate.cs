@@ -14,6 +14,10 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionUpdate
     {
+        private float MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ? 
+            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval).TotalSeconds
+                : float.MaxValue;
+
         #region Fields
 
         private Vessel _vessel;
@@ -65,8 +69,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public float ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
-        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, WarpSystem.Singleton.CurrentSubspace == Target.SubspaceId ?
-            SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval : float.MaxValue);
+        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
         private float _lerpPercentage = 1;
         public float LerpPercentage
@@ -99,6 +102,24 @@ namespace LunaClient.Systems.VesselPositionSys
             Array.Copy(msgData.LatLonAlt, LatLonAlt, 3);
             Array.Copy(msgData.NormalVector, NormalVector, 3);
             Array.Copy(msgData.Orbit, Orbit, 8);
+        }
+
+        public void CopyFrom(VesselPositionUpdate update)
+        {
+            VesselId = update.VesselId;
+            BodyIndex = update.BodyIndex;
+            SubspaceId = update.SubspaceId;
+            HeightFromTerrain = update.HeightFromTerrain;
+            Landed = update.Landed;
+            Splashed = update.Splashed;
+            GameTimeStamp = update.GameTimeStamp;
+            HackingGravity = update.HackingGravity;
+
+            Array.Copy(update.SrfRelRotation, SrfRelRotation, 4);
+            Array.Copy(update.Velocity, Velocity, 3);
+            Array.Copy(update.LatLonAlt, LatLonAlt, 3);
+            Array.Copy(update.NormalVector, NormalVector, 3);
+            Array.Copy(update.Orbit, Orbit, 8);
         }
 
         #endregion
@@ -136,9 +157,15 @@ namespace LunaClient.Systems.VesselPositionSys
                 ProcessRestart();
                 LerpPercentage = 0;
 
-                VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Recycle(Target);
-
-                Target = targetUpdate;
+                if (Target != null)
+                {
+                    Target.CopyFrom(targetUpdate);
+                    VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Recycle(targetUpdate);
+                }
+                else
+                {
+                    Target = targetUpdate;
+                }
 
                 AdjustExtraInterpolationTimes();
 
