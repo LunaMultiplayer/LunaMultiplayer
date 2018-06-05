@@ -73,21 +73,7 @@ namespace LunaClient.Systems.VesselPositionSys
             get => SettingsSystem.CurrentSettings.PositionInterpolation ? _lerpPercentage : 1;
             set => _lerpPercentage = Mathf.Clamp01(value);
         }
-
-        public double EquivalentGameTime
-        {
-            get
-            {
-                if (SubspaceId >= 0)
-                {
-                    if (WarpSystem.Singleton.Subspaces.TryGetValue(SubspaceId, out var extraTime))
-                        return GameTimeStamp - extraTime;
-                }
-
-                return GameTimeStamp;
-            }
-        }
-
+        
         #endregion
 
         #endregion
@@ -120,6 +106,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public void ForceRestart()
         {
+            if (Vessel == null || Vessel.precalc == null || Vessel.state == Vessel.State.DEAD || Body == null)
+            {
+                return;
+            }
+
+            ProcessRestart();
             VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Recycle(Target);
             Target = null;
             LerpPercentage = 1;
@@ -132,6 +124,12 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (Vessel == null || Vessel.precalc == null || Vessel.state == Vessel.State.DEAD || Body == null)
             {
+                return;
+            }
+
+            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == VesselId)
+            {
+                //Do not apply position updates to our OWN controlled vessel
                 return;
             }
 
