@@ -1,5 +1,4 @@
 ﻿using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using LunaCommon;
@@ -129,31 +128,24 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
-            if (InterpolationFinished)
+            if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue[VesselId].TryDequeue(out var targetUpdate))
             {
-                if (VesselPositionSystem.TargetVesselUpdateQueue[VesselId].TryDequeue(out var targetUpdate))
-                {
-                    ProcessRestart();
-                    LerpPercentage = 0;
+                if (Target == null) //This is the case of first iteration
+                    GameTimeStamp = targetUpdate.GameTimeStamp;
 
-                    VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Recycle(Target);
+                ProcessRestart();
+                LerpPercentage = 0;
 
-                    Target = targetUpdate;
+                VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Recycle(Target);
 
-                    AdjustExtraInterpolationTimes();
+                Target = targetUpdate;
 
-                    Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
-                        Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+                AdjustExtraInterpolationTimes();
 
-                    UpdateProtoVesselValues();
-                }
-                else
-                {
-                    //No data to retrieve!
-                    Target = null;
-                    LerpPercentage = 1;
-                    GameTimeStamp = TimeSyncerSystem.UniversalTime;
-                }
+                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
+                    Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+
+                UpdateProtoVesselValues();
             }
 
             if (Target == null) return;
@@ -375,7 +367,6 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
-                GameTimeStamp = TimeSyncerSystem.UniversalTime;
                 BodyIndex = Vessel.mainBody.flightGlobalsIndex;
                 Landed = Vessel.Landed;
                 Splashed = Vessel.Splashed;
