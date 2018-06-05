@@ -263,16 +263,25 @@ namespace LunaClient.Systems.Warp
         }
 
         /// <summary>
-        /// Returns true if given subspace is more advanced in time than our current subspace
+        /// Returns true if given subspace is equal or earlier in time than our subspace
         /// </summary>
-        public bool SubspaceIdIsMoreAdvancedInTime(int subspaceId)
+        public bool SubspaceIsEqualOrInThePast(int subspaceId)
         {
-            if (CurrentlyWarping || WaitingSubspaceIdFromServer || CurrentSubspace == subspaceId || subspaceId == -1) return false;
+            if (!CurrentlyWarping && CurrentSubspace == subspaceId)
+                return true;
 
-            if (Subspaces.TryGetValue(subspaceId, out var subspaceTime))
-                return CurrentSubspaceTimeDifference < subspaceTime;
+            if (subspaceId != -1 && Subspaces.TryGetValue(subspaceId, out var subspaceTime))
+                return CurrentSubspaceTimeDifference > subspaceTime;
 
             return false;
+        }
+
+        public double GetTimeDifferenceWithGivenSubspace(int subspaceId)
+        {
+            if (Subspaces.TryGetValue(subspaceId, out var subspaceTime))
+                return subspaceTime - CurrentSubspaceTimeDifference;
+
+            return double.MaxValue;
         }
 
         /// <summary>

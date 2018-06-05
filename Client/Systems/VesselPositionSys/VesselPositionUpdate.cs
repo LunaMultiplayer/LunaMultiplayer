@@ -177,7 +177,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void AdjustExtraInterpolationTimes()
         {
-            if (!WarpSystem.Singleton.SubspaceIdIsMoreAdvancedInTime(Target.SubspaceId))
+            if (WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId))
             {
                 var queueCount = VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Count;
                 //We are more advanced or in the subspace. For this case we want to have between 2 and 4 packets in the queue.
