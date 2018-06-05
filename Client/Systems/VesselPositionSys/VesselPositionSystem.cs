@@ -1,5 +1,7 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
@@ -13,8 +15,6 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
-        public const int MaxQueuedUpdates = 5;
-
         #region Fields & properties
 
         private static float LastVesselUpdatesSentTime { get; set; }
@@ -25,7 +25,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
-                                         FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
+                                         FlightGlobals.ActiveVessel.state != Vessel.State.DEAD &&
                                          FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
 
         public bool PositionUpdateSystemBasicReady => Enabled && PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
@@ -33,10 +33,8 @@ namespace LunaClient.Systems.VesselPositionSys
         public static ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } =
             new ConcurrentDictionary<Guid, VesselPositionUpdate>();
         
-        public static ConcurrentDictionary<Guid, FixedSizedConcurrentQueue<VesselPositionUpdate>> TargetVesselUpdateQueue { get; } =
-            new ConcurrentDictionary<Guid, FixedSizedConcurrentQueue<VesselPositionUpdate>>();
-
-        public static Queue<Guid> VesselsToRemove { get; } = new Queue<Guid>();
+        public static ConcurrentDictionary<Guid, PositionUpdateQueue> TargetVesselUpdateQueue { get; } =
+            new ConcurrentDictionary<Guid, PositionUpdateQueue>();
 
         private List<Vessel> SecondaryVesselsToUpdate { get; } = new List<Vessel>();
         private List<Vessel> AbandonedVesselsToUpdate { get; } = new List<Vessel>();
@@ -53,6 +51,8 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnEnabled();
 
+            WarpEvent.onTimeWarpStopped.Add(RemoveOldPositionMessages);
+
             TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
 
             //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
@@ -67,11 +67,14 @@ namespace LunaClient.Systems.VesselPositionSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
+
+            WarpEvent.onTimeWarpStopped.Remove(RemoveOldPositionMessages);
+
             CurrentVesselUpdate.Clear();
             TargetVesselUpdateQueue.Clear();
 
-            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
-            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
+            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
+            TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
         }
 
         private void HandleVesselUpdates()
@@ -80,17 +83,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             foreach (var keyVal in CurrentVesselUpdate)
             {
-                if (!VesselCommon.DoVesselChecks(keyVal.Key))
-                    RemoveVesselFromSystem(keyVal.Key);
-                
                 keyVal.Value.ApplyInterpolatedVesselUpdate();
-            }
-
-            while (VesselsToRemove.Count > 0)
-            {
-                var vesselToRemove = VesselsToRemove.Dequeue();
-                CurrentVesselUpdate.TryRemove(vesselToRemove, out _);
-                TargetVesselUpdateQueue.TryRemove(vesselToRemove, out _);
             }
         }
 
@@ -154,27 +147,24 @@ namespace LunaClient.Systems.VesselPositionSys
         #endregion
 
         #region Public methods
-        
+
         /// <summary>
         /// Gets the latest received position of a vessel
         /// </summary>
         public double[] GetLatestVesselPosition(Guid vesselId)
         {
-            return TargetVesselUpdateQueue.TryGetValue(vesselId, out var vesselPositionQueue) ? 
-                vesselPositionQueue.TryPeek(out var vesselPos) ? vesselPos.LatLonAlt :
-                CurrentVesselUpdate.TryGetValue(vesselId, out vesselPos) ?
-                    vesselPos.LatLonAlt :
-                    null : null;
+            return CurrentVesselUpdate.TryGetValue(vesselId, out var vesselPos) ?
+                        vesselPos.LatLonAlt : null;
         }
 
-        /// <summary>
-        /// Removes a vessel from the system
-        /// </summary>
-        public void RemoveVesselFromSystem(Guid vesselId)
+        public void RemoveOldPositionMessages()
         {
-            VesselsToRemove.Enqueue(vesselId);
+            foreach (var updateKeyVal in CurrentVesselUpdate)
+            {
+                updateKeyVal.Value.ForceRestart();
+            }
         }
-
+        
         #endregion
 
         #region Private methods
@@ -187,7 +177,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (vessel.orbit != null)
             {
-                vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, Planetarium.GetUniversalTime());
+                vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, WarpSystem.Singleton.CurrentSubspaceTime);
                 if (!vessel.LandedOrSplashed)
                 {
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);

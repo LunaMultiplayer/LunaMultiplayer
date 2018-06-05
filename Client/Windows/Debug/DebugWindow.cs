@@ -181,10 +181,13 @@ namespace LunaClient.Windows.Debug
 
                 if (_displayInterpolationData)
                 {
-                    StringBuilder.Append("Max queue length: ").AppendLine(VesselPositionSystem.MaxQueuedUpdates.ToString());
-                    foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
+                    if (VesselPositionSystem.TargetVesselUpdateQueue.Any())
                     {
-                        StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
+                        StringBuilder.Append("Cached: ").AppendLine(PositionUpdateQueue.CacheSize.ToString());
+                        foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
+                        {
+                            StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
+                        }
                     }
 
                     _interpolationText = StringBuilder.ToString();

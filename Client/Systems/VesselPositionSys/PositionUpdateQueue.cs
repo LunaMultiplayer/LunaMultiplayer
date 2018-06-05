@@ -7,7 +7,8 @@ namespace LunaClient.Systems.VesselPositionSys
 {
     public class PositionUpdateQueue : CachedConcurrentQueue<VesselPositionUpdate, VesselPositionMsgData>
     {
-        private const float MaxTimeDiff = 2f;
+        private const int MaxPacketsInQueue = 5;
+        private const float MaxTimeDifference = 1.5f;
 
         public override bool TryDequeue(out VesselPositionUpdate result)
         {
@@ -20,14 +21,14 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (dequeueResult)
             {
-                if (WarpSystem.Singleton.CurrentlyWarping || WarpSystem.Singleton.WaitingSubspaceIdFromServer || result.SubspaceId == -1) return true;
-
-                if (!WarpSystem.Singleton.SubspaceIdIsMoreAdvancedInTime(result.SubspaceId) && Count > 5)
+                if (!WarpSystem.Singleton.SubspaceIdIsMoreAdvancedInTime(result.SubspaceId) && Count > MaxPacketsInQueue)
                 {
+                    Recycle(result);
                     dequeueResult = KeepDequeuing(out result);
                 }
-                else if (WarpSystem.Singleton.CurrentSubspaceTime - result.GameTimeStamp > MaxTimeDiff)
+                else if (Planetarium.GetUniversalTime() - result.GameTimeStamp > MaxTimeDifference)
                 {
+                    Recycle(result);
                     dequeueResult = KeepDequeuing(out result);
                 }
             }

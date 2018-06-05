@@ -1,6 +1,8 @@
 ﻿using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using LunaCommon;
+using LunaCommon.Message.Data.Vessel;
 using System;
 using UnityEngine;
 
@@ -45,8 +47,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public float[] SrfRelRotation { get; set; } = new float[4];
         public float HeightFromTerrain { get; set; }
         public double GameTimeStamp { get; set; }
-        public DateTime ReceiveTime { get; set; }
-        public long UtcSentTime { get; set; }
+        public int SubspaceId { get; set; }
         public bool HackingGravity { get; set; }
 
         #endregion
@@ -62,15 +63,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Interpolation fields
 
-        //TODO: Remove this
-        public static bool UseGameTimeStamp = false;
-
-        private static float MaxInterpolationDuration => (float)TimeSpan
-            .FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval * 2).TotalSeconds;
-
+        public float ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
-        public float InterpolationDuration => UseGameTimeStamp ? Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp), 0, float.MaxValue) :
-            Mathf.Clamp((float)TimeSpan.FromTicks(Target.UtcSentTime - UtcSentTime).TotalSeconds, 0, MaxInterpolationDuration);
+        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, float.MaxValue);
 
         private float _lerpPercentage = 1;
         public float LerpPercentage
@@ -79,12 +74,56 @@ namespace LunaClient.Systems.VesselPositionSys
             set => _lerpPercentage = Mathf.Clamp01(value);
         }
 
+        public double EquivalentGameTime
+        {
+            get
+            {
+                if (SubspaceId >= 0)
+                {
+                    if (WarpSystem.Singleton.Subspaces.TryGetValue(SubspaceId, out var extraTime))
+                        return GameTimeStamp - extraTime;
+                }
+
+                return GameTimeStamp;
+            }
+        }
 
         #endregion
+
+        #endregion
+
+        #region Constructor
+
+        public VesselPositionUpdate() { }
+
+        public VesselPositionUpdate(VesselPositionMsgData msgData)
+        {
+            VesselId = msgData.VesselId;
+            BodyIndex = msgData.BodyIndex;
+            SubspaceId = msgData.SubspaceId;
+            HeightFromTerrain = msgData.HeightFromTerrain;
+            Landed = msgData.Landed;
+            Splashed = msgData.Splashed;
+            GameTimeStamp = msgData.GameTime;
+            HackingGravity = msgData.HackingGravity;
+
+            Array.Copy(msgData.SrfRelRotation, SrfRelRotation, 4);
+            Array.Copy(msgData.Velocity, Velocity, 3);
+            Array.Copy(msgData.LatLonAlt, LatLonAlt, 3);
+            Array.Copy(msgData.NormalVector, NormalVector, 3);
+            Array.Copy(msgData.Orbit, Orbit, 8);
+        }
 
         #endregion
 
         #region Main method
+
+        public void ForceRestart()
+        {
+            VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Recycle(Target);
+            Target = null;
+            LerpPercentage = 1;
+        }
 
         /// <summary>
         /// Call this method to apply a vessel update using interpolation
@@ -93,7 +132,6 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (Vessel == null || Vessel.precalc == null || Vessel.state == Vessel.State.DEAD || Body == null)
             {
-                VesselPositionSystem.VesselsToRemove.Enqueue(VesselId);
                 return;
             }
 
@@ -102,43 +140,11 @@ namespace LunaClient.Systems.VesselPositionSys
                 ProcessRestart();
                 LerpPercentage = 0;
 
-                if (Target == null)
-                {
-                    //We are in the first iteration of the interpolation (we just started to apply vessel updates)
-                    GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval).TotalSeconds;
-                    UtcSentTime = targetUpdate.UtcSentTime - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval).Ticks;
-                }
-                else
-                {
-                    GameTimeStamp = Target.GameTimeStamp;
-                    UtcSentTime = Target.UtcSentTime;
-                }
+                VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Recycle(Target);
 
                 Target = targetUpdate;
 
-                //This part increases the lerping time or decreasesit depending the amount of messages we have in the queue
-                switch (VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Count)
-                {
-                    case 0:
-                        GameTimeStamp -= InterpolationDuration * 0.75;
-                        UtcSentTime -= TimeSpan.FromSeconds(InterpolationDuration * 0.75).Ticks;
-                        break;
-                    case 1:
-                        GameTimeStamp -= InterpolationDuration * 0.25;
-                        UtcSentTime -= TimeSpan.FromSeconds(InterpolationDuration * 0.25).Ticks;
-                        break;
-                    case 2:
-                    case 3:
-                        break;
-                    case 4:
-                        GameTimeStamp += InterpolationDuration * 0.25;
-                        UtcSentTime += TimeSpan.FromSeconds(InterpolationDuration * 0.25).Ticks;
-                        break;
-                    case 5:
-                        GameTimeStamp += InterpolationDuration * 0.60;
-                        UtcSentTime += TimeSpan.FromSeconds(InterpolationDuration * 0.65).Ticks;
-                        break;
-                }
+                AdjustExtraInterpolationTimes();
 
                 Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
                     Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
@@ -152,13 +158,44 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 ApplyInterpolations();
             }
-            catch
+            catch (Exception e)
             {
-                // ignored
+                LunaLog.LogError($"ApplyInterpolations: {e}");
             }
             finally
             {
-                LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
+                LerpPercentage += Time.deltaTime / InterpolationDuration;
+            }
+        }
+
+        /// <summary>
+        /// This method adjust the extra interpolation duration in case we are lagging or too advanced
+        /// </summary>
+        private void AdjustExtraInterpolationTimes()
+        {
+            if (!WarpSystem.Singleton.SubspaceIdIsMoreAdvancedInTime(Target.SubspaceId))
+            {
+                var queueCount = VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Count;
+                //We are more advanced or in the same time. For this case we want to have between 2 and 4 packets in the queue.
+                switch (queueCount)
+                {
+                    case 0:
+                        ExtraInterpolationTime = InterpolationDuration * 0.75f;
+                        break;
+                    case 1:
+                        ExtraInterpolationTime = InterpolationDuration * 0.25f;
+                        break;
+                    case 2:
+                    case 3:
+                        ExtraInterpolationTime = 0;
+                        break;
+                    case 4:
+                        ExtraInterpolationTime = InterpolationDuration * 0.25f * -1f;
+                        break;
+                    default:
+                        ExtraInterpolationTime = InterpolationDuration * 0.60f * -1f;
+                        break;
+                }
             }
         }
 
@@ -317,9 +354,11 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (Target != null)
             {
+                GameTimeStamp = Target.GameTimeStamp;
                 BodyIndex = Target.BodyIndex;
                 Landed = Target.Landed;
                 Splashed = Target.Splashed;
+                SubspaceId = Target.SubspaceId;
 
                 Array.Copy(Target.SrfRelRotation, SrfRelRotation, 4);
                 Array.Copy(Target.Velocity, Velocity, 3);
