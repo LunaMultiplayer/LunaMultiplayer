@@ -1,5 +1,4 @@
 ﻿using LunaClient.Base;
-using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
@@ -51,8 +50,6 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnEnabled();
 
-            WarpEvent.onTimeWarpStopped.Add(RemoveOldPositionMessages);
-
             TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
 
             //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
@@ -67,8 +64,6 @@ namespace LunaClient.Systems.VesselPositionSys
         protected override void OnDisabled()
         {
             base.OnDisabled();
-
-            WarpEvent.onTimeWarpStopped.Remove(RemoveOldPositionMessages);
 
             CurrentVesselUpdate.Clear();
             TargetVesselUpdateQueue.Clear();
@@ -157,14 +152,6 @@ namespace LunaClient.Systems.VesselPositionSys
                         vesselPos.LatLonAlt : null;
         }
 
-        public void RemoveOldPositionMessages()
-        {
-            foreach (var updateKeyVal in CurrentVesselUpdate)
-            {
-                updateKeyVal.Value.ForceRestart();
-            }
-        }
-        
         #endregion
 
         #region Private methods

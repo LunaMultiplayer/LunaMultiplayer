@@ -59,7 +59,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         public void ForceRestart()
         {
-            ProcessRestart();
             VesselFlightStateSystem.TargetFlightStateQueue[VesselId].Recycle(Target);
             Target = null;
             LerpPercentage = 1;
@@ -78,6 +77,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
             if (InterpolationFinished && VesselFlightStateSystem.TargetFlightStateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
+                if (Target == null) //This is the case of first iteration
+                    GameTimeStamp = targetUpdate.GameTimeStamp - 1;
+
                 ProcessRestart();
                 LerpPercentage = 0;
 
@@ -126,6 +128,10 @@ namespace LunaClient.Systems.VesselFlightStateSys
                         ExtraInterpolationTime = InterpolationDuration * 0.60f * -1f;
                         break;
                 }
+            }
+            else
+            {
+                ExtraInterpolationTime = 0;
             }
         }
 

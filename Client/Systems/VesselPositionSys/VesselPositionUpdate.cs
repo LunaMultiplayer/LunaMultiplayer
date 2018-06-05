@@ -131,7 +131,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue[VesselId].TryDequeue(out var targetUpdate))
             {
                 if (Target == null) //This is the case of first iteration
-                    GameTimeStamp = targetUpdate.GameTimeStamp;
+                    GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval).TotalSeconds;
 
                 ProcessRestart();
                 LerpPercentage = 0;
@@ -192,6 +192,10 @@ namespace LunaClient.Systems.VesselPositionSys
                         ExtraInterpolationTime = InterpolationDuration * 0.60f * -1f;
                         break;
                 }
+            }
+            else
+            {
+                ExtraInterpolationTime = 0;
             }
         }
 
