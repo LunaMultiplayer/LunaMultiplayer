@@ -25,6 +25,11 @@ namespace LunaClient.Systems.TimeSyncer
         public static long ServerStartTime { get; set; }
 
         /// <summary>
+        /// Thread safe way of accessing Planetarium.GetUniversalTime()
+        /// </summary>
+        public static double UniversalTime { get; private set; }
+
+        /// <summary>
         /// Gets the server clock in seconds.
         /// </summary>
         public static double ServerClockSec => TimeUtil.TicksToSeconds(LunaNetworkTime.UtcNow.Ticks - ServerStartTime);
@@ -100,6 +105,9 @@ namespace LunaClient.Systems.TimeSyncer
         protected override void OnEnabled()
         {
             base.OnEnabled();
+
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, SetGameTime);
+
             SpectateEvent.onStartSpectating.Add(TimerSyncerEvents.OnStartSpectating);
             SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, SyncTimeScale));
             SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, SyncTime));
@@ -157,6 +165,18 @@ namespace LunaClient.Systems.TimeSyncer
                     ClockHandler.StepClock(targetTime);
                 }
             }
+        }
+
+        #endregion
+
+        #region FixedUpdateMethods
+
+        /// <summary>
+        /// Updates the UniversalTime with the game time on every fixed update
+        /// </summary>
+        private static void SetGameTime()
+        {
+            UniversalTime = Planetarium.GetUniversalTime();
         }
 
         #endregion
