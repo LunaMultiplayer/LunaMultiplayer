@@ -1,5 +1,6 @@
 ﻿using LunaClient.Systems.Warp;
 using System.Text;
+using LunaClient.Systems.TimeSyncer;
 
 namespace LunaClient.Windows.Status
 {
@@ -47,7 +48,7 @@ namespace LunaClient.Windows.Status
 
         private static void AppendDeltaTime(double subspaceTime)
         {
-            var currentTime = Planetarium.GetUniversalTime();
+            var currentTime = TimeSyncerSystem.UniversalTime;
             if (subspaceTime < currentTime)
             {
                 StringBuilder.Append(NegativeDeltaTimePrefix).Append(KSPUtil.PrintTimeCompact(currentTime - subspaceTime, false));

@@ -3,6 +3,7 @@ using LunaClient.Systems.Mod;
 using LunaClient.Utilities;
 using System;
 using System.Linq;
+using LunaClient.Systems.TimeSyncer;
 
 namespace LunaClient.VesselUtilities
 {
@@ -197,7 +198,7 @@ namespace LunaClient.VesselUtilities
             var boolValue = input.Substring(0, input.IndexOf(", ", StringComparison.Ordinal));
             var timeValue = input.Substring(input.IndexOf(", ", StringComparison.Ordinal) + 1);
             var vesselPlanetTime = double.Parse(timeValue);
-            var currentPlanetTime = Planetarium.GetUniversalTime();
+            var currentPlanetTime = TimeSyncerSystem.UniversalTime;
 
             return vesselPlanetTime > currentPlanetTime ? $"{boolValue}, {currentPlanetTime}" : input;
         }

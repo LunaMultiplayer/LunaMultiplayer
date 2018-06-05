@@ -34,7 +34,7 @@ namespace LunaClient.Systems.Warp
         public void SendNewSubspace()
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<WarpNewSubspaceMsgData>();
-            msgData.ServerTimeDifference = Planetarium.GetUniversalTime() - TimeSyncerSystem.ServerClockSec;
+            msgData.ServerTimeDifference = TimeSyncerSystem.UniversalTime - TimeSyncerSystem.ServerClockSec;
             msgData.PlayerCreator = SettingsSystem.CurrentSettings.PlayerName;
             //we don't send the SubspaceKey as it will be given by the server except when warping that we set it to -1
 

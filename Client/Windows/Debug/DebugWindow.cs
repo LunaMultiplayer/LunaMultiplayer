@@ -126,7 +126,7 @@ namespace LunaClient.Windows.Debug
                     StringBuilder.AppendLine($"Current subspace time: {WarpSystem.Singleton.CurrentSubspaceTime}s.");
                     StringBuilder.AppendLine($"Current subspace time difference: {WarpSystem.Singleton.CurrentSubspaceTimeDifference}s.");
                     StringBuilder.AppendLine($"Current Error: {Math.Round(TimeSyncerSystem.CurrentErrorSec * 1000, 0)}ms.");
-                    StringBuilder.AppendLine($"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT");
+                    StringBuilder.AppendLine($"Current universe time: {Math.Round(TimeSyncerSystem.UniversalTime, 3)} UT");
 
                     _subspaceText = StringBuilder.ToString();
                     StringBuilder.Length = 0;

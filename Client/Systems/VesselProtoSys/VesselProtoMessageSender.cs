@@ -9,6 +9,7 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
+using LunaClient.Systems.TimeSyncer;
 
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -76,7 +77,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     VesselsProtoStore.RawUpdateVesselProtoData(VesselSerializedBytes, numBytes, protoVessel.vesselID);
 
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
-                    msgData.GameTime = Planetarium.GetUniversalTime();
+                    msgData.GameTime = TimeSyncerSystem.UniversalTime;
                     FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
                 }
                 else

@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
@@ -20,7 +21,7 @@ namespace LunaClient.Systems.VesselEvaSys
             if (vessel == null) return;
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselEvaMsgData>();
-            msgData.GameTime = Planetarium.GetUniversalTime();
+            msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
             msgData.NewState = newState;
             msgData.EventToRun = eventToRun;

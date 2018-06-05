@@ -6,6 +6,7 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
+using LunaClient.Systems.TimeSyncer;
 
 namespace LunaClient.Systems.VesselPartModuleSyncSys
 {
@@ -19,7 +20,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
         public void SendVesselPartSyncMsg(Guid vesselId, uint partFlightId, string moduleName, string baseModuleName, string fieldName, string value)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselPartSyncMsgData>();
-            msgData.GameTime = Planetarium.GetUniversalTime();
+            msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vesselId;
             msgData.PartFlightId = partFlightId;
             msgData.ModuleName = moduleName;

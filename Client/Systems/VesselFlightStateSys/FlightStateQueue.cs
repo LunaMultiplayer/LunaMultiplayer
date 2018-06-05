@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaCommon.Message.Data.Vessel;
 
@@ -27,7 +28,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     Recycle(result);
                     dequeueResult = KeepDequeuing(out result);
                 }
-                else if (Planetarium.GetUniversalTime() - result.GameTimeStamp > MaxTimeDifference)
+                else if (TimeSyncerSystem.UniversalTime - result.GameTimeStamp > MaxTimeDifference)
                 {
                     //This is the case where the message comes from a subspace in the FUTURE.
                     //If the packet is too old, just discard it.

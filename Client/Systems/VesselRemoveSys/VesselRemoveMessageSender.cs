@@ -5,6 +5,7 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
+using LunaClient.Systems.TimeSyncer;
 
 namespace LunaClient.Systems.VesselRemoveSys
 {
@@ -23,7 +24,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             LunaLog.Log($"[LMP]: Removing {vesselId} from the server");
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselRemoveMsgData>();
-            msgData.GameTime = Planetarium.GetUniversalTime();
+            msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vesselId;
             msgData.AddToKillList = keepVesselInRemoveList;
 
