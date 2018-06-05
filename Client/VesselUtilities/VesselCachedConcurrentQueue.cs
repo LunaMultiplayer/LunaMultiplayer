@@ -37,18 +37,10 @@ namespace LunaClient.VesselUtilities
                     else if (TimeSyncerSystem.UniversalTime - GetTimestampFromValue(outValue) > MaxTimeDifference)
                     {
                         //We are in a subspace that it's in the future. Let's remove the messages that are too old...
-                        while (Queue.TryDequeue(out outValue))
+                        while (Queue.TryDequeue(out var dequeuedVal) && TimeSyncerSystem.UniversalTime - GetTimestampFromValue(dequeuedVal) > MaxTimeDifference)
                         {
-                            if (TimeSyncerSystem.UniversalTime - GetTimestampFromValue(outValue) > MaxTimeDifference)
-                            {
-                                Recycle(outValue);
-                            }
-                            else
-                            {
-                                break;
-                            }
+                            Recycle(outValue);
                         }
-
                     }
                 }
                 Thread.Sleep(5);
