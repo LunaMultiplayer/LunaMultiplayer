@@ -212,6 +212,8 @@
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageSender.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsSystem.cs" />
     <Compile Include="Systems\VesselFlightStateSys\FlightStateEvents.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\FlightStateExtensionMethods.cs" />
+    <Compile Include="Systems\VesselFlightStateSys\FlightStateQueue.cs" />
     <Compile Include="Systems\VesselFlightStateSys\VesselFlightStateUpdate.cs" />
     <Compile Include="Systems\VesselImmortalSys\VesselImmortalEvents.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\CustomizationsHandler.cs" />

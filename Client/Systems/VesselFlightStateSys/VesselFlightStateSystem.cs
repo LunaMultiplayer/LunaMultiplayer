@@ -4,10 +4,8 @@ using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using UnityEngine;
 
 namespace LunaClient.Systems.VesselFlightStateSys
 {
@@ -23,20 +21,25 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// <summary>
         /// This dictionary links a vessel with a callback that will apply the latest flight state we received
         /// </summary>
-        public Dictionary<Guid, FlightInputCallback> FlyByWireDictionary { get; } =
-            new Dictionary<Guid, FlightInputCallback>();
+        public ConcurrentDictionary<Guid, FlightInputCallback> FlyByWireDictionary { get; } =
+            new ConcurrentDictionary<Guid, FlightInputCallback>();
 
         /// <summary>
-        /// This dictioanry contains the latest flight state of a vessel that we received
+        /// This dictionary contains the current flight state of a vessel
         /// </summary>
-        public ConcurrentDictionary<Guid, VesselFlightStateUpdate> FlightStatesDictionary { get; } =
+        public static ConcurrentDictionary<Guid, VesselFlightStateUpdate> CurrentFlightState { get; } =
             new ConcurrentDictionary<Guid, VesselFlightStateUpdate>();
 
-        public bool FlightStateSystemReady
-            => Enabled && FlightGlobals.ActiveVessel != null && Time.timeSinceLevelLoad > 3f &&
-               FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
-               FlightGlobals.ActiveVessel.state != Vessel.State.DEAD && !FlightGlobals.ActiveVessel.packed &&
-               FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
+        /// <summary>
+        /// This dictionary contains a queue with the latest flight states we received
+        /// </summary>
+        public static ConcurrentDictionary<Guid, FlightStateQueue> TargetFlightStateQueue { get; } =
+            new ConcurrentDictionary<Guid, FlightStateQueue>();
+
+        public bool FlightStateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && HighLogic.LoadedScene == GameScenes.FLIGHT &&
+                                              FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
+                                              FlightGlobals.ActiveVessel.state != Vessel.State.DEAD &&
+                                              FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
 
         public FlightStateEvents FlightStateEvents { get; } = new FlightStateEvents();
 
@@ -55,20 +58,26 @@ namespace LunaClient.Systems.VesselFlightStateSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
+
             GameEvents.onVesselGoOnRails.Add(FlightStateEvents.OnVesselPack);
             GameEvents.onVesselGoOffRails.Add(FlightStateEvents.OnVesselUnpack);
+
             SpectateEvent.onStartSpectating.Add(FlightStateEvents.OnStartSpectating);
             SpectateEvent.onFinishedSpectating.Add(FlightStateEvents.OnFinishedSpectating);
+
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
+
             GameEvents.onVesselGoOnRails.Remove(FlightStateEvents.OnVesselPack);
             GameEvents.onVesselGoOffRails.Remove(FlightStateEvents.OnVesselUnpack);
+
             SpectateEvent.onStartSpectating.Remove(FlightStateEvents.OnStartSpectating);
             SpectateEvent.onFinishedSpectating.Remove(FlightStateEvents.OnFinishedSpectating);
+
             ClearSystem();
         }
 
@@ -98,7 +107,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
 
             FlyByWireDictionary.Clear();
-            FlightStatesDictionary.Clear();
+            CurrentFlightState.Clear();
+            TargetFlightStateQueue.Clear();
         }
 
         #endregion
@@ -113,7 +123,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (Enabled && FlightStateSystemReady && !FlightGlobals.ActiveVessel.isEVA)
             {
                 MessageSender.SendCurrentFlightState();
-
                 ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(SendFlightState), VesselCommon.IsSomeoneSpectatingUs ? 30 : 1000);
             }
         }
@@ -122,23 +131,14 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (vessel == null || vessel.isEVA) return;
 
-            if (!FlyByWireDictionary.ContainsKey(vessel.id))
-            {
-                //We must never have our own active and controlled vessel in the dictionary
-                if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
-                    return;
+            //We must never have our own active and controlled vessel in the dictionary
+            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
+                return;
 
-                FlightStatesDictionary.TryAdd(vessel.id, new VesselFlightStateUpdate());
-                FlyByWireDictionary.Add(vessel.id, st => LunaOnVesselFlyByWire(vessel.id, st));
+            FlyByWireDictionary.TryAdd(vessel.id, st => LunaOnVesselFlyByWire(vessel.id, st));
 
+            if (vessel.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
                 vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
-            }
-            else
-            {
-                //This will happen when you reload vessels, they will exist on the dictionary but their handler will not be assigned
-                if (vessel.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
-                    vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
-            }
         }
 
         /// <summary>
@@ -150,9 +150,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
             TryRemoveCallback(vesselToRemove);
 
-            if(FlyByWireDictionary.ContainsKey(vesselToRemove.id))
-                FlyByWireDictionary.Remove(vesselToRemove.id);
-            FlightStatesDictionary.TryRemove(vesselToRemove.id, out _);
+            FlyByWireDictionary.TryRemove(vesselToRemove.id, out _);
+            CurrentFlightState.TryRemove(vesselToRemove.id, out _);
+            TargetFlightStateQueue.TryRemove(vesselToRemove.id, out _);
         }
 
         public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
@@ -186,11 +186,11 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (!Enabled || !FlightStateSystemReady) return;
             
-            if (FlightStatesDictionary.TryGetValue(id, out var value))
+            if (CurrentFlightState.TryGetValue(id, out var value))
             {
                 if (VesselCommon.IsSpectating)
                 {
-                    st.CopyFrom(value.GetInterpolatedValue(st));
+                    st.CopyFrom(value.GetInterpolatedValue());
                 }
                 else
                 {
@@ -198,7 +198,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     //input controls as then the vessel jitters, specially if the other player has SAS on
                     if (FlightGlobals.ActiveVessel?.situation > Vessel.Situations.FLYING)
                     {
-                        var interpolatedState = value.GetInterpolatedValue(st);
+                        var interpolatedState = value.GetInterpolatedValue();
                         st.mainThrottle = interpolatedState.mainThrottle;
                         st.gearDown = interpolatedState.gearDown;
                         st.gearUp = interpolatedState.gearUp;
@@ -207,16 +207,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     }
                     else
                     {
-                        st.CopyFrom(value.GetInterpolatedValue(st));
+                        st.CopyFrom(value.GetInterpolatedValue());
                     }
-                }
-            }
-            else
-            {
-                var vessel = FlightGlobals.FindVessel(id);
-                if (vessel!= null && !FlightGlobals.FindVessel(id).packed)
-                {
-                    AddVesselToSystem(vessel);
                 }
             }
         }

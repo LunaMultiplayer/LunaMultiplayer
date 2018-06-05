@@ -13,6 +13,22 @@ namespace LunaCommon
         }
 
         /// <summary>
+        /// Custom lerp as Unity does not have a lerp for float values
+        /// </summary>
+        public static float Lerp(float v0, float v1, float t)
+        {
+            return (1 - t) * v0 + t * v1;
+        }
+
+        /// <summary>
+        /// Custom lerp as Unity does not have a lerp for bool values
+        /// </summary>
+        public static bool Lerp(bool v0, bool v1, float t)
+        {
+            return t < 0.5 ? v0 : v1;
+        }
+
+        /// <summary>
         /// Lerps an angle in degrees and wraps around the value specified
         /// </summary>
         public static double LerpAngleDeg(double from, double to, float t, double wrapAngle)

@@ -1,5 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.VesselStore;
+using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Concurrent;
@@ -14,9 +16,36 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (!(msg.Data is VesselFlightStateMsgData msgData)) return;
 
-            if (System.FlightStatesDictionary.TryGetValue(msgData.VesselId, out var existingFlightState))
+            var vesselId = msgData.VesselId;
+            if (!VesselCommon.DoVesselChecks(vesselId))
+                return;
+
+            //Vessel might exist in the store but not in game (while in KSC for example)
+            VesselsProtoStore.UpdateVesselProtoFlightState(msgData);
+
+            //System is not ready nor in use so just skip the message
+            if (!System.FlightStateSystemReady)
+                return;
+
+            //We are not close (unpacked range) to this vessel so ignore the message
+            if (!System.FlyByWireDictionary.ContainsKey(vesselId))
+                return;
+
+            if (VesselFlightStateSystem.CurrentFlightState.TryGetValue(vesselId, out var currentFlightState) && currentFlightState.GameTimeStamp > msgData.GameTime)
             {
-                existingFlightState.SetTarget(msgData);
+                //A user reverted, so clear his message queue and start from scratch
+                currentFlightState.ForceRestart();
+                VesselFlightStateSystem.TargetFlightStateQueue[vesselId].Clear();
+            }
+
+            if (!VesselFlightStateSystem.CurrentFlightState.ContainsKey(vesselId))
+            {
+                VesselFlightStateSystem.CurrentFlightState.TryAdd(vesselId, new VesselFlightStateUpdate(msgData));
+                VesselFlightStateSystem.TargetFlightStateQueue.TryAdd(vesselId, new FlightStateQueue());
+            }
+            else
+            {
+                VesselFlightStateSystem.TargetFlightStateQueue[vesselId].Enqueue(msgData);
             }
         }
     }

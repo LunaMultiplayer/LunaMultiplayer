@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -183,8 +184,19 @@ namespace LunaClient.Windows.Debug
                 {
                     if (VesselPositionSystem.TargetVesselUpdateQueue.Any())
                     {
+                        StringBuilder.AppendLine("Positioning");
                         StringBuilder.Append("Cached: ").AppendLine(PositionUpdateQueue.CacheSize.ToString());
                         foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
+                        {
+                            StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
+                        }
+                    }
+
+                    if (VesselFlightStateSystem.TargetFlightStateQueue.Any())
+                    {
+                        StringBuilder.AppendLine("Flight state");
+                        StringBuilder.Append("Cached: ").AppendLine(FlightStateQueue.CacheSize.ToString());
+                        foreach (var keyVal in VesselFlightStateSystem.TargetFlightStateQueue)
                         {
                             StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
                         }
