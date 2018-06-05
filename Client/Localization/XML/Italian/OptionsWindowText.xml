@@ -11,5 +11,7 @@
     <Interpolation>Abilita l'interpolazione</Interpolation>
     <GenerateLmpModControl>Genera un "LMPModControl.xml" per il server</GenerateLmpModControl>
     <GenerateUniverse>Genera un "Universo" da un salvataggio</GenerateUniverse>
-    <NetworkSettings>NetworkSettings settings</NetworkSettings>
+    <NetworkSettings>Network settings</NetworkSettings>
+    <CannotChangeWhileConnected>Cannot change values while connected</CannotChangeWhileConnected>
+    <ResetNetwork>Reset network</ResetNetwork>
 </OptionsWindowText>

@@ -11,5 +11,7 @@
     <Interpolation>启用插值</Interpolation>
     <GenerateLmpModControl>生成服务器MOD控制文件 LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>从已保存的存档中生成宇宙</GenerateUniverse>
-    <NetworkSettings>NetworkSettings settings</NetworkSettings>
+    <NetworkSettings>Network settings</NetworkSettings>
+    <CannotChangeWhileConnected>Cannot change values while connected</CannotChangeWhileConnected>
+    <ResetNetwork>Reset network</ResetNetwork>
 </OptionsWindowText>

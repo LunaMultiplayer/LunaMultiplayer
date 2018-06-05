@@ -90,7 +90,7 @@ namespace LunaClient.Windows.Options
             {
                 if (MainSystem.NetworkState > ClientState.Disconnected)
                 {
-                    GUILayout.Label("Cannot change values while connected");
+                    GUILayout.Label(LocalizationContainer.OptionsWindowText.CannotChangeWhileConnected);
                 }
 
                 GUILayout.Label($"MTU (Default: {NetPeerConfiguration.kDefaultMTU}): {NetworkMain.Config.MaximumTransmissionUnit}");
@@ -116,7 +116,7 @@ namespace LunaClient.Windows.Options
                     NetworkMain.Config.ConnectionTimeout = (int)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.ConnectionTimeout, 0, NetworkMain.Config.PingInterval, 120));
                     GUI.enabled = true;
 
-                    _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "Infinite", "toggle");
+                    _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "∞", "toggle");
                     if (_infiniteTimeout) NetworkMain.Config.ConnectionTimeout = float.MaxValue;
                 }
             }

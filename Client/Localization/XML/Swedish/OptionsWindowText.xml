@@ -11,5 +11,7 @@
     <Interpolation>Interpolering av/på</Interpolation>
     <GenerateLmpModControl>Skapa en server LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>Skapa ett Universum utifrån existerande sparfil</GenerateUniverse>
-    <NetworkSettings>NetworkSettings settings</NetworkSettings>
+    <NetworkSettings>Network settings</NetworkSettings>
+    <CannotChangeWhileConnected>Cannot change values while connected</CannotChangeWhileConnected>
+    <ResetNetwork>Reset network</ResetNetwork>
 </OptionsWindowText>
