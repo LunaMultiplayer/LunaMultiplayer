@@ -4,7 +4,6 @@ using Server.Client;
 using Server.Context;
 using Server.Log;
 using Server.Server;
-using Server.System.VesselRelay;
 
 namespace Server.System
 {
@@ -22,7 +21,6 @@ namespace Server.System
 
                 //Create Subspace
                 WarpContext.Subspaces.TryAdd(WarpContext.NextSubspaceId, new Subspace(WarpContext.NextSubspaceId, message.ServerTimeDifference, client.PlayerName));
-                VesselRelaySystem.CreateNewSubspace(WarpContext.NextSubspaceId);
 
                 //Tell all Clients about the new Subspace
                 var msgData = ServerContext.ServerMessageFactory.CreateNewMessageData<WarpNewSubspaceMsgData>();
@@ -60,10 +58,7 @@ namespace Server.System
                     client.Subspace = newSubspace;
 
                     //Try to remove his old subspace
-                    if (WarpSystem.RemoveSubspace(oldSubspace))
-                    {
-                        VesselRelaySystem.RemoveSubspace(oldSubspace);
-                    }
+                    WarpSystem.RemoveSubspace(oldSubspace);
                 }
             }
         }

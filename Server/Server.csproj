@@ -128,13 +128,11 @@
     <Compile Include="Settings\Definition\IntervalSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\LogSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\MasterServerSettingsDefinition.cs" />
-    <Compile Include="Settings\Definition\RelaySettingsDefinition.cs" />
     <Compile Include="Settings\Definition\ScreenshotSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\WarpSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\WebsiteSettingsDefinition.cs" />
     <Compile Include="Settings\SettingsHandler.cs" />
     <Compile Include="Settings\Structures\ConnectionSettings.cs" />
-    <Compile Include="Settings\Structures\RelaySettings.cs" />
     <Compile Include="Settings\Structures\IntervalSettings.cs" />
     <Compile Include="Settings\Structures\LogSettings.cs" />
     <Compile Include="Settings\Structures\WebsiteSettings.cs" />
@@ -196,10 +194,6 @@
     <Compile Include="System\ShareTechnologySystem.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselDataUpdater.cs" />
-    <Compile Include="System\VesselRelay\VesselRelayItem.cs" />
-    <Compile Include="System\VesselRelay\VesselRelaySystem.cs" />
-    <Compile Include="System\VesselRelay\VesselRelaySystemDataBase.cs" />
-    <Compile Include="System\VesselRelay\VesselRelaySystemDictionary.cs" />
     <Compile Include="System\VesselStoreSystem.cs" />
     <Compile Include="System\WarpSystem.cs" />
     <Compile Include="System\WarpSystemReceiver.cs" />
@@ -220,7 +214,6 @@
     <Compile Include="Web\Structures\Settings\ServerIntervalSettings.cs" />
     <Compile Include="Web\Structures\Settings\ServerLogSettings.cs" />
     <Compile Include="Web\Structures\Settings\ServerMasterServerSettings.cs" />
-    <Compile Include="Web\Structures\Settings\ServerRelaySettings.cs" />
     <Compile Include="Web\Structures\Settings\ServerScreenshotSettings.cs" />
     <Compile Include="Web\Structures\Settings\ServerWarpSettings.cs" />
     <Compile Include="Web\Structures\Settings\ServerGeneralSettings.cs" />

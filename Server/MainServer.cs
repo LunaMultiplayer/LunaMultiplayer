@@ -11,7 +11,6 @@ using Server.Plugin;
 using Server.Settings;
 using Server.Settings.Structures;
 using Server.System;
-using Server.System.VesselRelay;
 using Server.Upnp;
 using Server.Utilities;
 using Server.Web;
@@ -107,7 +106,6 @@ namespace Server
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RefreshMasterServersList, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServer, CancellationTokenSrc.Token));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(VesselRelaySystem.RelayOldVesselMessages, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersion, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsg, CancellationTokenSrc.Token));
 

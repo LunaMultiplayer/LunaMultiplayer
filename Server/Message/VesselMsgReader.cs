@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Text;
-using LunaCommon.Message.Data.Vessel;
+﻿using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using LunaCommon.Message.Server;
 using LunaCommon.Message.Types;
@@ -12,7 +9,9 @@ using Server.Message.Base;
 using Server.Server;
 using Server.Settings.Structures;
 using Server.System;
-using Server.System.VesselRelay;
+using System;
+using System.Linq;
+using System.Text;
 
 namespace Server.Message
 {
@@ -37,12 +36,12 @@ namespace Server.Message
                     HandleVesselRemove(client, messageData);
                     break;
                 case VesselMessageType.Position:
-                    VesselRelaySystem.HandleVesselMessage(client, messageData);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     if (!GeneralSettings.SettingsStore.ShowVesselsInThePast || client.Subspace == WarpContext.LatestSubspace.Id)
                         VesselDataUpdater.WritePositionDataToFile(messageData);
                     break;
                 case VesselMessageType.Flightstate:
-                    VesselRelaySystem.HandleVesselMessage(client, messageData);
+                    MessageQueuer.RelayMessage<VesselSrvMsg>(client, messageData);
                     VesselDataUpdater.WriteFlightstateDataToFile(messageData);
                     break;
                 case VesselMessageType.Update:

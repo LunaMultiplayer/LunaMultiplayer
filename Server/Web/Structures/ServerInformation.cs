@@ -8,7 +8,6 @@ namespace Server.Web.Structures
         public ServerGeneralSettings GeneralSettings { get; } = new ServerGeneralSettings();
         public ServerWarpSettings WarpSettings { get; } = new ServerWarpSettings();
         public ServerScreenshotSettings ServerScreenshotSettings { get; } = new ServerScreenshotSettings();
-        public ServerRelaySettings RelaySettings { get; } = new ServerRelaySettings();
         public ServerMasterServerSettings ServerMasterServerSettings { get; } = new ServerMasterServerSettings();
         public ServerLogSettings ServerLogSettings { get; } = new ServerLogSettings();
         public ServerIntervalSettings ServerIntervalSettings { get; } = new ServerIntervalSettings();

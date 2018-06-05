@@ -7,7 +7,6 @@ using Server.Log;
 using Server.Plugin;
 using Server.Server;
 using Server.System;
-using Server.System.VesselRelay;
 using System;
 
 namespace Server.Client
@@ -47,11 +46,7 @@ namespace Server.Client
 
                     MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
                     LockSystem.ReleasePlayerLocks(client);
-
-                    if (WarpSystem.RemoveSubspace(client.Subspace))
-                    {
-                        VesselRelaySystem.RemoveSubspace(client.Subspace);
-                    }
+                    WarpSystem.RemoveSubspace(client.Subspace);
                 }
 
                 try
