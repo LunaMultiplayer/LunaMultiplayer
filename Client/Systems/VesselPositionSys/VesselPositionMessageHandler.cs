@@ -41,7 +41,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!VesselPositionSystem.CurrentVesselUpdate.ContainsKey(vesselId))
             {
                 VesselPositionSystem.CurrentVesselUpdate.TryAdd(vesselId, new VesselPositionUpdate(msgData));
-                VesselPositionSystem.TargetVesselUpdateQueue.TryAdd(vesselId, new PositionUpdateQueue());
+                VesselPositionSystem.TargetVesselUpdateQueue.TryAdd(vesselId, new PositionUpdateQueue(vesselId));
             }
             else
             {

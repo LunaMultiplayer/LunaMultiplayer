@@ -41,7 +41,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (!VesselFlightStateSystem.CurrentFlightState.ContainsKey(vesselId))
             {
                 VesselFlightStateSystem.CurrentFlightState.TryAdd(vesselId, new VesselFlightStateUpdate(msgData));
-                VesselFlightStateSystem.TargetFlightStateQueue.TryAdd(vesselId, new FlightStateQueue());
+                VesselFlightStateSystem.TargetFlightStateQueue.TryAdd(vesselId, new FlightStateQueue(vesselId));
             }
             else
             {

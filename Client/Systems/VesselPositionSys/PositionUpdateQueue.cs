@@ -1,8 +1,9 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaCommon.Message.Data.Vessel;
 using System;
-using LunaClient.Systems.TimeSyncer;
+using System.Threading;
 
 namespace LunaClient.Systems.VesselPositionSys
 {
@@ -11,35 +12,45 @@ namespace LunaClient.Systems.VesselPositionSys
         private const int MaxPacketsInQueue = 5;
         private const float MaxTimeDifference = 1.5f;
 
-        public override bool TryDequeue(out VesselPositionUpdate result)
-        {
-            return KeepDequeuing(out result);
-        }
+        private Guid VesselId { get; set; }
 
-        private bool KeepDequeuing(out VesselPositionUpdate result)
+        public PositionUpdateQueue(Guid vesselId) => SystemBase.LongRunTaskFactory.StartNew(() =>
         {
-            var dequeueResult = base.TryDequeue(out result);
-
-            if (dequeueResult)
+            VesselId = vesselId;
+            while (VesselPositionSystem.CurrentVesselUpdate.ContainsKey(VesselId))
             {
-                if (!WarpSystem.Singleton.SubspaceIdIsMoreAdvancedInTime(result.SubspaceId) && Count > MaxPacketsInQueue)
+                if (Queue.TryPeek(out var outValue))
                 {
-                    //This is the case where the message comes from the same subspace or from a subspace in the PAST.
-                    //We don't want to have more than 5 packets in the queue so discard the old ones
-                    Recycle(result);
-                    dequeueResult = KeepDequeuing(out result);
+                    //Only remove old messages that are from future subspaces or from our same subspace!
+                    if (WarpSystem.Singleton.SubspaceIdIsMoreAdvancedInTime(outValue.SubspaceId) || WarpSystem.Singleton.CurrentSubspace == outValue.SubspaceId)
+                    {
+                        if (TimeSyncerSystem.UniversalTime - outValue.GameTimeStamp > MaxTimeDifference)
+                        {
+                            while (Queue.TryDequeue(out outValue))
+                            {
+                                if (TimeSyncerSystem.UniversalTime - outValue.GameTimeStamp > MaxTimeDifference)
+                                {
+                                    Recycle(outValue);
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        //This is the case where we received updates from a PAST subspace
+                        while (Count > MaxPacketsInQueue && Queue.TryDequeue(out var outExceededValue))
+                        {
+                            Recycle(outExceededValue);
+                        }
+                    }
                 }
-                else if (TimeSyncerSystem.UniversalTime - result.GameTimeStamp > MaxTimeDifference)
-                {                    
-                    //This is the case where the message comes from a subspace in the FUTURE.
-                    //If the packet is too old, just discard it.
-                    Recycle(result);
-                    dequeueResult = KeepDequeuing(out result);
-                }
+                Thread.Sleep(5);
             }
-
-            return dequeueResult;
-        }
+        });
 
         protected override void AssignFromMessage(VesselPositionUpdate value, VesselPositionMsgData msgData)
         {

@@ -76,7 +76,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
                 return FlightGlobals.ActiveVessel.ctrlState;
             }
 
-            if (InterpolationFinished && VesselFlightStateSystem.TargetFlightStateQueue[VesselId].TryDequeue(out var targetUpdate))
+            if (InterpolationFinished && VesselFlightStateSystem.TargetFlightStateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
                 ProcessRestart();
                 LerpPercentage = 0;
