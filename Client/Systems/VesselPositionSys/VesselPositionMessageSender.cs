@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
@@ -67,7 +68,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
             var msgData = MessageFactory.CreateNewMessageData<VesselPositionMsgData>();
             msgData.SubspaceId = WarpSystem.Singleton.CurrentSubspace;
-            msgData.GameTime = WarpSystem.Singleton.CurrentSubspaceTime;
+            msgData.GameTime = TimeSyncerSystem.UniversalTime;
             try
             {
                 msgData.VesselId = vessel.id;

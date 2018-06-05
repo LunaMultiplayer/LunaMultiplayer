@@ -1,6 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.Warp;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.VesselUtilities;
 using System;
 using System.Collections.Concurrent;
@@ -164,7 +164,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (vessel.orbit != null)
             {
-                vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, WarpSystem.Singleton.CurrentSubspaceTime);
+                vessel.orbit?.UpdateFromStateVectors(vessel.orbit.pos, vessel.orbit.vel, vessel.orbit.referenceBody, TimeSyncerSystem.UniversalTime);
                 if (!vessel.LandedOrSplashed)
                 {
                     vessel.mainBody.GetLatLonAltOrbital(vessel.orbit.pos, out vessel.latitude, out vessel.longitude, out vessel.altitude);
