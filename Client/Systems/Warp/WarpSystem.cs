@@ -278,7 +278,7 @@ namespace LunaClient.Systems.Warp
 
         public double GetTimeDifferenceWithGivenSubspace(int subspaceId)
         {
-            if (Subspaces.TryGetValue(subspaceId, out var subspaceTime))
+            if (subspaceId != -1 && Subspaces.TryGetValue(subspaceId, out var subspaceTime))
                 return subspaceTime - CurrentSubspaceTimeDifference;
 
             return double.MaxValue;
