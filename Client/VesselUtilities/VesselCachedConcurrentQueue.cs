@@ -31,7 +31,7 @@ namespace LunaClient.VesselUtilities
                     }
                     else if (WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(subspaceId) < MaxTimeDifference * 1.5f)
                     {
-                        //We are in a subspace that even if it's in the future we have a time difference less than MaxTimeDifference
+                        //We are in a subspace that even if it's in the future we have a time difference close to MaxTimeDifference
                         DequeueExtraPackets();
                     }
                     else if (TimeSyncerSystem.UniversalTime - GetTimestampFromValue(outValue) > MaxTimeDifference)
