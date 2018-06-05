@@ -16,7 +16,7 @@ namespace Server.Log
         public static string LogFolder = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
 
         public static string LogFilename = Path.Combine(LogFolder,
-            $"lmpserver {DateTime.Now:yyyy-MM-dd HH-mm-ss}.log");
+            $"lmpserver_{DateTime.Now:yyyy-MM-dd_HH-mm-ss}.log");
 
         #region Private methods
 
