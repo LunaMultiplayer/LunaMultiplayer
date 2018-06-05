@@ -33,9 +33,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var currentUpdate) && currentUpdate.GameTimeStamp > msgData.GameTime)
             {
-                //User reverted!
-                LunaLog.LogError("USER REVERTED");
-                currentUpdate.LerpPercentage = 1;
+                //A user reverted, so clear his message queue and start from scratch
+                currentUpdate.ForceRestart();
                 VesselPositionSystem.TargetVesselUpdateQueue[vesselId].Clear();
             }
 

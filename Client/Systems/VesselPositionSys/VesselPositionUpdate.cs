@@ -176,7 +176,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (!WarpSystem.Singleton.SubspaceIdIsMoreAdvancedInTime(Target.SubspaceId))
             {
                 var queueCount = VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Count;
-                //We are more advanced or in the same time. For this case we want to have between 2 and 4 packets in the queue.
+                //We are more advanced or in the subspace. For this case we want to have between 2 and 4 packets in the queue.
                 switch (queueCount)
                 {
                     case 0:

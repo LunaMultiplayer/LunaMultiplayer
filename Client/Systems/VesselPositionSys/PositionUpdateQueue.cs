@@ -23,11 +23,15 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 if (!WarpSystem.Singleton.SubspaceIdIsMoreAdvancedInTime(result.SubspaceId) && Count > MaxPacketsInQueue)
                 {
+                    //This is the case where the message comes from the same subspace or from a subspace in the PAST.
+                    //We don't want to have more than 5 packets in the queue so discard the old ones
                     Recycle(result);
                     dequeueResult = KeepDequeuing(out result);
                 }
                 else if (Planetarium.GetUniversalTime() - result.GameTimeStamp > MaxTimeDifference)
-                {
+                {                    
+                    //This is the case where the message comes from a subspace in the FUTURE.
+                    //If the packet is too old, just discard it.
                     Recycle(result);
                     dequeueResult = KeepDequeuing(out result);
                 }
