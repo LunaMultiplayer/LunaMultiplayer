@@ -250,7 +250,6 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
-    <Compile Include="VesselUtilities\VesselCachedConcurrentQueue.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
