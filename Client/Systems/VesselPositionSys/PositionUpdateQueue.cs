@@ -1,19 +1,11 @@
-﻿using LunaClient.VesselUtilities;
+﻿using LunaClient.Base;
 using LunaCommon.Message.Data.Vessel;
 using System;
 
 namespace LunaClient.Systems.VesselPositionSys
 {
-    public class PositionUpdateQueue : VesselCachedConcurrentQueue<VesselPositionUpdate, VesselPositionMsgData>
+    public class PositionUpdateQueue : CachedConcurrentQueue<VesselPositionUpdate, VesselPositionMsgData>
     {
-        public PositionUpdateQueue(Guid vesselId) : base(vesselId)
-        {
-        }
-
-        protected override bool CurrentDictionaryContainsKey(Guid vesselId) => VesselPositionSystem.CurrentVesselUpdate.ContainsKey(vesselId);
-        protected override int GetSubspaceIdFromValue(VesselPositionUpdate value) => value.SubspaceId;
-        protected override double GetTimestampFromValue(VesselPositionUpdate value) => value.GameTimeStamp;
-
         protected override void AssignFromMessage(VesselPositionUpdate value, VesselPositionMsgData msgData)
         {
             value.VesselId = msgData.VesselId;
