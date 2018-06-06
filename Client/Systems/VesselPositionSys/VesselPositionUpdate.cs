@@ -203,10 +203,13 @@ namespace LunaClient.Systems.VesselPositionSys
             TimeDifference = (float)(TimeSyncerSystem.UniversalTime - GameTimeStamp);
             if (SubspaceId == -1)
             {
+                //While warping we only fix the interpolation if we are LAGGING behind the updates
+                //We never fix it if the packet that we received is very advanced in time
                 ExtraInterpolationTime = (TimeDifference > timeBack ? -1 : 0) * GetInterpolationFixFactor();
             }
             else if (WarpSystem.Singleton.SubspaceIsEqualOrInThePast(SubspaceId))
             {
+                //IN past or same subspaces we want to be timeBack seconds BEHIND the player position
                 if (WarpSystem.Singleton.CurrentSubspace != SubspaceId)
                 {
                     var timeToAdd = (float)Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
@@ -217,11 +220,15 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
-                //Future subspace
+                //In future subspaces we want to be in the exact time as when the packet was sent
                 ExtraInterpolationTime = (TimeDifference > 0 ? -1 : 1) * GetInterpolationFixFactor();
             }
         }
 
+        /// <summary>
+        /// This gives the fix factor. It scales up or down depending on the error we have
+        /// </summary>
+        /// <returns></returns>
         private float GetInterpolationFixFactor()
         {
             var error = Math.Abs(TimeDifference);
