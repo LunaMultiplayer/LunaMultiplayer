@@ -94,8 +94,10 @@ namespace LunaClient.Systems.Lock
         /// </summary>
         public void AcquireKerbalLock(Vessel vessel, bool force = false)
         {
+            if (vessel == null) return;
             foreach (var kerbal in vessel.GetVesselCrew())
             {
+                if (kerbal == null) continue;
                 if (!LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
                     AcquireLock(new LockDefinition(LockType.Kerbal, SettingsSystem.CurrentSettings.PlayerName, kerbal.name), force);
             }
