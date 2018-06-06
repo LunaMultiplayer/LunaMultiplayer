@@ -17,7 +17,7 @@ namespace LunaClient.Systems.VesselPositionSys
     public class VesselPositionUpdate
     {
         private float MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval).TotalSeconds
+            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval).TotalSeconds * 10
                 : float.MaxValue;
 
         #region Fields

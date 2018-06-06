@@ -10,7 +10,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
     public class VesselFlightStateUpdate
     {
         private float MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            1 : float.MaxValue;
+            1 * 10 : float.MaxValue;
 
         #region Fields
 
