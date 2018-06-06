@@ -7,6 +7,7 @@ using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
+using LunaCommon.Extensions;
 using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,8 @@ namespace LunaClient.Windows.Debug
         private static string _timeText;
         private static string _connectionText;
         private static string _vesselStoreText;
-        private static string _interpolationText;
+        private static string _interpolationPositionText;
+        private static string _interpolationFlightStateText;
         private static float _lastUpdateTime;
 
         private static bool _displayVectors;
@@ -44,6 +46,8 @@ namespace LunaClient.Windows.Debug
         private static bool _displayConnectionQueue;
         private static bool _displayVesselStoreData;
         private static bool _displayInterpolationData;
+        private static bool _displayInterpolationPositionData;
+        private static bool _displayInterpolationFlightStateData;
 
         private static bool _display;
         public override bool Display
@@ -182,28 +186,35 @@ namespace LunaClient.Windows.Debug
 
                 if (_displayInterpolationData)
                 {
-                    if (VesselPositionSystem.TargetVesselUpdateQueue.Any())
+                    if (_displayInterpolationPositionData && VesselPositionSystem.TargetVesselUpdateQueue.Any())
                     {
-                        StringBuilder.AppendLine("Positioning");
                         StringBuilder.Append("Cached: ").AppendLine(PositionUpdateQueue.CacheSize.ToString());
                         foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
                         {
-                            StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
+                            var extraInterpolationTime = VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].ExtraInterpolationTime;
+                            var timeDiff = VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].TimeDifference;
+                            StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
+                                .Append($" TimeDiff: {timeDiff}").AppendLine($" T+: {extraInterpolationTime}");
                         }
+
+                        _interpolationPositionText = StringBuilder.ToString();
+                        StringBuilder.Length = 0;
                     }
 
-                    if (VesselFlightStateSystem.TargetFlightStateQueue.Any())
+                    if (_displayInterpolationFlightStateData && VesselFlightStateSystem.TargetFlightStateQueue.Any())
                     {
-                        StringBuilder.AppendLine("Flight state");
                         StringBuilder.Append("Cached: ").AppendLine(FlightStateQueue.CacheSize.ToString());
                         foreach (var keyVal in VesselFlightStateSystem.TargetFlightStateQueue)
                         {
-                            StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
+                            var extraInterpolationTime = VesselFlightStateSystem.CurrentFlightState[keyVal.Key].ExtraInterpolationTime;
+                            var timeDiff = VesselFlightStateSystem.CurrentFlightState[keyVal.Key].TimeDifference;
+                            StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
+                                .Append($" TimeDiff: {timeDiff}").AppendLine($" T+: {extraInterpolationTime}");
                         }
-                    }
 
-                    _interpolationText = StringBuilder.ToString();
-                    StringBuilder.Length = 0;
+                        _interpolationFlightStateText = StringBuilder.ToString();
+                        StringBuilder.Length = 0;
+                    }
                 }
             }
         }

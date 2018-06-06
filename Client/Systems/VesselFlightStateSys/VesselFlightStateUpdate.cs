@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.Warp;
+﻿using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using System;
@@ -27,6 +28,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         #region Interpolation fields
 
+        public float TimeDifference { get; private set; }
         public float ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
         public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, MaxInterpolationDuration);
@@ -123,34 +125,54 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private void AdjustExtraInterpolationTimes()
         {
-            if (WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId))
+            var timeBack = 0.35;
+
+            TimeDifference = (float)(TimeSyncerSystem.UniversalTime - GameTimeStamp);
+            if (SubspaceId == -1)
             {
-                var queueCount = VesselFlightStateSystem.TargetFlightStateQueue[VesselId].Count;
-                //We are more advanced or in the subspace. For this case we want to have between 2 and 4 packets in the queue.
-                switch (queueCount)
+                ExtraInterpolationTime = (TimeDifference > timeBack ? -1 : 0) * GetInterpolationFixFactor();
+            }
+            else if (WarpSystem.Singleton.SubspaceIsEqualOrInThePast(SubspaceId))
+            {
+                if (WarpSystem.Singleton.CurrentSubspace != SubspaceId)
                 {
-                    case 0:
-                        ExtraInterpolationTime = InterpolationDuration * 0.75f;
-                        break;
-                    case 1:
-                        ExtraInterpolationTime = InterpolationDuration * 0.25f;
-                        break;
-                    case 2:
-                    case 3:
-                        ExtraInterpolationTime = 0;
-                        break;
-                    case 4:
-                        ExtraInterpolationTime = InterpolationDuration * 0.25f * -1f;
-                        break;
-                    default:
-                        ExtraInterpolationTime = InterpolationDuration * 0.60f * -1f;
-                        break;
+                    var timeToAdd = (float)Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
+                    TimeDifference += timeToAdd;
                 }
+
+                ExtraInterpolationTime = (TimeDifference > timeBack ? -1 : 1) * GetInterpolationFixFactor();
             }
             else
             {
-                ExtraInterpolationTime = 0;
+                //Future subspace
+                ExtraInterpolationTime = (TimeDifference > 0 ? -1 : 1) * GetInterpolationFixFactor();
             }
+        }
+
+        private float GetInterpolationFixFactor()
+        {
+            var error = Math.Abs(TimeDifference);
+            if (error <= 1.5f)
+            {
+                return InterpolationDuration * 0.25f;
+            }
+
+            if (error <= 5)
+            {
+                return InterpolationDuration * error / 10;
+            }
+
+            if (error <= 10)
+            {
+                return InterpolationDuration * error / 5;
+            }
+
+            if (error <= 15)
+            {
+                return InterpolationDuration * error / 2;
+            }
+
+            return InterpolationDuration * error;
         }
 
         #endregion

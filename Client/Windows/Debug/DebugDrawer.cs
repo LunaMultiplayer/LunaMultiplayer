@@ -24,7 +24,14 @@ namespace LunaClient.Windows.Debug
 
             _displayInterpolationData = GUILayout.Toggle(_displayInterpolationData, "Display interpolation statistics", ButtonStyle);
             if (_displayInterpolationData)
-                GUILayout.Label(_interpolationText, LabelStyle);
+            {
+                _displayInterpolationPositionData = GUILayout.Toggle(_displayInterpolationPositionData, "Position", ButtonStyle);
+                if (_displayInterpolationPositionData)
+                    GUILayout.Label(_interpolationPositionText, LabelStyle);
+                _displayInterpolationFlightStateData = GUILayout.Toggle(_displayInterpolationFlightStateData, "Flight state", ButtonStyle);
+                if (_displayInterpolationFlightStateData)
+                    GUILayout.Label(_interpolationFlightStateText, LabelStyle);
+            }
 
             _displaySubspace = GUILayout.Toggle(_displaySubspace, "Display subspace statistics", ButtonStyle);
             if (_displaySubspace)
