@@ -31,14 +31,10 @@ namespace LunaClient.Systems.VesselFlightStateSys
         public float TimeDifference { get; private set; }
         public float ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
+        public float RawInterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp), 0, MaxInterpolationDuration);
         public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
-        private float _lerpPercentage = 1;
-        public float LerpPercentage
-        {
-            get => _lerpPercentage;
-            set => _lerpPercentage = Mathf.Clamp01(value);
-        }
+        public float LerpPercentage { get; set; } = 1;
 
         #endregion
 
@@ -114,7 +110,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
             if (Target == null) return InterpolatedCtrlState;
 
-            InterpolatedCtrlState.Lerp(CtrlState, Target.CtrlState, _lerpPercentage);
+            InterpolatedCtrlState.LerpUnclamped(CtrlState, Target.CtrlState, LerpPercentage);
             LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
 
             return InterpolatedCtrlState;
@@ -125,7 +121,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private void AdjustExtraInterpolationTimes()
         {
-            var timeBack = 0.35;
+            var timeBack = 1.5;
 
             TimeDifference = (float)(TimeSyncerSystem.UniversalTime - GameTimeStamp);
             if (SubspaceId == -1)
@@ -152,27 +148,22 @@ namespace LunaClient.Systems.VesselFlightStateSys
         private float GetInterpolationFixFactor()
         {
             var error = Math.Abs(TimeDifference);
-            if (error <= 1.5f)
-            {
-                return InterpolationDuration * 0.25f;
-            }
-
             if (error <= 5)
             {
-                return InterpolationDuration * error / 10;
+                return RawInterpolationDuration * 0.25f;
             }
 
             if (error <= 10)
             {
-                return InterpolationDuration * error / 5;
+                return RawInterpolationDuration * 0.60f;
             }
 
             if (error <= 15)
             {
-                return InterpolationDuration * error / 2;
+                return RawInterpolationDuration;
             }
 
-            return InterpolationDuration * error;
+            return RawInterpolationDuration * 2;
         }
 
         #endregion

@@ -49,5 +49,27 @@ namespace LunaClient.Systems.VesselFlightStateSys
             fs.headlight = LunaMath.Lerp(from.headlight, to.headlight, Mathf.Clamp01(lerpPercentage));
             fs.killRot = LunaMath.Lerp(from.killRot, to.killRot, Mathf.Clamp01(lerpPercentage));
         }
+
+        public static void LerpUnclamped(this FlightCtrlState fs, FlightCtrlState from, FlightCtrlState to, float lerpPercentage)
+        {
+            fs.X = LunaMath.LerpUnclamped(from.X, to.X, lerpPercentage);
+            fs.Y = LunaMath.LerpUnclamped(from.Y, to.Y, lerpPercentage);
+            fs.Z = LunaMath.LerpUnclamped(from.Z, to.Z, lerpPercentage);
+            fs.pitch = LunaMath.LerpUnclamped(from.pitch, to.pitch, lerpPercentage);
+            fs.pitchTrim = LunaMath.LerpUnclamped(from.pitchTrim, to.pitchTrim, lerpPercentage);
+            fs.roll = LunaMath.LerpUnclamped(from.roll, to.roll, lerpPercentage);
+            fs.rollTrim = LunaMath.LerpUnclamped(from.rollTrim, to.rollTrim, lerpPercentage);
+            fs.yaw = LunaMath.LerpUnclamped(from.yaw, to.yaw, lerpPercentage);
+            fs.yawTrim = LunaMath.LerpUnclamped(from.yawTrim, to.yawTrim, lerpPercentage);
+            fs.mainThrottle = LunaMath.LerpUnclamped(from.mainThrottle, to.mainThrottle, lerpPercentage);
+            fs.wheelSteer = LunaMath.LerpUnclamped(from.wheelSteer, to.wheelSteer, lerpPercentage);
+            fs.wheelSteerTrim = LunaMath.LerpUnclamped(from.wheelSteerTrim, to.wheelSteerTrim, lerpPercentage);
+            fs.wheelThrottle = LunaMath.LerpUnclamped(from.wheelThrottle, to.wheelThrottle, lerpPercentage);
+            fs.wheelThrottleTrim = LunaMath.LerpUnclamped(from.wheelThrottleTrim, to.wheelThrottleTrim, lerpPercentage);
+            fs.gearDown = LunaMath.Lerp(from.gearDown, to.gearDown, lerpPercentage);
+            fs.gearUp = LunaMath.Lerp(from.gearUp, to.gearUp, lerpPercentage);
+            fs.headlight = LunaMath.Lerp(from.headlight, to.headlight, lerpPercentage);
+            fs.killRot = LunaMath.Lerp(from.killRot, to.killRot, lerpPercentage);
+        }
     }
 }

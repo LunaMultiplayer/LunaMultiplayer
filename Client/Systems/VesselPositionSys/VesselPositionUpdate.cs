@@ -1,6 +1,7 @@
 ﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
+using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
@@ -71,13 +72,15 @@ namespace LunaClient.Systems.VesselPositionSys
         public float TimeDifference { get; private set; }
         public float ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
+
+        public float RawInterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp), 0, MaxInterpolationDuration);
         public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
         private float _lerpPercentage = 1;
         public float LerpPercentage
         {
             get => SettingsSystem.CurrentSettings.PositionInterpolation ? _lerpPercentage : 1;
-            set => _lerpPercentage = Mathf.Clamp01(value);
+            set => _lerpPercentage = value;
         }
 
         #endregion
@@ -198,7 +201,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void AdjustExtraInterpolationTimes()
         {
-            var timeBack = 0.35;
+            var timeBack = 1.5;
 
             TimeDifference = (float)(TimeSyncerSystem.UniversalTime - GameTimeStamp);
             if (SubspaceId == -1)
@@ -232,27 +235,22 @@ namespace LunaClient.Systems.VesselPositionSys
         private float GetInterpolationFixFactor()
         {
             var error = Math.Abs(TimeDifference);
-            if (error <= 1.5f)
-            {
-                return InterpolationDuration * 0.25f;
-            }
-
             if (error <= 5)
             {
-                return InterpolationDuration * error / 10;
+                return RawInterpolationDuration * 0.25f;
             }
 
             if (error <= 10)
             {
-                return InterpolationDuration * error / 5;
+                return RawInterpolationDuration * 0.60f;
             }
 
             if (error <= 15)
             {
-                return InterpolationDuration * error / 2;
+                return RawInterpolationDuration;
             }
 
-            return InterpolationDuration * error;
+            return RawInterpolationDuration * 2;
         }
 
         #endregion
@@ -321,8 +319,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyInterpolationsToLoadedVessel()
         {
-            var currentSurfaceRelRotation = Quaternion.Slerp(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
-            var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, LerpPercentage);
+            var currentSurfaceRelRotation = Quaternion.SlerpUnclamped(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
+            var curVelocity = VectorUtil.LerpUnclamped(VelocityVector, Target.VelocityVector, LerpPercentage);
 
             //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped.
             Vessel.SetWorldVelocity(curVelocity);
@@ -340,9 +338,9 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (Vessel.LandedOrSplashed)
             {
-                Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
-                Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
-                Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
+                Vessel.latitude = LunaMath.LerpUnclamped(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
+                Vessel.longitude = LunaMath.LerpUnclamped(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
+                Vessel.altitude = LunaMath.LerpUnclamped(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
 
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
@@ -368,14 +366,14 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void ApplyPositionsToEva()
         {
-            Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
-            Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
-            Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
+            Vessel.latitude = LunaMath.LerpUnclamped(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
+            Vessel.longitude = LunaMath.LerpUnclamped(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
+            Vessel.altitude = LunaMath.LerpUnclamped(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
 
             Vessel.Landed = LerpPercentage < 0.5 ? Landed : Target.Landed;
             Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
 
-            var currentSurfaceRelRotation = Quaternion.Slerp(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
+            var currentSurfaceRelRotation = Quaternion.SlerpUnclamped(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
             Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
@@ -389,7 +387,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyOrbitInterpolation()
         {
-            var lerpTime = LunaMath.Lerp(Orbit[6], Target.Orbit[6], LerpPercentage);
+            var lerpTime = LunaMath.LerpUnclamped(Orbit[6], Target.Orbit[6], LerpPercentage);
 
             var currentPos = KspOrbit.getRelativePositionAtUT(Orbit[6]);
             var targetPos = Target.KspOrbit.getRelativePositionAtUT(Target.Orbit[6]);
@@ -397,8 +395,8 @@ namespace LunaClient.Systems.VesselPositionSys
             var currentVel = KspOrbit.getOrbitalVelocityAtUT(Orbit[6]) + KspOrbit.referenceBody.GetFrameVelAtUT(Orbit[6]) - Body.GetFrameVelAtUT(Orbit[6]);
             var targetVel = Target.KspOrbit.getOrbitalVelocityAtUT(Target.Orbit[6]) + Target.KspOrbit.referenceBody.GetFrameVelAtUT(Target.Orbit[6]) - Target.Body.GetFrameVelAtUT(Target.Orbit[6]);
 
-            var lerpedPos = Vector3d.Lerp(currentPos, targetPos, LerpPercentage);
-            var lerpedVel = Vector3d.Lerp(currentVel, targetVel, LerpPercentage);
+            var lerpedPos = VectorUtil.LerpUnclamped(currentPos, targetPos, LerpPercentage);
+            var lerpedVel = VectorUtil.LerpUnclamped(currentVel, targetVel, LerpPercentage);
 
             Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, lerpTime);
         }
