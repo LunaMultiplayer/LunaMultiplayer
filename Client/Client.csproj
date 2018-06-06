@@ -78,6 +78,8 @@
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Events\StrategyEvent.cs" />
     <Compile Include="Events\WarpEvent.cs" />
+    <Compile Include="Extensions\OrbitExtension.cs" />
+    <Compile Include="Extensions\StringExtension.cs" />
     <Compile Include="Harmony\DebugScreen_OnGameSceneLoad.cs" />
     <Compile Include="Harmony\DebugToolbar_WindowCheats.cs" />
     <Compile Include="Harmony\CollisionEnhancer_FixedUpdate.cs" />
@@ -239,6 +241,7 @@
     <Compile Include="Utilities\CoroutineUtil.cs" />
     <Compile Include="Utilities\Detourer.cs" />
     <Compile Include="Utilities\Json.cs" />
+    <Compile Include="Utilities\VectorUtil.cs" />
     <Compile Include="VesselIgnore\VesselModulesToIgnore.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselProtoEvents.cs" />
     <Compile Include="Systems\VesselProtoSys\VesselToProtoRefresh.cs" />
@@ -249,7 +252,6 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
-    <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />
@@ -590,6 +592,7 @@
       <Name>LmpGlobal</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PostBuildEvent Condition="'$(OS)' != 'Unix'">if /I "$(ConfigurationName)" == "Debug" call  "$(SolutionDir)Scripts\CopyToKSPDirectory.bat" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>

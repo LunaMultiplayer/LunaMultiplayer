@@ -13,6 +13,14 @@ namespace LunaCommon
         }
 
         /// <summary>
+        /// Custom unclamped as Unity does not have a lerp for double values
+        /// </summary>
+        public static double LerpUnclamped(double from, double to, double t)
+        {
+            return from + (to - from) * t;
+        }
+
+        /// <summary>
         /// Custom lerp as Unity does not have a lerp for float values
         /// </summary>
         public static float Lerp(float v0, float v1, float t)
