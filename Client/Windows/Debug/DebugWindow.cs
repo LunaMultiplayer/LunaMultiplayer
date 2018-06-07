@@ -191,10 +191,12 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.Append("Cached: ").AppendLine(PositionUpdateQueue.CacheSize.ToString());
                         foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
                         {
-                            var extraInterpolationTime = VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].ExtraInterpolationTime;
-                            var timeDiff = VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].TimeDifference;
+                            var perc = VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].LerpPercentage * 100;
+                            var duration = TimeSpan.FromSeconds(VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].InterpolationDuration).TotalMilliseconds;
+                            var extraInterpolationTime = TimeSpan.FromSeconds(VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].ExtraInterpolationTime).TotalMilliseconds;
+                            var timeDiff = TimeSpan.FromSeconds(VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].TimeDifference).TotalMilliseconds;
                             StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
-                                .Append($" TimeDiff: {timeDiff}").AppendLine($" T+: {extraInterpolationTime}");
+                                .Append($" Dur: {duration:F0}ms").Append($" Perc: {perc:F0}%").Append($" TimeDiff: {timeDiff:F0}ms").AppendLine($" T+: {extraInterpolationTime:F0}ms");
                         }
 
                         _interpolationPositionText = StringBuilder.ToString();
