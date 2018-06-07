@@ -114,21 +114,44 @@ namespace LunaClient.Windows.Options
                     }
                     else
                     {
-                        NetworkMain.Config.MaximumTransmissionUnit = (int)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.MaximumTransmissionUnit, 0, 1, NetworkMain.MaxMtuSize));
-                        NetworkMain.Config.AutoExpandMTU = GUILayout.Toggle(NetworkMain.Config.AutoExpandMTU, "Auto expand MTU");
+                        var mtuValue = (int)Math.Round(GUILayout.HorizontalScrollbar(SettingsSystem.CurrentSettings.Mtu, 0, 1, NetworkMain.MaxMtuSize));
+                        if (mtuValue != SettingsSystem.CurrentSettings.Mtu)
+                        {
+                            NetworkMain.Config.MaximumTransmissionUnit = SettingsSystem.CurrentSettings.Mtu = mtuValue;
+                            SettingsSystem.SaveSettings();
+                        }
+
+                        var autoExpandValue = GUILayout.Toggle(SettingsSystem.CurrentSettings.AutoExpandMtu, "Auto expand MTU");
+                        if (autoExpandValue != SettingsSystem.CurrentSettings.AutoExpandMtu)
+                        {
+                            NetworkMain.Config.AutoExpandMTU = SettingsSystem.CurrentSettings.AutoExpandMtu = autoExpandValue;
+                            SettingsSystem.SaveSettings();
+                        }
                     }
                 }
 
                 GUILayout.Label(_infiniteTimeout ? "Timeout (Default: 15): ∞" : $"Timeout (Default: 15): {NetworkMain.Config.ConnectionTimeout}s");
-
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
+                    _infiniteTimeout = SettingsSystem.CurrentSettings.Timeout == float.MaxValue;
+
                     GUI.enabled = !_infiniteTimeout;
-                    NetworkMain.Config.ConnectionTimeout = (int)Math.Round(GUILayout.HorizontalScrollbar(NetworkMain.Config.ConnectionTimeout, 0, NetworkMain.Config.PingInterval, 120));
+                    var newTimeoutVal = (int)Math.Round(GUILayout.HorizontalScrollbar(SettingsSystem.CurrentSettings.Timeout, 0, NetworkMain.Config.PingInterval, 120));
+                    // ReSharper disable once CompareOfFloatsByEqualityOperator
+                    if (newTimeoutVal != SettingsSystem.CurrentSettings.Timeout)
+                    {
+                        NetworkMain.Config.ConnectionTimeout = SettingsSystem.CurrentSettings.Timeout = newTimeoutVal;
+                        SettingsSystem.SaveSettings();
+                    }
                     GUI.enabled = true;
 
                     _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "∞", "toggle");
-                    if (_infiniteTimeout) NetworkMain.Config.ConnectionTimeout = float.MaxValue;
+                    if (_infiniteTimeout)
+                    {
+                        NetworkMain.Config.ConnectionTimeout = SettingsSystem.CurrentSettings.Timeout = float.MaxValue;
+                        SettingsSystem.SaveSettings();
+                    }
                 }
             }
         }

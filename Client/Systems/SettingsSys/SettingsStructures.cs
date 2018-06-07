@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.PlayerColorSys;
+﻿using Lidgren.Network;
+using LunaClient.Systems.PlayerColorSys;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,9 @@ namespace LunaClient.Systems.SettingsSys
         public bool OverrideIntegrator { get; set; }
         public bool PositionInterpolation { get; set; } = true;
         public double InterpolationOffset { get; set; } = 0.5f;
+        public int Mtu { get; set; } = NetPeerConfiguration.kDefaultMTU;
+        public bool AutoExpandMtu { get; set; } = false;
+        public float Timeout { get; set; } = 15;
 
         /*
          * You can use this debug switches for testing purposes. 
