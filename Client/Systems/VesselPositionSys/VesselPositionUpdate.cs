@@ -167,8 +167,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 AdjustExtraInterpolationTimes();
 
-                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],
-                    Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
+                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
 
                 UpdateProtoVesselValues();
             }
@@ -384,8 +384,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyOrbitInterpolation()
         {
-            var startTime = Orbit[6];
-            var targetTime = Target.Orbit[6];
+            var startTime = KspOrbit.epoch;
+            var targetTime = Target.KspOrbit.epoch;
             var lerpTime = LunaMath.LerpUnclamped(startTime, targetTime, LerpPercentage);
 
             var currentPos = KspOrbit.getRelativePositionAtUT(startTime);
@@ -457,8 +457,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 HeightFromTerrain = Vessel.heightFromTerrain;
             }
-
-            KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
         }
 
         #region Helper methods
