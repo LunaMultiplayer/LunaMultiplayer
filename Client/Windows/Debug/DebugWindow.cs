@@ -191,12 +191,16 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.Append("Cached: ").AppendLine(PositionUpdateQueue.CacheSize.ToString());
                         foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
                         {
-                            var perc = VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].LerpPercentage * 100;
-                            var duration = TimeSpan.FromSeconds(VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].InterpolationDuration).TotalMilliseconds;
-                            var extraInterpolationTime = TimeSpan.FromSeconds(VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].ExtraInterpolationTime).TotalMilliseconds;
-                            var timeDiff = TimeSpan.FromSeconds(VesselPositionSystem.CurrentVesselUpdate[keyVal.Key].TimeDifference).TotalMilliseconds;
-                            StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
-                                .Append($" Dur: {duration:F0}ms").Append($" Perc: {perc:F0}%").Append($" TimeDiff: {timeDiff:F0}ms").AppendLine($" T+: {extraInterpolationTime:F0}ms");
+                            if (VesselPositionSystem.CurrentVesselUpdate.TryGetValue(keyVal.Key, out var current) && current.Target != null){
+
+                                var perc = current.LerpPercentage * 100;
+                                var duration = TimeSpan.FromSeconds(current.InterpolationDuration).TotalMilliseconds;
+                                var extraInterpolationTime = TimeSpan.FromSeconds(current.ExtraInterpolationTime).TotalMilliseconds;
+                                var timeDiff = TimeSpan.FromSeconds(current.TimeDifference).TotalMilliseconds;
+                                StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
+                                    .Append($" Dur: {duration:F0}ms").Append($" Perc: {perc:F0}%").Append($" TimeDiff: {timeDiff:F0}ms").AppendLine($" T+: {extraInterpolationTime:F0}ms");
+                            }
+
                         }
 
                         _interpolationPositionText = StringBuilder.ToString();
