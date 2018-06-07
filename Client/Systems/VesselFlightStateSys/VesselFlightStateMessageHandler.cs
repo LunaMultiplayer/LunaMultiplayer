@@ -44,7 +44,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
             else
             {
-                VesselFlightStateSystem.TargetFlightStateQueue[vesselId].Enqueue(msgData);
+                VesselFlightStateSystem.TargetFlightStateQueue.TryGetValue(vesselId, out var queue);
+                queue?.Enqueue(msgData);
             }
         }
     }

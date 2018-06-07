@@ -44,7 +44,8 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
-                VesselPositionSystem.TargetVesselUpdateQueue[vesselId].Enqueue(msgData);
+                VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(vesselId, out var queue);
+                queue?.Enqueue(msgData);
             }
         }
     }
