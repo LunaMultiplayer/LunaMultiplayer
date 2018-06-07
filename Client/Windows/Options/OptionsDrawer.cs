@@ -66,6 +66,17 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.PositionInterpolation = settingInterpolator;
                 SettingsSystem.SaveSettings();
             }
+            if (SettingsSystem.CurrentSettings.PositionInterpolation)
+            {
+                GUILayout.Label($"Interpolation offset: {SettingsSystem.CurrentSettings.InterpolationOffset * 1000:F0} ms");
+                var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffset, 0, 0, 3), 2);
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (interpolationOffset != SettingsSystem.CurrentSettings.InterpolationOffset)
+                {
+                    SettingsSystem.CurrentSettings.InterpolationOffset = interpolationOffset;
+                    SettingsSystem.SaveSettings();
+                }
+            }
             GUILayout.Space(10);
 
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
@@ -134,8 +145,9 @@ namespace LunaClient.Windows.Options
                 SettingsSystem.CurrentSettings.OverrideIntegrator = settingIntegrator;
                 SettingsSystem.SaveSettings();
             }
+
             GUILayout.Space(10);
-            
+
             _showBadNetworkSimulationFields = GUILayout.Toggle(_showBadNetworkSimulationFields, "Bad network simulation", ButtonStyle);
             if (_showBadNetworkSimulationFields)
             {
@@ -180,7 +192,7 @@ namespace LunaClient.Windows.Options
         #region UniverseConverter
 
         private void DrawUniverseConverterDialog(int windowId)
-        {            
+        {
             //Always draw close button first
             DrawCloseButton(() => _displayUniverseConverterDialog = false, _universeConverterWindowRect);
 

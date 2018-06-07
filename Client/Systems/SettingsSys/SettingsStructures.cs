@@ -24,6 +24,7 @@ namespace LunaClient.Systems.SettingsSys
         public int MaxGroupsPerPlayer { get; set; } = 1;
         public bool OverrideIntegrator { get; set; }
         public bool PositionInterpolation { get; set; } = true;
+        public double InterpolationOffset { get; set; } = 0.5f;
 
         /*
          * You can use this debug switches for testing purposes. 
@@ -40,7 +41,6 @@ namespace LunaClient.Systems.SettingsSys
         public bool Debug7 { get; set; } = false;
         public bool Debug8 { get; set; } = false;
         public bool Debug9 { get; set; } = false;
-
     }
 
     [Serializable]

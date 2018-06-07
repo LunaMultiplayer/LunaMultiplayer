@@ -201,14 +201,12 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void AdjustExtraInterpolationTimes()
         {
-            var timeBack = 1.5;
-
             TimeDifference = (float)(TimeSyncerSystem.UniversalTime - GameTimeStamp);
             if (SubspaceId == -1)
             {
                 //While warping we only fix the interpolation if we are LAGGING behind the updates
                 //We never fix it if the packet that we received is very advanced in time
-                ExtraInterpolationTime = (TimeDifference > timeBack ? -1 : 0) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 0) * GetInterpolationFixFactor();
             }
             else if (WarpSystem.Singleton.SubspaceIsEqualOrInThePast(SubspaceId))
             {
@@ -219,7 +217,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     TimeDifference += timeToAdd;
                 }
 
-                ExtraInterpolationTime = (TimeDifference > timeBack ? -1 : 1) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 1) * GetInterpolationFixFactor();
             }
             else
             {

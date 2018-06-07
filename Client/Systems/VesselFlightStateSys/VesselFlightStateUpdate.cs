@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.TimeSyncer;
+﻿using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
@@ -121,26 +122,27 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private void AdjustExtraInterpolationTimes()
         {
-            var timeBack = 1.5;
-
             TimeDifference = (float)(TimeSyncerSystem.UniversalTime - GameTimeStamp);
             if (SubspaceId == -1)
             {
-                ExtraInterpolationTime = (TimeDifference > timeBack ? -1 : 0) * GetInterpolationFixFactor();
+                //While warping we only fix the interpolation if we are LAGGING behind the updates
+                //We never fix it if the packet that we received is very advanced in time
+                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 0) * GetInterpolationFixFactor();
             }
             else if (WarpSystem.Singleton.SubspaceIsEqualOrInThePast(SubspaceId))
             {
+                //IN past or same subspaces we want to be timeBack seconds BEHIND the player position
                 if (WarpSystem.Singleton.CurrentSubspace != SubspaceId)
                 {
                     var timeToAdd = (float)Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
                     TimeDifference += timeToAdd;
                 }
 
-                ExtraInterpolationTime = (TimeDifference > timeBack ? -1 : 1) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 1) * GetInterpolationFixFactor();
             }
             else
             {
-                //Future subspace
+                //In future subspaces we want to be in the exact time as when the packet was sent
                 ExtraInterpolationTime = (TimeDifference > 0 ? -1 : 1) * GetInterpolationFixFactor();
             }
         }
