@@ -116,8 +116,11 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (removeFromStore) //The exception is when reloading a vessel!
                 VesselsProtoStore.RemoveVessel(vesselId);
 
-            VesselPositionSystem.Singleton.RemoveVessel(vesselId);
-            VesselFlightStateSystem.Singleton.RemoveVesselFromSystem(vesselId);
+            if (removeFromStore)
+            {
+                VesselPositionSystem.Singleton.RemoveVessel(vesselId);
+                VesselFlightStateSystem.Singleton.RemoveVesselFromSystem(vesselId);
+            }
             var killVessel = FlightGlobals.FindVessel(vesselId);
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)
                 return;
