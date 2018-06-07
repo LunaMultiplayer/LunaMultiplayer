@@ -152,6 +152,15 @@ namespace LunaClient.Systems.VesselPositionSys
                         vesselPos.LatLonAlt : null;
         }
 
+        /// <summary>
+        /// Remvoes a vessel from the system
+        /// </summary>
+        public void RemoveVessel(Guid vesselId)
+        {
+            CurrentVesselUpdate.TryRemove(vesselId, out _);
+            TargetVesselUpdateQueue.TryRemove(vesselId, out _);
+        }
+
         #endregion
 
         #region Private methods

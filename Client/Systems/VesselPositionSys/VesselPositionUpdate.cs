@@ -131,13 +131,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Main method
 
-        public void ForceRestart()
-        {
-            VesselPositionSystem.TargetVesselUpdateQueue[VesselId].Recycle(Target);
-            Target = null;
-            LerpPercentage = 1;
-        }
-
         /// <summary>
         /// Call this method to apply a vessel update using interpolation
         /// </summary>
@@ -184,6 +177,10 @@ namespace LunaClient.Systems.VesselPositionSys
 
             try
             {
+                if (LerpPercentage > 1)
+                {
+                    LunaLog.LogError("No messages to interpolate to! Increase the interpolation offset!");
+                }
                 ApplyInterpolations();
             }
             catch (Exception e)
@@ -233,6 +230,8 @@ namespace LunaClient.Systems.VesselPositionSys
         private float GetInterpolationFixFactor()
         {
             var error = Math.Abs(TimeDifference);
+
+            //Do not use less than 0.25 as otherwise it won't fix it.
             if (error <= 5)
             {
                 return RawInterpolationDuration * 0.25f;
@@ -385,13 +384,15 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyOrbitInterpolation()
         {
-            var lerpTime = LunaMath.LerpUnclamped(Orbit[6], Target.Orbit[6], LerpPercentage);
+            var startTime = Orbit[6];
+            var targetTime = Target.Orbit[6];
+            var lerpTime = LunaMath.LerpUnclamped(startTime, targetTime, LerpPercentage);
 
-            var currentPos = KspOrbit.getRelativePositionAtUT(Orbit[6]);
-            var targetPos = Target.KspOrbit.getRelativePositionAtUT(Target.Orbit[6]);
+            var currentPos = KspOrbit.getRelativePositionAtUT(startTime);
+            var targetPos = Target.KspOrbit.getRelativePositionAtUT(targetTime);
 
-            var currentVel = KspOrbit.getOrbitalVelocityAtUT(Orbit[6]) + KspOrbit.referenceBody.GetFrameVelAtUT(Orbit[6]) - Body.GetFrameVelAtUT(Orbit[6]);
-            var targetVel = Target.KspOrbit.getOrbitalVelocityAtUT(Target.Orbit[6]) + Target.KspOrbit.referenceBody.GetFrameVelAtUT(Target.Orbit[6]) - Target.Body.GetFrameVelAtUT(Target.Orbit[6]);
+            var currentVel = KspOrbit.getOrbitalVelocityAtUT(startTime) + KspOrbit.referenceBody.GetFrameVelAtUT(startTime) - Body.GetFrameVelAtUT(startTime);
+            var targetVel = Target.KspOrbit.getOrbitalVelocityAtUT(targetTime) + Target.KspOrbit.referenceBody.GetFrameVelAtUT(targetTime) - Target.Body.GetFrameVelAtUT(targetTime);
 
             var lerpedPos = VectorUtil.LerpUnclamped(currentPos, targetPos, LerpPercentage);
             var lerpedVel = VectorUtil.LerpUnclamped(currentVel, targetVel, LerpPercentage);

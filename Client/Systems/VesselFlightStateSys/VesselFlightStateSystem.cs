@@ -127,53 +127,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
         }
 
-        public void AddVesselToSystem(Vessel vessel)
-        {
-            if (vessel == null || vessel.isEVA) return;
-
-            //We must never have our own active and controlled vessel in the dictionary
-            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
-                return;
-
-            FlyByWireDictionary.TryAdd(vessel.id, st => LunaOnVesselFlyByWire(vessel.id, st));
-
-            if (vessel.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
-                vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
-        }
-
-        /// <summary>
-        /// Removes the vessel from the dictionaries
-        /// </summary>
-        public void RemoveVesselFromSystem(Vessel vesselToRemove)
-        {
-            if (vesselToRemove == null) return;
-
-            TryRemoveCallback(vesselToRemove);
-
-            FlyByWireDictionary.TryRemove(vesselToRemove.id, out _);
-            CurrentFlightState.TryRemove(vesselToRemove.id, out _);
-            TargetFlightStateQueue.TryRemove(vesselToRemove.id, out _);
-        }
-
-        public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
-        {
-            if (protoVessel == null) return;
-
-            protoVessel.ctrlState.SetValue("pitch", pitch);
-            protoVessel.ctrlState.SetValue("yaw", yaw);
-            protoVessel.ctrlState.SetValue("roll", roll);
-            protoVessel.ctrlState.SetValue("trimPitch", pitchTrm);
-            protoVessel.ctrlState.SetValue("trimYaw", yawTrm);
-            protoVessel.ctrlState.SetValue("trimRoll", rollTrm);
-            protoVessel.ctrlState.SetValue("mainThrottle", throttle);
-        }
-
-        internal void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, VesselFlightStateMsgData msgData)
-        {
-            UpdateFlightStateInProtoVessel(protoVessel, msgData.Pitch, msgData.Yaw, msgData.Roll, msgData.PitchTrim,
-                msgData.YawTrim, msgData.RollTrim, msgData.MainThrottle);
-        }
-
         #endregion
 
         #region Private methods
@@ -217,6 +170,71 @@ namespace LunaClient.Systems.VesselFlightStateSys
         {
             if (FlyByWireDictionary.ContainsKey(vesselToRemove.id) && vesselToRemove.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
                 vesselToRemove.OnFlyByWire -= FlyByWireDictionary[vesselToRemove.id];
+        }
+
+        #endregion
+
+        #region Public methods
+        
+        public void AddVesselToSystem(Vessel vessel)
+        {
+            if (vessel == null || vessel.isEVA) return;
+
+            //We must never have our own active and controlled vessel in the dictionary
+            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == vessel.id)
+                return;
+
+            FlyByWireDictionary.TryAdd(vessel.id, st => LunaOnVesselFlyByWire(vessel.id, st));
+
+            if (vessel.OnFlyByWire.GetInvocationList().All(d => d.Method.Name != nameof(LunaOnVesselFlyByWire)))
+                vessel.OnFlyByWire += FlyByWireDictionary[vessel.id];
+        }
+
+        /// <summary>
+        /// Removes the vessel from the dictionaries
+        /// </summary>
+        public void RemoveVesselFromSystem(Guid vesselId)
+        {
+            var vessel = FlightGlobals.FindVessel(vesselId);
+            if (vessel != null)
+                TryRemoveCallback(vessel);
+
+            FlyByWireDictionary.TryRemove(vesselId, out _);
+            CurrentFlightState.TryRemove(vesselId, out _);
+            TargetFlightStateQueue.TryRemove(vesselId, out _);
+        }
+
+        /// <summary>
+        /// Removes the vessel from the dictionaries
+        /// </summary>
+        public void RemoveVesselFromSystem(Vessel vesselToRemove)
+        {
+            if (vesselToRemove == null) return;
+
+            TryRemoveCallback(vesselToRemove);
+
+            FlyByWireDictionary.TryRemove(vesselToRemove.id, out _);
+            CurrentFlightState.TryRemove(vesselToRemove.id, out _);
+            TargetFlightStateQueue.TryRemove(vesselToRemove.id, out _);
+        }
+
+        public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
+        {
+            if (protoVessel == null) return;
+
+            protoVessel.ctrlState.SetValue("pitch", pitch);
+            protoVessel.ctrlState.SetValue("yaw", yaw);
+            protoVessel.ctrlState.SetValue("roll", roll);
+            protoVessel.ctrlState.SetValue("trimPitch", pitchTrm);
+            protoVessel.ctrlState.SetValue("trimYaw", yawTrm);
+            protoVessel.ctrlState.SetValue("trimRoll", rollTrm);
+            protoVessel.ctrlState.SetValue("mainThrottle", throttle);
+        }
+
+        public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, VesselFlightStateMsgData msgData)
+        {
+            UpdateFlightStateInProtoVessel(protoVessel, msgData.Pitch, msgData.Yaw, msgData.Roll, msgData.PitchTrim,
+                msgData.YawTrim, msgData.RollTrim, msgData.MainThrottle);
         }
 
         #endregion

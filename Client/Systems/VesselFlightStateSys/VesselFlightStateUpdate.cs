@@ -68,13 +68,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         #region Main method
 
-        public void ForceRestart()
-        {
-            VesselFlightStateSystem.TargetFlightStateQueue[VesselId].Recycle(Target);
-            Target = null;
-            LerpPercentage = 1;
-        }
-
         /// <summary>
         /// Call this method to apply a vessel update using interpolation
         /// </summary>
@@ -150,6 +143,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
         private float GetInterpolationFixFactor()
         {
             var error = Math.Abs(TimeDifference);
+
+            //Do not use less than 0.25 as otherwise it won't fix it.
             if (error <= 5)
             {
                 return RawInterpolationDuration * 0.25f;

@@ -33,9 +33,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
             if (VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var currentUpdate) && currentUpdate.GameTimeStamp > msgData.GameTime)
             {
-                //A user reverted, so clear his message queue and start from scratch
-                currentUpdate.ForceRestart();
-                VesselPositionSystem.TargetVesselUpdateQueue[vesselId].Clear();
+                //A user reverted, so clear it and start from scratch
+                System.RemoveVessel(vesselId);
             }
 
             if (!VesselPositionSystem.CurrentVesselUpdate.ContainsKey(vesselId))

@@ -34,8 +34,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (VesselFlightStateSystem.CurrentFlightState.TryGetValue(vesselId, out var currentFlightState) && currentFlightState.GameTimeStamp > msgData.GameTime)
             {
                 //A user reverted, so clear his message queue and start from scratch
-                currentFlightState.ForceRestart();
-                VesselFlightStateSystem.TargetFlightStateQueue[vesselId].Clear();
+                System.RemoveVesselFromSystem(vesselId);
             }
 
             if (!VesselFlightStateSystem.CurrentFlightState.ContainsKey(vesselId))

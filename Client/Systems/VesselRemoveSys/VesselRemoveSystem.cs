@@ -2,6 +2,8 @@
 using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Time;
@@ -114,6 +116,8 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (removeFromStore) //The exception is when reloading a vessel!
                 VesselsProtoStore.RemoveVessel(vesselId);
 
+            VesselPositionSystem.Singleton.RemoveVessel(vesselId);
+            VesselFlightStateSystem.Singleton.RemoveVesselFromSystem(vesselId);
             var killVessel = FlightGlobals.FindVessel(vesselId);
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)
                 return;
