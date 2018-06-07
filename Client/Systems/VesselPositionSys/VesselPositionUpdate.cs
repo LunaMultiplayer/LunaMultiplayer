@@ -384,8 +384,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyOrbitInterpolation()
         {
-            var startTime = KspOrbit.epoch;
-            var targetTime = Target.KspOrbit.epoch;
+            var startTime = Orbit[6];
+            var targetTime = Target.Orbit[6];
             var lerpTime = LunaMath.LerpUnclamped(startTime, targetTime, LerpPercentage);
 
             var currentPos = KspOrbit.getRelativePositionAtUT(startTime);
