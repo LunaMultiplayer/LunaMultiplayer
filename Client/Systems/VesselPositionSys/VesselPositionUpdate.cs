@@ -178,7 +178,7 @@ namespace LunaClient.Systems.VesselPositionSys
             if (Target == null) return;
             if (LerpPercentage > 1)
             {
-                LunaLog.LogError("No messages to interpolate to! Increase the interpolation offset!");
+                LunaLog.LogWarning("No messages to interpolate to! Increase the interpolation offset!");
             }
 
             try
@@ -226,20 +226,20 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private double GetInterpolationFixFactor()
         {
-            var error = Math.Abs(TimeDifference);
+            var error = TimeSpan.FromSeconds(Math.Abs(TimeDifference)).TotalMilliseconds;
 
             //Do not use less than 0.25 as otherwise it won't fix it.
-            if (error <= 5)
+            if (error <= 500)
             {
                 return RawInterpolationDuration * 0.25;
             }
 
-            if (error <= 10)
+            if (error <= 1000)
             {
                 return RawInterpolationDuration * 0.60;
             }
 
-            if (error <= 15)
+            if (error <= 5000)
             {
                 return RawInterpolationDuration;
             }

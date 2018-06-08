@@ -150,20 +150,20 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private double GetInterpolationFixFactor()
         {
-            var error = Math.Abs(TimeDifference);
+            var error = TimeSpan.FromSeconds(Math.Abs(TimeDifference)).TotalMilliseconds;
 
             //Do not use less than 0.25 as otherwise it won't fix it.
-            if (error <= 5)
+            if (error <= 500)
             {
                 return RawInterpolationDuration * 0.25;
             }
 
-            if (error <= 10)
+            if (error <= 1000)
             {
                 return RawInterpolationDuration * 0.60;
             }
 
-            if (error <= 15)
+            if (error <= 5000)
             {
                 return RawInterpolationDuration;
             }
