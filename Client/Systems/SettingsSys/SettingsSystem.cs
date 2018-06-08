@@ -56,10 +56,11 @@ namespace LunaClient.Systems.SettingsSys
         public void AdjustLocalSettings()
         {
             //Increase the interpolation offset if necessary
-            var minRecommendedInterpolationOffset = TimeSpan.FromMilliseconds(ServerSettings.SecondaryVesselUpdatesMsInterval * 3).TotalSeconds;
+            var minRecommendedInterpolationOffset = TimeSpan.FromMilliseconds(ServerSettings.SecondaryVesselUpdatesMsInterval * 4).TotalSeconds;
             if (CurrentSettings.InterpolationOffsetSeconds < minRecommendedInterpolationOffset)
             {
                 LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.IncreasedInterpolationOffset, 30, ScreenMessageStyle.UPPER_RIGHT);
+                LunaLog.LogWarning(LocalizationContainer.ScreenText.IncreasedInterpolationOffset);
                 CurrentSettings.InterpolationOffsetSeconds = minRecommendedInterpolationOffset;
             }
         }
