@@ -8,10 +8,15 @@
     <Blue>B :</Blue>
     <Random>Aléatoire</Random>
     <Set>Appliquer</Set>
-    <Interpolation>Activer l'interpolation</Interpolation>
+    <InterpolationSettings>Interpolation settings</InterpolationSettings>
+    <EnableInterpolation>Activer l'interpolation</EnableInterpolation>
+    <InterpolationOffset>Interpolation offset:</InterpolationOffset>
     <GenerateLmpModControl>Générer le fichier serveur "LMPModControl.xml"</GenerateLmpModControl>
     <GenerateUniverse>Générer l'univers depuis une sauvegarde</GenerateUniverse>
     <NetworkSettings>Network settings</NetworkSettings>
     <CannotChangeWhileConnected>Cannot change values while connected</CannotChangeWhileConnected>
     <ResetNetwork>Reset network</ResetNetwork>
+    <Mtu>MTU (Default: 1408):</Mtu>
+    <AutoExpandMtu>Auto expand MTU</AutoExpandMtu>
+    <ConnectionTimeout>Connection timeout (Default: 15):</ConnectionTimeout>
 </OptionsWindowText>

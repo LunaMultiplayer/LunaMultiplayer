@@ -60,25 +60,6 @@ namespace LunaClient.Windows.Options
             GUILayout.EndHorizontal();
 
             GUILayout.Space(10);
-            var settingInterpolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionInterpolation, "Use interpolation", ButtonStyle);
-            if (settingInterpolator != SettingsSystem.CurrentSettings.PositionInterpolation)
-            {
-                SettingsSystem.CurrentSettings.PositionInterpolation = settingInterpolator;
-                SettingsSystem.SaveSettings();
-            }
-            if (SettingsSystem.CurrentSettings.PositionInterpolation)
-            {
-                GUILayout.Label($"Interpolation offset: {SettingsSystem.CurrentSettings.InterpolationOffset * 1000:F0} ms");
-                var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffset, 0, 0, 3), 2);
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
-                if (interpolationOffset != SettingsSystem.CurrentSettings.InterpolationOffset)
-                {
-                    SettingsSystem.CurrentSettings.InterpolationOffset = interpolationOffset;
-                    SettingsSystem.SaveSettings();
-                }
-            }
-            GUILayout.Space(10);
-
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl))
                 ModSystem.Singleton.GenerateModControlFile(false);
             if (GUILayout.Button(LocalizationContainer.OptionsWindowText.GenerateLmpModControl + " + SHA"))
@@ -86,12 +67,38 @@ namespace LunaClient.Windows.Options
             _displayUniverseConverterDialog = GUILayout.Toggle(_displayUniverseConverterDialog, LocalizationContainer.OptionsWindowText.GenerateUniverse, ButtonStyle);
             GUILayout.Space(10);
 
+            DrawInterpolationSettings();
             DrawNetworkSettings();
 #if DEBUG
             DrawAdvancedDebugOptions();
 #endif
             GUILayout.FlexibleSpace();
             GUILayout.EndVertical();
+        }
+
+        private void DrawInterpolationSettings()
+        {
+            _showInterpolationFields = GUILayout.Toggle(_showInterpolationFields, LocalizationContainer.OptionsWindowText.InterpolationSettings, ButtonStyle);
+            if (_showInterpolationFields)
+            {
+                var settingInterpolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionInterpolation, LocalizationContainer.OptionsWindowText.EnableInterpolation, "toggle");
+                if (settingInterpolator != SettingsSystem.CurrentSettings.PositionInterpolation)
+                {
+                    SettingsSystem.CurrentSettings.PositionInterpolation = settingInterpolator;
+                    SettingsSystem.SaveSettings();
+                }
+
+                GUI.enabled = SettingsSystem.CurrentSettings.PositionInterpolation;
+                GUILayout.Label($"{LocalizationContainer.OptionsWindowText.InterpolationOffset} {SettingsSystem.CurrentSettings.InterpolationOffset * 1000:F0} ms");
+                var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffset, 0, 0, 3), 2);
+                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                if (interpolationOffset != SettingsSystem.CurrentSettings.InterpolationOffset)
+                {
+                    SettingsSystem.CurrentSettings.InterpolationOffset = interpolationOffset;
+                    SettingsSystem.SaveSettings();
+                }
+                GUI.enabled = true;
+            }
         }
 
         private void DrawNetworkSettings()
@@ -104,12 +111,12 @@ namespace LunaClient.Windows.Options
                     GUILayout.Label(LocalizationContainer.OptionsWindowText.CannotChangeWhileConnected);
                 }
 
-                GUILayout.Label($"MTU (Default: {NetPeerConfiguration.kDefaultMTU}): {NetworkMain.Config.MaximumTransmissionUnit}");
+                GUILayout.Label($"{LocalizationContainer.OptionsWindowText.Mtu} {NetworkMain.Config.MaximumTransmissionUnit}");
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
                     if (NetworkMain.ClientConnection.Status != NetPeerStatus.NotRunning)
                     {
-                        if (GUILayout.Button("Reset network"))
+                        if (GUILayout.Button(LocalizationContainer.OptionsWindowText.ResetNetwork))
                             NetworkMain.ResetNetworkSystem();
                     }
                     else
@@ -121,7 +128,7 @@ namespace LunaClient.Windows.Options
                             SettingsSystem.SaveSettings();
                         }
 
-                        var autoExpandValue = GUILayout.Toggle(SettingsSystem.CurrentSettings.AutoExpandMtu, "Auto expand MTU");
+                        var autoExpandValue = GUILayout.Toggle(SettingsSystem.CurrentSettings.AutoExpandMtu, LocalizationContainer.OptionsWindowText.AutoExpandMtu);
                         if (autoExpandValue != SettingsSystem.CurrentSettings.AutoExpandMtu)
                         {
                             NetworkMain.Config.AutoExpandMTU = SettingsSystem.CurrentSettings.AutoExpandMtu = autoExpandValue;
@@ -130,7 +137,14 @@ namespace LunaClient.Windows.Options
                     }
                 }
 
-                GUILayout.Label(_infiniteTimeout ? "Timeout (Default: 15): ∞" : $"Timeout (Default: 15): {NetworkMain.Config.ConnectionTimeout}s");
+                if (_infiniteTimeout)
+                {
+                    GUILayout.Label($"{LocalizationContainer.OptionsWindowText.ConnectionTimeout} ∞");
+                }
+                else
+                {
+                    GUILayout.Label($"{LocalizationContainer.OptionsWindowText.ConnectionTimeout} {NetworkMain.Config.ConnectionTimeout} sec");
+                }
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
                     // ReSharper disable once CompareOfFloatsByEqualityOperator
@@ -204,10 +218,10 @@ namespace LunaClient.Windows.Options
             _showClockOffsetFields = GUILayout.Toggle(_showClockOffsetFields, "Clock offset simulation", ButtonStyle);
             if (_showClockOffsetFields)
             {
-                GUILayout.Label($"Computer clock offset (minutes): {LunaComputerTime.SimulatedMinutesTimeOffset:F1}");
+                GUILayout.Label($"Computer clock offset: {LunaComputerTime.SimulatedMinutesTimeOffset:F1} min");
                 LunaComputerTime.SimulatedMinutesTimeOffset = (float)Math.Round(GUILayout.HorizontalScrollbar(LunaComputerTime.SimulatedMinutesTimeOffset, 0, -15, 15), 3);
 
-                GUILayout.Label($"NTP server time offset (milliseconds): {LunaNetworkTime.SimulatedMsTimeOffset:F1}");
+                GUILayout.Label($"NTP server time offset: {LunaNetworkTime.SimulatedMsTimeOffset:F1} ms");
                 LunaNetworkTime.SimulatedMsTimeOffset = (float)Math.Round(GUILayout.HorizontalScrollbar(LunaNetworkTime.SimulatedMsTimeOffset, 0, -2500, 2500), 3);
             }
         }

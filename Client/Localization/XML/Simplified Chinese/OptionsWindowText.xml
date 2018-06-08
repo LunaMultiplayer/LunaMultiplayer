@@ -8,10 +8,15 @@
     <Blue>B:</Blue>
     <Random>随机</Random>
     <Set>设置</Set>
-    <Interpolation>启用插值</Interpolation>
+    <InterpolationSettings>Interpolation settings</InterpolationSettings>
+    <EnableInterpolation>启用插值</EnableInterpolation>
+    <InterpolationOffset>Interpolation offset:</InterpolationOffset>
     <GenerateLmpModControl>生成服务器MOD控制文件 LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>从已保存的存档中生成宇宙</GenerateUniverse>
     <NetworkSettings>Network settings</NetworkSettings>
     <CannotChangeWhileConnected>Cannot change values while connected</CannotChangeWhileConnected>
     <ResetNetwork>Reset network</ResetNetwork>
+    <Mtu>MTU (Default: 1408):</Mtu>
+    <AutoExpandMtu>Auto expand MTU</AutoExpandMtu>
+    <ConnectionTimeout>Connection timeout (Default: 15):</ConnectionTimeout>
 </OptionsWindowText>
