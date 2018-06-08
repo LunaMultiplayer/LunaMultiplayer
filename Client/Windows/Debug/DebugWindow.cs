@@ -26,7 +26,7 @@ namespace LunaClient.Windows.Debug
 
         private const float DisplayUpdateInterval = .2f;
         private const float WindowHeight = 400;
-        private const float WindowWidth = 400;
+        private const float WindowWidth = 450;
 
         private static bool _displayFast;
         private static string _vectorText;
