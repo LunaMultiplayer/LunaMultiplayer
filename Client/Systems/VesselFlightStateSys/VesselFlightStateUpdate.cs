@@ -2,6 +2,7 @@
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
+using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
 using System;
 using UnityEngine;
@@ -10,8 +11,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
 {
     public class VesselFlightStateUpdate
     {
-        private float MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            1 * 10 : float.MaxValue;
+        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
+            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval).TotalSeconds * 10
+            : double.MaxValue;
 
         #region Fields
 
@@ -29,11 +31,12 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         #region Interpolation fields
 
-        public float TimeDifference { get; private set; }
-        public float ExtraInterpolationTime { get; private set; }
+        public double TimeDifference { get; private set; }
+        public double ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
-        public float RawInterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp), 0, MaxInterpolationDuration);
-        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, MaxInterpolationDuration);
+
+        public double RawInterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp, 0, MaxInterpolationDuration);
+        public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
         public float LerpPercentage { get; set; } = 1;
 
@@ -82,7 +85,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (InterpolationFinished && VesselFlightStateSystem.TargetFlightStateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
                 if (Target == null) //This is the case of first iteration
-                    GameTimeStamp = targetUpdate.GameTimeStamp - 1;
+                    GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval).TotalSeconds;
 
                 ProcessRestart();
                 LerpPercentage = 0;
@@ -103,9 +106,15 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
 
             if (Target == null) return InterpolatedCtrlState;
+            if (LerpPercentage > 1)
+            {
+                //We only send flight states of the ACTIVE vessel so perhgaps some player switched a vessel and we are not receiveing any flight state
+                //To solve this just remove the vessel from the system
+                VesselFlightStateSystem.Singleton.RemoveVesselFromSystem(VesselId);
+            }
 
-            InterpolatedCtrlState.LerpUnclamped(CtrlState, Target.CtrlState, LerpPercentage);
-            LerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
+            InterpolatedCtrlState.Lerp(CtrlState, Target.CtrlState, LerpPercentage);
+            LerpPercentage += (float)(Time.fixedDeltaTime / InterpolationDuration);
 
             return InterpolatedCtrlState;
         }
@@ -115,44 +124,43 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private void AdjustExtraInterpolationTimes()
         {
-            TimeDifference = (float)(TimeSyncerSystem.UniversalTime - GameTimeStamp);
+            TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
             if (SubspaceId == -1)
             {
                 //While warping we only fix the interpolation if we are LAGGING behind the updates
                 //We never fix it if the packet that we received is very advanced in time
                 ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 0) * GetInterpolationFixFactor();
             }
-            else if (WarpSystem.Singleton.SubspaceIsEqualOrInThePast(SubspaceId))
+            else 
             {
-                //IN past or same subspaces we want to be timeBack seconds BEHIND the player position
-                if (WarpSystem.Singleton.CurrentSubspace != SubspaceId)
+                //IN past or same subspaces we want to be SettingsSystem.CurrentSettings.InterpolationOffset seconds BEHIND the player position
+                if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
                 {
-                    var timeToAdd = (float)Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
+                    //The subspace is in the past so add the difference seconds to normalize it
+                    var timeToAdd = Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
                     TimeDifference += timeToAdd;
                 }
 
                 ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 1) * GetInterpolationFixFactor();
             }
-            else
-            {
-                //In future subspaces we want to be in the exact time as when the packet was sent
-                ExtraInterpolationTime = (TimeDifference > 0 ? -1 : 1) * GetInterpolationFixFactor();
-            }
         }
 
-        private float GetInterpolationFixFactor()
+        /// <summary>
+        /// This gives the fix factor. It scales up or down depending on the error we have
+        /// </summary>
+        private double GetInterpolationFixFactor()
         {
             var error = Math.Abs(TimeDifference);
 
             //Do not use less than 0.25 as otherwise it won't fix it.
             if (error <= 5)
             {
-                return RawInterpolationDuration * 0.25f;
+                return RawInterpolationDuration * 0.25;
             }
 
             if (error <= 10)
             {
-                return RawInterpolationDuration * 0.60f;
+                return RawInterpolationDuration * 0.60;
             }
 
             if (error <= 15)

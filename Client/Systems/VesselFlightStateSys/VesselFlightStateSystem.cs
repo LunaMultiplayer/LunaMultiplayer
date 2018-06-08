@@ -1,11 +1,13 @@
 ﻿using LunaClient.Base;
 using LunaClient.Events;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using System;
 using System.Collections.Concurrent;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using UnityEngine;
 
 namespace LunaClient.Systems.VesselFlightStateSys
 {
@@ -17,6 +19,19 @@ namespace LunaClient.Systems.VesselFlightStateSys
     public class VesselFlightStateSystem : MessageSystem<VesselFlightStateSystem, VesselFlightStateMessageSender, VesselFlightStateMessageHandler>
     {
         #region Fields & properties
+        
+        private static float LastVesselFlightStateSentTime { get; set; }
+
+        private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
+            TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval :
+            TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval;
+
+        public bool FlightStateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && HighLogic.LoadedScene == GameScenes.FLIGHT &&
+                                              FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
+                                              FlightGlobals.ActiveVessel.state != Vessel.State.DEAD &&
+                                              FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
+
+        public FlightStateEvents FlightStateEvents { get; } = new FlightStateEvents();
 
         /// <summary>
         /// This dictionary links a vessel with a callback that will apply the latest flight state we received
@@ -35,13 +50,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         public static ConcurrentDictionary<Guid, FlightStateQueue> TargetFlightStateQueue { get; } =
             new ConcurrentDictionary<Guid, FlightStateQueue>();
-
-        public bool FlightStateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && HighLogic.LoadedScene == GameScenes.FLIGHT &&
-                                              FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
-                                              FlightGlobals.ActiveVessel.state != Vessel.State.DEAD &&
-                                              FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
-
-        public FlightStateEvents FlightStateEvents { get; } = new FlightStateEvents();
 
         #endregion
 
@@ -65,7 +73,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
             SpectateEvent.onStartSpectating.Add(FlightStateEvents.OnStartSpectating);
             SpectateEvent.onFinishedSpectating.Add(FlightStateEvents.OnFinishedSpectating);
 
-            SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, SendFlightState));
+            //Send the flight state updates after all the calculations are done.
+            TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendFlightState);
         }
 
         protected override void OnDisabled()
@@ -77,6 +86,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
             SpectateEvent.onStartSpectating.Remove(FlightStateEvents.OnStartSpectating);
             SpectateEvent.onFinishedSpectating.Remove(FlightStateEvents.OnFinishedSpectating);
+
+            TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendFlightState);
 
             ClearSystem();
         }
@@ -120,10 +131,10 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private void SendFlightState()
         {
-            if (Enabled && FlightStateSystemReady && !FlightGlobals.ActiveVessel.isEVA)
+            if (FlightStateSystemReady && TimeToSendVesselUpdate && !VesselCommon.IsSpectating && !FlightGlobals.ActiveVessel.isEVA)
             {
                 MessageSender.SendCurrentFlightState();
-                ChangeRoutineExecutionInterval(RoutineExecution.Update, nameof(SendFlightState), VesselCommon.IsSomeoneSpectatingUs ? 30 : 1000);
+                LastVesselFlightStateSentTime = Time.time;
             }
         }
 

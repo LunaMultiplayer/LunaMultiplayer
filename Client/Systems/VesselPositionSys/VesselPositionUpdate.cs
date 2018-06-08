@@ -83,6 +83,8 @@ namespace LunaClient.Systems.VesselPositionSys
             set => _lerpPercentage = value;
         }
 
+        public double LerpTime { get; set; }
+
         #endregion
 
         #endregion
@@ -147,7 +149,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
-            if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue[VesselId].TryDequeue(out var targetUpdate))
+            if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
                 if (Target == null) //This is the case of first iteration
                     GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval).TotalSeconds;
@@ -168,19 +170,19 @@ namespace LunaClient.Systems.VesselPositionSys
                 AdjustExtraInterpolationTimes();
 
                 KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
-                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3],Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
 
                 UpdateProtoVesselValues();
             }
 
             if (Target == null) return;
+            if (LerpPercentage > 1)
+            {
+                LunaLog.LogError("No messages to interpolate to! Increase the interpolation offset!");
+            }
 
             try
             {
-                if (LerpPercentage > 1)
-                {
-                    LunaLog.LogError("No messages to interpolate to! Increase the interpolation offset!");
-                }
                 ApplyInterpolations();
             }
             catch (Exception e)
@@ -189,7 +191,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             finally
             {
-                LerpPercentage += (float)(Time.deltaTime / InterpolationDuration);
+                LerpPercentage += (float)(Time.fixedDeltaTime / InterpolationDuration);
             }
         }
 
@@ -205,28 +207,23 @@ namespace LunaClient.Systems.VesselPositionSys
                 //We never fix it if the packet that we received is very advanced in time
                 ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 0) * GetInterpolationFixFactor();
             }
-            else if (WarpSystem.Singleton.SubspaceIsEqualOrInThePast(SubspaceId))
+            else 
             {
-                //IN past or same subspaces we want to be timeBack seconds BEHIND the player position
-                if (WarpSystem.Singleton.CurrentSubspace != SubspaceId)
+                //IN past or same subspaces we want to be SettingsSystem.CurrentSettings.InterpolationOffset seconds BEHIND the player position
+                if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
                 {
+                    //The subspace is in the past so add the difference seconds to normalize it
                     var timeToAdd = Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
                     TimeDifference += timeToAdd;
                 }
 
                 ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 1) * GetInterpolationFixFactor();
             }
-            else
-            {
-                //In future subspaces we want to be in the exact time as when the packet was sent
-                ExtraInterpolationTime = (TimeDifference > 0 ? -1 : 1) * GetInterpolationFixFactor();
-            }
         }
 
         /// <summary>
         /// This gives the fix factor. It scales up or down depending on the error we have
         /// </summary>
-        /// <returns></returns>
         private double GetInterpolationFixFactor()
         {
             var error = Math.Abs(TimeDifference);
@@ -331,6 +328,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
 
             //Set the position of the vessel based on the orbital parameters
+            //Don't call this method as we are replaying orbits from back an older time!
             Vessel.orbitDriver.updateFromParameters();
 
             if (Vessel.LandedOrSplashed)
@@ -375,7 +373,8 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
             ApplyOrbitInterpolation();
-            Vessel.orbitDriver.updateFromParameters();
+            //Don't call this method as we are replaying orbits from back an older time!
+            //Vessel.orbitDriver.updateFromParameters();
 
             //We don't do the surface positioning as with vessels because kerbals don't walk at high speeds and with this code it will be enough ;)
             if (Vessel.LandedOrSplashed || Vessel.situation <= Vessel.Situations.FLYING)
@@ -396,8 +395,8 @@ namespace LunaClient.Systems.VesselPositionSys
             var lerpedPos = VectorUtil.LerpUnclamped(currentPos, targetPos, LerpPercentage);
             var lerpedVel = VectorUtil.LerpUnclamped(currentVel, targetVel, LerpPercentage);
 
-            var lerpTime = LunaMath.LerpUnclamped(startTime, targetTime, LerpPercentage);
-            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, lerpTime);
+            LerpTime = LunaMath.LerpUnclamped(startTime, targetTime, LerpPercentage);
+            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, LerpTime);
         }
 
         /// <summary>
@@ -470,6 +469,47 @@ namespace LunaClient.Systems.VesselPositionSys
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        public void UpdateFromParameters(OrbitDriver driver, double time)
+        {
+            driver.orbit.UpdateFromUT(time);
+            driver.pos = driver.orbit.pos;
+            driver.vel = driver.orbit.vel;
+            driver.pos.Swizzle();
+            driver.vel.Swizzle();
+            if (double.IsNaN(driver.pos.x))
+            {
+                driver.vessel?.Unload();
+                UnityEngine.Object.Destroy(driver.vessel.gameObject);
+                return;
+            }
+            if (driver.reverse)
+            {
+                Vector3d vector3d;
+                if (!driver.celestialBody)
+                {
+                    vector3d = driver.driverTransform.position;
+                }
+                else
+                {
+                    vector3d = driver.celestialBody.position;
+                }
+                driver.referenceBody.position = vector3d - driver.pos;
+            }
+            else if (driver.vessel)
+            {
+                var vector3d1 = driver.driverTransform.rotation * driver.vessel.localCoM;
+                driver.vessel.SetPosition((driver.referenceBody.position + driver.pos) - vector3d1);
+            }
+            else if (!driver.celestialBody)
+            {
+                driver.driverTransform.position = driver.referenceBody.position + driver.pos;
+            }
+            else
+            {
+                driver.celestialBody.position = driver.referenceBody.position + driver.pos;
             }
         }
 
