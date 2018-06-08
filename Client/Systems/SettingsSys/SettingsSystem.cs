@@ -2,6 +2,7 @@
 using LunaClient.Localization;
 using LunaClient.Network;
 using LunaCommon.Enums;
+using System;
 using System.Text;
 
 namespace LunaClient.Systems.SettingsSys
@@ -55,11 +56,11 @@ namespace LunaClient.Systems.SettingsSys
         public void AdjustLocalSettings()
         {
             //Increase the interpolation offset if necessary
-            var minRecommendedInterpolationOffset = ServerSettings.SecondaryVesselUpdatesMsInterval * 3;
-            if (CurrentSettings.InterpolationOffset < minRecommendedInterpolationOffset)
+            var minRecommendedInterpolationOffset = TimeSpan.FromMilliseconds(ServerSettings.SecondaryVesselUpdatesMsInterval * 3).TotalSeconds;
+            if (CurrentSettings.InterpolationOffsetSeconds < minRecommendedInterpolationOffset)
             {
-                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.IncreasedInterpolationOffset, 5, ScreenMessageStyle.UPPER_CENTER);
-                CurrentSettings.InterpolationOffset = minRecommendedInterpolationOffset;
+                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.IncreasedInterpolationOffset, 30, ScreenMessageStyle.UPPER_RIGHT);
+                CurrentSettings.InterpolationOffsetSeconds = minRecommendedInterpolationOffset;
             }
         }
     }

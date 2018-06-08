@@ -28,7 +28,7 @@ namespace LunaClient.Network
             SendBufferSize = 500000, //500Kb
             SuppressUnreliableUnorderedAcks = true, //We don't need ack for unreliable unordered!
             PingInterval = (float)TimeSpan.FromMilliseconds(SettingsSystem.CurrentSettings.HearbeatMsInterval).TotalSeconds,
-            ConnectionTimeout = SettingsSystem.CurrentSettings.Timeout,
+            ConnectionTimeout = SettingsSystem.CurrentSettings.TimeoutSeconds,
             MaximumTransmissionUnit = SettingsSystem.CurrentSettings.Mtu,
             AutoExpandMTU = SettingsSystem.CurrentSettings.AutoExpandMtu,
         };

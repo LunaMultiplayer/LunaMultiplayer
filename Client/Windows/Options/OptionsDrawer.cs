@@ -90,11 +90,11 @@ namespace LunaClient.Windows.Options
                 }
 
                 GUI.enabled = SettingsSystem.CurrentSettings.PositionInterpolation;
-                GUILayout.Label($"{LocalizationContainer.OptionsWindowText.InterpolationOffset} {SettingsSystem.CurrentSettings.InterpolationOffset * 1000:F0} ms");
-                var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffset, 0, 0, 5), 1);
-                if (interpolationOffset != SettingsSystem.CurrentSettings.InterpolationOffset)
+                GUILayout.Label($"{LocalizationContainer.OptionsWindowText.InterpolationOffset} {SettingsSystem.CurrentSettings.InterpolationOffsetSeconds * 1000:F0} ms");
+                var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffsetSeconds, 0, 0, 5), 1);
+                if (interpolationOffset != SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
                 {
-                    SettingsSystem.CurrentSettings.InterpolationOffset = interpolationOffset;
+                    SettingsSystem.CurrentSettings.InterpolationOffsetSeconds = interpolationOffset;
                     SettingsSystem.SaveSettings();
                 }
                 GUI.enabled = true;
@@ -137,7 +137,7 @@ namespace LunaClient.Windows.Options
                     }
                 }
 
-                if (SettingsSystem.CurrentSettings.Timeout == float.MaxValue)
+                if (SettingsSystem.CurrentSettings.TimeoutSeconds == float.MaxValue)
                 {
                     GUILayout.Label($"{LocalizationContainer.OptionsWindowText.ConnectionTimeout} ∞");
                 }
@@ -147,13 +147,13 @@ namespace LunaClient.Windows.Options
                 }
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
-                    _infiniteTimeout = SettingsSystem.CurrentSettings.Timeout == float.MaxValue;
+                    _infiniteTimeout = SettingsSystem.CurrentSettings.TimeoutSeconds == float.MaxValue;
 
                     GUI.enabled = !_infiniteTimeout;
-                    var newTimeoutVal = (int)Math.Round(GUILayout.HorizontalScrollbar(SettingsSystem.CurrentSettings.Timeout, 0, NetworkMain.Config.PingInterval, 120));
-                    if (newTimeoutVal != SettingsSystem.CurrentSettings.Timeout)
+                    var newTimeoutVal = (int)Math.Round(GUILayout.HorizontalScrollbar(SettingsSystem.CurrentSettings.TimeoutSeconds, 0, NetworkMain.Config.PingInterval, 120));
+                    if (newTimeoutVal != SettingsSystem.CurrentSettings.TimeoutSeconds)
                     {
-                        NetworkMain.Config.ConnectionTimeout = SettingsSystem.CurrentSettings.Timeout = newTimeoutVal;
+                        NetworkMain.Config.ConnectionTimeout = SettingsSystem.CurrentSettings.TimeoutSeconds = newTimeoutVal;
                         SettingsSystem.SaveSettings();
                     }
                     GUI.enabled = true;
@@ -161,7 +161,7 @@ namespace LunaClient.Windows.Options
                     _infiniteTimeout = GUILayout.Toggle(_infiniteTimeout, "∞", "toggle");
                     if (_infiniteTimeout)
                     {
-                        NetworkMain.Config.ConnectionTimeout = SettingsSystem.CurrentSettings.Timeout = float.MaxValue;
+                        NetworkMain.Config.ConnectionTimeout = SettingsSystem.CurrentSettings.TimeoutSeconds = float.MaxValue;
                         SettingsSystem.SaveSettings();
                     }
                 }

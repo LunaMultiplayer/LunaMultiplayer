@@ -25,10 +25,10 @@ namespace LunaClient.Systems.SettingsSys
         public int MaxGroupsPerPlayer { get; set; } = 1;
         public bool OverrideIntegrator { get; set; }
         public bool PositionInterpolation { get; set; } = true;
-        public double InterpolationOffset { get; set; } = 0.5f;
+        public double InterpolationOffsetSeconds { get; set; } = 0.5f;
         public int Mtu { get; set; } = NetPeerConfiguration.kDefaultMTU;
         public bool AutoExpandMtu { get; set; } = false;
-        public float Timeout { get; set; } = 15;
+        public float TimeoutSeconds { get; set; } = 15;
 
         /*
          * You can use this debug switches for testing purposes. 

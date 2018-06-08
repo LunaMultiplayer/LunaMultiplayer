@@ -205,7 +205,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 //While warping we only fix the interpolation if we are LAGGING behind the updates
                 //We never fix it if the packet that we received is very advanced in time
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 0) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 0) * GetInterpolationFixFactor();
             }
             else 
             {
@@ -217,7 +217,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     TimeDifference += timeToAdd;
                 }
 
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffset ? -1 : 1) * GetInterpolationFixFactor();
+                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 1) * GetInterpolationFixFactor();
             }
         }
 
