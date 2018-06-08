@@ -12,7 +12,7 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Interval in ms at which the client will send POSITION updates for vessels that are uncontrolled and nearby him. " +
                             "This interval is also applied used to send position updates of HIS OWN vessel when NOBODY is around")]
-        public int SecondaryVesselPositionUpdatesMsInterval { get; set; } = 500;
+        public int SecondaryVesselPositionUpdatesMsInterval { get; set; } = 150;
 
         [XmlComment(Value = "Interval in ms at which users will check the controlled and close uncontrolled vessel and sync the parts that have changes " +
                             "(ladders that extend or shields that open) to the server. " +
