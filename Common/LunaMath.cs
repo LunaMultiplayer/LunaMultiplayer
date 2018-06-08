@@ -152,6 +152,22 @@ namespace LunaCommon
             return single;
         }
 
+        /// <summary>
+        /// Clamps a double between min and max
+        /// </summary>
+        public static double Clamp(double value, double min, double max)
+        {
+            if (value < min)
+            {
+                value = min;
+            }
+            else if (value > max)
+            {
+                value = max;
+            }
+            return value;
+        }
+        
         private static double Repeat(double t, double length)
         {
             return t - Math.Floor(t / length) * length;

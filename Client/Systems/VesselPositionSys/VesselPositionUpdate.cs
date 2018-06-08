@@ -16,9 +16,9 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionUpdate
     {
-        private float MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            (float)TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval).TotalSeconds * 10
-                : float.MaxValue;
+        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
+            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval).TotalSeconds * 10
+                : double.MaxValue;
 
         #region Fields
 
@@ -69,12 +69,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Interpolation fields
 
-        public float TimeDifference { get; private set; }
-        public float ExtraInterpolationTime { get; private set; }
+        public double TimeDifference { get; private set; }
+        public double ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
 
-        public float RawInterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp), 0, MaxInterpolationDuration);
-        public float InterpolationDuration => Mathf.Clamp((float)(Target.GameTimeStamp - GameTimeStamp) + ExtraInterpolationTime, 0, MaxInterpolationDuration);
+        public double RawInterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp, 0, MaxInterpolationDuration);
+        public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
         private float _lerpPercentage = 1;
         public float LerpPercentage
@@ -189,7 +189,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             finally
             {
-                LerpPercentage += Time.deltaTime / InterpolationDuration;
+                LerpPercentage += (float)(Time.deltaTime / InterpolationDuration);
             }
         }
 
@@ -198,7 +198,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void AdjustExtraInterpolationTimes()
         {
-            TimeDifference = (float)(TimeSyncerSystem.UniversalTime - GameTimeStamp);
+            TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
             if (SubspaceId == -1)
             {
                 //While warping we only fix the interpolation if we are LAGGING behind the updates
@@ -210,7 +210,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 //IN past or same subspaces we want to be timeBack seconds BEHIND the player position
                 if (WarpSystem.Singleton.CurrentSubspace != SubspaceId)
                 {
-                    var timeToAdd = (float)Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
+                    var timeToAdd = Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
                     TimeDifference += timeToAdd;
                 }
 
@@ -227,19 +227,19 @@ namespace LunaClient.Systems.VesselPositionSys
         /// This gives the fix factor. It scales up or down depending on the error we have
         /// </summary>
         /// <returns></returns>
-        private float GetInterpolationFixFactor()
+        private double GetInterpolationFixFactor()
         {
             var error = Math.Abs(TimeDifference);
 
             //Do not use less than 0.25 as otherwise it won't fix it.
             if (error <= 5)
             {
-                return RawInterpolationDuration * 0.25f;
+                return RawInterpolationDuration * 0.25;
             }
 
             if (error <= 10)
             {
-                return RawInterpolationDuration * 0.60f;
+                return RawInterpolationDuration * 0.60;
             }
 
             if (error <= 15)
