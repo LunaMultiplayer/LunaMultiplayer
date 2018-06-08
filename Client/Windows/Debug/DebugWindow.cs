@@ -225,7 +225,8 @@ namespace LunaClient.Windows.Debug
                                 var extraInterpolationTime = TimeSpan.FromSeconds(current.ExtraInterpolationTime).TotalMilliseconds;
                                 var timeDiff = TimeSpan.FromSeconds(current.TimeDifference).TotalMilliseconds;
                                 StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
-                                    .Append($" Dur: {duration:F0}ms").Append($" Perc: {perc:F0}%").Append($" TimeDiff: {timeDiff:F0}ms").AppendLine($" T+: {extraInterpolationTime:F0}ms");
+                                    .Append($" Dur: {duration:F0}ms").Append($" TimeDiff: {timeDiff:F0}ms").Append($" T+: {extraInterpolationTime:F0}ms").AppendLine($" Perc: {perc:F0}%");
+                                StringBuilder.AppendLine();
                             }
                         }
 
