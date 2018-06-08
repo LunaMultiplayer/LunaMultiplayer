@@ -1,7 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
-using LunaClient.Systems.VesselFlightStateSys;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -36,8 +35,7 @@ namespace LunaClient.Windows.Debug
         private static string _timeText;
         private static string _connectionText;
         private static string _vesselStoreText;
-        private static string _interpolationPositionText;
-        private static string _interpolationFlightStateText;
+        private static string _interpolationText;
         private static float _lastUpdateTime;
 
         private static bool _displayVectors;
@@ -48,8 +46,6 @@ namespace LunaClient.Windows.Debug
         private static bool _displayConnectionQueue;
         private static bool _displayVesselStoreData;
         private static bool _displayInterpolationData;
-        private static bool _displayInterpolationPositionData;
-        private static bool _displayInterpolationFlightStateData;
 
         private static bool _display;
         public override bool Display
@@ -217,7 +213,7 @@ namespace LunaClient.Windows.Debug
 
                 if (_displayInterpolationData)
                 {
-                    if (_displayInterpolationPositionData && VesselPositionSystem.TargetVesselUpdateQueue.Any())
+                    if (VesselPositionSystem.TargetVesselUpdateQueue.Any())
                     {
                         StringBuilder.Append("Cached: ").AppendLine(PositionUpdateQueue.CacheSize.ToString());
                         foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
@@ -233,27 +229,7 @@ namespace LunaClient.Windows.Debug
                             }
                         }
 
-                        _interpolationPositionText = StringBuilder.ToString();
-                        StringBuilder.Length = 0;
-                    }
-
-                    if (_displayInterpolationFlightStateData && VesselFlightStateSystem.TargetFlightStateQueue.Any())
-                    {
-                        StringBuilder.Append("Cached: ").AppendLine(FlightStateQueue.CacheSize.ToString());
-                        foreach (var keyVal in VesselFlightStateSystem.TargetFlightStateQueue)
-                        {
-                            if (VesselFlightStateSystem.CurrentFlightState.TryGetValue(keyVal.Key, out var current) && current.Target != null)
-                            {
-                                var perc = current.LerpPercentage * 100;
-                                var duration = TimeSpan.FromSeconds(current.InterpolationDuration).TotalMilliseconds;
-                                var extraInterpolationTime = TimeSpan.FromSeconds(current.ExtraInterpolationTime).TotalMilliseconds;
-                                var timeDiff = TimeSpan.FromSeconds(current.TimeDifference).TotalMilliseconds;
-                                StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
-                                    .Append($" Dur: {duration:F0}ms").Append($" Perc: {perc:F0}%").Append($" TimeDiff: {timeDiff:F0}ms").AppendLine($" T+: {extraInterpolationTime:F0}ms");
-                            }
-                        }
-
-                        _interpolationFlightStateText = StringBuilder.ToString();
+                        _interpolationText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
                     }
                 }
