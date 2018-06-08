@@ -14,9 +14,13 @@ namespace LunaClient.Windows.Debug
             if (_displayVectors)
                 GUILayout.Label(_vectorText, LabelStyle);
 
-            _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display orbit info", ButtonStyle);
+            _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display active vessel orbit info", ButtonStyle);
             if (_displayOrbit)
                 GUILayout.Label(_orbitText, LabelStyle);
+
+            _displayVesselsOrbit = GUILayout.Toggle(_displayVesselsOrbit, "Display other vessels orbit info", ButtonStyle);
+            if (_displayVesselsOrbit)
+                GUILayout.Label(_orbitVesselsText, LabelStyle);
 
             _displayVesselStoreData = GUILayout.Toggle(_displayVesselStoreData, "Display vessel store data", ButtonStyle);
             if (_displayVesselStoreData)

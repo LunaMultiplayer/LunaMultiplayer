@@ -31,6 +31,7 @@ namespace LunaClient.Windows.Debug
         private static bool _displayFast;
         private static string _vectorText;
         private static string _orbitText;
+        private static string _orbitVesselsText;
         private static string _subspaceText;
         private static string _timeText;
         private static string _connectionText;
@@ -41,6 +42,7 @@ namespace LunaClient.Windows.Debug
 
         private static bool _displayVectors;
         private static bool _displayOrbit;
+        private static bool _displayVesselsOrbit;
         private static bool _displaySubspace;
         private static bool _displayTimes;
         private static bool _displayConnectionQueue;
@@ -119,7 +121,36 @@ namespace LunaClient.Windows.Debug
                     }
                     else
                     {
-                        _orbitText = "You have to be in orbit";
+                        _orbitText = "You have to be in flight and with an active vessel";
+                    }
+                }
+
+                if (_displayVesselsOrbit)
+                {
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready)
+                    {
+                        foreach (var vessel in FlightGlobals.Vessels)
+                        {
+                            if (vessel.id != FlightGlobals.ActiveVessel?.id && vessel.orbitDriver?.orbit != null)
+                            {
+                                StringBuilder.AppendLine($"Id: {vessel.id}");
+                                StringBuilder.AppendLine($"Semi major axis: {vessel.orbitDriver.orbit.semiMajorAxis}");
+                                StringBuilder.AppendLine($"Eccentricity: {vessel.orbitDriver.orbit.eccentricity}");
+                                StringBuilder.AppendLine($"Inclination: {vessel.orbitDriver.orbit.inclination}");
+                                StringBuilder.AppendLine($"LAN: {vessel.orbitDriver.orbit.LAN}");
+                                StringBuilder.AppendLine($"Arg Periapsis: {vessel.orbitDriver.orbit.argumentOfPeriapsis}");
+                                StringBuilder.AppendLine($"Mean anomaly: {vessel.orbitDriver.orbit.meanAnomalyAtEpoch}");
+                                StringBuilder.AppendLine($"Epoch: {vessel.orbitDriver.orbit.epoch}");
+                                StringBuilder.AppendLine();
+                            }
+
+                            _orbitVesselsText = StringBuilder.ToString();
+                            StringBuilder.Length = 0;
+                        }
+                    }
+                    else
+                    {
+                        _orbitVesselsText = "You have to be in flight";
                     }
                 }
 
