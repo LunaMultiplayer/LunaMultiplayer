@@ -23,8 +23,8 @@ namespace LunaClient.Systems.VesselFlightStateSys
         private static float LastVesselFlightStateSentTime { get; set; }
 
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
-            TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval :
-            TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval;
+            TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselUpdatesMsInterval :
+            TimeSpan.FromSeconds(Time.time - LastVesselFlightStateSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval;
 
         public bool FlightStateSystemReady => Enabled && FlightGlobals.ActiveVessel != null && HighLogic.LoadedScene == GameScenes.FLIGHT &&
                                               FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&

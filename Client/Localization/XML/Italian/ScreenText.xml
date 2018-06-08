@@ -16,4 +16,5 @@
     <CraftLibraryInterval>L'intervallo tra le richieste della libreria dei veicoli è di $1 secondi. Impossibile elaborare la richiesta in questo momento.</CraftLibraryInterval>
     <ScreenshotTaken>Screenshot caricato!</ScreenshotTaken>
     <ImageSaved>Immagine salvata in GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
 </ScreenText>

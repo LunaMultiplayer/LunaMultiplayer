@@ -16,4 +16,5 @@
     <CraftLibraryInterval>Intervalo entre peticiones fijado a $1 segundos. No se puede procesar la peticion en este momento</CraftLibraryInterval>
     <ScreenshotTaken>¡Foto subida!</ScreenshotTaken>
     <ImageSaved>Imagen guardada en GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
 </ScreenText>

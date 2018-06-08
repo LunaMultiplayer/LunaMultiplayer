@@ -16,4 +16,5 @@
     <CraftLibraryInterval>Intervallen mellan fordons förfrågningar is $1 sekund. Kan inte hantera förfrågningen just nu</CraftLibraryInterval>
     <ScreenshotTaken>Skärmbild uppladdad!</ScreenshotTaken>
     <ImageSaved>Bild sparad i GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
 </ScreenText>

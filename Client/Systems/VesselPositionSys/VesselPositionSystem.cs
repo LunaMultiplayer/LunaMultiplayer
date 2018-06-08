@@ -19,8 +19,8 @@ namespace LunaClient.Systems.VesselPositionSys
         private static float LastVesselUpdatesSentTime { get; set; }
 
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
-            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval :
-            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval;
+            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.VesselUpdatesMsInterval :
+            TimeSpan.FromSeconds(Time.time - LastVesselUpdatesSentTime).TotalMilliseconds > SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval;
 
         public bool PositionUpdateSystemReady => Enabled && FlightGlobals.ActiveVessel != null &&
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
@@ -57,8 +57,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
             //It's important that SECONDARY vessels send their position in the UPDATE as their parameters will NOT be updated on the fixed update if the are packed.
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
-            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
+            SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
         }
 
         protected override void OnDisabled()

@@ -16,4 +16,5 @@
     <CraftLibraryInterval>Intervallet mellem fartøjes bibliotek anmodninger er $1 sekunder. Kan ikke behandle anmodningen i øjeblikket</CraftLibraryInterval>
     <ScreenshotTaken>Skærmbillede uploadet!</ScreenshotTaken>
     <ImageSaved>Billede gemt til GameData / LunaMultiplayer / Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
 </ScreenText>

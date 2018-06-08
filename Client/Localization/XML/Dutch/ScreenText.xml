@@ -16,4 +16,5 @@
     <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
     <ScreenshotTaken>Screenshot uploaded!</ScreenshotTaken>
     <ImageSaved>Image saved to GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
 </ScreenText>

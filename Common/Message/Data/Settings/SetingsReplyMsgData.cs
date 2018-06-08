@@ -21,8 +21,8 @@ namespace LunaCommon.Message.Data.Settings
         public string ConsoleIdentifier;
         public GameDifficulty GameDifficulty;
         public float SafetyBubbleDistance;
-        public int VesselPositionUpdatesMsInterval;
-        public int SecondaryVesselPositionUpdatesMsInterval;
+        public int VesselUpdatesMsInterval;
+        public int SecondaryVesselUpdatesMsInterval;
         public bool AllowStockVessels;
         public bool CanRevert;
         public bool AutoHireCrews;
@@ -84,8 +84,8 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(ConsoleIdentifier);
             lidgrenMsg.Write((int)GameDifficulty);
             lidgrenMsg.Write(SafetyBubbleDistance);
-            lidgrenMsg.Write(VesselPositionUpdatesMsInterval);
-            lidgrenMsg.Write(SecondaryVesselPositionUpdatesMsInterval);
+            lidgrenMsg.Write(VesselUpdatesMsInterval);
+            lidgrenMsg.Write(SecondaryVesselUpdatesMsInterval);
             lidgrenMsg.Write(AllowStockVessels);
             lidgrenMsg.Write(CanRevert);
             lidgrenMsg.Write(AutoHireCrews);
@@ -146,8 +146,8 @@ namespace LunaCommon.Message.Data.Settings
             ConsoleIdentifier = lidgrenMsg.ReadString();
             GameDifficulty = (GameDifficulty)lidgrenMsg.ReadInt32();
             SafetyBubbleDistance = lidgrenMsg.ReadFloat();
-            VesselPositionUpdatesMsInterval = lidgrenMsg.ReadInt32();
-            SecondaryVesselPositionUpdatesMsInterval = lidgrenMsg.ReadInt32();
+            VesselUpdatesMsInterval = lidgrenMsg.ReadInt32();
+            SecondaryVesselUpdatesMsInterval = lidgrenMsg.ReadInt32();
             AllowStockVessels = lidgrenMsg.ReadBoolean();
             CanRevert = lidgrenMsg.ReadBoolean();
             AutoHireCrews = lidgrenMsg.ReadBoolean();

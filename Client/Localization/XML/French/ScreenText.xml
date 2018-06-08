@@ -16,4 +16,5 @@
     <CraftLibraryInterval>Intervalle entre les requêtes d'accès à la bibliothèque de crafts : $1 secondes. Action momentanément indisponible.</CraftLibraryInterval>
     <ScreenshotTaken>Capture d'écran partagée !</ScreenshotTaken>
     <ImageSaved>Image sauvegardée dans GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
 </ScreenText>

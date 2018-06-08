@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Network;
 using LunaCommon.Enums;
 using System.Text;
@@ -46,6 +47,20 @@ namespace LunaClient.Systems.SettingsSys
             }
 
             return validationResult;
+        }
+
+        /// <summary>
+        /// Here we can adjust local settings to what we received from the server
+        /// </summary>
+        public void AdjustLocalSettings()
+        {
+            //Increase the interpolation offset if necessary
+            var minRecommendedInterpolationOffset = ServerSettings.SecondaryVesselUpdatesMsInterval * 3;
+            if (CurrentSettings.InterpolationOffset < minRecommendedInterpolationOffset)
+            {
+                LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.IncreasedInterpolationOffset, 5, ScreenMessageStyle.UPPER_CENTER);
+                CurrentSettings.InterpolationOffset = minRecommendedInterpolationOffset;
+            }
         }
     }
 }

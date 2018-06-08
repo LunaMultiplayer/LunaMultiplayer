@@ -16,4 +16,5 @@
     <CraftLibraryInterval>载具库请求间隔为 $1 秒。此时无法处理此请求</CraftLibraryInterval>
     <ScreenshotTaken>截图已上传！</ScreenshotTaken>
     <ImageSaved>图片已保存至 GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
 </ScreenText>
