@@ -231,7 +231,6 @@ namespace LunaClient.Windows.Debug
                                 StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
                                     .Append($" Dur: {duration:F0}ms").Append($" Perc: {perc:F0}%").Append($" TimeDiff: {timeDiff:F0}ms").AppendLine($" T+: {extraInterpolationTime:F0}ms");
                             }
-
                         }
 
                         _interpolationPositionText = StringBuilder.ToString();
@@ -243,10 +242,15 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.Append("Cached: ").AppendLine(FlightStateQueue.CacheSize.ToString());
                         foreach (var keyVal in VesselFlightStateSystem.TargetFlightStateQueue)
                         {
-                            var extraInterpolationTime = VesselFlightStateSystem.CurrentFlightState[keyVal.Key].ExtraInterpolationTime;
-                            var timeDiff = VesselFlightStateSystem.CurrentFlightState[keyVal.Key].TimeDifference;
-                            StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
-                                .Append($" TimeDiff: {timeDiff}").AppendLine($" T+: {extraInterpolationTime}");
+                            if (VesselFlightStateSystem.CurrentFlightState.TryGetValue(keyVal.Key, out var current) && current.Target != null)
+                            {
+                                var perc = current.LerpPercentage * 100;
+                                var duration = TimeSpan.FromSeconds(current.InterpolationDuration).TotalMilliseconds;
+                                var extraInterpolationTime = TimeSpan.FromSeconds(current.ExtraInterpolationTime).TotalMilliseconds;
+                                var timeDiff = TimeSpan.FromSeconds(current.TimeDifference).TotalMilliseconds;
+                                StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
+                                    .Append($" Dur: {duration:F0}ms").Append($" Perc: {perc:F0}%").Append($" TimeDiff: {timeDiff:F0}ms").AppendLine($" T+: {extraInterpolationTime:F0}ms");
+                            }
                         }
 
                         _interpolationFlightStateText = StringBuilder.ToString();
