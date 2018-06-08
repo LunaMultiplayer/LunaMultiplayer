@@ -2,8 +2,8 @@
 <ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SettingsIcon>Impostazioni</SettingsIcon>
   <ServerIcon>Lista Server</ServerIcon>
-  <ConnectIcon>Connetti</ConnectIcon>
-  <DisconnectIcon>Disconnetti</DisconnectIcon>
+  <ConnectIcon>Connettiti</ConnectIcon>
+  <DisconnectIcon>Disconnettiti</DisconnectIcon>
   <SyncIcon>Accelera temporalmente a</SyncIcon>
   <CloseIcon>Chiudi</CloseIcon>
   <RefreshIcon>Aggiorna</RefreshIcon>
