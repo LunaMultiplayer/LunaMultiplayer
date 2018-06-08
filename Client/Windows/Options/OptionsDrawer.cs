@@ -10,6 +10,7 @@ using LunaCommon.Time;
 using System;
 using UnityEngine;
 
+// ReSharper disable CompareOfFloatsByEqualityOperator
 namespace LunaClient.Windows.Options
 {
     public partial class OptionsWindow
@@ -90,8 +91,7 @@ namespace LunaClient.Windows.Options
 
                 GUI.enabled = SettingsSystem.CurrentSettings.PositionInterpolation;
                 GUILayout.Label($"{LocalizationContainer.OptionsWindowText.InterpolationOffset} {SettingsSystem.CurrentSettings.InterpolationOffset * 1000:F0} ms");
-                var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffset, 0, 0, 3), 2);
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffset, 0, 0, 5), 1);
                 if (interpolationOffset != SettingsSystem.CurrentSettings.InterpolationOffset)
                 {
                     SettingsSystem.CurrentSettings.InterpolationOffset = interpolationOffset;
@@ -137,7 +137,7 @@ namespace LunaClient.Windows.Options
                     }
                 }
 
-                if (_infiniteTimeout)
+                if (SettingsSystem.CurrentSettings.Timeout == float.MaxValue)
                 {
                     GUILayout.Label($"{LocalizationContainer.OptionsWindowText.ConnectionTimeout} ∞");
                 }
@@ -147,12 +147,10 @@ namespace LunaClient.Windows.Options
                 }
                 if (MainSystem.NetworkState <= ClientState.Disconnected)
                 {
-                    // ReSharper disable once CompareOfFloatsByEqualityOperator
                     _infiniteTimeout = SettingsSystem.CurrentSettings.Timeout == float.MaxValue;
 
                     GUI.enabled = !_infiniteTimeout;
                     var newTimeoutVal = (int)Math.Round(GUILayout.HorizontalScrollbar(SettingsSystem.CurrentSettings.Timeout, 0, NetworkMain.Config.PingInterval, 120));
-                    // ReSharper disable once CompareOfFloatsByEqualityOperator
                     if (newTimeoutVal != SettingsSystem.CurrentSettings.Timeout)
                     {
                         NetworkMain.Config.ConnectionTimeout = SettingsSystem.CurrentSettings.Timeout = newTimeoutVal;
