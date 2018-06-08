@@ -150,25 +150,33 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// </summary>
         private double GetInterpolationFixFactor()
         {
-            var error = TimeSpan.FromSeconds(Math.Abs(TimeDifference)).TotalMilliseconds;
+            //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 seconds
 
-            //Do not use less than 0.25 as otherwise it won't fix it.
-            if (error <= 500)
+            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
+            var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
+
+            //We cannot fix errors that are below the fixed delta time!
+            if (errorInFrames < 1)
+                return 0;
+
+            if (errorInFrames <= 2)
             {
-                return RawInterpolationDuration * 0.25;
+                //The error is max 2 frames ahead/below
+                return Time.fixedDeltaTime;
+            }
+            if (errorInFrames <= 5)
+            {
+                //The error is max 5 frames ahead/below
+                return Time.fixedDeltaTime * 2;
+            }
+            if (errorInSeconds <= 2.5)
+            {
+                //The error is max 2.5 SECONDS ahead/below
+                return Time.fixedDeltaTime * errorInFrames / 2;
             }
 
-            if (error <= 1000)
-            {
-                return RawInterpolationDuration * 0.60;
-            }
-
-            if (error <= 5000)
-            {
-                return RawInterpolationDuration;
-            }
-
-            return RawInterpolationDuration * 2;
+            //The error is really big...
+            return Time.fixedDeltaTime * errorInFrames;
         }
 
         #endregion
