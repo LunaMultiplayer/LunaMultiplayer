@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.VesselUtilities;
@@ -26,6 +27,8 @@ namespace LunaClient.Systems.VesselPositionSys
                                          FlightGlobals.ready && FlightGlobals.ActiveVessel.loaded &&
                                          FlightGlobals.ActiveVessel.state != Vessel.State.DEAD &&
                                          FlightGlobals.ActiveVessel.vesselType != VesselType.Flag;
+
+        public PositionEvents PositionEvents { get; } = new PositionEvents();
 
         public bool PositionUpdateSystemBasicReady => Enabled && PositionUpdateSystemReady || HighLogic.LoadedScene == GameScenes.TRACKSTATION;
 
@@ -59,6 +62,8 @@ namespace LunaClient.Systems.VesselPositionSys
             //https://forum.kerbalspaceprogram.com/index.php?/topic/173885-packed-vessels-position-isnt-reliable-from-fixedupdate/
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendSecondaryVesselPositionUpdates));
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
+
+            LockEvent.onLockAcquire.Add(PositionEvents.OnLockAcquire);
         }
 
         protected override void OnDisabled()
@@ -70,6 +75,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
             TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
             TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
+
+            LockEvent.onLockAcquire.Remove(PositionEvents.OnLockAcquire);
         }
 
         private void HandleVesselUpdates()
