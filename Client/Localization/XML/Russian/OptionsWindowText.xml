@@ -8,15 +8,15 @@
     <Blue>B:</Blue>
     <Random>Случайно</Random>
     <Set>Подтвердить</Set>
-    <InterpolationSettings>Interpolation settings</InterpolationSettings>
+    <InterpolationSettings>Настройки интерполяции</InterpolationSettings>
     <EnableInterpolation>Включить интерполяцию</EnableInterpolation>
     <InterpolationOffset>Interpolation offset:</InterpolationOffset>
     <GenerateLmpModControl>Сгенерировать LMPModControl.xml для сервера</GenerateLmpModControl>
     <GenerateUniverse>Сгенерировать вселенную из сохраненной игры</GenerateUniverse>
-    <NetworkSettings>Network settings</NetworkSettings>
-    <CannotChangeWhileConnected>Cannot change values while connected</CannotChangeWhileConnected>
-    <ResetNetwork>Reset network</ResetNetwork>
+    <NetworkSettings>Настройки сети</NetworkSettings>
+    <CannotChangeWhileConnected>Невозможно изменить настройки во время подключения</CannotChangeWhileConnected>
+    <ResetNetwork>Сбросить сетевые настройки</ResetNetwork>
     <Mtu>MTU (Default: 1408):</Mtu>
     <AutoExpandMtu>Auto expand MTU</AutoExpandMtu>
-    <ConnectionTimeout>Connection timeout (Default: 15):</ConnectionTimeout>
+    <ConnectionTimeout>Время ожидания подключения (Default: 15):</ConnectionTimeout>
 </OptionsWindowText>
