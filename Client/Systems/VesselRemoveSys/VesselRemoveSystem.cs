@@ -119,7 +119,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             if (removeFromStore)
             {
                 VesselPositionSystem.Singleton.RemoveVessel(vesselId);
-                VesselFlightStateSystem.Singleton.RemoveVesselFromSystem(vesselId);
+                VesselFlightStateSystem.Singleton.RemoveVessel(vesselId);
             }
             var killVessel = FlightGlobals.FindVessel(vesselId);
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)

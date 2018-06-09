@@ -208,21 +208,21 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// <summary>
         /// Removes the vessel from the dictionaries
         /// </summary>
-        public void RemoveVesselFromSystem(Guid vesselId)
+        public void RemoveVessel(Guid vesselId)
         {
-            var vessel = FlightGlobals.FindVessel(vesselId);
-            if (vessel != null)
-                TryRemoveCallback(vessel);
-
             FlyByWireDictionary.TryRemove(vesselId, out _);
             CurrentFlightState.TryRemove(vesselId, out _);
             TargetFlightStateQueue.TryRemove(vesselId, out _);
+
+            var vessel = FlightGlobals.FindVessel(vesselId);
+            if (vessel != null)
+                TryRemoveCallback(vessel);
         }
 
         /// <summary>
         /// Removes the vessel from the dictionaries
         /// </summary>
-        public void RemoveVesselFromSystem(Vessel vesselToRemove)
+        public void RemoveVessel(Vessel vesselToRemove)
         {
             if (vesselToRemove == null) return;
 

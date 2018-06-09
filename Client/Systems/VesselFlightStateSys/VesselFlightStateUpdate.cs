@@ -110,7 +110,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             {
                 //We only send flight states of the ACTIVE vessel so perhgaps some player switched a vessel and we are not receiveing any flight state
                 //To solve this just remove the vessel from the system
-                VesselFlightStateSystem.Singleton.RemoveVesselFromSystem(VesselId);
+                VesselFlightStateSystem.Singleton.RemoveVessel(VesselId);
             }
 
             InterpolatedCtrlState.Lerp(CtrlState, Target.CtrlState, LerpPercentage);
