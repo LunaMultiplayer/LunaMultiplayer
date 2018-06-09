@@ -228,10 +228,10 @@ namespace LunaClient.Windows.Debug
                                 StringBuilder.AppendLine();
                             }
                         }
-
-                        _interpolationText = StringBuilder.ToString();
-                        StringBuilder.Length = 0;
                     }
+
+                    _interpolationText = StringBuilder.ToString();
+                    StringBuilder.Length = 0;
                 }
             }
         }
