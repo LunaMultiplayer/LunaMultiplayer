@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<ChatWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>聊天</Title>
+    <Send>发送</Send>
+</ChatWindowText>

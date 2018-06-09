@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <CraftUploaded>Fartøj uploaded!</CraftUploaded>
+    <CraftSaved>Fartøj gemt!</CraftSaved>
+    <ModFileGenerated>LMPModControl.xml fil genereret i din KSP mappe</ModFileGenerated>
+    <Disconected>Du er blevet frakoblet!</Disconected>
+    <Spectating>Dette fartøj styres af</Spectating>
+    <SafetyBubble>Husk!! Mens du er inde i sikkerhedsboblen, ses du ikke af andre spillere !!</SafetyBubble>
+    <CannotRecover>Kan ikke gendanne fartøjet, fartøjet er ikke dit.</CannotRecover>
+    <CannotTerminate>Kan ikke opsige fartøjet, fartøjet er ikke dit.</CannotTerminate>
+    <SpectatingRemoved>Det fartøj, du var tilskuere på, blev fjernet</SpectatingRemoved>
+    <WarpDisabled>Kan ikke warp, warping er deaktiveret på denne server</WarpDisabled>
+    <NotWarpMaster>Kan ikke Warp, du er ikke warplæreren!</NotWarpMaster>
+    <WaitingSubspace>Kan ikke warp, venter på subspace id fra servereren</WaitingSubspace>
+    <ScreenshotInterval>Interval mellem skærmbilleder er $ 1 sekunder. Kan ikke uploade skærmbilledet i øjeblikket</ScreenshotInterval>
+    <CraftLibraryInterval>Intervallet mellem fartøjes bibliotek anmodninger er $1 sekunder. Kan ikke behandle anmodningen i øjeblikket</CraftLibraryInterval>
+    <ScreenshotTaken>Skærmbillede uploadet!</ScreenshotTaken>
+    <ImageSaved>Billede gemt til GameData / LunaMultiplayer / Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
+</ScreenText>

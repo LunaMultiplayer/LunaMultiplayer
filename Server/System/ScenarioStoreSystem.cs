@@ -1,8 +1,10 @@
 ﻿using LunaCommon.Xml;
 using Server.Context;
+using Server.Events;
 using System.Collections.Concurrent;
 using System.IO;
 using System.Linq;
+
 // ReSharper disable InconsistentlySynchronizedField
 
 namespace Server.System
@@ -10,13 +12,15 @@ namespace Server.System
     /// <summary>
     /// Here we keep a copy of all the scnarios modules in XML format and we also save them to files at a specified rate
     /// </summary>
-    public class ScenarioStoreSystem
+    public static class ScenarioStoreSystem
     {
         public static string ScenariosFolder = Path.Combine(ServerContext.UniverseDirectory, "Scenarios");
 
         public static ConcurrentDictionary<string, string> CurrentScenariosInXmlFormat = new ConcurrentDictionary<string, string>();
 
         private static readonly object BackupLock = new object();
+
+        static ScenarioStoreSystem() => ExitEvent.ServerClosing += BackupScenarios;
 
         /// <summary>
         /// Returns a XML scenario in the standard KSP format

@@ -2,6 +2,8 @@
 using LunaClient.Events;
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Time;
@@ -17,12 +19,23 @@ namespace LunaClient.Systems.VesselRemoveSys
     /// </summary>
     public class VesselRemoveSystem : MessageSystem<VesselRemoveSystem, VesselRemoveMessageSender, VesselRemoveMessageHandler>
     {
+        private class VesselRemoveEntry
+        {
+            public Guid VesselId { get; }
+            public string Reason { get; }
+
+            public VesselRemoveEntry(Guid vesselId, string reason)
+            {
+                VesselId = vesselId;
+                Reason = "Queued: " + reason;
+            }
+        }
+
         #region Fields & properties
 
         private VesselRemoveEvents VesselRemoveEvents { get; } = new VesselRemoveEvents();
-
-        public ConcurrentQueue<Guid> VesselsToRemove { get; private set; } = new ConcurrentQueue<Guid>();
-        public ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
+        private static ConcurrentQueue<VesselRemoveEntry> VesselsToRemove { get; set; } = new ConcurrentQueue<VesselRemoveEntry>();
+        private static ConcurrentDictionary<Guid, DateTime> RemovedVessels { get; } = new ConcurrentDictionary<Guid, DateTime>();
 
         public Guid ManuallyKillingVesselId = Guid.Empty;
 
@@ -72,16 +85,16 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public void ClearSystem()
         {
-            VesselsToRemove = new ConcurrentQueue<Guid>();
+            VesselsToRemove = new ConcurrentQueue<VesselRemoveEntry>();
             RemovedVessels.Clear();
         }
 
         /// <summary>
         /// Add a vessel so it will be killed later
         /// </summary>
-        public void AddToKillList(Guid vesselId)
+        public void AddToKillList(Guid vesselId, string reason)
         {
-            VesselsToRemove.Enqueue(vesselId);
+            VesselsToRemove.Enqueue(new VesselRemoveEntry(vesselId, reason));
         }
 
         /// <summary>
@@ -89,24 +102,30 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         public bool VesselWillBeKilled(Guid vesselId)
         {
-            return VesselsToRemove.Contains(vesselId) || RemovedVessels.ContainsKey(vesselId);
+            return VesselsToRemove.Any(v => v.VesselId == vesselId) || RemovedVessels.ContainsKey(vesselId);
         }
-        
+
         /// <summary>
         /// Kills and unloads a vessel.
         /// </summary>
-        public void KillVessel(Guid vesselId, bool switchVessel = true)
+        public void KillVessel(Guid vesselId, string reason, bool switchVessel = true, bool removeFromStore = true)
         {
             //ALWAYS remove it from the proto store as this dictionary is maintained even if we are in the KSC
             //This means that while in KSC if we receive a vessel remove msg, our FlightGlobals.Vessels will be empty
             //But our VesselsProtoStore probably contains that vessel that must be removed.
-            VesselsProtoStore.RemoveVessel(vesselId);
+            if (removeFromStore) //The exception is when reloading a vessel!
+                VesselsProtoStore.RemoveVessel(vesselId);
 
+            if (removeFromStore)
+            {
+                VesselPositionSystem.Singleton.RemoveVessel(vesselId);
+                VesselFlightStateSystem.Singleton.RemoveVesselFromSystem(vesselId);
+            }
             var killVessel = FlightGlobals.FindVessel(vesselId);
             if (killVessel == null || killVessel.state == Vessel.State.DEAD)
                 return;
 
-            LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}");
+            LunaLog.Log($"[LMP]: Killing vessel {killVessel.id}. Reason: {reason}");
             if (switchVessel)
             {
                 SwitchVesselIfSpectating(killVessel);
@@ -147,7 +166,7 @@ namespace LunaClient.Systems.VesselRemoveSys
         private void FlushRemovedVessels()
         {
             var vesselsToFlush = RemovedVessels
-                .Where(v => (LunaTime.Now - v.Value) > TimeSpan.FromSeconds(20))
+                .Where(v => (LunaNetworkTime.Now - v.Value) > TimeSpan.FromSeconds(20))
                 .Select(v => v.Key);
 
             foreach (var vesselId in vesselsToFlush)
@@ -161,12 +180,12 @@ namespace LunaClient.Systems.VesselRemoveSys
         /// </summary>
         private void RemoveQueuedVessels()
         {
-            while(VesselsToRemove.TryDequeue(out var vesselId))
+            while (VesselsToRemove.TryDequeue(out var vesselRemoveEntry))
             {
-                KillVessel(vesselId);
+                KillVessel(vesselRemoveEntry.VesselId, vesselRemoveEntry.Reason);
 
                 //Always add to the killed list even if it exists that vessel or not.
-                RemovedVessels.TryAdd(vesselId, LunaTime.Now);
+                RemovedVessels.TryAdd(vesselRemoveEntry.VesselId, LunaNetworkTime.Now);
             }
         }
 
@@ -184,7 +203,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
                 foreach (var vesselId in vesselsToUnloadIds)
                 {
-                    AddToKillList(vesselId.Key);
+                    AddToKillList(vesselId.Key, "Vessel was in past subspace");
                 }
             }
         }
@@ -199,7 +218,7 @@ namespace LunaClient.Systems.VesselRemoveSys
             {
                 //Get a random vessel and switch to it if exists, otherwise go to spacecenter
                 var otherVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id != killVessel.id);
-                
+
                 if (otherVessel != null)
                     FlightGlobals.ForceSetActiveVessel(otherVessel);
                 else

@@ -51,7 +51,7 @@ namespace LunaCommon.Message.Data.Vessel
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(int) + 
-                GuidUtil.GetByteSize() * 2 + sizeof(int) + sizeof(byte) * NumBytes;
+                GuidUtil.ByteSize * 2 + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }

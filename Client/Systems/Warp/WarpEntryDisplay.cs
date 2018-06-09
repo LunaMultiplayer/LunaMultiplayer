@@ -59,6 +59,8 @@ namespace LunaClient.Systems.Warp
             {
                 System.SubspaceEntries.Clear();
                 var groupedPlayers = System.ClientSubspaceList.GroupBy(s => s.Value);
+
+                SubspaceDisplayEntry warpingSubspace = null;
                 foreach (var subspace in groupedPlayers)
                 {
                     var newSubspaceDisplay = new SubspaceDisplayEntry
@@ -67,24 +69,19 @@ namespace LunaClient.Systems.Warp
                         SubspaceId = subspace.Key,
                         Players = subspace.Select(u => u.Key).ToList()
                     };
+                    
+                    if (newSubspaceDisplay.SubspaceId == -1)
+                    {
+                        warpingSubspace = newSubspaceDisplay;
+                        continue;
+                    }
 
-                    if (subspace.Key == System.CurrentSubspace)
-                    {
-                        if (subspace.Select(v => v.Key).Contains(SettingsSystem.CurrentSettings.PlayerName))
-                        {
-                            System.SubspaceEntries.Insert(0, newSubspaceDisplay);
-                        }
-                        else
-                        {
-                            newSubspaceDisplay.Players.Insert(0, SettingsSystem.CurrentSettings.PlayerName);
-                            System.SubspaceEntries.Insert(0, newSubspaceDisplay);
-                        }
-                    }
-                    else
-                    {
-                        System.SubspaceEntries.Add(newSubspaceDisplay);
-                    }
+                    System.SubspaceEntries.Add(newSubspaceDisplay);
                 }
+
+                System.SubspaceEntries = System.SubspaceEntries.OrderByDescending(s => s.SubspaceTime).ToList();
+                if (warpingSubspace != null)
+                    System.SubspaceEntries.Insert(0, warpingSubspace);
             }
         }
 

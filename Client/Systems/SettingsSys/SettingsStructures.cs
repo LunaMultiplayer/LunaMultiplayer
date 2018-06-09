@@ -1,4 +1,4 @@
-﻿using LunaClient.Localization.Base;
+﻿using Lidgren.Network;
 using LunaClient.Systems.PlayerColorSys;
 using System;
 using System.Collections.Generic;
@@ -9,11 +9,11 @@ namespace LunaClient.Systems.SettingsSys
     [Serializable]
     public class SettingStructure
     {
-        public Languages Language { get; set; } = Languages.English;
+        public string Language { get; set; } = "English";
         public string PlayerName { get; set; } = "Player";
         public int ConnectionTries { get; set; } = 3;
         public int InitialConnectionMsTimeout { get; set; } = 5000;
-        public int SendReceiveMsInterval { get; set; } = 5;
+        public int SendReceiveMsInterval { get; set; } = 3;
         public int MsBetweenConnectionTries { get; set; } = 3000;
         public int HearbeatMsInterval { get; set; } = 2000;
         public bool DisclaimerAccepted { get; set; } = false;
@@ -25,8 +25,10 @@ namespace LunaClient.Systems.SettingsSys
         public int MaxGroupsPerPlayer { get; set; } = 1;
         public bool OverrideIntegrator { get; set; }
         public bool PositionInterpolation { get; set; } = true;
-
-#if DEBUG
+        public double InterpolationOffsetSeconds { get; set; } = 0.5f;
+        public int Mtu { get; set; } = NetPeerConfiguration.kDefaultMTU;
+        public bool AutoExpandMtu { get; set; } = false;
+        public float TimeoutSeconds { get; set; } = 15;
 
         /*
          * You can use this debug switches for testing purposes. 
@@ -43,9 +45,6 @@ namespace LunaClient.Systems.SettingsSys
         public bool Debug7 { get; set; } = false;
         public bool Debug8 { get; set; } = false;
         public bool Debug9 { get; set; } = false;
-
-#endif
-
     }
 
     [Serializable]

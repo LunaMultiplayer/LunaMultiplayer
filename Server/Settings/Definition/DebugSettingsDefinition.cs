@@ -17,8 +17,5 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Minimum latency that a packet may have")]
         public int MinSimulatedLatencyMs { get; set; } = 0;
-
-        [XmlComment(Value = "Simulated time difference in ms compared to the NTP servers")]
-        public int SimulatedMsTimeOffset { get; set; } = 0;
     }
 }

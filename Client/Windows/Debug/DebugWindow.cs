@@ -4,7 +4,9 @@ using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
+using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
+using LunaCommon.Extensions;
 using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
@@ -23,12 +25,14 @@ namespace LunaClient.Windows.Debug
 
         private const float DisplayUpdateInterval = .2f;
         private const float WindowHeight = 400;
-        private const float WindowWidth = 400;
+        private const float WindowWidth = 450;
 
         private static bool _displayFast;
         private static string _vectorText;
         private static string _orbitText;
-        private static string _ntpText;
+        private static string _orbitVesselsText;
+        private static string _subspaceText;
+        private static string _timeText;
         private static string _connectionText;
         private static string _vesselStoreText;
         private static string _interpolationText;
@@ -36,7 +40,9 @@ namespace LunaClient.Windows.Debug
 
         private static bool _displayVectors;
         private static bool _displayOrbit;
-        private static bool _displayNtp;
+        private static bool _displayVesselsOrbit;
+        private static bool _displaySubspace;
+        private static bool _displayTimes;
         private static bool _displayConnectionQueue;
         private static bool _displayVesselStoreData;
         private static bool _displayInterpolationData;
@@ -80,6 +86,8 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.AppendLine($"CoM offset vector: {ourVessel.CoM}\n");
                         StringBuilder.AppendLine($"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}");
                         StringBuilder.AppendLine($"World Pos: {(Vector3)ourVessel.GetWorldPos3D()}, |pos|: {ourVessel.GetWorldPos3D().magnitude}");
+                        StringBuilder.AppendLine($"Lat,Lon,Alt: {ourVessel.latitude},{ourVessel.longitude},{ourVessel.altitude}");
+                        StringBuilder.AppendLine($"On safety bubble: {VesselCommon.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
 
                         _vectorText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
@@ -109,28 +117,72 @@ namespace LunaClient.Windows.Debug
                     }
                     else
                     {
-                        _orbitText = "You have to be in orbit";
+                        _orbitText = "You have to be in flight and with an active vessel";
                     }
                 }
 
-                if (_displayNtp)
+                if (_displayVesselsOrbit)
                 {
-                    StringBuilder.AppendLine($"Server start time: {new DateTime(TimeSyncerSystem.ServerStartTime):yyyy-MM-dd HH-mm-ss.ffff}");
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready)
+                    {
+                        foreach (var vessel in FlightGlobals.Vessels)
+                        {
+                            if (vessel.id != FlightGlobals.ActiveVessel?.id && vessel.orbitDriver?.orbit != null)
+                            {
+                                StringBuilder.AppendLine($"Id: {vessel.id}");
+                                StringBuilder.AppendLine($"Semi major axis: {vessel.orbitDriver.orbit.semiMajorAxis}");
+                                StringBuilder.AppendLine($"Eccentricity: {vessel.orbitDriver.orbit.eccentricity}");
+                                StringBuilder.AppendLine($"Inclination: {vessel.orbitDriver.orbit.inclination}");
+                                StringBuilder.AppendLine($"LAN: {vessel.orbitDriver.orbit.LAN}");
+                                StringBuilder.AppendLine($"Arg Periapsis: {vessel.orbitDriver.orbit.argumentOfPeriapsis}");
+                                StringBuilder.AppendLine($"Mean anomaly: {vessel.orbitDriver.orbit.meanAnomalyAtEpoch}");
+                                StringBuilder.AppendLine($"Epoch: {vessel.orbitDriver.orbit.epoch}");
+                                StringBuilder.AppendLine();
+                            }
+
+                            _orbitVesselsText = StringBuilder.ToString();
+                            StringBuilder.Length = 0;
+                        }
+                    }
+                    else
+                    {
+                        _orbitVesselsText = "You have to be in flight";
+                    }
+                }
+
+                if (_displaySubspace)
+                {
                     StringBuilder.AppendLine($"Warp rate: {Math.Round(Time.timeScale, 3)}x.");
                     StringBuilder.AppendLine($"Current subspace: {WarpSystem.Singleton.CurrentSubspace}.");
                     StringBuilder.AppendLine($"Current subspace time: {WarpSystem.Singleton.CurrentSubspaceTime}s.");
                     StringBuilder.AppendLine($"Current subspace time difference: {WarpSystem.Singleton.CurrentSubspaceTimeDifference}s.");
                     StringBuilder.AppendLine($"Current Error: {Math.Round(TimeSyncerSystem.CurrentErrorSec * 1000, 0)}ms.");
-                    StringBuilder.AppendLine($"Current universe time: {Math.Round(Planetarium.GetUniversalTime(), 3)} UT");
+                    StringBuilder.AppendLine($"Current universe time: {Math.Round(TimeSyncerSystem.UniversalTime, 3)} UT");
 
-                    _ntpText = StringBuilder.ToString();
+                    _subspaceText = StringBuilder.ToString();
+                    StringBuilder.Length = 0;
+                }
+
+                if (_displayTimes)
+                {
+                    StringBuilder.AppendLine($"Server start time: {new DateTime(TimeSyncerSystem.ServerStartTime):yyyy-MM-dd HH-mm-ss.ffff}");
+
+                    StringBuilder.AppendLine($"Computer clock time (UTC): {DateTime.UtcNow:HH:mm:ss.fff}");
+                    StringBuilder.AppendLine($"Computer clock offset (minutes): {LunaComputerTime.SimulatedMinutesTimeOffset}");
+                    StringBuilder.AppendLine($"Computer clock time + offset: {LunaComputerTime.UtcNow:HH:mm:ss.fff}");
+                    
+                    StringBuilder.AppendLine($"Computer <-> NTP clock difference: {LunaNetworkTime.TimeDifference.TotalMilliseconds}ms.");
+                    StringBuilder.AppendLine($"NTP clock offset: {LunaNetworkTime.SimulatedMsTimeOffset}ms.");
+                    StringBuilder.AppendLine($"Total Difference: {LunaNetworkTime.TimeDifference.TotalMilliseconds + LunaNetworkTime.SimulatedMsTimeOffset}ms.");
+
+                    StringBuilder.AppendLine($"NTP clock time (UTP): {LunaNetworkTime.UtcNow:HH:mm:ss.fff}");
+
+                    _timeText = StringBuilder.ToString();
                     StringBuilder.Length = 0;
                 }
 
                 if (_displayConnectionQueue)
                 {
-                    StringBuilder.AppendLine($"NTP time diference: {LunaTime.TimeDifference.TotalMilliseconds}ms.");
-                    StringBuilder.AppendLine($"NTP + simulated time diference: {LunaTime.TimeDifference.TotalMilliseconds + LunaTime.SimulatedMsTimeOffset}ms.");
                     StringBuilder.AppendLine($"Ping: {NetworkStatistics.GetStatistics("Ping")}ms.");
                     StringBuilder.AppendLine($"Latency: {NetworkStatistics.GetStatistics("Latency")}s.");
                     StringBuilder.AppendLine($"TimeOffset: {TimeSpan.FromTicks(NetworkStatistics.GetStatistics("TimeOffset")).TotalMilliseconds}ms.");
@@ -161,14 +213,26 @@ namespace LunaClient.Windows.Debug
 
                 if (_displayInterpolationData)
                 {
-                    StringBuilder.Append("Max queue length: ").AppendLine(VesselPositionSystem.MaxQueuedUpdates.ToString());
-                    foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
+                    if (VesselPositionSystem.TargetVesselUpdateQueue.Any())
                     {
-                        StringBuilder.Append(keyVal.Key).Append(": ").AppendLine(keyVal.Value.Count.ToString());
-                    }
+                        StringBuilder.Append("Cached: ").AppendLine(PositionUpdateQueue.CacheSize.ToString());
+                        foreach (var keyVal in VesselPositionSystem.TargetVesselUpdateQueue)
+                        {
+                            if (VesselPositionSystem.CurrentVesselUpdate.TryGetValue(keyVal.Key, out var current) && current.Target != null){
 
-                    _interpolationText = StringBuilder.ToString();
-                    StringBuilder.Length = 0;
+                                var perc = current.LerpPercentage * 100;
+                                var duration = TimeSpan.FromSeconds(current.InterpolationDuration).TotalMilliseconds;
+                                var extraInterpolationTime = TimeSpan.FromSeconds(current.ExtraInterpolationTime).TotalMilliseconds;
+                                var timeDiff = TimeSpan.FromSeconds(current.TimeDifference).TotalMilliseconds;
+                                StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
+                                    .Append($" Dur: {duration:F0}ms").Append($" TimeDiff: {timeDiff:F0}ms").Append($" T+: {extraInterpolationTime:F0}ms").AppendLine($" Perc: {perc:F0}%");
+                                StringBuilder.AppendLine();
+                            }
+                        }
+
+                        _interpolationText = StringBuilder.ToString();
+                        StringBuilder.Length = 0;
+                    }
                 }
             }
         }

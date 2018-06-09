@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <CraftUploaded>载具上传成功!</CraftUploaded>
+    <CraftSaved>载具已保存!</CraftSaved>
+    <ModFileGenerated>LMPModControl.xml文件已经生成与您的KSP根文件夹</ModFileGenerated>
+    <Disconected>您已断开连接!</Disconected>
+    <Spectating>此载具控制由：</Spectating>
+    <SafetyBubble>请记住！！当您在安全泡沫内时您无法被其他玩家所看到！！</SafetyBubble>
+    <CannotRecover>无法回收载具, 因为这个载具属于他人</CannotRecover>
+    <CannotTerminate>无法删除载具, 因为这个载具属于他人</CannotTerminate>
+    <SpectatingRemoved>您正在观看的船只被删除</SpectatingRemoved>
+    <WarpDisabled>时间加速在本服务器被禁用，无法进行时间加速</WarpDisabled>
+    <NotWarpMaster>您不是时间加速主控，无法进行时间加速</NotWarpMaster>
+    <WaitingSubspace>正在等待来自服务器的子空间ID，无法进行时间加速</WaitingSubspace>
+    <ScreenshotInterval>屏幕截图上传之间的间隔为 $1 秒。此时无法上传屏幕截图</ScreenshotInterval>
+    <CraftLibraryInterval>载具库请求间隔为 $1 秒。此时无法处理此请求</CraftLibraryInterval>
+    <ScreenshotTaken>截图已上传！</ScreenshotTaken>
+    <ImageSaved>图片已保存至 GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
+</ScreenText>

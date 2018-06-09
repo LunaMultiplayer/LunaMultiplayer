@@ -104,7 +104,7 @@ namespace LunaClient.Systems.Scenario
         /// This transforms the scenarioModule to a config node. We cannot do this in another thread as Lingoona 
         /// is called sometimes and that makes a hard crash
         /// </summary>
-        private void ParseModulesToConfigNodes(IEnumerable<ScenarioModule> modules)
+        private static void ParseModulesToConfigNodes(IEnumerable<ScenarioModule> modules)
         {
             ScenariosConfigNodes.Clear();
             foreach (var scenarioModule in modules)

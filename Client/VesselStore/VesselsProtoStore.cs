@@ -1,6 +1,6 @@
-﻿using LunaClient.Base;
-using LunaClient.Systems.VesselEvaSys;
+﻿using LunaClient.Systems.VesselEvaSys;
 using LunaClient.Systems.VesselFlightStateSys;
+using LunaClient.Systems.VesselPositionSys;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using System;
@@ -16,25 +16,28 @@ namespace LunaClient.VesselStore
     /// </summary>
     public class VesselsProtoStore
     {
+        public static ConcurrentDictionary<Guid, double> VesselsSpawnTime { get; } =
+            new ConcurrentDictionary<Guid, double>();
+
         public static ConcurrentDictionary<Guid, VesselProtoUpdate> AllPlayerVessels { get; } =
             new ConcurrentDictionary<Guid, VesselProtoUpdate>();
 
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
         /// </summary>
-        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId)
+        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, double vesselSpawnTime = 0)
         {
-            SystemBase.TaskFactory.StartNew(() =>
+            //Do not do this logic in another thread as race conditions might appear as the byte[] 
+            //is a reference type and the message might have been recycled!
+            if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
             {
-                if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
-                {
-                    vesselUpdate.Update(vesselData, numBytes, vesselId);
-                }
-                else
-                {
-                    AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, numBytes, vesselId));
-                }
-            });
+                vesselUpdate.Update(vesselData, numBytes, vesselId);
+            }
+            else
+            {
+                if (vesselSpawnTime > 0) VesselsSpawnTime.TryAdd(vesselId, vesselSpawnTime);
+                AllPlayerVessels.TryAdd(vesselId, new VesselProtoUpdate(vesselData, numBytes, vesselId));
+            }
         }
 
         /// <summary>
@@ -129,6 +132,42 @@ namespace LunaClient.VesselStore
             }
         }
 
+        public static void UpdateVesselProtoPosition(VesselPositionUpdate vesselPositionUpdate)
+        {
+            if (vesselPositionUpdate == null) return;
+
+            if (AllPlayerVessels.TryGetValue(vesselPositionUpdate.VesselId, out var vesselProtoUpd))
+            {
+                if (vesselProtoUpd.ProtoVessel == null) return;
+
+                vesselProtoUpd.ProtoVessel.latitude = vesselPositionUpdate.LatLonAlt[0];
+                vesselProtoUpd.ProtoVessel.longitude = vesselPositionUpdate.LatLonAlt[1];
+                vesselProtoUpd.ProtoVessel.altitude = vesselPositionUpdate.LatLonAlt[2];
+                vesselProtoUpd.ProtoVessel.height = vesselPositionUpdate.HeightFromTerrain;
+
+                vesselProtoUpd.ProtoVessel.normal.x = (float)vesselPositionUpdate.NormalVector[0];
+                vesselProtoUpd.ProtoVessel.normal.y = (float)vesselPositionUpdate.NormalVector[1];
+                vesselProtoUpd.ProtoVessel.normal.z = (float)vesselPositionUpdate.NormalVector[2];
+
+                vesselProtoUpd.ProtoVessel.rotation.x = vesselPositionUpdate.SrfRelRotation[0];
+                vesselProtoUpd.ProtoVessel.rotation.y = vesselPositionUpdate.SrfRelRotation[1];
+                vesselProtoUpd.ProtoVessel.rotation.z = vesselPositionUpdate.SrfRelRotation[2];
+                vesselProtoUpd.ProtoVessel.rotation.w = vesselPositionUpdate.SrfRelRotation[3];
+
+                if (vesselProtoUpd.ProtoVessel.orbitSnapShot != null)
+                {
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.inclination = vesselPositionUpdate.Orbit[0];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.eccentricity = vesselPositionUpdate.Orbit[1];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.semiMajorAxis = vesselPositionUpdate.Orbit[2];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.LAN = vesselPositionUpdate.Orbit[3];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.argOfPeriapsis = vesselPositionUpdate.Orbit[4];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.meanAnomalyAtEpoch = vesselPositionUpdate.Orbit[5];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.epoch = vesselPositionUpdate.Orbit[6];
+                    vesselProtoUpd.ProtoVessel.orbitSnapShot.ReferenceBodyIndex = (int)vesselPositionUpdate.Orbit[7];
+                }
+            }
+        }
+
         public static void UpdateVesselProtoValues(VesselUpdateMsgData msgData)
         {
             if (AllPlayerVessels.TryGetValue(msgData.VesselId, out var vesselProtoUpd))
@@ -137,6 +176,7 @@ namespace LunaClient.VesselStore
 
                 vesselProtoUpd.ProtoVessel.vesselName = msgData.Name;
                 vesselProtoUpd.ProtoVessel.vesselType = (VesselType)Enum.Parse(typeof(VesselType), msgData.Type);
+                vesselProtoUpd.ProtoVessel.distanceTraveled = msgData.DistanceTraveled;
                 vesselProtoUpd.ProtoVessel.situation = (Vessel.Situations)Enum.Parse(typeof(Vessel.Situations), msgData.Situation);
                 vesselProtoUpd.ProtoVessel.landed = msgData.Landed;
                 vesselProtoUpd.ProtoVessel.landedAt = msgData.LandedAt;

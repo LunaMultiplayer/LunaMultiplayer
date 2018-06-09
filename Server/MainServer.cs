@@ -3,6 +3,7 @@ using LunaCommon.Time;
 using Server.Client;
 using Server.Command;
 using Server.Context;
+using Server.Events;
 using Server.Exit;
 using Server.Lidgren;
 using Server.Log;
@@ -10,9 +11,9 @@ using Server.Plugin;
 using Server.Settings;
 using Server.Settings.Structures;
 using Server.System;
-using Server.System.VesselRelay;
 using Server.Upnp;
 using Server.Utilities;
+using Server.Web;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -40,12 +41,10 @@ namespace Server
         {
             try
             {
-                Console.Title = $"LMPServer {LmpVersioning.CurrentVersion}";
-#if DEBUG
-                Console.Title += " DEBUG";
-#endif
+                Console.Title = $"LMP {LmpVersioning.CurrentVersion}";
+
                 Console.OutputEncoding = Encoding.Unicode;
-                ServerContext.StartTime = LunaTime.UtcNow.Ticks;
+                ServerContext.StartTime = LunaNetworkTime.UtcNow.Ticks;
 
                 if (!Common.PlatformIsWindows()) LunaLog.Warning("Remember! Quit the server by using Control+C so the vessels are saved to the hard drive!");
 
@@ -70,13 +69,10 @@ namespace Server
                 //Start the server clock
                 ServerContext.ServerClock.Start();
 
-                //Set the last player activity time to server start
-                ServerContext.LastPlayerActivity = ServerContext.ServerClock.ElapsedMilliseconds;
-
                 ServerContext.ServerStarting = true;
 
                 //Set day for log change
-                ServerContext.Day = LunaTime.Now.Day;
+                ServerContext.Day = LunaNetworkTime.Now.Day;
 
                 LunaLog.Normal($"Luna Server version: {LmpVersioning.CurrentVersion} ({Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)})");
 
@@ -90,12 +86,16 @@ namespace Server
 
                 LunaLog.Normal($"Starting '{GeneralSettings.SettingsStore.ServerName}' on Port {ConnectionSettings.SettingsStore.Port}... ");
 
-                LmpPortMapper.OpenPort().Wait();
+                LmpPortMapper.OpenLmpPort().Wait();
+                LmpPortMapper.OpenWebPort().Wait();
                 ServerContext.ServerRunning = true;
                 LidgrenServer.SetupLidgrenServer();
+                WebServer.StartWebServer();
 
                 //Do not add the command handler thread to the TaskContainer as it's a blocking task
                 LongRunTaskFactory.StartNew(() => new CommandHandler().ThreadMain(), CancellationTokenSrc.Token);
+                
+                TaskContainer.Add(LongRunTaskFactory.StartNew(WebServer.RefreshWebServerInformation, CancellationTokenSrc.Token));
 
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LmpPortMapper.RefreshUpnpPort, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LogThread.RunLogThread, CancellationTokenSrc.Token));
@@ -106,7 +106,6 @@ namespace Server
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RefreshMasterServersList, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(LidgrenMasterServer.RegisterWithMasterServer, CancellationTokenSrc.Token));
 
-                TaskContainer.Add(LongRunTaskFactory.StartNew(VesselRelaySystem.RelayOldVesselMessages, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.RefreshLatestVersion, CancellationTokenSrc.Token));
                 TaskContainer.Add(LongRunTaskFactory.StartNew(VersionChecker.DisplayNewVersionMsg, CancellationTokenSrc.Token));
 
@@ -144,6 +143,12 @@ namespace Server
                 LunaLog.Debug("Loading mod control...");
                 ModFileSystem.LoadModFile();
             }
+
+            Console.Title += $" ({GeneralSettings.SettingsStore.ServerName})";
+
+#if DEBUG
+            Console.Title += " DEBUG";
+#endif
         }
 
         /// <summary>
@@ -157,10 +162,10 @@ namespace Server
         private static void Exit()
         {
             LunaLog.Normal("Exiting... Please wait until all threads are finished");
-
             ServerContext.Shutdown("Server is shutting down");
 
-            LmpPortMapper.RemoveOpenedPorts().Wait();
+            ExitEvent.Exit();
+            
             CancellationTokenSrc.Cancel();
             Task.WaitAll(TaskContainer.ToArray());
 

@@ -37,7 +37,8 @@ namespace Server.System.Scenario
                                                  $"{ConfigNodeXmlParser.ParentNode}[@name='{facilityId}']/" +
                                                  $"{ConfigNodeXmlParser.ValueNode}[@name='lvl']");
 
-            if (node != null) node.InnerText = level.ToString(CultureInfo.InvariantCulture);
+            //Valid levels in the scenario file are 0, 0.5 and 1. So for this we divide the arrived level by 2
+            if (node != null) node.InnerText = (level/2f).ToString(CultureInfo.InvariantCulture);
 
             return document.ToIndentedString();
         }

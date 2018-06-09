@@ -44,14 +44,18 @@ namespace Server.System
                 if (DateTime.Now - lastTime > TimeSpan.FromMilliseconds(ScreenshotSettings.SettingsStore.MinScreenshotIntervalMs))
                 {
                     LastUploadRequest.AddOrUpdate(client.PlayerName, DateTime.Now, (key, existingVal) => DateTime.Now);
-                    if (data.Screenshot.DateTaken == 0) data.Screenshot.DateTaken = LunaTime.UtcNow.ToBinary();
+                    if (data.Screenshot.DateTaken == 0) data.Screenshot.DateTaken = LunaNetworkTime.UtcNow.ToBinary();
                     var fileName = $"{data.Screenshot.DateTaken}.png";
                     if (!File.Exists(fileName))
                     {
                         var fullPath = Path.Combine(playerFolder, fileName);
 
+                        var scaledImageData = ScaleImage(data.Screenshot.Data, data.Screenshot.NumBytes,
+                            ScreenshotSettings.SettingsStore.MaxScreenshotWidth,
+                            ScreenshotSettings.SettingsStore.MaxScreenshotHeight);
+
                         LunaLog.Normal($"Saving screenshot {fileName} ({data.Screenshot.NumBytes} bytes) from: {client.PlayerName}.");
-                        FileHandler.WriteToFile(fullPath, data.Screenshot.Data, data.Screenshot.NumBytes);
+                        FileHandler.CreateFile(fullPath, scaledImageData, scaledImageData.Length);
                         CreateMiniature(fullPath);
                         SendNotification(client.PlayerName);
                     }
@@ -223,10 +227,36 @@ namespace Server.System
         }
 
         /// <summary>
+        /// Scales a image in byte array
+        /// </summary>
+        private static byte[] ScaleImage(byte[] data, int numBytes, int maxWidth, int maxHeight)
+        {
+            using (var stream = new MemoryStream(data, 0, numBytes))
+            using (var image = Image.FromStream(stream))
+            {
+                if (image.Width <= maxWidth && image.Height <= maxHeight)
+                {
+                    Array.Resize(ref data, numBytes);
+                    return data;
+                }
+
+                using (var newImage = ScaleImage(image, maxWidth, maxHeight))
+                using (var outputStream = new MemoryStream())
+                {
+                    newImage.Save(outputStream, image.RawFormat);
+                    return outputStream.ToArray();
+                }
+            }
+        }
+
+        /// <summary>
         /// Scales a given image
         /// </summary>
         private static Image ScaleImage(Image image, int maxWidth, int maxHeight)
         {
+            if (image.Width <= maxWidth && image.Height <= maxHeight)
+                return image;
+
             var ratioX = (double)maxWidth / image.Width;
             var ratioY = (double)maxHeight / image.Height;
             var ratio = Math.Min(ratioX, ratioY);

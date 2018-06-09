@@ -13,6 +13,38 @@ namespace LunaCommon
         }
 
         /// <summary>
+        /// Custom unclamped as Unity does not have a lerp for double values
+        /// </summary>
+        public static double LerpUnclamped(double from, double to, double t)
+        {
+            return from + (to - from) * t;
+        }
+
+        /// <summary>
+        /// Custom lerp as Unity does not have a lerp for float values
+        /// </summary>
+        public static float Lerp(float v0, float v1, float t)
+        {
+            return (1 - t) * v0 + t * v1;
+        }
+
+        /// <summary>
+        /// Custom unclamped as Unity does not have a lerp for double values
+        /// </summary>
+        public static float LerpUnclamped(float from, float to, float t)
+        {
+            return from + (to - from) * t;
+        }
+
+        /// <summary>
+        /// Custom lerp as Unity does not have a lerp for bool values
+        /// </summary>
+        public static bool Lerp(bool v0, bool v1, float t)
+        {
+            return t < 0.5 ? v0 : v1;
+        }
+
+        /// <summary>
         /// Lerps an angle in degrees and wraps around the value specified
         /// </summary>
         public static double LerpAngleDeg(double from, double to, float t, double wrapAngle)
@@ -120,6 +152,22 @@ namespace LunaCommon
             return single;
         }
 
+        /// <summary>
+        /// Clamps a double between min and max
+        /// </summary>
+        public static double Clamp(double value, double min, double max)
+        {
+            if (value < min)
+            {
+                value = min;
+            }
+            else if (value > max)
+            {
+                value = max;
+            }
+            return value;
+        }
+        
         private static double Repeat(double t, double length)
         {
             return t - Math.Floor(t / length) * length;

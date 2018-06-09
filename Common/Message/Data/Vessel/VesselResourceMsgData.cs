@@ -1,7 +1,5 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
-using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -11,8 +9,6 @@ namespace LunaCommon.Message.Data.Vessel
         internal VesselResourceMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Resource;
 
-        public Guid VesselId;
-
         public int ResourcesCount;
         public VesselResourceInfo[] Resources = new VesselResourceInfo[0];
 
@@ -21,8 +17,6 @@ namespace LunaCommon.Message.Data.Vessel
         internal override void InternalSerialize(NetOutgoingMessage lidgrenMsg)
         {
             base.InternalSerialize(lidgrenMsg);
-            
-            GuidUtil.Serialize(VesselId, lidgrenMsg);
 
             lidgrenMsg.Write(ResourcesCount);
             for (var i = 0; i < ResourcesCount; i++)
@@ -34,8 +28,6 @@ namespace LunaCommon.Message.Data.Vessel
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             base.InternalDeserialize(lidgrenMsg);
-
-            VesselId = GuidUtil.Deserialize(lidgrenMsg);
 
             ResourcesCount = lidgrenMsg.ReadInt32();
             if (Resources.Length < ResourcesCount)

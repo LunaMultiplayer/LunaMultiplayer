@@ -14,6 +14,7 @@ using LunaClient.Systems.ShareContracts;
 using LunaClient.Systems.ShareFunds;
 using LunaClient.Systems.ShareReputation;
 using LunaClient.Systems.ShareScience;
+using LunaClient.Systems.ShareScienceSubject;
 using LunaClient.Systems.ShareStrategy;
 using LunaClient.Systems.ShareTechnology;
 using LunaClient.Systems.TimeSyncer;
@@ -220,6 +221,11 @@ namespace LunaClient.Windows.Systems
             if (_shareScience)
             {
                 ShareScienceSystem.Singleton.Enabled = GUILayout.Toggle(ShareScienceSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _shareScienceSubject = GUILayout.Toggle(_shareScienceSubject, "Share Science subject system", ButtonStyle);
+            if (_shareScienceSubject)
+            {
+                ShareScienceSubjectSystem.Singleton.Enabled = GUILayout.Toggle(ShareScienceSubjectSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             _shareReputation = GUILayout.Toggle(_shareReputation, "Share Reputation system", ButtonStyle);
             if (_shareReputation)

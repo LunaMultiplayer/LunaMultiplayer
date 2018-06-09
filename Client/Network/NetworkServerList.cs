@@ -57,14 +57,14 @@ namespace LunaClient.Network
         {
             try
             {
-                var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg, LunaTime.UtcNow.Ticks);
+                var msgDeserialized = NetworkMain.MstSrvMsgFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks);
                 
                 //Sometimes we receive other type of unconnected messages. 
                 //Therefore we assert that the received message data is of MsReplyServersMsgData
                 if (msgDeserialized.Data is MsReplyServersMsgData data)
                 {
                     //Filter servers with diferent version
-                    if (data.ServerVersion != LmpVersioning.CurrentVersion)
+                    if (!LmpVersioning.IsCompatible(data.ServerVersion))
                         return;
 
                     if (!Servers.ContainsKey(data.Id))
@@ -75,6 +75,7 @@ namespace LunaClient.Network
                             InternalEndpoint = data.InternalEndpoint,
                             ExternalEndpoint = data.ExternalEndpoint,
                             Description = data.Description,
+                            Country = data.Country,
                             Website = data.Website,
                             WebsiteText = data.WebsiteText,
                             Password = data.Password,

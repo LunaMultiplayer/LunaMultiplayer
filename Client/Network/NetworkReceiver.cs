@@ -21,6 +21,7 @@ using LunaClient.Systems.ShareFunds;
 using LunaClient.Systems.SharePurchaseParts;
 using LunaClient.Systems.ShareReputation;
 using LunaClient.Systems.ShareScience;
+using LunaClient.Systems.ShareScienceSubject;
 using LunaClient.Systems.ShareStrategy;
 using LunaClient.Systems.ShareTechnology;
 using LunaClient.Systems.ShareUpgradeableFacilities;
@@ -60,7 +61,7 @@ namespace LunaClient.Network
                 {
                     if (NetworkMain.ClientConnection.ReadMessage(out var msg))
                     {
-                        NetworkStatistics.LastReceiveTime = LunaTime.UtcNow;
+                        NetworkStatistics.LastReceiveTime = LunaNetworkTime.UtcNow;
                         switch (msg.MessageType)
                         {
                             case NetIncomingMessageType.DebugMessage:
@@ -81,7 +82,7 @@ namespace LunaClient.Network
                             case NetIncomingMessageType.Data:
                                 try
                                 {
-                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg, LunaTime.UtcNow.Ticks);
+                                    var deserializedMsg = NetworkMain.SrvMsgFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks);
                                     if (deserializedMsg != null)
                                     {
                                         EnqueueMessageToSystem(deserializedMsg as IServerMessageBase);
@@ -222,6 +223,9 @@ namespace LunaClient.Network
                             break;
                         case ShareProgressMessageType.ScienceUpdate:
                             ShareScienceSystem.Singleton.EnqueueMessage(msg);
+                            break;
+                        case ShareProgressMessageType.ScienceSubjectUpdate:
+                            ShareScienceSubjectSystem.Singleton.EnqueueMessage(msg);
                             break;
                         case ShareProgressMessageType.ReputationUpdate:
                             ShareReputationSystem.Singleton.EnqueueMessage(msg);

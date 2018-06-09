@@ -3,6 +3,7 @@ using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Time;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 
 namespace LMP.MasterServer.Structure
 {
@@ -13,13 +14,52 @@ namespace LMP.MasterServer.Structure
         public IPEndPoint ExternalEndpoint { get; set; }
         public ServerInfo Info { get; set; }
 
+        public void Update(MsRegisterServerMsgData msg)
+        {
+            InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);
+            LastRegisterTime = LunaNetworkTime.UtcNow.Ticks;
+            Info.InternalEndpoint = $"{InternalEndpoint.Address}:{InternalEndpoint.Port}";
+            Info.Cheats = msg.Cheats;
+            Info.Password = msg.Password;
+            Info.ServerVersion = msg.ServerVersion;
+            Info.ShowVesselsInThePast = msg.ShowVesselsInThePast;
+            Info.Description = msg.Description;
+            Info.Website = msg.Website;
+            Info.WebsiteText = msg.WebsiteText;
+            Info.DropControlOnExit = msg.DropControlOnExit;
+            Info.DropControlOnExitFlight = msg.DropControlOnExitFlight;
+            Info.DropControlOnVesselSwitching = msg.DropControlOnVesselSwitching;
+            Info.GameMode = msg.GameMode;
+            Info.MaxPlayers = msg.MaxPlayers;
+            Info.ModControl = msg.ModControl;
+            Info.PlayerCount = msg.PlayerCount;
+            Info.ServerName = msg.ServerName;
+            Info.WarpMode = msg.WarpMode;
+            Info.TerrainQuality = msg.TerrainQuality;
+
+            Info.ServerName = Info.ServerName.Length > 30 ? Info.ServerName.Substring(0, 30) : Info.ServerName;
+            Info.Description = Info.Description.Length > 200 ? Info.Description.Substring(0, 200) : Info.Description;
+            Info.Website = Info.Website.Length > 60 ? Info.Website.Substring(0, 60) : Info.Website;
+            Info.WebsiteText = Info.WebsiteText.Length > 15 ? Info.WebsiteText.Substring(0, 15) : Info.WebsiteText;
+
+            if (!string.IsNullOrEmpty(Info.Website) && !Info.Website.Contains("://"))
+            {
+                Info.Website = "http://" + Info.Website;
+            }
+
+            if (string.IsNullOrEmpty(Info.WebsiteText) && !string.IsNullOrEmpty(Info.Website))
+            {
+                Info.WebsiteText = "URL";
+            }
+        }
+
         public Server(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
             ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ? new IPEndPoint(IPAddress.Parse(LunaNetUtils.GetOwnExternalIpAddress()), externalEndpoint.Port) : 
                 externalEndpoint;
 
             InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);
-            LastRegisterTime = LunaTime.UtcNow.Ticks;
+            LastRegisterTime = LunaNetworkTime.UtcNow.Ticks;
             Info = new ServerInfo
             {
                 Id = msg.Id,
@@ -41,8 +81,10 @@ namespace LMP.MasterServer.Structure
                 PlayerCount = msg.PlayerCount,
                 ServerName = msg.ServerName,
                 WarpMode = msg.WarpMode,
-                TerrainQuality = msg.TerrainQuality
+                TerrainQuality = msg.TerrainQuality,
             };
+
+            SetCountryFromEndpoint(Info, ExternalEndpoint);
 
             Info.ServerName = Info.ServerName.Length > 30 ? Info.ServerName.Substring(0, 30) : Info.ServerName;
             Info.Description = Info.Description.Length > 200 ? Info.Description.Substring(0, 200) : Info.Description;
@@ -57,6 +99,15 @@ namespace LMP.MasterServer.Structure
             if (string.IsNullOrEmpty(Info.WebsiteText) && !string.IsNullOrEmpty(Info.Website))
             {
                 Info.WebsiteText = "URL";
+            }
+        }
+        
+        private static async void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
+        {
+            using (var client = new HttpClient())
+            {
+                var countryCode = await client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/");
+                server.Country = countryCode;
             }
         }
 

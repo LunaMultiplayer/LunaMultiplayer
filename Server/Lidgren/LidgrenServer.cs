@@ -22,6 +22,8 @@ namespace Server.Lidgren
         public static void SetupLidgrenServer()
         {
             ServerContext.Config.Port = ConnectionSettings.SettingsStore.Port;
+            ServerContext.Config.AutoExpandMTU = ConnectionSettings.SettingsStore.AutoExpandMtu;
+            ServerContext.Config.MaximumTransmissionUnit = ConnectionSettings.SettingsStore.MaximumTransmissionUnit;
             ServerContext.Config.MaximumConnections = GeneralSettings.SettingsStore.MaxPlayers;
             ServerContext.Config.PingInterval = (float) TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.HearbeatMsInterval).TotalSeconds;
             ServerContext.Config.ConnectionTimeout = (float) TimeSpan.FromMilliseconds(ConnectionSettings.SettingsStore.ConnectionMsTimeout).TotalSeconds;
@@ -148,7 +150,7 @@ namespace Server.Lidgren
         {
             var outmsg = Server.CreateMessage(message.GetMessageSize());
 
-            message.Data.SentTime = LunaTime.UtcNow.Ticks;
+            message.Data.SentTime = LunaNetworkTime.UtcNow.Ticks;
             message.Serialize(outmsg);
 
             client.LastSendTime = ServerContext.ServerClock.ElapsedMilliseconds;

@@ -1,5 +1,6 @@
 ﻿using LunaClient.Systems.Warp;
-using LunaCommon;
+using System.Text;
+using LunaClient.Systems.TimeSyncer;
 
 namespace LunaClient.Windows.Status
 {
@@ -25,18 +26,39 @@ namespace LunaClient.Windows.Status
         public const string Debug8BtnTxt = "D8";
         public const string Debug9BtnTxt = "D9";
 
-        private static string _lastPlayerText = string.Empty;
-        public static string GetPlayerText(PlayerStatus playerStatus)
-        {
-            if (_lastPlayerText != playerStatus.VesselText)
-                _lastPlayerText = $"Pilot: {playerStatus.VesselText}";
+        private const string NegativeDeltaTimePrefix = " (-";
+        private const string PositiveDeltaTimePrefix = " (+";
+        private const string CloseDeltaTime = ")";
 
-            return _lastPlayerText;
-        }
-
+        private static readonly StringBuilder StringBuilder = new StringBuilder();
+        
         public static string GetTimeLabel(SubspaceDisplayEntry currentEntry)
         {
-            return $"T: +{KSPUtil.PrintTimeCompact(WarpSystem.Singleton.GetSubspaceTime(currentEntry.SubspaceId), false)}";
+            StringBuilder.Length = 0;
+
+            var subspaceTime = WarpSystem.Singleton.GetSubspaceTime(currentEntry.SubspaceId);
+
+            StringBuilder.Append(KSPUtil.PrintDateCompact(subspaceTime, true, true));
+
+            if (WarpSystem.Singleton.CurrentSubspace != currentEntry.SubspaceId)
+                AppendDeltaTime(subspaceTime);
+
+            return StringBuilder.ToString();
+        }
+
+        private static void AppendDeltaTime(double subspaceTime)
+        {
+            var currentTime = TimeSyncerSystem.UniversalTime;
+            if (subspaceTime < currentTime)
+            {
+                StringBuilder.Append(NegativeDeltaTimePrefix).Append(KSPUtil.PrintTimeCompact(currentTime - subspaceTime, false));
+            }
+            else
+            {
+                StringBuilder.Append(PositiveDeltaTimePrefix).Append(KSPUtil.PrintTimeCompact(subspaceTime - currentTime, false));
+            }
+
+            StringBuilder.Append(CloseDeltaTime);
         }
     }
 }

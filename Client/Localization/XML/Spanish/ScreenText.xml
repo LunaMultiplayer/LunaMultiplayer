@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <CraftUploaded>¡Nave subida!</CraftUploaded>
+    <CraftSaved>¡Nave guardada!</CraftSaved>
+    <ModFileGenerated>Se ha generado el archivo LMPModControl.xml en tu carpeta de KSP</ModFileGenerated>
+    <Disconected>¡Estás desconectado!</Disconected>
+    <Spectating>Esta nave está siendo controlada por:</Spectating>
+    <SafetyBubble>¡¡Recuerda!! ¡¡Mientras estes en la burbuja de seguridad los otros jugadores no te verán!!</SafetyBubble>
+    <CannotRecover>No puedes recuperar la nave puesto que no es tuya.</CannotRecover>
+    <CannotTerminate>No puedes eliminar la nave puesto que no es tuya.</CannotTerminate>
+    <SpectatingRemoved>La nave que estabas observando ha sido eliminada</SpectatingRemoved>
+    <WarpDisabled>No puedes adelantar el tiempo. Esta opción esta desabilitada en el servidor</WarpDisabled>
+    <NotWarpMaster>No puedes adelantar el tiempo. ¡No eres el jugador designado!</NotWarpMaster>
+    <WaitingSubspace>No puedes adelantar el tiempo. Esperando un id de subspacio del servidor</WaitingSubspace>
+    <ScreenshotInterval>Intervalo entre fotos fijado a $1 segundos. No se puede subir la foto en este momento</ScreenshotInterval>
+    <CraftLibraryInterval>Intervalo entre peticiones fijado a $1 segundos. No se puede procesar la peticion en este momento</CraftLibraryInterval>
+    <ScreenshotTaken>¡Foto subida!</ScreenshotTaken>
+    <ImageSaved>Imagen guardada en GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
+</ScreenText>

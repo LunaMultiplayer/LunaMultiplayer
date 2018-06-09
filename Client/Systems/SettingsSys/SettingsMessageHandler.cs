@@ -25,13 +25,15 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.MaxNumberOfAsteroids = msgData.MaxNumberOfAsteroids;
             SettingsSystem.ServerSettings.ConsoleIdentifier = msgData.ConsoleIdentifier;
             SettingsSystem.ServerSettings.SafetyBubbleDistance = msgData.SafetyBubbleDistance;
-            SettingsSystem.ServerSettings.VesselPositionUpdatesMsInterval = msgData.VesselPositionUpdatesMsInterval;
-            SettingsSystem.ServerSettings.SecondaryVesselPositionUpdatesMsInterval = msgData.SecondaryVesselPositionUpdatesMsInterval;
+            SettingsSystem.ServerSettings.VesselUpdatesMsInterval = msgData.VesselUpdatesMsInterval;
+            SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval = msgData.SecondaryVesselUpdatesMsInterval;
             SettingsSystem.ServerSettings.VesselPartsSyncMsInterval = msgData.VesselPartsSyncMsInterval;
             SettingsSystem.ServerSettings.ShowVesselsInThePast = msgData.ShowVesselsInThePast;
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
             SettingsSystem.ServerSettings.GameDifficulty = msgData.GameDifficulty;
             SettingsSystem.ServerSettings.MinScreenshotIntervalMs = msgData.MinScreenshotIntervalMs;
+            SettingsSystem.ServerSettings.MaxScreenshotWidth = msgData.MaxScreenshotWidth;
+            SettingsSystem.ServerSettings.MaxScreenshotHeight = msgData.MaxScreenshotHeight;
             SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs = msgData.MinScreenshotIntervalMs;
 
             if (SettingsSystem.ServerSettings.GameDifficulty != GameDifficulty.Custom)
@@ -105,6 +107,7 @@ namespace LunaClient.Systems.SettingsSys
                 };
             }
 
+            System.AdjustLocalSettings();
             MainSystem.NetworkState = ClientState.SettingsSynced;
         }
     }

@@ -59,6 +59,7 @@ namespace LunaClient.Windows.Systems
         private static bool _warp;
         private static bool _shareFunds;
         private static bool _shareScience;
+        private static bool _shareScienceSubject;
         private static bool _shareReputation;
         private static bool _shareTechnology;
         private static bool _shareContracts;

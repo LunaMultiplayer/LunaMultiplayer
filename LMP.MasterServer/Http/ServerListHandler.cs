@@ -1,4 +1,5 @@
-﻿using LunaCommon;
+﻿using LmpGlobal;
+using LunaCommon;
 using LunaCommon.Enums;
 using System;
 using System.IO;
@@ -78,8 +79,15 @@ namespace LMP.MasterServer.Http
         {
             writer.RenderBeginTag(HtmlTextWriterTag.P);
             writer.RenderBeginTag(HtmlTextWriterTag.Small);
-            writer.Write("Luna Multiplayer - ");
-            writer.AddAttribute(HtmlTextWriterAttribute.Href, "https://github.com/LunaMultiplayer/LunaMultiplayer");
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Href, RepoConstants.OfficialWebsite);
+            writer.RenderBeginTag(HtmlTextWriterTag.A);
+            writer.Write("Luna Multiplayer");
+            writer.RenderEndTag();
+
+            writer.Write(" - ");
+
+            writer.AddAttribute(HtmlTextWriterAttribute.Href, RepoConstants.RepoUrl);
             writer.RenderBeginTag(HtmlTextWriterTag.A);
             writer.Write("Github repo");
             writer.RenderEndTag();
@@ -97,6 +105,7 @@ namespace LMP.MasterServer.Http
             writer.RenderBeginTag("thead");
             writer.RenderBeginTag(HtmlTextWriterTag.Tr);
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Address");writer.RenderEndTag();
+            writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Country"); writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Password");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Name");writer.RenderEndTag();
             writer.RenderBeginTag(HtmlTextWriterTag.Th);writer.Write("Description");writer.RenderEndTag();
@@ -115,6 +124,7 @@ namespace LMP.MasterServer.Http
             {
                 writer.RenderBeginTag(HtmlTextWriterTag.Tr);
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.ExternalEndpoint);writer.RenderEndTag();
+                writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Country); writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Password);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.ServerName);writer.RenderEndTag();
                 writer.RenderBeginTag(HtmlTextWriterTag.Td);writer.Write(server.Description);writer.RenderEndTag();

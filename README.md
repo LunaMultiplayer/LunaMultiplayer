@@ -5,7 +5,7 @@
 
 <p align="center">
     <a href="https://paypal.me/gavazquez"><img src="https://img.shields.io/badge/paypal-donate-yellow.svg" alt="PayPal"/></a>
-    <a href="https://discord.gg/S6bQR5q"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
+    <a href="https://discord.gg/wKVMhWQ"><img src="https://img.shields.io/discord/378456662392045571.svg" alt="Chat on discord"/></a>
     <a href="../../releases"><img src="https://img.shields.io/github/release/lunamultiplayer/lunamultiplayer.svg" alt="Latest release" /></a>
     <a href="../../releases"><img src="https://img.shields.io/github/downloads/lunamultiplayer/lunamultiplayer/total.svg" alt="Total downloads" /></a>
 </p>
@@ -47,7 +47,7 @@
 - [ ] [QuickLZ](http://www.quicklz.com) for fast compression.
 - [ ] Support for groups/companies inside career and science modes.
 
-Please check the [wiki](../../wiki) to see how to [build](../../wiki/How-to-compile-LMP), [run](../../wiki/How-to-play-with-LMP.) or [debug](../../wiki/Debugging-in-Visual-studio) LMP
+Please check the [wiki](../../wiki) to see how to [install](../../wiki/How-to-install-LMP), [run](../../wiki/How-to-play-with-LMP), [build](../../wiki/How-to-compile-LMP) or [debug](../../wiki/Debugging-in-Visual-studio) LMP among other things
 
 ---
 ### Servers:
@@ -69,7 +69,7 @@ Check how many servers are up and running either in [Release](../../wiki/How-to-
 ### Contributing:
 
 Consider [donating trough paypal](https://paypal.me/gavazquez) if you like this project. 
-It will encourage us to do future releases and add new features :star:
+It will encourage us to do future releases, fix bugs and add new features :star:
 
 Please write the code as you were going to leave it, return after 1 year and you'd have to understand what you wrote.  
 It's **very** important that the code is clean and documented so in case someone leaves, another programmer could take and maintain it. Bear in mind that **nobody** likes to take a project where it's code looks like a dumpster.

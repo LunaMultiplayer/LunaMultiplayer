@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaCommon.Locks;
 
 namespace LunaClient.Systems.VesselFlightStateSys
 {
@@ -22,6 +23,18 @@ namespace LunaClient.Systems.VesselFlightStateSys
         public void OnFinishedSpectating()
         {
             System.RemoveVesselFromSystem(FlightGlobals.ActiveVessel);
+        }
+
+        public void OnLockAcquire(LockDefinition data)
+        {
+            switch (data.Type)
+            {
+                case LockType.UnloadedUpdate:
+                case LockType.Update:
+                case LockType.Control:
+                    System.RemoveVesselFromSystem(data.VesselId);
+                    break;
+            }
         }
     }
 }

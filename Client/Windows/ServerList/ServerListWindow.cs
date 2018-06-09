@@ -25,7 +25,12 @@ namespace LunaClient.Windows.ServerList
         public override bool Display
         {
             get => base.Display && _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState == ClientState.Disconnected && HighLogic.LoadedScene == GameScenes.MAINMENU;
-            set => base.Display = _display = value;
+            set
+            {
+                if (!_display && value && !NetworkServerList.Servers.Any())
+                    NetworkServerList.RequestServers();
+                base.Display = _display = value;
+            }
         }
 
         private static readonly List<ServerInfo> DisplayedServers = new List<ServerInfo>();
@@ -105,7 +110,7 @@ namespace LunaClient.Windows.ServerList
             base.OnGui();
             if (Display)
             {
-                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, "Server list", WindowStyle));
+                WindowRect = FixWindowPos(GUILayout.Window(6714 + MainSystem.WindowOffset, WindowRect, DrawContent, LocalizationContainer.ServerListWindowText.Title, WindowStyle));
                 if (_selectedServerId != 0)
                 {
                     _serverDetailWindowRect = FixWindowPos(GUILayout.Window(6715 + MainSystem.WindowOffset,

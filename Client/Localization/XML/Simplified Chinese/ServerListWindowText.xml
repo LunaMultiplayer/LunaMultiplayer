@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>Server list</Title>
+    <NoServers>没有可用服务器!</NoServers>
+    <Ping>Ping</Ping>
+    <Players>玩家</Players>
+    <MaxPlayers>最大玩家数</MaxPlayers>
+    <Mode>模式</Mode>
+    <WarpMode>时间加速模式</WarpMode>
+    <Terrain>地形</Terrain>
+    <Cheats>作弊</Cheats>
+    <Name>名称</Name>
+    <Description>简介</Description>
+    <Website>链接</Website>
+    <ServerDetailTitle>连接至服务器</ServerDetailTitle>
+    <Password>密码</Password>
+    <Connect>连接</Connect>
+</ServerListWindowText>

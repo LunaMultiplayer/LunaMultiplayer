@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<BannedPartsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>LunaMultiplayer - 使用禁止パーツ</Title>
+    <Text>次の使用禁止パーツを含んでいるため、打ち上げできません。</Text>
+</BannedPartsWindowText>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>Server list</Title>
+    <NoServers>Ingen serverer!</NoServers>
+    <Ping>Ping</Ping>
+    <Players>Spillere</Players>
+    <MaxPlayers>Max spillere</MaxPlayers>
+    <Mode>Tilstand</Mode>
+    <WarpMode>Warp mode</WarpMode>
+    <Terrain>Terræn</Terrain>
+    <Cheats>Snyd</Cheats>
+    <Name>Navn</Name>
+    <Description>Beskrivelse</Description>
+    <Website>URL</Website>
+    <ServerDetailTitle>Tilslut til server</ServerDetailTitle>
+    <Password>Kodeord</Password>
+    <Connect>Tilslut</Connect>
+</ServerListWindowText>

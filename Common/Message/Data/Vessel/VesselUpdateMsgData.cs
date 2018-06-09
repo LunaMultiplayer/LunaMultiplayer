@@ -1,7 +1,6 @@
 ﻿using Lidgren.Network;
 using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
-using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -11,9 +10,9 @@ namespace LunaCommon.Message.Data.Vessel
         internal VesselUpdateMsgData() { }
         public override VesselMessageType VesselMessageType => VesselMessageType.Update;
         
-        public Guid VesselId;
         public string Name;
         public string Type;
+        public double DistanceTraveled;
         public string Situation;
         public bool Landed;
         public bool Splashed;
@@ -39,9 +38,9 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
-            GuidUtil.Serialize(VesselId, lidgrenMsg);
             lidgrenMsg.Write(Name);
             lidgrenMsg.Write(Type);
+            lidgrenMsg.Write(DistanceTraveled);
             lidgrenMsg.Write(Situation);
             lidgrenMsg.Write(Landed);
             lidgrenMsg.Write(Splashed);
@@ -68,9 +67,9 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalDeserialize(lidgrenMsg);
 
-            VesselId = GuidUtil.Deserialize(lidgrenMsg);
             Name = lidgrenMsg.ReadString();
             Type = lidgrenMsg.ReadString();
+            DistanceTraveled = lidgrenMsg.ReadDouble();
             Situation = lidgrenMsg.ReadString();
             Landed = lidgrenMsg.ReadBoolean();
             Splashed = lidgrenMsg.ReadBoolean();
@@ -106,8 +105,8 @@ namespace LunaCommon.Message.Data.Vessel
                 arraySize += ActionGroups[i].GetByteCount();
             }
 
-            return base.InternalGetMessageSize() + GuidUtil.GetByteSize() 
-                + sizeof(double) * 3 + sizeof(bool) * 5 + sizeof(uint) + sizeof(int)
+            return base.InternalGetMessageSize() 
+                + sizeof(double) * 4 + sizeof(bool) * 5 + sizeof(uint) + sizeof(int)
                 + Name.GetByteCount() + Type.GetByteCount() + Situation.GetByteCount() 
                 + LandedAt.GetByteCount() + DisplayLandedAt.GetByteCount() + AutoCleanReason.GetByteCount()
                 + arraySize;

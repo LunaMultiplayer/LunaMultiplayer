@@ -90,7 +90,7 @@ namespace LunaCommon.Locks
 
         public int GetByteCount()
         {
-            return PlayerName.GetByteCount() + KerbalName.GetByteCount() + GuidUtil.GetByteSize() + sizeof(LockType);
+            return PlayerName.GetByteCount() + KerbalName.GetByteCount() + GuidUtil.ByteSize + sizeof(LockType);
         }
 
         public void CopyFrom(LockDefinition lockDefinition)

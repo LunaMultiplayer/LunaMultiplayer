@@ -52,7 +52,7 @@ namespace LunaCommon.Message.Data.ShareProgress
 
         public int GetByteCount()
         {
-            return GuidUtil.GetByteSize() + sizeof(int) + sizeof(byte) * NumBytes;
+            return GuidUtil.ByteSize + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }

@@ -1,4 +1,9 @@
-﻿using LunaCommon.Message.Data.Vessel;
+﻿using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.Warp;
+using LunaClient.VesselUtilities;
+using LunaCommon;
+using LunaCommon.Message.Data.Vessel;
 using System;
 using UnityEngine;
 
@@ -6,125 +11,195 @@ namespace LunaClient.Systems.VesselFlightStateSys
 {
     public class VesselFlightStateUpdate
     {
-        public long StartTimeStamp;
-        public FlightCtrlState Start;
+        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
+            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 10
+            : double.MaxValue;
 
-        public long EndTimeStamp;
-        public FlightCtrlState Target;
+        #region Fields
 
-        public float InterpolationDuration => (float)TimeSpan.FromTicks(EndTimeStamp - StartTimeStamp).TotalSeconds;
+        public VesselFlightStateUpdate Target { get; set; }
 
+        #region Message Fields
 
-        private readonly FlightCtrlState _currentFlightControlState = new FlightCtrlState();
+        public FlightCtrlState InterpolatedCtrlState { get; set; } = new FlightCtrlState();
+        public FlightCtrlState CtrlState { get; set; } = new FlightCtrlState();
+        public double GameTimeStamp { get; set; }
+        public int SubspaceId { get; set; }
+        public Guid VesselId { get; set; }
 
-        private float _lerpPercentage;
-        private bool _resetStart;
+        #endregion
 
-        public void SetTarget(VesselFlightStateMsgData msgData)
+        #region Interpolation fields
+
+        public double TimeDifference { get; private set; }
+        public double ExtraInterpolationTime { get; private set; }
+        public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
+
+        public double RawInterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp, 0, MaxInterpolationDuration);
+        public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
+
+        public float LerpPercentage { get; set; } = 1;
+
+        #endregion
+
+        #endregion
+
+        #region Constructor
+
+        public VesselFlightStateUpdate() { }
+        
+        public VesselFlightStateUpdate(VesselFlightStateMsgData msgData)
         {
-            _resetStart = true;
-            _lerpPercentage = 0;
+            VesselId = msgData.VesselId;
+            GameTimeStamp = msgData.GameTime;
+            SubspaceId = msgData.SubspaceId;
 
-            if (Target == null)
+            CtrlState.CopyFrom(msgData);
+        }
+
+        public void CopyFrom(VesselFlightStateUpdate update)
+        {
+            VesselId = update.VesselId;
+            GameTimeStamp = update.GameTimeStamp;
+            SubspaceId = update.SubspaceId;
+
+            CtrlState.CopyFrom(update.CtrlState);
+        }
+
+        #endregion
+
+
+        #region Main method
+
+        /// <summary>
+        /// Call this method to apply a vessel update using interpolation
+        /// </summary>
+        public FlightCtrlState GetInterpolatedValue()
+        {
+            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == VesselId)
             {
-                Target = GetFlightCtrlStateFromMsg(msgData);
+                //Do not apply flight states updates to our OWN controlled vessel
+                return FlightGlobals.ActiveVessel.ctrlState;
+            }
+
+            if (InterpolationFinished && VesselFlightStateSystem.TargetFlightStateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
+            {
+                if (Target == null) //This is the case of first iteration
+                    GameTimeStamp = targetUpdate.GameTimeStamp - TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds;
+
+                ProcessRestart();
+                LerpPercentage = 0;
+
+                if (Target != null)
+                {
+                    Target.CopyFrom(targetUpdate);
+                    VesselFlightStateSystem.TargetFlightStateQueue[VesselId].Recycle(targetUpdate);
+                }
+                else
+                {
+                    Target = targetUpdate;
+                }
+
+                AdjustExtraInterpolationTimes();
+
+                //UpdateProtoVesselValues();
+            }
+
+            if (Target == null) return InterpolatedCtrlState;
+            if (LerpPercentage > 1)
+            {
+                //We only send flight states of the ACTIVE vessel so perhgaps some player switched a vessel and we are not receiveing any flight state
+                //To solve this just remove the vessel from the system
+                VesselFlightStateSystem.Singleton.RemoveVesselFromSystem(VesselId);
+            }
+
+            InterpolatedCtrlState.Lerp(CtrlState, Target.CtrlState, LerpPercentage);
+            LerpPercentage += (float)(Time.fixedDeltaTime / InterpolationDuration);
+
+            return InterpolatedCtrlState;
+        }
+
+        /// <summary>
+        /// This method adjust the extra interpolation duration in case we are lagging or too advanced
+        /// </summary>
+        private void AdjustExtraInterpolationTimes()
+        {
+            TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
+            if (SubspaceId == -1)
+            {
+                //While warping we only fix the interpolation if we are LAGGING behind the updates
+                //We never fix it if the packet that we received is very advanced in time
+                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 0) * GetInterpolationFixFactor();
+            }
+            else 
+            {
+                //IN past or same subspaces we want to be SettingsSystem.CurrentSettings.InterpolationOffset seconds BEHIND the player position
+                if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
+                {
+                    //The subspace is in the past so add the difference seconds to normalize it
+                    var timeToAdd = Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
+                    TimeDifference += timeToAdd;
+                }
+
+                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 1) * GetInterpolationFixFactor();
+            }
+        }
+
+        /// <summary>
+        /// This gives the fix factor. It scales up or down depending on the error we have
+        /// </summary>
+        private double GetInterpolationFixFactor()
+        {
+            //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 seconds
+
+            var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
+            var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
+
+            //We cannot fix errors that are below the fixed delta time!
+            if (errorInFrames < 1)
+                return 0;
+
+            if (errorInFrames <= 2)
+            {
+                //The error is max 2 frames ahead/below
+                return Time.fixedDeltaTime;
+            }
+            if (errorInFrames <= 5)
+            {
+                //The error is max 5 frames ahead/below
+                return Time.fixedDeltaTime * 2;
+            }
+            if (errorInSeconds <= 2.5)
+            {
+                //The error is max 2.5 SECONDS ahead/below
+                return Time.fixedDeltaTime * errorInFrames / 2;
+            }
+
+            //The error is really big...
+            return Time.fixedDeltaTime * errorInFrames;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Here we apply the CURRENT vessel flight state to this update.
+        /// </summary>
+        private void ProcessRestart()
+        {
+            if (Target != null)
+            {
+                GameTimeStamp = Target.GameTimeStamp;
+                SubspaceId = Target.SubspaceId;
+
+                CtrlState.CopyFrom(Target.CtrlState);
             }
             else
             {
-                Target.mainThrottle = msgData.MainThrottle;
-                Target.wheelThrottleTrim = msgData.WheelThrottleTrim;
-                Target.X = msgData.X;
-                Target.Y = msgData.Y;
-                Target.Z = msgData.Z;
-                Target.killRot = msgData.KillRot;
-                Target.gearUp = msgData.GearUp;
-                Target.gearDown = msgData.GearDown;
-                Target.headlight = msgData.Headlight;
-                Target.wheelThrottle = msgData.WheelThrottle;
-                Target.roll = msgData.Roll;
-                Target.yaw = msgData.Yaw;
-                Target.pitch = msgData.Pitch;
-                Target.rollTrim = msgData.RollTrim;
-                Target.yawTrim = msgData.YawTrim;
-                Target.pitchTrim = msgData.PitchTrim;
-                Target.wheelSteer = msgData.WheelSteer;
-                Target.wheelSteerTrim = msgData.WheelSteerTrim;
+                var vessel = FlightGlobals.FindVessel(VesselId);
+                if (vessel == null) return;
+
+                CtrlState.CopyFrom(vessel.ctrlState);
             }
-
-            StartTimeStamp = EndTimeStamp;
-            EndTimeStamp = msgData.TimeStamp;
-        }
-
-        private static FlightCtrlState GetFlightCtrlStateFromMsg(VesselFlightStateMsgData msgData)
-        {
-            return new FlightCtrlState
-            {
-                mainThrottle = msgData.MainThrottle,
-                wheelThrottleTrim = msgData.WheelThrottleTrim,
-                X = msgData.X,
-                Y = msgData.Y,
-                Z = msgData.Z,
-                killRot = msgData.KillRot,
-                gearUp = msgData.GearUp,
-                gearDown = msgData.GearDown,
-                headlight = msgData.Headlight,
-                wheelThrottle = msgData.WheelThrottle,
-                roll = msgData.Roll,
-                yaw = msgData.Yaw,
-                pitch = msgData.Pitch,
-                rollTrim = msgData.RollTrim,
-                yawTrim = msgData.YawTrim,
-                pitchTrim = msgData.PitchTrim,
-                wheelSteer = msgData.WheelSteer,
-                wheelSteerTrim = msgData.WheelSteerTrim
-            };
-        }
-
-        public FlightCtrlState GetInterpolatedValue(FlightCtrlState currentFlightState)
-        {
-            if (currentFlightState == null) currentFlightState = new FlightCtrlState();
-
-            if (_resetStart || Start == null)
-            {
-                _resetStart = false;
-                Start = currentFlightState;
-            }
-
-            if (Target == null) Target = new FlightCtrlState();
-
-            _currentFlightControlState.X = Lerp(Start.X, Target.X, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.Y = Lerp(Start.Y, Target.Y, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.Z = Lerp(Start.Z, Target.Z, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.pitch = Lerp(Start.pitch, Target.pitch, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.pitchTrim = Lerp(Start.pitchTrim, Target.pitchTrim, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.roll = Lerp(Start.roll, Target.roll, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.rollTrim = Lerp(Start.rollTrim, Target.rollTrim, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.yaw = Lerp(Start.yaw, Target.yaw, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.yawTrim = Lerp(Start.yawTrim, Target.yawTrim, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.mainThrottle = Lerp(Start.mainThrottle, Target.mainThrottle, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.wheelSteer = Lerp(Start.wheelSteer, Target.wheelSteer, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.wheelSteerTrim = Lerp(Start.wheelSteerTrim, Target.wheelSteerTrim, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.wheelThrottle = Lerp(Start.wheelThrottle, Target.wheelThrottle, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.wheelThrottleTrim = Lerp(Start.wheelThrottleTrim, Target.wheelThrottleTrim, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.gearDown = Lerp(Start.gearDown, Target.gearDown, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.gearUp = Lerp(Start.gearUp, Target.gearUp, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.headlight = Lerp(Start.headlight, Target.headlight, Mathf.Clamp01(_lerpPercentage));
-            _currentFlightControlState.killRot = Lerp(Start.killRot, Target.killRot, Mathf.Clamp01(_lerpPercentage));
-
-            if (InterpolationDuration > 0)
-                _lerpPercentage += Time.fixedDeltaTime / InterpolationDuration;
-
-            return _currentFlightControlState;
-        }
-
-        private static float Lerp(float v0, float v1, float t)
-        {
-            return (1 - t) * v0 + t * v1;
-        }
-
-        private static bool Lerp(bool v0, bool v1, float t)
-        {
-            return t < 0.5 ? v0 : v1;
         }
     }
 }

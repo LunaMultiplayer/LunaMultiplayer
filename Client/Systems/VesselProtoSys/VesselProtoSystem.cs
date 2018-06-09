@@ -1,13 +1,16 @@
 ﻿using LunaClient.Base;
+using LunaClient.Events;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaClient.Windows.BannedParts;
+using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using LunaClient.Systems.TimeSyncer;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -20,6 +23,8 @@ namespace LunaClient.Systems.VesselProtoSys
     public partial class VesselProtoSystem : MessageSystem<VesselProtoSystem, VesselProtoMessageSender, VesselProtoMessageHandler>
     {
         #region Fields & properties
+
+        private static DateTime _lastReloadCheck = LunaComputerTime.UtcNow;
 
         public static Guid CurrentlyUpdatingVesselId { get; set; } = Guid.Empty;
 
@@ -38,8 +43,6 @@ namespace LunaClient.Systems.VesselProtoSys
         public VesselRemoveSystem VesselRemoveSystem => VesselRemoveSystem.Singleton;
 
         public Queue<Vessel> FlagsToSend = new Queue<Vessel>();
-
-        private static DateTime LastReloadCheck { get; set; } = DateTime.UtcNow;
 
         private List<Guid> VesselsToRefresh { get; } = new List<Guid>();
 
@@ -63,6 +66,10 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onVesselPartCountChanged.Add(VesselProtoEvents.VesselPartCountChangedinSpectatingVessel);
             GameEvents.onVesselPartCountChanged.Add(VesselProtoEvents.VesselPartCountChanged);
 
+            GameEvents.OnTriggeredDataTransmission.Add(VesselProtoEvents.TriggeredDataTransmission);
+            GameEvents.OnExperimentStored.Add(VesselProtoEvents.ExperimentStored);
+            ExperimentEvent.onExperimentReset.Add(VesselProtoEvents.ExperimentReset);
+
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveBadDebrisWhileSpectating));
             SetupRoutine(new RoutineDefinition(2000, RoutineExecution.Update, CheckVesselsToLoad));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, CheckRefreshOwnVesselWhileSpectating));
@@ -80,6 +87,10 @@ namespace LunaClient.Systems.VesselProtoSys
             GameEvents.onGameSceneLoadRequested.Remove(VesselProtoEvents.OnSceneRequested);
             GameEvents.onVesselPartCountChanged.Remove(VesselProtoEvents.VesselPartCountChangedinSpectatingVessel);
             GameEvents.onVesselPartCountChanged.Remove(VesselProtoEvents.VesselPartCountChanged);
+
+            GameEvents.OnTriggeredDataTransmission.Remove(VesselProtoEvents.TriggeredDataTransmission);
+            GameEvents.OnExperimentStored.Remove(VesselProtoEvents.ExperimentStored);
+            ExperimentEvent.onExperimentReset.Remove(VesselProtoEvents.ExperimentReset);
 
             //This is the main system that handles the vesselstore so if it's disabled clear the store aswell
             VesselsProtoStore.ClearSystem();
@@ -138,7 +149,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 foreach (var vessel in FlightGlobals.Vessels.Where(v => !VesselsProtoStore.AllPlayerVessels.ContainsKey(v.id)))
                 {
-                    VesselRemoveSystem.Singleton.AddToKillList(vessel.id);
+                    VesselRemoveSystem.Singleton.AddToKillList(vessel.id, "Bad debris created while spectating");
                 }
             }
         }
@@ -181,6 +192,10 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselProto.Key))
                             continue;
 
+                        //If the vessel spawned later than the current time avoid loading it
+                        if (VesselsProtoStore.VesselsSpawnTime.TryGetValue(vesselProto.Key, out var spawnTime) && TimeSyncerSystem.UniversalTime < spawnTime)
+                            continue;
+
                         //Only load vessels that are in safety bubble when not in flight
                         if (vesselProto.Value.IsInSafetyBubble && HighLogic.LoadedScene == GameScenes.FLIGHT)
                             continue;
@@ -207,7 +222,7 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             try
             {
-                if ((DateTime.UtcNow - LastReloadCheck).TotalMilliseconds > 1500 && ProtoSystemBasicReady)
+                if (TimeUtil.IsInInterval(ref _lastReloadCheck, 1500) && ProtoSystemBasicReady)
                 {
                     VesselsToRefresh.Clear();
 
@@ -236,8 +251,6 @@ namespace LunaClient.Systems.VesselProtoSys
                             CurrentlyUpdatingVesselId = Guid.Empty;
                         }
                     }
-
-                    LastReloadCheck = DateTime.UtcNow;
                 }
             }
             catch (Exception e)

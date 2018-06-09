@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>Server list</Title>
+    <NoServers>No servers!</NoServers>
+    <Ping>Ping</Ping>
+    <Players>Players</Players>
+    <MaxPlayers>Max players</MaxPlayers>
+    <Mode>Mode</Mode>
+    <WarpMode>Warp mode</WarpMode>
+    <Terrain>Terrain</Terrain>
+    <Cheats>Cheats</Cheats>
+    <Name>Name</Name>
+    <Description>Description</Description>
+    <Website>URL</Website>
+    <ServerDetailTitle>Connect to server</ServerDetailTitle>
+    <Password>Password</Password>
+    <Connect>Connect</Connect>
+</ServerListWindowText>

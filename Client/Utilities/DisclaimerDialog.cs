@@ -21,6 +21,7 @@ namespace LunaClient.Utilities
                                     SettingsSystem.CurrentSettings.DisclaimerAccepted = true;
                                     MainSystem.Singleton.Enabled = true;
                                     SettingsSystem.SaveSettings();
+                                    MainSystem.Singleton.StartCoroutine(UpdateHandler.CheckForUpdates());
                                 }
                             ),
                             new DialogGUIFlexibleSpace(),
@@ -47,7 +48,5 @@ namespace LunaClient.Utilities
                 HighLogic.UISkin
             );
         }
-
-
     }
 }

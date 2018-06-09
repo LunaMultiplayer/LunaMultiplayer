@@ -15,6 +15,8 @@
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <!-- Prevent default XML files copied to output -->
+    <AllowedReferenceRelatedFileExtensions>.pdb</AllowedReferenceRelatedFileExtensions>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,6 +26,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <!-- Prevent default XML and PDB files copied to output -->
+    <AllowedReferenceRelatedFileExtensions>.none</AllowedReferenceRelatedFileExtensions>
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -39,8 +43,8 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LiteDB, Version=4.1.2.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
-      <HintPath>..\External\Nuget\LiteDB.4.1.2\lib\net40\LiteDB.dll</HintPath>
+    <Reference Include="LiteDB, Version=4.1.3.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
+      <HintPath>..\External\Nuget\LiteDB.4.1.3\lib\net40\LiteDB.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Open.Nat, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f22a6a4582336c76, processorArchitecture=MSIL">
@@ -49,6 +53,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
@@ -82,6 +87,7 @@
     <Compile Include="Context\Universe.cs" />
     <Compile Include="Context\WarpContext.cs" />
     <Compile Include="Enums\RelaySystemMode.cs" />
+    <Compile Include="Events\ExitEvent.cs" />
     <Compile Include="Exit\WinExitSignal.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Lidgren\LidgrenMasterServer.cs" />
@@ -91,26 +97,26 @@
     <Compile Include="Log\LogThread.cs" />
     <Compile Include="Log\LunaLog.cs" />
     <Compile Include="MainServer.cs" />
-    <Compile Include="Message\Reader\AdminMsgReader.cs" />
-    <Compile Include="Message\Reader\ScreenshotMsgReader.cs" />
-    <Compile Include="Message\Reader\FacilityMsgReader.cs" />
-    <Compile Include="Message\Reader\Base\ReaderBase.cs" />
-    <Compile Include="Message\Reader\ChatMsgReader.cs" />
-    <Compile Include="Message\Reader\CraftLibraryMsgReader.cs" />
-    <Compile Include="Message\Reader\FlagSyncMsgReader.cs" />
-    <Compile Include="Message\Reader\GroupMsgReader.cs" />
-    <Compile Include="Message\Reader\HandshakeMsgReader.cs" />
-    <Compile Include="Message\Reader\KerbalMsgReader.cs" />
-    <Compile Include="Message\Reader\LockSystemMsgReader.cs" />
-    <Compile Include="Message\Reader\ModDataMsgReader.cs" />
-    <Compile Include="Message\Reader\MotdMsgReader.cs" />
-    <Compile Include="Message\Reader\PlayerColorMsgReader.cs" />
-    <Compile Include="Message\Reader\PlayerStatusMsgReader.cs" />
-    <Compile Include="Message\Reader\ScenarioDataMsgReader.cs" />
-    <Compile Include="Message\Reader\SettingsMsgReader.cs" />
-    <Compile Include="Message\Reader\ShareProgressMsgReader.cs" />
-    <Compile Include="Message\Reader\VesselMsgReader.cs" />
-    <Compile Include="Message\Reader\WarpControlMsgReader.cs" />
+    <Compile Include="Message\AdminMsgReader.cs" />
+    <Compile Include="Message\ScreenshotMsgReader.cs" />
+    <Compile Include="Message\FacilityMsgReader.cs" />
+    <Compile Include="Message\Base\ReaderBase.cs" />
+    <Compile Include="Message\ChatMsgReader.cs" />
+    <Compile Include="Message\CraftLibraryMsgReader.cs" />
+    <Compile Include="Message\FlagSyncMsgReader.cs" />
+    <Compile Include="Message\GroupMsgReader.cs" />
+    <Compile Include="Message\HandshakeMsgReader.cs" />
+    <Compile Include="Message\KerbalMsgReader.cs" />
+    <Compile Include="Message\LockSystemMsgReader.cs" />
+    <Compile Include="Message\ModDataMsgReader.cs" />
+    <Compile Include="Message\MotdMsgReader.cs" />
+    <Compile Include="Message\PlayerColorMsgReader.cs" />
+    <Compile Include="Message\PlayerStatusMsgReader.cs" />
+    <Compile Include="Message\ScenarioDataMsgReader.cs" />
+    <Compile Include="Message\SettingsMsgReader.cs" />
+    <Compile Include="Message\ShareProgressMsgReader.cs" />
+    <Compile Include="Message\VesselMsgReader.cs" />
+    <Compile Include="Message\WarpControlMsgReader.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -122,14 +128,14 @@
     <Compile Include="Settings\Definition\IntervalSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\LogSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\MasterServerSettingsDefinition.cs" />
-    <Compile Include="Settings\Definition\RelaySettingsDefinition.cs" />
     <Compile Include="Settings\Definition\ScreenshotSettingsDefinition.cs" />
     <Compile Include="Settings\Definition\WarpSettingsDefinition.cs" />
+    <Compile Include="Settings\Definition\WebsiteSettingsDefinition.cs" />
     <Compile Include="Settings\SettingsHandler.cs" />
     <Compile Include="Settings\Structures\ConnectionSettings.cs" />
-    <Compile Include="Settings\Structures\RelaySettings.cs" />
     <Compile Include="Settings\Structures\IntervalSettings.cs" />
     <Compile Include="Settings\Structures\LogSettings.cs" />
+    <Compile Include="Settings\Structures\WebsiteSettings.cs" />
     <Compile Include="Settings\Structures\WarpSettings.cs" />
     <Compile Include="Settings\Structures\ScreenshotSettings.cs" />
     <Compile Include="Settings\Structures\CraftSettings.cs" />
@@ -165,6 +171,7 @@
     <Compile Include="System\Scenario\ScenarioContractsDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioDestructiblesDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioFacilityLevelDataUpdater.cs" />
+    <Compile Include="System\Scenario\ScenarioScienceSubjectDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioStrategyDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioPartPurchaseDataUpdater.cs" />
     <Compile Include="System\Scenario\ScenarioTechnologyDataUpdater.cs" />
@@ -180,16 +187,13 @@
     <Compile Include="System\ScreenshotSystem.cs" />
     <Compile Include="System\SharePartPurchaseSystem.cs" />
     <Compile Include="System\ShareReputationSystem.cs" />
+    <Compile Include="System\ShareScienceSubjectSystem.cs" />
     <Compile Include="System\ShareUpgradeableFacilitiesSystem.cs" />
     <Compile Include="System\ShareScienceSystem.cs" />
     <Compile Include="System\ShareStrategySystem.cs" />
     <Compile Include="System\ShareTechnologySystem.cs" />
     <Compile Include="System\VesselContext.cs" />
     <Compile Include="System\VesselDataUpdater.cs" />
-    <Compile Include="System\VesselRelay\VesselRelayItem.cs" />
-    <Compile Include="System\VesselRelay\VesselRelaySystem.cs" />
-    <Compile Include="System\VesselRelay\VesselRelaySystemDataBase.cs" />
-    <Compile Include="System\VesselRelay\VesselRelaySystemDictionary.cs" />
     <Compile Include="System\VesselStoreSystem.cs" />
     <Compile Include="System\WarpSystem.cs" />
     <Compile Include="System\WarpSystemReceiver.cs" />
@@ -199,6 +203,24 @@
     <Compile Include="Utilities\HandledException.cs" />
     <Compile Include="Utilities\InstancesChecker.cs" />
     <Compile Include="Utilities\VersionChecker.cs" />
+    <Compile Include="Web\Handlers\ExceptionHandler.cs" />
+    <Compile Include="Web\Handlers\HttpException.cs" />
+    <Compile Include="Web\Structures\CurrentState.cs" />
+    <Compile Include="Web\Structures\Settings\ServerWebsiteSettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerConnectionSettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerGameplaySettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerDebugSettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerCraftSettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerIntervalSettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerLogSettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerMasterServerSettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerScreenshotSettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerWarpSettings.cs" />
+    <Compile Include="Web\Structures\Settings\ServerGeneralSettings.cs" />
+    <Compile Include="Web\Structures\ServerInformation.cs" />
+    <Compile Include="Web\Structures\VesselInfo.cs" />
+    <Compile Include="Web\WebServer.cs" />
+    <Compile Include="Web\Handlers\ServerInformationRestController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
@@ -213,11 +235,12 @@
       <Project>{35a57b77-236e-492c-b003-1f8fc2f544f3}</Project>
       <Name>LunaUpdater</Name>
     </ProjectReference>
+    <ProjectReference Include="..\uhttpsharp\uhttpsharp.csproj">
+      <Project>{3d681959-4da3-4a71-a68b-704d6411d5ea}</Project>
+      <Name>uhttpsharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
@@ -227,6 +250,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <Content Include="icon.ico" />
     <Content Include="Resources\Scenario\ScenarioNewGameIntro.xml" />
     <Content Include="Resources\Scenario\CommNetScenario.xml" />
@@ -250,6 +276,7 @@
     <None Include="Resources\Kerbals\Bob Kerman.txt" />
     <None Include="Resources\Kerbals\Bill Kerman.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup Condition="'$(OS)' != 'Unix'">
     <PostBuildEvent>del "$(TargetDir)LiteDB.xml"</PostBuildEvent>

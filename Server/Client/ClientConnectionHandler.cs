@@ -7,9 +7,7 @@ using Server.Log;
 using Server.Plugin;
 using Server.Server;
 using Server.System;
-using Server.System.VesselRelay;
 using System;
-using System.Linq;
 
 namespace Server.Client
 {
@@ -48,12 +46,7 @@ namespace Server.Client
 
                     MessageQueuer.RelayMessage<PlayerConnectionSrvMsg>(client, msgData);
                     LockSystem.ReleasePlayerLocks(client);
-
-                    if (!ServerContext.Clients.Any(c => c.Value.Subspace == client.Subspace))
-                    {
-                        WarpSystem.RemoveSubspace(client.Subspace);
-                        VesselRelaySystem.RemoveSubspace(client.Subspace);
-                    }
+                    WarpSystem.RemoveSubspace(client.Subspace);
                 }
 
                 try
@@ -62,9 +55,8 @@ namespace Server.Client
                 }
                 catch (Exception e)
                 {
-                    LunaLog.Debug($"Error closing client Connection: {e.Message}");
+                    LunaLog.Error($"Error closing client Connection: {e.Message}");
                 }
-                ServerContext.LastPlayerActivity = ServerContext.ServerClock.ElapsedMilliseconds;
             }
         }
     }

@@ -14,9 +14,13 @@ namespace LunaClient.Windows.Debug
             if (_displayVectors)
                 GUILayout.Label(_vectorText, LabelStyle);
 
-            _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display orbit info", ButtonStyle);
+            _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display active vessel orbit info", ButtonStyle);
             if (_displayOrbit)
                 GUILayout.Label(_orbitText, LabelStyle);
+
+            _displayVesselsOrbit = GUILayout.Toggle(_displayVesselsOrbit, "Display other vessels orbit info", ButtonStyle);
+            if (_displayVesselsOrbit)
+                GUILayout.Label(_orbitVesselsText, LabelStyle);
 
             _displayVesselStoreData = GUILayout.Toggle(_displayVesselStoreData, "Display vessel store data", ButtonStyle);
             if (_displayVesselStoreData)
@@ -24,11 +28,17 @@ namespace LunaClient.Windows.Debug
 
             _displayInterpolationData = GUILayout.Toggle(_displayInterpolationData, "Display interpolation statistics", ButtonStyle);
             if (_displayInterpolationData)
+            {
                 GUILayout.Label(_interpolationText, LabelStyle);
+            }
 
-            _displayNtp = GUILayout.Toggle(_displayNtp, "Display NTP/Subspace statistics", ButtonStyle);
-            if (_displayNtp)
-                GUILayout.Label(_ntpText, LabelStyle);
+            _displaySubspace = GUILayout.Toggle(_displaySubspace, "Display subspace statistics", ButtonStyle);
+            if (_displaySubspace)
+                GUILayout.Label(_subspaceText, LabelStyle);
+
+            _displayTimes = GUILayout.Toggle(_displayTimes, "Display time clocks", ButtonStyle);
+            if (_displayTimes)
+                GUILayout.Label(_timeText, LabelStyle);
 
             _displayConnectionQueue = GUILayout.Toggle(_displayConnectionQueue, "Display connection statistics", ButtonStyle);
             if (_displayConnectionQueue)

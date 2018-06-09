@@ -9,6 +9,7 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
+using LunaClient.Systems.TimeSyncer;
 
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -76,6 +77,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     VesselsProtoStore.RawUpdateVesselProtoData(VesselSerializedBytes, numBytes, protoVessel.vesselID);
 
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
+                    msgData.GameTime = TimeSyncerSystem.UniversalTime;
                     FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
                 }
                 else
@@ -83,7 +85,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (protoVessel.vesselType == VesselType.Debris)
                     {
                         LunaLog.Log($"Serialization of debris vessel: {protoVessel.vesselID} name: {protoVessel.vesselName} failed. Adding to kill list");
-                        VesselRemoveSystem.Singleton.AddToKillList(protoVessel.vesselID);
+                        VesselRemoveSystem.Singleton.AddToKillList(protoVessel.vesselID, "Serialization of debris failed");
                     }
                 }
             }
@@ -91,13 +93,13 @@ namespace LunaClient.Systems.VesselProtoSys
 
         private void FillAndSendProtoMessageData(Guid vesselId, VesselProtoMsgData msgData, byte[] vesselBytes, int numBytes)
         {
-            msgData.Vessel.VesselId = vesselId;
+            msgData.VesselId = vesselId;
 
-            if (msgData.Vessel.Data.Length < numBytes)
-                Array.Resize(ref msgData.Vessel.Data, numBytes);
+            if (msgData.Data.Length < numBytes)
+                Array.Resize(ref msgData.Data, numBytes);
 
-            Array.Copy(vesselBytes, 0, msgData.Vessel.Data, 0, numBytes);
-            msgData.Vessel.NumBytes = numBytes;
+            Array.Copy(vesselBytes, 0, msgData.Data, 0, numBytes);
+            msgData.NumBytes = numBytes;
 
             SendMessage(msgData);
         }

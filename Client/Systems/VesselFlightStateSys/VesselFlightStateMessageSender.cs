@@ -1,11 +1,12 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
-using LunaCommon.Time;
 
 namespace LunaClient.Systems.VesselFlightStateSys
 {
@@ -22,6 +23,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
             flightState.CopyFrom(FlightGlobals.ActiveVessel.ctrlState);
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselFlightStateMsgData>();
+            msgData.GameTime = TimeSyncerSystem.UniversalTime;
+            msgData.SubspaceId = WarpSystem.Singleton.CurrentSubspace;
+
             msgData.VesselId = FlightGlobals.ActiveVessel.id;
             msgData.GearDown = flightState.gearDown;
             msgData.GearUp = flightState.gearUp;
@@ -41,9 +45,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
             msgData.Yaw = flightState.yaw;
             msgData.YawTrim = flightState.yawTrim;
             msgData.Z = flightState.Z;
-            msgData.TimeStamp = LunaTime.UtcNow.Ticks;
-
-            msgData.GameTime = Planetarium.GetUniversalTime();
 
             SendMessage(msgData);
 

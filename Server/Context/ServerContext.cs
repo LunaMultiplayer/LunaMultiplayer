@@ -27,7 +27,6 @@ namespace Server.Context
         public static string ConfigDirectory { get; } = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Config");
         public static string Players => ClientRetriever.GetActivePlayerNames();
         public static int Day { get; set; }
-        public static long LastPlayerActivity { get; set; }
         public static bool UsePassword => !string.IsNullOrEmpty(GeneralSettings.SettingsStore.Password);
 
         // Configuration object

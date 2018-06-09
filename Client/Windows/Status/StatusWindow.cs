@@ -24,12 +24,11 @@ namespace LunaClient.Windows.Status
         private static Vector2 _scrollPosition;
         private static GUIStyle _subspaceStyle;
         private static Dictionary<string, GUIStyle> _playerNameStyle;
-        private static GUIStyle _vesselNameStyle;
         private static GUIStyle _stateTextStyle;
 
         private const float WindowHeight = 400;
         private const float WindowWidth = 300;
-        private const float UpdateStatusInterval = .5f;
+        private const float UpdateStatusInterval = 1f;
 
         private static double _lastStatusUpdate;
 
@@ -92,13 +91,6 @@ namespace LunaClient.Windows.Status
             
             _playerNameStyle = new Dictionary<string, GUIStyle>();
 
-            _vesselNameStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = Color.white } };
-            _vesselNameStyle.hover.textColor = _vesselNameStyle.normal.textColor;
-            _vesselNameStyle.active.textColor = _vesselNameStyle.normal.textColor;
-            _vesselNameStyle.fontStyle = FontStyle.Normal;
-            _vesselNameStyle.fontSize = 12;
-            _vesselNameStyle.stretchWidth = true;
-
             _stateTextStyle = new GUIStyle(GUI.skin.label) { normal = { textColor = new Color(0.75f, 0.75f, 0.75f) } };
             _stateTextStyle.hover.textColor = _stateTextStyle.normal.textColor;
             _stateTextStyle.active.textColor = _stateTextStyle.normal.textColor;
@@ -114,8 +106,8 @@ namespace LunaClient.Windows.Status
 
             if (Time.realtimeSinceStartup - _lastStatusUpdate > UpdateStatusInterval)
             {
-                SubspaceDisplay.Clear();
                 _lastStatusUpdate = Time.realtimeSinceStartup;
+                SubspaceDisplay.Clear();
                 SubspaceDisplay.AddRange(WarpSystem.Singleton.WarpEntryDisplay.GetSubspaceDisplayEntries());
             }
         }

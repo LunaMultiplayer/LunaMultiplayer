@@ -191,6 +191,8 @@ namespace LunaClient
 
         public void Start()
         {
+            CompatibilityHandler.CheckKspVersion();
+            LocalizationContainer.LoadLanguages();
             LocalizationContainer.LoadLanguage(SettingsSystem.CurrentSettings.Language);
 
             SystemsHandler.FillUpSystemsList();
@@ -206,6 +208,10 @@ namespace LunaClient
             {
                 Enabled = false;
                 DisclaimerDialog.SpawnDialog();
+            }
+            else
+            {
+                StartCoroutine(UpdateHandler.CheckForUpdates());
             }
         }
 
@@ -269,6 +275,7 @@ namespace LunaClient
             //Screenshot image: 6721
             //Tools window: 6722
             //Admin window: 6723
+            //Update window: 6724
 
             WindowsHandler.OnGui();
         }

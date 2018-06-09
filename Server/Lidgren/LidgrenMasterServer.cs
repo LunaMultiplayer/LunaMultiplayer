@@ -66,9 +66,9 @@ namespace Server.Lidgren
                 msgData.ModControl = GeneralSettings.SettingsStore.ModControl;
                 msgData.PlayerCount = ServerContext.Clients.Count;
                 msgData.ServerName = GeneralSettings.SettingsStore.ServerName;
-                msgData.ServerVersion = LmpVersioning.CurrentVersion;
-                msgData.VesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.VesselPositionUpdatesMsInterval;
-                msgData.SecondaryVesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.SecondaryVesselPositionUpdatesMsInterval;
+                msgData.ServerVersion = LmpVersioning.CurrentVersion.ToString(3);
+                msgData.VesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.VesselUpdatesMsInterval;
+                msgData.SecondaryVesselPositionUpdatesMsInterval = IntervalSettings.SettingsStore.SecondaryVesselUpdatesMsInterval;
                 msgData.WarpMode = (int)WarpSettings.SettingsStore.WarpMode;
                 msgData.TerrainQuality = (int)GeneralSettings.SettingsStore.TerrainQuality;
 
@@ -94,7 +94,7 @@ namespace Server.Lidgren
             Task.Run(() =>
             {
                 var msg = ServerContext.MasterServerMessageFactory.CreateNew<MainMstSrvMsg>(msgData);
-                msg.Data.SentTime = LunaTime.UtcNow.Ticks;
+                msg.Data.SentTime = LunaNetworkTime.UtcNow.Ticks;
 
                 try
                 {

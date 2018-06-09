@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>Options</Title>
+    <Language>Taal:</Language>
+    <Color>Speler kleur:</Color>
+    <Red>R:</Red>
+    <Green>G:</Green>
+    <Blue>B:</Blue>
+    <Random>Willekeurig</Random>
+    <Set>Pas toe</Set>
+    <InterpolationSettings>Interpolation settings</InterpolationSettings>
+    <EnableInterpolation>Zet interpolatie aan</EnableInterpolation>
+    <InterpolationOffset>Interpolation offset:</InterpolationOffset>
+    <GenerateLmpModControl>Genereer een server LMPModControl.xml</GenerateLmpModControl>
+    <GenerateUniverse>Genereer universum van opgeslagen game</GenerateUniverse>
+    <NetworkSettings>Network settings</NetworkSettings>
+    <CannotChangeWhileConnected>Cannot change values while connected</CannotChangeWhileConnected>
+    <ResetNetwork>Reset network</ResetNetwork>
+    <Mtu>MTU (Default: 1408):</Mtu>
+    <AutoExpandMtu>Auto expand MTU</AutoExpandMtu>
+    <ConnectionTimeout>Connection timeout (Default: 15):</ConnectionTimeout>
+</OptionsWindowText>

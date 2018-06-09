@@ -22,6 +22,7 @@ namespace LMP.Tests
             msgData.VesselId = Guid.NewGuid();
             msgData.Name = "Name";
             msgData.Type = "Type";
+            msgData.DistanceTraveled = 222;
             msgData.Situation = "Situation";
             msgData.Landed = true;
             msgData.LandedAt = "LandedAt";

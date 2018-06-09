@@ -50,6 +50,7 @@
     <Compile Include="Common.cs" />
     <Compile Include="ConsoleLogger.cs" />
     <Compile Include="ConsoleUtil.cs" />
+    <Compile Include="ContentChecker.cs" />
     <Compile Include="Enums\AdminResponse.cs" />
     <Compile Include="Enums\ClientMessageType.cs" />
     <Compile Include="Enums\ClientState.cs" />
@@ -62,6 +63,7 @@
     <Compile Include="Enums\ServerMessageType.cs" />
     <Compile Include="Enums\TerrainQuality.cs" />
     <Compile Include="Enums\WarpMode.cs" />
+    <Compile Include="Extensions\GuidExtensions.cs" />
     <Compile Include="IgnoredScenarios.cs" />
     <Compile Include="Locks\LockQueryContract.cs" />
     <Compile Include="Locks\LockQueryKerbal.cs" />
@@ -203,16 +205,17 @@
     <Compile Include="Message\Data\ShareProgress\ShareProgressFundsMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressAchievementsMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressReputationMsgData.cs" />
+    <Compile Include="Message\Data\ShareProgress\ShareProgressScienceSubjectMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressScienceMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressStrategyMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressFacilityUpgradeMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressTechnologyMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\ShareProgressPartPurchaseMsgData.cs" />
     <Compile Include="Message\Data\ShareProgress\StrategyInfo.cs" />
+    <Compile Include="Message\Data\ShareProgress\ScienceSubjectInfo.cs" />
     <Compile Include="Message\Data\ShareProgress\TechNodeInfo.cs" />
     <Compile Include="Message\Data\Vessel\ActionGroup.cs" />
     <Compile Include="Message\Data\Vessel\VesselEvaMsgData.cs" />
-    <Compile Include="Message\Data\Vessel\VesselInfo.cs" />
     <Compile Include="Message\Data\Vessel\VesselBaseMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselDockMsgData.cs" />
     <Compile Include="Message\Data\Vessel\VesselFlightStateMsgData.cs" />
@@ -292,7 +295,8 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ServerInfo.cs" />
-    <Compile Include="Time\LunaTime.cs" />
+    <Compile Include="Time\LunaComputerTime.cs" />
+    <Compile Include="Time\LunaNetworkTime.cs" />
     <Compile Include="Time\TimeEnums.cs" />
     <Compile Include="Time\TimeRetriever.cs" />
     <Compile Include="Time\TimeRetrieverNist.cs" />
@@ -323,11 +327,6 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\.editorconfig">
-      <Link>.editorconfig</Link>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

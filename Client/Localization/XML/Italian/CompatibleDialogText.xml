@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-16"?>
+<CompatibleDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>Compatibilità LMP &lt;-&gt; KSP</Title>
+  <Text>Questa versione di LMP non è compatibile con la tua attuale versione di Kerbal Space Program.</Text>
+  <Accept>Accetta</Accept>
+</CompatibleDialogText>

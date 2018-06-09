@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<DisclaimerDialogText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Text>
+Luna Multi Player (LMP) delar den följande personligt identifierbara information med huvudservern och den server du ansluter till.
+a) Det spelar namn du ansluter med.
+b) Ditt spelar tecken (A randomly generated string to authenticate you).
+c) Din IP adress sparas i serverloggen.
+
+LMP kontaktar inte någon annan dator förutom servern du ansluter till och huvudservern.
+För att kunna använda LMP, måste du ge tillgång till den här informarionen.
+
+För mer information - se KSP tiläggs regler
+    </Text>
+    <Title>LunaMultiplayer - Friskrivningsklausul</Title>
+    <Accept>Acceptera</Accept>
+    <Decline>Avböj</Decline>
+</DisclaimerDialogText>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-16"?>
+<AdminWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>管理</Title>
+  <Password>サーバー管理者パスワード:</Password>
+  <ConfirmDialogTitle>確認</ConfirmDialogTitle>
+  <BanText>本当にこのプレイヤーをBANしますか？</BanText>
+  <KickText>本当にこのプレイヤーをキックしますか？</KickText>
+  <Reason>理由:</Reason>
+</AdminWindowText>

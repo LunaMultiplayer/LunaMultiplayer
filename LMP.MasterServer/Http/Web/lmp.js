@@ -1,5 +1,5 @@
 $(document).ready(function() 
     { 
-        $("#LmpTable").tablesorter( {sortList: [[5,0], [3,0]]} ); 
+        $("#LmpTable").tablesorter( {sortList: [[7,1]]} ); 
     } 
-); 
+);

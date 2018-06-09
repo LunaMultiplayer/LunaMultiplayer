@@ -6,6 +6,7 @@ using LunaClient.Systems.VesselSwitcherSys;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
+using LunaCommon.Time;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -23,7 +24,6 @@ namespace LunaClient.Systems.VesselDockSys
         /// <summary>
         /// Called when 2 parts couple
         /// </summary>
-        /// <param name="partAction"></param>
         public void OnPartCouple(GameEvents.FromToAction<Part, Part> partAction)
         {
             if (!VesselCommon.IsSpectating)
@@ -52,6 +52,9 @@ namespace LunaClient.Systems.VesselDockSys
             }
         }
 
+        /// <summary>
+        /// Event triggered when a kerbal boards a vessel
+        /// </summary>
         public void OnCrewBoard(GameEvents.FromToAction<Part, Part> partAction)
         {
             LunaLog.Log("[LMP]: Crew boarding detected!");
@@ -71,7 +74,6 @@ namespace LunaClient.Systems.VesselDockSys
         /// <summary>
         /// Event triggered when a vessel undocks
         /// </summary>
-        /// <param name="part"></param>
         public void OnPartUndock(Part part)
         {
             var vessel = part.vessel;
@@ -80,7 +82,6 @@ namespace LunaClient.Systems.VesselDockSys
             var isEvaPart = part.FindModuleImplementing<KerbalEVA>() != null;
             if (isEvaPart) //This is the case when a kerbal gets out of a external command seat
             {
-                
                 vessel.parts.Remove(part);
                 VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
             }
@@ -94,6 +95,19 @@ namespace LunaClient.Systems.VesselDockSys
                 FlightCamera.SetTarget(part.vessel);
                 part.vessel.MakeActive();
             }
+        }
+
+        /// <summary>
+        /// Event called after the undocking is completed and we have the 2 final vessels
+        /// </summary>
+        public void OnVesselUndocking(Vessel vessel1, Vessel vessel2)
+        {
+            LunaLog.Log("[LMP]: Undock detected!");
+
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1, false);
+            VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel1);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2, false);
+            VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel2);
         }
 
         /// <summary>
@@ -140,7 +154,7 @@ namespace LunaClient.Systems.VesselDockSys
             dock.WeakVesselId = temp;
 
             LunaLog.Log($"[LMP]: Crewboard to an external seat detected! We own the kerbal {dock.WeakVesselId}");
-            VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+            VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing kerbal as it boarded a vessel");
 
             dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
             System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -167,7 +181,7 @@ namespace LunaClient.Systems.VesselDockSys
                     dock.WeakVesselId = temp;
 
                     LunaLog.Log($"[LMP]: Crewboard detected! We own the kerbal {dock.WeakVesselId}");
-                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing kerbal (active) as it boarded a vessel");
 
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -175,7 +189,7 @@ namespace LunaClient.Systems.VesselDockSys
                 else
                 {
                     LunaLog.Log($"[LMP]: Docking detected! We own the dominant vessel {dock.DominantVesselId}");
-                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing weak vessel during a docking");
                     dock.DominantVessel = FlightGlobals.ActiveVessel;
 
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -192,7 +206,7 @@ namespace LunaClient.Systems.VesselDockSys
                     dock.WeakVesselId = temp;
 
                     LunaLog.Log($"[LMP]: Crewboard detected! We own the vessel {dock.DominantVesselId}");
-                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing kerbal as it boarded a vessel");
 
                     dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
                     System.MessageSender.SendDockInformation(dock, currentSubspaceId);
@@ -200,7 +214,7 @@ namespace LunaClient.Systems.VesselDockSys
                 else
                 {
                     LunaLog.Log($"[LMP]: Docking detected! We DON'T own the dominant vessel {dock.DominantVesselId}");
-                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId);
+                    VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing weak (active) vessel during a docking");
 
                     if (dock.DominantVessel == null)
                         dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
@@ -234,11 +248,11 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         private static IEnumerator WaitUntilWeSwitchedThenSendDockInfo(VesselDockStructure dockInfo, int secondsToWait = 5)
         {
-            var start = DateTime.Now;
+            var start = LunaComputerTime.UtcNow;
             var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
             var waitInterval = new WaitForSeconds(0.5f);
 
-            while (FlightGlobals.ActiveVessel?.id != dockInfo.DominantVesselId && DateTime.Now - start < TimeSpan.FromSeconds(30))
+            while (FlightGlobals.ActiveVessel?.id != dockInfo.DominantVesselId && LunaComputerTime.UtcNow - start < TimeSpan.FromSeconds(30))
             {
                 yield return waitInterval;
             }

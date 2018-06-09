@@ -28,7 +28,7 @@ namespace Server.System
                     PlayerCount = players.Length,
                     Players = players,
                     SubspaceKey = s.Key,
-                    SubspaceTime = s.Value
+                    SubspaceTime = s.Value.Time
                 };
             }).ToArray();
 

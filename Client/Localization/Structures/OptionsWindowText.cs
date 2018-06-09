@@ -1,4 +1,6 @@
-﻿namespace LunaClient.Localization.Structures
+﻿using Lidgren.Network;
+
+namespace LunaClient.Localization.Structures
 {
     public class OptionsWindowText
     {
@@ -10,8 +12,16 @@
         public string Blue { get; set; } = "B:";
         public string Random { get; set; } = "Random";
         public string Set { get; set; } = "Set";
-        public string Interpolation { get; set; } = "Enable interpolation";
+        public string InterpolationSettings { get; set; } = "Interpolation settings";
+        public string EnableInterpolation { get; set; } = "Enable interpolation";
+        public string InterpolationOffset { get; set; } = "Interpolation offset:";
         public string GenerateLmpModControl { get; set; } = "Generate a server LMPModControl.xml";
         public string GenerateUniverse { get; set; } = "Generate Universe from saved game";
+        public string NetworkSettings { get; set; } = "Network settings";
+        public string CannotChangeWhileConnected { get; set; } = "Cannot change values while connected";
+        public string ResetNetwork { get; set; } = "Reset network";
+        public string Mtu { get; set; } = $"MTU (Default: {NetPeerConfiguration.kDefaultMTU}):";
+        public string AutoExpandMtu { get; set; } = "Auto expand MTU";
+        public string ConnectionTimeout { get; set; } = "Connection timeout (Default: 15):";
     }
 }

@@ -1,5 +1,6 @@
 ﻿using LunaCommon.Xml;
 using Server.Context;
+using Server.Events;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
@@ -11,13 +12,15 @@ namespace Server.System
     /// <summary>
     /// Here we keep a copy of all the player vessels in XML format and we also save them to files at a specified rate
     /// </summary>
-    public class VesselStoreSystem
+    public static class VesselStoreSystem
     {
         public static string VesselsFolder = Path.Combine(ServerContext.UniverseDirectory, "Vessels");
 
         public static ConcurrentDictionary<Guid, string> CurrentVesselsInXmlFormat = new ConcurrentDictionary<Guid, string>();
 
         private static readonly object BackupLock = new object();
+
+        static VesselStoreSystem() => ExitEvent.ServerClosing += BackupVessels;
 
         public static bool VesselExists(Guid vesselId) => CurrentVesselsInXmlFormat.ContainsKey(vesselId);
 

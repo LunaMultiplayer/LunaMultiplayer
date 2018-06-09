@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-16"?>
+<AdminWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Title>管理</Title>
+  <Password>服务器管理员密码：</Password>
+  <ConfirmDialogTitle>确认</ConfirmDialogTitle>
+  <BanText>您真的确定封禁此玩家吗？</BanText>
+  <KickText>您真的确定踢出此玩家吗？</KickText>
+  <Reason>原因：</Reason>
+</AdminWindowText>

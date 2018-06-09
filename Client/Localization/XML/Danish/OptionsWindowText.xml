@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>Indstillinger</Title>
+    <Language>Sprog:</Language>
+    <Color>Spiller farve:</Color>
+    <Red>R:</Red>
+    <Green>G:</Green>
+    <Blue>B:</Blue>
+    <Random>Tilfældig</Random>
+    <Set>Sæt</Set>
+    <InterpolationSettings>Interpolation settings</InterpolationSettings>
+    <EnableInterpolation>Aktivér interpolering</EnableInterpolation>
+    <InterpolationOffset>Interpolation offset:</InterpolationOffset>
+    <GenerateLmpModControl>Generere en server LMPModControl.xml fil</GenerateLmpModControl>
+    <GenerateUniverse>Generere univers fra gemt spil</GenerateUniverse>
+    <NetworkSettings>Network settings</NetworkSettings>
+    <CannotChangeWhileConnected>Cannot change values while connected</CannotChangeWhileConnected>
+    <ResetNetwork>Reset network</ResetNetwork>
+    <Mtu>MTU (Default: 1408):</Mtu>
+    <AutoExpandMtu>Auto expand MTU</AutoExpandMtu>
+    <ConnectionTimeout>Connection timeout (Default: 15):</ConnectionTimeout>
+</OptionsWindowText>

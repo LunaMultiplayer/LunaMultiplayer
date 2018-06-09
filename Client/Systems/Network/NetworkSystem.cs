@@ -15,6 +15,7 @@ using LunaClient.Systems.VesselSyncSys;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 
 namespace LunaClient.Systems.Network
@@ -64,7 +65,7 @@ namespace LunaClient.Systems.Network
                     MainSystem.Singleton.Status = "Connected";
                     MainSystem.NetworkState = ClientState.Handshaking;
                     HandshakeSystem.Singleton.MessageSender.SendHandshakeRequest();
-                    _lastStateTime = DateTime.Now;
+                    _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.Handshaking:
                     MainSystem.Singleton.Status = "Waiting for handshake response";
@@ -77,7 +78,7 @@ namespace LunaClient.Systems.Network
                     MainSystem.NetworkState = ClientState.SyncingSettings;
                     NetworkSimpleMessageSender.SendSettingsRequest();
 
-                    _lastStateTime = DateTime.Now;
+                    _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingSettings:
                     MainSystem.Singleton.Status = "Syncing settings";
@@ -94,7 +95,7 @@ namespace LunaClient.Systems.Network
                         VesselSyncSystem.Singleton.MessageSender.SendVesselsSyncMsg();
                         MainSystem.NetworkState = ClientState.SyncingKerbals;
                         NetworkSimpleMessageSender.SendKerbalsRequest();
-                        _lastStateTime = DateTime.Now;
+                        _lastStateTime = LunaComputerTime.UtcNow;
                     }
                     break;
                 case ClientState.SyncingKerbals:
@@ -107,7 +108,7 @@ namespace LunaClient.Systems.Network
                     WarpSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingWarpsubspaces;
                     NetworkSimpleMessageSender.SendWarpSubspacesRequest();
-                    _lastStateTime = DateTime.Now;
+                    _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingWarpsubspaces:
                     MainSystem.Singleton.Status = "Syncing warp subspaces";
@@ -119,7 +120,7 @@ namespace LunaClient.Systems.Network
                     PlayerColorSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingColors;
                     NetworkSimpleMessageSender.SendColorsRequest();
-                    _lastStateTime = DateTime.Now;
+                    _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingColors:
                     MainSystem.Singleton.Status = "Syncing player colors";
@@ -131,7 +132,7 @@ namespace LunaClient.Systems.Network
                     FlagSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingFlags;
                     NetworkSimpleMessageSender.SendFlagsRequest();
-                    _lastStateTime = DateTime.Now;
+                    _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingFlags:
                     MainSystem.Singleton.Status = "Syncing flags";
@@ -144,7 +145,7 @@ namespace LunaClient.Systems.Network
                     PlayerConnectionSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingPlayers;
                     NetworkSimpleMessageSender.SendPlayersRequest();
-                    _lastStateTime = DateTime.Now;
+                    _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingPlayers:
                     MainSystem.Singleton.Status = "Syncing players";
@@ -156,7 +157,7 @@ namespace LunaClient.Systems.Network
                     ScenarioSystem.Singleton.Enabled = true;
                     MainSystem.NetworkState = ClientState.SyncingScenarios;
                     NetworkSimpleMessageSender.SendScenariosRequest();
-                    _lastStateTime = DateTime.Now;
+                    _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingScenarios:
                     MainSystem.Singleton.Status = "Syncing scenarios";
@@ -168,7 +169,7 @@ namespace LunaClient.Systems.Network
                     MainSystem.NetworkState = ClientState.SyncingLocks;
                     LockSystem.Singleton.Enabled = true;
                     LockSystem.Singleton.MessageSender.SendLocksRequest();
-                    _lastStateTime = DateTime.Now;
+                    _lastStateTime = LunaComputerTime.UtcNow;
                     break;
                 case ClientState.SyncingLocks:
                     MainSystem.Singleton.Status = "Syncing locks";
@@ -203,11 +204,10 @@ namespace LunaClient.Systems.Network
 
         #region Private methods
 
-
         private static DateTime _lastStateTime = DateTime.MinValue;
         private static bool ConnectionIsStuck(int maxIdleMiliseconds = 2000)
         {
-            if ((DateTime.Now - _lastStateTime).TotalMilliseconds > maxIdleMiliseconds)
+            if ((LunaComputerTime.UtcNow - _lastStateTime).TotalMilliseconds > maxIdleMiliseconds)
             {
                 LunaLog.LogWarning($"Connection got stuck while connecting after waiting {maxIdleMiliseconds} ms, resending last request!");
                 return true;

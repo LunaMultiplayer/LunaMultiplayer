@@ -6,7 +6,7 @@
 #      general configuration      #
 #---------------------------------#
 
-version: 0.8.42.{build}
+version: 0.10.45.{build}
 #Do not build if we change any of this files
 skip_commits:
   files:
@@ -19,7 +19,7 @@ image: Visual Studio 2017
 #---------------------------------#
 
 environment:
-  smallversion: 0.8.42
+  smallversion: 0.10.45
   ZIPPASSWORD:
     secure: aYtowPY3EEDAWEnow3/CajwQYL9PtdXpVdSqhC3f5X4=
 assembly_info:
@@ -50,19 +50,18 @@ after_build:
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Localization"
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\PartSync"
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Icons"
- - ps: copy "$env:appveyor_build_folder\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" 
- - ps: copy "$env:appveyor_build_folder\LunaMultiplayer.version" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Plugins\LunaMultiplayer.version"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Resources\*.png" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Button"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Plugins"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Localization\XML\*.xml" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Localization"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\ModuleStore\XML\*.xml" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\PartSync"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Resources\Icons\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Icons"
+ - ps: copy "$env:appveyor_build_folder\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt"
+ - ps: xcopy /y "$env:appveyor_build_folder\Client\Resources\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Button"
+ - ps: xcopy /y "$env:appveyor_build_folder\Client\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Plugins"
+ - ps: xcopy /s/y "$env:appveyor_build_folder\Client\Localization\XML\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Localization"
+ - ps: xcopy /y "$env:appveyor_build_folder\Client\ModuleStore\XML\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\PartSync"
+ - ps: xcopy /y "$env:appveyor_build_folder\Client\Resources\Icons\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient\GameData\LunaMultiplayer\Icons"
 #Master server post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
- - ps: xcopy /s/y "$env:appveyor_build_folder\MasterServer\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
+ - ps: xcopy /y "$env:appveyor_build_folder\MasterServer\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"
 #Server server post build commands
  - ps: mkdir "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
- - ps: xcopy /s/y "$env:appveyor_build_folder\Server\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
+ - ps: xcopy /y "$env:appveyor_build_folder\Server\bin\$env:configuration\*.*" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  #7zip everything
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMP Readme.txt" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPClient" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPServer"
  - ps: 7z a "$env:appveyor_build_folder\LunaMultiplayerMasterServer-$env:configuration.zip" "$env:appveyor_build_folder\FinalFiles\$env:configuration\LMPMasterServer"

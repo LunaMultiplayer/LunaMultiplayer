@@ -4,12 +4,13 @@
     {
         FundsUpdate = 0,
         ScienceUpdate = 1,
-        ReputationUpdate = 2,
-        TechnologyUpdate = 3,
-        ContractsUpdate = 4,
-        AchievementsUpdate = 5,
-        StrategyUpdate = 6,
-        FacilityUpgrade = 7,
-        PartPurchase = 8,
+        ScienceSubjectUpdate = 2,
+        ReputationUpdate = 3,
+        TechnologyUpdate = 4,
+        ContractsUpdate = 5,
+        AchievementsUpdate = 6,
+        StrategyUpdate = 7,
+        FacilityUpgrade = 8,
+        PartPurchase = 9,
     }
 }

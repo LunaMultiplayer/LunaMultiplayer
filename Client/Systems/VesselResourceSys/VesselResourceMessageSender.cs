@@ -6,6 +6,7 @@ using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System.Collections.Generic;
+using LunaClient.Systems.TimeSyncer;
 
 namespace LunaClient.Systems.VesselResourceSys
 {
@@ -23,6 +24,7 @@ namespace LunaClient.Systems.VesselResourceSys
             _resources.Clear();
 
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselResourceMsgData>();
+            msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vessel.id;
             
             for (var i = 0; i < vessel.protoVessel.protoPartSnapshots.Count; i++)

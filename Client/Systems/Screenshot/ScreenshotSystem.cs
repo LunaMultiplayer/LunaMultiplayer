@@ -2,12 +2,14 @@
 using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
+using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using UnityEngine;
 
 namespace LunaClient.Systems.Screenshot
 {
@@ -54,16 +56,19 @@ namespace LunaClient.Systems.Screenshot
         {
             if (GameSettings.TAKE_SCREENSHOT.GetKeyDown())
             {
-                if (DateTime.Now - _lastTakenScreenshot > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinScreenshotIntervalMs))
+                if (TimeUtil.IsInInterval(ref _lastTakenScreenshot, SettingsSystem.ServerSettings.MinScreenshotIntervalMs))
                 {
-                    _lastTakenScreenshot = DateTime.Now;
                     var path = CommonUtil.CombinePaths(MainSystem.KspPath, "Screenshots");
                     CoroutineUtil.StartDelayedRoutine(nameof(CheckScreenshots), () =>
                     {
                         var photo = new DirectoryInfo(path).GetFiles().OrderByDescending(f => f.LastWriteTime).FirstOrDefault();
                         if (photo != null)
                         {
-                            TaskFactory.StartNew(() => MessageSender.SendScreenshot(File.ReadAllBytes(photo.FullName)));
+                            var imageData = ScaleScreenshot(File.ReadAllBytes(photo.FullName), 800, 600);
+                            TaskFactory.StartNew(() =>
+                            {
+                                MessageSender.SendScreenshot(imageData);
+                            });
                             LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.ScreenshotTaken, 10f, ScreenMessageStyle.UPPER_CENTER);
                         }
                     }, 0.3f);
@@ -109,6 +114,32 @@ namespace LunaClient.Systems.Screenshot
 
             if (MiniatureImages.GetOrAdd(selectedFolder, new ConcurrentDictionary<long, Screenshot>()).Count == 0)
                 MessageSender.RequestMiniatures(selectedFolder);
+        }
+
+        private byte[] ScaleScreenshot(byte[] source, int maxWidth, int maxHeight)
+        {
+            var image = new Texture2D(1, 1);
+            image.LoadImage(source);
+
+            var ratioX = (double)maxWidth / image.width;
+            var ratioY = (double)maxHeight / image.height;
+            var ratio = Math.Min(ratioX, ratioY);
+
+            var newWidth = (int)(image.width * ratio);
+            var newHeight = (int)(image.height * ratio);
+
+            var scaledImage = new Texture2D(newWidth, newHeight);
+            for (var i = 0; i < scaledImage.height; ++i)
+            {
+                for (var j = 0; j < scaledImage.width; ++j)
+                {
+                    var newColor = image.GetPixelBilinear((float)j / (float)scaledImage.width, (float)i / (float)scaledImage.height);
+                    scaledImage.SetPixel(j, i, newColor);
+                }
+            }
+
+            scaledImage.Apply();
+            return scaledImage.EncodeToPNG();
         }
     }
 }

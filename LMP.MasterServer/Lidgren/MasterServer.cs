@@ -82,7 +82,7 @@ namespace LMP.MasterServer.Lidgren
         {
             try
             {
-                var message = MasterServerMessageFactory.Deserialize(msg, LunaTime.UtcNow.Ticks) as IMasterServerMessageBase;
+                var message = MasterServerMessageFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks) as IMasterServerMessageBase;
                 return message;
             }
             catch (Exception)
@@ -158,6 +158,7 @@ namespace LMP.MasterServer.Lidgren
                 msgData.Password = server.Info.Password;
                 msgData.Cheats = server.Info.Cheats;
                 msgData.Description = server.Info.Description;
+                msgData.Country = server.Info.Country;
                 msgData.Website = server.Info.Website;
                 msgData.WebsiteText = server.Info.WebsiteText;
                 msgData.DropControlOnExit = server.Info.DropControlOnExit;
@@ -197,7 +198,7 @@ namespace LMP.MasterServer.Lidgren
             else
             {
                 //Just update
-                ServerDictionary[msgData.Id] = new Server(msgData, netMsg.SenderEndPoint);
+                ServerDictionary[msgData.Id].Update(msgData);
             }
         }
 
@@ -208,7 +209,7 @@ namespace LMP.MasterServer.Lidgren
                 while (RunServer)
                 {
                     var serversIdsToRemove = ServerDictionary
-                        .Where(s => LunaTime.UtcNow.Ticks - s.Value.LastRegisterTime >
+                        .Where(s => LunaNetworkTime.UtcNow.Ticks - s.Value.LastRegisterTime >
                                     TimeSpan.FromMilliseconds(ServerMsTimeout).Ticks)
                         .ToArray();
 

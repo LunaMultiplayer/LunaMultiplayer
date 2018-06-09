@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>Alternativ</Title>
+    <Language>Språk:</Language>
+    <Color>Spelar färg:</Color>
+    <Red>R:</Red>
+    <Green>G:</Green>
+    <Blue>B:</Blue>
+    <Random>Slumpmässig</Random>
+    <Set>Klar</Set>
+    <InterpolationSettings>Interpolation settings</InterpolationSettings>
+    <EnableInterpolation>Interpolering av/på</EnableInterpolation>
+    <InterpolationOffset>Interpolation offset:</InterpolationOffset>
+    <GenerateLmpModControl>Skapa en server LMPModControl.xml</GenerateLmpModControl>
+    <GenerateUniverse>Skapa ett Universum utifrån existerande sparfil</GenerateUniverse>
+    <NetworkSettings>Network settings</NetworkSettings>
+    <CannotChangeWhileConnected>Cannot change values while connected</CannotChangeWhileConnected>
+    <ResetNetwork>Reset network</ResetNetwork>
+    <Mtu>MTU (Default: 1408):</Mtu>
+    <AutoExpandMtu>Auto expand MTU</AutoExpandMtu>
+    <ConnectionTimeout>Connection timeout (Default: 15):</ConnectionTimeout>
+</OptionsWindowText>

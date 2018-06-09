@@ -3,6 +3,7 @@ using LunaClient.Localization;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -67,6 +68,8 @@ namespace LunaClient.Systems.CraftLibrary
         /// </summary>
         public void RefreshOwnCrafts()
         {
+            OwnCrafts.Clear();
+
             var vabFolder = CommonUtil.CombinePaths(SaveFolder, "Ships", "VAB");
             if (Directory.Exists(vabFolder))
             {
@@ -152,9 +155,8 @@ namespace LunaClient.Systems.CraftLibrary
         /// </summary>
         public void SendCraft(CraftEntry craft)
         {
-            if (DateTime.Now - _lastRequest > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs))
+            if (TimeUtil.IsInInterval(ref _lastRequest, SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs))
             {
-                _lastRequest = DateTime.Now;
                 MessageSender.SendCraftMsg(craft);
                 LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.CraftUploaded, 10f, ScreenMessageStyle.UPPER_CENTER);
             }
@@ -172,9 +174,8 @@ namespace LunaClient.Systems.CraftLibrary
         /// </summary>
         public void RequestCraft(CraftBasicEntry craft)
         {
-            if (DateTime.Now - _lastRequest > TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs))
+            if (TimeUtil.IsInInterval(ref _lastRequest, SettingsSystem.ServerSettings.MinCraftLibraryRequestIntervalMs))
             {
-                _lastRequest = DateTime.Now;
                 MessageSender.SendRequestCraftMsg(craft);
             }
             else

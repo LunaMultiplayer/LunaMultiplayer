@@ -6,11 +6,11 @@ using LunaCommon.Time;
 using Server.Client;
 using Server.Context;
 using Server.Log;
-using Server.Message.Reader;
-using Server.Message.Reader.Base;
 using Server.Plugin;
 using System;
 using System.Collections.Generic;
+using Server.Message;
+using Server.Message.Base;
 
 namespace Server.Server
 {
@@ -60,7 +60,8 @@ namespace Server.Server
 
             if (message.VersionMismatch)
             {
-                MessageQueuer.SendConnectionEnd(client, $"Version mismatch. Your version does not match the server's version: {LmpVersioning.CurrentVersion}.");
+                MessageQueuer.SendConnectionEnd(client, $"Version mismatch: Your version ({message.Data.MajorVersion}.{message.Data.MinorVersion}.{message.Data.BuildVersion}) " +
+                                                        $"does not match the server version: {LmpVersioning.CurrentVersion}.");
                 return;
             }
 
@@ -79,7 +80,7 @@ namespace Server.Server
         {
             try
             {
-                return ServerContext.ClientMessageFactory.Deserialize(msg, LunaTime.UtcNow.Ticks) as IClientMessageBase;
+                return ServerContext.ClientMessageFactory.Deserialize(msg, LunaNetworkTime.UtcNow.Ticks) as IClientMessageBase;
             }
             catch (Exception e)
             {

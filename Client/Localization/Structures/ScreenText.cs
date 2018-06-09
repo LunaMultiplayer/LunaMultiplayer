@@ -18,5 +18,6 @@
         public string CraftLibraryInterval { get; set; } = "Interval between craft library requests is $1 seconds. Cannot process the request at this moment";
         public string ScreenshotTaken { get; set; } = "Screenshot uploaded!";
         public string ImageSaved { get; set; } = "Image saved to GameData/LunaMultiplayer/Screenshots";
+        public string IncreasedInterpolationOffset { get; set; } = "Warning! Your interpolation offset has been increased as it was too low for this server";
     }
 }

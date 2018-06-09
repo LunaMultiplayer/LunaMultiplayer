@@ -1,7 +1,5 @@
 ﻿using Lidgren.Network;
-using LunaCommon.Message.Base;
 using LunaCommon.Message.Types;
-using System;
 
 namespace LunaCommon.Message.Data.Vessel
 {
@@ -12,7 +10,7 @@ namespace LunaCommon.Message.Data.Vessel
         public override VesselMessageType VesselMessageType => VesselMessageType.Flightstate;
 
         //Avoid using reference types in this message as it can generate allocations and is sent VERY often.
-        public Guid VesselId;
+        public int SubspaceId;
         public float MainThrottle;
         public float WheelThrottleTrim;
         public float X;
@@ -31,8 +29,6 @@ namespace LunaCommon.Message.Data.Vessel
         public float YawTrim;
         public float WheelSteer;
         public float WheelSteerTrim;
-        public long TimeStamp;
-        public double GameTime;
 
         public override string ClassName { get; } = nameof(VesselFlightStateMsgData);
 
@@ -40,7 +36,7 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
-            GuidUtil.Serialize(VesselId, lidgrenMsg);
+            lidgrenMsg.Write(SubspaceId);
             lidgrenMsg.Write(MainThrottle);
             lidgrenMsg.Write(WheelThrottle);
             lidgrenMsg.Write(WheelThrottleTrim);
@@ -59,15 +55,13 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(YawTrim);
             lidgrenMsg.Write(WheelSteer);
             lidgrenMsg.Write(WheelSteerTrim);
-            lidgrenMsg.Write(TimeStamp);
-            lidgrenMsg.Write(TimeStamp);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
         {
             base.InternalDeserialize(lidgrenMsg);
 
-            VesselId = GuidUtil.Deserialize(lidgrenMsg);
+            SubspaceId = lidgrenMsg.ReadInt32();
             MainThrottle = lidgrenMsg.ReadFloat();
             WheelThrottle = lidgrenMsg.ReadFloat();
             WheelThrottleTrim = lidgrenMsg.ReadFloat();
@@ -86,14 +80,11 @@ namespace LunaCommon.Message.Data.Vessel
             YawTrim = lidgrenMsg.ReadFloat();
             WheelSteer = lidgrenMsg.ReadFloat();
             WheelSteerTrim = lidgrenMsg.ReadFloat();
-            TimeStamp = lidgrenMsg.ReadInt64();
-            GameTime = lidgrenMsg.ReadDouble();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() +
-                   GuidUtil.GetByteSize() + sizeof(float) * 14 + sizeof(bool) * 4 + sizeof(long) + sizeof(double);
+            return base.InternalGetMessageSize() + sizeof(int) + sizeof(float) * 14 + sizeof(bool) * 4;
         }
     }
 }

@@ -2,6 +2,7 @@
 using LunaClient.Localization;
 using LunaClient.Systems.Screenshot;
 using LunaCommon.Enums;
+using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using UniLinq;
@@ -13,7 +14,7 @@ namespace LunaClient.Windows.Screenshots
     {
         #region Fields
 
-        private const float UpdateIntervalMs = 1500;
+        private const int UpdateIntervalMs = 1500;
 
         protected const float FoldersWindowHeight = 300;
         protected const float FoldersWindowWidth = 200;
@@ -59,10 +60,8 @@ namespace LunaClient.Windows.Screenshots
             base.Update();
             if (!Display) return;
 
-            if (DateTime.Now - _lastGuiUpdateTime > TimeSpan.FromMilliseconds(UpdateIntervalMs))
+            if (TimeUtil.IsInInterval(ref _lastGuiUpdateTime, UpdateIntervalMs))
             {
-                _lastGuiUpdateTime = DateTime.Now;
-                
                 Miniatures.Clear();
                 if (!string.IsNullOrEmpty(_selectedFolder) && System.MiniatureImages.TryGetValue(_selectedFolder, out var miniatures))
                 {

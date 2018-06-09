@@ -25,14 +25,19 @@ namespace LunaClient.Systems.TimeSyncer
         public static long ServerStartTime { get; set; }
 
         /// <summary>
+        /// Thread safe way of accessing TimeSyncerSystem.UniversalTime
+        /// </summary>
+        public static double UniversalTime { get; private set; }
+
+        /// <summary>
         /// Gets the server clock in seconds.
         /// </summary>
-        public static double ServerClockSec => TimeUtil.TicksToSeconds(LunaTime.UtcNow.Ticks - ServerStartTime);
+        public static double ServerClockSec => TimeUtil.TicksToSeconds(LunaNetworkTime.UtcNow.Ticks - ServerStartTime);
 
         /// <summary>
         /// Gets the current time error between the server time and the game time
         /// </summary>
-        public static double CurrentErrorSec => Planetarium.GetUniversalTime() - WarpSystem.Singleton.CurrentSubspaceTime;
+        public static double CurrentErrorSec => UniversalTime - WarpSystem.Singleton.CurrentSubspaceTime;
 
         #endregion
 
@@ -53,11 +58,11 @@ namespace LunaClient.Systems.TimeSyncer
         /// <summary>
         /// Limit at which we won't fix the time with the GAME timescale
         /// </summary>
-        private const int PhisicsClockLimitMs = 15000;
+        private const int PhisicsClockLimitMs = 2500;
         /// <summary>
         /// If the time difference is greater than this, the game will set a new time as a global
         /// </summary>
-        private const int MaxClockErrorMs = 15000;
+        private const int MaxClockErrorMs = 2500;
         /// <summary>
         /// Limit at which we won't fix the time with the GAME timescale when spectating
         /// </summary>
@@ -100,6 +105,21 @@ namespace LunaClient.Systems.TimeSyncer
         protected override void OnEnabled()
         {
             base.OnEnabled();
+
+            //Refresh it at TimingManager.TimingStage.Precalc so it's updated JUST after KSP updates it's time
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, SetGameTime);
+
+            //Uncomment to check if the TimingManager.TimingStage.Precalc is the correct time. All the operations should give "0"
+            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.ObscenelyEarly, ()=> LunaLog.Log($"ObscenelyEarly {Planetarium.GetUniversalTime() - UniversalTime}"));
+            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Early, () => LunaLog.Log($"Early {Planetarium.GetUniversalTime() - UniversalTime}"));
+            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Precalc, () => LunaLog.Log($"Precalc {Planetarium.GetUniversalTime() - UniversalTime}"));
+            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Earlyish, () => LunaLog.Log($"Earlyish {Planetarium.GetUniversalTime() - UniversalTime}"));
+            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Normal, () => LunaLog.Log($"Normal {Planetarium.GetUniversalTime() - UniversalTime}"));
+            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.FashionablyLate, () => LunaLog.Log($"FashionablyLate {Planetarium.GetUniversalTime() - UniversalTime}"));
+            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.FlightIntegrator, () => LunaLog.Log($"FlightIntegrator {Planetarium.GetUniversalTime() - UniversalTime}"));
+            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.Late, () => LunaLog.Log($"Late {Planetarium.GetUniversalTime() - UniversalTime}"));
+            //TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, () => LunaLog.Log($"BetterLateThanNever {Planetarium.GetUniversalTime() - UniversalTime}"));
+
             SpectateEvent.onStartSpectating.Add(TimerSyncerEvents.OnStartSpectating);
             SetupRoutine(new RoutineDefinition(100, RoutineExecution.Update, SyncTimeScale));
             SetupRoutine(new RoutineDefinition(15000, RoutineExecution.Update, SyncTime));
@@ -108,6 +128,8 @@ namespace LunaClient.Systems.TimeSyncer
         protected override void OnDisabled()
         {
             base.OnDisabled();
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.ObscenelyEarly, SetGameTime);
+
             SpectateEvent.onStartSpectating.Remove(TimerSyncerEvents.OnStartSpectating);
             ServerStartTime = 0;
         }
@@ -153,10 +175,22 @@ namespace LunaClient.Systems.TimeSyncer
 
                 if (targetTime > 0 && Math.Abs(currentError) > (VesselCommon.IsSpectating ? MaxSpectatingClockErrorMs : MaxClockErrorMs))
                 {
-                    LunaLog.LogWarning($"[LMP] Adjusted time from: {Planetarium.GetUniversalTime()} to: {targetTime} due to error:{currentError}");
+                    LunaLog.LogWarning($"[LMP] Adjusted time from: {UniversalTime} to: {targetTime} due to error:{currentError}");
                     ClockHandler.StepClock(targetTime);
                 }
             }
+        }
+
+        #endregion
+
+        #region FixedUpdateMethods
+
+        /// <summary>
+        /// Updates the UniversalTime with the game time on every fixed update
+        /// </summary>
+        private static void SetGameTime()
+        {
+            UniversalTime = Planetarium.GetUniversalTime();
         }
 
         #endregion
@@ -173,7 +207,7 @@ namespace LunaClient.Systems.TimeSyncer
                 var targetTime = WarpSystem.Singleton.CurrentSubspaceTime;
                 var currentError = TimeUtil.SecondsToMilliseconds(CurrentErrorSec);
 
-                LunaLog.LogWarning($"FORCING a time sync from: {Planetarium.GetUniversalTime()} to: {targetTime}. Error:{currentError}");
+                LunaLog.LogWarning($"FORCING a time sync from: {UniversalTime} to: {targetTime}. Error:{currentError}");
                 ClockHandler.StepClock(targetTime);
             }
         }

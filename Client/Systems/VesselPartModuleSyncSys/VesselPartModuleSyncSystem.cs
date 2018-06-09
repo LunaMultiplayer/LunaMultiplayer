@@ -4,6 +4,7 @@ using LunaClient.Systems.SettingsSys;
 using LunaClient.Utilities;
 using LunaClient.VesselUtilities;
 using System.Collections.Generic;
+using LunaClient.Extensions;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselPartModuleSyncSys

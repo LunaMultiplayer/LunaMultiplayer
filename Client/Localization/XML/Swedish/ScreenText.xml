@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<ScreenText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <CraftUploaded>Skapelse uppladdad!</CraftUploaded>
+    <CraftSaved>Skapelse sparad!</CraftSaved>
+    <ModFileGenerated>LMPModControl.xml fil skapad i din KSP mapp</ModFileGenerated>
+    <Disconected>Du har blivit avansluten!</Disconected>
+    <Spectating>Det här fordonet kontrolleras av</Spectating>
+    <SafetyBubble>Kom ihåg!! När du är innuti säkerhets bubblan kan du inte bli sedd av andra spelare!!</SafetyBubble>
+    <CannotRecover>Kan inte återhämta fordonet, fordonet tillhör inte dig.</CannotRecover>
+    <CannotTerminate>Kan inte avsluta fordonet, fordonet är inte ditt.</CannotTerminate>
+    <SpectatingRemoved>Fordonet du tittade på har raderats</SpectatingRemoved>
+    <WarpDisabled>Kan inte snabbspola, snabbspolning är förbjudet på denna server!</WarpDisabled>
+    <NotWarpMaster>Kan inte snabbspola, du är inte snabbspolnings mästaren!</NotWarpMaster>
+    <WaitingSubspace>Kan inte snabbspola, väntar på utrymmes id från servern</WaitingSubspace>
+    <ScreenshotInterval>Intervallen mellan skärmbilder är $1 sekund. Kan inte ladda upp skärmbilden just nu</ScreenshotInterval>
+    <CraftLibraryInterval>Intervallen mellan fordons förfrågningar is $1 sekund. Kan inte hantera förfrågningen just nu</CraftLibraryInterval>
+    <ScreenshotTaken>Skärmbild uppladdad!</ScreenshotTaken>
+    <ImageSaved>Bild sparad i GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
+</ScreenText>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-16"?>
+<ButtonTooltips xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SettingsIcon>セッティング</SettingsIcon>
+  <ServerIcon>サーバー</ServerIcon>
+  <ConnectIcon>接続</ConnectIcon>
+  <DisconnectIcon>切断</DisconnectIcon>
+  <SyncIcon>同期</SyncIcon>
+  <CloseIcon>閉じる</CloseIcon>
+  <RefreshIcon>リフレッシュ</RefreshIcon>
+  <UploadIcon>アップロード</UploadIcon>
+  <DeleteIcon>削除</DeleteIcon>
+  <PlusIcon>追加</PlusIcon>
+  <SaveIcon>セーブ</SaveIcon>
+  <KeyIcon>パスワード</KeyIcon>
+  <ChatIcon>チャット</ChatIcon>
+  <CameraIcon>スクリーンショット</CameraIcon>
+  <RocketIcon>機体</RocketIcon>
+  <AdminIcon>管理者</AdminIcon>
+  <KickIcon>キック</KickIcon>
+  <BanIcon>BAN</BanIcon>
+  <DekesslerIcon>デブリ消去</DekesslerIcon>
+  <NukeIcon>KSCを清掃する</NukeIcon>
+  <RestartServerIcon>Restart server</RestartServerIcon>
+</ButtonTooltips>

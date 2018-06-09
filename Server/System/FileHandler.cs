@@ -1,9 +1,11 @@
-﻿using Server.Log;
+﻿using LunaCommon;
+using Server.Log;
 using Server.Utilities;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Server.System
 {
@@ -44,7 +46,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe file overwriting method
+        /// Thread safe file overwriting method
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <param name="data">Data to insert</param>
@@ -53,6 +55,9 @@ namespace Server.System
         {
             lock (GetLockSemaphore(path))
             {
+                if (ContentChecker.ContentsAreEqual(data, numBytes, path))
+                    return;
+
                 using (var fs = new FileStream(path, FileMode.Create, FileAccess.Write))
                 {
                     fs.Write(data, 0, numBytes);
@@ -67,11 +72,32 @@ namespace Server.System
         /// <param name="text">Text to insert</param>
         public static void WriteToFile(string path, string text)
         {
+            var content = Encoding.UTF8.GetBytes(text);
+            WriteToFile(path, content, content.Length);
+        }
+
+        /// <summary>
+        /// Thread safe file creating method. It won't create the file if it already exists!
+        /// </summary>
+        /// <param name="path">Path to the file</param>
+        /// <param name="data">Data to insert</param>
+        /// <param name="numBytes">Number of bytes to write</param>
+        public static void CreateFile(string path, byte[] data, int numBytes)
+        {
             lock (GetLockSemaphore(path))
             {
-                File.WriteAllText(path, text);
+                if (!FileExists(path))
+                {
+                    LunaLog.Normal($"Creating file {Path.GetFileName(path)}");
+
+                    using (var fs = new FileStream(path, FileMode.CreateNew, FileAccess.Write))
+                    {
+                        fs.Write(data, 0, numBytes);
+                    }
+                }
             }
         }
+    
 
         /// <summary>
         /// Thread safe file creating method. It won't create the file if it already exists!
@@ -80,18 +106,12 @@ namespace Server.System
         /// <param name="text">Text to insert</param>
         public static void CreateFile(string path, string text)
         {
-            if (!FileExists(path))
-            {
-                LunaLog.Normal($"Creating file {Path.GetFileName(path)}");
-                lock (GetLockSemaphore(path))
-                {
-                    File.WriteAllText(path, text);
-                }
-            }
+            var content = Encoding.UTF8.GetBytes(text);
+            CreateFile(path, content, content.Length);
         }
 
         /// <summary>
-        ///     Thread safe file copying
+        /// Thread safe file copying
         /// </summary>
         /// <param name="from">From path</param>
         /// <param name="to">To path</param>
@@ -107,7 +127,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe file reading method
+        /// Thread safe file reading method
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <returns>Bytes of the file</returns>
@@ -120,7 +140,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe file text reading method
+        /// Thread safe file text reading method
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <returns>Bytes of the file</returns>
@@ -133,7 +153,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe file text reading method
+        /// Thread safe file text reading method
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <returns>Test lines of the file</returns>
@@ -146,7 +166,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe file exist method
+        /// Thread safe file exist method
         /// </summary>
         /// <param name="path">Path to the file</param>
         /// <returns>File exists or not</returns>
@@ -159,7 +179,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe folder exist method
+        /// Thread safe folder exist method
         /// </summary>
         /// <param name="path">Path to the folder</param>
         /// <returns>Folder exists or not</returns>
@@ -172,7 +192,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe folder delete method
+        /// Thread safe folder delete method
         /// </summary>
         /// <param name="path">Path to the folder</param>
         public static void FolderDelete(string path)
@@ -184,7 +204,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe folder create method
+        /// Thread safe folder create method
         /// </summary>
         /// <param name="path">Path to the folder</param>
         /// <returns>Folder exists or not</returns>
@@ -197,7 +217,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe file moving method
+        /// Thread safe file moving method
         /// </summary>
         /// <param name="sourcePath">Original path</param>
         /// <param name="destPath">Destination path</param>
@@ -213,7 +233,7 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe file deleting method
+        /// Thread safe file deleting method
         /// </summary>
         /// <param name="path">Path of the file to remove</param>
         public static void FileDelete(string path)
@@ -226,13 +246,12 @@ namespace Server.System
         }
 
         /// <summary>
-        ///     Thread safe retrieval of files in a given path
+        /// Thread safe retrieval of files in a given path
         /// </summary>
         /// <param name="path">Path to look into</param>
         /// <param name="searchOption">Search options</param>
         /// <returns>List of files</returns>
-        public static string[] GetFilesInPath(string path,
-            SearchOption searchOption = SearchOption.TopDirectoryOnly)
+        public static string[] GetFilesInPath(string path, SearchOption searchOption = SearchOption.TopDirectoryOnly)
         {
             lock (GetLockSemaphore(path))
             {
