@@ -212,9 +212,14 @@ namespace LunaClient.Systems.VesselPositionSys
                 //IN past or same subspaces we want to be SettingsSystem.CurrentSettings.InterpolationOffset seconds BEHIND the player position
                 if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
                 {
-                    //The subspace is in the past so add the difference seconds to normalize it
+                    /* The subspace is in the past so REMOVE the difference to normalize it
+                     * Example: P1 subspace is +7 seconds. Your subspace is + 30 seconds
+                     * Packet TimeDifference will be 23 seconds but in reality it should be 0
+                     * So, we remove the time difference between subspaces (30 - 7 = 23)
+                     * And now the TimeDifference - 23 = 0
+                     */
                     var timeToAdd = Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
-                    TimeDifference += timeToAdd;
+                    TimeDifference -= timeToAdd;
                 }
 
                 ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 1) * GetInterpolationFixFactor();
