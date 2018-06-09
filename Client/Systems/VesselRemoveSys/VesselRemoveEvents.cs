@@ -70,6 +70,8 @@ namespace LunaClient.Systems.VesselRemoveSys
             //Vessel is recovered so remove the locks
             LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c=> c.name), recoveredVessel.vesselID);
 
+            System.KillVessel(_recoveringTerminatingVesselId, "Recovering vessel");
+            
             //Refresh the markers as they sometimes get messy
             KSCVesselMarkers.fetch?.RefreshMarkers();
         }
