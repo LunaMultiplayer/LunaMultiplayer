@@ -120,15 +120,25 @@ namespace LunaClient.Systems.VesselFlightStateSys
         }
 
         /// <summary>
-        /// This method adjust the extra interpolation duration in case we are lagging or too advanced
+        /// This method adjust the extra interpolation duration in case we are lagging or too advanced.
+        /// The idea is that we replay the message at the correct time that is GameTimeWhenMEssageWasSent+InterpolationOffset
+        /// In order to adjust we increase or decrease the interpolation duration so next packet matches the time more perfectly
         /// </summary>
         private void AdjustExtraInterpolationTimes()
         {
             TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
+            if (WarpSystem.Singleton.CurrentlyWarping)
+            {
+                //While WE warp we cannot fix the other player packets if they are in the PAST because we don't know what is OUR time difference with HIS subspace!
+                //Therefore we only fix it if the packet we received is MORE ADVANCED than our game time
+                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? 0 : 1) * GetInterpolationFixFactor();
+                return;
+            }
+
             if (SubspaceId == -1)
             {
-                //While warping we only fix the interpolation if we are LAGGING behind the updates
-                //We never fix it if the packet that we received is very advanced in time
+                //While HE warps we cannot fix the other player packets if he is in the FUTURE as we may receive a packet that is VERY advanced compared to our time!
+                //Therefore we only fix it if the packet we received is BEHIND our game time. This way we will skip his past messages very fast
                 ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 0) * GetInterpolationFixFactor();
             }
             else 
