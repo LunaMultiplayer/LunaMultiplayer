@@ -5,7 +5,7 @@
     <ModFileGenerated>LMPModControl.xml Datei wurde in deinem KSP Ordner generiert</ModFileGenerated>
     <Disconected>Deine Verbindung wurde getrennt!</Disconected>
     <Spectating>Dieses Fahrzeug wird kontrolliert von</Spectating>
-    <SafetyBubble>Remember!! While you're inside the safety bubble you won't be seen by other players!!</SafetyBubble>
+    <SafetyBubble>Achtung!! Während du dich in der Sicherheitsblase befindest kannst du von anderen Spielern nicht gesehen werden!!</SafetyBubble>
     <CannotRecover>Zurücksetzen des Fahrzeugs nicht möglich, das Fahrzeug gehört dir nicht.</CannotRecover>
     <CannotTerminate>Löschen des Fahrzeugs nicht möglich, das Fahrzeug gehört dir nicht.</CannotTerminate>
     <SpectatingRemoved>Das beobachtete Fahrzeug wurde gelöscht</SpectatingRemoved>
@@ -13,8 +13,8 @@
     <NotWarpMaster>Zeitraffer nicht möglich, du bist nicht der Meister des Zeitraffers!</NotWarpMaster>
     <WaitingSubspace>Zeitraffer nicht möglich, warte auf Sub-Universum-ID vom Server</WaitingSubspace>
     <ScreenshotInterval>Mindestzeitabstand zwischen den Screenshots betrÃ¤gt $1 Sekunden. Screenshot kann momentan nicht hochgeladen werden</ScreenshotInterval>
-    <CraftLibraryInterval>Interval between craft library requests is $1 seconds. Cannot process the request at this moment</CraftLibraryInterval>
+    <CraftLibraryInterval>Das Interval zwischen den Bibliotheksabfragen beträgt $1 Sekunde(n). Abfrage kann momentan nicht durchgeführt werden</CraftLibraryInterval>
     <ScreenshotTaken>Screenshot wurde hochgeladen!</ScreenshotTaken>
     <ImageSaved>Bild wurde gespeichert unter GameData/LunaMultiplayer/Screenshots</ImageSaved>
-    <IncreasedInterpolationOffset>Warning! Your interpolation offset has been increased as it was too low for this server</IncreasedInterpolationOffset>
+    <IncreasedInterpolationOffset>Achtung! Dein Interpolations-Versatz wurde erhöht, weil es zu niedrig für den Server war</IncreasedInterpolationOffset>
 </ScreenText>

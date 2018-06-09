@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <ServerListWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <Title>Server list</Title>
+    <Title>Server Liste</Title>
     <NoServers>Keine Server gefunden!</NoServers>
     <Ping>Ping</Ping>
     <Players>Spieleranzahl</Players>
@@ -12,7 +12,7 @@
     <Name>Name</Name>
     <Description>Beschreibung</Description>
     <Website>URL</Website>
-    <ServerDetailTitle>Connect to server</ServerDetailTitle>
-    <Password>Password</Password>
-    <Connect>Connect</Connect>
+    <ServerDetailTitle>Zum Server verbinden</ServerDetailTitle>
+    <Password>Passwort</Password>
+    <Connect>Verbinden</Connect>
 </ServerListWindowText>
