@@ -18,13 +18,19 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Protovessel --------------> Vessel & ProtoVessel
         /// This way we avoid having to unload and reload a vessel with it's terrible performance
         /// </summary>
-        public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel, IEnumerable<uint> vesselPartsId = null)
+        public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel, bool forceReload, IEnumerable<uint> vesselPartsId = null)
         {
             if (vessel == null || protoVessel == null || vessel.state == Vessel.State.DEAD) return;
 
             if (vessel.id != protoVessel.vesselID)
             {
                 LunaLog.LogError($"Tried to update a vessel id {vessel.id} with a protovessel of vessel id {protoVessel.vesselID}");
+                return;
+            }
+
+            if (forceReload)
+            {
+                VesselLoader.ReloadVessel(protoVessel);
                 return;
             }
 

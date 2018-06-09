@@ -2,6 +2,7 @@
 using LunaClient.Events;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
@@ -10,7 +11,6 @@ using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LunaClient.Systems.TimeSyncer;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -164,7 +164,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemReady)
                 {
-                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
+                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false, false);
                     MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
                 }
             }
@@ -243,11 +243,11 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (vesselIdToReload == FlightGlobals.ActiveVessel?.id && !VesselCommon.IsSpectating)
                             continue;
 
-                        if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpdate))
+                        if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpd))
                         {
                             CurrentlyUpdatingVesselId = vesselIdToReload;
-                            ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
-                            vesselProtoUpdate.VesselHasUpdate = false;
+                            ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpd.Vessel, vesselProtoUpd.ProtoVessel, vesselProtoUpd.ForceReload, vesselProtoUpd.VesselParts.Keys);
+                            vesselProtoUpd.VesselHasUpdate = false;
                             CurrentlyUpdatingVesselId = Guid.Empty;
                         }
                     }

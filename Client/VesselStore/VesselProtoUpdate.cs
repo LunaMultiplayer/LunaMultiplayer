@@ -13,6 +13,7 @@ namespace LunaClient.VesselStore
 
         public Guid VesselId { get; }
         public bool VesselHasUpdate { get; set; }
+        public bool ForceReload { get; set; }
 
         private ProtoVessel _deserializedProtoVessel;
         public ProtoVessel ProtoVessel
@@ -72,7 +73,7 @@ namespace LunaClient.VesselStore
         /// <summary>
         /// Update this class with the new data received
         /// </summary>
-        public void Update(byte[] vesselData, int numBytes, Guid vesselId)
+        public void Update(byte[] vesselData, int numBytes, Guid vesselId, bool forceReload)
         {
             lock (_vesselDataSyncLock)
             {
@@ -86,6 +87,7 @@ namespace LunaClient.VesselStore
 
                 _needToDeserializeData = true;
                 VesselHasUpdate = true;
+                ForceReload = forceReload;
             }
         }
 

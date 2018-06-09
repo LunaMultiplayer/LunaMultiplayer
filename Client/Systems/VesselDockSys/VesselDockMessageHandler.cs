@@ -24,7 +24,7 @@ namespace LunaClient.Systems.VesselDockSys
             LunaLog.Log("Docking message received!");
 
             //Add the new vessel data to the store
-            VesselsProtoStore.HandleVesselProtoData(msgData.FinalVesselData, msgData.NumBytes, msgData.DominantVesselId);
+            VesselsProtoStore.HandleVesselProtoData(msgData.FinalVesselData, msgData.NumBytes, msgData.DominantVesselId, false);
 
             if (FlightGlobals.ActiveVessel?.id == msgData.WeakVesselId)
             {
@@ -62,7 +62,7 @@ namespace LunaClient.Systems.VesselDockSys
                 VesselLoader.ReloadVessel(newProto);
 
                 LunaLog.Log("Force sending the new proto vessel");
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, false);
 
                 WarpSystem.WarpIfSubspaceIsMoreAdvanced(msgData.SubspaceId);
                 return;

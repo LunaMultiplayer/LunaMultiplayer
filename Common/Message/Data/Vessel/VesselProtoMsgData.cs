@@ -7,6 +7,7 @@ namespace LunaCommon.Message.Data.Vessel
     {
         internal VesselProtoMsgData() { }
 
+        public bool ForceReload; //Force a vessel reload on the clients who receive the message
         public int NumBytes;
         public byte[] Data = new byte[0];
 
@@ -18,6 +19,7 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalSerialize(lidgrenMsg);
 
+            lidgrenMsg.Write(ForceReload);
             lidgrenMsg.Write(NumBytes);
             lidgrenMsg.Write(Data, 0, NumBytes);
         }
@@ -26,6 +28,7 @@ namespace LunaCommon.Message.Data.Vessel
         {
             base.InternalDeserialize(lidgrenMsg);
 
+            ForceReload = lidgrenMsg.ReadBoolean();
             NumBytes = lidgrenMsg.ReadInt32();
             if (Data.Length < NumBytes)
                 Data = new byte[NumBytes];
@@ -35,7 +38,7 @@ namespace LunaCommon.Message.Data.Vessel
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(int) + sizeof(byte) * NumBytes;
+            return base.InternalGetMessageSize() + sizeof(bool) + sizeof(int) + sizeof(byte) * NumBytes;
         }
     }
 }

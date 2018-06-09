@@ -73,7 +73,7 @@ namespace LunaClient.Systems.Asteroid
                     {
                         LunaLog.Log($"[LMP]: Sending changed asteroid, new state: {asteroid.DiscoveryInfo.trackingStatus.Value}!");
                         ServerAsteroidTrackStatus[asteroid.id.ToString()] = asteroid.DiscoveryInfo.trackingStatus.Value;
-                        VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid, true);
+                        VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(asteroid, true, false);
                     }
                 }
             }

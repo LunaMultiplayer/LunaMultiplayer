@@ -83,7 +83,7 @@ namespace LunaClient.Systems.VesselDockSys
             if (isEvaPart) //This is the case when a kerbal gets out of a external command seat
             {
                 vessel.parts.Remove(part);
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true, false);
             }
 
             //Update the vessel in the proto store as it will have now less parts.
@@ -104,9 +104,9 @@ namespace LunaClient.Systems.VesselDockSys
         {
             LunaLog.Log("[LMP]: Undock detected!");
 
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1, false, false);
             VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel1);
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel2, false, false);
             VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel2);
         }
 
@@ -128,7 +128,7 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
         {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true, false);
         }
 
         /// <summary>
@@ -136,7 +136,7 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
         {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true, false);
         }
 
         #region Private
