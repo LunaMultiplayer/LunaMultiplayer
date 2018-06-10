@@ -375,10 +375,7 @@ namespace LunaClient.VesselUtilities
         {
             if (protoVessel == null)
                 return true;
-
-            if (protoVessel.situation >= Vessel.Situations.FLYING)
-                return false;
-
+            
             if (protoVessel.orbitSnapShot != null)
                 return IsInSafetyBubble(protoVessel.latitude, protoVessel.longitude, protoVessel.altitude, protoVessel.orbitSnapShot.ReferenceBodyIndex);
 
