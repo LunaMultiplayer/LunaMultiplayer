@@ -18,7 +18,7 @@ namespace LunaClient.Systems.VesselPositionSys
     {
         #region Fields & properties
 
-        public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(TimeSpan.FromSeconds(SettingsSystem.CurrentSettings.InterpolationOffsetSeconds).TotalMilliseconds, 
+        public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(TimeSpan.FromSeconds(SettingsSystem.CurrentSettings.InterpolationOffsetSeconds).TotalMilliseconds,
             SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval));
 
         private static float LastVesselUpdatesSentTime { get; set; }
@@ -38,7 +38,7 @@ namespace LunaClient.Systems.VesselPositionSys
 
         public static ConcurrentDictionary<Guid, VesselPositionUpdate> CurrentVesselUpdate { get; } =
             new ConcurrentDictionary<Guid, VesselPositionUpdate>();
-        
+
         public static ConcurrentDictionary<Guid, PositionUpdateQueue> TargetVesselUpdateQueue { get; } =
             new ConcurrentDictionary<Guid, PositionUpdateQueue>();
 
@@ -160,8 +160,14 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public double[] GetLatestVesselPosition(Guid vesselId)
         {
-            return CurrentVesselUpdate.TryGetValue(vesselId, out var vesselPos) ?
-                        vesselPos.LatLonAlt : null;
+            if (CurrentVesselUpdate.TryGetValue(vesselId, out var vesselPos))
+            {
+                var fullData = new double[vesselPos.LatLonAlt.Length + vesselPos.Orbit.Length];
+                vesselPos.LatLonAlt.CopyTo(fullData, 0);
+                vesselPos.Orbit.CopyTo(fullData, vesselPos.LatLonAlt.Length);
+                return fullData;
+            }
+            return null;
         }
 
         /// <summary>
