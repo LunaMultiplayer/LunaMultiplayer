@@ -200,7 +200,7 @@ namespace LunaClient.Windows.Debug
                     StringBuilder.Append("Num of vessels: ").Append(VesselsProtoStore.AllPlayerVessels.Count).AppendLine();
 
                     VesselProtoStoreData.Clear();
-                    VesselProtoStoreData.AddRange(VesselsProtoStore.AllPlayerVessels.Select(p=> new Tuple<Guid, string>(p.Key, p.Value.Vessel?.vesselName)));
+                    VesselProtoStoreData.AddRange(VesselsProtoStore.AllPlayerVessels.Select(p=> new Tuple<Guid, string>(p.Key, p.Value.ProtoVessel.vesselName)));
                     foreach (var vessel in VesselProtoStoreData)
                     {
                         StringBuilder.Append(vessel.Item1).Append(" - ").AppendLine(vessel.Item2);
