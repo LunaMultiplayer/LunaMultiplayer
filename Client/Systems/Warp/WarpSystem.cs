@@ -184,9 +184,8 @@ namespace LunaClient.Systems.Warp
 
                 return false;
             }
-
-
-            if (WaitingSubspaceIdFromServer)
+            
+            if (WaitingSubspaceIdFromServer && TimeWarp.CurrentRateIndex > 0)
             {
                 DisplayMessage(LocalizationContainer.ScreenText.WaitingSubspace, 5f);
                 return false;
