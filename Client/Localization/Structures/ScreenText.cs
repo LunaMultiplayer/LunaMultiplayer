@@ -19,5 +19,6 @@
         public string ScreenshotTaken { get; set; } = "Screenshot uploaded!";
         public string ImageSaved { get; set; } = "Image saved to GameData/LunaMultiplayer/Screenshots";
         public string IncreasedInterpolationOffset { get; set; } = "Warning! Your interpolation offset has been increased as it was too low for this server";
+        public string SackingKerbalsNotAllowed { get; set; } = "This server does not allow sacking kerbals";
     }
 }
