@@ -17,7 +17,7 @@ namespace LunaClient.Systems.VesselPositionSys
     public class VesselPositionUpdate
     {
         private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 10
+            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
                 : double.MaxValue;
 
         #region Fields
@@ -72,8 +72,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public double TimeDifference { get; private set; }
         public double ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
-
-        public double RawInterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp, 0, MaxInterpolationDuration);
         public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
         private float _lerpPercentage = 1;
@@ -128,7 +126,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Array.Copy(update.NormalVector, NormalVector, 3);
             Array.Copy(update.Orbit, Orbit, 8);
         }
-
+        
         #endregion
 
         #region Main method
@@ -176,7 +174,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
 
             if (Target == null) return;
-            if (LerpPercentage > 1)
+            if (LerpPercentage > 1 && SubspaceId != -1 && !WarpSystem.Singleton.CurrentlyWarping)
             {
                 LunaLog.LogWarning("No messages to interpolate to! Increase the interpolation offset!");
             }
@@ -200,25 +198,37 @@ namespace LunaClient.Systems.VesselPositionSys
         /// The idea is that we replay the message at the correct time that is GameTimeWhenMEssageWasSent+InterpolationOffset
         /// In order to adjust we increase or decrease the interpolation duration so next packet matches the time more perfectly
         /// </summary>
-        private void AdjustExtraInterpolationTimes()
+        public void AdjustExtraInterpolationTimes()
         {
             TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
             if (WarpSystem.Singleton.CurrentlyWarping)
             {
-                //While WE warp we cannot fix the other player packets if they are in the PAST because we don't know what is OUR time difference with HIS subspace!
-                //Therefore we only fix it if the packet we received is MORE ADVANCED than our game time
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? 0 : 1) * GetInterpolationFixFactor();
+                //While WE warp if we receive a message that is from before our time, we want to skip it as fast as possible!
+                //If the packet is in the future then we must interpolate towards it
+                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
+                {
+                    LerpPercentage = 1;
+                }
+
+                ExtraInterpolationTime = Time.fixedDeltaTime;
                 return;
             }
 
             if (SubspaceId == -1)
             {
-                //While HE warps we cannot fix the other player packets if he is in the FUTURE as we may receive a packet that is VERY advanced compared to our time!
-                //Therefore we only fix it if the packet we received is BEHIND our game time. This way we will skip his past messages very fast
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 0) * GetInterpolationFixFactor();
+                //The message was received when HE was warping. We don't know his final subspace BUT if the message was sent in a time BEFORE us, we can skip it as fast as possible.
+                //If the packet is in the future then we must interpolate towards it
+                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
+                {
+                    LerpPercentage = 1;
+                }
+
+                ExtraInterpolationTime = Time.fixedDeltaTime;
             }
             else
             {
+                //This is the easiest case, the message comes from the same or a past subspace
+
                 //IN past or same subspaces we want to be SettingsSystem.CurrentSettings.InterpolationOffset seconds BEHIND the player position
                 if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
                 {
@@ -249,19 +259,19 @@ namespace LunaClient.Systems.VesselPositionSys
             //We cannot fix errors that are below the fixed delta time!
             if (errorInFrames < 1)
                 return 0;
-            
+
             if (errorInFrames <= 2)
             {
                 //The error is max 2 frames ahead/below
                 return Time.fixedDeltaTime;
             }
             if (errorInFrames <= 5)
-            {                
+            {
                 //The error is max 5 frames ahead/below
                 return Time.fixedDeltaTime * 2;
             }
             if (errorInSeconds <= 2.5)
-            {                
+            {
                 //The error is max 2.5 SECONDS ahead/below
                 return Time.fixedDeltaTime * errorInFrames / 2;
             }

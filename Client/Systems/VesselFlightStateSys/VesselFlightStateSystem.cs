@@ -233,6 +233,17 @@ namespace LunaClient.Systems.VesselFlightStateSys
             TargetFlightStateQueue.TryRemove(vesselToRemove.id, out _);
         }
 
+        /// <summary>
+        /// Force adjustment of interpolation times
+        /// </summary>
+        public void AdjustExtraInterpolationTimes()
+        {
+            foreach (var keyVal in CurrentFlightState)
+            {
+                keyVal.Value.AdjustExtraInterpolationTimes();
+            }
+        }
+
         public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)
         {
             if (protoVessel == null) return;

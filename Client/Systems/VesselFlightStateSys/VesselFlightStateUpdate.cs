@@ -12,7 +12,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
     public class VesselFlightStateUpdate
     {
         private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 10
+            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
             : double.MaxValue;
 
         #region Fields
@@ -35,7 +35,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
         public double ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
 
-        public double RawInterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp, 0, MaxInterpolationDuration);
         public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
         public float LerpPercentage { get; set; } = 1;
@@ -106,9 +105,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
 
             if (Target == null) return InterpolatedCtrlState;
-            if (LerpPercentage > 1)
+            if (LerpPercentage > 1 && SubspaceId != -1 && !WarpSystem.Singleton.CurrentlyWarping)
             {
-                //We only send flight states of the ACTIVE vessel so perhgaps some player switched a vessel and we are not receiveing any flight state
+                //We only send flight states of the ACTIVE vessel so perhaps some player switched a vessel and we are not receiveing any flight state
                 //To solve this just remove the vessel from the system
                 VesselFlightStateSystem.Singleton.RemoveVessel(VesselId);
             }
@@ -124,25 +123,37 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// The idea is that we replay the message at the correct time that is GameTimeWhenMEssageWasSent+InterpolationOffset
         /// In order to adjust we increase or decrease the interpolation duration so next packet matches the time more perfectly
         /// </summary>
-        private void AdjustExtraInterpolationTimes()
+        public void AdjustExtraInterpolationTimes()
         {
             TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
             if (WarpSystem.Singleton.CurrentlyWarping)
             {
-                //While WE warp we cannot fix the other player packets if they are in the PAST because we don't know what is OUR time difference with HIS subspace!
-                //Therefore we only fix it if the packet we received is MORE ADVANCED than our game time
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? 0 : 1) * GetInterpolationFixFactor();
+                //While WE warp if we receive a message that is from before our time, we want to skip it as fast as possible!
+                //If the packet is in the future then we must interpolate towards it
+                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
+                {
+                    LerpPercentage = 1;
+                }
+
+                ExtraInterpolationTime = Time.fixedDeltaTime;
                 return;
             }
 
             if (SubspaceId == -1)
             {
-                //While HE warps we cannot fix the other player packets if he is in the FUTURE as we may receive a packet that is VERY advanced compared to our time!
-                //Therefore we only fix it if the packet we received is BEHIND our game time. This way we will skip his past messages very fast
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 0) * GetInterpolationFixFactor();
+                //The message was received when HE was warping. We don't know his final subspace BUT if the message was sent in a time BEFORE us, we can skip it as fast as possible.
+                //If the packet is in the future then we must interpolate towards it
+                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
+                {
+                    LerpPercentage = 1;
+                }
+
+                ExtraInterpolationTime = Time.fixedDeltaTime;
             }
-            else 
+            else
             {
+                //This is the easiest case, the message comes from the same or a past subspace
+
                 //IN past or same subspaces we want to be SettingsSystem.CurrentSettings.InterpolationOffset seconds BEHIND the player position
                 if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
                 {

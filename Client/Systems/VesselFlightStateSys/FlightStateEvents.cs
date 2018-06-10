@@ -43,5 +43,13 @@ namespace LunaClient.Systems.VesselFlightStateSys
                     break;
             }
         }
+
+        /// <summary>
+        /// When stop warping adjust the interpolation times of long running packets
+        /// </summary>
+        public void WarpStopped()
+        {
+            System.AdjustExtraInterpolationTimes();
+        }
     }
 }

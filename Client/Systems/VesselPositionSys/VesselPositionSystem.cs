@@ -64,6 +64,7 @@ namespace LunaClient.Systems.VesselPositionSys
             SetupRoutine(new RoutineDefinition(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval, RoutineExecution.Update, SendUnloadedSecondaryVesselPositionUpdates));
 
             LockEvent.onLockAcquire.Add(PositionEvents.OnLockAcquire);
+            WarpEvent.onTimeWarpStopped.Add(PositionEvents.WarpStopped);
         }
 
         protected override void OnDisabled()
@@ -166,6 +167,17 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             CurrentVesselUpdate.TryRemove(vesselId, out _);
             TargetVesselUpdateQueue.TryRemove(vesselId, out _);
+        }
+
+        /// <summary>
+        /// Force adjustment of interpolation times
+        /// </summary>
+        public void AdjustExtraInterpolationTimes()
+        {
+            foreach (var keyVal in CurrentVesselUpdate)
+            {
+                keyVal.Value.AdjustExtraInterpolationTimes();
+            }
         }
 
         #endregion
