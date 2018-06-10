@@ -82,7 +82,7 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void ReturningToEditor(EditorFacility data)
         {
-            if (FlightGlobals.ActiveVessel == null) return;
+            if (FlightGlobals.ActiveVessel == null || VesselCommon.IsSpectating) return;
 
             //Force setting the kerbals as available as when reverting their status will be "assigned"
             var kerbals = FlightGlobals.ActiveVessel.GetVesselCrew();
