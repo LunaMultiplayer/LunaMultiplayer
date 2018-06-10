@@ -156,5 +156,29 @@ namespace LunaClient.Systems.KerbalSys
                 }
             }
         }
+
+        /// <summary>
+        /// Whenever we load a vessel trigger a refresh of the astronaut complex if we are in it
+        /// </summary>
+        public void OnVesselLoaded(Vessel data)
+        {
+            if (System.AstronautComplex != null)
+            {
+                HighLogic.CurrentGame.Updated();
+                System.RefreshCrewDialog();
+            }
+        }
+
+        /// <summary>
+        /// Whenever we reload a vessel trigger a refresh of the astronaut complex if we are in it
+        /// </summary>
+        public void OnVesselReloaded(Vessel data)
+        {
+            if (System.AstronautComplex != null)
+            {
+                HighLogic.CurrentGame.Updated();
+                System.RefreshCrewDialog();
+            }
+        }
     }
 }

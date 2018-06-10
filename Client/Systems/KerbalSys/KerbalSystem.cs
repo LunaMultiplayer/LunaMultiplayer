@@ -23,7 +23,7 @@ namespace LunaClient.Systems.KerbalSys
         public KerbalEvents KerbalEvents { get; } = new KerbalEvents();
 
         private static AstronautComplex _astronautComplex;
-        private static AstronautComplex AstronautComplex
+        public AstronautComplex AstronautComplex
         {
             get
             {
@@ -67,6 +67,9 @@ namespace LunaClient.Systems.KerbalSys
             GameEvents.onVesselTerminated.Add(KerbalEvents.OnVesselTerminated);
             GameEvents.onVesselRecovered.Add(KerbalEvents.OnVesselRecovered);
             GameEvents.onVesselWillDestroy.Add(KerbalEvents.OnVesselWillDestroy);
+
+            VesselLoadEvent.onVesselLoaded.Add(KerbalEvents.OnVesselLoaded);
+            VesselReloadEvent.onVesselReloaded.Add(KerbalEvents.OnVesselReloaded);
         }
 
         protected override void OnDisabled()
@@ -81,6 +84,9 @@ namespace LunaClient.Systems.KerbalSys
             GameEvents.onVesselTerminated.Remove(KerbalEvents.OnVesselTerminated);
             GameEvents.onVesselRecovered.Remove(KerbalEvents.OnVesselRecovered);
             GameEvents.onVesselWillDestroy.Remove(KerbalEvents.OnVesselWillDestroy);
+
+            VesselLoadEvent.onVesselLoaded.Remove(KerbalEvents.OnVesselLoaded);
+            VesselReloadEvent.onVesselReloaded.Remove(KerbalEvents.OnVesselReloaded);
         }
 
         #endregion
@@ -174,9 +180,12 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         public void RefreshCrewDialog()
         {
-            CrewAssignmentDialog.Instance?.RefreshCrewLists(CrewAssignmentDialog.Instance.GetManifest(true), false, true, null);
-            CrewAssignmentDialog.Instance?.ButtonClear();
-            CrewAssignmentDialog.Instance?.ButtonFill();
+            if (CrewAssignmentDialog.Instance != null)
+            {
+                CrewAssignmentDialog.Instance.RefreshCrewLists(CrewAssignmentDialog.Instance.GetManifest(true), false, true, null);
+                CrewAssignmentDialog.Instance.ButtonClear();
+                CrewAssignmentDialog.Instance.ButtonFill();
+            }
 
             if (AstronautComplex != null)
             {
