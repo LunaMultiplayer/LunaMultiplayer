@@ -89,6 +89,13 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             _recoveringTerminatingVesselId = terminatedVessel.vesselID;
             LunaLog.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
+
+            //Force setting the kerbals as missing as we don't have their kerbal lock
+            var kerbals = terminatedVessel.GetVesselCrew();
+            foreach (var kerbal in kerbals)
+            {
+                KerbalSystem.Singleton.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Missing);
+            }
             KerbalSystem.Singleton.ProcessKerbalsInVessel(terminatedVessel);
 
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
@@ -122,6 +129,13 @@ namespace LunaClient.Systems.VesselRemoveSys
                 System.MessageSender.SendVesselRemove(FlightGlobals.ActiveVessel.id, true);
                 
                 System.KillVessel(FlightGlobals.ActiveVessel.id, "Reverted to editor", false);
+                
+                //Force setting the kerbals as available as when reverting their status will be "assigned"
+                var kerbals = FlightGlobals.ActiveVessel.GetVesselCrew();
+                foreach (var kerbal in kerbals)
+                {
+                    kerbal.rosterStatus = ProtoCrewMember.RosterStatus.Available;
+                }
             }
         }
 

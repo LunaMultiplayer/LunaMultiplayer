@@ -42,6 +42,14 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (previousStatus != newStatus)
             {
+                //This is the case when we are removing a vessel from another player.
+                //We must NOT send this new status as missing
+                if (!LockSystem.LockQuery.KerbalLockExists(kerbal.name) && newStatus == ProtoCrewMember.RosterStatus.Missing)
+                {
+                    System.SetKerbalStatusWithoutTriggeringEvent(kerbal, previousStatus);
+                    return;
+                }
+
                 if (!LockSystem.LockQuery.CanEditKerbal(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
                 {
                     System.SetKerbalStatusWithoutTriggeringEvent(kerbal, previousStatus);
