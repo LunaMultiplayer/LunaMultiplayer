@@ -83,7 +83,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 SetOrbit(vessel, msgData);
 
                 msgData.HeightFromTerrain = vessel.heightFromTerrain;
-                msgData.HackingGravity = Math.Abs(MainSystem.BodiesGees[vessel.mainBody] - vessel.mainBody.GeeASL) > 0.0001;
+
+                if (MainSystem.BodiesGees.TryGetValue(vessel.mainBody, out var bodyGee))
+                    msgData.HackingGravity = Math.Abs(bodyGee - vessel.mainBody.GeeASL) > 0.0001;
+                msgData.HackingGravity = false;
 
                 return msgData;
             }
