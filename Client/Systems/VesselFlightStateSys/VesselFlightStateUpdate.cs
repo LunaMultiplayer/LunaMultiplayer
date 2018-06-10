@@ -126,23 +126,24 @@ namespace LunaClient.Systems.VesselFlightStateSys
         public void AdjustExtraInterpolationTimes()
         {
             TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
-            if (WarpSystem.Singleton.CurrentlyWarping)
+            
+            if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {
-                //While WE warp if we receive a message that is from before our time, we want to skip it as fast as possible!
-                //If the packet is in the future then we must interpolate towards it
-                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
-                {
-                    LerpPercentage = 1;
-                }
+                //This is the case when the message was received while warping or we are warping.
 
-                ExtraInterpolationTime = Time.fixedDeltaTime;
-                return;
-            }
-
-            if (SubspaceId == -1)
-            {
-                //The message was received when HE was warping. We don't know his final subspace BUT if the message was sent in a time BEFORE us, we can skip it as fast as possible.
-                //If the packet is in the future then we must interpolate towards it
+                /* We are warping:
+                 * While WE warp if we receive a message that is from before our time, we want to skip it as fast as possible!
+                 * If the packet is in the future then we must interpolate towards it
+                 *
+                 * Player was warping:
+                 * The message was received when HE was warping. We don't know his final subspace time BUT if the message was sent
+                 * in a time BEFORE ours, we can skip it as fast as possible.
+                 * If the packet is in the future then we must interpolate towards it
+                 *
+                 * Bear in mind that even if the interpolation against the future packet is long because he is in the future,
+                 * when we stop warping this method will be called
+                 */
+                 
                 if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
                 {
                     LerpPercentage = 1;
