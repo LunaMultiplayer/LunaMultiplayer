@@ -3,6 +3,7 @@ using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.VesselUtilities;
+using LunaCommon;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -16,6 +17,9 @@ namespace LunaClient.Systems.VesselPositionSys
     public class VesselPositionSystem : MessageSystem<VesselPositionSystem, VesselPositionMessageSender, VesselPositionMessageHandler>
     {
         #region Fields & properties
+
+        public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(TimeSpan.FromSeconds(SettingsSystem.CurrentSettings.InterpolationOffsetSeconds).TotalMilliseconds, 
+            SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval));
 
         private static float LastVesselUpdatesSentTime { get; set; }
 

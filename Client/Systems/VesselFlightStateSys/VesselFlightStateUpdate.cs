@@ -11,10 +11,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
 {
     public class VesselFlightStateUpdate
     {
-        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
-            : double.MaxValue;
-
         #region Fields
 
         public VesselFlightStateUpdate Target { get; set; }
@@ -31,6 +27,11 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         #region Interpolation fields
 
+        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
+            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
+            : double.MaxValue;
+
+        private int MessageCount => VesselFlightStateSystem.TargetFlightStateQueue.TryGetValue(VesselId, out var queue) ? queue.Count : 0;
         public double TimeDifference { get; private set; }
         public double ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
@@ -105,7 +106,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
             }
 
             if (Target == null) return InterpolatedCtrlState;
-            if (LerpPercentage > 1 && SubspaceId != -1 && !WarpSystem.Singleton.CurrentlyWarping)
+            if (LerpPercentage > 1)
             {
                 //We only send flight states of the ACTIVE vessel so perhaps some player switched a vessel and we are not receiveing any flight state
                 //To solve this just remove the vessel from the system
@@ -126,7 +127,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
         public void AdjustExtraInterpolationTimes()
         {
             TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
-            
+
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {
                 //This is the case when the message was received while warping or we are warping.
@@ -142,9 +143,12 @@ namespace LunaClient.Systems.VesselFlightStateSys
                  *
                  * Bear in mind that even if the interpolation against the future packet is long because he is in the future,
                  * when we stop warping this method will be called
+                 *
+                 * Also, we don't remove messages if we are close to the min recommended value
+                 *
                  */
-                 
-                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
+
+                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds && MessageCount > VesselFlightStateSystem.MinRecommendedMessageCount)
                 {
                     LerpPercentage = 1;
                 }

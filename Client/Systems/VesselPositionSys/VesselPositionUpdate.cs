@@ -16,10 +16,6 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionUpdate
     {
-        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
-                : double.MaxValue;
-
         #region Fields
 
         private Vessel _vessel;
@@ -69,6 +65,11 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Interpolation fields
 
+        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
+            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
+            : double.MaxValue;
+
+        private int MessageCount => VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) ? queue.Count : 0;
         public double TimeDifference { get; private set; }
         public double ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
@@ -174,7 +175,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
 
             if (Target == null) return;
-            if (LerpPercentage > 1 && SubspaceId != -1 && !WarpSystem.Singleton.CurrentlyWarping)
+            if (LerpPercentage > 1)
             {
                 LunaLog.LogWarning("No messages to interpolate to! Increase the interpolation offset!");
             }
@@ -217,9 +218,12 @@ namespace LunaClient.Systems.VesselPositionSys
                  *
                  * Bear in mind that even if the interpolation against the future packet is long because he is in the future,
                  * when we stop warping this method will be called
+                 *
+                 * Also, we don't remove messages if we are close to the min recommended value
+                 *
                  */
 
-                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)
+                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds && MessageCount > VesselPositionSystem.MinRecommendedMessageCount)
                 {
                     LerpPercentage = 1;
                 }

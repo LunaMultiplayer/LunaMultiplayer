@@ -2,6 +2,7 @@
 using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
+using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
 using System;
 using System.Collections.Concurrent;
@@ -19,7 +20,10 @@ namespace LunaClient.Systems.VesselFlightStateSys
     public class VesselFlightStateSystem : MessageSystem<VesselFlightStateSystem, VesselFlightStateMessageSender, VesselFlightStateMessageHandler>
     {
         #region Fields & properties
-        
+
+        public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(TimeSpan.FromSeconds(SettingsSystem.CurrentSettings.InterpolationOffsetSeconds).TotalMilliseconds,
+            SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval));
+
         private static float LastVesselFlightStateSentTime { get; set; }
 
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
