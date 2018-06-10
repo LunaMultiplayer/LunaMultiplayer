@@ -1,4 +1,6 @@
-﻿using LunaClient.Systems.Lock;
+﻿using LunaClient.Systems.Chat;
+using LunaClient.Systems.Lock;
+using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.Warp;
@@ -204,6 +206,45 @@ namespace LunaClient.VesselUtilities
                 return false;
 
             return true;
+        }
+
+        /// <summary>
+        /// Checks if the protovessel has resources,parts that you don't have or that they are banned
+        /// </summary>
+        public static bool ProtoVesselHasInvalidParts(ProtoVessel pv)
+        {
+            foreach (var pps in pv.protoPartSnapshots)
+            {
+                if (ModSystem.Singleton.ModControl && !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
+                {
+                    var msg = $"Protovessel {pv.vesselID} ({pv.vesselName}) contains the BANNED PART '{pps.partName}'. Skipping load.";
+                    LunaLog.LogWarning(msg);
+                    ChatSystem.Singleton.PmMessageServer(msg);
+
+                    return true;
+                }
+
+                if (pps.partInfo == null)
+                {
+                    LunaLog.LogWarning($"Protovessel {pv.vesselID} ({pv.vesselName}) contains the MISSING PART '{pps.partName}'. Skipping load.");
+                    LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing {pps.partName}", 10f, ScreenMessageStyle.UPPER_CENTER);
+
+                    return true;
+                }
+
+                var missingeResource = pps.resources.FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
+                if (missingeResource != null)
+                {
+                    var msg = $"Protovessel {pv.vesselID} ({pv.vesselName}) contains the MISSING RESOURCE '{missingeResource.resourceName}'. Skipping load.";
+                    LunaLog.LogWarning(msg);
+                    ChatSystem.Singleton.PmMessageServer(msg);
+
+                    LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing resource {missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

@@ -47,6 +47,9 @@ namespace LunaClient.Systems.VesselDockSys
                  */
                 LunaLog.Log("Docking NOT detected. We OWN the dominant vessel");
 
+                //This is the case when the user that docked with us has invalid parts
+                if (VesselCommon.ProtoVesselHasInvalidParts(newProto)) return;
+
                 if (FlightGlobals.FindVessel(msgData.WeakVesselId) != null)
                 {
                     LunaLog.Log($"Weak vessel {msgData.WeakVesselId} still exists in our game. Removing it now");

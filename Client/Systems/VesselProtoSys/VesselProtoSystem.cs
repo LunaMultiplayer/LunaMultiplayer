@@ -228,7 +228,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     //We get the vessels that already exist
                     VesselsToRefresh.AddRange(VesselsProtoStore.AllPlayerVessels
-                        .Where(pv => pv.Value.VesselExist && pv.Value.VesselHasUpdate)
+                        .Where(pv => pv.Value.VesselExist && pv.Value.VesselHasUpdate && !pv.Value.HasInvalidParts)
                         .Select(v => v.Key));
 
                     //Do not iterate directly trough the AllPlayerVessels dictionary as the collection can be modified in another threads!
