@@ -17,4 +17,7 @@
     <ScreenshotTaken>Capture d'écran partagée !</ScreenshotTaken>
     <ImageSaved>Image sauvegardée dans GameData/LunaMultiplayer/Screenshots</ImageSaved>
     <IncreasedInterpolationOffset>Attention ! Votre décalage d'interpolation a été augmenté car il était trop bas pour ce serveur.</IncreasedInterpolationOffset>
+    <SackingKerbalsNotAllowed>This server does not allow firing kerbals</SackingKerbalsNotAllowed>
+    <CannotLoadGames>LMP does not allow loading savegames</CannotLoadGames>
+    <KerbalNotYours>Another player is using this kerbal</KerbalNotYours>
 </ScreenText>

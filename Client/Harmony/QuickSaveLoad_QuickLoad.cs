@@ -1,4 +1,5 @@
 ﻿using Harmony;
+using LunaClient.Localization;
 using LunaCommon.Enums;
 // ReSharper disable All
 
@@ -16,7 +17,7 @@ namespace LunaClient.Harmony
         {
             if (MainSystem.NetworkState < ClientState.Connected) return true;
 
-            LunaScreenMsg.PostScreenMessage("Cannot quickload in LMP!", 5f, ScreenMessageStyle.UPPER_CENTER);
+            LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.CannotLoadGames, 5f, ScreenMessageStyle.UPPER_CENTER);
 
             return false;
         }

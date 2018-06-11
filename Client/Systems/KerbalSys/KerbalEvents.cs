@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.VesselRemoveSys;
@@ -65,7 +66,7 @@ namespace LunaClient.Systems.KerbalSys
             {
                 if (LockSystem.LockQuery.KerbalLockExists(kerbal.name) && !LockSystem.LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
                 {
-                    LunaScreenMsg.PostScreenMessage("This kerbal does not belongs you", 5f, ScreenMessageStyle.UPPER_CENTER);
+                    LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.KerbalNotYours, 5f, ScreenMessageStyle.UPPER_CENTER);
                     System.SetKerbalTypeWithoutTriggeringEvent(kerbal, ProtoCrewMember.KerbalType.Crew);
                     return;
                 }
