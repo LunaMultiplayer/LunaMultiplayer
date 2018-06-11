@@ -77,6 +77,9 @@ namespace LunaClient.Systems.VesselSwitcherSys
                     }
                 }
 
+                if(!VesselToSwitchTo.loaded)
+                    VesselToSwitchTo.Load();
+
                 FlightGlobals.ForceSetActiveVessel(VesselToSwitchTo);
                 FlightCamera.fetch.SetDistance(zoom);
                 VesselToSwitchTo = null;
