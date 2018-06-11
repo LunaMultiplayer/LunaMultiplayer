@@ -10,6 +10,7 @@
     <Set>Set</Set>
     <InterpolationSettings>Interpolation settings</InterpolationSettings>
     <EnableInterpolation>Enable interpolation</EnableInterpolation>
+    <EnableExtrapolation>Enable extrapolation</EnableExtrapolation>
     <InterpolationOffset>Interpolation offset:</InterpolationOffset>
     <GenerateLmpModControl>Generate a server LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>Generate Universe from saved game</GenerateUniverse>

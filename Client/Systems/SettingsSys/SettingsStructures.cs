@@ -25,6 +25,7 @@ namespace LunaClient.Systems.SettingsSys
         public int MaxGroupsPerPlayer { get; set; } = 1;
         public bool OverrideIntegrator { get; set; }
         public bool PositionInterpolation { get; set; } = true;
+        public bool PositionExtrapolation { get; set; } = false;
         public double InterpolationOffsetSeconds { get; set; } = 0.5f;
         public int Mtu { get; set; } = NetPeerConfiguration.kDefaultMTU;
         public bool AutoExpandMtu { get; set; } = false;

@@ -10,6 +10,7 @@
     <Set>Imposta</Set>
     <InterpolationSettings>Impostazioni Interpolazione</InterpolationSettings>
     <EnableInterpolation>Abilita l'interpolazione</EnableInterpolation>
+    <EnableExtrapolation>Enable extrapolation</EnableExtrapolation>
     <InterpolationOffset>Offset di interpolazione:</InterpolationOffset>
     <GenerateLmpModControl>Genera un "LMPModControl.xml" per il server</GenerateLmpModControl>
     <GenerateUniverse>Genera un "Universo" da un salvataggio</GenerateUniverse>

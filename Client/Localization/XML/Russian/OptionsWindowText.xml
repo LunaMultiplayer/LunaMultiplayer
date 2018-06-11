@@ -10,6 +10,7 @@
     <Set>Подтвердить</Set>
     <InterpolationSettings>Настройки интерполяции</InterpolationSettings>
     <EnableInterpolation>Включить интерполяцию</EnableInterpolation>
+    <EnableExtrapolation>Enable extrapolation</EnableExtrapolation>
     <InterpolationOffset>Interpolation offset:</InterpolationOffset>
     <GenerateLmpModControl>Сгенерировать LMPModControl.xml для сервера</GenerateLmpModControl>
     <GenerateUniverse>Сгенерировать вселенную из сохраненной игры</GenerateUniverse>

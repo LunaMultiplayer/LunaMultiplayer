@@ -10,6 +10,7 @@
     <Set>Klar</Set>
     <InterpolationSettings>Interpolation settings</InterpolationSettings>
     <EnableInterpolation>Interpolering av/på</EnableInterpolation>
+    <EnableExtrapolation>Enable extrapolation</EnableExtrapolation>
     <InterpolationOffset>Interpolation offset:</InterpolationOffset>
     <GenerateLmpModControl>Skapa en server LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>Skapa ett Universum utifrån existerande sparfil</GenerateUniverse>

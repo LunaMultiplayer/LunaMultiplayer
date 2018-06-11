@@ -14,6 +14,7 @@ namespace LunaClient.Localization.Structures
         public string Set { get; set; } = "Set";
         public string InterpolationSettings { get; set; } = "Interpolation settings";
         public string EnableInterpolation { get; set; } = "Enable interpolation";
+        public string EnableExtrapolation { get; set; } = "Enable extrapolation";
         public string InterpolationOffset { get; set; } = "Interpolation offset:";
         public string GenerateLmpModControl { get; set; } = "Generate a server LMPModControl.xml";
         public string GenerateUniverse { get; set; } = "Generate Universe from saved game";

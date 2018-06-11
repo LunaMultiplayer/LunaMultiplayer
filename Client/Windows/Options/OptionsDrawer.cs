@@ -89,6 +89,13 @@ namespace LunaClient.Windows.Options
                     SettingsSystem.SaveSettings();
                 }
 
+                var settingExtrapolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionExtrapolation, LocalizationContainer.OptionsWindowText.EnableExtrapolation, "toggle");
+                if (settingExtrapolator != SettingsSystem.CurrentSettings.PositionExtrapolation)
+                {
+                    SettingsSystem.CurrentSettings.PositionExtrapolation = settingExtrapolator;
+                    SettingsSystem.SaveSettings();
+                }
+
                 GUI.enabled = SettingsSystem.CurrentSettings.PositionInterpolation;
                 GUILayout.Label($"{LocalizationContainer.OptionsWindowText.InterpolationOffset} {SettingsSystem.CurrentSettings.InterpolationOffsetSeconds * 1000:F0} ms");
                 var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffsetSeconds, 0, 0, 5), 1);
