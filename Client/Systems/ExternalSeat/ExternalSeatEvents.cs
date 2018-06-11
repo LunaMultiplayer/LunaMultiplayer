@@ -29,9 +29,9 @@ namespace LunaClient.Systems.ExternalSeat
             LunaLog.Log("Crew-unboard from an external seat detected!");
             
             //This vessel will have kerbal removed as a part so we can be sure that the other clients need a reload of the vessel
-            VesselProtoSys.VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(unboardedVessel, true, true);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(unboardedVessel, true, true);
 
-            VesselProtoSys.VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(kerbal.vessel, true, false);
+            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(kerbal.vessel, true, false);
         }
     }
 }
