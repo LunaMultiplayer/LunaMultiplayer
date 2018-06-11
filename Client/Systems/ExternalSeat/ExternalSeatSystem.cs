@@ -3,7 +3,7 @@
 namespace LunaClient.Systems.ExternalSeat
 {
     /// <summary>
-    /// This system packs applis a custom precalc to all vessels so they don't do the kill check if they are not yours
+    /// This system handles the events when a kerbal boards or unboards an external seat
     /// </summary>
     public class ExternalSeatSystem : Base.System<ExternalSeatSystem>
     {
