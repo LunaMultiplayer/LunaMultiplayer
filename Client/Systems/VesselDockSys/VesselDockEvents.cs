@@ -48,28 +48,10 @@ namespace LunaClient.Systems.VesselDockSys
             }
             else
             {
-                LunaLog.Log("[LMP]: Spectator docking happened. This needs to be fixed later.");
+                LunaLog.Log("Spectator docking happened. This needs to be fixed later.");
             }
         }
 
-        /// <summary>
-        /// Event triggered when a kerbal boards a vessel
-        /// </summary>
-        public void OnCrewBoard(GameEvents.FromToAction<Part, Part> partAction)
-        {
-            LunaLog.Log("[LMP]: Crew boarding detected!");
-            if (!VesselCommon.IsSpectating)
-            {
-                LunaLog.Log($"[LMP]: EVA Boarding, from: {partAction.from.vessel.id }, Name: {partAction.from.vessel.vesselName}");
-                LunaLog.Log($"[LMP]: EVA Boarding, to: {partAction.to.vessel.id}, Name: {partAction.to.vessel.vesselName}");
-
-                var dock = new VesselDockStructure(partAction.from.vessel.id, partAction.to.vessel.id);
-                if (dock.StructureIsOk())
-                {
-                    HandleDocking(dock, true);
-                }
-            }
-        }
 
         /// <summary>
         /// Event triggered when a vessel undocks
@@ -101,7 +83,7 @@ namespace LunaClient.Systems.VesselDockSys
         /// </summary>
         public void OnVesselUndocking(Vessel vessel1, Vessel vessel2)
         {
-            LunaLog.Log("[LMP]: Undock detected!");
+            LunaLog.Log("Undock detected!");
 
             VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel1, false, false);
             VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel1);
@@ -120,22 +102,6 @@ namespace LunaClient.Systems.VesselDockSys
                 HandleDocking(VesselDockings[data.id], false);
                 VesselDockings.Remove(data.id);
             }
-        }
-
-        /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition
-        /// </summary>
-        public void OnCrewTransfered(GameEvents.HostedFromToAction<ProtoCrewMember, Part> data)
-        {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true, false);
-        }
-
-        /// <summary>
-        /// The vessel has changed as it has less crew now so send the definition
-        /// </summary>
-        public void OnCrewEva(GameEvents.FromToAction<Part, Part> data)
-        {
-            VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(data.from.vessel, true, false);
         }
 
         #region Private
