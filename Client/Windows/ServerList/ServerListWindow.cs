@@ -40,8 +40,8 @@ namespace LunaClient.Windows.ServerList
         private static GUILayoutOption[] _serverDetailLayoutOptions;
 
         private static long _selectedServerId;
-        private static string _orderBy = "Ping";
-        private static bool _ascending = true;
+        private static string _orderBy = "PlayerCount";
+        private static bool _ascending = false;
 
         private static GUIStyle _headerServerLine;
         private static GUIStyle _evenServerLine;
@@ -126,7 +126,7 @@ namespace LunaClient.Windows.ServerList
             {
                 DisplayedServers.Clear();
                 DisplayedServers.AddRange(_ascending ? NetworkServerList.Servers.Values.OrderBy(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)) : 
-                    NetworkServerList.Servers.Values.OrderByDescending(s =>OrderByPropertyDictionary[_orderBy].GetValue(s, null)));
+                    NetworkServerList.Servers.Values.OrderByDescending(s => OrderByPropertyDictionary[_orderBy].GetValue(s, null)));
             }
         }
     }

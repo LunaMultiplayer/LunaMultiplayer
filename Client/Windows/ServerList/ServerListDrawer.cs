@@ -9,7 +9,7 @@ namespace LunaClient.Windows.ServerList
 {
     public partial class ServerListWindow
     {
-        private static readonly float[] HeaderGridSize = new float[12];
+        private static readonly float[] HeaderGridSize = new float[13];
 
         #region Servers grid
 
@@ -65,12 +65,20 @@ namespace LunaClient.Windows.ServerList
             if (Event.current.type == EventType.Repaint) HeaderGridSize[1] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(30));
+            if (GUILayout.Button(GlobeIcon, ButtonStyle))
+            {
+                _orderBy = "Country";
+            }
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[2] = GUILayoutUtility.GetLastRect().width;
+            GUILayout.EndHorizontal();
+
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Ping, ButtonStyle))
             {
                 _orderBy = "Ping";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[2] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[3] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
@@ -78,7 +86,7 @@ namespace LunaClient.Windows.ServerList
             {
                 _orderBy = "PlayerCount";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[3] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[4] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
@@ -86,7 +94,7 @@ namespace LunaClient.Windows.ServerList
             {
                 _orderBy = "MaxPlayers";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[4] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[5] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(85));
@@ -94,7 +102,7 @@ namespace LunaClient.Windows.ServerList
             {
                 _orderBy = "GameMode";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[5] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[6] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(75));
@@ -102,7 +110,7 @@ namespace LunaClient.Windows.ServerList
             {
                 _orderBy = "WarpMode";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[6] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[7] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
@@ -110,7 +118,7 @@ namespace LunaClient.Windows.ServerList
             {
                 _orderBy = "TerrainQuality";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[7] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[8] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(50));
@@ -118,7 +126,7 @@ namespace LunaClient.Windows.ServerList
             {
                 _orderBy = "Cheats";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[8] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(220));
@@ -126,7 +134,7 @@ namespace LunaClient.Windows.ServerList
             {
                 _orderBy = "ServerName";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[9] = GUILayoutUtility.GetLastRect().width > 220 ? GUILayoutUtility.GetLastRect().width : 220;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[10] = GUILayoutUtility.GetLastRect().width > 220 ? GUILayoutUtility.GetLastRect().width : 220;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(150));
@@ -134,7 +142,7 @@ namespace LunaClient.Windows.ServerList
             {
                 _orderBy = "WebsiteText";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[10] = GUILayoutUtility.GetLastRect().width;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[11] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(550));
@@ -142,7 +150,7 @@ namespace LunaClient.Windows.ServerList
             {
                 _orderBy = "Description";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[11] = GUILayoutUtility.GetLastRect().width > 550 ? GUILayoutUtility.GetLastRect().width : 550;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[12] = GUILayoutUtility.GetLastRect().width > 550 ? GUILayoutUtility.GetLastRect().width : 550;
             GUILayout.EndHorizontal();
 
             GUILayout.EndHorizontal();
@@ -207,52 +215,53 @@ namespace LunaClient.Windows.ServerList
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[2]));
-            GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[2]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Country}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[2]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[3]));
-            GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[3]));
+            GUILayout.Label(new GUIContent($"{currentEntry.DisplayedPing}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[3]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[4]));
-            GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[4]));
+            GUILayout.Label(new GUIContent($"{currentEntry.PlayerCount}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[4]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[5]));
-            GUILayout.Label(new GUIContent($"{(GameMode)currentEntry.GameMode}"), LabelStyle,
-                GUILayout.MinWidth(HeaderGridSize[5]));
+            GUILayout.Label(new GUIContent($"{currentEntry.MaxPlayers}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[5]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[6]));
-            GUILayout.Label(new GUIContent($"{(WarpMode)currentEntry.WarpMode}"), LabelStyle,
-                GUILayout.MinWidth(HeaderGridSize[6]));
+            GUILayout.Label(new GUIContent($"{(GameMode)currentEntry.GameMode}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[6]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[7]));
-            GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"), LabelStyle,
-                GUILayout.MinWidth(HeaderGridSize[7]));
+            GUILayout.Label(new GUIContent($"{(WarpMode)currentEntry.WarpMode}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[7]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[8]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[8]));
+            GUILayout.Label(new GUIContent($"{(TerrainQuality)currentEntry.TerrainQuality}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[8]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[9]));
-            GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[9]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Cheats}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[9]));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[10]));
+            GUILayout.Label(new GUIContent($"{currentEntry.ServerName}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[10]));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[11]));
             if (!string.IsNullOrEmpty(currentEntry.Website))
             {
-                if (GUILayout.Button(new GUIContent(currentEntry.WebsiteText), HyperlinkLabelStyle, GUILayout.MinWidth(HeaderGridSize[10])))
+                if (GUILayout.Button(new GUIContent(currentEntry.WebsiteText), HyperlinkLabelStyle, GUILayout.MinWidth(HeaderGridSize[11])))
                 {
                     Application.OpenURL(currentEntry.Website);
                 }
             }
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[11]));
-            GUILayout.Label(new GUIContent($"{currentEntry.Description}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[11]));
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(HeaderGridSize[12]));
+            GUILayout.Label(new GUIContent($"{currentEntry.Description}"), LabelStyle, GUILayout.MinWidth(HeaderGridSize[12]));
             GUILayout.EndHorizontal();
         }
 
