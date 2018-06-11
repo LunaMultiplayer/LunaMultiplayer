@@ -113,11 +113,9 @@ namespace LunaClient.Systems.VesselRemoveSys
             //ALWAYS remove it from the proto store as this dictionary is maintained even if we are in the KSC
             //This means that while in KSC if we receive a vessel remove msg, our FlightGlobals.Vessels will be empty
             //But our VesselsProtoStore probably contains that vessel that must be removed.
-            if (removeFromStore) //The exception is when reloading a vessel!
-                VesselsProtoStore.RemoveVessel(vesselId);
-
             if (removeFromStore)
             {
+                VesselsProtoStore.RemoveVessel(vesselId);
                 VesselPositionSystem.Singleton.RemoveVessel(vesselId);
                 VesselFlightStateSystem.Singleton.RemoveVessel(vesselId);
             }
