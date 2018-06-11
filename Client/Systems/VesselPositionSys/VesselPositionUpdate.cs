@@ -2,6 +2,7 @@
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.Utilities;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
@@ -127,7 +128,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Array.Copy(update.NormalVector, NormalVector, 3);
             Array.Copy(update.Orbit, Orbit, 8);
         }
-        
+
         #endregion
 
         #region Main method
@@ -139,6 +140,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             if (Vessel == null || Body == null)
             {
+                VesselsProtoStore.UpdateVesselProtoPosition(this);
                 return;
             }
 
@@ -172,9 +174,11 @@ namespace LunaClient.Systems.VesselPositionSys
                 Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
 
                 UpdateProtoVesselValues();
+                VesselsProtoStore.UpdateVesselProtoPosition(this);
             }
 
             if (Target == null) return;
+            if (InterpolationFinished && (!SettingsSystem.CurrentSettings.PositionExtrapolation || Vessel.situation >= Vessel.Situations.SUB_ORBITAL)) return;
 
             try
             {
@@ -436,9 +440,9 @@ namespace LunaClient.Systems.VesselPositionSys
             var currentVel = KspOrbit.getOrbitalVelocityAtUT(startTime) + KspOrbit.referenceBody.GetFrameVelAtUT(startTime) - Body.GetFrameVelAtUT(startTime);
             var targetVel = Target.KspOrbit.getOrbitalVelocityAtUT(targetTime) + Target.KspOrbit.referenceBody.GetFrameVelAtUT(targetTime) - Target.Body.GetFrameVelAtUT(targetTime);
 
-            var lerpedPos = SettingsSystem.CurrentSettings.PositionExtrapolation ? VectorUtil.LerpUnclamped(currentPos, targetPos, LerpPercentage):
+            var lerpedPos = SettingsSystem.CurrentSettings.PositionExtrapolation ? VectorUtil.LerpUnclamped(currentPos, targetPos, LerpPercentage) :
                 Vector3d.Lerp(currentPos, targetPos, LerpPercentage);
-            var lerpedVel = SettingsSystem.CurrentSettings.PositionExtrapolation ? VectorUtil.LerpUnclamped(currentVel, targetVel, LerpPercentage):
+            var lerpedVel = SettingsSystem.CurrentSettings.PositionExtrapolation ? VectorUtil.LerpUnclamped(currentVel, targetVel, LerpPercentage) :
                 Vector3d.Lerp(currentVel, targetVel, LerpPercentage); ;
 
             LerpTime = SettingsSystem.CurrentSettings.PositionExtrapolation ? LunaMath.LerpUnclamped(startTime, targetTime, LerpPercentage) :
