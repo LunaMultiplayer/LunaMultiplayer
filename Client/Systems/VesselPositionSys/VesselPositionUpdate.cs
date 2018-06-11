@@ -144,12 +144,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
-            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == VesselId)
-            {
-                //Do not apply position updates to our OWN controlled vessel
-                return;
-            }
-
             if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
                 if (Target == null) //This is the case of first iteration
