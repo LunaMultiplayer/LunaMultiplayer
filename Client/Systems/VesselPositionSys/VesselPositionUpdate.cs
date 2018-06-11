@@ -137,7 +137,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void ApplyInterpolatedVesselUpdate()
         {
-            if (Vessel == null || Vessel.precalc == null || Vessel.state == Vessel.State.DEAD || Body == null)
+            if (Vessel == null || Body == null)
             {
                 return;
             }
@@ -190,7 +190,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             finally
             {
-                LerpPercentage += (float)(Time.fixedDeltaTime / InterpolationDuration);
+                LerpPercentage += (float)(Time.deltaTime / InterpolationDuration);
             }
         }
 
@@ -228,7 +228,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     LerpPercentage = 1;
                 }
 
-                ExtraInterpolationTime = Time.fixedDeltaTime;
+                ExtraInterpolationTime = Time.deltaTime;
             }
             else
             {
@@ -256,10 +256,10 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private double GetInterpolationFixFactor()
         {
-            //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 seconds
+            //The minimum fix factor is Time.deltaTime. Usually 0.02 seconds
 
             var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
-            var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
+            var errorInFrames = errorInSeconds / Time.deltaTime;
 
             //We cannot fix errors that are below the fixed delta time!
             if (errorInFrames < 1)
@@ -268,21 +268,21 @@ namespace LunaClient.Systems.VesselPositionSys
             if (errorInFrames <= 2)
             {
                 //The error is max 2 frames ahead/below
-                return Time.fixedDeltaTime;
+                return Time.deltaTime;
             }
             if (errorInFrames <= 5)
             {
                 //The error is max 5 frames ahead/below
-                return Time.fixedDeltaTime * 2;
+                return Time.deltaTime * 2;
             }
             if (errorInSeconds <= 2.5)
             {
                 //The error is max 2.5 SECONDS ahead/below
-                return Time.fixedDeltaTime * errorInFrames / 2;
+                return Time.deltaTime * errorInFrames / 2;
             }
 
             //The error is really big...
-            return Time.fixedDeltaTime * errorInFrames;
+            return Time.deltaTime * errorInFrames;
         }
 
         #endregion
