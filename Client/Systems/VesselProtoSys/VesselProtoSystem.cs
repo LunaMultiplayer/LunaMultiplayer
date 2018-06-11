@@ -238,6 +238,8 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselIdToReload))
                             continue;
 
+                        if (FlightGlobals.ActiveVessel?.id == vesselIdToReload)
+                            LunaLog.LogWarning("Reloading our OWN active vessel!");
 
                         if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpd))
                         {
