@@ -145,12 +145,12 @@ namespace LunaClient.Windows.ServerList
             if (Event.current.type == EventType.Repaint) HeaderGridSize[11] = GUILayoutUtility.GetLastRect().width;
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal(GUILayout.MinWidth(550));
+            GUILayout.BeginHorizontal(GUILayout.MinWidth(600));
             if (GUILayout.Button(LocalizationContainer.ServerListWindowText.Description, ButtonStyle))
             {
                 _orderBy = "Description";
             }
-            if (Event.current.type == EventType.Repaint) HeaderGridSize[12] = GUILayoutUtility.GetLastRect().width > 550 ? GUILayoutUtility.GetLastRect().width : 550;
+            if (Event.current.type == EventType.Repaint) HeaderGridSize[12] = GUILayoutUtility.GetLastRect().width > 600 ? GUILayoutUtility.GetLastRect().width : 600;
             GUILayout.EndHorizontal();
 
             GUILayout.EndHorizontal();
