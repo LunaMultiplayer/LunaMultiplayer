@@ -19,30 +19,17 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             fieldCustomization = FieldModuleStore.GetCustomFieldDefinition(moduleName, fieldName);
             if (fieldCustomization.Ignore) return CustomizationResult.Ignore;
             if (receive)
-            { 
-                try
-                {
-                    if (!LastReceiveUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].IntervalIsOk()) return CustomizationResult.TooEarly;
+            {
+                AddValuesToReceiveDictionaryIfMissing(vesselId, partFlightId, moduleName, fieldName, fieldCustomization);
 
-                    LastReceiveUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].Update();
-                    return CustomizationResult.Ok;
-                }
-                catch (Exception)
-                {
-                    if (!LastReceiveUpdatedDictionary.ContainsKey(vesselId))
-                        LastReceiveUpdatedDictionary.Add(vesselId, new Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>());
-                    if (!LastReceiveUpdatedDictionary[vesselId].ContainsKey(partFlightId))
-                        LastReceiveUpdatedDictionary[vesselId].Add(partFlightId, new Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>());
-                    if (!LastReceiveUpdatedDictionary[vesselId][partFlightId].ContainsKey(moduleName))
-                        LastReceiveUpdatedDictionary[vesselId][partFlightId].Add(moduleName, new Dictionary<string, PartSyncUpdateEntry>());
-                    if (!LastReceiveUpdatedDictionary[vesselId][partFlightId][moduleName].ContainsKey(fieldName))
-                        LastReceiveUpdatedDictionary[vesselId][partFlightId][moduleName].Add(fieldName, new PartSyncUpdateEntry(fieldCustomization.Interval));
-                }
+                if (!LastReceiveUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].IntervalIsOk())
+                    return CustomizationResult.TooEarly;
 
+                LastReceiveUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].Update();
                 return CustomizationResult.Ok;
             }
 
-            AddValuesToDictionaryIfMissing(vesselId, partFlightId, moduleName, fieldName, fieldCustomization);
+            AddValuesToSendDictionaryIfMissing(vesselId, partFlightId, moduleName, fieldName, fieldCustomization);
 
             if (!LastSendUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].IntervalIsOk())
                 return CustomizationResult.TooEarly;
@@ -51,7 +38,19 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
             return CustomizationResult.Ok;
         }
 
-        private static void AddValuesToDictionaryIfMissing(Guid vesselId, uint partFlightId, string moduleName, string fieldName, FieldDefinition fieldCustomization)
+        private static void AddValuesToReceiveDictionaryIfMissing(Guid vesselId, uint partFlightId, string moduleName, string fieldName, FieldDefinition fieldCustomization)
+        {
+            if (!LastReceiveUpdatedDictionary.ContainsKey(vesselId))
+                LastReceiveUpdatedDictionary.Add(vesselId, new Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>());
+            if (!LastReceiveUpdatedDictionary[vesselId].ContainsKey(partFlightId))
+                LastReceiveUpdatedDictionary[vesselId].Add(partFlightId, new Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>());
+            if (!LastReceiveUpdatedDictionary[vesselId][partFlightId].ContainsKey(moduleName))
+                LastReceiveUpdatedDictionary[vesselId][partFlightId].Add(moduleName, new Dictionary<string, PartSyncUpdateEntry>());
+            if (!LastReceiveUpdatedDictionary[vesselId][partFlightId][moduleName].ContainsKey(fieldName))
+                LastReceiveUpdatedDictionary[vesselId][partFlightId][moduleName].Add(fieldName, new PartSyncUpdateEntry(fieldCustomization.Interval));
+        }
+
+        private static void AddValuesToSendDictionaryIfMissing(Guid vesselId, uint partFlightId, string moduleName, string fieldName, FieldDefinition fieldCustomization)
         {
             if (!LastSendUpdatedDictionary.ContainsKey(vesselId))
                 LastSendUpdatedDictionary.Add(vesselId, new Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>());
