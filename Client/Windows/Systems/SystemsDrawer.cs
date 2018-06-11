@@ -1,4 +1,5 @@
 ﻿using LunaClient.Systems.CraftLibrary;
+using LunaClient.Systems.ExternalSeat;
 using LunaClient.Systems.Facility;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.Groups;
@@ -78,6 +79,11 @@ namespace LunaClient.Windows.Systems
             if (_flag)
             {
                 FlagSystem.Singleton.Enabled = GUILayout.Toggle(FlagSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
+            _externalSeat = GUILayout.Toggle(_externalSeat, "External seat", ButtonStyle);
+            if (_externalSeat)
+            {
+                ExternalSeatSystem.Singleton.Enabled = GUILayout.Toggle(ExternalSeatSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             _kscScene = GUILayout.Toggle(_kscScene, "KscScene system", ButtonStyle);
             if (_kscScene)

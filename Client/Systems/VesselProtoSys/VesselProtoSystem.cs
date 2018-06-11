@@ -238,11 +238,11 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselIdToReload))
                             continue;
 
-                        //Do not handle vessel proto updates over our OWN active vessel if we are not spectating
-                        //If there is an undetected dock (our protovessel has been modified) it will be detected
-                        //in the docksystem
-                        if (vesselIdToReload == FlightGlobals.ActiveVessel?.id && !VesselCommon.IsSpectating)
-                            continue;
+                        ////Do not handle vessel proto updates over our OWN active vessel if we are not spectating
+                        ////If there is an undetected dock (our protovessel has been modified) it will be detected
+                        ////in the docksystem
+                        //if (vesselIdToReload == FlightGlobals.ActiveVessel?.id && !VesselCommon.IsSpectating)
+                        //    continue;
 
                         if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpd))
                         {

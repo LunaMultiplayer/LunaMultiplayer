@@ -9,6 +9,6 @@ namespace LunaClient.Events
     public static class ExternalSeatEvent
     {
         public static EventData<KerbalSeat, Guid, string> onExternalSeatBoard { get; } = new EventData<KerbalSeat, Guid, string>("onExternalSeatBoard");
-        public static EventData<KerbalSeat, KerbalEVA> onExternalSeatUnboard { get; } = new EventData<KerbalSeat, KerbalEVA>("onExternalSeatUnboard");
+        public static EventData<Vessel, KerbalEVA> onExternalSeatUnboard { get; } = new EventData<Vessel, KerbalEVA>("onExternalSeatUnboard");
     }
 }

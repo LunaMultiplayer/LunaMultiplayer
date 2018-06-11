@@ -1,5 +1,6 @@
 ﻿using Harmony;
 using LunaClient.Events;
+using System;
 // ReSharper disable All
 
 namespace LunaClient.Harmony
@@ -11,13 +12,26 @@ namespace LunaClient.Harmony
     [HarmonyPatch("BoardSeat")]
     public class KerbalEVA_BoardSeat
     {
+        private static Guid KerbalVesselId;
+        private static string KerbalName;
+
+        [HarmonyPrefix]
+        private static void PrefixBoardSeat(KerbalEVA __instance, ref bool __result, KerbalSeat seat)
+        {
+            if (__instance.vessel != null)
+            {
+
+                KerbalVesselId = __instance.vessel.id;
+                KerbalName = __instance.vessel.vesselName;
+            }
+        }
 
         [HarmonyPostfix]
         private static void PostfixBoardSeat(KerbalEVA __instance, ref bool __result, KerbalSeat seat)
         {
             if (__result)
             {
-                ExternalSeatEvent.onExternalSeatBoard.Fire(seat, __instance);
+                ExternalSeatEvent.onExternalSeatBoard.Fire(seat, KerbalVesselId, KerbalName);
             }
         }
     }

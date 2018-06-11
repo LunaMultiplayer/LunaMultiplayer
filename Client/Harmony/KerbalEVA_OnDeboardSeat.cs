@@ -11,11 +11,18 @@ namespace LunaClient.Harmony
     [HarmonyPatch("OnDeboardSeat")]
     public class KerbalEVA_OnDeboardSeat
     {
+        private static Vessel DeboardedVessel;
+
+        [HarmonyPrefix]
+        private static void PrefixOnDeboardSeat(KerbalEVA __instance)
+        {
+            DeboardedVessel = __instance.vessel;
+        }
+
         [HarmonyPostfix]
         private static void PostfixOnDeboardSeat(KerbalEVA __instance)
         {
-            var unboardedSeat = Traverse.Create(typeof(KerbalEVA)).Field("kerbalSeat").GetValue<KerbalSeat>();
-            ExternalSeatEvent.onExternalSeatUnboard.Fire(unboardedSeat, __instance);
+            ExternalSeatEvent.onExternalSeatUnboard.Fire(DeboardedVessel, __instance);
         }
     }
 }

@@ -35,7 +35,7 @@ namespace LunaClient.Systems.VesselDockSys
                     {
                         if (partAction.from.Modules.Contains("KerbalSeat") || partAction.to.Modules.Contains("KerbalSeat"))
                         {
-                            HandleExternalSeatBoard(dock);
+                            return;
                         }
                         else
                         {
@@ -82,8 +82,7 @@ namespace LunaClient.Systems.VesselDockSys
             var isEvaPart = part.FindModuleImplementing<KerbalEVA>() != null;
             if (isEvaPart) //This is the case when a kerbal gets out of a external command seat
             {
-                vessel.parts.Remove(part);
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(vessel, true, false);
+                return;
             }
 
             //Update the vessel in the proto store as it will have now less parts.
@@ -140,28 +139,7 @@ namespace LunaClient.Systems.VesselDockSys
         }
 
         #region Private
-
-        /// <summary>
-        /// Here we handle the "dock" when a kerbal goes into an external seat
-        /// </summary>
-        private static void HandleExternalSeatBoard(VesselDockStructure dock)
-        {
-            var currentSubspaceId = WarpSystem.Singleton.CurrentSubspace;
-
-            //Kerbal must never be the dominant
-            var temp = dock.DominantVesselId;
-            dock.DominantVesselId = dock.WeakVesselId;
-            dock.WeakVesselId = temp;
-
-            LunaLog.Log($"[LMP]: Crewboard to an external seat detected! We own the kerbal {dock.WeakVesselId}");
-            VesselRemoveSystem.Singleton.AddToKillList(dock.WeakVesselId, "Killing kerbal as it boarded a vessel");
-
-            dock.DominantVessel = FlightGlobals.FindVessel(dock.DominantVesselId);
-            System.MessageSender.SendDockInformation(dock, currentSubspaceId);
-            MainSystem.Singleton.StartCoroutine(WaitUntilWeSwitchedThenSendDockInfo(dock));
-        }
-
-
+        
         /// <summary>
         /// This method is called after the docking is over and there 
         /// should be only 1 vessel in the screen (the final one)

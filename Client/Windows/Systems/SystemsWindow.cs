@@ -46,6 +46,7 @@ namespace LunaClient.Windows.Systems
         private static bool _facility;
         private static bool _flag;
         private static bool _kscScene;
+        private static bool _externalSeat;
         private static bool _group;
         private static bool _kerbal;
         private static bool _lock;
