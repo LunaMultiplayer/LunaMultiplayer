@@ -214,7 +214,6 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             if (FlightGlobals.ActiveVessel?.id == killVessel.id)
             {
-
                 //Try to switch to a nearby loaded vessel...
                 var otherVessel = FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id != killVessel.id);
 
