@@ -214,8 +214,13 @@ namespace LunaClient.Systems.VesselRemoveSys
         {
             if (FlightGlobals.ActiveVessel?.id == killVessel.id)
             {
-                //Get a random vessel and switch to it if exists, otherwise go to spacecenter
-                var otherVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id != killVessel.id);
+
+                //Try to switch to a nearby loaded vessel...
+                var otherVessel = FlightGlobals.VesselsLoaded.FirstOrDefault(v => v.id != killVessel.id);
+
+                //No nearby vessel detected... Get a random vessel and switch to it if exists, otherwise go to spacecenter
+                if (otherVessel == null)
+                    otherVessel = FlightGlobals.Vessels.FirstOrDefault(v => v.id != killVessel.id);
 
                 if (otherVessel != null)
                     FlightGlobals.ForceSetActiveVessel(otherVessel);
