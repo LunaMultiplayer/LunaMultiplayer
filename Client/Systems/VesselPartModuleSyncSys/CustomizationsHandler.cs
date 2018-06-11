@@ -42,26 +42,25 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                 return CustomizationResult.Ok;
             }
 
-            try
-            {
-                if (!LastSendUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].IntervalIsOk()) return CustomizationResult.TooEarly;
+            AddValuesToDictionaryIfMissing(vesselId, partFlightId, moduleName, fieldName, fieldCustomization);
 
-                LastSendUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].Update();
-                return CustomizationResult.Ok;
-            }
-            catch (Exception)
-            {
-                if (!LastSendUpdatedDictionary.ContainsKey(vesselId))
-                    LastSendUpdatedDictionary.Add(vesselId, new Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>());
-                if (!LastSendUpdatedDictionary[vesselId].ContainsKey(partFlightId))
-                    LastSendUpdatedDictionary[vesselId].Add(partFlightId, new Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>());
-                if (!LastSendUpdatedDictionary[vesselId][partFlightId].ContainsKey(moduleName))
-                    LastSendUpdatedDictionary[vesselId][partFlightId].Add(moduleName, new Dictionary<string, PartSyncUpdateEntry>());
-                if (!LastSendUpdatedDictionary[vesselId][partFlightId][moduleName].ContainsKey(fieldName))
-                    LastSendUpdatedDictionary[vesselId][partFlightId][moduleName].Add(fieldName, new PartSyncUpdateEntry(fieldCustomization.Interval));
-            }
+            if (!LastSendUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].IntervalIsOk())
+                return CustomizationResult.TooEarly;
 
+            LastSendUpdatedDictionary[vesselId][partFlightId][moduleName][fieldName].Update();
             return CustomizationResult.Ok;
+        }
+
+        private static void AddValuesToDictionaryIfMissing(Guid vesselId, uint partFlightId, string moduleName, string fieldName, FieldDefinition fieldCustomization)
+        {
+            if (!LastSendUpdatedDictionary.ContainsKey(vesselId))
+                LastSendUpdatedDictionary.Add(vesselId, new Dictionary<uint, Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>>());
+            if (!LastSendUpdatedDictionary[vesselId].ContainsKey(partFlightId))
+                LastSendUpdatedDictionary[vesselId].Add(partFlightId, new Dictionary<string, Dictionary<string, PartSyncUpdateEntry>>());
+            if (!LastSendUpdatedDictionary[vesselId][partFlightId].ContainsKey(moduleName))
+                LastSendUpdatedDictionary[vesselId][partFlightId].Add(moduleName, new Dictionary<string, PartSyncUpdateEntry>());
+            if (!LastSendUpdatedDictionary[vesselId][partFlightId][moduleName].ContainsKey(fieldName))
+                LastSendUpdatedDictionary[vesselId][partFlightId][moduleName].Add(fieldName, new PartSyncUpdateEntry(fieldCustomization.Interval));
         }
     }
 }
