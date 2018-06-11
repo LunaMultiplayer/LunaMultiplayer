@@ -256,12 +256,12 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private double GetInterpolationFixFactor()
         {
-            //The minimum fix factor is Time.deltaTime. Usually 0.02 seconds
+            //The minimum fix factor is Time.deltaTime.
 
             var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
             var errorInFrames = errorInSeconds / Time.deltaTime;
 
-            //We cannot fix errors that are below the fixed delta time!
+            //We cannot fix errors that are below the delta time!
             if (errorInFrames < 1)
                 return 0;
 
