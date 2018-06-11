@@ -6,6 +6,7 @@ using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System;
 
 namespace LunaClient.Systems.VesselDockSys
 {
@@ -16,40 +17,37 @@ namespace LunaClient.Systems.VesselDockSys
             TaskFactory.StartNew(() => NetworkSender.QueueOutgoingMessage(MessageFactory.CreateNew<VesselCliMsg>(msg)));
         }
 
-        public void SendDockInformation(VesselDockStructure dock, int subspaceId)
+        public void SendDockInformation(Guid weakVesselId, Vessel dominantVessel, int subspaceId)
         {
-            var vesselBytes = VesselSerializer.SerializeVessel(dock.DominantVessel.BackupVessel());
+            var vesselBytes = VesselSerializer.SerializeVessel(dominantVessel.BackupVessel());
             if (vesselBytes.Length > 0)
             {
-                CreateAndSendDockMessage(dock, subspaceId, vesselBytes);
+                CreateAndSendDockMessage(weakVesselId, dominantVessel.id, subspaceId, vesselBytes);
             }
         }
 
-        public void SendDockInformation(VesselDockStructure dock, int subspaceId, ProtoVessel finalDominantVesselProto)
+        public void SendDockInformation(Guid weakVesselId, Vessel dominantVessel, int subspaceId, ProtoVessel finalDominantVesselProto)
         {
             if (finalDominantVesselProto != null)
             {
                 var vesselBytes = VesselSerializer.SerializeVessel(finalDominantVesselProto);
                 if (vesselBytes.Length > 0)
                 {
-                    CreateAndSendDockMessage(dock, subspaceId, vesselBytes);
+                    CreateAndSendDockMessage(weakVesselId, dominantVessel.id, subspaceId, vesselBytes);
                 }
             }
             else
             {
-                SendDockInformation(dock, subspaceId);
+                SendDockInformation(weakVesselId, dominantVessel, subspaceId);
             }
         }
 
-        private void CreateAndSendDockMessage(VesselDockStructure dock, int subspaceId, byte[] vesselBytes)
+        private void CreateAndSendDockMessage(Guid weakVesselId, Guid dominantVesselId, int subspaceId, byte[] vesselBytes)
         {
-            //TODO: When would dock be null?
-            if (dock == null) return;
-
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselDockMsgData>();
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
-            msgData.WeakVesselId = dock.WeakVesselId;
-            msgData.DominantVesselId = dock.DominantVesselId;
+            msgData.WeakVesselId = weakVesselId;
+            msgData.DominantVesselId = dominantVesselId;
             msgData.FinalVesselData = vesselBytes;
             msgData.NumBytes = vesselBytes.Length;
             msgData.SubspaceId = subspaceId;
