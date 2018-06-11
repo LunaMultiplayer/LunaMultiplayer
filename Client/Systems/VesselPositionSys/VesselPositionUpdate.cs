@@ -175,10 +175,6 @@ namespace LunaClient.Systems.VesselPositionSys
             }
 
             if (Target == null) return;
-            if (LerpPercentage > 1)
-            {
-                LunaLog.LogWarning("No messages to interpolate to! Increase the interpolation offset!");
-            }
 
             try
             {
