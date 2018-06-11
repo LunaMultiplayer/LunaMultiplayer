@@ -190,7 +190,7 @@ namespace LunaClient.Systems.Lock
         }
 
         /// <summary>
-        /// Release all the locks (update and control) of a vessel
+        /// Release all the locks (unloaded update, update, control and kerbals) of a vessel
         /// </summary>
         public void ReleaseAllVesselLocks(IEnumerable<string> crewNames, Guid vesselId, int msDelay = 0)
         {
