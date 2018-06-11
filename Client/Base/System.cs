@@ -55,6 +55,11 @@ namespace LunaClient.Base
         protected System() => NetworkEvent.onNetworkStatusChanged.Add(NetworkEventHandler);
 
         /// <summary>
+        /// Override this property if you want to enable the system BEFORE we are in KSC
+        /// </summary>
+        protected virtual ClientState EnableStage => ClientState.Running;
+
+        /// <summary>
         /// Handle here what happens to your system when the network status changes. By default it will be disabled if we disconnect and enable just before starting
         /// </summary>
         protected virtual void NetworkEventHandler(ClientState data)
@@ -64,7 +69,7 @@ namespace LunaClient.Base
                 Enabled = false;
             }
 
-            if (data == ClientState.Running)
+            if (data == EnableStage)
             {
                 Enabled = true;
             }
