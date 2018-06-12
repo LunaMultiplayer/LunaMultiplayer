@@ -40,11 +40,17 @@ namespace LunaClient.Systems.VesselProtoSys
             var vesselPartsIds = vessel.loaded ? vessel.parts.Select(p => p.flightID) : vessel.protoVessel.protoPartSnapshots.Select(p=> p.flightID);
 
             var hasMissingparts = vesselProtoPartIds.Except(vesselPartsIds).Any();
-            if (hasMissingparts || !VesselCommon.IsSpectating && (UnloadedVesselChangedSituation(vessel, protoVessel) || VesselJustLandedOrSplashed(vessel, protoVessel)))
+            if (hasMissingparts)
+            {
+                //Better to reload if has missing parts as creating them dinamically is a PIA
+                VesselLoader.ReloadVessel(protoVessel);
+                return;
+            }
+
+            if (FlightGlobals.ActiveVessel?.id != vessel.id && (UnloadedVesselChangedSituation(vessel, protoVessel) || VesselJustLandedOrSplashed(vessel, protoVessel)))
             {
                 //Reload the whole vessel if vessel lands/splashes as otherwise map view puts the vessel next to the other player.
                 //Also reload the whole vessel if is not loaded and situation changed....
-                //Better to reload if has missing parts as creating them dinamically is a PIA
                 VesselLoader.ReloadVessel(protoVessel);
                 return;
             }
