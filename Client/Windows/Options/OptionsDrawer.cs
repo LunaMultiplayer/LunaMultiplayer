@@ -82,21 +82,25 @@ namespace LunaClient.Windows.Options
             _showInterpolationFields = GUILayout.Toggle(_showInterpolationFields, LocalizationContainer.OptionsWindowText.InterpolationSettings, ButtonStyle);
             if (_showInterpolationFields)
             {
+                GUI.enabled = MainSystem.NetworkState < ClientState.SyncingSettings || !SettingsSystem.ServerSettings.ForceInterpolation;
                 var settingInterpolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionInterpolation, LocalizationContainer.OptionsWindowText.EnableInterpolation, "toggle");
                 if (settingInterpolator != SettingsSystem.CurrentSettings.PositionInterpolation)
                 {
                     SettingsSystem.CurrentSettings.PositionInterpolation = settingInterpolator;
                     SettingsSystem.SaveSettings();
                 }
+                GUI.enabled = true;
 
+                GUI.enabled = MainSystem.NetworkState < ClientState.SyncingSettings || !SettingsSystem.ServerSettings.ForceExtrapolation;
                 var settingExtrapolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionExtrapolation, LocalizationContainer.OptionsWindowText.EnableExtrapolation, "toggle");
                 if (settingExtrapolator != SettingsSystem.CurrentSettings.PositionExtrapolation)
                 {
                     SettingsSystem.CurrentSettings.PositionExtrapolation = settingExtrapolator;
                     SettingsSystem.SaveSettings();
                 }
+                GUI.enabled = true;
 
-                GUI.enabled = SettingsSystem.CurrentSettings.PositionInterpolation;
+                GUI.enabled = SettingsSystem.CurrentSettings.PositionInterpolation && (MainSystem.NetworkState < ClientState.SyncingSettings || !SettingsSystem.ServerSettings.ForceInterpolationOffset);
                 GUILayout.Label($"{LocalizationContainer.OptionsWindowText.InterpolationOffset} {SettingsSystem.CurrentSettings.InterpolationOffsetSeconds * 1000:F0} ms");
                 var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffsetSeconds, 0, 0, 5), 1);
                 if (interpolationOffset != SettingsSystem.CurrentSettings.InterpolationOffsetSeconds)

@@ -144,6 +144,7 @@
     <Compile Include="Systems\Admin\AdminSystem.cs" />
     <Compile Include="Systems\ExternalSeat\ExternalSeatEvents.cs" />
     <Compile Include="Systems\ExternalSeat\ExternalSeatSystem.cs" />
+    <Compile Include="Systems\SettingsSys\SettingsBackup.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsEvents.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageHandler.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageSender.cs" />
