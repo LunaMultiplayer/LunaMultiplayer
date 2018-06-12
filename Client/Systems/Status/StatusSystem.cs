@@ -108,7 +108,7 @@ namespace LunaClient.Systems.Status
 
         private static string GetCurrentShipStatus()
         {
-            if (VesselCommon.IsInSafetyBubble(FlightGlobals.ActiveVessel))
+            if (SafetyBubble.IsInSafetyBubble(FlightGlobals.ActiveVessel))
                 return StatusTexts.InsideSafetyBubble;
 
             StrBuilder.Length = 0;
