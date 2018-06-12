@@ -244,7 +244,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private double GetInterpolationFixFactor()
         {
-            //The minimum fix factor is Time.fixedDeltaTime.
+            //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 s
 
             var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
             var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
@@ -337,7 +337,7 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 ApplyInterpolationsToLoadedVessel();
             }
-            
+
             //Apply the CURRENT time to the orbit only in space. If we don't do it the vessel will drift away 
             //in space and if we apply it in atmo the rotations and positions will be buggy
             if (Vessel.situation >= Vessel.Situations.SUB_ORBITAL)
