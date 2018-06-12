@@ -166,10 +166,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
             }
 
-            if (Target == null) return;
-
-            //Do not use extrapolation in space as vessel drifts away!
-            if (InterpolationFinished) return;
+            if (Target == null || InterpolationFinished) return;
 
             try
             {
