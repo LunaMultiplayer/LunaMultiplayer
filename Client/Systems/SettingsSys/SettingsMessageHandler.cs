@@ -27,6 +27,8 @@ namespace LunaClient.Systems.SettingsSys
             SettingsSystem.ServerSettings.SafetyBubbleDistance = msgData.SafetyBubbleDistance;
             SettingsSystem.ServerSettings.VesselUpdatesMsInterval = msgData.VesselUpdatesMsInterval;
             SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval = msgData.SecondaryVesselUpdatesMsInterval;
+            SettingsSystem.ServerSettings.ForceInterpolationOffset = msgData.ForceInterpolationOffset;
+            SettingsSystem.ServerSettings.ForceInterpolation = msgData.ForceInterpolation;
             SettingsSystem.ServerSettings.VesselPartsSyncMsInterval = msgData.VesselPartsSyncMsInterval;
             SettingsSystem.ServerSettings.ShowVesselsInThePast = msgData.ShowVesselsInThePast;
             SettingsSystem.ServerSettings.WarpMaster = msgData.WarpMaster;
@@ -107,7 +109,7 @@ namespace LunaClient.Systems.SettingsSys
                 };
             }
 
-            System.AdjustLocalSettings();
+            System.AdjustLocalSettings(msgData);
             MainSystem.NetworkState = ClientState.SettingsSynced;
         }
     }

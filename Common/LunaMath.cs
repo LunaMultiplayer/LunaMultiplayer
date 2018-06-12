@@ -167,7 +167,13 @@ namespace LunaCommon
             }
             return value;
         }
-        
+
+        public static double SafeDivision(double numerator, double denominator)
+        {
+            // ReSharper disable once CompareOfFloatsByEqualityOperator
+            return denominator == 0 ? 0 : numerator / denominator;
+        }
+
         private static double Repeat(double t, double length)
         {
             return t - Math.Floor(t / length) * length;

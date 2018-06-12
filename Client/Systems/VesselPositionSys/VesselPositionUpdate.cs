@@ -1,7 +1,7 @@
 ﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
-using LunaClient.Utilities;
+using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
@@ -16,10 +16,6 @@ namespace LunaClient.Systems.VesselPositionSys
     /// </summary>
     public class VesselPositionUpdate
     {
-        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 10
-                : double.MaxValue;
-
         #region Fields
 
         private Vessel _vessel;
@@ -69,11 +65,14 @@ namespace LunaClient.Systems.VesselPositionSys
 
         #region Interpolation fields
 
+        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
+            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
+            : double.MaxValue;
+
+        private int MessageCount => VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) ? queue.Count : 0;
         public double TimeDifference { get; private set; }
         public double ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
-
-        public double RawInterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp, 0, MaxInterpolationDuration);
         public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
         private float _lerpPercentage = 1;
@@ -138,16 +137,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void ApplyInterpolatedVesselUpdate()
         {
-            if (Vessel == null || Vessel.precalc == null || Vessel.state == Vessel.State.DEAD || Body == null)
-            {
-                return;
-            }
-
-            if (!VesselCommon.IsSpectating && FlightGlobals.ActiveVessel?.id == VesselId)
-            {
-                //Do not apply position updates to our OWN controlled vessel
-                return;
-            }
+            if (Body == null) return;
 
             if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
@@ -173,13 +163,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
 
                 UpdateProtoVesselValues();
+                VesselsProtoStore.UpdateVesselProtoPosition(this);
             }
 
-            if (Target == null) return;
-            if (LerpPercentage > 1)
-            {
-                LunaLog.LogWarning("No messages to interpolate to! Increase the interpolation offset!");
-            }
+            if (Target == null || InterpolationFinished) return;
 
             try
             {
@@ -196,25 +183,56 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         /// <summary>
-        /// This method adjust the extra interpolation duration in case we are lagging or too advanced
+        /// This method adjust the extra interpolation duration in case we are lagging or too advanced.
+        /// The idea is that we replay the message at the correct time that is GameTimeWhenMEssageWasSent+InterpolationOffset
+        /// In order to adjust we increase or decrease the interpolation duration so next packet matches the time more perfectly
         /// </summary>
-        private void AdjustExtraInterpolationTimes()
+        public void AdjustExtraInterpolationTimes()
         {
             TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
-            if (SubspaceId == -1)
+
+            if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {
-                //While warping we only fix the interpolation if we are LAGGING behind the updates
-                //We never fix it if the packet that we received is very advanced in time
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 0) * GetInterpolationFixFactor();
+                //This is the case when the message was received while warping or we are warping.
+
+                /* We are warping:
+                 * While WE warp if we receive a message that is from before our time, we want to skip it as fast as possible!
+                 * If the packet is in the future then we must interpolate towards it
+                 *
+                 * Player was warping:
+                 * The message was received when HE was warping. We don't know his final subspace time BUT if the message was sent
+                 * in a time BEFORE ours, we can skip it as fast as possible.
+                 * If the packet is in the future then we must interpolate towards it
+                 *
+                 * Bear in mind that even if the interpolation against the future packet is long because he is in the future,
+                 * when we stop warping this method will be called
+                 *
+                 * Also, we don't remove messages if we are close to the min recommended value
+                 *
+                 */
+
+                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds && MessageCount > VesselPositionSystem.MinRecommendedMessageCount)
+                {
+                    LerpPercentage = 1;
+                }
+
+                ExtraInterpolationTime = Time.fixedDeltaTime;
             }
-            else 
+            else
             {
+                //This is the easiest case, the message comes from the same or a past subspace
+
                 //IN past or same subspaces we want to be SettingsSystem.CurrentSettings.InterpolationOffset seconds BEHIND the player position
                 if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
                 {
-                    //The subspace is in the past so add the difference seconds to normalize it
+                    /* The subspace is in the past so REMOVE the difference to normalize it
+                     * Example: P1 subspace is +7 seconds. Your subspace is + 30 seconds
+                     * Packet TimeDifference will be 23 seconds but in reality it should be 0
+                     * So, we remove the time difference between subspaces (30 - 7 = 23)
+                     * And now the TimeDifference - 23 = 0
+                     */
                     var timeToAdd = Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
-                    TimeDifference += timeToAdd;
+                    TimeDifference -= timeToAdd;
                 }
 
                 ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 1) * GetInterpolationFixFactor();
@@ -226,27 +244,27 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private double GetInterpolationFixFactor()
         {
-            //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 seconds
+            //The minimum fix factor is Time.fixedDeltaTime.
 
             var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
             var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
 
-            //We cannot fix errors that are below the fixed delta time!
+            //We cannot fix errors that are below the delta time!
             if (errorInFrames < 1)
                 return 0;
-            
+
             if (errorInFrames <= 2)
             {
                 //The error is max 2 frames ahead/below
                 return Time.fixedDeltaTime;
             }
             if (errorInFrames <= 5)
-            {                
+            {
                 //The error is max 5 frames ahead/below
                 return Time.fixedDeltaTime * 2;
             }
             if (errorInSeconds <= 2.5)
-            {                
+            {
                 //The error is max 2.5 SECONDS ahead/below
                 return Time.fixedDeltaTime * errorInFrames / 2;
             }
@@ -261,6 +279,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void UpdateProtoVesselValues()
         {
+            if (Vessel == null) return;
+
             Vessel.protoVessel.latitude = Target.LatLonAlt[0];
             Vessel.protoVessel.longitude = Target.LatLonAlt[1];
             Vessel.protoVessel.altitude = Target.LatLonAlt[2];
@@ -287,6 +307,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyInterpolations()
         {
+            if (Vessel == null) return;
+
             if (Vessel.isEVA && Vessel.loaded)
             {
                 ApplyPositionsToEva();
@@ -307,7 +329,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.latitude = Target.LatLonAlt[0];
                 Vessel.longitude = Target.LatLonAlt[1];
                 Vessel.altitude = Target.LatLonAlt[2];
-                Vessel.orbitDriver.updateFromParameters();
 
                 if (Vessel.LandedOrSplashed)
                     Vessel.SetPosition(Target.Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
@@ -316,13 +337,18 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 ApplyInterpolationsToLoadedVessel();
             }
+            
+            //Apply the CURRENT time to the orbit only in space. If we don't do it the vessel will drift away 
+            //in space and if we apply it in atmo the rotations and positions will be buggy
+            if (Vessel.situation >= Vessel.Situations.SUB_ORBITAL)
+                Vessel.orbitDriver.updateFromParameters();
         }
 
 
         private void ApplyInterpolationsToLoadedVessel()
         {
-            var currentSurfaceRelRotation = Quaternion.SlerpUnclamped(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
-            var curVelocity = VectorUtil.LerpUnclamped(VelocityVector, Target.VelocityVector, LerpPercentage);
+            var currentSurfaceRelRotation = Quaternion.Slerp(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
+            var curVelocity = Vector3d.Lerp(VelocityVector, Target.VelocityVector, LerpPercentage);
 
             //Always apply velocity otherwise vessel is not positioned correctly and sometimes it moves even if it should be stopped.
             Vessel.SetWorldVelocity(curVelocity);
@@ -336,14 +362,13 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
 
             //Set the position of the vessel based on the orbital parameters
-            //Don't call this method as we are replaying orbits from back an older time!
-            Vessel.orbitDriver.updateFromParameters();
+            //Don't call Vessel.orbitDriver.updateFromParameters(); as we are replaying orbits from back an older time!
 
             if (Vessel.LandedOrSplashed)
             {
-                Vessel.latitude = LunaMath.LerpUnclamped(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
-                Vessel.longitude = LunaMath.LerpUnclamped(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
-                Vessel.altitude = LunaMath.LerpUnclamped(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
+                Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
+                Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
+                Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
 
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
             }
@@ -369,20 +394,19 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private void ApplyPositionsToEva()
         {
-            Vessel.latitude = LunaMath.LerpUnclamped(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
-            Vessel.longitude = LunaMath.LerpUnclamped(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
-            Vessel.altitude = LunaMath.LerpUnclamped(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
+            Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
+            Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
+            Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
 
             Vessel.Landed = LerpPercentage < 0.5 ? Landed : Target.Landed;
             Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
 
-            var currentSurfaceRelRotation = Quaternion.SlerpUnclamped(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
+            var currentSurfaceRelRotation = Quaternion.Slerp(SurfaceRelRotation, Target.SurfaceRelRotation, LerpPercentage);
             Vessel.SetRotation((Quaternion)Vessel.mainBody.rotation * currentSurfaceRelRotation, true);
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
             ApplyOrbitInterpolation();
-            //Don't call this method as we are replaying orbits from back an older time!
-            //Vessel.orbitDriver.updateFromParameters();
+            //Don't call Vessel.orbitDriver.updateFromParameters() as we are replaying orbits from back an older time!
 
             //We don't do the surface positioning as with vessels because kerbals don't walk at high speeds and with this code it will be enough ;)
             if (Vessel.LandedOrSplashed || Vessel.situation <= Vessel.Situations.FLYING)
@@ -400,10 +424,11 @@ namespace LunaClient.Systems.VesselPositionSys
             var currentVel = KspOrbit.getOrbitalVelocityAtUT(startTime) + KspOrbit.referenceBody.GetFrameVelAtUT(startTime) - Body.GetFrameVelAtUT(startTime);
             var targetVel = Target.KspOrbit.getOrbitalVelocityAtUT(targetTime) + Target.KspOrbit.referenceBody.GetFrameVelAtUT(targetTime) - Target.Body.GetFrameVelAtUT(targetTime);
 
-            var lerpedPos = VectorUtil.LerpUnclamped(currentPos, targetPos, LerpPercentage);
-            var lerpedVel = VectorUtil.LerpUnclamped(currentVel, targetVel, LerpPercentage);
+            var lerpedPos = Vector3d.Lerp(currentPos, targetPos, LerpPercentage);
+            var lerpedVel = Vector3d.Lerp(currentVel, targetVel, LerpPercentage); ;
 
-            LerpTime = LunaMath.LerpUnclamped(startTime, targetTime, LerpPercentage);
+            LerpTime = LunaMath.Lerp(startTime, targetTime, LerpPercentage);
+
             Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, LerpTime);
         }
 
@@ -431,6 +456,8 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             else
             {
+                if (Vessel == null) return;
+
                 BodyIndex = Vessel.mainBody.flightGlobalsIndex;
                 Landed = Vessel.Landed;
                 Splashed = Vessel.Splashed;
@@ -477,47 +504,6 @@ namespace LunaClient.Systems.VesselPositionSys
             catch (Exception)
             {
                 return null;
-            }
-        }
-
-        public void UpdateFromParameters(OrbitDriver driver, double time)
-        {
-            driver.orbit.UpdateFromUT(time);
-            driver.pos = driver.orbit.pos;
-            driver.vel = driver.orbit.vel;
-            driver.pos.Swizzle();
-            driver.vel.Swizzle();
-            if (double.IsNaN(driver.pos.x))
-            {
-                driver.vessel?.Unload();
-                UnityEngine.Object.Destroy(driver.vessel.gameObject);
-                return;
-            }
-            if (driver.reverse)
-            {
-                Vector3d vector3d;
-                if (!driver.celestialBody)
-                {
-                    vector3d = driver.driverTransform.position;
-                }
-                else
-                {
-                    vector3d = driver.celestialBody.position;
-                }
-                driver.referenceBody.position = vector3d - driver.pos;
-            }
-            else if (driver.vessel)
-            {
-                var vector3d1 = driver.driverTransform.rotation * driver.vessel.localCoM;
-                driver.vessel.SetPosition((driver.referenceBody.position + driver.pos) - vector3d1);
-            }
-            else if (!driver.celestialBody)
-            {
-                driver.driverTransform.position = driver.referenceBody.position + driver.pos;
-            }
-            else
-            {
-                driver.celestialBody.position = driver.referenceBody.position + driver.pos;
             }
         }
 

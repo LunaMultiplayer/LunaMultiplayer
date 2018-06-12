@@ -184,9 +184,8 @@ namespace LunaClient.Systems.Warp
 
                 return false;
             }
-
-
-            if (WaitingSubspaceIdFromServer)
+            
+            if (WaitingSubspaceIdFromServer && TimeWarp.CurrentRateIndex > 0)
             {
                 DisplayMessage(LocalizationContainer.ScreenText.WaitingSubspace, 5f);
                 return false;
@@ -281,7 +280,7 @@ namespace LunaClient.Systems.Warp
         /// </summary>
         public bool SubspaceIsInThePast(int subspaceId)
         {
-            if (CurrentlyWarping || CurrentSubspace == subspaceId || subspaceId != -1)
+            if (CurrentlyWarping || CurrentSubspace == subspaceId || subspaceId == -1)
                 return false;
 
             if (Subspaces.TryGetValue(subspaceId, out var subspaceTime))

@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Extensions;
 using LunaCommon.Message.Data.Vessel;
 
 namespace LunaClient.Systems.VesselFlightStateSys

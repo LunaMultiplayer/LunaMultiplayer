@@ -10,6 +10,7 @@ namespace Server.Web.Structures
         public ServerScreenshotSettings ServerScreenshotSettings { get; } = new ServerScreenshotSettings();
         public ServerMasterServerSettings ServerMasterServerSettings { get; } = new ServerMasterServerSettings();
         public ServerLogSettings ServerLogSettings { get; } = new ServerLogSettings();
+        public ServerInterpolationSettings InterpolationSettings { get; } = new ServerInterpolationSettings();
         public ServerIntervalSettings ServerIntervalSettings { get; } = new ServerIntervalSettings();
         public ServerGameplaySettings ServerGameplaySettings { get; } = new ServerGameplaySettings();
         public ServerDebugSettings ServerDebugSettings { get; } = new ServerDebugSettings();

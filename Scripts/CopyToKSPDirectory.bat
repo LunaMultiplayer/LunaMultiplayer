@@ -45,6 +45,12 @@ IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiplayer\Icons")
 del "%KSPPATH%\GameData\LunaMultiplayer\Icons\*.*" /Q /F
 IF DEFINED KSPPATH2 (del "%KSPPATH2%\GameData\LunaMultiplayer\Icons\*.*" /Q /F)
 
+mkdir "%KSPPATH%\GameData\LunaMultiplayer\Flags"
+IF DEFINED KSPPATH2 (mkdir "%KSPPATH2%\GameData\LunaMultiplayer\Flags")
+
+del "%KSPPATH%\GameData\LunaMultiplayer\Flags\*.*" /Q /F
+IF DEFINED KSPPATH2 (del "%KSPPATH2%\GameData\LunaMultiplayer\Flags\*.*" /Q /F)
+
 "%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaClient.dll"
 "%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LmpGlobal.dll"
 "%~dp0..\External\pdb2mdb\pdb2mdb.exe" "%~dp0..\Client\bin\%SOLUTIONCONFIGURATION%\LunaCommon.dll"
@@ -68,3 +74,6 @@ IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\ModuleStore\XML\*.xml" "%KSPPATH2%
 
 xcopy /Y "%~dp0..\Client\Resources\Icons\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Icons"
 IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\Resources\Icons\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Icons")
+
+xcopy /Y "%~dp0..\Client\Resources\Flags\*.*" "%KSPPATH%\GameData\LunaMultiplayer\Flags"
+IF DEFINED KSPPATH2 (xcopy /Y "%~dp0..\Client\Resources\Flags\*.*" "%KSPPATH2%\GameData\LunaMultiplayer\Flags")

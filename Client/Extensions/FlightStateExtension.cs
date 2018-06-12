@@ -2,7 +2,7 @@
 using LunaCommon.Message.Data.Vessel;
 using UnityEngine;
 
-namespace LunaClient.Systems.VesselFlightStateSys
+namespace LunaClient.Extensions
 {
     public static class FlightCtrlStateExtensionMethods
     {

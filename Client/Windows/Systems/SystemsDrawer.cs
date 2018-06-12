@@ -1,4 +1,5 @@
 ﻿using LunaClient.Systems.CraftLibrary;
+using LunaClient.Systems.ExternalSeat;
 using LunaClient.Systems.Facility;
 using LunaClient.Systems.Flag;
 using LunaClient.Systems.Groups;
@@ -18,6 +19,7 @@ using LunaClient.Systems.ShareScienceSubject;
 using LunaClient.Systems.ShareStrategy;
 using LunaClient.Systems.ShareTechnology;
 using LunaClient.Systems.TimeSyncer;
+using LunaClient.Systems.VesselCrewSys;
 using LunaClient.Systems.VesselDockSys;
 using LunaClient.Systems.VesselFairingsSys;
 using LunaClient.Systems.VesselFlightStateSys;
@@ -79,6 +81,11 @@ namespace LunaClient.Windows.Systems
             {
                 FlagSystem.Singleton.Enabled = GUILayout.Toggle(FlagSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
+            _externalSeat = GUILayout.Toggle(_externalSeat, "External seat", ButtonStyle);
+            if (_externalSeat)
+            {
+                ExternalSeatSystem.Singleton.Enabled = GUILayout.Toggle(ExternalSeatSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
             _kscScene = GUILayout.Toggle(_kscScene, "KscScene system", ButtonStyle);
             if (_kscScene)
             {
@@ -136,6 +143,11 @@ namespace LunaClient.Windows.Systems
             //{
             //    ToolbarSystem.Singleton.Enabled = GUILayout.Toggle(ToolbarSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             //}
+            _vesselCrew = GUILayout.Toggle(_vesselCrew, "Vessel crew", ButtonStyle);
+            if (_vesselCrew)
+            {
+                VesselCrewSystem.Singleton.Enabled = GUILayout.Toggle(VesselCrewSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
+            }
             _vesselDock = GUILayout.Toggle(_vesselDock, "Vessel dock", ButtonStyle);
             if (_vesselDock)
             {

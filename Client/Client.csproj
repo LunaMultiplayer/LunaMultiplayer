@@ -70,6 +70,7 @@
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
     <Compile Include="Events\ExperimentEvent.cs" />
+    <Compile Include="Events\ExternalSeatEvent.cs" />
     <Compile Include="Events\ImmortalEvent.cs" />
     <Compile Include="Events\LockEvent.cs" />
     <Compile Include="Events\ModApiEvent.cs" />
@@ -77,6 +78,8 @@
     <Compile Include="Events\RevertEvent.cs" />
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Events\StrategyEvent.cs" />
+    <Compile Include="Events\VesselReloadEvent.cs" />
+    <Compile Include="Events\VesselLoadEvent.cs" />
     <Compile Include="Events\WarpEvent.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
@@ -88,6 +91,9 @@
     <Compile Include="Harmony\FlightDriver_RevertToPrelaunch.cs" />
     <Compile Include="Harmony\FlightDriver_ReturnToEditor.cs" />
     <Compile Include="Harmony\FlightDriver_RevertToLaunch.cs" />
+    <Compile Include="Harmony\KerbalEVA_OnDeboardSeat.cs" />
+    <Compile Include="Harmony\KerbalEVA_BoardSeat.cs" />
+    <Compile Include="Harmony\KerbalRoster_SackAvailable.cs" />
     <Compile Include="Harmony\ModuleScienceExperiment_ResetExperiment.cs" />
     <Compile Include="Harmony\OrbitDriver_UpdateOrbit.cs" />
     <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
@@ -136,6 +142,9 @@
     <Compile Include="Systems\Admin\AdminMessageHandler.cs" />
     <Compile Include="Systems\Admin\AdminMessageSender.cs" />
     <Compile Include="Systems\Admin\AdminSystem.cs" />
+    <Compile Include="Systems\ExternalSeat\ExternalSeatEvents.cs" />
+    <Compile Include="Systems\ExternalSeat\ExternalSeatSystem.cs" />
+    <Compile Include="Systems\SettingsSys\SettingsBackup.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsEvents.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageHandler.cs" />
     <Compile Include="Systems\ShareAchievements\ShareAchievementsMessageSender.cs" />
@@ -191,6 +200,8 @@
     <Compile Include="Systems\Status\StatusTexts.cs" />
     <Compile Include="Systems\TimeSyncer\TimerSyncerEvents.cs" />
     <Compile Include="Systems\Toolbar\ToolbarEvents.cs" />
+    <Compile Include="Systems\VesselCrewSys\VesselCrewEvents.cs" />
+    <Compile Include="Systems\VesselCrewSys\VesselCrewSystem.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaMessageHandler.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaMessageSender.cs" />
     <Compile Include="Systems\VesselEvaSys\VesselEvaSystem.cs" />
@@ -207,7 +218,6 @@
     <Compile Include="Systems\KerbalSys\KerbalEvents.cs" />
     <Compile Include="Systems\Lock\LockEvents.cs" />
     <Compile Include="Systems\Ping\PingSystem.cs" />
-    <Compile Include="Systems\VesselDockSys\VesselDockStructure.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageHandler.cs" />
     <Compile Include="Systems\VesselDockSys\VesselDockMessageSender.cs" />
     <Compile Include="Systems\VesselFairingsSys\VesselFairingsMessageHandler.cs" />
@@ -253,6 +263,7 @@
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageHandler.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateMessageSender.cs" />
     <Compile Include="Systems\VesselUpdateSys\VesselUpdateSystem.cs" />
+    <Compile Include="VesselUtilities\SafetyBubble.cs" />
     <Compile Include="VesselUtilities\VesselSerializer.cs" />
     <Compile Include="VesselStore\VesselsProtoStore.cs" />
     <Compile Include="Systems\VesselSwitcherSys\VesselSwitcherSystem.cs" />

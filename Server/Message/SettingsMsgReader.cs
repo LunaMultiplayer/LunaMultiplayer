@@ -30,6 +30,10 @@ namespace Server.Message
             msgData.SafetyBubbleDistance = GeneralSettings.SettingsStore.SafetyBubbleDistance;
             msgData.VesselUpdatesMsInterval = IntervalSettings.SettingsStore.VesselUpdatesMsInterval;
             msgData.SecondaryVesselUpdatesMsInterval = IntervalSettings.SettingsStore.SecondaryVesselUpdatesMsInterval;
+            msgData.ForceInterpolationOffset = InterpolationSettings.SettingsStore.ForceInterpolationOffset;
+            msgData.InterpolationOffsetMs = InterpolationSettings.SettingsStore.InterpolationOffsetMs;
+            msgData.ForceInterpolation = InterpolationSettings.SettingsStore.ForceInterpolation;
+            msgData.InterpolationValue = InterpolationSettings.SettingsStore.InterpolationValue;
             msgData.VesselPartsSyncMsInterval = IntervalSettings.SettingsStore.VesselPartsSyncMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = WarpSettings.SettingsStore.WarpMaster;

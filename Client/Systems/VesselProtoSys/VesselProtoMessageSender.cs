@@ -1,6 +1,9 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
@@ -9,7 +12,6 @@ using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
 using System.Collections.Generic;
-using LunaClient.Systems.TimeSyncer;
 
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -32,19 +34,24 @@ namespace LunaClient.Systems.VesselProtoSys
         {
             foreach (var vessel in vessels)
             {
-                SendVesselMessage(vessel, false);
+                SendVesselMessage(vessel, false, false);
             }
         }
 
-        public void SendVesselMessage(Vessel vessel, bool force)
+        public void SendVesselMessage(Vessel vessel, bool forceSend, bool forceReloadOnReceive)
         {
-            if (vessel == null || VesselCommon.IsSpectating || vessel.state == Vessel.State.DEAD || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
+            if (vessel == null || (!forceSend && VesselCommon.IsSpectating) || vessel.state == Vessel.State.DEAD || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
+                return;
+
+            if (!forceSend && !LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                return;
+            if (!forceSend && !LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 return;
 
             var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
 
-            if (force || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
-                SendVesselMessage(vessel.BackupVessel());
+            if (forceSend || vesselHasChanges || !VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
+                SendVesselMessage(vessel.BackupVessel(), forceReloadOnReceive);
 
             if (!VesselsProtoStore.AllPlayerVessels.ContainsKey(vessel.id))
                 VesselsProtoStore.AddOrUpdateVesselToDictionary(vessel);
@@ -52,18 +59,18 @@ namespace LunaClient.Systems.VesselProtoSys
 
         #region Private methods
 
-        private void SendVesselMessage(ProtoVessel protoVessel)
+        private void SendVesselMessage(ProtoVessel protoVessel, bool forceReloadOnReceive)
         {
             if (protoVessel == null || protoVessel.vesselID == Guid.Empty) return;
             //Doing this in another thread can crash the game as during the serialization into a config node Lingoona is called...
             //TaskFactory.StartNew(() => PrepareAndSendProtoVessel(protoVessel));
-            PrepareAndSendProtoVessel(protoVessel);
+            PrepareAndSendProtoVessel(protoVessel, forceReloadOnReceive);
         }
 
         /// <summary>
         /// This method prepares the protovessel class and send the message, it's intended to be run in another thread
         /// </summary>
-        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel)
+        private void PrepareAndSendProtoVessel(ProtoVessel protoVessel, bool forceReloadOnReceive)
         {
             //Never send empty vessel id's (it happens with flags...)
             if (protoVessel.vesselID == Guid.Empty || protoVessel.vesselName == null) return;
@@ -79,6 +86,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselProtoMsgData>();
                     msgData.GameTime = TimeSyncerSystem.UniversalTime;
                     FillAndSendProtoMessageData(protoVessel.vesselID, msgData, VesselSerializedBytes, numBytes);
+                    msgData.ForceReload = forceReloadOnReceive;
                 }
                 else
                 {

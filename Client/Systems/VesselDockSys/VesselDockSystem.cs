@@ -11,25 +11,19 @@ namespace LunaClient.Systems.VesselDockSys
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            GameEvents.onPartUndock.Add(VesselDockEvents.OnPartUndock);
             GameEvents.onPartCouple.Add(VesselDockEvents.OnPartCouple);
             GameEvents.onVesselWasModified.Add(VesselDockEvents.OnVesselWasModified);
-            GameEvents.onCrewBoardVessel.Add(VesselDockEvents.OnCrewBoard);
-            GameEvents.onCrewOnEva.Add(VesselDockEvents.OnCrewEva);
-            GameEvents.onCrewTransferred.Add(VesselDockEvents.OnCrewTransfered);
-            GameEvents.onVesselsUndocking.Add(VesselDockEvents.OnVesselUndocking);
+
+            GameEvents.onVesselsUndocking.Add(VesselDockEvents.UndockingComplete);
         }
 
         protected override void OnDisabled()
         {
             base.OnDisabled();
-            GameEvents.onPartUndock.Remove(VesselDockEvents.OnPartUndock);
             GameEvents.onPartCouple.Remove(VesselDockEvents.OnPartCouple);
             GameEvents.onVesselWasModified.Remove(VesselDockEvents.OnVesselWasModified);
-            GameEvents.onCrewBoardVessel.Remove(VesselDockEvents.OnCrewBoard);
-            GameEvents.onCrewOnEva.Remove(VesselDockEvents.OnCrewEva);
-            GameEvents.onCrewTransferred.Remove(VesselDockEvents.OnCrewTransfered);
-            GameEvents.onVesselsUndocking.Remove(VesselDockEvents.OnVesselUndocking);
+
+            GameEvents.onVesselsUndocking.Remove(VesselDockEvents.UndockingComplete);
         }
     }
 }

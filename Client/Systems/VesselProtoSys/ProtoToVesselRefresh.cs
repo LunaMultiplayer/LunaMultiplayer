@@ -18,7 +18,7 @@ namespace LunaClient.Systems.VesselProtoSys
         /// Protovessel --------------> Vessel & ProtoVessel
         /// This way we avoid having to unload and reload a vessel with it's terrible performance
         /// </summary>
-        public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel, IEnumerable<uint> vesselPartsId = null)
+        public static void UpdateVesselPartsFromProtoVessel(Vessel vessel, ProtoVessel protoVessel, bool forceReload, IEnumerable<uint> vesselPartsId = null)
         {
             if (vessel == null || protoVessel == null || vessel.state == Vessel.State.DEAD) return;
 
@@ -28,17 +28,29 @@ namespace LunaClient.Systems.VesselProtoSys
                 return;
             }
 
+            if (forceReload)
+            {
+                VesselLoader.ReloadVessel(protoVessel);
+                return;
+            }
+
             var vesselProtoPartIds = vesselPartsId ?? protoVessel.protoPartSnapshots.Select(p => p.flightID);
 
             //If vessel is UNLOADED it won't have parts so we must take them from the proto...
             var vesselPartsIds = vessel.loaded ? vessel.parts.Select(p => p.flightID) : vessel.protoVessel.protoPartSnapshots.Select(p=> p.flightID);
 
             var hasMissingparts = vesselProtoPartIds.Except(vesselPartsIds).Any();
-            if (hasMissingparts || !VesselCommon.IsSpectating && (UnloadedVesselChangedSituation(vessel, protoVessel) || VesselJustLandedOrSplashed(vessel, protoVessel)))
+            if (hasMissingparts)
+            {
+                //Better to reload if has missing parts as creating them dinamically is a PIA
+                VesselLoader.ReloadVessel(protoVessel);
+                return;
+            }
+
+            if (FlightGlobals.ActiveVessel?.id != vessel.id && (UnloadedVesselChangedSituation(vessel, protoVessel) || VesselJustLandedOrSplashed(vessel, protoVessel)))
             {
                 //Reload the whole vessel if vessel lands/splashes as otherwise map view puts the vessel next to the other player.
                 //Also reload the whole vessel if is not loaded and situation changed....
-                //Better to reload if has missing parts as creating them dinamically is a PIA
                 VesselLoader.ReloadVessel(protoVessel);
                 return;
             }

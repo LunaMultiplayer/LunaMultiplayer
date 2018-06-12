@@ -20,6 +20,8 @@ namespace LunaClient.Systems.SettingsSys
         public float SafetyBubbleDistance { get; set; } = 100f;
         public int VesselUpdatesMsInterval { get; set; }
         public int SecondaryVesselUpdatesMsInterval { get; set; }
+        public bool ForceInterpolationOffset { get; set; }
+        public bool ForceInterpolation { get; set; }
         public string WarpMaster { get; set; }
         public int VesselPartsSyncMsInterval { get; set; }
         public bool ShowVesselsInThePast { get; set; }

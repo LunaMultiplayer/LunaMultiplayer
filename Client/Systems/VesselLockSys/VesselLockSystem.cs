@@ -253,7 +253,7 @@ namespace LunaClient.Systems.VesselLockSys
             return FlightGlobals.Vessels
                 .Where(v => v != null && v.state != Vessel.State.DEAD && !v.loaded &&
                             v.id != FlightGlobals.ActiveVessel?.id &&
-                            !VesselCommon.IsInSafetyBubble(v) &&
+                            !SafetyBubble.IsInSafetyBubble(v) &&
                             !v.LandedOrSplashed && //DO NOT get unloaded locks on landed vessels!
                             !LockSystem.LockQuery.UnloadedUpdateLockExists(v.id) &&
                             !LockSystem.LockQuery.UpdateLockExists(v.id))
@@ -273,7 +273,7 @@ namespace LunaClient.Systems.VesselLockSys
             return FlightGlobals.VesselsLoaded
                 .Where(v => v != null && v.state != Vessel.State.DEAD &&
                             v.id != FlightGlobals.ActiveVessel?.id &&
-                            !VesselCommon.IsInSafetyBubble(v) &&
+                            !SafetyBubble.IsInSafetyBubble(v) &&
                             !LockSystem.LockQuery.UpdateLockExists(v.id))
                 .Select(v => v.id);
         }
@@ -298,7 +298,7 @@ namespace LunaClient.Systems.VesselLockSys
                 .Where(v => v.id != FlightGlobals.ActiveVessel?.id &&
                             LockSystem.LockQuery.UpdateLockBelongsToPlayer(v.id, SettingsSystem.CurrentSettings.PlayerName) &&
                             (!v.loaded || v.state == Vessel.State.DEAD ||
-                            VesselCommon.IsInSafetyBubble(v)))
+                            SafetyBubble.IsInSafetyBubble(v)))
                 .Select(v => v.id);
         }
 

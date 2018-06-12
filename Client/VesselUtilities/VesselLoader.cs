@@ -131,12 +131,21 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         private static void GetLatestProtoVesselPosition(ProtoVessel vesselProto)
         {
-            var latLonAlt = VesselPositionSystem.Singleton.GetLatestVesselPosition(vesselProto.vesselID);
-            if (latLonAlt != null)
+            var fullPosData = VesselPositionSystem.Singleton.GetLatestVesselPosition(vesselProto.vesselID);
+            if (fullPosData != null)
             {
-                vesselProto.latitude = latLonAlt[0];
-                vesselProto.longitude = latLonAlt[1];
-                vesselProto.altitude = latLonAlt[2];
+                vesselProto.latitude = fullPosData[0];
+                vesselProto.longitude = fullPosData[1];
+                vesselProto.altitude = fullPosData[2];
+
+                vesselProto.orbitSnapShot.inclination = fullPosData[3];
+                vesselProto.orbitSnapShot.eccentricity = fullPosData[4];
+                vesselProto.orbitSnapShot.semiMajorAxis = fullPosData[5];
+                vesselProto.orbitSnapShot.LAN = fullPosData[6];
+                vesselProto.orbitSnapShot.argOfPeriapsis = fullPosData[7];
+                vesselProto.orbitSnapShot.meanAnomalyAtEpoch = fullPosData[8];
+                vesselProto.orbitSnapShot.epoch = fullPosData[9];
+                vesselProto.orbitSnapShot.ReferenceBodyIndex = (int)fullPosData[10];
             }
         }
 
@@ -245,7 +254,8 @@ namespace LunaClient.VesselUtilities
                     BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
             }
 
-            KSCVesselMarkers.fetch?.RefreshMarkers();
+            if(HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                KSCVesselMarkers.fetch?.RefreshMarkers();
 
             return true;
         }

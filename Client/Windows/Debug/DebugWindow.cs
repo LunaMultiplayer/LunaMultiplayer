@@ -6,7 +6,6 @@ using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Enums;
-using LunaCommon.Extensions;
 using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
@@ -25,7 +24,7 @@ namespace LunaClient.Windows.Debug
 
         private const float DisplayUpdateInterval = .2f;
         private const float WindowHeight = 400;
-        private const float WindowWidth = 450;
+        private const float WindowWidth = 650;
 
         private static bool _displayFast;
         private static string _vectorText;
@@ -87,7 +86,7 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.AppendLine($"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}");
                         StringBuilder.AppendLine($"World Pos: {(Vector3)ourVessel.GetWorldPos3D()}, |pos|: {ourVessel.GetWorldPos3D().magnitude}");
                         StringBuilder.AppendLine($"Lat,Lon,Alt: {ourVessel.latitude},{ourVessel.longitude},{ourVessel.altitude}");
-                        StringBuilder.AppendLine($"On safety bubble: {VesselCommon.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
+                        StringBuilder.AppendLine($"On safety bubble: {SafetyBubble.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
 
                         _vectorText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
@@ -201,7 +200,7 @@ namespace LunaClient.Windows.Debug
                     StringBuilder.Append("Num of vessels: ").Append(VesselsProtoStore.AllPlayerVessels.Count).AppendLine();
 
                     VesselProtoStoreData.Clear();
-                    VesselProtoStoreData.AddRange(VesselsProtoStore.AllPlayerVessels.Select(p=> new Tuple<Guid, string>(p.Key, p.Value.Vessel?.vesselName)));
+                    VesselProtoStoreData.AddRange(VesselsProtoStore.AllPlayerVessels.Select(p=> new Tuple<Guid, string>(p.Key, p.Value.ProtoVessel.vesselName)));
                     foreach (var vessel in VesselProtoStoreData)
                     {
                         StringBuilder.Append(vessel.Item1).Append(" - ").AppendLine(vessel.Item2);
@@ -224,15 +223,15 @@ namespace LunaClient.Windows.Debug
                                 var duration = TimeSpan.FromSeconds(current.InterpolationDuration).TotalMilliseconds;
                                 var extraInterpolationTime = TimeSpan.FromSeconds(current.ExtraInterpolationTime).TotalMilliseconds;
                                 var timeDiff = TimeSpan.FromSeconds(current.TimeDifference).TotalMilliseconds;
-                                StringBuilder.Append(keyVal.Key.ToSmallString()).Append(": ").Append(keyVal.Value.Count.ToString())
+                                StringBuilder.Append(keyVal.Key).Append(": ").Append($" Amt: {keyVal.Value.Count}")
                                     .Append($" Dur: {duration:F0}ms").Append($" TimeDiff: {timeDiff:F0}ms").Append($" T+: {extraInterpolationTime:F0}ms").AppendLine($" Perc: {perc:F0}%");
                                 StringBuilder.AppendLine();
                             }
                         }
-
-                        _interpolationText = StringBuilder.ToString();
-                        StringBuilder.Length = 0;
                     }
+
+                    _interpolationText = StringBuilder.ToString();
+                    StringBuilder.Length = 0;
                 }
             }
         }

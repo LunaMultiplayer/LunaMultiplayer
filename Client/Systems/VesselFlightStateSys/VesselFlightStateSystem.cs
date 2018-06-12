@@ -2,6 +2,7 @@
 using LunaClient.Events;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
+using LunaCommon;
 using LunaCommon.Message.Data.Vessel;
 using System;
 using System.Collections.Concurrent;
@@ -19,7 +20,10 @@ namespace LunaClient.Systems.VesselFlightStateSys
     public class VesselFlightStateSystem : MessageSystem<VesselFlightStateSystem, VesselFlightStateMessageSender, VesselFlightStateMessageHandler>
     {
         #region Fields & properties
-        
+
+        public static int MinRecommendedMessageCount => (int)Math.Ceiling(LunaMath.SafeDivision(TimeSpan.FromSeconds(SettingsSystem.CurrentSettings.InterpolationOffsetSeconds).TotalMilliseconds,
+            SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval));
+
         private static float LastVesselFlightStateSentTime { get; set; }
 
         private static bool TimeToSendVesselUpdate => VesselCommon.PlayerVesselsNearby() ?
@@ -208,21 +212,21 @@ namespace LunaClient.Systems.VesselFlightStateSys
         /// <summary>
         /// Removes the vessel from the dictionaries
         /// </summary>
-        public void RemoveVesselFromSystem(Guid vesselId)
+        public void RemoveVessel(Guid vesselId)
         {
-            var vessel = FlightGlobals.FindVessel(vesselId);
-            if (vessel != null)
-                TryRemoveCallback(vessel);
-
             FlyByWireDictionary.TryRemove(vesselId, out _);
             CurrentFlightState.TryRemove(vesselId, out _);
             TargetFlightStateQueue.TryRemove(vesselId, out _);
+
+            var vessel = FlightGlobals.FindVessel(vesselId);
+            if (vessel != null)
+                TryRemoveCallback(vessel);
         }
 
         /// <summary>
         /// Removes the vessel from the dictionaries
         /// </summary>
-        public void RemoveVesselFromSystem(Vessel vesselToRemove)
+        public void RemoveVessel(Vessel vesselToRemove)
         {
             if (vesselToRemove == null) return;
 
@@ -231,6 +235,17 @@ namespace LunaClient.Systems.VesselFlightStateSys
             FlyByWireDictionary.TryRemove(vesselToRemove.id, out _);
             CurrentFlightState.TryRemove(vesselToRemove.id, out _);
             TargetFlightStateQueue.TryRemove(vesselToRemove.id, out _);
+        }
+
+        /// <summary>
+        /// Force adjustment of interpolation times
+        /// </summary>
+        public void AdjustExtraInterpolationTimes()
+        {
+            foreach (var keyVal in CurrentFlightState)
+            {
+                keyVal.Value.AdjustExtraInterpolationTimes();
+            }
         }
 
         public void UpdateFlightStateInProtoVessel(ProtoVessel protoVessel, float pitch, float yaw, float roll, float pitchTrm, float yawTrm, float rollTrm, float throttle)

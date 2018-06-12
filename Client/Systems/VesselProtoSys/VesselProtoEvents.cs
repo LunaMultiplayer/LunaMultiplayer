@@ -33,7 +33,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     if (VesselCommon.IsSpectating || FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id == Guid.Empty)
                         return;
 
-                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, false);
                 }, 5f);
 
                 //Only show safety bubble text if safety bubble is active and player is spawning a new vessel
@@ -71,7 +71,7 @@ namespace LunaClient.Systems.VesselProtoSys
                     //We didn't find an original vessel so it's probably a totally new vessel that spawned...
                     LunaLog.Log($"SENDING NEW vesselId {data.id} name {data.vesselName} (Original vessel NOT found)");
 
-                    System.MessageSender.SendVesselMessage(data, true);
+                    System.MessageSender.SendVesselMessage(data, true, false);
                     LockSystem.Singleton.AcquireUpdateLock(data.id, true);
                 }
                 else
@@ -82,7 +82,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         //We own the update lock of that vessel that originated that part so let's get that update lock as forced and send the definition
                         LunaLog.Log($"SENDING NEW vesselId {data.id} name {data.vesselName} (Original vessel UPD lock is ours)");
 
-                        System.MessageSender.SendVesselMessage(data, true);
+                        System.MessageSender.SendVesselMessage(data, true, false);
                         LockSystem.Singleton.AcquireUpdateLock(data.id, true);
                     }
                     else
@@ -102,7 +102,7 @@ namespace LunaClient.Systems.VesselProtoSys
             if (HighLogic.LoadedSceneIsFlight && requestedScene != GameScenes.FLIGHT)
             {
                 //When quitting flight send the vessel one last time
-                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                VesselProtoSystem.Singleton.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, false);
             }
         }
 
@@ -190,7 +190,7 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (subject != null)
                 {
                     LunaLog.Log("Detected a experiment transmission. Sending vessel definition to the server");
-                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, false);
 
                     ShareScienceSubjectSystem.Singleton.MessageSender.SendScienceSubjectMessage(subject);
                 }
@@ -209,7 +209,8 @@ namespace LunaClient.Systems.VesselProtoSys
                 if (subject != null)
                 {
                     LunaLog.Log("Detected a experiment stored. Sending vessel definition to the server");
-                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                    //We need to FORCE the clients to reload this vessel. Otherwise they won't get an updated protomodule
+                    System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, true);
 
                     ShareScienceSubjectSystem.Singleton.MessageSender.SendScienceSubjectMessage(subject);
                 }
@@ -224,7 +225,8 @@ namespace LunaClient.Systems.VesselProtoSys
             if (FlightGlobals.ActiveVessel != null && !VesselCommon.IsSpectating)
             {
                 LunaLog.Log("Detected a experiment reset. Sending vessel definition to the server");
-                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true);
+                //We need to FORCE the clients to reload this vessel. Otherwise they won't get an updated protomodule
+                System.MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, true, true);
             }
         }
     }

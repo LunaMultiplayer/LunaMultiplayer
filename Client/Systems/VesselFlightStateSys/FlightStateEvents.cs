@@ -1,4 +1,5 @@
 ﻿using LunaClient.Base;
+using LunaClient.Systems.SettingsSys;
 using LunaCommon.Locks;
 
 namespace LunaClient.Systems.VesselFlightStateSys
@@ -7,7 +8,7 @@ namespace LunaClient.Systems.VesselFlightStateSys
     {
         public void OnVesselPack(Vessel vessel)
         {
-            System.RemoveVesselFromSystem(vessel);
+            System.RemoveVessel(vessel);
         }
 
         public void OnVesselUnpack(Vessel vessel)
@@ -22,19 +23,33 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         public void OnFinishedSpectating()
         {
-            System.RemoveVesselFromSystem(FlightGlobals.ActiveVessel);
+            System.RemoveVessel(FlightGlobals.ActiveVessel);
         }
-
+        
+        /// <summary>
+        /// Whenever we acquire a UnloadedUpdate/Update/Control lock of a vessel, remove it from the dictionaries
+        /// </summary>
         public void OnLockAcquire(LockDefinition data)
         {
+            if (data.PlayerName != SettingsSystem.CurrentSettings.PlayerName)
+                return;
+
             switch (data.Type)
             {
                 case LockType.UnloadedUpdate:
                 case LockType.Update:
                 case LockType.Control:
-                    System.RemoveVesselFromSystem(data.VesselId);
+                    System.RemoveVessel(data.VesselId);
                     break;
             }
+        }
+
+        /// <summary>
+        /// When stop warping adjust the interpolation times of long running packets
+        /// </summary>
+        public void WarpStopped()
+        {
+            System.AdjustExtraInterpolationTimes();
         }
     }
 }

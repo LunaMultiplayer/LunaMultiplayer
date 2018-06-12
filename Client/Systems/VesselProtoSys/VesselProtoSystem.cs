@@ -2,6 +2,7 @@
 using LunaClient.Events;
 using LunaClient.Systems.Mod;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
@@ -10,7 +11,6 @@ using LunaCommon.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using LunaClient.Systems.TimeSyncer;
 using UnityEngine;
 
 namespace LunaClient.Systems.VesselProtoSys
@@ -164,7 +164,7 @@ namespace LunaClient.Systems.VesselProtoSys
             {
                 if (ProtoSystemReady)
                 {
-                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false);
+                    MessageSender.SendVesselMessage(FlightGlobals.ActiveVessel, false, false);
                     MessageSender.SendVesselMessage(VesselCommon.GetSecondaryVessels());
                 }
             }
@@ -205,6 +205,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselLoader.LoadVessel(vesselProto.Value.ProtoVessel))
                         {
                             LunaLog.Log($"[LMP]: Vessel {vesselProto.Key} loaded");
+                            VesselLoadEvent.onVesselLoaded.Fire(vesselProto.Value.Vessel);
                         }
                     }
                 }
@@ -228,7 +229,7 @@ namespace LunaClient.Systems.VesselProtoSys
 
                     //We get the vessels that already exist
                     VesselsToRefresh.AddRange(VesselsProtoStore.AllPlayerVessels
-                        .Where(pv => pv.Value.VesselExist && pv.Value.VesselHasUpdate)
+                        .Where(pv => pv.Value.VesselExist && pv.Value.VesselHasUpdate && !pv.Value.HasInvalidParts)
                         .Select(v => v.Key));
 
                     //Do not iterate directly trough the AllPlayerVessels dictionary as the collection can be modified in another threads!
@@ -237,17 +238,15 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselRemoveSystem.VesselWillBeKilled(vesselIdToReload))
                             continue;
 
-                        //Do not handle vessel proto updates over our OWN active vessel if we are not spectating
-                        //If there is an undetected dock (our protovessel has been modified) it will be detected
-                        //in the docksystem
-                        if (vesselIdToReload == FlightGlobals.ActiveVessel?.id && !VesselCommon.IsSpectating)
-                            continue;
+                        if (FlightGlobals.ActiveVessel?.id == vesselIdToReload)
+                            LunaLog.LogWarning("Reloading our OWN active vessel!");
 
-                        if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpdate))
+                        if (VesselsProtoStore.AllPlayerVessels.TryGetValue(vesselIdToReload, out var vesselProtoUpd))
                         {
                             CurrentlyUpdatingVesselId = vesselIdToReload;
-                            ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpdate.Vessel, vesselProtoUpdate.ProtoVessel, vesselProtoUpdate.VesselParts.Keys);
-                            vesselProtoUpdate.VesselHasUpdate = false;
+                            ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpd.Vessel, vesselProtoUpd.ProtoVessel, vesselProtoUpd.ForceReload, vesselProtoUpd.VesselParts.Keys);
+                            vesselProtoUpd.VesselHasUpdate = false;
+                            VesselReloadEvent.onVesselReloaded.Fire(vesselProtoUpd.Vessel);
                             CurrentlyUpdatingVesselId = Guid.Empty;
                         }
                     }

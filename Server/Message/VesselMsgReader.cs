@@ -73,7 +73,10 @@ namespace Server.Message
         {
             var data = (VesselRemoveMsgData) message;
 
-            if (LockSystem.LockQuery.ControlLockExists(data.VesselId) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(data.VesselId, client.PlayerName))
+            if (data.Force)
+                LunaLog.Debug($"Received a FORCED remove against vessel {data.VesselId} from {client.PlayerName}");
+
+            if (!data.Force && LockSystem.LockQuery.ControlLockExists(data.VesselId) && !LockSystem.LockQuery.ControlLockBelongsToPlayer(data.VesselId, client.PlayerName))
                 return;
 
             if (VesselStoreSystem.VesselExists(data.VesselId))

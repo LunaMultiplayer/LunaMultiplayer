@@ -1,7 +1,7 @@
 ﻿namespace LunaClient.Systems.VesselPrecalcSys
 {
     /// <summary>
-    /// This system packs applis a custom precalc to all vessels so they don't do the kill check if they are not yours
+    /// This system packs applies a custom precalc to all vessels so they don't do the kill check if they are not yours
     /// </summary>
     public class VesselPrecalcSystem : Base.System<VesselPrecalcSystem>
     {

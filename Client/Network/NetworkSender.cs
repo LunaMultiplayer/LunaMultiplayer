@@ -60,7 +60,7 @@ namespace LunaClient.Network
             message.Data.SentTime = LunaNetworkTime.UtcNow.Ticks;
             try
             {
-                NetworkStatistics.LastSendTime = LunaNetworkTime.Now;
+                NetworkStatistics.LastSendTime = LunaNetworkTime.UtcNow;
 
                 if (message is IMasterServerMessageBase)
                 {

@@ -49,8 +49,7 @@ namespace LunaClient.Systems.VesselImmortalSys
 
             foreach (var part in vessel.Parts)
             {
-                if (part.attachJoint != null)
-                    part.attachJoint?.SetUnbreakable(immortal, part.rigidAttachment);
+                if (part == null) return;
 
                 //Do not remove the colliders as then you can't dock
                 //if(part.collider != null)

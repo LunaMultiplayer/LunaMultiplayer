@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Extensions;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselUtilities;
@@ -11,10 +12,6 @@ namespace LunaClient.Systems.VesselFlightStateSys
 {
     public class VesselFlightStateUpdate
     {
-        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
-            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 10
-            : double.MaxValue;
-
         #region Fields
 
         public VesselFlightStateUpdate Target { get; set; }
@@ -31,11 +28,15 @@ namespace LunaClient.Systems.VesselFlightStateSys
 
         #region Interpolation fields
 
+        private double MaxInterpolationDuration => WarpSystem.Singleton.SubspaceIsEqualOrInThePast(Target.SubspaceId) ?
+            TimeSpan.FromMilliseconds(SettingsSystem.ServerSettings.SecondaryVesselUpdatesMsInterval).TotalSeconds * 2
+            : double.MaxValue;
+
+        private int MessageCount => VesselFlightStateSystem.TargetFlightStateQueue.TryGetValue(VesselId, out var queue) ? queue.Count : 0;
         public double TimeDifference { get; private set; }
         public double ExtraInterpolationTime { get; private set; }
         public bool InterpolationFinished => Target == null || LerpPercentage >= 1;
 
-        public double RawInterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp, 0, MaxInterpolationDuration);
         public double InterpolationDuration => LunaMath.Clamp(Target.GameTimeStamp - GameTimeStamp + ExtraInterpolationTime, 0, MaxInterpolationDuration);
 
         public float LerpPercentage { get; set; } = 1;
@@ -108,9 +109,9 @@ namespace LunaClient.Systems.VesselFlightStateSys
             if (Target == null) return InterpolatedCtrlState;
             if (LerpPercentage > 1)
             {
-                //We only send flight states of the ACTIVE vessel so perhgaps some player switched a vessel and we are not receiveing any flight state
+                //We only send flight states of the ACTIVE vessel so perhaps some player switched a vessel and we are not receiveing any flight state
                 //To solve this just remove the vessel from the system
-                VesselFlightStateSystem.Singleton.RemoveVesselFromSystem(VesselId);
+                VesselFlightStateSystem.Singleton.RemoveVessel(VesselId);
             }
 
             InterpolatedCtrlState.Lerp(CtrlState, Target.CtrlState, LerpPercentage);
@@ -120,25 +121,56 @@ namespace LunaClient.Systems.VesselFlightStateSys
         }
 
         /// <summary>
-        /// This method adjust the extra interpolation duration in case we are lagging or too advanced
+        /// This method adjust the extra interpolation duration in case we are lagging or too advanced.
+        /// The idea is that we replay the message at the correct time that is GameTimeWhenMEssageWasSent+InterpolationOffset
+        /// In order to adjust we increase or decrease the interpolation duration so next packet matches the time more perfectly
         /// </summary>
-        private void AdjustExtraInterpolationTimes()
+        public void AdjustExtraInterpolationTimes()
         {
             TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
-            if (SubspaceId == -1)
+
+            if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {
-                //While warping we only fix the interpolation if we are LAGGING behind the updates
-                //We never fix it if the packet that we received is very advanced in time
-                ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 0) * GetInterpolationFixFactor();
+                //This is the case when the message was received while warping or we are warping.
+
+                /* We are warping:
+                 * While WE warp if we receive a message that is from before our time, we want to skip it as fast as possible!
+                 * If the packet is in the future then we must interpolate towards it
+                 *
+                 * Player was warping:
+                 * The message was received when HE was warping. We don't know his final subspace time BUT if the message was sent
+                 * in a time BEFORE ours, we can skip it as fast as possible.
+                 * If the packet is in the future then we must interpolate towards it
+                 *
+                 * Bear in mind that even if the interpolation against the future packet is long because he is in the future,
+                 * when we stop warping this method will be called
+                 *
+                 * Also, we don't remove messages if we are close to the min recommended value
+                 *
+                 */
+
+                if (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds && MessageCount > VesselFlightStateSystem.MinRecommendedMessageCount)
+                {
+                    LerpPercentage = 1;
+                }
+
+                ExtraInterpolationTime = Time.fixedDeltaTime;
             }
-            else 
+            else
             {
+                //This is the easiest case, the message comes from the same or a past subspace
+
                 //IN past or same subspaces we want to be SettingsSystem.CurrentSettings.InterpolationOffset seconds BEHIND the player position
                 if (WarpSystem.Singleton.SubspaceIsInThePast(SubspaceId))
                 {
-                    //The subspace is in the past so add the difference seconds to normalize it
+                    /* The subspace is in the past so REMOVE the difference to normalize it
+                     * Example: P1 subspace is +7 seconds. Your subspace is + 30 seconds
+                     * Packet TimeDifference will be 23 seconds but in reality it should be 0
+                     * So, we remove the time difference between subspaces (30 - 7 = 23)
+                     * And now the TimeDifference - 23 = 0
+                     */
                     var timeToAdd = Math.Abs(WarpSystem.Singleton.GetTimeDifferenceWithGivenSubspace(SubspaceId));
-                    TimeDifference += timeToAdd;
+                    TimeDifference -= timeToAdd;
                 }
 
                 ExtraInterpolationTime = (TimeDifference > SettingsSystem.CurrentSettings.InterpolationOffsetSeconds ? -1 : 1) * GetInterpolationFixFactor();

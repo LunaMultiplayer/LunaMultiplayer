@@ -20,9 +20,10 @@ namespace LunaClient.Windows.Systems
 
         private const float WindowHeight = 400;
         private const float WindowWidth = 400;
-        
+
         #region Vessel systems
 
+        private static bool _vesselCrew;
         private static bool _vesselDock;
         private static bool _vesselFlightState;
         private static bool _vesselImmortal;
@@ -46,6 +47,7 @@ namespace LunaClient.Windows.Systems
         private static bool _facility;
         private static bool _flag;
         private static bool _kscScene;
+        private static bool _externalSeat;
         private static bool _group;
         private static bool _kerbal;
         private static bool _lock;

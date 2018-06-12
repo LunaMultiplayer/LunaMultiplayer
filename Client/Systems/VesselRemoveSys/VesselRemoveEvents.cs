@@ -1,7 +1,6 @@
 ﻿using KSP.UI.Screens;
 using LunaClient.Base;
 using LunaClient.Localization;
-using LunaClient.Systems.KerbalSys;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
 using LunaClient.VesselUtilities;
@@ -38,8 +37,6 @@ namespace LunaClient.Systems.VesselRemoveSys
                 //Add to the kill list so it's also removed from the store later on!
                 System.AddToKillList(dyingVessel.id, "OnVesselWillDestroy - " + reason);
 
-                KerbalSystem.Singleton.ProcessKerbalsInVessel(dyingVessel);
-
                 //If we are killing our own vessel there's the possibility that the player hits "revert" so in this case DO NOT keep it in the remove list
                 System.MessageSender.SendVesselRemove(dyingVessel.id, false);
 
@@ -63,7 +60,6 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             _recoveringTerminatingVesselId = recoveredVessel.vesselID;
             LunaLog.Log($"[LMP]: Removing vessel {recoveredVessel.vesselID}, Name: {recoveredVessel.vesselName} from the server: Recovered");
-            KerbalSystem.Singleton.ProcessKerbalsInVessel(recoveredVessel);
 
             System.MessageSender.SendVesselRemove(recoveredVessel.vesselID);
 
@@ -71,9 +67,10 @@ namespace LunaClient.Systems.VesselRemoveSys
             LockSystem.Singleton.ReleaseAllVesselLocks(recoveredVessel.GetVesselCrew().Select(c=> c.name), recoveredVessel.vesselID);
 
             System.KillVessel(_recoveringTerminatingVesselId, "Recovering vessel");
-            
+
             //Refresh the markers as they sometimes get messy
-            KSCVesselMarkers.fetch?.RefreshMarkers();
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                KSCVesselMarkers.fetch?.RefreshMarkers();
         }
 
         /// <summary>
@@ -89,8 +86,7 @@ namespace LunaClient.Systems.VesselRemoveSys
 
             _recoveringTerminatingVesselId = terminatedVessel.vesselID;
             LunaLog.Log($"[LMP]: Removing vessel {terminatedVessel.vesselID}, Name: {terminatedVessel.vesselName} from the server: Terminated");
-            KerbalSystem.Singleton.ProcessKerbalsInVessel(terminatedVessel);
-
+            
             System.MessageSender.SendVesselRemove(terminatedVessel.vesselID);
 
             //Vessel is terminated so remove locks            

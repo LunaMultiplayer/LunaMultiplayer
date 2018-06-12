@@ -23,8 +23,6 @@ namespace LunaClient.Base
 
         public virtual void EnqueueMessage(IServerMessageBase msg)
         {
-            if (!Enabled) return;
-
             if (ProcessMessagesInUnityThread)
             {
                 MessageHandler.IncomingMessages.Enqueue(msg);
@@ -47,8 +45,9 @@ namespace LunaClient.Base
         protected override void OnEnabled()
         {
             base.OnEnabled();
-            
-            //During the update we receive and handle all received messages
+
+            //During the update we receive and handle all received messages. 
+            //We won't process them until the system is turned ENABLED
             if (ProcessMessagesInUnityThread)
                 SetupRoutine(new RoutineDefinition(0, RoutineExecution.Update, ReadAndHandleAllReceivedMessages));
         }

@@ -1,16 +1,17 @@
 ﻿using LunaClient.Base;
+using LunaClient.Localization;
 using LunaClient.Systems.Lock;
 using LunaClient.Systems.SettingsSys;
+using LunaClient.Systems.VesselRemoveSys;
+using LunaClient.VesselUtilities;
+using System;
 
 namespace LunaClient.Systems.KerbalSys
 {
     public class KerbalEvents : SubSystem<KerbalSystem>
     {
-        public void CrewAdd(ProtoCrewMember protoCrew, int crewCount)
-        {
-            System.MessageSender.SendKerbal(protoCrew);
-        }
-        
+        private static Guid _recoveringTerminatingVesselId = Guid.Empty;
+
         /// <summary>
         /// Use this event to send the kerbals just when we start a flight.
         /// We use this event instead of onFlightReady as the latter is triggered once UI and everythign is ready and this one is triggered
@@ -42,7 +43,8 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (previousStatus != newStatus)
             {
-                if (!LockSystem.LockQuery.CanEditKerbal(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
+                //This is the case when we are removing a vessel from another player. This status change event will be called
+                if (!LockSystem.LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
                 {
                     System.SetKerbalStatusWithoutTriggeringEvent(kerbal, previousStatus);
                     return;
@@ -50,6 +52,7 @@ namespace LunaClient.Systems.KerbalSys
 
                 System.SetKerbalStatusWithoutTriggeringEvent(kerbal, newStatus);
                 System.MessageSender.SendKerbal(kerbal);
+                System.RefreshCrewDialog();
             }
         }
 
@@ -61,22 +64,121 @@ namespace LunaClient.Systems.KerbalSys
         {
             if (previousType != newType)
             {
-                if (!LockSystem.LockQuery.CanEditKerbal(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
+                if (LockSystem.LockQuery.KerbalLockExists(kerbal.name) && !LockSystem.LockQuery.KerbalLockBelongsToPlayer(kerbal.name, SettingsSystem.CurrentSettings.PlayerName))
                 {
-                    LunaScreenMsg.PostScreenMessage("This kerbal does not belongs you", 5f, ScreenMessageStyle.UPPER_CENTER);
-                    System.SetKerbalTypeWithoutTriggeringEvent(kerbal, ProtoCrewMember.KerbalType.Crew);
-                    return;
-                }
-
-                if (previousType == ProtoCrewMember.KerbalType.Crew && newType == ProtoCrewMember.KerbalType.Applicant && !SettingsSystem.ServerSettings.AllowSackKerbals)
-                {
-                    //This means that we sacked the crew and we are not allowed to do it
+                    LunaScreenMsg.PostScreenMessage(LocalizationContainer.ScreenText.KerbalNotYours, 5f, ScreenMessageStyle.UPPER_CENTER);
                     System.SetKerbalTypeWithoutTriggeringEvent(kerbal, ProtoCrewMember.KerbalType.Crew);
                     return;
                 }
 
                 System.SetKerbalTypeWithoutTriggeringEvent(kerbal, newType);
                 System.MessageSender.SendKerbal(kerbal);
+                System.RefreshCrewDialog();
+            }
+        }
+
+        /// <summary>
+        /// When returning to editor force all kerbals as available.
+        /// Bear in mind that we will NOT have the kerbal lock!
+        /// </summary>
+        public void ReturningToEditor(EditorFacility data)
+        {
+            if (FlightGlobals.ActiveVessel == null || VesselCommon.IsSpectating) return;
+
+            //Force setting the kerbals as available as when reverting their status will be "assigned"
+            var kerbals = FlightGlobals.ActiveVessel.GetVesselCrew();
+            foreach (var kerbal in kerbals)
+            {
+                System.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Available);
+                System.MessageSender.SendKerbal(kerbal);
+            }
+        }
+
+        /// <summary>
+        /// Force setting the kerbals as missing in a terminated vessel
+        /// </summary>
+        public void OnVesselTerminated(ProtoVessel terminatedVessel)
+        {
+            if (terminatedVessel == null) return;
+
+            if (LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(terminatedVessel.vesselID, SettingsSystem.CurrentSettings.PlayerName))
+            {
+                _recoveringTerminatingVesselId = terminatedVessel.vesselID;
+
+                //Force setting the kerbals as missing as we don't have their kerbal lock
+                var kerbals = terminatedVessel.GetVesselCrew();
+                foreach (var kerbal in kerbals)
+                {
+                    KerbalSystem.Singleton.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Missing);
+                    System.MessageSender.SendKerbal(kerbal);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Force setting the kerbals as available in a recovered vessel
+        /// </summary>
+        public void OnVesselRecovered(ProtoVessel recoveredVessel, bool quick)
+        {
+            if (recoveredVessel == null) return;
+
+            if (LockSystem.LockQuery.CanRecoverOrTerminateTheVessel(recoveredVessel.vesselID, SettingsSystem.CurrentSettings.PlayerName))
+            {
+                _recoveringTerminatingVesselId = recoveredVessel.vesselID;
+
+                //Force setting the kerbals as missing as we don't have their kerbal lock
+                var kerbals = recoveredVessel.GetVesselCrew();
+                foreach (var kerbal in kerbals)
+                {
+                    KerbalSystem.Singleton.SetKerbalStatusWithoutTriggeringEvent(kerbal, ProtoCrewMember.RosterStatus.Available);
+                    System.MessageSender.SendKerbal(kerbal);
+                }
+            }
+        }
+
+        public void OnVesselWillDestroy(Vessel dyingVessel)
+        {
+            if (dyingVessel == null) return;
+
+            //We are just reloading a vessel and the vessel.Die() was triggered so we should not do anything!
+            if (VesselLoader.ReloadingVesselId == dyingVessel.id)
+                return;
+
+            //We are MANUALLY killing a vessel and it's NOT KSP who is calling this method so ignore all the logic of below
+            if (VesselRemoveSystem.Singleton.ManuallyKillingVesselId == dyingVessel.id)
+                return;
+
+            //Only send the vessel remove msg if we own the unloaded update lock
+            if (LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(dyingVessel.id, SettingsSystem.CurrentSettings.PlayerName) || dyingVessel.id == _recoveringTerminatingVesselId)
+            {
+                foreach (var protoCrew in dyingVessel.GetVesselCrew())
+                {
+                    System.MessageSender.SendKerbal(protoCrew);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Whenever we load a vessel trigger a refresh of the astronaut complex if we are in it
+        /// </summary>
+        public void OnVesselLoaded(Vessel data)
+        {
+            if (System.AstronautComplex != null)
+            {
+                HighLogic.CurrentGame.Updated();
+                System.RefreshCrewDialog();
+            }
+        }
+
+        /// <summary>
+        /// Whenever we reload a vessel trigger a refresh of the astronaut complex if we are in it
+        /// </summary>
+        public void OnVesselReloaded(Vessel data)
+        {
+            if (System.AstronautComplex != null)
+            {
+                HighLogic.CurrentGame.Updated();
+                System.RefreshCrewDialog();
             }
         }
     }

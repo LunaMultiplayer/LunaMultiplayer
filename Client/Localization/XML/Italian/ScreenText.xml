@@ -16,4 +16,7 @@
     <CraftLibraryInterval>L'intervallo tra le richieste della libreria dei veicoli è di $1 secondi. Impossibile elaborare la richiesta in questo momento.</CraftLibraryInterval>
     <ScreenshotTaken>Screenshot caricato!</ScreenshotTaken>
     <ImageSaved>Immagine salvata in GameData/LunaMultiplayer/Screenshots</ImageSaved>
+    <SackingKerbalsNotAllowed>This server does not allow firing kerbals</SackingKerbalsNotAllowed>
+    <CannotLoadGames>LMP does not allow loading savegames</CannotLoadGames>
+    <KerbalNotYours>Another player is using this kerbal</KerbalNotYours>
 </ScreenText>

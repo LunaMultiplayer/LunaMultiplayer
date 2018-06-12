@@ -1,6 +1,7 @@
 ﻿using KSP.UI;
 using KSP.UI.Screens;
 using LunaClient.Base;
+using LunaClient.Events;
 using System.Collections.Concurrent;
 using System.Reflection;
 using Object = UnityEngine.Object;
@@ -22,7 +23,7 @@ namespace LunaClient.Systems.KerbalSys
         public KerbalEvents KerbalEvents { get; } = new KerbalEvents();
 
         private static AstronautComplex _astronautComplex;
-        private static AstronautComplex AstronautComplex
+        public AstronautComplex AstronautComplex
         {
             get
             {
@@ -59,10 +60,16 @@ namespace LunaClient.Systems.KerbalSys
             base.OnEnabled();
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, RemoveQueuedKerbals));
             SetupRoutine(new RoutineDefinition(1000, RoutineExecution.Update, LoadKerbals));
-            GameEvents.OnCrewmemberHired.Add(KerbalEvents.CrewAdd);
             GameEvents.onGameSceneLoadRequested.Add(KerbalEvents.SwitchSceneRequested);
             GameEvents.onKerbalStatusChange.Add(KerbalEvents.StatusChange);
             GameEvents.onKerbalTypeChange.Add(KerbalEvents.TypeChange);
+            RevertEvent.onReturningToEditor.Add(KerbalEvents.ReturningToEditor);
+            GameEvents.onVesselTerminated.Add(KerbalEvents.OnVesselTerminated);
+            GameEvents.onVesselRecovered.Add(KerbalEvents.OnVesselRecovered);
+            GameEvents.onVesselWillDestroy.Add(KerbalEvents.OnVesselWillDestroy);
+
+            VesselLoadEvent.onVesselLoaded.Add(KerbalEvents.OnVesselLoaded);
+            VesselReloadEvent.onVesselReloaded.Add(KerbalEvents.OnVesselReloaded);
         }
 
         protected override void OnDisabled()
@@ -70,10 +77,16 @@ namespace LunaClient.Systems.KerbalSys
             base.OnDisabled();
             KerbalsToRemove = new ConcurrentQueue<string>();
             KerbalsToProcess = new ConcurrentQueue<ConfigNode>();
-            GameEvents.OnCrewmemberHired.Remove(KerbalEvents.CrewAdd);
             GameEvents.onGameSceneLoadRequested.Remove(KerbalEvents.SwitchSceneRequested);
             GameEvents.onKerbalStatusChange.Remove(KerbalEvents.StatusChange);
             GameEvents.onKerbalTypeChange.Remove(KerbalEvents.TypeChange);
+            RevertEvent.onReturningToEditor.Remove(KerbalEvents.ReturningToEditor);
+            GameEvents.onVesselTerminated.Remove(KerbalEvents.OnVesselTerminated);
+            GameEvents.onVesselRecovered.Remove(KerbalEvents.OnVesselRecovered);
+            GameEvents.onVesselWillDestroy.Remove(KerbalEvents.OnVesselWillDestroy);
+
+            VesselLoadEvent.onVesselLoaded.Remove(KerbalEvents.OnVesselLoaded);
+            VesselReloadEvent.onVesselReloaded.Remove(KerbalEvents.OnVesselReloaded);
         }
 
         #endregion
@@ -87,32 +100,6 @@ namespace LunaClient.Systems.KerbalSys
         public void LoadKerbalsIntoGame()
         {
             ProcessKerbalQueue();
-        }
-
-        /// <summary>
-        /// Checks if the crew on a protoVessel has changed and sends the message accordingly
-        /// </summary>
-        public void ProcessKerbalsInVessel(ProtoVessel protoVessel)
-        {
-            if (protoVessel == null) return;
-
-            foreach (var protoCrew in protoVessel.GetVesselCrew())
-            {
-                MessageSender.SendKerbal(protoCrew);
-            }
-        }
-
-        /// <summary>
-        /// Checks if the crew on a vessel has changed and sends the message accordingly
-        /// </summary>
-        public void ProcessKerbalsInVessel(Vessel vessel)
-        {
-            if (vessel == null) return;
-
-            foreach (var protoCrew in vessel.GetVesselCrew())
-            {
-                MessageSender.SendKerbal(protoCrew);
-            }
         }
 
         /// <summary>
@@ -149,11 +136,11 @@ namespace LunaClient.Systems.KerbalSys
                 var refreshDialog = false;
                 while (KerbalsToRemove.TryDequeue(out var kerbalNameToRemove))
                 {
-                    refreshDialog |= HighLogic.CurrentGame.CrewRoster.Remove(kerbalNameToRemove);
+                    HighLogic.CurrentGame.CrewRoster.Remove(kerbalNameToRemove);
+                    refreshDialog = true;
                 }
 
-                if (refreshDialog)
-                    RefreshCrewDialog();
+                if (refreshDialog) RefreshCrewDialog();
             }
         }
 
@@ -178,24 +165,27 @@ namespace LunaClient.Systems.KerbalSys
         /// </summary>
         private void ProcessKerbalQueue()
         {
-            var refreshDialog = KerbalsToProcess.Count > 0;
+            var refreshDialog = false;
             while (KerbalsToProcess.TryDequeue(out var kerbalNode))
             {
                 LoadKerbal(kerbalNode);
+                refreshDialog = true;
             }
 
-            if (refreshDialog)
-                RefreshCrewDialog();
+            if (refreshDialog) RefreshCrewDialog();
         }
 
         /// <summary>
         /// Call this method to refresh the crews in the vessel spawn, vessel editor and astronaut complex
         /// </summary>
-        private static void RefreshCrewDialog()
+        public void RefreshCrewDialog()
         {
-            CrewAssignmentDialog.Instance?.RefreshCrewLists(CrewAssignmentDialog.Instance.GetManifest(true), false, true, null);
-            CrewAssignmentDialog.Instance?.ButtonClear();
-            CrewAssignmentDialog.Instance?.ButtonFill();
+            if (CrewAssignmentDialog.Instance != null)
+            {
+                CrewAssignmentDialog.Instance.RefreshCrewLists(CrewAssignmentDialog.Instance.GetManifest(true), false, true, null);
+                CrewAssignmentDialog.Instance.ButtonClear();
+                CrewAssignmentDialog.Instance.ButtonFill();
+            }
 
             if (AstronautComplex != null)
             {

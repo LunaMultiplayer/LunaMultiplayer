@@ -13,6 +13,8 @@ namespace LunaClient.VesselStore
 
         public Guid VesselId { get; }
         public bool VesselHasUpdate { get; set; }
+        public bool ForceReload { get; set; }
+        public bool HasInvalidParts { get; set; }
 
         private ProtoVessel _deserializedProtoVessel;
         public ProtoVessel ProtoVessel
@@ -29,8 +31,8 @@ namespace LunaClient.VesselStore
 
         public Vessel Vessel => FlightGlobals.FindVessel(VesselId);
         public bool VesselExist => Vessel != null;
-        public bool ShouldBeLoaded => SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(VesselId);
-        public bool IsInSafetyBubble => VesselCommon.IsInSafetyBubble(ProtoVessel);
+        public bool ShouldBeLoaded => !HasInvalidParts && (SettingsSystem.ServerSettings.ShowVesselsInThePast || !VesselCommon.VesselIsControlledAndInPastSubspace(VesselId));
+        public bool IsInSafetyBubble => SafetyBubble.IsInSafetyBubble(ProtoVessel);
 
         private readonly ConcurrentDictionary<uint, ProtoPartSnapshot> _vesselParts = new ConcurrentDictionary<uint, ProtoPartSnapshot>();
         public ConcurrentDictionary<uint, ProtoPartSnapshot> VesselParts
@@ -72,7 +74,7 @@ namespace LunaClient.VesselStore
         /// <summary>
         /// Update this class with the new data received
         /// </summary>
-        public void Update(byte[] vesselData, int numBytes, Guid vesselId)
+        public void Update(byte[] vesselData, int numBytes, Guid vesselId, bool forceReload)
         {
             lock (_vesselDataSyncLock)
             {
@@ -86,6 +88,7 @@ namespace LunaClient.VesselStore
 
                 _needToDeserializeData = true;
                 VesselHasUpdate = true;
+                ForceReload = forceReload;
             }
         }
 
@@ -128,6 +131,8 @@ namespace LunaClient.VesselStore
                 //In case there's a deserialization error skip it and keep the older proto
                 if (newProto != null)
                 {
+                    HasInvalidParts = VesselCommon.ProtoVesselHasInvalidParts(newProto);
+
                     if (newProto.vesselID != VesselId)
                     {
                         LunaLog.LogError($"Tried to update the Vessel with a proto from a different vessel ID. Proto: {newProto.vesselID} CorrectId: {VesselId}");

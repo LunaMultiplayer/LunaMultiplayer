@@ -4,7 +4,6 @@ using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
-using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -22,10 +21,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public void SendVesselPositionUpdate(Vessel vessel)
         {
             if (vessel == null) return;
-
-            //Do not send messages while inside safety bubble
-            if (VesselCommon.IsInSafetyBubble(vessel, false))
-                return;
 
             var msg = CreateMessageFromVessel(vessel);
             if (msg == null) return;
@@ -83,7 +78,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 SetOrbit(vessel, msgData);
 
                 msgData.HeightFromTerrain = vessel.heightFromTerrain;
-                msgData.HackingGravity = Math.Abs(MainSystem.BodiesGees[vessel.mainBody] - vessel.mainBody.GeeASL) > 0.0001;
+
+                if (MainSystem.BodiesGees.TryGetValue(vessel.mainBody, out var bodyGee))
+                    msgData.HackingGravity = Math.Abs(bodyGee - vessel.mainBody.GeeASL) > 0.0001;
+                msgData.HackingGravity = false;
 
                 return msgData;
             }

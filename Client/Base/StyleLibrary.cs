@@ -54,6 +54,7 @@ namespace LunaClient.Base
         protected Texture2D WaitIcon;
         protected Texture2D WaitGiantIcon;
         protected GUIContent KeyIcon;
+        protected GUIContent GlobeIcon;
         protected GUIContent ChatIcon;
         protected GUIContent ChatRedIcon;
         protected GUIContent CameraIcon;
@@ -119,6 +120,8 @@ namespace LunaClient.Base
             WaitIcon = WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "wait.png"), 16, 16);
 
             KeyIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "key.png"), 16, 16), 
+                LocalizationContainer.ButtonTooltips.KeyIcon);
+            GlobeIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "globe.png"), 16, 16),
                 LocalizationContainer.ButtonTooltips.KeyIcon);
             ChatIcon = new GUIContent(WindowUtil.LoadIcon(CommonUtil.CombinePaths(MainSystem.KspPath, "GameData", "LunaMultiplayer", "Icons", "chatWhite.png"), 16, 16), 
                 LocalizationContainer.ButtonTooltips.ChatIcon);

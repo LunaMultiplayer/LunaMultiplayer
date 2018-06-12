@@ -13,20 +13,14 @@ namespace LunaClient.Harmony
     /// </summary>
     [HarmonyPatch(typeof(Strategy))]
     [HarmonyPatch("CanBeActivated")]
-    class Strategy_CanBeActivated
+    public class Strategy_CanBeActivated
     {
         [HarmonyPrefix]
-        private static bool PrefixCanBeActivated(ref bool __result)
+        private static bool PrefixCanBeActivated()
         {
             if (MainSystem.NetworkState < ClientState.Connected || !ShareStrategySystem.Singleton.Enabled) return true;
 
-            if (ShareStrategySystem.Singleton.IgnoreEvents)
-            {
-                __result = true;
-                return false;
-            }
-
-            return true;
+            return !ShareStrategySystem.Singleton.IgnoreEvents;
         }
     }
 }

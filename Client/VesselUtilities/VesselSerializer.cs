@@ -1,9 +1,6 @@
-﻿using LunaClient.Systems.Chat;
-using LunaClient.Systems.Mod;
+﻿using LunaClient.Systems.TimeSyncer;
 using LunaClient.Utilities;
 using System;
-using System.Linq;
-using LunaClient.Systems.TimeSyncer;
 
 namespace LunaClient.VesselUtilities
 {
@@ -64,38 +61,7 @@ namespace LunaClient.VesselUtilities
                     return null;
 
                 //Cannot reuse the Protovessel to save memory garbage as it does not have any clear method :(
-                var pv = new ProtoVessel(inputNode, HighLogic.CurrentGame);
-                foreach (var pps in pv.protoPartSnapshots)
-                {
-                    if (ModSystem.Singleton.ModControl && !ModSystem.Singleton.AllowedParts.Contains(pps.partName))
-                    {
-                        var msg = $"Protovessel {protoVesselId} ({pv.vesselName}) contains the BANNED PART '{pps.partName}'. Skipping load.";
-                        LunaLog.LogWarning(msg);
-                        ChatSystem.Singleton.PmMessageServer(msg);
-
-                        return null;
-                    }
-
-                    if (pps.partInfo == null)
-                    {
-                        LunaLog.LogWarning($"WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the MISSING PART '{pps.partName}'. Skipping load.");
-                        LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing {pps.partName}", 10f, ScreenMessageStyle.UPPER_CENTER);
-
-                        return null;
-                    }
-
-                    var missingeResource = pps.resources.FirstOrDefault(r => !PartResourceLibrary.Instance.resourceDefinitions.Contains(r.resourceName));
-                    if (missingeResource != null)
-                    {
-                        var msg = $"WARNING: Protovessel {protoVesselId} ({pv.vesselName}) contains the MISSING RESOURCE '{missingeResource.resourceName}'. Skipping load.";
-                        LunaLog.LogWarning(msg);
-                        ChatSystem.Singleton.PmMessageServer(msg);
-
-                        LunaScreenMsg.PostScreenMessage($"Cannot load '{pv.vesselName}' - missing resource {missingeResource.resourceName}", 10f, ScreenMessageStyle.UPPER_CENTER);
-                        return null;
-                    }
-                }
-                return pv;
+                return new ProtoVessel(inputNode, HighLogic.CurrentGame);
             }
             catch (Exception e)
             {

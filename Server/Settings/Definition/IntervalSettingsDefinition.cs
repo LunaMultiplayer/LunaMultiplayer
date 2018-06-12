@@ -16,7 +16,7 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "Interval in ms at which users will check the controlled and close uncontrolled vessel and sync the parts that have changes " +
                             "(ladders that extend or shields that open) to the server. " +
-                            "Caution! Puting a very low value could make clients with slow computers to lag a lot!")]
+                            "Caution! Putting a very low value could make clients with slow computers to lag a lot!")]
         public int VesselPartsSyncMsInterval { get; set; } = 500;
 
         [XmlComment(Value = "Send/Receive tick clock. Keep this value low but at least above 2ms to avoid extreme CPU usage.")]

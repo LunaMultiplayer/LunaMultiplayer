@@ -25,13 +25,13 @@ namespace LunaClient.VesselStore
         /// <summary>
         /// In this method we get the new vessel data and set it to the dictionary of all the player vessels.
         /// </summary>
-        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, double vesselSpawnTime = 0)
+        public static void HandleVesselProtoData(byte[] vesselData, int numBytes, Guid vesselId, bool forceReload, double vesselSpawnTime = 0)
         {
             //Do not do this logic in another thread as race conditions might appear as the byte[] 
             //is a reference type and the message might have been recycled!
             if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
             {
-                vesselUpdate.Update(vesselData, numBytes, vesselId);
+                vesselUpdate.Update(vesselData, numBytes, vesselId, forceReload);
             }
             else
             {
@@ -94,7 +94,7 @@ namespace LunaClient.VesselStore
         {
             if (AllPlayerVessels.TryGetValue(vesselId, out var vesselProtoUpd))
             {
-                vesselProtoUpd.Update(vesselData, numBytes, vesselId);
+                vesselProtoUpd.Update(vesselData, numBytes, vesselId, false);
             }
         }
 
