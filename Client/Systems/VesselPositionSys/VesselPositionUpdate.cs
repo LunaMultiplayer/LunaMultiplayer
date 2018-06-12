@@ -331,7 +331,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 Vessel.latitude = Target.LatLonAlt[0];
                 Vessel.longitude = Target.LatLonAlt[1];
                 Vessel.altitude = Target.LatLonAlt[2];
-                Vessel.orbitDriver.updateFromParameters();
 
                 if (Vessel.LandedOrSplashed)
                     Vessel.SetPosition(Target.Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
@@ -363,8 +362,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
 
             //Set the position of the vessel based on the orbital parameters
-            //Don't call this method as we are replaying orbits from back an older time!
-            Vessel.orbitDriver.updateFromParameters();
+            //Don't call Vessel.orbitDriver.updateFromParameters(); as we are replaying orbits from back an older time!
 
             if (Vessel.LandedOrSplashed)
             {
@@ -415,8 +413,7 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
             ApplyOrbitInterpolation();
-            //Don't call this method as we are replaying orbits from back an older time!
-            //Vessel.orbitDriver.updateFromParameters();
+            //Don't call Vessel.orbitDriver.updateFromParameters() as we are replaying orbits from back an older time!
 
             //We don't do the surface positioning as with vessels because kerbals don't walk at high speeds and with this code it will be enough ;)
             if (Vessel.LandedOrSplashed || Vessel.situation <= Vessel.Situations.FLYING)
@@ -467,8 +464,10 @@ namespace LunaClient.Systems.VesselPositionSys
                 HeightFromTerrain = Target.HeightFromTerrain;
                 HackingGravity = Target.HackingGravity;
             }
-            else if (Vessel != null)
+            else
             {
+                if (Vessel == null) return;
+
                 BodyIndex = Vessel.mainBody.flightGlobalsIndex;
                 Landed = Vessel.Landed;
                 Splashed = Vessel.Splashed;
