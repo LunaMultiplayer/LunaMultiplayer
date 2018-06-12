@@ -27,7 +27,7 @@ namespace LunaClient.Windows.ServerList
             get => base.Display && _display && MainSystem.ToolbarShowGui && MainSystem.NetworkState == ClientState.Disconnected && HighLogic.LoadedScene == GameScenes.MAINMENU;
             set
             {
-                if (!_display && value && !NetworkServerList.Servers.Any())
+                if (!_display && value)
                     NetworkServerList.RequestServers();
                 base.Display = _display = value;
             }
