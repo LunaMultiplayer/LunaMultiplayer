@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+    <!--Ignoring TweakScale Transform Scale-->
+        <FieldDefinition>
+            <FieldName>defaultTransformScale</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+    <!--Ignoring TweakScale DryCost-->
+        <FieldDefinition>
+            <FieldName>DryCost</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+    </Fields>
+</ModuleDefinition>
