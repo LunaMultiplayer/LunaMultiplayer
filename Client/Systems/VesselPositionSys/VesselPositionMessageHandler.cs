@@ -18,10 +18,6 @@ namespace LunaClient.Systems.VesselPositionSys
             var vesselId = msgData.VesselId;
             if (!VesselCommon.DoVesselChecks(vesselId))
                 return;
-
-            //Ignore messages that contain positions inside safety bubble
-            if (VesselCommon.IsInSafetyBubble(msgData.LatLonAlt[0], msgData.LatLonAlt[1], msgData.LatLonAlt[2], msgData.BodyIndex))
-                return;
             
             if (VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var currentUpdate) && currentUpdate.GameTimeStamp > msgData.GameTime)
             {

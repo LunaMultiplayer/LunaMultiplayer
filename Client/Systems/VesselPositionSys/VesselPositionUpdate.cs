@@ -138,11 +138,7 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void ApplyInterpolatedVesselUpdate()
         {
-            if (Vessel == null || Body == null)
-            {
-                VesselsProtoStore.UpdateVesselProtoPosition(this);
-                return;
-            }
+            if (Body == null) return;
 
             if (InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.TryDequeue(out var targetUpdate))
             {
@@ -285,6 +281,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void UpdateProtoVesselValues()
         {
+            if (Vessel == null) return;
+
             Vessel.protoVessel.latitude = Target.LatLonAlt[0];
             Vessel.protoVessel.longitude = Target.LatLonAlt[1];
             Vessel.protoVessel.altitude = Target.LatLonAlt[2];
@@ -311,6 +309,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
         private void ApplyInterpolations()
         {
+            if (Vessel == null) return;
+
             if (Vessel.isEVA && Vessel.loaded)
             {
                 ApplyPositionsToEva();
@@ -467,7 +467,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 HeightFromTerrain = Target.HeightFromTerrain;
                 HackingGravity = Target.HackingGravity;
             }
-            else
+            else if (Vessel != null)
             {
                 BodyIndex = Vessel.mainBody.flightGlobalsIndex;
                 Landed = Vessel.Landed;
