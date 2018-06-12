@@ -168,7 +168,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
 
             if (Target == null) return;
-            if (InterpolationFinished && (!SettingsSystem.CurrentSettings.PositionExtrapolation || Vessel.situation >= Vessel.Situations.SUB_ORBITAL)) return;
+            if (InterpolationFinished && (!SettingsSystem.CurrentSettings.PositionExtrapolation || Vessel?.situation >= Vessel.Situations.SUB_ORBITAL)) return;
 
             try
             {
