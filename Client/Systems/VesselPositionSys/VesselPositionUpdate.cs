@@ -178,7 +178,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             finally
             {
-                LerpPercentage += (float)(Time.deltaTime / InterpolationDuration);
+                LerpPercentage += (float)(Time.fixedDeltaTime / InterpolationDuration);
             }
         }
 
@@ -216,7 +216,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     LerpPercentage = 1;
                 }
 
-                ExtraInterpolationTime = Time.deltaTime;
+                ExtraInterpolationTime = Time.fixedDeltaTime;
             }
             else
             {
@@ -244,10 +244,10 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private double GetInterpolationFixFactor()
         {
-            //The minimum fix factor is Time.deltaTime.
+            //The minimum fix factor is Time.fixedDeltaTime.
 
             var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
-            var errorInFrames = errorInSeconds / Time.deltaTime;
+            var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
 
             //We cannot fix errors that are below the delta time!
             if (errorInFrames < 1)
@@ -256,21 +256,21 @@ namespace LunaClient.Systems.VesselPositionSys
             if (errorInFrames <= 2)
             {
                 //The error is max 2 frames ahead/below
-                return Time.deltaTime;
+                return Time.fixedDeltaTime;
             }
             if (errorInFrames <= 5)
             {
                 //The error is max 5 frames ahead/below
-                return Time.deltaTime * 2;
+                return Time.fixedDeltaTime * 2;
             }
             if (errorInSeconds <= 2.5)
             {
                 //The error is max 2.5 SECONDS ahead/below
-                return Time.deltaTime * errorInFrames / 2;
+                return Time.fixedDeltaTime * errorInFrames / 2;
             }
 
             //The error is really big...
-            return Time.deltaTime * errorInFrames;
+            return Time.fixedDeltaTime * errorInFrames;
         }
 
         #endregion
