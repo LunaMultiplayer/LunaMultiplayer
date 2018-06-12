@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using Harmony;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -340,10 +341,8 @@ namespace LunaClient.Systems.VesselPositionSys
 
             //Apply the CURRENT time to the orbit only in space. If we don't do it the vessel will drift away 
             //in space and if we apply it in atmo the rotations and positions will be buggy
-            if (Vessel.situation >= Vessel.Situations.SUB_ORBITAL)
-                Vessel.orbitDriver.updateFromParameters();
+            CustomUpdateFromParameters(Vessel.situation < Vessel.Situations.SUB_ORBITAL ? LerpTime : Planetarium.GetUniversalTime());
         }
-
 
         private void ApplyInterpolationsToLoadedVessel()
         {
@@ -360,9 +359,6 @@ namespace LunaClient.Systems.VesselPositionSys
 
             Vessel.Landed = LerpPercentage < 0.5 ? Landed : Target.Landed;
             Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
-
-            //Set the position of the vessel based on the orbital parameters
-            //Don't call Vessel.orbitDriver.updateFromParameters(); as we are replaying orbits from back an older time!
 
             if (Vessel.LandedOrSplashed)
             {
@@ -406,7 +402,6 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.srfRelRotation = currentSurfaceRelRotation;
 
             ApplyOrbitInterpolation();
-            //Don't call Vessel.orbitDriver.updateFromParameters() as we are replaying orbits from back an older time!
 
             //We don't do the surface positioning as with vessels because kerbals don't walk at high speeds and with this code it will be enough ;)
             if (Vessel.LandedOrSplashed || Vessel.situation <= Vessel.Situations.FLYING)
@@ -494,6 +489,34 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         #region Helper methods
+        
+        private void CustomUpdateFromParameters(double time)
+        {
+            Traverse.Create(Vessel.orbitDriver).Field("updateUT").SetValue(time);
+            Vessel.orbitDriver.orbit.UpdateFromUT(time);
+            Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos;
+            Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel;
+            Vessel.orbitDriver.pos.Swizzle();
+            Vessel.orbitDriver.vel.Swizzle();
+            if (Vessel.orbitDriver.reverse)
+            {
+                Vessel.orbitDriver.referenceBody.position = (!Vessel.orbitDriver.celestialBody ? (Vector3d)Vessel.orbitDriver.driverTransform.position :
+                                                                Vessel.orbitDriver.celestialBody.position) - Vessel.orbitDriver.pos;
+            }
+            else if (Vessel)
+            {
+                var vector3D = Vessel.orbitDriver.driverTransform.rotation * Vessel.localCoM;
+                Vessel.SetPosition((Vessel.orbitDriver.referenceBody.position + Vessel.orbitDriver.pos) - vector3D);
+            }
+            else if (!Vessel.orbitDriver.celestialBody)
+            {
+                Vessel.orbitDriver.driverTransform.position = Vessel.orbitDriver.referenceBody.position + Vessel.orbitDriver.pos;
+            }
+            else
+            {
+                Vessel.orbitDriver.celestialBody.position = Vessel.orbitDriver.referenceBody.position + Vessel.orbitDriver.pos;
+            }
+        }
 
         private static CelestialBody GetBody(int bodyIndex)
         {
