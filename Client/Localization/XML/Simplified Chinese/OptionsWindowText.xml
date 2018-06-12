@@ -10,7 +10,6 @@
     <Set>设置</Set>
     <InterpolationSettings>Interpolation settings</InterpolationSettings>
     <EnableInterpolation>启用插值</EnableInterpolation>
-    <EnableExtrapolation>Enable extrapolation</EnableExtrapolation>
     <InterpolationOffset>Interpolation offset:</InterpolationOffset>
     <GenerateLmpModControl>生成服务器MOD控制文件 LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>从已保存的存档中生成宇宙</GenerateUniverse>

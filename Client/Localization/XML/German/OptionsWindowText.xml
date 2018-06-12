@@ -10,7 +10,6 @@
     <Set>Festlegen</Set>
     <InterpolationSettings>Interpolation Einstellungen</InterpolationSettings>
     <EnableInterpolation>Aktiviere Interpolation</EnableInterpolation>
-    <EnableExtrapolation>Enable extrapolation</EnableExtrapolation>
     <InterpolationOffset>Interpolations-Versatz:</InterpolationOffset>
     <GenerateLmpModControl>Generiere die Server LMPModControl.xml-Datei</GenerateLmpModControl>
     <GenerateUniverse>Generiere das Universum von einem gespeicherten Spielstand</GenerateUniverse>

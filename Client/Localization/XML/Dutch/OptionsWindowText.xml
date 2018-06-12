@@ -10,7 +10,6 @@
     <Set>Pas toe</Set>
     <InterpolationSettings>Interpolation settings</InterpolationSettings>
     <EnableInterpolation>Zet interpolatie aan</EnableInterpolation>
-    <EnableExtrapolation>Enable extrapolation</EnableExtrapolation>
     <InterpolationOffset>Interpolation offset:</InterpolationOffset>
     <GenerateLmpModControl>Genereer een server LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>Genereer universum van opgeslagen game</GenerateUniverse>
