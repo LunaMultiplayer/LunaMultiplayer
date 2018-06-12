@@ -4,7 +4,6 @@ using LunaClient.Network;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
-using LunaClient.VesselUtilities;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
@@ -22,10 +21,6 @@ namespace LunaClient.Systems.VesselPositionSys
         public void SendVesselPositionUpdate(Vessel vessel)
         {
             if (vessel == null) return;
-
-            //Do not send messages while inside safety bubble
-            if (VesselCommon.IsInSafetyBubble(vessel, false))
-                return;
 
             var msg = CreateMessageFromVessel(vessel);
             if (msg == null) return;
