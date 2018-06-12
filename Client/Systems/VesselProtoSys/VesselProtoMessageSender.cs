@@ -1,6 +1,8 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.Lock;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.VesselStore;
@@ -39,6 +41,11 @@ namespace LunaClient.Systems.VesselProtoSys
         public void SendVesselMessage(Vessel vessel, bool forceSend, bool forceReloadOnReceive)
         {
             if (vessel == null || (!forceSend && VesselCommon.IsSpectating) || vessel.state == Vessel.State.DEAD || VesselRemoveSystem.Singleton.VesselWillBeKilled(vessel.id))
+                return;
+
+            if (!forceSend && !LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
+                return;
+            if (!forceSend && !LockSystem.LockQuery.UpdateLockBelongsToPlayer(vessel.id, SettingsSystem.CurrentSettings.PlayerName))
                 return;
 
             var vesselHasChanges = VesselToProtoRefresh.RefreshVesselProto(vessel);
