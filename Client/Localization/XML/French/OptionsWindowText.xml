@@ -10,7 +10,6 @@
     <Set>Appliquer</Set>
     <InterpolationSettings>Paramètres d'interpolation</InterpolationSettings>
     <EnableInterpolation>Activer l'interpolation</EnableInterpolation>
-    <EnableExtrapolation>Activer l'extrapolation</EnableExtrapolation>
     <InterpolationOffset>Décalage d'interpolation :</InterpolationOffset>
     <GenerateLmpModControl>Générer le fichier serveur "LMPModControl.xml"</GenerateLmpModControl>
     <GenerateUniverse>Générer l'univers depuis une sauvegarde</GenerateUniverse>
