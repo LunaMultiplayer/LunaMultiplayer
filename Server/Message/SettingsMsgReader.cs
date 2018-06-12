@@ -34,8 +34,6 @@ namespace Server.Message
             msgData.InterpolationOffsetMs = InterpolationSettings.SettingsStore.InterpolationOffsetMs;
             msgData.ForceInterpolation = InterpolationSettings.SettingsStore.ForceInterpolation;
             msgData.InterpolationValue = InterpolationSettings.SettingsStore.InterpolationValue;
-            msgData.ForceExtrapolation = InterpolationSettings.SettingsStore.ForceExtrapolation;
-            msgData.ExtrapolationValue = InterpolationSettings.SettingsStore.ExtrapolationValue;
             msgData.VesselPartsSyncMsInterval = IntervalSettings.SettingsStore.VesselPartsSyncMsInterval;
             msgData.ShowVesselsInThePast = GeneralSettings.SettingsStore.ShowVesselsInThePast;
             msgData.WarpMaster = WarpSettings.SettingsStore.WarpMaster;

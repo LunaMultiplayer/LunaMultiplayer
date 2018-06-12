@@ -27,8 +27,6 @@ namespace LunaCommon.Message.Data.Settings
         public int InterpolationOffsetMs;
         public bool ForceInterpolation;
         public bool InterpolationValue;
-        public bool ForceExtrapolation;
-        public bool ExtrapolationValue;
         public bool AllowStockVessels;
         public bool CanRevert;
         public bool AutoHireCrews;
@@ -96,8 +94,6 @@ namespace LunaCommon.Message.Data.Settings
             lidgrenMsg.Write(InterpolationOffsetMs);
             lidgrenMsg.Write(ForceInterpolation);
             lidgrenMsg.Write(InterpolationValue);
-            lidgrenMsg.Write(ForceExtrapolation);
-            lidgrenMsg.Write(ExtrapolationValue);
             lidgrenMsg.Write(AllowStockVessels);
             lidgrenMsg.Write(CanRevert);
             lidgrenMsg.Write(AutoHireCrews);
@@ -164,8 +160,6 @@ namespace LunaCommon.Message.Data.Settings
             InterpolationOffsetMs = lidgrenMsg.ReadInt32();
             ForceInterpolation = lidgrenMsg.ReadBoolean();
             InterpolationValue = lidgrenMsg.ReadBoolean();
-            ForceExtrapolation = lidgrenMsg.ReadBoolean();
-            ExtrapolationValue = lidgrenMsg.ReadBoolean();
             AllowStockVessels = lidgrenMsg.ReadBoolean();
             CanRevert = lidgrenMsg.ReadBoolean();
             AutoHireCrews = lidgrenMsg.ReadBoolean();
@@ -215,7 +209,7 @@ namespace LunaCommon.Message.Data.Settings
         internal override int InternalGetMessageSize()
         {
             return base.InternalGetMessageSize() + sizeof(WarpMode) + sizeof(GameMode) + sizeof(TerrainQuality) + sizeof(GameDifficulty) +
-                sizeof(bool) * 27 + sizeof(int) * 9 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
+                sizeof(bool) * 25 + sizeof(int) * 9 + sizeof(float) * 19 + ConsoleIdentifier.GetByteCount() + WarpMaster.GetByteCount();
         }
     }
 }

@@ -90,16 +90,6 @@ namespace LunaClient.Windows.Options
                     SettingsSystem.SaveSettings();
                 }
                 GUI.enabled = true;
-
-                GUI.enabled = MainSystem.NetworkState < ClientState.SyncingSettings || !SettingsSystem.ServerSettings.ForceExtrapolation;
-                var settingExtrapolator = GUILayout.Toggle(SettingsSystem.CurrentSettings.PositionExtrapolation, LocalizationContainer.OptionsWindowText.EnableExtrapolation, "toggle");
-                if (settingExtrapolator != SettingsSystem.CurrentSettings.PositionExtrapolation)
-                {
-                    SettingsSystem.CurrentSettings.PositionExtrapolation = settingExtrapolator;
-                    SettingsSystem.SaveSettings();
-                }
-                GUI.enabled = true;
-
                 GUI.enabled = SettingsSystem.CurrentSettings.PositionInterpolation && (MainSystem.NetworkState < ClientState.SyncingSettings || !SettingsSystem.ServerSettings.ForceInterpolationOffset);
                 GUILayout.Label($"{LocalizationContainer.OptionsWindowText.InterpolationOffset} {SettingsSystem.CurrentSettings.InterpolationOffsetSeconds * 1000:F0} ms");
                 var interpolationOffset = Math.Round(GUILayout.HorizontalScrollbar((float)SettingsSystem.CurrentSettings.InterpolationOffsetSeconds, 0, 0, 5), 1);

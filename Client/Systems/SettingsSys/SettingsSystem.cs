@@ -24,7 +24,7 @@ namespace LunaClient.Systems.SettingsSys
             base.OnDisabled();
 
             //Restore our local settings back
-            if (ServerSettings.ForceInterpolationOffset || ServerSettings.ForceInterpolation || ServerSettings.ForceExtrapolation)
+            if (ServerSettings.ForceInterpolationOffset || ServerSettings.ForceInterpolation)
             {
                 SettingsBackup.RestoreBackup();
             }
@@ -82,7 +82,6 @@ namespace LunaClient.Systems.SettingsSys
             }
 
             if (ServerSettings.ForceInterpolation) CurrentSettings.PositionInterpolation = msgData.InterpolationValue;
-            if (ServerSettings.ForceExtrapolation) CurrentSettings.PositionExtrapolation = msgData.ExtrapolationValue;
         }
     }
 }

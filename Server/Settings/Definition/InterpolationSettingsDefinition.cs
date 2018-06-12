@@ -17,11 +17,5 @@ namespace Server.Settings.Definition
 
         [XmlComment(Value = "The interpolation value to force the clients to have")]
         public bool InterpolationValue { get; set; } = true;
-
-        [XmlComment(Value = "Force clients to have extrapolation on/off")]
-        public bool ForceExtrapolation { get; set; } = false;
-
-        [XmlComment(Value = "The extrapolation value to force the clients to have")]
-        public bool ExtrapolationValue { get; set; } = true;
     }
 }
