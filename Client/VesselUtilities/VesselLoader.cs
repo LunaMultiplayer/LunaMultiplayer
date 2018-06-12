@@ -254,7 +254,8 @@ namespace LunaClient.VesselUtilities
                     BuildSpaceTrackingVesselList?.Invoke(spaceTracking, null);
             }
 
-            KSCVesselMarkers.fetch?.RefreshMarkers();
+            if(HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                KSCVesselMarkers.fetch?.RefreshMarkers();
 
             return true;
         }
