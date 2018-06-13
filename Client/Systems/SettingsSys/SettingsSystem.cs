@@ -45,9 +45,7 @@ namespace LunaClient.Systems.SettingsSys
             if ((int)ServerSettings.TerrainQuality != PQSCache.PresetList.presetIndex)
             {
                 validationResult = false;
-                Builder.Append($"Your terrain quality ({((TerrainQuality)PQSCache.PresetList.presetIndex).ToString()}) " +
-                                     $"does not match the server quality ({ServerSettings.TerrainQuality.ToString()}).");
-
+                Builder.Append($"Your terrain quality: {(TerrainQuality)PQSCache.PresetList.presetIndex} does not match the server quality: {ServerSettings.TerrainQuality}.");
             }
 
             if (!validationResult)
