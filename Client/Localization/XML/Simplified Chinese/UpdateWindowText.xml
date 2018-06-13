@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-16"?>
 <UpdateWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <Title>New update available</Title>
-  <Text>There is a new version of LMP available for download</Text>
-  <StillCompatible>Your current LMP version is compatible with the latest version</StillCompatible>
-  <NotCompatible>Your current LMP version is not compatible with the latest version</NotCompatible>
-  <Changelog>Changelog</Changelog>
-  <CurrentVersion>Your current version:</CurrentVersion>
-  <LatestVersion>Latest version:</LatestVersion>
+  <Title>新更新可用</Title>
+  <Text>有一个新版本的LMP可供下载</Text>
+  <StillCompatible>您当前的LMP版本与最新版本兼容</StillCompatible>
+  <NotCompatible>您当前的LMP版本与最新版本不兼容</NotCompatible>
+  <Changelog>更新日志</Changelog>
+  <CurrentVersion>你的版本:</CurrentVersion>
+  <LatestVersion>最新版本:</LatestVersion>
 </UpdateWindowText>
