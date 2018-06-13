@@ -24,6 +24,7 @@ namespace LunaClient.Harmony
             var crashingVessel = c.gameObject.GetComponentUpwards<Part>()?.vessel;
             if (crashingVessel != null)
             {
+                if (!LockSystem.LockQuery.UpdateLockExists(crashingVessel.id)) return true;
                 return LockSystem.LockQuery.UpdateLockBelongsToPlayer(crashingVessel.id, SettingsSystem.CurrentSettings.PlayerName);
             }
 

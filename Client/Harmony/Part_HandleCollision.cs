@@ -21,6 +21,7 @@ namespace LunaClient.Harmony
 
             if (__instance?.vessel != null)
             {
+                if (!LockSystem.LockQuery.UpdateLockExists(__instance.vessel.id)) return true;
                 return LockSystem.LockQuery.UpdateLockBelongsToPlayer(__instance.vessel.id, SettingsSystem.CurrentSettings.PlayerName);
             }
 
