@@ -1,4 +1,6 @@
-﻿using LunaClient.Base;
+﻿using Harmony;
+using LunaClient.Base;
+using System.Collections.Generic;
 
 namespace LunaClient.Systems.Facility
 {
@@ -11,6 +13,8 @@ namespace LunaClient.Systems.Facility
 
         public FacilityEvents FacilityEvents { get; } = new FacilityEvents();
 
+        public readonly HashSet<string> DestroyedFacilities = new HashSet<string>();
+
         public string BuildingIdToIgnore;
 
         #endregion
@@ -21,15 +25,21 @@ namespace LunaClient.Systems.Facility
 
         protected override void OnEnabled()
         {
-            GameEvents.OnKSCStructureRepaired.Add(FacilityEvents.FacilityRepaired);
+            GameEvents.OnKSCStructureRepairing.Add(FacilityEvents.FacilityRepairing);
             GameEvents.OnKSCStructureCollapsing.Add(FacilityEvents.FacilityCollapsing);
+
+            GameEvents.onFlightReady.Add(FacilityEvents.FlightReady);
             base.OnEnabled();
         }
 
         protected override void OnDisabled()
         {
-            GameEvents.OnKSCStructureRepaired.Remove(FacilityEvents.FacilityRepaired);
+            DestroyedFacilities.Clear();
+
+            GameEvents.OnKSCStructureRepaired.Remove(FacilityEvents.FacilityRepairing);
             GameEvents.OnKSCStructureCollapsing.Remove(FacilityEvents.FacilityCollapsing);
+
+            GameEvents.onFlightReady.Remove(FacilityEvents.FlightReady);
             base.OnDisabled();
         }
 
@@ -62,6 +72,26 @@ namespace LunaClient.Systems.Facility
 
             BuildingIdToIgnore = building.id;
             building.Demolish();
+            BuildingIdToIgnore = string.Empty;
+        }
+
+        /// <summary>
+        /// Collapses a building without replaying the special effects. 
+        /// Useful when reverting as you don't want to see the flames again...
+        /// </summary>
+        public void CollapseFacilityWithoutSfx(DestructibleBuilding building)
+        {
+            if (building == null || !building.IsIntact || building.IsDestroyed)
+                return;
+
+            BuildingIdToIgnore = building.id;
+            foreach (var collapsibleObj in building.CollapsibleObjects)
+            {
+                collapsibleObj.SetDestroyed(true);
+            }
+
+            Traverse.Create(building).Field("destroyed").SetValue(true);
+            Traverse.Create(building).Field("intact").SetValue(false);
             BuildingIdToIgnore = string.Empty;
         }
 

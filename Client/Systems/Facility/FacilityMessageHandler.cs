@@ -23,9 +23,11 @@ namespace LunaClient.Systems.Facility
                 switch (msgData.FacilityMessageType)
                 {
                     case FacilityMessageType.Repair:
+                        System.DestroyedFacilities.Remove(destructibleFacility.id);
                         System.RepairFacilityWithoutSendingMessage(destructibleFacility);
                         break;
                     case FacilityMessageType.Collapse:
+                        System.DestroyedFacilities.Add(destructibleFacility.id);
                         System.CollapseFacilityWithoutSendingMessage(destructibleFacility);
                         break;
                 }
