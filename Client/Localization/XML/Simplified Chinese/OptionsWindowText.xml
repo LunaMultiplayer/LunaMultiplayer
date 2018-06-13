@@ -14,7 +14,7 @@
     <GenerateLmpModControl>生成服务器MOD控制文件 LMPModControl.xml</GenerateLmpModControl>
     <GenerateUniverse>从已保存的存档中生成宇宙</GenerateUniverse>
     <NetworkSettings>网络设置</NetworkSettings>
-    <CannotChangeWhileConnected>已连接时不能更改值</CannotChangeWhileConnected>
+    <CannotChangeWhileConnected>已连接服务器时不能更改值</CannotChangeWhileConnected>
     <ResetNetwork>重设网络</ResetNetwork>
     <Mtu>MTU (默认: 1408):</Mtu>
     <AutoExpandMtu>自动扩展MTU</AutoExpandMtu>
