@@ -167,7 +167,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
             }
 
-            if (Target == null || InterpolationFinished) return;
+            if (Target == null || InterpolationFinished && SettingsSystem.CurrentSettings.PositionInterpolation) return;
 
             try
             {
@@ -190,6 +190,12 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         public void AdjustExtraInterpolationTimes()
         {
+            if (!SettingsSystem.CurrentSettings.PositionInterpolation)
+            {
+                TimeDifference = 0;
+                return;
+            }
+
             TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
 
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
