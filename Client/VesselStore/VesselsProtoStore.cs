@@ -31,7 +31,7 @@ namespace LunaClient.VesselStore
             //is a reference type and the message might have been recycled!
             if (AllPlayerVessels.TryGetValue(vesselId, out var vesselUpdate))
             {
-                vesselUpdate.Update(vesselData, numBytes, vesselId, forceReload);
+                vesselUpdate.Update(vesselData, numBytes, vesselId, forceReload, true);
             }
             else
             {
@@ -94,7 +94,7 @@ namespace LunaClient.VesselStore
         {
             if (AllPlayerVessels.TryGetValue(vesselId, out var vesselProtoUpd))
             {
-                vesselProtoUpd.Update(vesselData, numBytes, vesselId, false);
+                vesselProtoUpd.Update(vesselData, numBytes, vesselId, false, false);
             }
         }
 

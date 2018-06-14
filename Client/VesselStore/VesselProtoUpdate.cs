@@ -74,7 +74,7 @@ namespace LunaClient.VesselStore
         /// <summary>
         /// Update this class with the new data received
         /// </summary>
-        public void Update(byte[] vesselData, int numBytes, Guid vesselId, bool forceReload)
+        public void Update(byte[] vesselData, int numBytes, Guid vesselId, bool forceReload, bool reloadLocally)
         {
             lock (_vesselDataSyncLock)
             {
@@ -87,7 +87,7 @@ namespace LunaClient.VesselStore
                 CopyVesselBytes(vesselData, numBytes);
 
                 _needToDeserializeData = true;
-                VesselHasUpdate = true;
+                VesselHasUpdate = reloadLocally;
                 ForceReload = forceReload;
             }
         }
