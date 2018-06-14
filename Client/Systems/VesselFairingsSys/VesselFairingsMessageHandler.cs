@@ -4,6 +4,7 @@ using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
+using System;
 using System.Collections.Concurrent;
 
 namespace LunaClient.Systems.VesselFairingsSys
@@ -33,7 +34,14 @@ namespace LunaClient.Systems.VesselFairingsSys
                 module?.moduleValues.SetValue("fsm", "st_flight_deployed");
                 module?.moduleValues.RemoveNodesStartWith("XSECTION");
 
-                (module?.moduleRef as ModuleProceduralFairing)?.DeployFairing();
+                try
+                {
+                    (module?.moduleRef as ModuleProceduralFairing)?.DeployFairing();
+                }
+                catch (Exception)
+                {
+                    //TODO reload the module
+                }
             }
         }
     }
