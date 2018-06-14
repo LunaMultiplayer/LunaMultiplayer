@@ -5,6 +5,6 @@ namespace LunaClient.Events
 {
     public class VesselLoadEvent
     {
-        public static EventData<Vessel> onVesselLoaded { get; } = new EventData<Vessel>("onVesselLoaded");
+        public static EventData<Vessel> onLmpVesselLoaded { get; } = new EventData<Vessel>("onLmpVesselLoaded");
     }
 }

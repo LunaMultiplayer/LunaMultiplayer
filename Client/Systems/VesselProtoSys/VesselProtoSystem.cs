@@ -205,7 +205,7 @@ namespace LunaClient.Systems.VesselProtoSys
                         if (VesselLoader.LoadVessel(vesselProto.Value.ProtoVessel))
                         {
                             LunaLog.Log($"[LMP]: Vessel {vesselProto.Key} loaded");
-                            VesselLoadEvent.onVesselLoaded.Fire(vesselProto.Value.Vessel);
+                            VesselLoadEvent.onLmpVesselLoaded.Fire(vesselProto.Value.Vessel);
                         }
                     }
                 }
@@ -246,7 +246,7 @@ namespace LunaClient.Systems.VesselProtoSys
                             CurrentlyUpdatingVesselId = vesselIdToReload;
                             ProtoToVesselRefresh.UpdateVesselPartsFromProtoVessel(vesselProtoUpd.Vessel, vesselProtoUpd.ProtoVessel, vesselProtoUpd.ForceReload, vesselProtoUpd.VesselParts.Keys);
                             vesselProtoUpd.VesselHasUpdate = false;
-                            VesselReloadEvent.onVesselReloaded.Fire(vesselProtoUpd.Vessel);
+                            VesselReloadEvent.onLmpVesselReloaded.Fire(vesselProtoUpd.Vessel);
                             CurrentlyUpdatingVesselId = Guid.Empty;
                         }
                     }

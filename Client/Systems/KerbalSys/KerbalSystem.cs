@@ -69,8 +69,8 @@ namespace LunaClient.Systems.KerbalSys
             GameEvents.onVesselRecovered.Add(KerbalEvents.OnVesselRecovered);
             GameEvents.onVesselWillDestroy.Add(KerbalEvents.OnVesselWillDestroy);
 
-            VesselLoadEvent.onVesselLoaded.Add(KerbalEvents.OnVesselLoaded);
-            VesselReloadEvent.onVesselReloaded.Add(KerbalEvents.OnVesselReloaded);
+            VesselLoadEvent.onLmpVesselLoaded.Add(KerbalEvents.OnVesselLoaded);
+            VesselReloadEvent.onLmpVesselReloaded.Add(KerbalEvents.OnVesselReloaded);
         }
 
         protected override void OnDisabled()
@@ -87,8 +87,8 @@ namespace LunaClient.Systems.KerbalSys
             GameEvents.onVesselRecovered.Remove(KerbalEvents.OnVesselRecovered);
             GameEvents.onVesselWillDestroy.Remove(KerbalEvents.OnVesselWillDestroy);
 
-            VesselLoadEvent.onVesselLoaded.Remove(KerbalEvents.OnVesselLoaded);
-            VesselReloadEvent.onVesselReloaded.Remove(KerbalEvents.OnVesselReloaded);
+            VesselLoadEvent.onLmpVesselLoaded.Remove(KerbalEvents.OnVesselLoaded);
+            VesselReloadEvent.onLmpVesselReloaded.Remove(KerbalEvents.OnVesselReloaded);
         }
 
         #endregion

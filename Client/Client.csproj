@@ -80,6 +80,7 @@
     <Compile Include="Events\StrategyEvent.cs" />
     <Compile Include="Events\VesselReloadEvent.cs" />
     <Compile Include="Events\VesselLoadEvent.cs" />
+    <Compile Include="Events\VesselUnloadEvent.cs" />
     <Compile Include="Events\WarpEvent.cs" />
     <Compile Include="Extensions\OrbitExtension.cs" />
     <Compile Include="Extensions\StringExtension.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Harmony\VesselPrecalculate_MainPhysics.cs" />
     <Compile Include="Harmony\TimeWarp_setMode.cs" />
     <Compile Include="Harmony\TimeWarp_setRate.cs" />
+    <Compile Include="Harmony\Vessel_Unload.cs" />
     <Compile Include="Harmony\Vessel_CheckKill.cs" />
     <Compile Include="Localization\Structures\AdminWindowText.cs" />
     <Compile Include="Localization\Structures\BannedPartsWindowText.cs" />
