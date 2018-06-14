@@ -54,6 +54,9 @@ namespace LunaClient.VesselUtilities
             if (vessel.situation >= Vessel.Situations.FLYING)
                 return false;
 
+            if (SettingsSystem.ServerSettings.SafetyBubbleDistance <= 0)
+                return false;
+
             if (useLatLonAltFromProto)
                 //Use the protovessel values as the normal vessel values can be affected by the position system and the situation of the vessel
                 return IsInSafetyBubble(vessel.protoVessel.latitude, vessel.protoVessel.longitude, vessel.protoVessel.altitude, vessel.mainBody);
