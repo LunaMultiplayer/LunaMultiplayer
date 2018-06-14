@@ -6,9 +6,6 @@ namespace Server.Utilities
     {
         public override string Message { get; }
 
-        public HandledException(string message)
-        {
-            Message = message;
-        }
+        public HandledException(string message) => Message = message;
     }
 }

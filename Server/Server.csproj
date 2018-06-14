@@ -203,7 +203,6 @@
     <Compile Include="Upnp\LmpPortMapper.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\HandledException.cs" />
-    <Compile Include="Utilities\InstancesChecker.cs" />
     <Compile Include="Utilities\VersionChecker.cs" />
     <Compile Include="Web\Handlers\ExceptionHandler.cs" />
     <Compile Include="Web\Handlers\HttpException.cs" />
