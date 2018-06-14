@@ -24,7 +24,7 @@ namespace LunaClient.Systems.TimeSyncer
         public static long ServerStartTime { get; set; }
 
         /// <summary>
-        /// Thread safe way of accessing TimeSyncerSystem.UniversalTime
+        /// Thread safe way of accessing Planetarium.GetUniversalTime()
         /// </summary>
         public static double UniversalTime { get; private set; }
 
