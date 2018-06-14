@@ -80,7 +80,7 @@ namespace LunaClient.Systems.VesselPositionSys
         public float LerpPercentage
         {
             get => SettingsSystem.CurrentSettings.PositionInterpolation ? _lerpPercentage : 1;
-            set => _lerpPercentage = value;
+            set => _lerpPercentage = Mathf.Clamp01(value);
         }
 
         public double LerpTime { get; set; }
@@ -167,7 +167,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
             }
 
-            if (Target == null || InterpolationFinished && SettingsSystem.CurrentSettings.PositionInterpolation) return;
+            if (Target == null) return;
 
             try
             {
