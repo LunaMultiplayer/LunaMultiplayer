@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ModuleDefinition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Fields>
+        <!--Strings which say "Retracting..." and "Deploying...". Not needed.-->	
+        <FieldDefinition>
+            <FieldName>stateString</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+	<!--Same as before but what is displayed regarding the language patch you're using-->
+	<FieldDefinition>
+            <FieldName>stateDisplayString</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+    </Fields>
+</ModuleDefinition>
