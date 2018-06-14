@@ -179,7 +179,7 @@ namespace LunaClient.Systems.VesselPositionSys
             }
             finally
             {
-                LerpPercentage += (float)(Time.fixedDeltaTime / InterpolationDuration);
+                LerpPercentage += (float)(Time.deltaTime / InterpolationDuration);
             }
         }
 
@@ -223,7 +223,7 @@ namespace LunaClient.Systems.VesselPositionSys
                     LerpPercentage = 1;
                 }
 
-                ExtraInterpolationTime = Time.fixedDeltaTime;
+                ExtraInterpolationTime = Time.deltaTime;
             }
             else
             {
@@ -251,10 +251,10 @@ namespace LunaClient.Systems.VesselPositionSys
         /// </summary>
         private double GetInterpolationFixFactor()
         {
-            //The minimum fix factor is Time.fixedDeltaTime. Usually 0.02 s
+            //The minimum fix factor is Time.deltaTime. Usually 0.02 s
 
             var errorInSeconds = Math.Abs(Math.Abs(TimeDifference) - SettingsSystem.CurrentSettings.InterpolationOffsetSeconds);
-            var errorInFrames = errorInSeconds / Time.fixedDeltaTime;
+            var errorInFrames = errorInSeconds / Time.deltaTime;
 
             //We cannot fix errors that are below the delta time!
             if (errorInFrames < 1)
@@ -263,21 +263,21 @@ namespace LunaClient.Systems.VesselPositionSys
             if (errorInFrames <= 2)
             {
                 //The error is max 2 frames ahead/below
-                return Time.fixedDeltaTime;
+                return Time.deltaTime;
             }
             if (errorInFrames <= 5)
             {
                 //The error is max 5 frames ahead/below
-                return Time.fixedDeltaTime * 2;
+                return Time.deltaTime * 2;
             }
             if (errorInSeconds <= 2.5)
             {
                 //The error is max 2.5 SECONDS ahead/below
-                return Time.fixedDeltaTime * errorInFrames / 2;
+                return Time.deltaTime * errorInFrames / 2;
             }
 
             //The error is really big...
-            return Time.fixedDeltaTime * errorInFrames;
+            return Time.deltaTime * errorInFrames;
         }
 
         #endregion
@@ -345,9 +345,16 @@ namespace LunaClient.Systems.VesselPositionSys
                 ApplyInterpolationsToLoadedVessel();
             }
 
-            //Apply the CURRENT time to the orbit only in space. If we don't do it the vessel will drift away 
-            //in space and if we apply it in atmo the rotations and positions will be buggy
-            CustomUpdateFromParameters(Vessel.situation < Vessel.Situations.SUB_ORBITAL ? LerpTime : Planetarium.GetUniversalTime());
+            if (Vessel.situation >= Vessel.Situations.SUB_ORBITAL)
+            {
+                //Apply the CURRENT time to the orbit only in space. If we don't do it the vessel will drift away 
+                //in space and if we apply it in atmo the rotations and positions will be buggy
+                CustomUpdateFromParameters(TimeSyncerSystem.UniversalTime);
+            }
+            else
+            {
+                CustomUpdateFromParameters(InterpolationFinished ? TimeSyncerSystem.UniversalTime : LerpTime);
+            }
         }
 
         private void ApplyInterpolationsToLoadedVessel()
@@ -495,7 +502,7 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         #region Helper methods
-        
+
         private void CustomUpdateFromParameters(double time)
         {
             Traverse.Create(Vessel.orbitDriver).Field("updateUT").SetValue(time);
