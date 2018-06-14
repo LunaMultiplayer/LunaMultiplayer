@@ -57,7 +57,7 @@ namespace LunaClient.Systems.VesselPositionSys
         {
             base.OnEnabled();
 
-            TimingManager.UpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
+            TimingManager.FixedUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
 
             //Send the position updates after all the calculations are done. If you send it in the fixed update sometimes weird rubber banding appear (specially in space)
             TimingManager.LateUpdateAdd(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
@@ -78,7 +78,7 @@ namespace LunaClient.Systems.VesselPositionSys
             CurrentVesselUpdate.Clear();
             TargetVesselUpdateQueue.Clear();
 
-            TimingManager.UpdateRemove(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
+            TimingManager.FixedUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, HandleVesselUpdates);
             TimingManager.LateUpdateRemove(TimingManager.TimingStage.BetterLateThanNever, SendVesselPositionUpdates);
 
             LockEvent.onLockAcquire.Remove(PositionEvents.OnLockAcquire);
