@@ -95,7 +95,7 @@ namespace LunaClient.Windows.Screenshots
                         DrawLibraryContent, $"{_selectedFolder} {LocalizationContainer.ScreenshotWindowText.Screenshots}", WindowStyle, _libraryLayoutOptions));
                 }
 
-                if (_selectedImage > 0 && System.DownloadedImages.ContainsKey(_selectedFolder))
+                if (_selectedImage > 0 && System.DownloadedImages.ContainsKey(_selectedFolder) && System.DownloadedImages[_selectedFolder].ContainsKey(_selectedImage))
                 {
                     _imageWindowRect = FixWindowPos(GUILayout.Window(6721 + MainSystem.WindowOffset, _imageWindowRect, 
                         DrawImageContent, $"{DateTime.FromBinary(_selectedImage):yyyy/MM/dd HH:mm:ss} UTC", WindowStyle));
