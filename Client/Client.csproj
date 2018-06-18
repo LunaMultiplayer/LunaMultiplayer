@@ -51,8 +51,7 @@
     <Reference Include="System.Threading">
       <HintPath>..\External\Dependencies\System.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine">
       <HintPath>..\External\KSPLibraries\UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
@@ -75,6 +74,7 @@
     <Compile Include="Events\LockEvent.cs" />
     <Compile Include="Events\ModApiEvent.cs" />
     <Compile Include="Events\NetworkEvent.cs" />
+    <Compile Include="Events\PartModuleEvent.cs" />
     <Compile Include="Events\RevertEvent.cs" />
     <Compile Include="Events\SpectateEvent.cs" />
     <Compile Include="Events\StrategyEvent.cs" />
@@ -124,6 +124,7 @@
     <Compile Include="Localization\Structures\CompatibleDialogText.cs" />
     <Compile Include="Localization\Structures\UpdateWindowText.cs" />
     <Compile Include="LunaScreenMsg.cs" />
+    <Compile Include="ModuleStore\PartModulePatcher.cs" />
     <Compile Include="ModuleStore\Structures\FieldDefinition.cs" />
     <Compile Include="ModuleStore\Structures\ModuleDefinition.cs" />
     <Compile Include="ModuleStore\FieldModuleDefinition.cs" />
@@ -141,6 +142,7 @@
     <Compile Include="Localization\Structures\StatusWindowText.cs" />
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
+    <Compile Include="ModuleStore\TestMod.cs" />
     <Compile Include="Systems\Admin\AdminMessageHandler.cs" />
     <Compile Include="Systems\Admin\AdminMessageSender.cs" />
     <Compile Include="Systems\Admin\AdminSystem.cs" />

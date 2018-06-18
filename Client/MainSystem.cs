@@ -235,6 +235,7 @@ namespace LunaClient
             }
 
             HarmonyPatcher.Awake();
+            PartModulePatcher.Awake();
             SetupDirectoriesIfNeeded();
             HandleCommandLineArgs();
 
