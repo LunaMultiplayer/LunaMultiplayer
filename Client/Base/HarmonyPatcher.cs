@@ -5,10 +5,11 @@ namespace LunaClient.Base
 {
     public static class HarmonyPatcher
     {
+        public static HarmonyInstance HarmonyInstance = HarmonyInstance.Create("LunaMultiplayer");
+
         public static void Awake()
         {
-            var instance = HarmonyInstance.Create("LunaMultiplayer");
-            instance.PatchAll(Assembly.GetExecutingAssembly());
+            HarmonyInstance.PatchAll(Assembly.GetExecutingAssembly());
         }
     }
 }
