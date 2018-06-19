@@ -142,7 +142,6 @@
     <Compile Include="Localization\Structures\StatusWindowText.cs" />
     <Compile Include="LunaLog.cs" />
     <Compile Include="Base\MessageSystem.cs" />
-    <Compile Include="ModuleStore\TestMod.cs" />
     <Compile Include="Systems\Admin\AdminMessageHandler.cs" />
     <Compile Include="Systems\Admin\AdminMessageSender.cs" />
     <Compile Include="Systems\Admin\AdminSystem.cs" />
