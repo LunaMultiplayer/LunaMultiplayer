@@ -1,17 +1,19 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Reflection;
+using UniLinq;
 
 namespace LunaClient.ModuleStore
 {
     public class FieldModuleDefinition
     {
         public Type ModuleType { get; }
-        public FieldInfo[] PersistentModuleField { get; } = new FieldInfo[0];
+        public Dictionary<string, FieldInfo> PersistentModuleField { get; }
 
-        public FieldModuleDefinition(Type moduleType, FieldInfo[] persistentFields)
+        public FieldModuleDefinition(Type moduleType, IEnumerable<FieldInfo> persistentFields)
         {
             ModuleType = moduleType;
-            PersistentModuleField = persistentFields;
+            PersistentModuleField = persistentFields.ToDictionary(k=> k.Name, k => k);
         }
     }
 }

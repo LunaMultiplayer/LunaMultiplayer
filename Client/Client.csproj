@@ -233,6 +233,7 @@
     <Compile Include="Systems\VesselImmortalSys\VesselImmortalEvents.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\CustomizationsHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\PartSyncUpdateEntry.cs" />
+    <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncEvents.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageHandler.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncMessageSender.cs" />
     <Compile Include="Systems\VesselPartModuleSyncSys\VesselPartModuleSyncSystem.cs" />

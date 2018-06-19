@@ -23,7 +23,6 @@ namespace LunaClient.Systems.SettingsSys
         public bool ForceInterpolationOffset { get; set; }
         public bool ForceInterpolation { get; set; }
         public string WarpMaster { get; set; }
-        public int VesselPartsSyncMsInterval { get; set; }
         public bool ShowVesselsInThePast { get; set; }
         public int MinScreenshotIntervalMs { get; set; }
         public int MaxScreenshotWidth { get; set; }

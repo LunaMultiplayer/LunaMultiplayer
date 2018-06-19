@@ -64,8 +64,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
                     {
                         if (FieldModuleStore.ModuleFieldsDictionary.TryGetValue(msgData.BaseModuleName, out var moduleDef))
                         {
-                            var fieldDef = moduleDef.PersistentModuleField.FirstOrDefault(f => f.Name == msgData.FieldName);
-                            if (fieldDef != null)
+                            if (moduleDef.PersistentModuleField.TryGetValue(msgData.FieldName, out var fieldDef))
                             {
                                 var convertedVal = Convert.ChangeType(msgData.Value, fieldDef.FieldType);
                                 if (convertedVal != null) fieldDef.SetValue(module.moduleRef, convertedVal);

@@ -14,11 +14,6 @@ namespace Server.Settings.Definition
                             "This interval is also applied used to send position updates of HIS OWN vessel when NOBODY is around")]
         public int SecondaryVesselUpdatesMsInterval { get; set; } = 150;
 
-        [XmlComment(Value = "Interval in ms at which users will check the controlled and close uncontrolled vessel and sync the parts that have changes " +
-                            "(ladders that extend or shields that open) to the server. " +
-                            "Caution! Putting a very low value could make clients with slow computers to lag a lot!")]
-        public int VesselPartsSyncMsInterval { get; set; } = 500;
-
         [XmlComment(Value = "Send/Receive tick clock. Keep this value low but at least above 2ms to avoid extreme CPU usage.")]
         public int SendReceiveThreadTickMs { get; set; } = 5;
 
