@@ -18,7 +18,7 @@ namespace LunaClient.Harmony
         {
             if (MainSystem.NetworkState < ClientState.Connected) return true;
 
-            return !LockSystem.LockQuery.UpdateLockExists(__instance.id) || 
+            return !LockSystem.LockQuery.UnloadedUpdateLockExists(__instance.id) || 
                    LockSystem.LockQuery.UnloadedUpdateLockBelongsToPlayer(__instance.id, SettingsSystem.CurrentSettings.PlayerName);
         }
     }
