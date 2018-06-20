@@ -96,11 +96,9 @@
     <Compile Include="Harmony\KerbalEVA_BoardSeat.cs" />
     <Compile Include="Harmony\KerbalRoster_SackAvailable.cs" />
     <Compile Include="Harmony\ModuleScienceExperiment_ResetExperiment.cs" />
-    <Compile Include="Harmony\OrbitDriver_UpdateFromParameters.cs" />
     <Compile Include="Harmony\KscVesselMarkers_SpawnVesselMarkers.cs" />
     <Compile Include="Harmony\LaunchSiteClear_Test.cs" />
     <Compile Include="Harmony\KSCPauseMenu_QuickLoad.cs" />
-    <Compile Include="Harmony\OrbitDriver_TrackRigidbody.cs" />
     <Compile Include="Harmony\PartJoint_OnJointBreak.cs" />
     <Compile Include="Harmony\Part_HandleCollision.cs" />
     <Compile Include="Harmony\QuickSaveLoad_QuickLoad.cs" />
