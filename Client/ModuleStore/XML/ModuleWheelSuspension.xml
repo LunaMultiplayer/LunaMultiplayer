@@ -11,5 +11,15 @@
             <FieldName>autoBoost</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>
+        <!--Damper is tweakbale through SPH. Default won't be synced, but modified values are synced on every bump.-->
+	 <FieldDefinition>
+            <FieldName>damperTweakable</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+	 <!--Spring is tweakable through SPH. Default won't be synced, but modified values are synced on every bump.-->
+	 <FieldDefinition>
+	     <FieldName>springTweakable</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
     </Fields>
 </ModuleDefinition>
