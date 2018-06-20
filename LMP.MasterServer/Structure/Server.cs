@@ -1,6 +1,7 @@
 ﻿using LunaCommon;
 using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Time;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -104,10 +105,17 @@ namespace LMP.MasterServer.Structure
         
         private static async void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
         {
-            using (var client = new HttpClient())
+            try
             {
-                var countryCode = await client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/");
-                server.Country = countryCode;
+                using (var client = new HttpClient())
+                {
+                    var countryCode = await client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/");
+                    server.Country = countryCode;
+                }
+            }
+            catch (Exception)
+            {
+                // ignored
             }
         }
 
