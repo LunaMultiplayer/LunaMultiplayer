@@ -124,7 +124,7 @@ namespace LunaClient.Windows.Debug
 
                 if (_displayVesselsOrbit)
                 {
-                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready)
+                    if (HighLogic.LoadedScene >= GameScenes.FLIGHT && FlightGlobals.ready)
                     {
                         foreach (var vessel in FlightGlobals.Vessels)
                         {
