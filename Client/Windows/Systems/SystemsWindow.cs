@@ -34,7 +34,6 @@ namespace LunaClient.Windows.Systems
         private static bool _vesselResource;
         private static bool _vesselFairing;
         private static bool _vesselProto;
-        private static bool _vesselPrecalc;
         private static bool _vesselState;
         private static bool _vesselRemove;
         private static bool _vesselSwitcher;

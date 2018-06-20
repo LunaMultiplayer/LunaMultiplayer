@@ -27,7 +27,6 @@ using LunaClient.Systems.VesselImmortalSys;
 using LunaClient.Systems.VesselLockSys;
 using LunaClient.Systems.VesselPartModuleSyncSys;
 using LunaClient.Systems.VesselPositionSys;
-using LunaClient.Systems.VesselPrecalcSys;
 using LunaClient.Systems.VesselProtoSys;
 using LunaClient.Systems.VesselRemoveSys;
 using LunaClient.Systems.VesselResourceSys;
@@ -197,11 +196,6 @@ namespace LunaClient.Windows.Systems
             if (_vesselProto)
             {
                 VesselProtoSystem.Singleton.Enabled = GUILayout.Toggle(VesselProtoSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
-            }
-            _vesselPrecalc = GUILayout.Toggle(_vesselPrecalc, "Vessel precalc", ButtonStyle);
-            if (_vesselPrecalc)
-            {
-                VesselPrecalcSystem.Singleton.Enabled = GUILayout.Toggle(VesselPrecalcSystem.Singleton.Enabled, "ON/OFF", ButtonStyle);
             }
             _vesselState = GUILayout.Toggle(_vesselState, "Vessel state", ButtonStyle);
             if (_vesselState)
