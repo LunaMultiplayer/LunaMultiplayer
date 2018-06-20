@@ -1,5 +1,4 @@
-﻿using Harmony;
-using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -82,8 +81,6 @@ namespace LunaClient.Systems.VesselPositionSys
             get => SettingsSystem.CurrentSettings.PositionInterpolation ? _lerpPercentage : 1;
             set => _lerpPercentage = Mathf.Clamp01(value);
         }
-
-        public double LerpTime { get; set; }
 
         #endregion
 
@@ -344,17 +341,6 @@ namespace LunaClient.Systems.VesselPositionSys
             {
                 ApplyInterpolationsToLoadedVessel();
             }
-
-            if (Vessel.situation >= Vessel.Situations.SUB_ORBITAL)
-            {
-                //Apply the CURRENT time to the orbit only in space. If we don't do it the vessel will drift away 
-                //in space and if we apply it in atmo the rotations and positions will be buggy
-                CustomUpdateFromParameters(TimeSyncerSystem.UniversalTime);
-            }
-            else
-            {
-                CustomUpdateFromParameters(InterpolationFinished ? TimeSyncerSystem.UniversalTime : LerpTime);
-            }
         }
 
         private void ApplyInterpolationsToLoadedVessel()
@@ -433,11 +419,12 @@ namespace LunaClient.Systems.VesselPositionSys
             var targetVel = Target.KspOrbit.getOrbitalVelocityAtUT(targetTime) + Target.KspOrbit.referenceBody.GetFrameVelAtUT(targetTime) - Target.Body.GetFrameVelAtUT(targetTime);
 
             var lerpedPos = Vector3d.Lerp(currentPos, targetPos, LerpPercentage);
-            var lerpedVel = Vector3d.Lerp(currentVel, targetVel, LerpPercentage); ;
+            var lerpedVel = Vector3d.Lerp(currentVel, targetVel, LerpPercentage);
 
-            LerpTime = LunaMath.Lerp(startTime, targetTime, LerpPercentage);
+            //Don't need this...
+            //var lerpTime = LunaMath.Lerp(startTime, targetTime, LerpPercentage);
 
-            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, LerpTime);
+            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, Planetarium.GetUniversalTime());
         }
 
         /// <summary>
@@ -502,34 +489,6 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         #region Helper methods
-
-        private void CustomUpdateFromParameters(double time)
-        {
-            Traverse.Create(Vessel.orbitDriver).Field("updateUT").SetValue(time);
-            Vessel.orbitDriver.orbit.UpdateFromUT(time);
-            Vessel.orbitDriver.pos = Vessel.orbitDriver.orbit.pos;
-            Vessel.orbitDriver.vel = Vessel.orbitDriver.orbit.vel;
-            Vessel.orbitDriver.pos.Swizzle();
-            Vessel.orbitDriver.vel.Swizzle();
-            if (Vessel.orbitDriver.reverse)
-            {
-                Vessel.orbitDriver.referenceBody.position = (!Vessel.orbitDriver.celestialBody ? (Vector3d)Vessel.orbitDriver.driverTransform.position :
-                                                                Vessel.orbitDriver.celestialBody.position) - Vessel.orbitDriver.pos;
-            }
-            else if (Vessel)
-            {
-                var vector3D = Vessel.orbitDriver.driverTransform.rotation * Vessel.localCoM;
-                Vessel.SetPosition((Vessel.orbitDriver.referenceBody.position + Vessel.orbitDriver.pos) - vector3D);
-            }
-            else if (!Vessel.orbitDriver.celestialBody)
-            {
-                Vessel.orbitDriver.driverTransform.position = Vessel.orbitDriver.referenceBody.position + Vessel.orbitDriver.pos;
-            }
-            else
-            {
-                Vessel.orbitDriver.celestialBody.position = Vessel.orbitDriver.referenceBody.position + Vessel.orbitDriver.pos;
-            }
-        }
 
         private static CelestialBody GetBody(int bodyIndex)
         {
