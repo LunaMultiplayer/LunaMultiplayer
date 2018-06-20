@@ -6,6 +6,11 @@
             <FieldName>frictionMultiplier</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>
+        <!--Auto friction. We don't really care about it-->
+        <FieldDefinition>
+            <FieldName>autoFriction</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
         <!--set for grounded wheels. We don't really care about it-->
         <FieldDefinition>
             <FieldName>isGrounded</FieldName>
