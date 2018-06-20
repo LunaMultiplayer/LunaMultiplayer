@@ -82,6 +82,8 @@ namespace LunaClient.Systems.VesselPositionSys
             set => _lerpPercentage = Mathf.Clamp01(value);
         }
 
+        public bool Frozen => InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.IsEmpty;
+
         #endregion
 
         #endregion
@@ -165,6 +167,11 @@ namespace LunaClient.Systems.VesselPositionSys
             }
 
             if (Target == null) return;
+            if (Frozen && SettingsSystem.CurrentSettings.PositionInterpolation)
+            {
+                Vessel?.GoOnRails();
+                return;
+            }
 
             try
             {
@@ -424,7 +431,7 @@ namespace LunaClient.Systems.VesselPositionSys
             //Don't need this...
             //var lerpTime = LunaMath.Lerp(startTime, targetTime, LerpPercentage);
 
-            Vessel.orbitDriver.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, Planetarium.GetUniversalTime());
+            Vessel.orbit.UpdateFromStateVectors(lerpedPos, lerpedVel, LerpBody, Planetarium.GetUniversalTime());
         }
 
         /// <summary>
