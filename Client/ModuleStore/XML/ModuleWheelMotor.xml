@@ -6,5 +6,20 @@
             <FieldName>driveLimiter</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>
+        <!--Traction Control Scale. We don't need to sync this.-->
+        <FieldDefinition>
+            <FieldName>tractionControlScale</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+	 <!--Auto-Torque. Not needed.-->
+        <FieldDefinition>
+            <FieldName>autoTorque</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
+	 <!--Motor Inverted. Not needed.-->
+	 <FieldDefinition>
+            <FieldName>motorInverted</FieldName>
+            <Ignore>true</Ignore>
+        </FieldDefinition>
     </Fields>
 </ModuleDefinition>
