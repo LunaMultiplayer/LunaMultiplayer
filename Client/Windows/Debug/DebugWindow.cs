@@ -103,13 +103,15 @@ namespace LunaClient.Windows.Debug
                     {
                         var ourVessel = FlightGlobals.ActiveVessel;
 
-                        StringBuilder.AppendLine($"Semi major axis: {ourVessel.orbitDriver.orbit.semiMajorAxis}");
-                        StringBuilder.AppendLine($"Eccentricity: {ourVessel.orbitDriver.orbit.eccentricity}");
-                        StringBuilder.AppendLine($"Inclination: {ourVessel.orbitDriver.orbit.inclination}");
-                        StringBuilder.AppendLine($"LAN: {ourVessel.orbitDriver.orbit.LAN}");
-                        StringBuilder.AppendLine($"Arg Periapsis: {ourVessel.orbitDriver.orbit.argumentOfPeriapsis}");
-                        StringBuilder.AppendLine($"Mean anomaly: {ourVessel.orbitDriver.orbit.meanAnomalyAtEpoch}");
-                        StringBuilder.AppendLine($"Epoch: {ourVessel.orbitDriver.orbit.epoch}");
+                        StringBuilder.AppendLine($"Id: {ourVessel.id}");
+                        StringBuilder.AppendLine($"Mode: {ourVessel.orbitDriver.updateMode}");
+                        StringBuilder.AppendLine($"Semi major axis: {ourVessel.orbit.semiMajorAxis}");
+                        StringBuilder.AppendLine($"Eccentricity: {ourVessel.orbit.eccentricity}");
+                        StringBuilder.AppendLine($"Inclination: {ourVessel.orbit.inclination}");
+                        StringBuilder.AppendLine($"LAN: {ourVessel.orbit.LAN}");
+                        StringBuilder.AppendLine($"Arg Periapsis: {ourVessel.orbit.argumentOfPeriapsis}");
+                        StringBuilder.AppendLine($"Mean anomaly: {ourVessel.orbit.meanAnomalyAtEpoch}");
+                        StringBuilder.AppendLine($"Epoch: {ourVessel.orbit.epoch}");
 
                         _orbitText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
@@ -129,13 +131,14 @@ namespace LunaClient.Windows.Debug
                             if (vessel.id != FlightGlobals.ActiveVessel?.id && vessel.orbitDriver?.orbit != null)
                             {
                                 StringBuilder.AppendLine($"Id: {vessel.id}");
-                                StringBuilder.AppendLine($"Semi major axis: {vessel.orbitDriver.orbit.semiMajorAxis}");
-                                StringBuilder.AppendLine($"Eccentricity: {vessel.orbitDriver.orbit.eccentricity}");
-                                StringBuilder.AppendLine($"Inclination: {vessel.orbitDriver.orbit.inclination}");
-                                StringBuilder.AppendLine($"LAN: {vessel.orbitDriver.orbit.LAN}");
-                                StringBuilder.AppendLine($"Arg Periapsis: {vessel.orbitDriver.orbit.argumentOfPeriapsis}");
-                                StringBuilder.AppendLine($"Mean anomaly: {vessel.orbitDriver.orbit.meanAnomalyAtEpoch}");
-                                StringBuilder.AppendLine($"Epoch: {vessel.orbitDriver.orbit.epoch}");
+                                StringBuilder.AppendLine($"Mode: {vessel.orbitDriver.updateMode}");
+                                StringBuilder.AppendLine($"Semi major axis: {vessel.orbit.semiMajorAxis}");
+                                StringBuilder.AppendLine($"Eccentricity: {vessel.orbit.eccentricity}");
+                                StringBuilder.AppendLine($"Inclination: {vessel.orbit.inclination}");
+                                StringBuilder.AppendLine($"LAN: {vessel.orbit.LAN}");
+                                StringBuilder.AppendLine($"Arg Periapsis: {vessel.orbit.argumentOfPeriapsis}");
+                                StringBuilder.AppendLine($"Mean anomaly: {vessel.orbit.meanAnomalyAtEpoch}");
+                                StringBuilder.AppendLine($"Epoch: {vessel.orbit.epoch}");
                                 StringBuilder.AppendLine();
                             }
 
