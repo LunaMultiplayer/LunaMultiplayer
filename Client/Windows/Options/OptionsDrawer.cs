@@ -175,12 +175,6 @@ namespace LunaClient.Windows.Options
 
             if (GUILayout.Button("Check Common.dll stock parts"))
                 ModSystem.Singleton.CheckCommonStockParts();
-            var settingIntegrator = GUILayout.Toggle(SettingsSystem.CurrentSettings.OverrideIntegrator, "Override flight integrator", ButtonStyle);
-            if (settingIntegrator != SettingsSystem.CurrentSettings.OverrideIntegrator)
-            {
-                SettingsSystem.CurrentSettings.OverrideIntegrator = settingIntegrator;
-                SettingsSystem.SaveSettings();
-            }
 
             GUILayout.Space(10);
 
