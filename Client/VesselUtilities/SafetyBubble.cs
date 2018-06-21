@@ -83,11 +83,16 @@ namespace LunaClient.VesselUtilities
         /// </summary>
         public static bool IsInSafetyBubble(double lat, double lon, double alt, int bodyIndex)
         {
-            var body = FlightGlobals.Bodies[bodyIndex];
-            if (body == null || !body.isHomeWorld)
-                return false;
+            if (bodyIndex < FlightGlobals.Bodies.Count)
+            {
+                var body = FlightGlobals.Bodies[bodyIndex];
+                if (body == null || !body.isHomeWorld)
+                    return false;
 
-            return IsInSafetyBubble(FlightGlobals.Bodies[bodyIndex].GetWorldSurfacePosition(lat, lon, alt));
+                return IsInSafetyBubble(FlightGlobals.Bodies[bodyIndex].GetWorldSurfacePosition(lat, lon, alt));
+            }
+            LunaLog.LogError($"Body index {bodyIndex} is out of range!");
+            return false;
         }
 
         /// <summary>
