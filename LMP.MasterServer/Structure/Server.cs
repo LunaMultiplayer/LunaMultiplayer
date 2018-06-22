@@ -11,7 +11,7 @@ namespace LMP.MasterServer.Structure
     public class Server
     {
         private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries = 
-            new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromMinutes(60).TotalMilliseconds);
+            new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromHours(24).TotalMilliseconds);
 
         public long LastRegisterTime { get; set; }
         public IPEndPoint InternalEndpoint { get; set; }
