@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Timers;
 
 namespace LMP.MasterServer.Structure
 {
     public class TimeoutConcurrentDictionary<TKey,TValue>
     {
-        public double TimeutInMs = TimeSpan.FromMinutes(60).TotalMilliseconds;
+        private readonly double _timeutInMs;
 
         private class TimedValue
         {
@@ -32,9 +31,11 @@ namespace LMP.MasterServer.Structure
 
         private static readonly ConcurrentDictionary<TKey, TimedValue> Dictionary = new ConcurrentDictionary<TKey, TimedValue>();
 
+        public TimeoutConcurrentDictionary(double timeoutInMs) => _timeutInMs = timeoutInMs;
+
         public bool TryAdd(TKey key, TValue value)
         {
-            return Dictionary.TryAdd(key, new TimedValue(key, value, TimeutInMs));
+            return Dictionary.TryAdd(key, new TimedValue(key, value, _timeutInMs));
         }
 
         public bool TryGet(TKey key, out TValue value)

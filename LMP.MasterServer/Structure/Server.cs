@@ -10,7 +10,8 @@ namespace LMP.MasterServer.Structure
 {
     public class Server
     {
-        private static TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries = new TimeoutConcurrentDictionary<IPEndPoint, string>();
+        private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries = 
+            new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromMinutes(60).TotalMilliseconds);
 
         public long LastRegisterTime { get; set; }
         public IPEndPoint InternalEndpoint { get; set; }
