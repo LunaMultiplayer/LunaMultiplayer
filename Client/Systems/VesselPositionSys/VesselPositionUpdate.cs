@@ -1,4 +1,5 @@
-﻿using LunaClient.Systems.SettingsSys;
+﻿using LunaClient.Extensions;
+using LunaClient.Systems.SettingsSys;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -167,10 +168,20 @@ namespace LunaClient.Systems.VesselPositionSys
             }
 
             if (Target == null) return;
-            if (Frozen && SettingsSystem.CurrentSettings.PositionInterpolation)
+            if (Vessel != null && SettingsSystem.CurrentSettings.PositionInterpolation && Vessel.loaded && !Vessel.packed)
             {
-                Vessel?.GoOnRails();
-                return;
+                //When using interpolation and the vessel is close to us (unpacked) we freeze the vessel position if we don't have more updates
+                //This is the case when a client have a lag spike, it's better to freeze the position than going ballistic. 
+                //To freeze it we use the rigidbodies as that's how unity handles it
+
+                //If the vessel is PACKED then the OrbitDriver_UpdateOrbit harmony patch will freeze the vessel by not calling that method
+                if (Frozen)
+                {
+                    Vessel.FreezePosition();
+                    return;
+                }
+
+                Vessel.UnfreezePosition();
             }
 
             try

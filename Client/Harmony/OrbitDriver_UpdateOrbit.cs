@@ -17,7 +17,7 @@ namespace LunaClient.Harmony
         [HarmonyPrefix]
         private static bool PrefixUpdateOrbit(OrbitDriver __instance)
         {
-            if (MainSystem.NetworkState < ClientState.Connected || __instance.vessel == null) return true;
+            if (MainSystem.NetworkState < ClientState.Connected || __instance.vessel == null || !SettingsSystem.CurrentSettings.PositionInterpolation) return true;
 
             var vesselId = __instance.vessel.id;
 
