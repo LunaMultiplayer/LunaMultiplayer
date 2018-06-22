@@ -83,7 +83,9 @@ namespace LunaClient.Systems.VesselPositionSys
             set => _lerpPercentage = Mathf.Clamp01(value);
         }
 
-        public bool Frozen => InterpolationFinished && VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.IsEmpty;
+        public bool WasFrozen { get; set; }
+        public bool Frozen => InterpolationFinished && SettingsSystem.CurrentSettings.PositionInterpolation && 
+                              VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.IsEmpty;
 
         #endregion
 
@@ -177,6 +179,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 //If the vessel is PACKED then the OrbitDriver_UpdateOrbit harmony patch will freeze the vessel by not calling that method
                 if (Frozen)
                 {
+                    WasFrozen = true;
                     Vessel.FreezePosition();
                     return;
                 }
@@ -187,6 +190,13 @@ namespace LunaClient.Systems.VesselPositionSys
             try
             {
                 ApplyInterpolations();
+                if (WasFrozen && !Frozen)
+                {
+                    WasFrozen = false;
+
+                    var pos = Vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
+                    Vessel.SetPosition(pos, false);
+                }
             }
             catch (Exception e)
             {
