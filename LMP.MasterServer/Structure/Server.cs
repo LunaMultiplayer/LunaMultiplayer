@@ -10,6 +10,8 @@ namespace LMP.MasterServer.Structure
 {
     public class Server
     {
+        private static TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries = new TimeoutConcurrentDictionary<IPEndPoint, string>();
+
         public long LastRegisterTime { get; set; }
         public IPEndPoint InternalEndpoint { get; set; }
         public IPEndPoint ExternalEndpoint { get; set; }
@@ -110,10 +112,17 @@ namespace LMP.MasterServer.Structure
         {
             try
             {
-                using (var client = new HttpClient())
+                if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
                 {
-                    var countryCode = await client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/");
                     server.Country = countryCode;
+                }
+                else
+                {
+                    using (var client = new HttpClient())
+                    {
+                        server.Country = await client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/");
+                        EndpointCountries.TryAdd(externalEndpoint, server.Country);
+                    }
                 }
             }
             catch (Exception)
