@@ -193,9 +193,6 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (WasFrozen && !Frozen)
                 {
                     WasFrozen = false;
-
-                    var pos = Vessel.orbit.getPositionAtUT(Planetarium.GetUniversalTime());
-                    Vessel.SetPosition(pos, false);
                 }
             }
             catch (Exception e)
