@@ -84,7 +84,7 @@ namespace LunaClient.Systems.VesselPositionSys
         }
 
         public bool WasFrozen { get; set; }
-        public bool Frozen => InterpolationFinished && SettingsSystem.CurrentSettings.PositionInterpolation && 
+        public bool Frozen => InterpolationFinished && SettingsSystem.CurrentSettings.PositionInterpolation &&
                               VesselPositionSystem.TargetVesselUpdateQueue.TryGetValue(VesselId, out var queue) && queue.IsEmpty;
 
         #endregion
@@ -384,13 +384,20 @@ namespace LunaClient.Systems.VesselPositionSys
             Vessel.Landed = LerpPercentage < 0.5 ? Landed : Target.Landed;
             Vessel.Splashed = LerpPercentage < 0.5 ? Splashed : Target.Splashed;
 
-            if (Vessel.LandedOrSplashed)
+            if (Vessel.situation <= Vessel.Situations.SPLASHED)
             {
                 Vessel.latitude = LunaMath.Lerp(LatLonAlt[0], Target.LatLonAlt[0], LerpPercentage);
                 Vessel.longitude = LunaMath.Lerp(LatLonAlt[1], Target.LatLonAlt[1], LerpPercentage);
                 Vessel.altitude = LunaMath.Lerp(LatLonAlt[2], Target.LatLonAlt[2], LerpPercentage);
 
                 Vessel.SetPosition(Body.GetWorldSurfacePosition(Vessel.latitude, Vessel.longitude, Vessel.altitude));
+            }
+            else if (Vessel.situation <= Vessel.Situations.FLYING)
+            {
+                var startSurfacePos = Body.GetWorldSurfacePosition(LatLonAlt[0], LatLonAlt[1], LatLonAlt[2]);
+                var endSurfacePos = Body.GetWorldSurfacePosition(Target.LatLonAlt[0], Target.LatLonAlt[1], Target.LatLonAlt[2]);
+
+                Vessel.SetPosition(Vector3d.Lerp(startSurfacePos, endSurfacePos, LerpPercentage));
             }
 
             foreach (var part in Vessel.Parts)
