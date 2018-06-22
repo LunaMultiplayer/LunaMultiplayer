@@ -28,7 +28,6 @@ namespace LunaClient.Harmony
 
             if (VesselPositionSystem.CurrentVesselUpdate.TryGetValue(vesselId, out var curPos))
             {
-                if (SettingsSystem.CurrentSettings.Debug1) return false;
                 return !curPos.Frozen;
             }
 
