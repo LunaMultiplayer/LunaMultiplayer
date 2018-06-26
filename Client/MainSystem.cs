@@ -199,7 +199,6 @@ namespace LunaClient
             SystemsHandler.FillUpSystemsList();
             WindowsHandler.FillUpWindowsList();
 
-            FieldModuleStore.ReadCustomizationXml();
             FieldModuleStore.ReadLoadedPartModules();
 
             ModApiSystem.Singleton.Enabled = true;
@@ -234,7 +233,8 @@ namespace LunaClient
                 Enabled = false;
                 return;
             }
-
+            
+            FieldModuleStore.ReadCustomizationXml();
             LmpBaseEvent.Awake();
             HarmonyPatcher.Awake();
             PartModulePatcher.Awake();

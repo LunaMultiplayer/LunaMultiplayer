@@ -22,6 +22,8 @@ namespace LunaClient.ModuleStore
         private static readonly MethodInfo InitTranspilerMethod = typeof(PartModulePatcher).GetMethod(nameof(InitTranspiler));
         private static readonly MethodInfo TranspilerMethod = typeof(PartModulePatcher).GetMethod(nameof(Transpiler));
 
+        private static string _currentPartModule;
+
         /// <summary>
         /// This is a test class, we use the method "ExampleCall" to take the IL codes and paste them on the real part module methods
         /// </summary>
@@ -51,6 +53,8 @@ namespace LunaClient.ModuleStore
                     var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
                     foreach (var partModule in partModules)
                     {
+                        _currentPartModule = partModule.Name;
+
                         var persistentFields = partModule.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
                             .Where(f => f.GetCustomAttributes(typeof(KSPField), true).Any(attr => ((KSPField)attr).isPersistant)).ToArray();
 
@@ -88,17 +92,20 @@ namespace LunaClient.ModuleStore
             var length = codes.Count;
             for (var i = 0; i < length; i++)
             {
+                //This is the case when a field value is being set
                 if (codes[i].opcode == OpCodes.Stfld)
                 {
-                    var operand = codes[i].operand as FieldInfo;
-                    var attributes = operand?.GetCustomAttributes(typeof(KSPField), false).Cast<KSPField>().ToArray();
-                    if (attributes != null && attributes.Any() && attributes.First().isPersistant)
+                    if (!(codes[i].operand is FieldInfo operand)) continue;
+                    if (FieldIsIgnored(operand)) continue;
+
+                    var attributes = operand.GetCustomAttributes(typeof(KSPField), false).Cast<KSPField>().ToArray();
+                    if (attributes.Any() && attributes.First().isPersistant)
                     {
                         for (var j = 0; j < Instructions.Count; j++)
                         {
                             if (Instructions[j].opcode == OpCodes.Ldstr)
                             {
-                                //hange the name operand so the proper "field name" is shown
+                                //Change the name operand so the proper "field name" is shown
                                 Instructions[j].operand = operand.Name;
                             }
                             
@@ -112,6 +119,21 @@ namespace LunaClient.ModuleStore
             }
 
             return codes.AsEnumerable();
+        }
+
+        private static bool FieldIsIgnored(FieldInfo fieldInfo)
+        {
+            if (FieldModuleStore.CustomizedModuleFieldsBehaviours.TryGetValue(_currentPartModule, out var definition))
+            {
+                var fieldDef = definition.Fields.FirstOrDefault(f => f.FieldName == fieldInfo.Name);
+                if (fieldDef != null)
+                {
+                    if (fieldDef.Ignore)
+                        return true;
+                }
+            }
+
+            return false;
         }
     }
 }
