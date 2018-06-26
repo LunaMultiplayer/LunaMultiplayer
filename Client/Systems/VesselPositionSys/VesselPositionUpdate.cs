@@ -1,6 +1,5 @@
 ﻿using LunaClient.Extensions;
 using LunaClient.Systems.SettingsSys;
-using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
 using LunaClient.VesselUtilities;
@@ -164,10 +163,11 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 //As we are using a position from the PAST, we must compensate the planet rotation in the received LAN parameter
                 //rel: https://forum.kerbalspaceprogram.com/index.php?/topic/176149-replaying-orbit-positions-from-the-past/
-                var rotationFixFactor = TimeDifference * 360 / Body.SiderealDayLength();
+                var startRotationFixFactor = Vessel?.situation <= Vessel.Situations.FLYING ? TimeDifference * 360 / Body.SiderealDayLength() : 0;
+                var endRotationFixFactor = Vessel?.situation <= Vessel.Situations.FLYING ? (TimeDifference + ExtraInterpolationTime) * 360 / Body.SiderealDayLength() : 0;
 
-                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + rotationFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
-                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + rotationFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + startRotationFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
+                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + endRotationFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
 
                 UpdateProtoVesselValues();
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
@@ -184,8 +184,17 @@ namespace LunaClient.Systems.VesselPositionSys
                 if (Frozen)
                 {
                     WasFrozen = true;
+
+                    Vessel.orbitDriver.updateFromParameters();
                     Vessel.FreezePosition();
                     return;
+                }
+
+                if (WasFrozen && !Frozen)
+                {
+                    WasFrozen = false;
+
+                    Vessel.orbitDriver.updateFromParameters();
                 }
 
                 Vessel.UnfreezePosition();
@@ -194,10 +203,6 @@ namespace LunaClient.Systems.VesselPositionSys
             try
             {
                 ApplyInterpolations();
-                if (WasFrozen && !Frozen)
-                {
-                    WasFrozen = false;
-                }
             }
             catch (Exception e)
             {
@@ -222,7 +227,7 @@ namespace LunaClient.Systems.VesselPositionSys
                 return;
             }
 
-            TimeDifference = TimeSyncerSystem.UniversalTime - GameTimeStamp;
+            TimeDifference = Planetarium.GetUniversalTime() - GameTimeStamp;
 
             if (WarpSystem.Singleton.CurrentlyWarping || SubspaceId == -1)
             {
