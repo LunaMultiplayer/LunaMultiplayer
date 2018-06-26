@@ -1,10 +1,11 @@
-﻿// ReSharper disable All
+﻿using LunaClient.Events.Base;
+// ReSharper disable All
 #pragma warning disable IDE1006
 
 namespace LunaClient.Events
 {
-    public static class ExperimentEvent
+    public class ExperimentEvent: LmpBaseEvent
     {
-        public static EventData<Vessel> onExperimentReset { get; } = new EventData<Vessel>("onExperimentReset");
+        public static EventData<Vessel> onExperimentReset;
     }
 }

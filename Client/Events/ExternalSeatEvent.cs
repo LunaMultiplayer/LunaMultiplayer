@@ -1,14 +1,13 @@
-﻿// ReSharper disable All
-
+﻿using LunaClient.Events.Base;
 using System;
-
+// ReSharper disable All
 #pragma warning disable IDE1006
 
 namespace LunaClient.Events
 {
-    public static class ExternalSeatEvent
+    public class ExternalSeatEvent : LmpBaseEvent
     {
-        public static EventData<KerbalSeat, Guid, string> onExternalSeatBoard { get; } = new EventData<KerbalSeat, Guid, string>("onExternalSeatBoard");
-        public static EventData<Vessel, KerbalEVA> onExternalSeatUnboard { get; } = new EventData<Vessel, KerbalEVA>("onExternalSeatUnboard");
+        public static EventData<KerbalSeat, Guid, string> onExternalSeatBoard;
+        public static EventData<Vessel, KerbalEVA> onExternalSeatUnboard;
     }
 }

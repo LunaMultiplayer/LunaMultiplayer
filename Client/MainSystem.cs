@@ -2,6 +2,7 @@
 using KSP.UI.Screens;
 using LunaClient.Base;
 using LunaClient.Events;
+using LunaClient.Events.Base;
 using LunaClient.Localization;
 using LunaClient.ModuleStore;
 using LunaClient.Network;
@@ -234,6 +235,7 @@ namespace LunaClient
                 return;
             }
 
+            LmpBaseEvent.Awake();
             HarmonyPatcher.Awake();
             PartModulePatcher.Awake();
             SetupDirectoriesIfNeeded();

@@ -68,6 +68,7 @@
     <Compile Include="Base\Interface\IMessageHandler.cs" />
     <Compile Include="Base\Interface\IMessageSender.cs" />
     <Compile Include="Base\Interface\IWindow.cs" />
+    <Compile Include="Events\Base\LmpBaseEvent.cs" />
     <Compile Include="Events\ExperimentEvent.cs" />
     <Compile Include="Events\ExternalSeatEvent.cs" />
     <Compile Include="Events\ImmortalEvent.cs" />

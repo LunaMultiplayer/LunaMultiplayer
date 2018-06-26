@@ -1,10 +1,11 @@
-﻿// ReSharper disable All
+﻿using LunaClient.Events.Base;
+// ReSharper disable All
 #pragma warning disable IDE1006
 
 namespace LunaClient.Events
 {
-    public class ModApiEvent
+    public class ModApiEvent : LmpBaseEvent
     {
-        public static EventData<string, byte[]> onModMessageReceived { get; } = new EventData<string, byte[]>("onModMessageReceived");
+        public static EventData<string, byte[]> onModMessageReceived;
     }
 }

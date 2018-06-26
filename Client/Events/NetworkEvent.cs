@@ -1,11 +1,12 @@
-﻿using LunaCommon.Enums;
+﻿using LunaClient.Events.Base;
+using LunaCommon.Enums;
 // ReSharper disable All
 #pragma warning disable IDE1006
 
 namespace LunaClient.Events
 {
-    public static class NetworkEvent
+    public class NetworkEvent : LmpBaseEvent
     {
-        public static EventData<ClientState> onNetworkStatusChanged { get; } = new EventData<ClientState>("onNetworkStatusChanged");
+        public static EventData<ClientState> onNetworkStatusChanged;
     }
 }
