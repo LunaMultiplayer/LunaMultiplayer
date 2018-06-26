@@ -21,8 +21,10 @@ namespace LunaClient.ModuleStore
 
         private static readonly MethodInfo InitTranspilerMethod = typeof(PartModulePatcher).GetMethod(nameof(InitTranspiler));
         private static readonly MethodInfo TranspilerMethod = typeof(PartModulePatcher).GetMethod(nameof(Transpiler));
+        private static readonly MethodInfo RestoreMethod = typeof(PartModulePatcher).GetMethod(nameof(Restore));
 
         private static string _currentPartModule;
+        private static readonly List<CodeInstruction> InstructionsBackup = new List<CodeInstruction>();
 
         /// <summary>
         /// This is a test class, we use the method "ExampleCall" to take the IL codes and paste them on the real part module methods
@@ -48,10 +50,10 @@ namespace LunaClient.ModuleStore
             HarmonyPatcher.HarmonyInstance.Patch(TestModule.ExampleCallMethod, null, null, new HarmonyMethod(InitTranspilerMethod));
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                try
+                var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
+                foreach (var partModule in partModules)
                 {
-                    var partModules = assembly.GetTypes().Where(myType => myType.IsClass && myType.IsSubclassOf(typeof(PartModule)));
-                    foreach (var partModule in partModules)
+                    try
                     {
                         _currentPartModule = partModule.Name;
 
@@ -69,14 +71,15 @@ namespace LunaClient.ModuleStore
                                 catch
                                 {
                                     LunaLog.LogError($"Could not patch method {partModuleMethod.Name} in module {partModule.Name}");
+                                    HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(RestoreMethod));
                                 }
                             }
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    LunaLog.LogError($"Exception loading types from assembly {assembly.FullName}: {ex.Message}");
+                    catch (Exception ex)
+                    {
+                        LunaLog.LogError($"Exception patching {partModule.Name} from assembly {assembly.FullName}: {ex.Message}");
+                    }
                 }
             }
         }
@@ -87,7 +90,10 @@ namespace LunaClient.ModuleStore
         /// </summary>
         public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
         {
+            InstructionsBackup.Clear();
+
             var codes = new List<CodeInstruction>(instructions);
+            InstructionsBackup.AddRange(codes);
 
             var length = codes.Count;
             for (var i = 0; i < length; i++)
@@ -108,7 +114,7 @@ namespace LunaClient.ModuleStore
                                 //Change the name operand so the proper "field name" is shown
                                 Instructions[j].operand = operand.Name;
                             }
-                            
+
                             codes.Insert(i + 1 + j, new CodeInstruction(Instructions[j]));
                         }
 
@@ -119,6 +125,14 @@ namespace LunaClient.ModuleStore
             }
 
             return codes.AsEnumerable();
+        }
+
+        /// <summary>
+        /// This method restores a failed method patch
+        /// </summary>
+        public static IEnumerable<CodeInstruction> Restore(IEnumerable<CodeInstruction> instructions)
+        {
+            return InstructionsBackup.AsEnumerable();
         }
 
         private static bool FieldIsIgnored(FieldInfo fieldInfo)
