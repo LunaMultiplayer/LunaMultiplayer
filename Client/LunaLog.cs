@@ -68,7 +68,7 @@ namespace LunaClient
 
         public static void Log(string message)
         {
-            var msg = message.Contains("[LMP]") ? message : $"[LMP]: {message}";
+            var msg = message.StartsWith("[LMP]") ? message : $"[LMP]: {message}";
             if (MainSystem.IsUnityThread)
             {
                 Debug.Log(msg);
