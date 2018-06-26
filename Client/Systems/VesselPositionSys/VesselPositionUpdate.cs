@@ -162,10 +162,12 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 AdjustExtraInterpolationTimes();
 
-                var lanFixFactor = SettingsSystem.CurrentSettings.InterpolationOffsetSeconds * 360 / Body.SiderealDayLength();
+                //As we are using a position from the PAST, we must compensate the planet rotation in the received LAN parameter
+                //rel: https://forum.kerbalspaceprogram.com/index.php?/topic/176149-replaying-orbit-positions-from-the-past/
+                var rotationFixFactor = TimeDifference * 360 / Body.SiderealDayLength();
 
-                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
-                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + rotationFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
+                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + rotationFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
 
                 UpdateProtoVesselValues();
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
