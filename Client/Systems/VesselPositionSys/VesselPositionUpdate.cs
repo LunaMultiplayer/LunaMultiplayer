@@ -162,8 +162,10 @@ namespace LunaClient.Systems.VesselPositionSys
 
                 AdjustExtraInterpolationTimes();
 
-                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3], Orbit[4], Orbit[5], Orbit[6], Body);
-                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3], Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
+                var lanFixFactor = SettingsSystem.CurrentSettings.InterpolationOffsetSeconds * 360 / Body.SiderealDayLength();
+
+                KspOrbit = new Orbit(Orbit[0], Orbit[1], Orbit[2], Orbit[3] + lanFixFactor, Orbit[4], Orbit[5], Orbit[6], Body);
+                Target.KspOrbit = new Orbit(Target.Orbit[0], Target.Orbit[1], Target.Orbit[2], Target.Orbit[3] + lanFixFactor, Target.Orbit[4], Target.Orbit[5], Target.Orbit[6], Target.Body);
 
                 UpdateProtoVesselValues();
                 VesselsProtoStore.UpdateVesselProtoPosition(this);
