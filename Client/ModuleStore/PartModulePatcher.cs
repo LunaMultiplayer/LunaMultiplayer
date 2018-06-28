@@ -62,10 +62,12 @@ namespace LunaClient.ModuleStore
 
                         if (persistentFields.Any())
                         {
-                            foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly))
+                            foreach (var partModuleMethod in partModule.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly)
+                            .Where(m=> !m.IsGenericMethod))
                             {
                                 try
                                 {
+                                    LunaLog.Log($"Patching method {partModuleMethod.Name} in module {partModule.Name}");
                                     HarmonyPatcher.HarmonyInstance.Patch(partModuleMethod, null, null, new HarmonyMethod(TranspilerMethod));
                                 }
                                 catch
