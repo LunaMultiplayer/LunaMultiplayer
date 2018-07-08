@@ -177,7 +177,7 @@ namespace LunaCommon.Locks
         }
         
         /// <summary>
-        /// Retrieves a lock from the dictioanry based on the given lock
+        /// Retrieves a lock from the dictionary based on the given lock
         /// </summary>
         public LockDefinition GetLock(LockType lockType, string playerName, Guid vesselId, string kerbalName)
         {
