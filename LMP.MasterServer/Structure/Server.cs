@@ -2,14 +2,18 @@
 using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Time;
 using System;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 
 namespace LMP.MasterServer.Structure
 {
     public class Server
     {
+        private static readonly ConcurrentDictionary<IPEndPoint, object> LockDictionary = new ConcurrentDictionary<IPEndPoint, object>();
+
         private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries = 
             new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromHours(24).TotalMilliseconds);
 
@@ -109,27 +113,33 @@ namespace LMP.MasterServer.Structure
             }
         }
         
-        private static async void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
+        private static void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
         {
-            try
+            Task.Run(() =>
             {
-                if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
+                lock (LockDictionary.GetOrAdd(externalEndpoint, new object()))
                 {
-                    server.Country = countryCode;
-                }
-                else
-                {
-                    using (var client = new HttpClient())
+                    try
                     {
-                        server.Country = await client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/");
-                        EndpointCountries.TryAdd(externalEndpoint, server.Country);
+                        if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
+                        {
+                            server.Country = countryCode;
+                        }
+                        else
+                        {
+                            using (var client = new HttpClient())
+                            {
+                                server.Country = client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/").Result;
+                                EndpointCountries.TryAdd(externalEndpoint, server.Country);
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        // ignored
                     }
                 }
-            }
-            catch (Exception)
-            {
-                // ignored
-            }
+            });
         }
 
         public static bool IsLocalIpAddress(IPAddress host)
