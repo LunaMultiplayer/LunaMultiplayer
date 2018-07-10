@@ -12,10 +12,8 @@ namespace LMP.MasterServer.Structure
 {
     public class Server
     {
-        private static readonly ConcurrentDictionary<IPEndPoint, object> LockDictionary = new ConcurrentDictionary<IPEndPoint, object>();
-
-        private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries = 
-            new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromHours(24).TotalMilliseconds);
+        private static readonly ConcurrentDictionary<IPEndPoint, string> EndpointCountries = new ConcurrentDictionary<IPEndPoint, string>();
+        private static DateTime _lastCountryRequestTime = DateTime.MinValue;
 
         public long LastRegisterTime { get; set; }
         public IPEndPoint InternalEndpoint { get; set; }
@@ -115,29 +113,30 @@ namespace LMP.MasterServer.Structure
         
         private static void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
         {
+            if (DateTime.UtcNow - _lastCountryRequestTime < TimeSpan.FromSeconds(10))
+                return;
+
             Task.Run(() =>
             {
-                lock (LockDictionary.GetOrAdd(externalEndpoint, new object()))
+                _lastCountryRequestTime = DateTime.UtcNow;
+                try
                 {
-                    try
+                    if (EndpointCountries.TryGetValue(externalEndpoint, out var countryCode))
                     {
-                        if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
+                        server.Country = countryCode;
+                    }
+                    else
+                    {
+                        using (var client = new HttpClient())
                         {
-                            server.Country = countryCode;
-                        }
-                        else
-                        {
-                            using (var client = new HttpClient())
-                            {
-                                server.Country = client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/").Result;
-                                EndpointCountries.TryAdd(externalEndpoint, server.Country);
-                            }
+                            server.Country = client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/").Result;
+                            EndpointCountries.TryAdd(externalEndpoint, server.Country);
                         }
                     }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
+                }
+                catch (Exception)
+                {
+                    // ignored
                 }
             });
         }
