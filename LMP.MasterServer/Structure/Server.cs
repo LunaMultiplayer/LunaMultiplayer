@@ -115,7 +115,7 @@ namespace LMP.MasterServer.Structure
         {
             Task.Run(() =>
             {
-                if (DateTime.UtcNow - _lastCountryRequestTime < TimeSpan.FromSeconds(10))
+                if (DateTime.UtcNow - _lastCountryRequestTime < TimeSpan.FromSeconds(1.5))
                     return;
 
                 _lastCountryRequestTime = DateTime.UtcNow;
