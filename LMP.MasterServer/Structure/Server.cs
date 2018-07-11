@@ -1,20 +1,18 @@
-﻿using LunaCommon;
+﻿using LMP.MasterServer.Geolocalization;
+using LunaCommon;
 using LunaCommon.Message.Data.MasterServer;
 using LunaCommon.Time;
 using System;
-using System.Collections.Concurrent;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace LMP.MasterServer.Structure
 {
     public class Server
     {
-        private static readonly ConcurrentDictionary<IPEndPoint, object> LockDictionary = new ConcurrentDictionary<IPEndPoint, object>();
-
-        private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries = 
+        private static DateTime _lastCountryRequestTime = DateTime.MinValue;
+        private static readonly TimeoutConcurrentDictionary<IPEndPoint, string> EndpointCountries =
             new TimeoutConcurrentDictionary<IPEndPoint, string>(TimeSpan.FromHours(24).TotalMilliseconds);
 
         public long LastRegisterTime { get; set; }
@@ -66,7 +64,7 @@ namespace LMP.MasterServer.Structure
 
         public Server(MsRegisterServerMsgData msg, IPEndPoint externalEndpoint)
         {
-            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ? new IPEndPoint(IPAddress.Parse(LunaNetUtils.GetOwnExternalIpAddress()), externalEndpoint.Port) : 
+            ExternalEndpoint = IsLocalIpAddress(externalEndpoint.Address) ? new IPEndPoint(IPAddress.Parse(LunaNetUtils.GetOwnExternalIpAddress()), externalEndpoint.Port) :
                 externalEndpoint;
 
             InternalEndpoint = Common.CreateEndpointFromString(msg.InternalEndpoint);
@@ -112,32 +110,27 @@ namespace LMP.MasterServer.Structure
                 Info.WebsiteText = "URL";
             }
         }
-        
+
         private static void SetCountryFromEndpoint(ServerInfo server, IPEndPoint externalEndpoint)
         {
             Task.Run(() =>
             {
-                lock (LockDictionary.GetOrAdd(externalEndpoint, new object()))
+                if (DateTime.UtcNow - _lastCountryRequestTime < TimeSpan.FromSeconds(10))
+                    return;
+
+                _lastCountryRequestTime = DateTime.UtcNow;
+                if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
                 {
-                    try
-                    {
-                        if (EndpointCountries.TryGet(externalEndpoint, out var countryCode))
-                        {
-                            server.Country = countryCode;
-                        }
-                        else
-                        {
-                            using (var client = new HttpClient())
-                            {
-                                server.Country = client.GetStringAsync($"https://ipapi.co/{externalEndpoint.Address}/country/").Result;
-                                EndpointCountries.TryAdd(externalEndpoint, server.Country);
-                            }
-                        }
-                    }
-                    catch (Exception)
-                    {
-                        // ignored
-                    }
+                    server.Country = countryCode;
+                }
+                else
+                {
+                    server.Country = IpApi.GetCountry(externalEndpoint);
+                    if (string.IsNullOrEmpty(server.Country))
+                        server.Country = IpLocate.GetCountry(externalEndpoint);
+
+                    if (!string.IsNullOrEmpty(server.Country))
+                        EndpointCountries.TryAdd(externalEndpoint, server.Country);
                 }
             });
         }
@@ -145,7 +138,7 @@ namespace LMP.MasterServer.Structure
         public static bool IsLocalIpAddress(IPAddress host)
         {
             try
-            { 
+            {
                 var hostIPs = Dns.GetHostAddresses(host.ToString());
                 var localIPs = Dns.GetHostAddresses(Dns.GetHostName());
 
