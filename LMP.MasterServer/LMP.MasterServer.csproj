@@ -59,6 +59,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Structure\Server.cs" />
+    <Compile Include="Structure\TimeoutDictionary.cs" />
     <Compile Include="Upnp\MasterServerPortMapper.cs" />
     <Compile Include="Web\WebHandler.cs" />
   </ItemGroup>
