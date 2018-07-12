@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<OptionsWindowText xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <Title>Opcje</Title>
+    <Language>Jezyk:</Language>
+    <Color>Kolor gracza:</Color>
+    <Red>R:</Red>
+    <Green>G:</Green>
+    <Blue>B:</Blue>
+    <Random>Losowy</Random>
+    <Set>Ustaw</Set>
+    <InterpolationSettings>Ustawienia interpolacji</InterpolationSettings>
+    <EnableInterpolation>W³¹cz Interpolacje</EnableInterpolation>
+    <InterpolationOffset>dostosowanie Interpolacji:</InterpolationOffset>
+    <GenerateLmpModControl>Wygeneruj serwer LMPModControl.xml</GenerateLmpModControl>
+    <GenerateUniverse>Wygeneruj swiat z zapisanej gry</GenerateUniverse>
+    <NetworkSettings>Ustawienia sieci</NetworkSettings>    
+    <CannotChangeWhileConnected>
+Nie mozna zmienic wartosci podczas polaczenia</CannotChangeWhileConnected>
+    <ResetNetwork>Zresetuj siec</ResetNetwork>
+    <Mtu>MTU (Default: 1408):</Mtu>
+    <AutoExpandMtu>automatyczne rozszerzanie MTU</AutoExpandMtu>
+    <ConnectionTimeout>Uplynal czas polaczenia (Default: 15):</ConnectionTimeout>
+</OptionsWindowText>
