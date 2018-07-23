@@ -9,10 +9,10 @@ namespace LunaClient.Utilities
     {
         private static readonly Version KspVersion = new Version(Versioning.version_major, Versioning.version_minor, Versioning.Revision);
 
-        public static void CheckKspVersion()
+        public static bool CheckKspVersion()
         {
             var compatible = KspVersion >= KspCompatible.MinKspVersion && KspVersion <= KspCompatible.MaxKspVersion;
-            if (compatible) return;
+            if (compatible) return true;
 
             PopupDialog.SpawnPopupDialog(
                 new MultiOptionDialog("CompatibilityWindow", string.Empty, LocalizationContainer.CompatibleDialogText.Title,
@@ -32,6 +32,8 @@ namespace LunaClient.Utilities
                 true,
                 HighLogic.UISkin
             );
+
+            return false;
         }
     }
 }
