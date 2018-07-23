@@ -14,6 +14,10 @@ namespace LunaClient.Windows.Debug
             if (_displayVectors)
                 GUILayout.Label(_vectorText, LabelStyle);
 
+            _displayPositions = GUILayout.Toggle(_displayPositions, "Display vessel positions", ButtonStyle);
+            if (_displayPositions)
+                GUILayout.Label(_positionText, LabelStyle);
+
             _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display active vessel orbit info", ButtonStyle);
             if (_displayOrbit)
                 GUILayout.Label(_orbitText, LabelStyle);

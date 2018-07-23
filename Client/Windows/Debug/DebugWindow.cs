@@ -28,6 +28,7 @@ namespace LunaClient.Windows.Debug
 
         private static bool _displayFast;
         private static string _vectorText;
+        private static string _positionText;
         private static string _orbitText;
         private static string _orbitVesselsText;
         private static string _subspaceText;
@@ -38,6 +39,7 @@ namespace LunaClient.Windows.Debug
         private static float _lastUpdateTime;
 
         private static bool _displayVectors;
+        private static bool _displayPositions;
         private static bool _displayOrbit;
         private static bool _displayVesselsOrbit;
         private static bool _displaySubspace;
@@ -84,9 +86,6 @@ namespace LunaClient.Windows.Debug
                             StringBuilder.AppendLine($"Frame Velocity: {(Vector3)ourVessel.orbitDriver.orbit.GetFrameVel()}, |v|: {ourVessel.orbitDriver.orbit.GetFrameVel().magnitude}");
                         StringBuilder.AppendLine($"CoM offset vector: {ourVessel.CoM}\n");
                         StringBuilder.AppendLine($"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}");
-                        StringBuilder.AppendLine($"World Pos: {(Vector3)ourVessel.GetWorldPos3D()}, |pos|: {ourVessel.GetWorldPos3D().magnitude}");
-                        StringBuilder.AppendLine($"Lat,Lon,Alt: {ourVessel.latitude},{ourVessel.longitude},{ourVessel.altitude}");
-                        StringBuilder.AppendLine($"On safety bubble: {SafetyBubble.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
 
                         _vectorText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
@@ -94,6 +93,25 @@ namespace LunaClient.Windows.Debug
                     else
                     {
                         _vectorText = "You have to be in flight";
+                    }
+                }
+
+                if (_displayPositions)
+                {
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
+                    {
+                        var ourVessel = FlightGlobals.ActiveVessel;
+                        StringBuilder.AppendLine($"Transform Pos: {ourVessel.vesselTransform.position}, |v|: {ourVessel.vesselTransform.position.magnitude}");
+                        StringBuilder.AppendLine($"ComD Pos: {ourVessel.CoMD}, |v|: {ourVessel.CoMD.magnitude}");
+                        StringBuilder.AppendLine($"Lat,Lon,Alt: {ourVessel.latitude},{ourVessel.longitude},{ourVessel.altitude}");
+                        StringBuilder.AppendLine($"On safety bubble: {SafetyBubble.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
+
+                        _positionText = StringBuilder.ToString();
+                        StringBuilder.Length = 0;
+                    }
+                    else
+                    {
+                        _positionText = "You have to be in flight";
                     }
                 }
 
