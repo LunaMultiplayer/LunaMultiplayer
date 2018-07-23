@@ -192,7 +192,6 @@ namespace LunaClient
 
         public void Start()
         {
-            CompatibilityHandler.CheckKspVersion();
             LocalizationContainer.LoadLanguages();
             LocalizationContainer.LoadLanguage(SettingsSystem.CurrentSettings.Language);
 
@@ -228,7 +227,7 @@ namespace LunaClient
             LunaLog.Log($"[LMP]: KSP installed at: {KspPath}");
             LunaLog.Log($"[LMP]: LMP installed at: {Environment.CurrentDirectory}");
 
-            if (!InstallChecker.IsCorrectlyInstalled())
+            if (!CompatibilityHandler.CheckKspVersion() || !InstallChecker.IsCorrectlyInstalled())
             {
                 Enabled = false;
                 return;
