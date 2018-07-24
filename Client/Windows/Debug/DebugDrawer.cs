@@ -18,7 +18,7 @@ namespace LunaClient.Windows.Debug
             if (_displayPositions)
                 GUILayout.Label(_positionText, LabelStyle);
 
-            _displayFloatingOrigin = GUILayout.Toggle(_displayPositions, "Display flotating origin", ButtonStyle);
+            _displayFloatingOrigin = GUILayout.Toggle(_displayFloatingOrigin, "Display flotating origin", ButtonStyle);
             if (_displayFloatingOrigin)
                 GUILayout.Label(_floatingOriginText, LabelStyle);
 

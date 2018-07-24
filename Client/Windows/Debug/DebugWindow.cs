@@ -77,16 +77,16 @@ namespace LunaClient.Windows.Debug
                         StringBuilder.AppendLine($"Id: {ourVessel.id}");
                         StringBuilder.AppendLine($"Persistent Id: {ourVessel.persistentId}");
                         StringBuilder.AppendLine($"Forward vector: {ourVessel.GetFwdVector()}");
-                        StringBuilder.AppendLine($"Up vector: {(Vector3)ourVessel.upAxis}");
+                        StringBuilder.AppendLine($"Up vector: {ourVessel.upAxis}");
                         StringBuilder.AppendLine($"Srf Rotation: {ourVessel.srfRelRotation}");
                         StringBuilder.AppendLine($"Vessel Rotation: {ourVessel.transform.rotation}");
                         StringBuilder.AppendLine($"Vessel Local Rotation: {ourVessel.transform.localRotation}");
-                        StringBuilder.AppendLine($"mainBody Rotation: {(Quaternion)ourVessel.mainBody.rotation}");
+                        StringBuilder.AppendLine($"mainBody Rotation: {ourVessel.mainBody.rotation}");
                         StringBuilder.AppendLine($"mainBody Transform Rotation: {ourVessel.mainBody.bodyTransform.rotation}");
                         StringBuilder.AppendLine($"Surface Velocity: {ourVessel.GetSrfVelocity()}, |v|: {ourVessel.GetSrfVelocity().magnitude}");
                         StringBuilder.AppendLine($"Orbital Velocity: {ourVessel.GetObtVelocity()}, |v|: {ourVessel.GetObtVelocity().magnitude}");
                         if (ourVessel.orbitDriver != null && ourVessel.orbitDriver.orbit != null)
-                            StringBuilder.AppendLine($"Frame Velocity: {(Vector3)ourVessel.orbitDriver.orbit.GetFrameVel()}, |v|: {ourVessel.orbitDriver.orbit.GetFrameVel().magnitude}");
+                            StringBuilder.AppendLine($"Frame Velocity: {ourVessel.orbitDriver.orbit.GetFrameVel()}, |v|: {ourVessel.orbitDriver.orbit.GetFrameVel().magnitude}");
                         StringBuilder.AppendLine($"CoM offset vector: {ourVessel.CoM}\n");
                         StringBuilder.AppendLine($"Angular Velocity: {ourVessel.angularVelocity}, |v|: {ourVessel.angularVelocity.magnitude}");
 
@@ -105,7 +105,7 @@ namespace LunaClient.Windows.Debug
                     {
                         var ourVessel = FlightGlobals.ActiveVessel;
                         StringBuilder.AppendLine($"Transform Pos: {ourVessel.vesselTransform.position}");
-                        StringBuilder.AppendLine($"ComD Pos: {(Vector3)ourVessel.CoMD}");
+                        StringBuilder.AppendLine($"ComD Pos: {ourVessel.CoMD}");
                         StringBuilder.AppendLine($"Lat,Lon,Alt: {ourVessel.latitude},{ourVessel.longitude},{ourVessel.altitude}");
                         StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubble.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
 
@@ -122,9 +122,9 @@ namespace LunaClient.Windows.Debug
                 {
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
                     {
-                        StringBuilder.AppendLine($"Pos: {(Vector3)FloatingOriginSystem.Offset}");
+                        StringBuilder.AppendLine($"Pos: {FloatingOriginSystem.Offset}");
                         StringBuilder.AppendLine($"LatLonAlt: {FloatingOriginSystem.OffsetLatLonAlt[0]},{FloatingOriginSystem.OffsetLatLonAlt[1]},{FloatingOriginSystem.OffsetLatLonAlt[2]}");
-                        StringBuilder.AppendLine($"Non Krakensbane Pos: {(Vector3)FloatingOriginSystem.OffsetNonKrakensbane}");
+                        StringBuilder.AppendLine($"Non Krakensbane Pos: {FloatingOriginSystem.OffsetNonKrakensbane}");
                         StringBuilder.AppendLine($"LatLonAlt: {FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[0]}," +
                                                  $"{FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[1]},{FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[2]}");
                         StringBuilder.AppendLine($"Distance from transform: {(FloatingOriginSystem.Offset - FlightGlobals.ActiveVessel.transform.position).magnitude}");
