@@ -18,6 +18,10 @@ namespace LunaClient.Windows.Debug
             if (_displayPositions)
                 GUILayout.Label(_positionText, LabelStyle);
 
+            _displayFloatingOrigin = GUILayout.Toggle(_displayPositions, "Display flotating origin", ButtonStyle);
+            if (_displayFloatingOrigin)
+                GUILayout.Label(_floatingOriginText, LabelStyle);
+
             _displayOrbit = GUILayout.Toggle(_displayOrbit, "Display active vessel orbit info", ButtonStyle);
             if (_displayOrbit)
                 GUILayout.Label(_orbitText, LabelStyle);

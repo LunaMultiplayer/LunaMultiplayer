@@ -1,5 +1,6 @@
 ﻿using LunaClient.Base;
 using LunaClient.Network;
+using LunaClient.Systems.FloatingOrigin;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.VesselPositionSys;
 using LunaClient.Systems.Warp;
@@ -28,6 +29,7 @@ namespace LunaClient.Windows.Debug
 
         private static bool _displayFast;
         private static string _vectorText;
+        private static string _floatingOriginText;
         private static string _positionText;
         private static string _orbitText;
         private static string _orbitVesselsText;
@@ -40,6 +42,7 @@ namespace LunaClient.Windows.Debug
 
         private static bool _displayVectors;
         private static bool _displayPositions;
+        private static bool _displayFloatingOrigin;
         private static bool _displayOrbit;
         private static bool _displayVesselsOrbit;
         private static bool _displaySubspace;
@@ -101,10 +104,10 @@ namespace LunaClient.Windows.Debug
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
                     {
                         var ourVessel = FlightGlobals.ActiveVessel;
-                        StringBuilder.AppendLine($"Transform Pos: {ourVessel.vesselTransform.position}, |v|: {ourVessel.vesselTransform.position.magnitude}");
-                        StringBuilder.AppendLine($"ComD Pos: {ourVessel.CoMD}, |v|: {ourVessel.CoMD.magnitude}");
+                        StringBuilder.AppendLine($"Transform Pos: {ourVessel.vesselTransform.position}");
+                        StringBuilder.AppendLine($"ComD Pos: {(Vector3)ourVessel.CoMD}");
                         StringBuilder.AppendLine($"Lat,Lon,Alt: {ourVessel.latitude},{ourVessel.longitude},{ourVessel.altitude}");
-                        StringBuilder.AppendLine($"On safety bubble: {SafetyBubble.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
+                        StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubble.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
 
                         _positionText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
@@ -112,6 +115,26 @@ namespace LunaClient.Windows.Debug
                     else
                     {
                         _positionText = "You have to be in flight";
+                    }
+                }
+
+                if (_displayFloatingOrigin)
+                {
+                    if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
+                    {
+                        StringBuilder.AppendLine($"Pos: {(Vector3)FloatingOriginSystem.Offset}");
+                        StringBuilder.AppendLine($"LatLonAlt: {FloatingOriginSystem.OffsetLatLonAlt[0]},{FloatingOriginSystem.OffsetLatLonAlt[1]},{FloatingOriginSystem.OffsetLatLonAlt[2]}");
+                        StringBuilder.AppendLine($"Non Krakensbane Pos: {(Vector3)FloatingOriginSystem.OffsetNonKrakensbane}");
+                        StringBuilder.AppendLine($"LatLonAlt: {FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[0]}," +
+                                                 $"{FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[1]},{FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[2]}");
+                        StringBuilder.AppendLine($"Distance from transform: {(FloatingOriginSystem.Offset - FlightGlobals.ActiveVessel.transform.position).magnitude}");
+
+                        _floatingOriginText = StringBuilder.ToString();
+                        StringBuilder.Length = 0;
+                    }
+                    else
+                    {
+                        _floatingOriginText = "You have to be in flight";
                     }
                 }
 
