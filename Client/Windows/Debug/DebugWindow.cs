@@ -104,7 +104,9 @@ namespace LunaClient.Windows.Debug
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
                     {
                         var ourVessel = FlightGlobals.ActiveVessel;
+
                         StringBuilder.AppendLine($"Transform Pos: {ourVessel.vesselTransform.position}");
+                        StringBuilder.AppendLine($"Com Pos: {ourVessel.CoM}");
                         StringBuilder.AppendLine($"ComD Pos: {ourVessel.CoMD}");
                         StringBuilder.AppendLine($"Lat,Lon,Alt: {ourVessel.latitude},{ourVessel.longitude},{ourVessel.altitude}");
                         StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubble.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
@@ -122,12 +124,15 @@ namespace LunaClient.Windows.Debug
                 {
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
                     {
+                        var ourVessel = FlightGlobals.ActiveVessel;
+
                         StringBuilder.AppendLine($"Pos: {FloatingOriginSystem.Offset}");
                         StringBuilder.AppendLine($"LatLonAlt: {FloatingOriginSystem.OffsetLatLonAlt[0]},{FloatingOriginSystem.OffsetLatLonAlt[1]},{FloatingOriginSystem.OffsetLatLonAlt[2]}");
+                        StringBuilder.AppendLine($"Distance: {(FloatingOriginSystem.Offset - ourVessel.vesselTransform.position).magnitude}");
                         StringBuilder.AppendLine($"Non Krakensbane Pos: {FloatingOriginSystem.OffsetNonKrakensbane}");
                         StringBuilder.AppendLine($"LatLonAlt: {FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[0]}," +
                                                  $"{FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[1]},{FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[2]}");
-                        StringBuilder.AppendLine($"Distance from transform: {(FloatingOriginSystem.Offset - FlightGlobals.ActiveVessel.transform.position).magnitude}");
+                        StringBuilder.AppendLine($"Distance: {(FloatingOriginSystem.OffsetNonKrakensbane - ourVessel.vesselTransform.position).magnitude}");
 
                         _floatingOriginText = StringBuilder.ToString();
                         StringBuilder.Length = 0;
