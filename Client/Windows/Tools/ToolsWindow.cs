@@ -1,10 +1,10 @@
 ﻿using LunaClient.Base;
+using LunaClient.Extensions;
 using LunaClient.Utilities;
 using LunaCommon.Enums;
 using LunaCommon.Time;
 using System;
 using System.IO;
-using LunaClient.Extensions;
 using UnityEngine;
 
 namespace LunaClient.Windows.Tools
@@ -29,6 +29,9 @@ namespace LunaClient.Windows.Tools
 
         private static readonly int SaveOrbitDataMsInterval = 100;
         private static DateTime _lastSavedOrbitDataTime = DateTime.MinValue;
+
+        private static bool _displayReloads;
+        private static bool _displayRanges;
 
         #endregion
 
