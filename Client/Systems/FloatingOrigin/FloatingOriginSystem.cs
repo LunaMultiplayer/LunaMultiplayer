@@ -1,8 +1,6 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-
-namespace LunaClient.Systems.FloatingOrigin
+﻿namespace LunaClient.Systems.FloatingOrigin
 {
+    /// <inheritdoc />
     /// <summary>
     /// This system stores the last offset position so we can position the unpacked vessels correctly
     /// </summary>
@@ -10,44 +8,40 @@ namespace LunaClient.Systems.FloatingOrigin
     {
         #region Fields & properties
 
-        public static Vector3d Offset { get; set; }
+        public static Vector3d Offset;
+        public static Vector3d OffsetNonKrakensbane;
 
-        private static double[] _offsetLatLonAlt = new double[3];
+        private static readonly double[] OffsetLatLonAltArray = new double[3];
+        private static readonly double[] OffsetNonKrakensbaneArray = new double[3];
 
-        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
         public static double[] OffsetLatLonAlt
         {
             get
             {
-                if (_offsetLatLonAlt[0] == 0 && _offsetLatLonAlt[1] == 0 && _offsetLatLonAlt[2] == 0 && FlightGlobals.currentMainBody != null)
+                if (FlightGlobals.currentMainBody != null)
                 {
-                    FlightGlobals.currentMainBody.GetLatLonAlt(Offset, out _offsetLatLonAlt[0],
-                        out _offsetLatLonAlt[1], out _offsetLatLonAlt[2]);
+                    FlightGlobals.currentMainBody.GetLatLonAlt(Offset, out OffsetLatLonAltArray[0], out OffsetLatLonAltArray[1], out OffsetLatLonAltArray[2]);
+                    return OffsetLatLonAltArray;
                 }
 
-                return _offsetLatLonAlt;
+                return new double[3];
             }
-            set => Array.Copy(value, _offsetLatLonAlt, 3);
         }
-
-        public static Vector3d OffsetNonKrakensbane { get; set; }
-
-        private static double[] _offsetNonKrakensbaneLatLonAlt = new double[3];
-
-        [SuppressMessage("ReSharper", "CompareOfFloatsByEqualityOperator")]
+        
         public static double[] OffsetNonKrakensbaneLatLonAlt
         {
             get
             {
-                if (_offsetNonKrakensbaneLatLonAlt[0] == 0 && _offsetNonKrakensbaneLatLonAlt[1] == 0 && _offsetNonKrakensbaneLatLonAlt[2] == 0 && FlightGlobals.currentMainBody != null)
+                if (FlightGlobals.currentMainBody != null)
                 {
-                    FlightGlobals.currentMainBody.GetLatLonAlt(OffsetNonKrakensbane, out _offsetNonKrakensbaneLatLonAlt[0],
-                        out _offsetNonKrakensbaneLatLonAlt[1], out _offsetNonKrakensbaneLatLonAlt[2]);
+                    FlightGlobals.currentMainBody?.GetLatLonAlt(OffsetNonKrakensbane, out OffsetNonKrakensbaneArray[0],
+                        out OffsetNonKrakensbaneArray[1], out OffsetNonKrakensbaneArray[2]);
+
+                    return OffsetNonKrakensbaneArray;
                 }
 
-                return _offsetNonKrakensbaneLatLonAlt;
+                return new double[3];
             }
-            set => Array.Copy(value, _offsetNonKrakensbaneLatLonAlt, 3);
         }
 
         private FloatingOriginEvents FloatingOriginEvents { get; } = new FloatingOriginEvents();
