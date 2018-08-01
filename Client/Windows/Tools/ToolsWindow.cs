@@ -32,6 +32,7 @@ namespace LunaClient.Windows.Tools
 
         private static bool _displayReloads;
         private static bool _displayRanges;
+        private static bool _displayFloatingOrigin;
 
         #endregion
 

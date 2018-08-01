@@ -25,6 +25,7 @@ namespace LunaClient.Windows.Tools
 
             ReloadSection();
             RangesSection();
+            FloatingOriginSection();
 
             GUILayout.EndVertical();
         }
@@ -83,6 +84,25 @@ namespace LunaClient.Windows.Tools
                         if (FlightGlobals.ActiveVessel?.id == proto.vesselID) continue;
                         VesselLoader.ReloadVessel(proto);
                     }
+                }
+            }
+        }
+        
+        private void FloatingOriginSection()
+        {
+            _displayFloatingOrigin = GUILayout.Toggle(_displayFloatingOrigin, "Floating Origin", ButtonStyle);
+            if (_displayFloatingOrigin)
+            {
+                if (GUILayout.Button("Reset floating origin", ButtonStyle))
+                {
+                    FloatingOrigin.fetch.ResetOffset();
+                }
+
+                if (GUILayout.Button("Set random floating origin", ButtonStyle))
+                {
+                    FloatingOrigin.SetOffset(new Vector3d(Random.Range(0, FloatingOrigin.fetch.threshold), 
+                        Random.Range(0, FloatingOrigin.fetch.threshold), 
+                        Random.Range(0, FloatingOrigin.fetch.threshold)));
                 }
             }
         }
