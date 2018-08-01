@@ -1,6 +1,7 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
 using LunaClient.Network;
+using LunaClient.Systems.FloatingOrigin;
 using LunaClient.Systems.TimeSyncer;
 using LunaClient.Systems.Warp;
 using LunaClient.VesselStore;
@@ -74,6 +75,8 @@ namespace LunaClient.Systems.VesselPositionSys
                 SetSrfRelRotation(vessel, msgData);
                 SetVelocity(vessel, msgData);
                 SetLatLonAlt(vessel, msgData);
+                SetFloatingOriginLatLonAlt(vessel, msgData);
+                SetVesselTransformPos(vessel, msgData);
                 SetNormalVector(vessel, msgData);
                 SetOrbit(vessel, msgData);
 
@@ -119,6 +122,24 @@ namespace LunaClient.Systems.VesselPositionSys
             msgData.LatLonAlt[0] = vessel.latitude;
             msgData.LatLonAlt[1] = vessel.longitude;
             msgData.LatLonAlt[2] = vessel.altitude;
+        }
+
+        private static void SetFloatingOriginLatLonAlt(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.FloatingOriginLatLonAlt[0] = FloatingOriginSystem.OffsetLatLonAlt[0];
+            msgData.FloatingOriginLatLonAlt[1] = FloatingOriginSystem.OffsetLatLonAlt[1];
+            msgData.FloatingOriginLatLonAlt[2] = FloatingOriginSystem.OffsetLatLonAlt[2];
+
+            msgData.FloatingOriginNonKrakensbaneLatLonAlt[0] = FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[0];
+            msgData.FloatingOriginNonKrakensbaneLatLonAlt[1] = FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[1];
+            msgData.FloatingOriginNonKrakensbaneLatLonAlt[2] = FloatingOriginSystem.OffsetNonKrakensbaneLatLonAlt[2];
+        }
+
+        private static void SetVesselTransformPos(Vessel vessel, VesselPositionMsgData msgData)
+        {
+            msgData.TransformPos[0] = vessel.vesselTransform.position.x;
+            msgData.TransformPos[1] = vessel.vesselTransform.position.y;
+            msgData.TransformPos[2] = vessel.vesselTransform.position.z;
         }
 
         private static void SetVelocity(Vessel vessel, VesselPositionMsgData msgData)

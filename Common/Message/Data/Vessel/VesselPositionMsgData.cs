@@ -15,6 +15,9 @@ namespace LunaCommon.Message.Data.Vessel
         public bool Landed;
         public bool Splashed;
         public double[] LatLonAlt = new double[3];
+        public double[] FloatingOriginLatLonAlt = new double[3];
+        public double[] FloatingOriginNonKrakensbaneLatLonAlt = new double[3];
+        public float[] TransformPos = new float[3];
         public double[] NormalVector = new double[3];
         public double[] Velocity = new double[3];
         public double[] Orbit = new double[8];
@@ -35,6 +38,15 @@ namespace LunaCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(LatLonAlt[i]);
+
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(FloatingOriginLatLonAlt[i]);
+
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(FloatingOriginNonKrakensbaneLatLonAlt[i]);
+
+            for (var i = 0; i < 3; i++)
+                lidgrenMsg.Write(TransformPos[i]);
 
             for (var i = 0; i < 3; i++)
                 lidgrenMsg.Write(NormalVector[i]);
@@ -63,7 +75,16 @@ namespace LunaCommon.Message.Data.Vessel
 
             for (var i = 0; i < 3; i++)
                 LatLonAlt[i] = lidgrenMsg.ReadDouble();
-            
+
+            for (var i = 0; i < 3; i++)
+                FloatingOriginLatLonAlt[i] = lidgrenMsg.ReadDouble();
+
+            for (var i = 0; i < 3; i++)
+                FloatingOriginNonKrakensbaneLatLonAlt[i] = lidgrenMsg.ReadDouble();
+
+            for (var i = 0; i < 3; i++)
+                TransformPos[i] = lidgrenMsg.ReadFloat();
+
             for (var i = 0; i < 3; i++)
                 NormalVector[i] = lidgrenMsg.ReadDouble();
             
@@ -82,8 +103,8 @@ namespace LunaCommon.Message.Data.Vessel
         
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(int) * 2 + sizeof(bool) * 2 + sizeof(double) * 3 * 3 + 
-                sizeof(float) * 4 * 1 + sizeof(float) + sizeof(bool);
+            return base.InternalGetMessageSize() + sizeof(int) * 2 + sizeof(bool) * 2 + sizeof(double) * 3 * 5 + 
+                sizeof(float) * 4 * 1 + sizeof(float) * 3 * 1 + sizeof(float) + sizeof(bool);
         }
     }
 }
