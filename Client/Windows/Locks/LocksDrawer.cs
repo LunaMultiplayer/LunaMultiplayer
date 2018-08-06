@@ -25,6 +25,7 @@ namespace LunaClient.Windows.Locks
         private void PrintLocks()
         {
             GUILayout.Label("Asteroid owner: " + _asteroidLockOwner, LabelStyle);
+            GUILayout.Label("Contract owner: " + _contractLockOwner, LabelStyle);
             GUILayout.Space(10);
             for (var i = 0; i < VesselLocks.Count; i++)
             {

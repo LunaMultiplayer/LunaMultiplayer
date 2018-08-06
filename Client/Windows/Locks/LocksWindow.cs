@@ -32,6 +32,7 @@ namespace LunaClient.Windows.Locks
 
         private static readonly List<VesselLockDisplay> VesselLocks = new List<VesselLockDisplay>();
         private static string _asteroidLockOwner = string.Empty;
+        private static string _contractLockOwner = string.Empty;
         private static readonly StringBuilder StrBuilder = new StringBuilder();
 
         #endregion
@@ -41,8 +42,8 @@ namespace LunaClient.Windows.Locks
             base.Update();
             if (Display && TimeUtil.IsInInterval(ref _lastUpdateTime, 3000))
             {
-                var asteroidLock = LockSystem.LockQuery.AsteroidLock();
-                _asteroidLockOwner = asteroidLock?.PlayerName;
+                _asteroidLockOwner = LockSystem.LockQuery.AsteroidLockOwner();
+                _contractLockOwner = LockSystem.LockQuery.ContractLockOwner();
 
                 for (var i = 0; i < FlightGlobals.Vessels.Count; i++)
                 {
