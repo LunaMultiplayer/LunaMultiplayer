@@ -104,11 +104,18 @@ namespace LunaClient.Windows.Debug
                     if (HighLogic.LoadedScene == GameScenes.FLIGHT && FlightGlobals.ready && FlightGlobals.ActiveVessel != null)
                     {
                         var ourVessel = FlightGlobals.ActiveVessel;
-
+                        
+                        StringBuilder.AppendLine($"Orbit Pos: {ourVessel.orbit.pos}");
                         StringBuilder.AppendLine($"Transform Pos: {ourVessel.vesselTransform.position}");
                         StringBuilder.AppendLine($"Com Pos: {ourVessel.CoM}");
                         StringBuilder.AppendLine($"ComD Pos: {ourVessel.CoMD}");
                         StringBuilder.AppendLine($"Lat,Lon,Alt: {ourVessel.latitude},{ourVessel.longitude},{ourVessel.altitude}");
+
+                        ourVessel.mainBody.GetLatLonAlt(ourVessel.vesselTransform.position, out var lat, out var lon, out var alt);
+                        StringBuilder.AppendLine($"Current Lat,Lon,Alt: {lat},{lon},{alt}");
+                        ourVessel.mainBody.GetLatLonAltOrbital(ourVessel.orbit.pos, out lat, out lon, out alt);
+                        StringBuilder.AppendLine($"Orbital Lat,Lon,Alt: {lat},{lon},{alt}");
+
                         StringBuilder.AppendLine($"Inside safety bubble: {SafetyBubble.IsInSafetyBubble(ourVessel.latitude, ourVessel.longitude, ourVessel.altitude, ourVessel.mainBody)}");
 
                         _positionText = StringBuilder.ToString();
