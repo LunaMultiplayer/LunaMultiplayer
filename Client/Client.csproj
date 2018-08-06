@@ -600,7 +600,9 @@
     <Content Include="Localization\XML\Swedish\StatusWindowText.xml" />
     <Content Include="Localization\XML\Swedish\UpdateWindowText.xml" />
     <Content Include="ModuleStore\XML\FXModuleAnimateThrottle.xml" />
+    <Content Include="ModuleStore\XML\HitpointTracker.xml" />
     <Content Include="ModuleStore\XML\KerbalEVA.xml" />
+    <Content Include="ModuleStore\XML\MissileBase.xml" />
     <Content Include="ModuleStore\XML\ModuleCoreHeat.xml" />
     <Content Include="ModuleStore\XML\ModuleDeployablePart.xml" />
     <Content Include="ModuleStore\XML\ModuleDeployableSolarPanel.xml" />
@@ -609,8 +611,11 @@
     <Content Include="ModuleStore\XML\ModuleReactionWheel.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelBase.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelBrakes.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelDeployment.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelMotor.xml" />
+    <Content Include="ModuleStore\XML\ModuleWheelSteering.xml" />
     <Content Include="ModuleStore\XML\ModuleWheelSuspension.xml" />
+    <Content Include="ModuleStore\XML\TweakScale.xml" />
     <Content Include="Resources\LMPButton.png" />
   </ItemGroup>
   <ItemGroup>

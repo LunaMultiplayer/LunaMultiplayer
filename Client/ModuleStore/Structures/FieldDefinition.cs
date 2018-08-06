@@ -10,6 +10,9 @@ namespace LunaClient.ModuleStore.Structures
         [XmlComment(Value = "Ignore changes on this field")]
         public bool Ignore { get; set; }
 
+        [XmlComment(Value = "Ignore changes on this field at server side")]
+        public bool ServerIgnore { get; set; }
+
         [XmlComment(Value = "Ignore changes on this field while spectating")]
         public bool IgnoreSpectating { get; set; }
 

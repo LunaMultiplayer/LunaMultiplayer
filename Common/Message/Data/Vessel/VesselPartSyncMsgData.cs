@@ -13,6 +13,7 @@ namespace LunaCommon.Message.Data.Vessel
         public string BaseModuleName;
         public string FieldName;
         public string Value;
+        public bool ServerIgnore;
 
         public override VesselMessageType VesselMessageType => VesselMessageType.PartSync;
 
@@ -27,6 +28,7 @@ namespace LunaCommon.Message.Data.Vessel
             lidgrenMsg.Write(BaseModuleName);
             lidgrenMsg.Write(FieldName);
             lidgrenMsg.Write(Value);
+            lidgrenMsg.Write(ServerIgnore);
         }
 
         internal override void InternalDeserialize(NetIncomingMessage lidgrenMsg)
@@ -38,11 +40,12 @@ namespace LunaCommon.Message.Data.Vessel
             BaseModuleName = lidgrenMsg.ReadString();
             FieldName = lidgrenMsg.ReadString();
             Value = lidgrenMsg.ReadString();
+            ServerIgnore = lidgrenMsg.ReadBoolean();
         }
 
         internal override int InternalGetMessageSize()
         {
-            return base.InternalGetMessageSize() + sizeof(uint) + ModuleName.GetByteCount() + BaseModuleName.GetByteCount() + FieldName.GetByteCount() + Value.GetByteCount();
+            return base.InternalGetMessageSize() + sizeof(uint) + ModuleName.GetByteCount() + BaseModuleName.GetByteCount() + FieldName.GetByteCount() + Value.GetByteCount() + sizeof(bool);
         }
     }
 }

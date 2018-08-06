@@ -1,12 +1,13 @@
 ﻿using LunaClient.Base;
 using LunaClient.Base.Interface;
+using LunaClient.ModuleStore;
 using LunaClient.Network;
+using LunaClient.Systems.TimeSyncer;
 using LunaClient.VesselStore;
 using LunaCommon.Message.Client;
 using LunaCommon.Message.Data.Vessel;
 using LunaCommon.Message.Interface;
 using System;
-using LunaClient.Systems.TimeSyncer;
 
 namespace LunaClient.Systems.VesselPartModuleSyncSys
 {
@@ -20,6 +21,7 @@ namespace LunaClient.Systems.VesselPartModuleSyncSys
         public void SendVesselPartSyncMsg(Guid vesselId, uint partFlightId, string moduleName, string baseModuleName, string fieldName, string value)
         {
             var msgData = NetworkMain.CliMsgFactory.CreateNewMessageData<VesselPartSyncMsgData>();
+            msgData.ServerIgnore = FieldModuleStore.GetCustomFieldDefinition(moduleName, fieldName)?.ServerIgnore ?? false;
             msgData.GameTime = TimeSyncerSystem.UniversalTime;
             msgData.VesselId = vesselId;
             msgData.PartFlightId = partFlightId;

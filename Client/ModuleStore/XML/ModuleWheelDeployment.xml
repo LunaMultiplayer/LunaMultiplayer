@@ -6,8 +6,8 @@
             <FieldName>stateString</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>
-	<!--Same as before but what is displayed regarding the language patch you're using-->
-	<FieldDefinition>
+	      <!--Same as before but what is displayed regarding the language patch you're using-->
+	      <FieldDefinition>
             <FieldName>stateDisplayString</FieldName>
             <Ignore>true</Ignore>
         </FieldDefinition>

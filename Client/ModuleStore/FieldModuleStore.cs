@@ -20,6 +20,7 @@ namespace LunaClient.ModuleStore
         {
             FieldName = string.Empty,
             Ignore = false,
+            ServerIgnore = false,
             IgnoreSpectating = false,
             Interval = 2500,
             SetValueInModule = false,

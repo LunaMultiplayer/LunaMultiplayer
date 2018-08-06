@@ -9,6 +9,7 @@
         <FieldDefinition>
             <FieldName>manuallyOverridden</FieldName>
             <Ignore>false</Ignore>
+            <ServerIgnore>false</ServerIgnore>
             <IgnoreSpectating>false</IgnoreSpectating>
             <Interval>600000</Interval>
             <SetValueInModule>false</SetValueInModule>

@@ -231,6 +231,7 @@ namespace Server.System
         {
             if (!(message is VesselPartSyncMsgData msgData)) return;
             if (VesselContext.RemovedVessels.Contains(msgData.VesselId)) return;
+            if (msgData.ServerIgnore) return;
 
             //Sync part changes ALWAYS and ignore the rate they arrive
             Task.Run(() =>
